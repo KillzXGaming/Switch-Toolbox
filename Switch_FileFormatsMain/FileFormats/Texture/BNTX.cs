@@ -1,0 +1,1212 @@
+﻿using System;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using System.ComponentModel;
+using System.Text;
+using System.Threading.Tasks;
+using Syroot.NintenTools.NSW.Bntx;
+using Syroot.NintenTools.NSW.Bntx.GFX;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using Switch_Toolbox.Library;
+using WeifenLuo.WinFormsUI.Docking;
+using Smash_Forge.Rendering;
+using Switch_Toolbox.Library.Forms;
+
+namespace FirstPlugin
+{
+    public class Formats
+    {
+        public enum BNTXImageFormat
+        {
+            IMAGE_FORMAT_INVALID = 0x0,
+            IMAGE_FORMAT_R8_G8_B8_A8 = 0x0b,
+            IMAGE_FORMAT_R5_G6_B5 = 0x07,
+            IMAGE_FORMAT_R8 = 0x02,
+            IMAGE_FORMAT_R8_G8 = 0x09,
+            IMAGE_FORMAT_BC1 = 0x1a,
+            IMAGE_FORMAT_BC2 = 0x1b,
+            IMAGE_FORMAT_BC3 = 0x1c,
+            IMAGE_FORMAT_BC4 = 0x1d,
+            IMAGE_FORMAT_BC5 = 0x1e,
+            IMAGE_FORMAT_BC6 = 0x1f,
+            IMAGE_FORMAT_BC7 = 0x20,
+        };
+
+        public enum BNTXImageTypes
+        {
+            UNORM = 0x01,
+            SNORM = 0x02,
+            SRGB = 0x06,
+        };
+
+        public static uint blk_dims(uint format)
+        {
+            switch (format)
+            {
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC1:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC2:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC3:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC4:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC5:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC6:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC7:
+                case 0x2d:
+                    return 0x44;
+
+                case 0x2e: return 0x54;
+                case 0x2f: return 0x55;
+                case 0x30: return 0x65;
+                case 0x31: return 0x66;
+                case 0x32: return 0x85;
+                case 0x33: return 0x86;
+                case 0x34: return 0x88;
+                case 0x35: return 0xa5;
+                case 0x36: return 0xa6;
+                case 0x37: return 0xa8;
+                case 0x38: return 0xaa;
+                case 0x39: return 0xca;
+                case 0x3a: return 0xcc;
+
+                default: return 0x11;
+            }
+        }
+
+        public static uint bpps(uint format)
+        {
+            switch (format)
+            {
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_R8_G8_B8_A8: return 4;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_R8: return 1;
+
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_R5_G6_B5:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_R8_G8:
+                    return 2;
+
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC1:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC4:
+                    return 8;
+
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC2:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC3:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC5:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC6:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_BC7:
+                case 0x2e:
+                case 0x2f:
+                case 0x30:
+                case 0x31:
+                case 0x32:
+                case 0x33:
+                case 0x34:
+                case 0x35:
+                case 0x36:
+                case 0x37:
+                case 0x38:
+                case 0x39:
+                case 0x3a:
+                    return 16;
+                default: return 0x00;
+            }
+        }
+    }
+
+    public class BNTX : IFileFormat
+    {
+        public bool CanSave { get; set; } = false;
+        public bool FileIsEdited { get; set; } = false;
+        public bool FileIsCompressed { get; set; } = false;
+        public string[] Description { get; set; } = new string[] { "*BNTX"};
+        public string[] Extension { get; set; } = new string[] { "*.bntx"};
+        public string Magic { get; set; } = "BNTX";
+        public CompressionType CompressionType { get; set; } = CompressionType.None;
+        public byte[] Data { get; set; }
+        public string FileName { get; set; }
+        public TreeNode EditorRoot { get; set; }
+        public bool IsActive { get; set; } = false;
+        public bool UseEditMenu { get; set; } = false;
+        public IFileFormat ArchiveFile { get; set; }
+        public int Alignment { get; set; } = 0;
+        public string FilePath { get; set; }
+        public Type[] Types
+        {
+            get
+            {
+                List<Type> types = new List<Type>();
+                types.Add(typeof(MenuExt));
+                return types.ToArray();
+            }
+        }
+     	class MenuExt : IFileMenuExtension
+        {
+            public ToolStripItemDark[] NewFileMenuExtensions => newFileExt;
+            public ToolStripItemDark[] ToolsMenuExtensions => null;
+            public ToolStripItemDark[] TitleBarExtensions => null;
+            public ToolStripItemDark[] CompressionMenuExtensions => null;
+            public ToolStripItemDark[] ExperimentalMenuExtensions => null;
+
+            ToolStripItemDark[] newFileExt = new ToolStripItemDark[1];
+            public MenuExt()
+            {
+                newFileExt[0] = new ToolStripItemDark("BNTX ");
+            }
+        }   
+
+        BinaryTextureContainer bntx;
+
+        public void Load()
+        {
+            IsActive = true;
+            UseEditMenu = true;
+            CanSave = true;
+
+            bntx = new BinaryTextureContainer(Data, FileName);
+            EditorRoot = bntx;
+        }
+        public void Unload()
+        {
+            foreach (TextureData tex in bntx.Textures.Values)
+            {
+                tex.mipmaps.Clear();
+                tex.renderedGLTex = null;
+            }
+
+            bntx.Textures.Clear();
+            bntx.Nodes.Clear();
+        }
+        public byte[] Save()
+        {
+            MessageBox.Show("Saving... " + bntx.Name);
+            return bntx.Save();
+        }
+    }
+
+    public class BinaryTextureContainer : TreeNodeCustom
+    {
+        public Dictionary<string, TextureData> Textures;
+
+        public byte[] Data;
+        public PropertieGridData prop;
+        public BntxFile BinaryTexFile;
+        public string FileNameText;
+
+        public BinaryTextureContainer()
+        {
+            ImageKey = "bntx";
+            SelectedImageKey = "bntx";
+        }
+
+        public BinaryTextureContainer(byte[] data, string Name = "", string FileName = "")
+        {
+            if (data.Length == 0)
+                data = CreateNewBNTX(Name);
+
+            ImageKey = "bntx";
+            SelectedImageKey = "bntx";
+
+            FileNameText = FileName;
+            LoadFile(data, Name);
+
+            PluginRuntime.bntxContainers.Add(this);
+        }
+        private byte[] CreateNewBNTX(string Name)
+        {
+            MemoryStream mem = new MemoryStream();
+
+            BntxFile bntx = new BntxFile();
+            bntx.Target = new char[] { 'N', 'X', ' ', ' '};
+            bntx.Name = Name;
+            bntx.Alignment = 0xC;
+            bntx.TargetAddressSize = 0x40;
+            bntx.VersionMajor = 0;
+            bntx.VersionMajor2 = 4;
+            bntx.VersionMinor = 0;
+            bntx.VersionMinor2 = 0;
+            bntx.Textures = new List<Texture>();
+            bntx.TextureDict = new ResDict();
+            bntx.RelocationTable = new RelocationTable();
+            bntx.Flag = 0;
+            bntx.Save(mem);
+
+            File.WriteAllBytes("NewTex.bntx", mem.ToArray());
+
+            return mem.ToArray();
+        }
+        public void RemoveTexture(TextureData textureData)
+        {
+            Nodes.Remove(textureData);
+            Textures.Remove(textureData.Text);
+            Viewport.Instance.UpdateViewport();
+        }
+        public override void OnClick(TreeView treeView)
+        {
+            Console.WriteLine(FirstPlugin.MainF);
+            foreach (Control control in FirstPlugin.MainF.Controls)
+            {
+                if (control is DockPanel)
+                {
+
+                }
+            }
+        }
+
+        public void LoadFile(byte[] data, string Name = "")
+        {
+            Textures = new Dictionary<string, TextureData>();
+
+            Data = data;
+
+            BinaryTexFile = new BntxFile(new MemoryStream(Data));
+            Text = BinaryTexFile.Name;
+
+            prop = new PropertieGridData();
+            prop.Target = new string(BinaryTexFile.Target);
+            prop.VersionMajor = BinaryTexFile.VersionMajor;
+            prop.VersionMajor2 = BinaryTexFile.VersionMajor2;
+            prop.VersionMinor = BinaryTexFile.VersionMinor;
+            prop.VersionMinor2 = BinaryTexFile.VersionMinor2;
+            prop.VersionFull = $"{BinaryTexFile.VersionMajor}.{BinaryTexFile.VersionMajor2}.{BinaryTexFile.VersionMinor}.{BinaryTexFile.VersionMinor2}";
+
+            foreach (Texture tex in BinaryTexFile.Textures)
+            {
+                TextureData texData = new TextureData(tex, BinaryTexFile);
+          //      texData.LoadOpenGLTexture();
+
+                Nodes.Add(texData);
+                Textures.Add(tex.Name, texData);
+            }
+
+            ContextMenu = new ContextMenu();
+            MenuItem export = new MenuItem("Export BNTX");
+            ContextMenu.MenuItems.Add(export);
+            export.Click += Export;
+            MenuItem replace = new MenuItem("Replace BNTX");
+            ContextMenu.MenuItems.Add(replace);
+            replace.Click += Import;
+            MenuItem importTex = new MenuItem("Import Texture");
+            ContextMenu.MenuItems.Add(importTex);
+            importTex.Click += ImportTexture;
+            MenuItem exportAll = new MenuItem("Export All Textures");
+            ContextMenu.MenuItems.Add(exportAll);
+            exportAll.Click += ExportAll;
+            MenuItem clear = new MenuItem("Clear");
+            ContextMenu.MenuItems.Add(clear);
+            clear.Click += Clear;
+        }
+        private void ImportTexture(object sender, EventArgs args)
+        {
+            ImportTexture();
+        }
+        public void ImportTexture()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            //     ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+            ofd.Filter = "Supported Formats|*.bftex;*.dds;|" +
+                  "Binary Texture |*.bftex|" +
+                         "Microsoft DDS |*.dds|" +
+          /*               "Portable Network Graphics |*.png|" +
+                         "Joint Photographic Experts Group |*.jpg|" +
+                         "Bitmap Image |*.bmp|" +
+                         "Tagged Image File Format |*.tiff|" */
+                         "All files(*.*)|*.*";
+            ofd.DefaultExt = "bftex";
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                BinaryTextureImporterList importer = new BinaryTextureImporterList();
+
+                List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
+                foreach (string name in ofd.FileNames)
+                {
+                    string ext = Path.GetExtension(name);
+                    if (ext == ".dds" || ext == ".bftex")
+                    {
+                        AddTexture(name);
+                    }
+                    else
+                    {
+                        settings.Add(LoadSettings(name));
+                    }
+                }
+                if (settings.Count == 0)
+                {
+                    importer.Dispose();
+                    return;
+                }
+
+                importer.LoadSettings(settings, this);
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (var setting in settings)
+                    {
+                        if (setting.DataBlockOutput != null)
+                        {
+                            Texture tex = setting.FromBitMap(setting.DataBlockOutput, setting);
+                            if (setting.textureData != null)
+                            {
+                                setting.textureData.LoadTexture(tex, 1);
+                            }
+                            else
+                            {
+                                setting.textureData = new TextureData(tex, setting.bntx);
+                            }
+
+                            Nodes.Add(setting.textureData);
+                            Textures.Add(setting.textureData.Text, setting.textureData);
+                            setting.textureData.LoadOpenGLTexture();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Something went wrong???");
+                        }
+                    }
+                }
+                settings.Clear();
+                GC.Collect();
+            }
+        }
+        //This function is an optional feature that will import a dummy texture if one is missing in the materials
+        public void ImportPlaceholderTexture(string TextureName)
+        {
+            if (Textures.ContainsKey(TextureName))
+                return;
+
+            if (TextureName == "Basic_Alb")
+                ImportBasicTextures("Basic_Alb");
+            else if (TextureName == "Basic_Nrm")
+                ImportBasicTextures("Basic_Nrm");
+            else if (TextureName == "Basic_Spm")
+                ImportBasicTextures("Basic_Spm");
+            else if (TextureName == "Basic_Sphere")
+                ImportBasicTextures("Basic_Sphere");
+            else if (TextureName == "Basic_Mtl")
+                ImportBasicTextures("Basic_Mtl");
+            else if (TextureName == "Basic_Rgh")
+                ImportBasicTextures("Basic_Rgh");
+            else if (TextureName == "Basic_MRA")
+                ImportBasicTextures("Basic_MRA");
+            else if (TextureName == "Basic_Bake_st0")
+                ImportBasicTextures("Basic_Bake_st0");
+            else if (TextureName == "Basic_Bake_st1")
+                ImportBasicTextures("Basic_Bake_st1");
+            else if (TextureName == "Basic_Emm")
+                ImportBasicTextures("Basic_Emm");
+            else
+            {
+                ImportPlaceholderTexture(Properties.Resources.InjectTexErrored, TextureName);
+            }
+        }
+        private void ImportPlaceholderTexture(byte[] data, string TextureName)
+        {
+            TextureImporterSettings importDDS = new TextureImporterSettings();
+            importDDS.LoadDDS(TextureName, BinaryTexFile, data);
+
+            TextureData texData = importDDS.textureData;
+            texData.Text = TextureName;
+
+            Nodes.Add(texData);
+            Textures.Add(TextureName, texData);
+            texData.LoadOpenGLTexture();
+        }
+        public void ImportBasicTextures(string TextureName, bool BC5Nrm = true)
+        {
+            if (Textures.ContainsKey(TextureName))
+                return;
+
+            if (TextureName == "Basic_Alb")
+                ImportPlaceholderTexture(Properties.Resources.InjectTexErrored, TextureName);
+            if (TextureName == "Basic_Nrm" && BC5Nrm)
+                ImportPlaceholderTexture(Properties.Resources.Basic_NrmBC5, TextureName);
+            if (TextureName == "Basic_Nrm" && BC5Nrm == false)
+                ImportPlaceholderTexture(Properties.Resources.Basic_Nrm, TextureName);
+            if (TextureName == "Basic_Spm")
+                ImportPlaceholderTexture(Properties.Resources.Black, TextureName);
+            if (TextureName == "Basic_Sphere")
+                ImportPlaceholderTexture(Properties.Resources.Black, TextureName);
+            if (TextureName == "Basic_Mtl")
+                ImportPlaceholderTexture(Properties.Resources.Black, TextureName);
+            if (TextureName == "Basic_Rgh")
+                ImportPlaceholderTexture(Properties.Resources.White, TextureName);
+            if (TextureName == "Basic_MRA")
+                ImportPlaceholderTexture(Properties.Resources.Black, TextureName);
+            if (TextureName == "Basic_Bake_st0")
+                ImportPlaceholderTexture(Properties.Resources.White, TextureName);
+            if (TextureName == "Basic_Bake_st1")
+                ImportPlaceholderTexture(Properties.Resources.White, TextureName);
+        }
+        public TextureImporterSettings LoadSettings(string name)
+        {
+            var importer = new TextureImporterSettings();
+
+            string ext = Path.GetExtension(name);
+            switch (ext)
+            {
+                case ".bftex":
+                    Texture tex = new Texture();
+                    tex.Import(name);
+                    break;
+                case ".dds":
+                    importer.LoadDDS(name, BinaryTexFile);
+                    break;
+                default:
+                    importer.LoadBitMap(name, BinaryTexFile);
+                    break;
+            }
+
+            return importer;
+        }
+        public TextureData AddTexture(string name)
+        {
+            var importer = new TextureImporterSettings();
+
+            TextureData texData = null;
+            string ext = Path.GetExtension(name);
+            switch (ext)
+            {
+                case ".bftex":
+                    Texture tex = new Texture();
+                    tex.Import(name);
+                    texData = new TextureData(tex, BinaryTexFile);
+                    break;
+                case ".dds":
+                    importer.LoadDDS(name, BinaryTexFile);
+                    texData = importer.textureData;
+                    break;
+                default:
+                    importer.LoadBitMap(name, BinaryTexFile);
+                    texData = importer.textureData;
+                    break;
+            }
+            if (texData != null)
+            {
+                List<string> keyList = new List<string>(Textures.Keys);
+                texData.Text = Utils.RenameDuplicateString(keyList, texData.Text);
+
+                Nodes.Add(texData);
+                Textures.Add(texData.Text, texData);
+                texData.LoadOpenGLTexture();
+            }
+            return texData;
+        }
+        private void Clear(object sender, EventArgs args)
+        {
+            Nodes.Clear();
+            Textures.Clear();
+        }
+        private void ExportAll(object sender, EventArgs args)
+        {
+            List<string> Formats = new List<string>();
+            Formats.Add("Cafe Binary Textures (.bftex)");
+            Formats.Add("Microsoft DDS (.dds)");
+            Formats.Add("Portable Graphics Network (.png)");
+            Formats.Add("Joint Photographic Experts Group (.jpg)");
+            Formats.Add("Bitmap Image (.bmp)");
+            Formats.Add("Tagged Image File Format (.tiff)");
+
+            FolderSelectDialog sfd = new FolderSelectDialog();
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = sfd.SelectedPath;
+
+                TextureFormatExport form = new TextureFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (TextureData tex in Nodes)
+                    {
+                        if (form.Index == 0)
+                            tex.SaveBinaryTexture(folderPath + '\\' + tex.Text + ".bftex");
+                        else if (form.Index == 1)
+                            tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
+                        else if (form.Index == 2)
+                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".png");
+                        else if (form.Index == 3)
+                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".jpg");
+                        else if (form.Index == 4)
+                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".bmp");
+                        else if (form.Index == 5)
+                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".tiff");
+                    }
+                }     
+            }
+        }
+        public byte[] Save()
+        {
+            BinaryTexFile.Textures.Clear();
+            BinaryTexFile.TextureDict.Clear();
+
+            foreach (TextureData tex in Textures.Values)
+            {
+                tex.Texture.Name = tex.Text;
+
+                BinaryTexFile.Textures.Add(tex.Texture);
+                BinaryTexFile.TextureDict.Add(tex.Text);
+            }
+
+            MemoryStream mem = new MemoryStream();
+            BinaryTexFile.Save(mem);
+
+            return mem.ToArray();
+        }
+
+        public class PropertieGridData
+        {
+            [Browsable(true)]
+            [Category("BNTX")]
+            [DisplayName("Name")]
+            public string Name { get; set; }
+
+            [Browsable(true)]
+            [Category("BNTX")]
+            [DisplayName("Original Path")]
+            public string Path { get; set; }
+
+            [Browsable(true)]
+            [Category("BNTX")]
+            [DisplayName("Target")]
+            public string Target { get; set; }
+
+            [Browsable(true)]
+            [ReadOnly(true)]
+            [Category("Versions")]
+            [DisplayName("Full Version")]
+            public string VersionFull { get; set; }
+
+            [Browsable(true)]
+            [Category("Versions")]
+            [DisplayName("Version Major 1")]
+            public uint VersionMajor { get; set; }
+
+            [Browsable(true)]
+            [Category("Versions")]
+            [DisplayName("Version Major 2")]
+            public uint VersionMajor2 { get; set; }
+
+            [Browsable(true)]
+            [Category("Versions")]
+            [DisplayName("Version Minor 1")]
+            public uint VersionMinor { get; set; }
+
+            [Browsable(true)]
+            [Category("Versions")]
+            [DisplayName("Version Minor 2")]
+            public uint VersionMinor2 { get; set; }
+        }
+
+        private void Import(object sender, EventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Data = File.ReadAllBytes(ofd.FileName);
+                LoadFile(Data);
+            }
+        }
+
+        private void Export(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.DefaultExt = "bntx";
+            sfd.Filter = "Supported Formats|*.bntx;";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllBytes(sfd.FileName, Data);
+            }
+        }
+    }
+
+    public class TextureData : TreeNodeCustom
+    {
+        public Texture Texture;
+        public BntxFile bntxFile;
+        public List<byte[]> mipmaps = new List<byte[]>();
+        public BRTI_Texture renderedGLTex = new BRTI_Texture();
+
+        BNTXEditor BNTXEditor;
+
+        public TextureData()
+        {
+            ImageKey = "Texture";
+            SelectedImageKey = "Texture";
+        }
+        public TextureData(Texture tex, BntxFile bntx)
+        {
+            ImageKey = "Texture";
+            SelectedImageKey = "Texture";
+
+            Texture = tex;
+            bntxFile = bntx;
+
+            Text = tex.Name;
+
+            ContextMenu = new ContextMenu();
+            MenuItem export = new MenuItem("Export");
+            ContextMenu.MenuItems.Add(export);
+            export.Click += Export;
+            MenuItem replace = new MenuItem("Replace");
+            ContextMenu.MenuItems.Add(replace);
+            replace.Click += Replace;
+            MenuItem remove = new MenuItem("Remove");
+            ContextMenu.MenuItems.Add(remove);
+            remove.Click += Remove;
+            MenuItem rename = new MenuItem("Rename");
+            ContextMenu.MenuItems.Add(rename);
+            rename.Click += Rename;
+
+            string TargetString = new string(bntx.Target);
+
+            int target = 0;
+            if (TargetString == "NX  ")
+                target = 1;
+
+
+        }
+        public override void OnClick(TreeView treeView)
+        {
+            foreach (Control control in FirstPlugin.MainF.Controls)
+            {
+                if (control is DockPanel)
+                {
+                    if (FirstPlugin.DockedEditorS == null)
+                    {
+                        FirstPlugin.DockedEditorS = new DockContent();
+                        FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
+                    }
+                }
+            }      
+
+            if (!EditorIsActive(FirstPlugin.DockedEditorS))
+            {
+                FirstPlugin.DockedEditorS.Controls.Clear();
+
+                BNTXEditor = new BNTXEditor();
+                BNTXEditor.Text = Text;
+                BNTXEditor.Dock = DockStyle.Fill;
+                BNTXEditor.LoadPicture(DisplayTexture());
+                BNTXEditor.LoadProperty(this);
+                FirstPlugin.DockedEditorS.Controls.Add(BNTXEditor);
+            }
+        }
+        public bool EditorIsActive(DockContent dock)
+        {
+            foreach (Control ctrl in dock.Controls)
+            {
+                if (ctrl is BNTXEditor)
+                {
+                    dock.Text = Text;
+                    ((BNTXEditor)ctrl).LoadPicture(DisplayTexture());
+                    ((BNTXEditor)ctrl).LoadProperty(this);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void LoadOpenGLTexture()
+        {
+            if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
+                return;
+
+            LoadTexture(Texture);
+
+            if (mipmaps.Count <= 0)
+            {
+                throw new Exception("No texture data found");
+            }
+
+            renderedGLTex.data = mipmaps[0];
+            renderedGLTex.width = (int)Texture.Width;
+            renderedGLTex.height = (int)Texture.Height;
+
+            switch (Texture.Format)
+            {
+                case SurfaceFormat.BC1_UNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
+                    break;
+                case SurfaceFormat.BC1_SRGB:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
+                    break;
+                case SurfaceFormat.BC2_UNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
+                    break;
+                case SurfaceFormat.BC2_SRGB:
+                    renderedGLTex.type = PixelInternalFormat.CompressedSrgbAlphaS3tcDxt3Ext;
+                    break;
+                case SurfaceFormat.BC3_UNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
+                    break;
+                case SurfaceFormat.BC3_SRGB:
+                    renderedGLTex.type = PixelInternalFormat.CompressedSrgbAlphaS3tcDxt5Ext;
+                    break;
+                case SurfaceFormat.BC4_UNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRedRgtc1;
+                    break;
+                case SurfaceFormat.BC4_SNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedSignedRedRgtc1;
+                    break;
+                case SurfaceFormat.BC5_UNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgRgtc2;
+                    break;
+                case SurfaceFormat.BC5_SNORM:
+                    renderedGLTex.data = DDS_Decompress.DecompressBC5(mipmaps[0], (int)Texture.Width, (int)Texture.Height, true, true);
+                    renderedGLTex.type = PixelInternalFormat.Rgba;
+                    renderedGLTex.utype = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    break;
+                case SurfaceFormat.BC6_FLOAT:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbBptcSignedFloat;
+                    break;
+                case SurfaceFormat.BC6_UFLOAT:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbBptcUnsignedFloat;
+                    break;
+                case SurfaceFormat.BC7_SRGB:
+                    renderedGLTex.type = PixelInternalFormat.CompressedSrgbAlphaBptcUnorm;
+                    break;
+                case SurfaceFormat.BC7_UNORM:
+                    renderedGLTex.type = PixelInternalFormat.CompressedRgbaBptcUnorm;
+                    break;
+                case SurfaceFormat.R8_G8_B8_A8_SRGB:
+                    renderedGLTex.type = PixelInternalFormat.Rgba;
+                    renderedGLTex.utype = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    break;
+            }
+            renderedGLTex.display = loadImage(renderedGLTex);
+        }
+
+        //Gets the decompressed byte[]
+        public static Bitmap DecodeBlock(byte[] data, uint Width, uint Height, SurfaceFormat Format)
+        {
+            Bitmap decomp;
+
+            if (Format == SurfaceFormat.BC1_UNORM)
+                decomp = DDS_Decompress.DecompressBC1(data, (int)Width, (int)Height, false);
+            else if (Format == SurfaceFormat.BC1_SRGB)
+                decomp = DDS_Decompress.DecompressBC1(data, (int)Width, (int)Height, true);
+            else if (Format == SurfaceFormat.BC3_UNORM)
+                decomp = DDS_Decompress.DecompressBC3(data, (int)Width, (int)Height, false);
+            else if (Format == SurfaceFormat.BC3_SRGB)
+                decomp = DDS_Decompress.DecompressBC3(data, (int)Width, (int)Height, true);
+            else if (Format == SurfaceFormat.BC4_UNORM)
+                decomp = DDS_Decompress.DecompressBC4(data, (int)Width, (int)Height, false);
+            else if (Format == SurfaceFormat.BC4_SNORM)
+                decomp = DDS_Decompress.DecompressBC4(data, (int)Width, (int)Height, true);
+            else if (Format == SurfaceFormat.BC5_UNORM)
+                decomp = DDS_Decompress.DecompressBC5(data, (int)Width, (int)Height, false);
+            else if (Format == SurfaceFormat.BC5_SNORM)
+                decomp = DDS_Decompress.DecompressBC5(data, (int)Width, (int)Height, true);
+            else if (Format == SurfaceFormat.R8_UNORM)
+                decomp = DDS_PixelDecode.DecodeR8G8(data, (int)Width, (int)Height);
+            else if (Format == SurfaceFormat.R8_G8_B8_A8_SRGB)
+                decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height);
+            else if (Format == SurfaceFormat.R8_G8_B8_A8_UNORM)
+                decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height);
+            else
+            {
+                decomp = Properties.Resources.TextureError;
+                Console.WriteLine($"Format {Format} not supported!");
+
+           //     throw new Exception($"Format {Format} not supported!");
+            }
+
+            return decomp;
+        }
+
+        public unsafe Bitmap GLTextureToBitmap(BRTI_Texture t, int id)
+        {
+            Bitmap bitmap = new Bitmap(t.width, t.height);
+            System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, t.width, t.height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            GL.BindTexture(TextureTarget.Texture2D, id);
+            GL.GetTexImage(TextureTarget.Texture2D, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
+
+            bitmap.UnlockBits(bitmapData);
+            return bitmap;
+        }
+        public unsafe void ExportAsImage(BRTI_Texture t, int id, string path)
+        {
+            Bitmap bitmap = new Bitmap(t.width, t.height);
+            System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, t.width, t.height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            GL.BindTexture(TextureTarget.Texture2D, id);
+            GL.GetTexImage(TextureTarget.Texture2D, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
+
+            bitmap.UnlockBits(bitmapData);
+            bitmap.Save(path);
+        }
+        public class BRTI_Texture
+        {
+            public List<byte[]> mipmaps = new List<byte[]>();
+            public byte[] data;
+            public int width, height;
+            public int display = 0;
+            public PixelInternalFormat type;
+            public OpenTK.Graphics.OpenGL.PixelFormat utype;
+        }
+        public static int getImageSize(BRTI_Texture t)
+        {
+            switch (t.type)
+            {
+                case PixelInternalFormat.CompressedRgbaS3tcDxt1Ext:
+                case PixelInternalFormat.CompressedSrgbAlphaS3tcDxt1Ext:
+                case PixelInternalFormat.CompressedRedRgtc1:
+                case PixelInternalFormat.CompressedSignedRedRgtc1:
+                    return (t.width * t.height / 2);
+                case PixelInternalFormat.CompressedRgbaS3tcDxt3Ext:
+                case PixelInternalFormat.CompressedSrgbAlphaS3tcDxt3Ext:
+                case PixelInternalFormat.CompressedRgbaS3tcDxt5Ext:
+                case PixelInternalFormat.CompressedSrgbAlphaS3tcDxt5Ext:
+                case PixelInternalFormat.CompressedSignedRgRgtc2:
+                case PixelInternalFormat.CompressedRgRgtc2:
+                    return (t.width * t.height);
+                case PixelInternalFormat.Rgba:
+                    return t.data.Length;
+                default:
+                    return t.data.Length;
+            }
+        }
+        public static int loadImage(BRTI_Texture t)
+        {
+            int texID = GL.GenTexture();
+
+            GL.BindTexture(TextureTarget.Texture2D, texID);
+
+            if (t.type != PixelInternalFormat.Rgba)
+            {
+                GL.CompressedTexImage2D<byte>(TextureTarget.Texture2D, 0, (InternalFormat)t.type,
+                    t.width, t.height, 0, getImageSize(t), t.data);
+                //Debug.WriteLine(GL.GetError());
+            }
+            else
+            {
+                GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, t.type, t.width, t.height, 0,
+                    t.utype, PixelType.UnsignedByte, t.data);
+            }
+
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+            return texID;
+        }
+        private void Remove(object sender, EventArgs args)
+        {
+            ((BinaryTextureContainer)Parent).RemoveTexture(this);
+        }
+        private void Rename(object sender, EventArgs args)
+        {
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(Text);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                ((BinaryTextureContainer)Parent).Textures.Remove(Text);
+                Text = dialog.textBox1.Text;
+
+                ((BinaryTextureContainer)Parent).Textures.Add(Text, this);
+            }
+        }
+        private void Replace(object sender, EventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            //     ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+            ofd.Filter = "Supported Formats|*.bftex;*.dds;|" +
+                  "Binary Texture |*.bftex|" +
+                         "Microsoft DDS |*.dds|" +
+                         /*               "Portable Network Graphics |*.png|" +
+                                        "Joint Photographic Experts Group |*.jpg|" +
+                                        "Bitmap Image |*.bmp|" +
+                                        "Tagged Image File Format |*.tiff|" */
+                         "All files(*.*)|*.*";
+
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Replace(ofd.FileName);
+            }
+        }
+        public void Replace(string FileName)
+        {
+            string ext = Path.GetExtension(FileName);
+            switch (ext)
+            {
+                case ".bftex":
+                    Texture.Import(FileName);
+                    break;
+                case ".dds":
+                    TextureImporterSettings importDDS = new TextureImporterSettings();
+                    importDDS.LoadDDS(FileName, bntxFile, null, this);
+                    break;
+                default:
+                    TextureImporterSettings import = new TextureImporterSettings();
+                    import.LoadBitMap(FileName, bntxFile, this);
+                    break;
+            }
+            Texture.Name = Text;
+            UpdateBfresTextureMapping();
+            if (BNTXEditor != null)
+            {
+                BNTXEditor.LoadPicture(DisplayTexture());
+                BNTXEditor.LoadProperty(this);
+            }
+        }
+        private void UpdateBfresTextureMapping()
+        {
+            foreach (GL_Core.Interfaces.AbstractGlDrawable draw in Runtime.abstractGlDrawables)
+            {
+                if (draw is BFRESRender)
+                {
+                    ((BFRESRender)draw).UpdateTextureMaps();
+                }
+            }
+        }
+        private void Export(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Texture.Name;
+            sfd.DefaultExt = "bftex";
+            sfd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                         "Binary Texture |*.bftex|" +
+                         "Microsoft DDS |*.dds|" +
+                         "Portable Network Graphics |*.png|" +
+                         "Joint Photographic Experts Group |*.jpg|" +
+                         "Bitmap Image |*.bmp|" +
+                         "Tagged Image File Format |*.tiff|" +
+                         "All files(*.*)|*.*";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Export(sfd.FileName);
+            }
+        }
+        public void Export(string FileName)
+        {
+            string ext = Path.GetExtension(FileName);
+            switch (ext)
+            {
+                case ".bftex":
+                    SaveBinaryTexture(FileName);
+                    break;
+                case ".dds":
+                    SaveDDS(FileName);
+                    break;
+                default:
+                    SaveBitMap(FileName);
+                    break;
+            }
+        }
+        internal void SaveBitMap(string FileName)
+        {
+            Bitmap bitMap = DisplayTexture();
+
+            bitMap.Save(FileName);
+        }
+        internal void SaveBinaryTexture(string FileName)
+        {
+            Console.WriteLine("Test");
+            Texture.Export(FileName, bntxFile);
+        }
+        internal void SaveDDS(string FileName)
+        {
+            DDS dds = new DDS();
+            dds.header = new DDS.Header();
+            dds.header.width = Texture.Width;
+            dds.header.height = Texture.Height;
+            dds.header.mipmapCount = (uint)mipmaps.Count;
+
+            bool IsDX10 = false;
+
+            switch (Texture.Format)
+            {
+                case SurfaceFormat.BC1_UNORM:
+                case SurfaceFormat.BC1_SRGB:
+                    dds.header.ddspf.fourCC = "DXT1";
+                    break;
+                case SurfaceFormat.BC2_UNORM:
+                case SurfaceFormat.BC2_SRGB:
+                    dds.header.ddspf.fourCC = "DXT3";
+                    break;
+                case SurfaceFormat.BC3_UNORM:
+                case SurfaceFormat.BC3_SRGB:
+                    dds.header.ddspf.fourCC = "DXT5";
+                    break;
+                case SurfaceFormat.BC4_UNORM:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
+                    break;
+                case SurfaceFormat.BC4_SNORM:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
+                    break;
+                case SurfaceFormat.BC5_UNORM:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
+                    break;
+                case SurfaceFormat.BC5_SNORM:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
+                    break;
+                case SurfaceFormat.BC6_FLOAT:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16;
+                    break;
+                case SurfaceFormat.BC6_UFLOAT:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16;
+                    break;
+                case SurfaceFormat.BC7_UNORM:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB;
+                    break;
+                case SurfaceFormat.BC7_SRGB:
+                    IsDX10 = true;
+                    dds.DX10header = new DDS.DX10Header();
+                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
+                    break;
+                default:
+                    throw new Exception($"Format {Texture.Format} not supported!");
+            }
+     
+            if (IsDX10)
+                dds.header.ddspf.fourCC = "DX10";
+
+            dds.Save(dds, FileName, mipmaps, IsDX10);
+        }
+        public void LoadTexture(Texture tex, int target = 1)
+        {
+            mipmaps.Clear();
+
+            uint blk_dim = Formats.blk_dims((uint)((int)tex.Format >> 8));
+            uint blkWidth = blk_dim >> 4;
+            uint blkHeight = blk_dim & 0xF;
+
+            int linesPerBlockHeight = (1 << (int)tex.BlockHeightLog2) * 8;
+            int blockHeightShift = 0;
+
+            uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
+
+            for (int mipLevel = 0; mipLevel < tex.TextureData.Length; mipLevel++)
+            {
+                uint width = (uint)Math.Max(1, tex.Width >> mipLevel);
+                uint height = (uint)Math.Max(1, tex.Height >> mipLevel);
+
+                uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+
+                if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                    blockHeightShift += 1;
+
+                byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), tex.TextureData[mipLevel]);
+                //Create a copy and use that to remove uneeded data
+                byte[] result_ = new byte[size];
+                Array.Copy(result, 0, result_, 0, size);
+
+                mipmaps.Add(result_);
+            }
+            Texture = tex;
+        }
+
+        public Bitmap DisplayTexture(int DisplayMipIndex = 0)
+        {
+            LoadTexture(Texture);
+
+            if (mipmaps.Count <= 0)
+            {
+                throw new Exception("No texture data found");
+            }
+
+            uint width = (uint)Math.Max(1, Texture.Width >> DisplayMipIndex);
+            uint height = (uint)Math.Max(1, Texture.Height >> DisplayMipIndex);
+
+            byte[] data = mipmaps[DisplayMipIndex];
+
+            return DecodeBlock(data, width, height, Texture.Format);
+        }
+
+        public Bitmap ToBitmap()
+        {
+            return new Bitmap("");
+        }
+        public Bitmap UpdateBitmap(Bitmap image)
+        {
+            return ColorComponentSelector(image, Texture.ChannelRed, Texture.ChannelGreen, Texture.ChannelBlue, Texture.ChannelAlpha);
+        }
+        public static Bitmap ColorComponentSelector(Bitmap image, ChannelType R, ChannelType G, ChannelType B, ChannelType A)
+        {
+            BitmapExtension.ColorSwapFilter color = new BitmapExtension.ColorSwapFilter();
+            if (R == ChannelType.Red)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.Red;
+            if (R == ChannelType.Green)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.Green;
+            if (R == ChannelType.Blue)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.Blue;
+            if (R == ChannelType.Alpha)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.Alpha;
+            if (R == ChannelType.One)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.One;
+            if (R == ChannelType.Zero)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.Zero;
+
+            if (G == ChannelType.Red)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Red;
+            if (G == ChannelType.Green)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Green;
+            if (G == ChannelType.Blue)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Blue;
+            if (G == ChannelType.Alpha)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Alpha;
+            if (G == ChannelType.One)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.One;
+            if (G == ChannelType.Zero)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Zero;
+
+            if (B == ChannelType.Red)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Red;
+            if (B == ChannelType.Green)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Green;
+            if (B == ChannelType.Blue)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Blue;
+            if (B == ChannelType.Alpha)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Alpha;
+            if (B == ChannelType.One)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.One;
+            if (B == ChannelType.Zero)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Zero;
+
+            if (A == ChannelType.Red)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Red;
+            if (A == ChannelType.Green)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Green;
+            if (A == ChannelType.Blue)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Blue;
+            if (A == ChannelType.Alpha)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Alpha;
+            if (A == ChannelType.One)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.One;
+            if (A == ChannelType.Zero)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Zero;
+
+            return BitmapExtension.SwapRGB(image, color);
+        }
+
+        private void SwapChannels(Bitmap bitmap)
+        {
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    bitmap.GetPixel(x, y);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1007 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>VGAudio</name>
+    </assembly>
+    <members>
+        <member name="T:VGAudio.Codecs.Atrac9.Atrac9Config">
+            <summary>
+            Stores the configuration data needed to decode or encode an ATRAC9 stream.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.ConfigData">
+            <summary>
+            The 4-byte ATRAC9 configuration data.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.SampleRateIndex">
+            <summary>
+            A 4-bit value specifying one of 16 sample rates.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.ChannelConfigIndex">
+            <summary>
+            A 3-bit value specifying one of 6 substream channel mappings.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.FrameBytes">
+            <summary>
+            An 11-bit value containing the average size of a single frame.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.SuperframeIndex">
+            <summary>
+            A 2-bit value indicating how many frames are in each superframe.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.ChannelConfig">
+            <summary>
+            The channel mapping used by the ATRAC9 stream.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.ChannelCount">
+            <summary>
+            The total number of channels in the ATRAC9 stream.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.SampleRate">
+            <summary>
+            The sample rate of the ATRAC9 stream.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.HighSampleRate">
+            <summary>
+            Indicates whether the ATRAC9 stream has a <see cref="P:VGAudio.Codecs.Atrac9.Atrac9Config.SampleRateIndex"/> of 8 or above.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.FramesPerSuperframe">
+            <summary>
+            The number of frames in each superframe.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.FrameSamplesPower">
+            <summary>
+            The number of samples in one frame as an exponent of 2.
+            <see cref="P:VGAudio.Codecs.Atrac9.Atrac9Config.FrameSamples"/> = 2^<see cref="P:VGAudio.Codecs.Atrac9.Atrac9Config.FrameSamplesPower"/>.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.FrameSamples">
+            <summary>
+            The number of samples in one frame.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.SuperframeBytes">
+            <summary>
+            The number of bytes in one superframe.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.Atrac9.Atrac9Config.SuperframeSamples">
+            <summary>
+            The number of samples in one superframe.
+            </summary>
+        </member>
+        <member name="M:VGAudio.Codecs.Atrac9.Atrac9Config.#ctor(System.Byte[])">
+            <summary>
+            Reads ATRAC9 configuration data and calculates the stream parameters from it.
+            </summary>
+            <param name="configData">The processed ATRAC9 configuration.</param>
+        </member>
+        <member name="T:VGAudio.Codecs.Atrac9.Atrac9Decoder">
+            <summary>
+            Decodes an ATRAC9 stream into 16-bit PCM.
+            </summary>
+        </member>
+        <member name="M:VGAudio.Codecs.Atrac9.Atrac9Decoder.Initialize(System.Byte[])">
+            <summary>
+            Sets up the decoder to decode an ATRAC9 stream based on the information in <paramref name="configData"/>.
+            </summary>
+            <param name="configData">A 4-byte value containing information about the ATRAC9 stream.</param>
+        </member>
+        <member name="M:VGAudio.Codecs.Atrac9.Atrac9Decoder.Decode(System.Byte[],System.Int16[][])">
+            <summary>
+            Decodes one superframe of ATRAC9 data.
+            </summary>
+            <param name="atrac9Data">The ATRAC9 data to decode. The array must be at least
+            <see cref="P:VGAudio.Codecs.Atrac9.Atrac9Decoder.Config"/>.<see cref="P:VGAudio.Codecs.Atrac9.Atrac9Config.SuperframeBytes"/> bytes long.</param>
+            <param name="pcmOut">A buffer that the decoded PCM data will be placed in.
+            The array must have dimensions of at least [<see cref="P:VGAudio.Codecs.Atrac9.Atrac9Decoder.Config"/>.<see cref="P:VGAudio.Codecs.Atrac9.Atrac9Config.ChannelCount"/>]
+            [<see cref="P:VGAudio.Codecs.Atrac9.Atrac9Decoder.Config"/>.<see cref="P:VGAudio.Codecs.Atrac9.Atrac9Config.SuperframeSamples"/>].</param>
+        </member>
+        <member name="T:VGAudio.Codecs.Atrac9.Atrac9Rng">
+            <summary>
+            An Xorshift RNG used by the ATRAC9 codec
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.CriHca.CriHcaEncoder.PendingFrameCount">
+            <summary>
+            The number of buffered frames waiting to be read.
+            All buffered frames must be read before calling <see cref="M:VGAudio.Codecs.CriHca.CriHcaEncoder.Encode(System.Int16[][],System.Byte[])"/> again.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Codecs.CriHca.CriHcaEncoder.FrameSize">
+            <summary>
+            The size, in bytes, of one frame of HCA audio data.
+            </summary>
+        </member>
+        <member name="M:VGAudio.Codecs.CriHca.CriHcaEncoder.InitializeNew(VGAudio.Codecs.CriHca.CriHcaParameters)">
+            <summary>
+            Creates and initializes a new <see cref="T:VGAudio.Codecs.CriHca.CriHcaEncoder"/>. The encoder
+            will be ready to accept PCM audio via <see cref="M:VGAudio.Codecs.CriHca.CriHcaEncoder.Encode(System.Int16[][],System.Byte[])"/>.
+            </summary>
+            <param name="config">The configuration to be used when creating the HCA file.</param>
+        </member>
+        <member name="M:VGAudio.Codecs.CriHca.CriHcaEncoder.Initialize(VGAudio.Codecs.CriHca.CriHcaParameters)">
+            <summary>
+            Initializes this <see cref="T:VGAudio.Codecs.CriHca.CriHcaEncoder"/>. Any preexisting state is reset, and the encoder
+            will be ready to accept PCM audio via <see cref="M:VGAudio.Codecs.CriHca.CriHcaEncoder.Encode(System.Int16[][],System.Byte[])"/>.
+            </summary>
+            <param name="config">The configuration to be used when creating the HCA file.</param>
+        </member>
+        <member name="M:VGAudio.Codecs.CriHca.CriHcaEncoder.Encode(System.Int16[][],System.Byte[])">
+            <summary>
+            Encodes one frame of PCM audio into the HCA format.
+            </summary>
+            <param name="pcm">The PCM audio to encode. The array must be a jagged array
+            of the size [ChannelCount][1024] or larger.</param>
+            <param name="hcaOut">The buffer that the encoded HCA frame will be placed in.
+            Must be at least <see cref="P:VGAudio.Codecs.CriHca.CriHcaEncoder.FrameSize"/> bytes long.</param>
+            <returns>The number of HCA frames that were output by the encoder.
+            The first frame is output to <paramref name="hcaOut"/>. Any additional frames must be retrieved
+            by calling <see cref="M:VGAudio.Codecs.CriHca.CriHcaEncoder.GetPendingFrame"/> before <see cref="M:VGAudio.Codecs.CriHca.CriHcaEncoder.Encode(System.Int16[][],System.Byte[])"/> can be called again.</returns>
+        </member>
+        <member name="M:VGAudio.Codecs.CriHca.CriHcaEncoder.GetPendingFrame">
+            <summary>
+            Returns the next HCA frame awaiting output.
+            </summary>
+            <returns>Byte array containing the HCA frame data. The caller is given ownership of this array.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when there are no frames awaiting output.</exception>
+        </member>
+        <member name="P:VGAudio.Codecs.CriHca.CriHcaEncryption.Keys">
+            <summary>
+            A list of known keys used for encrypting HCA files.
+            </summary>
+            <remarks>
+            See the /docs/hca/encryption-keys.md file in this repository for a more detailed list.
+            </remarks>
+        </member>
+        <member name="M:VGAudio.Codecs.CriHca.CriHcaFrame.ScaleAthCurve(System.Int32)">
+            <summary>
+            Scales an ATH curve to the specified frequency.
+            </summary>
+            <param name="frequency">The frequency to scale the curve to.</param>
+            <returns>The scaled ATH curve</returns>
+            <remarks>The original ATH curve is for a frequency of 41856 Hz.</remarks>
+        </member>
+        <member name="P:VGAudio.Codecs.CriHca.CriHcaTables.AthCurve">
+            <summary>
+            Represents an Absolute Threshold of Hearing (ATH) curve. 
+            This curve is used when deriving resolutions from scale factors in very old HCA versions.
+            </summary>
+            <seealso cref="M:VGAudio.Codecs.CriHca.CriHcaFrame.ScaleAthCurve(System.Int32)"/>
+            <remarks>This curve seems to be a slight modification of the standard Painter &amp; Spanias ATH curve formula</remarks>
+        </member>
+        <member name="T:VGAudio.Codecs.GcAdpcm.GcAdpcmEncoder">
+            <summary>
+            This class contains functions used for encoding
+            Nintendo's 4-bit ADPCM audio format.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Configuration.TrimFile">
+            <summary>
+            If <c>true</c>, trims the output file length to the set LoopEnd.
+            If <c>false</c> or if the <see cref="T:VGAudio.Formats.IAudioFormat"/> does not loop,
+            the output file is not trimmed.
+            Default is <c>true</c>.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.Dsp.DspConfiguration">
+            <summary>
+            Contains the options used to build the DSP file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspConfiguration.RecalculateLoopContext">
+            <summary>
+            If <c>true</c>, recalculates the loop context when building the DSP.
+            If <c>false</c>, reuses the loop context read from an imported DSP
+            if available.
+            Default is <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspConfiguration.SamplesPerInterleave">
+            <summary>
+            The number of samples in each block when interleaving
+            the audio data in the audio file.
+            Must be divisible by 14.
+            Default is 14,336 (0x3800).
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if value is negative 
+            or not divisible by 14.</exception>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspConfiguration.LoopPointAlignment">
+            <summary>
+            When building the DSP file, the loop points and audio will
+            be adjusted so that the start loop point is a multiple of
+            this number. Default is 1.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.Dsp.DspStructure">
+            <summary>
+            Defines the structure of a DSP file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.SampleCount">
+            <summary>
+            The number of samples in the DSP.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.NibbleCount">
+            <summary>
+            The number of ADPCM nibbles in the DSP.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.SampleRate">
+            <summary>
+            The sample rate of the audio.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.Looping">
+            <summary>
+            This flag is set if the DSP loops.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.Format">
+            <summary>
+            The format of 
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.StartAddress">
+            <summary>
+            The address, in nibbles, of the start
+            loop point.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.EndAddress">
+            <summary>
+            The address, in nibbles, of the end
+            loop point.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.CurrentAddress">
+            <summary>
+            The address, in nibbles, of the initial
+            playback position.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.ChannelCount">
+            <summary>
+            The number of channels in the DSP file.
+            Only used in multi-channel DSP files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.FramesPerInterleave">
+            <summary>
+            The number of ADPCM frames in each
+            interleaved audio data block.
+            Only used in multi-channel DSP files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.Channels">
+            <summary>
+            The ADPCM information for each channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.LoopStart">
+            <summary>
+            The start loop point in samples.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspStructure.LoopEnd">
+            <summary>
+            The end loop point in samples.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Dsp.DspWriter.AudioDataSize">
+            <summary>
+            Size of a single channel's ADPCM audio data with padding when written to a file
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.ChannelCount">
+            <summary>
+            The number of channels in the file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.Interleave">
+            <summary>
+            The number of bytes per channel in each
+            interleaved audio data block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.SampleRate">
+            <summary>
+            The sample rate of the audio.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.LoopStart">
+            <summary>
+            The start loop point in samples.
+            Will be <c>-1</c> if audio doesn't loop.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.LoopEnd">
+            <summary>
+            The end loop point in samples.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.Codec">
+            <summary>
+            The audio codec of the audio data contained in the GENH.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.AudioDataOffset">
+            <summary>
+            The offset that the actual audio data starts at.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.HeaderSize">
+            <summary>
+            The size of the GENH header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.Coefs">
+            <summary>
+            The offsets of the ADPCM coefficients for the 
+            left and right channels, respectively.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.CoefsSplit">
+            <summary>
+            The offsets of the split ADPCM coefficients for the 
+            left and right channels, respectively.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.InterleaveType">
+            <summary>
+            The interleave type of the GENH file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.CoefType">
+            <summary>
+            Specifies how the ADPCM coefficients are stored.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.Channels">
+            <summary>
+            The ADPCM information for each channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.SampleCount">
+            <summary>
+            The number of samples in the file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Genh.GenhStructure.Looping">
+            <summary>
+            This flag is set if the file loops.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.Genh.GenhCoefType">
+            <summary>
+            Flags for how the ADPCM coefficients are stored in a GENH file.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.Genh.GenhCoefType.Split">
+            <summary>
+            Set if the ADPCM coefficients are in column-major order.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.Genh.GenhCoefType.LittleEndian">
+            <summary>
+            Set if the ADPCM coefficients are little endian.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Hca.HcaReader.Decrypt">
+            <summary>If <c>true</c>, decrypts the HCA data if possible.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.SampleCount">
+            <summary>
+            The number of samples in the channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.NibbleCount">
+            <summary>
+            The number of ADPCM nibbles in the channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.SampleRate">
+            <summary>
+            The sample rate of the audio.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.Looping">
+            <summary>
+            This flag is set if the channel loops.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.StartAddress">
+            <summary>
+            The address, in nibbles, of the start
+            loop point.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.EndAddress">
+            <summary>
+            The address, in nibbles, of the end
+            loop point.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspChannelInfo.CurrentAddress">
+            <summary>
+            The address, in nibbles, of the initial
+            playback position.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.Idsp.IdspConfiguration">
+            <summary>
+            Contains the options used to build the IDSP file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspConfiguration.RecalculateLoopContext">
+            <summary>
+            If <c>true</c>, recalculates the loop context when building the file.
+            If <c>false</c>, reuses the loop context read from the imported file,
+            if available.
+            Default is <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspConfiguration.BlockSize">
+            <summary>
+            The number of bytes in each block when interleaving the audio data.
+            Must be divisible by 8.
+            Default is 16.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if value is negative 
+            or not divisible by 8.</exception>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.Looping">
+            <summary>
+            This flag is set if the file loops.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.ChannelCount">
+            <summary>
+            The number of channels in the file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.SampleRate">
+            <summary>
+            The sample rate of the audio.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.LoopStart">
+            <summary>
+            The start loop point in samples.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.LoopEnd">
+            <summary>
+            The end loop point in samples.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.SampleCount">
+            <summary>
+            The number of samples in the file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.AudioDataOffset">
+            <summary>
+            The offset that the actual audio data starts at.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.InterleaveSize">
+            <summary>
+            The number of bytes per channel in each
+            interleaved audio data block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.HeaderSize">
+            <summary>
+            The size, in bytes, of the main IDSP header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.ChannelInfoSize">
+            <summary>
+            The size, in bytes, of the information for each channel
+            in the file header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.AudioDataLength">
+            <summary>
+            The length, in bytes, of the audio data of each channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspStructure.Channels">
+            <summary>
+            The ADPCM information for each channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Idsp.IdspWriter.AudioDataSize">
+            <summary>
+            Size of a single channel's ADPCM audio data with padding when written to a file
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BCFstmWriter.AudioDataSize">
+            <summary>
+            Size of a single channel's ADPCM audio data with padding when written to a file
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BrstmWriter.AudioDataSize">
+            <summary>
+            Size of a single channel's audio data with padding when written to a file
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.NintendoWare.BxstmConfiguration">
+            <summary>
+            Contains the options used to build BRSTM, BCSTM and BFSTM files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.RecalculateSeekTable">
+            <summary>
+            If <c>true</c>, rebuilds the seek table when building the file.
+            If <c>false</c>, reuses the seek table read from the imported file,
+            if available.
+            Default is <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.RecalculateLoopContext">
+            <summary>
+            If <c>true</c>, recalculates the loop context when building the file.
+            If <c>false</c>, reuses the loop context read from the imported file,
+            if available.
+            Default is <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.SamplesPerInterleave">
+            <summary>
+            The number of samples in each block when interleaving
+            the audio data in the audio file.
+            Must be divisible by 14.
+            Default is 14,336 (0x3800).
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if value is negative 
+            or not divisible by 14.</exception>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.SamplesPerSeekTableEntry">
+            <summary>
+            The number of samples per entry in the seek table. Used when
+            building the audio file.
+            Default is 14,336 (0x3800).
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if
+            value is less than 2.</exception>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.LoopPointAlignment">
+            <summary>
+            When building the audio file, the loop points and audio will
+            be adjusted so that the start loop point is a multiple of
+            this number. Default is 14,336 (0x3800).
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.TrackType">
+            <summary>
+            The type of track description to be used when building the 
+            BRSTM header.
+            Default is <see cref="F:VGAudio.Containers.NintendoWare.Structures.BrstmTrackType.Standard"/>.
+            Used only in BRSTM files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmConfiguration.SeekTableType">
+            <summary>
+            The type of seek table to use when building the BRSTM
+            ADPC block.
+            Default is <see cref="F:VGAudio.Containers.NintendoWare.Structures.BrstmSeekTableType.Standard"/>.
+            Used only in BRSTM files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.FileSize">
+            <summary>
+            The size of the entire file.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.HeaderSize">
+            <summary>
+            The size of the file header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.Version">
+            <summary>
+            The version listed in the header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.BlockCount">
+            <summary>
+            The number of blocks listed in the header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.BrstmHeader">
+            <summary>
+            Information about the data blocks in the file.
+            Used in BRSTM files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.Blocks">
+            <summary>
+            Information about the data blocks in the file.
+            Used in BCSTM and BFSTM files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.Regions">
+            <summary>The audio regions in the file.
+            Used in BCSTM and BFSTM files.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.BrstmSeekTableType">
+            <summary>
+            Specifies whether the seek table is full
+            length, or a truncated table used in some
+            games including Pokémon Battle Revolution
+            and Mario Party 8. 
+            Used in BRSTM files.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.BxstmStructure.SeekTable">
+            <summary>
+            The seek table containing PCM samples
+            from throughout the audio stream.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.NintendoWare.NwCodec">
+            <summary>
+            The different audio codecs used in BRSTM, BCSTM, and BFSTM files.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.NwCodec.Pcm8Bit">
+            <summary>
+            Big-endian, 8-bit PCM.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.NwCodec.Pcm16Bit">
+            <summary>
+            Big-endian, 16-bit PCM.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.NwCodec.GcAdpcm">
+            <summary>
+            Nintendo's 4-Bit ADPCM codec.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.BrstmHeader.HeadBlockOffset">
+            <summary>
+            The offset of the HEAD block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.BrstmHeader.HeadBlockSize">
+            <summary>
+            The size of the HEAD block as stated in the header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.BrstmHeader.SeekBlockOffset">
+            <summary>
+            The offset of the ADPC block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.BrstmHeader.SeekBlockSize">
+            <summary>
+            The size of the ADPC block as stated in the header.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.BrstmHeader.DataBlockOffset">
+            <summary>
+            The offset of the DATA block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.BrstmHeader.DataBlockSize">
+            <summary>
+            The size of the DATA block as stated in the header.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.NintendoWare.Structures.BrstmSeekTableType">
+            <summary>
+            The different types of seek tables used in BRSTM files.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.Structures.BrstmSeekTableType.Standard">
+            <summary>
+            A normal length, complete seek table. Used in almost all games.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.Structures.BrstmSeekTableType.Short">
+            <summary>
+            A shortened, truncated seek table used in games 
+            including Pokémon Battle Revolution and Mario Party 8.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.NintendoWare.Structures.BrstmTrackType">
+            <summary>
+            The different track description types used in BRSTM files.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.Structures.BrstmTrackType.Short">
+            <summary>
+            A shorter track description that does not include volume or panning values.
+            Used in Super Smash Bros. Brawl. 
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.NintendoWare.Structures.BrstmTrackType.Standard">
+            <summary>
+            A track description containing all the standard values.
+            Used in most games other than Super Smash Bros. Brawl.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.Reference.ReferenceType">
+            <summary>
+            The reference type. Used in NW4R file formats. 0 = Address, 1 = Offset
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.Reference.DataType">
+            <summary>
+            The data type of the referenced data. Used in NW4R file formats.
+            Meaning can change between different structures.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.Codec">
+            <summary>The audio codec.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.Looping">
+            <summary>This flag is set if the file loops.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.ChannelCount">
+            <summary>The number of channels in the file.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.RegionCount">
+            <summary>The number of audio regions in the file.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.SampleRate">
+            <summary>The sample rate of the audio.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.LoopStart">
+            <summary>The start loop point in samples.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.SampleCount">
+            <summary>The number of samples in the file.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.InterleaveCount">
+            <summary>The total count of interleaved audio data blocks.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.InterleaveSize">
+            <summary>
+            The number of bytes per channel in each
+            interleaved audio data block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.SamplesPerInterleave">
+            <summary>
+            The number of samples per channel in each
+            interleaved audio data block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.LastBlockSizeWithoutPadding">
+            <summary>
+            The number of bytes per channel in the final
+            interleaved audio data block, not including
+            the padding at the end of each channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.LastBlockSamples">
+            <summary>
+            The number of samples per channel in the final
+            interleaved audio data block.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.LastBlockSize">
+            <summary>
+            The number of bytes per channel in the final
+            interleaved audio data block, including
+            the padding at the end of each channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.BytesPerSeekTableEntry">
+            <summary>The number of bytes per seek table entry.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.SamplesPerSeekTableEntry">
+            <summary>The number of samples per seek table entry.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.NintendoWare.Structures.StreamInfo.AudioDataOffset">
+            <summary>The offset that the actual audio data starts at.</summary>
+        </member>
+        <member name="T:VGAudio.Containers.Wave.WaveCodec">
+            <summary>
+            The different audio codecs used in Wave files.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.Wave.WaveCodec.Pcm16Bit">
+            <summary>
+            16-bit PCM.
+            </summary>
+        </member>
+        <member name="F:VGAudio.Containers.Wave.WaveCodec.Pcm8Bit">
+            <summary>
+            8-bit PCM.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Containers.Wave.WaveStructure">
+            <summary>
+            Defines the structure and metadata
+            of a WAVE file
+            </summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.ChannelCount">
+            <summary>The number of channels in the WAVE file.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.SampleRate">
+            <summary>The audio sample rate.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.BitsPerSample">
+            <summary>The number of bits per audio sample.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.SampleCount">
+            <summary>The number of samples in the audio file.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.Looping">
+            <summary>This flag is set if the file loops.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.LoopStart">
+            <summary>The loop start position in samples.</summary>
+        </member>
+        <member name="P:VGAudio.Containers.Wave.WaveStructure.LoopEnd">
+            <summary>The loop end position in samples.</summary>
+        </member>
+        <member name="T:VGAudio.Formats.AudioTrack">
+            <summary>
+            Defines an audio track in an audio stream.
+            Each track is composed of one or two channels.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.AudioTrack.Volume">
+            <summary>
+            The volume of the track. Ranges from
+            0 to 127 (0x7f).
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.AudioTrack.Panning">
+            <summary>
+            The panning of the track. Ranges from
+            0 (Completely to the left) to 127 (0x7f)
+            (Completely to the right) with the center
+            at 64 (0x40).
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.AudioTrack.ChannelCount">
+            <summary>
+            The number of channels in the track.
+            If <c>1</c>, only <see cref="P:VGAudio.Formats.AudioTrack.ChannelLeft"/>
+            will be used for the mono track.
+            If <c>2</c>, both <see cref="P:VGAudio.Formats.AudioTrack.ChannelLeft"/>
+            and <see cref="P:VGAudio.Formats.AudioTrack.ChannelRight"/> will be used.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.AudioTrack.ChannelLeft">
+            <summary>
+            The zero-based ID of the left channel in a stereo
+            track, or the only channel in a mono track.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.AudioTrack.ChannelRight">
+            <summary>
+            The zero-based ID of the right channel in
+            a stereo track.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Formats.GcAdpcm.GcAdpcmChannelInfo">
+            <summary>
+            Defines the ADPCM information for a single
+            GC ADPCM channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.GcAdpcm.GcAdpcmChannelInfo.Coefs">
+            <summary>
+            The ADPCM coefficients of the channel.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.GcAdpcm.GcAdpcmChannelInfo.Gain">
+            <summary>
+            The gain level for the channel.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Formats.GcAdpcm.GcAdpcmContext">
+            <summary>
+            Contains the ADPCM coder context for an ADPCM sample.
+            </summary>
+        </member>
+        <member name="P:VGAudio.Formats.GcAdpcm.GcAdpcmContext.PredScale">
+            <summary>The predictor and scale for the current sample's frame.</summary>
+        </member>
+        <member name="P:VGAudio.Formats.GcAdpcm.GcAdpcmContext.Hist1">
+            <summary>The first PCM history sample. (Current sample - 1).</summary>
+        </member>
+        <member name="P:VGAudio.Formats.GcAdpcm.GcAdpcmContext.Hist2">
+            <summary>The second PCM history sample. (Current sample - 2).</summary>
+        </member>
+        <member name="M:VGAudio.Formats.GcAdpcm.GcAdpcmContext.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Creates a <see cref="T:VGAudio.Formats.GcAdpcm.GcAdpcmContext"/> by reading the values from a <see cref="T:System.IO.BinaryReader"/>.
+            3 <see langword="short"/> values are read. <see cref="P:VGAudio.Formats.GcAdpcm.GcAdpcmContext.PredScale"/>, <see cref="P:VGAudio.Formats.GcAdpcm.GcAdpcmContext.Hist1"/>,
+            and <see cref="P:VGAudio.Formats.GcAdpcm.GcAdpcmContext.Hist2"/> respectively.
+            </summary>
+            <param name="reader">The <see cref="T:System.IO.BinaryReader"/> to be read from. Must be set
+            at the position to be read from.</param>
+        </member>
+        <member name="T:VGAudio.Formats.GcAdpcm.GcAdpcmFormat">
+            <summary>
+            A 4-bit Nintendo ADPCM audio stream.
+            The stream can contain any number of individual channels.
+            </summary>
+        </member>
+        <member name="T:VGAudio.Formats.Pcm16.Pcm16Format">
+            <summary>
+            A 16-bit PCM audio stream.
+            The stream can contain any number of individual channels.
+            </summary>
+        </member>
+        <member name="M:VGAudio.IProgressReport.Report(System.Int32)">
+            <summary>
+            Sets the current value of the <see cref="T:VGAudio.IProgressReport"/> to <paramref name="value"/>.
+            </summary>
+            <param name="value">The value to set.</param>
+        </member>
+        <member name="M:VGAudio.IProgressReport.ReportAdd(System.Int32)">
+            <summary>
+            Adds <paramref name="value"/> to the current value of the <see cref="T:VGAudio.IProgressReport"/>.
+            </summary>
+            <param name="value">The amount to add.</param>
+        </member>
+        <member name="M:VGAudio.IProgressReport.SetTotal(System.Int32)">
+            <summary>
+            Sets the maximum value of the <see cref="T:VGAudio.IProgressReport"/> to <paramref name="value"/>.
+            </summary>
+            <param name="value">The maximum value to set.</param>
+        </member>
+        <member name="M:VGAudio.IProgressReport.LogMessage(System.String)">
+            <summary>
+            Logs a message to the <see cref="T:VGAudio.IProgressReport"/> object.
+            </summary>
+            <param name="message">The message to output.</param>
+        </member>
+        <member name="T:VGAudio.Utilities.BitReader.OffsetBias">
+            <summary>
+            Specifies the bias of an offset binary value. A positive bias can represent one more
+            positive value than negative value, and a negative bias can represent one more
+            negative value than positive value.
+            </summary>
+            <remarks>Example:
+            A 4-bit offset binary value with a positive bias can store
+            the values 8 through -7 inclusive.
+            A 4-bit offset binary value with a positive bias can store
+            the values 7 through -8 inclusive.</remarks>
+        </member>
+        <member name="M:VGAudio.Utilities.Helpers.Log2(System.Int32)">
+            <summary>
+            Returns the floor of the base 2 logarithm of a specified number.
+            </summary>
+            <param name="value">The number whose logarithm is to be found.</param>
+            <returns>The floor of the base 2 logarithm of <paramref name="value"/>.</returns>
+        </member>
+        <member name="M:VGAudio.Utilities.Mdct.Dct4(System.Double[],System.Double[])">
+            <summary>
+            Does a Type-4 DCT.
+            </summary>
+            <param name="input">The input array containing the time or frequency-domain samples</param>
+            <param name="output">The output array that will contain the transformed time or frequency-domain samples</param>
+        </member>
+        <member name="M:VGAudio.Utilities.Mdct.Dct4Slow(System.Double[],System.Double[])">
+            <summary>
+            Does a Type-4 DCT. Intended for reference.
+            </summary>
+            <param name="input">The input array containing the time or frequency-domain samples</param>
+            <param name="output">The output array that will contain the transformed time or frequency-domain samples</param>
+        </member>
+    </members>
+</doc>

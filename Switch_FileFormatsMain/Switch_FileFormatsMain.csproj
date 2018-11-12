@@ -1,0 +1,499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A11705CF-A6A3-41C3-875A-E1CFD8080F09}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FirstPlugin</RootNamespace>
+    <AssemblyName>FirstPlugin.Plg</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Switch_Toolbox\bin\Debug\Lib\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Switch_Toolbox\bin\Release\Lib\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BarsLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ConsoleApp1\BarsLibrary\bin\Release\BarsLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BezelEngineArchive_Lib">
+      <HintPath>Externals\BezelEngineArchive_Lib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ByamlExt">
+      <HintPath>..\EditorCore-master\EditorCore\bin\Debug\Ext\ByamlExt.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Costura, Version=3.1.4.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.3.1.4\lib\net46\Costura.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="EditorCoreCommon">
+      <HintPath>..\EditorCore-master\EditorCore\bin\Debug\EditorCoreCommon.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KCLExt">
+      <HintPath>Externals\KCLExt.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio">
+      <HintPath>Externals\NAudio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\OpenTK.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\OpenTK.GLControl.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SARCExt">
+      <HintPath>Externals\SARCExt.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SFGraphics">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\SFGraphics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SFGraphics.Utils">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\SFGraphics.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.BinaryData">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\Syroot.BinaryData.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.Maths">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\Syroot.Maths.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Externals\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bntx, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Documents\GitHub\Nintendo_Switch_BFRES_Library\src - Copy (2)\Syroot.NintenTools.Bntx\bin\Release\net45\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VGAudio">
+      <HintPath>Externals\VGAudio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VisualStudioTabControl">
+      <HintPath>..\..\..\..\Documents\GitHub\Nintendo_Switch_BFRES_Library\src - Copy (3)\VisualStudioTabControl.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.4.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.3.0.4\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ZstdNet">
+      <HintPath>Externals\ZstdNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="FileFormats\AAMP.cs" />
+    <Compile Include="FileFormats\BARS.cs" />
+    <Compile Include="FileFormats\BEA.cs" />
+    <Compile Include="FileFormats\BFFNT.cs" />
+    <Compile Include="FileFormats\BFLAN.cs" />
+    <Compile Include="FileFormats\BFLYT.cs" />
+    <Compile Include="FileFormats\BFRES.cs" />
+    <Compile Include="FileFormats\BFRES\BfresStructs.cs" />
+    <Compile Include="FileFormats\BFRES\BfresSwitch.cs" />
+    <Compile Include="FileFormats\BFRES\BfresWiiU.cs" />
+    <Compile Include="FileFormats\BFSAR.cs" />
+    <Compile Include="FileFormats\BYAML.cs" />
+    <Compile Include="FileFormats\CsvModels.cs" />
+    <Compile Include="FileFormats\GFPAK.cs" />
+    <Compile Include="FileFormats\KCL.cs" />
+    <Compile Include="FileFormats\MSBT.cs" />
+    <Compile Include="FileFormats\SARC.cs" />
+    <Compile Include="FileFormats\Texture\BNTX.cs" />
+    <Compile Include="FileFormats\Texture\TegraX1Swizzle.cs" />
+    <Compile Include="FileFormats\Texture\XTX.cs" />
+    <Compile Include="GL\BFRES_Render.cs" />
+    <Compile Include="GUI\Advanced Editor\TextureOpenEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\TextureOpenEditor.Designer.cs">
+      <DependentUpon>TextureOpenEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\TextureViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\TextureViewer.Designer.cs">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresModelImportSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresModelImportSettings.Designer.cs">
+      <DependentUpon>BfresModelImportSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\FloatsIntsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\FloatsIntsPanel.Designer.cs">
+      <DependentUpon>FloatsIntsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\BoolValuesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\BoolValuesPanel.Designer.cs">
+      <DependentUpon>BoolValuesPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\SamplerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\SamplerEditor.Designer.cs">
+      <DependentUpon>SamplerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BntxSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BntxSelector.Designer.cs">
+      <DependentUpon>BntxSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\CopyMaterialMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\CopyMaterialMenu.Designer.cs">
+      <DependentUpon>CopyMaterialMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\BFAVEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\BFAVEditor.Designer.cs">
+      <DependentUpon>BFAVEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresBoneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresBoneEditor.Designer.cs">
+      <DependentUpon>BfresBoneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresLODMeshEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresLODMeshEditor.Designer.cs">
+      <DependentUpon>BfresLODMeshEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresProperties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresProperties.Designer.cs">
+      <DependentUpon>BfresProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresMaterialEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresMaterialEditor.Designer.cs">
+      <DependentUpon>BfresMaterialEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderOptionsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderOptionsEditor.Designer.cs">
+      <DependentUpon>BfresShaderOptionsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShapeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShapeEditor.Designer.cs">
+      <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\BNTXEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\BNTXEditor.Designer.cs">
+      <DependentUpon>BNTXEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\ByamlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\ByamlEditor.Designer.cs">
+      <DependentUpon>ByamlEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\PreviewEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\PreviewEditor.Designer.cs">
+      <DependentUpon>PreviewEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\FSKLEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\FSKLEditor.Designer.cs">
+      <DependentUpon>FSKLEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\RenderInfoEnums.cs" />
+    <Compile Include="GUI\Editors\RenderInfoValue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\RenderInfoValue.Designer.cs">
+      <DependentUpon>RenderInfoValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\VertexAttributeDataList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\VertexAttributeDataList.Designer.cs">
+      <DependentUpon>VertexAttributeDataList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\PreviewFormatList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\PreviewFormatList.Designer.cs">
+      <DependentUpon>PreviewFormatList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\SetParamDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\SetParamDialog.Designer.cs">
+      <DependentUpon>SetParamDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\SRTValuesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresShaderParams\SRTValuesPanel.Designer.cs">
+      <DependentUpon>SRTValuesPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Texture Selector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Texture Selector.Designer.cs">
+      <DependentUpon>Texture Selector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\BinaryTextureImporterList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\BinaryTextureImporterList.Designer.cs">
+      <DependentUpon>BinaryTextureImporterList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\TextureFormatExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\TextureFormatExport.Designer.cs">
+      <DependentUpon>TextureFormatExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\TextureImporterSettings.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PluginRuntime.cs" />
+    <Compile Include="XML\BfresMaterial2XML.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InjectTexErrored.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GUI\Advanced Editor\TextureOpenEditor.resx">
+      <DependentUpon>TextureOpenEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Advanced Editor\TextureViewer.resx">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresModelImportSettings.resx">
+      <DependentUpon>BfresModelImportSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresShaderParams\FloatsIntsPanel.resx">
+      <DependentUpon>FloatsIntsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresShaderParams\BoolValuesPanel.resx">
+      <DependentUpon>BoolValuesPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\SamplerEditor.resx">
+      <DependentUpon>SamplerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BntxSelector.resx">
+      <DependentUpon>BntxSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\CopyMaterialMenu.resx">
+      <DependentUpon>CopyMaterialMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\BFAVEditor.resx">
+      <DependentUpon>BFAVEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresBoneEditor.resx">
+      <DependentUpon>BfresBoneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresLODMeshEditor.resx">
+      <DependentUpon>BfresLODMeshEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresProperties.resx">
+      <DependentUpon>BfresProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresMaterialEditor.resx">
+      <DependentUpon>BfresMaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresShaderOptionsEditor.resx">
+      <DependentUpon>BfresShaderOptionsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
+      <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\BNTXEditor.resx">
+      <DependentUpon>BNTXEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\ByamlEditor.resx">
+      <DependentUpon>ByamlEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Advanced Editor\PreviewEditor.resx">
+      <DependentUpon>PreviewEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\FSKLEditor.resx">
+      <DependentUpon>FSKLEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\RenderInfoValue.resx">
+      <DependentUpon>RenderInfoValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\VertexAttributeDataList.resx">
+      <DependentUpon>VertexAttributeDataList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PreviewFormatList.resx">
+      <DependentUpon>PreviewFormatList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresShaderParams\SetParamDialog.resx">
+      <DependentUpon>SetParamDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresShaderParams\SRTValuesPanel.resx">
+      <DependentUpon>SRTValuesPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Texture Selector.resx">
+      <DependentUpon>Texture Selector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\BinaryTextureImporterList.resx">
+      <DependentUpon>BinaryTextureImporterList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\TextureFormatExport.resx">
+      <DependentUpon>TextureFormatExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GL_EditorFramework-master\GL_Core\GL_Core.csproj">
+      <Project>{29647ba5-2859-46f0-a99e-c3a387a9447a}</Project>
+      <Name>GL_Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
+      <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
+      <Name>Switch_Toolbox_Library</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TextureError.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrowMinimize .png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Basic_Nrm.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Basic_NrmBC5.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Black.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\White.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="AxWMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Fody.3.2.9\build\Fody.targets" Condition="Exists('..\packages\Fody.3.2.9\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.3.2.9\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.9\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets')" />
+</Project>
