@@ -32,10 +32,11 @@ Libaries
 - [Assimp](https://bitbucket.org/Starnick/assimpnet/src/master/)
 - [OpenTK](https://github.com/opentk/opentk)
 - [BezelEngineArchive Library](https://github.com/KillzXGaming/BEA-Library-Editor)
-- (Syroot BinaryData](https://gitlab.com/Syroot/BinaryData)
-- (Syroot Maths](https://gitlab.com/Syroot/Maths)
+- [Syroot BinaryData](https://gitlab.com/Syroot/BinaryData)
+- [Syroot Maths](https://gitlab.com/Syroot/Maths)
+- [Syroot Bfres Library (Wii U)](https://gitlab.com/Syroot/NintenTools.Bfres)
 - [Costura for embedding data for plugins](https://github.com/Fody/Costura) 
-- [CsvHelper (unused atm but planned to be used)](https://joshclose.github.io/CsvHelper/)
+- [CsvHelper (unused atm but planned to be used](https://joshclose.github.io/CsvHelper/)
 
 License
  in Switch_Toolbox\Lib\Licenses
