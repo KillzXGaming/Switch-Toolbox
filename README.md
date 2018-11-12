@@ -23,9 +23,9 @@ Resources
 Libaries
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
-- Be.HexEditor by Bernhard Elbl
+- [Be.HexEditor by Bernhard Elbl](https://sourceforge.net/projects/hexbox/)
 - GL EditorFramwork by jupahe64
--[WeifenLuo for docking suite](http://dockpanelsuite.com/)
+- [WeifenLuo for docking suite](http://dockpanelsuite.com/)
 - [SF Graphics by SMG (Experimental](https://github.com/ScanMountGoat/SFGraphics) (currently just a placeholder for shader workflow and some useful things)
 - [Audio & MIDI library](https://github.com/naudio/NAudio)
 - [VGAudio](https://github.com/Thealexbarney/VGAudio)
