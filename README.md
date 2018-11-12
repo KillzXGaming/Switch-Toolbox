@@ -21,21 +21,21 @@ Resources
 - Smash Forge (Currently placeholders)
 
 Libaries
-- [Exelix (Sarc, kcl, and byml libraries)] (https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
+- [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
 - Be.HexEditor by Bernhard Elbl
 - GL EditorFramwork by jupahe64
--[WeifenLuo for docking suite] (http://dockpanelsuite.com/)
-- [SF Graphics by SMG (Experimental] (https://github.com/ScanMountGoat/SFGraphics) (currently just a placeholder for shader workflow and some useful things)
-- [Audio & MIDI library] (https://github.com/naudio/NAudio)
-- [VGAudio] (https://github.com/Thealexbarney/VGAudio)
-- [Assimp] (https://bitbucket.org/Starnick/assimpnet/src/master/)
-- [OpenTK] (https://github.com/opentk/opentk)
-- [BezelEngineArchive Library] (https://github.com/KillzXGaming/BEA-Library-Editor)
-- (Syroot BinaryData)[https://gitlab.com/Syroot/BinaryData]
-- (Syroot Maths)[https://gitlab.com/Syroot/Maths]
-- [Costura for embedding data for plugins] (https://github.com/Fody/Costura) 
-- [CsvHelper (unused atm but planned to be used)] (https://joshclose.github.io/CsvHelper/)
+-[WeifenLuo for docking suite](http://dockpanelsuite.com/)
+- [SF Graphics by SMG (Experimental](https://github.com/ScanMountGoat/SFGraphics) (currently just a placeholder for shader workflow and some useful things)
+- [Audio & MIDI library](https://github.com/naudio/NAudio)
+- [VGAudio](https://github.com/Thealexbarney/VGAudio)
+- [Assimp](https://bitbucket.org/Starnick/assimpnet/src/master/)
+- [OpenTK](https://github.com/opentk/opentk)
+- [BezelEngineArchive Library](https://github.com/KillzXGaming/BEA-Library-Editor)
+- (Syroot BinaryData](https://gitlab.com/Syroot/BinaryData)
+- (Syroot Maths](https://gitlab.com/Syroot/Maths)
+- [Costura for embedding data for plugins](https://github.com/Fody/Costura) 
+- [CsvHelper (unused atm but planned to be used)](https://joshclose.github.io/CsvHelper/)
 
 License
  in Switch_Toolbox\Lib\Licenses
