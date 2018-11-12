@@ -1,0 +1,7 @@
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\bin\Debug\Updater.exe.config
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\bin\Debug\Updater.exe
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\bin\Debug\Updater.pdb
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\obj\Debug\Updater.csprojAssemblyReference.cache
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\obj\Debug\Updater.csproj.CoreCompileInputs.cache
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\obj\Debug\Updater.exe
+C:\Users\Nathan\source\repos\Switch_Toolbox\Updater\obj\Debug\Updater.pdb
