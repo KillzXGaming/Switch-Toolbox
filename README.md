@@ -13,7 +13,7 @@ A tool to edit many formats of Nintendo Switch and some Wii U.
 - Exelix for Byaml, Sarc and KCL library
 - Syroot for helpful IO extensions and libraies
 - GDK Chan for some DDS decode methods
-- AboodXD for BNTX texture swizzling
+- AboodXD for some foundation stuff with exelix's SARC library and BNTX texture swizzling and documentation
 - MelonSpeedruns for logo.
 
 Resources
