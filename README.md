@@ -1,8 +1,7 @@
 # Switch-Toolbox
 A tool to edit many formats of Nintendo Switch and some Wii U. 
 
-## Note not all libraries and files are pushed to this tool YET. This is still WIP and not finished!
-
+## Note not all libraries and files are pushed to this tool YET. This is in BETA and not final! Code also needs some major clean up!
 ## Credits
 
 - Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff and some rendering.
