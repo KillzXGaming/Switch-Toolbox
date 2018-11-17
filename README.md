@@ -4,7 +4,7 @@ A tool to edit many formats of Nintendo Switch and some Wii U.
 ## Note not all libraries and files are pushed to this tool YET. This is in BETA and not final! Code also needs some major clean up!
 ## Credits
 
-- Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff, GTX c$# implementation, and some rendering.
+- Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff, GTX c# implementation, and some rendering.
 - Assimp devs for their massive asset library!
 - Wexos (helped figure out a few things, ie format list to assign each attribute)
 - JuPaHe64 for the base 3D renderer.
