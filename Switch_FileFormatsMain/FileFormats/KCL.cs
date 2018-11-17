@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Switch_Toolbox;
+using System.IO;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
-using KCLExt;
 using SFGraphics.GLObjects.Shaders;
 using Smash_Forge.Rendering;
 using GL_Core.Interfaces;
@@ -15,6 +11,8 @@ using OpenTK;
 using Switch_Toolbox.Library.Rendering;
 using WeifenLuo.WinFormsUI.Docking;
 using GL_Core;
+using System.Drawing;
+using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
@@ -29,11 +27,12 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNode EditorRoot { get; set; }
+        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
-        public int Alignment { get; set; } = 0;
         public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
+
         public Type[] Types
         {
             get
@@ -46,7 +45,8 @@ namespace FirstPlugin
         public void Load()
         {
             IsActive = true;
-            EditorRoot = new KCLRoot(FileName);
+            EditorRoot = new KCLRoot(FileName, this);
+            IFileInfo = new IFileInfo();
         }
         public void Unload()
         {
@@ -54,7 +54,34 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            return null;
+            KCLRoot root = (KCLRoot)EditorRoot;
+            return root.kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian);
+        }
+
+        private static void SaveCompressFile(byte[] data, string FileName, CompressionType CompressionType, int Alignment = 0, bool EnableDialog = true)
+        {
+            if (EnableDialog && CompressionType != CompressionType.None)
+            {
+                DialogResult save = MessageBox.Show($"Compress file as {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
+
+                if (save == DialogResult.Yes)
+                {
+                    switch (CompressionType)
+                    {
+                        case CompressionType.Yaz0:
+                            data = EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
+                            break;
+                        case CompressionType.Lz4f:
+                            data = STLibraryCompression.Type_LZ4F.Compress(data);
+                            break;
+                        case CompressionType.Lz4:
+                            break;
+                    }
+                }
+            }
+            File.WriteAllBytes(FileName, data);
+            MessageBox.Show($"File has been saved to {FileName}");
+            Cursor.Current = Cursors.Default;
         }
 
         public enum GameSet : ushort
@@ -117,23 +144,152 @@ namespace FirstPlugin
             BoostTrick = 8202,
         }
 
-        public static Shader shader = null;
-
-        public class KCLRoot : TreeNodeCustom
+        public class KCLRoot : TreeNodeFile
         {
-            public KCLRoot(string Name)
+            public KCLRoot(string Name, IFileFormat handler)
             {
                 Text = Name;
+                FileHandler = handler;
+                Renderer = new KCLRendering();
+                Read(handler.Data);
+
+                ContextMenu = new ContextMenu();
+                MenuItem save = new MenuItem("Save");
+                ContextMenu.MenuItems.Add(save);
+                save.Click += Save;
+                MenuItem export = new MenuItem("Export");
+                ContextMenu.MenuItems.Add(export);
+                export.Click += Export;
+                MenuItem replace = new MenuItem("Replace");
+                ContextMenu.MenuItems.Add(replace);
+                replace.Click += Replace;
+            }
+            public void Save(object sender, EventArgs args)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Supported Formats|*.kcl";
+                sfd.FileName = Text;
+                sfd.DefaultExt = ".kcl";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+
+                    int Alignment = FileHandler.IFileInfo.Alignment;
+                    SaveCompressFile(FileHandler.Save(), sfd.FileName, FileHandler.CompressionType, Alignment);
+                }
+            }
+            public void Export(object sender, EventArgs args)
+            {
+                if (kcl == null)
+                    return;
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Supported Formats|*.obj";
+                sfd.FileName = Text;
+                sfd.DefaultExt = ".obj";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    kcl.ToOBJ().toWritableObj().WriteObj(sfd.FileName + ".obj");
+                }
+            }
+            public void Replace(object sender, EventArgs args)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Supported Formats|*.obj";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(ofd.FileName)), null);
+                    if (mod.Faces.Count > 65535)
+                    {
+                    	MessageBox.Show("this model has too many faces, only models with less than 65535 triangles can be converted");
+                    	return;
+                    }
+                    kcl = MarioKart.MK7.KCL.FromOBJ(mod);
+                    Read(kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian));
+                }
             }
 
             KCLRendering Renderer;
             public override void OnClick(TreeView treeView)
             {
-                //If has models
-                if (Nodes[0].Nodes.Count > 0)
+                Renderer.LoadViewport();
+                Renderer.UpdateVertexData();
+            }
+
+            public MarioKart.MK7.KCL kcl = null;
+            public void Read(byte[] file_data)
+            {
+                try
                 {
-                    Renderer.LoadViewport();
-                    Renderer.UpdateVertexData();
+                    kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.LittleEndian);
+                }
+                catch
+                {
+                    kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.BigEndian);
+                }
+                Read(kcl);
+                Renderer.UpdateVertexData();
+            }
+            public void Read(MarioKart.MK7.KCL kcl)
+            {
+                Nodes.Clear();
+                Renderer.models.Clear();
+
+                int CurModelIndx = 0;
+                foreach (MarioKart.MK7.KCL.KCLModel mdl in kcl.Models)
+                {
+                    KCLModel kclmodel = new KCLModel();
+
+                    kclmodel.Text = "Model " + CurModelIndx;
+
+                    int ft = 0;
+                    foreach (var plane in mdl.Planes)
+                    {
+                        var triangle = mdl.GetTriangle(plane);
+                        var normal = triangle.Normal;
+                        var pointA = triangle.PointA;
+                        var pointB = triangle.PointB;
+                        var pointC = triangle.PointC;
+
+                        Vertex vtx = new Vertex();
+                        Vertex vtx2 = new Vertex();
+                        Vertex vtx3 = new Vertex();
+
+                        vtx.pos = new Vector3(Vec3D_To_Vec3(pointA));
+                        vtx2.pos = new Vector3(Vec3D_To_Vec3(pointB));
+                        vtx3.pos = new Vector3(Vec3D_To_Vec3(pointC));
+                        vtx.nrm = new Vector3(Vec3D_To_Vec3(normal));
+                        vtx2.nrm = new Vector3(Vec3D_To_Vec3(normal));
+                        vtx3.nrm = new Vector3(Vec3D_To_Vec3(normal));
+
+                        KCLModel.Face face = new KCLModel.Face();
+                        face.Text = triangle.Collision.ToString();
+                        face.MaterialFlag = triangle.Collision;
+
+                        var col = MarioKart.MK7.KCLColors.GetMaterialColor(plane.CollisionType);
+                        Vector3 ColorSet = new Vector3(col.R, col.G, col.B);
+
+                        vtx.col = new Vector4(ColorSet, 1);
+                        vtx2.col = new Vector4(ColorSet, 1);
+                        vtx3.col = new Vector4(ColorSet, 1);
+
+                        kclmodel.faces.Add(ft);
+                        kclmodel.faces.Add(ft + 1);
+                        kclmodel.faces.Add(ft + 2);
+
+                        ft += 3;
+
+                        kclmodel.vertices.Add(vtx);
+                        kclmodel.vertices.Add(vtx2);
+                        kclmodel.vertices.Add(vtx3);
+                    }
+
+                    Renderer.models.Add(kclmodel);
+                    Nodes.Add(kclmodel);
+
+                    CurModelIndx++;
                 }
             }
         }
@@ -147,15 +303,25 @@ namespace FirstPlugin
             //Set the game's material list
             public GameSet GameMaterialSet = GameSet.MarioKart8D;
             public List<KCLModel> models = new List<KCLModel>();
+            public Shader shader = null;
 
-            public KCLRendering()
+            private void GenerateBuffers()
             {
                 GL.GenBuffers(1, out vbo_position);
                 GL.GenBuffers(1, out ibo_elements);
             }
 
+            public void Destroy()
+            {
+                GL.DeleteBuffer(vbo_position);
+                GL.DeleteBuffer(ibo_elements);
+            }
+
             public void UpdateVertexData()
             {
+                if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
+                    return;
+
                 DisplayVertex[] Vertices;
                 int[] Faces;
 
@@ -168,8 +334,6 @@ namespace FirstPlugin
                     m.Offset = poffset * 4;
                     List<DisplayVertex> pv = m.CreateDisplayVertices();
                     Vs.AddRange(pv);
-
-                    Console.WriteLine(m.displayFaceSize);
 
                     for (int i = 0; i < m.displayFaceSize; i++)
                     {
@@ -189,6 +353,8 @@ namespace FirstPlugin
 
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
                 GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
+
+                Viewport.Instance.UpdateViewport();
             }
 
             string FileName;
@@ -226,9 +392,16 @@ namespace FirstPlugin
             }
             public override void Draw(GL_ControlModern control)
             {
-                shader = OpenTKSharedResources.shaders["KCL"];
+                bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
+                if (!buffersWereInitialized)
+                    GenerateBuffers();
 
+                if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
+                    return;
+
+                shader = OpenTKSharedResources.shaders["KCL"];
                 shader.UseProgram();
+
                 shader.EnableVertexAttributes();
                 SetRenderSettings(shader);
 
@@ -237,10 +410,13 @@ namespace FirstPlugin
                 Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
 
                 shader.SetVector3("difLightDirection", Vector3.TransformNormal(new Vector3(0f, 0f, -1f), camMat.Inverted()).Normalized());
+                shader.SetVector3("difLightColor", new Vector3(1));
+                shader.SetVector3("ambLightColor", new Vector3(1));
+
                 shader.EnableVertexAttributes();
                 SetRenderSettings(shader);
 
-                shader.SetMatrix4x4("modelview", ref camMat);
+                shader.SetMatrix4x4("mvpMatrix", ref camMat);
 
                 foreach (KCLModel mdl in models)
                 {
@@ -318,137 +494,43 @@ namespace FirstPlugin
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                 shader.SetInt("colorOverride", 0);
             }
-
-            public MarioKart.MK7.KCL kcl = null;
-            public void Read(byte[] file_data)
-            {
-                try
-                {
-                    kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.LittleEndian);
-                }
-                catch
-                {
-                    kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.BigEndian);
-                }
-
-                /* 
-                int CurModelIndx = 0;
-                foreach (MarioKart.MK7.KCL.KCLModel mdl in kcl.Models)
-                {
-                    KCLModel kclmodel = new KCLModel();
-
-                    kclmodel.Text = "Model " + CurModelIndx;
-  
-                    KclFace[] indicesArray = mdl.Faces;
-
-                    int ft = 0;
-                    foreach (KclFace f in mdl.Faces)
-                    {
-                        Vertex vtx = new Vertex();
-                        Vertex vtx2 = new Vertex();
-                        Vertex vtx3 = new Vertex();
-
-
-                        Vector3 CrossA = Vector3.Cross(Vec3F_To_Vec3(mdl.Normals[f.Normal1Index]), Vec3F_To_Vec3(mdl.Normals[f.DirectionIndex]));
-                        Vector3 CrossB = Vector3.Cross(Vec3F_To_Vec3(mdl.Normals[f.Normal2Index]), Vec3F_To_Vec3(mdl.Normals[f.DirectionIndex]));
-                        Vector3 CrossC = Vector3.Cross(Vec3F_To_Vec3(mdl.Normals[f.Normal3Index]), Vec3F_To_Vec3(mdl.Normals[f.DirectionIndex]));
-                        Vector3 normal_a = Vec3F_To_Vec3(mdl.Normals[f.Normal1Index]);
-                        Vector3 normal_b = Vec3F_To_Vec3(mdl.Normals[f.Normal2Index]);
-                        Vector3 normal_c = Vec3F_To_Vec3(mdl.Normals[f.Normal3Index]);
-
-
-                        float result1 = Vector3.Dot(new Vector3(CrossB.X, CrossB.Y, CrossB.Z), (new Vector3(normal_c.X, normal_c.Y, normal_c.Z)));
-                        float result2 = Vector3.Dot(new Vector3(CrossA.X, CrossA.Y, CrossA.Z), (new Vector3(normal_c.X, normal_c.Y, normal_c.Z)));
-
-                        Vector3 pos = Vec3F_To_Vec3(mdl.Positions[f.PositionIndex]);
-                        Vector3 nrm = Vec3F_To_Vec3(mdl.Normals[f.Normal1Index]);
-
-                        Vector3 Vertex1 = pos;
-                        Vector3 Vertex2 = pos + CrossB * (f.Length / result1);
-                        Vector3 Vertex3 = pos + CrossA * (f.Length / result2);
-
-                        vtx.pos = new Vector3(Vertex1.X, Vertex1.Y, Vertex1.Z);
-                        vtx2.pos = new Vector3(Vertex2.X, Vertex2.Y, Vertex2.Z);
-                        vtx3.pos = new Vector3(Vertex3.X, Vertex3.Y, Vertex3.Z);
-
-                        var dir = Vector3.Cross(Vertex2 - Vertex1, Vertex3 - Vertex1);
-                        var norm = Vector3.Normalize(dir);
-
-                        vtx.nrm = norm;
-                        vtx2.nrm = norm;
-                        vtx3.nrm = norm;
-
-                        KCLModel.Face face = new KCLModel.Face();
-
-                        face.Text = f.CollisionFlags.ToString();
-
-                        face.MaterialFlag = f.CollisionFlags;
-
-                        Color color = SetMaterialColor(face);
-
-
-                        AllFlags.Add(face.MaterialFlag);
-
-                        Vector3 ColorSet = new Vector3(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f);
-
-                        vtx.col = new Vector3(ColorSet);
-                        vtx2.col = new Vector3(ColorSet);
-                        vtx3.col = new Vector3(ColorSet);
-
-                        kclmodel.faces.Add(ft);
-                        kclmodel.faces.Add(ft + 1);
-                        kclmodel.faces.Add(ft + 2);
-
-                        ft += 3;
-
-                        kclmodel.vertices.Add(vtx);
-                        kclmodel.vertices.Add(vtx2);
-                        kclmodel.vertices.Add(vtx3);
-
-
-                    }
-
-
-                    models.Add(kclmodel);
-
-
-
-                    Nodes.Add(kclmodel);
-
-                    CurModelIndx++;
-                }*/
-            }
-            //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods
-            public static Vector3 Vec3F_To_Vec3(Syroot.Maths.Vector3F v)
-            {
-                return new Vector3(v.X, v.Y, v.Z);
-            }
+        }
+     
+        //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods
+        public static Vector3 Vec3D_To_Vec3(System.Windows.Media.Media3D.Vector3D v)
+        {
+            return new Vector3((float)v.X, (float)v.Y, (float)v.Z);
         }
         public struct DisplayVertex
         {
             // Used for rendering.
             public Vector3 pos;
             public Vector3 nrm;
-            public Vector3 tan;
-            public Vector3 bit;
-            public Vector2 uv;
-            public Vector4 col;
-            public Vector4 node;
-            public Vector4 weight;
-            public Vector2 uv2;
-            public Vector2 uv3;
-            public Vector3 pos1;
-            public Vector3 pos2;
+            public Vector3 col;
 
-            public static int Size = 4 * (3 + 3 + 3 + 3 + 2 + 4 + 4 + 4 + 2 + 2 + 3 + 3);
+            public static int Size = 4 * (3 + 3 + 3);
         }
         public class KCLModel : STGenericObject
         {
+            public KCLModel()
+            {
+                ImageKey = "mesh";
+                SelectedImageKey = "mesh";
+
+                Checked = true;
+            }
+
             public int[] display;
             public int Offset; // For Rendering
 
             public int strip = 0x40;
             public int displayFaceSize = 0;
+
+            public class Face : TreeNode
+            {
+                public int MaterialFlag = 0;
+
+            }
 
             public List<DisplayVertex> CreateDisplayVertices()
             {
@@ -466,7 +548,7 @@ namespace FirstPlugin
                     {
                         pos = v.pos,
                         nrm = v.nrm,
-                        col = v.col,
+                        col = v.col.Xyz,
                     };
 
                     displayVertList.Add(displayVert);

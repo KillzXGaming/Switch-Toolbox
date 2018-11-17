@@ -127,12 +127,12 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNode EditorRoot { get; set; }
+        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
-        public IFileFormat ArchiveFile { get; set; }
         public int Alignment { get; set; } = 0;
         public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
         public Type[] Types
         {
             get
@@ -144,7 +144,7 @@ namespace FirstPlugin
         }
      	class MenuExt : IFileMenuExtension
         {
-            public ToolStripItemDark[] NewFileMenuExtensions => newFileExt;
+            public ToolStripItemDark[] NewFileMenuExtensions => null;
             public ToolStripItemDark[] ToolsMenuExtensions => null;
             public ToolStripItemDark[] TitleBarExtensions => null;
             public ToolStripItemDark[] CompressionMenuExtensions => null;
@@ -165,7 +165,7 @@ namespace FirstPlugin
             UseEditMenu = true;
             CanSave = true;
 
-            bntx = new BinaryTextureContainer(Data, FileName);
+            bntx = new BinaryTextureContainer(Data, FileName, "", this);
             EditorRoot = bntx;
         }
         public void Unload()
@@ -186,7 +186,7 @@ namespace FirstPlugin
         }
     }
 
-    public class BinaryTextureContainer : TreeNodeCustom
+    public class BinaryTextureContainer : TreeNodeFile
     {
         public Dictionary<string, TextureData> Textures;
 
@@ -201,7 +201,7 @@ namespace FirstPlugin
             SelectedImageKey = "bntx";
         }
 
-        public BinaryTextureContainer(byte[] data, string Name = "", string FileName = "")
+        public BinaryTextureContainer(byte[] data, string Name = "", string FileName = "", IFileFormat handler = null)
         {
             if (data.Length == 0)
                 data = CreateNewBNTX(Name);
@@ -260,7 +260,6 @@ namespace FirstPlugin
             Textures = new Dictionary<string, TextureData>();
 
             Data = data;
-
             BinaryTexFile = new BntxFile(new MemoryStream(Data));
             Text = BinaryTexFile.Name;
 
@@ -305,15 +304,19 @@ namespace FirstPlugin
         public void ImportTexture()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            //     ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-            ofd.Filter = "Supported Formats|*.bftex;*.dds;|" +
-                  "Binary Texture |*.bftex|" +
-                         "Microsoft DDS |*.dds|" +
-          /*               "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" */
-                         "All files(*.*)|*.*";
+            /*         ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                                  "Binary Texture |*.bftex|" +
+                                  "Microsoft DDS |*.dds|" +
+                                  "Portable Network Graphics |*.png|" +
+                                  "Joint Photographic Experts Group |*.jpg|" +
+                                  "Bitmap Image |*.bmp|" +
+                                  "Tagged Image File Format |*.tiff|" +
+                                  "All files(*.*)|*.*";*/
+            ofd.Filter = "Supported Formats|*.bftex;*.dds|" +
+             "Binary Texture |*.bftex|" +
+             "Microsoft DDS |*.dds|" +
+             "All files(*.*)|*.*";
+                
             ofd.DefaultExt = "bftex";
             ofd.Multiselect = true;
 
@@ -325,6 +328,8 @@ namespace FirstPlugin
                 foreach (string name in ofd.FileNames)
                 {
                     string ext = Path.GetExtension(name);
+                    ext = ext.ToLower();
+
                     if (ext == ".dds" || ext == ".bftex")
                     {
                         AddTexture(name);
@@ -445,6 +450,8 @@ namespace FirstPlugin
             var importer = new TextureImporterSettings();
 
             string ext = Path.GetExtension(name);
+            ext = ext.ToLower();
+
             switch (ext)
             {
                 case ".bftex":
@@ -467,6 +474,8 @@ namespace FirstPlugin
 
             TextureData texData = null;
             string ext = Path.GetExtension(name);
+            ext = ext.ToLower();
+
             switch (ext)
             {
                 case ".bftex":
@@ -627,7 +636,7 @@ namespace FirstPlugin
     {
         public Texture Texture;
         public BntxFile bntxFile;
-        public List<byte[]> mipmaps = new List<byte[]>();
+        public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
         public BRTI_Texture renderedGLTex = new BRTI_Texture();
 
         BNTXEditor BNTXEditor;
@@ -723,7 +732,7 @@ namespace FirstPlugin
                 throw new Exception("No texture data found");
             }
 
-            renderedGLTex.data = mipmaps[0];
+            renderedGLTex.data = mipmaps[0][0];
             renderedGLTex.width = (int)Texture.Width;
             renderedGLTex.height = (int)Texture.Height;
 
@@ -757,7 +766,7 @@ namespace FirstPlugin
                     renderedGLTex.type = PixelInternalFormat.CompressedRgRgtc2;
                     break;
                 case SurfaceFormat.BC5_SNORM:
-                    renderedGLTex.data = DDS_Decompress.DecompressBC5(mipmaps[0], (int)Texture.Width, (int)Texture.Height, true, true);
+                    renderedGLTex.data = DDS_Decompress.DecompressBC5(mipmaps[0][0], (int)Texture.Width, (int)Texture.Height, true, true);
                     renderedGLTex.type = PixelInternalFormat.Rgba;
                     renderedGLTex.utype = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
@@ -912,15 +921,19 @@ namespace FirstPlugin
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            //     ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-            ofd.Filter = "Supported Formats|*.bftex;*.dds;|" +
-                  "Binary Texture |*.bftex|" +
+   /*         ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                         "Binary Texture |*.bftex|" +
                          "Microsoft DDS |*.dds|" +
-                         /*               "Portable Network Graphics |*.png|" +
-                                        "Joint Photographic Experts Group |*.jpg|" +
-                                        "Bitmap Image |*.bmp|" +
-                                        "Tagged Image File Format |*.tiff|" */
-                         "All files(*.*)|*.*";
+                         "Portable Network Graphics |*.png|" +
+                         "Joint Photographic Experts Group |*.jpg|" +
+                         "Bitmap Image |*.bmp|" +
+                         "Tagged Image File Format |*.tiff|" +
+                         "All files(*.*)|*.*";*/
+
+            ofd.Filter = "Supported Formats|*.bftex;*.dds|" +
+             "Binary Texture |*.bftex|" +
+             "Microsoft DDS |*.dds|" +
+             "All files(*.*)|*.*";
 
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -931,6 +944,8 @@ namespace FirstPlugin
         public void Replace(string FileName)
         {
             string ext = Path.GetExtension(FileName);
+            ext = ext.ToLower();
+
             switch (ext)
             {
                 case ".bftex":
@@ -982,9 +997,12 @@ namespace FirstPlugin
                 Export(sfd.FileName);
             }
         }
-        public void Export(string FileName)
+        public void Export(string FileName, bool ExportSurfaceLevel = false,
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
             string ext = Path.GetExtension(FileName);
+            ext = ext.ToLower();
+
             switch (ext)
             {
                 case ".bftex":
@@ -998,9 +1016,9 @@ namespace FirstPlugin
                     break;
             }
         }
-        internal void SaveBitMap(string FileName)
+        internal void SaveBitMap(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {
-            Bitmap bitMap = DisplayTexture();
+            Bitmap bitMap = DisplayTexture(MipLevel, SurfaceLevel);
 
             bitMap.Save(FileName);
         }
@@ -1091,31 +1109,39 @@ namespace FirstPlugin
             uint blkHeight = blk_dim & 0xF;
 
             int linesPerBlockHeight = (1 << (int)tex.BlockHeightLog2) * 8;
-            int blockHeightShift = 0;
 
             uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
 
-            for (int mipLevel = 0; mipLevel < tex.TextureData.Length; mipLevel++)
+            for (int arrayLevel = 0; arrayLevel < tex.ArrayLength; arrayLevel++)
             {
-                uint width = (uint)Math.Max(1, tex.Width >> mipLevel);
-                uint height = (uint)Math.Max(1, tex.Height >> mipLevel);
+                int blockHeightShift = 0;
 
-                uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+                List<byte[]> mips = new List<byte[]>();
+                for (int mipLevel = 0; mipLevel < tex.TextureData[arrayLevel].Count; mipLevel++)
+                {
+                    uint width = (uint)Math.Max(1, tex.Width >> mipLevel);
+                    uint height = (uint)Math.Max(1, tex.Height >> mipLevel);
 
-                if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                    blockHeightShift += 1;
+                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
 
-                byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), tex.TextureData[mipLevel]);
-                //Create a copy and use that to remove uneeded data
-                byte[] result_ = new byte[size];
-                Array.Copy(result, 0, result_, 0, size);
+                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                        blockHeightShift += 1;
 
-                mipmaps.Add(result_);
+                    byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), tex.TextureData[arrayLevel][mipLevel]);
+                    //Create a copy and use that to remove uneeded data
+                    byte[] result_ = new byte[size];
+                    Array.Copy(result, 0, result_, 0, size);
+
+                    mips.Add(result_);
+
+                }
+                mipmaps.Add(mips);
             }
+
             Texture = tex;
         }
 
-        public Bitmap DisplayTexture(int DisplayMipIndex = 0)
+        public Bitmap DisplayTexture(int DisplayMipIndex = 0, int ArrayIndex = 0)
         {
             LoadTexture(Texture);
 
@@ -1127,7 +1153,7 @@ namespace FirstPlugin
             uint width = (uint)Math.Max(1, Texture.Width >> DisplayMipIndex);
             uint height = (uint)Math.Max(1, Texture.Height >> DisplayMipIndex);
 
-            byte[] data = mipmaps[DisplayMipIndex];
+            byte[] data = mipmaps[ArrayIndex][DisplayMipIndex];
 
             return DecodeBlock(data, width, height, Texture.Format);
         }
