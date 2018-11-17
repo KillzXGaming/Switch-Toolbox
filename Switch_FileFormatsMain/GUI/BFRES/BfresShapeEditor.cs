@@ -12,6 +12,7 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.Rendering;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -21,15 +22,17 @@ namespace FirstPlugin
         {
             InitializeComponent();
         }
-        BFRESRender.FSHP activeShape;
-        BFRESRender.FMDL activeModel;
+        FSHP activeShape;
+        FMDL activeModel;
 
-        public void LoadObject(BFRESRender.FMDL mdl, BFRESRender.FSHP shape)
+        public void LoadObject(FMDL mdl, FSHP shape)
         {
             InitializeControls();
 
             activeShape = shape;
             activeModel = mdl;
+
+
 
             //Load all the material names unless there's alot
             if (mdl.materials.Count < 1)
@@ -50,16 +53,27 @@ namespace FirstPlugin
             textBoxName.Text = shape.Text;
             textBoxBoneIndex.Text = shape.BoneIndex.ToString();
             textBoxMatIndex.Text = shape.MaterialIndex.ToString();
-            textBoxBoneName.Text = mdl.Skeleton.bones[shape.boneIndx].Text;
+
+            
+            bonesCB.Items.Add(mdl.Skeleton.bones[shape.boneIndx].Text);
+            bonesCB.SelectedIndex = 0;
             textBoxVertexSkinCount.Text = shape.VertexSkinCount.ToString();
 
-            if (shape.Shape.Flags == ShapeFlags.SubMeshBoundaryConsistent)
-                checkBoxUseSubMeshBoundryConsistent.Checked = true;
-            if (shape.Shape.Flags == ShapeFlags.HasVertexBuffer)
-                checkBoxUseVertexBuffer.Checked = true;
+            if (BFRES.IsWiiU)
+            {
+       
+            }
+            else
+            {
+                if (shape.Shape.Flags == ShapeFlags.SubMeshBoundaryConsistent)
+                    checkBoxUseSubMeshBoundryConsistent.Checked = true;
+                if (shape.Shape.Flags == ShapeFlags.HasVertexBuffer)
+                    checkBoxUseVertexBuffer.Checked = true;
+            }
+
 
             shaderAttCB.Items.Add("NONE");
-            foreach (BFRESRender.FSHP.VertexAttribute att in shape.vertexAttributes)
+            foreach (FSHP.VertexAttribute att in shape.vertexAttributes)
             {
                 vtxAttributesCB.Items.Add(att.Name);
                 vtxFormatCB.Items.Add(att.Format);
@@ -98,6 +112,8 @@ namespace FirstPlugin
         private void InitializeControls()
         {
             IsLoaded = false;
+            IsBoneListLoaded = false;
+            bonesCB.Items.Clear();
             materialComboBox1.Items.Clear();
             vtxAttributesCB.Items.Clear();
             vtxFormatCB.Items.Clear();
@@ -118,6 +134,7 @@ namespace FirstPlugin
         }
 
         bool IsLoaded = false;
+        bool IsBoneListLoaded = false;
         private void materialComboBox1_Click(object sender, EventArgs e)
         {
         }
@@ -126,23 +143,52 @@ namespace FirstPlugin
         {
             ReloadMaterialList();
         }
+        private void bonesCB_KeyDown(object sender, KeyEventArgs e)
+        {
+            ReloadBoneList();
+        }
+        private void materialComboBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReloadMaterialList();
+        }
+        private void bonesCB_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReloadBoneList();
+        }
         private void ReloadMaterialList()
         {
             //For optmization purposes. Load a list when used instead
             if (!IsLoaded)
             {
                 materialComboBox1.Items.Clear();
-                foreach (BFRESRender.FMAT mat in activeModel.materials.Values)
+                foreach (FMAT mat in activeModel.materials.Values)
                     materialComboBox1.Items.Add(mat.Text);
 
                 materialComboBox1.SelectedIndex = activeShape.MaterialIndex;
                 IsLoaded = true;
             }
         }
-
-        private void materialComboBox1_MouseDown(object sender, MouseEventArgs e)
+        private void ReloadBoneList()
         {
-            ReloadMaterialList();
+            if (!IsBoneListLoaded)
+            {
+                bonesCB.Items.Clear();
+                foreach (var bn in activeModel.Skeleton.bones)
+                    bonesCB.Items.Add(bn.Text);
+
+                bonesCB.SelectedIndex = activeShape.BoneIndex;
+                IsBoneListLoaded = true;
+            }
+        }
+        private void bonesCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (bonesCB.SelectedIndex >= 0 && IsBoneListLoaded)
+            {
+                activeShape.boneIndx = bonesCB.SelectedIndex;
+                textBoxBoneIndex.Text = bonesCB.SelectedIndex.ToString();
+            }
+
+            Viewport.Instance.UpdateViewport();
         }
 
         bool IsSet = false;

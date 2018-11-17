@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Xml;
 using Syroot.NintenTools.NSW.Bfres;
 using System.IO;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
     public class FMAT2XML
     {
-        public static void Read(BFRESRender.FMAT mat, string FileName, bool OnlyMatParams = false)
+        public static void Read(FMAT mat, string FileName, bool OnlyMatParams = false)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(FileName);
@@ -29,13 +30,13 @@ namespace FirstPlugin
 
             }
         }
-        public static void ReadShaderParams(XmlDocument doc, XmlNode parentNode, BFRESRender.FMAT mat)
+        public static void ReadShaderParams(XmlDocument doc, XmlNode parentNode, FMAT mat)
         {
             mat.matparam.Clear();
             foreach (XmlNode node in parentNode.ChildNodes)
             {
                 string Value = node.Attributes[0].Value;
-                BFRESRender.BfresShaderParam param = new BFRESRender.BfresShaderParam();
+                BfresShaderParam param = new BfresShaderParam();
                 param.Name = node.Name;
                 Console.WriteLine(node.Name);
 
@@ -262,7 +263,7 @@ namespace FirstPlugin
             }
             return texSrtEx;
         }
-        public static void Save(BFRESRender.FMAT mat, string FileName, bool OnlyMaterialParams = false)
+        public static void Save(FMAT mat, string FileName, bool OnlyMaterialParams = false)
         {
             XmlDocument doc = new XmlDocument();
             XmlNode mainNode = doc.CreateElement("FMAT");
@@ -279,7 +280,7 @@ namespace FirstPlugin
             }
             doc.Save(FileName);
         }
-        private static void AppendMaterialParams(BFRESRender.FMAT mat, XmlDocument doc, XmlNode parentNode)
+        private static void AppendMaterialParams(FMAT mat, XmlDocument doc, XmlNode parentNode)
         {
             XmlNode matParamsNode = doc.CreateElement("MaterialParameters");
             parentNode.AppendChild(matParamsNode);

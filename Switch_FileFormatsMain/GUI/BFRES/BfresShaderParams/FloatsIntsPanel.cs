@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -18,7 +19,7 @@ namespace FirstPlugin
             InitializeComponent();
             HideControls();
         }
-        public void GetValues(BFRESRender.BfresShaderParam param)
+        public void GetValues(BfresShaderParam param)
         {
             switch (param.Type)
             {

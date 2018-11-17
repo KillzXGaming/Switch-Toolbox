@@ -60,7 +60,9 @@
             this.rotUDY = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
             this.rotUDZ = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.label34 = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
+            this.LODMeshCB = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.btnLODMeshes = new System.Windows.Forms.Button();
             this.labelName = new System.Windows.Forms.Label();
@@ -85,7 +87,6 @@
             this.labelVertexSkinCount = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.button7 = new System.Windows.Forms.Button();
-            this.textBoxBoneName = new System.Windows.Forms.TextBox();
             this.textBoxVertexSkinCount = new System.Windows.Forms.TextBox();
             this.checkBoxUseSubMeshBoundryConsistent = new System.Windows.Forms.CheckBox();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -109,8 +110,7 @@
             this.panel12 = new System.Windows.Forms.Panel();
             this.button9 = new System.Windows.Forms.Button();
             this.label31 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.LODMeshCB = new System.Windows.Forms.ComboBox();
+            this.bonesCB = new System.Windows.Forms.ComboBox();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat1)).BeginInit();
             this.panel3.SuspendLayout();
@@ -657,6 +657,15 @@
             this.panel6.Size = new System.Drawing.Size(635, 131);
             this.panel6.TabIndex = 27;
             // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(6, 97);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(110, 13);
+            this.label34.TabIndex = 43;
+            this.label34.Text = "Displayed LOD Mesh:";
+            // 
             // textBoxName
             // 
             this.textBoxName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
@@ -666,6 +675,18 @@
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(225, 20);
             this.textBoxName.TabIndex = 33;
+            // 
+            // LODMeshCB
+            // 
+            this.LODMeshCB.BackColor = System.Drawing.Color.White;
+            this.LODMeshCB.Cursor = System.Windows.Forms.Cursors.Default;
+            this.LODMeshCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.LODMeshCB.FormattingEnabled = true;
+            this.LODMeshCB.Location = new System.Drawing.Point(133, 94);
+            this.LODMeshCB.Name = "LODMeshCB";
+            this.LODMeshCB.Size = new System.Drawing.Size(120, 21);
+            this.LODMeshCB.TabIndex = 42;
+            this.LODMeshCB.SelectedIndexChanged += new System.EventHandler(this.LODMeshCB_SelectedIndexChanged);
             // 
             // label19
             // 
@@ -919,18 +940,6 @@
             this.button7.TabIndex = 34;
             this.button7.UseVisualStyleBackColor = true;
             // 
-            // textBoxBoneName
-            // 
-            this.textBoxBoneName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.textBoxBoneName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxBoneName.ForeColor = System.Drawing.Color.White;
-            this.textBoxBoneName.Location = new System.Drawing.Point(116, 31);
-            this.textBoxBoneName.Name = "textBoxBoneName";
-            this.textBoxBoneName.ReadOnly = true;
-            this.textBoxBoneName.Size = new System.Drawing.Size(224, 20);
-            this.textBoxBoneName.TabIndex = 37;
-            this.textBoxBoneName.TextChanged += new System.EventHandler(this.textBoxBoneName_TextChanged);
-            // 
             // textBoxVertexSkinCount
             // 
             this.textBoxVertexSkinCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
@@ -1064,12 +1073,12 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.bonesCB);
             this.panel1.Controls.Add(this.textBoxBoneIndex);
             this.panel1.Controls.Add(this.label22);
             this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.label21);
             this.panel1.Controls.Add(this.label23);
-            this.panel1.Controls.Add(this.textBoxBoneName);
             this.panel1.Controls.Add(this.textBoxVertexSkinCount);
             this.panel1.Controls.Add(this.panel10);
             this.panel1.Controls.Add(this.labelVertexSkinCount);
@@ -1184,26 +1193,20 @@
             this.label31.TabIndex = 0;
             this.label31.Text = "Advanced";
             // 
-            // label34
+            // bonesCB
             // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(6, 97);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(110, 13);
-            this.label34.TabIndex = 43;
-            this.label34.Text = "Displayed LOD Mesh:";
-            // 
-            // LODMeshCB
-            // 
-            this.LODMeshCB.BackColor = System.Drawing.Color.White;
-            this.LODMeshCB.Cursor = System.Windows.Forms.Cursors.Default;
-            this.LODMeshCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.LODMeshCB.FormattingEnabled = true;
-            this.LODMeshCB.Location = new System.Drawing.Point(133, 94);
-            this.LODMeshCB.Name = "LODMeshCB";
-            this.LODMeshCB.Size = new System.Drawing.Size(120, 21);
-            this.LODMeshCB.TabIndex = 42;
-            this.LODMeshCB.SelectedIndexChanged += new System.EventHandler(this.LODMeshCB_SelectedIndexChanged);
+            this.bonesCB.BackColor = System.Drawing.Color.White;
+            this.bonesCB.Cursor = System.Windows.Forms.Cursors.Default;
+            this.bonesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.bonesCB.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.bonesCB.FormattingEnabled = true;
+            this.bonesCB.Location = new System.Drawing.Point(116, 30);
+            this.bonesCB.Name = "bonesCB";
+            this.bonesCB.Size = new System.Drawing.Size(219, 21);
+            this.bonesCB.TabIndex = 33;
+            this.bonesCB.SelectedIndexChanged += new System.EventHandler(this.bonesCB_SelectedIndexChanged);
+            this.bonesCB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.bonesCB_KeyDown);
+            this.bonesCB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bonesCB_MouseDown);
             // 
             // FSHPEditor
             // 
@@ -1317,7 +1320,6 @@
         private System.Windows.Forms.CheckBox checkBoxUseSubMeshBoundryConsistent;
         private System.Windows.Forms.CheckBox checkBoxUseVertexBuffer;
         private System.Windows.Forms.TextBox textBoxVertexSkinCount;
-        private System.Windows.Forms.TextBox textBoxBoneName;
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textBoxBoneIndex;
@@ -1340,5 +1342,6 @@
         private System.Windows.Forms.ComboBox shaderAttCB;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.ComboBox LODMeshCB;
+        private System.Windows.Forms.ComboBox bonesCB;
     }
 }

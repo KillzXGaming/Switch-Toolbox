@@ -195,7 +195,7 @@ namespace Switch_Toolbox.Library
             lod.PrimitiveType = STPolygonType.Triangle;
             lod.GenerateSubMesh();
             obj.lodMeshes.Add(lod);
-            obj.vertices = GetVertices(msh, transform);
+            obj.vertices = GetVertices(msh, transform, obj);
             obj.VertexBufferIndex = Index;
 
             return obj;
@@ -435,8 +435,9 @@ namespace Switch_Toolbox.Library
 
             return 0;
         }
-        public List<Vertex> GetVertices(Mesh msh, Matrix4 transform)
+        public List<Vertex> GetVertices(Mesh msh, Matrix4 transform, STGenericObject STobj)
         {
+
             List<Vertex> vertices = new List<Vertex>();
             for (int v = 0; v < msh.VertexCount; v++)
             {
@@ -462,20 +463,35 @@ namespace Switch_Toolbox.Library
                 {
                     foreach (Bone bn in msh.Bones)
                     {
-                    /*    Vertex.Bone bone = new Vertex.Bone();
-                        bone.Name = bn.Name;
-                        bone.HasWeights = bn.HasVertexWeights;
-
-                        if (bn.HasVertexWeights)
-                        {
-                            foreach (VertexWeight w in bn.VertexWeights)
-                                bone.weights.Add(new Vertex.BoneWeight() { weight = w.Weight });
-                        }
-                        vert.boneList.Add(bone);*/
+                  
                     }
                 }
                 vertices.Add(vert);
             }
+            if (msh.HasBones)
+            {
+                for (int i = 0; i < msh.BoneCount; i++)
+                {
+                    Bone bn = msh.Bones[i];
+
+                    Console.WriteLine($"Bone Info {bn.VertexWeightCount} {bn.Name}");
+
+                    Vertex.Bone bone = new Vertex.Bone();
+                    bone.Name = bn.Name;
+                    bone.HasWeights = bn.HasVertexWeights;
+
+                    if (bn.HasVertexWeights)
+                    {
+                        foreach (VertexWeight w in bn.VertexWeights)
+                        {
+                            vertices[w.VertexID].pos = Vector3.TransformPosition(vertices[w.VertexID].pos, FromMatrix( bn.OffsetMatrix));
+                            vertices[w.VertexID].weights.Add(w.Weight);
+                            vertices[w.VertexID].boneNames.Add(bn.Name);
+                        }
+                    }
+                }
+            }
+
 
             return vertices;
         }

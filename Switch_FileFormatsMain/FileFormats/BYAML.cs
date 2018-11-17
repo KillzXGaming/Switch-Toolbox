@@ -65,8 +65,7 @@ namespace FirstPlugin
             IsActive = false;
             CanSave = false;
 
-        //    ByamlViewer.OpenByml(new System.IO.MemoryStream(Data), FileName);
-
+            ByamlViewer.OpenByml(new System.IO.MemoryStream(Data), FileName);
 
             //    BymlFileData byamlFile = ByamlFile.LoadN(new System.IO.MemoryStream(Data), false, Syroot.BinaryData.ByteOrder.LittleEndian);
             //          EditorRoot = LoadByamlNodes(byamlFile.RootNode);

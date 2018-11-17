@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -22,8 +23,8 @@ namespace FirstPlugin
 
             rotMeasureCB.SelectedIndex = 1;
         }
-        BFRESRender.BfresBone activeBone;
-        public void LoadBone(BFRESRender.BfresBone bone)
+        BfresBone activeBone;
+        public void LoadBone(BfresBone bone)
         {
             activeBone = bone;
 

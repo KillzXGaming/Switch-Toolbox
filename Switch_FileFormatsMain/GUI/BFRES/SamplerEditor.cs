@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -24,11 +25,11 @@ namespace FirstPlugin
                 wrapWCB.Items.Add(type);
             }
         }
-        public void LoadSampler(BFRESRender.MatTexture texture)
+        public void LoadSampler(MatTexture texture)
         {
-            wrapXCB.SelectedItem = BFRESRender.MatTexture.wrapmode[texture.wrapModeS];
-            wrapYCB.SelectedItem = BFRESRender.MatTexture.wrapmode[texture.wrapModeT];
-            wrapWCB.SelectedItem = BFRESRender.MatTexture.wrapmode[texture.wrapModeW];
+            wrapXCB.SelectedItem = MatTexture.wrapmode[texture.wrapModeS];
+            wrapYCB.SelectedItem = MatTexture.wrapmode[texture.wrapModeT];
+            wrapWCB.SelectedItem = MatTexture.wrapmode[texture.wrapModeW];
         }
     }
 }

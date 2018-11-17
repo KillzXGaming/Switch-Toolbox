@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -17,8 +17,8 @@ namespace FirstPlugin
         {
             InitializeComponent();
         }
-        BFRESRender.FSHP ActiveShape;
-        public void LoadLODS(BFRESRender.FSHP fshp)
+        FSHP ActiveShape;
+        public void LoadLODS(FSHP fshp)
         {
             meshListView.Items.Clear();
             subMeshListView.Items.Clear();

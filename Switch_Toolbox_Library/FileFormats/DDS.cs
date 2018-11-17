@@ -258,7 +258,7 @@ namespace Switch_Toolbox.Library
             DX10header.arrayFlag = reader.ReadUInt32();
             DX10header.miscFlags2 = reader.ReadUInt32();
         }
-        public void Save(DDS dds, string FileName, List<byte[]> data = null, bool IsDX10 = false)
+        public void Save(DDS dds, string FileName, List<List<byte[]>> data = null, bool IsDX10 = false)
         {
             BinaryDataWriter writer = new BinaryDataWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
             writer.Write(Encoding.ASCII.GetBytes("DDS "));
@@ -296,7 +296,7 @@ namespace Switch_Toolbox.Library
 
             if (data != null)
             {
-                foreach (byte[] mip in data)
+                foreach (byte[] mip in data[0])
                 {
                     writer.Write(mip);
                 }

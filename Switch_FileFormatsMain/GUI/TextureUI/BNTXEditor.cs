@@ -30,13 +30,17 @@ namespace FirstPlugin
         }
         public void LoadPicture(Bitmap image)
         {
-          //  pictureBoxCustom1.Image = image;
+            //  pictureBoxCustom1.Image = image;
         }
 
         TextureData textureData;
         int CurMipDisplayLevel = 0;
+        int CurArrayDisplayLevel = 0;
         public void LoadProperty(TextureData tex)
         {
+            CurMipDisplayLevel = 0;
+            CurArrayDisplayLevel = 0;
+
             textureData = tex;
 
             Texture texture = tex.Texture;
@@ -46,22 +50,24 @@ namespace FirstPlugin
         }
         private void UpdateMipDisplay()
         {
-            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps.Count - 1}";
+            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps[CurArrayDisplayLevel].Count - 1}";
+            arrayLevelCounterLabel.Text = $"{CurArrayDisplayLevel} / {textureData.mipmaps.Count - 1}";
+
 
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-
             Thread = new Thread((ThreadStart)(() =>
             {
                 pictureBoxCustom1.Image = Imaging.GetLoadingImage();
-                pictureBoxCustom1.Image = textureData.DisplayTexture(CurMipDisplayLevel);
-              //  texSizeMipsLabel.Text = $"Width = {pictureBoxCustom1.Image.Width} Height = {pictureBoxCustom1.Image.Height}";
+                pictureBoxCustom1.Image = textureData.DisplayTexture(CurMipDisplayLevel, CurArrayDisplayLevel);
+
+                //  texSizeMipsLabel.Text = $"Width = {pictureBoxCustom1.Image.Width} Height = {pictureBoxCustom1.Image.Height}";
             }));
             Thread.Start();
 
 
-            if (CurMipDisplayLevel != textureData.mipmaps.Count - 1)
+            if (CurMipDisplayLevel != textureData.mipmaps[CurArrayDisplayLevel].Count - 1)
                 BtnMipsRight.Enabled = true;
             else
                 BtnMipsRight.Enabled = false;
@@ -70,6 +76,16 @@ namespace FirstPlugin
                 BtmMipsLeft.Enabled = true;
             else
                 BtmMipsLeft.Enabled = false;
+
+            if (CurArrayDisplayLevel != textureData.mipmaps.Count - 1)
+                btnRightArray.Enabled = true;
+            else
+                btnRightArray.Enabled = false;
+
+            if (CurArrayDisplayLevel != 0)
+                btnLeftArray.Enabled = true;
+            else
+                btnLeftArray.Enabled = false;
         }
 
         bool IsHidden = false;
@@ -109,11 +125,28 @@ namespace FirstPlugin
 
         private void BtnMipsRight_Click(object sender, EventArgs e)
         {
-            if (CurMipDisplayLevel != textureData.mipmaps.Count - 1)
+            if (CurMipDisplayLevel != textureData.mipmaps[CurArrayDisplayLevel].Count - 1)
                 CurMipDisplayLevel += 1;
-            
+
             UpdateMipDisplay();
         }
+
+        private void btnLeftArray_Click(object sender, EventArgs e)
+        {
+            if (CurArrayDisplayLevel != 0)
+                CurArrayDisplayLevel -= 1;
+
+            UpdateMipDisplay();
+        }
+
+        private void btnRightArray_Click(object sender, EventArgs e)
+        {
+            if (CurArrayDisplayLevel != textureData.mipmaps.Count - 1)
+                CurArrayDisplayLevel += 1;
+
+            UpdateMipDisplay();
+        }
+
 
         private void UpdateBackgroundImage()
         {
@@ -134,6 +167,53 @@ namespace FirstPlugin
         {
             Runtime.pictureBoxStyle = (Runtime.PictureBoxBG)imageBGComboBox.SelectedItem;
             UpdateBackgroundImage();
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            Button btnSender = (Button)sender;
+            Point ptLowerLeft = new Point(0, btnSender.Height);
+            ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
+            contextMenuStrip1.Show(ptLowerLeft);
+        }
+
+        private void replaceSurfaceLevelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Supported Formats|*.dds|" +
+              "Microsoft DDS |*.dds|" +
+              "All files(*.*)|*.*";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                DDS dds = new DDS(ofd.FileName);
+                textureData.Texture.MipCount = (uint)dds.header.mipmapCount;
+
+                if (textureData.Texture.Height != (uint)dds.header.height)
+                    throw new Exception("Invalid height! Must be same as original!");
+
+                if (textureData.Texture.Width != (uint)dds.header.width)
+                    throw new Exception("Invalid Width! Must be same as original!");
+
+                List<byte[]> Mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(textureData.Texture, dds.bdata, TileMode.Default);
+                textureData.mipmaps[CurArrayDisplayLevel] = Mipmaps;
+
+                UpdateMipDisplay();
+                textureData.LoadOpenGLTexture();
+            }
+        }
+
+        private void exportSurfaceLevelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.dds|" +
+          "Microsoft DDS |*.dds|" +
+          "All files(*.*)|*.*";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                textureData.Export(sfd.FileName, true, false, CurArrayDisplayLevel, CurMipDisplayLevel);
+            }
         }
     }
 }

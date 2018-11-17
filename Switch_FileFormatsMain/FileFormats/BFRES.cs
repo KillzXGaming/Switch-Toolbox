@@ -152,7 +152,7 @@ namespace FirstPlugin
                 bfres.resFile.Models[CurMdl].Shapes.Clear();
                 bfres.resFile.Models[CurMdl].VertexBuffers.Clear();
                 bfres.resFile.Models[CurMdl].Materials.Clear();
-                bfres.resFile.Models[CurMdl].MaterialDict.Clear();
+            //    bfres.resFile.Models[CurMdl].MaterialDict.Clear();
 
                 int i = 0;
                 var duplicates = model.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);

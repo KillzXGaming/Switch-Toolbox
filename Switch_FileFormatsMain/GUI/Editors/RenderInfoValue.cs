@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres;
 using Switch_Toolbox.Library;
 using System.Reflection;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -33,7 +34,7 @@ namespace FirstPlugin
         public List<int> valueInts = new List<int>();
 
         public int ActiveItemIndex = 0;
-        public void LoadValues(BFRESRender.BfresRenderInfo info)
+        public void LoadValues(BfresRenderInfo info)
         {
             textBox1.Text = info.Name;
             comboBox1.SelectedItem = info.Type;

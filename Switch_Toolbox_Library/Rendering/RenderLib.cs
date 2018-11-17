@@ -134,7 +134,7 @@ namespace Switch_Toolbox.Library.Rendering
 
         public int GetMaxSkinInfluenceCount()
         {
-            return vertices.Max(t => t.boneNames.Count);
+            return vertices.Max(t => t.boneIds.Count);
         }
 
         public Vector3 GetOrigin()

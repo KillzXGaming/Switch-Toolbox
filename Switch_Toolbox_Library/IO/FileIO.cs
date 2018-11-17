@@ -7,11 +7,30 @@ using Syroot.BinaryData;
 using System.IO;
 using System.IO.Compression;
 using OpenTK;
+using K4os.Compression.LZ4.Streams;
 
 namespace Switch_Toolbox.Library.IO
 {
     public class STLibraryCompression
     {
+        public static byte[] CompressFile(byte[] data, IFileFormat format)
+        {
+            int Alignment = 0;
+
+            if (format.IFileInfo != null)
+                Alignment = format.IFileInfo.Alignment;
+
+            switch (format.CompressionType)
+            {
+                case CompressionType.Yaz0:
+                    return EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
+                case CompressionType.None:
+                    return data;
+                default:
+                    return data;
+            }
+        }
+
         public class GZIP
         {
             public static byte[] Decompress(byte[] b)
@@ -38,6 +57,66 @@ namespace Switch_Toolbox.Library.IO
                     }
                     return mem.ToArray();
                 }
+            }
+        }
+        public class Type_LZ4F
+        {
+            public static byte[] Decompress(byte[] data)
+            {
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    using (var source = LZ4Stream.Decode(new MemoryStream(data)))
+                    {
+                        source.CopyTo(mem);
+                        mem.Write(data, 0, data.Length);
+                    }
+                    return mem.ToArray();
+                }
+            }
+            public static byte[] Compress(byte[] data)
+            {
+                LZ4EncoderSettings settings = new LZ4EncoderSettings();
+                settings.ChainBlocks = false;
+         //       settings.BlockSize = K4os.Compression.LZ4.Internal.Mem.M1;
+
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    var encodeSettings = new LZ4EncoderSettings();
+                    using (var source = LZ4Stream.Encode(mem, settings))
+                    {
+                        source.Write(data, 0, data.Length);
+
+                        var newMem = new MemoryStream();
+                        BinaryWriter writer = new BinaryWriter(newMem);
+                        writer.Write((uint)data.Length);
+                        writer.Write(mem.ToArray());
+                        writer.Write((uint)973407368);
+                        return newMem.ToArray();
+                    }
+                }
+            }
+        }
+        public class Type_LZ4
+        {
+            public static byte[] Decompress(byte[] data, int inputOffset, int InputLength, int decompressedSize)
+            {
+                return LZ4.LZ4Codec.Decode(data, inputOffset, InputLength, decompressedSize);
+            }
+            public static byte[] Decompress(byte[] data)
+            {
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    using (var source = LZ4Stream.Decode(new MemoryStream(data)))
+                    {
+                        source.CopyTo(mem);
+                        mem.Write(data, 0, data.Length);
+                    }
+                    return mem.ToArray();
+                }
+            }
+            public static byte[] Compress(byte[] data, int inputOffset = 0)
+            {
+                return LZ4.LZ4Codec.Encode(data, inputOffset, data.Length);
             }
         }
     }

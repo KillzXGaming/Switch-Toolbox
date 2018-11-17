@@ -22,11 +22,11 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNode EditorRoot { get; set; }
+        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
-        public int Alignment { get; set; } = 0;
         public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
         public Type[] Types
         {
             get
@@ -37,6 +37,7 @@ namespace FirstPlugin
         }
 
         public SarcData sarcData;
+        public string SarcHash;
         public void Load()
         {
             EditorRoot = new RootNode(Path.GetFileName(FileName), this);
@@ -50,8 +51,11 @@ namespace FirstPlugin
             sarcData.HashOnly = false;
             sarcData.Files = SzsFiles.Files;
             sarcData.endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
+            SarcHash = Utils.GenerateUniqueHashID();
 
-            FillTreeNodes(EditorRoot, SzsFiles.Files);
+            IFileInfo = new IFileInfo();
+
+            FillTreeNodes(EditorRoot, SzsFiles.Files, SarcHash);
 
             sarcData.Files.Clear();
         }
@@ -83,46 +87,57 @@ namespace FirstPlugin
                     Console.WriteLine("Saving " + node);
                     SaveFileEntryData((SarcEntry)node);
                 }
+                if (node is TreeNodeFile && node != EditorRoot)
+                {
+                    TreeNodeFile treeNodeFile = (TreeNodeFile)node;
+                    if (treeNodeFile.FileHandler != null && treeNodeFile.FileHandler.IFileInfo.ArchiveHash == SarcHash)
+                    {
+                        sarcData.Files.Add(SARC.SetSarcPath(node, (TreeNode)this.EditorRoot), STLibraryCompression.CompressFile(treeNodeFile.FileHandler.Save(), treeNodeFile.FileHandler));
+                    }
+                }
             }
 
             Tuple<int, byte[]> sarc = SARCExt.SARC.PackN(sarcData);
-            Alignment = sarc.Item1;
+            IFileInfo.Alignment = sarc.Item1;
             return sarc.Item2;
+        }
+
+        public static string SetSarcPath(TreeNode node, TreeNode sarcNode)
+        {
+            string nodePath = node.FullPath;
+            int startIndex = nodePath.IndexOf(sarcNode.Text);
+            if (startIndex > 0)
+                nodePath = nodePath.Substring(startIndex);
+
+            string slash = Path.DirectorySeparatorChar.ToString();
+            string slashAlt = Path.AltDirectorySeparatorChar.ToString();
+
+            string SetPath = nodePath.Replace(sarcNode.Text + slash, string.Empty).Replace(slash ?? "", slashAlt);
+            return !(SetPath == string.Empty) ? SetPath : node.Text;
         }
 
         private void SaveFileEntryData(SarcEntry sarc)
         {
             string dir = Path.GetDirectoryName(sarc.FullName);
-            Console.WriteLine(dir);
-            Console.WriteLine(sarc.FullName);
 
             if (dir == string.Empty)
                 sarc.FullName = sarc.Text;
             else
                 sarc.FullName = Path.Combine(dir, sarc.Text);
 
-            Console.WriteLine(sarc.FullName);
-
-            if (sarc.FileHandle != null)
-            {
-                IFileFormat file = sarc.FileHandle;
-
-                if (file.CanSave)
-                    sarcData.Files.Add(sarc.FullName, file.Save());
-                else
-                    sarcData.Files.Add(sarc.FullName, sarc.Data);
-            }
-            else
-                sarcData.Files.Add(sarc.FullName, sarc.Data);
+            sarcData.Files.Add(sarc.FullName, sarc.Data);
         }
         public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
         {
+            if (NewNode == null)
+                return;
+
             int index = node.Nodes.IndexOf(replaceNode);
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
         }
 
-        public class RootNode : TreeNodeCustom
+        public class RootNode : TreeNodeFile
         {
             SARC sarc;
             public RootNode(string n, SARC s)
@@ -147,7 +162,7 @@ namespace FirstPlugin
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    SaveCompressFile(sarc.Save(), sfd.FileName, sarc.Alignment);
+                    SaveCompressFile(sarc.Save(), sfd.FileName, sarc.IFileInfo.Alignment);
                 }
             }
             private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
@@ -166,11 +181,11 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-            /*    CallRecursive(treeview);
-                foreach (TreeNode n in Nodes)
-                {
-                    n.ExpandAll();
-                }*/
+                /*    CallRecursive(treeview);
+                    foreach (TreeNode n in Nodes)
+                    {
+                        n.ExpandAll();
+                    }*/
             }
             private void CallRecursive(TreeView treeView)
             {
@@ -206,6 +221,7 @@ namespace FirstPlugin
         {
             public SARC sarc; //Sarc file the entry is located in
             public byte[] Data;
+            public string sarcHash;
 
             public SarcEntry()
             {
@@ -230,70 +246,11 @@ namespace FirstPlugin
                 rename.Click += Rename;
             }
             public override void OnClick(TreeView treeView)
-            {
-                OpenFile(Name, Data, treeView);
-            }
-            public void OpenFile(string FileName, byte[] data, TreeView treeView, bool Compressed = false, CompressionType CompType = CompressionType.None)
             { 
-                FileReader f = new FileReader(data);
-                string Magic = f.ReadMagic(0, 4);
-                string Magic2 = f.ReadMagic(0, 2);
-
-                //Determine if the file is compressed or not
-                if (Magic == "Yaz0")
-                {
-                    data = EveryFileExplorer.YAZ0.Decompress(data);
-                    OpenFile(FileName, data, treeView, true, CompressionType.Yaz0);
-                    return;
-                }
-                if (Magic == "ZLIB")
-                {
-                    data = FileReader.InflateZLIB(f.getSection(64, data.Length - 64));
-                    OpenFile(FileName, data, treeView, true, CompressionType.Zlib);
-                    return;
-                }
-
-                f.Dispose();
-                f.Close();
-
-                IFileFormat[] SupportedFormats = FileManager.GetFileFormats();
-
-                foreach (IFileFormat format in SupportedFormats)
-                {
-                    if (format.Magic == Magic || format.Magic == Magic2)
-                    {
-                        FileHandle = format;
-
-                        format.CompressionType = CompType;
-                        format.FileIsCompressed = Compressed;
-                        format.Data = data;
-                        format.FileName = Path.GetFileName(FileName);
-                        format.Load();
-                        format.FilePath = FileName;
-
-                        if (format.EditorRoot != null)
-                        {
-                            format.EditorRoot.Text = Text;
-                            format.EditorRoot.ImageKey = ImageKey;
-                            format.EditorRoot.SelectedImageKey = SelectedImageKey;
-
-                            Nodes.Add(format.EditorRoot);
-
-
-                        //    ReplaceNode(this.Parent, this, format.EditorRoot);
-                        }
-                    }
-                     if (format.Magic == String.Empty) //Load by extension if magic isn't defined
-                    {
-                        foreach (string ext in format.Extension)
-                        {
-                            if (ext.Remove(0, 1) == Path.GetExtension(FileName))
-                            {
-                                format.Load();
-                            }
-                        }
-                    }
-                }
+            }
+            public override void OnMouseClick(TreeView treeView)
+            {
+                ReplaceNode(this.Parent, this, OpenFile(Name, Data, this));
             }
 
             private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -315,7 +272,7 @@ namespace FirstPlugin
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                        Data = File.ReadAllBytes(ofd.FileName);
+                    Data = File.ReadAllBytes(ofd.FileName);
                 }
             }
             private void Export(object sender, EventArgs args)
@@ -350,7 +307,7 @@ namespace FirstPlugin
                 }
             }
         }
-        void FillTreeNodes(TreeNode root, Dictionary<string, byte[]> files)
+        void FillTreeNodes(TreeNode root, Dictionary<string, byte[]> files, string SarcHash)
         {
             var rootText = root.Text;
             var rootTextLength = rootText.Length;
@@ -381,7 +338,7 @@ namespace FirstPlugin
 
                         var temp = new TreeNode(parentName, 0, 0);
                         if (rootIndex == roots.Length - 1)
-                            temp = SetupFileEntry(node.Value, parentName, node.Key);
+                            temp = SetupFileEntry(node.Value, parentName, node.Key, SarcHash);
 
                         temp.Name = nodeName;
                         parentNode.Nodes.Add(temp);
@@ -418,7 +375,73 @@ namespace FirstPlugin
             return finalList;
         }
 
-        public SarcEntry SetupFileEntry(byte[] data, string name, string fullName)
+        public static TreeNode OpenFile(string FileName, byte[] data, SarcEntry sarcEntry, bool Compressed = false, CompressionType CompType = 0)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            FileReader fileReader = new FileReader(data);
+            string Magic4 = fileReader.ReadMagic(0, 4);
+            string Magic2 = fileReader.ReadMagic(0, 2);
+            if (Magic4 == "Yaz0")
+            {
+                data = EveryFileExplorer.YAZ0.Decompress(data);
+                return OpenFile(FileName, data, sarcEntry, true, (CompressionType)1);
+            }
+            if (Magic4 == "ZLIB")
+            {
+                data = FileReader.InflateZLIB(fileReader.getSection(64, data.Length - 64));
+                return OpenFile(FileName, data, sarcEntry, true, (CompressionType)2);
+            }
+            fileReader.Dispose();
+            fileReader.Close();
+            foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
+            {
+                if (fileFormat.Magic == Magic4 || fileFormat.Magic == Magic2)
+                {
+                    fileFormat.CompressionType = CompType;
+                    fileFormat.FileIsCompressed = Compressed;
+                    fileFormat.Data = data;
+                    fileFormat.Load();
+                    fileFormat.FileName = Path.GetFileName(FileName);
+                    fileFormat.FilePath = FileName;
+                    fileFormat.IFileInfo = new IFileInfo();
+                    fileFormat.IFileInfo.ArchiveHash = sarcEntry.sarcHash;
+                    fileFormat.IFileInfo.InArchive = true;
+                    if (fileFormat.EditorRoot == null)
+                        return null;
+                    fileFormat.EditorRoot.ImageKey = sarcEntry.ImageKey;
+                    fileFormat.EditorRoot.SelectedImageKey = sarcEntry.SelectedImageKey;
+                    fileFormat.EditorRoot.Text = sarcEntry.Text;
+
+                    return fileFormat.EditorRoot;
+                }
+                if (fileFormat.Magic == string.Empty)
+                {
+                    foreach (string str3 in fileFormat.Extension)
+                    {
+                        if (str3.Remove(0, 1) == Path.GetExtension(FileName))
+                        {
+                            fileFormat.Data = data;
+                            fileFormat.Load();
+                            fileFormat.FileName = Path.GetFileName(FileName);
+                            fileFormat.FilePath = FileName;
+                            fileFormat.IFileInfo = new IFileInfo();
+                            fileFormat.IFileInfo.ArchiveHash = sarcEntry.sarcHash;
+                            fileFormat.IFileInfo.InArchive = true;
+                            if (fileFormat.EditorRoot == null)
+                                return null;
+                            fileFormat.EditorRoot.ImageKey = sarcEntry.ImageKey;
+                            fileFormat.EditorRoot.SelectedImageKey = sarcEntry.SelectedImageKey;
+                            fileFormat.EditorRoot.Text = sarcEntry.Text;
+                            return fileFormat.EditorRoot;
+                        }
+                    }
+                }
+            }
+            return (TreeNode)null;
+        }
+
+
+        public SarcEntry SetupFileEntry(byte[] data, string name, string fullName, string SarchHash)
         {
             SarcEntry sarcEntry = new SarcEntry();
             sarcEntry.FullName = fullName;
@@ -426,6 +449,7 @@ namespace FirstPlugin
             sarcEntry.Text = name;
             sarcEntry.sarc = this;
             sarcEntry.Data = data;
+            sarcEntry.sarcHash = SarcHash;
 
             Console.WriteLine(name);
 

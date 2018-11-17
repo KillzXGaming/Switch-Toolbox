@@ -44,7 +44,7 @@ namespace FirstPlugin
             GPUAccessFlgComb.Items.Add("Texture");
             ImgDimComb.SelectedIndex = 1;
             GPUAccessFlgComb.SelectedIndex = 0;
-            formatComboBox.SelectedItem = SurfaceFormat.R8_G8_B8_A8_SRGB;
+            formatComboBox.SelectedItem = SurfaceFormat.BC1_SRGB;
         }
         TextureImporterSettings SelectedTexSettings;
         BinaryTextureContainer bntx;
@@ -63,6 +63,30 @@ namespace FirstPlugin
             }
         }
 
+        public bool IsCompressed(SurfaceFormat format)
+        {
+            switch (format)
+            {
+                case SurfaceFormat.BC1_UNORM:
+                case SurfaceFormat.BC1_SRGB:
+                case SurfaceFormat.BC2_UNORM:
+                case SurfaceFormat.BC2_SRGB:
+                case SurfaceFormat.BC3_UNORM:
+                case SurfaceFormat.BC3_SRGB:
+                case SurfaceFormat.BC4_UNORM:
+                case SurfaceFormat.BC4_SNORM:
+                case SurfaceFormat.BC5_UNORM:
+                case SurfaceFormat.BC5_SNORM:
+                case SurfaceFormat.BC6_UFLOAT:
+                case SurfaceFormat.BC6_FLOAT:
+                case SurfaceFormat.BC7_UNORM:
+                case SurfaceFormat.BC7_SRGB:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public void SetupSettings(Bitmap bitmap)
         {
             if (SelectedTexSettings.Format == SurfaceFormat.Invalid)
@@ -73,6 +97,53 @@ namespace FirstPlugin
             HeightLabel.Text = $"Height {bitmap.Height}";
             if (formatComboBox.SelectedItem is SurfaceFormat)
                 SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
+
+            if (IsCompressed(SelectedTexSettings.Format))
+            {
+                //Compress first!
+                switch (SelectedTexSettings.Format)
+                {
+                    case SurfaceFormat.BC1_UNORM:
+                    //    SelectedTexSettings.DataBlockOutput = TexConv.CompressBC1(FileName);
+                        break;
+                    case SurfaceFormat.BC1_SRGB:
+                    case SurfaceFormat.BC2_UNORM:
+                    case SurfaceFormat.BC2_SRGB:
+                    case SurfaceFormat.BC3_UNORM:
+                    case SurfaceFormat.BC3_SRGB:
+                    case SurfaceFormat.BC4_UNORM:
+                    case SurfaceFormat.BC4_SNORM:
+                    case SurfaceFormat.BC5_UNORM:
+                    case SurfaceFormat.BC5_SNORM:
+                    case SurfaceFormat.BC6_UFLOAT:
+                    case SurfaceFormat.BC6_FLOAT:
+                    case SurfaceFormat.BC7_UNORM:
+                    case SurfaceFormat.BC7_SRGB:
+                        break;
+                }
+
+                System.IO.File.WriteAllBytes("temp.dds", SelectedTexSettings.DataBlockOutput);
+                switch (SelectedTexSettings.Format)
+                {
+                    case SurfaceFormat.BC1_UNORM:
+                   //     SelectedTexSettings.DataBlockOutput = TexConv.DecompressDDS(FileName);
+                        break;
+                    case SurfaceFormat.BC1_SRGB:
+                    case SurfaceFormat.BC2_UNORM:
+                    case SurfaceFormat.BC2_SRGB:
+                    case SurfaceFormat.BC3_UNORM:
+                    case SurfaceFormat.BC3_SRGB:
+                    case SurfaceFormat.BC4_UNORM:
+                    case SurfaceFormat.BC4_SNORM:
+                    case SurfaceFormat.BC5_UNORM:
+                    case SurfaceFormat.BC5_SNORM:
+                    case SurfaceFormat.BC6_UFLOAT:
+                    case SurfaceFormat.BC6_FLOAT:
+                    case SurfaceFormat.BC7_UNORM:
+                    case SurfaceFormat.BC7_SRGB:
+                        break;
+                }
+            }
 
         }
 

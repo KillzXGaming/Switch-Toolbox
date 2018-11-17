@@ -36,7 +36,6 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportShaderErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +50,10 @@
             this.gzipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gzipCompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gzipDecompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lZ4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lZ4FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lz4fDecompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lz4fCompressToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,7 +101,6 @@
             this.openToolStripMenuItem,
             this.recentToolStripMenuItem,
             this.exportShaderErrorsToolStripMenuItem,
-            this.saveConfigToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.exitToolStripMenuItem,
@@ -114,14 +116,14 @@
             // 
             this.newToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -129,31 +131,23 @@
             // 
             this.recentToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
-            this.recentToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.recentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.recentToolStripMenuItem.Text = "Recent";
             // 
             // exportShaderErrorsToolStripMenuItem
             // 
             this.exportShaderErrorsToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.exportShaderErrorsToolStripMenuItem.Name = "exportShaderErrorsToolStripMenuItem";
-            this.exportShaderErrorsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.exportShaderErrorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportShaderErrorsToolStripMenuItem.Text = "Export Shader Errors";
             this.exportShaderErrorsToolStripMenuItem.Click += new System.EventHandler(this.exportShaderErrorsToolStripMenuItem_Click);
-            // 
-            // saveConfigToolStripMenuItem
-            // 
-            this.saveConfigToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
-            this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.saveConfigToolStripMenuItem.Text = "Save Config";
-            this.saveConfigToolStripMenuItem.Click += new System.EventHandler(this.saveConfigToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Enabled = false;
             this.saveToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -162,7 +156,7 @@
             this.saveAsToolStripMenuItem.Enabled = false;
             this.saveAsToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -170,7 +164,7 @@
             // 
             this.exitToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click_1);
             // 
@@ -178,7 +172,7 @@
             // 
             this.clearWorkspaceToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.clearWorkspaceToolStripMenuItem.Name = "clearWorkspaceToolStripMenuItem";
-            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.clearWorkspaceToolStripMenuItem.Text = "Clear Workspace";
             this.clearWorkspaceToolStripMenuItem.Click += new System.EventHandler(this.clearWorkspaceToolStripMenuItem_Click);
             // 
@@ -209,7 +203,9 @@
             // 
             this.compressionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.yaz0ToolStripMenuItem,
-            this.gzipToolStripMenuItem});
+            this.gzipToolStripMenuItem,
+            this.lZ4ToolStripMenuItem,
+            this.lZ4FToolStripMenuItem});
             this.compressionToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.compressionToolStripMenuItem.Name = "compressionToolStripMenuItem";
             this.compressionToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
@@ -266,6 +262,39 @@
             this.gzipDecompressToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.gzipDecompressToolStripMenuItem.Text = "Decompress";
             this.gzipDecompressToolStripMenuItem.Click += new System.EventHandler(this.gzipDecompressToolStripMenuItem_Click);
+            // 
+            // lZ4ToolStripMenuItem
+            // 
+            this.lZ4ToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.lZ4ToolStripMenuItem.Name = "lZ4ToolStripMenuItem";
+            this.lZ4ToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.lZ4ToolStripMenuItem.Text = "LZ4";
+            // 
+            // lZ4FToolStripMenuItem
+            // 
+            this.lZ4FToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lz4fDecompressToolStripMenuItem,
+            this.lz4fCompressToolStripMenuItem1});
+            this.lZ4FToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.lZ4FToolStripMenuItem.Name = "lZ4FToolStripMenuItem";
+            this.lZ4FToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.lZ4FToolStripMenuItem.Text = "LZ4F";
+            // 
+            // lz4fDecompressToolStripMenuItem
+            // 
+            this.lz4fDecompressToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.lz4fDecompressToolStripMenuItem.Name = "lz4fDecompressToolStripMenuItem";
+            this.lz4fDecompressToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.lz4fDecompressToolStripMenuItem.Text = "Decompress";
+            this.lz4fDecompressToolStripMenuItem.Click += new System.EventHandler(this.lz4fDeompressToolStripMenuItem_Click);
+            // 
+            // lz4fCompressToolStripMenuItem1
+            // 
+            this.lz4fCompressToolStripMenuItem1.ForeColor = System.Drawing.Color.White;
+            this.lz4fCompressToolStripMenuItem1.Name = "lz4fCompressToolStripMenuItem1";
+            this.lz4fCompressToolStripMenuItem1.Size = new System.Drawing.Size(139, 22);
+            this.lz4fCompressToolStripMenuItem1.Text = "Compress";
+            this.lz4fCompressToolStripMenuItem1.Click += new System.EventHandler(this.lz4fCompressToolStripMenuItem1_Click);
             // 
             // pluginsToolStripMenuItem
             // 
@@ -361,7 +390,6 @@
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showObjectlistToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveConfigToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportShaderErrorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearWorkspaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressionToolStripMenuItem;
@@ -373,5 +401,9 @@
         private System.Windows.Forms.ToolStripMenuItem gzipDecompressToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem experimentalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lZ4ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lZ4FToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lz4fDecompressToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lz4fCompressToolStripMenuItem1;
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BNTXEditor));
             this.panel1 = new System.Windows.Forms.Panel();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
@@ -36,18 +37,27 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.imageBGComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.texSizeMipsLabel = new System.Windows.Forms.Label();
             this.mipLevelCounterLabel = new System.Windows.Forms.Label();
             this.BtnMipsRight = new System.Windows.Forms.Button();
             this.BtmMipsLeft = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.imageBGComboBox = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.arrayLevelCounterLabel = new System.Windows.Forms.Label();
+            this.btnRightArray = new System.Windows.Forms.Button();
+            this.btnLeftArray = new System.Windows.Forms.Button();
+            this.btnEdit = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.replaceSurfaceLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportSurfaceLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
             this.panel3.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -114,9 +124,9 @@
             // 
             this.panel4.Controls.Add(this.pictureBoxCustom1);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 53);
+            this.panel4.Location = new System.Drawing.Point(0, 80);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(593, 244);
+            this.panel4.Size = new System.Drawing.Size(593, 217);
             this.panel4.TabIndex = 4;
             // 
             // pictureBoxCustom1
@@ -126,13 +136,18 @@
             this.pictureBoxCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
-            this.pictureBoxCustom1.Size = new System.Drawing.Size(593, 244);
+            this.pictureBoxCustom1.Size = new System.Drawing.Size(593, 217);
             this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxCustom1.TabIndex = 0;
             this.pictureBoxCustom1.TabStop = false;
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.btnEdit);
+            this.panel3.Controls.Add(this.label5);
+            this.panel3.Controls.Add(this.arrayLevelCounterLabel);
+            this.panel3.Controls.Add(this.btnRightArray);
+            this.panel3.Controls.Add(this.btnLeftArray);
             this.panel3.Controls.Add(this.imageBGComboBox);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.texSizeMipsLabel);
@@ -142,8 +157,19 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 25);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(593, 28);
+            this.panel3.Size = new System.Drawing.Size(593, 55);
             this.panel3.TabIndex = 2;
+            // 
+            // imageBGComboBox
+            // 
+            this.imageBGComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.imageBGComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imageBGComboBox.FormattingEnabled = true;
+            this.imageBGComboBox.Location = new System.Drawing.Point(215, 7);
+            this.imageBGComboBox.Name = "imageBGComboBox";
+            this.imageBGComboBox.Size = new System.Drawing.Size(121, 21);
+            this.imageBGComboBox.TabIndex = 5;
+            this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -160,7 +186,7 @@
             // 
             this.texSizeMipsLabel.AutoSize = true;
             this.texSizeMipsLabel.ForeColor = System.Drawing.Color.White;
-            this.texSizeMipsLabel.Location = new System.Drawing.Point(3, 7);
+            this.texSizeMipsLabel.Location = new System.Drawing.Point(127, 34);
             this.texSizeMipsLabel.Name = "texSizeMipsLabel";
             this.texSizeMipsLabel.Size = new System.Drawing.Size(42, 13);
             this.texSizeMipsLabel.TabIndex = 3;
@@ -217,16 +243,84 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // imageBGComboBox
+            // label5
             // 
-            this.imageBGComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.imageBGComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imageBGComboBox.FormattingEnabled = true;
-            this.imageBGComboBox.Location = new System.Drawing.Point(215, 4);
-            this.imageBGComboBox.Name = "imageBGComboBox";
-            this.imageBGComboBox.Size = new System.Drawing.Size(121, 21);
-            this.imageBGComboBox.TabIndex = 5;
-            this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(342, 30);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(74, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Array Counter:";
+            // 
+            // arrayLevelCounterLabel
+            // 
+            this.arrayLevelCounterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.arrayLevelCounterLabel.AutoSize = true;
+            this.arrayLevelCounterLabel.ForeColor = System.Drawing.Color.White;
+            this.arrayLevelCounterLabel.Location = new System.Drawing.Point(415, 30);
+            this.arrayLevelCounterLabel.Name = "arrayLevelCounterLabel";
+            this.arrayLevelCounterLabel.Size = new System.Drawing.Size(42, 13);
+            this.arrayLevelCounterLabel.TabIndex = 8;
+            this.arrayLevelCounterLabel.Text = "00 / 00";
+            // 
+            // btnRightArray
+            // 
+            this.btnRightArray.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRightArray.Location = new System.Drawing.Point(533, 26);
+            this.btnRightArray.Name = "btnRightArray";
+            this.btnRightArray.Size = new System.Drawing.Size(57, 21);
+            this.btnRightArray.TabIndex = 7;
+            this.btnRightArray.Text = ">";
+            this.btnRightArray.UseVisualStyleBackColor = true;
+            this.btnRightArray.Click += new System.EventHandler(this.btnRightArray_Click);
+            // 
+            // btnLeftArray
+            // 
+            this.btnLeftArray.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLeftArray.Enabled = false;
+            this.btnLeftArray.Location = new System.Drawing.Point(470, 26);
+            this.btnLeftArray.Name = "btnLeftArray";
+            this.btnLeftArray.Size = new System.Drawing.Size(57, 21);
+            this.btnLeftArray.TabIndex = 6;
+            this.btnLeftArray.Text = "<";
+            this.btnLeftArray.UseVisualStyleBackColor = true;
+            this.btnLeftArray.Click += new System.EventHandler(this.btnLeftArray_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEdit.ForeColor = System.Drawing.Color.White;
+            this.btnEdit.Location = new System.Drawing.Point(6, 5);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(63, 23);
+            this.btnEdit.TabIndex = 12;
+            this.btnEdit.Text = "Edit";
+            this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.replaceSurfaceLevelToolStripMenuItem,
+            this.exportSurfaceLevelToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(188, 70);
+            // 
+            // replaceSurfaceLevelToolStripMenuItem
+            // 
+            this.replaceSurfaceLevelToolStripMenuItem.Name = "replaceSurfaceLevelToolStripMenuItem";
+            this.replaceSurfaceLevelToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.replaceSurfaceLevelToolStripMenuItem.Text = "Replace Surface Level";
+            this.replaceSurfaceLevelToolStripMenuItem.Click += new System.EventHandler(this.replaceSurfaceLevelToolStripMenuItem_Click);
+            // 
+            // exportSurfaceLevelToolStripMenuItem
+            // 
+            this.exportSurfaceLevelToolStripMenuItem.Name = "exportSurfaceLevelToolStripMenuItem";
+            this.exportSurfaceLevelToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.exportSurfaceLevelToolStripMenuItem.Text = "Export Surface Level";
+            this.exportSurfaceLevelToolStripMenuItem.Click += new System.EventHandler(this.exportSurfaceLevelToolStripMenuItem_Click);
             // 
             // BNTXEditor
             // 
@@ -243,6 +337,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -263,5 +358,13 @@
         private System.Windows.Forms.Label texSizeMipsLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox imageBGComboBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label arrayLevelCounterLabel;
+        private System.Windows.Forms.Button btnRightArray;
+        private System.Windows.Forms.Button btnLeftArray;
+        private System.Windows.Forms.Button btnEdit;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem replaceSurfaceLevelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportSurfaceLevelToolStripMenuItem;
     }
 }

@@ -72,6 +72,9 @@ namespace Switch_Toolbox
                     case "PreviewScale":
                         float.TryParse(node.InnerText, out Runtime.previewScale);
                         break;
+                    case "Yaz0CompressionLevel":
+                        int.TryParse(node.InnerText, out Runtime.Yaz0CompressionLevel);
+                        break;
                 }
             }
         }
@@ -89,6 +92,7 @@ namespace Switch_Toolbox
             AppendMainFormSettings(doc, mainNode);
             AppendObjectlistSettings(doc, mainNode);
             AppendRenderSettings(doc, mainNode);
+            AppendOCompressionFilelistSettings(doc, mainNode);
 
             return doc;
         }
@@ -98,7 +102,12 @@ namespace Switch_Toolbox
             parentNode.AppendChild(mainSettingsNode);
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
         }
-
+        private static void AppendOCompressionFilelistSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode compSettingsNode = doc.CreateElement("COMPRESSIONSETTINGS");
+            parentNode.AppendChild(compSettingsNode);
+            compSettingsNode.AppendChild(createNode(doc, "Yaz0CompressionLevel", Runtime.Yaz0CompressionLevel.ToString()));
+        }
         private static void AppendObjectlistSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode objlistSettingsNode = doc.CreateElement("OBJLISTSETTINGS");

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -23,7 +24,7 @@ namespace FirstPlugin
                 Text = Name;
             }
         }
-        public void LoadMaterials(string SelectedMat, List<BFRESRender.FMDL> models)
+        public void LoadMaterials(string SelectedMat, List<FMDL> models)
         {
             foreach (var mdl in models)
             {

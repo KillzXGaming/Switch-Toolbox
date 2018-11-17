@@ -25,11 +25,13 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNode EditorRoot { get; set; }
+        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
         public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
+
         public Type[] Types
         {
             get
@@ -117,7 +119,7 @@ namespace FirstPlugin
             CanSave = true;
 
             beaFile = new BezelEngineArchive(new MemoryStream(Data));
-            EditorRoot = new RootNode(Path.GetFileName(FileName));
+            EditorRoot = new RootNode(Path.GetFileName(FileName), this);
             TreeNode root = EditorRoot;
 
             FillTreeNodes(root, beaFile.FileList);
@@ -158,11 +160,12 @@ namespace FirstPlugin
         }
 
 
-        public class RootNode : TreeNodeCustom
+        public class RootNode : TreeNodeFile
         {
-            public RootNode(string n)
+            public RootNode(string n, IFileFormat format)
             {
                 Text = n;
+                FileHandler = format;
 
                 ContextMenu = new ContextMenu();
                 MenuItem previewFiles = new MenuItem("Preview Window");
@@ -451,8 +454,6 @@ namespace FirstPlugin
                             format.EditorRoot.SelectedImageKey = SelectedImageKey;
 
                             Nodes.Add(format.EditorRoot);
-
-                        //     ReplaceNode(this.Parent, this, format.EditorRoot);
                         }
                     }
                     if (format.Magic == String.Empty) //Load by extension if magic isn't defined

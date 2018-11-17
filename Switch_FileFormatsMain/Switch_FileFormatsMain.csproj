@@ -50,20 +50,21 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ByamlExt">
-      <HintPath>..\EditorCore-master\EditorCore\bin\Debug\Ext\ByamlExt.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\ByamlExt.dll</HintPath>
     </Reference>
     <Reference Include="Costura, Version=3.1.4.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.1.4\lib\net46\Costura.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EditorCoreCommon">
-      <HintPath>..\EditorCore-master\EditorCore\bin\Debug\EditorCoreCommon.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\EditorCoreCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KCLExt">
-      <HintPath>Externals\KCLExt.dll</HintPath>
+    <Reference Include="KCLExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Switch_Toolbox\Lib\KCLExt.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio">
       <HintPath>Externals\NAudio.dll</HintPath>
       <Private>False</Private>
@@ -75,6 +76,10 @@
     </Reference>
     <Reference Include="OpenTK.GLControl">
       <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\OpenTK.GLControl.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore">
       <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -96,6 +101,10 @@
     </Reference>
     <Reference Include="Syroot.Maths">
       <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\Syroot.Maths.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.Bfres">
+      <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -162,7 +171,10 @@
     <Compile Include="FileFormats\MSBT.cs" />
     <Compile Include="FileFormats\SARC.cs" />
     <Compile Include="FileFormats\Texture\BNTX.cs" />
+    <Compile Include="FileFormats\Texture\FTEX.cs" />
+    <Compile Include="FileFormats\Texture\GTX.cs" />
     <Compile Include="FileFormats\Texture\TegraX1Swizzle.cs" />
+    <Compile Include="FileFormats\Texture\TexConv.cs" />
     <Compile Include="FileFormats\Texture\XTX.cs" />
     <Compile Include="GL\BFRES_Render.cs" />
     <Compile Include="GUI\Advanced Editor\TextureOpenEditor.cs">
@@ -254,6 +266,13 @@
     </Compile>
     <Compile Include="GUI\BFRES\BfresShapeEditor.Designer.cs">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\FormLoader.cs" />
+    <Compile Include="GUI\TextureUI\FTEXEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\FTEXEditor.Designer.cs">
+      <DependentUpon>FTEXEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\TextureUI\BNTXEditor.cs">
       <SubType>UserControl</SubType>
@@ -387,6 +406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\FTEXEditor.resx">
+      <DependentUpon>FTEXEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureUI\BNTXEditor.resx">
       <DependentUpon>BNTXEditor.cs</DependentUpon>

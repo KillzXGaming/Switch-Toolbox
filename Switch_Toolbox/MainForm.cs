@@ -29,6 +29,9 @@ namespace Switch_Toolbox
         IFileFormat[] SupportedFormats;
         IFileMenuExtension[] FileMenuExtensions;
 
+        private static MainForm _instance;
+        public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
+
         public MainForm()
         {
             InitializeComponent();
@@ -207,8 +210,10 @@ namespace Switch_Toolbox
         public void SaveFile(IFileFormat format, string FileName)
         {
             byte[] data = format.Save();
-            int Alignment = format.Alignment;
-            Console.WriteLine(Alignment);
+            int Alignment = 0;
+
+            if (format.IFileInfo != null)
+               Alignment = format.IFileInfo.Alignment;
 
             SaveCompressFile(data, FileName, Alignment);
         }
@@ -249,6 +254,15 @@ namespace Switch_Toolbox
             {
                 data = FileReader.InflateZLIB(f.getSection(64, data.Length - 64));
                 OpenFile(FileName, data, true, CompressionType.Zlib);
+                return;
+            }
+            if (Path.GetExtension(FileName) == ".cmp" && CompType == CompressionType.None)
+            {
+                f.Position = 0;
+                int OuSize = f.ReadInt32();
+                int InSize = data.Length - 4;
+                data = STLibraryCompression.Type_LZ4F.Decompress(f.getSection(4, InSize));
+                OpenFile(FileName, data, true, CompressionType.Lz4f);
                 return;
             }
 
@@ -472,7 +486,7 @@ namespace Switch_Toolbox
 
                 foreach (IFileFormat format in SupportedFormats)
                 {
-                    if (format.IsActive)
+                    if (format.CanSave)
                     {
                         format.Unload();
                     }
@@ -487,7 +501,7 @@ namespace Switch_Toolbox
             switch (CompressionType)
             {
                 case CompressionType.Yaz0:
-                    SaveFileForCompression(EveryFileExplorer.YAZ0.Compress(data));
+                    SaveFileForCompression(EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel));
                     break;
                 case CompressionType.Zlib:
                     break;
@@ -495,6 +509,12 @@ namespace Switch_Toolbox
                     SaveFileForCompression(STLibraryCompression.GZIP.Compress(data));
                     break;
                 case CompressionType.Zstb:
+                    break;
+                case CompressionType.Lz4f:
+                    SaveFileForCompression(STLibraryCompression.Type_LZ4F.Compress(data));
+                    break;
+                case CompressionType.Lz4:
+                    SaveFileForCompression(STLibraryCompression.Type_LZ4.Compress(data));
                     break;
             }
         }
@@ -513,6 +533,12 @@ namespace Switch_Toolbox
                         SaveFileForCompression(STLibraryCompression.GZIP.Decompress(data));
                         break;
                     case CompressionType.Zstb:
+                        break;  
+                    case CompressionType.Lz4f:
+                        SaveFileForCompression(STLibraryCompression.Type_LZ4F.Decompress(data));
+                        break;
+                    case CompressionType.Lz4:
+                        SaveFileForCompression(STLibraryCompression.Type_LZ4.Decompress(data));
                         break;
                 }
             }
@@ -520,7 +546,6 @@ namespace Switch_Toolbox
             {
                 MessageBox.Show($"File not compressed with {CompressionType} compression!");
             }
-
         }
 
         private void yaz0DecompressToolStripMenuItem_Click(object sender, EventArgs e)
@@ -535,9 +560,25 @@ namespace Switch_Toolbox
         {
             OpenFileForCompression(CompressionType.Gzip, true);
         }
+        private void lz4CompressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileForCompression(CompressionType.Lz4, false);
+        }
+        private void lz4fCompressToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            OpenFileForCompression(CompressionType.Lz4f, true);
+        }
         private void gzipDecompressToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileForCompression(CompressionType.Gzip, false);
+        }
+        private void lz4DecompressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileForCompression(CompressionType.Lz4, false);
+        }
+        private void lz4fDeompressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileForCompression(CompressionType.Lz4f, false);
         }
 
         private void SaveFileForCompression(byte[] data)

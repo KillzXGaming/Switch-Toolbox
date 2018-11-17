@@ -208,6 +208,9 @@
             // 
             // textureRefListView
             // 
+            this.textureRefListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textureRefListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.textureRefListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textureRefListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {

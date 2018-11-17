@@ -11,12 +11,13 @@ using WeifenLuo.WinFormsUI.Docking;
 using Syroot.NintenTools.NSW.Bfres;
 using OpenTK;
 using Switch_Toolbox.Library;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
     public partial class FMATEditor : UserControl
     {
-        public BFRESRender.FMAT material;
+        public FMAT material;
 
         public BFRESRender bfresRender;
 
@@ -45,7 +46,7 @@ namespace FirstPlugin
         {
 
         }
-        public void LoadMaterial(BFRESRender.FMAT mat, BFRESRender bfres)
+        public void LoadMaterial(FMAT mat, BFRESRender bfres)
         {
             bfresRender = bfres;
             material = mat;
@@ -82,7 +83,7 @@ namespace FirstPlugin
             else
                 return "";
         }
-        private void InitializeShaderOptionList(BFRESRender.FMAT material)
+        private void InitializeShaderOptionList(FMAT material)
         {
             shaderOptionsListView.Items.Clear();
 
@@ -91,7 +92,7 @@ namespace FirstPlugin
                 shaderOptionsListView.Items.Add(option.Key).SubItems.Add(option.Value);
             }
         }
-        private void InitializeShaderParamList(BFRESRender.FMAT material)
+        private void InitializeShaderParamList(FMAT material)
         {
             listView1.Items.Clear();
 
@@ -162,13 +163,13 @@ namespace FirstPlugin
             listView1.SmallImageList = il;
             listView1.FullRowSelect = true;
         }
-        public void InitializeTextureListView(BFRESRender.FMAT material)
+        public void InitializeTextureListView(FMAT material)
         {
             textureRefListView.Items.Clear();
             textureRefListView.SmallImageList = textureImageList;
             textureRefListView.FullRowSelect = true;
 
-            foreach (BFRESRender.MatTexture tex in material.textures)
+            foreach (MatTexture tex in material.textures)
             {
                 ListViewItem item = new ListViewItem();
                 item.Text = tex.Name;
@@ -186,7 +187,8 @@ namespace FirstPlugin
             textureImageList.Images.Clear();
 
             int CurTex = 0;
-            if (PluginRuntime.bntxContainers.Count == 0)
+            if (PluginRuntime.bntxContainers.Count == 0 &&
+                PluginRuntime.ftexContainers.Count == 0)
             {
                 foreach (ListViewItem item in textureRefListView.Items)
                 {
@@ -214,6 +216,24 @@ namespace FirstPlugin
                         temp.Dispose();
                     }
                 }
+                foreach (FTEXContainer ftexCont in PluginRuntime.ftexContainers)
+                {
+                    if (ftexCont.Textures.ContainsKey(item.Text))
+                    {
+                        FoundTexture = true;
+
+                        FTEX tex = ftexCont.Textures[item.Text];
+                        FTEX.RenderableTex renderedTex = tex.renderedTex;
+                        Bitmap temp = tex.GLTextureToBitmap(renderedTex, renderedTex.display);
+
+                        textureImageList.Images.Add(tex.Text, temp);
+
+                        item.ImageIndex = CurTex++;
+
+                        var dummy = textureImageList.Handle;
+                        temp.Dispose();
+                    }
+                }
                 if (FoundTexture == false)
                 {
                     AddBlankTexture(item, item.Text, CurTex++);
@@ -230,7 +250,7 @@ namespace FirstPlugin
             var dummy = textureImageList.Handle;
             temp.Dispose();
         }
-        private void InitializeRenderInfoList(BFRESRender.FMAT material)
+        private void InitializeRenderInfoList(FMAT material)
         {
             renderInfoListView.Items.Clear();
 
@@ -465,7 +485,7 @@ namespace FirstPlugin
         private void btnSamplerEditor_Click(object sender, EventArgs e)
         {
             SamplerEditor samplerEditor = new SamplerEditor();
-            foreach (BFRESRender.MatTexture tex in material.textures)
+            foreach (MatTexture tex in material.textures)
             {
                 if (tex.Name == textureRefListView.SelectedItems[0].Text)
                 {

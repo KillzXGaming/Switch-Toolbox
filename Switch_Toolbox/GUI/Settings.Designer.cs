@@ -33,6 +33,8 @@
             this.chkBoxNormalMap = new System.Windows.Forms.CheckBox();
             this.shadingComboBox = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.previewScaleUD = new System.Windows.Forms.NumericUpDown();
             this.chkBoxDisplayPolyCount = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.camFarNumUD = new System.Windows.Forms.NumericUpDown();
@@ -49,13 +51,16 @@
             this.GLSLVerLabel = new System.Windows.Forms.Label();
             this.openGLVerLabel = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.previewScaleUD = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.yazoCompressionLevelUD = new System.Windows.Forms.NumericUpDown();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.previewScaleUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.camFarNumUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.camNearNumUD)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.previewScaleUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yazoCompressionLevelUD)).BeginInit();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -127,6 +132,40 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(534, 246);
             this.panel2.TabIndex = 4;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.Location = new System.Drawing.Point(285, 196);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(75, 13);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Preview Scale";
+            // 
+            // previewScaleUD
+            // 
+            this.previewScaleUD.DecimalPlaces = 3;
+            this.previewScaleUD.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.previewScaleUD.Location = new System.Drawing.Point(363, 194);
+            this.previewScaleUD.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.previewScaleUD.Name = "previewScaleUD";
+            this.previewScaleUD.Size = new System.Drawing.Size(171, 20);
+            this.previewScaleUD.TabIndex = 14;
+            this.previewScaleUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.previewScaleUD.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // chkBoxDisplayPolyCount
             // 
@@ -288,7 +327,7 @@
             this.panel1.Controls.Add(this.openGLVerLabel);
             this.panel1.Location = new System.Drawing.Point(12, 13);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(534, 137);
+            this.panel1.Size = new System.Drawing.Size(215, 137);
             this.panel1.TabIndex = 5;
             // 
             // GLSLVerLabel
@@ -321,39 +360,47 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // label6
+            // label7
             // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(285, 196);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(75, 13);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Preview Scale";
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.Location = new System.Drawing.Point(3, 14);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(123, 13);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "Yaz0 Compression Level";
             // 
-            // previewScaleUD
+            // yazoCompressionLevelUD
             // 
-            this.previewScaleUD.DecimalPlaces = 3;
-            this.previewScaleUD.Increment = new decimal(new int[] {
+            this.yazoCompressionLevelUD.Location = new System.Drawing.Point(130, 12);
+            this.yazoCompressionLevelUD.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.yazoCompressionLevelUD.Minimum = new decimal(new int[] {
             1,
             0,
             0,
-            131072});
-            this.previewScaleUD.Location = new System.Drawing.Point(363, 194);
-            this.previewScaleUD.Minimum = new decimal(new int[] {
+            0});
+            this.yazoCompressionLevelUD.Name = "yazoCompressionLevelUD";
+            this.yazoCompressionLevelUD.Size = new System.Drawing.Size(42, 20);
+            this.yazoCompressionLevelUD.TabIndex = 16;
+            this.yazoCompressionLevelUD.Value = new decimal(new int[] {
             1,
             0,
             0,
-            131072});
-            this.previewScaleUD.Name = "previewScaleUD";
-            this.previewScaleUD.Size = new System.Drawing.Size(171, 20);
-            this.previewScaleUD.TabIndex = 14;
-            this.previewScaleUD.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.previewScaleUD.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            0});
+            this.yazoCompressionLevelUD.ValueChanged += new System.EventHandler(this.yazoCompressionLevelUD_ValueChanged);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.yazoCompressionLevelUD);
+            this.panel3.Controls.Add(this.label7);
+            this.panel3.Location = new System.Drawing.Point(233, 12);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(313, 138);
+            this.panel3.TabIndex = 18;
             // 
             // Settings
             // 
@@ -361,6 +408,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.ClientSize = new System.Drawing.Size(551, 443);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
@@ -370,11 +418,14 @@
             this.Load += new System.EventHandler(this.Settings_Load);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.previewScaleUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.camFarNumUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.camNearNumUD)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.previewScaleUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yazoCompressionLevelUD)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -404,5 +455,8 @@
         private System.Windows.Forms.CheckBox chkBoxDisplayPolyCount;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown previewScaleUD;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown yazoCompressionLevelUD;
+        private System.Windows.Forms.Panel panel3;
     }
 }

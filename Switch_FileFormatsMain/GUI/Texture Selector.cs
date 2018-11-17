@@ -20,11 +20,24 @@ namespace FirstPlugin
 
         public void LoadTexture()
         {
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            if (BFRES.IsWiiU)
             {
-                foreach (TextureData tex in bntx.Textures.Values)
-                    listView1.Items.Add(tex.Text);
+                foreach (FTEXContainer ftexcont in PluginRuntime.ftexContainers)
+                {
+                    foreach (FTEX tex in ftexcont.Textures.Values)
+                        listView1.Items.Add(tex.Text);
+                }
             }
+            else
+            {
+                foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                {
+                    foreach (TextureData tex in bntx.Textures.Values)
+                        listView1.Items.Add(tex.Text);
+                }
+            }
+
+  
             if (listView1.Items.Count > 0)
             {
                 listView1.Items[0].Selected = true;
@@ -41,12 +54,37 @@ namespace FirstPlugin
             if (listView1.SelectedItems.Count > 0)
             {
                 string TexName = listView1.SelectedItems[0].Text;
-                foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                if (BFRES.IsWiiU)
                 {
-                    if (bntx.Textures.ContainsKey(TexName))
-                        DisplayTexture(bntx.Textures[TexName]);
+                    foreach (FTEXContainer ftexcont in PluginRuntime.ftexContainers)
+                    {
+                        if (ftexcont.Textures.ContainsKey(TexName))
+                            DisplayTexture(ftexcont.Textures[TexName]);
+                    }
                 }
+                else
+                {
+                    foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                    {
+                        if (bntx.Textures.ContainsKey(TexName))
+                            DisplayTexture(bntx.Textures[TexName]);
+                    }
+                }  
             }
+        }
+        private void DisplayTexture(FTEX texData)
+        {
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
+
+            Thread = new Thread((ThreadStart)(() =>
+            {
+                pictureBoxCustom1.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                pictureBoxCustom1.Image = texData.DisplayTexture();
+                //  texSizeMipsLabel.Text = $"Width = {pictureBoxCustom1.Image.Width} Height = {pictureBoxCustom1.Image.Height}";
+            }));
+            Thread.Start();
         }
         private void DisplayTexture(TextureData texData)
         {

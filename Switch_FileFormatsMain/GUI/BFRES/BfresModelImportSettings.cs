@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres.GFX;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.Rendering;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -82,76 +83,76 @@ namespace FirstPlugin
             EnableUV1 = obj.HasUv1;
             EnableUV2 = obj.HasUv2;
         }
-        public List<BFRESRender.FSHP.VertexAttribute> CreateNewAttributes()
+        public List<FSHP.VertexAttribute> CreateNewAttributes()
         {
-            List<BFRESRender.FSHP.VertexAttribute> attribute = new List<BFRESRender.FSHP.VertexAttribute>();
+            List<FSHP.VertexAttribute> attribute = new List<FSHP.VertexAttribute>();
 
             if (EnablePositions)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_p0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatPositions));
                 attribute.Add(att);
             }
             if (EnableNormals)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_n0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatNormals));
                 attribute.Add(att);
             }
             if (EnableVertexColors)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_c0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatVertexColors));
                 attribute.Add(att);
             }
             if (EnableUV0)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_u0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatUvs));
                 attribute.Add(att);
             }
             if (EnableUV1 && EnableUV0)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_u1";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatUvs));
                 attribute.Add(att);
             }
             if (EnableUV2 && EnableUV0)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_u2";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatUvs));
                 attribute.Add(att);
             }
             if (EnableTangents)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_t0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatTangents));
                 attribute.Add(att);
             }
             if (EnableBitangents)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_b0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatBitans));
                 attribute.Add(att);
             }
             if (EnableWeights)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_w0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatWeights));
                 attribute.Add(att);
             }
             if (EnableIndices)
             {
-                BFRESRender.FSHP.VertexAttribute att = new BFRESRender.FSHP.VertexAttribute();
+                FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_i0";
                 att.Format = SetAttribFormat(GetCmboxString(comboBoxFormatIndices));
                 attribute.Add(att);

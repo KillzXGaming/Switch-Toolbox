@@ -64,6 +64,11 @@ namespace Switch_Toolbox.Library
             return scaleMat * (rotXMat * rotYMat * rotZMat) * positionMat;
         }
 
+        public static string GenerateUniqueHashID()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
         public static string GetAllFilters(IEnumerable<IFileFormat> format)
         {
             var alltypes = format;

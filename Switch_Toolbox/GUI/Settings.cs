@@ -43,6 +43,7 @@ namespace Switch_Toolbox
             camNearNumUD.Value = (decimal)Runtime.CameraNear;
             camFarNumUD.Value = (decimal)Runtime.CameraFar;
             previewScaleUD.Value = (decimal)Runtime.previewScale;
+            yazoCompressionLevelUD.Value = Runtime.Yaz0CompressionLevel;
 
             GLSLVerLabel.Text   = $"Open GL Version: {Runtime.GLSLVersion}";
             openGLVerLabel.Text = $"GLSL Version:     {Runtime.openGLVersion}";
@@ -126,6 +127,11 @@ namespace Switch_Toolbox
             Runtime.previewScale = (float)previewScaleUD.Value;
             Viewport.Instance.LoadViewportRuntimeValues();
             Viewport.Instance.UpdateViewport();
+        }
+
+        private void yazoCompressionLevelUD_ValueChanged(object sender, EventArgs e)
+        {
+            Runtime.Yaz0CompressionLevel = (int)yazoCompressionLevelUD.Value;
         }
     }
 }

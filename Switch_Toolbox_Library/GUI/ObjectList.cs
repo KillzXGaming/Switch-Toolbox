@@ -151,7 +151,7 @@ namespace Switch_Toolbox.Library
         {
             foreach (IFileFormat file in FileManager.GetFileFormats())
             {
-                if (file.IsActive)
+                if (file.IFileInfo.IsActive)
                 {
                     DialogResult dialogResult = MessageBox.Show("Are you sure you want to close this tab? Doing so may result in losing progress.", "", MessageBoxButtons.YesNo);
                     if (dialogResult != DialogResult.Yes)
@@ -207,6 +207,19 @@ namespace Switch_Toolbox.Library
         private void ObjectList_Load(object sender, EventArgs e)
         {
            // this.treeView1.DrawMode = TreeViewDrawMode.OwnerDrawText;
+        }
+
+        private void treeView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                TreeViewHitTestInfo info = treeView1.HitTest(treeView1.PointToClient(Cursor.Position));
+                if (info != null && info.Node is TreeNodeCustom)
+                {
+                    ((TreeNodeCustom)info.Node).OnMouseClick(treeView1);
+                    treeView1.SelectedNode = info.Node;
+                }
+            }
         }
     }
 }

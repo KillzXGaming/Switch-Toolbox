@@ -18,15 +18,21 @@ namespace Switch_Toolbox.Library
         bool FileIsCompressed { get; set; }
         bool FileIsEdited { get; set; }
         bool CanSave { get; set; }
-        bool IsActive { get; set; }
         bool UseEditMenu { get; set; }
         byte[] Data { get; set; }
         string FileName { get; set; }
         string FilePath { get; set; }
-        TreeNode EditorRoot { get; set; }
+        TreeNodeFile EditorRoot { get; set; }
         void Load();
         void Unload();
         byte[] Save();
-        int Alignment { get; set; } //Alignment to save the file back. Also used for Yaz0 comp sometimes
+        IFileInfo IFileInfo { get; set; }
+    }
+    public class IFileInfo
+    {
+        public virtual bool IsActive { get; set; }
+        public virtual string ArchiveHash { get; set; }
+        public virtual bool InArchive { get; set; }
+        public virtual int Alignment { get; set; } //Alignment to save the file back. Also used for Yaz0 comp sometimes
     }
 }

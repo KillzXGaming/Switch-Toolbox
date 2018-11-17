@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres;
 using Switch_Toolbox.Library;
 using OpenTK;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -36,9 +37,9 @@ namespace FirstPlugin
         BoolValuesPanel boolPanel;
         SRTValuesPanel SRTPanel;
         FloatsIntsValuePanel FloatIntsPanel;
-        public BFRESRender.BfresShaderParam activeParam;
+        public BfresShaderParam activeParam;
 
-        public void LoadParam(BFRESRender.BfresShaderParam param)
+        public void LoadParam(BfresShaderParam param)
         {
             panel1.Controls.Clear();
 
@@ -123,7 +124,7 @@ namespace FirstPlugin
                     break;
             }
         }
-        public void SetColorBox(BFRESRender.BfresShaderParam param)
+        public void SetColorBox(BfresShaderParam param)
         {
             Vector4 color = new Vector4();
             switch (param.Type)

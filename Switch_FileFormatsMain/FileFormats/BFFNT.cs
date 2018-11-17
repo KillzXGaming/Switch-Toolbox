@@ -22,11 +22,13 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNode EditorRoot { get; set; }
+        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
         public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
+
         public Type[] Types
         {
             get
@@ -44,7 +46,7 @@ namespace FirstPlugin
 
             TGLP tglp = bffnt.finf.tglp;
 
-            EditorRoot = new TreeNode(FileName);
+            EditorRoot = new TreeNodeFile(FileName, this);
 
             int i = 0;
             foreach (byte[] texture in tglp.SheetDataList)

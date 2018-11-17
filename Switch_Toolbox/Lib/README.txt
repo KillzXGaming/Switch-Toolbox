@@ -1,1 +1,0 @@
-Note if you hae an issue with your libray being in this repo please contact me and i will remove it!.

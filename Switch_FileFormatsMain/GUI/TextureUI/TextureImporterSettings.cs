@@ -184,7 +184,7 @@ namespace FirstPlugin
         {
             return data.Skip((int)offset).Take((int)length).ToArray();
         }
-        private Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkHeight, uint blkWidth, uint bpp, int CurLevel)
+        private static Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkHeight, uint blkWidth, uint bpp, int CurLevel)
         {
             uint offset = 0;
             uint width_ = 0;
@@ -213,42 +213,11 @@ namespace FirstPlugin
             tex.Format = Format;
             tex.Name = settings.TexName;
             tex.Path = "";
+            tex.TextureData = new List<List<byte[]>>();
 
             if (settings.MipCount == 0)
                 settings.MipCount = 1;
-
-            uint blockHeight = 0;
-            uint blk_dim = Formats.blk_dims((uint)((int)tex.Format >> 8));
-            uint blkWidth = blk_dim >> 4;
-            uint blkHeight = blk_dim & 0xF;
-            uint linesPerBlockHeight = 0;
-
-            Console.WriteLine("blkWidth " + blkWidth);
-            Console.WriteLine("blkHeight " + blkHeight);
-
-            uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
-
-            if ((int)settings.TileMode == 1)
-            {
-                blockHeight = 1;
-                tex.BlockHeightLog2 = 0;
-                tex.Alignment = 1;
-
-                linesPerBlockHeight = 1;
-                tex.ReadTextureLayout = 0;
-            }
-            else
-            {
-                blockHeight = TegraX1Swizzle.GetBlockHeight(DIV_ROUND_UP(tex.Height, blkHeight));
-                tex.BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-                Console.WriteLine("BlockHeightLog2 " + tex.BlockHeightLog2);
-                Console.WriteLine("blockHeight " + blockHeight);
-                tex.Alignment = 512;
-                tex.ReadTextureLayout = 1;
-
-                linesPerBlockHeight = blockHeight * 8;
-
-            }
+       
             tex.sparseBinding = settings.sparseBinding;
             tex.sparseResidency = settings.sparseResidency;
             tex.AccessFlags = settings.AccessFlags;
@@ -270,14 +239,56 @@ namespace FirstPlugin
             tex.Regs = settings.Regs;
             tex.Pitch = settings.Pitch;
 
-            uint SurfaceSize = 0;
             tex.MipOffsets = new long[tex.MipCount];
+
+            List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, data, tex.TileMode);
+            tex.TextureData.Add(mipmaps);
+            byte[] test = Combine(mipmaps);
+            tex.TextureData[0][0] = test;
+
+            return tex;
+        }
+        public static List<byte[]> SwizzleSurfaceMipMaps(FTEX tex, byte[] data)
+        {
+            throw new Exception("Unimplemented");
+        }
+        public static List<byte[]> SwizzleSurfaceMipMaps(Texture tex,byte[] data, TileMode TileMode)
+        {
             int blockHeightShift = 0;
             int target = 1;
             uint Pitch = 0;
+            uint SurfaceSize = 0;
+            uint blockHeight = 0;
+            uint blk_dim = Formats.blk_dims((uint)((int)tex.Format >> 8));
+            uint blkWidth = blk_dim >> 4;
+            uint blkHeight = blk_dim & 0xF;
+            uint linesPerBlockHeight = 0;
 
-            tex.TextureData = new byte[tex.MipCount][];
+            uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
 
+            if ((int)TileMode == 1)
+            {
+                blockHeight = 1;
+                tex.BlockHeightLog2 = 0;
+                tex.Alignment = 1;
+
+                linesPerBlockHeight = 1;
+                tex.ReadTextureLayout = 0;
+            }
+            else
+            {
+                blockHeight = TegraX1Swizzle.GetBlockHeight(DIV_ROUND_UP(tex.Height, blkHeight));
+                tex.BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
+                Console.WriteLine("BlockHeightLog2 " + tex.BlockHeightLog2);
+                Console.WriteLine("blockHeight " + blockHeight);
+                tex.Alignment = 512;
+                tex.ReadTextureLayout = 1;
+
+                linesPerBlockHeight = blockHeight * 8;
+
+            }
+
+            List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < tex.MipCount; mipLevel++)
             {
                 var result = GetCurrentMipSize(tex.Width, tex.Height, blkWidth, blkHeight, bpp, mipLevel);
@@ -301,10 +312,6 @@ namespace FirstPlugin
                 Console.WriteLine("MipOffsets " + SurfaceSize);
 
                 tex.MipOffsets[mipLevel] = SurfaceSize;
-                //   Console.WriteLine("MipOffsets " + SurfaceSize);
-
-                //    Console.WriteLine("mipamp " + mipLevel);
-
                 if (tex.TileMode == TileMode.LinearAligned)
                 {
                     Pitch = width__ * bpp;
@@ -335,18 +342,14 @@ namespace FirstPlugin
 
                     byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, blkWidth, blkHeight, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), data_);
 
-                    tex.TextureData[mipLevel] = AlignedData.Concat(SwizzledData).ToArray();
+                    mipmaps.Add(AlignedData.Concat(SwizzledData).ToArray());
                 }
             }
             tex.ImageSize = SurfaceSize;
 
-            byte[] test = Combine(tex.TextureData);
-
-            tex.TextureData[0] = test;
-
-            return tex;
+            return mipmaps;
         }
-        private byte[] Combine(params byte[][] arrays)
+        private byte[] Combine(List<byte[]> arrays)
         {
             byte[] rv = new byte[arrays.Sum(a => a.Length)];
             int offset = 0;

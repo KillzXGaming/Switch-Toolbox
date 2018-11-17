@@ -181,7 +181,6 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            MessageBox.Show("Saving... " + bntx.Name);
             return bntx.Save();
         }
     }
@@ -232,8 +231,6 @@ namespace FirstPlugin
             bntx.RelocationTable = new RelocationTable();
             bntx.Flag = 0;
             bntx.Save(mem);
-
-            File.WriteAllBytes("NewTex.bntx", mem.ToArray());
 
             return mem.ToArray();
         }

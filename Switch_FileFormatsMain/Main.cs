@@ -25,7 +25,7 @@ namespace FirstPlugin
         {
             get
             {
-                return "Main File Formats Plugin";
+                return "First Plugin";
             }
             set
             {
@@ -125,15 +125,15 @@ namespace FirstPlugin
             Formats.Add(typeof(BNTX));
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));
-        //    Formats.Add(typeof(XTX));
+            Formats.Add(typeof(XTX));
             Formats.Add(typeof(KCL));
             Formats.Add(typeof(BFFNT));
-      //      Formats.Add(typeof(MSBT));
+            Formats.Add(typeof(MSBT));
             Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BARS));
-      //      Formats.Add(typeof(BFLAN));
-     //       Formats.Add(typeof(BFLYT));
-     //       Formats.Add(typeof(CsvModel));
+            Formats.Add(typeof(BFLAN));
+            Formats.Add(typeof(BFLYT));
+            Formats.Add(typeof(CsvModel));
             Formats.Add(typeof(GFPAK));
 
             

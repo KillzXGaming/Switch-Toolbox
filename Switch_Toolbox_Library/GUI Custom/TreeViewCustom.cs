@@ -11,13 +11,31 @@ namespace Switch_Toolbox.Library
 {
     public abstract class TreeNodeCustom : TreeNode
     {
-        public abstract void OnClick(TreeView treeview);
+        public virtual void OnClick(TreeView treeview) { }
+        public virtual void OnMouseClick(TreeView treeview) { }
+        public virtual void OnDoubleMouseClick(TreeView treeview) { }
 
         public TreeNodeCustom()
         {
         }
     }
+    public class TreeNodeFile : TreeNodeCustom
+    {
+        public IFileFormat FileHandler;
+        public TreeNodeFile()
+        {
 
+        }
+        public TreeNodeFile(IFileFormat handler)
+        {
+
+        }
+        public TreeNodeFile(string text, IFileFormat handler)
+        {
+            Text = text;
+            FileHandler = handler;
+        }
+    }
     public class TreeViewCustom : TreeView
     {
         private readonly Dictionary<int, TreeNode> _treeNodes = new Dictionary<int, TreeNode>();
@@ -51,7 +69,7 @@ namespace Switch_Toolbox.Library
             imgList.Images.Add("bfstp", Properties.Resources.Music2);
             imgList.Images.Add("material", Properties.Resources.materialSphere);
             imgList.Images.Add("model", Properties.Resources.model);
-            imgList.Images.Add("skeleton", Properties.Resources.skeleton);
+            imgList.Images.Add("folder", Properties.Resources.skeleton);
 
             this.ImageList = imgList;
         }
