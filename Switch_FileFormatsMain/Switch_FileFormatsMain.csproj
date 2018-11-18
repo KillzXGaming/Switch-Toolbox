@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Switch_Toolbox\bin\Debug\Lib\Plugins\</OutputPath>
+    <OutputPath>..\Switch_Toolbox\Lib\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,7 +30,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Switch_Toolbox\bin\Release\Lib\Plugins\</OutputPath>
+    <OutputPath>..\Switch_Toolbox\Lib\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,10 +40,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BarsLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ConsoleApp1\BarsLibrary\bin\Release\BarsLibrary.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="BarsLibrary">
+      <HintPath>..\Switch_Toolbox\Lib\BarsLibrary.dll</HintPath>
     </Reference>
     <Reference Include="BezelEngineArchive_Lib">
       <HintPath>..\Switch_Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
@@ -52,7 +50,7 @@
       <HintPath>..\Switch_Toolbox\Lib\ByamlExt.dll</HintPath>
     </Reference>
     <Reference Include="Costura, Version=3.1.4.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.3.1.4\lib\net46\Costura.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\Costura.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EditorCoreCommon">
@@ -67,12 +65,12 @@
       <HintPath>..\Switch_Toolbox\Lib\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\OpenTK.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\OpenTK.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\OpenTK.GLControl.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
       <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -84,11 +82,11 @@
       <HintPath>..\Switch_Toolbox\Lib\SARCExt.dll</HintPath>
     </Reference>
     <Reference Include="SFGraphics">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\SFGraphics.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\SFGraphics.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SFGraphics.Utils">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\SFGraphics.Utils.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.BinaryData">
@@ -126,7 +124,7 @@
       <HintPath>..\Switch_Toolbox\Lib\VGAudio.dll</HintPath>
     </Reference>
     <Reference Include="VisualStudioTabControl">
-      <HintPath>..\..\..\..\Documents\GitHub\Nintendo_Switch_BFRES_Library\src - Copy (3)\VisualStudioTabControl.dll</HintPath>
+      <HintPath>..\Switch_Toolbox\Lib\VisualStudioTabControl.dll</HintPath>
       <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>

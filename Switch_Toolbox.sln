@@ -14,8 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Switch_Toolbox_Library", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GL_Core", "GL_EditorFramework-master\GL_Core\GL_Core.csproj", "{29647BA5-2859-46F0-A99E-C3A387A9447A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ToolInstaller", "ToolInstaller\ToolInstaller.vdproj", "{1C5E232E-FEE3-4C24-B57E-45B4098FCC43}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{D82A2C08-2A65-43AF-BDA6-A36CC27AA003}"
 EndProject
 Global
@@ -40,8 +38,6 @@ Global
 		{29647BA5-2859-46F0-A99E-C3A387A9447A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29647BA5-2859-46F0-A99E-C3A387A9447A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29647BA5-2859-46F0-A99E-C3A387A9447A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C5E232E-FEE3-4C24-B57E-45B4098FCC43}.Debug|Any CPU.ActiveCfg = Debug
-		{1C5E232E-FEE3-4C24-B57E-45B4098FCC43}.Release|Any CPU.ActiveCfg = Release
 		{D82A2C08-2A65-43AF-BDA6-A36CC27AA003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D82A2C08-2A65-43AF-BDA6-A36CC27AA003}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D82A2C08-2A65-43AF-BDA6-A36CC27AA003}.Release|Any CPU.ActiveCfg = Release|Any CPU
