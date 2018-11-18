@@ -1,12 +1,55 @@
 # Switch-Toolbox
 A tool to edit many formats of Nintendo Switch and some Wii U. 
 
+## Changelog
+
+v0.73 Changelog
+- Param default values can be set on import for models. (Colors reset to white, bake coords are reset)
+- Fixed some bugs.
+
+v0.72 Changelog
+- Fixed crashes from RGBA DDS.
+- Added an option to disable viewport. (May be quicker, and for those who use old GL versions).
+
+v0.71 Changelog
+- Stability improvements. 
+- Add byml editor back in.
+- Some bug fixes and exception issues
+
+## Features
+
+This tool currently features:
+- BFRES
+   - Model importing (dae, fbx, obj, and csv)
+   - Material editing (Render info, texture mapping, parameters, etc)
+   - Material  copying
+   - Animation and model sub section can be exported/imported.
+   - Can delete, add, replace individual objects from an fmdl.
+- BNTX
+   - Can add/remove textures.
+   - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
+   - Can export as binary, dds, png, tga, etc.
+   - Can preview mipmap and surface(array) levels.
+- SARC
+   - Supported editing/saving data opened. (Automatically saves data opened in objectlist if supported)
+   - Supports padding (Thanks to Exelix and AboodXD)
+   - Can save sarcs in sarcs in sarcs.
+- BARS
+   - Can extract and replace audio files.. (rebuilds the file)
+- KCL
+   - Preview collision models.
+   - Replace/Export as obj (Thanks to Exelix)
+- BFFNT
+   - Can extract font images (BNTX)
+- GFPAK
+   - Can extract files.
+
 ## Buidling
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
 
-## is is in BETA and not final! Code also needs some major clean up!
+## This tool is in BETA and not final! Code also needs some major clean up!
 ## Credits
 
 - Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff, GTX c# implementation, and some rendering.
