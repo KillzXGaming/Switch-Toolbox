@@ -1712,8 +1712,6 @@ namespace Bfres.Structs
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Text = dialog.textBox1.Text;
-
                 ((FMDL)Parent.Parent).materials.Remove(Text);
                 Text = dialog.textBox1.Text;
                 ((FMDL)Parent.Parent).materials.Add(Text, this);
