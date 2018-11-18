@@ -1416,7 +1416,7 @@ namespace Bfres.Structs
                             shape.CreateNewBoundingBoxes();
                             shape.CreateBoneList(obj, this);
                             shape.CreateIndexList(obj, this);
-                            shape.ApplyImportSettings(csvsettings);
+                            shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.SaveShape();
                             shape.SaveVertexBuffer();
                             shape.BFRESRender = BFRESRender;
@@ -1561,7 +1561,7 @@ namespace Bfres.Structs
                             shape.CreateNewBoundingBoxes();
                             shape.CreateBoneList(obj, this);
                             shape.CreateIndexList(obj, this);
-                            shape.ApplyImportSettings(settings);
+                            shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.SaveShape();
                             shape.SaveVertexBuffer();
                             shape.BFRESRender = BFRESRender;
@@ -1578,6 +1578,10 @@ namespace Bfres.Structs
                     break;
             }
             BFRESRender.UpdateVertexData();
+        }
+        public FMAT GetMaterial(int index)
+        {
+            return materials.Values.ElementAt(index);
         }
         public void AddMaterials(string FileName, bool Replace = true)
         {
@@ -1712,8 +1716,6 @@ namespace Bfres.Structs
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Text = dialog.textBox1.Text;
-
                 ((FMDL)Parent.Parent).materials.Remove(Text);
                 Text = dialog.textBox1.Text;
                 ((FMDL)Parent.Parent).materials.Add(Text, this);
@@ -2123,7 +2125,7 @@ namespace Bfres.Structs
                 Parent.Nodes.Remove(this);
             }
         }
-        public void ApplyImportSettings(BfresModelImportSettings settings)
+        public void ApplyImportSettings(BfresModelImportSettings settings, FMAT mat)
         {
             if (settings.FlipUVsVertical)
             {
@@ -2153,6 +2155,40 @@ namespace Bfres.Structs
                 catch
                 {
                     MessageBox.Show($"Failed to generate tangents for mesh {Text}");
+                }
+            }
+            if (settings.SetDefaultParamData)
+            {
+                foreach (var param in mat.matparam.Values)
+                {
+                    switch (param.Name)
+                    {
+                        case "const_color0":
+                        case "const_color1":
+                        case "const_color2":
+                        case "const_color3":
+                        case "base_color_mul_color":
+                        case "uniform0_mul_color":
+                        case "uniform1_mul_color":
+                        case "uniform2_mul_color":
+                        case "uniform3_mul_color":
+                        case "uniform4_mul_color":
+                        case "proc_texture_2d_mul_color":
+                        case "proc_texture_3d_mul_color":
+                        case "displacement1_color":
+                        case "ripple_emission_color":
+                        case "hack_color":
+                        case "stain_color":
+                        case "displacement_color":
+                            param.ValueFloat = new float[] {1,1,1,1 };
+                            break;
+                        case "gsys_bake_st0":
+                            param.ValueFloat = new float[] { 1, 1, 0, 0 };
+                            break;
+                        case "gsys_bake_st1":
+                            param.ValueFloat = new float[] { 1, 1, 0, 0 };
+                            break;
+                    }
                 }
             }
         }

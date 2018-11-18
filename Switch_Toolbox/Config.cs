@@ -44,6 +44,9 @@ namespace Switch_Toolbox
                     case "OpenStartupWindow":
                         bool.TryParse(node.InnerText, out Runtime.OpenStartupWindow);
                         break;
+                    case "DisableViewport":
+                        bool.TryParse(node.InnerText, out Runtime.DisableViewport);
+                        break;
                     case "RenderModels":
                         bool.TryParse(node.InnerText, out Runtime.RenderModels);
                         break;
@@ -86,7 +89,7 @@ namespace Switch_Toolbox
         private static XmlDocument CreateXmlFromSettings()
         {
             XmlDocument doc = new XmlDocument();
-            XmlNode mainNode = doc.CreateElement("FORGECONFIG");
+            XmlNode mainNode = doc.CreateElement("TOOLCONFIG");
             doc.AppendChild(mainNode);
 
             AppendMainFormSettings(doc, mainNode);
@@ -101,6 +104,7 @@ namespace Switch_Toolbox
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "DisableViewport", Runtime.DisableViewport.ToString()));
         }
         private static void AppendOCompressionFilelistSettings(XmlDocument doc, XmlNode parentNode)
         {

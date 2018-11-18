@@ -81,11 +81,19 @@ namespace FirstPlugin
         public void Load()
         {
             MainF = MainForm;
-            DockedViewport = DockedEditor;
-            DockedEditor = Viewport.Instance;
-
 
             Config.StartupFromFile("Lib/Plugins/config.xml");
+            if (!Runtime.DisableViewport)
+            {
+                DockedViewport = DockedEditor;
+                DockedEditor = Viewport.Instance;
+            }
+            else
+            {
+                PluginRuntime.FSHPDockState = DockState.Document;
+            }
+
+
         }
         public void Unload()
         {

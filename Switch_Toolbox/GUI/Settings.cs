@@ -44,6 +44,7 @@ namespace Switch_Toolbox
             camFarNumUD.Value = (decimal)Runtime.CameraFar;
             previewScaleUD.Value = (decimal)Runtime.previewScale;
             yazoCompressionLevelUD.Value = Runtime.Yaz0CompressionLevel;
+            disableViewportCHKBX.Checked = Runtime.DisableViewport;
 
             GLSLVerLabel.Text   = $"Open GL Version: {Runtime.GLSLVersion}";
             openGLVerLabel.Text = $"GLSL Version:     {Runtime.openGLVersion}";
@@ -132,6 +133,11 @@ namespace Switch_Toolbox
         private void yazoCompressionLevelUD_ValueChanged(object sender, EventArgs e)
         {
             Runtime.Yaz0CompressionLevel = (int)yazoCompressionLevelUD.Value;
+        }
+
+        private void checkBox1_CheckedChanged_2(object sender, EventArgs e)
+        {
+            Runtime.DisableViewport = disableViewportCHKBX.Checked;
         }
     }
 }

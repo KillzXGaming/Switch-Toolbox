@@ -54,6 +54,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.yazoCompressionLevelUD = new System.Windows.Forms.NumericUpDown();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.disableViewportCHKBX = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.previewScaleUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.camFarNumUD)).BeginInit();
@@ -323,6 +324,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.disableViewportCHKBX);
             this.panel1.Controls.Add(this.GLSLVerLabel);
             this.panel1.Controls.Add(this.openGLVerLabel);
             this.panel1.Location = new System.Drawing.Point(12, 13);
@@ -402,6 +404,18 @@
             this.panel3.Size = new System.Drawing.Size(313, 138);
             this.panel3.TabIndex = 18;
             // 
+            // disableViewportCHKBX
+            // 
+            this.disableViewportCHKBX.AutoSize = true;
+            this.disableViewportCHKBX.ForeColor = System.Drawing.Color.White;
+            this.disableViewportCHKBX.Location = new System.Drawing.Point(0, 67);
+            this.disableViewportCHKBX.Name = "disableViewportCHKBX";
+            this.disableViewportCHKBX.Size = new System.Drawing.Size(105, 17);
+            this.disableViewportCHKBX.TabIndex = 16;
+            this.disableViewportCHKBX.Text = "Disable Viewport";
+            this.disableViewportCHKBX.UseVisualStyleBackColor = true;
+            this.disableViewportCHKBX.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,5 +472,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown yazoCompressionLevelUD;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckBox disableViewportCHKBX;
     }
 }

@@ -81,11 +81,14 @@ namespace FirstPlugin
         #region structs
         public void LoadViewport()
         {
-            if (!EditorIsViewportActive(FirstPlugin.DockedViewport))
+            if (!Runtime.DisableViewport)
             {
-                Viewport.Instance.gL_ControlModern1.MainDrawable = this;
-                FirstPlugin.DockedViewport.Text = resFile.Name + ".bfres";
-                FirstPlugin.DockedViewport = Viewport.Instance;
+                if (!EditorIsViewportActive(FirstPlugin.DockedViewport))
+                {
+                    Viewport.Instance.gL_ControlModern1.MainDrawable = this;
+                    FirstPlugin.DockedViewport.Text = resFile.Name + ".bfres";
+                    FirstPlugin.DockedViewport = Viewport.Instance;
+                }
             }
         }
         public bool EditorIsViewportActive(DockContent dock)

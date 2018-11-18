@@ -46,8 +46,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="BezelEngineArchive_Lib">
-      <HintPath>Externals\BezelEngineArchive_Lib.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
     </Reference>
     <Reference Include="ByamlExt">
       <HintPath>..\Switch_Toolbox\Lib\ByamlExt.dll</HintPath>
@@ -58,7 +57,6 @@
     </Reference>
     <Reference Include="EditorCoreCommon">
       <HintPath>..\Switch_Toolbox\Lib\EditorCoreCommon.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="KCLExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -66,8 +64,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio">
-      <HintPath>Externals\NAudio.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\OpenTK.dll</HintPath>
@@ -84,8 +81,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="SARCExt">
-      <HintPath>Externals\SARCExt.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\SARCExt.dll</HintPath>
     </Reference>
     <Reference Include="SFGraphics">
       <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\SFGraphics.dll</HintPath>
@@ -96,26 +92,19 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.BinaryData">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\Syroot.BinaryData.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
     </Reference>
     <Reference Include="Syroot.Maths">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\Syroot.Maths.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\Syroot.Maths.dll</HintPath>
     </Reference>
     <Reference Include="Syroot.NintenTools.Bfres">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="Syroot.NintenTools.NSW.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Externals\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Syroot.NintenTools.NSW.Bfres">
+      <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
     </Reference>
-    <Reference Include="Syroot.NintenTools.NSW.Bntx, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Documents\GitHub\Nintendo_Switch_BFRES_Library\src - Copy (2)\Syroot.NintenTools.Bntx\bin\Release\net45\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Syroot.NintenTools.NSW.Bntx">
+      <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -134,8 +123,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="VGAudio">
-      <HintPath>Externals\VGAudio.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\VGAudio.dll</HintPath>
     </Reference>
     <Reference Include="VisualStudioTabControl">
       <HintPath>..\..\..\..\Documents\GitHub\Nintendo_Switch_BFRES_Library\src - Copy (3)\VisualStudioTabControl.dll</HintPath>
@@ -147,8 +135,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ZstdNet">
-      <HintPath>Externals\ZstdNet.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Switch_Toolbox\Lib\ZstdNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

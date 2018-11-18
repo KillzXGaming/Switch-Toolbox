@@ -39,8 +39,13 @@ namespace Switch_Toolbox
             ShaderTools.executableDir = executableDir;
 
             Config.StartupFromFile(MainForm.executableDir + "\\config.xml");
+
             dockContent = new DockContentST();
-            dockContent = Viewport.Instance;
+            if (!Runtime.DisableViewport)
+            {
+                dockContent = Viewport.Instance;
+            }
+
 
             GenericPluginLoader.LoadPlugin();
 
@@ -129,7 +134,9 @@ namespace Switch_Toolbox
                 fileRecent.ForeColor = Color.White;
                 recentToolStripMenuItem.DropDownItems.Add(fileRecent); //add the menu to "recent" menu
             }
-            dockContent.Show(dockPanel1, DockState.Document);
+            if (!Runtime.DisableViewport)
+                dockContent.Show(dockPanel1, DockState.Document);
+
 
             if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
             {

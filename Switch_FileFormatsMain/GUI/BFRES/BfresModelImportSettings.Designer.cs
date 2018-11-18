@@ -61,6 +61,7 @@
             this.chkBoxFlipUvsY = new System.Windows.Forms.CheckBox();
             this.chkBoxImportBones = new System.Windows.Forms.CheckBox();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.chkBoxRotNegative90Y = new System.Windows.Forms.CheckBox();
             this.useMaterialLabel = new System.Windows.Forms.Label();
             this.textBoxMaterialPath = new System.Windows.Forms.TextBox();
             this.chkBoxEnableWeightIndices = new System.Windows.Forms.CheckBox();
@@ -83,7 +84,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
-            this.chkBoxRotNegative90Y = new System.Windows.Forms.CheckBox();
+            this.chkBoxParamDefaults = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -383,7 +384,7 @@
             // chkBoxFlipUvsY
             // 
             this.chkBoxFlipUvsY.AutoSize = true;
-            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 21);
+            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 39);
             this.chkBoxFlipUvsY.Name = "chkBoxFlipUvsY";
             this.chkBoxFlipUvsY.Size = new System.Drawing.Size(65, 17);
             this.chkBoxFlipUvsY.TabIndex = 4;
@@ -394,7 +395,7 @@
             // chkBoxImportBones
             // 
             this.chkBoxImportBones.AutoSize = true;
-            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 44);
+            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 62);
             this.chkBoxImportBones.Name = "chkBoxImportBones";
             this.chkBoxImportBones.Size = new System.Drawing.Size(88, 17);
             this.chkBoxImportBones.TabIndex = 10;
@@ -405,6 +406,7 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.chkBoxParamDefaults);
             this.panel8.Controls.Add(this.chkBoxRotNegative90Y);
             this.panel8.Controls.Add(this.useMaterialLabel);
             this.panel8.Controls.Add(this.textBoxMaterialPath);
@@ -427,6 +429,17 @@
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(498, 322);
             this.panel8.TabIndex = 11;
+            // 
+            // chkBoxRotNegative90Y
+            // 
+            this.chkBoxRotNegative90Y.AutoSize = true;
+            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 108);
+            this.chkBoxRotNegative90Y.Name = "chkBoxRotNegative90Y";
+            this.chkBoxRotNegative90Y.Size = new System.Drawing.Size(117, 17);
+            this.chkBoxRotNegative90Y.TabIndex = 29;
+            this.chkBoxRotNegative90Y.Text = "Rotate -90 degrees";
+            this.chkBoxRotNegative90Y.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.chkBoxRotNegative90Y.UseVisualStyleBackColor = true;
             // 
             // useMaterialLabel
             // 
@@ -452,7 +465,7 @@
             // chkBoxEnableWeightIndices
             // 
             this.chkBoxEnableWeightIndices.AutoSize = true;
-            this.chkBoxEnableWeightIndices.Location = new System.Drawing.Point(238, 159);
+            this.chkBoxEnableWeightIndices.Location = new System.Drawing.Point(240, 154);
             this.chkBoxEnableWeightIndices.Name = "chkBoxEnableWeightIndices";
             this.chkBoxEnableWeightIndices.Size = new System.Drawing.Size(140, 17);
             this.chkBoxEnableWeightIndices.TabIndex = 25;
@@ -462,7 +475,7 @@
             // chkBoxEnableBitans
             // 
             this.chkBoxEnableBitans.AutoSize = true;
-            this.chkBoxEnableBitans.Location = new System.Drawing.Point(238, 136);
+            this.chkBoxEnableBitans.Location = new System.Drawing.Point(240, 131);
             this.chkBoxEnableBitans.Name = "chkBoxEnableBitans";
             this.chkBoxEnableBitans.Size = new System.Drawing.Size(112, 17);
             this.chkBoxEnableBitans.TabIndex = 24;
@@ -472,7 +485,7 @@
             // chkBoxEnableTans
             // 
             this.chkBoxEnableTans.AutoSize = true;
-            this.chkBoxEnableTans.Location = new System.Drawing.Point(238, 113);
+            this.chkBoxEnableTans.Location = new System.Drawing.Point(240, 108);
             this.chkBoxEnableTans.Name = "chkBoxEnableTans";
             this.chkBoxEnableTans.Size = new System.Drawing.Size(107, 17);
             this.chkBoxEnableTans.TabIndex = 23;
@@ -483,7 +496,7 @@
             // chkBoxEnableVertColors
             // 
             this.chkBoxEnableVertColors.AutoSize = true;
-            this.chkBoxEnableVertColors.Location = new System.Drawing.Point(238, 90);
+            this.chkBoxEnableVertColors.Location = new System.Drawing.Point(240, 85);
             this.chkBoxEnableVertColors.Name = "chkBoxEnableVertColors";
             this.chkBoxEnableVertColors.Size = new System.Drawing.Size(124, 17);
             this.chkBoxEnableVertColors.TabIndex = 22;
@@ -494,7 +507,7 @@
             // chkBoxEnableUVs
             // 
             this.chkBoxEnableUVs.AutoSize = true;
-            this.chkBoxEnableUVs.Location = new System.Drawing.Point(238, 67);
+            this.chkBoxEnableUVs.Location = new System.Drawing.Point(240, 62);
             this.chkBoxEnableUVs.Name = "chkBoxEnableUVs";
             this.chkBoxEnableUVs.Size = new System.Drawing.Size(82, 17);
             this.chkBoxEnableUVs.TabIndex = 21;
@@ -505,7 +518,7 @@
             // chkBoxEnableNormals
             // 
             this.chkBoxEnableNormals.AutoSize = true;
-            this.chkBoxEnableNormals.Location = new System.Drawing.Point(238, 44);
+            this.chkBoxEnableNormals.Location = new System.Drawing.Point(240, 39);
             this.chkBoxEnableNormals.Name = "chkBoxEnableNormals";
             this.chkBoxEnableNormals.Size = new System.Drawing.Size(100, 17);
             this.chkBoxEnableNormals.TabIndex = 20;
@@ -517,7 +530,7 @@
             // 
             this.chkBoxEnablePositions.AutoSize = true;
             this.chkBoxEnablePositions.Enabled = false;
-            this.chkBoxEnablePositions.Location = new System.Drawing.Point(238, 21);
+            this.chkBoxEnablePositions.Location = new System.Drawing.Point(240, 16);
             this.chkBoxEnablePositions.Name = "chkBoxEnablePositions";
             this.chkBoxEnablePositions.Size = new System.Drawing.Size(104, 17);
             this.chkBoxEnablePositions.TabIndex = 19;
@@ -528,7 +541,7 @@
             // chkBoxRecalcNormals
             // 
             this.chkBoxRecalcNormals.AutoSize = true;
-            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 136);
+            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 154);
             this.chkBoxRecalcNormals.Name = "chkBoxRecalcNormals";
             this.chkBoxRecalcNormals.Size = new System.Drawing.Size(124, 17);
             this.chkBoxRecalcNormals.TabIndex = 18;
@@ -553,7 +566,7 @@
             // chkBoxTransformMatrix
             // 
             this.chkBoxTransformMatrix.AutoSize = true;
-            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 113);
+            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 131);
             this.chkBoxTransformMatrix.Name = "chkBoxTransformMatrix";
             this.chkBoxTransformMatrix.Size = new System.Drawing.Size(104, 17);
             this.chkBoxTransformMatrix.TabIndex = 14;
@@ -565,7 +578,7 @@
             // chkBoxRot90Y
             // 
             this.chkBoxRot90Y.AutoSize = true;
-            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 67);
+            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 85);
             this.chkBoxRot90Y.Name = "chkBoxRot90Y";
             this.chkBoxRot90Y.Size = new System.Drawing.Size(114, 17);
             this.chkBoxRot90Y.TabIndex = 13;
@@ -577,7 +590,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 162);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 180);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(17, 17);
             this.pictureBox1.TabIndex = 12;
@@ -586,7 +599,7 @@
             // checkBox9
             // 
             this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(25, 163);
+            this.checkBox9.Location = new System.Drawing.Point(25, 181);
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.Size = new System.Drawing.Size(130, 17);
             this.checkBox9.TabIndex = 11;
@@ -672,16 +685,16 @@
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
-            // chkBoxRotNegative90Y
+            // chkBoxParamDefaults
             // 
-            this.chkBoxRotNegative90Y.AutoSize = true;
-            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 90);
-            this.chkBoxRotNegative90Y.Name = "chkBoxRotNegative90Y";
-            this.chkBoxRotNegative90Y.Size = new System.Drawing.Size(117, 17);
-            this.chkBoxRotNegative90Y.TabIndex = 29;
-            this.chkBoxRotNegative90Y.Text = "Rotate -90 degrees";
-            this.chkBoxRotNegative90Y.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.chkBoxRotNegative90Y.UseVisualStyleBackColor = true;
+            this.chkBoxParamDefaults.AutoSize = true;
+            this.chkBoxParamDefaults.Location = new System.Drawing.Point(3, 16);
+            this.chkBoxParamDefaults.Name = "chkBoxParamDefaults";
+            this.chkBoxParamDefaults.Size = new System.Drawing.Size(117, 17);
+            this.chkBoxParamDefaults.TabIndex = 30;
+            this.chkBoxParamDefaults.Text = "Set Param Defaults";
+            this.chkBoxParamDefaults.UseVisualStyleBackColor = true;
+            this.chkBoxParamDefaults.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
             // 
             // BfresModelImportSettings
             // 
@@ -779,5 +792,6 @@
         private System.Windows.Forms.Label useMaterialLabel;
         private System.Windows.Forms.TextBox textBoxMaterialPath;
         private System.Windows.Forms.CheckBox chkBoxRotNegative90Y;
+        private System.Windows.Forms.CheckBox chkBoxParamDefaults;
     }
 }

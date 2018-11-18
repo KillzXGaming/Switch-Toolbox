@@ -24,6 +24,7 @@ namespace Switch_Toolbox.Library
         public static bool RenderModelWireframe = false;
         public static ViewportShading viewportShading;
         public static bool IsDebugMode = false; //Enables experimental features and other things to debug. 
+        public static bool DisableViewport = false;
 
         public static bool enableVSync = false;
         public static float floorSize = 30f;

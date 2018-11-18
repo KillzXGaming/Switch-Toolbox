@@ -89,12 +89,9 @@ namespace FirstPlugin
                 case "DX10":
                     IsDX10 = true;
                     break;
-                case "":
-                    return SurfaceFormat.R8_G8_B8_A8_SRGB;
                 default:
-                     throw new Exception($"Format {fourCC} not supported!");
+                    return SurfaceFormat.R8_G8_B8_A8_SRGB;
             }
-
             if (IsDX10)
             {
                 switch (dds.DX10header.DXGI_Format)

@@ -43,6 +43,7 @@ namespace FirstPlugin
         public bool Rotate90DegreesNegativeX;
         public bool RecalculateNormals;
         public string ExternalMaterialPath;
+        public bool SetDefaultParamData;
 
         public void DisableMaterialEdits()
         {
@@ -60,6 +61,8 @@ namespace FirstPlugin
             chkBoxEnableBitans.Checked = obj.HasUv0;
             chkBoxEnableWeightIndices.Checked = obj.HasWeights;
             chkBoxEnableVertColors.Checked = obj.HasVertColors;
+            chkBoxParamDefaults.Checked = true;
+            chkBoxTransformMatrix.Checked = true;
 
             if (!obj.HasPos)
                 DisableAttribute(chkBoxEnablePositions, comboBoxFormatPositions);
@@ -257,6 +260,7 @@ namespace FirstPlugin
             Rotate90DegreesY = chkBoxRot90Y.Checked;
             Rotate90DegreesNegativeY = chkBoxRotNegative90Y.Checked;
             RecalculateNormals = chkBoxRecalcNormals.Checked;
+            SetDefaultParamData = chkBoxParamDefaults.Checked;
         }
         private AttribFormat SetAttribFormat(string Format)
         {
