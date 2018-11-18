@@ -6,7 +6,7 @@ To build make sure you have Visual Studio installed (I use 2017, older versions 
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
 
-## Note not all libraries and files are pushed to this tool YET. This is in BETA and not final! Code also needs some major clean up!
+## is is in BETA and not final! Code also needs some major clean up!
 ## Credits
 
 - Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff, GTX c# implementation, and some rendering.
