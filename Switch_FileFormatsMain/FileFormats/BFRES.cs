@@ -166,6 +166,7 @@ namespace FirstPlugin
 
                     bfres.resFile.Models[CurMdl].Shapes.Add(shape.Shape);
                     bfres.resFile.Models[CurMdl].VertexBuffers.Add(shape.VertexBuffer);
+                    shape.Shape.VertexBufferIndex = (ushort)(bfres.resFile.Models[CurMdl].VertexBuffers.Count - 1);
 
                     SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
                 }
@@ -213,6 +214,7 @@ namespace FirstPlugin
 
                     bfres.resFileU.Models[CurMdl].Shapes.Add(shape.Text, shape.ShapeU);
                     bfres.resFileU.Models[CurMdl].VertexBuffers.Add(shape.VertexBufferU);
+                    shape.ShapeU.VertexBufferIndex = (ushort)(bfres.resFileU.Models[CurMdl].VertexBuffers.Count - 1);
 
                     SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
                 }
