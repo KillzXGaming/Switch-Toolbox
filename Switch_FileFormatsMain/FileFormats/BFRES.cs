@@ -236,7 +236,7 @@ namespace FirstPlugin
             foreach (var tex in shape.GetMaterial().textures)
             {
                 if (!shd.samplers.ContainsValue(tex.SamplerName))
-                    shd.attributes.Add(tex.SamplerName, tex.SamplerName);
+                    shd.samplers.Add(tex.SamplerName, tex.SamplerName);
             }
         }
 
