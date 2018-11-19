@@ -294,7 +294,7 @@ namespace FirstPlugin
                     break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
                     //OpenTK doesn't load BC5 SNORM textures right so I'll use the same decompress method bntx has
-                    byte[] fixBC5 = DDS_Decompress.DecompressBC5(renderedTex.data, renderedTex.width, renderedTex.height, true, true);
+                    byte[] fixBC5 = DDSCompressor.DecompressBC5(renderedTex.data, renderedTex.width, renderedTex.height, true, true);
                     renderedTex.data = fixBC5;
                     renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
                     renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
@@ -454,21 +454,21 @@ namespace FirstPlugin
             switch (Format)
             {
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM):
-                    decomp = DDS_Decompress.DecompressBC1(data, (int)Width, (int)Height, false); break;
+                    decomp = DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, false); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB):
-                    decomp = DDS_Decompress.DecompressBC1(data, (int)Width, (int)Height, true); break;
+                    decomp = DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, true); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM):
-                    decomp = DDS_Decompress.DecompressBC3(data, (int)Width, (int)Height, false); break;
+                    decomp = DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, false); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB):
-                    decomp = DDS_Decompress.DecompressBC3(data, (int)Width, (int)Height, true); break;
+                    decomp = DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, true); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM):
-                    decomp = DDS_Decompress.DecompressBC4(data, (int)Width, (int)Height, false); break;
+                    decomp = DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, false); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM):
-                    decomp = DDS_Decompress.DecompressBC4(data, (int)Width, (int)Height, true); break;
+                    decomp = DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, true); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM):
-                    decomp = DDS_Decompress.DecompressBC5(data, (int)Width, (int)Height, false); break;
+                    decomp = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
-                    decomp = DDS_Decompress.DecompressBC5(data, (int)Width, (int)Height, true); break;
+                    decomp = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_SNORM):
                     decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_UINT):

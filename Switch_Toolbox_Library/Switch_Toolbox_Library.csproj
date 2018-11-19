@@ -42,6 +42,9 @@
     <Reference Include="CsvHelper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\Switch_Toolbox\Lib\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="DirectXTex">
+      <HintPath>..\..\Switch-Toolbox\Switch_Toolbox\Lib\DirectXTex.dll</HintPath>
+    </Reference>
     <Reference Include="K4os.Compression.LZ4, Version=1.1.0.0, Culture=neutral, PublicKeyToken=27d14aecb5186925, processorArchitecture=MSIL">
       <HintPath>..\Switch_Toolbox\Lib\K4os.Compression.LZ4.dll</HintPath>
     </Reference>
@@ -108,7 +111,7 @@
     <Compile Include="FileFormats\DDS_PixelDecode.cs" />
     <Compile Include="FileFormats\CSV.cs" />
     <Compile Include="FileFormats\DDS.cs" />
-    <Compile Include="FileFormats\DDS_Decompress.cs" />
+    <Compile Include="FileFormats\DDSCompressor.cs" />
     <Compile Include="GUI Custom\ListViewCustom.cs">
       <SubType>Component</SubType>
     </Compile>

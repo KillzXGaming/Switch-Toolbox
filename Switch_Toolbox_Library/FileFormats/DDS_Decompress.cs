@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using Switch_Toolbox.Library;
+using DirectXTex;
 
 namespace Switch_Toolbox.Library
 {
@@ -438,61 +439,18 @@ namespace Switch_Toolbox.Library
 
         public static Bitmap DecompressBC6(Byte[] data, int width, int height, bool IsSNORM)
         {
-            DDS dds = new DDS();
-            dds.bdata = data;
-            dds.header.height = (uint)height;
-            dds.header.width = (uint)width;
-            dds.DX10header = new DDS.DX10Header();
-            dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB;
-            dds.Save(dds, "temp.dds");
-
-            Process myProcess = new Process();
-            myProcess.StartInfo.UseShellExecute = false;
-            myProcess.StartInfo.RedirectStandardOutput = true;
-            myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            myProcess.StartInfo.CreateNoWindow = true;
-            myProcess.StartInfo.FileName = "Lib/texconv.exe";
-            myProcess.StartInfo.Arguments += "temp.dds";
-
-            if (IsSNORM)
-                myProcess.StartInfo.Arguments += " -srgb";
-
-            if (IsSNORM)
-                myProcess.StartInfo.Arguments += " -f " + "BC7_UNorm_SRgb";
-            else
-                myProcess.StartInfo.Arguments += " -f " + "BC7_UNorm";
-
             return null;
         }
         public static Bitmap DecompressBC7(Byte[] data, int width, int height, bool IsSNORM)
         {
-            DDS dds = new DDS();
-            dds.bdata = data;
-            dds.header = new DDS.Header();
-            dds.header.height = (uint)height;
-            dds.header.width = (uint)width;
-            dds.header.ddspf = new DDS.Header.DDS_PixelFormat();
-            dds.header.ddspf.fourCC = "DX10";
+            byte[] decomp = new byte[0];
 
-            dds.DX10header = new DDS.DX10Header();
-            dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB;
-            dds.Save(dds, "temp.dds", true);
+            if (IsSNORM)
+                decomp = DirectXTex.ImageCompressor.Decompress(data, width, height, (int)DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB);
+            else
+                decomp = DirectXTex.ImageCompressor.Decompress(data, width, height, (int)DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM);
 
-            Process myProcess = new Process();
-            myProcess.StartInfo.UseShellExecute = false;
-            myProcess.StartInfo.RedirectStandardOutput = true;
-            myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            myProcess.StartInfo.CreateNoWindow = true;
-            myProcess.StartInfo.FileName = "Lib/texconv.exe";
-            myProcess.StartInfo.Arguments += "temp.dds ";
-            myProcess.StartInfo.Arguments += "-ft ";
-            myProcess.StartInfo.Arguments += "png ";
-            myProcess.StartInfo.Arguments += "-f ";
-            myProcess.StartInfo.Arguments += "R10G10B10A2_UNORM ";
-            myProcess.StartInfo.Arguments += "-y ";
-            myProcess.Start();
-
-            return new Bitmap("temp.png");
+            return BitmapExtension.GetBitmap(decomp, width, height);
         }
 
         public static int Get16(byte[] Data, int Address)

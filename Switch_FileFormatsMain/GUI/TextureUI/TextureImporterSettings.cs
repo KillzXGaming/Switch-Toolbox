@@ -46,8 +46,8 @@ namespace FirstPlugin
         public uint TextureLayout;
         public uint TextureLayout2 = 0x010007;
         public uint bpp;
-        public byte[] DataBlockOutput;
-        public byte[] CompressedData;
+        public List<byte[]> DataBlockOutput = new List<byte[]>();
+        public List<byte[]> DecompressedData = new List<byte[]>();
         public BntxFile bntx;
         public int sparseResidency = 0; //false
         public int sparseBinding = 0; //false
@@ -136,11 +136,12 @@ namespace FirstPlugin
             TexWidth = dds.header.width;
             TexHeight = dds.header.height;
 
-            DataBlockOutput = dds.bdata;
+            DataBlockOutput.Add(dds.bdata);
+
 
             Format = LoadDDSFormat(dds.header.ddspf.fourCC, dds, IsSRGB);
 
-            Texture tex = FromBitMap(DataBlockOutput, this);
+            Texture tex = FromBitMap(DataBlockOutput[0], this);
 
             if (tree != null)
             {
@@ -153,24 +154,39 @@ namespace FirstPlugin
         }
         public void LoadBitMap(string FileName, BntxFile bntxFile, TextureData tree = null)
         {
+            DecompressedData.Clear();
+
             TexName = Path.GetFileNameWithoutExtension(FileName);
             bntx = bntxFile;
             textureData = tree;
-            Format = SurfaceFormat.R8_G8_B8_A8_SRGB;
+            Format = SurfaceFormat.BC1_SRGB;
 
             Bitmap Image = new Bitmap(FileName);
+            Image = TextureData.SwapBlueRedChannels(Image);
 
             TexWidth = (uint)Image.Width;
             TexHeight = (uint)Image.Height;
             MipCount = 1;
 
-            DataBlockOutput = BitmapExtension.ImageToByte(Image);
+            List<byte[]> mipMaps = new List<byte[]>();
+   /*       while(Image.Width / 2 > 0)
+            {
+                Image.SetResolution(Image.Width / 2, Image.Height / 2);
+            }*/
+            DecompressedData.Add(BitmapExtension.ImageToByte(Image));
 
             Image.Dispose();
-
-            if (DataBlockOutput.Length == 0)
+            if (DecompressedData.Count == 0)
             {
                 throw new Exception("Failed to load " + Format);
+            }
+        }
+        public void Compress()
+        {
+            DataBlockOutput.Clear();
+            foreach (var surface in DecompressedData)
+            {
+                DataBlockOutput.Add(TextureData.CompressBlock(surface, (int)TexWidth, (int)TexHeight, Format));
             }
         }
         public static uint DIV_ROUND_UP(uint value1, uint value2)
@@ -359,9 +375,9 @@ namespace FirstPlugin
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (CompressedData != null)
+            if (DataBlockOutput != null)
             {
-                Texture tex = FromBitMap(CompressedData, this);
+                Texture tex = FromBitMap(DataBlockOutput[0], this);
                 if (textureData != null)
                 {
                     textureData.LoadTexture(tex, 1);

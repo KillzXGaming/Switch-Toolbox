@@ -59,11 +59,17 @@ void main()
     }
 
     vec3 displayNormal = (normal.xyz * 0.5) + 0.5;
-
-    if (renderType == 1) // normals color
-        FragColor = vec4(displayNormal.rgb,1);
-	else{
+	
+	if(renderType == 0){ //default
 		float shading = max(displayNormal.y,0.5);
 		FragColor = vec4(vec3(1,1,1)*shading*checker(position*0.015625), 1);
 	}
+	else if (renderType == 1) // normals color
+        FragColor = vec4(displayNormal.rgb,1);
+	else if (renderType == 2) // shading
+        FragColor = vec4(vec3(1,1,1) * max(displayNormal.y,0.5), 1);
+	else if (renderType == 3) // diffuse
+		FragColor = vec4(vec3(1,1,1)*checker(position*0.015625), 1);
+	else
+		FragColor = vec4 (0,0,0,1);
 }

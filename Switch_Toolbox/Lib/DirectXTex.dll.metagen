@@ -1,0 +1,40 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly DirectXTex, Version=0.0.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Class DirectXTex.ImageCompressor: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Decompress(Byte[], Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig
+    Compress(Byte[], Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig
+Class DirectXTex.ImageConverter: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Convert(Byte[], Int32, Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig
+Class DirectXTex.ImageStruct: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Byte[] Data 'get set' : 
+    Int32 MipMapLevels 'get set' : 
+    Int32 Format 'get set' : 
+    Int32 Height 'get set' : 
+    Int32 Width 'get set' : 
+  Methods:
+    get_Width(): PrivateScope, Public, HideBySig, SpecialName
+    set_Width(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_Height(): PrivateScope, Public, HideBySig, SpecialName
+    set_Height(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_Format(): PrivateScope, Public, HideBySig, SpecialName
+    set_Format(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_MipMapLevels(): PrivateScope, Public, HideBySig, SpecialName
+    set_MipMapLevels(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_Data(): PrivateScope, Public, HideBySig, SpecialName
+    set_Data(Byte[]): PrivateScope, Public, HideBySig, SpecialName
+    GetRowPitch(): PrivateScope, Public, HideBySig
+    GetSlicePitch(): PrivateScope, Public, HideBySig
+Class DirectXTex.DDSIO: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    ReadDDS(String): PrivateScope, Public, Static, HideBySig
+    WriteDDS(String, ImageStruct): PrivateScope, Public, Static, HideBySig
