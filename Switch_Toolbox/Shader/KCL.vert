@@ -8,6 +8,7 @@ in vec3 vColor;
 
 out vec3 normal;
 out vec3 color;
+out vec3 position;
 
 uniform mat4 mvpMatrix;
 
@@ -15,6 +16,7 @@ void main()
 {
     normal = vNormal;
     color = vColor;
+	position = vPosition;
 
     gl_Position = mvpMatrix * vec4(vPosition.xyz, 1.0);
 

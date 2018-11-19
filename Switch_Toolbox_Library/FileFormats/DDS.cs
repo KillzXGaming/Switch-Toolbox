@@ -9,6 +9,7 @@ using Syroot.BinaryData;
 using System.IO;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.IO;
 
 namespace Switch_Toolbox.Library
 {
@@ -185,12 +186,12 @@ namespace Switch_Toolbox.Library
         }
         public DDS(byte[] data)
         {
-            BinaryDataReader reader = new BinaryDataReader(new MemoryStream(data));
+            FileReader reader = new FileReader(new MemoryStream(data));
             Load(reader);
         }
         public DDS(string FileName)
         {
-            BinaryDataReader reader = new BinaryDataReader(new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read));
+            FileReader reader = new FileReader(new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read));
 
             Load(reader);
         }
@@ -258,9 +259,9 @@ namespace Switch_Toolbox.Library
             DX10header.arrayFlag = reader.ReadUInt32();
             DX10header.miscFlags2 = reader.ReadUInt32();
         }
-        public void Save(DDS dds, string FileName, List<List<byte[]>> data = null, bool IsDX10 = false)
+        public void Save(DDS dds, string FileName, bool IsDX10 = false, List<List<byte[]>> data = null)
         {
-            BinaryDataWriter writer = new BinaryDataWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
+            FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
             writer.Write(Encoding.ASCII.GetBytes("DDS "));
             writer.Write(header.size);
             writer.Write(header.flags);
@@ -277,7 +278,7 @@ namespace Switch_Toolbox.Library
 
             writer.Write(header.ddspf.size);
             writer.Write(header.ddspf.flags);
-            writer.Write(header.ddspf.fourCC);
+            writer.WriteSignature(header.ddspf.fourCC);
             writer.Write(header.ddspf.RGBBitCount);
             writer.Write(header.ddspf.RBitMask);
             writer.Write(header.ddspf.GBitMask);

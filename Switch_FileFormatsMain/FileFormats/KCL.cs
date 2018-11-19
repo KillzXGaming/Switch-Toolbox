@@ -54,8 +54,7 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            KCLRoot root = (KCLRoot)EditorRoot;
-            return root.kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian);
+            return Data;
         }
 
         private static void SaveCompressFile(byte[] data, string FileName, CompressionType CompressionType, int Alignment = 0, bool EnableDialog = true)
@@ -207,7 +206,8 @@ namespace FirstPlugin
                     	return;
                     }
                     kcl = MarioKart.MK7.KCL.FromOBJ(mod);
-                    Read(kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian));
+                    FileHandler.Data = kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian);
+                    Read(FileHandler.Data);
                 }
             }
 

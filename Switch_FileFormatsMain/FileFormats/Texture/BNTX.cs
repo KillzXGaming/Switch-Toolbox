@@ -717,10 +717,10 @@ namespace FirstPlugin
             return false;
         }
 
-        public void LoadOpenGLTexture()
+        public BRTI_Texture LoadOpenGLTexture()
         {
             if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
-                return;
+                return null;
 
             LoadTexture(Texture);
 
@@ -785,6 +785,8 @@ namespace FirstPlugin
                     break;
             }
             renderedGLTex.display = loadImage(renderedGLTex);
+
+            return renderedGLTex;
         }
 
         //Gets the decompressed byte[]
@@ -808,10 +810,14 @@ namespace FirstPlugin
                 decomp = DDS_Decompress.DecompressBC5(data, (int)Width, (int)Height, false);
             else if (Format == SurfaceFormat.BC5_SNORM)
                 decomp = DDS_Decompress.DecompressBC5(data, (int)Width, (int)Height, true);
-            else if (Format == SurfaceFormat.R8_UNORM)
-                decomp = DDS_PixelDecode.DecodeR8G8(data, (int)Width, (int)Height);
-            else if (Format == SurfaceFormat.R8_G8_B8_A8_SRGB)
-                decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height);
+            else if (Format == SurfaceFormat.BC6_FLOAT)
+                decomp = DDS_Decompress.DecompressBC6(data, (int)Width, (int)Height, true);
+            else if (Format == SurfaceFormat.BC6_UFLOAT)
+                decomp = DDS_Decompress.DecompressBC6(data, (int)Width, (int)Height, false);
+            else if (Format == SurfaceFormat.BC7_SRGB)
+                decomp = DDS_Decompress.DecompressBC7(data, (int)Width, (int)Height, true);
+            else if (Format == SurfaceFormat.BC7_UNORM)
+                decomp = DDS_Decompress.DecompressBC7(data, (int)Width, (int)Height, false);
             else if (Format == SurfaceFormat.R8_G8_B8_A8_UNORM)
                 decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height);
             else
@@ -819,12 +825,11 @@ namespace FirstPlugin
                 decomp = Properties.Resources.TextureError;
                 Console.WriteLine($"Format {Format} not supported!");
 
-           //     throw new Exception($"Format {Format} not supported!");
+                //     throw new Exception($"Format {Format} not supported!");
             }
 
             return decomp;
         }
-
         public unsafe Bitmap GLTextureToBitmap(BRTI_Texture t, int id)
         {
             Bitmap bitmap = new Bitmap(t.width, t.height);
@@ -1095,7 +1100,7 @@ namespace FirstPlugin
             if (IsDX10)
                 dds.header.ddspf.fourCC = "DX10";
 
-            dds.Save(dds, FileName, mipmaps, IsDX10);
+            dds.Save(dds, FileName, IsDX10, mipmaps);
         }
         public void LoadTexture(Texture tex, int target = 1)
         {

@@ -737,6 +737,7 @@ namespace FirstPlugin
                 }
 
                 IList<uint> faceList = new List<uint>();
+                msh.IndexBuffer = new Syroot.NintenTools.Bfres.Buffer();
                 foreach (int f in mesh.faces)
                 {
                     faceList.Add((uint)f);
@@ -757,7 +758,10 @@ namespace FirstPlugin
         }
         public static void SaveVertexBuffer(FSHP fshp)
         {
-            VertexBufferHelper helper = new VertexBufferHelper(new VertexBuffer(), Syroot.BinaryData.ByteOrder.LittleEndian);
+            VertexBuffer buffer = new VertexBuffer();
+            buffer.Attributes = new ResDict<VertexAttrib>();
+
+            VertexBufferHelper helper = new VertexBufferHelper(buffer, Syroot.BinaryData.ByteOrder.BigEndian);
             List<VertexBufferHelperAttrib> atrib = new List<VertexBufferHelperAttrib>();
             fshp.UpdateVertices();
 

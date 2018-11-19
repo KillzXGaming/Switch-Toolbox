@@ -166,7 +166,7 @@ namespace FirstPlugin
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, data);
+                    File.WriteAllBytes(sfd.FileName, STLibraryCompression.Type_LZ4.Decompress(data));
                 }
             }
         }

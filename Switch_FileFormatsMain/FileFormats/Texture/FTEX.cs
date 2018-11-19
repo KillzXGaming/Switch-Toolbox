@@ -254,7 +254,7 @@ namespace FirstPlugin
             if (IsDX10)
                 dds.header.ddspf.fourCC = "DX10";
 
-            dds.Save(dds, FileName, renderedTex.mipmaps, IsDX10);
+            dds.Save(dds, FileName, IsDX10, renderedTex.mipmaps);
         }
 
 

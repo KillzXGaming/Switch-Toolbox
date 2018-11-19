@@ -1438,115 +1438,123 @@ namespace Bfres.Structs
                         return;
                     }
                     BfresModelImportSettings settings = new BfresModelImportSettings();
+
+                    if (BFRES.IsWiiU)
+                        settings.DisableMaterialEdits();
+
                     settings.SetModelAttributes(assimp.objects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)
                     {
                         Cursor.Current = Cursors.WaitCursor;
-                        if (Replace)
+                        if (!BFRES.IsWiiU && Replace)
                         {
                             materials.Clear();
                             Nodes["FmatFolder"].Nodes.Clear();
                             MatStartIndex = 0;
                         }
 
-                        foreach (STGenericMaterial mat in assimp.materials)
+                        if (!BFRES.IsWiiU)
                         {
-                            FMAT fmat = new FMAT();
-                            fmat.Material = new Material();
-                            if (settings.ExternalMaterialPath != string.Empty)
+                            foreach (STGenericMaterial mat in assimp.materials)
                             {
-                                fmat.Material.Import(settings.ExternalMaterialPath);
-                                fmat.ReadMaterial(fmat.Material);
-                            }
-
-                            fmat.Text = mat.Text;
-                            //Setup placeholder textures
-                            //Note we can't add/remove samplers so we must fill these slots
-                            foreach (var t in fmat.textures)
-                            {
-                                t.wrapModeS = 0;
-                                t.wrapModeT = 0;
-
-                                switch (t.Type)
+                                FMAT fmat = new FMAT();
+                                fmat.Material = new Material();
+                                if (settings.ExternalMaterialPath != string.Empty)
                                 {
-                                    case STGenericMatTexture.TextureType.Diffuse:
-                                        t.Name = "Basic_Alb";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Emission:
-                                        t.Name = "Basic_Emm";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Normal:
-                                        t.Name = "Basic_Nrm";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Specular:
-                                        t.Name = "Basic_Spm";
-                                        break;
-                                    case STGenericMatTexture.TextureType.SphereMap:
-                                        t.Name = "Basic_Sphere";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Metalness:
-                                        t.Name = "Basic_Mtl";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Roughness:
-                                        t.Name = "Basic_Rgh";
-                                        break;
-                                    case STGenericMatTexture.TextureType.MRA:
-                                        t.Name = "Basic_MRA";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Shadow:
-                                        t.Name = "Basic_Bake_st0";
-                                        break;
-                                    case STGenericMatTexture.TextureType.Light:
-                                        t.Name = "Basic_Bake_st1";
-                                        break;
+                                    fmat.Material.Import(settings.ExternalMaterialPath);
+                                    fmat.ReadMaterial(fmat.Material);
                                 }
-                            }
 
-                            if (PluginRuntime.bntxContainers.Count > 0)
-                            {
-                                foreach (var node in Parent.Parent.Nodes["EXT"].Nodes)
-                                {
-                                    if (node is BinaryTextureContainer)
-                                    {
-                                        var bntx = (BinaryTextureContainer)node;
-
-                                        bntx.ImportBasicTextures("Basic_Alb");
-                                        bntx.ImportBasicTextures("Basic_Nrm");
-                                        bntx.ImportBasicTextures("Basic_Spm");
-                                        bntx.ImportBasicTextures("Basic_Sphere");
-                                        bntx.ImportBasicTextures("Basic_Mtl");
-                                        bntx.ImportBasicTextures("Basic_Rgh");
-                                        bntx.ImportBasicTextures("Basic_MRA");
-                                        bntx.ImportBasicTextures("Basic_Bake_st0");
-                                        bntx.ImportBasicTextures("Basic_Bake_st1");
-                                        bntx.ImportBasicTextures("Basic_Emm");
-                                    }
-                                }
-                            }
-
-                            foreach (var tex in mat.TextureMaps)
-                            {
+                                fmat.Text = mat.Text;
+                                //Setup placeholder textures
+                                //Note we can't add/remove samplers so we must fill these slots
                                 foreach (var t in fmat.textures)
                                 {
-                                    if (t.Type == tex.Type)
+                                    t.wrapModeS = 0;
+                                    t.wrapModeT = 0;
+
+                                    switch (t.Type)
                                     {
-                                        t.Name = tex.Name;
-                                        t.wrapModeS = tex.wrapModeS;
-                                        t.wrapModeT = tex.wrapModeT;
-                                        t.wrapModeW = tex.wrapModeW;
-                                        t.Type = tex.Type;
+                                        case STGenericMatTexture.TextureType.Diffuse:
+                                            t.Name = "Basic_Alb";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Emission:
+                                            t.Name = "Basic_Emm";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Normal:
+                                            t.Name = "Basic_Nrm";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Specular:
+                                            t.Name = "Basic_Spm";
+                                            break;
+                                        case STGenericMatTexture.TextureType.SphereMap:
+                                            t.Name = "Basic_Sphere";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Metalness:
+                                            t.Name = "Basic_Mtl";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Roughness:
+                                            t.Name = "Basic_Rgh";
+                                            break;
+                                        case STGenericMatTexture.TextureType.MRA:
+                                            t.Name = "Basic_MRA";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Shadow:
+                                            t.Name = "Basic_Bake_st0";
+                                            break;
+                                        case STGenericMatTexture.TextureType.Light:
+                                            t.Name = "Basic_Bake_st1";
+                                            break;
                                     }
                                 }
+
+                                if (PluginRuntime.bntxContainers.Count > 0)
+                                {
+                                    foreach (var node in Parent.Parent.Nodes["EXT"].Nodes)
+                                    {
+                                        if (node is BinaryTextureContainer)
+                                        {
+                                            var bntx = (BinaryTextureContainer)node;
+
+                                            bntx.ImportBasicTextures("Basic_Alb");
+                                            bntx.ImportBasicTextures("Basic_Nrm");
+                                            bntx.ImportBasicTextures("Basic_Spm");
+                                            bntx.ImportBasicTextures("Basic_Sphere");
+                                            bntx.ImportBasicTextures("Basic_Mtl");
+                                            bntx.ImportBasicTextures("Basic_Rgh");
+                                            bntx.ImportBasicTextures("Basic_MRA");
+                                            bntx.ImportBasicTextures("Basic_Bake_st0");
+                                            bntx.ImportBasicTextures("Basic_Bake_st1");
+                                            bntx.ImportBasicTextures("Basic_Emm");
+                                        }
+                                    }
+                                }
+
+                                foreach (var tex in mat.TextureMaps)
+                                {
+                                    foreach (var t in fmat.textures)
+                                    {
+                                        if (t.Type == tex.Type)
+                                        {
+                                            t.Name = tex.Name;
+                                            t.wrapModeS = tex.wrapModeS;
+                                            t.wrapModeT = tex.wrapModeT;
+                                            t.wrapModeW = tex.wrapModeW;
+                                            t.Type = tex.Type;
+                                        }
+                                    }
+                                }
+                                fmat.Material.Name = Text;
+                                fmat.SetMaterial(fmat.Material);
+
+                                List<string> keyList = new List<string>(materials.Keys);
+                                fmat.Text = Utils.RenameDuplicateString(keyList, fmat.Text);
+
+                                materials.Add(fmat.Text, fmat);
+                                Nodes["FmatFolder"].Nodes.Add(fmat);
                             }
-                            fmat.Material.Name = Text;
-                            fmat.SetMaterial(fmat.Material);
-
-                            List<string> keyList = new List<string>(materials.Keys);
-                            fmat.Text = Utils.RenameDuplicateString(keyList, fmat.Text);
-
-                            materials.Add(fmat.Text, fmat);
-                            Nodes["FmatFolder"].Nodes.Add(fmat);
                         }
+                 
                         foreach (STGenericObject obj in assimp.objects)
                         {
                             FSHP shape = new FSHP();
@@ -1556,6 +1564,10 @@ namespace Bfres.Structs
                             shape.vertexAttributes = settings.CreateNewAttributes();
                             shape.boneIndx = obj.BoneIndex;
                             shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
+
+                            if (BFRES.IsWiiU)
+                                shape.MaterialIndex = 0;
+
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
                             shape.CreateNewBoundingBoxes();
