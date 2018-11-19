@@ -53,7 +53,6 @@ namespace FirstPlugin
             mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps[CurArrayDisplayLevel].Count - 1}";
             arrayLevelCounterLabel.Text = $"{CurArrayDisplayLevel} / {textureData.mipmaps.Count - 1}";
 
-
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 

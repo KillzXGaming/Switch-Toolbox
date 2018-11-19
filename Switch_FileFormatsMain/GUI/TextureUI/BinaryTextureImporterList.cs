@@ -137,8 +137,8 @@ namespace FirstPlugin
             }));
             Thread.Start();
 
-          //  WidthLabel.Text = $"Width {pictureBox1.Image.Width}";
-      //      HeightLabel.Text = $"Height {pictureBox1.Image.Height}";
+            //  WidthLabel.Text = $"Width {pictureBox1.Image.Width}";
+            //      HeightLabel.Text = $"Height {pictureBox1.Image.Height}";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -162,7 +162,29 @@ namespace FirstPlugin
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
 
                 SetupSettings();
+
+                MipmapNum.Value = 0;
+
+                uint num = Math.Max(SelectedTexSettings.TexHeight, SelectedTexSettings.TexWidth);
+                while (true)
+                {
+                    num >>= 1;
+                    if (num > 0)
+                        ++MipmapNum.Value;
+                    else
+                        break;
+                }
+                MipmapNum.Maximum = MipmapNum.Value;
             }
+        }
+
+        private void BinaryTextureImporterList_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void MipmapNum_ValueChanged(object sender, EventArgs e)
+        {
+            SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
         }
     }
 }

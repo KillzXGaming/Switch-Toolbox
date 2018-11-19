@@ -470,9 +470,9 @@ namespace FirstPlugin
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
                     decomp = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_SNORM):
-                    break;
+                    decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height); break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_UINT):
-                    break;
+                    decomp = DDS_PixelDecode.DecodeR8G8B8A8(data, (int)Width, (int)Height); break;
                 default:
                     decomp = Properties.Resources.TextureError;
                     Console.WriteLine($"Format {Format} not supported!");

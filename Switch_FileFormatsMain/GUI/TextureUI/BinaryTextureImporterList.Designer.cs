@@ -184,6 +184,7 @@
             this.MipmapNum.Name = "MipmapNum";
             this.MipmapNum.Size = new System.Drawing.Size(130, 16);
             this.MipmapNum.TabIndex = 20;
+            this.MipmapNum.ValueChanged += new System.EventHandler(this.MipmapNum_ValueChanged);
             // 
             // WidthLabel
             // 
@@ -248,7 +249,8 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.ForeColor = System.Drawing.Color.White;
-            this.Text = "BinaryTextureImporterList";
+            this.Text = "Texture Importer";
+            this.Load += new System.EventHandler(this.BinaryTextureImporterList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
