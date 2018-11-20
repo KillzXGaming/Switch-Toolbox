@@ -67,7 +67,7 @@ Resources
 - [Treeview Icons by icons8](https://icons8.com/)
 - Smash Forge (Currently placeholders)
 
-Libaries
+Libraries
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
 - [Be.HexEditor by Bernhard Elbl](https://sourceforge.net/projects/hexbox/)
