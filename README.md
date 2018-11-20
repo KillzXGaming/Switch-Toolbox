@@ -58,7 +58,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - JuPaHe64 for the base 3D renderer.
 - Every File Explorer devs (Gericom) for Yaz0 stuff
 - Exelix for Byaml, Sarc and KCL library
-- Syroot for helpful IO extensions and libraies
+- Syroot for helpful IO extensions and libraries
 - GDK Chan for some DDS decode methods
 - AboodXD for some foundation stuff with exelix's SARC library, GTX and BNTX texture swizzling and documentation
 - MelonSpeedruns for logo.
