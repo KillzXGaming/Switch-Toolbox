@@ -44,7 +44,7 @@ This tool currently features:
 - GFPAK
    - Can extract files.
 
-## Buidling
+## Building
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
