@@ -19,6 +19,36 @@ namespace Bfres.Structs
         {
             Text = "Models";
             Name = "FMDLFolder";
+
+            ContextMenu = new ContextMenu();
+            MenuItem import = new MenuItem("Import");
+            ContextMenu.MenuItems.Add(import);
+            import.Click += Import;
+            MenuItem exportAll = new MenuItem("Export All");
+            ContextMenu.MenuItems.Add(exportAll);
+            exportAll.Click += ExportAll;
+            MenuItem clear = new MenuItem("Clear");
+            ContextMenu.MenuItems.Add(clear);
+            clear.Click += Clear;
+        }
+        public void Import(object sender, EventArgs args)
+        {
+
+        }
+        public void ExportAll(object sender, EventArgs args)
+        {
+
+        }
+        private void Clear(object sender, EventArgs args)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                Nodes.Clear();
+                ((ResourceFile)Parent).BFRESRender.models.Clear();
+                ((ResourceFile)Parent).BFRESRender.UpdateVertexData();
+            }
         }
         public override void OnClick(TreeView treeView)
         {
@@ -49,6 +79,9 @@ namespace Bfres.Structs
             MenuItem replace = new MenuItem("Replace Model");
             ContextMenu.MenuItems.Add(replace);
             replace.Click += Replace;
+            MenuItem rename = new MenuItem("Rename");
+            ContextMenu.MenuItems.Add(rename);
+            rename.Click += Rename;
             MenuItem calcTansBitans = new MenuItem("Calculate Tangents/Bitangents");
             ContextMenu.MenuItems.Add(calcTansBitans);
             calcTansBitans.Click += CalcTansBitansAllShapes;
@@ -60,10 +93,6 @@ namespace Bfres.Structs
             MenuItem recalculateNormals = new MenuItem("Recalculate");
             normals.MenuItems.Add(recalculateNormals);
             recalculateNormals.Click += RecalculateNormals;
-
-            MenuItem rename = new MenuItem("Rename");
-            ContextMenu.MenuItems.Add(rename);
-            rename.Click += Rename;
         }
         private void SmoothNormals(object sender, EventArgs args)
         {

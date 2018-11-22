@@ -8,6 +8,7 @@ using FirstPlugin;
 
 namespace Bfres.Structs
 {
+
     public class FSKL : STSkeleton
     {
         public int[] Node_Array;

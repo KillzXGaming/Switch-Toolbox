@@ -1,17 +1,16 @@
 ﻿using System;
-using Switch_Toolbox.Library;
 using System.Windows.Forms;
+using Switch_Toolbox.Library;
 using FirstPlugin;
-
 
 namespace Bfres.Structs
 {
-    public class FbnvFolder : TreeNodeCustom
+    public class FshpaFolder : TreeNodeCustom
     {
-        public FbnvFolder()
+        public FshpaFolder()
         {
-            Text = "Bone Visabilty Animations";
-            Name = "FBNV";
+            Text = "Shape Animations";
+            Name = "FSHPA";
 
             ContextMenu = new ContextMenu();
             MenuItem import = new MenuItem("Import");
@@ -24,15 +23,15 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(clear);
             clear.Click += Clear;
         }
-        public void Import(object sender, EventArgs args)
+        private void Import(object sender, EventArgs args)
         {
 
         }
-        public void ExportAll(object sender, EventArgs args)
+        private void ExportAll(object sender, EventArgs args)
         {
 
         }
-        public void Clear(object sender, EventArgs args)
+        private void Clear(object sender, EventArgs args)
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
 
@@ -41,7 +40,6 @@ namespace Bfres.Structs
                 Nodes.Clear();
             }
         }
-
         public override void OnClick(TreeView treeView)
         {
             FormLoader.LoadEditor(this, Text);

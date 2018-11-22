@@ -15,7 +15,38 @@ namespace Bfres.Structs
         {
             Text = "Skeleton Animations";
             Name = "FSKA";
+
+            ContextMenu = new ContextMenu();
+            MenuItem import = new MenuItem("Import");
+            ContextMenu.MenuItems.Add(import);
+            import.Click += Import;
+            MenuItem exportAll = new MenuItem("Export All");
+            ContextMenu.MenuItems.Add(exportAll);
+            exportAll.Click += ExportAll;
+            MenuItem clear = new MenuItem("Clear");
+            ContextMenu.MenuItems.Add(clear);
+            clear.Click += Clear;
         }
+        public void Import(object sender, EventArgs args)
+        {
+
+        }
+        public void ExportAll(object sender, EventArgs args)
+        {
+
+        }
+        private void Clear(object sender, EventArgs args)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                Nodes.Clear();
+                ((ResourceFile)Parent).BFRESRender.models.Clear();
+                ((ResourceFile)Parent).BFRESRender.UpdateVertexData();
+            }
+        }
+
         public void LoadAnimations(ResU.ResFile resFile, BFRESRender BFRESRender)
         {
             foreach (var ska in resFile.SkeletalAnims.Values)
@@ -87,7 +118,7 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(replace);
             replace.Click += Replace;
         }
-        public void Export(object sender, EventArgs args)
+        private void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.bfska;|" +
@@ -101,7 +132,7 @@ namespace Bfres.Structs
                 SkeletalAnim.Export(sfd.FileName, BFRESRender.resFile);
             }
         }
-        public void Replace(object sender, EventArgs args)
+        private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Supported Formats|*.bfska;|" +

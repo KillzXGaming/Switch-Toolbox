@@ -33,7 +33,7 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(clear);
             clear.Click += Clear;
         }
-        public void Clear(object sender, EventArgs args)
+        private void Clear(object sender, EventArgs args)
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
 
@@ -44,11 +44,11 @@ namespace Bfres.Structs
                 ((FMDL)Parent).BFRESRender.UpdateVertexData();
             }
         }
-        public void ExportAll(object sender, EventArgs args)
+        private void ExportAll(object sender, EventArgs args)
         {
             ((FMDL)Parent).ExportAll();
         }
-        public void Import(object sender, EventArgs args)
+        private void Import(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Supported Formats|*.bfobj;*.fbx;*.dae; *.obj;*.csv;|" +

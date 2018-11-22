@@ -127,9 +127,9 @@ namespace Bfres.Structs
             if (resFile.SkeletalAnims.Count > 0)
                 AddSkeletonAnims(resFile);
             if (resFile.ShaderParamAnims.Count > 0)
-                Nodes.Add(new FshaFolder());
+                Nodes.Add(new FshuFolder());
             if (resFile.ColorAnims.Count > 0)
-                Nodes.Add(new FshaColorFolder());
+                Nodes.Add(new FshuColorFolder());
             if (resFile.TexSrtAnims.Count > 0)
                 Nodes.Add(new TexSrtFolder());
             if (resFile.TexPatternAnims.Count > 0)
@@ -296,18 +296,6 @@ namespace Bfres.Structs
             FskaFolder FSKA = new FskaFolder();
             FSKA.LoadAnimations(resFile, BFRESRender);
             Nodes.Add(FSKA);
-        }
-    }
-    public class FshpaFolder : TreeNodeCustom
-    {
-        public FshpaFolder()
-        {
-            Text = "Shape Animations";
-            Name = "FSHPA";
-        }
-        public override void OnClick(TreeView treeView)
-        {
-            FormLoader.LoadEditor(this, Text);
         }
     }
 }
