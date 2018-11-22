@@ -2,12 +2,13 @@
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using FirstPlugin;
+using Syroot.NintenTools.NSW.Bfres;
 
 namespace Bfres.Structs
 {
-    public class FmmaFolder : TreeNodeCustom
+    public class FmaaFolder : TreeNodeCustom
     {
-        public FmmaFolder()
+        public FmaaFolder()
         {
             Text = "Material Animations";
             Name = "FMAA";
@@ -29,12 +30,22 @@ namespace Bfres.Structs
         }
         public void ExportAll(object sender, EventArgs args)
         {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = sfd.SelectedPath;
+                foreach (FMAA fmaa in Nodes)
+                {
+                    string FileName = folderPath + '\\' + fmaa.Text + ".bfmaa";
+                    ((FMAA)fmaa).MaterialAnim.Export(FileName, fmaa.BFRESRender.resFile);
+                }
+            }
+
 
         }
         private void Clear(object sender, EventArgs args)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
-
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all material animations? This cannot be undone!", "", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
                 Nodes.Clear();
@@ -46,8 +57,14 @@ namespace Bfres.Structs
         }
     }
 
-    public class FMAA
+    public class FMAA : TreeNodeCustom
     {
+        public BFRESRender BFRESRender;
+        public MaterialAnim MaterialAnim;
 
+        public void Read(MaterialAnim anim)
+        {
+            MaterialAnim = anim;
+        }
     }
 }

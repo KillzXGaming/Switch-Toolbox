@@ -37,40 +37,12 @@ namespace Bfres.Structs
         }
         private void Clear(object sender, EventArgs args)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
-
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all skeletal animations? This cannot be undone!", "", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
                 Nodes.Clear();
-                ((ResourceFile)Parent).BFRESRender.models.Clear();
-                ((ResourceFile)Parent).BFRESRender.UpdateVertexData();
             }
         }
-
-        public void LoadAnimations(ResU.ResFile resFile, BFRESRender BFRESRender)
-        {
-            foreach (var ska in resFile.SkeletalAnims.Values)
-            {
-                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
-                skeletonAnim.BFRESRender = BFRESRender;
-                skeletonAnim.Read(ska, resFile);
-                Nodes.Add(skeletonAnim);
-            }
-        }
-        public void LoadAnimations(ResFile resFile, BFRESRender BFRESRender)
-        {
-            foreach (SkeletalAnim ska in resFile.SkeletalAnims)
-            {
-                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
-                skeletonAnim.BFRESRender = BFRESRender;
-                skeletonAnim.Read(ska, resFile);
-                Nodes.Add(skeletonAnim);
-            }
-        }
-        /*   public override void OnClick(TreeView treeView)
-           {
-               FormLoader.LoadEditor(this, Text);
-           }*/
     }
 
     public class BfresSkeletonAnim : Animation
@@ -121,9 +93,7 @@ namespace Bfres.Structs
         private void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.bfska;|" +
-             "Bfres Object (shape/vertices) |*.bfska|" +
-             "All files(*.*)|*.*";
+            sfd.Filter = "Supported Formats|*.bfska;";
             sfd.FileName = Text;
             sfd.DefaultExt = ".bfska";
 
@@ -135,9 +105,7 @@ namespace Bfres.Structs
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.bfska;|" +
-             "Bfres Object (shape/vertices) |*.bfska|" +
-             "All files(*.*)|*.*";
+            ofd.Filter = "Supported Formats|*.bfska;";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -147,7 +115,6 @@ namespace Bfres.Structs
         }
 
         public static List<Animation> SkeletonAnimations = new List<Animation>();
-
         public void Read(ResU.SkeletalAnim ska, ResU.ResFile b)
         {
 

@@ -177,14 +177,10 @@ namespace Bfres.Structs
             Text = resFile.Name;
             UpdateTree(resFile);
 
-            foreach (MaterialAnim anim in resFile.MaterialAnims)
-                Nodes["FMAA"].Nodes.Add(anim.Name);
             foreach (ShapeAnim anim in resFile.ShapeAnims)
                 Nodes["FSHPA"].Nodes.Add(anim.Name);
             foreach (VisibilityAnim anim in resFile.BoneVisibilityAnims)
                 Nodes["FBNV"].Nodes.Add(anim.Name);
-            foreach (SceneAnim anim in resFile.SceneAnims)
-                Nodes["FSCN"].Nodes.Add(anim.Name);
 
             int ext = 0;
             foreach (ExternalFile extfile in resFile.ExternalFiles)
@@ -261,19 +257,20 @@ namespace Bfres.Structs
             if (resFile.SkeletalAnims.Count > 0)
                 AddSkeletonAnims(resFile);
             if (resFile.MaterialAnims.Count > 0)
-                Nodes.Add(new FmmaFolder());
+                AddMaterialAnims(resFile);
             if (resFile.ShapeAnims.Count > 0)
                 Nodes.Add(new FshpaFolder());
             if (resFile.BoneVisibilityAnims.Count > 0)
                 Nodes.Add(new FbnvFolder());
             if (resFile.SceneAnims.Count > 0)
-                Nodes.Add(new FscnFolder());
+                AddSceneAnims(resFile);
             if (resFile.ExternalFiles.Count > 0)
                 Nodes.Add(new EmbeddedFilesFolder());
         }
         private void AddFTEXTextures(ResU.ResFile resFile)
         {
             FTEXContainer ftexContainer = new FTEXContainer();
+            Nodes.Add(ftexContainer);
             foreach (ResU.Texture tex in resFile.Textures.Values)
             {
                 string TextureName = tex.Name;
@@ -283,19 +280,61 @@ namespace Bfres.Structs
                 ftexContainer.Textures.Add(texture.Text, texture);
             }
             PluginRuntime.ftexContainers.Add(ftexContainer);
-            Nodes.Add(ftexContainer);
         }
         private void AddSkeletonAnims(ResU.ResFile resFile)
         {
-            FskaFolder FSKA = new FskaFolder();
-            FSKA.LoadAnimations(resFile, BFRESRender);
-            Nodes.Add(FSKA);
+            FskaFolder fksaFolder = new FskaFolder();
+            Nodes.Add(fksaFolder);
+            foreach (ResU.SkeletalAnim ska in resFile.SkeletalAnims.Values)
+            {
+                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
+                skeletonAnim.BFRESRender = BFRESRender;
+                skeletonAnim.Read(ska, resFile);
+                fksaFolder.Nodes.Add(skeletonAnim);
+            }
         }
         private void AddSkeletonAnims(ResFile resFile)
         {
-            FskaFolder FSKA = new FskaFolder();
-            FSKA.LoadAnimations(resFile, BFRESRender);
-            Nodes.Add(FSKA);
+            FskaFolder fksaFolder = new FskaFolder();
+            Nodes.Add(fksaFolder);
+            foreach (SkeletalAnim ska in resFile.SkeletalAnims)
+            {
+                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
+                skeletonAnim.BFRESRender = BFRESRender;
+                skeletonAnim.Read(ska, resFile);
+                fksaFolder.Nodes.Add(skeletonAnim);
+            }
+        }
+        private void AddSceneAnims(ResU.ResFile resFile)
+        {
+            FscnFolder FSCN = new FscnFolder();
+            Nodes.Add(FSCN);
+        }
+        private void AddSceneAnims(ResFile resFile)
+        {
+            FscnFolder fscnFolder = new FscnFolder();
+            Nodes.Add(fscnFolder);
+            foreach (var scn in resFile.SceneAnims)
+            {
+                FSCN sceneAnim = new FSCN();
+                sceneAnim.Text = scn.Name;
+                sceneAnim.BFRESRender = BFRESRender;
+                sceneAnim.Read(scn);
+                fscnFolder.Nodes.Add(sceneAnim);
+            }
+        }
+        private void AddMaterialAnims(ResFile resFile)
+        {
+            FmaaFolder fmaaFolder = new FmaaFolder();
+            Nodes.Add(fmaaFolder);
+            foreach (var fmaa in resFile.MaterialAnims)
+            {
+                FMAA materialAnim = new FMAA();
+                materialAnim.Text = fmaa.Name;
+                materialAnim.BFRESRender = BFRESRender;
+                materialAnim.Read(fmaa);
+                fmaaFolder.Nodes.Add(materialAnim);
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Bfres.Structs
         }
         public void Clear(object sender, EventArgs args)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all visibility animations? This cannot be undone!", "", MessageBoxButtons.YesNo);
 
             if (dialogResult == DialogResult.Yes)
             {

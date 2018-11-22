@@ -153,13 +153,12 @@ namespace Switch_Toolbox.Library
             if (treeView1.SelectedNode is STGenericObject)
             {
                 ((STGenericObject)treeView1.SelectedNode).OnClick(treeView1);
+                Viewport.Instance.Update();
             }
             if (treeView1.SelectedNode is STGenericMaterial)
             {
                 ((STGenericMaterial)treeView1.SelectedNode).OnClick(treeView1);
             }
-
-            Viewport.Instance.UpdateViewport();
         }
 
         private void ObjectList_DockStateChanged(object sender, EventArgs e)
@@ -169,7 +168,6 @@ namespace Switch_Toolbox.Library
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            Viewport.Instance.UpdateViewport();
         }
 
         private void searchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -201,6 +199,14 @@ namespace Switch_Toolbox.Library
                     ((TreeNodeCustom)info.Node).OnMouseRightClick(treeView1);
 
                 treeView1.SelectedNode = info.Node;
+            }
+        }
+
+        private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (treeView1.SelectedNode is TreeNodeCustom)
+            {
+                ((TreeNodeCustom)treeView1.SelectedNode).OnDoubleMouseClick(treeView1);
             }
         }
     }

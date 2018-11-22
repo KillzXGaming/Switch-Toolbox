@@ -193,15 +193,6 @@ namespace FirstPlugin
                 MessageBox.Show($"File has been saved to {FileName}");
                 Cursor.Current = Cursors.Default;
             }
-
-            public override void OnClick(TreeView treeview)
-            {
-                /*    CallRecursive(treeview);
-                    foreach (TreeNode n in Nodes)
-                    {
-                        n.ExpandAll();
-                    }*/
-            }
             private void CallRecursive(TreeView treeView)
             {
                 // Print each node recursively.  
@@ -260,10 +251,7 @@ namespace FirstPlugin
                 ContextMenu.MenuItems.Add(rename);
                 rename.Click += Rename;
             }
-            public override void OnClick(TreeView treeView)
-            { 
-            }
-            public override void OnMouseLeftClick(TreeView treeView)
+            public override void OnDoubleMouseClick(TreeView treeView)
             {
                 ReplaceNode(this.Parent, this, OpenFile(Name, Data, this));
             }
