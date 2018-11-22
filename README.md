@@ -44,7 +44,7 @@ This tool currently features:
 - GFPAK
    - Can extract files.
 
-## Buidling
+## Building
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
@@ -58,7 +58,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - JuPaHe64 for the base 3D renderer.
 - Every File Explorer devs (Gericom) for Yaz0 stuff
 - Exelix for Byaml, Sarc and KCL library
-- Syroot for helpful IO extensions and libraies
+- Syroot for helpful IO extensions and libraries
 - GDK Chan for some DDS decode methods
 - AboodXD for some foundation stuff with exelix's SARC library, GTX and BNTX texture swizzling and documentation
 - MelonSpeedruns for logo.
@@ -67,7 +67,7 @@ Resources
 - [Treeview Icons by icons8](https://icons8.com/)
 - Smash Forge (Currently placeholders)
 
-Libaries
+Libraries
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
 - [Be.HexEditor by Bernhard Elbl](https://sourceforge.net/projects/hexbox/)
