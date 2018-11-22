@@ -214,7 +214,7 @@ namespace FirstPlugin
             KCLRendering Renderer;
             public override void OnClick(TreeView treeView)
             {
-                Renderer.LoadViewport();
+                LibraryGUI.Instance.LoadViewport(Viewport.Instance);
                 Renderer.UpdateVertexData();
             }
 
@@ -358,15 +358,6 @@ namespace FirstPlugin
             }
 
             string FileName;
-            public void LoadViewport()
-            {
-                if (!EditorIsViewportActive(FirstPlugin.DockedViewport))
-                {
-                    Viewport.Instance.gL_ControlModern1.MainDrawable = this;
-                    FirstPlugin.DockedViewport.Text = FileName;
-                    FirstPlugin.DockedViewport = Viewport.Instance;
-                }
-            }
             public bool EditorIsViewportActive(DockContent dock)
             {
                 if (dock is Viewport)

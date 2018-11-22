@@ -130,28 +130,11 @@ namespace FirstPlugin
             }
             private void LoadBFWAVEditor()
             {
-                foreach (Control control in FirstPlugin.MainF.Controls)
-                {
-                    if (control is DockPanel)
-                    {
-                        if (FirstPlugin.DockedEditorS == null)
-                        {
-                            FirstPlugin.DockedEditorS = new DockContent();
-                            FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
-                        }
-                    }
-                }
-
-                if (!EditorIsActive(FirstPlugin.DockedEditorS))
-                {
-                    FirstPlugin.DockedEditorS.Controls.Clear();
-
-                    BFAVEditor = new BFAVEditor();
-                    BFAVEditor.Text = Text;
-                    BFAVEditor.Dock = DockStyle.Fill;
-                    BFAVEditor.LoadFile(this);
-                    FirstPlugin.DockedEditorS.Controls.Add(BFAVEditor);
-                }
+                BFAVEditor BFAVEditor = new BFAVEditor();
+                BFAVEditor.Text = Text;
+                BFAVEditor.Dock = DockStyle.Fill;
+                BFAVEditor.LoadFile(this);
+                LibraryGUI.Instance.LoadDockContent(BFAVEditor, PluginRuntime.FSHPDockState);
             }
             public bool EditorIsActive(DockContent dock)
             {

@@ -51,27 +51,11 @@ namespace FirstPlugin
         }
         public static void LoadBoneEditor(BfresBone bone)
         {
-            foreach (Control control in FirstPlugin.MainF.Controls)
-            {
-                if (control is DockPanel)
-                {
-                    if (FirstPlugin.DockedEditorS == null)
-                    {
-                        FirstPlugin.DockedEditorS = new DockContent();
-                        FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
-                    }
-                }
-            }
-
-            if (!BoneEditorIsActive(FirstPlugin.DockedEditorS, bone))
-            {
-                FirstPlugin.DockedEditorS.Controls.Clear();
-                BfresBoneEditor BfresBone = new BfresBoneEditor();
-                BfresBone.Text = bone.Text;
-                BfresBone.Dock = DockStyle.Fill;
-                BfresBone.LoadBone(bone);
-                FirstPlugin.DockedEditorS.Controls.Add(BfresBone);
-            }
+            BfresBoneEditor BfresBone = new BfresBoneEditor();
+            BfresBone.Text = bone.Text;
+            BfresBone.Dock = DockStyle.Fill;
+            BfresBone.LoadBone(bone);
+            LibraryGUI.Instance.LoadDockContent(BfresBone, PluginRuntime.FSHPDockState);
         }
         public static bool BoneEditorIsActive(DockContent dock, BfresBone bone)
         {
@@ -88,76 +72,20 @@ namespace FirstPlugin
 
         public static void LoadMatEditor(FMAT mat)
         {
-            foreach (Control control in FirstPlugin.MainF.Controls)
-            {
-                if (control is DockPanel)
-                {
-                    if (FirstPlugin.DockedEditorS == null)
-                    {
-                        FirstPlugin.DockedEditorS = new DockContent();
-                        FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
-                    }
-                }
-            }
-
-            if (!EditorIsActive(FirstPlugin.DockedEditorS))
-            {
-                FirstPlugin.DockedEditorS.Controls.Clear();
-                FMATEditor editor = new FMATEditor();
-                editor.Text = mat.Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadMaterial(mat, mat.BFRESRender);
-                FirstPlugin.DockedEditorS.Controls.Add(editor);
-            }
-            bool EditorIsActive(DockContent dock)
-            {
-                foreach (Control ctrl in dock.Controls)
-                {
-                    if (ctrl is FMATEditor)
-                    {
-                        ((FMATEditor)ctrl).LoadMaterial(mat, mat.BFRESRender);
-                        return true;
-                    }
-                }
-                return false;
-            }
+            FMATEditor editor = new FMATEditor();
+            editor.Text = mat.Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadMaterial(mat, mat.BFRESRender);
+            LibraryGUI.Instance.LoadDockContent(editor, PluginRuntime.FSHPDockState);
         }
 
         public static void LoadShapeEditor(FSHP fshp)
         {
-            foreach (Control control in FirstPlugin.MainF.Controls)
-            {
-                if (control is DockPanel)
-                {
-                    if (FirstPlugin.DockedEditorS == null)
-                    {
-                        FirstPlugin.DockedEditorS = new DockContent();
-                        FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
-                    }
-                }
-            }
-
-            if (!EditorIsActive(FirstPlugin.DockedEditorS))
-            {
-                FirstPlugin.DockedEditorS.Controls.Clear();
-                FSHPEditor BfresProperties = new FSHPEditor();
-                BfresProperties.Text = fshp.Text;
-                BfresProperties.Dock = DockStyle.Fill;
-                BfresProperties.LoadObject((FMDL)fshp.Parent.Parent, fshp);
-                FirstPlugin.DockedEditorS.Controls.Add(BfresProperties);
-            }
-            bool EditorIsActive(DockContent dock)
-            {
-                foreach (Control ctrl in dock.Controls)
-                {
-                    if (ctrl is FSHPEditor)
-                    {
-                        ((FSHPEditor)ctrl).LoadObject((FMDL)fshp.Parent.Parent, fshp);
-                        return true;
-                    }
-                }
-                return false;
-            }
+            FSHPEditor BfresProperties = new FSHPEditor();
+            BfresProperties.Text = fshp.Text;
+            BfresProperties.Dock = DockStyle.Fill;
+            BfresProperties.LoadObject((FMDL)fshp.Parent.Parent, fshp);
+            LibraryGUI.Instance.LoadDockContent(BfresProperties, PluginRuntime.FSHPDockState);
         }
     }
 }

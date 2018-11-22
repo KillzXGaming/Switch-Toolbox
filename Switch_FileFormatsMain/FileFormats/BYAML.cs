@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Switch_Toolbox;
 using System.Windows.Forms;
@@ -60,12 +60,14 @@ namespace FirstPlugin
             }
         }
 
+        MemoryStream mem;
         public void Load()
         {
             IsActive = false;
             CanSave = false;
 
-            ByamlViewer.OpenByml(new System.IO.MemoryStream(Data), FileName);
+            mem = new MemoryStream(Data);
+            ByamlViewer.OpenByml(mem, FileName);
 
             //    BymlFileData byamlFile = ByamlFile.LoadN(new System.IO.MemoryStream(Data), false, Syroot.BinaryData.ByteOrder.LittleEndian);
             //          EditorRoot = LoadByamlNodes(byamlFile.RootNode);
@@ -78,20 +80,6 @@ namespace FirstPlugin
         }
 
         ByamlEditor ByamlEditor;
-
-        public void LoadDockedEditor(BymlFileData byamlFile)
-        {
-            foreach (Control control in FirstPlugin.MainF.Controls)
-            {
-                if (control is DockPanel)
-                {
-                    ByamlEditor = new ByamlEditor();
-                    ByamlEditor.Dock = DockStyle.Fill;
-                    ByamlEditor.Show(((DockPanel)control), DockState.Document);
-                    ByamlEditor.LoadByaml(byamlFile);
-                }
-            }
-        }
 
         public TreeNode LoadByamlNodes(dynamic root)
         {
@@ -194,6 +182,9 @@ namespace FirstPlugin
 
         public byte[] Save()
         {
+            if (mem != null)
+                return mem.ToArray();
+
             return null;
         }
     }

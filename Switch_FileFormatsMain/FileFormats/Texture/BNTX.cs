@@ -729,39 +729,11 @@ namespace FirstPlugin
         }
         public override void OnClick(TreeView treeView)
         {
-            if (FirstPlugin.DockedEditorS == null)
-            {
-                foreach (Control control in FirstPlugin.MainF.Controls)
-                {
-                    if (control is DockPanel)
-                    {
-                        FirstPlugin.DockedEditorS = new DockContent();
-                        FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
-                    }
-                }
-            }
-  
-            if (!EditorIsActive(FirstPlugin.DockedEditorS))
-            {
-                FirstPlugin.DockedEditorS.Controls.Clear();
-
-                BNTXEditor BNTXEditor = new BNTXEditor();
-                BNTXEditor.Text = Text;
-                BNTXEditor.Dock = DockStyle.Fill;
-                BNTXEditor.LoadProperty(this);
-                FirstPlugin.DockedEditorS.Controls.Add(BNTXEditor);
-            }
-        }
-        public void UpdateEditor()
-        {
-            foreach (Control ctrl in FirstPlugin.DockedEditorS.Controls)
-            {
-                if (ctrl is BNTXEditor)
-                {
-                    FirstPlugin.DockedEditorS.Text = Text;
-                    ((BNTXEditor)ctrl).LoadProperty(this);
-                }
-            }
+            BNTXEditor BNTXEditor = new BNTXEditor();
+            BNTXEditor.Text = Text;
+            BNTXEditor.Dock = DockStyle.Fill;
+            BNTXEditor.LoadProperty(this);
+            LibraryGUI.Instance.LoadDockContent(BNTXEditor, PluginRuntime.FSHPDockState);
         }
         public bool EditorIsActive(DockContent dock)
         {
@@ -1149,7 +1121,7 @@ namespace FirstPlugin
                 Texture.Name = Text;
                 UpdateBfresTextureMapping();
 
-                UpdateEditor();
+                //LibraryGUI.Instance.LoadDockContent(BNTXEditor);
             }
         }
         private void UpdateBfresTextureMapping()

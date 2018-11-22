@@ -40,19 +40,9 @@ namespace Switch_Toolbox
 
             Config.StartupFromFile(MainForm.executableDir + "\\config.xml");
 
-            dockContent = new DockContentST();
-            if (!Runtime.DisableViewport)
-            {
-                dockContent = Viewport.Instance;
-            }
-
-
             GenericPluginLoader.LoadPlugin();
-
             foreach (var plugin in GenericPluginLoader._Plugins)
             {
-                plugin.Value.MainForm = this;
-                plugin.Value.DockedEditor = dockContent;
                 plugin.Value.Load();
                 LoadPluginContextMenus(plugin.Value.Types);
             }
@@ -134,9 +124,7 @@ namespace Switch_Toolbox
                 fileRecent.ForeColor = Color.White;
                 recentToolStripMenuItem.DropDownItems.Add(fileRecent); //add the menu to "recent" menu
             }
-            if (!Runtime.DisableViewport)
-                dockContent.Show(dockPanel1, DockState.Document);
-
+            LibraryGUI.Instance.dockPanel = dockPanel1;
 
             if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
             {
@@ -302,7 +290,7 @@ namespace Switch_Toolbox
                     if (format.UseEditMenu)
                         editToolStripMenuItem.Enabled = true;
                 }
-                if (format.Magic == String.Empty) //Load by extension if magic isn't defined
+                else
                 {
                     foreach (string ext in format.Extension)
                     {
@@ -329,7 +317,7 @@ namespace Switch_Toolbox
                                 editToolStripMenuItem.Enabled = true;
                         }
                     }
-                }
+                }        
             }
         }
         private void DisposeControls()

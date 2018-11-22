@@ -69,9 +69,6 @@ namespace FirstPlugin
     }
     public class GTX
     {
-
-
-
         //From https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
         //Todo. Add swizzling back
         public struct GX2Surface

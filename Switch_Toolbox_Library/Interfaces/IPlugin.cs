@@ -17,8 +17,6 @@ namespace PluginContracts
         //List of types
         //IFileFormat
         Type[] Types { get; } //Types hold File extensions
-        Form MainForm { get; set; }
-        DockContentST DockedEditor { get; set; }
         void Load();
         void Unload();
     }

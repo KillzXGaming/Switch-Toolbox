@@ -110,7 +110,7 @@ namespace Bfres.Structs
                 {
 
                 }
-                BFRESRender.LoadViewport();
+                LibraryGUI.Instance.LoadViewport(Viewport.Instance);
                 BFRESRender.UpdateVertexData();
             }
         }

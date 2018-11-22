@@ -303,6 +303,10 @@ namespace FirstPlugin
                     renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
                     renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
+                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_SRGB):
+                    renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
+                    renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    break;
             }
             renderedTex.display = loadImage(renderedTex);
         }
@@ -363,44 +367,12 @@ namespace FirstPlugin
 
         public override void OnClick(TreeView treeView)
         {
-            foreach (Control control in FirstPlugin.MainF.Controls)
-            {
-                if (control is DockPanel)
-                {
-                    if (FirstPlugin.DockedEditorS == null)
-                    {
-                        FirstPlugin.DockedEditorS = new DockContent();
-                        FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
-                    }
-                }
-            }
-
-            if (!EditorIsActive(FirstPlugin.DockedEditorS))
-            {
-                FirstPlugin.DockedEditorS.Controls.Clear();
-
-                FTEXEditor FTEXEditor = new FTEXEditor();
-                FTEXEditor.Text = Text;
-                FTEXEditor.Dock = DockStyle.Fill;
-                FTEXEditor.LoadPicture(DisplayTexture());
-                FTEXEditor.LoadProperty(this);
-                FirstPlugin.DockedEditorS.Controls.Add(FTEXEditor);
-            }
-        }
-        public bool EditorIsActive(DockContent dock)
-        {
-            foreach (Control ctrl in dock.Controls)
-            {
-                if (ctrl is FTEXEditor)
-                {
-                    dock.Text = Text;
-                    ((FTEXEditor)ctrl).LoadPicture(DisplayTexture());
-                    ((FTEXEditor)ctrl).LoadProperty(this);
-                    return true;
-                }
-            }
-
-            return false;
+            FTEXEditor FTEXEditor = new FTEXEditor();
+            FTEXEditor.Text = Text;
+            FTEXEditor.Dock = DockStyle.Fill;
+            FTEXEditor.LoadPicture(DisplayTexture());
+            FTEXEditor.LoadProperty(this);
+            LibraryGUI.Instance.LoadDockContent(FTEXEditor, PluginRuntime.FSHPDockState);
         }
 
         public class RenderableTex
@@ -451,21 +423,31 @@ namespace FirstPlugin
         {
             Bitmap decomp;
 
-            if (Format == GX2SurfaceFormat.T_BC5_SNorm)
-                return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true);
-
-            byte[] d = null;
-            if (IsCompressedFormat(Format))
-                d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
-            else
-                d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
-
-            if (d != null)
+            try
             {
-                decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
-                return SwapBlueRedChannels(decomp);
+                if (Format == GX2SurfaceFormat.T_BC5_SNorm)
+                    return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true);
+
+                byte[] d = null;
+                if (IsCompressedFormat(Format))
+                    d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
+                else
+                    d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
+
+                if (d != null)
+                {
+                    decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
+                    return SwapBlueRedChannels(decomp);
+                }
+                return BitmapExtension.GetBitmap(d, (int)Width, (int)Height);;
             }
-            return null;
+            catch
+            {
+                throw new Exception($"Bad size from format {Format}");
+            }
+
+
+
         }
         private static DDS.DXGI_FORMAT GetUncompressedDXGI_FORMAT(GX2SurfaceFormat Format)
         {
@@ -474,8 +456,8 @@ namespace FirstPlugin
                 case GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
                 case GX2SurfaceFormat.TC_R4_G4_B4_A4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
                 case GX2SurfaceFormat.TCS_R5_G6_B5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
-                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
-                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                 case GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM;
                 case GX2SurfaceFormat.TC_R11_G11_B10_Float: return DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT;
                 case GX2SurfaceFormat.TCD_R16_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R16_UNORM;
@@ -494,8 +476,8 @@ namespace FirstPlugin
             {
                 case GX2SurfaceFormat.T_BC1_UNorm: 
                 case GX2SurfaceFormat.T_BC1_SRGB: 
-                case GX2SurfaceFormat.T_BC2_SRGB:
                 case GX2SurfaceFormat.T_BC2_UNorm:
+                case GX2SurfaceFormat.T_BC2_SRGB:
                 case GX2SurfaceFormat.T_BC3_UNorm: 
                 case GX2SurfaceFormat.T_BC3_SRGB:
                 case GX2SurfaceFormat.T_BC4_UNorm:
@@ -513,8 +495,8 @@ namespace FirstPlugin
             {
                 case GX2SurfaceFormat.T_BC1_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
                 case GX2SurfaceFormat.T_BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB;
-                case GX2SurfaceFormat.T_BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
-                case GX2SurfaceFormat.T_BC2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
+                case GX2SurfaceFormat.T_BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB;
                 case GX2SurfaceFormat.T_BC3_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
                 case GX2SurfaceFormat.T_BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB;
                 case GX2SurfaceFormat.T_BC4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;

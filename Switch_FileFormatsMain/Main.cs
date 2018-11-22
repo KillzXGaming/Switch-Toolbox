@@ -17,9 +17,6 @@ namespace FirstPlugin
 
         #region IPlugin Members 
 
-        public Form MainForm { get; set; }
-        public DockContentST DockedEditor { get; set; }
-
         private string name;
         public string Name
         {
@@ -74,26 +71,13 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
-        public static Form MainF;
-        public static DockContent DockedViewport;
-        public static DockContent DockedEditorS;
-
         public void Load()
         {
-            MainF = MainForm;
-
             Config.StartupFromFile("Lib/Plugins/config.xml");
             if (!Runtime.DisableViewport)
-            {
-                DockedViewport = DockedEditor;
-                DockedEditor = Viewport.Instance;
-            }
+                    LibraryGUI.Instance.LoadViewport(Viewport.Instance);
             else
-            {
                 PluginRuntime.FSHPDockState = DockState.Document;
-            }
-
-
         }
         public void Unload()
         {
