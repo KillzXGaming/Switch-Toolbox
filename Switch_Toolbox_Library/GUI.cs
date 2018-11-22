@@ -26,13 +26,23 @@ namespace Switch_Toolbox.Library
             content.Controls.Add(control);
             content.Show(dockPanel, dockState);
         }
+        public bool IsContentDocked(Control control)
+        {
+            foreach (DockContent dockContent in dockPanel.Contents)
+            {
+                foreach (Control ctrl in dockContent.Controls)
+                    if (ctrl == control)
+                        return true;
+            }
+            return false;
+        }
         public void LoadDockContent(DockContent DockContent, DockState dockState)
         {
             DockContent.Show(dockPanel, dockState);
         }
         public void LoadViewport(Viewport viewport)
         {
-            if (dockPanel == null || IsContentActive(viewport))
+            if (dockPanel == null && IsContentActive(viewport))
                 return;
 
             viewport.Show(dockPanel, DockState.Document);

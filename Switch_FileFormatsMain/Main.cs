@@ -74,10 +74,6 @@ namespace FirstPlugin
         public void Load()
         {
             Config.StartupFromFile("Lib/Plugins/config.xml");
-            if (!Runtime.DisableViewport)
-                    LibraryGUI.Instance.LoadViewport(Viewport.Instance);
-            else
-                PluginRuntime.FSHPDockState = DockState.Document;
         }
         public void Unload()
         {

@@ -76,23 +76,6 @@ namespace FirstPlugin
             GL.DeleteBuffer(ibo_elements);
         }
 
-        #region structs
-        public bool EditorIsViewportActive(DockContent dock)
-        {
-            if (dock is Viewport)
-            {
-                if (BFRES.IsWiiU)
-                    dock.Text = resFileU.Name + ".bfres";
-                else
-                    dock.Text = resFile.Name + ".bfres";
-                ((Viewport)dock).gL_ControlModern1.MainDrawable = this;
-                return true;
-            }
-            return false;
-        }
-
-        #endregion
-
         #region Rendering
 
         bool RanOnce = false;

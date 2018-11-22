@@ -215,6 +215,8 @@ namespace FirstPlugin
             public override void OnClick(TreeView treeView)
             {
                 LibraryGUI.Instance.LoadViewport(Viewport.Instance);
+                Viewport.Instance.gL_ControlModern1.MainDrawable = Renderer;
+
                 Renderer.UpdateVertexData();
             }
 
