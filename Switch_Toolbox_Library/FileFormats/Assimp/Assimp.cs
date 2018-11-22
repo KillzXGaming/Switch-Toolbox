@@ -34,7 +34,7 @@ namespace Switch_Toolbox.Library
             AssimpContext Importer = new AssimpContext();
 
             scene = Importer.ImportFile(FileName, PostProcessSteps.Triangulate | PostProcessSteps.JoinIdenticalVertices
-                 | PostProcessSteps.FlipUVs | PostProcessSteps.ValidateDataStructure |
+                 | PostProcessSteps.FlipUVs | PostProcessSteps.LimitBoneWeights |
                PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
             LoadMeshes();
         }
@@ -55,23 +55,17 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
-        private void BuildNode(Node node, ref Matrix4x4 rootTransform)
+        private void BuildNode(Node parent, ref Matrix4x4 rootTransform)
         {
-            Matrix4x4 trafo = node.Transform;
+            Matrix4x4 trafo = parent.Transform;
             Matrix4x4 world = trafo * rootTransform;
-            Matrix4 worldTK = TKMatrix(world);
+            Matrix4 worldTK = AssimpHelper.TKMatrix(world);
 
-            if (node.HasMeshes)
-            {
-                foreach (int index in node.MeshIndices)
-                {
-                    objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
-                }
-            }
-            for (int i = 0; i < node.ChildCount; i++)
-            {
-                BuildNode(node.Children[i], ref world);
-            }
+            foreach (int index in parent.MeshIndices)
+                objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
+            
+            foreach (Node child in parent.Children)
+                BuildNode(child, ref rootTransform);
         }
         public void LoadMeshes()
         {
@@ -81,14 +75,41 @@ namespace Switch_Toolbox.Library
             {
                 foreach (Material mat in scene.Materials)
                 {
-                    Console.WriteLine(mat.Name + " TEST");
                     materials.Add(CreateGenericMaterial(mat));
                 }
             }
+            foreach (Assimp.Animation animation in scene.Animations)
+            {
+                  
+            }
         }
-        void CopyNodesWithMeshes()
+        public Animation CreateGenericAnimation(Assimp.Animation animation)
         {
+            Animation STanim = new Animation();
+            STanim.Text = animation.Name;
+            STanim.FrameCount = (int)animation.DurationInTicks;
 
+            //Load node animations
+            if (animation.HasNodeAnimations)
+            {
+                var _channels = new NodeAnimationChannel[animation.NodeAnimationChannelCount];
+                for (int i = 0; i < _channels.Length; i++)
+                {
+                    _channels[i] = new NodeAnimationChannel();
+                }
+            }
+
+            //Load mesh animations
+            if (animation.HasMeshAnimations)
+            {
+                var _meshChannels = new MeshAnimationChannel[animation.MeshAnimationChannelCount];
+                for (int i = 0; i < _meshChannels.Length; i++)
+                {
+                    _meshChannels[i] = new MeshAnimationChannel();
+                }
+            }
+
+            return STanim;
         }
         public STGenericMaterial CreateGenericMaterial(Material material)
         {
@@ -459,33 +480,19 @@ namespace Switch_Toolbox.Library
                     vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);
-                if (msh.HasBones)
-                {
-                    foreach (Bone bn in msh.Bones)
-                    {
-                  
-                    }
-                }
                 vertices.Add(vert);
             }
             if (msh.HasBones)
             {
                 for (int i = 0; i < msh.BoneCount; i++)
                 {
-                    Bone bn = msh.Bones[i];
-
-                    Console.WriteLine($"Bone Info {bn.VertexWeightCount} {bn.Name}");
-
-                    Vertex.Bone bone = new Vertex.Bone();
-                    bone.Name = bn.Name;
-                    bone.HasWeights = bn.HasVertexWeights;
-
+                    Bone bn  = msh.Bones[i];
                     if (bn.HasVertexWeights)
                     {
                         foreach (VertexWeight w in bn.VertexWeights)
                         {
-                            vertices[w.VertexID].pos = Vector3.TransformPosition(vertices[w.VertexID].pos, FromMatrix( bn.OffsetMatrix));
-                            vertices[w.VertexID].weights.Add(w.Weight);
+                          //  vertices[w.VertexID].pos = Vector3.TransformPosition(vertices[w.VertexID].pos, AssimpHelper.TKMatrix(bn.OffsetMatrix));
+                            vertices[w.VertexID].boneWeights.Add(w.Weight);
                             vertices[w.VertexID].boneNames.Add(bn.Name);
                         }
                     }
@@ -502,13 +509,6 @@ namespace Switch_Toolbox.Library
             v.Y = vec.Y;
             v.Z = vec.Z;
             return v;
-        }
-        public static OpenTK.Matrix4 TKMatrix(Assimp.Matrix4x4 input)
-        {
-            return new OpenTK.Matrix4(input.A1, input.B1, input.C1, input.D1,
-                                       input.A2, input.B2, input.C2, input.D2,
-                                       input.A3, input.B3, input.C3, input.D3,
-                                       input.A4, input.B4, input.C4, input.D4);
         }
         public static OpenTK.Matrix4 TKMatrix2(Assimp.Matrix4x4 matOut)
         {
@@ -550,78 +550,11 @@ namespace Switch_Toolbox.Library
             Console.WriteLine($"rotQ " + rot);
 
             Matrix4 positionMat = Matrix4.CreateTranslation(FromVector(tranlation));
-            Matrix4 rotQ = Matrix4.CreateFromQuaternion(TKQuaternion(rot));
+            Matrix4 rotQ = Matrix4.CreateFromQuaternion(AssimpHelper.TKQuaternion(rot));
             Matrix4 scaleMat = Matrix4.CreateScale(FromVector(scaling));
             Matrix4 matrixFinal = scaleMat * rotQ * positionMat;
 
             return matrixFinal;
-        }
-        private OpenTK.Quaternion TKQuaternion(Assimp.Quaternion rot)
-        {
-            OpenTK.Quaternion quat = new OpenTK.Quaternion();
-            quat.X = rot.X;
-            quat.Y = rot.Y;
-            quat.Z = rot.Z;
-            quat.W = rot.W;
-            return quat;
-        }
-        private Matrix4 FromMatrix(Matrix4x4 mat)
-        {
-            Matrix4 m = new Matrix4();
-            m.M11 = mat.A1;
-            m.M12 = mat.A2;
-            m.M13 = mat.A3;
-            m.M14 = mat.A4;
-            m.M21 = mat.B1;
-            m.M22 = mat.B2;
-            m.M23 = mat.B3;
-            m.M24 = mat.B4;
-            m.M31 = mat.C1;
-            m.M32 = mat.C2;
-            m.M33 = mat.C3;
-            m.M34 = mat.C4;
-            m.M41 = mat.D1;
-            m.M42 = mat.D2;
-            m.M43 = mat.D3;
-            m.M44 = mat.D4;
-            return m;
-        }
-
-        public static Vector3 ToEulerAngles(Assimp.Quaternion q)
-        {
-            float PI = (float)Math.PI;
-            // Store the Euler angles in radians
-            Vector3 pitchYawRoll = new Vector3();
-
-            double sqw = q.W * q.W;
-            double sqx = q.X * q.X;
-            double sqy = q.Y * q.Y;
-            double sqz = q.Z * q.Z;
-
-            // If quaternion is normalised the unit is one, otherwise it is the correction factor
-            double unit = sqx + sqy + sqz + sqw;
-            double test = q.X * q.Y + q.Z * q.W;
-
-            if (test > 0.499f * unit)
-            {
-                // Singularity at north pole
-                pitchYawRoll.Y = 2f * (float)Math.Atan2(q.X, q.W);  // Yaw
-                pitchYawRoll.X = PI * 0.5f;                         // Pitch
-                pitchYawRoll.Z = 0f;                                // Roll
-                return pitchYawRoll;
-            }
-            else if (test < -0.499f * unit)
-            {
-                // Singularity at south pole
-                pitchYawRoll.Y = -2f * (float)Math.Atan2(q.X, q.W); // Yaw
-                pitchYawRoll.X = -PI * 0.5f;                        // Pitch
-                pitchYawRoll.Z = 0f;                                // Roll
-                return pitchYawRoll;
-            }
-            pitchYawRoll.Y = (float)Math.Atan2(2 * q.Y * q.W - 2 * q.X * q.Z, sqx - sqy - sqz + sqw);       // Yaw
-            pitchYawRoll.X = (float)Math.Asin(2 * test / unit);                                             // Pitch
-            pitchYawRoll.Z = (float)Math.Atan2(2 * q.X * q.W - 2 * q.Y * q.Z, -sqx + sqy - sqz + sqw);      // Roll
-            return pitchYawRoll;
         }
     }
 }

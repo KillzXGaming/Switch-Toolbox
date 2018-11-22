@@ -10,11 +10,92 @@ using System.IO;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
+using SFGraphics.GLObjects.Textures;
+using OpenTK.Graphics.OpenGL;
 
 namespace Switch_Toolbox.Library
 {
+    //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
     public class DDS
     {
+        public enum CubemapFace
+        {
+            PosX,
+            NegX,
+            PosY,
+            NegY,
+            PosZ,
+            NegZ
+        }
+
+        [Flags]
+        public enum DDSD : uint
+        {
+            CAPS = 0x00000001,
+            HEIGHT = 0x00000002,
+            WIDTH = 0x00000004,
+            PITCH = 0x00000008,
+            PIXELFORMAT = 0x00001000,
+            MIPMAPCOUNT = 0x00020000,
+            LINEARSIZE = 0x00080000,
+            DEPTH = 0x00800000
+        }
+        [Flags]
+        public enum DDPF : uint
+        {
+            ALPHAPIXELS = 0x00000001,
+            ALPHA = 0x00000002,
+            FOURCC = 0x00000004,
+            RGB = 0x00000040,
+            YUV = 0x00000200,
+            LUMINANCE = 0x00020000,
+        }
+        [Flags]
+        public enum DDSCAPS : uint
+        {
+            COMPLEX = 0x00000008,
+            TEXTURE = 0x00001000,
+            MIPMAP = 0x00400000,
+        }
+        [Flags]
+        public enum DDSCAPS2 : uint
+        {
+            CUBEMAP = 0x00000200,
+            CUBEMAP_POSITIVEX = 0x00000400 | CUBEMAP,
+            CUBEMAP_NEGATIVEX = 0x00000800 | CUBEMAP,
+            CUBEMAP_POSITIVEY = 0x00001000 | CUBEMAP,
+            CUBEMAP_NEGATIVEY = 0x00002000 | CUBEMAP,
+            CUBEMAP_POSITIVEZ = 0x00004000 | CUBEMAP,
+            CUBEMAP_NEGATIVEZ = 0x00008000 | CUBEMAP,
+            CUBEMAP_ALLFACES = (CUBEMAP_POSITIVEX | CUBEMAP_NEGATIVEX |
+                                  CUBEMAP_POSITIVEY | CUBEMAP_NEGATIVEY |
+                                  CUBEMAP_POSITIVEZ | CUBEMAP_NEGATIVEZ),
+            VOLUME = 0x00200000
+        }
+
+        public static uint getFormatSize(uint fourCC)
+        {
+            switch (fourCC)
+            {
+                case 0x00000000: //RGBA
+                    return 0x4;
+                case 0x31545844: //DXT1
+                    return 0x8;
+                case 0x33545844: //DXT3
+                    return 0x10;
+                case 0x35545844: //DXT5
+                    return 0x10;
+                case 0x31495441: //ATI1
+                case 0x55344342: //BC4U
+                    return 0x8;
+                case 0x32495441: //ATI2
+                case 0x55354342: //BC5U
+                    return 0x10;
+                default:
+                    return 0;
+            }
+        }
+
         public Header header;
         public DX10Header DX10header;
         public class Header
@@ -258,6 +339,26 @@ namespace Switch_Toolbox.Library
             DX10header.miscFlag = reader.ReadUInt32();
             DX10header.arrayFlag = reader.ReadUInt32();
             DX10header.miscFlags2 = reader.ReadUInt32();
+        }
+        public static TextureCubeMap CreateGLCubeMap(DDS dds)
+        {
+            TextureCubeMap texture = new TextureCubeMap();
+            List<byte[]> cubemap = GetArrayFaces(dds.bdata, 6);
+            texture.LoadImageData((int)dds.header.width,new SFGraphics.GLObjects.Textures.TextureFormats.TextureFormatUncompressed(PixelInternalFormat.Rgba,
+                OpenTK.Graphics.OpenGL.PixelFormat.Rgba, OpenTK.Graphics.OpenGL.PixelType.Float), cubemap[0],
+                cubemap[1], cubemap[2], cubemap[3], cubemap[4], cubemap[5]);
+            return texture;
+        }
+        public static List<byte[]> GetArrayFaces(byte[] data, uint Length)
+        {
+            using (FileReader reader = new FileReader(data))
+            {
+                List<byte[]> array = new List<byte[]>();
+                for (int i = 0; i < Length; i++)
+                    array.Add(reader.ReadBytes(data.Length / (int)Length));
+                
+                return array;
+            }
         }
         public void Save(DDS dds, string FileName, bool IsDX10 = false, List<List<byte[]>> data = null)
         {

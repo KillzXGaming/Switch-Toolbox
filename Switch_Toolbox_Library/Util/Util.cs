@@ -33,6 +33,17 @@ namespace Switch_Toolbox.Library
         {
             return new Vector4(v.X, v.Y, v.Z, v.W);
         }
+        public static byte[] CombineByteArray(params byte[][] arrays)
+        {
+            byte[] rv = new byte[arrays.Sum(a => a.Length)];
+            int offset = 0;
+            foreach (byte[] array in arrays)
+            {
+                System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                offset += array.Length;
+            }
+            return rv;
+        }
         static int i = 0;
         public static string RenameDuplicateString(List<string> strings, string oldString)
         {

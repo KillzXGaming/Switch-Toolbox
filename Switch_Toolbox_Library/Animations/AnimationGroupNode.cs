@@ -8,7 +8,7 @@ using OpenTK;
 
 namespace Switch_Toolbox.Library
 {
-    public class AnimationGroupNode : TreeNode
+    public class AnimationGroupNode : TreeNodeCustom
     {
     }
 }

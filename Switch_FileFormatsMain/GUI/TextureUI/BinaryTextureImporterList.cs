@@ -79,10 +79,20 @@ namespace FirstPlugin
             foreach (var setting in settings)
             {
                 listViewCustom1.Items.Add(setting.TexName).SubItems.Add(setting.Format.ToString());
-
             }
+            listViewCustom1.Items[0].Selected = true;
+            listViewCustom1.Select();
         }
+        public void LoadSetting(TextureImporterSettings setting, BinaryTextureContainer b)
+        {
+            settings = new List<TextureImporterSettings>();
+            settings.Add(setting);
+            bntx = b;
 
+            listViewCustom1.Items.Add(setting.TexName).SubItems.Add(setting.Format.ToString());
+            listViewCustom1.Items[0].Selected = true;
+            listViewCustom1.Select();
+        }
         public bool IsCompressed(SurfaceFormat format)
         {
             switch (format)
@@ -163,18 +173,8 @@ namespace FirstPlugin
 
                 SetupSettings();
 
-                MipmapNum.Value = 0;
-
-                uint num = Math.Max(SelectedTexSettings.TexHeight, SelectedTexSettings.TexWidth);
-                while (true)
-                {
-                    num >>= 1;
-                    if (num > 0)
-                        ++MipmapNum.Value;
-                    else
-                        break;
-                }
-                MipmapNum.Maximum = MipmapNum.Value;
+                MipmapNum.Maximum = SelectedTexSettings.GetTotalMipCount();
+                MipmapNum.Value = SelectedTexSettings.MipCount;
             }
         }
 

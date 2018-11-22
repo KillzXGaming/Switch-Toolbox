@@ -8,6 +8,7 @@ using SFGraphics.GLObjects.Textures.TextureFormats;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Smash_Forge.Rendering;
+using Switch_Toolbox.Library.IO;
 
 namespace Switch_Toolbox.Library
 {
@@ -25,15 +26,20 @@ namespace Switch_Toolbox.Library
             uvTestPattern = new Texture2D();
             uvTestPattern.LoadImageData(Properties.Resources.UVPattern);
 
-    //        DDS specularSdr = new DDS(Properties.Resources.specularSDR);
-       //     specularPbr = NUT.CreateTextureCubeMap(specularSdr.ToNutTexture());
+            if (Runtime.EnablePBR)
+            {
+                byte[] decompSpecular = STLibraryCompression.GZIP.Decompress(Properties.Resources.specularSDR);
+                DDS specularSdr = new DDS(decompSpecular);
+              //  specularPbr = DDS.CreateGLCubeMap(specularSdr);
+            }
 
-         //   DDS diffuseSdr = new DDS(Properties.Resources.diffuseSDR);
-           // diffusePbr = CreateTextureCubeMap(bntx.textureData.texture);
+
+            //   DDS diffuseSdr = new DDS(Properties.Resources.diffuseSDR);
+            // diffusePbr = CreateTextureCubeMap(bntx.textureData.texture);
 
             // Don't use mipmaps.
-        //    diffusePbr.MinFilter = TextureMinFilter.Linear;
-       //     diffusePbr.MagFilter = TextureMagFilter.Linear;
+            //    diffusePbr.MinFilter = TextureMinFilter.Linear;
+            //     diffusePbr.MagFilter = TextureMagFilter.Linear;
         }
 
         public static void DrawSkyBox(Matrix4 RotationMatrix)

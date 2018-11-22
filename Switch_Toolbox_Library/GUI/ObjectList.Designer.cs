@@ -131,8 +131,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.ClientSize = new System.Drawing.Size(358, 450);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.panel1);
             this.Name = "ObjectList";
             this.Text = "ObjectList";
             this.DockStateChanged += new System.EventHandler(this.ObjectList_DockStateChanged);

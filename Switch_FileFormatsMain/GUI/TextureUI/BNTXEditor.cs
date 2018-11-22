@@ -28,16 +28,15 @@ namespace FirstPlugin
             imageBGComboBox.SelectedItem = Runtime.pictureBoxStyle;
             UpdateBackgroundImage();
         }
-        public void LoadPicture(Bitmap image)
-        {
-            //  pictureBoxCustom1.Image = image;
-        }
 
         TextureData textureData;
         int CurMipDisplayLevel = 0;
         int CurArrayDisplayLevel = 0;
         public void LoadProperty(TextureData tex)
         {
+            pictureBoxCustom1.Image = Imaging.GetLoadingImage();
+            LoadImage();
+
             CurMipDisplayLevel = 0;
             CurArrayDisplayLevel = 0;
 
@@ -48,11 +47,8 @@ namespace FirstPlugin
             propertyGrid1.SelectedObject = texture;
             UpdateMipDisplay();
         }
-        private void UpdateMipDisplay()
+        private void LoadImage()
         {
-            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps[CurArrayDisplayLevel].Count - 1}";
-            arrayLevelCounterLabel.Text = $"{CurArrayDisplayLevel} / {textureData.mipmaps.Count - 1}";
-
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
@@ -60,13 +56,26 @@ namespace FirstPlugin
             {
                 pictureBoxCustom1.Image = Imaging.GetLoadingImage();
                 pictureBoxCustom1.Image = textureData.DisplayTexture(CurMipDisplayLevel, CurArrayDisplayLevel);
-
-                //  texSizeMipsLabel.Text = $"Width = {pictureBoxCustom1.Image.Width} Height = {pictureBoxCustom1.Image.Height}";
             }));
             Thread.Start();
 
+            GC.Collect();
+        }
+        private void UpdateMipDisplay()
+        {
+            LoadImage();
 
-            if (CurMipDisplayLevel != textureData.mipmaps[CurArrayDisplayLevel].Count - 1)
+            int MipCount = 1;
+            if (textureData.mipmaps.Count <= 0)
+                return;
+            else
+                MipCount = textureData.mipmaps[CurArrayDisplayLevel].Count;
+
+
+            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps[CurArrayDisplayLevel].Count - 1}";
+            arrayLevelCounterLabel.Text = $"{CurArrayDisplayLevel} / {textureData.mipmaps.Count - 1}";
+
+            if (CurMipDisplayLevel != MipCount - 1)
                 BtnMipsRight.Enabled = true;
             else
                 BtnMipsRight.Enabled = false;

@@ -201,7 +201,7 @@ namespace FirstPlugin
         internal void SaveBinaryTexture(string FileName)
         {
             Console.WriteLine("Test");
-            // Texture.Export(FileName, bntxFile);
+           // Texture.Export(FileName, bntxFile);
         }
         internal void SaveDDS(string FileName)
         {
@@ -444,48 +444,91 @@ namespace FirstPlugin
 
             byte[] data = renderedTex.mipmaps[ArrayIndex][DisplayMipIndex];
 
-            return DecodeBlock(data, width, height, format);
+            return DecodeBlock(data, width, height, (GX2SurfaceFormat)format);
         }
 
-        public static Bitmap DecodeBlock(byte[] data, uint Width, uint Height, int Format)
+        public static Bitmap DecodeBlock(byte[] data, uint Width, uint Height, GX2SurfaceFormat Format)
         {
             Bitmap decomp;
 
+            if (Format == GX2SurfaceFormat.T_BC5_SNorm)
+                return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true);
+
+            byte[] d = null;
+            if (IsCompressedFormat(Format))
+                d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
+            else
+                d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
+
+            if (d != null)
+            {
+                decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
+                return SwapBlueRedChannels(decomp);
+            }
+            return null;
+        }
+        private static DDS.DXGI_FORMAT GetUncompressedDXGI_FORMAT(GX2SurfaceFormat Format)
+        {
             switch (Format)
             {
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM):
-                    decomp = DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, false); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB):
-                    decomp = DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, true); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM):
-                    decomp = DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, false); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB):
-                    decomp = DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, true); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM):
-                    decomp = DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, false); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM):
-                    decomp = DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, true); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM):
-                    decomp = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
-                    decomp = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true); break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_SNORM):
-                    byte[] dec = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-                    decomp = BitmapExtension.GetBitmap(dec, (int)Width, (int)Height);
-                    decomp = TextureData.SwapBlueRedChannels(decomp);
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_UINT):
-                    decomp = BitmapExtension.GetBitmap(data, (int)Width, (int)Height);
-                    decomp = TextureData.SwapBlueRedChannels(decomp);
-                    break;
+                case GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
+                case GX2SurfaceFormat.TC_R4_G4_B4_A4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
+                case GX2SurfaceFormat.TCS_R5_G6_B5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
+                case GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM;
+                case GX2SurfaceFormat.TC_R11_G11_B10_Float: return DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT;
+                case GX2SurfaceFormat.TCD_R16_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R16_UNORM;
+                case GX2SurfaceFormat.TCD_R32_Float: return DDS.DXGI_FORMAT.DXGI_FORMAT_R32_FLOAT;
+                case GX2SurfaceFormat.T_R4_G4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
+                case GX2SurfaceFormat.TC_R8_G8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM;
+                case GX2SurfaceFormat.TC_R8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8_UNORM;
+                case GX2SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
-                    decomp = Properties.Resources.TextureError;
-                    Console.WriteLine($"Format {Format} not supported!");
-                    break;
+                    throw new Exception($"Cannot convert format {Format}");
             }
-            return decomp;
         }
-
+        private static bool IsCompressedFormat(GX2SurfaceFormat Format)
+        {
+            switch (Format)
+            {
+                case GX2SurfaceFormat.T_BC1_UNorm: 
+                case GX2SurfaceFormat.T_BC1_SRGB: 
+                case GX2SurfaceFormat.T_BC2_SRGB:
+                case GX2SurfaceFormat.T_BC2_UNorm:
+                case GX2SurfaceFormat.T_BC3_UNorm: 
+                case GX2SurfaceFormat.T_BC3_SRGB:
+                case GX2SurfaceFormat.T_BC4_UNorm:
+                case GX2SurfaceFormat.T_BC4_SNorm:
+                case GX2SurfaceFormat.T_BC5_UNorm: 
+                case GX2SurfaceFormat.T_BC5_SNorm:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        private static DDS.DXGI_FORMAT GetCompressedDXGI_FORMAT(GX2SurfaceFormat Format)
+        {
+            switch (Format)
+            {
+                case GX2SurfaceFormat.T_BC1_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
+                case GX2SurfaceFormat.T_BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
+                case GX2SurfaceFormat.T_BC2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC3_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
+                case GX2SurfaceFormat.T_BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
+                case GX2SurfaceFormat.T_BC4_SNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
+                case GX2SurfaceFormat.T_BC5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
+                case GX2SurfaceFormat.T_BC5_SNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
+                default:
+                    throw new Exception($"Cannot convert format {Format}");
+            }
+        }
+        public static Bitmap SwapBlueRedChannels(Bitmap bitmap)
+        {
+            return ColorComponentSelector(bitmap, GX2CompSel.ChannelB, GX2CompSel.ChannelG, GX2CompSel.ChannelR, GX2CompSel.ChannelA);
+        }
         public Bitmap UpdateBitmap(Bitmap image)
         {
             return ColorComponentSelector(image, ChannelRed, ChannelGreen, ChannelBlue, ChannelAlpha);
@@ -502,9 +545,9 @@ namespace FirstPlugin
             if (R == GX2CompSel.ChannelA)
                 color.CompRed = BitmapExtension.ColorSwapFilter.Red.Alpha;
             if (R == GX2CompSel.Always0)
-                color.CompRed = BitmapExtension.ColorSwapFilter.Red.One;
-            if (R == GX2CompSel.Always1)
                 color.CompRed = BitmapExtension.ColorSwapFilter.Red.Zero;
+            if (R == GX2CompSel.Always1)
+                color.CompRed = BitmapExtension.ColorSwapFilter.Red.One;
 
             if (G == GX2CompSel.ChannelR)
                 color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Red;
@@ -515,9 +558,9 @@ namespace FirstPlugin
             if (G == GX2CompSel.ChannelA)
                 color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Alpha;
             if (G == GX2CompSel.Always0)
-                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.One;
-            if (G == GX2CompSel.Always1)
                 color.CompGreen = BitmapExtension.ColorSwapFilter.Green.Zero;
+            if (G == GX2CompSel.Always1)
+                color.CompGreen = BitmapExtension.ColorSwapFilter.Green.One;
 
             if (B == GX2CompSel.ChannelR)
                 color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Red;
@@ -528,9 +571,9 @@ namespace FirstPlugin
             if (B == GX2CompSel.ChannelA)
                 color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Alpha;
             if (B == GX2CompSel.Always0)
-                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.One;
-            if (B == GX2CompSel.Always1)
                 color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.Zero;
+            if (B == GX2CompSel.Always1)
+                color.CompBlue = BitmapExtension.ColorSwapFilter.Blue.One;
 
             if (A == GX2CompSel.ChannelR)
                 color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Red;
@@ -541,9 +584,9 @@ namespace FirstPlugin
             if (A == GX2CompSel.ChannelA)
                 color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Alpha;
             if (A == GX2CompSel.Always0)
-                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.One;
-            if (A == GX2CompSel.Always1)
                 color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.Zero;
+            if (A == GX2CompSel.Always1)
+                color.CompAlpha = BitmapExtension.ColorSwapFilter.Alpha.One;
 
             return BitmapExtension.SwapRGB(image, color);
         }

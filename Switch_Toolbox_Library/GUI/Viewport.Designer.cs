@@ -32,10 +32,10 @@
             this.animationPanel1 = new Switch_Toolbox.Library.AnimationPanel();
             this.contextMenuStripDark1 = new Switch_Toolbox.Library.Forms.ContextMenuStripDark();
             this.shadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rotateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripDark1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -85,7 +85,6 @@
             // 
             // shadingToolStripMenuItem
             // 
-            this.shadingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {});
             this.shadingToolStripMenuItem.Image = global::Switch_Toolbox.Library.Properties.Resources.diffuseSphere;
             this.shadingToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.shadingToolStripMenuItem.Name = "shadingToolStripMenuItem";
@@ -94,16 +93,6 @@
             this.shadingToolStripMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.shadingToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.shadingToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.shadingToolStripMenuItem_DropDownItemClicked);
-            // 
-            // normalsShadingToolStripMenuItem
-            // 
-            this.normalsShadingToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.normalsShadingToolStripMenuItem.Image = global::Switch_Toolbox.Library.Properties.Resources.normalsSphere;
-            this.normalsShadingToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.normalsShadingToolStripMenuItem.Name = "normalsShadingToolStripMenuItem";
-            this.normalsShadingToolStripMenuItem.Size = new System.Drawing.Size(204, 46);
-            this.normalsShadingToolStripMenuItem.Text = "Normals Shading";
-            this.normalsShadingToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             // 
             // translateToolStripMenuItem
             // 
@@ -132,6 +121,16 @@
             this.scaleToolStripMenuItem.Text = "Scale";
             this.scaleToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             // 
+            // normalsShadingToolStripMenuItem
+            // 
+            this.normalsShadingToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.normalsShadingToolStripMenuItem.Image = global::Switch_Toolbox.Library.Properties.Resources.normalsSphere;
+            this.normalsShadingToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.normalsShadingToolStripMenuItem.Name = "normalsShadingToolStripMenuItem";
+            this.normalsShadingToolStripMenuItem.Size = new System.Drawing.Size(204, 46);
+            this.normalsShadingToolStripMenuItem.Text = "Normals Shading";
+            this.normalsShadingToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
             // Viewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -150,6 +149,7 @@
             this.Name = "Viewport";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Unknown;
             this.Text = "Viewport";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Viewport_FormClosing);
             this.contextMenuStripDark1.ResumeLayout(false);
             this.contextMenuStripDark1.PerformLayout();
             this.ResumeLayout(false);
@@ -160,7 +160,7 @@
         #endregion
 
         public GL_Core.GL_ControlModern gL_ControlModern1;
-        private AnimationPanel animationPanel1;
+        public AnimationPanel animationPanel1;
         private Forms.ContextMenuStripDark contextMenuStripDark1;
         private System.Windows.Forms.ToolStripMenuItem shadingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;

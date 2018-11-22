@@ -52,6 +52,7 @@ namespace FirstPlugin
         public int sparseResidency = 0; //false
         public int sparseBinding = 0; //false
         public bool IsSRGB = true;
+        public bool GenerateMipmaps = false; //If bitmap and count more that 1 then geenrate
 
         private SurfaceFormat LoadDDSFormat(string fourCC, DDS dds = null, bool IsSRGB = false)
         {
@@ -135,6 +136,11 @@ namespace FirstPlugin
             MipCount = dds.header.mipmapCount;
             TexWidth = dds.header.width;
             TexHeight = dds.header.height;
+            arrayLength = 1;
+            if (dds.header.caps2 == (uint)DDS.DDSCAPS2.CUBEMAP_ALLFACES)
+            {
+                arrayLength = 6;
+            }
 
             DataBlockOutput.Add(dds.bdata);
 
@@ -152,27 +158,22 @@ namespace FirstPlugin
                 textureData = new TextureData(tex, bntxFile);
             }
         }
-        public void LoadBitMap(string FileName, BntxFile bntxFile, TextureData tree = null)
+        public void LoadBitMap(string FileName, BntxFile bntxFile)
         {
             DecompressedData.Clear();
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
             bntx = bntxFile;
-            textureData = tree;
             Format = SurfaceFormat.BC1_SRGB;
+            GenerateMipmaps = true;
 
             Bitmap Image = new Bitmap(FileName);
             Image = TextureData.SwapBlueRedChannels(Image);
 
             TexWidth = (uint)Image.Width;
             TexHeight = (uint)Image.Height;
-            MipCount = 1;
+            MipCount = (uint)GetTotalMipCount();
 
-            List<byte[]> mipMaps = new List<byte[]>();
-   /*       while(Image.Width / 2 > 0)
-            {
-                Image.SetResolution(Image.Width / 2, Image.Height / 2);
-            }*/
             DecompressedData.Add(BitmapExtension.ImageToByte(Image));
 
             Image.Dispose();
@@ -180,6 +181,49 @@ namespace FirstPlugin
             {
                 throw new Exception("Failed to load " + Format);
             }
+        }
+        public int GetTotalMipCount()
+        {
+            int MipmapNum = 0;
+            uint num = Math.Max(TexHeight, TexWidth);
+
+            int width = (int)TexWidth;
+            int height = (int)TexHeight;
+
+            while (true)
+            {
+                num >>= 1;
+
+                width = width / 2;
+                height = height / 2;
+                if (width <= 0 || height <= 0)
+                    break;
+
+                if (num > 0)
+                    ++MipmapNum;
+                else
+                    break;
+            }
+
+            return MipmapNum;
+        }
+        public byte[] GenerateMips(int SurfaceLevel = 0)
+        {
+            Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
+
+            List<byte[]> mipmaps = new List<byte[]>();
+            mipmaps.Add(TextureData.CompressBlock(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight, Format));
+
+            //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
+            //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+            for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+            {
+                Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
+                mipmaps.Add(TextureData.CompressBlock(BitmapExtension.ImageToByte(Image), Image.Width, Image.Height, Format));
+            }
+            Image.Dispose();
+
+            return Utils.CombineByteArray(mipmaps.ToArray());
         }
         public void Compress()
         {
@@ -254,11 +298,19 @@ namespace FirstPlugin
 
             tex.MipOffsets = new long[tex.MipCount];
 
-            List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, data, tex.TileMode);
-            tex.TextureData.Add(mipmaps);
-            byte[] test = Combine(mipmaps);
-            tex.TextureData[0][0] = test;
+            List<byte[]> arrayFaces = new List<byte[]>();
+            if (tex.ArrayLength > 1)
+                arrayFaces = DDS.GetArrayFaces(data, tex.ArrayLength);
+            else
+                arrayFaces.Add(data);
 
+            for (int i = 0; i < tex.ArrayLength; i++)
+            {
+                List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, arrayFaces[i], tex.TileMode);
+                tex.TextureData.Add(mipmaps);
+                byte[] test = Combine(mipmaps);
+                tex.TextureData[i][0] = test;
+            }
             return tex;
         }
         public static List<byte[]> SwizzleSurfaceMipMaps(FTEX tex, byte[] data)

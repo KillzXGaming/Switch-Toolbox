@@ -12,7 +12,8 @@ namespace Switch_Toolbox.Library
     public abstract class TreeNodeCustom : TreeNode
     {
         public virtual void OnClick(TreeView treeview) { }
-        public virtual void OnMouseClick(TreeView treeview) { }
+        public virtual void OnMouseLeftClick(TreeView treeview) { }
+        public virtual void OnMouseRightClick(TreeView treeview) { }
         public virtual void OnDoubleMouseClick(TreeView treeview) { }
 
         public TreeNodeCustom()

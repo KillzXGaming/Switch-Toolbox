@@ -388,9 +388,6 @@
     <Content Include="Lib\Licenses\ZSTD NET COPYRIGHT.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="LZ4.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Projects\Recent\DUMMY.txt" />
     <None Include="Resources\Logo.png" />
     <Content Include="Tool.ico" />

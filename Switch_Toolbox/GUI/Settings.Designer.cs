@@ -48,13 +48,14 @@
             this.chkBoxStereoscopy = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.disableViewportCHKBX = new System.Windows.Forms.CheckBox();
             this.GLSLVerLabel = new System.Windows.Forms.Label();
             this.openGLVerLabel = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.yazoCompressionLevelUD = new System.Windows.Forms.NumericUpDown();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.disableViewportCHKBX = new System.Windows.Forms.CheckBox();
+            this.chkBoxEnablePBR = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.previewScaleUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.camFarNumUD)).BeginInit();
@@ -111,6 +112,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.chkBoxEnablePBR);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.previewScaleUD);
             this.panel2.Controls.Add(this.chkBoxDisplayPolyCount);
@@ -332,6 +334,18 @@
             this.panel1.Size = new System.Drawing.Size(215, 137);
             this.panel1.TabIndex = 5;
             // 
+            // disableViewportCHKBX
+            // 
+            this.disableViewportCHKBX.AutoSize = true;
+            this.disableViewportCHKBX.ForeColor = System.Drawing.Color.White;
+            this.disableViewportCHKBX.Location = new System.Drawing.Point(0, 67);
+            this.disableViewportCHKBX.Name = "disableViewportCHKBX";
+            this.disableViewportCHKBX.Size = new System.Drawing.Size(105, 17);
+            this.disableViewportCHKBX.TabIndex = 16;
+            this.disableViewportCHKBX.Text = "Disable Viewport";
+            this.disableViewportCHKBX.UseVisualStyleBackColor = true;
+            this.disableViewportCHKBX.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
+            // 
             // GLSLVerLabel
             // 
             this.GLSLVerLabel.AutoSize = true;
@@ -404,17 +418,17 @@
             this.panel3.Size = new System.Drawing.Size(313, 138);
             this.panel3.TabIndex = 18;
             // 
-            // disableViewportCHKBX
+            // chkBoxEnablePBR
             // 
-            this.disableViewportCHKBX.AutoSize = true;
-            this.disableViewportCHKBX.ForeColor = System.Drawing.Color.White;
-            this.disableViewportCHKBX.Location = new System.Drawing.Point(0, 67);
-            this.disableViewportCHKBX.Name = "disableViewportCHKBX";
-            this.disableViewportCHKBX.Size = new System.Drawing.Size(105, 17);
-            this.disableViewportCHKBX.TabIndex = 16;
-            this.disableViewportCHKBX.Text = "Disable Viewport";
-            this.disableViewportCHKBX.UseVisualStyleBackColor = true;
-            this.disableViewportCHKBX.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
+            this.chkBoxEnablePBR.AutoSize = true;
+            this.chkBoxEnablePBR.ForeColor = System.Drawing.Color.White;
+            this.chkBoxEnablePBR.Location = new System.Drawing.Point(258, 139);
+            this.chkBoxEnablePBR.Name = "chkBoxEnablePBR";
+            this.chkBoxEnablePBR.Size = new System.Drawing.Size(84, 17);
+            this.chkBoxEnablePBR.TabIndex = 17;
+            this.chkBoxEnablePBR.Text = "Enable PBR";
+            this.chkBoxEnablePBR.UseVisualStyleBackColor = true;
+            this.chkBoxEnablePBR.CheckedChanged += new System.EventHandler(this.chkBoxEnablePBR_CheckedChanged);
             // 
             // Settings
             // 
@@ -473,5 +487,6 @@
         private System.Windows.Forms.NumericUpDown yazoCompressionLevelUD;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox disableViewportCHKBX;
+        private System.Windows.Forms.CheckBox chkBoxEnablePBR;
     }
 }

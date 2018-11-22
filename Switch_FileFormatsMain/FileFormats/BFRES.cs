@@ -46,7 +46,7 @@ namespace FirstPlugin
                 this.eitorRoot = value;
             }
         }
-        private void SaveFile()
+        public void SaveFile()
         {
             List<IFileFormat> formats = new List<IFileFormat>();
             formats.Add(this);
@@ -112,7 +112,6 @@ namespace FirstPlugin
             bfres = new BFRESRender();
             bfres.ResFileNode = new ResourceFile(this);
             bfres.ResFileNode.BFRESRender = bfres;
-            bfres.SaveFile = SaveFile;
 
             EditorRoot = bfres.ResFileNode;
 

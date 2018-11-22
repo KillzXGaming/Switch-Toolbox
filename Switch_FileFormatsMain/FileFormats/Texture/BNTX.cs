@@ -161,10 +161,11 @@ namespace FirstPlugin
 
         public void Load()
         {
+            IFileInfo = new IFileInfo();
+
             IsActive = true;
             UseEditMenu = true;
             CanSave = true;
-
             bntx = new BinaryTextureContainer(Data, FileName, "", this);
             EditorRoot = bntx;
         }
@@ -194,12 +195,41 @@ namespace FirstPlugin
         public BntxFile BinaryTexFile;
         public string FileNameText;
 
+        MenuItem save = new MenuItem("Save");
+        MenuItem replace = new MenuItem("Replace");
+        MenuItem rename = new MenuItem("Rename");
+        MenuItem importTex = new MenuItem("Import Texture");
+        MenuItem exportAll = new MenuItem("Export All Textures");
+        MenuItem clear = new MenuItem("Clear");
+
+        private bool hasParent;
+        public bool HasParent
+        {
+            get
+            {
+                hasParent = Parent != null;
+                replace.Enabled = hasParent;
+                rename.Enabled = hasParent;
+                return hasParent;
+            }
+        }
+        public bool CanReplace;
+        public bool AllGLInitialized
+        {
+            get
+            {
+                if (Textures.Any(item => item.Value.GLInitialized == false))
+                    return false;
+                else
+                    return true;
+            }
+        }
+
         public BinaryTextureContainer()
         {
             ImageKey = "bntx";
             SelectedImageKey = "bntx";
         }
-
         public BinaryTextureContainer(byte[] data, string Name = "", string FileName = "", IFileFormat handler = null)
         {
             if (data.Length == 0)
@@ -212,6 +242,25 @@ namespace FirstPlugin
             LoadFile(data, Name);
 
             PluginRuntime.bntxContainers.Add(this);
+            FileHandler = handler;
+
+            //Check if bntx is parented to determine if an archive is used
+            bool checkParent = HasParent;
+
+            ContextMenu = new ContextMenu();
+            ContextMenu.MenuItems.Add(save);
+            ContextMenu.MenuItems.Add(replace);
+            ContextMenu.MenuItems.Add(rename);
+            ContextMenu.MenuItems.Add(importTex);
+            ContextMenu.MenuItems.Add(exportAll);
+            ContextMenu.MenuItems.Add(clear);
+
+            save.Click      += Save;
+            replace.Click   += Import;
+            rename.Click   += Rename;
+            importTex.Click += ImportTexture;
+            exportAll.Click += ExportAll;
+            clear.Click     += Clear;
         }
         private byte[] CreateNewBNTX(string Name)
         {
@@ -242,14 +291,12 @@ namespace FirstPlugin
         }
         public override void OnClick(TreeView treeView)
         {
-            Console.WriteLine(FirstPlugin.MainF);
-            foreach (Control control in FirstPlugin.MainF.Controls)
-            {
-                if (control is DockPanel)
-                {
 
-                }
-            }
+        }
+        //Check right click to enable/disable certain context menus
+        public override void OnMouseRightClick(TreeView treeview)
+        {
+            bool checkParent = HasParent;
         }
 
         public void LoadFile(byte[] data, string Name = "")
@@ -276,23 +323,8 @@ namespace FirstPlugin
                 Nodes.Add(texData);
                 Textures.Add(tex.Name, texData);
             }
-
-            ContextMenu = new ContextMenu();
-            MenuItem export = new MenuItem("Export BNTX");
-            ContextMenu.MenuItems.Add(export);
-            export.Click += Export;
-            MenuItem replace = new MenuItem("Replace BNTX");
-            ContextMenu.MenuItems.Add(replace);
-            replace.Click += Import;
-            MenuItem importTex = new MenuItem("Import Texture");
-            ContextMenu.MenuItems.Add(importTex);
-            importTex.Click += ImportTexture;
-            MenuItem exportAll = new MenuItem("Export All Textures");
-            ContextMenu.MenuItems.Add(exportAll);
-            exportAll.Click += ExportAll;
-            MenuItem clear = new MenuItem("Clear");
-            ContextMenu.MenuItems.Add(clear);
-            clear.Click += Clear;
+            BinaryTexFile.Textures.Clear(); //We don't need these in memeory anymore
+            BinaryTexFile.TextureDict.Clear();
         }
         private void ImportTexture(object sender, EventArgs args)
         {
@@ -341,8 +373,15 @@ namespace FirstPlugin
                 importer.LoadSettings(settings, this);
                 if (importer.ShowDialog() == DialogResult.OK)
                 {
+                    Cursor.Current = Cursors.WaitCursor;
                     foreach (var setting in settings)
                     {
+                        if (setting.GenerateMipmaps)
+                        {
+                            setting.DataBlockOutput.Clear();
+                            setting.DataBlockOutput.Add(setting.GenerateMips());
+                        }
+
                         if (setting.DataBlockOutput != null)
                         {
                             Texture tex = setting.FromBitMap(setting.DataBlockOutput[0], setting);
@@ -353,6 +392,12 @@ namespace FirstPlugin
                             else
                             {
                                 setting.textureData = new TextureData(tex, setting.bntx);
+                            }
+
+                            int i = 0;
+                            if (Textures.ContainsKey(setting.textureData.Text))
+                            {
+                                setting.textureData.Text = setting.textureData.Text + i++;
                             }
 
                             Nodes.Add(setting.textureData);
@@ -367,6 +412,7 @@ namespace FirstPlugin
                 }
                 settings.Clear();
                 GC.Collect();
+                Cursor.Current = Cursors.Default;
             }
         }
         //This function is an optional feature that will import a dummy texture if one is missing in the materials
@@ -500,6 +546,7 @@ namespace FirstPlugin
         {
             Nodes.Clear();
             Textures.Clear();
+            GC.Collect();
         }
         private void ExportAll(object sender, EventArgs args)
         {
@@ -611,16 +658,26 @@ namespace FirstPlugin
                 LoadFile(Data);
             }
         }
+        private void Rename(object sender, EventArgs args)
+        {
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(Text);
 
-        private void Export(object sender, EventArgs args)
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Text = dialog.textBox1.Text;
+            }
+        }
+        private void Save(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.DefaultExt = "bntx";
             sfd.Filter = "Supported Formats|*.bntx;";
+            sfd.FileName = FileHandler.FileName;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sfd.FileName, Data);
+                File.WriteAllBytes(sfd.FileName, FileHandler.Save());
             }
         }
     }
@@ -631,8 +688,7 @@ namespace FirstPlugin
         public BntxFile bntxFile;
         public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
         public BRTI_Texture renderedGLTex = new BRTI_Texture();
-
-        BNTXEditor BNTXEditor;
+        public bool GLInitialized = false;
 
         public TextureData()
         {
@@ -673,28 +729,38 @@ namespace FirstPlugin
         }
         public override void OnClick(TreeView treeView)
         {
-            foreach (Control control in FirstPlugin.MainF.Controls)
+            if (FirstPlugin.DockedEditorS == null)
             {
-                if (control is DockPanel)
+                foreach (Control control in FirstPlugin.MainF.Controls)
                 {
-                    if (FirstPlugin.DockedEditorS == null)
+                    if (control is DockPanel)
                     {
                         FirstPlugin.DockedEditorS = new DockContent();
                         FirstPlugin.DockedEditorS.Show((DockPanel)control, PluginRuntime.FSHPDockState);
                     }
                 }
-            }      
-
+            }
+  
             if (!EditorIsActive(FirstPlugin.DockedEditorS))
             {
                 FirstPlugin.DockedEditorS.Controls.Clear();
 
-                BNTXEditor = new BNTXEditor();
+                BNTXEditor BNTXEditor = new BNTXEditor();
                 BNTXEditor.Text = Text;
                 BNTXEditor.Dock = DockStyle.Fill;
-                BNTXEditor.LoadPicture(DisplayTexture());
                 BNTXEditor.LoadProperty(this);
                 FirstPlugin.DockedEditorS.Controls.Add(BNTXEditor);
+            }
+        }
+        public void UpdateEditor()
+        {
+            foreach (Control ctrl in FirstPlugin.DockedEditorS.Controls)
+            {
+                if (ctrl is BNTXEditor)
+                {
+                    FirstPlugin.DockedEditorS.Text = Text;
+                    ((BNTXEditor)ctrl).LoadProperty(this);
+                }
             }
         }
         public bool EditorIsActive(DockContent dock)
@@ -704,7 +770,6 @@ namespace FirstPlugin
                 if (ctrl is BNTXEditor)
                 {
                     dock.Text = Text;
-                    ((BNTXEditor)ctrl).LoadPicture(DisplayTexture());
                     ((BNTXEditor)ctrl).LoadProperty(this);
                     return true;
                 }
@@ -781,6 +846,7 @@ namespace FirstPlugin
                     break;
             }
             renderedGLTex.display = loadImage(renderedGLTex);
+            GLInitialized = true;
 
             return renderedGLTex;
         }
@@ -793,62 +859,128 @@ namespace FirstPlugin
             if (Format == SurfaceFormat.BC5_SNORM)
                 return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true);
 
-            byte[] d = DecodePixelBlocks(data, (int)Width, (int)Height, Format);
-            d = DecompressBlocks(data, (int)Width, (int)Height, Format);
-
+            byte[] d = null;
+            if (IsCompressedFormat(Format))
+                d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
+            else if (IsAtscFormat(Format))
+                d = null;
+            else
+                d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
+            
             if (d != null)
             {
                 decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
                 return SwapBlueRedChannels(decomp);
             }
-
             return null;
         }
-        private static byte[] DecompressBlocks(byte[] data, int width, int height, SurfaceFormat Format)
+        private static DDS.DXGI_FORMAT GetUncompressedDXGI_FORMAT(SurfaceFormat Format)
         {
             switch (Format)
             {
-                case SurfaceFormat.BC1_UNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM);
-                case SurfaceFormat.BC1_SRGB: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB);
-                case SurfaceFormat.BC2_UNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM);
-                case SurfaceFormat.BC2_SRGB: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB);
-                case SurfaceFormat.BC3_UNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM);
-                case SurfaceFormat.BC3_SRGB: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB);
-                case SurfaceFormat.BC4_UNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM);
-                case SurfaceFormat.BC4_SNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM);
-                case SurfaceFormat.BC5_UNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM);
-                case SurfaceFormat.BC6_UFLOAT: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16);
-                case SurfaceFormat.BC6_FLOAT: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM);
-                case SurfaceFormat.BC7_UNORM: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM);
-                case SurfaceFormat.BC7_SRGB: return DDSCompressor.DecompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB);
+                case SurfaceFormat.A1_B5_G5_R5_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
+                case SurfaceFormat.A4_B4_G4_R4_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
+                case SurfaceFormat.B5_G5_R5_A1_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
+                case SurfaceFormat.B5_G6_R5_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
+                case SurfaceFormat.B8_G8_R8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+                case SurfaceFormat.B8_G8_R8_A8_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
+                case SurfaceFormat.R10_G10_B10_A2_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM;
+                case SurfaceFormat.R11_G11_B10_FLOAT: return DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT;
+                case SurfaceFormat.R16_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_R16_UNORM;
+                case SurfaceFormat.R32_FLOAT: return DDS.DXGI_FORMAT.DXGI_FORMAT_R32_FLOAT;
+                case SurfaceFormat.R4_G4_B4_A4_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
+                case SurfaceFormat.R4_G4_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
+                case SurfaceFormat.R5_G5_B5_A1_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
+                case SurfaceFormat.R5_G6_B5_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
+                case SurfaceFormat.R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+                case SurfaceFormat.R8_G8_B8_A8_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
+                case SurfaceFormat.R8_G8_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM;
+                case SurfaceFormat.R8_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8_UNORM;
+                case SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
-                    return null;
+                    throw new Exception($"Cannot convert format {Format}");
             }
         }
-        private static byte[] DecodePixelBlocks(byte[] data, int width, int height, SurfaceFormat Format)
+        private static DDS.DXGI_FORMAT GetCompressedDXGI_FORMAT(SurfaceFormat Format)
         {
             switch (Format)
             {
-                case SurfaceFormat.A1_B5_G5_R5_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
-                case SurfaceFormat.A4_B4_G4_R4_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM);
-                case SurfaceFormat.B5_G5_R5_A1_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
-                case SurfaceFormat.B5_G6_R5_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM);
-                case SurfaceFormat.B8_G8_R8_A8_SRGB: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM_SRGB);
-                case SurfaceFormat.B8_G8_R8_A8_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM);
-                case SurfaceFormat.R10_G10_B10_A2_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM);
-                case SurfaceFormat.R11_G11_B10_FLOAT: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT);
-                case SurfaceFormat.R16_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R16_UNORM);
-                case SurfaceFormat.R32_FLOAT: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32_FLOAT);
-                case SurfaceFormat.R4_G4_B4_A4_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM);
-                case SurfaceFormat.R4_G4_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM);
-                case SurfaceFormat.R5_G5_B5_A1_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
-                case SurfaceFormat.R5_G6_B5_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM);
-                case SurfaceFormat.R8_G8_B8_A8_SRGB: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-                case SurfaceFormat.R8_G8_B8_A8_UNORM: return data;
-                case SurfaceFormat.R8_G8_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM);
-                case SurfaceFormat.R8_UNORM: return DDSCompressor.DecodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8_UNORM);
+                case SurfaceFormat.BC1_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
+                case SurfaceFormat.BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB;
+                case SurfaceFormat.BC2_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
+                case SurfaceFormat.BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB;
+                case SurfaceFormat.BC3_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
+                case SurfaceFormat.BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB;
+                case SurfaceFormat.BC4_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
+                case SurfaceFormat.BC4_SNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
+                case SurfaceFormat.BC5_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
+                case SurfaceFormat.BC5_SNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
+                case SurfaceFormat.BC6_UFLOAT: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16;
+                case SurfaceFormat.BC6_FLOAT: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16;
+                case SurfaceFormat.BC7_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
+                case SurfaceFormat.BC7_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB;
+                case SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
-                    return null;
+                    throw new Exception($"Cannot convert format {Format}");
+            }
+        }
+        private static bool IsCompressedFormat(SurfaceFormat Format)
+        {
+            switch (Format)
+            {
+                case SurfaceFormat.BC1_UNORM: 
+                case SurfaceFormat.BC1_SRGB: 
+                case SurfaceFormat.BC2_UNORM: 
+                case SurfaceFormat.BC2_SRGB:
+                case SurfaceFormat.BC3_UNORM:
+                case SurfaceFormat.BC3_SRGB:
+                case SurfaceFormat.BC4_UNORM:
+                case SurfaceFormat.BC4_SNORM: 
+                case SurfaceFormat.BC5_UNORM: 
+                case SurfaceFormat.BC5_SNORM:
+                case SurfaceFormat.BC6_UFLOAT:
+                case SurfaceFormat.BC6_FLOAT: 
+                case SurfaceFormat.BC7_UNORM: 
+                case SurfaceFormat.BC7_SRGB:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        private static bool IsAtscFormat(SurfaceFormat Format)
+        {
+            switch (Format)
+            {
+                case SurfaceFormat.ASTC_10x10_SRGB:
+                case SurfaceFormat.ASTC_10x10_UNORM:
+                case SurfaceFormat.ASTC_10x5_SRGB:
+                case SurfaceFormat.ASTC_10x5_UNORM:
+                case SurfaceFormat.ASTC_10x6_SRGB:
+                case SurfaceFormat.ASTC_10x6_UNORM:
+                case SurfaceFormat.ASTC_10x8_SRGB:
+                case SurfaceFormat.ASTC_10x8_UNORM:
+                case SurfaceFormat.ASTC_12x10_SRGB:
+                case SurfaceFormat.ASTC_12x10_UNORM:
+                case SurfaceFormat.ASTC_12x12_SRGB:
+                case SurfaceFormat.ASTC_12x12_UNORM:
+                case SurfaceFormat.ASTC_4x4_SRGB:
+                case SurfaceFormat.ASTC_5x4_SRGB:
+                case SurfaceFormat.ASTC_5x4_UNORM:
+                case SurfaceFormat.ASTC_5x5_SRGB:
+                case SurfaceFormat.ASTC_5x5_UNORM:
+                case SurfaceFormat.ASTC_6x5_SRGB:
+                case SurfaceFormat.ASTC_6x5_UNORM:
+                case SurfaceFormat.ASTC_6x6_SRGB:
+                case SurfaceFormat.ASTC_6x6_UNORM:
+                case SurfaceFormat.ASTC_8x5_SRGB:
+                case SurfaceFormat.ASTC_8x5_UNORM:
+                case SurfaceFormat.ASTC_8x6_SRGB:
+                case SurfaceFormat.ASTC_8x6_UNORM:
+                case SurfaceFormat.ASTC_8x8_SRGB:
+                case SurfaceFormat.ASTC_8x8_UNORM:
+                    return true;
+                default:
+                    return false;
             }
         }
         public static Bitmap SwapBlueRedChannels(Bitmap bitmap)
@@ -857,45 +989,12 @@ namespace FirstPlugin
         }
         public static byte[] CompressBlock(byte[] data, int width, int height, SurfaceFormat format)
         {
-            switch (format)
-            {
-                case SurfaceFormat.A1_B5_G5_R5_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
-                case SurfaceFormat.A4_B4_G4_R4_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM);
-                case SurfaceFormat.B5_G5_R5_A1_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
-                case SurfaceFormat.B5_G6_R5_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM);
-                case SurfaceFormat.B8_G8_R8_A8_SRGB: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM_SRGB);
-                case SurfaceFormat.B8_G8_R8_A8_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM);
-                case SurfaceFormat.R10_G10_B10_A2_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM);
-                case SurfaceFormat.R11_G11_B10_FLOAT: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT);
-                case SurfaceFormat.R16_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R16_UNORM);
-                case SurfaceFormat.R32_FLOAT: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32_FLOAT);
-                case SurfaceFormat.R4_G4_B4_A4_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM);
-                case SurfaceFormat.R4_G4_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM);
-                case SurfaceFormat.R5_G5_B5_A1_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
-                case SurfaceFormat.R5_G6_B5_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM);
-                case SurfaceFormat.R8_G8_B8_A8_SRGB: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-                case SurfaceFormat.R8_G8_B8_A8_UNORM: return data;
-                case SurfaceFormat.R8_G8_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM);
-                case SurfaceFormat.R8_UNORM: return DDSCompressor.EncodePixelBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_R8_UNORM);
-
-
-                case SurfaceFormat.BC1_UNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM);
-                case SurfaceFormat.BC1_SRGB: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB);
-                case SurfaceFormat.BC2_UNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM);
-                case SurfaceFormat.BC2_SRGB: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB);
-                case SurfaceFormat.BC3_UNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM);
-                case SurfaceFormat.BC3_SRGB: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB);
-                case SurfaceFormat.BC4_UNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM);
-                case SurfaceFormat.BC4_SNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM);
-                case SurfaceFormat.BC5_UNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM);
-                case SurfaceFormat.BC5_SNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM);
-                case SurfaceFormat.BC6_UFLOAT: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16);
-                case SurfaceFormat.BC6_FLOAT: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16);
-                case SurfaceFormat.BC7_UNORM: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM);
-                case SurfaceFormat.BC7_SRGB: return DDSCompressor.CompressBlock(data, width, height, DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB);
-                default:
-                    throw new Exception($"Format {format} unsupported and cannot be compressed!");
-            }
+            if (IsCompressedFormat(format))
+                return DDSCompressor.CompressBlock(data, width, height, GetCompressedDXGI_FORMAT(format));
+            else if (IsAtscFormat(format))
+                return null;
+            else
+                return DDSCompressor.EncodePixelBlock(data, width, height, GetUncompressedDXGI_FORMAT(format));
         }
         public unsafe Bitmap GLTextureToBitmap(BRTI_Texture t, int id)
         {
@@ -990,19 +1089,14 @@ namespace FirstPlugin
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-   /*         ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+            ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
                          "Binary Texture |*.bftex|" +
                          "Microsoft DDS |*.dds|" +
                          "Portable Network Graphics |*.png|" +
                          "Joint Photographic Experts Group |*.jpg|" +
                          "Bitmap Image |*.bmp|" +
                          "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";*/
-
-            ofd.Filter = "Supported Formats|*.bftex;*.dds|" +
-             "Binary Texture |*.bftex|" +
-             "Microsoft DDS |*.dds|" +
-             "All files(*.*)|*.*";
+                         "All files(*.*)|*.*";
 
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -1015,26 +1109,47 @@ namespace FirstPlugin
             string ext = Path.GetExtension(FileName);
             ext = ext.ToLower();
 
+            TextureImporterSettings setting = new TextureImporterSettings();
+            BinaryTextureImporterList importer = new BinaryTextureImporterList();
+
             switch (ext)
             {
                 case ".bftex":
                     Texture.Import(FileName);
                     break;
                 case ".dds":
-                    TextureImporterSettings importDDS = new TextureImporterSettings();
-                    importDDS.LoadDDS(FileName, bntxFile, null, this);
+                    setting.LoadDDS(FileName, bntxFile, null, this);
                     break;
                 default:
-                    TextureImporterSettings import = new TextureImporterSettings();
-                    import.LoadBitMap(FileName, bntxFile, this);
+                    setting.LoadBitMap(FileName, bntxFile);
+                    importer.LoadSetting(setting, (BinaryTextureContainer)Parent);
                     break;
             }
-            Texture.Name = Text;
-            UpdateBfresTextureMapping();
-            if (BNTXEditor != null)
+
+            if (importer.ShowDialog() == DialogResult.OK)
             {
-                BNTXEditor.LoadPicture(DisplayTexture());
-                BNTXEditor.LoadProperty(this);
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (setting.GenerateMipmaps)
+                {
+                    setting.DataBlockOutput.Clear();
+                    setting.DataBlockOutput.Add(setting.GenerateMips());
+                }
+
+                if (setting.DataBlockOutput != null)
+                {
+                    Texture = setting.FromBitMap(setting.DataBlockOutput[0], setting);
+                    LoadTexture(Texture, 1);
+                    LoadOpenGLTexture();
+                }
+                else
+                {
+                    MessageBox.Show("Something went wrong???");
+                }
+                Texture.Name = Text;
+                UpdateBfresTextureMapping();
+
+                UpdateEditor();
             }
         }
         private void UpdateBfresTextureMapping()

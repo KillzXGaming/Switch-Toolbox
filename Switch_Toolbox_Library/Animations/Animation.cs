@@ -43,6 +43,7 @@ namespace Switch_Toolbox.Library
             CONSTANT,
             HERMITE,
             STEP,
+            STEPBOOL,
         };
 
         public class KeyNode : TreeNode
@@ -297,6 +298,7 @@ namespace Switch_Toolbox.Library
 
             if (Frame == 0 && !isChild)
                 skeleton.reset();
+
 
             foreach (object child in Children)
             {

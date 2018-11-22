@@ -19,7 +19,6 @@ namespace FirstPlugin
         public void LoadTexture(TextureData tex)
         {
             TextureData.BRTI_Texture renderedTex = tex.renderedGLTex;
-            bntxEditor1.LoadPicture(tex.GLTextureToBitmap(renderedTex, renderedTex.display));
             bntxEditor1.LoadProperty(tex);
         }
     }

@@ -303,6 +303,157 @@ namespace FirstPlugin
             VertexBufferHelperAttrib attd = helper[attName];
             return attd.Data;
         }
+        public static SkeletalAnim SetSkeletalAniamtion(BfresSkeletonAnim anim)
+        {
+            SkeletalAnim animation = new SkeletalAnim();
+
+            animation.Name = anim.Text;
+            animation.FrameCount = anim.FrameCount;
+            animation.FlagsAnimSettings = SkeletalAnimFlags.Looping;
+            animation.FlagsRotate = SkeletalAnimFlagsRotate.EulerXYZ;
+            animation.FlagsScale = SkeletalAnimFlagsScale.Maya;
+            animation.BindIndices = new ushort[anim.Bones.Count];
+            animation.BindSkeleton = new Skeleton();
+            animation.BakedSize = 0;
+            animation.BoneAnims = new List<BoneAnim>();
+            animation.UserDataDict = new ResDict();
+            animation.UserDatas = new List<UserData>();
+
+            foreach (var bone in anim.Bones)
+                animation.BoneAnims.Add(createBoneAnim(bone, anim));
+
+            return animation;
+        }
+        private static BoneAnim createBoneAnim(Animation.KeyNode bone, BfresSkeletonAnim anim)
+        {
+            BoneAnim boneAnim = new BoneAnim();
+            boneAnim.Name = bone.Name;
+            var posx = bone.XPOS.GetValue(0);
+            var posy = bone.YPOS.GetValue(0);
+            var posz = bone.ZPOS.GetValue(0);
+            var scax = bone.XSCA.GetValue(0);
+            var scay = bone.YSCA.GetValue(0);
+            var scaz = bone.ZSCA.GetValue(0);
+            var rotx = bone.XROT.GetValue(0);
+            var roty = bone.YROT.GetValue(0);
+            var rotz = bone.ZROT.GetValue(0);
+            var rotw = bone.WROT.GetValue(0);
+
+            BoneAnimData boneBaseData = new BoneAnimData();
+            boneBaseData.Translate = new Syroot.Maths.Vector3F(posx, posy, posz);
+            boneBaseData.Scale = new Syroot.Maths.Vector3F(scax, scay, scaz);
+            boneBaseData.Rotate = new Syroot.Maths.Vector4F(rotx, roty, rotz, rotw);
+            boneAnim.BaseData = boneBaseData;
+            boneAnim.BeginBaseTranslate = 0;
+            boneAnim.BeginRotate = 0;
+            boneAnim.BeginTranslate = 0;
+            boneAnim.Curves = new List<AnimCurve>();
+            boneAnim.FlagsBase = BoneAnimFlagsBase.Translate | BoneAnimFlagsBase.Scale | BoneAnimFlagsBase.Rotate;
+            boneAnim.FlagsTransform = BoneAnimFlagsTransform.Identity;
+
+            if (bone.XPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateX;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.XPOS));
+            }
+            if (bone.YPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateY;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.YPOS));
+            }
+            if (bone.ZPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateZ;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.ZPOS));
+            }
+            if (bone.XSCA.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleX;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.XSCA));
+            }
+            if (bone.YSCA.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleY;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.YSCA));
+            }
+            if (bone.ZSCA.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleZ;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.ZSCA));
+            }
+            if (bone.XROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateX;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.XROT));
+            }
+            if (bone.YROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateY;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.YROT));
+            }
+            if (bone.ZROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateZ;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.ZROT));
+            }
+            if (bone.WROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateW;
+                boneAnim.Curves.Add(SetAnimationCurve(bone.WROT));
+            }
+
+            return boneAnim;
+        }
+        private static AnimCurve SetAnimationCurve(Animation.KeyGroup keyGroup)
+        {
+            AnimCurve curve = new AnimCurve();
+            curve.Frames = new float[(int)keyGroup.Keys.Count];
+            curve.FrameType = AnimCurveFrameType.Single;
+            curve.KeyType = AnimCurveKeyType.Single;
+            curve.EndFrame = keyGroup.FrameCount;
+            curve.AnimDataOffset = 0;
+            curve.Delta = 0;
+            curve.Scale = 1;
+            curve.StartFrame = 0;
+            curve.Offset = 0;
+
+            var frame = keyGroup.GetKeyFrame(0);
+            int valuesLength = 1;
+            if (frame.InterType == Animation.InterpolationType.HERMITE)
+            {
+                curve.CurveType = AnimCurveType.Cubic;
+                curve.Keys = new float[keyGroup.Keys.Count, 4];
+                for (int k = 0; k < keyGroup.Keys.Count; k++)
+                {
+                    float value = keyGroup.GetValue(keyGroup.Keys[k].Frame);
+                    curve.Keys[k, 0] = value;
+                    curve.Keys[k, 1] = 0;
+                    curve.Keys[k, 2] = 0;
+                    curve.Keys[k, 3] = 0;
+
+                    curve.Frames[k] = keyGroup.Keys[k].Frame;
+                }
+            }
+            if (frame.InterType == Animation.InterpolationType.LINEAR)
+            {
+                curve.CurveType = AnimCurveType.Linear;
+                curve.Keys = new float[keyGroup.Keys.Count, 2];
+            }
+            if (frame.InterType == Animation.InterpolationType.STEP)
+            {
+                curve.CurveType = AnimCurveType.StepInt;
+                curve.Keys = new float[keyGroup.Keys.Count, 1];
+            }
+            if (frame.InterType == Animation.InterpolationType.STEPBOOL)
+            {
+                curve.CurveType = AnimCurveType.StepBool;
+                curve.Keys = new float[keyGroup.Keys.Count, 1];
+            }
+
+
+
+            return curve;
+        }
 
         public static void SetSkeleton(this TreeNodeCustom skl, Skeleton skeleton, FSKL RenderableSkeleton)
         {
@@ -327,9 +478,9 @@ namespace FirstPlugin
             RenderableSkeleton.update();
             RenderableSkeleton.reset();
 
-            foreach (var bone in RenderableSkeleton.bones)
-                if (bone.Parent == null)
-                    skl.Nodes.Add(bone);
+     //       foreach (var bone in RenderableSkeleton.bones)
+      //          if (bone.Parent == null)
+            //        skl.Nodes.Add(bone);
 
             Runtime.abstractGlDrawables.Add(RenderableSkeleton);
         }

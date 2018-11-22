@@ -16,6 +16,22 @@ namespace Switch_Toolbox.Library
         {
 
         }
+        public static List<byte[]> GenerateMipMaps(Bitmap bitmap)
+        {
+            List<byte[]> datas = new List<byte[]>();
+
+            datas.Add(ImageToByte(bitmap));
+            while (bitmap.Width / 2 > 0 && bitmap.Height / 2 > 0)
+            {
+                bitmap = Resize(bitmap, bitmap.Width / 2, bitmap.Height / 2);
+                datas.Add(ImageToByte(bitmap));
+            }
+            return datas;
+        }
+        public static Bitmap Resize(Image original, int width, int height)
+        {
+            return new Bitmap(original, new Size(width, height));
+        }
         public static Bitmap GetBitmap(byte[] Buffer, int Width, int Height, PixelFormat pixelFormat = PixelFormat.Format32bppArgb)
         {
 
@@ -143,9 +159,9 @@ namespace Switch_Toolbox.Library
 
             for (int k = 0; k < resultBuffer.Length; k += 4)
             {
-                sourceBlue = resultBuffer[k];
+                sourceRed = resultBuffer[k];
                 sourceGreen = resultBuffer[k + 1];
-                sourceRed = resultBuffer[k + 2];
+                sourceBlue = resultBuffer[k + 2];
                 sourceAlpha = resultBuffer[k + 3];
 
 
@@ -245,9 +261,9 @@ namespace Switch_Toolbox.Library
                         break;
                 }
 
-                resultBuffer[k] = resultBlue;
+                resultBuffer[k] = resultRed;
                 resultBuffer[k + 1] = resultGreen;
-                resultBuffer[k + 2] = resultRed;
+                resultBuffer[k + 2] = resultBlue;
                 resultBuffer[k + 3] = resultAlpha;
             }
 

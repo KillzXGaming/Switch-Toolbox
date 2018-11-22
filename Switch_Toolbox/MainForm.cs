@@ -240,6 +240,7 @@ namespace Switch_Toolbox
         public void OpenFile(string FileName, byte[] data = null, bool Compressed = false,
             CompressionType CompType = CompressionType.None)
         {
+            Reload();
             if (data == null)
                 data = File.ReadAllBytes(FileName);
 
@@ -278,8 +279,6 @@ namespace Switch_Toolbox
 
             foreach (IFileFormat format in SupportedFormats)
             {
-                Console.WriteLine(format.Magic.Reverse());
-                Console.WriteLine(Magic2);
 
                 if (format.Magic == Magic || format.Magic == Magic2 || format.Magic.Reverse() == Magic2)
                 {

@@ -33,10 +33,8 @@ namespace FirstPlugin
 
         public Shader shader = null;
         public List<FMDL> models = new List<FMDL>();
-        public AnimationGroupNode SkeletonAnimGroup;
 
         public ResourceFile ResFileNode;
-        public Action SaveFile;
 
         public BFRESRender()
         {
@@ -492,7 +490,8 @@ namespace FirstPlugin
                 {
                     if (bntx.Textures.ContainsKey(t.Name))
                     {
-                        bntx.Textures[t.Name].LoadOpenGLTexture();
+                        if (!bntx.Textures[t.Name].GLInitialized)
+                            bntx.Textures[t.Name].LoadOpenGLTexture();
                     }
                 }
             }
@@ -506,9 +505,13 @@ namespace FirstPlugin
 
             foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
             {
-                foreach (var tex in bntx.Textures)
+                if (!bntx.AllGLInitialized)
                 {
-                    tex.Value.LoadOpenGLTexture();
+                    foreach (var tex in bntx.Textures)
+                    {
+                        if (!tex.Value.GLInitialized)
+                            tex.Value.LoadOpenGLTexture();
+                    }
                 }
             }
             foreach (FTEXContainer ftexCont in PluginRuntime.ftexContainers)

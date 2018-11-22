@@ -56,6 +56,9 @@ namespace Switch_Toolbox
                     case "RenderModelWireframe":
                         bool.TryParse(node.InnerText, out Runtime.RenderModelWireframe);
                         break;
+                    case "EnablePBR":
+                        bool.TryParse(node.InnerText, out Runtime.EnablePBR);
+                        break;
                     case "viewportShading":
                         if (node.ParentNode != null && node.ParentNode.Name.Equals("RENDERSETTINGS"))
                             Enum.TryParse(node.InnerText, out Runtime.viewportShading);
@@ -78,6 +81,7 @@ namespace Switch_Toolbox
                     case "Yaz0CompressionLevel":
                         int.TryParse(node.InnerText, out Runtime.Yaz0CompressionLevel);
                         break;
+
                 }
             }
         }
@@ -127,6 +131,7 @@ namespace Switch_Toolbox
             renderSettingsNode.AppendChild(createNode(doc, "CameraFar", Runtime.CameraFar.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "CameraNear", Runtime.CameraNear.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "PreviewScale", Runtime.previewScale.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "EnablePBR", Runtime.EnablePBR.ToString()));
         }
         public static XmlNode createNode(XmlDocument doc, string el, string v)
         {

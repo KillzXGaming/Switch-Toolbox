@@ -193,8 +193,12 @@ namespace Bfres.Structs
                 string Magic = f.ReadMagic(0, 4);
                 if (Magic == "BNTX")
                 {
-                    BinaryTextureContainer bntxTreeNode = new BinaryTextureContainer(extfile.Data, Name, resFile.Name);
-                    Nodes["EXT"].Nodes.Add(bntxTreeNode);
+                    BNTX bntx = new BNTX();
+                    bntx.Data = extfile.Data;
+                    bntx.FileName = Name;
+                    bntx.Load();
+                    bntx.IFileInfo.InArchive = true;
+                    Nodes["EXT"].Nodes.Add(bntx.EditorRoot);
                 }
                 else if (Magic == "FSHA")
                 {
@@ -232,7 +236,7 @@ namespace Bfres.Structs
         }
         private void Save(object sender, EventArgs args)
         {
-            BFRESRender.SaveFile();
+            ((BFRES)FileHandler).SaveFile();
         }
         private void Rename(object sender, EventArgs args)
         {
@@ -292,7 +296,7 @@ namespace Bfres.Structs
             Nodes.Add(FSKA);
         }
     }
-    public class FskaFolder : TreeNodeCustom
+    public class FskaFolder : AnimationGroupNode
     {
         public FskaFolder()
         {
@@ -319,10 +323,10 @@ namespace Bfres.Structs
                 Nodes.Add(skeletonAnim);
             }
         }
-        public override void OnClick(TreeView treeView)
+     /*   public override void OnClick(TreeView treeView)
         {
             FormLoader.LoadEditor(this, Text);
-        }
+        }*/
     }
     public class FmdlFolder : TreeNodeCustom
     {
@@ -631,44 +635,40 @@ namespace Bfres.Structs
 
                 bone.Text = bonean.Text;
 
+
                 for (int Frame = 0; Frame < ska.FrameCount; Frame++)
                 {
-
-                    //Set base/start values for bones.
-                    //Note. BOTW doesn't use base values as it uses havok engine. Need to add option to disable these
                     if (Frame == 0)
                     {
                         if (bn.FlagsBase.HasFlag(BoneAnimFlagsBase.Scale))
                         {
-                            bone.XSCA.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.sca.X });
-                            bone.YSCA.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.sca.Y });
-                            bone.ZSCA.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.sca.Z });
+                            bone.XSCA.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.sca.X });
+                            bone.YSCA.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.sca.Y });
+                            bone.ZSCA.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.sca.Z });
                         }
                         if (bn.FlagsBase.HasFlag(BoneAnimFlagsBase.Rotate))
                         {
-                            bone.XROT.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.rot.X });
-                            bone.YROT.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.rot.Y });
-                            bone.ZROT.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.rot.Z });
-                            bone.WROT.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.rot.W });
+                            bone.XROT.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.rot.X });
+                            bone.YROT.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.rot.Y });
+                            bone.ZROT.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.rot.Z });
+                            bone.WROT.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.rot.W });
                         }
                         if (bn.FlagsBase.HasFlag(BoneAnimFlagsBase.Translate))
                         {
-                            bone.XPOS.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.pos.X });
-                            bone.YPOS.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.pos.Y });
-                            bone.ZPOS.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = bonean.pos.Z });
+                            bone.XPOS.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.pos.X });
+                            bone.YPOS.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.pos.Y });
+                            bone.ZPOS.Keys.Add(new KeyFrame() { Frame = 0, Value = bonean.pos.Z });
                         }
                     }
                     foreach (FSKATrack track in bonean.tracks)
                     {
-                        Animation.KeyFrame frame = new Animation.KeyFrame();
+                        KeyFrame frame = new KeyFrame();
                         frame.InterType = Animation.InterpolationType.HERMITE;
                         frame.Frame = Frame;
 
                         FSKAKey left = track.GetLeft(Frame);
                         FSKAKey right = track.GetRight(Frame);
                         float value;
-
-
 
                         value = Animation.Hermite(Frame, left.frame, right.frame, 0, 0, left.unk1, right.unk1);
 
@@ -711,12 +711,9 @@ namespace Bfres.Structs
             {
                 Text = b.Name;
 
-                if (b.BaseData.Scale != Syroot.Maths.Vector3F.Zero)
-                    sca = new Vector3(b.BaseData.Scale.X, b.BaseData.Scale.Y, b.BaseData.Scale.Z);
-                if (b.BaseData.Rotate != Syroot.Maths.Vector4F.Zero)
-                    rot = new Vector4(b.BaseData.Rotate.X, b.BaseData.Rotate.Y, b.BaseData.Rotate.Z, b.BaseData.Rotate.W);
-                if (b.BaseData.Translate != Syroot.Maths.Vector3F.Zero)
-                    pos = new Vector3(b.BaseData.Translate.X, b.BaseData.Translate.Y, b.BaseData.Translate.Z);
+                sca = new Vector3(b.BaseData.Scale.X, b.BaseData.Scale.Y, b.BaseData.Scale.Z);
+                rot = new Vector4(b.BaseData.Rotate.X, b.BaseData.Rotate.Y, b.BaseData.Rotate.Z, b.BaseData.Rotate.W);
+                pos = new Vector3(b.BaseData.Translate.X, b.BaseData.Translate.Y, b.BaseData.Translate.Z);
 
                 foreach (AnimCurve tr in b.Curves)
                 {

@@ -101,13 +101,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.ClientSize = new System.Drawing.Size(602, 69);
             this.Controls.Add(this.animationTrackBar);
             this.Controls.Add(this.totalFrame);
             this.Controls.Add(this.currentFrameUpDown);
             this.Controls.Add(this.animationPlayBtn);
             this.Name = "AnimationPanel";
-            this.Text = "AnimationPanel";
+            this.Size = new System.Drawing.Size(602, 69);
+            this.Load += new System.EventHandler(this.AnimationPanel_Load);
             this.Click += new System.EventHandler(this.AnimationPanel_Click);
             this.Enter += new System.EventHandler(this.AnimationPanel_Enter);
             this.Leave += new System.EventHandler(this.AnimationPanel_Leave);

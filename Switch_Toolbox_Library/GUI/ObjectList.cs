@@ -74,31 +74,12 @@ namespace Switch_Toolbox.Library
 
                     }
                 }
-                AnimationPanel AnimationPanel = LoadAnimationPanel();
-
-                if (AnimationPanel != null)
+                if (Viewport.Instance.animationPanel1 != null)
                 {
-                    AnimationPanel.CurrentAnimation = running;
+                    Console.WriteLine("running" + running.Text);
+                    Viewport.Instance.animationPanel1.CurrentAnimation = running;
                 }
             }
-        }
-        public AnimationPanel LoadAnimationPanel()
-        {
-            Form form1 = Application.OpenForms[0];
-            foreach (Control control in form1.Controls)
-            {
-                if (control is DockPanel)
-                {                    
-                    foreach (DockContent ctrl in ((DockPanel)control).Contents)
-                    {
-                        if (ctrl is AnimationPanel)
-                        {
-                          //  return (AnimationPanel)ctrl;
-                        }
-                    }
-                }
-            }
-            return null;
         }
 
         private void ApplyThumbnailSetting(Runtime.ThumbnailSize size)
@@ -211,14 +192,15 @@ namespace Switch_Toolbox.Library
 
         private void treeView1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            TreeViewHitTestInfo info = treeView1.HitTest(treeView1.PointToClient(Cursor.Position));
+            if (info != null && info.Node is TreeNodeCustom)
             {
-                TreeViewHitTestInfo info = treeView1.HitTest(treeView1.PointToClient(Cursor.Position));
-                if (info != null && info.Node is TreeNodeCustom)
-                {
-                    ((TreeNodeCustom)info.Node).OnMouseClick(treeView1);
-                    treeView1.SelectedNode = info.Node;
-                }
+                if (e.Button == MouseButtons.Left)
+                    ((TreeNodeCustom)info.Node).OnMouseLeftClick(treeView1);
+                else if (e.Button == MouseButtons.Right)
+                    ((TreeNodeCustom)info.Node).OnMouseRightClick(treeView1);
+
+                treeView1.SelectedNode = info.Node;
             }
         }
     }

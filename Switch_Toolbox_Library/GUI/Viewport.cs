@@ -121,5 +121,10 @@ namespace Switch_Toolbox.Library
                 i++;
             }
         }
+
+        private void Viewport_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            animationPanel1.ClosePanel();
+        }
     }
 }

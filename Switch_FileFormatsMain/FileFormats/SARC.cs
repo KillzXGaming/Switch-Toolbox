@@ -46,11 +46,10 @@ namespace FirstPlugin
             UseEditMenu = true;
 
             var SzsFiles = SARCExt.SARC.UnpackRamN(Data);
-
             sarcData = new SarcData();
             sarcData.HashOnly = false;
             sarcData.Files = SzsFiles.Files;
-            sarcData.endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
+            sarcData.endianness = GetByteOrder(Data);
             SarcHash = Utils.GenerateUniqueHashID();
 
             IFileInfo = new IFileInfo();
@@ -58,6 +57,22 @@ namespace FirstPlugin
             FillTreeNodes(EditorRoot, SzsFiles.Files, SarcHash);
 
             sarcData.Files.Clear();
+        }
+        public Syroot.BinaryData.ByteOrder GetByteOrder(byte[] data)
+        {
+            using (FileReader reader = new FileReader(data))
+            {
+                reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                reader.Seek(6);
+                ushort bom = reader.ReadUInt16();
+                reader.Close();
+                reader.Dispose();
+
+                if (bom == 0xFFFE)
+                    return Syroot.BinaryData.ByteOrder.LittleEndian;
+                else
+                    return Syroot.BinaryData.ByteOrder.BigEndian;
+            }
         }
 
         public void Unload()
@@ -248,7 +263,7 @@ namespace FirstPlugin
             public override void OnClick(TreeView treeView)
             { 
             }
-            public override void OnMouseClick(TreeView treeView)
+            public override void OnMouseLeftClick(TreeView treeView)
             {
                 ReplaceNode(this.Parent, this, OpenFile(Name, Data, this));
             }

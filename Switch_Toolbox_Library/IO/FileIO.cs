@@ -158,6 +158,22 @@ namespace Switch_Toolbox.Library.IO
         {
             Write(Encoding.ASCII.GetBytes(value));
         }
+        public void WriteUint64Offset(long target)
+        {
+            long pos = Position;
+            using (TemporarySeek(target, SeekOrigin.Begin))
+            {
+                Write(pos);
+            }
+        }
+        public void WriteUint32Offset(long target)
+        {
+            long pos = Position;
+            using (TemporarySeek(target, SeekOrigin.Begin))
+            {
+                Write((uint)pos);
+            }
+        }
     }
     public class FileExt
     {

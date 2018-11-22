@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using Switch_Toolbox.Library;
+using System.Runtime.InteropServices;
 
 namespace Switch_Toolbox.Library
 {
@@ -180,8 +181,7 @@ namespace Switch_Toolbox.Library
 
             return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
         }
-
-          public static Bitmap DecompressBC4(Byte[] data, int width, int height, bool IsSNORM)
+        public static Bitmap DecompressBC4(Byte[] data, int width, int height, bool IsSNORM)
           {
               int W = (width + 3) / 4;
               int H = (height + 3) / 4;
@@ -436,7 +436,50 @@ namespace Switch_Toolbox.Library
             return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
         }
 
+        /*   public static unsafe byte[] CreateImage(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
+           {
+               long inputRowPitch;
+               long inputSlicePitch;
+               TexHelper.Instance.ComputePitch((DXGI_FORMAT)format, width, height, out inputRowPitch, out inputSlicePitch, CP_FLAGS.NONE);
 
+               if (data.Length == inputSlicePitch)
+               {
+                   byte* buf;
+                   buf = (byte*)Marshal.AllocHGlobal((int)inputSlicePitch);
+                   Marshal.Copy(data, 0, (IntPtr)buf, (int)inputSlicePitch);
+
+                   DirectXTexNet.Image inputImage = new DirectXTexNet.Image(width, height, (DXGI_FORMAT)format, inputRowPitch, inputSlicePitch, (IntPtr)buf, null);
+                   ScratchImage scratchImage = TexHelper.Instance.Initialize2D((DXGI_FORMAT)format, width, height, 1, 1, CP_FLAGS.NONE);
+
+                   using (var comp = scratchImage.Compress(DXGI_FORMAT.BC1_UNORM, TEX_COMPRESS_FLAGS.PARALLEL, 0.5f))
+                   {
+                       long outRowPitch;
+                       long outSlicePitch;
+                       TexHelper.Instance.ComputePitch((DXGI_FORMAT)format, width, height, out outRowPitch, out outSlicePitch, CP_FLAGS.NONE);
+
+                       byte[] result = new byte[outSlicePitch];
+                       Marshal.Copy(result, 0, scratchImage.GetPixels(), (int)outSlicePitch);
+
+                       return result;
+                   }
+               }
+               return null;
+           }*/
+        public unsafe byte* PointerData(byte* data, int length)
+        {
+            byte[] safe = new byte[length];
+            for (int i = 0; i < length; i++)
+                safe[i] = data[i];
+
+            fixed (byte* converted = safe)
+            {
+                // This will update the safe and converted arrays.
+                for (int i = 0; i < length; i++)
+                    converted[i]++;
+
+                return converted;
+            }
+        }
         public static byte[] DecompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
             return DirectXTex.ImageCompressor.Decompress(data, width, height, (int)format);
@@ -447,10 +490,16 @@ namespace Switch_Toolbox.Library
         }
         public static byte[] EncodePixelBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
+            if (format == DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM)
+                return data;
+
             return DirectXTex.ImageConverter.Convert(data, width, height,(int)DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, (int)format);
         }
         public static byte[] DecodePixelBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
+            if (format == DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM)
+                return data;
+
             return DirectXTex.ImageConverter.Convert(data, width, height, (int)format, (int)DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM);
         }
 

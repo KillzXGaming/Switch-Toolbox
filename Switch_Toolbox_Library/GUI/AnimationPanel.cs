@@ -25,10 +25,9 @@ namespace Switch_Toolbox.Library
         public int AnimationSpeed = 60;
         public float Frame = 0;
         public bool isPlaying;
-        private bool isOpen = true;
+        public bool isOpen = true;
         private Thread renderThread;
-        private GL_Core.GL_ControlModern gL_ControlModern1;
-        private bool renderThreadIsUpdating = false;
+        public bool renderThreadIsUpdating = false;
 
         private Animation currentAnimation;
         public Animation CurrentAnimation
@@ -39,13 +38,16 @@ namespace Switch_Toolbox.Library
             }
             set
             {
+                if (value == null)
+                    return;
+
                 ResetModels();
-           /*  currentAnimation = value;
+                currentAnimation = value;
                 totalFrame.Value = value.FrameCount;
                 animationTrackBar.TickFrequency = 1;
                 animationTrackBar.SetRange(0, (int)value.FrameCount);
                 currentFrameUpDown.Value = 1;
-                currentFrameUpDown.Value = 0;*/
+                currentFrameUpDown.Value = 0;
             }
         }
 
@@ -118,6 +120,9 @@ namespace Switch_Toolbox.Library
 
         private void UpdateViewport()
         {
+            if (IsDisposed)
+                return;
+
             if (Viewport.Instance.gL_ControlModern1.InvokeRequired)
             {
                 Viewport.Instance.gL_ControlModern1.Invoke((MethodInvoker)delegate {
@@ -226,7 +231,8 @@ namespace Switch_Toolbox.Library
 
             SetAnimationsToFrame(currentFrame);
 
-            UpdateViewport();
+            if (!renderThreadIsUpdating || !isPlaying)
+                UpdateViewport();
         }
         private void SetAnimationsToFrame(int frameNum)
         {
@@ -252,19 +258,19 @@ namespace Switch_Toolbox.Library
             animationTrackBar.Value = (int)currentFrameUpDown.Value;
         }
 
-        private void AnimationPanel_FormClosed(object sender, FormClosedEventArgs e)
+        public void AnimationPanel_FormClosed()
         {
             isOpen = false;
             Dispose();
         }
 
-        private void AnimationPanel_Shown(object sender, EventArgs e)
+        private void AnimationPanel_Load(object sender, EventArgs e)
         {
-      //      if (Viewport.Instance.gL_ControlModern1 != null)
-       //         Viewport.Instance.gL_ControlModern1.VSync = Runtime.enableVSync;
+            if (Viewport.Instance.gL_ControlModern1 != null)
+                Viewport.Instance.gL_ControlModern1.VSync = Runtime.enableVSync;
 
-          //  renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
-        //    renderThread.Start();
+            renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
+            renderThread.Start();
         }
 
         private void AnimationPanel_Enter(object sender, EventArgs e)
@@ -280,6 +286,13 @@ namespace Switch_Toolbox.Library
         private void AnimationPanel_Leave(object sender, EventArgs e)
         {
             renderThreadIsUpdating = false;
+        }
+        public void ClosePanel()
+        {
+            renderThreadIsUpdating = false;
+            isOpen = false;
+            Dispose();
+            renderThread.Abort();
         }
     }
 }
