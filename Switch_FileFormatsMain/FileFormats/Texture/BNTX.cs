@@ -480,9 +480,9 @@ namespace FirstPlugin
             if (TextureName == "Basic_MRA")
                 ImportPlaceholderTexture(Properties.Resources.Black, TextureName);
             if (TextureName == "Basic_Bake_st0")
-                ImportPlaceholderTexture(Properties.Resources.White, TextureName);
+                ImportPlaceholderTexture(Properties.Resources.Basic_Bake_st0, TextureName);
             if (TextureName == "Basic_Bake_st1")
-                ImportPlaceholderTexture(Properties.Resources.White, TextureName);
+                ImportPlaceholderTexture(Properties.Resources.Basic_Bake_st1, TextureName);
         }
         public TextureImporterSettings LoadSettings(string name)
         {
@@ -724,16 +724,17 @@ namespace FirstPlugin
             int target = 0;
             if (TargetString == "NX  ")
                 target = 1;
-
-
         }
         public override void OnClick(TreeView treeView)
         {
-            BNTXEditor BNTXEditor = new BNTXEditor();
-            BNTXEditor.Text = Text;
-            BNTXEditor.Dock = DockStyle.Fill;
-            BNTXEditor.LoadProperty(this);
-            LibraryGUI.Instance.LoadDockContent(BNTXEditor, PluginRuntime.FSHPDockState);
+            if (LibraryGUI.Instance.dockContent != null && !EditorIsActive(LibraryGUI.Instance.dockContent))
+            {
+                BNTXEditor BNTXEditor = new BNTXEditor();
+                BNTXEditor.Text = Text;
+                BNTXEditor.Dock = DockStyle.Fill;
+                BNTXEditor.LoadProperty(this);
+                LibraryGUI.Instance.LoadDockContent(BNTXEditor, PluginRuntime.FSHPDockState);
+            }
         }
         public bool EditorIsActive(DockContent dock)
         {
@@ -1321,6 +1322,35 @@ namespace FirstPlugin
         public Bitmap UpdateBitmap(Bitmap image)
         {
             return ColorComponentSelector(image, Texture.ChannelRed, Texture.ChannelGreen, Texture.ChannelBlue, Texture.ChannelAlpha);
+        }
+        public static ChannelType[] SetChannelsByFormat(SurfaceFormat Format)
+        {
+            ChannelType[] channels = new ChannelType[4];
+
+            switch (Format)
+            {
+                case SurfaceFormat.BC5_UNORM:
+                case SurfaceFormat.BC5_SNORM:
+                    channels[0] = ChannelType.Red;
+                    channels[1] = ChannelType.Green;
+                    channels[2] = ChannelType.Zero;
+                    channels[3] = ChannelType.One;
+                    break;
+                case SurfaceFormat.BC4_SNORM:
+                case SurfaceFormat.BC4_UNORM:
+                    channels[0] = ChannelType.Red;
+                    channels[1] = ChannelType.Red;
+                    channels[2] = ChannelType.Red;
+                    channels[3] = ChannelType.Red;
+                    break;
+                default:
+                    channels[0] = ChannelType.Red;
+                    channels[1] = ChannelType.Green;
+                    channels[2] = ChannelType.Blue;
+                    channels[3] = ChannelType.Alpha;
+                    break;
+            }
+            return channels;
         }
         public static Bitmap ColorComponentSelector(Bitmap image, ChannelType R, ChannelType G, ChannelType B, ChannelType A)
         {

@@ -73,6 +73,26 @@ namespace FirstPlugin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Basic_Bake_st0 {
+            get {
+                object obj = ResourceManager.GetObject("Basic_Bake_st0", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Basic_Bake_st1 {
+            get {
+                object obj = ResourceManager.GetObject("Basic_Bake_st1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] Basic_Nrm {
             get {
                 object obj = ResourceManager.GetObject("Basic_Nrm", resourceCulture);

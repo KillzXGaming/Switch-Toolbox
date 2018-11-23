@@ -40,8 +40,6 @@ namespace Bfres.Structs
                     ((FMAA)fmaa).MaterialAnim.Export(FileName, fmaa.GetResFile());
                 }
             }
-
-
         }
         private void Clear(object sender, EventArgs args)
         {

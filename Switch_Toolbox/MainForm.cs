@@ -289,6 +289,8 @@ namespace Switch_Toolbox
                     }
                     if (format.UseEditMenu)
                         editToolStripMenuItem.Enabled = true;
+
+                    return;
                 }
             }
             //If magic fails, then check extensions
@@ -317,6 +319,8 @@ namespace Switch_Toolbox
                         }
                         if (format.UseEditMenu)
                             editToolStripMenuItem.Enabled = true;
+
+                        return;
                     }
                 }
             }

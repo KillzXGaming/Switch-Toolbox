@@ -139,4 +139,10 @@
   <data name="White" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\White.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Basic_Bake_st0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Basic_Bake_st0.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Basic_Bake_st1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Basic_Bake_st1.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

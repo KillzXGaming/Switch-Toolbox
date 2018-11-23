@@ -19,26 +19,36 @@ namespace Switch_Toolbox.Library
         public static LibraryGUI Instance { get { return _instance == null ? _instance = new LibraryGUI() : _instance; } }
 
         public DockPanel dockPanel;
+        public DockContent dockContent;
 
         public void LoadDockContent(Control control, DockState dockState)
         {
-            DockContent content = new DockContent();
-            content.Controls.Add(control);
-            content.Show(dockPanel, dockState);
+            dockContent = new DockContent();
+            dockContent.Controls.Add(control);
+            dockContent.Show(dockPanel, dockState);
         }
-        public bool IsContentDocked(Control control)
+        public UserControl GetContentDocked(UserControl control)
         {
             foreach (DockContent dockContent in dockPanel.Contents)
             {
                 foreach (Control ctrl in dockContent.Controls)
-                    if (ctrl == control)
-                        return true;
+                    if (ctrl.GetType() == control.GetType())
+                        return (UserControl)ctrl;
             }
-            return false;
+            return null;
+        }
+        public DockContent GetContentDocked(DockContent DockContent)
+        {
+            foreach (DockContent dock in dockPanel.Contents)
+                if (dock.GetType() == DockContent.GetType())
+                    return dock;
+
+            return null;
         }
         public void LoadDockContent(DockContent DockContent, DockState dockState)
         {
-            DockContent.Show(dockPanel, dockState);
+            dockContent = DockContent;
+            dockContent.Show(dockPanel, dockState);
         }
         public void LoadViewport(Viewport viewport)
         {
@@ -47,8 +57,9 @@ namespace Switch_Toolbox.Library
 
             viewport.Show(dockPanel, DockState.Document);
         }
-        public bool IsContentActive(DockContent dockContent)
+        public bool IsContentActive(DockContent DockContent)
         {
+            dockContent = DockContent;
             return dockPanel.Contents.Contains(dockContent);
         }
     }

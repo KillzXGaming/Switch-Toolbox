@@ -274,16 +274,17 @@ namespace FirstPlugin
 
             if (settings.MipCount == 0)
                 settings.MipCount = 1;
-       
+
+            ChannelType[] channels = TextureData.SetChannelsByFormat(settings.Format);
+            tex.ChannelRed = channels[0];
+            tex.ChannelGreen = channels[1];
+            tex.ChannelBlue = channels[2];
+            tex.ChannelAlpha = channels[3];
             tex.sparseBinding = settings.sparseBinding;
             tex.sparseResidency = settings.sparseResidency;
             tex.AccessFlags = settings.AccessFlags;
             tex.ArrayLength = settings.arrayLength;
             tex.MipCount = settings.MipCount;
-            tex.ChannelRed = settings.RedComp;
-            tex.ChannelGreen = settings.GreenComp;
-            tex.ChannelBlue = settings.BlueComp;
-            tex.ChannelAlpha = settings.AlphaComp;
             tex.Depth = settings.Depth;
             tex.Dim = settings.Dim;
             tex.Flags = settings.Flags;
