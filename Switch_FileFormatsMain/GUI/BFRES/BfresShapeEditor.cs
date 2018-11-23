@@ -324,7 +324,7 @@ namespace FirstPlugin
             if (LODMeshCB.SelectedIndex != -1)
             {
                 activeShape.DisplayLODIndex = LODMeshCB.SelectedIndex;
-                activeShape.BFRESRender.UpdateVertexData();
+                activeShape.UpdateVertexData();
                 Viewport.Instance.UpdateViewport();
             }
         }

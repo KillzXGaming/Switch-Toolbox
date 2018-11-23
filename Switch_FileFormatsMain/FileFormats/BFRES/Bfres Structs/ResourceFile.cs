@@ -31,6 +31,9 @@ namespace Bfres.Structs
     {
         public BFRESRender BFRESRender;
 
+        public ResFile resFile = null;
+        public ResU.ResFile resFileU = null;
+
         public TreeNode TextureFolder = new TreeNode("Textures");
         public ResourceFile(IFileFormat handler)
         {
@@ -116,44 +119,46 @@ namespace Bfres.Structs
                 BFRESRender.UpdateVertexData();
             }
         }
-        public void Load(ResU.ResFile resFile)
+        public void Load(ResU.ResFile res)
         {
-            Text = resFile.Name;
+            resFileU = res;
 
-            if (resFile.Models.Count > 0)
+            Text = resFileU.Name;
+
+            if (resFileU.Models.Count > 0)
                 Nodes.Add(new FmdlFolder());
-            if (resFile.Textures.Count > 0)
-                AddFTEXTextures(resFile);
-            if (resFile.SkeletalAnims.Count > 0)
-                AddSkeletonAnims(resFile);
-            if (resFile.ShaderParamAnims.Count > 0)
+            if (resFileU.Textures.Count > 0)
+                AddFTEXTextures(resFileU);
+            if (resFileU.SkeletalAnims.Count > 0)
+                AddSkeletonAnims(resFileU);
+            if (resFileU.ShaderParamAnims.Count > 0)
                 Nodes.Add(new FshuFolder());
-            if (resFile.ColorAnims.Count > 0)
+            if (resFileU.ColorAnims.Count > 0)
                 Nodes.Add(new FshuColorFolder());
-            if (resFile.TexSrtAnims.Count > 0)
+            if (resFileU.TexSrtAnims.Count > 0)
                 Nodes.Add(new TexSrtFolder());
-            if (resFile.TexPatternAnims.Count > 0)
+            if (resFileU.TexPatternAnims.Count > 0)
                 Nodes.Add(new TexPatFolder());
-            if (resFile.ShapeAnims.Count > 0)
+            if (resFileU.ShapeAnims.Count > 0)
                 Nodes.Add(new FshpaFolder());
-            if (resFile.BoneVisibilityAnims.Count > 0)
+            if (resFileU.BoneVisibilityAnims.Count > 0)
                 Nodes.Add(new FbnvFolder());
-            if (resFile.SceneAnims.Count > 0)
+            if (resFileU.SceneAnims.Count > 0)
                 Nodes.Add(new FscnFolder());
-            if (resFile.ExternalFiles.Count > 0)
+            if (resFileU.ExternalFiles.Count > 0)
                 Nodes.Add(new EmbeddedFilesFolder());
 
-            foreach (var anim in resFile.ShaderParamAnims)
+            foreach (var anim in resFileU.ShaderParamAnims)
                 Nodes["FSHA"].Nodes.Add(anim.Key);
-            foreach (var anim in resFile.ColorAnims)
+            foreach (var anim in resFileU.ColorAnims)
                 Nodes["FSHAColor"].Nodes.Add(anim.Key);
-            foreach (var anim in resFile.TexSrtAnims)
+            foreach (var anim in resFileU.TexSrtAnims)
                 Nodes["TEXSRT"].Nodes.Add(anim.Key);
-            foreach (var anim in resFile.TexPatternAnims)
+            foreach (var anim in resFileU.TexPatternAnims)
                 Nodes["TEXPAT"].Nodes.Add(anim.Key);
 
             int ext = 0;
-            foreach (var extfile in resFile.ExternalFiles)
+            foreach (var extfile in resFileU.ExternalFiles)
             {
                 string Name = extfile.Key;
 
@@ -172,8 +177,10 @@ namespace Bfres.Structs
                 ext++;
             }
         }
-        public void Load(ResFile resFile)
+        public void Load(ResFile res)
         {
+            resFile = res;
+
             Text = resFile.Name;
             UpdateTree(resFile);
 
@@ -214,9 +221,9 @@ namespace Bfres.Structs
         private void NewTextureFile(object sender, EventArgs args)
         {
             string Name = "textures";
-            for (int i = 0; i < BFRESRender.resFile.ExternalFiles.Count; i++)
+            for (int i = 0; i < resFile.ExternalFiles.Count; i++)
             {
-                if (BFRESRender.resFile.ExternalFileDict.GetKey(i) == Name)
+                if (resFile.ExternalFileDict.GetKey(i) == Name)
                     Name = Name + i;
             }
             if (!Nodes.ContainsKey("EXT"))
@@ -225,7 +232,7 @@ namespace Bfres.Structs
             }
             BNTX bntx = new BNTX();
             bntx.Data = new byte[0];
-            BinaryTextureContainer bntxTreeNode = new BinaryTextureContainer(new byte[0], "textures", BFRESRender.resFile.Name);
+            BinaryTextureContainer bntxTreeNode = new BinaryTextureContainer(new byte[0], "textures", resFile.Name);
             Nodes["EXT"].Nodes.Add(bntxTreeNode);
 
         }
@@ -288,7 +295,6 @@ namespace Bfres.Structs
             foreach (ResU.SkeletalAnim ska in resFile.SkeletalAnims.Values)
             {
                 BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
-                skeletonAnim.BFRESRender = BFRESRender;
                 skeletonAnim.Read(ska, resFile);
                 fksaFolder.Nodes.Add(skeletonAnim);
             }
@@ -300,7 +306,6 @@ namespace Bfres.Structs
             foreach (SkeletalAnim ska in resFile.SkeletalAnims)
             {
                 BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
-                skeletonAnim.BFRESRender = BFRESRender;
                 skeletonAnim.Read(ska, resFile);
                 fksaFolder.Nodes.Add(skeletonAnim);
             }
@@ -318,7 +323,6 @@ namespace Bfres.Structs
             {
                 FSCN sceneAnim = new FSCN();
                 sceneAnim.Text = scn.Name;
-                sceneAnim.BFRESRender = BFRESRender;
                 sceneAnim.Read(scn);
                 fscnFolder.Nodes.Add(sceneAnim);
             }

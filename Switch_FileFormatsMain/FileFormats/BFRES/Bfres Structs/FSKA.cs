@@ -60,7 +60,6 @@ namespace Bfres.Structs
             ZROT = 0x28,
         }
         public SkeletalAnim SkeletalAnim;
-        public BFRESRender BFRESRender;
 
         public BfresSkeletonAnim()
         {
@@ -90,6 +89,11 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(replace);
             replace.Click += Replace;
         }
+        public ResFile GetResFile()
+        {
+            //ResourceFile -> FMDL -> Material Folder -> this
+            return ((ResourceFile)Parent.Parent).resFile;
+        }
         private void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -99,7 +103,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                SkeletalAnim.Export(sfd.FileName, BFRESRender.resFile);
+                SkeletalAnim.Export(sfd.FileName, GetResFile());
             }
         }
         private void Replace(object sender, EventArgs args)

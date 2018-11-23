@@ -60,9 +60,27 @@ namespace Bfres.Structs
     {
         public List<FSHP> shapes = new List<FSHP>();
         public Dictionary<string, FMAT> materials = new Dictionary<string, FMAT>();
-        public BFRESRender BFRESRender;
         public Model Model;
         public ResU.Model ModelU;
+
+        public ResFile GetResFile()
+        {
+            //ResourceFile -> FMDL -> Material Folder -> this
+            return ((ResourceFile)Parent.Parent).resFile;
+        }
+        public ResU.ResFile GetResFileU()
+        {
+            return ((ResourceFile)Parent.Parent).resFileU;
+        }
+        public void UpdateVertexData()
+        {
+            ((ResourceFile)Parent.Parent).BFRESRender.UpdateVertexData();
+        }
+        public List<FMDL> GetModelList()
+        {
+            return ((ResourceFile)Parent.Parent).BFRESRender.models;
+        }
+
 
         public FMDL()
         {
@@ -105,7 +123,7 @@ namespace Bfres.Structs
 
                 shp.SaveVertexBuffer();
             }
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
         private void RecalculateNormals(object sender, EventArgs args)
@@ -119,7 +137,7 @@ namespace Bfres.Structs
 
                 shp.SaveVertexBuffer();
             }
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
         private void Rename(object sender, EventArgs args)
@@ -181,13 +199,13 @@ namespace Bfres.Structs
                 shp.SaveVertexBuffer();
             }
 
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
         public void CopyMaterial(FMAT selectedMaterial)
         {
             CopyMaterialMenu menu = new CopyMaterialMenu();
-            menu.LoadMaterials(selectedMaterial.Text, BFRESRender.models);
+            menu.LoadMaterials(selectedMaterial.Text, GetModelList());
             if (menu.ShowDialog() == DialogResult.OK)
             {
                 foreach (TreeNode mdl in menu.materialTreeView.Nodes)
@@ -281,7 +299,7 @@ namespace Bfres.Structs
                 switch (ext)
                 {
                     case ".bfmdl":
-                        Model.Export(sfd.FileName, BFRESRender.resFile);
+                        Model.Export(sfd.FileName, GetResFile());
                         break;
                     case ".csv":
                         CsvModel csv = new CsvModel();
@@ -360,7 +378,6 @@ namespace Bfres.Structs
 
                     FSHP shapeS = new FSHP();
                     shapeS.Shape = shpS;
-                    shapeS.BFRESRender = BFRESRender;
                     BfresSwitch.ReadShapesVertices(shapeS, shpS, vertexBuffer, this);
                     shapes.Add(shapeS);
                     Nodes["FshpFolder"].Nodes.Add(shapeS);
@@ -370,7 +387,7 @@ namespace Bfres.Structs
                     Cursor.Current = Cursors.WaitCursor;
                     shapes.Clear();
                     Model mdl = new Model();
-                    mdl.Import(FileName, BFRESRender.resFile);
+                    mdl.Import(FileName, GetResFile());
                     mdl.Name = Text;
                     shapes.Clear();
                     Nodes["FshpFolder"].Nodes.Clear();
@@ -417,7 +434,6 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.SaveShape();
                             shape.SaveVertexBuffer();
-                            shape.BFRESRender = BFRESRender;
                             shape.BoneIndices = new List<ushort>();
 
                             Nodes["FshpFolder"].Nodes.Add(shape);
@@ -574,7 +590,6 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.SaveShape();
                             shape.SaveVertexBuffer();
-                            shape.BFRESRender = BFRESRender;
                             shape.BoneIndices = new List<ushort>();
 
                             List<string> keyList = shapes.Select(o => o.Text).ToList();
@@ -587,7 +602,7 @@ namespace Bfres.Structs
                     }
                     break;
             }
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
         }
         public FMAT GetMaterial(int index)
         {
@@ -611,7 +626,6 @@ namespace Bfres.Structs
                     mat.Material = new Material();
                     mat.Material.Import(FileName);
                     mat.ReadMaterial(mat.Material);
-                    mat.BFRESRender = BFRESRender;
                     mat.Text = mat.Material.Name;
 
                     materials.Add(mat.Text, mat);

@@ -170,6 +170,7 @@ namespace FirstPlugin
             format = (int)tex.Format;
             int swizzle = (int)tex.Swizzle;
             int pitch = (int)tex.Pitch;
+
             renderedTex.data = GTX.swizzleBC(tex.Data, renderedTex.width, renderedTex.height, format, (int)tex.TileMode, pitch, swizzle);
         }
 
@@ -393,6 +394,7 @@ namespace FirstPlugin
                 }
                 set
                 {
+                    mipmaps.Clear();
                     List<byte[]> mips = new List<byte[]>();
                     mips.Add(value);
                     mipmaps.Add(mips);

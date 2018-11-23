@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTex", "Switch_Toolbox\Lib\DirectXTex\DirectXTex.vcxproj", "{755AB64B-16B4-4C90-AA3B-BFF448E5A21E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectXTexNet", "DirectXTexNet-master\DirectXTexNet\DirectXTexNet.csproj", "{98495BF2-DED3-4E08-B965-C12D471BC86F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,14 +73,6 @@ Global
 		{755AB64B-16B4-4C90-AA3B-BFF448E5A21E}.Release|Any CPU.Build.0 = Release|Win32
 		{755AB64B-16B4-4C90-AA3B-BFF448E5A21E}.Release|x64.ActiveCfg = Release|x64
 		{755AB64B-16B4-4C90-AA3B-BFF448E5A21E}.Release|x64.Build.0 = Release|x64
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Debug|x64.Build.0 = Debug|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Release|x64.ActiveCfg = Release|Any CPU
-		{98495BF2-DED3-4E08-B965-C12D471BC86F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

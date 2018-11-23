@@ -65,12 +65,25 @@ namespace Bfres.Structs
             rename.Click += Rename;
         }
 
-        public BFRESRender BFRESRender;
         public bool Enabled = true;
 
         public override void OnClick(TreeView treeView)
         {
             FormLoader.LoadMatEditor(this);
+        }
+        public ResFile GetResFile()
+        {
+            //ResourceFile -> FMDL -> Material Folder -> this
+            return ((FMDL)Parent.Parent).GetResFile();
+        }
+        public ResU.ResFile GetResFileU()
+        {
+            return ((FMDL)Parent.Parent).GetResFileU();
+        }
+
+        public void UpdateTextureMaps()
+        {
+           ((ResourceFile)Parent.Parent.Parent.Parent).BFRESRender.UpdateSingleMaterialTextureMaps(this);
         }
 
         public void SetActiveGame()
@@ -115,7 +128,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Material.Export(sfd.FileName, BFRESRender.resFile);
+                Material.Export(sfd.FileName, GetResFile());
             }
         }
         private void Replace(object sender, EventArgs args)

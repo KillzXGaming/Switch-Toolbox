@@ -30,13 +30,11 @@ namespace FirstPlugin
                 model.Nodes.Add(model.Skeleton.node);
                 model.Skeleton.reset();
                 model.Skeleton.update();
-                model.BFRESRender = renderer;
                 model.Skeleton.node.BFRESRender = renderer;
                 model.ModelU = mdl;
                 foreach (Material mat in mdl.Materials.Values)
                 {
                     FMAT FMAT = new FMAT();
-                    FMAT.BFRESRender = renderer;
                     FMAT.Text = mat.Name;
                     FMAT.ReadMaterial(mat);
                     model.Nodes[1].Nodes.Add(FMAT);
@@ -47,7 +45,6 @@ namespace FirstPlugin
                     VertexBuffer vertexBuffer = mdl.VertexBuffers[shp.VertexBufferIndex];
                     Material material = mdl.Materials[shp.MaterialIndex];
                     FSHP mesh = new FSHP();
-                    mesh.BFRESRender = renderer;
                     mesh.ModelIndex = CurMdl;
                     ReadShapesVertices(mesh, shp, vertexBuffer, model);
                     mesh.MaterialIndex = shp.MaterialIndex;
@@ -619,7 +616,7 @@ namespace FirstPlugin
                 TextureRef texref = new TextureRef();
                 texref.Name = textu.Name;
                 Texture texMapped = new Texture();
-                m.BFRESRender.resFileU.Textures.TryGetValue(textu.Name, out texMapped);
+                m.GetResFileU().Textures.TryGetValue(textu.Name, out texMapped);
                 texref.Texture = texMapped;
                 mat.TextureRefs.Add(texref);
             }

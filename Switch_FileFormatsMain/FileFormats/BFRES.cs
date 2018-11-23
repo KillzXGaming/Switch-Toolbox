@@ -145,12 +145,14 @@ namespace FirstPlugin
         }
         private void SaveSwitch(MemoryStream mem)
         {
+            var resFile = bfres.ResFileNode.resFile;
+
             int CurMdl = 0;
             foreach (FMDL model in bfres.models)
             {
-                bfres.resFile.Models[CurMdl].Shapes.Clear();
-                bfres.resFile.Models[CurMdl].VertexBuffers.Clear();
-                bfres.resFile.Models[CurMdl].Materials.Clear();
+                resFile.Models[CurMdl].Shapes.Clear();
+                resFile.Models[CurMdl].VertexBuffers.Clear();
+                resFile.Models[CurMdl].Materials.Clear();
 
                 int i = 0;
                 var duplicates = model.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
@@ -162,43 +164,45 @@ namespace FirstPlugin
                     CheckMissingTextures(shape);
                     BfresSwitch.SetShape(shape, shape.Shape);
 
-                    bfres.resFile.Models[CurMdl].Shapes.Add(shape.Shape);
-                    bfres.resFile.Models[CurMdl].VertexBuffers.Add(shape.VertexBuffer);
-                    shape.Shape.VertexBufferIndex = (ushort)(bfres.resFile.Models[CurMdl].VertexBuffers.Count - 1);
+                    resFile.Models[CurMdl].Shapes.Add(shape.Shape);
+                    resFile.Models[CurMdl].VertexBuffers.Add(shape.VertexBuffer);
+                    shape.Shape.VertexBufferIndex = (ushort)(resFile.Models[CurMdl].VertexBuffers.Count - 1);
 
                     SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
                 }
                 foreach (FMAT mat in model.materials.Values)
                 {
                     BfresSwitch.SetMaterial(mat, mat.Material);
-                    bfres.resFile.Models[CurMdl].Materials.Add(mat.Material);
+                    resFile.Models[CurMdl].Materials.Add(mat.Material);
                 }
                 CurMdl++;
             }
-            bfres.resFile.SkeletalAnims.Clear();
+            resFile.SkeletalAnims.Clear();
             if (EditorRoot.Nodes.ContainsKey("FSKA"))
             {
                 foreach (BfresSkeletonAnim ska in EditorRoot.Nodes["FSKA"].Nodes)
                 {
-                    bfres.resFile.SkeletalAnims.Add(ska.SkeletalAnim);
+                    resFile.SkeletalAnims.Add(ska.SkeletalAnim);
                 }
             }
 
             ErrorCheck();
 
-            BfresSwitch.WriteExternalFiles(bfres.resFile, EditorRoot);
-            bfres.resFile.Save(mem);
+            BfresSwitch.WriteExternalFiles(resFile, EditorRoot);
+            resFile.Save(mem);
         }
         private void SaveWiiU(MemoryStream mem)
         {
-            bfres.resFileU.Save(mem);
+            var resFileU = bfres.ResFileNode.resFileU;
+
+            resFileU.Save(mem);
 
             int CurMdl = 0;
             foreach (FMDL model in bfres.models)
             {
-                bfres.resFileU.Models[CurMdl].Shapes.Clear();
-                bfres.resFileU.Models[CurMdl].VertexBuffers.Clear();
-                bfres.resFileU.Models[CurMdl].Materials.Clear();
+                resFileU.Models[CurMdl].Shapes.Clear();
+                resFileU.Models[CurMdl].VertexBuffers.Clear();
+                resFileU.Models[CurMdl].Materials.Clear();
 
                 int i = 0;
                 var duplicates = model.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
@@ -210,16 +214,16 @@ namespace FirstPlugin
                     CheckMissingTextures(shape);
                     BfresWiiU.SetShape(shape, shape.ShapeU);
 
-                    bfres.resFileU.Models[CurMdl].Shapes.Add(shape.Text, shape.ShapeU);
-                    bfres.resFileU.Models[CurMdl].VertexBuffers.Add(shape.VertexBufferU);
-                    shape.ShapeU.VertexBufferIndex = (ushort)(bfres.resFileU.Models[CurMdl].VertexBuffers.Count - 1);
+                    resFileU.Models[CurMdl].Shapes.Add(shape.Text, shape.ShapeU);
+                    resFileU.Models[CurMdl].VertexBuffers.Add(shape.VertexBufferU);
+                    shape.ShapeU.VertexBufferIndex = (ushort)(resFileU.Models[CurMdl].VertexBuffers.Count - 1);
 
                     SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
                 }
                 foreach (FMAT mat in model.materials.Values)
                 {
                     BfresWiiU.SetMaterial(mat, mat.MaterialU);
-                    bfres.resFileU.Models[CurMdl].Materials.Add(mat.Text, mat.MaterialU);
+                    resFileU.Models[CurMdl].Materials.Add(mat.Text, mat.MaterialU);
                 }
                 CurMdl++;
             }

@@ -265,9 +265,9 @@ namespace Switch_Toolbox
             f.Dispose();
             f.Close();
 
+             //Check magic first regardless of extension
             foreach (IFileFormat format in SupportedFormats)
             {
-
                 if (format.Magic == Magic || format.Magic == Magic2 || format.Magic.Reverse() == Magic2)
                 {
                     format.CompressionType = CompType;
@@ -290,34 +290,35 @@ namespace Switch_Toolbox
                     if (format.UseEditMenu)
                         editToolStripMenuItem.Enabled = true;
                 }
-                else
+            }
+            //If magic fails, then check extensions
+            foreach (IFileFormat format in SupportedFormats)
+            {
+                foreach (string ext in format.Extension)
                 {
-                    foreach (string ext in format.Extension)
+                    if (ext.Remove(0, 1) == Path.GetExtension(FileName))
                     {
-                        if (ext.Remove(0, 1) == Path.GetExtension(FileName))
+                        format.CompressionType = CompType;
+                        format.FileIsCompressed = Compressed;
+                        format.Data = data;
+                        format.FileName = Path.GetFileName(FileName);
+                        format.FilePath = FileName;
+                        format.Load();
+
+                        if (format.EditorRoot != null)
                         {
-                            format.CompressionType = CompType;
-                            format.FileIsCompressed = Compressed;
-                            format.Data = data;
-                            format.FileName = Path.GetFileName(FileName);
-                            format.FilePath = FileName;
-                            format.Load();
-
-                            if (format.EditorRoot != null)
-                            {
-                                objectList.treeView1.Nodes.Add(format.EditorRoot);
-                            }
-
-                            if (format.CanSave)
-                            {
-                                saveAsToolStripMenuItem.Enabled = true;
-                                saveToolStripMenuItem.Enabled = true;
-                            }
-                            if (format.UseEditMenu)
-                                editToolStripMenuItem.Enabled = true;
+                            objectList.treeView1.Nodes.Add(format.EditorRoot);
                         }
+
+                        if (format.CanSave)
+                        {
+                            saveAsToolStripMenuItem.Enabled = true;
+                            saveToolStripMenuItem.Enabled = true;
+                        }
+                        if (format.UseEditMenu)
+                            editToolStripMenuItem.Enabled = true;
                     }
-                }        
+                }
             }
         }
         private void DisposeControls()
@@ -326,7 +327,9 @@ namespace Switch_Toolbox
         }
         private void RecentFile_click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             OpenFile(sender.ToString());
+            Cursor.Current = Cursors.Default;
         }
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
@@ -362,8 +365,12 @@ namespace Switch_Toolbox
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 foreach (string file in ofd.FileNames)
                     OpenFile(file);
+
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -375,11 +382,15 @@ namespace Switch_Toolbox
 
         private void dockPanel1_DragDrop(object sender, DragEventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string filename in files)
             {
                 OpenFile(filename);
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void dockPanel1_DragEnter(object sender, DragEventArgs e)

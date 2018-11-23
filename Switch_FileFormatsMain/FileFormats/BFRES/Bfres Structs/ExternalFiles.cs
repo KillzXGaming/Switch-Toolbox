@@ -37,7 +37,16 @@ namespace Bfres.Structs
 
             if (dialogResult == DialogResult.Yes)
             {
+                foreach (var ext in Nodes)
+                {
+                    if (ext is BinaryTextureContainer)
+                    {
+                        PluginRuntime.bntxContainers.Remove((BinaryTextureContainer)ext);
+                    }
+                }
+
                 Nodes.Clear();
+                Viewport.Instance.Refresh();
             }
         }
         public override void OnClick(TreeView treeView)

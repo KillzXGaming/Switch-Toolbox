@@ -37,7 +37,7 @@ namespace Bfres.Structs
                 foreach (FMAA fmaa in Nodes)
                 {
                     string FileName = folderPath + '\\' + fmaa.Text + ".bfmaa";
-                    ((FMAA)fmaa).MaterialAnim.Export(FileName, fmaa.BFRESRender.resFile);
+                    ((FMAA)fmaa).MaterialAnim.Export(FileName, fmaa.GetResFile());
                 }
             }
 
@@ -62,6 +62,10 @@ namespace Bfres.Structs
         public BFRESRender BFRESRender;
         public MaterialAnim MaterialAnim;
 
+        public ResFile GetResFile()
+        {
+            return ((ResourceFile)Parent.Parent).resFile;
+        }
         public void Read(MaterialAnim anim)
         {
             MaterialAnim = anim;

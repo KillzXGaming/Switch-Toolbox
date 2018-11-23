@@ -28,9 +28,6 @@ namespace FirstPlugin
         int vbo_position;
         int ibo_elements;
 
-        public ResFile resFile = null;
-        public ResU.ResFile resFileU = null;
-
         public Shader shader = null;
         public List<FMDL> models = new List<FMDL>();
 
@@ -51,18 +48,16 @@ namespace FirstPlugin
             GL.GenBuffers(1, out vbo_position);
             GL.GenBuffers(1, out ibo_elements);
         }
-        public void LoadFile(ResU.ResFile r)
+        public void LoadFile(ResU.ResFile resFileU)
         {
-            resFileU = r;
             ResFileNode.Load(resFileU);
 
             BfresWiiU.Read(this, resFileU, ResFileNode);
             UpdateVertexData();
             UpdateTextureMaps();
         }
-        public void LoadFile(ResFile r)
+        public void LoadFile(ResFile resFile)
         {
-            resFile = r;
             ResFileNode.Load(resFile);
 
             BfresSwitch.Read(this, resFile, ResFileNode);

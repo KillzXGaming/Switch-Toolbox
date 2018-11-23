@@ -40,17 +40,6 @@ namespace Bfres.Structs
                 Nodes.Clear();
             }
         }
-        public void LoadAnimations(ResFile resFile, BFRESRender BFRESRender)
-        {
-            foreach (var scn in resFile.SceneAnims)
-            {
-                FSCN sceneAnim = new FSCN();
-                sceneAnim.Text = scn.Name;
-                sceneAnim.BFRESRender = BFRESRender;
-                sceneAnim.Read(scn);
-                Nodes.Add(sceneAnim);
-            }
-        }
 
         public override void OnClick(TreeView treeView)
         {
@@ -61,8 +50,6 @@ namespace Bfres.Structs
     public class FSCN : TreeNodeCustom
     {
         public SceneAnim SceneAnim;
-        public BFRESRender BFRESRender;
-
         public FSCN()
         {
             ImageKey = "skeletonAnimation";
@@ -77,6 +64,11 @@ namespace Bfres.Structs
             replace.Click += Replace;
         }
 
+        public ResFile GetResFile()
+        {
+            return ((ResourceFile)Parent.Parent).resFile;
+        }
+
         private void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -86,7 +78,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                SceneAnim.Export(sfd.FileName, BFRESRender.resFile);
+                SceneAnim.Export(sfd.FileName, GetResFile());
             }
         }
         private void Replace(object sender, EventArgs args)

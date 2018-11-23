@@ -41,7 +41,7 @@ namespace Bfres.Structs
             {
                 Nodes.Clear();
                 ((FMDL)Parent).shapes.Clear();
-                ((FMDL)Parent).BFRESRender.UpdateVertexData();
+                ((FMDL)Parent).UpdateVertexData();
             }
         }
         private void ExportAll(object sender, EventArgs args)
@@ -134,8 +134,6 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(rename);
             rename.Click += Rename;
         }
-
-        public BFRESRender BFRESRender;
         public FMATEditor editor;
         public int ModelIndex; //For getting the model the shape is in
 
@@ -143,6 +141,24 @@ namespace Bfres.Structs
         public Shape Shape;
         public ResU.VertexBuffer VertexBufferU;
         public ResU.Shape ShapeU;
+
+        public ResFile GetResFile()
+        {
+            //ResourceFile -> FMDL -> Material Folder -> this
+            return ((FMDL)Parent.Parent).GetResFile();
+        }
+        public ResU.ResFile GetResFileU()
+        {
+            return ((FMDL)Parent.Parent).GetResFileU();
+        }
+        public void UpdateVertexData()
+        {
+            ((FMDL)Parent.Parent).UpdateVertexData();
+        }
+        public List<FMDL> GetModelList()
+        {
+           return ((FMDL)Parent.Parent).GetModelList();
+        }
 
         public FMAT GetMaterial()
         {
@@ -162,7 +178,7 @@ namespace Bfres.Structs
             Cursor.Current = Cursors.WaitCursor;
             SmoothNormals();
             SaveVertexBuffer();
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
         private void RecalculateNormals(object sender, EventArgs args)
@@ -170,7 +186,7 @@ namespace Bfres.Structs
             Cursor.Current = Cursors.WaitCursor;
             CalculateNormals();
             SaveVertexBuffer();
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
         private void Rename(object sender, EventArgs args)
@@ -190,7 +206,7 @@ namespace Bfres.Structs
             if (dialogResult == DialogResult.Yes)
             {
                 ((FMDL)Parent.Parent).shapes.Remove(this);
-                ((FMDL)Parent.Parent).BFRESRender.UpdateVertexData();
+                ((FMDL)Parent.Parent).UpdateVertexData();
                 Parent.Nodes.Remove(this);
             }
         }
@@ -320,7 +336,7 @@ namespace Bfres.Structs
 
             CalculateTangentBitangent();
             SaveVertexBuffer();
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
         public bool HasUV0()
@@ -345,7 +361,7 @@ namespace Bfres.Structs
 
             FlipUvsVertical();
             SaveVertexBuffer();
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
         }
         public void FlipUvsHorizontal(object sender, EventArgs args)
         {
@@ -357,7 +373,7 @@ namespace Bfres.Structs
 
             FlipUvsHorizontal();
             SaveVertexBuffer();
-            BFRESRender.UpdateVertexData();
+            UpdateVertexData();
         }
         public void ExportMaterials(object sender, EventArgs args)
         {
@@ -368,7 +384,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                GetMaterial().Material.Export(sfd.FileName, BFRESRender.resFile);
+                GetMaterial().Material.Export(sfd.FileName, GetResFile());
             }
         }
         public void ReplaceMaterials(object sender, EventArgs args)
@@ -414,7 +430,7 @@ namespace Bfres.Structs
         }
         public void ExportBinaryObject(string FileName)
         {
-            Shape.Export(FileName, BFRESRender.resFile);
+            Shape.Export(FileName, GetResFile());
         }
         public void Replace(object sender, EventArgs args)
         {
@@ -438,7 +454,7 @@ namespace Bfres.Structs
                         shp.Import(ofd.FileName, VertexBuffer);
                         shp.Name = Text;
                         shp.MaterialIndex = (ushort)MaterialIndex;
-                        BfresSwitch.ReadShapesVertices(this, shp, VertexBuffer, BFRESRender.models[ModelIndex]);
+                        BfresSwitch.ReadShapesVertices(this, shp, VertexBuffer, GetModelList()[ModelIndex]);
                         break;
                     default:
                         AssimpData assimp = new AssimpData();
@@ -474,7 +490,7 @@ namespace Bfres.Structs
                         }
                         break;
                 }
-                BFRESRender.UpdateVertexData();
+                UpdateVertexData();
             }
         }
         public void CreateIndexList(GenericObject ob, FMDL mdl = null)

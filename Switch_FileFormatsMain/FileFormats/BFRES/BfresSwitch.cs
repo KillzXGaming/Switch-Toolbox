@@ -28,13 +28,11 @@ namespace FirstPlugin
                 model.Nodes.Add(model.Skeleton.node);
                 model.Skeleton.reset();
                 model.Skeleton.update();
-                model.BFRESRender = renderer;
                 model.Skeleton.node.BFRESRender = renderer;
                 model.Model = mdl;
                 foreach (Material mat in mdl.Materials)
                 {
                     FMAT FMAT = new FMAT();
-                    FMAT.BFRESRender = renderer;
                     FMAT.Text = mat.Name;
                     FMAT.ReadMaterial(mat);
                     model.Nodes[1].Nodes.Add(FMAT);
@@ -45,7 +43,6 @@ namespace FirstPlugin
                     VertexBuffer vertexBuffer = mdl.VertexBuffers[shp.VertexBufferIndex];
                     Material material = mdl.Materials[shp.MaterialIndex];
                     FSHP mesh = new FSHP();
-                    mesh.BFRESRender = renderer;
                     mesh.ModelIndex = CurMdl;
                     ReadShapesVertices(mesh, shp, vertexBuffer, model);
                     mesh.MaterialIndex = shp.MaterialIndex;
@@ -449,9 +446,6 @@ namespace FirstPlugin
                 curve.CurveType = AnimCurveType.StepBool;
                 curve.Keys = new float[keyGroup.Keys.Count, 1];
             }
-
-
-
             return curve;
         }
 
@@ -472,7 +466,6 @@ namespace FirstPlugin
             {
                 BfresBone STBone = new BfresBone(RenderableSkeleton);
                 SetBone(STBone, bone);
-                STBone.BFRESRender = RenderableSkeleton.node.BFRESRender; //to update viewport on bone edits
                 RenderableSkeleton.bones.Add(STBone);
             }
             RenderableSkeleton.update();

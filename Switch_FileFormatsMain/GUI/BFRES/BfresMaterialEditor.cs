@@ -19,8 +19,6 @@ namespace FirstPlugin
     {
         public FMAT material;
 
-        public BFRESRender bfresRender;
-
         public ImageList textureImageList;
         public string SelectedMatParam = "";
         public ImageList il = new ImageList();
@@ -46,9 +44,8 @@ namespace FirstPlugin
         {
 
         }
-        public void LoadMaterial(FMAT mat, BFRESRender bfres)
+        public void LoadMaterial(FMAT mat)
         {
-            bfresRender = bfres;
             material = mat;
             textBoxMaterialName.Text = material.Text;
 
@@ -320,7 +317,7 @@ namespace FirstPlugin
             {
                 material.textures[index].Name = tex.GetSelectedTexture();
                 InitializeTextureListView(material);
-                bfresRender.UpdateSingleMaterialTextureMaps(material);
+                material.UpdateTextureMaps();
             }
         }
 

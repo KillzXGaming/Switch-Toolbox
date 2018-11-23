@@ -43,7 +43,7 @@ namespace Bfres.Structs
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    Skeleton.Export(sfd.FileName, BFRESRender.resFile);
+                    Skeleton.Export(sfd.FileName, ((FMDL)Parent).GetResFile());
                 }
             }
             public void Replace(object sender, EventArgs args)
@@ -58,12 +58,10 @@ namespace Bfres.Structs
                     Skeleton.Import(ofd.FileName);
                 }
             }
-
             public override void OnClick(TreeView treeView)
             {
 
             }
-
         }
         public FSKL()
         {
@@ -107,6 +105,11 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(replace);
             replace.Click += Replace;
         }
+        public ResFile GetResFile()
+        {
+            //ResourceFile -> FMDL -> Material Folder -> this
+            return ((FMDL)Parent.Parent).GetResFile();
+        }
         public void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -116,7 +119,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Bone.Export(sfd.FileName, BFRESRender.resFile);
+                Bone.Export(sfd.FileName, GetResFile());
             }
         }
         public void Replace(object sender, EventArgs args)
