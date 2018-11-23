@@ -30,7 +30,16 @@ namespace Bfres.Structs
         }
         private void ExportAll(object sender, EventArgs args)
         {
-
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = sfd.SelectedPath;
+                foreach (FSCN fscn in Nodes)
+                {
+                    string FileName = folderPath + '\\' + fscn.Text + ".bfscn";
+                    ((FSCN)fscn).SceneAnim.Export(FileName, fscn.GetResFile());
+                }
+            }
         }
         private void Clear(object sender, EventArgs args)
         {

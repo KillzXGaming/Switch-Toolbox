@@ -71,7 +71,7 @@ namespace Bfres.Structs
         {
             node = new fsklNode();
             node.Skeleton = skl;
-            BfresSwitch.SetSkeleton(node, skl, this);
+            BfresSwitch.ReadSkeleton(node, skl, this);
         }
         public FSKL(ResU.Skeleton skl)
         {

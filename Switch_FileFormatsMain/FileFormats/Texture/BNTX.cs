@@ -727,30 +727,20 @@ namespace FirstPlugin
         }
         public override void OnClick(TreeView treeView)
         {
-            if (LibraryGUI.Instance.dockContent != null && !EditorIsActive(LibraryGUI.Instance.dockContent))
-            {
-                BNTXEditor BNTXEditor = new BNTXEditor();
-                BNTXEditor.Text = Text;
-                BNTXEditor.Dock = DockStyle.Fill;
-                BNTXEditor.LoadProperty(this);
-                LibraryGUI.Instance.LoadDockContent(BNTXEditor, PluginRuntime.FSHPDockState);
-            }
+            UpdateBNTXEditor();
         }
-        public bool EditorIsActive(DockContent dock)
+        public void UpdateBNTXEditor()
         {
-            foreach (Control ctrl in dock.Controls)
+            BNTXEditor docked = (BNTXEditor)LibraryGUI.Instance.GetContentDocked(new BNTXEditor());
+            if (docked == null)
             {
-                if (ctrl is BNTXEditor)
-                {
-                    dock.Text = Text;
-                    ((BNTXEditor)ctrl).LoadProperty(this);
-                    return true;
-                }
+                docked = new BNTXEditor();
+                LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
             }
-
-            return false;
+            docked.Text = Text;
+            docked.Dock = DockStyle.Fill;
+            docked.LoadProperty(this);
         }
-
         public BRTI_Texture LoadOpenGLTexture()
         {
             if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
@@ -1121,8 +1111,7 @@ namespace FirstPlugin
                 }
                 Texture.Name = Text;
                 UpdateBfresTextureMapping();
-
-                //LibraryGUI.Instance.LoadDockContent(BNTXEditor);
+                UpdateBNTXEditor();
             }
         }
         private void UpdateBfresTextureMapping()

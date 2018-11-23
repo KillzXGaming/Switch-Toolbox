@@ -134,7 +134,6 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(rename);
             rename.Click += Rename;
         }
-        public FMATEditor editor;
         public int ModelIndex; //For getting the model the shape is in
 
         public VertexBuffer VertexBuffer;
@@ -171,7 +170,19 @@ namespace Bfres.Structs
 
         public override void OnClick(TreeView treeView)
         {
-            FormLoader.LoadShapeEditor(this);
+            UpdateFSHPEditor();
+        }
+        public void UpdateFSHPEditor()
+        {
+            FSHPEditor docked = (FSHPEditor)LibraryGUI.Instance.GetContentDocked(new FSHPEditor());
+            if (docked == null)
+            {
+                docked = new FSHPEditor();
+                LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
+            }
+            docked.Text = Text;
+            docked.Dock = DockStyle.Fill;
+            docked.LoadObject((FMDL)Parent.Parent, this);
         }
         private void SmoothNormals(object sender, EventArgs args)
         {
@@ -288,7 +299,7 @@ namespace Bfres.Structs
         }
         private void OpenMaterialEditor(object sender, EventArgs args)
         {
-            FormLoader.LoadMatEditor(GetMaterial());
+           GetMaterial().UpdateFMATEditor();
         }
         private void CalcTansBitans(object sender, EventArgs args)
         {

@@ -17,6 +17,36 @@ namespace FirstPlugin
 {
     public static class BfresSwitch
     {
+        public static Model SetModel(FMDL fmdl)
+        {
+            Model model = new Model();
+
+            int i = 0;
+            var duplicates = fmdl.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
+            foreach (var shape in duplicates)
+                shape.Text += i++;
+
+            foreach (FSHP shape in fmdl.shapes)
+            {
+                BFRES.CheckMissingTextures(shape);
+                SetShape(shape, shape.Shape);
+
+                model.Shapes.Add(shape.Shape);
+                model.VertexBuffers.Add(shape.VertexBuffer);
+
+                shape.Shape.VertexBufferIndex = (ushort)(model.VertexBuffers.Count - 1);
+
+                BFRES.SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
+            }
+            foreach (FMAT mat in fmdl.materials.Values)
+            {
+                SetMaterial(mat, mat.Material);
+                model.Materials.Add(mat.Material);
+            }
+
+
+            return model;
+        }
         public static void Read(BFRESRender renderer, ResFile resFile, TreeNode ResFileNode)
         {
             int CurMdl = 0;
@@ -119,7 +149,6 @@ namespace FirstPlugin
             }
             return Shape;
         }
-
         public static void ReadShapesVertices(FSHP fshp, Shape shp, VertexBuffer vertexBuffer, FMDL model)
         {
             fshp.boundingBoxes.Clear();
@@ -448,8 +477,7 @@ namespace FirstPlugin
             }
             return curve;
         }
-
-        public static void SetSkeleton(this TreeNodeCustom skl, Skeleton skeleton, FSKL RenderableSkeleton)
+        public static void ReadSkeleton(this TreeNodeCustom skl, Skeleton skeleton, FSKL RenderableSkeleton)
         {
             if (skeleton.MatrixToBoneList == null)
                 skeleton.MatrixToBoneList = new List<ushort>();
@@ -465,7 +493,7 @@ namespace FirstPlugin
             foreach (Bone bone in skeleton.Bones)
             {
                 BfresBone STBone = new BfresBone(RenderableSkeleton);
-                SetBone(STBone, bone);
+                ReadBone(STBone, bone);
                 RenderableSkeleton.bones.Add(STBone);
             }
             RenderableSkeleton.update();
@@ -477,7 +505,7 @@ namespace FirstPlugin
 
             Runtime.abstractGlDrawables.Add(RenderableSkeleton);
         }
-        public static void SetBone(this BfresBone bone, Bone bn)
+        public static void ReadBone(this BfresBone bone, Bone bn)
         {
             bone.Bone = bn;
             bone.Text = bn.Name;
@@ -928,7 +956,6 @@ namespace FirstPlugin
                 mat.ShaderAssign.AttribAssigns.Add(att.Value);
             }
         }
-
         public static void WriteExternalFiles(ResFile resFile, TreeNode EditorRoot)
         {
             resFile.ExternalFiles.Clear();

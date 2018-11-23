@@ -147,43 +147,44 @@ namespace FirstPlugin
         {
             var resFile = bfres.ResFileNode.resFile;
 
-            int CurMdl = 0;
-            foreach (FMDL model in bfres.models)
-            {
-                resFile.Models[CurMdl].Shapes.Clear();
-                resFile.Models[CurMdl].VertexBuffers.Clear();
-                resFile.Models[CurMdl].Materials.Clear();
-
-                int i = 0;
-                var duplicates = model.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
-                foreach (var shape in duplicates)
-                    shape.Text += i++;
-
-                foreach (FSHP shape in model.shapes)
-                {
-                    CheckMissingTextures(shape);
-                    BfresSwitch.SetShape(shape, shape.Shape);
-
-                    resFile.Models[CurMdl].Shapes.Add(shape.Shape);
-                    resFile.Models[CurMdl].VertexBuffers.Add(shape.VertexBuffer);
-                    shape.Shape.VertexBufferIndex = (ushort)(resFile.Models[CurMdl].VertexBuffers.Count - 1);
-
-                    SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
-                }
-                foreach (FMAT mat in model.materials.Values)
-                {
-                    BfresSwitch.SetMaterial(mat, mat.Material);
-                    resFile.Models[CurMdl].Materials.Add(mat.Material);
-                }
-                CurMdl++;
-            }
+            resFile.Models.Clear();
             resFile.SkeletalAnims.Clear();
+            resFile.MaterialAnims.Clear();
+            resFile.SceneAnims.Clear();
+            resFile.ShapeAnims.Clear();
+            resFile.BoneVisibilityAnims.Clear();
+
+
+            int CurMdl = 0;
+            if (EditorRoot.Nodes.ContainsKey("FMDL"))
+            {
+                foreach (FMDL model in EditorRoot.Nodes["FMDL"].Nodes)
+                    resFile.Models.Add(BfresSwitch.SetModel(model));
+            }
             if (EditorRoot.Nodes.ContainsKey("FSKA"))
             {
                 foreach (BfresSkeletonAnim ska in EditorRoot.Nodes["FSKA"].Nodes)
-                {
                     resFile.SkeletalAnims.Add(ska.SkeletalAnim);
-                }
+            }
+            if (EditorRoot.Nodes.ContainsKey("FMAA"))
+            {
+                foreach (FMAA fmaa in EditorRoot.Nodes["FMAA"].Nodes)
+                    resFile.MaterialAnims.Add(fmaa.MaterialAnim);
+            }
+            if (EditorRoot.Nodes.ContainsKey("FBNV"))
+            {
+                foreach (FBNV fbnv in EditorRoot.Nodes["FBNV"].Nodes)
+                    resFile.BoneVisibilityAnims.Add(fbnv.VisibilityAnim);
+            }
+            if (EditorRoot.Nodes.ContainsKey("FSHPA"))
+            {
+                foreach (FSHA fsha in EditorRoot.Nodes["FSHPA"].Nodes)
+                    resFile.ShapeAnims.Add(fsha.ShapeAnim);
+            }
+            if (EditorRoot.Nodes.ContainsKey("FSCN"))
+            {
+                foreach (FSCN fscn in EditorRoot.Nodes["FSCN"].Nodes)
+                    resFile.SceneAnims.Add(fscn.SceneAnim);
             }
 
             ErrorCheck();
@@ -229,7 +230,7 @@ namespace FirstPlugin
             }
         }
 
-        private void SetShaderAssignAttributes(FMAT.ShaderAssign shd, FSHP shape)
+        public static void SetShaderAssignAttributes(FMAT.ShaderAssign shd, FSHP shape)
         {
             foreach (var att in shape.vertexAttributes)
             {
@@ -259,9 +260,9 @@ namespace FirstPlugin
             }
         }
 
-        bool ImportMissingTextures = false;
-        private void CheckMissingTextures(FSHP shape)
+        public static void CheckMissingTextures(FSHP shape)
         {
+            bool ImportMissingTextures = false;
             foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
             {
                 foreach (MatTexture tex in shape.GetMaterial().textures)

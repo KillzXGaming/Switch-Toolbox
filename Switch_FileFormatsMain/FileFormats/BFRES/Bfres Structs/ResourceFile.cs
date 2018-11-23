@@ -107,9 +107,9 @@ namespace Bfres.Structs
         public override void OnClick(TreeView treeView)
         {
             //If has models
-            if (Nodes.ContainsKey("FMDLFolder"))
+            if (Nodes.ContainsKey("FMDL"))
             {
-                if (Nodes["FMDLFolder"].Nodes.ContainsKey("FshpFolder"))
+                if (Nodes["FMDL"].Nodes.ContainsKey("FshpFolder"))
                 {
 
                 }

@@ -69,7 +69,19 @@ namespace Bfres.Structs
 
         public override void OnClick(TreeView treeView)
         {
-            FormLoader.LoadMatEditor(this);
+            UpdateFMATEditor();
+        }
+        public void UpdateFMATEditor()
+        {
+            FMATEditor docked = (FMATEditor)LibraryGUI.Instance.GetContentDocked(new FMATEditor());
+            if (docked == null)
+            {
+                docked = new FMATEditor();
+                LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
+            }
+            docked.Text = Text;
+            docked.Dock = DockStyle.Fill;
+            docked.LoadMaterial(this);
         }
         public ResFile GetResFile()
         {

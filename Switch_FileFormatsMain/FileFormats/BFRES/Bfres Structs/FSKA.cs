@@ -33,7 +33,16 @@ namespace Bfres.Structs
         }
         public void ExportAll(object sender, EventArgs args)
         {
-
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = sfd.SelectedPath;
+                foreach (BfresSkeletonAnim fska in Nodes)
+                {
+                    string FileName = folderPath + '\\' + fska.Text + ".bfska";
+                    ((BfresSkeletonAnim)fska).SkeletalAnim.Export(FileName, fska.GetResFile());
+                }
+            }
         }
         private void Clear(object sender, EventArgs args)
         {

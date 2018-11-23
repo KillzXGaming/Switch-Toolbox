@@ -18,7 +18,7 @@ namespace Bfres.Structs
         public FmdlFolder()
         {
             Text = "Models";
-            Name = "FMDLFolder";
+            Name = "FMDL";
 
             ContextMenu = new ContextMenu();
             MenuItem import = new MenuItem("Import");

@@ -29,12 +29,12 @@ namespace Switch_Toolbox.Library
         }
         public UserControl GetContentDocked(UserControl control)
         {
-            foreach (DockContent dockContent in dockPanel.Contents)
-            {
-                foreach (Control ctrl in dockContent.Controls)
-                    if (ctrl.GetType() == control.GetType())
-                        return (UserControl)ctrl;
-            }
+            if (dockContent == null)
+                return null;
+
+            foreach (Control ctrl in dockContent.Controls)
+                if (ctrl.GetType() == control.GetType())
+                    return (UserControl)ctrl;
             return null;
         }
         public DockContent GetContentDocked(DockContent DockContent)

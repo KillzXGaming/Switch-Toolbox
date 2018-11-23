@@ -69,23 +69,5 @@ namespace FirstPlugin
             }
             return false;
         }
-
-        public static void LoadMatEditor(FMAT mat)
-        {
-            FMATEditor editor = new FMATEditor();
-            editor.Text = mat.Text;
-            editor.Dock = DockStyle.Fill;
-            editor.LoadMaterial(mat);
-            LibraryGUI.Instance.LoadDockContent(editor, PluginRuntime.FSHPDockState);
-        }
-
-        public static void LoadShapeEditor(FSHP fshp)
-        {
-            FSHPEditor BfresProperties = new FSHPEditor();
-            BfresProperties.Text = fshp.Text;
-            BfresProperties.Dock = DockStyle.Fill;
-            BfresProperties.LoadObject((FMDL)fshp.Parent.Parent, fshp);
-            LibraryGUI.Instance.LoadDockContent(BfresProperties, PluginRuntime.FSHPDockState);
-        }
     }
 }
