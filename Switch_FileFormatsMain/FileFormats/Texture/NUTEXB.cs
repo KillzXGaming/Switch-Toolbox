@@ -32,6 +32,8 @@ namespace FirstPlugin
         {
             R8G8B8A8_UNORM = 0x00,
             R8G8B8A8_SRGB = 0x05,
+            B8G8R8A8_UNORM = 0x50,
+            B8G8R8A8_SRGB = 0x55,
             BC1_UNORM = 0x80,
             BC1_SRGB = 0x85,
             BC2_UNORM = 0x90,
@@ -74,6 +76,8 @@ namespace FirstPlugin
         {
             switch (format)
             {
+                case (byte)NUTEXImageFormat.B8G8R8A8_UNORM:
+                case (byte)NUTEXImageFormat.B8G8R8A8_SRGB:
                 case (byte)NUTEXImageFormat.R8G8B8A8_UNORM:
                 case (byte)NUTEXImageFormat.R8G8B8A8_SRGB:
                     return 4;
@@ -134,14 +138,12 @@ namespace FirstPlugin
                         texture.Read(new FileReader(file));
 
                         Console.WriteLine(texture.Format.ToString("x") + " " + file + " " + texture.Text);
-
-                        /*
                         try
                         {
-                            Bitmap bitmap = texture.DisplayImage();
+                            Bitmap bitmap = texture.DisplayTexture();
 
                             if (bitmap != null)
-                                bitmap.Save(System.IO.Path.GetDirectoryName(ofd.FileName) + texture.Text + ".png");
+                                bitmap.Save(System.IO.Path.GetFullPath(file) + texture.ArcOffset + texture.Text + ".png");
                             else
                                 Console.WriteLine(" Not supported Format! " + texture.Format);
 
@@ -150,16 +152,21 @@ namespace FirstPlugin
                         }
                         catch
                         {
-                            Console.WriteLine();
+                            Console.WriteLine("Somethign went wrong??");
                         }
+                        texture.blocksCompressed.Clear();
+                        texture.mipmaps.Clear();
+
+
                         texture = null;
-                        GC.Collect();*/
+                        GC.Collect();
                     }
                 }
             }
         }
         public class NuTex : TreeNodeFile
         {
+            public bool BadSwizzle;
             public uint Width;
             public uint Height;
             public byte Format;
@@ -168,6 +175,7 @@ namespace FirstPlugin
             public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
             public List<List<byte[]>> blocksCompressed = new List<List<byte[]>>();
             bool IsSwizzled = true;
+            public string ArcOffset; //Temp for exporting in batch 
 
             MenuItem export = new MenuItem("Export");
 
@@ -227,17 +235,15 @@ namespace FirstPlugin
                 dds.header.width = Width;
                 dds.header.height = Height;
                 dds.header.mipmapCount = (uint)mipmaps.Count;
+                dds.header.pitchOrLinearSize = (uint)mipmaps[0][0].Length;
 
-                bool IsDX10 = false;
+                if (IsCompressedFormat((NUTEXImageFormat)Format))
+                    dds.SetFlags(GetCompressedDXGI_FORMAT((NUTEXImageFormat)Format));
+                else
+                    dds.SetFlags(GetUncompressedDXGI_FORMAT((NUTEXImageFormat)Format));
 
-                IsDX10 = true;
-                dds.DX10header = new DDS.DX10Header();
-                dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
 
-                if (IsDX10)
-                    dds.header.ddspf.fourCC = "DX10";
-
-                dds.Save(dds, FileName, IsDX10, mipmaps);
+                dds.Save(dds, FileName, mipmaps);
             }
             public void Read(FileReader reader)
             {
@@ -285,8 +291,8 @@ namespace FirstPlugin
                     {
                         for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
                         {
-                            mips.Add(reader.ReadBytes((int)mipSizes[mipLevel]));
-                            break; //Don't load mip maps yet. They break for some reason????
+                            mips.Add(reader.ReadBytes((int)Width * (int)Height * (int)bpps(Format)));
+                            break;
                         }
                         blocksCompressed.Add(mips);
                     }
@@ -300,20 +306,26 @@ namespace FirstPlugin
 
             public Bitmap DisplayTexture(int DisplayMipIndex = 0, int ArrayIndex = 0)
             {
+                if (BadSwizzle)
+                    return BitmapExtension.GetBitmap(Properties.Resources.Black, 32, 32);
+
                 if (IsSwizzled)
                     LoadTexture();
                 else
                     mipmaps.Add(blocksCompressed[0]);
 
-                if (mipmaps.Count <= 0)
+                if (mipmaps[0].Count <= 0)
                 {
-                    throw new Exception("No texture data found");
+                    return BitmapExtension.GetBitmap(Properties.Resources.Black, 32, 32);
                 }
 
                 uint width = (uint)Math.Max(1, Width >> DisplayMipIndex);
                 uint height = (uint)Math.Max(1, Height >> DisplayMipIndex);
 
                 byte[] data = mipmaps[ArrayIndex][DisplayMipIndex];
+
+
+
                 return DecodeBlock(data, width, height, (NUTEXImageFormat)Format);
             }
             public static Bitmap DecodeBlock(byte[] data, uint Width, uint Height, NUTEXImageFormat Format)
@@ -342,6 +354,8 @@ namespace FirstPlugin
                 {
                     case NUTEXImageFormat.R8G8B8A8_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                     case NUTEXImageFormat.R8G8B8A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+                    case NUTEXImageFormat.B8G8R8A8_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
+                    case NUTEXImageFormat.B8G8R8A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
                     default:
                         throw new Exception($"Cannot convert format {Format}");
                 }
@@ -423,12 +437,22 @@ namespace FirstPlugin
 
                         Console.WriteLine($"{blk_dim.ToString("x")} {bpp} {width} {height} {linesPerBlockHeight} {blkWidth} {blkHeight} {size} { blocksCompressed[arrayLevel][mipLevel].Length}");
 
-                        byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, tileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), blocksCompressed[arrayLevel][mipLevel]);
-                        //Create a copy and use that to remove uneeded data
-                        byte[] result_ = new byte[size];
-                        Array.Copy(result, 0, result_, 0, size);
+                        try
+                        {
+                            byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, tileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), blocksCompressed[arrayLevel][mipLevel]);
+                            //Create a copy and use that to remove uneeded data
+                            byte[] result_ = new byte[size];
+                            Array.Copy(result, 0, result_, 0, size);
 
-                        mips.Add(result_);
+                            mips.Add(result_);
+                        }
+                        catch (Exception e)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Failed to swizzle texture!");
+                            Console.WriteLine(e);
+                            BadSwizzle = true;
+                            break;
+                        }
                     }
                     mipmaps.Add(mips);
                 }
@@ -456,6 +480,7 @@ namespace FirstPlugin
             IsActive = true;
             EditorRoot = new NuTex();
             ((NuTex)EditorRoot).FileHandler = this;
+            ((NuTex)EditorRoot).ArcOffset = System.IO.Path.GetFileNameWithoutExtension(FileName);
             ((NuTex)EditorRoot).Read(new FileReader(Data));
         }
         public void Unload()

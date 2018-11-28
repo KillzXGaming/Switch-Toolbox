@@ -219,50 +219,14 @@ namespace FirstPlugin
             dds.header.height = (uint)renderedTex.width;
             dds.header.mipmapCount = (uint)renderedTex.mipmaps[0].Count;
 
-            bool IsDX10 = false;
+            dds.header.pitchOrLinearSize = (uint)renderedTex.mipmaps[0][0].Length;
 
-            switch (format)
-            {
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM):
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB):
-                    dds.header.ddspf.fourCC = "DXT1";
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_UNORM):
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_SRGB):
-                    dds.header.ddspf.fourCC = "DXT3";
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM):
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB):
-                    dds.header.ddspf.fourCC = "DXT5";
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM):
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM):
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM):
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
-                    break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
-                    break;
-                default:
-                    throw new Exception($"Format {(GTX.GX2SurfaceFormat)format} not supported!");
-            }
+            if (IsCompressedFormat((GX2SurfaceFormat)format))
+                dds.SetFlags(GetCompressedDXGI_FORMAT((GX2SurfaceFormat)format));
+            else
+                dds.SetFlags(GetUncompressedDXGI_FORMAT((GX2SurfaceFormat)format));
 
-            if (IsDX10)
-                dds.header.ddspf.fourCC = "DX10";
-
-            dds.Save(dds, FileName, IsDX10, renderedTex.mipmaps);
+            dds.Save(dds, FileName, renderedTex.mipmaps);
         }
 
 

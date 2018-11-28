@@ -76,7 +76,7 @@ namespace FirstPlugin
         {
             uint block_height = (uint)(1 << blockHeightLog2);
 
-      //      Console.WriteLine($"Swizzle {width} {height} {blkWidth} {blkHeight} {roundPitch} {bpp} {tileMode} {blockHeightLog2} {data.Length} {toSwizzle}");
+            Console.WriteLine($"Swizzle {width} {height} {blkWidth} {blkHeight} {roundPitch} {bpp} {tileMode} {blockHeightLog2} {data.Length} {toSwizzle}");
 
             width = DIV_ROUND_UP(width, blkWidth);
             height = DIV_ROUND_UP(height, blkHeight);

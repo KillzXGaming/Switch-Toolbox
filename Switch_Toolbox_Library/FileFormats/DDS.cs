@@ -95,7 +95,25 @@ namespace Switch_Toolbox.Library
                     return 0;
             }
         }
-
+        public void SetFourCC(DXGI_FORMAT Format)
+        {
+            switch (Format)
+            {
+                case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
+                    header.ddspf.fourCC = "DXT1";
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
+                    header.ddspf.fourCC = "DXT3";
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
+                    header.ddspf.fourCC = "DXT5";
+                    break;
+            }
+        }
+        public bool IsDX10;
         public Header header;
         public DX10Header DX10header;
         public class Header
@@ -318,6 +336,8 @@ namespace Switch_Toolbox.Library
             int DX10HeaderSize = 0;
             if (header.ddspf.fourCC == "DX10")
             {
+                IsDX10 = true;
+
                 DX10HeaderSize = 20;
                 ReadDX10Header(reader);
             }
@@ -357,7 +377,57 @@ namespace Switch_Toolbox.Library
                 return array;
             }
         }
-        public void Save(DDS dds, string FileName, bool IsDX10 = false, List<List<byte[]>> data = null)
+        public void SetFlags(DXGI_FORMAT Format)
+        {
+            header.flags = (uint)(DDSD.CAPS | DDSD.HEIGHT | DDSD.WIDTH | DDSD.PIXELFORMAT | DDSD.MIPMAPCOUNT | DDSD.LINEARSIZE);
+            header.caps = (uint)DDSCAPS.TEXTURE;
+            if (header.mipmapCount > 1)
+                header.caps |= (uint)(DDSCAPS.COMPLEX | DDSCAPS.MIPMAP);
+
+            switch (Format)
+            {
+                case DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+                    header.ddspf.flags = (uint)(DDPF.RGB | DDPF.ALPHAPIXELS);
+                    header.ddspf.RGBBitCount = 0x8 * 4;
+                    header.ddspf.RBitMask = 0x000000FF;
+                    header.ddspf.GBitMask = 0x0000FF00;
+                    header.ddspf.BBitMask = 0x00FF0000;
+                    header.ddspf.ABitMask = 0xFF000000;
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
+                case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = "DXT1";
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
+                case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = "DXT3";
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
+                case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = "DXT5";
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16:
+                case DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
+                case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
+                case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
+                    header.ddspf.fourCC = "DX10";
+                    if (DX10header == null)
+                        DX10header = new DX10Header();
+
+                    IsDX10 = true;
+                    DX10header.DXGI_Format = Format;
+                    break;
+            }
+        }
+        public void Save(DDS dds, string FileName, List<List<byte[]>> data = null)
         {
             FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
             writer.Write(Encoding.ASCII.GetBytes("DDS "));

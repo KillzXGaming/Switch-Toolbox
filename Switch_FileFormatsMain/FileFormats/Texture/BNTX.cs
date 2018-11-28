@@ -1252,71 +1252,14 @@ namespace FirstPlugin
             dds.header.width = Texture.Width;
             dds.header.height = Texture.Height;
             dds.header.mipmapCount = (uint)mipmaps.Count;
+            dds.header.pitchOrLinearSize = (uint)mipmaps[0][0].Length;
 
-            bool IsDX10 = false;
+            if (IsCompressedFormat(Texture.Format))
+                dds.SetFlags(GetCompressedDXGI_FORMAT(Texture.Format));
+            else
+                dds.SetFlags(GetUncompressedDXGI_FORMAT(Texture.Format));
 
-            switch (Texture.Format)
-            {
-                case SurfaceFormat.BC1_UNORM:
-                case SurfaceFormat.BC1_SRGB:
-                    dds.header.ddspf.fourCC = "DXT1";
-                    break;
-                case SurfaceFormat.BC2_UNORM:
-                case SurfaceFormat.BC2_SRGB:
-                    dds.header.ddspf.fourCC = "DXT3";
-                    break;
-                case SurfaceFormat.BC3_UNORM:
-                case SurfaceFormat.BC3_SRGB:
-                    dds.header.ddspf.fourCC = "DXT5";
-                    break;
-                case SurfaceFormat.BC4_UNORM:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
-                    break;
-                case SurfaceFormat.BC4_SNORM:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
-                    break;
-                case SurfaceFormat.BC5_UNORM:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
-                    break;
-                case SurfaceFormat.BC5_SNORM:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
-                    break;
-                case SurfaceFormat.BC6_FLOAT:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16;
-                    break;
-                case SurfaceFormat.BC6_UFLOAT:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16;
-                    break;
-                case SurfaceFormat.BC7_UNORM:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB;
-                    break;
-                case SurfaceFormat.BC7_SRGB:
-                    IsDX10 = true;
-                    dds.DX10header = new DDS.DX10Header();
-                    dds.DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
-                    break;
-                default:
-                    throw new Exception($"Format {Texture.Format} not supported!");
-            }
-     
-            if (IsDX10)
-                dds.header.ddspf.fourCC = "DX10";
-
-            dds.Save(dds, FileName, IsDX10, mipmaps);
+            dds.Save(dds, FileName, mipmaps);
         }
         public void LoadTexture(Texture tex, int target = 1)
         {
@@ -1331,11 +1274,9 @@ namespace FirstPlugin
                 int linesPerBlockHeight = (1 << (int)tex.BlockHeightLog2) * 8;
 
                 uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
-
                 for (int arrayLevel = 0; arrayLevel < tex.ArrayLength; arrayLevel++)
                 {
                     int blockHeightShift = 0;
-
                     List<byte[]> mips = new List<byte[]>();
                     for (int mipLevel = 0; mipLevel < tex.TextureData[arrayLevel].Count; mipLevel++)
                     {
