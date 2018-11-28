@@ -153,6 +153,12 @@ namespace FirstPlugin
             resFile.SceneAnims.Clear();
             resFile.ShapeAnims.Clear();
             resFile.BoneVisibilityAnims.Clear();
+            resFile.ModelDict.Clear();
+            resFile.SkeletalAnimDict.Clear();
+            resFile.MaterialAnimDict.Clear();
+            resFile.SceneAnimDict.Clear();
+            resFile.ShapeAnimDict.Clear();
+            resFile.BoneVisibilityAnimDict.Clear();
 
 
             int CurMdl = 0;
@@ -195,39 +201,22 @@ namespace FirstPlugin
         private void SaveWiiU(MemoryStream mem)
         {
             var resFileU = bfres.ResFileNode.resFileU;
+            resFileU.Models.Clear();
+       //     resFileU.SkeletalAnims.Clear();
+       //     resFileU.SceneAnims.Clear();
+       //     resFileU.ShapeAnims.Clear();
+     //       resFileU.BoneVisibilityAnims.Clear();
+       //     resFileU.Textures.Clear();
 
-            resFileU.Save(mem);
 
             int CurMdl = 0;
-            foreach (FMDL model in bfres.models)
+            if (EditorRoot.Nodes.ContainsKey("FMDL"))
             {
-                resFileU.Models[CurMdl].Shapes.Clear();
-                resFileU.Models[CurMdl].VertexBuffers.Clear();
-                resFileU.Models[CurMdl].Materials.Clear();
-
-                int i = 0;
-                var duplicates = model.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
-                foreach (var shape in duplicates)
-                    shape.Text += i++;
-
-                foreach (FSHP shape in model.shapes)
-                {
-                    CheckMissingTextures(shape);
-                    BfresWiiU.SetShape(shape, shape.ShapeU);
-
-                    resFileU.Models[CurMdl].Shapes.Add(shape.Text, shape.ShapeU);
-                    resFileU.Models[CurMdl].VertexBuffers.Add(shape.VertexBufferU);
-                    shape.ShapeU.VertexBufferIndex = (ushort)(resFileU.Models[CurMdl].VertexBuffers.Count - 1);
-
-                    SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
-                }
-                foreach (FMAT mat in model.materials.Values)
-                {
-                    BfresWiiU.SetMaterial(mat, mat.MaterialU);
-                    resFileU.Models[CurMdl].Materials.Add(mat.Text, mat.MaterialU);
-                }
-                CurMdl++;
+                foreach (FMDL model in EditorRoot.Nodes["FMDL"].Nodes)
+                    resFileU.Models.Add(model.Text, BfresWiiU.SetModel(model));
             }
+            ErrorCheck();
+            resFileU.Save(mem);
         }
 
         public static void SetShaderAssignAttributes(FMAT.ShaderAssign shd, FSHP shape)
@@ -299,20 +288,44 @@ namespace FirstPlugin
                 {
                     foreach (FSHP shp in model.shapes)
                     {
-                        Syroot.NintenTools.NSW.Bfres.VertexBuffer vtx = shp.VertexBuffer;
-                        Syroot.NintenTools.NSW.Bfres.Material mat = shp.GetMaterial().Material;
-                        Syroot.NintenTools.NSW.Bfres.ShaderAssign shdr = mat.ShaderAssign;
+                        if (!IsWiiU)
+                        {
+                            Syroot.NintenTools.NSW.Bfres.VertexBuffer vtx = shp.VertexBuffer;
+                            Syroot.NintenTools.NSW.Bfres.Material mat = shp.GetMaterial().Material;
+                            Syroot.NintenTools.NSW.Bfres.ShaderAssign shdr = mat.ShaderAssign;
 
-                        for (int att = 0; att < vtx.Attributes.Count; att++)
-                        {
-                            if (!shdr.AttribAssigns.Contains(vtx.Attributes[att].Name))
-                                MessageBox.Show($"Error! Attribute {vtx.Attributes[att].Name} is unlinked!");
+                            for (int att = 0; att < vtx.Attributes.Count; att++)
+                            {
+                                if (!shdr.AttribAssigns.Contains(vtx.Attributes[att].Name))
+                                    MessageBox.Show($"Error! Attribute {vtx.Attributes[att].Name} is unlinked!");
+                            }
+                            for (int att = 0; att < mat.TextureRefs.Count; att++)
+                            {
+                                if (!shdr.SamplerAssigns.Contains(mat.SamplerDict.GetKey(att))) //mat.SamplerDict[att]
+                                    MessageBox.Show($"Error! Sampler {mat.SamplerDict.GetKey(att)} is unlinked!");
+                            }
                         }
-                        for (int att = 0; att < mat.TextureRefs.Count; att++)
+                        else
                         {
-                            if (!shdr.SamplerAssigns.Contains(mat.SamplerDict.GetKey(att))) //mat.SamplerDict[att]
-                                MessageBox.Show($"Error! Sampler {mat.SamplerDict.GetKey(att)} is unlinked!");
+                            Syroot.NintenTools.Bfres.VertexBuffer vtx = shp.VertexBufferU;
+                            Syroot.NintenTools.Bfres.Material mat = shp.GetMaterial().MaterialU;
+                            Syroot.NintenTools.Bfres.ShaderAssign shdr = mat.ShaderAssign;
+
+                            for (int att = 0; att < vtx.Attributes.Count; att++)
+                            {
+                                if (!shdr.AttribAssigns.ContainsKey(vtx.Attributes[att].Name))
+                                    MessageBox.Show($"Error! Attribute {vtx.Attributes[att].Name} is unlinked!");
+                            }
+                            for (int att = 0; att < mat.TextureRefs.Count; att++)
+                            {
+                                string samp = "";
+                                mat.Samplers.TryGetKey(mat.Samplers[att], out samp);
+                                if (!shdr.SamplerAssigns.ContainsKey(samp)) //mat.SamplerDict[att]
+                                    MessageBox.Show($"Error! Sampler {samp} is unlinked!");
+                            }
                         }
+
+                     
                     }
                 }
              //   ErrorList errorList = new ErrorList();

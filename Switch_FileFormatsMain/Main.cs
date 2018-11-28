@@ -123,8 +123,8 @@ namespace FirstPlugin
             Formats.Add(typeof(BFLYT));
             Formats.Add(typeof(CsvModel));
             Formats.Add(typeof(GFPAK));
+            Formats.Add(typeof(NUTEXB));
 
-            
             return Formats.ToArray();
         }
         #endregion

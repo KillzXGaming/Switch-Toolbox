@@ -481,6 +481,9 @@ namespace FirstPlugin
 
         private void btnSamplerEditor_Click(object sender, EventArgs e)
         {
+            if (textureRefListView.SelectedItems.Count <= 0)
+                return;
+
             SamplerEditor samplerEditor = new SamplerEditor();
             foreach (MatTexture tex in material.textures)
             {
@@ -489,7 +492,6 @@ namespace FirstPlugin
                     samplerEditor.LoadSampler(tex);
                 }
             }
-             
             if (samplerEditor.ShowDialog() == DialogResult.OK)
             {
 
@@ -499,9 +501,9 @@ namespace FirstPlugin
         private void textureRefListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (textureRefListView.SelectedItems.Count > 0)
-            {
                 btnSamplerEditor.Enabled = true;
-            }
+            else
+                btnSamplerEditor.Enabled = false;
         }
 
         private void shaderOptionsListView_ColumnClick(object sender, ColumnClickEventArgs e)

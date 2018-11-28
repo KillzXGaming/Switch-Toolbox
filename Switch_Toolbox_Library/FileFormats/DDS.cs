@@ -325,9 +325,6 @@ namespace Switch_Toolbox.Library
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
             bdata = reader.ReadBytes((int)(reader.BaseStream.Length - reader.Position));
 
-
-
-
             reader.Dispose();
             reader.Close();
         }

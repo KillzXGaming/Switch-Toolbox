@@ -109,10 +109,6 @@ namespace Bfres.Structs
             //If has models
             if (Nodes.ContainsKey("FMDL"))
             {
-                if (Nodes["FMDL"].Nodes.ContainsKey("FshpFolder"))
-                {
-
-                }
                 LibraryGUI.Instance.LoadViewport(Viewport.Instance);
                 Viewport.Instance.gL_ControlModern1.MainDrawable = BFRESRender;
 
@@ -266,9 +262,9 @@ namespace Bfres.Structs
             if (resFile.MaterialAnims.Count > 0)
                 AddMaterialAnims(resFile);
             if (resFile.ShapeAnims.Count > 0)
-                Nodes.Add(new FshpaFolder());
+                AddShapeAnims(resFile);
             if (resFile.BoneVisibilityAnims.Count > 0)
-                Nodes.Add(new FbnvFolder());
+                AddBoneVisAnims(resFile);
             if (resFile.SceneAnims.Count > 0)
                 AddSceneAnims(resFile);
             if (resFile.ExternalFiles.Count > 0)
@@ -276,6 +272,9 @@ namespace Bfres.Structs
         }
         private void AddFTEXTextures(ResU.ResFile resFile)
         {
+            MessageBox.Show("Note! Textures are disabled atm.");
+            return;
+
             FTEXContainer ftexContainer = new FTEXContainer();
             Nodes.Add(ftexContainer);
             foreach (ResU.Texture tex in resFile.Textures.Values)
@@ -338,6 +337,30 @@ namespace Bfres.Structs
                 materialAnim.BFRESRender = BFRESRender;
                 materialAnim.Read(fmaa);
                 fmaaFolder.Nodes.Add(materialAnim);
+            }
+        }
+        private void AddShapeAnims(ResFile resFile)
+        {
+            FshpaFolder fshaFolder = new FshpaFolder();
+            Nodes.Add(fshaFolder);
+            foreach (var fsha in resFile.ShapeAnims)
+            {
+                FSHA shapeAnim = new FSHA();
+                shapeAnim.Text = fsha.Name;
+                shapeAnim.Read(fsha);
+                fshaFolder.Nodes.Add(shapeAnim);
+            }
+        }
+        private void AddBoneVisAnims(ResFile resFile)
+        {
+            FbnvFolder fbnvFolder = new FbnvFolder();
+            Nodes.Add(fbnvFolder);
+            foreach (var fbnv in resFile.BoneVisibilityAnims)
+            {
+                FBNV boneVis = new FBNV();
+                boneVis.Text = fbnv.Name;
+                boneVis.Read(fbnv);
+                fbnvFolder.Nodes.Add(boneVis);
             }
         }
     }

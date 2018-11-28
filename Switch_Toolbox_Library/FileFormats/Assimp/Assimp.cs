@@ -8,6 +8,7 @@ using Assimp;
 using Assimp.Configs;
 using OpenTK;
 using Switch_Toolbox.Library.Rendering;
+using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library
 {
@@ -31,12 +32,23 @@ namespace Switch_Toolbox.Library
         }
         public void LoadFile(string FileName)
         {
-            AssimpContext Importer = new AssimpContext();
+            try
+            {
+                AssimpContext Importer = new AssimpContext();
 
-            scene = Importer.ImportFile(FileName, PostProcessSteps.Triangulate | PostProcessSteps.JoinIdenticalVertices
-                 | PostProcessSteps.FlipUVs | PostProcessSteps.LimitBoneWeights |
-               PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
-            LoadMeshes();
+                scene = Importer.ImportFile(FileName, PostProcessSteps.Triangulate | PostProcessSteps.JoinIdenticalVertices
+| PostProcessSteps.FlipUVs | PostProcessSteps.LimitBoneWeights |
+PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
+                LoadMeshes();
+            }
+            catch (Exception e)
+            {
+                if (e.ToString().Contains("Error loading unmanaged library from path"))
+                {
+                    MessageBox.Show($"Failed to load assimp! Make sure you have Assimp32.dll next to the program!");
+                }
+                Console.WriteLine(e);
+            }
         }
         public void processNode()
         {

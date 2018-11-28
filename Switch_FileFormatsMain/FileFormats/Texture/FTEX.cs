@@ -170,8 +170,15 @@ namespace FirstPlugin
             format = (int)tex.Format;
             int swizzle = (int)tex.Swizzle;
             int pitch = (int)tex.Pitch;
+            uint bpp = GTX.surfaceGetBitsPerPixel((uint)format) >> 3;
 
-            renderedTex.data = GTX.swizzleBC(tex.Data, renderedTex.width, renderedTex.height, format, (int)tex.TileMode, pitch, swizzle);
+            GTX.GX2Surface surf = new GTX.GX2Surface();
+            surf.bpp = bpp;
+
+            for (int surfaceLevel = 0; surfaceLevel < tex.ArrayLength; surfaceLevel++)
+            {
+            }
+            GTX.Decode(surf, tex.MipData);
         }
 
         public void Export(string FileName, bool ExportSurfaceLevel = false,

@@ -17,6 +17,7 @@ using Switch_Toolbox.Library;
 using WeifenLuo.WinFormsUI.Docking;
 using Smash_Forge.Rendering;
 using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
@@ -142,10 +143,10 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
-     	class MenuExt : IFileMenuExtension
+        class MenuExt : IFileMenuExtension
         {
             public ToolStripItemDark[] NewFileMenuExtensions => null;
-            public ToolStripItemDark[] ToolsMenuExtensions => null;
+            public ToolStripItemDark[] ToolsMenuExtensions => newFileExt;
             public ToolStripItemDark[] TitleBarExtensions => null;
             public ToolStripItemDark[] CompressionMenuExtensions => null;
             public ToolStripItemDark[] ExperimentalMenuExtensions => null;
@@ -153,9 +154,80 @@ namespace FirstPlugin
             ToolStripItemDark[] newFileExt = new ToolStripItemDark[1];
             public MenuExt()
             {
-                newFileExt[0] = new ToolStripItemDark("BNTX ");
+                newFileExt[0] = new ToolStripItemDark("Extract BNTX");
+                newFileExt[0].Click += Export;
             }
-        }   
+            private void Export(object sender, EventArgs args)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Multiselect = true;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string file in ofd.FileNames)
+                    {
+                        FileReader reader = new FileReader(ofd.FileName);
+                        reader.Seek(16, SeekOrigin.Begin);
+                        int offsetName = reader.ReadInt32();
+
+                        reader.Seek(offsetName, SeekOrigin.Begin);
+                        string Name = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+
+                        Console.WriteLine(file + " " + Name);
+
+                        reader.Close();
+                        reader.Dispose();
+
+                   //     System.IO.File.Move(file, Name);
+                    }
+                }
+            }
+        }
+/*
+                    byte[] ByteBuffer = File.ReadAllBytes(ofd.FileName);
+                    byte[] StringBytes = Encoding.UTF8.GetBytes("BNTX");
+                    try
+                    {
+                        while (true)
+                        {
+                            byte byt = reader.ReadByte();
+
+                            if (byt == 0x42)
+                            {
+                                reader.Seek(-1, SeekOrigin.Current);
+                                int TryRdMagic = reader.ReadInt32();
+                                if (TryRdMagic == 0x424E5458)
+                                {
+                                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+                                    long BNTXpos = reader.Position - 4;
+                                    Console.WriteLine("String was found at offset {0}", reader.Position);
+
+                                    reader.Seek(BNTXpos + 16, SeekOrigin.Begin);
+                                    int offsetName = reader.ReadInt32();
+
+                                    reader.Seek(BNTXpos + offsetName, SeekOrigin.Begin);
+                                    string Name = reader.ReadString();
+
+                                    reader.Seek(BNTXpos + 28, SeekOrigin.Begin);
+                                    int size = reader.ReadInt32();
+
+                                    reader.Seek(BNTXpos, SeekOrigin.Begin);
+
+                                    File.WriteAllBytes(Name + ".bntx", reader.ReadBytes(size));
+                                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                                }
+                            }
+                        }
+
+
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }*/
 
         BinaryTextureContainer bntx;
 
@@ -1250,41 +1322,48 @@ namespace FirstPlugin
         {
             mipmaps.Clear();
 
-            uint blk_dim = Formats.blk_dims((uint)((int)tex.Format >> 8));
-            uint blkWidth = blk_dim >> 4;
-            uint blkHeight = blk_dim & 0xF;
-
-            int linesPerBlockHeight = (1 << (int)tex.BlockHeightLog2) * 8;
-
-            uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
-
-            for (int arrayLevel = 0; arrayLevel < tex.ArrayLength; arrayLevel++)
+            try
             {
-                int blockHeightShift = 0;
+                uint blk_dim = Formats.blk_dims((uint)((int)tex.Format >> 8));
+                uint blkWidth = blk_dim >> 4;
+                uint blkHeight = blk_dim & 0xF;
 
-                List<byte[]> mips = new List<byte[]>();
-                for (int mipLevel = 0; mipLevel < tex.TextureData[arrayLevel].Count; mipLevel++)
+                int linesPerBlockHeight = (1 << (int)tex.BlockHeightLog2) * 8;
+
+                uint bpp = Formats.bpps((uint)((int)tex.Format >> 8));
+
+                for (int arrayLevel = 0; arrayLevel < tex.ArrayLength; arrayLevel++)
                 {
-                    uint width = (uint)Math.Max(1, tex.Width >> mipLevel);
-                    uint height = (uint)Math.Max(1, tex.Height >> mipLevel);
+                    int blockHeightShift = 0;
 
-                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+                    List<byte[]> mips = new List<byte[]>();
+                    for (int mipLevel = 0; mipLevel < tex.TextureData[arrayLevel].Count; mipLevel++)
+                    {
+                        uint width = (uint)Math.Max(1, tex.Width >> mipLevel);
+                        uint height = (uint)Math.Max(1, tex.Height >> mipLevel);
 
-                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                        blockHeightShift += 1;
+                        uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
 
-                    byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), tex.TextureData[arrayLevel][mipLevel]);
-                    //Create a copy and use that to remove uneeded data
-                    byte[] result_ = new byte[size];
-                    Array.Copy(result, 0, result_, 0, size);
+                        if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                            blockHeightShift += 1;
 
-                    mips.Add(result_);
+                        byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), tex.TextureData[arrayLevel][mipLevel]);
+                        //Create a copy and use that to remove uneeded data
+                        byte[] result_ = new byte[size];
+                        Array.Copy(result, 0, result_, 0, size);
+                        mips.Add(result_);
 
+                    }
+                    mipmaps.Add(mips);
                 }
-                mipmaps.Add(mips);
-            }
 
-            Texture = tex;
+                Texture = tex;
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Failed to swizzle texture {Text}! Exception: {e}");
+            }
         }
 
         public Bitmap DisplayTexture(int DisplayMipIndex = 0, int ArrayIndex = 0)

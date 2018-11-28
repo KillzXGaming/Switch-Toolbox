@@ -20,6 +20,16 @@ namespace FirstPlugin
         public static Model SetModel(FMDL fmdl)
         {
             Model model = new Model();
+            model.Name = fmdl.Text;
+            model.Shapes = new List<Shape>();
+            model.VertexBuffers = new List<VertexBuffer>();
+            model.Materials = new List<Material>();
+            model.UserData = new List<UserData>();
+            model.Skeleton = new Skeleton();
+            model.Skeleton = fmdl.Skeleton.node.Skeleton;
+            model.ShapeDict = new ResDict();
+            model.MaterialDict = new ResDict();
+            model.UserDataDict = new ResDict();
 
             int i = 0;
             var duplicates = fmdl.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
@@ -33,13 +43,13 @@ namespace FirstPlugin
 
                 model.Shapes.Add(shape.Shape);
                 model.VertexBuffers.Add(shape.VertexBuffer);
-
                 shape.Shape.VertexBufferIndex = (ushort)(model.VertexBuffers.Count - 1);
 
                 BFRES.SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
             }
             foreach (FMAT mat in fmdl.materials.Values)
             {
+
                 SetMaterial(mat, mat.Material);
                 model.Materials.Add(mat.Material);
             }

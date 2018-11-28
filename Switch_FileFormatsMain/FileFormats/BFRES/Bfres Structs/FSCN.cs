@@ -61,8 +61,8 @@ namespace Bfres.Structs
         public SceneAnim SceneAnim;
         public FSCN()
         {
-            ImageKey = "skeletonAnimation";
-            SelectedImageKey = "skeletonAnimation";
+            ImageKey = "sceneAnimation";
+            SelectedImageKey = "sceneAnimation";
 
             ContextMenu = new ContextMenu();
             MenuItem export = new MenuItem("Export");
@@ -81,7 +81,7 @@ namespace Bfres.Structs
         private void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.bfska;";
+            sfd.Filter = "Supported Formats|*.bfscn;";
             sfd.FileName = Text;
             sfd.DefaultExt = ".bfska";
 
@@ -93,7 +93,7 @@ namespace Bfres.Structs
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.bfska;";
+            ofd.Filter = "Supported Formats|*.bfscn;";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {

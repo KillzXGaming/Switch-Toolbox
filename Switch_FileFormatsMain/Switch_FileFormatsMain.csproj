@@ -172,6 +172,7 @@
     <Compile Include="FileFormats\Texture\FTEX.cs" />
     <Compile Include="FileFormats\Texture\GTX.cs" />
     <Compile Include="FileFormats\Texture\TegraX1Swizzle.cs" />
+    <Compile Include="FileFormats\Texture\NUTEXB.cs" />
     <Compile Include="FileFormats\Texture\TexConv.cs" />
     <Compile Include="FileFormats\Texture\XTX.cs" />
     <Compile Include="GL\BFRES_Render.cs" />
@@ -266,6 +267,18 @@
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FormLoader.cs" />
+    <Compile Include="GUI\NuTexEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\NuTexEditor.Designer.cs">
+      <DependentUpon>NuTexEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TexturePatternEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TexturePatternEditor.Designer.cs">
+      <DependentUpon>TexturePatternEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\TextureUI\FTEXEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -404,6 +417,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\NuTexEditor.resx">
+      <DependentUpon>NuTexEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TexturePatternEditor.resx">
+      <DependentUpon>TexturePatternEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureUI\FTEXEditor.resx">
       <DependentUpon>FTEXEditor.cs</DependentUpon>

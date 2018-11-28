@@ -238,6 +238,7 @@ namespace Switch_Toolbox
             FileReader f = new FileReader(data);
             string Magic = f.ReadMagic(0, 4);
             string Magic2 = f.ReadMagic(0, 2);
+            string Magic3 = f.ReadMagic((int)f.BaseStream.Length - 7, 3);
 
             //Determine if the file is compressed or not
             if (Magic == "Yaz0")
@@ -268,7 +269,7 @@ namespace Switch_Toolbox
              //Check magic first regardless of extension
             foreach (IFileFormat format in SupportedFormats)
             {
-                if (format.Magic == Magic || format.Magic == Magic2 || format.Magic.Reverse() == Magic2)
+                if (format.Magic == Magic || format.Magic == Magic3 || format.Magic == Magic2 || format.Magic.Reverse() == Magic2)
                 {
                     format.CompressionType = CompType;
                     format.FileIsCompressed = Compressed;

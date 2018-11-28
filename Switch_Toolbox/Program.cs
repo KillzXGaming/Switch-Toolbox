@@ -21,6 +21,5 @@ namespace Switch_Toolbox
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
-
     }
 }

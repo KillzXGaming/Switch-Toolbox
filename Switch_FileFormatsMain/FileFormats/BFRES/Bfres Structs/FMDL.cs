@@ -356,13 +356,6 @@ namespace Bfres.Structs
         //Function addes shapes, vertices and meshes
         public void AddOjects(string FileName, bool Replace = true)
         {
-            if (Replace)
-            {
-                shapes.Clear();
-
-                Nodes["FshpFolder"].Nodes.Clear();
-            }
-
             int MatStartIndex = materials.Count;
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -371,6 +364,12 @@ namespace Bfres.Structs
             {
                 case ".bfobj":
                     Cursor.Current = Cursors.WaitCursor;
+
+                    if (Replace)
+                    {
+                        shapes.Clear();
+                        Nodes["FshpFolder"].Nodes.Clear();
+                    }
 
                     Shape shpS = new Shape();
                     VertexBuffer vertexBuffer = new VertexBuffer();
@@ -385,12 +384,17 @@ namespace Bfres.Structs
                     break;
                 case ".bfmdl":
                     Cursor.Current = Cursors.WaitCursor;
-                    shapes.Clear();
+
+                    if (Replace)
+                    {
+                        shapes.Clear();
+                        Nodes["FshpFolder"].Nodes.Clear();
+                    }
+
                     Model mdl = new Model();
                     mdl.Import(FileName, GetResFile());
                     mdl.Name = Text;
                     shapes.Clear();
-                    Nodes["FshpFolder"].Nodes.Clear();
                     foreach (Shape shp in mdl.Shapes)
                     {
                         FSHP shape = new FSHP();
@@ -415,6 +419,12 @@ namespace Bfres.Structs
                     csvsettings.SetModelAttributes(csvModel.objects[0]);
                     if (csvsettings.ShowDialog() == DialogResult.OK)
                     {
+                        if (Replace)
+                        {
+                            shapes.Clear();
+                            Nodes["FshpFolder"].Nodes.Clear();
+                        }
+
                         Cursor.Current = Cursors.WaitCursor;
 
                         foreach (STGenericObject obj in csvModel.objects)
@@ -452,13 +462,15 @@ namespace Bfres.Structs
                         return;
                     }
                     BfresModelImportSettings settings = new BfresModelImportSettings();
-
-                    if (BFRES.IsWiiU)
-                        settings.DisableMaterialEdits();
-
                     settings.SetModelAttributes(assimp.objects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)
                     {
+                        if (Replace)
+                        {
+                            shapes.Clear();
+                            Nodes["FshpFolder"].Nodes.Clear();
+                        }
+
                         Cursor.Current = Cursors.WaitCursor;
                         if (!BFRES.IsWiiU && Replace)
                         {
@@ -466,108 +478,123 @@ namespace Bfres.Structs
                             Nodes["FmatFolder"].Nodes.Clear();
                             MatStartIndex = 0;
                         }
-
-                        if (!BFRES.IsWiiU)
+                        foreach (STGenericMaterial mat in assimp.materials)
                         {
-                            foreach (STGenericMaterial mat in assimp.materials)
+                            FMAT fmat = new FMAT();
+                            if (settings.ExternalMaterialPath != string.Empty)
                             {
-                                FMAT fmat = new FMAT();
-                                fmat.Material = new Material();
-                                if (settings.ExternalMaterialPath != string.Empty)
+                                if (!BFRES.IsWiiU)
                                 {
+                                    fmat.Material = new Material();
                                     fmat.Material.Import(settings.ExternalMaterialPath);
                                     fmat.ReadMaterial(fmat.Material);
                                 }
+                                else
+                                {
+                                    fmat.MaterialU = new ResU.Material();
+                                    fmat.MaterialU.Import(settings.ExternalMaterialPath, GetResFileU());
+                                    BfresWiiU.ReadMaterial(fmat, fmat.MaterialU);
+                                }
+                            }
 
-                                fmat.Text = mat.Text;
-                                //Setup placeholder textures
-                                //Note we can't add/remove samplers so we must fill these slots
+                            fmat.Text = mat.Text;
+                            //Setup placeholder textures
+                            //Note we can't add/remove samplers so we must fill these slots
+                            foreach (var t in fmat.textures)
+                            {
+                                t.wrapModeS = 0;
+                                t.wrapModeT = 0;
+
+                                switch (t.Type)
+                                {
+                                    case STGenericMatTexture.TextureType.Diffuse:
+                                        t.Name = "Basic_Alb";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Emission:
+                                        t.Name = "Basic_Emm";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Normal:
+                                        t.Name = "Basic_Nrm";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Specular:
+                                        t.Name = "Basic_Spm";
+                                        break;
+                                    case STGenericMatTexture.TextureType.SphereMap:
+                                        t.Name = "Basic_Sphere";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Metalness:
+                                        t.Name = "Basic_Mtl";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Roughness:
+                                        t.Name = "Basic_Rgh";
+                                        break;
+                                    case STGenericMatTexture.TextureType.MRA:
+                                        t.Name = "Basic_MRA";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Shadow:
+                                        t.Name = "Basic_Bake_st0";
+                                        break;
+                                    case STGenericMatTexture.TextureType.Light:
+                                        t.Name = "Basic_Bake_st1";
+                                        break;
+                                }
+                            }
+
+                            if (PluginRuntime.bntxContainers.Count > 0)
+                            {
+                                foreach (var node in Parent.Parent.Nodes["EXT"].Nodes)
+                                {
+                                    if (node is BinaryTextureContainer)
+                                    {
+                                        var bntx = (BinaryTextureContainer)node;
+
+                                        bntx.ImportBasicTextures("Basic_Alb");
+                                        bntx.ImportBasicTextures("Basic_Nrm");
+                                        bntx.ImportBasicTextures("Basic_Spm");
+                                        bntx.ImportBasicTextures("Basic_Sphere");
+                                        bntx.ImportBasicTextures("Basic_Mtl");
+                                        bntx.ImportBasicTextures("Basic_Rgh");
+                                        bntx.ImportBasicTextures("Basic_MRA");
+                                        bntx.ImportBasicTextures("Basic_Bake_st0");
+                                        bntx.ImportBasicTextures("Basic_Bake_st1");
+                                        bntx.ImportBasicTextures("Basic_Emm");
+                                    }
+                                }
+                            }
+
+                            foreach (var tex in mat.TextureMaps)
+                            {
                                 foreach (var t in fmat.textures)
                                 {
-                                    t.wrapModeS = 0;
-                                    t.wrapModeT = 0;
-
-                                    switch (t.Type)
+                                    if (t.Type == tex.Type)
                                     {
-                                        case STGenericMatTexture.TextureType.Diffuse:
-                                            t.Name = "Basic_Alb";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Emission:
-                                            t.Name = "Basic_Emm";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Normal:
-                                            t.Name = "Basic_Nrm";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Specular:
-                                            t.Name = "Basic_Spm";
-                                            break;
-                                        case STGenericMatTexture.TextureType.SphereMap:
-                                            t.Name = "Basic_Sphere";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Metalness:
-                                            t.Name = "Basic_Mtl";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Roughness:
-                                            t.Name = "Basic_Rgh";
-                                            break;
-                                        case STGenericMatTexture.TextureType.MRA:
-                                            t.Name = "Basic_MRA";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Shadow:
-                                            t.Name = "Basic_Bake_st0";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Light:
-                                            t.Name = "Basic_Bake_st1";
-                                            break;
+                                        t.Name = tex.Name;
+                                        t.wrapModeS = tex.wrapModeS;
+                                        t.wrapModeT = tex.wrapModeT;
+                                        t.wrapModeW = tex.wrapModeW;
+                                        t.Type = tex.Type;
                                     }
                                 }
+                            }
 
-                                if (PluginRuntime.bntxContainers.Count > 0)
-                                {
-                                    foreach (var node in Parent.Parent.Nodes["EXT"].Nodes)
-                                    {
-                                        if (node is BinaryTextureContainer)
-                                        {
-                                            var bntx = (BinaryTextureContainer)node;
+                            List<string> keyList = new List<string>(materials.Keys);
+                            fmat.Text = Utils.RenameDuplicateString(keyList, fmat.Text);
 
-                                            bntx.ImportBasicTextures("Basic_Alb");
-                                            bntx.ImportBasicTextures("Basic_Nrm");
-                                            bntx.ImportBasicTextures("Basic_Spm");
-                                            bntx.ImportBasicTextures("Basic_Sphere");
-                                            bntx.ImportBasicTextures("Basic_Mtl");
-                                            bntx.ImportBasicTextures("Basic_Rgh");
-                                            bntx.ImportBasicTextures("Basic_MRA");
-                                            bntx.ImportBasicTextures("Basic_Bake_st0");
-                                            bntx.ImportBasicTextures("Basic_Bake_st1");
-                                            bntx.ImportBasicTextures("Basic_Emm");
-                                        }
-                                    }
-                                }
+                            materials.Add(fmat.Text, fmat);
+                            Nodes["FmatFolder"].Nodes.Add(fmat);
 
-                                foreach (var tex in mat.TextureMaps)
-                                {
-                                    foreach (var t in fmat.textures)
-                                    {
-                                        if (t.Type == tex.Type)
-                                        {
-                                            t.Name = tex.Name;
-                                            t.wrapModeS = tex.wrapModeS;
-                                            t.wrapModeT = tex.wrapModeT;
-                                            t.wrapModeW = tex.wrapModeW;
-                                            t.Type = tex.Type;
-                                        }
-                                    }
-                                }
+                            if (BFRES.IsWiiU)
+                            {
+                                fmat.MaterialU.Name = Text;
+                                fmat.SetMaterial(fmat.MaterialU);
+                            }
+                            else
+                            {
                                 fmat.Material.Name = Text;
                                 fmat.SetMaterial(fmat.Material);
-
-                                List<string> keyList = new List<string>(materials.Keys);
-                                fmat.Text = Utils.RenameDuplicateString(keyList, fmat.Text);
-
-                                materials.Add(fmat.Text, fmat);
-                                Nodes["FmatFolder"].Nodes.Add(fmat);
                             }
                         }
+
 
                         foreach (STGenericObject obj in assimp.objects)
                         {
@@ -578,9 +605,6 @@ namespace Bfres.Structs
                             shape.vertexAttributes = settings.CreateNewAttributes();
                             shape.boneIndx = obj.BoneIndex;
                             shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
-
-                            if (BFRES.IsWiiU)
-                                shape.MaterialIndex = 0;
 
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;

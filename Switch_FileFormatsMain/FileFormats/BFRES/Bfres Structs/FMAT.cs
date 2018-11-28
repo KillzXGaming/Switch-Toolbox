@@ -100,6 +100,9 @@ namespace Bfres.Structs
 
         public void SetActiveGame()
         {
+            Runtime.activeGame = Runtime.ActiveGame.SMO;
+            return;
+
             string ShaderName = shaderassign.ShaderArchive;
             string ShaderModel = shaderassign.ShaderModel;
 
@@ -140,7 +143,10 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Material.Export(sfd.FileName, GetResFile());
+                if (BFRES.IsWiiU)
+                    MaterialU.Export(sfd.FileName, GetResFileU());
+                else
+                    Material.Export(sfd.FileName, GetResFile());
             }
         }
         private void Replace(object sender, EventArgs args)
@@ -150,10 +156,18 @@ namespace Bfres.Structs
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Material.Import(ofd.FileName);
-                Material.Name = Text;
-
-                BfresSwitch.ReadMaterial(this, Material);
+                if (BFRES.IsWiiU)
+                {
+                    MaterialU.Import(ofd.FileName, GetResFileU());
+                    MaterialU.Name = Text;
+                    BfresWiiU.ReadMaterial(this, MaterialU);
+                }
+                else
+                {
+                    Material.Import(ofd.FileName);
+                    Material.Name = Text;
+                    BfresSwitch.ReadMaterial(this, Material);
+                }
             }
         }
 

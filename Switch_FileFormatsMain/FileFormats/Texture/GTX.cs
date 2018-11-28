@@ -91,11 +91,79 @@ namespace FirstPlugin
             public int swizzle;
             public int alignment;
             public int pitch;
+            public uint bpp;
 
             public byte[] data;
 
             public int[] mipOffset;
         };
+
+        public static int m_configFlags = 4;
+        public static int ADDR_OK = 0;
+
+        public static int expPitch = 0;
+        public static int expHeight = 0;
+        public static int expNumSlices = 0;
+
+        public class surfaceIn
+        {
+            public int size = 0;
+            public int tileMode = 0;
+            public int format = 0;
+            public int bpp = 0;
+            public int numSamples = 0;
+            public int width = 0;
+            public int height = 0;
+            public int numSlices = 0;
+            public int slice = 0;
+            public int mipLevel = 0;
+            public Flags flags = new Flags();
+            public int numFrags = 0;
+            public TileInfo tileType = new TileInfo();
+            public int tileIndex = 0;
+        }
+        public class surfaceOut
+        {
+            public int size = 0;
+            public int pitch = 0;
+            public int height = 0;
+            public int depth = 0;
+            public int surfSize = 0;
+            public int tileMode = 0;
+            public int baseAlign = 0;
+            public int pitchAlign = 0;
+            public int heightAlign = 0;
+            public int depthAlign = 0;
+            public int bpp = 0;
+            public int pixelPitch = 0;
+            public int pixelHeight = 0;
+            public int pixelBits = 0;
+            public int sliceSize = 0;
+            public int pitchTileMax = 0;
+            public int heightTileMax = 0;
+            public int sliceTileMax = 0;
+            public int pTileInfo = 0;
+            public TileInfo tileType = new TileInfo();
+            public int tileIndex = 0;
+        }
+
+        public class Flags
+        {
+            public uint value = 0;
+        }
+
+        public class TileInfo
+        {
+            public int banks = 0;
+            public int bankWidth = 0;
+            public int bankHeight = 0;
+            public int macroAspectRatio = 0;
+            public int tileSplitBytes = 0;
+            public int pipeConfig = 0;
+        }
+
+        static surfaceIn  pIn = new surfaceIn();
+        static surfaceOut pOut = new surfaceOut();
 
         public enum GX2SurfaceDimension
         {
@@ -388,24 +456,47 @@ namespace FirstPlugin
             ADDR_FMT_RESERVED_63 = 0x3F,
         };
 
-        private static byte[] formatHwInfo = {
-            0x00, 0x00, 0x00, 0x01, 0x08, 0x03, 0x00, 0x01, 0x08, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-            0x00, 0x00, 0x00, 0x01, 0x10, 0x07, 0x00, 0x00, 0x10, 0x03, 0x00, 0x01, 0x10, 0x03, 0x00, 0x01,
-            0x10, 0x0B, 0x00, 0x01, 0x10, 0x01, 0x00, 0x01, 0x10, 0x03, 0x00, 0x01, 0x10, 0x03, 0x00, 0x01,
-            0x10, 0x03, 0x00, 0x01, 0x20, 0x03, 0x00, 0x00, 0x20, 0x07, 0x00, 0x00, 0x20, 0x03, 0x00, 0x00,
-            0x20, 0x03, 0x00, 0x01, 0x20, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x03, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x20, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-            0x00, 0x00, 0x00, 0x01, 0x20, 0x0B, 0x00, 0x01, 0x20, 0x0B, 0x00, 0x01, 0x20, 0x0B, 0x00, 0x01,
-            0x40, 0x05, 0x00, 0x00, 0x40, 0x03, 0x00, 0x00, 0x40, 0x03, 0x00, 0x00, 0x40, 0x03, 0x00, 0x00,
-            0x40, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x10, 0x01, 0x00, 0x00,
-            0x10, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00,
-            0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x60, 0x01, 0x00, 0x00,
-            0x60, 0x01, 0x00, 0x00, 0x40, 0x01, 0x00, 0x01, 0x80, 0x01, 0x00, 0x01, 0x80, 0x01, 0x00, 0x01,
-            0x40, 0x01, 0x00, 0x01, 0x80, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-        };
+        public static List<byte[]> Decode(GX2Surface tex, byte[] MipData)
+        {
+            var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
+            if (surfInfo.depth != 1)
+                throw new Exception("Unsupported Depth!");
+
+            List<byte[]> result = new List<byte[]>();
+            for (int mipLevel = 0; mipLevel < tex.numMips; mipLevel++)
+            {
+                int size;
+                if (IsFormatBCN((GX2SurfaceFormat)tex.format))
+                    size = ((Math.Max(1, tex.width >> mipLevel) + 3) >> 2) * ((Math.Max(1, tex.height >> mipLevel) + 3) >> 2) * (int)tex.bpp;
+                else
+                    size = Math.Max(1, tex.width >> mipLevel) * Math.Max(1, tex.height >> mipLevel) * (int)tex.bpp;
+
+                byte[] data;
+                if (mipLevel == 0)
+                {
+                    data = new byte[surfInfo.surfSize];
+                }
+                else
+                {
+                    int mipOffset;
+                    if (mipLevel == 1)
+                        mipOffset = tex.mipOffset[mipLevel - 1] - surfInfo.surfSize;
+                    else
+                        mipOffset = tex.mipOffset[mipLevel - 1];
+
+                    surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
+
+                    data = new byte[surfInfo.surfSize - mipOffset];
+                    Array.Copy(MipData, mipOffset, data, 0, surfInfo.surfSize);
+                }
+                byte[] deswizzled = deswizzle(Math.Max(1, (uint)tex.width >> mipLevel), Math.Max(1, (uint)tex.height >> mipLevel), (uint)surfInfo.height, (uint)tex.format,
+                (uint)surfInfo.tileMode, (uint)tex.swizzle, (uint)surfInfo.pitch, (uint)surfInfo.bpp, data);
+                //Create a copy and use that to remove uneeded data
+                byte[] result_ = new byte[size];
+                Array.Copy(deswizzled, 0, result_, 0, size);
+            }
+            return result;
+        }
 
 
 
@@ -430,24 +521,231 @@ namespace FirstPlugin
         { FORMAT_INVALID,   GX2_SURFACE_FORMAT_INVALID,               0,                                0xFFFFFFFF, 0x00, nullptr, 0x00,     0 }
     };*/
 
-
-        public static byte[] swizzleBC(byte[] data, int width, int height, int format, int tileMode, int pitch, int swizzle)
+        public static bool IsFormatBCN(GX2SurfaceFormat Format)
         {
-            GX2Surface sur = new GX2Surface();
-            sur.width = width;
-            sur.height = height;
-            sur.tileMode = tileMode;
-            sur.format = format;
-            sur.swizzle = swizzle;
-            sur.pitch = pitch;
-            sur.data = data;
-            sur.imageSize = data.Length;
-            //return swizzleBC(sur);
-            return swizzleSurface(sur, (GX2SurfaceFormat)sur.format != GX2SurfaceFormat.GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM &
-                (GX2SurfaceFormat)sur.format != GX2SurfaceFormat.GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_SRGB);
+            switch (Format)
+            {
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_SRGB:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM:
+                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
-        public static int getBPP(int i)
+        public static byte[] deswizzle(uint width, uint height, uint height_, uint format_, uint tileMode, uint swizzle_,
+             uint pitch, uint bpp, byte[] data)
+        {
+            return swizzleSurf(width, height, height_, format_, tileMode, swizzle_, pitch, bpp, data, 0);
+        }
+        public static byte[] swizzle(uint width, uint height, uint height_, uint format_, uint tileMode, uint swizzle_,
+     uint pitch, uint bpp, byte[] data)
+        {
+            return swizzleSurf(width, height, height_, format_, tileMode, swizzle_, pitch, bpp, data, 1);
+        }
+
+        static uint m_banks = 4;
+        static uint m_banksBitcount = 2;
+        static uint m_pipes = 2;
+        static uint m_pipesBitcount = 1;
+        static uint m_pipeInterleaveBytes = 256;
+        static uint m_pipeInterleaveBytesBitcount = 8;
+        static uint m_rowSize = 2048;
+        static uint m_swapSize = 256;
+        static uint m_splitSize = 2048;
+
+        static uint m_chipFamily = 2;
+
+        static uint MicroTilePixels = 64;
+
+
+        private static byte[] swizzleSurf(uint width, uint height, uint height_, uint format, uint tileMode, uint swizzle_,
+                uint pitch, uint bitsPerPixel, byte[] data, int swizzle)
+        {
+            byte[] result = new byte[data.Length];
+
+            uint bytesPerPixel = bitsPerPixel / 8;
+
+            uint pipeSwizzle, bankSwizzle, pos_;
+            uint pos;
+
+            if (IsFormatBCN((GX2SurfaceFormat)format))
+            {
+                width = (width + 3) / 4;
+                height = (height + 3) / 4;
+            }
+
+            pipeSwizzle = (swizzle_ >> 8) & 1;
+            bankSwizzle = (swizzle_ >> 9) & 3;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var tileGrp1 = new List<uint> { 0, 1 };
+                    var tileGrp2 = new List<uint> { 2, 3 };
+
+
+                    if (tileGrp1.Contains(tileMode))
+                        pos = (uint)(y * pitch + x) * bytesPerPixel;
+                    else if (tileGrp2.Contains(tileMode))
+                    {
+                        pos = computeSurfaceAddrFromCoordMicroTiled(x, y, bitsPerPixel, pitch, tileMode);
+                    }
+                    else
+                    {
+                        pos = computeSurfaceAddrFromCoordMacroTiled(x, y, bitsPerPixel, (int)pitch, (int)height_, (int)tileMode, (int)pipeSwizzle, (int)bankSwizzle);
+                    }
+                    pos = 0;
+
+                     pos_ = (uint)(y * width + x) * bytesPerPixel;
+
+                    if (pos_ + bytesPerPixel <= data.Length && pos + bytesPerPixel <= data.Length)
+                    {
+                        if (swizzle == 0)
+                        {
+                            for (int n = 0; n < bytesPerPixel; n++)
+                                result[pos_ + n] = data[(uint)pos + n];
+                        }
+                        else
+                        {
+                            for (int n = 0; n < bytesPerPixel; n++)
+                                result[(uint)pos + n] = data[pos_ + n];
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static byte[] formatHwInfo = {
+    0x00, 0x00, 0x00, 0x01, 0x08, 0x03, 0x00, 0x01, 0x08, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+    0x00, 0x00, 0x00, 0x01, 0x10, 0x07, 0x00, 0x00, 0x10, 0x03, 0x00, 0x01, 0x10, 0x03, 0x00, 0x01,
+    0x10, 0x0B, 0x00, 0x01, 0x10, 0x01, 0x00, 0x01, 0x10, 0x03, 0x00, 0x01, 0x10, 0x03, 0x00, 0x01,
+    0x10, 0x03, 0x00, 0x01, 0x20, 0x03, 0x00, 0x00, 0x20, 0x07, 0x00, 0x00, 0x20, 0x03, 0x00, 0x00,
+    0x20, 0x03, 0x00, 0x01, 0x20, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x03, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x20, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+    0x00, 0x00, 0x00, 0x01, 0x20, 0x0B, 0x00, 0x01, 0x20, 0x0B, 0x00, 0x01, 0x20, 0x0B, 0x00, 0x01,
+    0x40, 0x05, 0x00, 0x00, 0x40, 0x03, 0x00, 0x00, 0x40, 0x03, 0x00, 0x00, 0x40, 0x03, 0x00, 0x00,
+    0x40, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x10, 0x01, 0x00, 0x00,
+    0x10, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00,
+    0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x60, 0x01, 0x00, 0x00,
+    0x60, 0x01, 0x00, 0x00, 0x40, 0x01, 0x00, 0x01, 0x80, 0x01, 0x00, 0x01, 0x80, 0x01, 0x00, 0x01,
+    0x40, 0x01, 0x00, 0x01, 0x80, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        };
+
+        private static byte[] formatExInfo = {
+   0x00, 0x01, 0x01, 0x03, 0x08, 0x01, 0x01, 0x03, 0x08, 0x01, 0x01, 0x03, 0x08, 0x01, 0x01, 0x03,
+    0x00, 0x01, 0x01, 0x03, 0x10, 0x01, 0x01, 0x03, 0x10, 0x01, 0x01, 0x03, 0x10, 0x01, 0x01, 0x03,
+    0x10, 0x01, 0x01, 0x03, 0x10, 0x01, 0x01, 0x03, 0x10, 0x01, 0x01, 0x03, 0x10, 0x01, 0x01, 0x03,
+    0x10, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03,
+    0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03,
+    0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03,
+    0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03,
+    0x40, 0x01, 0x01, 0x03, 0x40, 0x01, 0x01, 0x03, 0x40, 0x01, 0x01, 0x03, 0x40, 0x01, 0x01, 0x03,
+    0x40, 0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x03, 0x80, 0x01, 0x01, 0x03, 0x80, 0x01, 0x01, 0x03,
+    0x00, 0x01, 0x01, 0x03, 0x01, 0x08, 0x01, 0x05, 0x01, 0x08, 0x01, 0x06, 0x10, 0x01, 0x01, 0x07,
+    0x10, 0x01, 0x01, 0x08, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03, 0x20, 0x01, 0x01, 0x03,
+    0x18, 0x03, 0x01, 0x04, 0x30, 0x03, 0x01, 0x04, 0x30, 0x03, 0x01, 0x04, 0x60, 0x03, 0x01, 0x04,
+    0x60, 0x03, 0x01, 0x04, 0x40, 0x04, 0x04, 0x09, 0x80, 0x04, 0x04, 0x0A, 0x80, 0x04, 0x04, 0x0B,
+    0x40, 0x04, 0x04, 0x0C, 0x40, 0x04, 0x04, 0x0D, 0x40, 0x04, 0x04, 0x0D, 0x40, 0x04, 0x04, 0x0D,
+    0x00, 0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x03,
+    0x00, 0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x03, 0x40, 0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x03,
+        };
+
+        public static uint surfaceGetBitsPerPixel(uint surfaceFormat)
+        {
+            return formatHwInfo[(surfaceFormat & 0x35) + 4];
+        }
+
+        private static uint computePipeFromCoordWoRotation(uint x, uint y)
+        {
+            return ((y >> 3) ^ (x >> 3)) & 1;
+        }
+
+        private static uint computeBankFromCoordWoRotation(uint x, uint y)
+        {
+            return ((y >> 5) ^ (x >> 3)) & 1 | 2 * (((y >> 4) ^ (x >> 4)) & 1);
+        }
+
+        private static bool isThickMacroTiled(uint tileMode)
+        {
+            var Grp1 = new List<uint> { 7, 11, 13, 15 };
+            if (Grp1.Contains(tileMode))
+                return true;
+
+            return false;
+        }
+
+        private static bool isBankSwapped(uint tileMode)
+        {
+            var Grp1 = new List<uint> { 8, 9, 10, 11, 14, 15 };
+            if (Grp1.Contains(tileMode))
+                return true;
+
+            return false;
+        }
+
+        private static uint computeMacroTileAspectRatio(uint tileMode)
+        {
+            var Grp1 = new List<uint> { 5, 9 };
+            var Grp2 = new List<uint> { 6, 10 };
+
+            if (Grp1.Contains(tileMode))
+                return 2;
+
+            if (Grp2.Contains(tileMode))
+                return 4;
+
+            return 1;
+        }
+
+        private static uint computeSurfaceBankSwappedWidth(uint tileMode, uint bpp, uint pitch, uint numSamplers)
+        {
+            if (isBankSwapped(tileMode) == true)
+                return 0;
+
+            return 0;
+        }
+
+        private static uint computeSurfaceAddrFromCoordMicroTiled(int x, int y, uint bpp, uint pitch, uint tileMode)
+        {
+            return 0; //Todo
+
+ /*           uint microTileThickness = 1;
+
+            if (tileMode == 3)
+                microTileThickness = 4;
+
+            uint microTileBytes = (MicroTilePixels * microTileThickness * bpp + 7) / 8;
+            uint microTilesPerRow = pitch >> 3;
+            uint microTileIndexX = (uint)x >> 3;
+            uint microTileIndexY = (uint)y >> 3;
+
+            uint microTileOffset = microTileBytes * (microTileIndexX + microTileIndexY * microTilesPerRow);
+
+            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, bpp, tileMode);
+
+            uint pixelOffset = bpp * pixelIndex;
+            pixelOffset >>= 3;
+
+            return pixelOffset + microTileOffset;*/
+        }
+
+
+
+        private static int getBPP(int i)
         {
             switch ((GX2SurfaceFormat)i)
             {
@@ -471,90 +769,15 @@ namespace FirstPlugin
             return -1;
         }
 
-        public static byte[] swizzleSurface(GX2Surface surface, bool isCompressed)
+
+
+        private static uint computeSurfaceAddrFromCoordMacroTiled(int x, int y, uint bpp, int pitch,
+            int height, int tileMode, int pipeSwizzle, int bankSwizzle)
         {
-            byte[] original = new byte[surface.data.Length];
-
-            surface.data.CopyTo(original, 0);
-
-            int swizzle = ((surface.swizzle >> 8) & 1) + (((surface.swizzle >> 9) & 3) << 1);
-            int blockSize;
-            int width = surface.width;
-            int height = surface.height;
-
-            int format = getBPP(surface.format);
-            Console.WriteLine(((GX2SurfaceFormat)surface.format).ToString());
-
-            if (isCompressed)
-            {
-                width /= 4;
-                height /= 4;
-
-                if ((GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM ||
-                    (GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB ||
-                    (GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM ||
-                    (GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM)
-                {
-                    blockSize = 8;
-                }
-                else
-                {
-                    blockSize = 16;
-                }
-            }
-            else
-            {
-                /*if ((GX2SurfaceFormat)surface.format == GX2SurfaceFormat.GX2_SURFACE_FORMAT_TC_R5_G5_B5_A1_UNORM)
-                {
-                    blockSize = format / 4;
-                }
-                else*/
-                blockSize = format / 8;
-            }
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int pos = surfaceAddrFromCoordMacroTiled(x, y, format, surface.pitch, swizzle);
-                    int pos_ = (y * width + x) * blockSize;
-
-                    for (int k = 0; k < blockSize; k++)
-                    {
-                        if (pos + k >= original.Length || pos_ + k >= surface.data.Length)
-                        {
-                            Console.WriteLine("Break Point " + pos_ + " " + pos);
-                            break;
-                        }
-                        surface.data[pos_ + k] = original[pos + k];
-                    }
-                }
-            }
-            return surface.data;
+            return 0; //Todo
         }
 
-        public static int surfaceAddrFromCoordMacroTiled(int x, int y, int bpp, int pitch, int swizzle)
-        {
-            int pixelIndex = computePixelIndexWithinMicroTile(x, y, bpp);
-            int elemOffset = (bpp * pixelIndex) >> 3;
-
-            int pipe = computePipeFromCoordWoRotation(x, y);
-            int bank = computeBankFromCoordWoRotation(x, y);
-            int bankPipe = ((pipe + 2 * bank) ^ swizzle) % 9;
-
-            pipe = bankPipe % 2;
-            bank = bankPipe / 2;
-
-            int macroTileBytes = (bpp * 512 + 7) >> 3;
-            int macroTileOffset = (x / 32 + pitch / 32 * (y / 16)) * macroTileBytes;
-
-            int unk1 = elemOffset + (macroTileOffset >> 3);
-            int unk2 = unk1 & ~0xFF;
-
-            return (unk2 << 3) | (0xFF & unk1) | (pipe << 8) | (bank << 9);
-        }
-
-        public static int computePixelIndexWithinMicroTile(int x, int y, int bpp)
+        private static int computePixelIndexWithinMicroTile(int x, int y, uint bpp)
         {
             int bits = ((x & 4) << 1) | ((y & 2) << 3) | ((y & 4) << 3);
 
@@ -574,13 +797,13 @@ namespace FirstPlugin
             return bits;
         }
 
-        public static int getFormatBpp(int format)
+        private static int getFormatBpp(int format)
         {
             int hwFormat = format & 0x3F;
             return formatHwInfo[hwFormat * 4];
         }
 
-        public static int computeSurfaceThickness(AddrTileMode tileMode)
+        private static int computeSurfaceThickness(AddrTileMode tileMode)
         {
             switch (tileMode)
             {
@@ -602,7 +825,7 @@ namespace FirstPlugin
             return 1;
         }
 
-        public static int isThickMacroTiled(AddrTileMode tileMode)
+        private static int isThickMacroTiled(AddrTileMode tileMode)
         {
             switch (tileMode)
             {
@@ -618,7 +841,7 @@ namespace FirstPlugin
             return 0;
         }
 
-        public static int isBankSwappedTileMode(AddrTileMode tileMode)
+        private static int isBankSwappedTileMode(AddrTileMode tileMode)
         {
             switch (tileMode)
             {
@@ -635,7 +858,7 @@ namespace FirstPlugin
             return 0;
         }
 
-        public static int computeSurfaceRotationFromTileMode(AddrTileMode tileMode)
+        private static int computeSurfaceRotationFromTileMode(AddrTileMode tileMode)
         {
             switch ((int)tileMode)
             {
@@ -662,13 +885,13 @@ namespace FirstPlugin
             return 0;
         }
 
-        public static int computePipeFromCoordWoRotation(int x, int y)
+        private static int computePipeFromCoordWoRotation(int x, int y)
         {
             int pipe = ((y >> 3) ^ (x >> 3)) & 1;
             return pipe;
         }
 
-        public static int computeBankFromCoordWoRotation(int x, int y)
+        private static int computeBankFromCoordWoRotation(int x, int y)
         {
             int bankBit0 = ((y / (16 * 2)) ^ (x >> 3)) & 1;
             int bank = bankBit0 | 2 * (((y / (8 * 2)) ^ (x >> 4)) & 1);
@@ -676,7 +899,7 @@ namespace FirstPlugin
             return bank;
         }
 
-        public static int computeMacroTileAspectRatio(AddrTileMode tileMode)
+        private static int computeMacroTileAspectRatio(AddrTileMode tileMode)
         {
             switch (tileMode)
             {
@@ -701,7 +924,7 @@ namespace FirstPlugin
             return 1;
         }
 
-        public static int computeSurfaceBankSwappedWidth(AddrTileMode tileMode, int bpp, int numSamples, int pitch, int pSlicesPerTile)
+        private static int computeSurfaceBankSwappedWidth(AddrTileMode tileMode, int bpp, int numSamples, int pitch, int pSlicesPerTile)
         {
             int bankSwapWidth = 0;
             int numBanks = 4;
@@ -787,7 +1010,7 @@ namespace FirstPlugin
             return bankSwapWidth;
         }
 
-        public static int computePixelIndexWithinMicroTile(int x, int y, int z, int bpp, AddrTileMode tileMode, int microTileType)
+        private static int computePixelIndexWithinMicroTile(int x, int y, int z, int bpp, AddrTileMode tileMode, int microTileType)
         {
             int pixelBit0 = 0;
             int pixelBit1 = 0;
@@ -903,7 +1126,7 @@ namespace FirstPlugin
                 (pixelBit1 << 1);
         }
 
-        public static int surfaceAddrFromCoordMacroTiled(
+        private static int surfaceAddrFromCoordMacroTiled(
             int x, int y, int slice, int sample, int bpp,
             int pitch, int height, int numSamples, AddrTileMode tileMode,
             int isDepth, int tileBase, int compBits,
@@ -1045,93 +1268,266 @@ namespace FirstPlugin
             return subOffset1 | subOffset2 | p4 | p5;
         }
 
-        public static byte[] swizzleBC(GX2Surface surface)
+        private static int getFillSizeFieldsFlags()
         {
-            //std::vector<u8> result;
-            //List<byte> result = new List<byte>();
+            return (m_configFlags >> 6) & 1;
+        }
 
-            //result.resize(surface->imageSize);
+        private static void computeSurfaceInfo(surfaceIn aSurfIn, surfaceOut aSurfOut)
+        {
+            //Todo!
+            surfaceIn pIn = aSurfIn;
+            surfaceOut pOut = aSurfOut;
 
-            //u8 *data = (u8*)surface->imagePtr;
-            byte[] data = surface.data;
-            byte[] result = new byte[surface.imageSize];
+            int v4 = 0;
+            int v6 = 0;
+            int v7 = 0;
+            int v8 = 0;
+            int v10 = 0;
+            int v11 = 0;
+            int v12 = 0;
+            int v18 = 0;
 
-            int width = surface.width / 4;
-            int height = surface.height / 4;
+            TileInfo tileInfoNull = new TileInfo();
+            int sliceFlags = 0;
+            int returnCode = 0;
 
-            for (int y = 0; y < height; ++y)
+            if (getFillSizeFieldsFlags() == 1 && (pIn.size != 60 || pOut.size != 96))
+                returnCode = 6;
+
+            if (pIn.bpp > 0x80)
+                returnCode = 3;
+
+            if (returnCode == ADDR_OK)
             {
-                for (int x = 0; x < width; ++x)
+                v18 = 0;
+
+
+                computeMipLevel();
+
+                int width = pIn.width;
+                int height = pIn.height;
+                int bpp = pIn.bpp;
+                int expandX = 1;
+                int expandY = 1;
+
+            }
+        }
+        private static void computeMipLevel()
+        {
+            uint slices = 0;
+            uint height = 0;
+            uint width = 0;
+            uint hwlHandled = 0;
+
+            if ((49 <= pIn.format && 49 <= 55 && pIn.mipLevel != 49) || 49 <= ((pIn.flags.value >> 12) & 1))
+            {
+                pIn.width = powTwoAlign(pIn.width, 4);
+                pIn.height = powTwoAlign(pIn.height, 4);
+            }
+            hwlHandled = hwlComputeMipLevel();
+
+        }
+        private static uint hwlComputeMipLevel()
+        {
+            //This part might be wrong?
+            uint handled = 0;
+
+            if (49 <= pIn.format && 49 <= 55)
+            {
+                if (pIn.mipLevel != 0)
                 {
-                    int bpp = getFormatBpp(surface.format);
-                    int pos = 0;
+                    int width = pIn.width;
+                    int height = pIn.height;
+                    int slices = pIn.numSlices;
 
-                    switch (surface.tileMode)
+                    if (((pIn.flags.value >> 12) & 1) != 0)
                     {
-                        case 0:
-                        case 1:
-                            {
-                                // pos = surfaceAddrFromCoordLinear(
-                                //  x, y, 0, 0, bpp,
-                                //  surface->pitch, height, surface->depth, 0
-                                // );
+                        int widtha = width >> pIn.mipLevel;
+                        int heighta = height >> pIn.mipLevel;
 
-                                //printf("Unsupported tilemode %d\n", surface->tileMode);
-                                //exit(1);
-                            }
-                            break;
+                        if (((pIn.flags.value >> 4) & 1) == 0)
+                            slices >>= pIn.mipLevel;
 
-                        case 2:
-                        case 3:
-                            {
-                                // pos = surfaceAddrFromCoordMicroTiled(
-                                //  x, y, 0, bpp, surface->pitch, height,
-                                //  surface->tileMode, 0, 0, 0, 0
-                                // );
-
-                                //printf("Unsupported tilemode %d\n", surface->tileMode);
-                                //exit(1);
-                            }
-                            break;
-
-                        default:
-                            {
-                                pos = surfaceAddrFromCoordMacroTiled(
-                                    x, y, 0, 0, bpp, surface.pitch, height,
-                                    1, (AddrTileMode)surface.tileMode, 0, 0, 0,
-                                    (surface.swizzle >> 8) & 1,
-                                    (surface.swizzle >> 9) & 3
-                                );
-                            }
-                            break;
+                        width = Math.Max(1, widtha);
+                        height = Math.Max(1, heighta);
+                        slices = Math.Max(1, slices);
                     }
 
-                    int q = y * width + x;
-                    switch (surface.format)
-                    {
-                        case 0x31:
-                        case 0x34:
-                        case 0x234:
-                        case 0x431:
-                            {
-                                System.Array.Copy(data, pos, result, q * 8, 8);
-                                //memcpy(result.data() + q*8, data+pos, 8);
-                            }
-                            break;
+                    pIn.width = nextPow2(width);
+                    pIn.height = nextPow2(height);
+                    pIn.numSlices = slices;
 
-                        default:
-                            {
-                                System.Array.Copy(data, pos, result, q * 16, 16);
-                                //memcpy(result.data() + q*16, data+pos, 16);
-                            }
-                            break;
-                    }
+                    handled = 1;
+                }
+            }
+            return handled;
+        }
+        private static int nextPow2(int dim)
+        {
+            uint newDim = 1;
+            if (newDim <= 0x7FFFFFFF)
+            {
+                while (newDim < dim)
+                    newDim *= 2;
+            }
+            else
+                newDim = 2147483648;
+
+            return (int)newDim;
+        }
+        private static int powTwoAlign(int x, int align)
+        {
+            return (int)(align - 1) & (x + align - 1);
+        }
+
+        public static surfaceOut getSurfaceInfo(GX2SurfaceFormat surfaceFormat, int surfaceWidth, int surfaceHeight, int surfaceDepth, uint surfaceDim, uint surfaceTileMode, uint surfaceAA, int level)
+        {
+            GX2Surface surface = new GX2Surface();
+
+            uint dim = 0;
+            uint width = 0;
+            uint blockSize = 0;
+            int numSamples = 0;
+            int hwFormat = 0;
+
+            var aSurfIn = new surfaceIn();
+            var pSurfOut = new surfaceOut();
+
+            hwFormat = (int)surfaceFormat & 0x3F;
+
+            if (surfaceTileMode == 16)
+            {
+                numSamples = 1 << (int)surfaceAA;
+
+                if (hwFormat < 0x31 || hwFormat > 0x35)
+                    blockSize = 1;
+                else
+                    blockSize = 4;
+
+                width = (uint)((blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
+
+                if (hwFormat == 0x35)
+                    return pSurfOut;
+
+                pSurfOut.bpp = formatHwInfo[hwFormat * 4];
+                pSurfOut.size = 96;
+                pSurfOut.pitch = (int)(width / blockSize);
+                pSurfOut.pixelBits = formatHwInfo[hwFormat * 4];
+                pSurfOut.baseAlign = 1;
+                pSurfOut.pitchAlign = 1;
+                pSurfOut.heightAlign = 1;
+                pSurfOut.depthAlign = 1;
+
+                if (dim == 0)
+                {
+                    pSurfOut.height = 1;
+                    pSurfOut.depth = 1;
+                }
+                else if (dim == 1)
+                {
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = 1;
+                }
+                else if (dim == 2)
+                {
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = Math.Max(1, surfaceDepth >> level);
+                }
+                else if (dim == 3)
+                {
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = Math.Max(6, surfaceDepth);
+                }
+                else if (dim == 4)
+                {
+                    pSurfOut.height = 1;
+                    pSurfOut.depth = surfaceDepth;
+                }
+                else if (dim == 5)
+                {
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = surfaceDepth;
+                }
+
+                pSurfOut.height = (int)(((blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize);
+                pSurfOut.pixelPitch = (int)((blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
+                pSurfOut.pixelPitch = (int)Math.Max(blockSize, pSurfOut.pixelPitch);
+                pSurfOut.pixelHeight = (int)((blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
+                pSurfOut.pixelHeight = (int)Math.Max(blockSize, pSurfOut.pixelHeight);
+                pSurfOut.pitch = Math.Max(1, pSurfOut.pitch);
+                pSurfOut.height = Math.Max(1, pSurfOut.height);
+                pSurfOut.surfSize = pSurfOut.bpp * numSamples * pSurfOut.depth * pSurfOut.height * pSurfOut.pitch >> 3;
+
+                if (surfaceDim == 2)
+                    pSurfOut.sliceSize = pSurfOut.surfSize;
+
+                else
+                    pSurfOut.sliceSize = pSurfOut.surfSize / pSurfOut.depth;
+
+                pSurfOut.pitchTileMax = (pSurfOut.pitch >> 3) - 1;
+                pSurfOut.heightTileMax = (pSurfOut.height >> 3) - 1;
+                pSurfOut.sliceTileMax = (pSurfOut.height * pSurfOut.pitch >> 6) - 1;
+            }
+            else
+            {
+                aSurfIn.size = 60;
+                aSurfIn.tileMode = (int)surfaceTileMode & 0x0F;
+                aSurfIn.format = hwFormat;
+                aSurfIn.bpp = formatHwInfo[hwFormat * 4];
+                aSurfIn.numSamples = 1 << (int)surfaceAA;
+                aSurfIn.numFrags = aSurfIn.numSamples;
+                aSurfIn.width = Math.Max(1, surfaceWidth >> level);
+
+                if (dim == 0)
+                {
+                    aSurfIn.height = 1;
+                    aSurfIn.numSlices = 1;
+                }
+                else if (dim == 1)
+                {
+                    aSurfIn.height = Math.Max(1, surfaceHeight >> level);
+                    aSurfIn.numSlices = 1;
+                }
+                else if (dim == 2)
+                {
+                    aSurfIn.height = Math.Max(1, surfaceHeight >> level);
+                    aSurfIn.numSlices = Math.Max(1, surfaceDepth >> level);
+                }
+                else if (dim == 3)
+                {
+                    aSurfIn.height = Math.Max(1, surfaceHeight >> level);
+                    aSurfIn.numSlices = Math.Max(6, surfaceDepth);
+                    aSurfIn.flags.value |= 0x10;
+                }
+                else if (dim == 4)
+                {
+                    aSurfIn.height = 1;
+                    aSurfIn.numSlices = surfaceDepth;
+                }
+                else if (dim == 5)
+                {
+                    aSurfIn.height = Math.Max(1, surfaceHeight >> level);
+                    aSurfIn.numSlices = surfaceDepth;
+                }
+                else if (dim == 6)
+                {
+                    aSurfIn.height = Math.Max(1, surfaceHeight >> level);
+                    aSurfIn.numSlices = 1;
+                }
+                else if (dim == 7)
+                {
+                    aSurfIn.height = Math.Max(1, surfaceHeight >> level);
+                    aSurfIn.numSlices = surfaceDepth;
                 }
             }
 
-            return result;
+            pSurfOut.size = 96;
+            computeSurfaceInfo(aSurfIn, pSurfOut);
 
-            //memcpy(data, result.data(), result.size());
+            pSurfOut = pOut;
+
+            return pSurfOut;
         }
     }
 }

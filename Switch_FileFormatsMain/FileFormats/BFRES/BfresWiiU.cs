@@ -19,6 +19,41 @@ namespace FirstPlugin
 {
     public static class BfresWiiU
     {
+        public static Model SetModel(FMDL fmdl)
+        {
+            Model model = new Model();
+            model.Name = fmdl.Text;
+            model.Shapes = new ResDict<Shape>();
+            model.VertexBuffers = new List<VertexBuffer>();
+            model.Materials = new ResDict<Material>();
+            model.UserData = new ResDict<UserData>();
+            model.Skeleton = new Skeleton();
+            model.Skeleton = fmdl.Skeleton.node.SkeletonU;
+
+            int i = 0;
+            var duplicates = fmdl.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
+            foreach (var shape in duplicates)
+                shape.Text += i++;
+
+            foreach (FMAT mat in fmdl.materials.Values)
+            {
+                SetMaterial(mat, mat.MaterialU);
+                model.Materials.Add(mat.Text, mat.MaterialU);
+            }
+            foreach (FSHP shape in fmdl.shapes)
+            {
+                BFRES.CheckMissingTextures(shape);
+                SetShape(shape, shape.ShapeU);
+                shape.ShapeU.SubMeshBoundingNodes = new List<BoundingNode>();
+
+                model.Shapes.Add(shape.Text, shape.ShapeU);
+                model.VertexBuffers.Add(shape.VertexBufferU);
+                shape.ShapeU.VertexBufferIndex = (ushort)(model.VertexBuffers.Count - 1);
+
+                BFRES.SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
+            }
+            return model;
+        }
         public static void Read(BFRESRender renderer, ResFile resFile, TreeNode ResFileNode)
         {
             int CurMdl = 0;
