@@ -433,7 +433,6 @@ namespace Bfres.Structs
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
                             shape.MaterialIndex = 0;
-                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                             shape.vertexAttributes = csvsettings.CreateNewAttributes();
                             shape.boneIndx = 0;
                             shape.Text = obj.ObjectName;
@@ -441,6 +440,7 @@ namespace Bfres.Structs
                             shape.CreateNewBoundingBoxes();
                             shape.CreateBoneList(obj, this);
                             shape.CreateIndexList(obj, this);
+                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.SaveShape();
                             shape.SaveVertexBuffer();

@@ -267,10 +267,16 @@
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FormLoader.cs" />
-    <Compile Include="GUI\NuTexEditor.cs">
+    <Compile Include="GUI\TextureUI\XTXEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\NuTexEditor.Designer.cs">
+    <Compile Include="GUI\TextureUI\XTXEditor.Designer.cs">
+      <DependentUpon>XTXEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\NuTexEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\NuTexEditor.Designer.cs">
       <DependentUpon>NuTexEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\TexturePatternEditor.cs">
@@ -418,7 +424,10 @@
     <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\NuTexEditor.resx">
+    <EmbeddedResource Include="GUI\TextureUI\XTXEditor.resx">
+      <DependentUpon>XTXEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\NuTexEditor.resx">
       <DependentUpon>NuTexEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\TexturePatternEditor.resx">

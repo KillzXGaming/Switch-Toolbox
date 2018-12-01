@@ -117,26 +117,33 @@ namespace FirstPlugin
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     Data = File.ReadAllBytes(ofd.FileName);
+                    UpdateEditor();
                 }
+            }
+            public void UpdateEditor()
+            {
+                if (Viewport.Instance.gL_ControlModern1.Visible == false)
+                    PluginRuntime.FSHPDockState = WeifenLuo.WinFormsUI.Docking.DockState.Document;
+
+                BFAVEditor docked = (BFAVEditor)LibraryGUI.Instance.GetContentDocked(new BFAVEditor());
+                if (docked == null)
+                {
+                    docked = new BFAVEditor();
+                    LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
+                }
+                docked.Text = Text;
+                docked.Dock = DockStyle.Fill;
+                docked.LoadFile(this);
             }
 
             public override void OnClick(TreeView treeview)
             {
                 if (Type == AudioType.Bfwav)
                 {
-                    LoadBFWAVEditor();
+                    UpdateEditor();
                 }
             
-            }
-            private void LoadBFWAVEditor()
-            {
-                BFAVEditor BFAVEditor = new BFAVEditor();
-                BFAVEditor.Text = Text;
-                BFAVEditor.Dock = DockStyle.Fill;
-                BFAVEditor.LoadFile(this);
-                LibraryGUI.Instance.LoadDockContent(BFAVEditor, PluginRuntime.FSHPDockState);
-            }
-            public bool EditorIsActive(DockContent dock)
+            } bool EditorIsActive(DockContent dock)
             {
                 foreach (Control ctrl in dock.Controls)
                 {

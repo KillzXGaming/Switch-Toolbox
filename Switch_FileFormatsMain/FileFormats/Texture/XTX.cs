@@ -75,13 +75,6 @@ namespace FirstPlugin
                 BC5S = 0x0000004c,
             };
 
-            public enum BNTXImageTypes
-            {
-                UNORM = 0x01,
-                SNORM = 0x02,
-                SRGB = 0x06,
-            };
-
             public static uint blk_dims(uint format)
             {
                 switch (format)
@@ -164,14 +157,18 @@ namespace FirstPlugin
 
             public void UpdateEditor()
             {
-                NuTexEditor docked = (NuTexEditor)LibraryGUI.Instance.GetContentDocked(new NuTexEditor());
+                if (Viewport.Instance.gL_ControlModern1.Visible == false)
+                    PluginRuntime.FSHPDockState = WeifenLuo.WinFormsUI.Docking.DockState.Document;
+
+                XTXEditor docked = (XTXEditor)LibraryGUI.Instance.GetContentDocked(new XTXEditor());
                 if (docked == null)
                 {
-                    docked = new NuTexEditor();
+                    docked = new XTXEditor();
                     LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
                 }
                 docked.Text = Text;
                 docked.Dock = DockStyle.Fill;
+                docked.LoadProperty(blockHeader.textureInfo);
             }
 
             public class BlockHeader
@@ -222,7 +219,7 @@ namespace FirstPlugin
                 public uint[] MipOffsets { get; set; }
                 public BlockHeader DataBlockHeader { get; set; }
                 public List<byte[]> mipmaps = new List<byte[]>();
-                public byte[] data;
+                public List<byte[]> compressedBlocks = new List<byte[]>();
 
                 public void Read(FileReader reader)
                 {
@@ -248,8 +245,25 @@ namespace FirstPlugin
                     DataBlockHeader.Read(reader);
 
                     reader.Seek(DataBlockOff + DataBlockHeader.DataOffset, SeekOrigin.Begin);
-                    data = reader.ReadBytes((int)DataBlockHeader.DataSize);
+                    //   data = reader.ReadBytes((int)DataBlockHeader.DataSize);
+                    long datastart = reader.Position;
 
+                    Console.WriteLine(DataBlockHeader.DataSize);
+                    for (int i = 0; i < MipCount; i++)
+                    {
+                        int size = (int)((int)DataBlockHeader.DataSize - MipOffsets[i]);
+                        Console.WriteLine(size);
+
+                        using (reader.TemporarySeek(datastart + MipOffsets[i], System.IO.SeekOrigin.Begin))
+                        {
+                            compressedBlocks.Add(reader.ReadBytes(size));
+                        }
+                        if (compressedBlocks[i].Length == 0)
+                            throw new System.Exception("Empty mip size!");
+
+                        break; //Only first mip level works?
+                    }
+                    reader.Seek(DataBlockOff + DataBlockHeader.DataOffset + (long)DataBlockHeader.DataSize, SeekOrigin.Begin);
                     BlockHeader EndBlockHeader = new BlockHeader();
                     EndBlockHeader.Read(reader);
                 }
@@ -344,7 +358,7 @@ namespace FirstPlugin
                     uint bpp = XTXFormats.bpps((uint)Format);
 
                     int blockHeightShift = 0;
-                    for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                    for (int mipLevel = 0; mipLevel < compressedBlocks.Count; mipLevel++)
                     {
                         uint width = (uint)Math.Max(1, Width >> mipLevel);
                         uint height = (uint)Math.Max(1, Height >> mipLevel);
@@ -352,12 +366,12 @@ namespace FirstPlugin
                         //  uint size = width * height * bpp;
                         uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
 
-                        byte[] mipData = GetMipBlock(MipOffsets[mipLevel], size);
-
+                        Console.WriteLine(mipLevel + " " + size);
+                            
                         if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                             blockHeightShift += 1;
 
-                        byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, (int)Target, bpp, (uint)TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), mipData);
+                        byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, (int)Target, bpp, (uint)TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), compressedBlocks[mipLevel]);
                         //Create a copy and use that to remove uneeded data
                         byte[] result_ = new byte[size];
                         Array.Copy(result, 0, result_, 0, size);
@@ -368,12 +382,6 @@ namespace FirstPlugin
                         Console.WriteLine("width " + width);
                         Console.WriteLine("height " + height);
                     }
-                }
-                private byte[] GetMipBlock(uint offset, uint Size)
-                {
-                    FileReader reader = new FileReader(new MemoryStream(data));
-                    reader.Seek(offset, SeekOrigin.Begin);
-                    return reader.ReadBytes((int)Size);
                 }
             }
 

@@ -473,7 +473,6 @@ namespace Switch_Toolbox.Library.Rendering
         public List<float> boneWeights = new List<float>();
 
         public List<string> boneNames = new List<string>();
-        public List<float> weights = new List<float>();
 
         public List<Bone> boneList = new List<Bone>();
         public class Bone

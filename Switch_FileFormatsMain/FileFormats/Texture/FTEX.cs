@@ -174,11 +174,28 @@ namespace FirstPlugin
 
             GTX.GX2Surface surf = new GTX.GX2Surface();
             surf.bpp = bpp;
+            surf.height = (int)tex.Height;
+            surf.width = (int)tex.Width;
+            surf.aa = (int)tex.AAMode;
+            surf.alignment = (int)tex.Alignment;
+            surf.depth = (int)tex.Depth;
+            surf.dim = (int)tex.Dim;
+            surf.format = (int)tex.Format;
+            surf.use = (int)tex.Use;
+            surf.pitch = (int)tex.Pitch;
+            surf.data = tex.Data;
+            surf.numMips = (int)tex.MipCount;
+            surf.mipOffset = tex.MipOffsets;
+            surf.mipData = tex.MipData;
+            surf.tileMode = (int)tex.TileMode;
+            surf.swizzle = (int)tex.Swizzle;
 
-            for (int surfaceLevel = 0; surfaceLevel < tex.ArrayLength; surfaceLevel++)
-            {
-            }
-            GTX.Decode(surf, tex.MipData);
+            List<byte[]> mips = GTX.Decode(surf);
+            renderedTex.mipmaps.Add(mips);
+
+        //        LoadOpenGLTexture();
+       //     else
+       //         Console.WriteLine("Failed to load image!");
         }
 
         public void Export(string FileName, bool ExportSurfaceLevel = false,

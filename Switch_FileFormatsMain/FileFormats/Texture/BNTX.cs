@@ -803,6 +803,9 @@ namespace FirstPlugin
         }
         public void UpdateBNTXEditor()
         {
+            if (Viewport.Instance.gL_ControlModern1.Visible == false)
+                PluginRuntime.FSHPDockState = WeifenLuo.WinFormsUI.Docking.DockState.Document;
+
             BNTXEditor docked = (BNTXEditor)LibraryGUI.Instance.GetContentDocked(new BNTXEditor());
             if (docked == null)
             {

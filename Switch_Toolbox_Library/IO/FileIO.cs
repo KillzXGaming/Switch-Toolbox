@@ -158,6 +158,10 @@ namespace Switch_Toolbox.Library.IO
         {
             Write(Encoding.ASCII.GetBytes(value));
         }
+        public void WriteString(string value)
+        {
+            Write(value, BinaryStringFormat.ZeroTerminated);
+        }
         public void WriteUint64Offset(long target)
         {
             long pos = Position;

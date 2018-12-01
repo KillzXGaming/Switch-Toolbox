@@ -819,8 +819,8 @@ namespace Bfres.Structs
                     //  vtx.nrm = TransformLocal(vtx.nrm, false);
                     //     Console.WriteLine("New " + vtx.pos);
                 }
-                //       Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
-                //      Console.WriteLine($"Index count {vtx.boneIds.Count}");
+                //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
+                //Console.WriteLine($"Index count {vtx.boneIds.Count}");
 
                 verts.Add(new Syroot.Maths.Vector4F(vtx.pos.X, vtx.pos.Y, vtx.pos.Z, 1.0f));
                 norms.Add(new Syroot.Maths.Vector4F(vtx.nrm.X, vtx.nrm.Y, vtx.nrm.Z, 0));

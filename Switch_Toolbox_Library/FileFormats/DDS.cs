@@ -418,6 +418,7 @@ namespace Switch_Toolbox.Library
                 case DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
                 case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
                     header.ddspf.fourCC = "DX10";
                     if (DX10header == null)
                         DX10header = new DX10Header();

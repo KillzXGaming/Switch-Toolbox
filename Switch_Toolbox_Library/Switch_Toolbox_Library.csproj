@@ -108,7 +108,6 @@
     <Compile Include="FileFormats\ANIM.cs" />
     <Compile Include="FileFormats\Assimp\Assimp.cs" />
     <Compile Include="FileFormats\Assimp\AssimpHelper.cs" />
-    <Compile Include="FileFormats\CSV.cs" />
     <Compile Include="FileFormats\DDS.cs" />
     <Compile Include="FileFormats\DDSCompressor.cs" />
     <Compile Include="GUI Custom\ListViewCustom.cs">

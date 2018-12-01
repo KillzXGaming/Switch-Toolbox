@@ -55,6 +55,7 @@ namespace DirectXTex
 				inputImage.slicePitch = slicePitch;
 
 				DirectX::ScratchImage outputImage;
+				
 
 				// decompress image
 				DirectX::Decompress(inputImage, DXGI_FORMAT_R8G8B8A8_UNORM, outputImage);

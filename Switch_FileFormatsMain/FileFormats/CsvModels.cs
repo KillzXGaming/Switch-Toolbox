@@ -277,6 +277,17 @@ namespace FirstPlugin
                     foreach (float f in obj.weightsT[v])
                         obj.vertices[v].boneWeights.Add(f);
                 }
+                foreach (Vertex v in obj.vertices)
+                {
+                    if (v.boneNames.Count == 1)
+                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]}");
+                    if (v.boneNames.Count == 2)
+                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]}");
+                    if (v.boneNames.Count == 3)
+                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]} {v.boneNames[2]} {v.boneWeights[2]}");
+                    if (v.boneNames.Count == 4)
+                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]} {v.boneNames[2]} {v.boneWeights[2]} {v.boneNames[3]} {v.boneWeights[3]}");
+                }
             }
 
             csv.Close();

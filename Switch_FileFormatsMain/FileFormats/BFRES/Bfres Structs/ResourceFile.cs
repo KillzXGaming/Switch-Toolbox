@@ -272,9 +272,6 @@ namespace Bfres.Structs
         }
         private void AddFTEXTextures(ResU.ResFile resFile)
         {
-            MessageBox.Show("Note! Textures are disabled atm.");
-            return;
-
             FTEXContainer ftexContainer = new FTEXContainer();
             Nodes.Add(ftexContainer);
             foreach (ResU.Texture tex in resFile.Textures.Values)
@@ -285,7 +282,7 @@ namespace Bfres.Structs
                 ftexContainer.Nodes.Add(texture);
                 ftexContainer.Textures.Add(texture.Text, texture);
             }
-            PluginRuntime.ftexContainers.Add(ftexContainer);
+           // PluginRuntime.ftexContainers.Add(ftexContainer);
         }
         private void AddSkeletonAnims(ResU.ResFile resFile)
         {

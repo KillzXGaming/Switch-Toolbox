@@ -277,7 +277,7 @@ namespace FirstPlugin
                         list.AddVector4(vtx.bitan);
                         break;
                     case "_w0":
-                        list.AddWeights(vtx.weights);
+                        list.AddWeights(vtx.boneWeights);
                         break;
                     case "_i0":
                         List<string> boneNames = new List<string>();
@@ -287,7 +287,7 @@ namespace FirstPlugin
                         boneNames = null;
                         break;
                     case "_w1":
-                        list.AddWeights(vtx.weights);
+                        list.AddWeights(vtx.boneWeights);
                         break;
                     case "_i1":
                         List<string> boneNames2 = new List<string>();
