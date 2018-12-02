@@ -278,9 +278,9 @@ namespace Switch_Toolbox
                     format.Load();
                     format.FilePath = FileName;
 
-                    if (format.EditorRoot != null)
+                    if (format is TreeNode)
                     {
-                        objectList.treeView1.Nodes.Add(format.EditorRoot);
+                        objectList.treeView1.Nodes.Add((TreeNode)format);
                     }
 
                     if (format.CanSave)
@@ -308,9 +308,9 @@ namespace Switch_Toolbox
                         format.FilePath = FileName;
                         format.Load();
 
-                        if (format.EditorRoot != null)
+                        if (format is TreeNode)
                         {
-                            objectList.treeView1.Nodes.Add(format.EditorRoot);
+                            objectList.treeView1.Nodes.Add((TreeNode)format);
                         }
 
                         if (format.CanSave)

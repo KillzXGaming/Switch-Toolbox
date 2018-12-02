@@ -20,7 +20,7 @@ namespace FirstPlugin
 
         public void LoadTexture()
         {
-            if (BFRES.IsWiiU)
+            if (BFRES.Instance.IsWiiU)
             {
                 foreach (FTEXContainer ftexcont in PluginRuntime.ftexContainers)
                 {
@@ -30,7 +30,7 @@ namespace FirstPlugin
             }
             else
             {
-                foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                foreach (BNTX bntx in PluginRuntime.bntxContainers)
                 {
                     foreach (TextureData tex in bntx.Textures.Values)
                         listView1.Items.Add(tex.Text);
@@ -54,7 +54,7 @@ namespace FirstPlugin
             if (listView1.SelectedItems.Count > 0)
             {
                 string TexName = listView1.SelectedItems[0].Text;
-                if (BFRES.IsWiiU)
+                if (BFRES.Instance.IsWiiU)
                 {
                     foreach (FTEXContainer ftexcont in PluginRuntime.ftexContainers)
                     {
@@ -64,7 +64,7 @@ namespace FirstPlugin
                 }
                 else
                 {
-                    foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                    foreach (BNTX bntx in PluginRuntime.bntxContainers)
                     {
                         if (bntx.Textures.ContainsKey(TexName))
                             DisplayTexture(bntx.Textures[TexName]);
@@ -121,7 +121,7 @@ namespace FirstPlugin
                 AddTexture((PluginRuntime.bntxContainers[0]));
             }
         }
-        private void AddTexture(BinaryTextureContainer bntx)
+        private void AddTexture(BNTX bntx)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
@@ -150,7 +150,7 @@ namespace FirstPlugin
             if (listView1.SelectedItems.Count > 0)
             {
                 string TexName = listView1.SelectedItems[0].Text;
-                foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                foreach (BNTX bntx in PluginRuntime.bntxContainers)
                 {
                     if (bntx.Textures.ContainsKey(TexName))
                     {

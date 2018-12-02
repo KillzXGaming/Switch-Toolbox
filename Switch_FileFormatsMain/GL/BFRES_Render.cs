@@ -31,7 +31,7 @@ namespace FirstPlugin
         public Shader shader = null;
         public List<FMDL> models = new List<FMDL>();
 
-        public ResourceFile ResFileNode;
+        public BFRES ResFileNode;
 
         public BFRESRender()
         {
@@ -303,7 +303,7 @@ namespace FirstPlugin
             GL.ActiveTexture(TextureUnit.Texture0 + tex.hash + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
 
-            if (BFRES.IsWiiU)
+            if (BFRES.Instance.IsWiiU)
             {
                 foreach (var ftexContainer in PluginRuntime.ftexContainers)
                 {
@@ -450,7 +450,7 @@ namespace FirstPlugin
             if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
                 return;
 
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 foreach (var t in mat.textures)
                 {
@@ -469,7 +469,7 @@ namespace FirstPlugin
             if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
                 return;
 
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 if (!bntx.AllGLInitialized)
                 {

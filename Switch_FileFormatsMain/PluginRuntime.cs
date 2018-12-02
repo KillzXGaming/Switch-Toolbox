@@ -9,7 +9,7 @@ namespace FirstPlugin
 {
     public class PluginRuntime
     {
-        public static List<BinaryTextureContainer> bntxContainers = new List<BinaryTextureContainer>();
+        public static List<BNTX> bntxContainers = new List<BNTX>();
         public static List<FTEXContainer> ftexContainers = new List<FTEXContainer>();
         public static DockState FSHPDockState = DockState.DockRight;
         public static string ExternalFMATPath = "";

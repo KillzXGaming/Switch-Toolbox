@@ -16,14 +16,14 @@ namespace FirstPlugin
         {
             InitializeComponent();
 
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 listView1.Items.Add(bntx.Text);
             }
         }
-        public BinaryTextureContainer GetBNTX()
+        public BNTX GetBNTX()
         {
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 if (bntx.Text == listView1.SelectedItems[0].Text)
                     return bntx;

@@ -974,19 +974,13 @@ namespace FirstPlugin
                 foreach (TreeNode node in EditorRoot.Nodes["EXT"].Nodes)
                 {
                     ExternalFile ext = new ExternalFile();
-                    if (node is BinaryTextureContainer)
-                    {
-                        BinaryTextureContainer bntx = (BinaryTextureContainer)node;
-                        ext.Data = bntx.Save();
-                    }
+                    if (node is BNTX)
+                        ext.Data = ((BNTX)node).Save();
                     else if (node is BfshaFileData)
-                    {
                         ext.Data = ((BfshaFileData)node).Data;
-                    }
                     else
-                    {
                         ext.Data = ((ExternalFileData)node).Data;
-                    }
+                    
                     resFile.ExternalFiles.Add(ext);
                 }
             }

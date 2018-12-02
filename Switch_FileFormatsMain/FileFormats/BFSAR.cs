@@ -10,7 +10,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class BFSAR : IFileFormat
+    public class BFSAR : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -21,7 +21,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
@@ -43,13 +42,12 @@ namespace FirstPlugin
             FSAR bfsar = new FSAR();
             bfsar.Read(new FileReader(new MemoryStream(Data)));
 
-            EditorRoot = new TreeNodeFile(FileName, this);
-
-            EditorRoot.Nodes.Add("Audio List");
-            EditorRoot.Nodes.Add("Audio Set List");
-            EditorRoot.Nodes.Add("Bank List");
-            EditorRoot.Nodes.Add("Group List");
-            EditorRoot.Nodes.Add("Players List");
+            Text = FileName;
+            Nodes.Add("Audio List");
+            Nodes.Add("Audio Set List");
+            Nodes.Add("Bank List");
+            Nodes.Add("Group List");
+            Nodes.Add("Players List");
         }
         public void Unload()
         {

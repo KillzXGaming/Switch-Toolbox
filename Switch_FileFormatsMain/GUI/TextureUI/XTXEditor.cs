@@ -29,7 +29,7 @@ namespace FirstPlugin
             UpdateBackgroundImage();
         }
 
-        XTX.XTXFile.TextureInfo textureData;
+        XTX.TextureInfo textureData;
 
         int CurMipDisplayLevel = 0;
         int CurArrayDisplayLevel = 0;
@@ -43,7 +43,7 @@ namespace FirstPlugin
             public uint MipCount { get; set; }
             public uint ArrayCount { get; set; }
         }
-        public void LoadProperty(XTX.XTXFile.TextureInfo tex)
+        public void LoadProperty(XTX.TextureInfo tex)
         {
             pictureBoxCustom1.Image = Imaging.GetLoadingImage();
             LoadImage();

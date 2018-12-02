@@ -11,7 +11,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class GFPAK : IFileFormat
+    public class GFPAK : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -22,7 +22,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
@@ -40,31 +39,11 @@ namespace FirstPlugin
         public void Load()
         {
             IsActive = true;
-            EditorRoot = new GFLXPACK(FileName, this);
             IFileInfo = new IFileInfo();
 
-            ((GFLXPACK)EditorRoot).Read(new FileReader(new MemoryStream(Data)), EditorRoot);
+             Read(new FileReader(new MemoryStream(Data)));
 
-        }
-        public void Unload()
-        {
-
-        }
-        public byte[] Save()
-        {
-            MemoryStream mem = new MemoryStream();
-            ((GFLXPACK)EditorRoot).Write(new FileWriter(mem));
-            return mem.ToArray();
-        }
-    }
-
-
-    public class GFLXPACK : TreeNodeFile
-    {
-        public GFLXPACK(string text, IFileFormat format)
-        {
-            Text = text;
-            FileHandler = format;
+            Text = FileName;
 
             ContextMenu = new ContextMenu();
             MenuItem save = new MenuItem("Save");
@@ -74,19 +53,29 @@ namespace FirstPlugin
             ContextMenu.MenuItems.Add(previewFiles);
             previewFiles.Click += PreviewWindow;
         }
+        public void Unload()
+        {
+
+        }
+        public byte[] Save()
+        {
+            MemoryStream mem = new MemoryStream();
+            Write(new FileWriter(mem));
+            return mem.ToArray();
+        }
+
         private void Save(object sender, EventArgs args)
         {
             List<IFileFormat> formats = new List<IFileFormat>();
-            formats.Add(FileHandler);
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = Utils.GetAllFilters(formats);
-            sfd.FileName = FileHandler.FileName;
+            sfd.FileName = FileName;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                SaveCompressFile(FileHandler.Save(), sfd.FileName, FileHandler.IFileInfo.Alignment);
+                SaveCompressFile(Save(), sfd.FileName, IFileInfo.Alignment);
             }
         }
         private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
@@ -154,7 +143,7 @@ namespace FirstPlugin
         public int version;
         public int FolderCount;
 
-        public void Read(FileReader reader, TreeNode root)
+        public void Read(FileReader reader)
         {
             string Signature = reader.ReadString(8, Encoding.ASCII);
             if (Signature != "GFLXPACK")
@@ -188,7 +177,7 @@ namespace FirstPlugin
                 FileEntry fileEntry = new FileEntry();
                 fileEntry.Read(reader);
                 fileEntry.Text = hashes[i].ToString();
-                root.Nodes.Add(fileEntry);
+                Nodes.Add(fileEntry);
                 files.Add(fileEntry);
             }
         }
@@ -380,14 +369,14 @@ namespace FirstPlugin
                     fileFormat.FilePath = FileName;
                     fileFormat.IFileInfo = new IFileInfo();
                     fileFormat.IFileInfo.InArchive = true;
-                    if (fileFormat.EditorRoot == null)
-                        return null;
-                    fileFormat.EditorRoot.ImageKey = fileEntry.ImageKey;
-                    fileFormat.EditorRoot.SelectedImageKey = fileEntry.SelectedImageKey;
-                    fileFormat.EditorRoot.Text = fileEntry.Text;
-                    fileEntry.FileHandler = fileFormat;
 
-                    return fileFormat.EditorRoot;
+                    if (fileFormat is TreeNode)
+                    {
+                        ((TreeNode)fileFormat).Text = fileEntry.Text;
+                        ((TreeNode)fileFormat).ImageKey = fileEntry.ImageKey;
+                        ((TreeNode)fileFormat).SelectedImageKey = fileEntry.SelectedImageKey;
+                        return (TreeNode)fileFormat;
+                    }
                 }
                 if (fileFormat.Magic == string.Empty)
                 {
@@ -401,14 +390,14 @@ namespace FirstPlugin
                             fileFormat.FilePath = FileName;
                             fileFormat.IFileInfo = new IFileInfo();
                             fileFormat.IFileInfo.InArchive = true;
-                            if (fileFormat.EditorRoot == null)
-                                return null;
-                            fileFormat.EditorRoot.ImageKey = fileEntry.ImageKey;
-                            fileFormat.EditorRoot.SelectedImageKey = fileEntry.SelectedImageKey;
-                            fileFormat.EditorRoot.Text = fileEntry.Text;
-                            fileEntry.FileHandler = fileFormat;
 
-                            return fileFormat.EditorRoot;
+                            if (fileFormat is TreeNode)
+                            {
+                                ((TreeNode)fileFormat).Text = fileEntry.Text;
+                                ((TreeNode)fileFormat).ImageKey = fileEntry.ImageKey;
+                                ((TreeNode)fileFormat).SelectedImageKey = fileEntry.SelectedImageKey;
+                                return (TreeNode)fileFormat;
+                            }
                         }
                     }
                 }
@@ -423,28 +412,6 @@ namespace FirstPlugin
             int index = node.Nodes.IndexOf(replaceNode);
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
-        }
-    }
-
-
-    public class FileUnk
-    {
-        public uint Size;
-        public uint Type;
-        public uint Width;
-        public uint Height;
-        public uint Ascend;
-        public uint LineFeed;
-        public uint AlterCharIndex;
-        public uint DefaultLeftWidth;
-        public uint DefaultGlyphWidth;
-        public uint DefaultCharWidth;
-        public uint CharEncoding;
-        public TGLP tglp;
-
-        public void Read(FileReader reader)
-        {
-           
         }
     }
 }

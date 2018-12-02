@@ -195,7 +195,7 @@ namespace FirstPlugin
             bool FoundTexture = false;
             foreach (ListViewItem item in textureRefListView.Items)
             {
-                foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                foreach (BNTX bntx in PluginRuntime.bntxContainers)
                 {
                     if (bntx.Textures.ContainsKey(item.Text))
                     {

@@ -21,7 +21,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public string FilePath { get; set; }

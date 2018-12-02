@@ -39,9 +39,9 @@ namespace Bfres.Structs
             {
                 foreach (var ext in Nodes)
                 {
-                    if (ext is BinaryTextureContainer)
+                    if (ext is BNTX)
                     {
-                        PluginRuntime.bntxContainers.Remove((BinaryTextureContainer)ext);
+                        PluginRuntime.bntxContainers.Remove((BNTX)ext);
                     }
                 }
 

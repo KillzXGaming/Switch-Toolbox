@@ -40,7 +40,7 @@ namespace FirstPlugin
             textureListView.FullRowSelect = true;
 
             int CurTex = 0;
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 foreach (TextureData item in bntx.Textures.Values)
                 {
@@ -73,7 +73,7 @@ namespace FirstPlugin
 
         private void textureListView_DoubleClick(object sender, EventArgs e)
         {
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 if (bntx.Textures.ContainsKey(textureListView.SelectedItems[0].Text))
                 {
@@ -110,7 +110,7 @@ namespace FirstPlugin
             {
                 case MouseButtons.Right:
                     {
-                        foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+                        foreach (BNTX bntx in PluginRuntime.bntxContainers)
                         {
                             if (bntx.Textures.ContainsKey(textureListView.SelectedItems[0].Text))
                             {

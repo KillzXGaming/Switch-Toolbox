@@ -75,7 +75,7 @@ namespace Bfres.Structs
 
         public ResFile GetResFile()
         {
-            return ((ResourceFile)Parent.Parent).resFile;
+            return ((BFRES)Parent.Parent).resFile;
         }
         public void Read(MaterialAnim anim)
         {

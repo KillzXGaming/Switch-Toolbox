@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.IO;
+using System.Windows.Forms;
 
 namespace FirstPlugin
 {
@@ -18,7 +21,65 @@ namespace FirstPlugin
         GeometryShaderProgram = 0x09,
     }
 
-    /*    public class GTXHeader
+    public class GTXFile : TreeNode, IFileFormat
+    {
+        public bool CanSave { get; set; } = false;
+        public bool FileIsEdited { get; set; } = false;
+        public bool FileIsCompressed { get; set; } = false;
+        public string[] Description { get; set; } = new string[] { "GTX" };
+        public string[] Extension { get; set; } = new string[] { "*.gtx" };
+        public string Magic { get; set; } = "Gfx2 ";
+        public CompressionType CompressionType { get; set; } = CompressionType.None;
+        public byte[] Data { get; set; }
+        public string FileName { get; set; }
+        public bool IsActive { get; set; } = false;
+        public bool UseEditMenu { get; set; } = false;
+        public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
+
+        public Type[] Types
+        {
+            get
+            {
+                List<Type> types = new List<Type>();
+                return types.ToArray();
+            }
+        }
+        private GTXHeader header;
+        private GTXDataBlock block;
+
+        public void Load()
+        {
+            CanSave = true;
+
+            ReadGx2(new FileReader(Data));
+
+
+            ContextMenu = new ContextMenu();
+            MenuItem save = new MenuItem("Save");
+            ContextMenu.MenuItems.Add(save);
+            save.Click += Save;
+        }
+        private void Save(object sender, EventArgs args)
+        {
+            Save();
+        }
+        private void ReadGx2(FileReader reader)
+        {
+            header = new GTXHeader();
+            header.Read(reader);
+
+        }
+        public void Unload()
+        {
+
+        }
+        public byte[] Save()
+        {
+            System.IO.MemoryStream mem = new System.IO.MemoryStream();
+            return mem.ToArray();
+        }
+        public class GTXHeader
         {
             public uint MajorVersion;
             public uint MinorVersion;
@@ -36,39 +97,70 @@ namespace FirstPlugin
                 MinorVersion = reader.ReadUInt32();
                 GpuVersion = reader.ReadUInt32();
                 AlignMode = reader.ReadUInt32();
-                uint Reserved = reader.ReadUInt32();
-                uint Reserved2 = reader.ReadUInt32();
             }
-            public void Write(FileWriter reader)
+            public void Write(FileWriter writer)
             {
+                writer.WriteSignature("Gfx2");
+                writer.Write(MajorVersion);
+                writer.Write(MinorVersion);
+                writer.Write(GpuVersion);
+                writer.Write(AlignMode);
             }
         }
         public class GTXDataBlock
         {
+            public uint HeaderSize;
             public uint MajorVersion;
             public uint MinorVersion;
             public BlockType BlockType;
             public uint Identifier;
             public uint index;
+            public uint DataSize;
 
             public void Read(FileReader reader, GTXHeader header)
             {
                 string Signature = reader.ReadString(4, Encoding.ASCII);
                 if (Signature != "BLK")
                     throw new Exception($"Invalid signature {Signature}! Expected BLK.");
-                uint HeaderSize = reader.ReadUInt32();
 
+                HeaderSize = reader.ReadUInt32();
                 MajorVersion = reader.ReadUInt32(); //Must be 0x01 for 6.x.x
                 MinorVersion = reader.ReadUInt32(); //Must be 0x00 for 6.x.x
                 BlockType = reader.ReadEnum<BlockType>(false);
-                uint DataSize = reader.ReadUInt32();
+                DataSize = reader.ReadUInt32();
                 Identifier = reader.ReadUInt32();
                 index = reader.ReadUInt32();
             }
-        }*/
+            public void Write(FileWriter writer)
+            {
+                writer.WriteSignature("BLK");
+                writer.Write(HeaderSize);
+                writer.Write(MajorVersion);
+                writer.Write(MinorVersion);
+                writer.Write(BlockType, true);
+                writer.Write(DataSize);
+                writer.Write(Identifier);
+                writer.Write(index);
+            }
+        }
+        public class TextureInfo
+        {
+
+            public void Read(FileReader reader)
+            {
+
+            }
+            public void Write(FileWriter writer)
+            {
+
+            }
+        }
+    }
+
+  
     public class GTX
     {
-        //From https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
+        //Some enums and parts from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
         //Todo. Add swizzling back
         public struct GX2Surface
         {

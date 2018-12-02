@@ -14,7 +14,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class BEA : IFileFormat
+    public class BEA : TreeNode, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -25,7 +25,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
@@ -115,14 +114,13 @@ namespace FirstPlugin
 
         public void Load()
         {
+            Text = FileName;
+
             IsActive = true;
             CanSave = true;
 
             beaFile = new BezelEngineArchive(new MemoryStream(Data));
-            EditorRoot = new RootNode(Path.GetFileName(FileName), this);
-            TreeNode root = EditorRoot;
-
-            FillTreeNodes(root, beaFile.FileList);
+            FillTreeNodes(this, beaFile.FileList);
         }
         public void Unload()
         {
@@ -141,7 +139,7 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            foreach (TreeNode node in Collect(EditorRoot.Nodes))
+            foreach (TreeNode node in Collect(Nodes))
             {
                 if (node is FileEntry)
                 {
@@ -165,7 +163,6 @@ namespace FirstPlugin
             public RootNode(string n, IFileFormat format)
             {
                 Text = n;
-                FileHandler = format;
 
                 ContextMenu = new ContextMenu();
                 MenuItem previewFiles = new MenuItem("Preview Window");
@@ -313,11 +310,13 @@ namespace FirstPlugin
                         format.Load();
                         format.FilePath = FileName;
 
-                        if (format.EditorRoot != null)
+                        if (format is TreeNode)
                         {
-                            format.EditorRoot.Text = Text;
-                            format.EditorRoot.ImageKey = ImageKey;
-                            format.EditorRoot.SelectedImageKey = SelectedImageKey;
+                            ((TreeNode)format).Text = Text;
+                            ((TreeNode)format).ImageKey = ImageKey;
+                            ((TreeNode)format).SelectedImageKey = SelectedImageKey;
+
+                            Nodes.Add(((TreeNode)format));
                         }
                     }
                     if (format.Magic == String.Empty) //Load by extension if magic isn't defined
@@ -447,13 +446,13 @@ namespace FirstPlugin
                         format.Load();
                         format.FilePath = FileName;
 
-                        if (format.EditorRoot != null)
+                        if (format is TreeNode)
                         {
-                            format.EditorRoot.Text = Text;
-                            format.EditorRoot.ImageKey = ImageKey;
-                            format.EditorRoot.SelectedImageKey = SelectedImageKey;
+                            ((TreeNode)format).Text = Text;
+                            ((TreeNode)format).ImageKey = ImageKey;
+                            ((TreeNode)format).SelectedImageKey = SelectedImageKey;
 
-                            Nodes.Add(format.EditorRoot);
+                            Nodes.Add(((TreeNode)format));
                         }
                     }
                     if (format.Magic == String.Empty) //Load by extension if magic isn't defined

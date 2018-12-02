@@ -9,11 +9,16 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library.IO;
 using Bfres.Structs;
+using ResU = Syroot.NintenTools.Bfres;
+using Syroot.NintenTools.NSW.Bfres;
 
 namespace FirstPlugin
 {
-    public class BFRES : IFileFormat
+    public class BFRES : TreeNodeFile, IFileFormat
     {
+        private static BFRES _instance;
+        public static BFRES Instance { get { return _instance == null ? _instance = new BFRES() : _instance; } }
+
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
         public bool FileIsCompressed { get; set; } = false;
@@ -34,19 +39,274 @@ namespace FirstPlugin
             }
         }
 
-        private TreeNodeFile eitorRoot;
-        public TreeNodeFile EditorRoot
+        public bool IsActive { get; set; } = false;
+        public bool UseEditMenu { get; set; } = false;
+        public int Alignment { get; set; } = 0;
+        public string FilePath { get; set; }
+        private bool isWiiU;
+        public bool IsWiiU
         {
             get
             {
-                return eitorRoot;
-            }
-            set
-            {
-                this.eitorRoot = value;
+                if (Data == null)
+                    return false;
+                if (isWiiU)
+                    return true;
+
+                using (FileReader reader = new FileReader(new MemoryStream(Data)))
+                {
+                    reader.Seek(4);
+                    if (reader.ReadInt32() != 0x20202020)
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                }
             }
         }
-        public void SaveFile()
+
+        public BFRESRender BFRESRender;
+        public void Load()
+        {
+            IsActive = true;
+            CanSave = true;
+
+
+
+            ImageKey = "bfres";
+            SelectedImageKey = "bfres";
+
+            ContextMenu = new ContextMenu();
+            MenuItem save = new MenuItem("Save");
+            ContextMenu.MenuItems.Add(save);
+            save.Click += Save;
+
+            MenuItem newMenu = new MenuItem("New");
+            MenuItem import = new MenuItem("Import");
+            //       ContextMenu.MenuItems.Add(newMenu);
+            //       ContextMenu.MenuItems.Add(import);
+
+            MenuItem rename = new MenuItem("Rename");
+            ContextMenu.MenuItems.Add(rename);
+            rename.Click += Rename;
+            MenuItem remove = new MenuItem("Remove");
+            ContextMenu.MenuItems.Add(remove);
+            remove.Click += Remove;
+
+            if (Parent == null)
+                remove.Enabled = false;
+
+            if (IsWiiU)
+            {
+
+            }
+            else
+            {
+                MenuItem model = new MenuItem("Model");
+                MenuItem fska = new MenuItem("Skeletal Animation");
+                MenuItem fmaa = new MenuItem("Material Animation");
+                MenuItem bonevis = new MenuItem("Bone Visual Animation");
+                MenuItem shape = new MenuItem("Shape Animation");
+                MenuItem scene = new MenuItem("Scene Animation");
+                MenuItem embedded = new MenuItem("Embedded File");
+                MenuItem texture = new MenuItem("Texture File");
+                texture.Click += NewTextureFile;
+                newMenu.MenuItems.Add(model);
+                newMenu.MenuItems.Add(fska);
+                newMenu.MenuItems.Add(fmaa);
+                newMenu.MenuItems.Add(bonevis);
+                newMenu.MenuItems.Add(shape);
+                newMenu.MenuItems.Add(scene);
+                newMenu.MenuItems.Add(embedded);
+                newMenu.MenuItems.Add(texture);
+
+                MenuItem importmodel = new MenuItem("Model");
+                MenuItem importfska = new MenuItem("Skeletal Animation");
+                MenuItem importfmaa = new MenuItem("Material Animation");
+                MenuItem importbonevis = new MenuItem("Bone Visual Animation");
+                MenuItem importshape = new MenuItem("Shape Animation");
+                MenuItem importscene = new MenuItem("Scene Animation");
+                MenuItem importembedded = new MenuItem("Embedded File");
+                MenuItem importtexture = new MenuItem("Texture File");
+                import.MenuItems.Add(importmodel);
+                import.MenuItems.Add(importfska);
+                import.MenuItems.Add(importfmaa);
+                import.MenuItems.Add(importbonevis);
+                import.MenuItems.Add(importshape);
+                import.MenuItems.Add(importscene);
+                import.MenuItems.Add(importembedded);
+                import.MenuItems.Add(importtexture);
+            }
+
+            BFRESRender = new BFRESRender();
+            BFRESRender.ResFileNode = this;
+
+            if (IsWiiU)
+            {
+                BFRESRender.LoadFile(new Syroot.NintenTools.Bfres.ResFile(new System.IO.MemoryStream(Data)));
+            }
+            else
+            {
+                BFRESRender.LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(new System.IO.MemoryStream(Data)));
+            }
+
+            Runtime.abstractGlDrawables.Add(BFRESRender);
+        }
+        public void Unload()
+        {
+            BFRESRender.Destroy();
+            BFRESRender.ResFileNode.Nodes.Clear();
+        }
+
+        public byte[] Save()
+        {
+            MemoryStream mem = new MemoryStream();
+
+            if (IsWiiU)
+                SaveWiiU(mem);
+            else
+                SaveSwitch(mem);
+
+            return mem.ToArray();
+        }
+
+        public ResFile resFile = null;
+        public ResU.ResFile resFileU = null;
+
+        public TreeNode TextureFolder = new TreeNode("Textures");
+
+        public override void OnClick(TreeView treeView)
+        {
+            //If has models
+            if (Nodes.ContainsKey("FMDL"))
+            {
+                LibraryGUI.Instance.LoadViewport(Viewport.Instance);
+                Viewport.Instance.gL_ControlModern1.MainDrawable = BFRESRender;
+
+                BFRESRender.UpdateVertexData();
+            }
+        }
+        public void Load(ResU.ResFile res)
+        {
+            resFileU = res;
+
+            Text = resFileU.Name;
+
+            if (resFileU.Models.Count > 0)
+                Nodes.Add(new FmdlFolder());
+            if (resFileU.Textures.Count > 0)
+                AddFTEXTextures(resFileU);
+            if (resFileU.SkeletalAnims.Count > 0)
+                AddSkeletonAnims(resFileU);
+            if (resFileU.ShaderParamAnims.Count > 0)
+                Nodes.Add(new FshuFolder());
+            if (resFileU.ColorAnims.Count > 0)
+                Nodes.Add(new FshuColorFolder());
+            if (resFileU.TexSrtAnims.Count > 0)
+                Nodes.Add(new TexSrtFolder());
+            if (resFileU.TexPatternAnims.Count > 0)
+                Nodes.Add(new TexPatFolder());
+            if (resFileU.ShapeAnims.Count > 0)
+                Nodes.Add(new FshpaFolder());
+            if (resFileU.BoneVisibilityAnims.Count > 0)
+                Nodes.Add(new FbnvFolder());
+            if (resFileU.SceneAnims.Count > 0)
+                Nodes.Add(new FscnFolder());
+            if (resFileU.ExternalFiles.Count > 0)
+                Nodes.Add(new EmbeddedFilesFolder());
+
+            foreach (var anim in resFileU.ShaderParamAnims)
+                Nodes["FSHA"].Nodes.Add(anim.Key);
+            foreach (var anim in resFileU.ColorAnims)
+                Nodes["FSHAColor"].Nodes.Add(anim.Key);
+            foreach (var anim in resFileU.TexSrtAnims)
+                Nodes["TEXSRT"].Nodes.Add(anim.Key);
+            foreach (var anim in resFileU.TexPatternAnims)
+                Nodes["TEXPAT"].Nodes.Add(anim.Key);
+
+            int ext = 0;
+            foreach (var extfile in resFileU.ExternalFiles)
+            {
+                string Name = extfile.Key;
+
+                FileReader f = new FileReader(extfile.Value.Data);
+                string Magic = f.ReadMagic(0, 4);
+                if (Magic == "FSHA")
+                {
+                    Nodes["EXT"].Nodes.Add(new BfshaFileData(extfile.Value.Data, Name));
+                }
+                else
+                    Nodes["EXT"].Nodes.Add(new ExternalFileData(extfile.Value.Data, Name));
+
+                f.Dispose();
+                f.Close();
+
+                ext++;
+            }
+        }
+        public void Load(ResFile res)
+        {
+            resFile = res;
+
+            Text = resFile.Name;
+            UpdateTree(resFile);
+
+            foreach (ShapeAnim anim in resFile.ShapeAnims)
+                Nodes["FSHPA"].Nodes.Add(anim.Name);
+            foreach (VisibilityAnim anim in resFile.BoneVisibilityAnims)
+                Nodes["FBNV"].Nodes.Add(anim.Name);
+
+            int ext = 0;
+            foreach (ExternalFile extfile in resFile.ExternalFiles)
+            {
+                string Name = resFile.ExternalFileDict.GetKey(ext);
+
+                FileReader f = new FileReader(extfile.Data);
+                string Magic = f.ReadMagic(0, 4);
+                if (Magic == "BNTX")
+                {
+                    BNTX bntx = new BNTX();
+                    bntx.Data = extfile.Data;
+                    bntx.FileName = Name;
+                    bntx.Load();
+                    bntx.IFileInfo.InArchive = true;
+                    Nodes["EXT"].Nodes.Add(bntx);
+                }
+                else if (Magic == "FSHA")
+                {
+                    Nodes["EXT"].Nodes.Add(new BfshaFileData(extfile.Data, Name));
+                }
+                else
+                    Nodes["EXT"].Nodes.Add(new ExternalFileData(extfile.Data, Name));
+
+                f.Dispose();
+                f.Close();
+
+                ext++;
+            }
+        }
+        private void NewTextureFile(object sender, EventArgs args)
+        {
+            string Name = "textures";
+            for (int i = 0; i < resFile.ExternalFiles.Count; i++)
+            {
+                if (resFile.ExternalFileDict.GetKey(i) == Name)
+                    Name = Name + i;
+            }
+            if (!Nodes.ContainsKey("EXT"))
+            {
+                Nodes.Add(new EmbeddedFilesFolder());
+            }
+            BNTX bntx = new BNTX();
+            bntx.Data = new byte[0];
+            bntx.FileName = "textures";
+            Nodes["EXT"].Nodes.Add(bntx);
+        }
+        private void NewEmbeddedFile(object sender, EventArgs args)
+        {
+        }
+        private void Save(object sender, EventArgs args)
         {
             List<IFileFormat> formats = new List<IFileFormat>();
             formats.Add(this);
@@ -59,6 +319,127 @@ namespace FirstPlugin
             {
                 Cursor.Current = Cursors.WaitCursor;
                 SaveCompressFile(Save(), sfd.FileName, Alignment);
+            }
+        }
+        private void Rename(object sender, EventArgs args)
+        {
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(Text);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Text = dialog.textBox1.Text;
+            }
+        }
+        private void Remove(object sender, EventArgs args)
+        {
+            BFRESRender.DisposeFile();
+        }
+        private void UpdateTree(ResFile resFile)
+        {
+            if (resFile.Models.Count > 0)
+                Nodes.Add(new FmdlFolder());
+            if (resFile.SkeletalAnims.Count > 0)
+                AddSkeletonAnims(resFile);
+            if (resFile.MaterialAnims.Count > 0)
+                AddMaterialAnims(resFile);
+            if (resFile.ShapeAnims.Count > 0)
+                AddShapeAnims(resFile);
+            if (resFile.BoneVisibilityAnims.Count > 0)
+                AddBoneVisAnims(resFile);
+            if (resFile.SceneAnims.Count > 0)
+                AddSceneAnims(resFile);
+            if (resFile.ExternalFiles.Count > 0)
+                Nodes.Add(new EmbeddedFilesFolder());
+        }
+        private void AddFTEXTextures(ResU.ResFile resFile)
+        {
+            FTEXContainer ftexContainer = new FTEXContainer();
+            Nodes.Add(ftexContainer);
+            foreach (ResU.Texture tex in resFile.Textures.Values)
+            {
+                string TextureName = tex.Name;
+                FTEX texture = new FTEX();
+                texture.Read(tex);
+                ftexContainer.Nodes.Add(texture);
+                ftexContainer.Textures.Add(texture.Text, texture);
+            }
+            PluginRuntime.ftexContainers.Add(ftexContainer);
+        }
+        private void AddSkeletonAnims(ResU.ResFile resFile)
+        {
+            FskaFolder fksaFolder = new FskaFolder();
+            Nodes.Add(fksaFolder);
+            foreach (ResU.SkeletalAnim ska in resFile.SkeletalAnims.Values)
+            {
+                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
+                skeletonAnim.Read(ska, resFile);
+                fksaFolder.Nodes.Add(skeletonAnim);
+            }
+        }
+        private void AddSkeletonAnims(ResFile resFile)
+        {
+            FskaFolder fksaFolder = new FskaFolder();
+            Nodes.Add(fksaFolder);
+            foreach (SkeletalAnim ska in resFile.SkeletalAnims)
+            {
+                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
+                skeletonAnim.Read(ska, resFile);
+                fksaFolder.Nodes.Add(skeletonAnim);
+            }
+        }
+        private void AddSceneAnims(ResU.ResFile resFile)
+        {
+            FscnFolder FSCN = new FscnFolder();
+            Nodes.Add(FSCN);
+        }
+        private void AddSceneAnims(ResFile resFile)
+        {
+            FscnFolder fscnFolder = new FscnFolder();
+            Nodes.Add(fscnFolder);
+            foreach (var scn in resFile.SceneAnims)
+            {
+                FSCN sceneAnim = new FSCN();
+                sceneAnim.Text = scn.Name;
+                sceneAnim.Read(scn);
+                fscnFolder.Nodes.Add(sceneAnim);
+            }
+        }
+        private void AddMaterialAnims(ResFile resFile)
+        {
+            FmaaFolder fmaaFolder = new FmaaFolder();
+            Nodes.Add(fmaaFolder);
+            foreach (var fmaa in resFile.MaterialAnims)
+            {
+                FMAA materialAnim = new FMAA();
+                materialAnim.Text = fmaa.Name;
+                materialAnim.BFRESRender = BFRESRender;
+                materialAnim.Read(fmaa);
+                fmaaFolder.Nodes.Add(materialAnim);
+            }
+        }
+        private void AddShapeAnims(ResFile resFile)
+        {
+            FshpaFolder fshaFolder = new FshpaFolder();
+            Nodes.Add(fshaFolder);
+            foreach (var fsha in resFile.ShapeAnims)
+            {
+                FSHA shapeAnim = new FSHA();
+                shapeAnim.Text = fsha.Name;
+                shapeAnim.Read(fsha);
+                fshaFolder.Nodes.Add(shapeAnim);
+            }
+        }
+        private void AddBoneVisAnims(ResFile resFile)
+        {
+            FbnvFolder fbnvFolder = new FbnvFolder();
+            Nodes.Add(fbnvFolder);
+            foreach (var fbnv in resFile.BoneVisibilityAnims)
+            {
+                FBNV boneVis = new FBNV();
+                boneVis.Text = fbnv.Name;
+                boneVis.Read(fbnv);
+                fbnvFolder.Nodes.Add(boneVis);
             }
         }
         private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
@@ -87,65 +468,9 @@ namespace FirstPlugin
             Cursor.Current = Cursors.Default;
         }
 
-        public bool IsActive { get; set; } = false;
-        public bool UseEditMenu { get; set; } = false;
-        public int Alignment { get; set; } = 0;
-        public string FilePath { get; set; }
-        public static bool IsWiiU = false;
-
-        BFRESRender bfres;
-        public void Load()
-        {
-            IsActive = true;
-            CanSave = true;
-
-            using (FileReader reader = new FileReader(new MemoryStream(Data)))
-            {
-                reader.Seek(4);
-                if (reader.ReadInt32() != 0x20202020)
-                {
-                    IsWiiU = true;
-                }
-                reader.Close();
-            }
-
-            bfres = new BFRESRender();
-            bfres.ResFileNode = new ResourceFile(this);
-            bfres.ResFileNode.BFRESRender = bfres;
-
-            EditorRoot = bfres.ResFileNode;
-
-            if (IsWiiU)
-            {
-                bfres.LoadFile(new Syroot.NintenTools.Bfres.ResFile(new System.IO.MemoryStream(Data)));
-            }
-            else
-            {
-                bfres.LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(new System.IO.MemoryStream(Data)));
-            }
-
-            Runtime.abstractGlDrawables.Add(bfres);
-        }
-        public void Unload()
-        {
-            bfres.Destroy();
-            bfres.ResFileNode.Nodes.Clear();
-        }
-
-        public byte[] Save()
-        {
-            MemoryStream mem = new MemoryStream();
-
-            if (IsWiiU)
-                SaveWiiU(mem);
-            else
-                SaveSwitch(mem);
-
-            return mem.ToArray();
-        }
         private void SaveSwitch(MemoryStream mem)
         {
-            var resFile = bfres.ResFileNode.resFile;
+            var resFile = BFRESRender.ResFileNode.resFile;
 
             resFile.Models.Clear();
             resFile.SkeletalAnims.Clear();
@@ -162,45 +487,45 @@ namespace FirstPlugin
 
 
             int CurMdl = 0;
-            if (EditorRoot.Nodes.ContainsKey("FMDL"))
+            if (Nodes.ContainsKey("FMDL"))
             {
-                foreach (FMDL model in EditorRoot.Nodes["FMDL"].Nodes)
+                foreach (FMDL model in Nodes["FMDL"].Nodes)
                     resFile.Models.Add(BfresSwitch.SetModel(model));
             }
-            if (EditorRoot.Nodes.ContainsKey("FSKA"))
+            if (Nodes.ContainsKey("FSKA"))
             {
-                foreach (BfresSkeletonAnim ska in EditorRoot.Nodes["FSKA"].Nodes)
+                foreach (BfresSkeletonAnim ska in Nodes["FSKA"].Nodes)
                     resFile.SkeletalAnims.Add(ska.SkeletalAnim);
             }
-            if (EditorRoot.Nodes.ContainsKey("FMAA"))
+            if (Nodes.ContainsKey("FMAA"))
             {
-                foreach (FMAA fmaa in EditorRoot.Nodes["FMAA"].Nodes)
+                foreach (FMAA fmaa in Nodes["FMAA"].Nodes)
                     resFile.MaterialAnims.Add(fmaa.MaterialAnim);
             }
-            if (EditorRoot.Nodes.ContainsKey("FBNV"))
+            if (Nodes.ContainsKey("FBNV"))
             {
-                foreach (FBNV fbnv in EditorRoot.Nodes["FBNV"].Nodes)
+                foreach (FBNV fbnv in Nodes["FBNV"].Nodes)
                     resFile.BoneVisibilityAnims.Add(fbnv.VisibilityAnim);
             }
-            if (EditorRoot.Nodes.ContainsKey("FSHPA"))
+            if (Nodes.ContainsKey("FSHPA"))
             {
-                foreach (FSHA fsha in EditorRoot.Nodes["FSHPA"].Nodes)
+                foreach (FSHA fsha in Nodes["FSHPA"].Nodes)
                     resFile.ShapeAnims.Add(fsha.ShapeAnim);
             }
-            if (EditorRoot.Nodes.ContainsKey("FSCN"))
+            if (Nodes.ContainsKey("FSCN"))
             {
-                foreach (FSCN fscn in EditorRoot.Nodes["FSCN"].Nodes)
+                foreach (FSCN fscn in Nodes["FSCN"].Nodes)
                     resFile.SceneAnims.Add(fscn.SceneAnim);
             }
 
             ErrorCheck();
 
-            BfresSwitch.WriteExternalFiles(resFile, EditorRoot);
+            BfresSwitch.WriteExternalFiles(resFile, this);
             resFile.Save(mem);
         }
         private void SaveWiiU(MemoryStream mem)
         {
-            var resFileU = bfres.ResFileNode.resFileU;
+            var resFileU = BFRESRender.ResFileNode.resFileU;
             resFileU.Models.Clear();
        //     resFileU.SkeletalAnims.Clear();
        //     resFileU.SceneAnims.Clear();
@@ -210,9 +535,9 @@ namespace FirstPlugin
 
 
             int CurMdl = 0;
-            if (EditorRoot.Nodes.ContainsKey("FMDL"))
+            if (Nodes.ContainsKey("FMDL"))
             {
-                foreach (FMDL model in EditorRoot.Nodes["FMDL"].Nodes)
+                foreach (FMDL model in Nodes["FMDL"].Nodes)
                     resFileU.Models.Add(model.Text, BfresWiiU.SetModel(model));
             }
             ErrorCheck();
@@ -252,7 +577,7 @@ namespace FirstPlugin
         public static void CheckMissingTextures(FSHP shape)
         {
             bool ImportMissingTextures = false;
-            foreach (BinaryTextureContainer bntx in PluginRuntime.bntxContainers)
+            foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 foreach (MatTexture tex in shape.GetMaterial().textures)
                 {
@@ -281,10 +606,10 @@ namespace FirstPlugin
 
         public void ErrorCheck()
         {
-            if (bfres != null)
+            if (BFRESRender != null)
             {
                 List<Errors> Errors = new List<Errors>();
-                foreach (FMDL model in bfres.models)
+                foreach (FMDL model in BFRESRender.models)
                 {
                     foreach (FSHP shp in model.shapes)
                     {

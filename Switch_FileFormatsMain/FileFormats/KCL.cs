@@ -16,7 +16,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class KCL : IFileFormat
+    public class KCL : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -27,7 +27,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public string FilePath { get; set; }
@@ -45,8 +44,22 @@ namespace FirstPlugin
         public void Load()
         {
             IsActive = true;
-            EditorRoot = new KCLRoot(FileName, this);
             IFileInfo = new IFileInfo();
+
+            Text = FileName;
+            Renderer = new KCLRendering();
+            Read(Data);
+
+            ContextMenu = new ContextMenu();
+            MenuItem save = new MenuItem("Save");
+            ContextMenu.MenuItems.Add(save);
+            save.Click += Save;
+            MenuItem export = new MenuItem("Export");
+            ContextMenu.MenuItems.Add(export);
+            export.Click += Export;
+            MenuItem replace = new MenuItem("Replace");
+            ContextMenu.MenuItems.Add(replace);
+            replace.Click += Replace;
         }
         public void Unload()
         {
@@ -143,156 +156,135 @@ namespace FirstPlugin
             BoostTrick = 8202,
         }
 
-        public class KCLRoot : TreeNodeFile
+        public void Save(object sender, EventArgs args)
         {
-            public KCLRoot(string Name, IFileFormat handler)
-            {
-                Text = Name;
-                FileHandler = handler;
-                Renderer = new KCLRendering();
-                Read(handler.Data);
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.kcl";
+            sfd.FileName = Text;
+            sfd.DefaultExt = ".kcl";
 
-                ContextMenu = new ContextMenu();
-                MenuItem save = new MenuItem("Save");
-                ContextMenu.MenuItems.Add(save);
-                save.Click += Save;
-                MenuItem export = new MenuItem("Export");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
-                MenuItem replace = new MenuItem("Replace");
-                ContextMenu.MenuItems.Add(replace);
-                replace.Click += Replace;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+
+                int Alignment = IFileInfo.Alignment;
+                SaveCompressFile(Save(), sfd.FileName, CompressionType, Alignment);
             }
-            public void Save(object sender, EventArgs args)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Supported Formats|*.kcl";
-                sfd.FileName = Text;
-                sfd.DefaultExt = ".kcl";
+        }
+        public void Export(object sender, EventArgs args)
+        {
+            if (kcl == null)
+                return;
 
-                if (sfd.ShowDialog() == DialogResult.OK)
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.obj";
+            sfd.FileName = Text;
+            sfd.DefaultExt = ".obj";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                kcl.ToOBJ().toWritableObj().WriteObj(sfd.FileName + ".obj");
+            }
+        }
+        public void Replace(object sender, EventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Supported Formats|*.obj";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(ofd.FileName)), null);
+                if (mod.Faces.Count > 65535)
                 {
-
-                    int Alignment = FileHandler.IFileInfo.Alignment;
-                    SaveCompressFile(FileHandler.Save(), sfd.FileName, FileHandler.CompressionType, Alignment);
-                }
-            }
-            public void Export(object sender, EventArgs args)
-            {
-                if (kcl == null)
+                    MessageBox.Show("this model has too many faces, only models with less than 65535 triangles can be converted");
                     return;
-
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Supported Formats|*.obj";
-                sfd.FileName = Text;
-                sfd.DefaultExt = ".obj";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    kcl.ToOBJ().toWritableObj().WriteObj(sfd.FileName + ".obj");
                 }
+                kcl = MarioKart.MK7.KCL.FromOBJ(mod);
+                Data = kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian);
+                Read(Data);
             }
-            public void Replace(object sender, EventArgs args)
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Filter = "Supported Formats|*.obj";
+        }
 
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(ofd.FileName)), null);
-                    if (mod.Faces.Count > 65535)
-                    {
-                    	MessageBox.Show("this model has too many faces, only models with less than 65535 triangles can be converted");
-                    	return;
-                    }
-                    kcl = MarioKart.MK7.KCL.FromOBJ(mod);
-                    FileHandler.Data = kcl.Write(Syroot.BinaryData.ByteOrder.LittleEndian);
-                    Read(FileHandler.Data);
-                }
+        KCLRendering Renderer;
+        public override void OnClick(TreeView treeView)
+        {
+            LibraryGUI.Instance.LoadViewport(Viewport.Instance);
+            Viewport.Instance.gL_ControlModern1.MainDrawable = Renderer;
+
+            Renderer.UpdateVertexData();
+        }
+
+        public MarioKart.MK7.KCL kcl = null;
+        public void Read(byte[] file_data)
+        {
+            try
+            {
+                kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.LittleEndian);
             }
-
-            KCLRendering Renderer;
-            public override void OnClick(TreeView treeView)
+            catch
             {
-                LibraryGUI.Instance.LoadViewport(Viewport.Instance);
-                Viewport.Instance.gL_ControlModern1.MainDrawable = Renderer;
-
-                Renderer.UpdateVertexData();
+                kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.BigEndian);
             }
+            Read(kcl);
+            Renderer.UpdateVertexData();
+        }
+        public void Read(MarioKart.MK7.KCL kcl)
+        {
+            Nodes.Clear();
+            Renderer.models.Clear();
 
-            public MarioKart.MK7.KCL kcl = null;
-            public void Read(byte[] file_data)
+            int CurModelIndx = 0;
+            foreach (MarioKart.MK7.KCL.KCLModel mdl in kcl.Models)
             {
-                try
+                KCLModel kclmodel = new KCLModel();
+
+                kclmodel.Text = "Model " + CurModelIndx;
+
+                int ft = 0;
+                foreach (var plane in mdl.Planes)
                 {
-                    kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.LittleEndian);
+                    var triangle = mdl.GetTriangle(plane);
+                    var normal = triangle.Normal;
+                    var pointA = triangle.PointA;
+                    var pointB = triangle.PointB;
+                    var pointC = triangle.PointC;
+
+                    Vertex vtx = new Vertex();
+                    Vertex vtx2 = new Vertex();
+                    Vertex vtx3 = new Vertex();
+
+                    vtx.pos = new Vector3(Vec3D_To_Vec3(pointA));
+                    vtx2.pos = new Vector3(Vec3D_To_Vec3(pointB));
+                    vtx3.pos = new Vector3(Vec3D_To_Vec3(pointC));
+                    vtx.nrm = new Vector3(Vec3D_To_Vec3(normal));
+                    vtx2.nrm = new Vector3(Vec3D_To_Vec3(normal));
+                    vtx3.nrm = new Vector3(Vec3D_To_Vec3(normal));
+
+                    KCLModel.Face face = new KCLModel.Face();
+                    face.Text = triangle.Collision.ToString();
+                    face.MaterialFlag = triangle.Collision;
+
+                    var col = MarioKart.MK7.KCLColors.GetMaterialColor(plane.CollisionType);
+                    Vector3 ColorSet = new Vector3(col.R, col.G, col.B);
+
+                    vtx.col = new Vector4(ColorSet, 1);
+                    vtx2.col = new Vector4(ColorSet, 1);
+                    vtx3.col = new Vector4(ColorSet, 1);
+
+                    kclmodel.faces.Add(ft);
+                    kclmodel.faces.Add(ft + 1);
+                    kclmodel.faces.Add(ft + 2);
+
+                    ft += 3;
+
+                    kclmodel.vertices.Add(vtx);
+                    kclmodel.vertices.Add(vtx2);
+                    kclmodel.vertices.Add(vtx3);
                 }
-                catch
-                {
-                    kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.BigEndian);
-                }
-                Read(kcl);
-                Renderer.UpdateVertexData();
-            }
-            public void Read(MarioKart.MK7.KCL kcl)
-            {
-                Nodes.Clear();
-                Renderer.models.Clear();
 
-                int CurModelIndx = 0;
-                foreach (MarioKart.MK7.KCL.KCLModel mdl in kcl.Models)
-                {
-                    KCLModel kclmodel = new KCLModel();
+                Renderer.models.Add(kclmodel);
+                Nodes.Add(kclmodel);
 
-                    kclmodel.Text = "Model " + CurModelIndx;
-
-                    int ft = 0;
-                    foreach (var plane in mdl.Planes)
-                    {
-                        var triangle = mdl.GetTriangle(plane);
-                        var normal = triangle.Normal;
-                        var pointA = triangle.PointA;
-                        var pointB = triangle.PointB;
-                        var pointC = triangle.PointC;
-
-                        Vertex vtx = new Vertex();
-                        Vertex vtx2 = new Vertex();
-                        Vertex vtx3 = new Vertex();
-
-                        vtx.pos = new Vector3(Vec3D_To_Vec3(pointA));
-                        vtx2.pos = new Vector3(Vec3D_To_Vec3(pointB));
-                        vtx3.pos = new Vector3(Vec3D_To_Vec3(pointC));
-                        vtx.nrm = new Vector3(Vec3D_To_Vec3(normal));
-                        vtx2.nrm = new Vector3(Vec3D_To_Vec3(normal));
-                        vtx3.nrm = new Vector3(Vec3D_To_Vec3(normal));
-
-                        KCLModel.Face face = new KCLModel.Face();
-                        face.Text = triangle.Collision.ToString();
-                        face.MaterialFlag = triangle.Collision;
-
-                        var col = MarioKart.MK7.KCLColors.GetMaterialColor(plane.CollisionType);
-                        Vector3 ColorSet = new Vector3(col.R, col.G, col.B);
-
-                        vtx.col = new Vector4(ColorSet, 1);
-                        vtx2.col = new Vector4(ColorSet, 1);
-                        vtx3.col = new Vector4(ColorSet, 1);
-
-                        kclmodel.faces.Add(ft);
-                        kclmodel.faces.Add(ft + 1);
-                        kclmodel.faces.Add(ft + 2);
-
-                        ft += 3;
-
-                        kclmodel.vertices.Add(vtx);
-                        kclmodel.vertices.Add(vtx2);
-                        kclmodel.vertices.Add(vtx3);
-                    }
-
-                    Renderer.models.Add(kclmodel);
-                    Nodes.Add(kclmodel);
-
-                    CurModelIndx++;
-                }
+                CurModelIndx++;
             }
         }
 

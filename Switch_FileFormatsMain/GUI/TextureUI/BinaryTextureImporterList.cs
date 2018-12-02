@@ -68,10 +68,10 @@ namespace FirstPlugin
             formatComboBox.SelectedItem = SurfaceFormat.BC1_SRGB;
         }
         TextureImporterSettings SelectedTexSettings;
-        BinaryTextureContainer bntx;
+        BNTX bntx;
 
         List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
-        public void LoadSettings(List<TextureImporterSettings> s, BinaryTextureContainer b)
+        public void LoadSettings(List<TextureImporterSettings> s, BNTX b)
         {
             settings = s;
             bntx = b;
@@ -83,7 +83,7 @@ namespace FirstPlugin
             listViewCustom1.Items[0].Selected = true;
             listViewCustom1.Select();
         }
-        public void LoadSetting(TextureImporterSettings setting, BinaryTextureContainer b)
+        public void LoadSetting(TextureImporterSettings setting, BNTX b)
         {
             settings = new List<TextureImporterSettings>();
             settings.Add(setting);

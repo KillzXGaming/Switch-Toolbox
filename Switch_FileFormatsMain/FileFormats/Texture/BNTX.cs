@@ -117,7 +117,7 @@ namespace FirstPlugin
         }
     }
 
-    public class BNTX : IFileFormat
+    public class BNTX : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -128,7 +128,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
@@ -183,86 +182,9 @@ namespace FirstPlugin
                 }
             }
         }
-/*
-                    byte[] ByteBuffer = File.ReadAllBytes(ofd.FileName);
-                    byte[] StringBytes = Encoding.UTF8.GetBytes("BNTX");
-                    try
-                    {
-                        while (true)
-                        {
-                            byte byt = reader.ReadByte();
 
-                            if (byt == 0x42)
-                            {
-                                reader.Seek(-1, SeekOrigin.Current);
-                                int TryRdMagic = reader.ReadInt32();
-                                if (TryRdMagic == 0x424E5458)
-                                {
-                                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-
-                                    long BNTXpos = reader.Position - 4;
-                                    Console.WriteLine("String was found at offset {0}", reader.Position);
-
-                                    reader.Seek(BNTXpos + 16, SeekOrigin.Begin);
-                                    int offsetName = reader.ReadInt32();
-
-                                    reader.Seek(BNTXpos + offsetName, SeekOrigin.Begin);
-                                    string Name = reader.ReadString();
-
-                                    reader.Seek(BNTXpos + 28, SeekOrigin.Begin);
-                                    int size = reader.ReadInt32();
-
-                                    reader.Seek(BNTXpos, SeekOrigin.Begin);
-
-                                    File.WriteAllBytes(Name + ".bntx", reader.ReadBytes(size));
-                                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                                }
-                            }
-                        }
-
-
-                    }
-                    catch
-                    {
-
-                    }
-                }
-            }*/
-
-        BinaryTextureContainer bntx;
-
-        public void Load()
-        {
-            IFileInfo = new IFileInfo();
-
-            IsActive = true;
-            UseEditMenu = true;
-            CanSave = true;
-            bntx = new BinaryTextureContainer(Data, FileName, "", this);
-            EditorRoot = bntx;
-        }
-        public void Unload()
-        {
-            foreach (TextureData tex in bntx.Textures.Values)
-            {
-                tex.mipmaps.Clear();
-                tex.renderedGLTex = null;
-            }
-
-            bntx.Textures.Clear();
-            bntx.Nodes.Clear();
-        }
-        public byte[] Save()
-        {
-            return bntx.Save();
-        }
-    }
-
-    public class BinaryTextureContainer : TreeNodeFile
-    {
         public Dictionary<string, TextureData> Textures;
 
-        public byte[] Data;
         public PropertieGridData prop;
         public BntxFile BinaryTexFile;
         public string FileNameText;
@@ -297,24 +219,26 @@ namespace FirstPlugin
             }
         }
 
-        public BinaryTextureContainer()
+        public void Load()
         {
-            ImageKey = "bntx";
-            SelectedImageKey = "bntx";
-        }
-        public BinaryTextureContainer(byte[] data, string Name = "", string FileName = "", IFileFormat handler = null)
-        {
-            if (data.Length == 0)
-                data = CreateNewBNTX(Name);
+            IFileInfo = new IFileInfo();
+
+            IsActive = true;
+            UseEditMenu = true;
+            CanSave = true;
 
             ImageKey = "bntx";
             SelectedImageKey = "bntx";
 
             FileNameText = FileName;
-            LoadFile(data, Name);
+
+            if (Data.Length == 0)
+                Data = CreateNewBNTX(Name);
+
+
+            LoadFile(Data, Name);
 
             PluginRuntime.bntxContainers.Add(this);
-            FileHandler = handler;
 
             //Check if bntx is parented to determine if an archive is used
             bool checkParent = HasParent;
@@ -327,19 +251,31 @@ namespace FirstPlugin
             ContextMenu.MenuItems.Add(exportAll);
             ContextMenu.MenuItems.Add(clear);
 
-            save.Click      += Save;
-            replace.Click   += Import;
-            rename.Click   += Rename;
+            save.Click += Save;
+            replace.Click += Import;
+            rename.Click += Rename;
             importTex.Click += ImportTexture;
             exportAll.Click += ExportAll;
-            clear.Click     += Clear;
+            clear.Click += Clear;
         }
+        public void Unload()
+        {
+            foreach (TextureData tex in Textures.Values)
+            {
+                tex.mipmaps.Clear();
+                tex.renderedGLTex = null;
+            }
+
+            Textures.Clear();
+            Nodes.Clear();
+        }
+
         private byte[] CreateNewBNTX(string Name)
         {
             MemoryStream mem = new MemoryStream();
 
             BntxFile bntx = new BntxFile();
-            bntx.Target = new char[] { 'N', 'X', ' ', ' '};
+            bntx.Target = new char[] { 'N', 'X', ' ', ' ' };
             bntx.Name = Name;
             bntx.Alignment = 0xC;
             bntx.TargetAddressSize = 0x40;
@@ -390,7 +326,7 @@ namespace FirstPlugin
             foreach (Texture tex in BinaryTexFile.Textures)
             {
                 TextureData texData = new TextureData(tex, BinaryTexFile);
-          //      texData.LoadOpenGLTexture();
+                //      texData.LoadOpenGLTexture();
 
                 Nodes.Add(texData);
                 Textures.Add(tex.Name, texData);
@@ -483,7 +419,7 @@ namespace FirstPlugin
                         }
                     }
                 }
-        
+
                 settings.Clear();
                 GC.Collect();
                 Cursor.Current = Cursors.Default;
@@ -656,7 +592,7 @@ namespace FirstPlugin
                         else if (form.Index == 5)
                             tex.SaveBitMap(folderPath + '\\' + tex.Text + ".tiff");
                     }
-                }     
+                }
             }
         }
         public byte[] Save()
@@ -747,11 +683,11 @@ namespace FirstPlugin
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.DefaultExt = "bntx";
             sfd.Filter = "Supported Formats|*.bntx;";
-            sfd.FileName = FileHandler.FileName;
+            sfd.FileName = FileName;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sfd.FileName, FileHandler.Save());
+                File.WriteAllBytes(sfd.FileName, Save());
             }
         }
     }
@@ -1111,7 +1047,7 @@ namespace FirstPlugin
         }
         private void Remove(object sender, EventArgs args)
         {
-            ((BinaryTextureContainer)Parent).RemoveTexture(this);
+            ((BNTX)Parent).RemoveTexture(this);
         }
         private void Rename(object sender, EventArgs args)
         {
@@ -1120,10 +1056,10 @@ namespace FirstPlugin
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                ((BinaryTextureContainer)Parent).Textures.Remove(Text);
+                ((BNTX)Parent).Textures.Remove(Text);
                 Text = dialog.textBox1.Text;
 
-                ((BinaryTextureContainer)Parent).Textures.Add(Text, this);
+                ((BNTX)Parent).Textures.Add(Text, this);
             }
         }
         private void Replace(object sender, EventArgs args)
@@ -1162,7 +1098,7 @@ namespace FirstPlugin
                     break;
                 default:
                     setting.LoadBitMap(FileName, bntxFile);
-                    importer.LoadSetting(setting, (BinaryTextureContainer)Parent);
+                    importer.LoadSetting(setting, (BNTX)Parent);
                     break;
             }
 

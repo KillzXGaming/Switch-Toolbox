@@ -12,7 +12,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace FirstPlugin
 {
-    public class BYAML : IFileFormat
+    public class BYAML : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -23,7 +23,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public string FilePath { get; set; }
@@ -70,7 +69,6 @@ namespace FirstPlugin
             ByamlViewer.OpenByml(mem, FileName);
 
             //    BymlFileData byamlFile = ByamlFile.LoadN(new System.IO.MemoryStream(Data), false, Syroot.BinaryData.ByteOrder.LittleEndian);
-            //          EditorRoot = LoadByamlNodes(byamlFile.RootNode);
 
             //    LoadDockedEditor(byamlFile);
         }
@@ -78,8 +76,6 @@ namespace FirstPlugin
         {
 
         }
-
-        ByamlEditor ByamlEditor;
 
         public TreeNode LoadByamlNodes(dynamic root)
         {

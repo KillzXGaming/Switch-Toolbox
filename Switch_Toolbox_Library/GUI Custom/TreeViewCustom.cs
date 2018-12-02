@@ -22,19 +22,13 @@ namespace Switch_Toolbox.Library
     }
     public class TreeNodeFile : TreeNodeCustom
     {
-        public IFileFormat FileHandler;
         public TreeNodeFile()
         {
 
         }
-        public TreeNodeFile(IFileFormat handler)
-        {
-
-        }
-        public TreeNodeFile(string text, IFileFormat handler)
+        public TreeNodeFile(string text)
         {
             Text = text;
-            FileHandler = handler;
         }
     }
     public class TreeViewCustom : TreeView

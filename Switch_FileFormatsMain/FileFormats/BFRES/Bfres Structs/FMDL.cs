@@ -46,8 +46,8 @@ namespace Bfres.Structs
             if (dialogResult == DialogResult.Yes)
             {
                 Nodes.Clear();
-                ((ResourceFile)Parent).BFRESRender.models.Clear();
-                ((ResourceFile)Parent).BFRESRender.UpdateVertexData();
+                ((BFRES)Parent).BFRESRender.models.Clear();
+                ((BFRES)Parent).BFRESRender.UpdateVertexData();
             }
         }
         public override void OnClick(TreeView treeView)
@@ -66,19 +66,19 @@ namespace Bfres.Structs
         public ResFile GetResFile()
         {
             //ResourceFile -> FMDL -> Material Folder -> this
-            return ((ResourceFile)Parent.Parent).resFile;
+            return ((BFRES)Parent.Parent).resFile;
         }
         public ResU.ResFile GetResFileU()
         {
-            return ((ResourceFile)Parent.Parent).resFileU;
+            return ((BFRES)Parent.Parent).resFileU;
         }
         public void UpdateVertexData()
         {
-            ((ResourceFile)Parent.Parent).BFRESRender.UpdateVertexData();
+            ((BFRES)Parent.Parent).BFRESRender.UpdateVertexData();
         }
         public List<FMDL> GetModelList()
         {
-            return ((ResourceFile)Parent.Parent).BFRESRender.models;
+            return ((BFRES)Parent.Parent).BFRESRender.models;
         }
 
 
@@ -472,7 +472,7 @@ namespace Bfres.Structs
                         }
 
                         Cursor.Current = Cursors.WaitCursor;
-                        if (!BFRES.IsWiiU && Replace)
+                        if (!BFRES.Instance.IsWiiU && Replace)
                         {
                             materials.Clear();
                             Nodes["FmatFolder"].Nodes.Clear();
@@ -483,7 +483,7 @@ namespace Bfres.Structs
                             FMAT fmat = new FMAT();
                             if (settings.ExternalMaterialPath != string.Empty)
                             {
-                                if (!BFRES.IsWiiU)
+                                if (!BFRES.Instance.IsWiiU)
                                 {
                                     fmat.Material = new Material();
                                     fmat.Material.Import(settings.ExternalMaterialPath);
@@ -544,9 +544,9 @@ namespace Bfres.Structs
                             {
                                 foreach (var node in Parent.Parent.Nodes["EXT"].Nodes)
                                 {
-                                    if (node is BinaryTextureContainer)
+                                    if (node is BNTX)
                                     {
-                                        var bntx = (BinaryTextureContainer)node;
+                                        var bntx = (BNTX)node;
 
                                         bntx.ImportBasicTextures("Basic_Alb");
                                         bntx.ImportBasicTextures("Basic_Nrm");
@@ -583,7 +583,7 @@ namespace Bfres.Structs
                             materials.Add(fmat.Text, fmat);
                             Nodes["FmatFolder"].Nodes.Add(fmat);
 
-                            if (BFRES.IsWiiU)
+                            if (BFRES.Instance.IsWiiU)
                             {
                                 fmat.MaterialU.Name = Text;
                                 fmat.SetMaterial(fmat.MaterialU);

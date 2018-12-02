@@ -29,7 +29,7 @@ namespace FirstPlugin
             UpdateBackgroundImage();
         }
 
-        NUTEXB.NuTex textureData;
+        NUTEXB textureData;
 
         int CurMipDisplayLevel = 0;
         int CurArrayDisplayLevel = 0;
@@ -43,7 +43,7 @@ namespace FirstPlugin
             public uint MipCount { get; set; }
             public uint ArrayCount { get; set; }
         }
-        public void LoadProperty(NUTEXB.NuTex tex)
+        public void LoadProperty(NUTEXB tex)
         {
             pictureBoxCustom1.Image = Imaging.GetLoadingImage();
             LoadImage();

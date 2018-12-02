@@ -124,6 +124,7 @@ namespace FirstPlugin
             Formats.Add(typeof(CsvModel));
             Formats.Add(typeof(GFPAK));
             Formats.Add(typeof(NUTEXB));
+            Formats.Add(typeof(GTXFile));
 
             return Formats.ToArray();
         }

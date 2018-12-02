@@ -11,7 +11,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class SARC : IFileFormat
+    public class SARC : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -22,7 +22,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public string FilePath { get; set; }
@@ -40,7 +39,6 @@ namespace FirstPlugin
         public string SarcHash;
         public void Load()
         {
-            EditorRoot = new RootNode(Path.GetFileName(FileName), this);
             IsActive = true;
             CanSave = true;
             UseEditMenu = true;
@@ -53,8 +51,14 @@ namespace FirstPlugin
             SarcHash = Utils.GenerateUniqueHashID();
 
             IFileInfo = new IFileInfo();
+            FillTreeNodes(this, SzsFiles.Files, SarcHash);
 
-            FillTreeNodes(EditorRoot, SzsFiles.Files, SarcHash);
+            Text = FileName;
+
+            ContextMenu = new ContextMenu();
+            MenuItem save = new MenuItem("Save");
+            ContextMenu.MenuItems.Add(save);
+            save.Click += Save;
 
             sarcData.Files.Clear();
         }
@@ -77,7 +81,7 @@ namespace FirstPlugin
 
         public void Unload()
         {
-            EditorRoot.Nodes.Clear();
+            Nodes.Clear();
         }
 
         IEnumerable<TreeNode> Collect(TreeNodeCollection nodes)
@@ -95,19 +99,20 @@ namespace FirstPlugin
             Console.WriteLine("Saving sarc");
 
             sarcData.Files.Clear();
-            foreach (TreeNode node in Collect(EditorRoot.Nodes))
+            foreach (TreeNode node in Collect(Nodes))
             {
                 if (node is SarcEntry)
                 {
                     Console.WriteLine("Saving " + node);
                     SaveFileEntryData((SarcEntry)node);
                 }
-                if (node is TreeNodeFile && node != EditorRoot)
+                if (node is TreeNodeFile && node != this)
                 {
-                    TreeNodeFile treeNodeFile = (TreeNodeFile)node;
-                    if (treeNodeFile.FileHandler != null && treeNodeFile.FileHandler.IFileInfo.ArchiveHash == SarcHash)
+                    IFileFormat fileFormat = (IFileFormat)node;
+                    if (fileFormat != null && fileFormat.IFileInfo.ArchiveHash == SarcHash)
                     {
-                        sarcData.Files.Add(SARC.SetSarcPath(node, (TreeNode)this.EditorRoot), STLibraryCompression.CompressFile(treeNodeFile.FileHandler.Save(), treeNodeFile.FileHandler));
+                        sarcData.Files.Add(SetSarcPath(node, this),
+                            STLibraryCompression.CompressFile(fileFormat.Save(), fileFormat));
                     }
                 }
             }
@@ -152,77 +157,62 @@ namespace FirstPlugin
             node.Nodes.Insert(index, NewNode);
         }
 
-        public class RootNode : TreeNodeFile
+        private void Save(object sender, EventArgs args)
         {
-            SARC sarc;
-            public RootNode(string n, SARC s)
+            List<IFileFormat> formats = new List<IFileFormat>();
+            formats.Add(this);
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(formats);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Text = n;
-                sarc = s;
-
-                ContextMenu = new ContextMenu();
-                MenuItem save = new MenuItem("Save");
-                ContextMenu.MenuItems.Add(save);
-                save.Click += Save;
-            }
-            private void Save(object sender, EventArgs args)
-            {
-                List<IFileFormat> formats = new List<IFileFormat>();
-                formats.Add(sarc);
-
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = Utils.GetAllFilters(formats);
-                sfd.FileName = sarc.FileName;
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    SaveCompressFile(sarc.Save(), sfd.FileName, sarc.IFileInfo.Alignment);
-                }
-            }
-            private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
-            {
-                if (EnableDialog)
-                {
-                    DialogResult save = MessageBox.Show("Compress file?", "File Save", MessageBoxButtons.YesNo);
-
-                    if (save == DialogResult.Yes)
-                        data = EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
-                }
-                File.WriteAllBytes(FileName, data);
-                MessageBox.Show($"File has been saved to {FileName}");
-                Cursor.Current = Cursors.Default;
-            }
-            private void CallRecursive(TreeView treeView)
-            {
-                // Print each node recursively.  
-                TreeNodeCollection nodes = treeView.Nodes;
-                foreach (TreeNode n in nodes)
-                {
-                    PrintRecursive(n);
-                }
-            }
-            private void PrintRecursive(TreeNode treeNode)
-            {
-                // Print the node. 
-
-                if (treeNode is SarcEntry)
-                {
-                    ((SarcEntry)treeNode).OnClick(treeNode.TreeView);
-                }
-                if (treeNode is IFileFormat)
-                {
-
-                }
-
-                // Print each node recursively.  
-                foreach (TreeNode tn in treeNode.Nodes)
-                {
-                    PrintRecursive(tn);
-                }
+                Cursor.Current = Cursors.WaitCursor;
+                SaveCompressFile(Save(), sfd.FileName, IFileInfo.Alignment);
             }
         }
+        private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
+        {
+            if (EnableDialog)
+            {
+                DialogResult save = MessageBox.Show("Compress file?", "File Save", MessageBoxButtons.YesNo);
 
+                if (save == DialogResult.Yes)
+                    data = EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
+            }
+            File.WriteAllBytes(FileName, data);
+            MessageBox.Show($"File has been saved to {FileName}");
+            Cursor.Current = Cursors.Default;
+        }
+        private void CallRecursive(TreeView treeView)
+        {
+            // Print each node recursively.  
+            TreeNodeCollection nodes = treeView.Nodes;
+            foreach (TreeNode n in nodes)
+            {
+                PrintRecursive(n);
+            }
+        }
+        private void PrintRecursive(TreeNode treeNode)
+        {
+            // Print the node. 
+
+            if (treeNode is SarcEntry)
+            {
+                ((SarcEntry)treeNode).OnClick(treeNode.TreeView);
+            }
+            if (treeNode is IFileFormat)
+            {
+
+            }
+
+            // Print each node recursively.  
+            foreach (TreeNode tn in treeNode.Nodes)
+            {
+                PrintRecursive(tn);
+            }
+        }
         public class SarcEntry : TreeNodeCustom
         {
             public SARC sarc; //Sarc file the entry is located in
@@ -409,13 +399,14 @@ namespace FirstPlugin
                     fileFormat.IFileInfo = new IFileInfo();
                     fileFormat.IFileInfo.ArchiveHash = sarcEntry.sarcHash;
                     fileFormat.IFileInfo.InArchive = true;
-                    if (fileFormat.EditorRoot == null)
-                        return null;
-                    fileFormat.EditorRoot.ImageKey = sarcEntry.ImageKey;
-                    fileFormat.EditorRoot.SelectedImageKey = sarcEntry.SelectedImageKey;
-                    fileFormat.EditorRoot.Text = sarcEntry.Text;
 
-                    return fileFormat.EditorRoot;
+                    if (fileFormat is TreeNode)
+                    {
+                        ((TreeNode)fileFormat).Text = sarcEntry.Text;
+                        ((TreeNode)fileFormat).ImageKey = sarcEntry.ImageKey;
+                        ((TreeNode)fileFormat).SelectedImageKey = sarcEntry.SelectedImageKey;
+                        return (TreeNode)fileFormat;
+                    }
                 }
                 if (fileFormat.Magic == string.Empty)
                 {
@@ -430,12 +421,14 @@ namespace FirstPlugin
                             fileFormat.IFileInfo = new IFileInfo();
                             fileFormat.IFileInfo.ArchiveHash = sarcEntry.sarcHash;
                             fileFormat.IFileInfo.InArchive = true;
-                            if (fileFormat.EditorRoot == null)
-                                return null;
-                            fileFormat.EditorRoot.ImageKey = sarcEntry.ImageKey;
-                            fileFormat.EditorRoot.SelectedImageKey = sarcEntry.SelectedImageKey;
-                            fileFormat.EditorRoot.Text = sarcEntry.Text;
-                            return fileFormat.EditorRoot;
+
+                            if (fileFormat is TreeNode)
+                            {
+                                ((TreeNode)fileFormat).Text = sarcEntry.Text;
+                                ((TreeNode)fileFormat).ImageKey = sarcEntry.ImageKey;
+                                ((TreeNode)fileFormat).SelectedImageKey = sarcEntry.SelectedImageKey;
+                                return (TreeNode)fileFormat;
+                            }
                         }
                     }
                 }

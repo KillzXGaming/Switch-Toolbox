@@ -22,7 +22,6 @@ namespace Switch_Toolbox.Library
         byte[] Data { get; set; }
         string FileName { get; set; }
         string FilePath { get; set; }
-        TreeNodeFile EditorRoot { get; set; }
         void Load();
         void Unload();
         byte[] Save();

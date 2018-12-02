@@ -658,7 +658,7 @@ namespace Bfres.Structs
         }
         public void SaveShape()
         {
-            if (!BFRES.IsWiiU)
+            if (!BFRES.Instance.IsWiiU)
                 Shape = BfresSwitch.SaveShape(this);
             else
                 ShapeU = BfresWiiU.SaveShape(this);
@@ -685,7 +685,7 @@ namespace Bfres.Structs
         }
         public void SaveVertexBuffer()
         {
-            if (BFRES.IsWiiU)
+            if (BFRES.Instance.IsWiiU)
             {
                 BfresWiiU.SaveVertexBuffer(this);
                 return;

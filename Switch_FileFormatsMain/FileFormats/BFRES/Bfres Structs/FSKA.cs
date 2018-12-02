@@ -101,7 +101,7 @@ namespace Bfres.Structs
         public ResFile GetResFile()
         {
             //ResourceFile -> FMDL -> Material Folder -> this
-            return ((ResourceFile)Parent.Parent).resFile;
+            return ((BFRES)Parent.Parent).resFile;
         }
         private void Export(object sender, EventArgs args)
         {

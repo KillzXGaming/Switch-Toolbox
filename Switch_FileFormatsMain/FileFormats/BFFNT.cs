@@ -11,7 +11,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class BFFNT : IFileFormat
+    public class BFFNT : TreeNode, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -22,7 +22,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
@@ -46,16 +45,12 @@ namespace FirstPlugin
 
             TGLP tglp = bffnt.finf.tglp;
 
-            EditorRoot = new TreeNodeFile(FileName, this);
-
             int i = 0;
             foreach (byte[] texture in tglp.SheetDataList)
             {
                 SheetEntry sheet = new SheetEntry();
                 sheet.data = texture;
                 sheet.Text = "Sheet" + i++;
-
-                EditorRoot.Nodes.Add(sheet);
             }
         }
         public void Unload()

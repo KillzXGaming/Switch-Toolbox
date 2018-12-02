@@ -16,7 +16,7 @@ using NAudio.Wave;
 
 namespace FirstPlugin
 {
-    public class BARS : IFileFormat
+    public class BARS : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -27,7 +27,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
@@ -165,15 +164,16 @@ namespace FirstPlugin
             IsActive = true;
             CanSave = true;
 
+            Text = FileName;
+
             bars = new BarsLib.BARS(new MemoryStream(Data));
-            EditorRoot = new TreeNodeFile(FileName, this);
-            EditorRoot.Nodes.Add("AMTA");
-            EditorRoot.Nodes.Add("Audio");
+            Nodes.Add("AMTA");
+            Nodes.Add("Audio");
             for (int i = 0; i < bars.AmtaList.Count; i++)
             {
                 string audioName = bars.AmtaList[i].Name;
 
-                EditorRoot.Nodes[0].Nodes.Add(audioName + ".amta");
+                Nodes[0].Nodes.Add(audioName + ".amta");
                 BARSAudioFile audio = bars.audioList[i];
 
                 AudioEntry node = new AudioEntry();
@@ -188,7 +188,7 @@ namespace FirstPlugin
                 else 
                     node.Text = audioName + ".UNKOWN";
 
-                EditorRoot.Nodes[1].Nodes.Add(node);
+                Nodes[1].Nodes.Add(node);
             }
         }
         public void Unload()
@@ -199,7 +199,7 @@ namespace FirstPlugin
         {
             MemoryStream mem = new MemoryStream();
 
-            foreach (TreeNode node in EditorRoot.Nodes[1].Nodes)
+            foreach (TreeNode node in Nodes[1].Nodes)
             {
                 for (int i = 0; i < bars.AmtaList.Count; i++)
                 {

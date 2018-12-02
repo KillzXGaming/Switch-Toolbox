@@ -95,7 +95,7 @@ namespace Bfres.Structs
 
         public void UpdateTextureMaps()
         {
-           ((ResourceFile)Parent.Parent.Parent.Parent).BFRESRender.UpdateSingleMaterialTextureMaps(this);
+           ((BFRES)Parent.Parent.Parent.Parent).BFRESRender.UpdateSingleMaterialTextureMaps(this);
         }
 
         public void SetActiveGame()
@@ -143,7 +143,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (BFRES.IsWiiU)
+                if (BFRES.Instance.IsWiiU)
                     MaterialU.Export(sfd.FileName, GetResFileU());
                 else
                     Material.Export(sfd.FileName, GetResFile());
@@ -156,7 +156,7 @@ namespace Bfres.Structs
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (BFRES.IsWiiU)
+                if (BFRES.Instance.IsWiiU)
                 {
                     MaterialU.Import(ofd.FileName, GetResFileU());
                     MaterialU.Name = Text;
