@@ -11,9 +11,9 @@ using Switch_Toolbox.Library.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using Switch_Toolbox.Library;
 using Smash_Forge.Rendering;
+using Switch_Toolbox_Library;
 using Switch_Toolbox.Library.IO;
 using System.Net;
-
 
 namespace Switch_Toolbox
 {
@@ -35,6 +35,7 @@ namespace Switch_Toolbox
         public MainForm()
         {
             InitializeComponent();
+            new DiscordPresence().Initialize();
 
             ShaderTools.executableDir = executableDir;
 

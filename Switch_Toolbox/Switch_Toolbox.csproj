@@ -53,6 +53,9 @@
       <HintPath>..\packages\CsvHelper.8.0.0-beta01\lib\net45\CsvHelper.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DiscordRPC">
+      <HintPath>Lib\DiscordRPC.dll</HintPath>
+    </Reference>
     <Reference Include="EditorCoreCommon">
       <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\WindowsFormsApp2\WindowsFormsApp2\Lib\EditorCoreCommon.dll</HintPath>
       <Private>False</Private>
