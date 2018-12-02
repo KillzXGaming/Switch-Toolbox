@@ -434,54 +434,56 @@ namespace FirstPlugin
                     else
                     {
                         settings.Add(LoadSettings(name));
+
+                        if (settings.Count == 0)
+                        {
+                            importer.Dispose();
+                            return;
+                        }
+
+                        importer.LoadSettings(settings, this);
+                        if (importer.ShowDialog() == DialogResult.OK)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+                            foreach (var setting in settings)
+                            {
+                                if (setting.GenerateMipmaps)
+                                {
+                                    setting.DataBlockOutput.Clear();
+                                    setting.DataBlockOutput.Add(setting.GenerateMips());
+                                }
+
+                                if (setting.DataBlockOutput != null)
+                                {
+                                    Texture tex = setting.FromBitMap(setting.DataBlockOutput[0], setting);
+                                    if (setting.textureData != null)
+                                    {
+                                        setting.textureData.LoadTexture(tex, 1);
+                                    }
+                                    else
+                                    {
+                                        setting.textureData = new TextureData(tex, setting.bntx);
+                                    }
+
+                                    int i = 0;
+                                    if (Textures.ContainsKey(setting.textureData.Text))
+                                    {
+                                        setting.textureData.Text = setting.textureData.Text + i++;
+                                    }
+
+                                    Nodes.Add(setting.textureData);
+                                    Textures.Add(setting.textureData.Text, setting.textureData);
+                                    setting.textureData.LoadOpenGLTexture();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Something went wrong???");
+                                }
+                            }
+                        }
                     }
                 }
-                if (settings.Count == 0)
-                {
-                    importer.Dispose();
-                    return;
-                }
-
-                importer.LoadSettings(settings, this);
-                if (importer.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    foreach (var setting in settings)
-                    {
-                        if (setting.GenerateMipmaps)
-                        {
-                            setting.DataBlockOutput.Clear();
-                            setting.DataBlockOutput.Add(setting.GenerateMips());
-                        }
-
-                        if (setting.DataBlockOutput != null)
-                        {
-                            Texture tex = setting.FromBitMap(setting.DataBlockOutput[0], setting);
-                            if (setting.textureData != null)
-                            {
-                                setting.textureData.LoadTexture(tex, 1);
-                            }
-                            else
-                            {
-                                setting.textureData = new TextureData(tex, setting.bntx);
-                            }
-
-                            int i = 0;
-                            if (Textures.ContainsKey(setting.textureData.Text))
-                            {
-                                setting.textureData.Text = setting.textureData.Text + i++;
-                            }
-
-                            Nodes.Add(setting.textureData);
-                            Textures.Add(setting.textureData.Text, setting.textureData);
-                            setting.textureData.LoadOpenGLTexture();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Something went wrong???");
-                        }
-                    }
-                }
+        
                 settings.Clear();
                 GC.Collect();
                 Cursor.Current = Cursors.Default;
@@ -1177,7 +1179,6 @@ namespace FirstPlugin
                 if (setting.DataBlockOutput != null)
                 {
                     Texture = setting.FromBitMap(setting.DataBlockOutput[0], setting);
-                    LoadTexture(Texture, 1);
                     LoadOpenGLTexture();
                 }
                 else

@@ -62,9 +62,9 @@ namespace FirstPlugin
             {
                 ImgDimComb.Items.Add(dim);
             }
-            GPUAccessFlgComb.Items.Add("Texture");
+            tileModeCB.Items.Add("Texture");
             ImgDimComb.SelectedIndex = 1;
-            GPUAccessFlgComb.SelectedIndex = 0;
+            tileModeCB.SelectedIndex = 0;
             formatComboBox.SelectedItem = SurfaceFormat.BC1_SRGB;
         }
         TextureImporterSettings SelectedTexSettings;

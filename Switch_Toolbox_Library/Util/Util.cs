@@ -44,6 +44,11 @@ namespace Switch_Toolbox.Library
             }
             return rv;
         }
+        public static byte[] SubArray(byte[] data, uint offset, uint length)
+        {
+            return data.Skip((int)offset).Take((int)length).ToArray();
+        }
+
         static int i = 0;
         public static string RenameDuplicateString(List<string> strings, string oldString)
         {

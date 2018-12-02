@@ -36,7 +36,7 @@
             this.Format = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SwizzleNum = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.GPUAccessFlgComb = new System.Windows.Forms.ComboBox();
+            this.tileModeCB = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ImgDimComb = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -57,7 +57,7 @@
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(941, 517);
+            this.button2.Location = new System.Drawing.Point(1009, 517);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(79, 33);
             this.button2.TabIndex = 5;
@@ -69,7 +69,7 @@
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(843, 517);
+            this.button1.Location = new System.Drawing.Point(911, 517);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(79, 33);
             this.button1.TabIndex = 4;
@@ -121,23 +121,23 @@
             this.label5.TabIndex = 27;
             this.label5.Text = "Swizzle";
             // 
-            // GPUAccessFlgComb
+            // tileModeCB
             // 
-            this.GPUAccessFlgComb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GPUAccessFlgComb.FormattingEnabled = true;
-            this.GPUAccessFlgComb.Location = new System.Drawing.Point(855, 79);
-            this.GPUAccessFlgComb.Name = "GPUAccessFlgComb";
-            this.GPUAccessFlgComb.Size = new System.Drawing.Size(172, 21);
-            this.GPUAccessFlgComb.TabIndex = 26;
+            this.tileModeCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tileModeCB.FormattingEnabled = true;
+            this.tileModeCB.Location = new System.Drawing.Point(855, 79);
+            this.tileModeCB.Name = "tileModeCB";
+            this.tileModeCB.Size = new System.Drawing.Size(233, 21);
+            this.tileModeCB.TabIndex = 26;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(759, 82);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 13);
+            this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 25;
-            this.label4.Text = "GPU Access Flags";
+            this.label4.Text = "Tile Mode";
             // 
             // ImgDimComb
             // 
@@ -145,7 +145,7 @@
             this.ImgDimComb.FormattingEnabled = true;
             this.ImgDimComb.Location = new System.Drawing.Point(853, 46);
             this.ImgDimComb.Name = "ImgDimComb";
-            this.ImgDimComb.Size = new System.Drawing.Size(172, 21);
+            this.ImgDimComb.Size = new System.Drawing.Size(233, 21);
             this.ImgDimComb.TabIndex = 24;
             // 
             // label3
@@ -222,7 +222,7 @@
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(853, 16);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.Size = new System.Drawing.Size(172, 21);
+            this.formatComboBox.Size = new System.Drawing.Size(233, 21);
             this.formatComboBox.TabIndex = 16;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
             // 
@@ -231,10 +231,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.ClientSize = new System.Drawing.Size(1036, 562);
+            this.ClientSize = new System.Drawing.Size(1100, 562);
             this.Controls.Add(this.SwizzleNum);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.GPUAccessFlgComb);
+            this.Controls.Add(this.tileModeCB);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.ImgDimComb);
             this.Controls.Add(this.label3);
@@ -265,7 +265,7 @@
         private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private System.Windows.Forms.NumericUpDown SwizzleNum;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox GPUAccessFlgComb;
+        private System.Windows.Forms.ComboBox tileModeCB;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox ImgDimComb;
         private System.Windows.Forms.Label label3;

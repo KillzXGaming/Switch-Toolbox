@@ -72,24 +72,24 @@ namespace FirstPlugin
         //Todo. Add swizzling back
         public struct GX2Surface
         {
-            public int dim;
-            public int width;
-            public int height;
-            public int depth;
-            public int numMips;
-            public int format;
-            public int aa;
-            public int use;
+            public uint dim;
+            public uint width;
+            public uint height;
+            public uint depth;
+            public uint numMips;
+            public uint format;
+            public uint aa;
+            public uint use;
             public int resourceFlags;
-            public int imageSize;
-            public int imagePtr;
+            public uint imageSize;
+            public uint imagePtr;
             public int pMem;
-            public int mipSize;
-            public int mipPtr;
-            public int tileMode;
-            public int swizzle;
-            public int alignment;
-            public int pitch;
+            public uint mipSize;
+            public uint mipPtr;
+            public uint tileMode;
+            public uint swizzle;
+            public uint alignment;
+            public uint pitch;
             public uint bpp;
 
             public byte[] data;
@@ -483,49 +483,52 @@ namespace FirstPlugin
             Console.WriteLine($"tileType      {surf.tileType}");
             Console.WriteLine($"tileIndex     {surf.tileIndex}");
         }
-        static bool DebugSurface = true;
+        static bool DebugSurface = false;
 
         public static List<byte[]> Decode(GX2Surface tex)
         {
-            var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
+            uint blkWidth, blkHeight;
+            if (IsFormatBCN((GX2SurfaceFormat)tex.format))
+            {
+                blkWidth = 4;
+                blkHeight = 4;
+            }
+            else
+            {
+                blkWidth = 1;
+                blkHeight = 1;
+            }
 
-            Console.WriteLine(tex.tileMode);
+            byte[] data = tex.data;
+
+            var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
+            Debug(surfInfo);
+            uint bpp = TegraX1Swizzle.DIV_ROUND_UP(surfInfo.bpp, 8);
 
             if (surfInfo.depth != 1)
-                throw new Exception("Unsupported Depth!");
+                throw new Exception($"Unsupported Depth {surfInfo.depth}!");
 
             List<byte[]> result = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < tex.numMips; mipLevel++)
             {
-                int size;
-                if (IsFormatBCN((GX2SurfaceFormat)tex.format))
-                    size = ((Math.Max(1, tex.width >> mipLevel) + 3) >> 2) * ((Math.Max(1, tex.height >> mipLevel) + 3) >> 2) * (int)tex.bpp;
-                else
-                    size = Math.Max(1, tex.width >> mipLevel) * Math.Max(1, tex.height >> mipLevel) * (int)tex.bpp;
+                uint width_ = (uint)Math.Max(1, tex.width >> mipLevel);
+                uint height_ = (uint)Math.Max(1, tex.height >> mipLevel);
 
-                byte[] data;
-                if (mipLevel == 0)
+                uint size = TegraX1Swizzle.DIV_ROUND_UP(width_, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height_, blkHeight) * bpp;
+
+                uint mipOffset;
+                if (mipLevel != 0)
                 {
-                    data = new byte[surfInfo.surfSize];
-                }
-                else
-                {
-                    uint mipOffset;
+                    mipOffset = (tex.mipOffset[mipLevel - 1]);
                     if (mipLevel == 1)
-                        mipOffset = (uint)(tex.mipOffset[mipLevel - 1] - surfInfo.surfSize);
-                    else
-                        mipOffset = (uint)tex.mipOffset[mipLevel - 1];
-
-               //     Console.WriteLine("mipOffset " + tex.mipOffset[mipLevel - 1]);
-               //     Console.WriteLine("surfSize " + surfInfo.surfSize);
+                        mipOffset -= (uint)surfInfo.surfSize;
 
                     surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
-
                     data = new byte[surfInfo.surfSize + mipOffset];
                     Array.Copy(tex.mipData, mipOffset, data, 0, surfInfo.surfSize);
                 }
-                byte[] deswizzled = deswizzle(Math.Max(1, (uint)tex.width >> mipLevel), Math.Max(1, (uint)tex.height >> mipLevel), (uint)surfInfo.height, (uint)tex.format,
-                (uint)surfInfo.tileMode, (uint)tex.swizzle, (uint)surfInfo.pitch, (uint)surfInfo.bpp, data);
+                byte[] deswizzled = deswizzle(width_, height_, surfInfo.height, (uint)tex.format,
+                surfInfo.tileMode, (uint)tex.swizzle, surfInfo.pitch, surfInfo.bpp, data);
                 //Create a copy and use that to remove uneeded data
                 byte[] result_ = new byte[size];
                 Array.Copy(deswizzled, 0, result_, 0, size);
@@ -591,17 +594,17 @@ namespace FirstPlugin
         private static byte[] swizzleSurf(uint width, uint height, uint height_, uint format, uint tileMode, uint swizzle_,
                 uint pitch, uint bitsPerPixel, byte[] data, int swizzle)
         {
-            Console.WriteLine("swizzle");
+            Console.WriteLine("swizzling level....");
             Console.WriteLine("---------------------------");
-            Console.WriteLine(width);
-            Console.WriteLine(height);
-            Console.WriteLine(height_);
-            Console.WriteLine(format);
-            Console.WriteLine(tileMode);
-            Console.WriteLine(swizzle_);
-            Console.WriteLine(pitch);
-            Console.WriteLine(bitsPerPixel);
-            Console.WriteLine(swizzle);
+            Console.WriteLine("width " + width);
+            Console.WriteLine("height " + height);
+            Console.WriteLine("height_ " + height_);
+            Console.WriteLine("format " + format);
+            Console.WriteLine("tileMode " + tileMode);
+            Console.WriteLine("swizzle_ " + swizzle_);
+            Console.WriteLine("pitch " + pitch);
+            Console.WriteLine("bitsPerPixel " + bitsPerPixel);
+            Console.WriteLine("swizzle " + swizzle);
             Console.WriteLine("---------------------------");
 
             uint bytesPerPixel = bitsPerPixel / 8;
@@ -2265,7 +2268,7 @@ namespace FirstPlugin
             return ~(align - 1) & (x + align - 1);
         }
 
-        public static surfaceOut getSurfaceInfo(GX2SurfaceFormat surfaceFormat, int surfaceWidth, int surfaceHeight, int surfaceDepth, uint surfaceDim, uint surfaceTileMode, uint surfaceAA, int level)
+        public static surfaceOut getSurfaceInfo(GX2SurfaceFormat surfaceFormat, uint surfaceWidth, uint surfaceHeight, uint surfaceDepth, uint surfaceDim, uint surfaceTileMode, uint surfaceAA, int level)
         {
             GX2Surface surface = new GX2Surface();
 
@@ -2312,34 +2315,34 @@ namespace FirstPlugin
                 }
                 else if (dim == 1)
                 {
-                    pSurfOut.height = (uint)Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = 1;
                 }
                 else if (dim == 2)
                 {
-                    pSurfOut.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    pSurfOut.depth = (uint)Math.Max(1, surfaceDepth >> level);
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = Math.Max(1, surfaceDepth >> level);
                 }
                 else if (dim == 3)
                 {
-                    pSurfOut.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    pSurfOut.depth = (uint)Math.Max(6, surfaceDepth);
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = Math.Max(6, surfaceDepth);
                 }
                 else if (dim == 4)
                 {
                     pSurfOut.height = 1;
-                    pSurfOut.depth = (uint)surfaceDepth;
+                    pSurfOut.depth = surfaceDepth;
                 }
                 else if (dim == 5)
                 {
-                    pSurfOut.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    pSurfOut.depth = (uint)surfaceDepth;
+                    pSurfOut.height = Math.Max(1, surfaceHeight >> level);
+                    pSurfOut.depth = surfaceDepth;
                 }
 
-                pSurfOut.height = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize;
-                pSurfOut.pixelPitch = (uint)(~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
+                pSurfOut.height = (~(blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize;
+                pSurfOut.pixelPitch = (~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
                 pSurfOut.pixelPitch = Math.Max(blockSize, pSurfOut.pixelPitch);
-                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
+                pSurfOut.pixelHeight = (~(blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
                 pSurfOut.pixelHeight = Math.Max(blockSize, pSurfOut.pixelHeight);
                 pSurfOut.pitch = Math.Max(1, pSurfOut.pitch);
                 pSurfOut.height = Math.Max(1, pSurfOut.height);

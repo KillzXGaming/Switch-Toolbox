@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -140,6 +141,7 @@
     <Compile Include="GUI\Viewport.Designer.cs">
       <DependentUpon>Viewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="Interfaces\IMenuExtension.cs" />
     <Compile Include="Plugin\GenericPluginLoader.cs" />
     <Compile Include="GUI Custom\DockContentST.cs">

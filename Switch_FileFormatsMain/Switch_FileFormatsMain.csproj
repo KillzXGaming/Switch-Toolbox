@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Switch_Toolbox\Lib\Plugins\</OutputPath>
+    <OutputPath>..\Switch_Toolbox\bin\Debug\Lib\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -267,6 +267,13 @@
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FormLoader.cs" />
+    <Compile Include="GUI\TextureUI\GTXImporterSettings.cs" />
+    <Compile Include="GUI\TextureUI\GTXTextureImporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\GTXTextureImporter.Designer.cs">
+      <DependentUpon>GTXTextureImporter.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\TextureUI\XTXEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -424,6 +431,9 @@
     <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\GTXTextureImporter.resx">
+      <DependentUpon>GTXTextureImporter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureUI\XTXEditor.resx">
       <DependentUpon>XTXEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -490,7 +500,6 @@
     <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
       <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
       <Name>Switch_Toolbox_Library</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

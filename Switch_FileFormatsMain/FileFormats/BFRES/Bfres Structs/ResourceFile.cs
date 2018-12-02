@@ -282,7 +282,7 @@ namespace Bfres.Structs
                 ftexContainer.Nodes.Add(texture);
                 ftexContainer.Textures.Add(texture.Text, texture);
             }
-           // PluginRuntime.ftexContainers.Add(ftexContainer);
+            PluginRuntime.ftexContainers.Add(ftexContainer);
         }
         private void AddSkeletonAnims(ResU.ResFile resFile)
         {

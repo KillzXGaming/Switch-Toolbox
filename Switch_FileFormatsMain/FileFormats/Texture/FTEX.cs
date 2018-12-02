@@ -25,6 +25,9 @@ namespace FirstPlugin
             Name = "FTEXCONT";
 
             ContextMenu = new ContextMenu();
+            MenuItem importTex = new MenuItem("Import");
+            ContextMenu.MenuItems.Add(importTex);
+            importTex.Click += Import;
             MenuItem exportAll = new MenuItem("Export All Textures");
             ContextMenu.MenuItems.Add(exportAll);
             exportAll.Click += ExportAll;
@@ -50,7 +53,117 @@ namespace FirstPlugin
             Textures.Remove(textureData.Text);
             Viewport.Instance.UpdateViewport();
         }
+        private void Import(object sender, EventArgs args)
+        {
+            ImportTexture();
+        }
+        public void ImportTexture()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                                     "Microsoft DDS |*.dds|" +
+                                     "Portable Network Graphics |*.png|" +
+                                     "Joint Photographic Experts Group |*.jpg|" +
+                                     "Bitmap Image |*.bmp|" +
+                                     "Tagged Image File Format |*.tiff|" +
+                                     "All files(*.*)|*.*";
 
+            ofd.Multiselect = true;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                GTXTextureImporter importer = new GTXTextureImporter();
+                List<GTXImporterSettings> settings = new List<GTXImporterSettings>();
+                foreach (string name in ofd.FileNames)
+                {
+                    string ext = System.IO.Path.GetExtension(name);
+                    ext = ext.ToLower();
+
+                    if (ext == ".dds")
+                    {
+                        settings.Add(LoadSettings(name));
+                        if (settings.Count == 0)
+                        {
+                            importer.Dispose();
+                            return;
+                        }
+                        importer.LoadSettings(settings);
+                        foreach (var setting in settings)
+                        {
+                            if (setting.DataBlockOutput != null)
+                            {
+                                GTX.GX2Surface tex = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                                FTEX ftex = new FTEX();
+                                ftex.texture = ftex.FromGx2Surface(tex, setting);
+                                ftex.Read(ftex.texture);
+
+                                Nodes.Add(ftex);
+                                Textures.Add(ftex.Text, ftex);
+                                ftex.LoadOpenGLTexture();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        settings.Add(LoadSettings(name));
+                        if (settings.Count == 0)
+                        {
+                            importer.Dispose();
+                            return;
+                        }
+                        importer.LoadSettings(settings);
+                        if (importer.ShowDialog() == DialogResult.OK)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+                            foreach (var setting in settings)
+                            {
+                                if (setting.GenerateMipmaps)
+                                {
+                                    setting.DataBlockOutput.Clear();
+                                    setting.DataBlockOutput.Add(setting.GenerateMips());
+                                }
+                                if (setting.DataBlockOutput != null)
+                                {
+                                    GTX.GX2Surface tex = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                                    FTEX ftex = new FTEX();
+                                    ftex.texture = ftex.FromGx2Surface(tex, setting);
+                                    ftex.Read(ftex.texture);
+
+                                    Nodes.Add(ftex);
+                                    Textures.Add(ftex.Text, ftex);
+                                    ftex.LoadOpenGLTexture();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Something went wrong???");
+                                }
+                            }
+                        }
+                    }
+               
+                    settings.Clear();
+                    GC.Collect();
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+        public GTXImporterSettings LoadSettings(string name)
+        {
+            var importer = new GTXImporterSettings();
+            string ext = System.IO.Path.GetExtension(name);
+            ext = ext.ToLower();
+
+            switch (ext)
+            {
+                case ".dds":
+                    importer.LoadDDS(name);
+                    break;
+                default:
+                    importer.LoadBitMap(name);
+                    break;
+            }
+
+            return importer;
+        }
         private void ExportAll(object sender, EventArgs args)
         {
             List<string> Formats = new List<string>();
@@ -94,10 +207,7 @@ namespace FirstPlugin
     {
         public int format;
         public RenderableTex renderedTex = new RenderableTex();
-        GX2CompSel ChannelRed;
-        GX2CompSel ChannelBlue;
-        GX2CompSel ChannelGreen;
-        GX2CompSel ChannelAlpha;
+        public Texture texture;
 
         public FTEX()
         {
@@ -105,6 +215,9 @@ namespace FirstPlugin
             MenuItem export = new MenuItem("Export");
             ContextMenu.MenuItems.Add(export);
             export.Click += Export;
+            MenuItem replace = new MenuItem("Replace");
+            ContextMenu.MenuItems.Add(replace);
+            replace.Click += Replace;
             MenuItem remove = new MenuItem("Remove");
             ContextMenu.MenuItems.Add(remove);
             remove.Click += Remove;
@@ -115,7 +228,91 @@ namespace FirstPlugin
 
         private void Replace(object sender, EventArgs args)
         {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                         "Microsoft DDS |*.dds|" +
+                         "Portable Network Graphics |*.png|" +
+                         "Joint Photographic Experts Group |*.jpg|" +
+                         "Bitmap Image |*.bmp|" +
+                         "Tagged Image File Format |*.tiff|" +
+                         "All files(*.*)|*.*";
 
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Replace(ofd.FileName);
+            }
+        }
+        public void Replace(string FileName)
+        {
+            string ext = System.IO.Path.GetExtension(FileName);
+            ext = ext.ToLower();
+
+            GTXImporterSettings setting = new GTXImporterSettings();
+            GTXTextureImporter importer = new GTXTextureImporter();
+
+            switch (ext)
+            {
+                case ".dds":
+                    setting.LoadDDS(FileName, null);
+                    break;
+                default:
+                    setting.LoadBitMap(FileName);
+                    importer.LoadSetting(setting);
+                    break;
+            }
+
+            if (importer.ShowDialog() == DialogResult.OK)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (setting.GenerateMipmaps)
+                {
+                    setting.DataBlockOutput.Clear();
+                    setting.DataBlockOutput.Add(setting.GenerateMips());
+                }
+
+                if (setting.DataBlockOutput != null)
+                {
+                    var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                    texture = FromGx2Surface(surface, setting);
+                    LoadOpenGLTexture();
+                }
+                else
+                {
+                    MessageBox.Show("Something went wrong???");
+                }
+                UpdateEditor();
+            }
+        }
+        //We reuse GX2 data as it's the same thing
+        public Texture FromGx2Surface(GTX.GX2Surface surf, GTXImporterSettings settings)
+        {
+            Texture tex = new Texture();
+            tex.Name = settings.TexName;
+            tex.AAMode = (GX2AAMode)surf.aa;
+            tex.Alignment = (uint)surf.alignment;
+            tex.ArrayLength = 1;
+            tex.Data = surf.data;
+            tex.MipData = surf.mipData;
+            tex.Format = (GX2SurfaceFormat)surf.format;
+            tex.Dim = (GX2SurfaceDim)surf.dim;
+            tex.Use = (GX2SurfaceUse)surf.use;
+            tex.TileMode = (GX2TileMode)surf.tileMode;
+            tex.Swizzle = (uint)surf.swizzle;
+            tex.Pitch = (uint)surf.pitch;
+            tex.Depth = (uint)surf.depth;
+            tex.MipCount = (uint)surf.numMips;
+            tex.MipOffsets = surf.mipOffset;
+            tex.Height = (uint)surf.height;
+            tex.Width = (uint)surf.width;
+            tex.Regs = new uint[0];
+            var channels = SetChannelsByFormat((GX2SurfaceFormat)surf.format);
+            tex.CompSelR = channels[0];
+            tex.CompSelG = channels[1];
+            tex.CompSelB = channels[2];
+            tex.CompSelA = channels[3];
+            return tex;
         }
         private void Rename(object sender, EventArgs args)
         {
@@ -160,11 +357,7 @@ namespace FirstPlugin
             SelectedImageKey = "Texture";
             Text = tex.Name;
 
-            ChannelRed = tex.CompSelR;
-            ChannelGreen = tex.CompSelG;
-            ChannelBlue = tex.CompSelB;
-            ChannelAlpha = tex.CompSelA;
-
+            renderedTex = new RenderableTex();
             renderedTex.width = (int)tex.Width;
             renderedTex.height = (int)tex.Height;
             format = (int)tex.Format;
@@ -172,30 +365,70 @@ namespace FirstPlugin
             int pitch = (int)tex.Pitch;
             uint bpp = GTX.surfaceGetBitsPerPixel((uint)format) >> 3;
 
+            Console.WriteLine(tex.Width);
+            Console.WriteLine(tex.Height);
+            Console.WriteLine(tex.Format);
+            Console.WriteLine(tex.Swizzle);
+            Console.WriteLine(tex.Pitch);
+            Console.WriteLine(tex.Alignment);
+            Console.WriteLine(tex.Depth);
+            Console.WriteLine(tex.Dim);
+            Console.WriteLine(tex.MipCount);
+            Console.WriteLine(tex.MipOffsets);
+            Console.WriteLine(tex.AAMode);
+            Console.WriteLine(tex.Use);
+
             GTX.GX2Surface surf = new GTX.GX2Surface();
             surf.bpp = bpp;
-            surf.height = (int)tex.Height;
-            surf.width = (int)tex.Width;
-            surf.aa = (int)tex.AAMode;
-            surf.alignment = (int)tex.Alignment;
-            surf.depth = (int)tex.Depth;
-            surf.dim = (int)tex.Dim;
-            surf.format = (int)tex.Format;
-            surf.use = (int)tex.Use;
-            surf.pitch = (int)tex.Pitch;
+            surf.height = tex.Height;
+            surf.width = tex.Width;
+            surf.aa = (uint)tex.AAMode;
+            surf.alignment = tex.Alignment;
+            surf.depth = tex.Depth;
+            surf.dim = (uint)tex.Dim;
+            surf.format = (uint)tex.Format;
+            surf.use = (uint)tex.Use;
+            surf.pitch = tex.Pitch;
             surf.data = tex.Data;
-            surf.numMips = (int)tex.MipCount;
+            surf.numMips = tex.MipCount;
             surf.mipOffset = tex.MipOffsets;
             surf.mipData = tex.MipData;
-            surf.tileMode = (int)tex.TileMode;
-            surf.swizzle = (int)tex.Swizzle;
+            surf.tileMode = (uint)tex.TileMode;
+            surf.swizzle = tex.Swizzle;
 
             List<byte[]> mips = GTX.Decode(surf);
             renderedTex.mipmaps.Add(mips);
 
-        //        LoadOpenGLTexture();
-       //     else
-       //         Console.WriteLine("Failed to load image!");
+            renderedTex.data = renderedTex.mipmaps[0][0];
+        }
+        public static GX2CompSel[] SetChannelsByFormat(GX2SurfaceFormat Format)
+        {
+            GX2CompSel[] channels = new GX2CompSel[4];
+
+            switch (Format)
+            {
+                case GX2SurfaceFormat.T_BC5_UNorm:
+                case GX2SurfaceFormat.T_BC5_SNorm:
+                    channels[0] = GX2CompSel.ChannelR;
+                    channels[1] = GX2CompSel.ChannelG;
+                    channels[2] = GX2CompSel.Always0;
+                    channels[3] = GX2CompSel.Always1;
+                    break;
+                case GX2SurfaceFormat.T_BC4_SNorm:
+                case GX2SurfaceFormat.T_BC4_UNorm:
+                    channels[0] = GX2CompSel.ChannelR;
+                    channels[1] = GX2CompSel.ChannelR;
+                    channels[2] = GX2CompSel.ChannelR;
+                    channels[3] = GX2CompSel.ChannelR;
+                    break;
+                default:
+                    channels[0] = GX2CompSel.ChannelR;
+                    channels[1] = GX2CompSel.ChannelG;
+                    channels[2] = GX2CompSel.ChannelB;
+                    channels[3] = GX2CompSel.Always1;
+                    break;
+            }
+            return channels;
         }
 
         public void Export(string FileName, bool ExportSurfaceLevel = false,
@@ -252,6 +485,7 @@ namespace FirstPlugin
             if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Unitialized)
                 return;
 
+
             switch (format)
             {
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM):
@@ -283,8 +517,7 @@ namespace FirstPlugin
                     break;
                 case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
                     //OpenTK doesn't load BC5 SNORM textures right so I'll use the same decompress method bntx has
-                    byte[] fixBC5 = DDSCompressor.DecompressBC5(renderedTex.data, renderedTex.width, renderedTex.height, true, true);
-                    renderedTex.data = fixBC5;
+                    renderedTex.data = DDSCompressor.DecompressBC5(renderedTex.mipmaps[0][0], (int)renderedTex.width, (int)renderedTex.height, true, true);
                     renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
                     renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
@@ -356,12 +589,24 @@ namespace FirstPlugin
 
         public override void OnClick(TreeView treeView)
         {
-            FTEXEditor FTEXEditor = new FTEXEditor();
-            FTEXEditor.Text = Text;
-            FTEXEditor.Dock = DockStyle.Fill;
-            FTEXEditor.LoadPicture(DisplayTexture());
-            FTEXEditor.LoadProperty(this);
-            LibraryGUI.Instance.LoadDockContent(FTEXEditor, PluginRuntime.FSHPDockState);
+            UpdateEditor();
+        }
+
+        public void UpdateEditor()
+        {
+            if (Viewport.Instance.gL_ControlModern1.Visible == false)
+                PluginRuntime.FSHPDockState = WeifenLuo.WinFormsUI.Docking.DockState.Document;
+
+            FTEXEditor docked = (FTEXEditor)LibraryGUI.Instance.GetContentDocked(new FTEXEditor());
+            if (docked == null)
+            {
+                docked = new FTEXEditor();
+                LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
+            }
+            docked.Text = Text;
+            docked.Dock = DockStyle.Fill;
+            docked.LoadPicture(DisplayTexture());
+            docked.LoadProperty(this);
         }
 
         public class RenderableTex
@@ -373,21 +618,8 @@ namespace FirstPlugin
             public PixelType pixelType = PixelType.UnsignedByte;
             public int mipMapCount;
             public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
+            public byte[] data;
 
-            public byte[] data
-            {
-                get
-                {
-                    return mipmaps[0][0];
-                }
-                set
-                {
-                    mipmaps.Clear();
-                    List<byte[]> mips = new List<byte[]>();
-                    mips.Add(value);
-                    mipmaps.Add(mips);
-                }
-            }
             public class Surface
             {
 
@@ -435,18 +667,23 @@ namespace FirstPlugin
             {
                 throw new Exception($"Bad size from format {Format}");
             }
-
-
-
+        }
+        public static byte[] CompressBlock(byte[] data, int width, int height, GTX.GX2SurfaceFormat format)
+        {
+            if (IsCompressedFormat((GX2SurfaceFormat)format))
+                return DDSCompressor.CompressBlock(data, width, height, GetCompressedDXGI_FORMAT((GX2SurfaceFormat)format));
+            else
+                return DDSCompressor.EncodePixelBlock(data, width, height, GetUncompressedDXGI_FORMAT((GX2SurfaceFormat)format));
         }
         private static DDS.DXGI_FORMAT GetUncompressedDXGI_FORMAT(GX2SurfaceFormat Format)
         {
             switch (Format)
             {
+                case GX2SurfaceFormat.TC_R5_G5_B5_A1_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
                 case GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
                 case GX2SurfaceFormat.TC_R4_G4_B4_A4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
                 case GX2SurfaceFormat.TCS_R5_G6_B5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
-                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                 case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                 case GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM;
                 case GX2SurfaceFormat.TC_R11_G11_B10_Float: return DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT;
@@ -484,11 +721,11 @@ namespace FirstPlugin
             switch (Format)
             {
                 case GX2SurfaceFormat.T_BC1_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
-                case GX2SurfaceFormat.T_BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
                 case GX2SurfaceFormat.T_BC2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
-                case GX2SurfaceFormat.T_BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
                 case GX2SurfaceFormat.T_BC3_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
-                case GX2SurfaceFormat.T_BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB;
+                case GX2SurfaceFormat.T_BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
                 case GX2SurfaceFormat.T_BC4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
                 case GX2SurfaceFormat.T_BC4_SNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
                 case GX2SurfaceFormat.T_BC5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
@@ -503,7 +740,8 @@ namespace FirstPlugin
         }
         public Bitmap UpdateBitmap(Bitmap image)
         {
-            return ColorComponentSelector(image, ChannelRed, ChannelGreen, ChannelBlue, ChannelAlpha);
+            return ColorComponentSelector(image, texture.CompSelR,
+                texture.CompSelG, texture.CompSelB, texture.CompSelA);
         }
         public static Bitmap ColorComponentSelector(Bitmap image, GX2CompSel R, GX2CompSel G, GX2CompSel B, GX2CompSel A)
         {

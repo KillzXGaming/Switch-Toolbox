@@ -145,7 +145,7 @@ namespace FirstPlugin
             DataBlockOutput.Add(dds.bdata);
 
 
-            Format = LoadDDSFormat(dds.header.ddspf.fourCC, dds, IsSRGB);
+            Format = LoadDDSFormat(dds.header.ddspf.fourCC.ToString(), dds, IsSRGB);
 
             Texture tex = FromBitMap(DataBlockOutput[0], this);
 
@@ -236,31 +236,6 @@ namespace FirstPlugin
         public static uint DIV_ROUND_UP(uint value1, uint value2)
         {
             return TegraX1Swizzle.DIV_ROUND_UP(value1, value2);
-        }
-        public static byte[] SubArray(byte[] data, uint offset, uint length)
-        {
-            return data.Skip((int)offset).Take((int)length).ToArray();
-        }
-        private static Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkHeight, uint blkWidth, uint bpp, int CurLevel)
-        {
-            uint offset = 0;
-            uint width_ = 0;
-            uint height_ = 0;
-
-            for (int mipLevel = 0; mipLevel < CurLevel; mipLevel++)
-            {
-                width_ = DIV_ROUND_UP(Math.Max(1, width >> mipLevel), blkWidth);
-                height_ = DIV_ROUND_UP(Math.Max(1, height >> mipLevel), blkHeight);
-
-                offset += width_ * height_ * bpp;
-            }
-
-            width_ = DIV_ROUND_UP(Math.Max(1, width >> CurLevel), blkWidth);
-            height_ = DIV_ROUND_UP(Math.Max(1, height >> CurLevel), blkHeight);
-
-            uint size = width_ * height_ * bpp;
-            return Tuple.Create(offset, size);
-
         }
         public Texture FromBitMap(byte[] data, TextureImporterSettings settings)
         {
@@ -357,11 +332,11 @@ namespace FirstPlugin
             List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < tex.MipCount; mipLevel++)
             {
-                var result = GetCurrentMipSize(tex.Width, tex.Height, blkWidth, blkHeight, bpp, mipLevel);
+                var result = TextureHelper.GetCurrentMipSize(tex.Width, tex.Height, blkWidth, blkHeight, bpp, mipLevel);
                 uint offset = result.Item1;
                 uint size = result.Item2;
 
-                byte[] data_ = SubArray(data, offset, size);
+                byte[] data_ = Utils.SubArray(data, offset, size);
 
                 uint width_ = Math.Max(1, tex.Width >> mipLevel);
                 uint height_ = Math.Max(1, tex.Height >> mipLevel);

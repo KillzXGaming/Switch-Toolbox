@@ -30,7 +30,6 @@
     <ProjectGuid>{755AB64B-16B4-4C90-AA3B-BFF448E5A21E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DirectXTex</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

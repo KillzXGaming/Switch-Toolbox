@@ -18,6 +18,19 @@ namespace Switch_Toolbox.Library
     //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
     public class DDS
     {
+        public const uint FOURCC_DXT1 = 0x31545844;
+        public const uint FOURCC_DXT2 = 0x32545844;
+        public const uint FOURCC_DXT3 = 0x33545844;
+        public const uint FOURCC_DXT4 = 0x34545844;
+        public const uint FOURCC_DXT5 = 0x35545844;
+        public const uint FOURCC_ATI1 = 0x31495441;
+        public const uint FOURCC_BC4U = 0x55344342;
+        public const uint FOURCC_BC5U = 0x55354342;
+        public const uint FOURCC_DX10 = 0x30315844;
+
+        public const uint FOURCC_ATI2 = 0x32495441;
+        public const uint FOURCC_RXGB = 0x42475852;
+
         public enum CubemapFace
         {
             PosX,
@@ -79,17 +92,21 @@ namespace Switch_Toolbox.Library
             {
                 case 0x00000000: //RGBA
                     return 0x4;
-                case 0x31545844: //DXT1
+                case FOURCC_DXT1: 
                     return 0x8;
-                case 0x33545844: //DXT3
+                case FOURCC_DXT2: 
                     return 0x10;
-                case 0x35545844: //DXT5
+                case FOURCC_DXT3:
                     return 0x10;
-                case 0x31495441: //ATI1
-                case 0x55344342: //BC4U
+                case FOURCC_DXT4:
+                    return 0x10;
+                case FOURCC_DXT5:
+                    return 0x10;
+                case FOURCC_ATI1:
+                case FOURCC_BC4U:
                     return 0x8;
-                case 0x32495441: //ATI2
-                case 0x55354342: //BC5U
+                case FOURCC_ATI2: 
+                case FOURCC_BC5U:
                     return 0x10;
                 default:
                     return 0;
@@ -101,19 +118,21 @@ namespace Switch_Toolbox.Library
             {
                 case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
-                    header.ddspf.fourCC = "DXT1";
+                    header.ddspf.fourCC = FOURCC_DXT1;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
-                    header.ddspf.fourCC = "DXT3";
+                    header.ddspf.fourCC = FOURCC_DXT3;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
-                    header.ddspf.fourCC = "DXT5";
+                    header.ddspf.fourCC = FOURCC_DXT5;
                     break;
             }
         }
         public bool IsDX10;
+        public             uint imageSize;
+
         public Header header;
         public DX10Header DX10header;
         public class Header
@@ -131,7 +150,7 @@ namespace Switch_Toolbox.Library
             {
                 public uint size = 0x20;
                 public uint flags = 0x00000000;
-                public string fourCC;
+                public uint fourCC;
                 public uint RGBBitCount = 0;
                 public uint RBitMask = 0x00000000;
                 public uint GBitMask = 0x00000000;
@@ -320,7 +339,7 @@ namespace Switch_Toolbox.Library
 
             header.ddspf.size = reader.ReadUInt32();
             header.ddspf.flags = reader.ReadUInt32();
-            header.ddspf.fourCC = reader.ReadString(4);
+            header.ddspf.fourCC = reader.ReadUInt32();
             header.ddspf.RGBBitCount = reader.ReadUInt32();
             header.ddspf.RBitMask = reader.ReadUInt32();
             header.ddspf.GBitMask = reader.ReadUInt32();
@@ -334,7 +353,7 @@ namespace Switch_Toolbox.Library
             header.reserved2 = reader.ReadUInt32();
 
             int DX10HeaderSize = 0;
-            if (header.ddspf.fourCC == "DX10")
+            if (header.ddspf.fourCC == FOURCC_DX10)
             {
                 IsDX10 = true;
 
@@ -342,8 +361,15 @@ namespace Switch_Toolbox.Library
                 ReadDX10Header(reader);
             }
 
+            if (IsCompressed())
+            {
+                imageSize = ((header.width + 3) >> 2) * ((header.height + 3) >> 2) * getFormatSize(header.ddspf.fourCC);
+            }
+            else
+                imageSize = header.width * header.height * getFormatSize(header.ddspf.fourCC);
+
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
-            bdata = reader.ReadBytes((int)(reader.BaseStream.Length - reader.Position));
+            bdata = reader.ReadBytes((int)imageSize);
 
             reader.Dispose();
             reader.Close();
@@ -398,17 +424,17 @@ namespace Switch_Toolbox.Library
                 case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
                 case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
                     header.ddspf.flags = (uint)DDPF.FOURCC;
-                    header.ddspf.fourCC = "DXT1";
+                    header.ddspf.fourCC = FOURCC_DXT1;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
                 case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
                     header.ddspf.flags = (uint)DDPF.FOURCC;
-                    header.ddspf.fourCC = "DXT3";
+                    header.ddspf.fourCC = FOURCC_DXT3;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
                 case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
                     header.ddspf.flags = (uint)DDPF.FOURCC;
-                    header.ddspf.fourCC = "DXT5";
+                    header.ddspf.fourCC = FOURCC_DXT5;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
@@ -419,7 +445,7 @@ namespace Switch_Toolbox.Library
                 case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
                     header.ddspf.flags = (uint)DDPF.FOURCC;
-                    header.ddspf.fourCC = "DX10";
+                    header.ddspf.fourCC = FOURCC_DX10;
                     if (DX10header == null)
                         DX10header = new DX10Header();
 
@@ -428,9 +454,58 @@ namespace Switch_Toolbox.Library
                     break;
             }
         }
+        public bool IsCompressed()
+        {
+            if (header == null)
+                return false;
+
+            if (DX10header != null)
+            {
+                switch (DX10header.DXGI_Format)
+                {
+                    case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC1_TYPELESS:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC2_TYPELESS:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC3_TYPELESS:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC4_TYPELESS:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC5_TYPELESS:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            else
+            {
+                switch (header.ddspf.fourCC)
+                {
+                    case FOURCC_DXT1:
+                    case FOURCC_DXT2:
+                    case FOURCC_DXT3:
+                    case FOURCC_DXT4:
+                    case FOURCC_DXT5:
+                    case FOURCC_ATI1:
+                    case FOURCC_BC4U:
+                    case FOURCC_ATI2:
+                    case FOURCC_BC5U:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
         public void Save(DDS dds, string FileName, List<List<byte[]>> data = null)
         {
             FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
+            var header = dds.header;
             writer.Write(Encoding.ASCII.GetBytes("DDS "));
             writer.Write(header.size);
             writer.Write(header.flags);
@@ -447,7 +522,7 @@ namespace Switch_Toolbox.Library
 
             writer.Write(header.ddspf.size);
             writer.Write(header.ddspf.flags);
-            writer.WriteSignature(header.ddspf.fourCC);
+            writer.Write(header.ddspf.fourCC);
             writer.Write(header.ddspf.RGBBitCount);
             writer.Write(header.ddspf.RBitMask);
             writer.Write(header.ddspf.GBitMask);
@@ -466,10 +541,7 @@ namespace Switch_Toolbox.Library
 
             if (data != null)
             {
-                foreach (byte[] mip in data[0])
-                {
-                    writer.Write(mip);
-                }
+                writer.Write(data[0][0]);
             }
             else
             {
