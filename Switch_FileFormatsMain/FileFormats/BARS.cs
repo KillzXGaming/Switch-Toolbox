@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.IO;
 using BarsLib;
 using WeifenLuo.WinFormsUI.Docking;
 using VGAudio.Formats;
@@ -190,10 +190,28 @@ namespace FirstPlugin
 
                 Nodes[1].Nodes.Add(node);
             }
+
+            ContextMenu = new ContextMenu();
+            MenuItem save = new MenuItem("Save");
+            ContextMenu.MenuItems.Add(save);
+            save.Click += Save;
         }
         public void Unload()
         {
 
+        }
+        private void Save(object sender, EventArgs args)
+        {
+            List<IFileFormat> formats = new List<IFileFormat>();
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(formats);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
         }
         public byte[] Save()
         {

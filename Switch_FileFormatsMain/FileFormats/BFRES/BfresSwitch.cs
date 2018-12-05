@@ -53,8 +53,6 @@ namespace FirstPlugin
                 SetMaterial(mat, mat.Material);
                 model.Materials.Add(mat.Material);
             }
-
-
             return model;
         }
         public static void Read(BFRESRender renderer, ResFile resFile, TreeNode ResFileNode)

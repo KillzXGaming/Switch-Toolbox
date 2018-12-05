@@ -8,9 +8,165 @@ using System.IO;
 using System.IO.Compression;
 using OpenTK;
 using K4os.Compression.LZ4.Streams;
+using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library.IO
 {
+    public class STFileSaver
+    {
+        /// <summary>
+        /// Saves the <see cref="IFileFormat"/> as a file from the given <param name="FileName">
+        /// </summary>
+        /// <param name="IFileFormat">The format instance of the file being saved</param>
+        /// <param name="FileName">The name of the file</param>
+        /// <param name="Alignment">The Alignment used for compression. Used for Yaz0 compression type. </param>
+        /// <param name="EnableDialog">Toggle for showing compression dialog</param>
+        /// <returns></returns>
+        public static void SaveFileFormat(IFileFormat FileFormat, string FileName, int Alignment = 0, bool EnableDialog = true)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            byte[] data = FileFormat.Save();
+            if (EnableDialog && FileFormat.FileIsCompressed)
+            {
+                DialogResult save = MessageBox.Show($"Compress file with {FileFormat.CompressionType}?", "File Save", MessageBoxButtons.YesNo);
+
+                if (save == DialogResult.Yes)
+                {
+                    switch (FileFormat.CompressionType)
+                    {
+                        case CompressionType.Yaz0:
+                            data = EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
+                            break;
+                        case CompressionType.Zstb:
+                            data = STLibraryCompression.ZSTD.Compress(data);
+                            break;
+                        case CompressionType.Lz4:
+                            data = STLibraryCompression.Type_LZ4.Compress(data);
+                            break;
+                        case CompressionType.Lz4f:
+                            data = STLibraryCompression.Type_LZ4.Compress(data);
+                            break;
+                        case CompressionType.Gzip:
+                            data = STLibraryCompression.GZIP.Compress(data);
+                            break;
+                        default:
+                            MessageBox.Show($"Compression Type {FileFormat.CompressionType} not supported!!");
+                            break;
+                    }
+                }
+            }
+            File.WriteAllBytes(FileName, data);
+            MessageBox.Show($"File has been saved to {FileName}");
+            Cursor.Current = Cursors.Default;
+        }
+    }
+    public class STFileLoader
+    {
+        /// <summary>
+        /// Gets the <see cref="TreeNodeFile"/> from a file or byte array. 
+        /// </summary>
+        /// <param name="FileName">The name of the file</param>
+        /// <param name="data">The byte array of the data</param>
+        /// <param name="InArchive">If the file is in an archive so it can be saved back</param>
+        /// <param name="archiveNode">The node being replaced from an archive</param>
+        /// <param name="ArchiveHash">The unique hash from an archive for saving</param>
+        /// <param name="Compressed">If the file is being compressed or not</param>
+        /// <param name="CompType">The type of <see cref="CompressionType"/> being used</param>
+        /// <returns></returns>
+        public static TreeNodeFile GetNodeFileFormat(string FileName, byte[] data, bool InArchive = false,
+            string ArchiveHash = "", TreeNode archiveNode = null, bool Compressed = false, CompressionType CompType = 0)
+        {
+            IFileFormat format = OpenFileFormat(FileName, data, InArchive, ArchiveHash, archiveNode);
+
+            if (format is TreeNode)
+                return (TreeNodeFile)format;
+            else
+                return null;
+        }
+        /// <summary>
+        /// Gets the <see cref="IFileFormat"/> from a file or byte array. 
+        /// </summary>
+        /// <param name="FileName">The name of the file</param>
+        /// <param name="data">The byte array of the data</param>
+        /// <param name="InArchive">If the file is in an archive so it can be saved back</param>
+        /// <param name="archiveNode">The node being replaced from an archive</param>
+        /// <param name="Compressed">If the file is being compressed or not</param>
+        /// <param name="CompType">The type of <see cref="CompressionType"/> being used</param>
+        /// <returns></returns>
+        public static IFileFormat OpenFileFormat(string FileName, byte[] data, bool InArchive = false,
+            string ArchiveHash = "", TreeNode archiveNode = null, bool Compressed = false, CompressionType CompType = 0)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            FileReader fileReader = new FileReader(data);
+            string Magic4 = fileReader.ReadMagic(0, 4);
+            string Magic2 = fileReader.ReadMagic(0, 2);
+            if (Magic4 == "Yaz0")
+            {
+                data = EveryFileExplorer.YAZ0.Decompress(data);
+                return OpenFileFormat(FileName, data, InArchive, ArchiveHash, archiveNode, true, CompressionType.Yaz0);
+            }
+            if (Magic4 == "ZLIB")
+            {
+                data = FileReader.InflateZLIB(fileReader.getSection(64, data.Length - 64));
+                return OpenFileFormat(FileName, data, InArchive, ArchiveHash, archiveNode, true, CompressionType.Zlib);
+            }
+            fileReader.Dispose();
+            fileReader.Close();
+            foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
+            {
+                if (fileFormat.Magic == Magic4 || fileFormat.Magic == Magic2)
+                {
+                    fileFormat.CompressionType = CompType;
+                    fileFormat.FileIsCompressed = Compressed;
+                    fileFormat.Data = data;
+                    fileFormat.Load();
+                    fileFormat.FileName = Path.GetFileName(FileName);
+                    fileFormat.FilePath = FileName;
+                    fileFormat.IFileInfo = new IFileInfo();
+                    fileFormat.IFileInfo.InArchive = InArchive;
+                    fileFormat.IFileInfo.ArchiveHash = ArchiveHash;
+                    fileFormat.FileIsCompressed = Compressed;
+                    if (Compressed)
+                        fileFormat.CompressionType = CompType;
+
+                    if (fileFormat is TreeNode)
+                    {
+                        ((TreeNode)fileFormat).Text = archiveNode.Text;
+                        ((TreeNode)fileFormat).ImageKey = archiveNode.ImageKey;
+                        ((TreeNode)fileFormat).SelectedImageKey = archiveNode.SelectedImageKey;
+                        return fileFormat;
+                    }
+                }
+                if (fileFormat.Magic == string.Empty)
+                {
+                    foreach (string str3 in fileFormat.Extension)
+                    {
+                        if (str3.Remove(0, 1) == Path.GetExtension(FileName))
+                        {
+                            fileFormat.Data = data;
+                            fileFormat.Load();
+                            fileFormat.FileName = Path.GetFileName(FileName);
+                            fileFormat.FilePath = FileName;
+                            fileFormat.IFileInfo = new IFileInfo();
+                            fileFormat.IFileInfo.InArchive = true;
+                            fileFormat.IFileInfo.ArchiveHash = ArchiveHash;
+
+                            if (fileFormat is TreeNode)
+                            {
+                                ((TreeNode)fileFormat).Text = archiveNode.Text;
+                                ((TreeNode)fileFormat).ImageKey = archiveNode.ImageKey;
+                                ((TreeNode)fileFormat).SelectedImageKey = archiveNode.SelectedImageKey;
+                                return fileFormat;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
     public class STLibraryCompression
     {
         public static byte[] CompressFile(byte[] data, IFileFormat format)
@@ -29,6 +185,32 @@ namespace Switch_Toolbox.Library.IO
                 default:
                     return data;
             }
+        }
+
+        public class ZSTD
+        {
+            public static byte[] Decompress(byte[] b)
+            {
+                using (var decompressor = new ZstdNet.Decompressor())
+                {
+                    return decompressor.Unwrap(b);
+                }
+            }
+            public static byte[] Decompress(byte[] b, int MaxDecompressedSize)
+            {
+                using (var decompressor = new ZstdNet.Decompressor())
+                {
+                    return decompressor.Unwrap(b, MaxDecompressedSize);
+                }
+            }
+            public static byte[] Compress(byte[] b)
+            {
+                using (var compressor = new ZstdNet.Compressor())
+                {
+                    return compressor.Wrap(b);
+                }
+            }
+
         }
 
         public class GZIP

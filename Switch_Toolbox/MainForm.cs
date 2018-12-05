@@ -11,9 +11,9 @@ using Switch_Toolbox.Library.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using Switch_Toolbox.Library;
 using Smash_Forge.Rendering;
-using Switch_Toolbox_Library;
 using Switch_Toolbox.Library.IO;
 using System.Net;
+
 
 namespace Switch_Toolbox
 {
@@ -35,7 +35,6 @@ namespace Switch_Toolbox
         public MainForm()
         {
             InitializeComponent();
-            new DiscordPresence().Initialize();
 
             ShaderTools.executableDir = executableDir;
 
@@ -237,15 +236,26 @@ namespace Switch_Toolbox
                 SaveRecentFile(FileName);
 
             FileReader f = new FileReader(data);
+
+            uint Identifier = f.ReadUInt32();
+            f.Seek(0, SeekOrigin.Begin);
+
             string Magic = f.ReadMagic(0, 4);
             string Magic2 = f.ReadMagic(0, 2);
             string Magic3 = f.ReadMagic((int)f.BaseStream.Length - 7, 3);
 
+ 
             //Determine if the file is compressed or not
             if (Magic == "Yaz0")
             {
                 data = EveryFileExplorer.YAZ0.Decompress(data).ToArray();
                 OpenFile(FileName, data, true, CompressionType.Yaz0);
+                return;
+            }
+            if (Identifier == 0x28B52FFD || Identifier == 0xFD2FB528)
+            {
+                data = STLibraryCompression.ZSTD.Decompress(f.getSection(0, data.Length));
+                OpenFile(FileName, data, true, CompressionType.Zstb);
                 return;
             }
             if (Magic == "ZLIB")

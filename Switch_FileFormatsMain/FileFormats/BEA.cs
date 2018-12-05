@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using System.IO;
 using BezelEngineArchive_Lib;
-using ZstdNet;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
 
@@ -79,23 +78,23 @@ namespace FirstPlugin
                             bea.FileName = file;
                             bea.Load();
 
-                            foreach (var asset in beaFile.FileList.Values)
+                            foreach (FileEntry asset in bea.Nodes)
                             {
-                                if (Path.GetExtension(asset.FileName) == ".lua")
+                                if (Path.GetExtension(asset.FullName) == ".lua")
                                 {
                                     try
                                     {
-                                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{folderPath}/{beaFile.Name}/{asset.FileName}")))
+                                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{folderPath}/{bea.Name}/{asset.FullName}")))
                                         {
-                                            if (!File.Exists(asset.FileName))
+                                            if (!File.Exists(asset.FullName))
                                             {
-                                                if (!Directory.Exists($"{folderPath}/{beaFile.Name}/{asset.FileName}"))
+                                                if (!Directory.Exists($"{folderPath}/{bea.Name}/{asset.FullName}"))
                                                 {
-                                                    Directory.CreateDirectory(Path.GetDirectoryName($"{folderPath}/{beaFile.Name}/{asset.FileName}"));
+                                                    Directory.CreateDirectory(Path.GetDirectoryName($"{folderPath}/{bea.Name}/{asset.FullName}"));
                                                 }
                                             }
                                         }
-                                        File.WriteAllBytes($"{folderPath}/{beaFile.Name}/{asset.FileName}", GetASSTData(asset.FileName));
+                                        File.WriteAllBytes($"{folderPath}/{bea.Name}/{asset.FullName}", GetASSTData(asset));
                                     }
                                     catch
                                     {
@@ -121,6 +120,17 @@ namespace FirstPlugin
 
             beaFile = new BezelEngineArchive(new MemoryStream(Data));
             FillTreeNodes(this, beaFile.FileList);
+
+            ContextMenu = new ContextMenu();
+            MenuItem save = new MenuItem("Save");
+            ContextMenu.MenuItems.Add(save);
+            save.Click += Save;
+            MenuItem previewFiles = new MenuItem("Preview Window");
+            ContextMenu.MenuItems.Add(previewFiles);
+            previewFiles.Click += PreviewWindow;
+            MenuItem exportAll = new MenuItem("Export All");
+            ContextMenu.MenuItems.Add(exportAll);
+            exportAll.Click += ExportAll;
         }
         public void Unload()
         {
@@ -137,18 +147,67 @@ namespace FirstPlugin
                     yield return child;
             }
         }
+        private void Save(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            List<IFileFormat> formats = new List<IFileFormat>();
+            formats.Add(this);
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(formats);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
+            GC.Collect();
+        }
         public byte[] Save()
         {
+            beaFile.FileList.Clear();
+            beaFile.FileDictionary.Clear();
+
             foreach (TreeNode node in Collect(Nodes))
             {
-                if (node is FileEntry)
+                if (node is TreeNodeFile && node != this)
                 {
-                    Console.WriteLine(node);
-                    if (((FileEntry)node).FileHandle != null)
+                    IFileFormat fileFormat = (IFileFormat)node;
+                    if (fileFormat != null)
                     {
-                        Console.WriteLine("Saving FileHandle");
-                        SaveFileEntryData((FileEntry)node);
+                        byte[] uncomrompressedData = fileFormat.Data;
+
+                        //Save any active files in the editor if supported
+                        if (fileFormat.CanSave)
+                            uncomrompressedData = fileFormat.Save();
+
+                        //Create a new asset entry
+                        ASST asset = new ASST();
+                        asset.unk = 2;
+                        asset.unk2 = 2;
+                        asset.UncompressedSize = uncomrompressedData.LongLength;
+
+                        if (fileFormat.FileIsCompressed)
+                            asset.FileData = STLibraryCompression.ZSTD.Compress(uncomrompressedData);
+                        else
+                            asset.FileData = fileFormat.Data;
+
+                        asset.FileName = fileFormat.FilePath;
+                        beaFile.FileList.Add(fileFormat.FilePath, asset);
+                        beaFile.FileDictionary.Add(fileFormat.FilePath);
                     }
+                }
+                else if (node is FileEntry)
+                {
+                    ASST asset = new ASST();
+                    asset.unk = ((FileEntry)node).unk1;
+                    asset.unk2 = ((FileEntry)node).unk2;
+                    asset.FileName = ((FileEntry)node).FullName;
+                    asset.FileData = ((FileEntry)node).data;
+                    byte[] uncomp = GetASSTData((FileEntry)node);
+                    asset.UncompressedSize = uncomp.Length;
+                    beaFile.FileList.Add(asset.FileName, asset);
+                    beaFile.FileDictionary.Add(asset.FileName);
                 }
             }
 
@@ -156,188 +215,88 @@ namespace FirstPlugin
             beaFile.Save(mem);
             return mem.ToArray();
         }
-
-
-        public class RootNode : TreeNodeFile
+        private void ExportAll(object sender, EventArgs args)
         {
-            public RootNode(string n, IFileFormat format)
-            {
-                Text = n;
+            FolderSelectDialog fsd = new FolderSelectDialog();
 
-                ContextMenu = new ContextMenu();
-                MenuItem previewFiles = new MenuItem("Preview Window");
-                ContextMenu.MenuItems.Add(previewFiles);
-                previewFiles.Click += PreviewWindow;
-                MenuItem exportAll = new MenuItem("Export All");
-                ContextMenu.MenuItems.Add(exportAll);
-                exportAll.Click += ExportAll;
+            if (fsd.ShowDialog() == DialogResult.OK)
+            {
+                progressBar = new ProgressBarWindow();
+                progressBar.Task = "Extracing Files...";
+                progressBar.Refresh();
+                progressBar.Value = 0;
+                progressBar.StartPosition = FormStartPosition.CenterScreen;
+                progressBar.Show();
+
+                ExportAll(fsd.SelectedPath, progressBar);
             }
-            public override void OnClick(TreeView treeview)
+        }
+        private void ExportAll(string Folder, ProgressBarWindow progressBar)
+        {
+            int Curfile = 0;
+            foreach (FileEntry asst in Nodes)
             {
+                int value = (Curfile * 100) / beaFile.FileList.Count;
+                progressBar.Value = value;
+                progressBar.Refresh();
 
-            }
-            private void ExportAll(object sender, EventArgs args)
-            {
-                FolderSelectDialog fsd = new FolderSelectDialog();
-
-                if (fsd.ShowDialog() == DialogResult.OK)
+                try
                 {
-                    progressBar = new ProgressBarWindow();
-                    progressBar.Task = "Extracing Files...";
-                    progressBar.Refresh();
-                    progressBar.Value = 0;
-                    progressBar.StartPosition = FormStartPosition.CenterScreen;
-                    progressBar.Show();
-
-                    ExportAll(fsd.SelectedPath, progressBar);
-                }
-            }
-            private void ExportAll(string Folder, ProgressBarWindow progressBar)
-            {
-
-                int Curfile = 0;
-                foreach (ASST asst in beaFile.FileList.Values)
-                {
-                    int value = (Curfile * 100) / beaFile.FileList.Count;
-                    progressBar.Value = value;
-                    progressBar.Refresh();
-
-                    try
+                    if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{Folder}/{beaFile.Name}/{asst.FullName}")))
                     {
-                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{Folder}/{beaFile.Name}/{asst.FileName}")))
+                        if (!File.Exists(asst.FullName))
                         {
-                            if (!File.Exists(asst.FileName))
+                            if (!Directory.Exists($"{Folder}/{beaFile.Name}/{asst.FullName}"))
                             {
-                                if (!Directory.Exists($"{Folder}/{beaFile.Name}/{asst.FileName}"))
-                                {
-                                    Directory.CreateDirectory(Path.GetDirectoryName($"{Folder}/{beaFile.Name}/{asst.FileName}"));
-                                }
-                            }
-                        }
-                        File.WriteAllBytes($"{Folder}/{beaFile.Name}/{asst.FileName}", GetASSTData(asst.FileName));
-                    }
-                    catch
-                    {
-
-                    }
-
-                    Curfile++;
-                    if (value == 99)
-                        value = 100;
-                    progressBar.Value = value;
-                    progressBar.Refresh();
-                }
-            }
-            private void CallRecursive(TreeView treeView)
-            {
-                // Print each node recursively.  
-                TreeNodeCollection nodes = treeView.Nodes;
-                foreach (TreeNode n in nodes)
-                {
-                    PrintRecursive(n);
-                }
-            }
-            private void PrintRecursive(TreeNode treeNode)
-            {
-                if (treeNode is FileEntry)
-                {
-                    FileEntry file = (FileEntry)treeNode;
-
-                    if (file.ImageKey == "bntx")
-                        OpenFile(file.Name, GetASSTData(file.FullName), TreeView);
-
-                    if (file.ImageKey == "bntx")
-                        Console.WriteLine(file.Name);
-                  //  if (file.ImageKey == "bfres")
-                  //   OpenFile(file.Name, GetASSTData(file.FullName), TreeView);
-                }
-
-                // Print each node recursively.  
-                foreach (TreeNode tn in treeNode.Nodes)
-                {
-                    PrintRecursive(tn);
-                }
-            }
-
-            public void PreviewWindow(object sender, EventArgs args)
-            {
-                PreviewFormatList previewFormatList = new PreviewFormatList();
-
-                if (previewFormatList.ShowDialog() == DialogResult.OK)
-                {
-                    CallRecursive(TreeView);
-                    Console.WriteLine("Loaded files");
-                    Console.WriteLine(PluginRuntime.bntxContainers.Count);
-                    PreviewEditor previewWindow = new PreviewEditor();
-                    previewWindow.Show();
-                }
-            }
-
-            public void OpenFile(string FileName, byte[] data, TreeView treeView, bool Compressed = false, CompressionType CompType = CompressionType.None)
-            {
-
-                FileReader f = new FileReader(data);
-                string Magic = f.ReadMagic(0, 4);
-                string Magic2 = f.ReadMagic(0, 2);
-
-                //Determine if the file is compressed or not
-                if (Magic == "Yaz0")
-                {
-                    data = EveryFileExplorer.YAZ0.Decompress(data);
-                    OpenFile(FileName, data, treeView, true, CompressionType.Yaz0);
-                    return;
-                }
-                if (Magic == "ZLIB")
-                {
-                    data = FileReader.InflateZLIB(f.getSection(64, data.Length - 64));
-                    OpenFile(FileName, data, treeView, true, CompressionType.Zlib);
-                    return;
-                }
-
-                f.Dispose();
-                f.Close();
-
-                IFileFormat[] SupportedFormats = FileManager.GetFileFormats();
-
-                foreach (IFileFormat format in SupportedFormats)
-                {
-                    if (format.Magic == Magic || format.Magic == Magic2)
-                    {
-                        format.CompressionType = CompType;
-                        format.FileIsCompressed = Compressed;
-                        format.Data = data;
-                        format.FileName = Path.GetFileName(FileName);
-                        format.Load();
-                        format.FilePath = FileName;
-
-                        if (format is TreeNode)
-                        {
-                            ((TreeNode)format).Text = Text;
-                            ((TreeNode)format).ImageKey = ImageKey;
-                            ((TreeNode)format).SelectedImageKey = SelectedImageKey;
-
-                            Nodes.Add(((TreeNode)format));
-                        }
-                    }
-                    if (format.Magic == String.Empty) //Load by extension if magic isn't defined
-                    {
-                        foreach (string ext in format.Extension)
-                        {
-                            if (ext.Remove(0, 1) == Path.GetExtension(FileName))
-                            {
-                                format.Load();
+                                Directory.CreateDirectory(Path.GetDirectoryName($"{Folder}/{beaFile.Name}/{asst.FullName}"));
                             }
                         }
                     }
+                    File.WriteAllBytes($"{Folder}/{beaFile.Name}/{asst.FullName}", GetASSTData(asst));
+                }
+                catch
+                {
+
                 }
 
-                SupportedFormats = null;
-                data = null;
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Curfile++;
+                if (value == 99)
+                    value = 100;
+                progressBar.Value = value;
+                progressBar.Refresh();
+            }
+        }
+        private void CallRecursive(TreeView treeView)
+        {
+            // Print each node recursively.  
+            TreeNodeCollection nodes = treeView.Nodes;
+            foreach (TreeNode n in nodes)
+            {
+                PrintRecursive(n);
+            }
+        }
+        private void PrintRecursive(TreeNode treeNode)
+        {
+            // Print each node recursively.  
+            foreach (TreeNode tn in treeNode.Nodes)
+            {
+                PrintRecursive(tn);
             }
         }
 
+        public void PreviewWindow(object sender, EventArgs args)
+        {
+            PreviewFormatList previewFormatList = new PreviewFormatList();
+
+            if (previewFormatList.ShowDialog() == DialogResult.OK)
+            {
+                CallRecursive(TreeView);
+                Console.WriteLine("Loaded files");
+                Console.WriteLine(PluginRuntime.bntxContainers.Count);
+                PreviewEditor previewWindow = new PreviewEditor();
+                previewWindow.Show();
+            }
+        }
         public bool Compressed;
         public class FolderEntry : TreeNode
         {
@@ -371,6 +330,10 @@ namespace FirstPlugin
 
             public string FullName;
             public IFileFormat FileHandle; //Load file instance to save later if possible
+            public byte[] data;
+            public ushort unk1;
+            public ushort unk2;
+            public bool IsCompressed;
 
             private void Export(object sender, EventArgs args)
             {
@@ -381,7 +344,7 @@ namespace FirstPlugin
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, GetASSTData(FullName));
+                    File.WriteAllBytes(sfd.FileName, GetASSTData(this));
                 }
             }
 
@@ -394,77 +357,18 @@ namespace FirstPlugin
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    SetASST(File.ReadAllBytes(ofd.FileName), FullName);
+                     SetASST(this, File.ReadAllBytes(ofd.FileName));
                 }
             }
 
-            public override void OnClick(TreeView treeView)
+            public override void OnDoubleMouseClick(TreeView treeview)
             {
-                if (beaFile != null)
+                if (GetASSTData(this) != null)
                 {
-                    if (GetASSTData(FullName) != null)
-                        OpenFile(Name, GetASSTData(FullName), treeView);
-                }
-            }
+                    TreeNode node = STFileLoader.GetNodeFileFormat(FullName, GetASSTData(this), true, "", this, IsCompressed, CompressionType.Zstb);
 
-            public void OpenFile(string FileName, byte[] data, TreeView treeView, bool Compressed = false, CompressionType CompType = CompressionType.None)
-            {
-
-                FileReader f = new FileReader(data);
-                string Magic = f.ReadMagic(0, 4);
-                string Magic2 = f.ReadMagic(0, 2);
-
-                //Determine if the file is compressed or not
-                if (Magic == "Yaz0")
-                {
-                    data = EveryFileExplorer.YAZ0.Decompress(data);
-                    OpenFile(FileName, data, treeView, true, CompressionType.Yaz0);
-                    return;
-                }
-                if (Magic == "ZLIB")
-                {
-                    data = FileReader.InflateZLIB(f.getSection(64, data.Length - 64));
-                    OpenFile(FileName, data, treeView, true, CompressionType.Zlib);
-                    return;
-                }
-
-                f.Dispose();
-                f.Close();
-
-                IFileFormat[] SupportedFormats = FileManager.GetFileFormats();
-
-                foreach (IFileFormat format in SupportedFormats)
-                {
-                    if (format.Magic == Magic || format.Magic == Magic2)
-                    {
-                        FileHandle = format;
-
-                        format.CompressionType = CompType;
-                        format.FileIsCompressed = Compressed;
-                        format.Data = data;
-                        format.FileName = Path.GetFileName(FileName);
-                        format.Load();
-                        format.FilePath = FileName;
-
-                        if (format is TreeNode)
-                        {
-                            ((TreeNode)format).Text = Text;
-                            ((TreeNode)format).ImageKey = ImageKey;
-                            ((TreeNode)format).SelectedImageKey = SelectedImageKey;
-
-                            Nodes.Add(((TreeNode)format));
-                        }
-                    }
-                    if (format.Magic == String.Empty) //Load by extension if magic isn't defined
-                    {
-                        foreach (string ext in format.Extension)
-                        {
-                            if (ext.Remove(0, 1) == Path.GetExtension(FileName))
-                            {
-                                format.Load();
-                            }
-                        }
-                    }
+                    if (node != null)
+                        ReplaceNode(this.Parent, this, node);
                 }
             }
         }
@@ -476,58 +380,19 @@ namespace FirstPlugin
             node.Nodes.Insert(index, NewNode);
         }
 
-        public static byte[] GetASSTData(string path)
+        public static byte[] GetASSTData(FileEntry entry)
         {
-            if (beaFile.FileList.ContainsKey(path))
-            {
-                if (beaFile.FileList[path].UncompressedSize == beaFile.FileList[path].FileData.Length)
-                {
-                    return beaFile.FileList[path].FileData;
-                }
-                else
-                {
-                    using (var decompressor = new Decompressor())
-                    {
-                        return decompressor.Unwrap(beaFile.FileList[path].FileData);
-                    }
-                }
-
-            }
-            return null;
+            if (entry.IsCompressed)
+                return STLibraryCompression.ZSTD.Decompress(entry.data);
+            else
+                return entry.data;
         }
-        public static void SetASST(byte[] data, string path)
+        public static void SetASST(FileEntry fileEntry, byte[] data)
         {
-            if (beaFile.FileList.ContainsKey(path))
-            {
-                ASST asst = beaFile.FileList[path];
-                Console.WriteLine(path + " A match!");
-
-                asst.UncompressedSize = data.Length;
-
-                if (asst.IsCompressed)
-                {
-                    using (var compressor = new Compressor())
-                    {
-                        asst.FileData = compressor.Wrap(data);
-                    }
-                }
-                else
-                {
-                    asst.FileData = data;
-                }
-            }
-        }
-
-        private void SaveFileEntryData(FileEntry entry)
-        {
-            IFileFormat file = entry.FileHandle;
-            if (beaFile.FileList.ContainsKey(entry.FullName))
-            {
-                if (file.CanSave)
-                {
-                    SetASST(file.Save(), entry.FullName);
-                }
-            }
+            if (fileEntry.IsCompressed)
+                fileEntry.data = STLibraryCompression.ZSTD.Compress(data);
+            else
+                fileEntry.data = data;
         }
 
         void FillTreeNodes(TreeNode root, Dictionary<string, ASST> files)
@@ -561,7 +426,7 @@ namespace FirstPlugin
 
                         var temp = new TreeNode(parentName, 0, 0);
                         if (rootIndex == roots.Length - 1)
-                            temp = SetupFileEntry(node.Value.FileData, parentName, node.Value.FileName, node.Value.IsCompressed);
+                            temp = SetupFileEntry(node.Value,parentName, node.Value.FileName, node.Value.IsCompressed);
                         else
                             temp = SetupFolderEntry(temp);
 
@@ -608,21 +473,25 @@ namespace FirstPlugin
             return finalList;
         }
 
-        public FileEntry SetupFileEntry(byte[] data, string name, string fullName, bool IsCompressed)
+        public FileEntry SetupFileEntry(ASST asset,string name, string fullName, bool IsCompressed)
         {
             FileEntry fileEntry = new FileEntry();
             fileEntry.FullName = fullName;
             fileEntry.Name = name;
             fileEntry.Text = name;
+            fileEntry.unk1 = asset.unk;
+            fileEntry.unk2 = asset.unk2;
+            fileEntry.IsCompressed = IsCompressed;
+            fileEntry.data = asset.FileData;
 
+            //Now check magic
+            //Todo clean this part up
+            byte[] data = asset.FileData;
             if (IsCompressed)
             {
                 try
                 {
-                    using (var decompressor = new Decompressor())
-                    {
-                        data = decompressor.Unwrap(data);
-                    }
+                    data = STLibraryCompression.ZSTD.Decompress(asset.FileData);
                 }
                 catch
                 {

@@ -42,12 +42,15 @@
   <ItemGroup>
     <Reference Include="BarsLibrary">
       <HintPath>..\Switch_Toolbox\Lib\BarsLibrary.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BezelEngineArchive_Lib">
       <HintPath>..\Switch_Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ByamlExt">
       <HintPath>..\Switch_Toolbox\Lib\ByamlExt.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Costura, Version=3.1.4.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\Switch_Toolbox\Lib\Costura.dll</HintPath>
@@ -55,10 +58,12 @@
     </Reference>
     <Reference Include="EditorCoreCommon">
       <HintPath>..\Switch_Toolbox\Lib\EditorCoreCommon.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="KCLExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Switch_Toolbox\Lib\KCLExt.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio">
@@ -80,6 +85,7 @@
     </Reference>
     <Reference Include="SARCExt">
       <HintPath>..\Switch_Toolbox\Lib\SARCExt.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SFGraphics">
       <HintPath>..\Switch_Toolbox\Lib\SFGraphics.dll</HintPath>
@@ -91,18 +97,23 @@
     </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.Maths">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.Maths.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.Bfres">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bntx">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -131,9 +142,6 @@
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.4.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.3.0.4\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="ZstdNet">
-      <HintPath>..\Switch_Toolbox\Lib\ZstdNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +179,7 @@
     <Compile Include="FileFormats\Texture\BNTX.cs" />
     <Compile Include="FileFormats\Texture\FTEX.cs" />
     <Compile Include="FileFormats\Texture\GTX.cs" />
+    <Compile Include="FileFormats\Texture\GTXFile.cs" />
     <Compile Include="FileFormats\Texture\TegraX1Swizzle.cs" />
     <Compile Include="FileFormats\Texture\NUTEXB.cs" />
     <Compile Include="FileFormats\Texture\TexConv.cs" />
@@ -267,6 +276,12 @@
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FormLoader.cs" />
+    <Compile Include="GUI\TextureUI\GTXEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\GTXEditor.Designer.cs">
+      <DependentUpon>GTXEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\TextureUI\GTXImporterSettings.cs" />
     <Compile Include="GUI\TextureUI\GTXTextureImporter.cs">
       <SubType>Form</SubType>
@@ -431,6 +446,9 @@
     <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\GTXEditor.resx">
+      <DependentUpon>GTXEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureUI\GTXTextureImporter.resx">
       <DependentUpon>GTXTextureImporter.cs</DependentUpon>
     </EmbeddedResource>
@@ -500,6 +518,7 @@
     <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
       <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
       <Name>Switch_Toolbox_Library</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -531,6 +550,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>aximp</WrapperTool>
       <Isolated>False</Isolated>
+      <Private>False</Private>
     </COMReference>
     <COMReference Include="WMPLib">
       <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
@@ -539,7 +559,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
   <ItemGroup>

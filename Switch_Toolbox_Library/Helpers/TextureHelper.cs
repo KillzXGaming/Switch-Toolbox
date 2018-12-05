@@ -8,7 +8,7 @@ namespace Switch_Toolbox.Library
 {
     public class TextureHelper
     {
-        public static Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkHeight, uint blkWidth, uint bpp, int CurLevel)
+        public static Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkWidth, uint blkHeight, uint bpp, int CurLevel)
         {
             uint offset = 0;
             uint width_ = 0;

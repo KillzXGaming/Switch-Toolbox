@@ -35,11 +35,6 @@ namespace FirstPlugin
             foreach (var shape in duplicates)
                 shape.Text += i++;
 
-            foreach (FMAT mat in fmdl.materials.Values)
-            {
-                SetMaterial(mat, mat.MaterialU);
-                model.Materials.Add(mat.Text, mat.MaterialU);
-            }
             foreach (FSHP shape in fmdl.shapes)
             {
                 BFRES.CheckMissingTextures(shape);
@@ -51,6 +46,12 @@ namespace FirstPlugin
                 shape.ShapeU.VertexBufferIndex = (ushort)(model.VertexBuffers.Count - 1);
 
                 BFRES.SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
+            }
+
+            foreach (FMAT mat in fmdl.materials.Values)
+            {
+                SetMaterial(mat, mat.MaterialU);
+                model.Materials.Add(mat.Text, mat.MaterialU);
             }
             return model;
         }
@@ -377,6 +378,11 @@ namespace FirstPlugin
             m.ReadShaderParams(mat);
             m.MaterialU = mat;
             m.ReadTextureRefs(mat);
+            m.ReadRenderState(mat.RenderState);
+        }
+        public static void ReadRenderState(this FMAT m, RenderState renderState)
+        {
+        
         }
         public static void ReadTextureRefs(this FMAT m, Material mat)
         {
@@ -399,6 +405,14 @@ namespace FirstPlugin
                 texture.wrapModeW = (int)mat.Samplers[id].TexSampler.ClampZ;
                 mat.Samplers.TryGetKey(mat.Samplers[id], out texture.SamplerName);
 
+                if (mat.Samplers[id].TexSampler.MinFilter == GX2TexXYFilterType.Bilinear)
+                {
+                    texture.magFilter = 0;
+                }
+                if (mat.Samplers[id].TexSampler.MagFilter == GX2TexXYFilterType.Bilinear)
+                {
+
+                }
                 if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
                 {
                     if (texture.SamplerName == "_a0")
@@ -727,6 +741,7 @@ namespace FirstPlugin
             foreach (var att in shd.attributes)
                 mat.ShaderAssign.AttribAssigns.Add(att.Key, att.Value);
         }
+
         public static Shape SaveShape(FSHP fshp)
         {
             Shape ShapeU = new Shape();

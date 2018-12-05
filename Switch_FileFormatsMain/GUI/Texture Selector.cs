@@ -18,9 +18,12 @@ namespace FirstPlugin
             InitializeComponent();
         }
 
-        public void LoadTexture()
+        bool IsWIiiU = false;
+        public void LoadTexture(bool isWiiU)
         {
-            if (BFRES.Instance.IsWiiU)
+            IsWIiiU = isWiiU;
+
+            if (IsWIiiU)
             {
                 foreach (FTEXContainer ftexcont in PluginRuntime.ftexContainers)
                 {
@@ -54,7 +57,7 @@ namespace FirstPlugin
             if (listView1.SelectedItems.Count > 0)
             {
                 string TexName = listView1.SelectedItems[0].Text;
-                if (BFRES.Instance.IsWiiU)
+                if (IsWIiiU)
                 {
                     foreach (FTEXContainer ftexcont in PluginRuntime.ftexContainers)
                     {

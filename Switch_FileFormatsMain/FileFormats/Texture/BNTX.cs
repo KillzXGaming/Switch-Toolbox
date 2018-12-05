@@ -687,7 +687,7 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sfd.FileName, Save());
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
         }
     }
@@ -836,13 +836,37 @@ namespace FirstPlugin
                 return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true);
 
             byte[] d = null;
-            if (IsCompressedFormat(Format))
-                d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
-            else if (IsAtscFormat(Format))
-                d = null;
-            else
-                d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
-            
+
+            try
+            {
+                if (IsCompressedFormat(Format))
+                    d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
+                else if (IsAtscFormat(Format))
+                    d = null;
+                else
+                    d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
+            }
+            catch
+            {
+                if (Format == SurfaceFormat.BC1_UNORM)
+                    return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, false);
+                else if (Format == SurfaceFormat.BC1_SRGB)
+                    return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, true);
+                else if (Format == SurfaceFormat.BC3_SRGB)
+                    return DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, false);
+                else if (Format == SurfaceFormat.BC3_UNORM)
+                    return DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, true);
+                else if (Format == SurfaceFormat.BC4_UNORM)
+                    return DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, false);
+                else if (Format == SurfaceFormat.BC4_SNORM)
+                    return DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, true);
+                else if (Format == SurfaceFormat.BC5_UNORM)
+                    return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false);
+                else
+                    return null;
+            }
+
+
             if (d != null)
             {
                 decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
@@ -882,11 +906,11 @@ namespace FirstPlugin
             switch (Format)
             {
                 case SurfaceFormat.BC1_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
-                case SurfaceFormat.BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB;
+                case SurfaceFormat.BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
                 case SurfaceFormat.BC2_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
-                case SurfaceFormat.BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB;
+                case SurfaceFormat.BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
                 case SurfaceFormat.BC3_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
-                case SurfaceFormat.BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB;
+                case SurfaceFormat.BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
                 case SurfaceFormat.BC4_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
                 case SurfaceFormat.BC4_SNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
                 case SurfaceFormat.BC5_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
@@ -894,7 +918,7 @@ namespace FirstPlugin
                 case SurfaceFormat.BC6_UFLOAT: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16;
                 case SurfaceFormat.BC6_FLOAT: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16;
                 case SurfaceFormat.BC7_UNORM: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
-                case SurfaceFormat.BC7_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB;
+                case SurfaceFormat.BC7_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
                 case SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
                     throw new Exception($"Cannot convert format {Format}");

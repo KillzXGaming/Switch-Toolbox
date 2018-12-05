@@ -214,7 +214,8 @@ namespace FirstPlugin
             public uint[] MipOffsets { get; set; }
             public BlockHeader DataBlockHeader { get; set; }
             public List<byte[]> mipmaps = new List<byte[]>();
-            public List<byte[]> compressedBlocks = new List<byte[]>();
+            public byte[] ImageData;
+
 
             public void Read(FileReader reader)
             {
@@ -240,24 +241,12 @@ namespace FirstPlugin
                 DataBlockHeader.Read(reader);
 
                 reader.Seek(DataBlockOff + DataBlockHeader.DataOffset, SeekOrigin.Begin);
-                //   data = reader.ReadBytes((int)DataBlockHeader.DataSize);
                 long datastart = reader.Position;
+                ImageData = reader.ReadBytes((int)DataSize);
 
-                Console.WriteLine(DataBlockHeader.DataSize);
-                for (int i = 0; i < MipCount; i++)
-                {
-                    int size = (int)((int)DataBlockHeader.DataSize - MipOffsets[i]);
-                    Console.WriteLine(size);
+                if (ImageData.Length == 0)
+                    throw new System.Exception("Empty data size!");
 
-                    using (reader.TemporarySeek(datastart + MipOffsets[i], System.IO.SeekOrigin.Begin))
-                    {
-                        compressedBlocks.Add(reader.ReadBytes(size));
-                    }
-                    if (compressedBlocks[i].Length == 0)
-                        throw new System.Exception("Empty mip size!");
-
-                    break; //Only first mip level works?
-                }
                 reader.Seek(DataBlockOff + DataBlockHeader.DataOffset + (long)DataBlockHeader.DataSize, SeekOrigin.Begin);
                 BlockHeader EndBlockHeader = new BlockHeader();
                 EndBlockHeader.Read(reader);
@@ -353,20 +342,36 @@ namespace FirstPlugin
                 uint bpp = XTXFormats.bpps((uint)Format);
 
                 int blockHeightShift = 0;
-                for (int mipLevel = 0; mipLevel < compressedBlocks.Count; mipLevel++)
+                for (int mipLevel = 0; mipLevel < MipOffsets.Length; mipLevel++)
                 {
+
                     uint width = (uint)Math.Max(1, Width >> mipLevel);
                     uint height = (uint)Math.Max(1, Height >> mipLevel);
 
                     //  uint size = width * height * bpp;
                     uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
 
+                    byte[] Output = new byte[size];
+
+                    uint mipOffset;
+                    if (mipLevel != 0)
+                    {
+                        mipOffset = (MipOffsets[mipLevel - 1]);
+                        if (mipLevel == 1)
+                            mipOffset -= (uint)size;
+
+                        Array.Copy(ImageData, mipOffset, Output, 0, size);
+                    }
+                    else
+                        Output = ImageData;
+
+                    byte[] output = new byte[size];
                     Console.WriteLine(mipLevel + " " + size);
 
                     if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                         blockHeightShift += 1;
 
-                    byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, (int)Target, bpp, (uint)TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), compressedBlocks[mipLevel]);
+                    byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, (int)Target, bpp, (uint)TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), Output);
                     //Create a copy and use that to remove uneeded data
                     byte[] result_ = new byte[size];
                     Array.Copy(result, 0, result_, 0, size);

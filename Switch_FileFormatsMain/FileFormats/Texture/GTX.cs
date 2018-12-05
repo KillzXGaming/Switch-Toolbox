@@ -1,181 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
-using System.Windows.Forms;
 
 namespace FirstPlugin
 {
-    public enum BlockType : uint
-    {
-        Invalid = 0x00,
-        EndOfFile = 0x01,
-        AlignData = 0x02,
-        VertexShaderHeader = 0x03,
-        VertexShaderProgram = 0x05,
-        PixelShaderHeader = 0x06,
-        PixelShaderProgram = 0x07,
-        GeometryShaderHeader = 0x08,
-        GeometryShaderProgram = 0x09,
-    }
-
-    public class GTXFile : TreeNode, IFileFormat
-    {
-        public bool CanSave { get; set; } = false;
-        public bool FileIsEdited { get; set; } = false;
-        public bool FileIsCompressed { get; set; } = false;
-        public string[] Description { get; set; } = new string[] { "GTX" };
-        public string[] Extension { get; set; } = new string[] { "*.gtx" };
-        public string Magic { get; set; } = "Gfx2 ";
-        public CompressionType CompressionType { get; set; } = CompressionType.None;
-        public byte[] Data { get; set; }
-        public string FileName { get; set; }
-        public bool IsActive { get; set; } = false;
-        public bool UseEditMenu { get; set; } = false;
-        public string FilePath { get; set; }
-        public IFileInfo IFileInfo { get; set; }
-
-        public Type[] Types
-        {
-            get
-            {
-                List<Type> types = new List<Type>();
-                return types.ToArray();
-            }
-        }
-        private GTXHeader header;
-        private GTXDataBlock block;
-
-        public void Load()
-        {
-            CanSave = true;
-
-            ReadGx2(new FileReader(Data));
-
-
-            ContextMenu = new ContextMenu();
-            MenuItem save = new MenuItem("Save");
-            ContextMenu.MenuItems.Add(save);
-            save.Click += Save;
-        }
-        private void Save(object sender, EventArgs args)
-        {
-            Save();
-        }
-        private void ReadGx2(FileReader reader)
-        {
-            header = new GTXHeader();
-            header.Read(reader);
-
-        }
-        public void Unload()
-        {
-
-        }
-        public byte[] Save()
-        {
-            System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            return mem.ToArray();
-        }
-        public class GTXHeader
-        {
-            public uint MajorVersion;
-            public uint MinorVersion;
-            public uint GpuVersion;
-            public uint AlignMode;
-
-            public void Read(FileReader reader)
-            {
-                string Signature = reader.ReadString(4, Encoding.ASCII);
-                if (Signature != "Gfx2")
-                    throw new Exception($"Invalid signature {Signature}! Expected Gfx2.");
-
-                uint HeaderSize = reader.ReadUInt32();
-                MajorVersion = reader.ReadUInt32();
-                MinorVersion = reader.ReadUInt32();
-                GpuVersion = reader.ReadUInt32();
-                AlignMode = reader.ReadUInt32();
-            }
-            public void Write(FileWriter writer)
-            {
-                writer.WriteSignature("Gfx2");
-                writer.Write(MajorVersion);
-                writer.Write(MinorVersion);
-                writer.Write(GpuVersion);
-                writer.Write(AlignMode);
-            }
-        }
-        public class GTXDataBlock
-        {
-            public uint HeaderSize;
-            public uint MajorVersion;
-            public uint MinorVersion;
-            public BlockType BlockType;
-            public uint Identifier;
-            public uint index;
-            public uint DataSize;
-
-            public void Read(FileReader reader, GTXHeader header)
-            {
-                string Signature = reader.ReadString(4, Encoding.ASCII);
-                if (Signature != "BLK")
-                    throw new Exception($"Invalid signature {Signature}! Expected BLK.");
-
-                HeaderSize = reader.ReadUInt32();
-                MajorVersion = reader.ReadUInt32(); //Must be 0x01 for 6.x.x
-                MinorVersion = reader.ReadUInt32(); //Must be 0x00 for 6.x.x
-                BlockType = reader.ReadEnum<BlockType>(false);
-                DataSize = reader.ReadUInt32();
-                Identifier = reader.ReadUInt32();
-                index = reader.ReadUInt32();
-            }
-            public void Write(FileWriter writer)
-            {
-                writer.WriteSignature("BLK");
-                writer.Write(HeaderSize);
-                writer.Write(MajorVersion);
-                writer.Write(MinorVersion);
-                writer.Write(BlockType, true);
-                writer.Write(DataSize);
-                writer.Write(Identifier);
-                writer.Write(index);
-            }
-        }
-        public class TextureInfo
-        {
-
-            public void Read(FileReader reader)
-            {
-
-            }
-            public void Write(FileWriter writer)
-            {
-
-            }
-        }
-    }
-
-  
     public class GTX
     {
         //Some enums and parts from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
         //Todo. Add swizzling back
-        public struct GX2Surface
+        public class GX2Surface
         {
             public uint dim;
             public uint width;
             public uint height;
             public uint depth;
             public uint numMips;
+            public uint firstSlice;
+            public uint numSlices;
             public uint format;
             public uint aa;
             public uint use;
             public int resourceFlags;
             public uint imageSize;
             public uint imagePtr;
-            public int pMem;
+            public int MemPtr;
             public uint mipSize;
             public uint mipPtr;
             public uint tileMode;
@@ -183,15 +30,18 @@ namespace FirstPlugin
             public uint alignment;
             public uint pitch;
             public uint bpp;
+            public uint imageCount;
+            public uint firstMip;
 
             public byte[] data;
             public byte[] mipData;
 
             public uint[] mipOffset;
+            public byte[] compSel;
+            public uint[] texRegs;
         };
 
         public static int m_configFlags = 4;
-        public static int ADDR_OK = 0;
 
         public static uint expPitch = 0;
         public static uint expHeight = 0;
@@ -579,6 +429,27 @@ namespace FirstPlugin
 
         public static List<byte[]> Decode(GX2Surface tex)
         {
+            Console.WriteLine("");
+            Console.WriteLine("// ----- GX2Surface Decode Info ----- ");
+            Console.WriteLine("  dim             = " + tex.dim);
+            Console.WriteLine("  width           = " + tex.width);
+            Console.WriteLine("  height          = " + tex.height);
+            Console.WriteLine("  depth           = " + tex.depth);
+            Console.WriteLine("  numMips         = " + tex.numMips);
+            Console.WriteLine("  format          = " + tex.format);
+            Console.WriteLine("  aa              = " + tex.aa);
+            Console.WriteLine("  use             = " + tex.use);
+            Console.WriteLine("  imageSize       = " + tex.imageSize);
+            Console.WriteLine("  mipSize         = " + tex.mipSize);
+            Console.WriteLine("  tileMode        = " + tex.tileMode);
+            Console.WriteLine("  swizzle         = " + tex.swizzle);
+            Console.WriteLine("  alignment       = " + tex.alignment);
+            Console.WriteLine("  pitch           = " + tex.pitch);
+            Console.WriteLine("  bits per pixel  = " + (tex.bpp << 3));
+            Console.WriteLine("  bytes per pixel = " + tex.bpp);
+            Console.WriteLine("  data size       = " + tex.data.Length);
+            Console.WriteLine("  realSize        = " + tex.imageSize);
+
             uint blkWidth, blkHeight;
             if (IsFormatBCN((GX2SurfaceFormat)tex.format))
             {
@@ -594,7 +465,6 @@ namespace FirstPlugin
             byte[] data = tex.data;
 
             var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
-            Debug(surfInfo);
             uint bpp = TegraX1Swizzle.DIV_ROUND_UP(surfInfo.bpp, 8);
 
             if (surfInfo.depth != 1)
@@ -616,7 +486,7 @@ namespace FirstPlugin
                         mipOffset -= (uint)surfInfo.surfSize;
 
                     surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
-                    data = new byte[surfInfo.surfSize + mipOffset];
+                    data = new byte[surfInfo.surfSize];
                     Array.Copy(tex.mipData, mipOffset, data, 0, surfInfo.surfSize);
                 }
                 byte[] deswizzled = deswizzle(width_, height_, surfInfo.height, (uint)tex.format,
@@ -634,23 +504,9 @@ namespace FirstPlugin
 
         /*---------------------------------------
          * 
-         * Code ported from AboodXD's GTX Extractor https://github.com/aboood40091/GTX-Extractor/blob/master/gtx_extract.py
-         * 
-         * With help by Aelan!
+         * Code ported from AboodXD's GTX Extractorhttps://github.com/aboood40091/GTX-Extractor/blob/f586dde90bd4a262421a4a565c1556d0079a748e/addrlib/addrlib_cy.pyx
          * 
          *---------------------------------------*/
-
-        /*var s_textureFormats[] = {
-        // internalFormat,  gxFormat,                                 glFormat,                         fourCC,    nutFormat, name, bpp, compressed
-        { FORMAT_RGBA_8888, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, GL_RGBA8,                         0x00000000, 0x11, "RGBA_8888", 0x20, 0 },
-        { FORMAT_ABGR_8888, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, GL_RGBA8,                         0x00000000, 0x0E, "ABGR_8888 (WIP)", 0x20, 0 },
-        { FORMAT_DXT1,      GX2_SURFACE_FORMAT_T_BC1_UNORM,           GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 0x31545844, 0x00, "DXT1",  0x40,     1 },
-        { FORMAT_DXT3,      GX2_SURFACE_FORMAT_T_BC2_UNORM,           GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 0x33545844, 0x01, "DXT3",  0x80,     1 },
-        { FORMAT_DXT5,      GX2_SURFACE_FORMAT_T_BC3_UNORM,           GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, 0x35545844, 0x02, "DXT5",  0x80,     1 },
-        { FORMAT_ATI1,      GX2_SURFACE_FORMAT_T_BC4_UNORM,           GL_COMPRESSED_RED_RGTC1,          0x31495441, 0x15, "ATI1",  0x40,     1 },
-        { FORMAT_ATI2,      GX2_SURFACE_FORMAT_T_BC5_UNORM,           GL_COMPRESSED_RG_RGTC2,           0x32495441, 0x16, "ATI2",  0x80,     1 },
-        { FORMAT_INVALID,   GX2_SURFACE_FORMAT_INVALID,               0,                                0xFFFFFFFF, 0x00, nullptr, 0x00,     0 }
-    };*/
 
         public static bool IsFormatBCN(GX2SurfaceFormat Format)
         {
@@ -686,19 +542,6 @@ namespace FirstPlugin
         private static byte[] swizzleSurf(uint width, uint height, uint height_, uint format, uint tileMode, uint swizzle_,
                 uint pitch, uint bitsPerPixel, byte[] data, int swizzle)
         {
-            Console.WriteLine("swizzling level....");
-            Console.WriteLine("---------------------------");
-            Console.WriteLine("width " + width);
-            Console.WriteLine("height " + height);
-            Console.WriteLine("height_ " + height_);
-            Console.WriteLine("format " + format);
-            Console.WriteLine("tileMode " + tileMode);
-            Console.WriteLine("swizzle_ " + swizzle_);
-            Console.WriteLine("pitch " + pitch);
-            Console.WriteLine("bitsPerPixel " + bitsPerPixel);
-            Console.WriteLine("swizzle " + swizzle);
-            Console.WriteLine("---------------------------");
-
             uint bytesPerPixel = bitsPerPixel / 8;
             byte[] result = new byte[data.Length];
 
@@ -1809,11 +1652,6 @@ namespace FirstPlugin
             if (padDims == 0)
                 padDims = 3;
 
-            Console.WriteLine("padDims " + padDims);
-            Console.WriteLine("pitchAlign " + pitchAlign);
-
-
-
             if ((pitchAlign & (pitchAlign - 1)) == 0)
                 expPitch = powTwoAlign(expPitch, pitchAlign);
             else
@@ -1826,10 +1664,6 @@ namespace FirstPlugin
             if (padDims > 1)
                 expHeight = powTwoAlign(expHeight, heightAlign);
 
-            Console.WriteLine("expPitch " + expPitch);
-            Console.WriteLine("expHeight " + expHeight);
-            Console.WriteLine("expNumSlices " + expNumSlices);
-
             if (padDims > 2 || thickness > 1)
             {
                 if (isCube != 0)
@@ -1838,10 +1672,6 @@ namespace FirstPlugin
                 if (thickness > 1)
                     expNumSlices = powTwoAlign(expNumSlices, sliceAlign);
             }
-            Console.WriteLine("expPitch " + expPitch);
-            Console.WriteLine("expHeight " + expHeight);
-            Console.WriteLine("expNumSlices " + expNumSlices);
-
             return new Tuple<uint, uint, uint>(expPitch, expHeight, expNumSlices);
         }
 
@@ -1885,9 +1715,6 @@ namespace FirstPlugin
                     microTileThickness = 1;
                 }
             }
-            Console.WriteLine($"baseTileMode {baseTileMode}");
-            Console.WriteLine($"tileMode {tileMode}");
-
             if (tileMode == baseTileMode
                 || mipLevel == 0
                 || isThickMacroTiled((AddrTileMode)baseTileMode) == 0
@@ -1907,28 +1734,8 @@ namespace FirstPlugin
 
                 bankSwappedWidth = computeSurfaceBankSwappedWidth((AddrTileMode)tileMode, bpp, pitch, numSamples);
 
-                Console.WriteLine("---------------------");
-                Console.WriteLine(baseAlign);
-                Console.WriteLine(pitchAlign);
-                Console.WriteLine(heightAlign);
-                Console.WriteLine(macroWidth);
-                Console.WriteLine(macroHeight);
-                Console.WriteLine(bankSwappedWidth);
-                Console.WriteLine("---------------------");
-
                 if (bankSwappedWidth > pitchAlign)
                     pitchAlign = bankSwappedWidth;
-
-                Console.WriteLine("padDimensions");
-                Console.WriteLine(tileMode);
-                Console.WriteLine(padDims);
-                Console.WriteLine((flags.value >> 4) & 1);
-                Console.WriteLine((flags.value >> 7) & 1);
-                Console.WriteLine(pitchAlign);
-                Console.WriteLine(heightAlign);
-                Console.WriteLine(microTileThickness);
-                Console.WriteLine("---------------------");
-                Console.WriteLine("expPitch " + expPitch);
 
                 var padDimens = padDimensions(
                      tileMode,
@@ -1942,14 +1749,6 @@ namespace FirstPlugin
                 expPitch = padDimens.Item1;
                 expHeight = padDimens.Item2;
                 expNumSlices = padDimens.Item3;
-
-                Console.WriteLine(expPitch);
-                Console.WriteLine(expHeight);
-                Console.WriteLine(expNumSlices);
-                Console.WriteLine(bpp);
-                Console.WriteLine(numSamples);
-
-                Console.WriteLine("---------------------");
 
                 pPitchOut = expPitch;
                 pHeightOut = expHeight;
@@ -2041,12 +1840,6 @@ namespace FirstPlugin
                     pHeightOut = expHeight;
                     pNumSlicesOut = expNumSlices;
                     pSurfSize = (expHeight * expPitch * expNumSlices * bpp * numSamples + 7) / 8;
-                    Console.WriteLine($"expHeight {expHeight}");
-                    Console.WriteLine($"expPitch {expPitch}");
-                    Console.WriteLine($"expNumSlices {expNumSlices}");
-                    Console.WriteLine($"bpp {bpp}");
-                    Console.WriteLine($"numSamples {numSamples}");
-                    Console.WriteLine($"bpp {bpp}");
 
                     pTileModeOut = expTileMode;
                     pBaseAlign = baseAlign;

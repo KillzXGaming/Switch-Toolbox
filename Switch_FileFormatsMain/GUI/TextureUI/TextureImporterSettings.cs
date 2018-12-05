@@ -54,47 +54,50 @@ namespace FirstPlugin
         public bool IsSRGB = true;
         public bool GenerateMipmaps = false; //If bitmap and count more that 1 then geenrate
 
-        private SurfaceFormat LoadDDSFormat(string fourCC, DDS dds = null, bool IsSRGB = false)
+        private SurfaceFormat LoadDDSFormat(uint fourCC, DDS dds = null, bool IsSRGB = false)
         {
             bool IsDX10 = false;
 
             switch (fourCC)
             {
-                case "DXT1":
+                case DDS.FOURCC_DXT1:
                     if (IsSRGB)
                         return SurfaceFormat.BC1_SRGB;
                     else
                         return SurfaceFormat.BC1_UNORM;
-                case "DXT3":
+                case DDS.FOURCC_DXT3:
                     if (IsSRGB)
                         return SurfaceFormat.BC2_SRGB;
                     else
                         return SurfaceFormat.BC2_UNORM;
-                case "DXT5":
+                case DDS.FOURCC_DXT5:
                     if (IsSRGB)
                         return SurfaceFormat.BC3_SRGB;
                     else
                         return SurfaceFormat.BC3_UNORM;
-                case "BC4U":
+                case DDS.FOURCC_BC4U:
                     return SurfaceFormat.BC4_UNORM;
-                case "BC4S":
+                case DDS.FOURCC_BC4S:
                     return SurfaceFormat.BC4_SNORM;
-                case "ATI1":
+                case DDS.FOURCC_ATI1:
                     return SurfaceFormat.BC4_UNORM;
-                case "ATI2":
+                case DDS.FOURCC_ATI2:
                     return SurfaceFormat.BC5_UNORM;
-                case "BC5U":
+                case DDS.FOURCC_BC5U:
                     return SurfaceFormat.BC5_UNORM;
-                case "BC5S":
+                case DDS.FOURCC_BC5S:
                     return SurfaceFormat.BC5_SNORM;
-                case "DX10":
+                case DDS.FOURCC_DX10:
                     IsDX10 = true;
                     break;
                 default:
                     return SurfaceFormat.R8_G8_B8_A8_SRGB;
             }
+            Console.WriteLine(IsDX10);
             if (IsDX10)
             {
+                Console.WriteLine(dds.DX10header.DXGI_Format);
+
                 switch (dds.DX10header.DXGI_Format)
                 {
                     case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
@@ -145,7 +148,7 @@ namespace FirstPlugin
             DataBlockOutput.Add(dds.bdata);
 
 
-            Format = LoadDDSFormat(dds.header.ddspf.fourCC.ToString(), dds, IsSRGB);
+            Format = LoadDDSFormat(dds.header.ddspf.fourCC, dds, IsSRGB);
 
             Texture tex = FromBitMap(DataBlockOutput[0], this);
 

@@ -16,7 +16,6 @@ namespace FirstPlugin
         public uint TexWidth;
         public uint TexHeight;
         public uint MipCount;
-        public uint bpp;
         public uint Depth = 1;
         public uint arrayLength = 1;
         public List<byte[]> DataBlockOutput = new List<byte[]>();
@@ -194,8 +193,9 @@ namespace FirstPlugin
             uint pitch = surfOut.pitch;
             uint mipSize = 0;
             uint dataSize = (uint)imageData.Length;
+            uint bpp = GTX.surfaceGetBitsPerPixel((uint)Format) >> 3;
 
-            if (imageData.Length <= 0)
+            if (dataSize <= 0)
                 throw new Exception($"Image is empty!!");
 
             if (surfOut.depth != 1)
@@ -228,30 +228,36 @@ namespace FirstPlugin
             List<uint> mipOffsets = new List<uint>();
             List<byte[]> Swizzled = new List<byte[]>();
 
-            byte[] data;
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
                 var result = TextureHelper.GetCurrentMipSize(TexWidth, TexHeight, blkWidth, blkHeight, bpp, mipLevel);
+
                 uint offset = result.Item1;
                 uint size = result.Item2;
 
-                byte[] data_ = Utils.SubArray(imageData, offset, size);
+                Console.WriteLine("Swizzle Size " + size);
+                Console.WriteLine("Swizzle offset " + offset);
+                Console.WriteLine("bpp " + bpp);
+                Console.WriteLine("TexWidth " + TexWidth);
+                Console.WriteLine("TexHeight " + TexHeight);
+                Console.WriteLine("blkWidth " + blkWidth);
+                Console.WriteLine("blkHeight " + blkHeight);
+                Console.WriteLine("mipLevel " + mipLevel);
+
+                byte[] data_ = new byte[size];
+                Array.Copy(imageData, offset, data_,0, size);
 
                 uint width_ = Math.Max(1, TexWidth >> mipLevel);
                 uint height_ = Math.Max(1, TexHeight >> mipLevel);
-
 
                 if (mipLevel != 0)
                 {
                     surfOut = GTX.getSurfaceInfo(Format, TexWidth, TexHeight, 1, 1, tileMode, 0, mipLevel);
 
                     if (mipLevel == 1)
-                    {
-                        if (mipLevel == 1)
-                            mipOffsets.Add(imageSize);
-                        else
-                            mipOffsets.Add(mipSize);
-                    }
+                        mipOffsets.Add(imageSize);
+                    else
+                        mipOffsets.Add(mipSize);
                 }
 
                 data_ = Utils.CombineByteArray(data_, new byte[surfOut.surfSize - size]);
@@ -260,10 +266,11 @@ namespace FirstPlugin
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                Swizzled.Add(Utils.CombineByteArray(dataAlignBytes, GTX.swizzle(width_, height_, surfOut.height, (uint)Format, surfOut.tileMode, s,
-                        surfOut.pitch, surfOut.bpp, data_)));
+                byte[] SwizzledData = GTX.swizzle(width_, height_, surfOut.height, (uint)Format, surfOut.tileMode, s,
+                        surfOut.pitch, surfOut.bpp, data_);
+
+                Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
             }
-            File.WriteAllBytes("NewSwizzle.bin",Swizzled[0]);
 
             compSel[0] = GX2CompSel.ChannelR;
             compSel[1] = GX2CompSel.ChannelG;
@@ -275,12 +282,13 @@ namespace FirstPlugin
             surf.width = TexWidth;
             surf.height = TexHeight;
             surf.depth = 1;
+            surf.use = 1;
             surf.dim = (uint)SurfaceDim;
-            surf.bpp = GTX.surfaceGetBitsPerPixel((uint)Format >> 3);
             surf.tileMode = tileMode;
             surf.swizzle = s;
             surf.resourceFlags = 0;
-            surf.pitch = surfOut.pitch;
+            surf.pitch = pitch;
+            surf.bpp = bpp;
             surf.format = (uint)Format;
             surf.numMips = MipCount;
             surf.aa = (uint)AAMode;
@@ -295,9 +303,11 @@ namespace FirstPlugin
             for (int mipLevel = 1; mipLevel < Swizzled.Count; mipLevel++)
             {
                 mips.Add(Swizzled[mipLevel]);
+                Console.WriteLine(Swizzled[mipLevel].Length);
             }
             surf.mipData = Utils.CombineByteArray(mips.ToArray());
             mips.Clear();
+
 
             Console.WriteLine("");
             Console.WriteLine("// ----- GX2Surface Info ----- ");
@@ -325,7 +335,6 @@ namespace FirstPlugin
             Console.WriteLine("  bits per pixel  = " + (surf.bpp << 3));
             Console.WriteLine("  bytes per pixel = " + surf.bpp);
             Console.WriteLine("  realSize        = " + imageData.Length);
-
 
             return surf;
         }

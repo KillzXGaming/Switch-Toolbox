@@ -50,6 +50,15 @@ namespace Switch_Toolbox.Library
 
             return Img;
         }
+        private static void ConvertBgraToRgba(byte[] bytes)
+        {
+            for (int i = 0; i < bytes.Length; i += 4)
+            {
+                var temp = bytes[i];
+                bytes[i] = bytes[i + 2];
+                bytes[i + 2] = temp;
+            }
+        }
         public class ColorSwapFilter
         {
             private ColorSwapType swapType = ColorSwapType.FixDDS;

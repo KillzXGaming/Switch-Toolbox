@@ -69,33 +69,6 @@ namespace FirstPlugin
         {
             return Data;
         }
-
-        private static void SaveCompressFile(byte[] data, string FileName, CompressionType CompressionType, int Alignment = 0, bool EnableDialog = true)
-        {
-            if (EnableDialog && CompressionType != CompressionType.None)
-            {
-                DialogResult save = MessageBox.Show($"Compress file as {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
-
-                if (save == DialogResult.Yes)
-                {
-                    switch (CompressionType)
-                    {
-                        case CompressionType.Yaz0:
-                            data = EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
-                            break;
-                        case CompressionType.Lz4f:
-                            data = STLibraryCompression.Type_LZ4F.Compress(data);
-                            break;
-                        case CompressionType.Lz4:
-                            break;
-                    }
-                }
-            }
-            File.WriteAllBytes(FileName, data);
-            MessageBox.Show($"File has been saved to {FileName}");
-            Cursor.Current = Cursors.Default;
-        }
-
         public enum GameSet : ushort
         {
             MarioOdyssey = 0x0,
@@ -165,9 +138,7 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-
-                int Alignment = IFileInfo.Alignment;
-                SaveCompressFile(Save(), sfd.FileName, CompressionType, Alignment);
+                STFileSaver.SaveFileFormat(this, sfd.FileName, IFileInfo.Alignment);
             }
         }
         public void Export(object sender, EventArgs args)

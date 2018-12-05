@@ -74,22 +74,8 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Cursor.Current = Cursors.WaitCursor;
-                SaveCompressFile(Save(), sfd.FileName, IFileInfo.Alignment);
+                STFileSaver.SaveFileFormat(this, sfd.FileName, IFileInfo.Alignment);
             }
-        }
-        private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
-        {
-            if (EnableDialog)
-            {
-                DialogResult save = MessageBox.Show("Compress file?", "File Save", MessageBoxButtons.YesNo);
-
-                if (save == DialogResult.Yes)
-                    data = EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
-            }
-            File.WriteAllBytes(FileName, data);
-            MessageBox.Show($"File has been saved to {FileName}");
-            Cursor.Current = Cursors.Default;
         }
 
         private void PreviewWindow(object sender, EventArgs args)
@@ -114,19 +100,6 @@ namespace FirstPlugin
         }
         private void PrintRecursive(TreeNode treeNode)
         {
-            if (treeNode is FileEntry)
-            {
-                FileEntry file = (FileEntry)treeNode;
-
-                if (file.ImageKey == "bntx")
-                    OpenFile(file.Name, file.data, file);
-
-                if (file.ImageKey == "bntx")
-                    Console.WriteLine(file.Name);
-                //  if (file.ImageKey == "bfres")
-                //   OpenFile(file.Name, GetASSTData(file.FullName), TreeView);
-            }
-
             // Print each node recursively.  
             foreach (TreeNode tn in treeNode.Nodes)
             {

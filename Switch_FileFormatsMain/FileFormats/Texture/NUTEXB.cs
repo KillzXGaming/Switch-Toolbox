@@ -156,7 +156,6 @@ namespace FirstPlugin
                         {
                             Console.WriteLine("Something went wrong??");
                         }
-                        texture.blocksCompressed.Clear();
                         texture.mipmaps.Clear();
 
 
@@ -177,7 +176,7 @@ namespace FirstPlugin
         public List<uint[]> mipSizes = new List<uint[]>();
         public int Alignment;
         public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
-        public List<List<byte[]>> blocksCompressed = new List<List<byte[]>>();
+        public byte[] ImageData;
         bool IsSwizzled = true;
         public string ArcOffset; //Temp for exporting in batch 
 
@@ -200,7 +199,7 @@ namespace FirstPlugin
                 var bntxFile = new BNTX();
                 var tex = new TextureData();
                 tex.Replace(ofd.FileName);
-                blocksCompressed = tex.Texture.TextureData;
+                ImageData = tex.Texture.TextureData[0][0];
                 mipmaps = tex.mipmaps;
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
@@ -236,8 +235,7 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Cursor.Current = Cursors.WaitCursor;
-                System.IO.File.WriteAllBytes(sfd.FileName, Save());
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
         }
         public void Export(string FileName, bool ExportSurfaceLevel = false,
@@ -318,39 +316,17 @@ namespace FirstPlugin
                 //Seek to next one
                 reader.Seek(mipPos + 0x40, System.IO.SeekOrigin.Begin);
             }
-
-
             reader.Seek(0, System.IO.SeekOrigin.Begin);
-            for (int arrayLevel = 1; arrayLevel < ArrayCount + 1; arrayLevel++)
-            {
-                List<byte[]> mipmaps = new List<byte[]>();
+            ImageData = reader.ReadBytes(imagesize);
 
-                for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
-                {
-                    //Get the size from the size array
-                    int size = (int)mipSizes[arrayLevel - 1][mipLevel];
-
-                    //Align the size
-                    if (mipLevel == 0)
-                        if (size % Alignment != 0) size = size + (Alignment - (size % Alignment));
-
-                    mipmaps.Add(reader.ReadBytes(imagesize));
-                    break;
-                }
-                blocksCompressed.Add(mipmaps);
-                //Seek the next array
-                reader.Seek(imagesize / (int)ArrayCount, System.IO.SeekOrigin.Begin);
-            }
             LoadTexture();
         }
         public void Write(FileWriter writer)
         {
-            int arrayCount = blocksCompressed.Count;
+            int arrayCount = mipSizes.Count;
 
-            foreach (var array in blocksCompressed)
-            {
-                writer.Write(array[0]); //Write textue block first
-            }
+            writer.Write(ImageData); //Write textue block first
+
             long headerStart = writer.Position;
             foreach (var mips in mipSizes)
             {
@@ -371,10 +347,10 @@ namespace FirstPlugin
             writer.Write((byte)unk);
             writer.Seek(2); //padding
             writer.Write(unk2);
-            writer.Write(blocksCompressed[0].Count);
+            writer.Write(mipSizes.Count);
             writer.Write(Alignment);
             writer.Write(arrayCount);
-            writer.Write(blocksCompressed[0][0].Length * arrayCount);
+            writer.Write(ImageData.Length);
             writer.WriteSignature(" XET");
             writer.Write(131073);
 
@@ -392,7 +368,7 @@ namespace FirstPlugin
             if (IsSwizzled)
                 LoadTexture();
             else
-                mipmaps.Add(blocksCompressed[ArrayIndex]);
+                mipmaps.Add(new List<byte[]>() { ImageData });
 
             if (mipmaps[0].Count <= 0)
             {
@@ -504,13 +480,21 @@ namespace FirstPlugin
 
             uint bpp = bpps((byte)Format);
 
-            for (int arrayLevel = 0; arrayLevel < blocksCompressed.Count; arrayLevel++)
+            for (int arrayLevel = 0; arrayLevel < mipSizes.Count; arrayLevel++)
             {
                 int blockHeightShift = 0;
+                uint mipOffset = 0;
 
                 List<byte[]> mips = new List<byte[]>();
-                for (int mipLevel = 0; mipLevel < blocksCompressed[arrayLevel].Count; mipLevel++)
+                for (int mipLevel = 0; mipLevel < mipSizes[arrayLevel].Length; mipLevel++)
                 {
+                    //Get the size from the size array
+                    int MipSize = (int)mipSizes[arrayLevel][mipLevel];
+
+                    //Align the size
+                    if (mipLevel == 0)
+                        if (MipSize % Alignment != 0) MipSize = MipSize + (Alignment - (MipSize % Alignment));
+
                     uint width = (uint)Math.Max(1, Width >> mipLevel);
                     uint height = (uint)Math.Max(1, Height >> mipLevel);
 
@@ -519,14 +503,14 @@ namespace FirstPlugin
                     if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                         blockHeightShift += 1;
 
-                    Console.WriteLine($"{blk_dim.ToString("x")} {bpp} {width} {height} {linesPerBlockHeight} {blkWidth} {blkHeight} {size} { blocksCompressed[arrayLevel][mipLevel].Length}");
+                    Console.WriteLine($"{blk_dim.ToString("x")} {bpp} {width} {height} {linesPerBlockHeight} {blkWidth} {blkHeight} {size} { ImageData.Length}");
 
                     try
                     {
-                        byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, tileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), blocksCompressed[arrayLevel][mipLevel]);
+                        byte[] result = TegraX1Swizzle.deswizzle(width, height, blkWidth, blkHeight, target, bpp, tileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), ImageData);
                         //Create a copy and use that to remove uneeded data
                         byte[] result_ = new byte[size];
-                        Array.Copy(result, 0, result_, 0, size);
+                        Array.Copy(result, mipOffset, result_, 0, size);
 
                         mips.Add(result_);
                     }
@@ -537,6 +521,8 @@ namespace FirstPlugin
                         BadSwizzle = true;
                         break;
                     }
+                    mipOffset += (uint)MipSize;
+                    break;
                 }
                 mipmaps.Add(mips);
             }

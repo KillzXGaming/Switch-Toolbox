@@ -81,6 +81,14 @@ namespace Bfres.Structs
             return ((BFRES)Parent.Parent).BFRESRender.models;
         }
 
+        public bool IsWiiU
+        {
+            get
+            {
+                return GetResFileU() != null;
+            }
+        }
+
 
         public FMDL()
         {
@@ -121,7 +129,7 @@ namespace Bfres.Structs
                 if (HasNormals)
                     shp.SmoothNormals();
 
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(IsWiiU);
             }
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
@@ -135,7 +143,7 @@ namespace Bfres.Structs
                 if (HasNormals)
                     shp.CalculateNormals();
 
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(IsWiiU);
             }
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
@@ -196,7 +204,7 @@ namespace Bfres.Structs
                 }
 
                 shp.CalculateTangentBitangent();
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(IsWiiU);
             }
 
             UpdateVertexData();
@@ -356,6 +364,8 @@ namespace Bfres.Structs
         //Function addes shapes, vertices and meshes
         public void AddOjects(string FileName, bool Replace = true)
         {
+            bool IsWiiU = (GetResFileU() != null);
+
             int MatStartIndex = materials.Count;
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -442,8 +452,8 @@ namespace Bfres.Structs
                             shape.CreateIndexList(obj, this);
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
-                            shape.SaveShape();
-                            shape.SaveVertexBuffer();
+                            shape.SaveShape(IsWiiU);
+                            shape.SaveVertexBuffer(IsWiiU);
                             shape.BoneIndices = new List<ushort>();
 
                             Nodes["FshpFolder"].Nodes.Add(shape);
@@ -472,7 +482,7 @@ namespace Bfres.Structs
                         }
 
                         Cursor.Current = Cursors.WaitCursor;
-                        if (!BFRES.Instance.IsWiiU && Replace)
+                        if (Replace)
                         {
                             materials.Clear();
                             Nodes["FmatFolder"].Nodes.Clear();
@@ -483,17 +493,17 @@ namespace Bfres.Structs
                             FMAT fmat = new FMAT();
                             if (settings.ExternalMaterialPath != string.Empty)
                             {
-                                if (!BFRES.Instance.IsWiiU)
-                                {
-                                    fmat.Material = new Material();
-                                    fmat.Material.Import(settings.ExternalMaterialPath);
-                                    fmat.ReadMaterial(fmat.Material);
-                                }
-                                else
+                                if (GetResFileU() != null)
                                 {
                                     fmat.MaterialU = new ResU.Material();
                                     fmat.MaterialU.Import(settings.ExternalMaterialPath, GetResFileU());
                                     BfresWiiU.ReadMaterial(fmat, fmat.MaterialU);
+                                }
+                                else
+                                {
+                                    fmat.Material = new Material();
+                                    fmat.Material.Import(settings.ExternalMaterialPath);
+                                    fmat.ReadMaterial(fmat.Material);
                                 }
                             }
 
@@ -583,7 +593,7 @@ namespace Bfres.Structs
                             materials.Add(fmat.Text, fmat);
                             Nodes["FmatFolder"].Nodes.Add(fmat);
 
-                            if (BFRES.Instance.IsWiiU)
+                            if (GetResFileU() != null)
                             {
                                 fmat.MaterialU.Name = Text;
                                 fmat.SetMaterial(fmat.MaterialU);
@@ -612,8 +622,8 @@ namespace Bfres.Structs
                             shape.CreateBoneList(obj, this);
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
-                            shape.SaveShape();
-                            shape.SaveVertexBuffer();
+                            shape.SaveShape(IsWiiU);
+                            shape.SaveVertexBuffer(IsWiiU);
                             shape.BoneIndices = new List<ushort>();
 
                             List<string> keyList = shapes.Select(o => o.Text).ToList();

@@ -295,15 +295,15 @@ namespace FirstPlugin
             // Bind the texture and create the uniform if the material has the right textures. 
             if (hasTex)
             {
-                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(mattex));
+                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(mattex, mat.GetResFileU() != null));
             }
         }
-        public static int BindTexture(MatTexture tex)
+        public static int BindTexture(MatTexture tex, bool IsWiiU)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.hash + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
 
-            if (BFRES.Instance.IsWiiU)
+            if (IsWiiU)
             {
                 foreach (var ftexContainer in PluginRuntime.ftexContainers)
                 {

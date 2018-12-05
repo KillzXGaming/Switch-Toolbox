@@ -24,6 +24,7 @@
 
 #include <vcclr.h>
 #include "DirectXTex.h"
+#define _WIN32_WINNT 0x0600 
 
 using namespace System;
 using namespace System::IO;

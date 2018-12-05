@@ -143,7 +143,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (BFRES.Instance.IsWiiU)
+                if (GetResFileU() != null)
                     MaterialU.Export(sfd.FileName, GetResFileU());
                 else
                     Material.Export(sfd.FileName, GetResFile());
@@ -156,7 +156,7 @@ namespace Bfres.Structs
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (BFRES.Instance.IsWiiU)
+                if (GetResFileU() != null)
                 {
                     MaterialU.Import(ofd.FileName, GetResFileU());
                     MaterialU.Name = Text;

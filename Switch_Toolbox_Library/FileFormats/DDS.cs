@@ -25,7 +25,9 @@ namespace Switch_Toolbox.Library
         public const uint FOURCC_DXT5 = 0x35545844;
         public const uint FOURCC_ATI1 = 0x31495441;
         public const uint FOURCC_BC4U = 0x55344342;
+        public const uint FOURCC_BC4S = 0x53344342;
         public const uint FOURCC_BC5U = 0x55354342;
+        public const uint FOURCC_BC5S = 0x53354342;
         public const uint FOURCC_DX10 = 0x30315844;
 
         public const uint FOURCC_ATI2 = 0x32495441;
@@ -369,7 +371,7 @@ namespace Switch_Toolbox.Library
                 imageSize = header.width * header.height * getFormatSize(header.ddspf.fourCC);
 
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
-            bdata = reader.ReadBytes((int)imageSize);
+            bdata = reader.ReadBytes((int)(reader.BaseStream.Length - reader.Position));
 
             reader.Dispose();
             reader.Close();

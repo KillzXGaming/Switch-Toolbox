@@ -77,7 +77,7 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
                 objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
             
             foreach (Node child in parent.Children)
-                BuildNode(child, ref rootTransform);
+                BuildNode(child, ref world);
         }
         public void LoadMeshes()
         {

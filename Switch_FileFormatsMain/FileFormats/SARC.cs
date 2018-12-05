@@ -106,10 +106,10 @@ namespace FirstPlugin
                     Console.WriteLine("Saving " + node);
                     SaveFileEntryData((SarcEntry)node);
                 }
-                if (node is TreeNodeFile && node != this)
+                else if (node is TreeNodeFile && node != this)
                 {
                     IFileFormat fileFormat = (IFileFormat)node;
-                    if (fileFormat != null && fileFormat.IFileInfo.ArchiveHash == SarcHash)
+                    if (fileFormat != null && fileFormat.IFileInfo != null && fileFormat.IFileInfo.ArchiveHash == SarcHash)
                     {
                         sarcData.Files.Add(SetSarcPath(node, this),
                             STLibraryCompression.CompressFile(fileFormat.Save(), fileFormat));
@@ -168,22 +168,8 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Cursor.Current = Cursors.WaitCursor;
-                SaveCompressFile(Save(), sfd.FileName, IFileInfo.Alignment);
+                STFileSaver.SaveFileFormat(this, sfd.FileName, IFileInfo.Alignment);
             }
-        }
-        private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
-        {
-            if (EnableDialog)
-            {
-                DialogResult save = MessageBox.Show("Compress file?", "File Save", MessageBoxButtons.YesNo);
-
-                if (save == DialogResult.Yes)
-                    data = EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
-            }
-            File.WriteAllBytes(FileName, data);
-            MessageBox.Show($"File has been saved to {FileName}");
-            Cursor.Current = Cursors.Default;
         }
         private void CallRecursive(TreeView treeView)
         {
@@ -243,7 +229,10 @@ namespace FirstPlugin
             }
             public override void OnDoubleMouseClick(TreeView treeView)
             {
-                ReplaceNode(this.Parent, this, OpenFile(Name, Data, this));
+                TreeNode node = STFileLoader.GetNodeFileFormat(FullName, Data, true, sarcHash, this);
+
+                if (node != null)
+                    ReplaceNode(this.Parent, this, node);
             }
 
             private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -367,75 +356,6 @@ namespace FirstPlugin
             }
             return finalList;
         }
-
-        public static TreeNode OpenFile(string FileName, byte[] data, SarcEntry sarcEntry, bool Compressed = false, CompressionType CompType = 0)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            FileReader fileReader = new FileReader(data);
-            string Magic4 = fileReader.ReadMagic(0, 4);
-            string Magic2 = fileReader.ReadMagic(0, 2);
-            if (Magic4 == "Yaz0")
-            {
-                data = EveryFileExplorer.YAZ0.Decompress(data);
-                return OpenFile(FileName, data, sarcEntry, true, (CompressionType)1);
-            }
-            if (Magic4 == "ZLIB")
-            {
-                data = FileReader.InflateZLIB(fileReader.getSection(64, data.Length - 64));
-                return OpenFile(FileName, data, sarcEntry, true, (CompressionType)2);
-            }
-            fileReader.Dispose();
-            fileReader.Close();
-            foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
-            {
-                if (fileFormat.Magic == Magic4 || fileFormat.Magic == Magic2)
-                {
-                    fileFormat.CompressionType = CompType;
-                    fileFormat.FileIsCompressed = Compressed;
-                    fileFormat.Data = data;
-                    fileFormat.Load();
-                    fileFormat.FileName = Path.GetFileName(FileName);
-                    fileFormat.FilePath = FileName;
-                    fileFormat.IFileInfo = new IFileInfo();
-                    fileFormat.IFileInfo.ArchiveHash = sarcEntry.sarcHash;
-                    fileFormat.IFileInfo.InArchive = true;
-
-                    if (fileFormat is TreeNode)
-                    {
-                        ((TreeNode)fileFormat).Text = sarcEntry.Text;
-                        ((TreeNode)fileFormat).ImageKey = sarcEntry.ImageKey;
-                        ((TreeNode)fileFormat).SelectedImageKey = sarcEntry.SelectedImageKey;
-                        return (TreeNode)fileFormat;
-                    }
-                }
-                if (fileFormat.Magic == string.Empty)
-                {
-                    foreach (string str3 in fileFormat.Extension)
-                    {
-                        if (str3.Remove(0, 1) == Path.GetExtension(FileName))
-                        {
-                            fileFormat.Data = data;
-                            fileFormat.Load();
-                            fileFormat.FileName = Path.GetFileName(FileName);
-                            fileFormat.FilePath = FileName;
-                            fileFormat.IFileInfo = new IFileInfo();
-                            fileFormat.IFileInfo.ArchiveHash = sarcEntry.sarcHash;
-                            fileFormat.IFileInfo.InArchive = true;
-
-                            if (fileFormat is TreeNode)
-                            {
-                                ((TreeNode)fileFormat).Text = sarcEntry.Text;
-                                ((TreeNode)fileFormat).ImageKey = sarcEntry.ImageKey;
-                                ((TreeNode)fileFormat).SelectedImageKey = sarcEntry.SelectedImageKey;
-                                return (TreeNode)fileFormat;
-                            }
-                        }
-                    }
-                }
-            }
-            return (TreeNode)null;
-        }
-
 
         public SarcEntry SetupFileEntry(byte[] data, string name, string fullName, string SarchHash)
         {

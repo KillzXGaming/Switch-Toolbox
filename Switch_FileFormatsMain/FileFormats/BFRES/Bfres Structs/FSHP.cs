@@ -92,6 +92,14 @@ namespace Bfres.Structs
     }
     public class FSHP : STGenericObject
     {
+        public bool IsWiiU
+        {
+            get
+            {
+                return GetResFileU() != null;
+            }
+        }
+
         public FSHP()
         {
             Checked = true;
@@ -188,7 +196,7 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             SmoothNormals();
-            SaveVertexBuffer();
+            SaveVertexBuffer(IsWiiU);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -196,7 +204,7 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             CalculateNormals();
-            SaveVertexBuffer();
+            SaveVertexBuffer(IsWiiU);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -279,8 +287,6 @@ namespace Bfres.Structs
                             param.ValueFloat = new float[] { 1, 1, 1, 1 };
                             break;
                         case "gsys_bake_st0":
-                            param.ValueFloat = new float[] { 1, 1, 0, 0 };
-                            break;
                         case "gsys_bake_st1":
                             param.ValueFloat = new float[] { 1, 1, 0, 0 };
                             break;
@@ -346,7 +352,7 @@ namespace Bfres.Structs
             }
 
             CalculateTangentBitangent();
-            SaveVertexBuffer();
+            SaveVertexBuffer(IsWiiU);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -371,7 +377,7 @@ namespace Bfres.Structs
             }
 
             FlipUvsVertical();
-            SaveVertexBuffer();
+            SaveVertexBuffer(IsWiiU);
             UpdateVertexData();
         }
         public void FlipUvsHorizontal(object sender, EventArgs args)
@@ -383,7 +389,7 @@ namespace Bfres.Structs
             }
 
             FlipUvsHorizontal();
-            SaveVertexBuffer();
+            SaveVertexBuffer(IsWiiU);
             UpdateVertexData();
         }
         public void ExportMaterials(object sender, EventArgs args)
@@ -445,6 +451,8 @@ namespace Bfres.Structs
         }
         public void Replace(object sender, EventArgs args)
         {
+            bool IsWiiU = (GetResFileU() != null);
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Supported Formats|*.bfobj;*.fbx;*.dae; *.obj;|" +
              "Bfres Object (shape/vertices) |*.bfobj|" +
@@ -494,8 +502,8 @@ namespace Bfres.Structs
                                 vertexAttributes = settings.CreateNewAttributes();
                                 lodMeshes = obj.lodMeshes;
                                 CreateNewBoundingBoxes();
-                                SaveShape();
-                                SaveVertexBuffer();
+                                SaveShape(IsWiiU);
+                                SaveVertexBuffer(IsWiiU);
                                 Cursor.Current = Cursors.Default;
                             }
                         }
@@ -609,7 +617,7 @@ namespace Bfres.Structs
 
         private void UpdateShaderAssignAttributes(FMAT material)
         {
-            material.shaderassign.samplers.Clear();
+            material.shaderassign.attributes.Clear();
             foreach (VertexAttribute att in vertexAttributes)
             {
                 material.shaderassign.attributes.Add(att.Name, att.Name);
@@ -656,12 +664,12 @@ namespace Bfres.Structs
                 return (ResUGX2.GX2AttribFormat)System.Enum.Parse(typeof(ResUGX2.GX2AttribFormat), type.ToString());
             }
         }
-        public void SaveShape()
+        public void SaveShape(bool IsWiiU)
         {
-            if (!BFRES.Instance.IsWiiU)
-                Shape = BfresSwitch.SaveShape(this);
-            else
+            if (IsWiiU)
                 ShapeU = BfresWiiU.SaveShape(this);
+            else
+                Shape = BfresSwitch.SaveShape(this);
         }
         public IList<ushort> GetIndices()
         {
@@ -683,9 +691,9 @@ namespace Bfres.Structs
             else
                 return Vector3.TransformNormal(position, trans);
         }
-        public void SaveVertexBuffer()
+        public void SaveVertexBuffer(bool IsWiiU)
         {
-            if (BFRES.Instance.IsWiiU)
+            if (IsWiiU)
             {
                 BfresWiiU.SaveVertexBuffer(this);
                 return;

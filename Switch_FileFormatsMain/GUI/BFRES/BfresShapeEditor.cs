@@ -59,7 +59,7 @@ namespace FirstPlugin
             bonesCB.SelectedIndex = 0;
             textBoxVertexSkinCount.Text = shape.VertexSkinCount.ToString();
 
-            if (BFRES.Instance.IsWiiU)
+            if (shape.GetResFileU() != null)
             {
 
             }

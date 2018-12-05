@@ -312,7 +312,7 @@ namespace FirstPlugin
             Console.WriteLine("click");
             int index = textureRefListView.SelectedIndices[0];
             Texture_Selector tex = new Texture_Selector();
-            tex.LoadTexture();
+            tex.LoadTexture(material.GetResFileU() != null);
             if (tex.ShowDialog() == DialogResult.OK)
             {
                 material.textures[index].Name = tex.GetSelectedTexture();

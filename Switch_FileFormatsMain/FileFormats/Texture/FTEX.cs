@@ -22,7 +22,7 @@ namespace FirstPlugin
         public FTEXContainer()
         {
             Text = "Textures";
-            Name = "FTEXCONT";
+            Name = "FTEX";
 
             ContextMenu = new ContextMenu();
             MenuItem importTex = new MenuItem("Import");
@@ -44,9 +44,6 @@ namespace FirstPlugin
         {
         }
 
-        public override void OnClick(TreeView treeview)
-        {
-        }
         public void RemoveTexture(FTEX textureData)
         {
             Nodes.Remove(textureData);
@@ -299,19 +296,27 @@ namespace FirstPlugin
             tex.Dim = (GX2SurfaceDim)surf.dim;
             tex.Use = (GX2SurfaceUse)surf.use;
             tex.TileMode = (GX2TileMode)surf.tileMode;
-            tex.Swizzle = (uint)surf.swizzle;
-            tex.Pitch = (uint)surf.pitch;
-            tex.Depth = (uint)surf.depth;
-            tex.MipCount = (uint)surf.numMips;
-            tex.MipOffsets = surf.mipOffset;
-            tex.Height = (uint)surf.height;
-            tex.Width = (uint)surf.width;
-            tex.Regs = new uint[0];
+            tex.Swizzle = surf.swizzle;
+            tex.Pitch = surf.pitch;
+            tex.Depth = surf.depth;
+            tex.MipCount = surf.numMips;
+
+            tex.MipOffsets = new uint[13];
+            for (int i = 0; i < 13; i++)
+            {
+                if (i < surf.mipOffset.Length)
+                    tex.MipOffsets[i] = surf.mipOffset[i];
+            }
+            tex.Height = surf.height;
+            tex.Width = surf.width;
+            tex.Regs = new uint[5];
+            tex.ArrayLength = 1;
             var channels = SetChannelsByFormat((GX2SurfaceFormat)surf.format);
             tex.CompSelR = channels[0];
             tex.CompSelG = channels[1];
             tex.CompSelB = channels[2];
             tex.CompSelA = channels[3];
+            tex.UserData = new ResDict<UserData>();
             return tex;
         }
         private void Rename(object sender, EventArgs args)
@@ -357,6 +362,8 @@ namespace FirstPlugin
             SelectedImageKey = "Texture";
             Text = tex.Name;
 
+            texture = tex;
+
             renderedTex = new RenderableTex();
             renderedTex.width = (int)tex.Width;
             renderedTex.height = (int)tex.Height;
@@ -400,6 +407,8 @@ namespace FirstPlugin
             renderedTex.mipmaps.Add(mips);
 
             renderedTex.data = renderedTex.mipmaps[0][0];
+
+            LoadOpenGLTexture();
         }
         public static GX2CompSel[] SetChannelsByFormat(GX2SurfaceFormat Format)
         {

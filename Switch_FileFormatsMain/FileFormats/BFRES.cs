@@ -16,9 +16,6 @@ namespace FirstPlugin
 {
     public class BFRES : TreeNodeFile, IFileFormat
     {
-        private static BFRES _instance;
-        public static BFRES Instance { get { return _instance == null ? _instance = new BFRES() : _instance; } }
-
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
         public bool FileIsCompressed { get; set; } = false;
@@ -43,15 +40,12 @@ namespace FirstPlugin
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
         public string FilePath { get; set; }
-        private bool isWiiU;
         public bool IsWiiU
         {
             get
             {
                 if (Data == null)
                     return false;
-                if (isWiiU)
-                    return true;
 
                 using (FileReader reader = new FileReader(new MemoryStream(Data)))
                 {
@@ -317,8 +311,7 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Cursor.Current = Cursors.WaitCursor;
-                SaveCompressFile(Save(), sfd.FileName, Alignment);
+                STFileSaver.SaveFileFormat(this, sfd.FileName, Alignment);
             }
         }
         private void Rename(object sender, EventArgs args)
@@ -442,32 +435,6 @@ namespace FirstPlugin
                 fbnvFolder.Nodes.Add(boneVis);
             }
         }
-        private void SaveCompressFile(byte[] data, string FileName, int Alignment = 0, bool EnableDialog = true)
-        {
-            if (EnableDialog && CompressionType != CompressionType.None)
-            {
-                DialogResult save = MessageBox.Show($"Compress file as {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
-
-                if (save == DialogResult.Yes)
-                {
-                    switch (CompressionType)
-                    {
-                        case CompressionType.Yaz0:
-                            data = EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
-                            break;
-                        case CompressionType.Lz4f:
-                            data = STLibraryCompression.Type_LZ4F.Compress(data);
-                            break;
-                        case CompressionType.Lz4:
-                            break;
-                    }
-                }
-            }
-            File.WriteAllBytes(FileName, data);
-            MessageBox.Show($"File has been saved to {FileName}");
-            Cursor.Current = Cursors.Default;
-        }
-
         private void SaveSwitch(MemoryStream mem)
         {
             var resFile = BFRESRender.ResFileNode.resFile;
@@ -531,7 +498,7 @@ namespace FirstPlugin
        //     resFileU.SceneAnims.Clear();
        //     resFileU.ShapeAnims.Clear();
      //       resFileU.BoneVisibilityAnims.Clear();
-       //     resFileU.Textures.Clear();
+            resFileU.Textures.Clear();
 
 
             int CurMdl = 0;
@@ -540,6 +507,14 @@ namespace FirstPlugin
                 foreach (FMDL model in Nodes["FMDL"].Nodes)
                     resFileU.Models.Add(model.Text, BfresWiiU.SetModel(model));
             }
+            if (Nodes.ContainsKey("FTEX"))
+            {
+                foreach (FTEX tex in Nodes["FTEX"].Nodes)
+                    resFileU.Textures.Add(tex.Text, tex.texture);
+            }
+            else
+                throw new Exception("Failed to find textures");
+
             ErrorCheck();
             resFileU.Save(mem);
         }
