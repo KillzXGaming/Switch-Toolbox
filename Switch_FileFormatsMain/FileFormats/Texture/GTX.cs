@@ -6,7 +6,6 @@ namespace FirstPlugin
     public class GTX
     {
         //Some enums and parts from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
-        //Todo. Add swizzling back
         public class GX2Surface
         {
             public uint dim;
