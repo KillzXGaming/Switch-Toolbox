@@ -6,7 +6,6 @@ namespace FirstPlugin
     public class GTX
     {
         //Some enums and parts from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
-        //Todo. Add swizzling back
         public class GX2Surface
         {
             public uint dim;
@@ -110,90 +109,90 @@ namespace FirstPlugin
 
         public enum GX2SurfaceDimension
         {
-            GX2_SURFACE_DIM_1D = 0x0,
-            GX2_SURFACE_DIM_2D = 0x1,
-            GX2_SURFACE_DIM_3D = 0x2,
-            GX2_SURFACE_DIM_CUBE = 0x3,
-            GX2_SURFACE_DIM_1D_ARRAY = 0x4,
-            GX2_SURFACE_DIM_2D_ARRAY = 0x5,
-            GX2_SURFACE_DIM_2D_MSAA = 0x6,
-            GX2_SURFACE_DIM_2D_MSAA_ARRAY = 0x7,
-            GX2_SURFACE_DIM_FIRST = 0x0,
-            GX2_SURFACE_DIM_LAST = 0x7,
+            DIM_1D = 0x0,
+            DIM_2D = 0x1,
+            DIM_3D = 0x2,
+            DIM_CUBE = 0x3,
+            DIM_1D_ARRAY = 0x4,
+            DIM_2D_ARRAY = 0x5,
+            DIM_2D_MSAA = 0x6,
+            DIM_2D_MSAA_ARRAY = 0x7,
+            DIM_FIRST = 0x0,
+            DIM_LAST = 0x7,
         };
         public enum GX2SurfaceFormat
         {
-            GX2_SURFACE_FORMAT_INVALID = 0x0,
-            GX2_SURFACE_FORMAT_TC_R8_UNORM = 0x1,
-            GX2_SURFACE_FORMAT_TC_R8_UINT = 0x101,
-            GX2_SURFACE_FORMAT_TC_R8_SNORM = 0x201,
-            GX2_SURFACE_FORMAT_TC_R8_SINT = 0x301,
-            GX2_SURFACE_FORMAT_T_R4_G4_UNORM = 0x2,
-            GX2_SURFACE_FORMAT_TCD_R16_UNORM = 0x5,
-            GX2_SURFACE_FORMAT_TC_R16_UINT = 0x105,
-            GX2_SURFACE_FORMAT_TC_R16_SNORM = 0x205,
-            GX2_SURFACE_FORMAT_TC_R16_SINT = 0x305,
-            GX2_SURFACE_FORMAT_TC_R16_FLOAT = 0x806,
-            GX2_SURFACE_FORMAT_TC_R8_G8_UNORM = 0x7,
-            GX2_SURFACE_FORMAT_TC_R8_G8_UINT = 0x107,
-            GX2_SURFACE_FORMAT_TC_R8_G8_SNORM = 0x207,
-            GX2_SURFACE_FORMAT_TC_R8_G8_SINT = 0x307,
-            GX2_SURFACE_FORMAT_TCS_R5_G6_B5_UNORM = 0x8,
-            GX2_SURFACE_FORMAT_TC_R5_G5_B5_A1_UNORM = 0xA,
-            GX2_SURFACE_FORMAT_TC_R4_G4_B4_A4_UNORM = 0xB,
-            GX2_SURFACE_FORMAT_TC_A1_B5_G5_R5_UNORM = 0xC,
-            GX2_SURFACE_FORMAT_TC_R32_UINT = 0x10D,
-            GX2_SURFACE_FORMAT_TC_R32_SINT = 0x30D,
-            GX2_SURFACE_FORMAT_TCD_R32_FLOAT = 0x80E,
-            GX2_SURFACE_FORMAT_TC_R16_G16_UNORM = 0xF,
-            GX2_SURFACE_FORMAT_TC_R16_G16_UINT = 0x10F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_SNORM = 0x20F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_SINT = 0x30F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_FLOAT = 0x810,
-            GX2_SURFACE_FORMAT_D_D24_S8_UNORM = 0x11,
-            GX2_SURFACE_FORMAT_T_R24_UNORM_X8 = 0x11,
-            GX2_SURFACE_FORMAT_T_X24_G8_UINT = 0x111,
-            GX2_SURFACE_FORMAT_D_D24_S8_FLOAT = 0x811,
-            GX2_SURFACE_FORMAT_TC_R11_G11_B10_FLOAT = 0x816,
-            GX2_SURFACE_FORMAT_TCS_R10_G10_B10_A2_UNORM = 0x19,
-            GX2_SURFACE_FORMAT_TC_R10_G10_B10_A2_UINT = 0x119,
-            GX2_SURFACE_FORMAT_T_R10_G10_B10_A2_SNORM = 0x219,
-            GX2_SURFACE_FORMAT_TC_R10_G10_B10_A2_SNORM = 0x219,
-            GX2_SURFACE_FORMAT_TC_R10_G10_B10_A2_SINT = 0x319,
-            GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM = 0x1A,
-            GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_UINT = 0x11A,
-            GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_SNORM = 0x21A,
-            GX2_SURFACE_FORMAT_TC_R8_G8_B8_A8_SINT = 0x31A,
-            GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_SRGB = 0x41A,
-            GX2_SURFACE_FORMAT_TCS_A2_B10_G10_R10_UNORM = 0x1B,
-            GX2_SURFACE_FORMAT_TC_A2_B10_G10_R10_UINT = 0x11B,
-            GX2_SURFACE_FORMAT_D_D32_FLOAT_S8_UINT_X24 = 0x81C,
-            GX2_SURFACE_FORMAT_T_R32_FLOAT_X8_X24 = 0x81C,
-            GX2_SURFACE_FORMAT_T_X32_G8_UINT_X24 = 0x11C,
-            GX2_SURFACE_FORMAT_TC_R32_G32_UINT = 0x11D,
-            GX2_SURFACE_FORMAT_TC_R32_G32_SINT = 0x31D,
-            GX2_SURFACE_FORMAT_TC_R32_G32_FLOAT = 0x81E,
-            GX2_SURFACE_FORMAT_TC_R16_G16_B16_A16_UNORM = 0x1F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_B16_A16_UINT = 0x11F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_B16_A16_SNORM = 0x21F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_B16_A16_SINT = 0x31F,
-            GX2_SURFACE_FORMAT_TC_R16_G16_B16_A16_FLOAT = 0x820,
-            GX2_SURFACE_FORMAT_TC_R32_G32_B32_A32_UINT = 0x122,
-            GX2_SURFACE_FORMAT_TC_R32_G32_B32_A32_SINT = 0x322,
-            GX2_SURFACE_FORMAT_TC_R32_G32_B32_A32_FLOAT = 0x823,
-            GX2_SURFACE_FORMAT_T_BC1_UNORM = 0x31,
-            GX2_SURFACE_FORMAT_T_BC1_SRGB = 0x431,
-            GX2_SURFACE_FORMAT_T_BC2_UNORM = 0x32,
-            GX2_SURFACE_FORMAT_T_BC2_SRGB = 0x432,
-            GX2_SURFACE_FORMAT_T_BC3_UNORM = 0x33,
-            GX2_SURFACE_FORMAT_T_BC3_SRGB = 0x433,
-            GX2_SURFACE_FORMAT_T_BC4_UNORM = 0x34,
-            GX2_SURFACE_FORMAT_T_BC4_SNORM = 0x234,
-            GX2_SURFACE_FORMAT_T_BC5_UNORM = 0x35,
-            GX2_SURFACE_FORMAT_T_BC5_SNORM = 0x235,
-            GX2_SURFACE_FORMAT_T_NV12_UNORM = 0x81,
-            GX2_SURFACE_FORMAT_FIRST = 0x1,
-            GX2_SURFACE_FORMAT_LAST = 0x83F,
+            INVALID = 0x0,
+            TC_R8_UNORM = 0x1,
+            TC_R8_UINT = 0x101,
+            TC_R8_SNORM = 0x201,
+            TC_R8_SINT = 0x301,
+            T_R4_G4_UNORM = 0x2,
+            TCD_R16_UNORM = 0x5,
+            TC_R16_UINT = 0x105,
+            TC_R16_SNORM = 0x205,
+            TC_R16_SINT = 0x305,
+            TC_R16_FLOAT = 0x806,
+            TC_R8_G8_UNORM = 0x7,
+            TC_R8_G8_UINT = 0x107,
+            TC_R8_G8_SNORM = 0x207,
+            TC_R8_G8_SINT = 0x307,
+            TCS_R5_G6_B5_UNORM = 0x8,
+            TC_R5_G5_B5_A1_UNORM = 0xA,
+            TC_R4_G4_B4_A4_UNORM = 0xB,
+            TC_A1_B5_G5_R5_UNORM = 0xC,
+            TC_R32_UINT = 0x10D,
+            TC_R32_SINT = 0x30D,
+            TCD_R32_FLOAT = 0x80E,
+            TC_R16_G16_UNORM = 0xF,
+            TC_R16_G16_UINT = 0x10F,
+            TC_R16_G16_SNORM = 0x20F,
+            TC_R16_G16_SINT = 0x30F,
+            TC_R16_G16_FLOAT = 0x810,
+            D_D24_S8_UNORM = 0x11,
+            T_R24_UNORM_X8 = 0x11,
+            T_X24_G8_UINT = 0x111,
+            D_D24_S8_FLOAT = 0x811,
+            TC_R11_G11_B10_FLOAT = 0x816,
+            TCS_R10_G10_B10_A2_UNORM = 0x19,
+            TC_R10_G10_B10_A2_UINT = 0x119,
+            T_R10_G10_B10_A2_SNORM = 0x219,
+            TC_R10_G10_B10_A2_SNORM = 0x219,
+            TC_R10_G10_B10_A2_SINT = 0x319,
+            TCS_R8_G8_B8_A8_UNORM = 0x1A,
+            TC_R8_G8_B8_A8_UINT = 0x11A,
+            TC_R8_G8_B8_A8_SNORM = 0x21A,
+            TC_R8_G8_B8_A8_SINT = 0x31A,
+            TCS_R8_G8_B8_A8_SRGB = 0x41A,
+            TCS_A2_B10_G10_R10_UNORM = 0x1B,
+            TC_A2_B10_G10_R10_UINT = 0x11B,
+            D_D32_FLOAT_S8_UINT_X24 = 0x81C,
+            T_R32_FLOAT_X8_X24 = 0x81C,
+            T_X32_G8_UINT_X24 = 0x11C,
+            TC_R32_G32_UINT = 0x11D,
+            TC_R32_G32_SINT = 0x31D,
+            TC_R32_G32_FLOAT = 0x81E,
+            TC_R16_G16_B16_A16_UNORM = 0x1F,
+            TC_R16_G16_B16_A16_UINT = 0x11F,
+            TC_R16_G16_B16_A16_SNORM = 0x21F,
+            TC_R16_G16_B16_A16_SINT = 0x31F,
+            TC_R16_G16_B16_A16_FLOAT = 0x820,
+            TC_R32_G32_B32_A32_UINT = 0x122,
+            TC_R32_G32_B32_A32_SINT = 0x322,
+            TC_R32_G32_B32_A32_FLOAT = 0x823,
+            T_BC1_UNORM = 0x31,
+            T_BC1_SRGB = 0x431,
+            T_BC2_UNORM = 0x32,
+            T_BC2_SRGB = 0x432,
+            T_BC3_UNORM = 0x33,
+            T_BC3_SRGB = 0x433,
+            T_BC4_UNORM = 0x34,
+            T_BC4_SNORM = 0x234,
+            T_BC5_UNORM = 0x35,
+            T_BC5_SNORM = 0x235,
+            T_NV12_UNORM = 0x81,
+            FIRST = 0x1,
+            LAST = 0x83F,
         };
         public enum GX2AAMode
         {
@@ -206,17 +205,17 @@ namespace FirstPlugin
         };
         public enum GX2SurfaceUse : uint
         {
-            GX2_SURFACE_USE_TEXTURE = 0x1,
-            GX2_SURFACE_USE_COLOR_BUFFER = 0x2,
-            GX2_SURFACE_USE_DEPTH_BUFFER = 0x4,
-            GX2_SURFACE_USE_SCAN_BUFFER = 0x8,
-            GX2_SURFACE_USE_FTV = 0x80000000,
-            GX2_SURFACE_USE_COLOR_BUFFER_TEXTURE = 0x3,
-            GX2_SURFACE_USE_DEPTH_BUFFER_TEXTURE = 0x5,
-            GX2_SURFACE_USE_COLOR_BUFFER_FTV = 0x80000002,
-            GX2_SURFACE_USE_COLOR_BUFFER_TEXTURE_FTV = 0x80000003,
-            GX2_SURFACE_USE_FIRST = 0x1,
-            GX2_SURFACE_USE_LAST = 0x8,
+            USE_TEXTURE = 0x1,
+            USE_COLOR_BUFFER = 0x2,
+            USE_DEPTH_BUFFER = 0x4,
+            USE_SCAN_BUFFER = 0x8,
+            USE_FTV = 0x80000000,
+            USE_COLOR_BUFFER_TEXTURE = 0x3,
+            USE_DEPTH_BUFFER_TEXTURE = 0x5,
+            USE_COLOR_BUFFER_FTV = 0x80000002,
+            USE_COLOR_BUFFER_TEXTURE_FTV = 0x80000003,
+            USE_FIRST = 0x1,
+            USE_LAST = 0x8,
         };
         public enum GX2RResourceFlags
         {
@@ -262,26 +261,26 @@ namespace FirstPlugin
         };
         public enum GX2TileMode
         {
-            GX2_TILE_MODE_DEFAULT = 0x0,
-            GX2_TILE_MODE_LINEAR_SPECIAL = 0x10,
-            GX2_TILE_MODE_DEFAULT_FIX2197 = 0x20,
-            GX2_TILE_MODE_LINEAR_ALIGNED = 0x1,
-            GX2_TILE_MODE_1D_TILED_THIN1 = 0x2,
-            GX2_TILE_MODE_1D_TILED_THICK = 0x3,
-            GX2_TILE_MODE_2D_TILED_THIN1 = 0x4,
-            GX2_TILE_MODE_2D_TILED_THIN2 = 0x5,
-            GX2_TILE_MODE_2D_TILED_THIN4 = 0x6,
-            GX2_TILE_MODE_2D_TILED_THICK = 0x7,
-            GX2_TILE_MODE_2B_TILED_THIN1 = 0x8,
-            GX2_TILE_MODE_2B_TILED_THIN2 = 0x9,
-            GX2_TILE_MODE_2B_TILED_THIN4 = 0xA,
-            GX2_TILE_MODE_2B_TILED_THICK = 0xB,
-            GX2_TILE_MODE_3D_TILED_THIN1 = 0xC,
-            GX2_TILE_MODE_3D_TILED_THICK = 0xD,
-            GX2_TILE_MODE_3B_TILED_THIN1 = 0xE,
-            GX2_TILE_MODE_3B_TILED_THICK = 0xF,
-            GX2_TILE_MODE_FIRST = 0x0,
-            GX2_TILE_MODE_LAST = 0x20,
+            MODE_DEFAULT = 0x0,
+            MODE_LINEAR_SPECIAL = 0x10,
+            MODE_DEFAULT_FIX2197 = 0x20,
+            MODE_LINEAR_ALIGNED = 0x1,
+            MODE_1D_TILED_THIN1 = 0x2,
+            MODE_1D_TILED_THICK = 0x3,
+            MODE_2D_TILED_THIN1 = 0x4,
+            MODE_2D_TILED_THIN2 = 0x5,
+            MODE_2D_TILED_THIN4 = 0x6,
+            MODE_2D_TILED_THICK = 0x7,
+            MODE_2B_TILED_THIN1 = 0x8,
+            MODE_2B_TILED_THIN2 = 0x9,
+            MODE_2B_TILED_THIN4 = 0xA,
+            MODE_2B_TILED_THICK = 0xB,
+            MODE_3D_TILED_THIN1 = 0xC,
+            MODE_3D_TILED_THICK = 0xD,
+            MODE_3B_TILED_THIN1 = 0xE,
+            MODE_3B_TILED_THICK = 0xF,
+            MODE_FIRST = 0x0,
+            MODE_LAST = 0x20,
         };
 
         public enum AddrTileMode
@@ -429,6 +428,10 @@ namespace FirstPlugin
 
         public static List<byte[]> Decode(GX2Surface tex)
         {
+            if (tex.data == null) //Some ftex will only have mip maps
+                throw new Exception("Data is empty! Make sure to open a Tex1.sbfres if using Tex2!");
+
+
             Console.WriteLine("");
             Console.WriteLine("// ----- GX2Surface Decode Info ----- ");
             Console.WriteLine("  dim             = " + tex.dim);
@@ -496,6 +499,9 @@ namespace FirstPlugin
                 Array.Copy(deswizzled, 0, result_, 0, size);
                 result.Add(result_);
             }
+            if (tex.format == (uint)GX2SurfaceFormat.TC_R8_UNORM)
+                System.IO.File.WriteAllBytes("TC_R8_UNorm.bin", result[0]);
+
             return result;
         }
 
@@ -512,16 +518,16 @@ namespace FirstPlugin
         {
             switch (Format)
             {
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_UNORM:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_SRGB:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM:
-                case GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM:
+                case GX2SurfaceFormat.T_BC1_UNORM:
+                case GX2SurfaceFormat.T_BC1_SRGB:
+                case GX2SurfaceFormat.T_BC2_UNORM:
+                case GX2SurfaceFormat.T_BC2_SRGB:
+                case GX2SurfaceFormat.T_BC3_UNORM:
+                case GX2SurfaceFormat.T_BC3_SRGB:
+                case GX2SurfaceFormat.T_BC4_UNORM:
+                case GX2SurfaceFormat.T_BC4_SNORM:
+                case GX2SurfaceFormat.T_BC5_SNORM:
+                case GX2SurfaceFormat.T_BC5_UNORM:
                     return true;
                 default:
                     return false;

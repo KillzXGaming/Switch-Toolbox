@@ -21,6 +21,7 @@ namespace FirstPlugin
         {
             Model model = new Model();
             model.Name = fmdl.Text;
+            model.Path = "";
             model.Shapes = new List<Shape>();
             model.VertexBuffers = new List<VertexBuffer>();
             model.Materials = new List<Material>();
@@ -590,7 +591,7 @@ namespace FirstPlugin
         }
         public static void ReadTextureRefs(this FMAT m, Material mat)
         {
-            m.textures.Clear();
+            m.TextureMaps.Clear();
 
             int AlbedoCount = 0;
             int id = 0;
@@ -790,7 +791,7 @@ namespace FirstPlugin
                 
                 texture.Name = TextureName;
 
-                m.textures.Add(texture);
+                m.TextureMaps.Add(texture);
 
                 id++;
             }
@@ -872,7 +873,7 @@ namespace FirstPlugin
             mat.TextureRefs = new List<string>();
             mat.TextureRefs.Clear();
 
-            foreach (var textu in m.textures)
+            foreach (var textu in m.TextureMaps)
                 mat.TextureRefs.Add(textu.Name);
             
         }

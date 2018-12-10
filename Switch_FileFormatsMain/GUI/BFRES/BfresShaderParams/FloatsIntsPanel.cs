@@ -19,12 +19,51 @@ namespace FirstPlugin
             InitializeComponent();
             HideControls();
         }
-        public void GetValues(BfresShaderParam param)
+        public void SetValues(BfresShaderParam param)
         {
             switch (param.Type)
             {
                 case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Float:
                     param.ValueFloat = new float[] { (float)ValueUD1.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Float2:
+                    param.ValueFloat = new float[] { (float)ValueUD1.Value, (float)ValueUD2.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Float3:
+                    param.ValueFloat = new float[] { (float)ValueUD1.Value, (float)ValueUD2.Value,
+                                                     (float)ValueUD3.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Float4:
+                    param.ValueFloat = new float[] { (float)ValueUD1.Value, (float)ValueUD2.Value,
+                                                     (float)ValueUD3.Value, (float)ValueUD4.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.UInt:
+                    param.ValueUint = new uint[] { (uint)ValueUD1.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.UInt2:
+                    param.ValueUint = new uint[] { (uint)ValueUD1.Value, (uint)ValueUD2.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.UInt3:
+                    param.ValueUint = new uint[] { (uint)ValueUD1.Value, (uint)ValueUD2.Value,
+                                                   (uint)ValueUD3.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.UInt4:
+                    param.ValueUint = new uint[] { (uint)ValueUD1.Value, (uint)ValueUD2.Value,
+                                                     (uint)ValueUD3.Value, (uint)ValueUD4.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Int:
+                    param.ValueInt = new int[] { (int)ValueUD1.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Int2:
+                    param.ValueInt = new int[] { (int)ValueUD1.Value, (int)ValueUD2.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Int3:
+                    param.ValueInt = new int[] { (int)ValueUD1.Value, (int)ValueUD2.Value,
+                                                 (int)ValueUD3.Value };
+                    break;
+                case Syroot.NintenTools.NSW.Bfres.ShaderParamType.Int4:
+                    param.ValueInt = new int[] { (int)ValueUD1.Value, (int)ValueUD2.Value,
+                                                 (int)ValueUD3.Value, (int)ValueUD4.Value };
                     break;
             }
         }

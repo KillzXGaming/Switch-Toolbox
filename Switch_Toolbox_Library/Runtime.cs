@@ -62,6 +62,8 @@ namespace Switch_Toolbox.Library
         public static bool renderNormalMap = true;
         public static bool renderVertColor = true;
         public static bool renderBfresPbr = false;
+        public static bool renderTevColors = true;
+        public static bool renderMatColors = true;
 
         public static bool stereoscopy = false;
         public static bool UseLegacyGL = false;
@@ -76,6 +78,10 @@ namespace Switch_Toolbox.Library
         public static float CameraNear = 0.1f;
         public static float CameraFar = 100000.0f;
         public static ActiveGame activeGame = ActiveGame.SMO;
+
+        public static string ProgramVersion = "0.0.0";
+        public static string CompileDate = "0/0/0000";
+        public static string CommitInfo = "";
 
         public enum ActiveGame
         {

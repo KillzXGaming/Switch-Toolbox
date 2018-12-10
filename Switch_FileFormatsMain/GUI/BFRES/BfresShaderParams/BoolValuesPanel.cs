@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Bfres.Structs;
+using Syroot.NintenTools.NSW.Bfres;
 
 namespace FirstPlugin
 {
@@ -17,7 +19,26 @@ namespace FirstPlugin
         {
             InitializeComponent();
         }
-
+        public void SetValues(BfresShaderParam param)
+        {
+            switch (param.Type)
+            {
+                case ShaderParamType.Bool:
+                    param.ValueBool = new bool[] { bool1.Visible};
+                    break;
+                case ShaderParamType.Bool2:
+                    param.ValueBool = new bool[] { bool1.Visible, bool2.Visible };
+                    break;
+                case ShaderParamType.Bool3:
+                    param.ValueBool = new bool[] { bool1.Visible, bool2.Visible,
+                                                   bool3.Visible };
+                    break;
+                case ShaderParamType.Bool4:
+                    param.ValueBool = new bool[] { bool1.Visible, bool2.Visible,
+                                                   bool3.Visible , bool4.Visible };
+                    break;
+            }
+        }
         public void LoadValues(bool[] values)
         {
             bool1.Visible = false;

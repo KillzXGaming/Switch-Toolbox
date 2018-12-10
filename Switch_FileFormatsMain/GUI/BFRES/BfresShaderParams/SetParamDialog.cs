@@ -153,17 +153,19 @@ namespace FirstPlugin
             }
         }
 
-        public void GetValues()
+        public void SetValues()
         {
             if (boolPanel != null)
             {
+                boolPanel.SetValues(activeParam);
             }
             if (SRTPanel != null)
             {
+                SRTPanel.SetValues(activeParam);
             }
             if (FloatIntsPanel != null)
             {
-                FloatIntsPanel.GetValues(activeParam);
+                FloatIntsPanel.SetValues(activeParam);
             }
         }
 

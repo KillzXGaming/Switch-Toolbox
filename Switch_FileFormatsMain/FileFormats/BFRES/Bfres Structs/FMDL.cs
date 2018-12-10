@@ -307,7 +307,12 @@ namespace Bfres.Structs
                 switch (ext)
                 {
                     case ".bfmdl":
-                        Model.Export(sfd.FileName, GetResFile());
+                        if (GetResFileU() != null)
+                        {
+
+                        }
+                        else
+                            Model.Export(sfd.FileName, GetResFile());
                         break;
                     case ".csv":
                         CsvModel csv = new CsvModel();
@@ -337,8 +342,34 @@ namespace Bfres.Structs
                         System.IO.File.WriteAllBytes(sfd.FileName, csv.Save());
                         break;
                     default:
+                        List<STGenericTexture> surfaces = new List<STGenericTexture>();
+                        foreach (FSHP fshp in shapes)
+                        {
+                            foreach (var bntx in PluginRuntime.bntxContainers)
+                            {
+                                foreach (var tex in fshp.GetMaterial().TextureMaps)
+                                {
+                                    if (bntx.Textures.ContainsKey(tex.Name))
+                                    {
+                                        surfaces.Add(bntx.Textures[tex.Name]);
+                                    }
+                                }
+                            }
+                            foreach (var ftex in PluginRuntime.ftexContainers)
+                            {
+                                foreach (var tex in fshp.GetMaterial().TextureMaps)
+                                {
+                                    if (ftex.Textures.ContainsKey(tex.Name))
+                                    {
+                                        surfaces.Add(ftex.Textures[tex.Name]);
+                                    }
+                                }
+                            }
+                        }
+                        Console.WriteLine("tex count " + surfaces.Count);
+
                         AssimpData assimp = new AssimpData();
-                        assimp.SaveFromModel(this, sfd.FileName);
+                        assimp.SaveFromModel(this, sfd.FileName, surfaces);
                         break;
                 }
             }
@@ -510,7 +541,7 @@ namespace Bfres.Structs
                             fmat.Text = mat.Text;
                             //Setup placeholder textures
                             //Note we can't add/remove samplers so we must fill these slots
-                            foreach (var t in fmat.textures)
+                            foreach (var t in fmat.TextureMaps)
                             {
                                 t.wrapModeS = 0;
                                 t.wrapModeT = 0;
@@ -574,7 +605,7 @@ namespace Bfres.Structs
 
                             foreach (var tex in mat.TextureMaps)
                             {
-                                foreach (var t in fmat.textures)
+                                foreach (var t in fmat.TextureMaps)
                                 {
                                     if (t.Type == tex.Type)
                                     {
@@ -627,11 +658,14 @@ namespace Bfres.Structs
                             shape.BoneIndices = new List<ushort>();
 
                             List<string> keyList = shapes.Select(o => o.Text).ToList();
+
                             shape.Text = Utils.RenameDuplicateString(keyList, shape.Text);
 
                             Nodes["FshpFolder"].Nodes.Add(shape);
                             shapes.Add(shape);
                         }
+                        Console.WriteLine("Finshed Importing Model");
+
                         Cursor.Current = Cursors.Default;
                     }
                     break;

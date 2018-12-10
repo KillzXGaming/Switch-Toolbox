@@ -59,10 +59,10 @@ namespace FirstPlugin
             prop.Name = textureData.Text;
             prop.Width = textureData.Width;
             prop.Height = textureData.Height;
-            if (textureData.mipmaps.Count > 0)
+            if (textureData.surfaces.Count > 0)
             {
-                prop.MipCount = (uint)textureData.mipmaps[CurArrayDisplayLevel].Count;
-                prop.ArrayCount = (uint)textureData.mipmaps.Count;
+                prop.MipCount = (uint)textureData.surfaces[CurArrayDisplayLevel].mipmaps.Count;
+                prop.ArrayCount = (uint)textureData.surfaces.Count;
             }
             prop.Height = textureData.Height;
 
@@ -87,14 +87,14 @@ namespace FirstPlugin
             LoadImage();
 
             int MipCount = 1;
-            if (textureData.mipmaps.Count <= 0)
+            if (textureData.surfaces.Count <= 0)
                 return;
             else
-                MipCount = textureData.mipmaps[CurArrayDisplayLevel].Count;
+                MipCount = textureData.surfaces[CurArrayDisplayLevel].mipmaps.Count;
 
 
-            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps[CurArrayDisplayLevel].Count - 1}";
-            arrayLevelCounterLabel.Text = $"{CurArrayDisplayLevel} / {textureData.mipmaps.Count - 1}";
+            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.surfaces[CurArrayDisplayLevel].mipmaps.Count - 1}";
+            arrayLevelCounterLabel.Text = $"{CurArrayDisplayLevel} / {textureData.surfaces.Count - 1}";
 
             if (CurMipDisplayLevel != MipCount - 1)
                 BtnMipsRight.Enabled = true;
@@ -106,7 +106,7 @@ namespace FirstPlugin
             else
                 BtmMipsLeft.Enabled = false;
 
-            if (CurArrayDisplayLevel != textureData.mipmaps.Count - 1)
+            if (CurArrayDisplayLevel != textureData.surfaces.Count - 1)
                 btnRightArray.Enabled = true;
             else
                 btnRightArray.Enabled = false;
@@ -153,7 +153,7 @@ namespace FirstPlugin
 
         private void BtnMipsRight_Click(object sender, EventArgs e)
         {
-            if (CurMipDisplayLevel != textureData.mipmaps[CurArrayDisplayLevel].Count - 1)
+            if (CurMipDisplayLevel != textureData.surfaces[CurArrayDisplayLevel].mipmaps.Count - 1)
                 CurMipDisplayLevel += 1;
 
             UpdateMipDisplay();
@@ -169,7 +169,7 @@ namespace FirstPlugin
 
         private void btnRightArray_Click(object sender, EventArgs e)
         {
-            if (CurArrayDisplayLevel != textureData.mipmaps.Count - 1)
+            if (CurArrayDisplayLevel != textureData.surfaces.Count - 1)
                 CurArrayDisplayLevel += 1;
 
             UpdateMipDisplay();

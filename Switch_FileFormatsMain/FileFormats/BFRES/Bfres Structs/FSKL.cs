@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Syroot.NintenTools.NSW.Bfres;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using ResU = Syroot.NintenTools.Bfres;
 using FirstPlugin;
+using OpenTK;
 
 namespace Bfres.Structs
 {
@@ -12,6 +14,7 @@ namespace Bfres.Structs
     public class FSKL : STSkeleton
     {
         public int[] Node_Array;
+        public List<Matrix3x4> matrices = new List<Matrix3x4>();
         public fsklNode node;
         public class fsklNode : TreeNodeCustom
         {

@@ -12,6 +12,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Smash_Forge.Rendering;
 using WeifenLuo.WinFormsUI.Docking;
+using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
@@ -91,9 +92,9 @@ namespace FirstPlugin
                                 GTX.GX2Surface tex = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
                                 FTEX ftex = new FTEX();
                                 ftex.texture = ftex.FromGx2Surface(tex, setting);
+                                Nodes.Add(ftex);
                                 ftex.Read(ftex.texture);
 
-                                Nodes.Add(ftex);
                                 Textures.Add(ftex.Text, ftex);
                                 ftex.LoadOpenGLTexture();
                             }
@@ -123,9 +124,9 @@ namespace FirstPlugin
                                     GTX.GX2Surface tex = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
                                     FTEX ftex = new FTEX();
                                     ftex.texture = ftex.FromGx2Surface(tex, setting);
+                                    Nodes.Add(ftex);
                                     ftex.Read(ftex.texture);
 
-                                    Nodes.Add(ftex);
                                     Textures.Add(ftex.Text, ftex);
                                     ftex.LoadOpenGLTexture();
                                 }
@@ -200,7 +201,7 @@ namespace FirstPlugin
         }
     }
 
-    public class FTEX : TreeNodeCustom
+    public class FTEX : STGenericTexture
     {
         public int format;
         public RenderableTex renderedTex = new RenderableTex();
@@ -221,6 +222,14 @@ namespace FirstPlugin
             MenuItem rename = new MenuItem("Rename");
             ContextMenu.MenuItems.Add(rename);
             rename.Click += Rename;
+        }
+        //For determining mip map file for botw (Tex2)
+        public string GetFilePath()
+        {
+            if (Parent == null)
+                throw new Exception("Parent is null!");
+
+            return ((BFRES)Parent.Parent).FilePath;
         }
 
         private void Replace(object sender, EventArgs args)
@@ -365,25 +374,15 @@ namespace FirstPlugin
             texture = tex;
 
             renderedTex = new RenderableTex();
-            renderedTex.width = (int)tex.Width;
-            renderedTex.height = (int)tex.Height;
+            Width = tex.Width;
+            Height = tex.Height;
+
+            renderedTex.width = (int)Width;
+            renderedTex.height = (int)Height;
             format = (int)tex.Format;
             int swizzle = (int)tex.Swizzle;
             int pitch = (int)tex.Pitch;
             uint bpp = GTX.surfaceGetBitsPerPixel((uint)format) >> 3;
-
-            Console.WriteLine(tex.Width);
-            Console.WriteLine(tex.Height);
-            Console.WriteLine(tex.Format);
-            Console.WriteLine(tex.Swizzle);
-            Console.WriteLine(tex.Pitch);
-            Console.WriteLine(tex.Alignment);
-            Console.WriteLine(tex.Depth);
-            Console.WriteLine(tex.Dim);
-            Console.WriteLine(tex.MipCount);
-            Console.WriteLine(tex.MipOffsets);
-            Console.WriteLine(tex.AAMode);
-            Console.WriteLine(tex.Use);
 
             GTX.GX2Surface surf = new GTX.GX2Surface();
             surf.bpp = bpp;
@@ -403,8 +402,39 @@ namespace FirstPlugin
             surf.tileMode = (uint)tex.TileMode;
             surf.swizzle = tex.Swizzle;
 
+            if (IsCompressedFormat(tex.Format))
+                Format = GetCompressedDXGI_FORMAT(tex.Format);
+            else
+                Format = GetUncompressedDXGI_FORMAT(tex.Format);
+
+            //Determine tex2 botw files to get mip maps
+
+            string Tex1 = GetFilePath();
+            if (Tex1.Contains(".Tex1"))
+            {
+                string Tex2 = Tex1.Replace(".Tex1", ".Tex2");
+                Console.WriteLine(Tex2);
+
+                if (System.IO.File.Exists(Tex2))
+                {
+                    ResFile resFile2 = new ResFile(new System.IO.MemoryStream(
+                        EveryFileExplorer.YAZ0.Decompress(Tex2)));
+
+                    if (resFile2.Textures.ContainsKey(tex.Name))
+                    {
+                        surf.mipData = resFile2.Textures[tex.Name].MipData;
+                        surf.mipOffset = resFile2.Textures[tex.Name].MipOffsets;
+                    }
+                }
+            }
+
+
+            if (surf.mipData == null)
+                surf.numMips = 1;
+
             List<byte[]> mips = GTX.Decode(surf);
             renderedTex.mipmaps.Add(mips);
+            surfaces.Add(new Surface() { mipmaps = mips });
 
             renderedTex.data = renderedTex.mipmaps[0][0];
 
@@ -474,18 +504,18 @@ namespace FirstPlugin
         {
             DDS dds = new DDS();
             dds.header = new DDS.Header();
-            dds.header.width = (uint)renderedTex.width;
-            dds.header.height = (uint)renderedTex.width;
-            dds.header.mipmapCount = (uint)renderedTex.mipmaps[0].Count;
+            dds.header.width = Width;
+            dds.header.height = Height;
+            dds.header.mipmapCount = (uint)surfaces[0].mipmaps.Count;
 
-            dds.header.pitchOrLinearSize = (uint)renderedTex.mipmaps[0][0].Length;
+            dds.header.pitchOrLinearSize = (uint)surfaces[0].mipmaps[0].Length;
 
             if (IsCompressedFormat((GX2SurfaceFormat)format))
-                dds.SetFlags(GetCompressedDXGI_FORMAT((GX2SurfaceFormat)format));
+                dds.SetFlags((DDS.DXGI_FORMAT)GetCompressedDXGI_FORMAT((GX2SurfaceFormat)format));
             else
-                dds.SetFlags(GetUncompressedDXGI_FORMAT((GX2SurfaceFormat)format));
+                dds.SetFlags((DDS.DXGI_FORMAT)GetUncompressedDXGI_FORMAT((GX2SurfaceFormat)format));
 
-            dds.Save(dds, FileName, renderedTex.mipmaps);
+            dds.Save(dds, FileName, surfaces);
         }
 
 
@@ -497,44 +527,49 @@ namespace FirstPlugin
 
             switch (format)
             {
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_UNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC1_UNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC1_SRGB):
+                case ((int)GTX.GX2SurfaceFormat.T_BC1_SRGB):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_UNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC2_UNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC2_SRGB):
+                case ((int)GTX.GX2SurfaceFormat.T_BC2_SRGB):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedSrgbAlphaS3tcDxt3Ext;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_UNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC3_UNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC3_SRGB):
+                case ((int)GTX.GX2SurfaceFormat.T_BC3_SRGB):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedSrgbAlphaS3tcDxt5Ext;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_UNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC4_UNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC4_SNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC4_SNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedSignedRedRgtc1;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_UNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC5_UNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_T_BC5_SNORM):
+                case ((int)GTX.GX2SurfaceFormat.T_BC5_SNORM):
                     //OpenTK doesn't load BC5 SNORM textures right so I'll use the same decompress method bntx has
                     renderedTex.data = DDSCompressor.DecompressBC5(renderedTex.mipmaps[0][0], (int)renderedTex.width, (int)renderedTex.height, true, true);
                     renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
                     renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM):
+                case ((int)GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM):
                     renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
                     renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
-                case ((int)GTX.GX2SurfaceFormat.GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_SRGB):
+                case ((int)GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB):
+                    renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
+                    renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    break;
+                default:
+                    renderedTex.data = BitmapExtension.ImageToByte(DecodeBlock(renderedTex.data, (uint)renderedTex.width, (uint)renderedTex.height, (GX2SurfaceFormat)format));
                     renderedTex.pixelInternalFormat = PixelInternalFormat.Rgba;
                     renderedTex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
@@ -659,16 +694,23 @@ namespace FirstPlugin
                 if (Format == GX2SurfaceFormat.T_BC5_SNorm)
                     return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true);
 
+                if (Format == GX2SurfaceFormat.TC_R8_UNorm)
+                    System.IO.File.WriteAllBytes("TC_R8_UNorm2.bin", data);
+
                 byte[] d = null;
                 if (IsCompressedFormat(Format))
-                    d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
+                    d = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)GetCompressedDXGI_FORMAT(Format));
                 else
-                    d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
+                    d = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)GetUncompressedDXGI_FORMAT(Format));
 
                 if (d != null)
                 {
                     decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
-                    return SwapBlueRedChannels(decomp);
+
+                    if (Format == GX2SurfaceFormat.TCS_R5_G6_B5_UNorm)
+                        return decomp;
+                    else
+                        return SwapBlueRedChannels(decomp);
                 }
                 return BitmapExtension.GetBitmap(d, (int)Width, (int)Height);;
             }
@@ -677,30 +719,30 @@ namespace FirstPlugin
                 throw new Exception($"Bad size from format {Format}");
             }
         }
-        public static byte[] CompressBlock(byte[] data, int width, int height, GTX.GX2SurfaceFormat format)
+        public static byte[] CompressBlock(byte[] data, int width, int height, GTX.GX2SurfaceFormat format, float alphaRef)
         {
             if (IsCompressedFormat((GX2SurfaceFormat)format))
-                return DDSCompressor.CompressBlock(data, width, height, GetCompressedDXGI_FORMAT((GX2SurfaceFormat)format));
+                return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)GetCompressedDXGI_FORMAT((GX2SurfaceFormat)format), alphaRef);
             else
-                return DDSCompressor.EncodePixelBlock(data, width, height, GetUncompressedDXGI_FORMAT((GX2SurfaceFormat)format));
+                return DDSCompressor.EncodePixelBlock(data, width, height, (DDS.DXGI_FORMAT)GetUncompressedDXGI_FORMAT((GX2SurfaceFormat)format));
         }
-        private static DDS.DXGI_FORMAT GetUncompressedDXGI_FORMAT(GX2SurfaceFormat Format)
+        private static TEX_FORMAT GetUncompressedDXGI_FORMAT(GX2SurfaceFormat Format)
         {
             switch (Format)
             {
-                case GX2SurfaceFormat.TC_R5_G5_B5_A1_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
-                case GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
-                case GX2SurfaceFormat.TC_R4_G4_B4_A4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
-                case GX2SurfaceFormat.TCS_R5_G6_B5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
-                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
-                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
-                case GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM;
-                case GX2SurfaceFormat.TC_R11_G11_B10_Float: return DDS.DXGI_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT;
-                case GX2SurfaceFormat.TCD_R16_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R16_UNORM;
-                case GX2SurfaceFormat.TCD_R32_Float: return DDS.DXGI_FORMAT.DXGI_FORMAT_R32_FLOAT;
-                case GX2SurfaceFormat.T_R4_G4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
-                case GX2SurfaceFormat.TC_R8_G8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM;
-                case GX2SurfaceFormat.TC_R8_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8_UNORM;
+                case GX2SurfaceFormat.TC_R5_G5_B5_A1_UNorm: return TEX_FORMAT.B5G5R5A1_UNORM;
+                case GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm: return TEX_FORMAT.B5G5R5A1_UNORM;
+                case GX2SurfaceFormat.TC_R4_G4_B4_A4_UNorm: return TEX_FORMAT.B4G4R4A4_UNORM;
+                case GX2SurfaceFormat.TCS_R5_G6_B5_UNorm: return TEX_FORMAT.B5G6R5_UNORM;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return TEX_FORMAT.R8G8B8A8_UNORM;
+                case GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNorm: return TEX_FORMAT.R10G10B10A2_UNORM;
+                case GX2SurfaceFormat.TC_R11_G11_B10_Float: return TEX_FORMAT.R11G11B10_FLOAT;
+                case GX2SurfaceFormat.TCD_R16_UNorm: return TEX_FORMAT.R16_UNORM;
+                case GX2SurfaceFormat.TCD_R32_Float: return TEX_FORMAT.R32_FLOAT;
+                case GX2SurfaceFormat.T_R4_G4_UNorm: return TEX_FORMAT.B4G4R4A4_UNORM;
+                case GX2SurfaceFormat.TC_R8_G8_UNorm: return TEX_FORMAT.R8G8_UNORM;
+                case GX2SurfaceFormat.TC_R8_UNorm: return TEX_FORMAT.R8_UNORM;
                 case GX2SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
                     throw new Exception($"Cannot convert format {Format}");
@@ -725,20 +767,20 @@ namespace FirstPlugin
                     return false;
             }
         }
-        private static DDS.DXGI_FORMAT GetCompressedDXGI_FORMAT(GX2SurfaceFormat Format)
+        private static TEX_FORMAT GetCompressedDXGI_FORMAT(GX2SurfaceFormat Format)
         {
             switch (Format)
             {
-                case GX2SurfaceFormat.T_BC1_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
-                case GX2SurfaceFormat.T_BC1_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
-                case GX2SurfaceFormat.T_BC2_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
-                case GX2SurfaceFormat.T_BC2_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
-                case GX2SurfaceFormat.T_BC3_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
-                case GX2SurfaceFormat.T_BC3_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
-                case GX2SurfaceFormat.T_BC4_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
-                case GX2SurfaceFormat.T_BC4_SNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
-                case GX2SurfaceFormat.T_BC5_UNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
-                case GX2SurfaceFormat.T_BC5_SNorm: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
+                case GX2SurfaceFormat.T_BC1_UNorm: return TEX_FORMAT.BC1_UNORM;
+                case GX2SurfaceFormat.T_BC1_SRGB: return TEX_FORMAT.BC1_UNORM;
+                case GX2SurfaceFormat.T_BC2_UNorm: return TEX_FORMAT.BC2_UNORM;
+                case GX2SurfaceFormat.T_BC2_SRGB: return TEX_FORMAT.BC2_UNORM;
+                case GX2SurfaceFormat.T_BC3_UNorm: return TEX_FORMAT.BC3_UNORM;
+                case GX2SurfaceFormat.T_BC3_SRGB: return TEX_FORMAT.BC3_UNORM;
+                case GX2SurfaceFormat.T_BC4_UNorm: return TEX_FORMAT.BC4_UNORM;
+                case GX2SurfaceFormat.T_BC4_SNorm: return TEX_FORMAT.BC4_SNORM;
+                case GX2SurfaceFormat.T_BC5_UNorm: return TEX_FORMAT.BC5_UNORM;
+                case GX2SurfaceFormat.T_BC5_SNorm: return TEX_FORMAT.BC5_SNORM;
                 default:
                     throw new Exception($"Cannot convert format {Format}");
             }

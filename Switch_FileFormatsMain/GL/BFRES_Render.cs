@@ -139,9 +139,12 @@ namespace FirstPlugin
 
             foreach (FMDL mdl in models)
             {
-                foreach (FSHP shp in mdl.shapes)
+                if (mdl.Checked)
                 {
-                    DrawModel(shp, mdl, shader);
+                    foreach (FSHP shp in mdl.shapes)
+                    {
+                        DrawModel(shp, mdl, shader);
+                    }
                 }
             }
 
@@ -206,6 +209,8 @@ namespace FirstPlugin
         private void SetRenderSettings(Shader shader)
         {
             shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
+            shader.SetBoolToInt("renderTevColors", Runtime.renderTevColors);
+            shader.SetBoolToInt("renderMatColors", Runtime.renderMatColors);
             shader.SetInt("renderType", (int)Runtime.viewportShading);
             shader.SetBoolToInt("useNormalMap", Runtime.useNormalMap);
             shader.SetInt("uvChannel", (int)Runtime.uvChannel);
@@ -238,6 +243,12 @@ namespace FirstPlugin
         {
             for (int i = 0; i < fmdl.Skeleton.Node_Array.Length; i++)
             {
+
+
+                /*         Matrix3x4 transform3x4 = fmdl.Skeleton.matrices[fmdl.Skeleton.Node_Array[i]];
+                                Matrix4 transform = new Matrix4(transform3x4.Row0, transform3x4.Row1,
+                                                                    transform3x4.Row2, new Vector4(0, 0, 0, 1));*/
+
                 Matrix4 transform = fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].invert * fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].transform;
                 GL.UniformMatrix4(GL.GetUniformLocation(shader.Id, String.Format("bones[{0}]", i)), false, ref transform);
             }
@@ -258,7 +269,7 @@ namespace FirstPlugin
             //      shader.SetTexture("irradianceMap", RenderTools.diffusePbr, 18);
             //      shader.SetTexture("specularIbl", RenderTools.specularPbr, 19);
 
-            foreach (MatTexture matex in mat.textures)
+            foreach (MatTexture matex in mat.TextureMaps)
             {
                 if (matex.Type == MatTexture.TextureType.Diffuse)
                     TextureUniform(shader, mat, mat.HasDiffuseMap, "DiffuseMap", matex);
@@ -346,7 +357,7 @@ namespace FirstPlugin
             SetVertexAttributes(m, shader);
             ApplyTransformFix(mdl, m, shader);
 
-            if (m.Checked)
+            if (m.Checked && m.Parent.Parent.Checked)
             {
                 if ((m.IsSelected))
                 {
@@ -452,7 +463,7 @@ namespace FirstPlugin
 
             foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
-                foreach (var t in mat.textures)
+                foreach (var t in mat.TextureMaps)
                 {
                     if (bntx.Textures.ContainsKey(t.Name))
                     {
@@ -494,6 +505,11 @@ namespace FirstPlugin
         {
             shader.SetVector4("gsys_bake_st0", new Vector4(1, 1, 0, 0));
             shader.SetVector4("gsys_bake_st1", new Vector4(1, 1, 0, 0));
+            shader.SetVector4("tev_color0", new Vector4(1, 1, 0, 0));
+            shader.SetVector4("tev_color1", new Vector4(1, 1, 0, 0));
+            shader.SetVector4("mat_color0", new Vector4(1, 1, 0, 0));
+            shader.SetVector4("mat_color1", new Vector4(1, 1, 0, 0));
+
             shader.SetVector4("const_color0", new Vector4(1, 1, 1, 1));
             shader.SetVector4("base_color_mul_color", new Vector4(1, 1, 1, 1));
             
@@ -504,7 +520,11 @@ namespace FirstPlugin
             SetUniformData(mat, shader, "gsys_bake_st0");
             SetUniformData(mat, shader, "gsys_bake_st1");
             SetUniformData(mat, shader, "const_color0");
-            SetUniformData(mat, shader, "base_color_mul_color");
+            SetUniformData(mat, shader, "tev_color0");
+            SetUniformData(mat, shader, "tev_color1");
+            SetUniformData(mat, shader, "mat_color0");
+            SetUniformData(mat, shader, "mat_color1");
+
         }
         private static void SetUniformData(FMAT mat, Shader shader, string propertyName)
         {

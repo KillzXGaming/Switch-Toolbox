@@ -53,6 +53,7 @@ namespace FirstPlugin
         public int sparseBinding = 0; //false
         public bool IsSRGB = true;
         public bool GenerateMipmaps = false; //If bitmap and count more that 1 then geenrate
+        public float alphaRef = 0.5f;
 
         private SurfaceFormat LoadDDSFormat(uint fourCC, DDS dds = null, bool IsSRGB = false)
         {
@@ -161,6 +162,30 @@ namespace FirstPlugin
                 textureData = new TextureData(tex, bntxFile);
             }
         }
+        public void LoadTGA(string FileName, BntxFile bntxFile)
+        {
+            DecompressedData.Clear();
+
+            TexName = Path.GetFileNameWithoutExtension(FileName);
+            bntx = bntxFile;
+            Format = SurfaceFormat.BC1_SRGB;
+            GenerateMipmaps = true;
+
+            Bitmap Image = Paloma.TargaImage.LoadTargaImage(FileName);
+            Image = TextureData.SwapBlueRedChannels(Image);
+
+            TexWidth = (uint)Image.Width;
+            TexHeight = (uint)Image.Height;
+            MipCount = (uint)GetTotalMipCount();
+
+            DecompressedData.Add(BitmapExtension.ImageToByte(Image));
+
+            Image.Dispose();
+            if (DecompressedData.Count == 0)
+            {
+                throw new Exception("Failed to load " + Format);
+            }
+        }
         public void LoadBitMap(string FileName, BntxFile bntxFile)
         {
             DecompressedData.Clear();
@@ -215,14 +240,14 @@ namespace FirstPlugin
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
             List<byte[]> mipmaps = new List<byte[]>();
-            mipmaps.Add(TextureData.CompressBlock(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight, Format));
+            mipmaps.Add(TextureData.CompressBlock(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight, Format, alphaRef));
 
             //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
             //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
                 Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
-                mipmaps.Add(TextureData.CompressBlock(BitmapExtension.ImageToByte(Image), Image.Width, Image.Height, Format));
+                mipmaps.Add(TextureData.CompressBlock(BitmapExtension.ImageToByte(Image), Image.Width, Image.Height, Format, alphaRef));
             }
             Image.Dispose();
 
@@ -233,7 +258,7 @@ namespace FirstPlugin
             DataBlockOutput.Clear();
             foreach (var surface in DecompressedData)
             {
-                DataBlockOutput.Add(TextureData.CompressBlock(surface, (int)TexWidth, (int)TexHeight, Format));
+                DataBlockOutput.Add(TextureData.CompressBlock(surface, (int)TexWidth, (int)TexHeight, Format, alphaRef));
             }
         }
         public static uint DIV_ROUND_UP(uint value1, uint value2)

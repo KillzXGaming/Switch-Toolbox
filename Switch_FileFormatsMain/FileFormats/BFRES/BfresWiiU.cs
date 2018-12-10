@@ -23,6 +23,7 @@ namespace FirstPlugin
         {
             Model model = new Model();
             model.Name = fmdl.Text;
+            model.Path = "";
             model.Shapes = new ResDict<Shape>();
             model.VertexBuffers = new List<VertexBuffer>();
             model.Materials = new ResDict<Material>();
@@ -39,13 +40,11 @@ namespace FirstPlugin
             {
                 BFRES.CheckMissingTextures(shape);
                 SetShape(shape, shape.ShapeU);
-                shape.ShapeU.SubMeshBoundingNodes = new List<BoundingNode>();
-
                 model.Shapes.Add(shape.Text, shape.ShapeU);
                 model.VertexBuffers.Add(shape.VertexBufferU);
                 shape.ShapeU.VertexBufferIndex = (ushort)(model.VertexBuffers.Count - 1);
 
-                BFRES.SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
+           //     BFRES.SetShaderAssignAttributes(shape.GetMaterial().shaderassign, shape);
             }
 
             foreach (FMAT mat in fmdl.materials.Values)
@@ -257,15 +256,15 @@ namespace FirstPlugin
 
                 if (fshp.VertexSkinCount == 1)
                 {
-                    Matrix4 sb = model.Skeleton.bones[model.Skeleton.Node_Array[v.boneIds[0]]].transform;
-                    v.pos = Vector3.TransformPosition(v.pos, sb);
-                    v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                 //   Matrix4 sb = model.Skeleton.bones[model.Skeleton.Node_Array[v.boneIds[0]]].transform;
+                  //  v.pos = Vector3.TransformPosition(v.pos, sb);
+                  //  v.nrm = Vector3.TransformNormal(v.nrm, sb);
                 }
                 if (fshp.VertexSkinCount == 0)
                 {
-                    Matrix4 NoBindFix = model.Skeleton.bones[fshp.boneIndx].transform;
-                    v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
-                    v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
+                 //   Matrix4 NoBindFix = model.Skeleton.bones[fshp.boneIndx].transform;
+                //    v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
+                //    v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
                 }
                 fshp.vertices.Add(v);
             }
@@ -288,20 +287,32 @@ namespace FirstPlugin
                 RenderableSkeleton.Node_Array[nodes] = node;
                 nodes++;
             }
+            for (int i = 0; i < skeleton.Bones.Count; i++)
+            {
+                if (skeleton.InverseModelMatrices == null)
+                    break;
 
+                if (i < skeleton.InverseModelMatrices.Count)
+                    RenderableSkeleton.matrices.Add(Utils.ToMat3x4(skeleton.InverseModelMatrices[i]));
+                else
+                    RenderableSkeleton.matrices.Add(Matrix3x4.Zero);
+            }
             foreach (Bone bone in skeleton.Bones.Values)
             {
                 BfresBone STBone = new BfresBone(RenderableSkeleton);
                 SetBone(STBone, bone);
                 STBone.BFRESRender = RenderableSkeleton.node.BFRESRender; //to update viewport on bone edits
                 RenderableSkeleton.bones.Add(STBone);
+
+                if (bone.InverseMatrix != null)
+                    RenderableSkeleton.matrices.Add(Utils.ToMat3x4(bone.InverseMatrix));
             }
             RenderableSkeleton.update();
             RenderableSkeleton.reset();
 
-            foreach (var bone in RenderableSkeleton.bones)
-                if (bone.Parent == null)
-                    skl.Nodes.Add(bone);
+       //     foreach (var bone in RenderableSkeleton.bones)
+           //     if (bone.Parent == null)
+              //      skl.Nodes.Add(bone);
 
             Runtime.abstractGlDrawables.Add(RenderableSkeleton);
         }
@@ -386,7 +397,7 @@ namespace FirstPlugin
         }
         public static void ReadTextureRefs(this FMAT m, Material mat)
         {
-            m.textures.Clear();
+            m.TextureMaps.Clear();
 
             int AlbedoCount = 0;
             int id = 0;
@@ -577,7 +588,7 @@ namespace FirstPlugin
                     }
                 }
                 texture.Name = TextureName;
-                m.textures.Add(texture);
+                m.TextureMaps.Add(texture);
 
                 id++;
             }
@@ -660,7 +671,7 @@ namespace FirstPlugin
             mat.TextureRefs = new List<TextureRef>();
             mat.TextureRefs.Clear();
 
-            foreach (var textu in m.textures)
+            foreach (var textu in m.TextureMaps)
             {
                 TextureRef texref = new TextureRef();
                 texref.Name = textu.Name;

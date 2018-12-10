@@ -25,6 +25,8 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
+        public string FilePath { get; set; }
+
         public IFileInfo IFileInfo { get; set; }
 
         public Type[] Types
@@ -39,7 +41,6 @@ namespace FirstPlugin
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public int Alignment { get; set; } = 0;
-        public string FilePath { get; set; }
         public bool IsWiiU
         {
             get
@@ -353,8 +354,8 @@ namespace FirstPlugin
             {
                 string TextureName = tex.Name;
                 FTEX texture = new FTEX();
-                texture.Read(tex);
                 ftexContainer.Nodes.Add(texture);
+                texture.Read(tex);
                 ftexContainer.Textures.Add(texture.Text, texture);
             }
             PluginRuntime.ftexContainers.Add(ftexContainer);
@@ -510,7 +511,10 @@ namespace FirstPlugin
             if (Nodes.ContainsKey("FTEX"))
             {
                 foreach (FTEX tex in Nodes["FTEX"].Nodes)
+                {
+                    tex.texture.Name = tex.Text;
                     resFileU.Textures.Add(tex.Text, tex.texture);
+                }
             }
             else
                 throw new Exception("Failed to find textures");
@@ -526,10 +530,10 @@ namespace FirstPlugin
                 if (!shd.attributes.ContainsValue(att.Name) && !shd.attributes.ContainsKey(att.Name))
                     shd.attributes.Add(att.Name, att.Name);
             }
-            foreach (var tex in shape.GetMaterial().textures)
+            foreach (var tex in shape.GetMaterial().TextureMaps)
             {
-                if (!shd.samplers.ContainsValue(tex.SamplerName))
-                    shd.samplers.Add(tex.SamplerName, tex.SamplerName);
+                if (!shd.samplers.ContainsValue(((MatTexture)tex).SamplerName))
+                    shd.samplers.Add(((MatTexture)tex).SamplerName, ((MatTexture)tex).SamplerName);
             }
         }
 
@@ -554,7 +558,7 @@ namespace FirstPlugin
             bool ImportMissingTextures = false;
             foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
-                foreach (MatTexture tex in shape.GetMaterial().textures)
+                foreach (MatTexture tex in shape.GetMaterial().TextureMaps)
                 {
                     if (!bntx.Textures.ContainsKey(tex.Name))
                     {
@@ -624,8 +628,6 @@ namespace FirstPlugin
                                     MessageBox.Show($"Error! Sampler {samp} is unlinked!");
                             }
                         }
-
-                     
                     }
                 }
              //   ErrorList errorList = new ErrorList();

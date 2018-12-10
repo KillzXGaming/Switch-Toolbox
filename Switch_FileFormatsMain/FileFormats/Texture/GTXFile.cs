@@ -30,7 +30,7 @@ namespace FirstPlugin
         UserBlock = 0x16,
     }
 
-    public class GTXFile : TreeNode, IFileFormat
+    public class GTXFile : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -95,11 +95,44 @@ namespace FirstPlugin
             using (FileWriter writer = new FileWriter(mem))
             {
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-
                 header.Write(writer);
+
+                uint surfBlockType;
+                uint dataBlockType;
+                uint mipBlockType;
+
+                if (header.MajorVersion == 6)
+                {
+                    surfBlockType = 0x0A;
+                    dataBlockType = 0x0B;
+                    mipBlockType = 0x0C;
+                }
+                else if (header.MajorVersion == 7)
+                {
+                    surfBlockType = 0x0B;
+                    dataBlockType = 0x0C;
+                    mipBlockType = 0x0D;
+                }
+                else
+                    throw new Exception($"Unsupported GTX version {header.MajorVersion}");
+
                 writer.Seek(header.HeaderSize, System.IO.SeekOrigin.Begin);
+                foreach (var tex in textures)
+                {
+                    tex.surface.Write(writer);
+                }
+
                 foreach (var block in blocks)
-                    block.Write(writer);
+                {
+                    if ((uint)block.BlockType == surfBlockType)
+                    {
+                        block.Write(writer);
+                    }
+                    else
+                    {
+                        block.Write(writer);
+                    }
+                }
             }
             return mem.ToArray();
         }
@@ -287,7 +320,6 @@ namespace FirstPlugin
 
                 reader.Seek(blockStart + HeaderSize, System.IO.SeekOrigin.Begin);
                 data = reader.ReadBytes((int)DataSize);
-                System.IO.File.WriteAllBytes($"block {BlockType}.bin", data);
             }
             public void Write(FileWriter writer)
             {
@@ -306,7 +338,7 @@ namespace FirstPlugin
                 writer.Write(data);
             }
         }
-        public class TextureData : TreeNodeCustom
+        public class TextureData : STGenericTexture
         {
             public SurfaceInfoParse surface;
             public RenderableTex renderedTex = new RenderableTex();
@@ -384,7 +416,7 @@ namespace FirstPlugin
 
              
 
-                dds.Save(dds, FileName, renderedTex.mipmaps);
+                dds.Save(dds, FileName, surfaces);
             }
             private void Replace(object sender, EventArgs args)
             {

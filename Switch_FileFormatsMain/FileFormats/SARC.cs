@@ -140,10 +140,14 @@ namespace FirstPlugin
         {
             string dir = Path.GetDirectoryName(sarc.FullName);
 
+            Console.WriteLine(sarc.FullName);
+
             if (dir == string.Empty)
                 sarc.FullName = sarc.Text;
             else
-                sarc.FullName = Path.Combine(dir, sarc.Text);
+                sarc.FullName = dir + "/" + sarc.Text;
+
+            Console.WriteLine(sarc.FullName);
 
             sarcData.Files.Add(sarc.FullName, sarc.Data);
         }

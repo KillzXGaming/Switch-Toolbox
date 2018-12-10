@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Assimp;
-using Assimp.Configs;
 using OpenTK;
 using Switch_Toolbox.Library.Rendering;
 using System.Windows.Forms;
@@ -15,10 +11,10 @@ namespace Switch_Toolbox.Library
     public class AssimpData
     {
         public Scene scene;
-        private Vector3 m_sceneCenter, m_sceneMin, m_sceneMax;
 
         public List<STGenericObject> objects = new List<STGenericObject>();
         public List<STGenericMaterial> materials = new List<STGenericMaterial>();
+        public List<STGenericTexture> textures = new List<STGenericTexture>();
 
         public AssimpContext Importer = new AssimpContext();
 
@@ -36,10 +32,14 @@ namespace Switch_Toolbox.Library
             {
                 AssimpContext Importer = new AssimpContext();
 
-                scene = Importer.ImportFile(FileName, PostProcessSteps.Triangulate | PostProcessSteps.JoinIdenticalVertices
-| PostProcessSteps.FlipUVs | PostProcessSteps.LimitBoneWeights |
-PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
-                LoadMeshes();
+                scene = Importer.ImportFile(FileName,
+                    PostProcessSteps.Triangulate           |
+                    PostProcessSteps.JoinIdenticalVertices |
+                    PostProcessSteps.FlipUVs               |
+                    PostProcessSteps.LimitBoneWeights      |
+                    PostProcessSteps.CalculateTangentSpace |
+                    PostProcessSteps.GenerateNormals);
+                LoadScene();
             }
             catch (Exception e)
             {
@@ -79,9 +79,12 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
             foreach (Node child in parent.Children)
                 BuildNode(child, ref world);
         }
-        public void LoadMeshes()
+        public void LoadScene()
         {
             objects.Clear();
+            textures.Clear();
+            materials.Clear();
+
             processNode();
             if (scene.HasMaterials)
             {
@@ -93,6 +96,9 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
             foreach (Assimp.Animation animation in scene.Animations)
             {
                   
+            }
+            foreach (var tex in scene.Textures)
+            {
             }
         }
         public Animation CreateGenericAnimation(Assimp.Animation animation)
@@ -123,10 +129,33 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
 
             return STanim;
         }
+        public STGenericTexture CreateGenericTexture(string Path)
+        {
+            STGenericTexture tex = new STGenericTexture();
+
+            switch (System.IO.Path.GetExtension(Path))
+            {
+                case ".dds":
+                    tex.LoadDDS(Path);
+                    break;
+                case ".tga":
+                    tex.LoadTGA(Path);
+                    break;
+                default:
+                    tex.LoadBitmap(Path);
+                    break;
+            }
+            return tex;
+        }
         public STGenericMaterial CreateGenericMaterial(Material material)
         {
             STGenericMaterial mat = new STGenericMaterial();
             mat.Text = material.Name;
+
+            foreach (var slot in material.GetAllMaterialTextures())
+            {
+                textures.Add(CreateGenericTexture(slot.FilePath));
+            }
 
             TextureSlot tex;
             if (material.GetMaterialTexture(TextureType.Diffuse, 0, out tex))
@@ -222,7 +251,7 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
             obj.boneList = GetBoneList(msh);
             obj.MaxSkinInfluenceCount = GetVertexSkinCount(msh);
 
-            GenericObject.LOD_Mesh lod = new GenericObject.LOD_Mesh();
+            STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
             lod.IndexFormat = STIndexFormat.UInt16;
             lod.PrimitiveType = STPolygonType.Triangle;
@@ -233,24 +262,19 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
 
             return obj;
         }
-        int NodeIndex;
-        public void SaveFromModel(GenericModel model, string FileName)
+        public void SaveFromModel(STGenericModel model, string FileName, List<STGenericTexture> Textures)
         {
             Scene scene = new Scene();
-            scene.RootNode = new Node("Root");
-
-            Node modelNode = new Node(model.Text);
-            scene.RootNode.Children.Add(modelNode);
+            scene.RootNode = new Node("RootNode");
+           
 
             int MeshIndex = 0;
             foreach (var obj in model.Nodes[0].Nodes)
             {
                 var genericObj = (STGenericObject)obj;
 
-                Node groupNode = new Node(genericObj.Text);
-
-
                 Mesh mesh = new Mesh(genericObj.Text, PrimitiveType.Triangle);
+                mesh.MaterialIndex = genericObj.MaterialIndex;
 
                 List<Vector3D> textureCoords0 = new List<Vector3D>();
                 List<Vector3D> textureCoords1 = new List<Vector3D>();
@@ -269,37 +293,38 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
                     mesh.TextureCoordinateChannels[2] = textureCoords2;
                     mesh.VertexColorChannels[0] = vertexColors;
                 }
-
                 List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
                 for (int f = 0; f < faces.Count; f++)
                     mesh.Faces.Add(new Face(new int[] { faces[f++], faces[f++], faces[f] }));
                 
-                Console.WriteLine(genericObj.faces.Count);
-                Console.WriteLine(genericObj.vertices.Count);
-                Console.WriteLine(genericObj.Text);
-
-                mesh.MaterialIndex = genericObj.MaterialIndex;
-
                 mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
-                groupNode.MeshIndices.Add(scene.Meshes.Count);
-
 
                 scene.Meshes.Add(mesh);
 
                 MeshIndex++;
-                modelNode.Children.Add(groupNode);
             }
+
+            string TextureExtension = ".png";
+            string TexturePath = System.IO.Path.GetDirectoryName(FileName);
+
             foreach (var mat in model.Nodes[1].Nodes)
             {
                 var genericMat = (STGenericMaterial)mat;
 
                 Material material = new Material();
-                material.Name = genericMat.Name;
+                material.Name = genericMat.Text;
 
                 foreach (var tex in genericMat.TextureMaps)
                 {
                     TextureSlot slot = new TextureSlot();
-                    slot.FilePath = tex.Name;
+                    string path = System.IO.Path.Combine(TexturePath, tex.Name + TextureExtension);
+                    slot.FilePath = path;
+                    slot.UVIndex = 0;
+                    slot.Flags = 0;
+                    slot.TextureIndex = 0;
+                    slot.BlendFactor = 1.0f;
+                    slot.Mapping = TextureMapping.FromUV;
+                    slot.Operation = TextureOperation.Add;
 
                     if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
                         slot.TextureType = TextureType.Diffuse;
@@ -311,13 +336,13 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
                         slot.TextureType = TextureType.Emissive;
                     else if (tex.Type == STGenericMatTexture.TextureType.Light)
                     {
-                        slot.Mapping = TextureMapping.FromUV - 1;
                         slot.TextureType = TextureType.Lightmap;
+                        slot.UVIndex = 2;
                     }
                     else if (tex.Type == STGenericMatTexture.TextureType.Shadow)
                     {
-                        slot.Mapping = TextureMapping.FromUV - 1;
                         slot.TextureType = TextureType.Ambient;
+                        slot.UVIndex = 1;
                     }
                     else
                         slot.TextureType = TextureType.Unknown;
@@ -329,15 +354,26 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
                     if (tex.wrapModeS == 2)
                         slot.WrapModeU = TextureWrapMode.Clamp;
                     if (tex.wrapModeT == 0)
-                        slot.WrapModeU = TextureWrapMode.Wrap;
+                        slot.WrapModeV = TextureWrapMode.Wrap;
                     if (tex.wrapModeT == 1)
-                        slot.WrapModeU = TextureWrapMode.Mirror;
+                        slot.WrapModeV = TextureWrapMode.Mirror;
                     if (tex.wrapModeT == 2)
-                        slot.WrapModeU = TextureWrapMode.Clamp;
+                        slot.WrapModeV = TextureWrapMode.Clamp;
+                    else
+                    {
+                        slot.WrapModeU = TextureWrapMode.Wrap;
+                        slot.WrapModeV = TextureWrapMode.Wrap;
+                    }
 
                     material.AddMaterialTexture(ref slot);
                 }
                 scene.Materials.Add(material);
+            }
+            foreach (var tex in Textures)
+            {
+                string path = System.IO.Path.Combine(TexturePath, tex.Name + TextureExtension);
+                if (!System.IO.File.Exists(path))
+                    tex.GetBitmap().Save(path);
             }
 
             using (var v = new AssimpContext())
@@ -348,16 +384,11 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
                 if (ext == ".obj")
                     formatID = "obj";
                 if (ext == ".fbx")
-                    formatID = "fbx";
+                    formatID = "collada";
                 if (ext == ".dae")
-                    formatID = "dae";
+                    formatID = "collada";
 
-                Console.WriteLine(ext);
-                Console.WriteLine(formatID);
-
-                bool Exported = v.ExportFile(scene, FileName, formatID);
-
-                if (Exported)
+                if (v.ExportFile(scene, FileName, formatID, PostProcessSteps.ValidateDataStructure))
                     System.Windows.Forms.MessageBox.Show($"Exported {FileName} Successfuly!");
                 else
                     System.Windows.Forms.MessageBox.Show($"Failed to export {FileName}!");
@@ -396,7 +427,6 @@ PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals);
 
             mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
             scene.Meshes.Add(mesh);
-            scene.RootNode.MeshIndices.Add(0);
 
             Material material = new Material();
             material.Name = "NewMaterial";

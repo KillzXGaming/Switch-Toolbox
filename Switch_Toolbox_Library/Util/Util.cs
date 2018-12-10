@@ -33,6 +33,23 @@ namespace Switch_Toolbox.Library
         {
             return new Vector4(v.X, v.Y, v.Z, v.W);
         }
+        public static Matrix3x4 ToMat3x4(Syroot.Maths.Matrix3x4 mat4)
+        {
+            Matrix3x4 mat = new Matrix3x4();
+            mat.M11 = mat4.M11;
+            mat.M12 = mat4.M12;
+            mat.M13 = mat4.M13;
+            mat.M14 = mat4.M14;
+            mat.M21 = mat4.M21;
+            mat.M22 = mat4.M22;
+            mat.M23 = mat4.M23;
+            mat.M24 = mat4.M24;
+            mat.M31 = mat4.M31;
+            mat.M32 = mat4.M32;
+            mat.M33 = mat4.M33;
+            mat.M34 = mat4.M34;
+            return mat;
+        }
         public static byte[] CombineByteArray(params byte[][] arrays)
         {
             byte[] rv = new byte[arrays.Sum(a => a.Length)];
@@ -56,7 +73,7 @@ namespace Switch_Toolbox.Library
             {
                 if (strings.Contains(oldString))
                 {
-                    oldString += i.ToString();
+                    oldString = $"{oldString}_0{i++}";
 
                     if (strings.Contains(oldString))
                         RenameDuplicateString(strings, oldString);

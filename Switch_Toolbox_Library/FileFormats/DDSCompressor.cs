@@ -484,9 +484,9 @@ namespace Switch_Toolbox.Library
         {
             return DirectXTex.ImageCompressor.Decompress(data, width, height, (int)format);
         }
-        public static byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
+        public static byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float alphaRef)
         {
-            return DirectXTex.ImageCompressor.Compress(data, width, height, (int)format);
+            return DirectXTex.ImageCompressor.Compress(data, width, height, (int)format, alphaRef);
         }
         public static byte[] EncodePixelBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {

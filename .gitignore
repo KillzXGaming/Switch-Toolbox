@@ -3,3 +3,6 @@
 *.resources
 Debug/
 Release/
+Switch_Toolbox/Lib/Syroot.NintenTools.Bfres.dll
+Switch_Toolbox/Lib/Syroot.NintenTools.Bfres.pdb
+Switch_Toolbox/Lib/Syroot.NintenTools.Bfres.xml

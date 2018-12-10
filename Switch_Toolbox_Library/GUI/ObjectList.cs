@@ -17,6 +17,9 @@ namespace Switch_Toolbox.Library
 {
     public partial class ObjectList : DockContent
     {
+        private static ObjectList _instance;
+        public static ObjectList Instance { get { return _instance == null ? _instance = new ObjectList() : _instance; } }
+
         Thread Thread;
 
         public ObjectList()
@@ -149,16 +152,17 @@ namespace Switch_Toolbox.Library
             if (treeView1.SelectedNode is TreeNodeCustom)
             {
                 ((TreeNodeCustom)treeView1.SelectedNode).OnClick(treeView1);
+
             }
             if (treeView1.SelectedNode is STGenericObject)
             {
                 ((STGenericObject)treeView1.SelectedNode).OnClick(treeView1);
-                Viewport.Instance.Update();
             }
             if (treeView1.SelectedNode is STGenericMaterial)
             {
                 ((STGenericMaterial)treeView1.SelectedNode).OnClick(treeView1);
             }
+            Viewport.Instance.UpdateViewport();
         }
 
         private void ObjectList_DockStateChanged(object sender, EventArgs e)
@@ -168,6 +172,23 @@ namespace Switch_Toolbox.Library
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
+            Viewport.Instance.UpdateViewport();
+
+            if (e.Node is STGenericModel)
+            {
+                CheckChildNodes(e.Node, e.Node.Checked);
+            }
+        }
+        private void CheckChildNodes(TreeNode node, bool IsChecked)
+        {
+            foreach (TreeNode n in node.Nodes)
+            {
+                n.Checked = IsChecked;
+                if (n.Nodes.Count > 0)
+                {
+                    CheckChildNodes(n, IsChecked);
+                }
+            }
         }
 
         private void searchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -208,6 +229,17 @@ namespace Switch_Toolbox.Library
             {
                 ((TreeNodeCustom)treeView1.SelectedNode).OnDoubleMouseClick(treeView1);
             }
+        }
+        private void treeView1_DrawNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            e.DrawDefault = true;
+
+            if (e.Node is STGenericObject || e.Node is STGenericModel)
+            {
+
+            }
+            else
+                TreeViewExtensions.HideCheckBox(e.Node);
         }
     }
 }

@@ -11,7 +11,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class NUTEXB : TreeNodeFile, IFileFormat
+    public class NUTEXB : STGenericTexture, IFileFormat
     {
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -22,7 +22,6 @@ namespace FirstPlugin
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public TreeNodeFile EditorRoot { get; set; }
         public bool IsActive { get; set; } = false;
         public bool UseEditMenu { get; set; } = false;
         public string FilePath { get; set; }
@@ -156,7 +155,7 @@ namespace FirstPlugin
                         {
                             Console.WriteLine("Something went wrong??");
                         }
-                        texture.mipmaps.Clear();
+                        texture.surfaces.Clear();
 
 
                         texture = null;
@@ -175,7 +174,6 @@ namespace FirstPlugin
         public NUTEXImageFormat Format;
         public List<uint[]> mipSizes = new List<uint[]>();
         public int Alignment;
-        public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
         public byte[] ImageData;
         bool IsSwizzled = true;
         public string ArcOffset; //Temp for exporting in batch 
@@ -183,24 +181,36 @@ namespace FirstPlugin
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                         "Microsoft DDS |*.dds|" +
-                         "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";
+            /*  ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                           "Microsoft DDS |*.dds|" +
+                           "Portable Network Graphics |*.png|" +
+                           "Joint Photographic Experts Group |*.jpg|" +
+                           "Bitmap Image |*.bmp|" +
+                           "Tagged Image File Format |*.tiff|" +
+                           "All files(*.*)|*.*";*/
+            ofd.Filter = "Supported Formats|*.dds;" +
+                                 "Microsoft DDS |*.dds" +
+                                 "All files(*.*)|*.*";
 
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                throw new Exception("Saving is not supported yet!");
-
                 var bntxFile = new BNTX();
                 var tex = new TextureData();
                 tex.Replace(ofd.FileName);
+
+                if (surfaces[0].mipmaps[0].Length != surfaces[0].mipmaps[0].Length)
+                    throw new Exception("Image must be the same size!");
+
+                if (surfaces[0].mipmaps.Count != tex.surfaces[0].mipmaps.Count)
+                    throw new Exception("Map map count must be the same!");
+
+                if (Width != tex.Texture.Width || Height != tex.Texture.Height)
+                    throw new Exception("Image size must be the same!");
+
                 ImageData = tex.Texture.TextureData[0][0];
-                mipmaps = tex.mipmaps;
+                surfaces = tex.surfaces;
+
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
 
@@ -265,8 +275,8 @@ namespace FirstPlugin
             dds.header = new DDS.Header();
             dds.header.width = Width;
             dds.header.height = Height;
-            dds.header.mipmapCount = (uint)mipmaps.Count;
-            dds.header.pitchOrLinearSize = (uint)mipmaps[0][0].Length;
+            dds.header.mipmapCount = (uint)surfaces[0].mipmaps.Count;
+            dds.header.pitchOrLinearSize = (uint)surfaces[0].mipmaps[0].Length;
 
             if (IsCompressedFormat((NUTEXImageFormat)Format))
                 dds.SetFlags(GetCompressedDXGI_FORMAT((NUTEXImageFormat)Format));
@@ -274,7 +284,7 @@ namespace FirstPlugin
                 dds.SetFlags(GetUncompressedDXGI_FORMAT((NUTEXImageFormat)Format));
 
 
-            dds.Save(dds, FileName, mipmaps);
+            dds.Save(dds, FileName, surfaces);
         }
         public void Read(FileReader reader)
         {
@@ -368,9 +378,9 @@ namespace FirstPlugin
             if (IsSwizzled)
                 LoadTexture();
             else
-                mipmaps.Add(new List<byte[]>() { ImageData });
+                surfaces.Add(new Surface() {mipmaps = new List<byte[]>() { ImageData } } );
 
-            if (mipmaps[0].Count <= 0)
+            if (surfaces[0].mipmaps.Count <= 0)
             {
                 return BitmapExtension.GetBitmap(Properties.Resources.Black, 32, 32);
             }
@@ -380,7 +390,7 @@ namespace FirstPlugin
             uint width = (uint)Math.Max(1, Width >> DisplayMipIndex);
             uint height = (uint)Math.Max(1, Height >> DisplayMipIndex);
 
-            byte[] data = mipmaps[ArrayIndex][DisplayMipIndex];
+            byte[] data = surfaces[ArrayIndex].mipmaps[DisplayMipIndex];
 
             return DecodeBlock(data, width, height, (NUTEXImageFormat)Format);
         }
@@ -466,7 +476,7 @@ namespace FirstPlugin
 
         public void LoadTexture(int target = 1)
         {
-            mipmaps.Clear();
+            surfaces.Clear();
 
             uint blk_dim = blk_dims((byte)Format);
             uint blkWidth = blk_dim >> 4;
@@ -524,7 +534,7 @@ namespace FirstPlugin
                     mipOffset += (uint)MipSize;
                     break;
                 }
-                mipmaps.Add(mips);
+                surfaces.Add(new Surface() { mipmaps = mips });
             }
         }
 

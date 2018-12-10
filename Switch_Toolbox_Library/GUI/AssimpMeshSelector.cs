@@ -31,7 +31,7 @@ namespace Switch_Toolbox.Library
                 listView1.Items.Add(msh.Name);
             }
         }
-        public GenericObject GetSelectedMesh()
+        public STGenericObject GetSelectedMesh()
         {
             assimp.processNode();
             foreach (Mesh msh in assimp.scene.Meshes)

@@ -103,7 +103,12 @@ namespace FirstPlugin
                 Color SetColor = Color.FromArgb(40, 40, 40);
                 Vector4 col = new Vector4();
 
-                bool IsColor = prm.Name.Contains("Color") || prm.Name.Contains("color");
+                bool IsColor = prm.Name.Contains("Color") ||
+                               prm.Name.Contains("color") ||
+                               prm.Name.Contains("konst0") ||
+                               prm.Name.Contains("konst1") ||
+                               prm.Name.Contains("konst2") ||
+                               prm.Name.Contains("konst3");
 
                 switch (prm.Type)
                 {
@@ -166,7 +171,7 @@ namespace FirstPlugin
             textureRefListView.SmallImageList = textureImageList;
             textureRefListView.FullRowSelect = true;
 
-            foreach (MatTexture tex in material.textures)
+            foreach (MatTexture tex in material.TextureMaps)
             {
                 ListViewItem item = new ListViewItem();
                 item.Text = tex.Name;
@@ -315,7 +320,7 @@ namespace FirstPlugin
             tex.LoadTexture(material.GetResFileU() != null);
             if (tex.ShowDialog() == DialogResult.OK)
             {
-                material.textures[index].Name = tex.GetSelectedTexture();
+                material.TextureMaps[index].Name = tex.GetSelectedTexture();
                 InitializeTextureListView(material);
                 material.UpdateTextureMaps();
             }
@@ -346,7 +351,7 @@ namespace FirstPlugin
                    
                     if (paramDialog.ShowDialog() == DialogResult.OK)
                     {
-                        paramDialog.GetValues();
+                        paramDialog.SetValues();
                         InitializeShaderParamList(material);
                         listView1.Items[index].Selected = true;
                     }
@@ -485,7 +490,7 @@ namespace FirstPlugin
                 return;
 
             SamplerEditor samplerEditor = new SamplerEditor();
-            foreach (MatTexture tex in material.textures)
+            foreach (MatTexture tex in material.TextureMaps)
             {
                 if (tex.Name == textureRefListView.SelectedItems[0].Text)
                 {

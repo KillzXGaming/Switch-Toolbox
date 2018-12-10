@@ -8,8 +8,25 @@
   DirectXTexMipmaps.cpp
   DirectXTexUtil.cpp
   wrapper.cpp
-  .NETFramework,Version=v4.6.AssemblyAttributes.cpp
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(27): warning C4005: '_WIN32_WINNT': macro redefinition
+  c:\program files (x86)\windows kits\8.1\include\shared\sdkddkver.h(200): note: see previous definition of '_WIN32_WINNT'
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(48): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(83): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(101): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(102): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(127): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(145): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(146): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(173): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(181): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(202): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(203): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(204): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(207): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(208): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\nathan\documents\github\switch_toolbox\switch-toolbox - copy\switch_toolbox\lib\directxtex\wrapper.cpp(263): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  .NETFramework,Version=v4.6.2.AssemblyAttributes.cpp
   Generating code
-  All 442 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 441 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-  DirectXTex.vcxproj -> C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox - Copy\Release\DirectXTex.dll
+  DirectXTex.vcxproj -> C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox - Copy\Switch_Toolbox\Lib\DirectXTex\Release\DirectXTex.dll

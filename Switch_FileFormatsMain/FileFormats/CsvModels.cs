@@ -84,7 +84,7 @@ namespace FirstPlugin
             Model model = new Model();
             STGenericObject STobj = new STGenericObject();
             Vertex vtx = new Vertex();
-            GenericObject.LOD_Mesh lod = new GenericObject.LOD_Mesh();
+            STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             int Index = 0;
             int ww = 0;
             while (true)
@@ -101,7 +101,7 @@ namespace FirstPlugin
                         models.Add(model);
 
                         STobj.ObjectName = model.Name;
-                        lod = new GenericObject.LOD_Mesh();
+                        lod = new STGenericObject.LOD_Mesh();
                         lod.IndexFormat = STIndexFormat.UInt16;
                         lod.PrimitiveType = STPolygonType.Triangle;
                         STobj.lodMeshes.Add(lod);
@@ -266,7 +266,7 @@ namespace FirstPlugin
             if (objects[0].weightsT.Count != objects[0].vertices.Count)
                 throw new Exception("Incorrect vertex amount");
 
-            foreach (GenericObject obj in objects)
+            foreach (STGenericObject obj in objects)
             {
                 obj.lodMeshes[0].GenerateSubMesh();
                 for (int v = 0; v < obj.vertices.Count; v++)
@@ -302,7 +302,7 @@ namespace FirstPlugin
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(mem))
             {
-                foreach (GenericObject obj in objects)
+                foreach (STGenericObject obj in objects)
                 {
                     file.WriteLine($"Obj Name:" + obj.ObjectName);
                     file.WriteLine($"Bone_Suport");

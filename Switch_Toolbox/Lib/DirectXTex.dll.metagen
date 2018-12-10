@@ -7,7 +7,7 @@ Class DirectXTex.ImageCompressor: AutoLayout, AnsiClass, Class, Public, BeforeFi
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Methods:
     Decompress(Byte[], Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig
-    Compress(Byte[], Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig
+    Compress(Byte[], Int32, Int32, Int32, Single): PrivateScope, Public, Static, HideBySig
 Class DirectXTex.ImageConverter: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Methods:

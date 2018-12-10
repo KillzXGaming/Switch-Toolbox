@@ -492,7 +492,7 @@ namespace Bfres.Structs
                             settings.SetModelAttributes(assimp.objects[0]);
                             if (settings.ShowDialog() == DialogResult.OK)
                             {
-                                GenericObject obj = selector.GetSelectedMesh();
+                                STGenericObject obj = selector.GetSelectedMesh();
 
                                 Cursor.Current = Cursors.WaitCursor;
                                 VertexBufferIndex = obj.VertexBufferIndex;
@@ -512,7 +512,7 @@ namespace Bfres.Structs
                 UpdateVertexData();
             }
         }
-        public void CreateIndexList(GenericObject ob, FMDL mdl = null)
+        public void CreateIndexList(STGenericObject ob, FMDL mdl = null)
         {
             BoneIndices = new List<ushort>();
 
@@ -539,7 +539,7 @@ namespace Bfres.Structs
                 index++;
             }
         }
-        public void CreateBoneList(GenericObject ob, FMDL mdl)
+        public void CreateBoneList(STGenericObject ob, FMDL mdl)
         {
             string[] nodeArrStrings = new string[mdl.Skeleton.Node_Array.Length];
 

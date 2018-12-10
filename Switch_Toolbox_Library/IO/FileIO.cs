@@ -57,8 +57,8 @@ namespace Switch_Toolbox.Library.IO
                 }
             }
             File.WriteAllBytes(FileName, data);
-            MessageBox.Show($"File has been saved to {FileName}");
             Cursor.Current = Cursors.Default;
+            MessageBox.Show($"File has been saved to {FileName}");
         }
     }
     public class STFileLoader

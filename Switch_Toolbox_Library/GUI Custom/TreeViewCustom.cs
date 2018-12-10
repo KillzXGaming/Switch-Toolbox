@@ -16,6 +16,40 @@ namespace Switch_Toolbox.Library
         public virtual void OnMouseRightClick(TreeView treeview) { }
         public virtual void OnDoubleMouseClick(TreeView treeview) { }
 
+        public void Sort(TreeNode node)
+        {
+            /*    string[] array = new string[Nodes.Count];
+          for (int i = 0; i < Nodes.Count; ++i)
+              array[i] = Nodes[i].Text;
+
+          Array.Sort<string>(array, (IComparer<string>)StringComparer.Ordinal);
+
+          for (int index = 0; index < Nodes.Count; ++index)
+              Nodes[index].Text = array[index];*/
+
+            //Good enough for now. I'll update with a more cleaner method later
+            foreach (TreeNode n in node.Nodes)
+                Sort(n);
+            try
+            {
+                TreeNode temp = null;
+                List<TreeNode> childs = new List<TreeNode>();
+                while (node.Nodes.Count > 0)
+                {
+                    foreach (TreeNode n in node.Nodes)
+                        if (temp == null || n.Text[0] < temp.Text[0])
+                            temp = n;
+                    node.Nodes.Remove(temp);
+                    childs.Add(temp);
+                    temp = null;
+                }
+                node.Nodes.Clear();
+                foreach (TreeNode a in childs)
+                    node.Nodes.Add(a);
+            }
+            catch { }
+        }
+
         public TreeNodeCustom()
         {
         }

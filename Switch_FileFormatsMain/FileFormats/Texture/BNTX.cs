@@ -26,10 +26,12 @@ namespace FirstPlugin
         public enum BNTXImageFormat
         {
             IMAGE_FORMAT_INVALID = 0x0,
-            IMAGE_FORMAT_R8_G8_B8_A8 = 0x0b,
             IMAGE_FORMAT_R5_G6_B5 = 0x07,
             IMAGE_FORMAT_R8 = 0x02,
             IMAGE_FORMAT_R8_G8 = 0x09,
+            IMAGE_FORMAT_R16 = 0x0a,
+            IMAGE_FORMAT_R8_G8_B8_A8 = 0x0b,
+            IMAGE_FORMAT_R11_G11_B11_A10 = 0x0f,
             IMAGE_FORMAT_BC1 = 0x1a,
             IMAGE_FORMAT_BC2 = 0x1b,
             IMAGE_FORMAT_BC3 = 0x1c,
@@ -37,6 +39,20 @@ namespace FirstPlugin
             IMAGE_FORMAT_BC5 = 0x1e,
             IMAGE_FORMAT_BC6 = 0x1f,
             IMAGE_FORMAT_BC7 = 0x20,
+            IMAGE_FORMAT_ASTC4x4 = 0x2d,
+            IMAGE_FORMAT_ASTC5x4 = 0x2e,
+            IMAGE_FORMAT_ASTC5x5 = 0x2f,
+            IMAGE_FORMAT_ASTC6x5 = 0x30,
+            IMAGE_FORMAT_ASTC6x6 = 0x31,
+            IMAGE_FORMAT_ASTC8x5 = 0x32,
+            IMAGE_FORMAT_ASTC8x6 = 0x33,
+            IMAGE_FORMAT_ASTC8x8 = 0x34,
+            IMAGE_FORMAT_ASTC10x5 = 0x35,
+            IMAGE_FORMAT_ASTC10x6 = 0x36,
+            IMAGE_FORMAT_ASTC10x8 = 0x37,
+            IMAGE_FORMAT_ASTC10x10 = 0x38,
+            IMAGE_FORMAT_ASTC12x10 = 0x39,
+            IMAGE_FORMAT_ASTC12x12 = 0x3a
         };
 
         public enum BNTXImageTypes
@@ -57,22 +73,22 @@ namespace FirstPlugin
                 case (uint)BNTXImageFormat.IMAGE_FORMAT_BC5:
                 case (uint)BNTXImageFormat.IMAGE_FORMAT_BC6:
                 case (uint)BNTXImageFormat.IMAGE_FORMAT_BC7:
-                case 0x2d:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC4x4:
                     return 0x44;
 
-                case 0x2e: return 0x54;
-                case 0x2f: return 0x55;
-                case 0x30: return 0x65;
-                case 0x31: return 0x66;
-                case 0x32: return 0x85;
-                case 0x33: return 0x86;
-                case 0x34: return 0x88;
-                case 0x35: return 0xa5;
-                case 0x36: return 0xa6;
-                case 0x37: return 0xa8;
-                case 0x38: return 0xaa;
-                case 0x39: return 0xca;
-                case 0x3a: return 0xcc;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC5x4: return 0x54;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC5x5: return 0x55;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC6x5: return 0x65;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC6x6: return 0x66;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC8x5: return 0x85;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC8x6: return 0x86;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC8x8: return 0x88;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x5: return 0xa5;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x6: return 0xa6;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x8: return 0xa8;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x10: return 0xaa;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC12x10: return 0xca;
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC12x12: return 0xcc;
 
                 default: return 0x11;
             }
@@ -98,19 +114,19 @@ namespace FirstPlugin
                 case (uint)BNTXImageFormat.IMAGE_FORMAT_BC5:
                 case (uint)BNTXImageFormat.IMAGE_FORMAT_BC6:
                 case (uint)BNTXImageFormat.IMAGE_FORMAT_BC7:
-                case 0x2e:
-                case 0x2f:
-                case 0x30:
-                case 0x31:
-                case 0x32:
-                case 0x33:
-                case 0x34:
-                case 0x35:
-                case 0x36:
-                case 0x37:
-                case 0x38:
-                case 0x39:
-                case 0x3a:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC5x4:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC5x5: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC6x5: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC6x6: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC8x5: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC8x6:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC8x8: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x5:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x6:
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x8: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC10x10: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC12x10: 
+                case (uint)BNTXImageFormat.IMAGE_FORMAT_ASTC12x12:
                     return 16;
                 default: return 0x00;
             }
@@ -144,17 +160,31 @@ namespace FirstPlugin
         }
         class MenuExt : IFileMenuExtension
         {
-            public ToolStripItemDark[] NewFileMenuExtensions => null;
-            public ToolStripItemDark[] ToolsMenuExtensions => newFileExt;
+            public ToolStripItemDark[] NewFileMenuExtensions => newFileExt;
+            public ToolStripItemDark[] ToolsMenuExtensions => toolExt;
             public ToolStripItemDark[] TitleBarExtensions => null;
             public ToolStripItemDark[] CompressionMenuExtensions => null;
             public ToolStripItemDark[] ExperimentalMenuExtensions => null;
 
+            ToolStripItemDark[] toolExt = new ToolStripItemDark[1];
             ToolStripItemDark[] newFileExt = new ToolStripItemDark[1];
+
             public MenuExt()
             {
-                newFileExt[0] = new ToolStripItemDark("Extract BNTX");
-                newFileExt[0].Click += Export;
+                toolExt[0] = new ToolStripItemDark("Extract BNTX");
+                toolExt[0].Click += Export;
+
+                newFileExt[0] = new ToolStripItemDark("BNTX");
+                newFileExt[0].Click += New;
+            }
+            private void New(object sender, EventArgs args)
+            {
+                BNTX bntx = new BNTX();
+                bntx.FileName = "textures.bntx";
+                bntx.Data = CreateNewBNTX("textures.bntx");
+                bntx.Load();
+
+                ObjectList.Instance.treeView1.Nodes.Add(bntx);
             }
             private void Export(object sender, EventArgs args)
             {
@@ -194,6 +224,7 @@ namespace FirstPlugin
         MenuItem rename = new MenuItem("Rename");
         MenuItem importTex = new MenuItem("Import Texture");
         MenuItem exportAll = new MenuItem("Export All Textures");
+        MenuItem sort = new MenuItem("Sort");
         MenuItem clear = new MenuItem("Clear");
 
         private bool hasParent;
@@ -232,10 +263,6 @@ namespace FirstPlugin
 
             FileNameText = FileName;
 
-            if (Data.Length == 0)
-                Data = CreateNewBNTX(Name);
-
-
             LoadFile(Data, Name);
 
             PluginRuntime.bntxContainers.Add(this);
@@ -249,6 +276,7 @@ namespace FirstPlugin
             ContextMenu.MenuItems.Add(rename);
             ContextMenu.MenuItems.Add(importTex);
             ContextMenu.MenuItems.Add(exportAll);
+            ContextMenu.MenuItems.Add(sort);
             ContextMenu.MenuItems.Add(clear);
 
             save.Click += Save;
@@ -256,13 +284,14 @@ namespace FirstPlugin
             rename.Click += Rename;
             importTex.Click += ImportTexture;
             exportAll.Click += ExportAll;
+            sort.Click += SortTextures;
             clear.Click += Clear;
         }
         public void Unload()
         {
             foreach (TextureData tex in Textures.Values)
             {
-                tex.mipmaps.Clear();
+                tex.surfaces.Clear();
                 tex.renderedGLTex = null;
             }
 
@@ -270,7 +299,7 @@ namespace FirstPlugin
             Nodes.Clear();
         }
 
-        private byte[] CreateNewBNTX(string Name)
+        private static byte[] CreateNewBNTX(string Name)
         {
             MemoryStream mem = new MemoryStream();
 
@@ -344,6 +373,7 @@ namespace FirstPlugin
             ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
                                      "Binary Texture |*.bftex|" +
                                      "Microsoft DDS |*.dds|" +
+                                     "TGA |*.tga|" +
                                      "Portable Network Graphics |*.png|" +
                                      "Joint Photographic Experts Group |*.jpg|" +
                                      "Bitmap Image |*.bmp|" +
@@ -357,9 +387,11 @@ namespace FirstPlugin
             {
                 BinaryTextureImporterList importer = new BinaryTextureImporterList();
 
-                List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
+                bool UseDialog = false;
                 foreach (string name in ofd.FileNames)
                 {
+                    TextureImporterSettings setting = new TextureImporterSettings();
+
                     string ext = Path.GetExtension(name);
                     ext = ext.ToLower();
 
@@ -367,60 +399,58 @@ namespace FirstPlugin
                     {
                         AddTexture(name);
                     }
+                    else if (ext == ".tga")
+                    {
+                        setting.LoadTGA(name, BinaryTexFile);
+                        importer.LoadSetting(setting, this);
+                        UseDialog = true;
+                    }
                     else
                     {
-                        settings.Add(LoadSettings(name));
-
-                        if (settings.Count == 0)
+                        setting.LoadBitMap(name, BinaryTexFile);
+                        importer.LoadSetting(setting, this);
+                        UseDialog = true;
+                    }
+                }
+                if (UseDialog && importer.ShowDialog() == DialogResult.OK)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    foreach (var setting in importer.settings)
+                    {
+                        if (setting.GenerateMipmaps)
                         {
-                            importer.Dispose();
-                            return;
+                            setting.DataBlockOutput.Clear();
+                            setting.DataBlockOutput.Add(setting.GenerateMips());
                         }
 
-                        importer.LoadSettings(settings, this);
-                        if (importer.ShowDialog() == DialogResult.OK)
+                        if (setting.DataBlockOutput != null)
                         {
-                            Cursor.Current = Cursors.WaitCursor;
-                            foreach (var setting in settings)
+                            Texture tex = setting.FromBitMap(setting.DataBlockOutput[0], setting);
+                            if (setting.textureData != null)
                             {
-                                if (setting.GenerateMipmaps)
-                                {
-                                    setting.DataBlockOutput.Clear();
-                                    setting.DataBlockOutput.Add(setting.GenerateMips());
-                                }
-
-                                if (setting.DataBlockOutput != null)
-                                {
-                                    Texture tex = setting.FromBitMap(setting.DataBlockOutput[0], setting);
-                                    if (setting.textureData != null)
-                                    {
-                                        setting.textureData.LoadTexture(tex, 1);
-                                    }
-                                    else
-                                    {
-                                        setting.textureData = new TextureData(tex, setting.bntx);
-                                    }
-
-                                    int i = 0;
-                                    if (Textures.ContainsKey(setting.textureData.Text))
-                                    {
-                                        setting.textureData.Text = setting.textureData.Text + i++;
-                                    }
-
-                                    Nodes.Add(setting.textureData);
-                                    Textures.Add(setting.textureData.Text, setting.textureData);
-                                    setting.textureData.LoadOpenGLTexture();
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Something went wrong???");
-                                }
+                                setting.textureData.LoadTexture(tex, 1);
                             }
+                            else
+                            {
+                                setting.textureData = new TextureData(tex, setting.bntx);
+                            }
+
+                            int i = 0;
+                            if (Textures.ContainsKey(setting.textureData.Text))
+                            {
+                                setting.textureData.Text = setting.textureData.Text + i++;
+                            }
+
+                            Nodes.Add(setting.textureData);
+                            Textures.Add(setting.textureData.Text, setting.textureData);
+                            setting.textureData.LoadOpenGLTexture();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Something went wrong???");
                         }
                     }
                 }
-
-                settings.Clear();
                 GC.Collect();
                 Cursor.Current = Cursors.Default;
             }
@@ -510,6 +540,9 @@ namespace FirstPlugin
                 case ".dds":
                     importer.LoadDDS(name, BinaryTexFile);
                     break;
+                case ".tga":
+                    importer.LoadTGA(name, BinaryTexFile);
+                    break;
                 default:
                     importer.LoadBitMap(name, BinaryTexFile);
                     break;
@@ -594,6 +627,11 @@ namespace FirstPlugin
                     }
                 }
             }
+        }
+        bool SortedAscending;
+        private void SortTextures(object sender, EventArgs args)
+        {
+            SortNodes(this);
         }
         public byte[] Save()
         {
@@ -692,11 +730,10 @@ namespace FirstPlugin
         }
     }
 
-    public class TextureData : TreeNodeCustom
+    public class TextureData : STGenericTexture
     {
         public Texture Texture;
         public BntxFile bntxFile;
-        public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
         public BRTI_Texture renderedGLTex = new BRTI_Texture();
         public bool GLInitialized = false;
 
@@ -761,12 +798,12 @@ namespace FirstPlugin
 
             LoadTexture(Texture);
 
-            if (mipmaps.Count <= 0)
+            if (surfaces.Count <= 0)
             {
                 throw new Exception("No texture data found");
             }
 
-            renderedGLTex.data = mipmaps[0][0];
+            renderedGLTex.data = surfaces[0].mipmaps[0];
             renderedGLTex.width = (int)Texture.Width;
             renderedGLTex.height = (int)Texture.Height;
 
@@ -800,7 +837,7 @@ namespace FirstPlugin
                     renderedGLTex.type = PixelInternalFormat.CompressedRgRgtc2;
                     break;
                 case SurfaceFormat.BC5_SNORM:
-                    renderedGLTex.data = DDSCompressor.DecompressBC5(mipmaps[0][0], (int)Texture.Width, (int)Texture.Height, true, true);
+                    renderedGLTex.data = DDSCompressor.DecompressBC5(surfaces[0].mipmaps[0], (int)Texture.Width, (int)Texture.Height, true, true);
                     renderedGLTex.type = PixelInternalFormat.Rgba;
                     renderedGLTex.utype = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
@@ -987,10 +1024,10 @@ namespace FirstPlugin
         {
             return ColorComponentSelector(bitmap, ChannelType.Blue, ChannelType.Green, ChannelType.Red, ChannelType.Alpha);
         }
-        public static byte[] CompressBlock(byte[] data, int width, int height, SurfaceFormat format)
+        public static byte[] CompressBlock(byte[] data, int width, int height, SurfaceFormat format, float alphaRef)
         {
             if (IsCompressedFormat(format))
-                return DDSCompressor.CompressBlock(data, width, height, GetCompressedDXGI_FORMAT(format));
+                return DDSCompressor.CompressBlock(data, width, height, GetCompressedDXGI_FORMAT(format), alphaRef);
             else if (IsAtscFormat(format))
                 return null;
             else
@@ -1092,6 +1129,7 @@ namespace FirstPlugin
             ofd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
                          "Binary Texture |*.bftex|" +
                          "Microsoft DDS |*.dds|" +
+                         "TGA |*.tga|" +
                          "Portable Network Graphics |*.png|" +
                          "Joint Photographic Experts Group |*.jpg|" +
                          "Bitmap Image |*.bmp|" +
@@ -1116,39 +1154,46 @@ namespace FirstPlugin
             {
                 case ".bftex":
                     Texture.Import(FileName);
+                    ApplyImportSettings(setting);
                     break;
                 case ".dds":
                     setting.LoadDDS(FileName, bntxFile, null, this);
+                    ApplyImportSettings(setting);
                     break;
                 default:
                     setting.LoadBitMap(FileName, bntxFile);
                     importer.LoadSetting(setting, (BNTX)Parent);
+
+                    if (importer.ShowDialog() == DialogResult.OK)
+                    {
+                        ApplyImportSettings(setting);
+                    }
                     break;
             }
+ 
+        }
+        private void ApplyImportSettings(TextureImporterSettings setting)
+        {
+            Cursor.Current = Cursors.WaitCursor;
 
-            if (importer.ShowDialog() == DialogResult.OK)
+            if (setting.GenerateMipmaps)
             {
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (setting.GenerateMipmaps)
-                {
-                    setting.DataBlockOutput.Clear();
-                    setting.DataBlockOutput.Add(setting.GenerateMips());
-                }
-
-                if (setting.DataBlockOutput != null)
-                {
-                    Texture = setting.FromBitMap(setting.DataBlockOutput[0], setting);
-                    LoadOpenGLTexture();
-                }
-                else
-                {
-                    MessageBox.Show("Something went wrong???");
-                }
-                Texture.Name = Text;
-                UpdateBfresTextureMapping();
-                UpdateBNTXEditor();
+                setting.DataBlockOutput.Clear();
+                setting.DataBlockOutput.Add(setting.GenerateMips());
             }
+
+            if (setting.DataBlockOutput != null)
+            {
+                Texture = setting.FromBitMap(setting.DataBlockOutput[0], setting);
+                LoadOpenGLTexture();
+            }
+            else
+            {
+                MessageBox.Show("Something went wrong???");
+            }
+            Texture.Name = Text;
+            UpdateBfresTextureMapping();
+            UpdateBNTXEditor();
         }
         private void UpdateBfresTextureMapping()
         {
@@ -1193,41 +1238,22 @@ namespace FirstPlugin
                 case ".dds":
                     SaveDDS(FileName);
                     break;
+                case ".astc":
+                    SaveASTC(FileName);
+                    break;
                 default:
                     SaveBitMap(FileName);
                     break;
             }
-        }
-        internal void SaveBitMap(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
-        {
-            Bitmap bitMap = DisplayTexture(MipLevel, SurfaceLevel);
-
-            bitMap.Save(FileName);
         }
         internal void SaveBinaryTexture(string FileName)
         {
             Console.WriteLine("Test");
             Texture.Export(FileName, bntxFile);
         }
-        internal void SaveDDS(string FileName)
-        {
-            DDS dds = new DDS();
-            dds.header = new DDS.Header();
-            dds.header.width = Texture.Width;
-            dds.header.height = Texture.Height;
-            dds.header.mipmapCount = (uint)mipmaps.Count;
-            dds.header.pitchOrLinearSize = (uint)mipmaps[0][0].Length;
-
-            if (IsCompressedFormat(Texture.Format))
-                dds.SetFlags(GetCompressedDXGI_FORMAT(Texture.Format));
-            else
-                dds.SetFlags(GetUncompressedDXGI_FORMAT(Texture.Format));
-
-            dds.Save(dds, FileName, mipmaps);
-        }
         public void LoadTexture(Texture tex, int target = 1)
         {
-            mipmaps.Clear();
+            surfaces.Clear();
 
             try
             {
@@ -1259,7 +1285,7 @@ namespace FirstPlugin
                         mips.Add(result_);
 
                     }
-                    mipmaps.Add(mips);
+                    surfaces.Add(new Surface() { mipmaps = mips });
                 }
 
                 Texture = tex;
@@ -1275,7 +1301,7 @@ namespace FirstPlugin
         {
             LoadTexture(Texture);
 
-            if (mipmaps.Count <= 0)
+            if (surfaces.Count <= 0)
             {
                 throw new Exception("No texture data found");
             }
@@ -1283,7 +1309,7 @@ namespace FirstPlugin
             uint width = (uint)Math.Max(1, Texture.Width >> DisplayMipIndex);
             uint height = (uint)Math.Max(1, Texture.Height >> DisplayMipIndex);
 
-            byte[] data = mipmaps[ArrayIndex][DisplayMipIndex];
+            byte[] data = surfaces[ArrayIndex].mipmaps[DisplayMipIndex];
 
             return DecodeBlock(data, width, height, Texture.Format);
         }

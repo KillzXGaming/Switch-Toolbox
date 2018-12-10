@@ -70,22 +70,9 @@ namespace FirstPlugin
         TextureImporterSettings SelectedTexSettings;
         BNTX bntx;
 
-        List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
-        public void LoadSettings(List<TextureImporterSettings> s, BNTX b)
-        {
-            settings = s;
-            bntx = b;
-
-            foreach (var setting in settings)
-            {
-                listViewCustom1.Items.Add(setting.TexName).SubItems.Add(setting.Format.ToString());
-            }
-            listViewCustom1.Items[0].Selected = true;
-            listViewCustom1.Select();
-        }
+        public List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
         public void LoadSetting(TextureImporterSettings setting, BNTX b)
         {
-            settings = new List<TextureImporterSettings>();
             settings.Add(setting);
             bntx = b;
 
@@ -123,29 +110,36 @@ namespace FirstPlugin
             if (SelectedTexSettings.Format == SurfaceFormat.Invalid)
                 return;
 
-
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            if (formatComboBox.SelectedItem is SurfaceFormat)
+            try
             {
-                SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
-                listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
+                if (formatComboBox.SelectedItem is SurfaceFormat)
+                {
+                    SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
+                    listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
+                }
+                Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+
+                Thread = new Thread((ThreadStart)(() =>
+                {
+                    pictureBox1.Image = bitmap;
+                    SelectedTexSettings.Compress();
+
+                    bitmap = TextureData.DecodeBlock(SelectedTexSettings.DataBlockOutput[0], SelectedTexSettings.
+                    TexWidth, SelectedTexSettings.TexHeight, SelectedTexSettings.Format);
+
+                    pictureBox1.Image = bitmap;
+
+                }));
+                Thread.Start();
             }
-            Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
-
-            Thread = new Thread((ThreadStart)(() =>
+            catch
             {
-                pictureBox1.Image = bitmap;
-                SelectedTexSettings.Compress();
-
-                bitmap = TextureData.DecodeBlock(SelectedTexSettings.DataBlockOutput[0], SelectedTexSettings.
-                TexWidth, SelectedTexSettings.TexHeight, SelectedTexSettings.Format);
-
-                pictureBox1.Image = bitmap;
- 
-            }));
-            Thread.Start();
+                throw new Exception("Failed to load image!");
+            }
+     
 
             //  WidthLabel.Text = $"Width {pictureBox1.Image.Width}";
             //      HeightLabel.Text = $"Height {pictureBox1.Image.Height}";
@@ -168,6 +162,8 @@ namespace FirstPlugin
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
+                Console.WriteLine("list index " + listViewCustom1.SelectedIndices[0]);
+
                 SelectedTexSettings = settings[listViewCustom1.SelectedIndices[0]];
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
 

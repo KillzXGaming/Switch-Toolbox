@@ -73,7 +73,7 @@ namespace DirectXTex
 			}			
 		}
 
-		static array<Byte>^ Compress(array<Byte>^ data, int width, int height, int format)
+		static array<Byte>^ Compress(array<Byte>^ data, int width, int height, int format, float alphaRef)
 		{
 			size_t rowPitch = width * 4;
 			size_t slicePitch = width * height * 4;
@@ -93,7 +93,7 @@ namespace DirectXTex
 				DirectX::ScratchImage outputImage;
 
 				// compress image
-				DirectX::Compress(inputImage, (DXGI_FORMAT)format, 0, 1, outputImage);
+				DirectX::Compress(inputImage, (DXGI_FORMAT)format, 0, alphaRef, outputImage);
 
 				size_t rowPitchOut;
 				size_t slicePitchOut;

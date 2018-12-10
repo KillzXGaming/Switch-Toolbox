@@ -27,7 +27,6 @@ namespace FirstPlugin
                         ReadShaderParams(doc, n, mat);
                     }
                 }
-
             }
         }
         public static void ReadShaderParams(XmlDocument doc, XmlNode parentNode, FMAT mat)

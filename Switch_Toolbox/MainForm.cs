@@ -32,9 +32,16 @@ namespace Switch_Toolbox
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
 
+        bool AttachCommit = false;
         public MainForm()
         {
             InitializeComponent();
+
+            string commit = "";
+            if (AttachCommit)
+                commit = $"Commit: {Runtime.CommitInfo}";
+
+            Text = $"Switch Toolbox | Compile Date: {Runtime.CompileDate} Version: {Runtime.ProgramVersion} {commit}";
 
             ShaderTools.executableDir = executableDir;
 
@@ -199,8 +206,7 @@ namespace Switch_Toolbox
         }
         private void LoadObjectList()
         {
-            objectList = new ObjectList();
-            objectList.Show(dockPanel1, Runtime.objectListDockState);
+            ObjectList.Instance.Show(dockPanel1, Runtime.objectListDockState);
         }
         public void SaveFile(IFileFormat format, string FileName)
         {
@@ -286,12 +292,12 @@ namespace Switch_Toolbox
                     format.FileIsCompressed = Compressed;
                     format.Data = data;
                     format.FileName = Path.GetFileName(FileName);
-                    format.Load();
                     format.FilePath = FileName;
+                    format.Load();
 
                     if (format is TreeNode)
                     {
-                        objectList.treeView1.Nodes.Add((TreeNode)format);
+                        ObjectList.Instance.treeView1.Nodes.Add((TreeNode)format);
                     }
 
                     if (format.CanSave)
@@ -321,7 +327,7 @@ namespace Switch_Toolbox
 
                         if (format is TreeNode)
                         {
-                            objectList.treeView1.Nodes.Add((TreeNode)format);
+                            ObjectList.Instance.treeView1.Nodes.Add((TreeNode)format);
                         }
 
                         if (format.CanSave)

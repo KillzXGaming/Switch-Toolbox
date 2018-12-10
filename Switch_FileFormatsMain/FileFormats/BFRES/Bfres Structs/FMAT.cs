@@ -173,7 +173,6 @@ namespace Bfres.Structs
 
         public Dictionary<string, float[]> anims = new Dictionary<string, float[]>();
         public Dictionary<string, int> Samplers = new Dictionary<string, int>();
-        public List<MatTexture> textures = new List<MatTexture>();
         public List<BfresRenderInfo> renderinfo = new List<BfresRenderInfo>();
         public List<SamplerInfo> samplerinfo = new List<SamplerInfo>();
         public Dictionary<string, BfresShaderParam> matparam = new Dictionary<string, BfresShaderParam>();

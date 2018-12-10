@@ -103,9 +103,9 @@
       <HintPath>..\Switch_Toolbox\Lib\Syroot.Maths.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Syroot.NintenTools.Bfres">
+    <Reference Include="Syroot.NintenTools.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
@@ -170,6 +170,7 @@
     <Compile Include="FileFormats\BFRES\Bfres Structs\FMDL.cs" />
     <Compile Include="FileFormats\BFRES\Bfres Structs\FSKA.cs" />
     <Compile Include="FileFormats\BFSAR.cs" />
+    <Compile Include="FileFormats\BFSHA.cs" />
     <Compile Include="FileFormats\BYAML.cs" />
     <Compile Include="FileFormats\CsvModels.cs" />
     <Compile Include="FileFormats\GFPAK.cs" />

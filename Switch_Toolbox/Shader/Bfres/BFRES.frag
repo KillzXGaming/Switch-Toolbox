@@ -64,8 +64,15 @@ uniform int HasRoughnessMap;
 uniform int HasMRA;
 uniform int HasSubSurfaceScatteringMap;
 
+uniform int renderTevColors;
+uniform int renderMatColors;
+
 uniform vec4 const_color0;
 uniform vec4 base_color_mul_color;
+uniform vec4 tev_color0;
+uniform vec4 tev_color1;
+uniform vec4 mat_color0;
+uniform vec4 mat_color1;
 
 struct VertexAttributes {
     vec3 objectPosition;
@@ -146,7 +153,18 @@ void main()
 	fragColor *= min(const_color0, vec4(1));
 	fragColor *= min(base_color_mul_color, vec4(1));
 
-	
+   float colorScale = texture(DiffuseMap, f_texcoord0).r;
+    if (renderMatColors == 1)
+	{
+      //  fragColor *= vec4(min(mat_color0, colorScale).rgb, 1.0);
+      //  fragColor *= vec4(min(mat_color1, (1 - colorScale) + colorScale * 0).rgb, 1.0);
+	}
+    if (renderTevColors == 1)
+	{
+      //  fragColor *= vec4(min(tev_color0, colorScale).rgb, 1.0);
+	//	fragColor *= vec4(min(tev_color1, (1 - colorScale) + colorScale * 0).rgb, 1.0);
+	}
+
 //	if (isTransparent != 1)
  //       fragColor.a = 1;
 }

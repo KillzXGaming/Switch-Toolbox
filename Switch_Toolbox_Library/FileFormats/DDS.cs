@@ -504,7 +504,36 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
-        public void Save(DDS dds, string FileName, List<List<byte[]>> data = null)
+        public STGenericTexture.TEX_FORMAT GetFormat()
+        {
+            if (DX10header != null)
+                return (STGenericTexture.TEX_FORMAT)DX10header.DXGI_Format;
+
+            switch (header.ddspf.fourCC)
+            {
+                case FOURCC_DXT1:
+                    return STGenericTexture.TEX_FORMAT.BC1_UNORM;
+                case FOURCC_DXT2:
+                    return STGenericTexture.TEX_FORMAT.BC2_UNORM;
+                case FOURCC_DXT3:
+                    return STGenericTexture.TEX_FORMAT.BC2_UNORM;
+                case FOURCC_DXT4:
+                    return STGenericTexture.TEX_FORMAT.BC3_UNORM;
+                case FOURCC_DXT5:
+                    return STGenericTexture.TEX_FORMAT.BC3_UNORM;
+                case FOURCC_ATI1:
+                    return STGenericTexture.TEX_FORMAT.BC4_UNORM;
+                case FOURCC_BC4U:
+                    return STGenericTexture.TEX_FORMAT.BC4_UNORM;
+                case FOURCC_ATI2:
+                    return STGenericTexture.TEX_FORMAT.BC5_UNORM;
+                case FOURCC_BC5U:
+                    return STGenericTexture.TEX_FORMAT.BC5_UNORM;
+                default:
+                    return STGenericTexture.TEX_FORMAT.UNKNOWN;
+            }
+        }
+        public void Save(DDS dds, string FileName, List<STGenericTexture.Surface> data = null)
         {
             FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
             var header = dds.header;
@@ -543,7 +572,7 @@ namespace Switch_Toolbox.Library
 
             if (data != null)
             {
-                writer.Write(data[0][0]);
+                writer.Write(data[0].mipmaps[0]);
             }
             else
             {
