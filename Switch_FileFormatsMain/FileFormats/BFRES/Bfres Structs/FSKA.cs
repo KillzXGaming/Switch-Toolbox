@@ -37,10 +37,14 @@ namespace Bfres.Structs
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 string folderPath = sfd.SelectedPath;
-                foreach (BfresSkeletonAnim fska in Nodes)
+                foreach (FSKA fska in Nodes)
                 {
                     string FileName = folderPath + '\\' + fska.Text + ".bfska";
-                    ((BfresSkeletonAnim)fska).SkeletalAnim.Export(FileName, fska.GetResFile());
+
+                    if (fska.GetResFileU() != null)
+                        ((FSKA)fska).SkeletalAnimU.Export(FileName, fska.GetResFileU());
+                    else
+                        ((FSKA)fska).SkeletalAnim.Export(FileName, fska.GetResFile());
                 }
             }
         }
@@ -54,7 +58,7 @@ namespace Bfres.Structs
         }
     }
 
-    public class BfresSkeletonAnim : Animation
+    public class FSKA : Animation
     {
         public enum TrackType
         {
@@ -71,7 +75,7 @@ namespace Bfres.Structs
         public SkeletalAnim SkeletalAnim;
         public ResU.SkeletalAnim SkeletalAnimU;
 
-        public BfresSkeletonAnim()
+        public FSKA()
         {
             ImageKey = "skeletonAnimation";
             SelectedImageKey = "skeletonAnimation";
@@ -84,7 +88,7 @@ namespace Bfres.Structs
             ContextMenu.MenuItems.Add(replace);
             replace.Click += Replace;
         }
-        public BfresSkeletonAnim(string name)
+        public FSKA(string name)
         {
             Text = name;
 
@@ -120,7 +124,7 @@ namespace Bfres.Structs
             {
                 if (GetResFileU() != null)
                 {
-                    throw new Exception("Wii U unsupported!");
+                    SkeletalAnimU.Export(sfd.FileName, GetResFileU());
                 }
                 else
                 {
@@ -137,19 +141,24 @@ namespace Bfres.Structs
             {
                 if (GetResFileU() != null)
                 {
-                    throw new Exception("Wii U unsupported!");
+                    SkeletalAnimU.Import(ofd.FileName, GetResFileU());
+                    SkeletalAnimU.Name = Text;
+                    Read(SkeletalAnimU);
                 }
                 else
                 {
                     SkeletalAnim.Import(ofd.FileName);
+                    SkeletalAnim.Name = Text;
+                    Read(SkeletalAnim);
                 }
             }
-            SkeletalAnim.Name = Text;
         }
 
-        public static List<Animation> SkeletonAnimations = new List<Animation>();
-        public void Read(ResU.SkeletalAnim ska, ResU.ResFile b)
+        public void Read(ResU.SkeletalAnim ska)
         {
+            Nodes.Clear();
+            Bones.Clear();
+
             FrameCount = ska.FrameCount;
             SkeletalAnimU = ska;
 
@@ -220,8 +229,11 @@ namespace Bfres.Structs
                 }
             }
         }
-        public void Read(SkeletalAnim ska, ResFile b)
+        public void Read(SkeletalAnim ska)
         {
+            Nodes.Clear();
+            Bones.Clear();
+
             FrameCount = ska.FrameCount;
             SkeletalAnim = ska;
 
@@ -311,8 +323,6 @@ namespace Bfres.Structs
             public List<FSKATrack> tracks = new List<FSKATrack>();
             public FSKANode(ResU.BoneAnim b)
             {
-                return;
-
                 Text = b.Name;
 
                 sca = new Vector3(b.BaseData.Scale.X, b.BaseData.Scale.Y, b.BaseData.Scale.Z);

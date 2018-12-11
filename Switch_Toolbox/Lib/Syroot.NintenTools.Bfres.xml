@@ -2417,6 +2417,11 @@
             Starts serializing the data from the <see cref="P:Syroot.NintenTools.Bfres.Core.ResFileSaver.Material"/> root.
             </summary>
         </member>
+        <member name="M:Syroot.NintenTools.Bfres.Core.ResFileSaver.ExportSkeletalAnimation">
+            <summary>
+            Starts serializing the data from the <see cref="P:Syroot.NintenTools.Bfres.Core.ResFileSaver.SkeletalAnim"/> root.
+            </summary>
+        </member>
         <member name="M:Syroot.NintenTools.Bfres.Core.ResFileSaver.Execute">
             <summary>
             Starts serializing the data from the <see cref="P:Syroot.NintenTools.Bfres.Core.ResFileSaver.ResFile"/> root.
@@ -5315,6 +5320,34 @@
             <summary>
             Gets or sets customly attached <see cref="P:Syroot.NintenTools.Bfres.SkeletalAnim.UserData"/> instances.
             </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.Bfres.SkeletalAnim.Import(System.IO.Stream,Syroot.NintenTools.Bfres.ResFile,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.Bfres.Material"/> class from the given <paramref name="stream"/> which
+            is optionally left open.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.Bfres.SkeletalAnim.Import(System.String,Syroot.NintenTools.Bfres.ResFile)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.Bfres.ResFile"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.Bfres.SkeletalAnim.Export(System.IO.Stream,Syroot.NintenTools.Bfres.ResFile,System.Boolean)">
+            <summary>
+            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.Bfres.SkeletalAnim.Export(System.String,Syroot.NintenTools.Bfres.ResFile)">
+            <summary>
+            Saves the contents in the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to save the contents into.</param>
         </member>
         <member name="T:Syroot.NintenTools.Bfres.SkeletalAnimFlags">
             <summary>

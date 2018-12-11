@@ -338,7 +338,7 @@ namespace FirstPlugin
             VertexBufferHelperAttrib attd = helper[attName];
             return attd.Data;
         }
-        public static SkeletalAnim SetSkeletalAniamtion(BfresSkeletonAnim anim)
+        public static SkeletalAnim SetSkeletalAniamtion(FSKA anim)
         {
             SkeletalAnim animation = new SkeletalAnim();
 
@@ -359,7 +359,7 @@ namespace FirstPlugin
 
             return animation;
         }
-        private static BoneAnim createBoneAnim(Animation.KeyNode bone, BfresSkeletonAnim anim)
+        private static BoneAnim createBoneAnim(Animation.KeyNode bone, FSKA anim)
         {
             BoneAnim boneAnim = new BoneAnim();
             boneAnim.Name = bone.Name;

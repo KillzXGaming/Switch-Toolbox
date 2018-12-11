@@ -366,8 +366,8 @@ namespace FirstPlugin
             Nodes.Add(fksaFolder);
             foreach (ResU.SkeletalAnim ska in resFile.SkeletalAnims.Values)
             {
-                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
-                skeletonAnim.Read(ska, resFile);
+                FSKA skeletonAnim = new FSKA(ska.Name);
+                skeletonAnim.Read(ska);
                 fksaFolder.Nodes.Add(skeletonAnim);
             }
         }
@@ -377,8 +377,8 @@ namespace FirstPlugin
             Nodes.Add(fksaFolder);
             foreach (SkeletalAnim ska in resFile.SkeletalAnims)
             {
-                BfresSkeletonAnim skeletonAnim = new BfresSkeletonAnim(ska.Name);
-                skeletonAnim.Read(ska, resFile);
+                FSKA skeletonAnim = new FSKA(ska.Name);
+                skeletonAnim.Read(ska);
                 fksaFolder.Nodes.Add(skeletonAnim);
             }
         }
@@ -462,7 +462,7 @@ namespace FirstPlugin
             }
             if (Nodes.ContainsKey("FSKA"))
             {
-                foreach (BfresSkeletonAnim ska in Nodes["FSKA"].Nodes)
+                foreach (FSKA ska in Nodes["FSKA"].Nodes)
                     resFile.SkeletalAnims.Add(ska.SkeletalAnim);
             }
             if (Nodes.ContainsKey("FMAA"))
@@ -495,7 +495,7 @@ namespace FirstPlugin
         {
             var resFileU = BFRESRender.ResFileNode.resFileU;
             resFileU.Models.Clear();
-       //     resFileU.SkeletalAnims.Clear();
+            resFileU.SkeletalAnims.Clear();
        //     resFileU.SceneAnims.Clear();
        //     resFileU.ShapeAnims.Clear();
      //       resFileU.BoneVisibilityAnims.Clear();
@@ -516,6 +516,15 @@ namespace FirstPlugin
                     resFileU.Textures.Add(tex.Text, tex.texture);
                 }
             }
+            if (Nodes.ContainsKey("FSKA"))
+            {
+                foreach (FSKA ska in Nodes["FSKA"].Nodes)
+                {
+                    ska.SkeletalAnimU.Name = ska.Text;
+                    resFileU.SkeletalAnims.Add(ska.Text, ska.SkeletalAnimU);
+                }
+            }
+            
             else
                 throw new Exception("Failed to find textures");
 

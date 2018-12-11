@@ -16,7 +16,7 @@ namespace Switch_Toolbox.Library
         public virtual void OnMouseRightClick(TreeView treeview) { }
         public virtual void OnDoubleMouseClick(TreeView treeview) { }
 
-        public void Sort(TreeNode node)
+        public void SortNodes(TreeNode node)
         {
             /*    string[] array = new string[Nodes.Count];
           for (int i = 0; i < Nodes.Count; ++i)
@@ -29,7 +29,7 @@ namespace Switch_Toolbox.Library
 
             //Good enough for now. I'll update with a more cleaner method later
             foreach (TreeNode n in node.Nodes)
-                Sort(n);
+                SortNodes(n);
             try
             {
                 TreeNode temp = null;
