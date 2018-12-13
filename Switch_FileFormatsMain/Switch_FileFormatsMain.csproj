@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FirstPlugin</RootNamespace>
     <AssemblyName>FirstPlugin.Plg</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -50,10 +49,6 @@
     </Reference>
     <Reference Include="ByamlExt">
       <HintPath>..\Switch_Toolbox\Lib\ByamlExt.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Costura, Version=3.1.4.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\Switch_Toolbox\Lib\Costura.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EditorCoreCommon">
@@ -113,7 +108,6 @@
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bntx">
       <HintPath>..\Switch_Toolbox\Lib\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -277,42 +271,17 @@
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FormLoader.cs" />
-    <Compile Include="GUI\TextureUI\GTXEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\TextureUI\GTXEditor.Designer.cs">
-      <DependentUpon>GTXEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\TextureUI\GTXImporterSettings.cs" />
-    <Compile Include="GUI\TextureUI\GTXTextureImporter.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\TextureUI\GTXTextureImporter.Designer.cs">
-      <DependentUpon>GTXTextureImporter.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\TextureUI\XTXEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\TextureUI\XTXEditor.Designer.cs">
       <DependentUpon>XTXEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\TextureUI\NuTexEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\TextureUI\NuTexEditor.Designer.cs">
-      <DependentUpon>NuTexEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\TexturePatternEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\TexturePatternEditor.Designer.cs">
       <DependentUpon>TexturePatternEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\TextureUI\FTEXEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\TextureUI\FTEXEditor.Designer.cs">
-      <DependentUpon>FTEXEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\TextureUI\BNTXEditor.cs">
       <SubType>UserControl</SubType>
@@ -447,23 +416,11 @@
     <EmbeddedResource Include="GUI\BFRES\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\TextureUI\GTXEditor.resx">
-      <DependentUpon>GTXEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\TextureUI\GTXTextureImporter.resx">
-      <DependentUpon>GTXTextureImporter.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureUI\XTXEditor.resx">
       <DependentUpon>XTXEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\TextureUI\NuTexEditor.resx">
-      <DependentUpon>NuTexEditor.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\TexturePatternEditor.resx">
       <DependentUpon>TexturePatternEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\TextureUI\FTEXEditor.resx">
-      <DependentUpon>FTEXEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureUI\BNTXEditor.resx">
       <DependentUpon>BNTXEditor.cs</DependentUpon>
@@ -576,8 +533,5 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Fody.3.2.9\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.9\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.4\build\Costura.Fody.props'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.3.1.4\build\Costura.Fody.targets')" />
 </Project>

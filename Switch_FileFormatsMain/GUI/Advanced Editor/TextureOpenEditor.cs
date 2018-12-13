@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Rendering;
 
 namespace FirstPlugin
 {
@@ -16,10 +18,9 @@ namespace FirstPlugin
         {
             InitializeComponent();
         }
-        public void LoadTexture(TextureData tex)
+        public void LoadTexture(STGenericTexture tex)
         {
-            TextureData.BRTI_Texture renderedTex = tex.renderedGLTex;
-            bntxEditor1.LoadProperty(tex);
+            RenderableTex renderedTex = tex.RenderableTex;
         }
     }
 }

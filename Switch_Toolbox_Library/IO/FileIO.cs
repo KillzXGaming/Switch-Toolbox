@@ -74,9 +74,12 @@ namespace Switch_Toolbox.Library.IO
         /// <param name="Compressed">If the file is being compressed or not</param>
         /// <param name="CompType">The type of <see cref="CompressionType"/> being used</param>
         /// <returns></returns>
-        public static TreeNodeFile GetNodeFileFormat(string FileName, byte[] data, bool InArchive = false,
+        public static TreeNodeFile GetNodeFileFormat(string FileName, byte[] data = null, bool InArchive = false,
             string ArchiveHash = "", TreeNode archiveNode = null, bool Compressed = false, CompressionType CompType = 0)
         {
+            if (data == null)
+                data = File.ReadAllBytes(FileName);
+
             IFileFormat format = OpenFileFormat(FileName, data, InArchive, ArchiveHash, archiveNode);
 
             if (format is TreeNode)
@@ -94,9 +97,12 @@ namespace Switch_Toolbox.Library.IO
         /// <param name="Compressed">If the file is being compressed or not</param>
         /// <param name="CompType">The type of <see cref="CompressionType"/> being used</param>
         /// <returns></returns>
-        public static IFileFormat OpenFileFormat(string FileName, byte[] data, bool InArchive = false,
+        public static IFileFormat OpenFileFormat(string FileName, byte[] data = null, bool InArchive = false,
             string ArchiveHash = "", TreeNode archiveNode = null, bool Compressed = false, CompressionType CompType = 0)
         {
+            if (data == null)
+                data = File.ReadAllBytes(FileName);
+
             Cursor.Current = Cursors.WaitCursor;
             FileReader fileReader = new FileReader(data);
             string Magic4 = fileReader.ReadMagic(0, 4);
@@ -130,13 +136,13 @@ namespace Switch_Toolbox.Library.IO
                     if (Compressed)
                         fileFormat.CompressionType = CompType;
 
-                    if (fileFormat is TreeNode)
+                    if (fileFormat is TreeNode && archiveNode != null)
                     {
                         ((TreeNode)fileFormat).Text = archiveNode.Text;
                         ((TreeNode)fileFormat).ImageKey = archiveNode.ImageKey;
                         ((TreeNode)fileFormat).SelectedImageKey = archiveNode.SelectedImageKey;
-                        return fileFormat;
                     }
+                    return fileFormat;
                 }
                 if (fileFormat.Magic == string.Empty)
                 {
@@ -157,8 +163,8 @@ namespace Switch_Toolbox.Library.IO
                                 ((TreeNode)fileFormat).Text = archiveNode.Text;
                                 ((TreeNode)fileFormat).ImageKey = archiveNode.ImageKey;
                                 ((TreeNode)fileFormat).SelectedImageKey = archiveNode.SelectedImageKey;
-                                return fileFormat;
                             }
+                            return fileFormat;
                         }
                     }
                 }

@@ -23,6 +23,9 @@ namespace Switch_Toolbox.Library
         }
         public override void Draw(GL_ControlLegacy control)
         {
+            if (Viewport.Instance.gL_ControlModern1 == null)
+                return;
+
             control.ResetModelMatrix();
 
             foreach (STBone bn in bones)

@@ -9,22 +9,28 @@ namespace Switch_Toolbox
 {
     public class VersionCheck
     {
-        public void ReadVersionInfo()
+        public string ProgramVersion;
+        public string CompileDate;
+        public string CommitInfo;
+
+        public VersionCheck()
         {
-            string path = MainForm.executableDir + "Version.txt";
+            string path = System.IO.Path.Combine(MainForm.executableDir, "Version.txt");
             using (StreamReader reader = new StreamReader(path))
             {
-                string Version = reader.ReadLine();
+                ProgramVersion = reader.ReadLine();
+                CompileDate = reader.ReadLine();
+                CommitInfo = reader.ReadLine();
             }
         }
-        public void WriteVersionInfo()
+        public void SaveVersionInfo()
         {
             string path = MainForm.executableDir + "Version.txt";
             using (StreamWriter writer = new StreamWriter(path))
             {
-                writer.Write($"Version: {Runtime.ProgramVersion}");
-                writer.Write($"Commit: {Runtime.CommitInfo}");
-                writer.Write($"Build Date: {Runtime.CompileDate}");
+                writer.WriteLine($"{ProgramVersion}");
+                writer.WriteLine($"{CompileDate}");
+                writer.WriteLine($"{CommitInfo}");
             }
         }
     }

@@ -120,7 +120,7 @@ namespace Switch_Toolbox.Library
 
         private void UpdateViewport()
         {
-            if (IsDisposed)
+            if (IsDisposed || Viewport.Instance.gL_ControlModern1 == null)
                 return;
 
             if (Viewport.Instance.gL_ControlModern1.InvokeRequired)
@@ -137,7 +137,7 @@ namespace Switch_Toolbox.Library
         }
         private void RenderAndAnimationLoop()
         {
-            if (IsDisposed)
+            if (IsDisposed || Viewport.Instance.gL_ControlModern1 == null)
                 return;
 
             // TODO: We don't really need two timers.

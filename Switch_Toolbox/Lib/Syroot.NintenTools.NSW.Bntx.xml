@@ -2055,6 +2055,11 @@
             Gets or sets the desired texture data buffer format.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bntx.Texture.FormatType">
+            <summary>
+            Gets or sets the desired texture data buffer format type.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.NSW.Bntx.Texture.Name">
             <summary>
             Gets or sets the name with which the instance can be referenced uniquely in <see cref="!:ResDict&lt;Texture&gt;"/>
@@ -2130,11 +2135,6 @@
         <member name="P:Syroot.NintenTools.NSW.Bntx.Texture.SampleCount">
             <summary>
             Gets or sets sample amount
-            </summary>
-        </member>
-        <member name="P:Syroot.NintenTools.NSW.Bntx.Texture.UserData">
-            <summary>
-            Gets or sets customly attached <see cref="P:Syroot.NintenTools.NSW.Bntx.Texture.UserData"/> instances.
             </summary>
         </member>
     </members>

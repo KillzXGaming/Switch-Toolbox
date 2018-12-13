@@ -405,6 +405,98 @@ namespace Switch_Toolbox.Library
                 return array;
             }
         }
+        public static DXGI_FORMAT GetDXGI_Format(TEX_FORMAT Format, TEX_FORMAT_TYPE type)
+        {
+            DXGI_FORMAT format = DXGI_FORMAT.DXGI_FORMAT_UNKNOWN;
+
+            string formatSTR = GetFormatString(Format);
+            string typeSTR = GetFormatTypeString(type, Format);
+
+            Enum.TryParse(formatSTR + typeSTR, out format);
+
+            return format;
+        }
+        public void SetFlags(TEX_FORMAT Format, TEX_FORMAT_TYPE type)
+        {
+            SetFlags(GetDXGI_Format(Format, type));
+        }
+        //Get format without type
+        private static string GetFormatString(TEX_FORMAT Format)
+        {
+            switch (Format)
+            {
+                case TEX_FORMAT.BC1: return "DXGI_FORMAT_BC1_";
+                case TEX_FORMAT.BC2: return "DXGI_FORMAT_BC2_";
+                case TEX_FORMAT.BC3: return "DXGI_FORMAT_BC3_";
+                case TEX_FORMAT.BC4: return "DXGI_FORMAT_BC4_";
+                case TEX_FORMAT.BC5: return "DXGI_FORMAT_BC5_";
+                case TEX_FORMAT.BC6: return "DXGI_FORMAT_BC6_";
+                case TEX_FORMAT.BC7: return "DXGI_FORMAT_BC7_";
+
+                case TEX_FORMAT.A1_B5_G5_R5: return "DXGI_FORMAT_B5G5R5A1_";
+                case TEX_FORMAT.A8: return "DXGI_FORMAT_A8_";
+                case TEX_FORMAT.A8P8: return "DXGI_FORMAT_A8P8";
+                case TEX_FORMAT.AI44: return "DXGI_FORMAT_AI44";
+                case TEX_FORMAT.AYUV: return "DXGI_FORMAT_AYUV";
+                case TEX_FORMAT.B5_G6_R5: return "DXGI_FORMAT_B5G6R5_";
+                case TEX_FORMAT.D16: return "DXGI_FORMAT_D16_";
+                case TEX_FORMAT.D32: return "DXGI_FORMAT_D32_";
+                case TEX_FORMAT.D32_S8_X24: return "DXGI_FORMAT_D32_FLOAT_S8X24_";
+                case TEX_FORMAT.R1: return "DXGI_FORMAT_R1_";
+                case TEX_FORMAT.R16: return "DXGI_FORMAT_R16_";
+                case TEX_FORMAT.R16_G16: return "DXGI_FORMAT_R16G16_";
+                case TEX_FORMAT.R10_G10_B10_A2: return "DXGI_FORMAT_R10G10B10A2_";
+                case TEX_FORMAT.R11_G11_B10: return "DXGI_FORMAT_R11G11B10_";
+                case TEX_FORMAT.R16_G16_B16_A16: return "DXGI_FORMAT_R16G16B16A16_";
+                case TEX_FORMAT.R24_G8: return "DXGI_FORMAT_R24G8_";
+                case TEX_FORMAT.R24_X8: return "DXGI_FORMAT_R24_UNORM_X8_";
+                case TEX_FORMAT.R32: return "DXGI_FORMAT_R32_";
+                case TEX_FORMAT.R32_G32: return "DXGI_FORMAT_R32G32_";
+                case TEX_FORMAT.R32_G32_B32: return "DXGI_FORMAT_R32G32B32_";
+                case TEX_FORMAT.R32_G32_B32_A32: return "DXGI_FORMAT_R32G32B32A32_";
+                case TEX_FORMAT.R4_G4_B4_A4: return "DXGI_FORMAT_B4G4R4A4_";
+                case TEX_FORMAT.R5_G5_B5_A1: return "DXGI_FORMAT_B5G5R5A1_";
+                case TEX_FORMAT.R8: return "DXGI_FORMAT_R8_";
+                case TEX_FORMAT.R8G8: return "DXGI_FORMAT_R8G8_";
+                case TEX_FORMAT.R8_G8_B8_A8: return "DXGI_FORMAT_R8G8B8A8_";
+                case TEX_FORMAT.R8_G8_B8_G8: return "DXGI_FORMAT_R8G8_B8G8_";
+                case TEX_FORMAT.R9_G9B9E5_SHAREDEXP: return "DXGI_FORMAT_R9G9B9E5_SHAREDEXP";
+                default:
+                    throw new Exception($"Format not supported! {Format}");
+            }
+        }
+        //Get only type
+        private static string GetFormatTypeString(TEX_FORMAT_TYPE type, TEX_FORMAT format)
+        {
+            switch (type)
+            {
+                case TEX_FORMAT_TYPE.FLOAT:
+                    if (format == TEX_FORMAT.BC6)
+                        return "SF16";
+                    else
+                        return "FLOAT";
+                case TEX_FORMAT_TYPE.UFLOAT:
+                    if (format == TEX_FORMAT.BC6)
+                        return "UF16";
+                    else
+                        return "UFLOAT";
+                case TEX_FORMAT_TYPE.SINT:
+                    return "SINT";
+                case TEX_FORMAT_TYPE.UINT:
+                    return "UINT";
+                case TEX_FORMAT_TYPE.SNORM:
+                    return "SNORM";
+                case TEX_FORMAT_TYPE.UNORM:
+                    return "UNORM";
+                case TEX_FORMAT_TYPE.TYPELESS:
+                    return "TYPELESS";
+                case TEX_FORMAT_TYPE.SRGB:
+                    return "UNORM_SRGB";
+                default:
+                    return "";
+            }
+        }
+
         public void SetFlags(DXGI_FORMAT Format)
         {
             header.flags = (uint)(DDSD.CAPS | DDSD.HEIGHT | DDSD.WIDTH | DDSD.PIXELFORMAT | DDSD.MIPMAPCOUNT | DDSD.LINEARSIZE);
@@ -504,34 +596,98 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
-        public STGenericTexture.TEX_FORMAT GetFormat()
+        public Tuple<TEX_FORMAT, TEX_FORMAT_TYPE> GetFormat()
         {
-            if (DX10header != null)
-                return (STGenericTexture.TEX_FORMAT)DX10header.DXGI_Format;
+            TEX_FORMAT format = TEX_FORMAT.UNKNOWN;
+            TEX_FORMAT_TYPE type = TEX_FORMAT_TYPE.UNORM;
 
+            if (DX10header != null)
+            {
+                string DXGIFormatSTR = DX10header.DXGI_Format.ToString();
+
+                //Set the type. 
+                if (DXGIFormatSTR.Contains("SRGB"))
+                    type = TEX_FORMAT_TYPE.SRGB;
+                else if (DXGIFormatSTR.Contains("SNORM"))
+                    type = TEX_FORMAT_TYPE.SNORM;
+                else if (DXGIFormatSTR.Contains("UNORM"))
+                    type = TEX_FORMAT_TYPE.UNORM;
+                else if (DXGIFormatSTR.Contains("UF16"))
+                    type = TEX_FORMAT_TYPE.UFLOAT;
+                else if (DXGIFormatSTR.Contains("SF16"))
+                    type = TEX_FORMAT_TYPE.FLOAT;
+                else if (DXGIFormatSTR.Contains("FLOAT"))
+                    type = TEX_FORMAT_TYPE.FLOAT;
+                else if (DXGIFormatSTR.Contains("UFLOAT"))
+                    type = TEX_FORMAT_TYPE.UFLOAT;
+                else if (DXGIFormatSTR.Contains("TYPELESS"))
+                    type = TEX_FORMAT_TYPE.TYPELESS;
+
+                //Set the format. 
+                if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC1"))
+                    format = TEX_FORMAT.BC1;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC2"))
+                    format = TEX_FORMAT.BC2;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC3"))
+                    format = TEX_FORMAT.BC3;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC3"))
+                    format = TEX_FORMAT.BC3;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC4"))
+                    format = TEX_FORMAT.BC4;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC4"))
+                    format = TEX_FORMAT.BC4;
+                else if(DXGIFormatSTR.Contains("DXGI_FORMAT_BC5"))
+                    format = TEX_FORMAT.BC5;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC6"))
+                    format = TEX_FORMAT.BC6;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_BC7"))
+                    format = TEX_FORMAT.BC7;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_R8G8B8A8"))
+                    format = TEX_FORMAT.R8_G8_B8_A8;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_R16"))
+                    format = TEX_FORMAT.R16;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_R8G8"))
+                    format = TEX_FORMAT.R8G8;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_A8"))
+                    format = TEX_FORMAT.A8;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_A8"))
+                    format = TEX_FORMAT.A8;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_R1"))
+                    format = TEX_FORMAT.R1;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_R16G16"))
+                    format = TEX_FORMAT.R16_G16;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_G8R8_G8B8"))
+                    format = TEX_FORMAT.G8_R8_G8_B8;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_D32_FLOAT_S8X24"))
+                    format = TEX_FORMAT.D32_S8_X24;
+                else if (DXGIFormatSTR.Contains("DXGI_FORMAT_D32"))
+                    format = TEX_FORMAT.D32;
+            }
             switch (header.ddspf.fourCC)
             {
                 case FOURCC_DXT1:
-                    return STGenericTexture.TEX_FORMAT.BC1_UNORM;
+                    format = TEX_FORMAT.BC1; break;
                 case FOURCC_DXT2:
-                    return STGenericTexture.TEX_FORMAT.BC2_UNORM;
+                    format = TEX_FORMAT.BC2; break;
                 case FOURCC_DXT3:
-                    return STGenericTexture.TEX_FORMAT.BC2_UNORM;
+                    format = TEX_FORMAT.BC2; break;
                 case FOURCC_DXT4:
-                    return STGenericTexture.TEX_FORMAT.BC3_UNORM;
+                    format = TEX_FORMAT.BC3; break;
                 case FOURCC_DXT5:
-                    return STGenericTexture.TEX_FORMAT.BC3_UNORM;
+                    format = TEX_FORMAT.BC3; break;
                 case FOURCC_ATI1:
-                    return STGenericTexture.TEX_FORMAT.BC4_UNORM;
+                    format = TEX_FORMAT.BC4; break;
                 case FOURCC_BC4U:
-                    return STGenericTexture.TEX_FORMAT.BC4_UNORM;
+                    format = TEX_FORMAT.BC4; break;
                 case FOURCC_ATI2:
-                    return STGenericTexture.TEX_FORMAT.BC5_UNORM;
+                    format = TEX_FORMAT.BC5; break;
                 case FOURCC_BC5U:
-                    return STGenericTexture.TEX_FORMAT.BC5_UNORM;
+                    format = TEX_FORMAT.BC5; break;
                 default:
-                    return STGenericTexture.TEX_FORMAT.UNKNOWN;
+                    format = TEX_FORMAT.UNKNOWN; break;
             }
+
+            return Tuple.Create(format, type);
         }
         public void Save(DDS dds, string FileName, List<STGenericTexture.Surface> data = null)
         {

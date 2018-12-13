@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Rendering;
 
 namespace FirstPlugin
 {
@@ -53,10 +54,8 @@ namespace FirstPlugin
                     TextureData tex = bntx.Textures[item.Text];
                     tex.LoadOpenGLTexture();
 
-
-                    TextureData.BRTI_Texture renderedTex = tex.renderedGLTex;
-
-                    Bitmap temp = tex.GLTextureToBitmap(renderedTex, renderedTex.display);
+                    RenderableTex renderedTex = tex.RenderableTex;
+                    Bitmap temp = RenderableTex.GLTextureToBitmap(renderedTex, renderedTex.display);
 
                     textureImageList.Images.Add(tex.Text, temp);
 

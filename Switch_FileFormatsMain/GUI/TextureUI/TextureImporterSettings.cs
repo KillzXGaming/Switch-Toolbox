@@ -34,7 +34,9 @@ namespace FirstPlugin
         public uint SampleCount = 1;
         public uint Pitch = 32;
         public uint[] Regs;
-        public SurfaceFormat Format;
+        public TEX_FORMAT Format;
+        public TEX_FORMAT_TYPE FormatType;
+
         public SurfaceDim SurfaceDim = SurfaceDim.Dim2D;
         public TileMode TileMode = TileMode.Default;
         public Dim Dim = Dim.Dim2D;
@@ -55,78 +57,6 @@ namespace FirstPlugin
         public bool GenerateMipmaps = false; //If bitmap and count more that 1 then geenrate
         public float alphaRef = 0.5f;
 
-        private SurfaceFormat LoadDDSFormat(uint fourCC, DDS dds = null, bool IsSRGB = false)
-        {
-            bool IsDX10 = false;
-
-            switch (fourCC)
-            {
-                case DDS.FOURCC_DXT1:
-                    if (IsSRGB)
-                        return SurfaceFormat.BC1_SRGB;
-                    else
-                        return SurfaceFormat.BC1_UNORM;
-                case DDS.FOURCC_DXT3:
-                    if (IsSRGB)
-                        return SurfaceFormat.BC2_SRGB;
-                    else
-                        return SurfaceFormat.BC2_UNORM;
-                case DDS.FOURCC_DXT5:
-                    if (IsSRGB)
-                        return SurfaceFormat.BC3_SRGB;
-                    else
-                        return SurfaceFormat.BC3_UNORM;
-                case DDS.FOURCC_BC4U:
-                    return SurfaceFormat.BC4_UNORM;
-                case DDS.FOURCC_BC4S:
-                    return SurfaceFormat.BC4_SNORM;
-                case DDS.FOURCC_ATI1:
-                    return SurfaceFormat.BC4_UNORM;
-                case DDS.FOURCC_ATI2:
-                    return SurfaceFormat.BC5_UNORM;
-                case DDS.FOURCC_BC5U:
-                    return SurfaceFormat.BC5_UNORM;
-                case DDS.FOURCC_BC5S:
-                    return SurfaceFormat.BC5_SNORM;
-                case DDS.FOURCC_DX10:
-                    IsDX10 = true;
-                    break;
-                default:
-                    return SurfaceFormat.R8_G8_B8_A8_SRGB;
-            }
-            Console.WriteLine(IsDX10);
-            if (IsDX10)
-            {
-                Console.WriteLine(dds.DX10header.DXGI_Format);
-
-                switch (dds.DX10header.DXGI_Format)
-                {
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
-                        return SurfaceFormat.BC4_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
-                        return SurfaceFormat.BC4_SNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_TYPELESS:
-                        return SurfaceFormat.BC4_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
-                        return SurfaceFormat.BC5_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
-                        return SurfaceFormat.BC5_SNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_TYPELESS:
-                        return SurfaceFormat.BC5_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
-                        return SurfaceFormat.BC6_FLOAT;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16:
-                        return SurfaceFormat.BC6_UFLOAT;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
-                        return SurfaceFormat.BC7_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
-                        return SurfaceFormat.BC7_SRGB;
-                    default:
-                        throw new Exception($"Format {dds.DX10header.DXGI_Format} not supported!");
-                }
-            }
-            throw new Exception($"This shouldn't happen :(");
-        }
         public void LoadDDS(string FileName, BntxFile bntxFile, byte[] FileData = null, TextureData tree = null)
         {
             TexName = Path.GetFileNameWithoutExtension(FileName);
@@ -148,8 +78,9 @@ namespace FirstPlugin
 
             DataBlockOutput.Add(dds.bdata);
 
-
-            Format = LoadDDSFormat(dds.header.ddspf.fourCC, dds, IsSRGB);
+            var formats = dds.GetFormat();
+            Format = formats.Item1;
+            FormatType = formats.Item2;
 
             Texture tex = FromBitMap(DataBlockOutput[0], this);
 
@@ -168,11 +99,13 @@ namespace FirstPlugin
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
             bntx = bntxFile;
-            Format = SurfaceFormat.BC1_SRGB;
+            Format = TEX_FORMAT.BC1;
+            FormatType = TEX_FORMAT_TYPE.SRGB;
+
             GenerateMipmaps = true;
 
             Bitmap Image = Paloma.TargaImage.LoadTargaImage(FileName);
-            Image = TextureData.SwapBlueRedChannels(Image);
+            Image = STGenericTexture.SwapBlueRedChannels(Image);
 
             TexWidth = (uint)Image.Width;
             TexHeight = (uint)Image.Height;
@@ -192,11 +125,13 @@ namespace FirstPlugin
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
             bntx = bntxFile;
-            Format = SurfaceFormat.BC1_SRGB;
+            Format = TEX_FORMAT.BC1;
+            FormatType = TEX_FORMAT_TYPE.SRGB;
+
             GenerateMipmaps = true;
 
             Bitmap Image = new Bitmap(FileName);
-            Image = TextureData.SwapBlueRedChannels(Image);
+            Image = STGenericTexture.SwapBlueRedChannels(Image);
 
             TexWidth = (uint)Image.Width;
             TexHeight = (uint)Image.Height;
@@ -240,14 +175,14 @@ namespace FirstPlugin
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
             List<byte[]> mipmaps = new List<byte[]>();
-            mipmaps.Add(TextureData.CompressBlock(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight, Format, alphaRef));
+            mipmaps.Add(STGenericTexture.CompressBlock(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight, Format, FormatType, alphaRef));
 
             //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
             //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
                 Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
-                mipmaps.Add(TextureData.CompressBlock(BitmapExtension.ImageToByte(Image), Image.Width, Image.Height, Format, alphaRef));
+                mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image), Image.Width, Image.Height, Format, FormatType, alphaRef));
             }
             Image.Dispose();
 
@@ -258,7 +193,7 @@ namespace FirstPlugin
             DataBlockOutput.Clear();
             foreach (var surface in DecompressedData)
             {
-                DataBlockOutput.Add(TextureData.CompressBlock(surface, (int)TexWidth, (int)TexHeight, Format, alphaRef));
+                DataBlockOutput.Add(STGenericTexture.CompressBlock(surface, (int)TexWidth, (int)TexHeight, Format, FormatType, alphaRef));
             }
         }
         public static uint DIV_ROUND_UP(uint value1, uint value2)
@@ -270,7 +205,10 @@ namespace FirstPlugin
             Texture tex = new Texture();
             tex.Height = (uint)settings.TexHeight;
             tex.Width = (uint)settings.TexWidth;
-            tex.Format = Format;
+            var formats = TextureData.GetSurfaceFormat(settings.Format, settings.FormatType);
+            tex.Format = formats.Item1;
+            tex.FormatType = formats.Item2;
+
             tex.Name = settings.TexName;
             tex.Path = "";
             tex.TextureData = new List<List<byte[]>>();
@@ -278,11 +216,11 @@ namespace FirstPlugin
             if (settings.MipCount == 0)
                 settings.MipCount = 1;
 
-            ChannelType[] channels = TextureData.SetChannelsByFormat(settings.Format);
-            tex.ChannelRed = channels[0];
-            tex.ChannelGreen = channels[1];
-            tex.ChannelBlue = channels[2];
-            tex.ChannelAlpha = channels[3];
+            STChannelType[] channels = STGenericTexture.SetChannelsByFormat(settings.Format);
+            tex.ChannelRed = (ChannelType)channels[0];
+            tex.ChannelGreen = (ChannelType)channels[1];
+            tex.ChannelBlue = (ChannelType)channels[2];
+            tex.ChannelAlpha = (ChannelType)channels[3];
             tex.sparseBinding = settings.sparseBinding;
             tex.sparseResidency = settings.sparseResidency;
             tex.AccessFlags = settings.AccessFlags;

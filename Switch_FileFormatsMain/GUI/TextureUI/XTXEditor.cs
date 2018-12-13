@@ -73,7 +73,7 @@ namespace FirstPlugin
             Thread = new Thread((ThreadStart)(() =>
             {
                 pictureBoxCustom1.Image = Imaging.GetLoadingImage();
-                pictureBoxCustom1.Image = textureData.DisplayImage(CurMipDisplayLevel, CurArrayDisplayLevel);
+                pictureBoxCustom1.Image = textureData.GetBitmap(CurMipDisplayLevel, CurArrayDisplayLevel);
             }));
             Thread.Start();
 
@@ -84,13 +84,13 @@ namespace FirstPlugin
             LoadImage();
 
             int MipCount = 1;
-            if (textureData.mipmaps.Count <= 0)
+            if (textureData.Surfaces.Count <= 0)
                 return;
             else
-                MipCount = textureData.mipmaps.Count;
+                MipCount = textureData.Surfaces.Count;
 
 
-            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.mipmaps.Count - 1}";
+            mipLevelCounterLabel.Text = $"{CurMipDisplayLevel} / {textureData.Surfaces.Count - 1}";
 
             if (CurMipDisplayLevel != MipCount - 1)
                 BtnMipsRight.Enabled = true;
@@ -139,7 +139,7 @@ namespace FirstPlugin
 
         private void BtnMipsRight_Click(object sender, EventArgs e)
         {
-            if (CurMipDisplayLevel != textureData.mipmaps.Count - 1)
+            if (CurMipDisplayLevel != textureData.Surfaces.Count - 1)
                 CurMipDisplayLevel += 1;
 
             UpdateMipDisplay();

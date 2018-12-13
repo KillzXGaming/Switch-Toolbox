@@ -23,6 +23,8 @@ namespace Switch_Toolbox.Library
 
         public void LoadDockContent(Control control, DockState dockState)
         {
+            return;
+
             dockContent = new DockContent();
             dockContent.Controls.Add(control);
             dockContent.Show(dockPanel, dockState);

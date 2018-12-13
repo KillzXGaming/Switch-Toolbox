@@ -18,6 +18,8 @@ namespace Switch_Toolbox.Library
 
         public static DockState objectListDockState = DockState.DockLeft;
 
+        public static bool DisableUpdatePrompt;
+
         public static int Yaz0CompressionLevel = 3;
         public static bool RenderModels = true;
         public static bool RenderModelSelection = true;

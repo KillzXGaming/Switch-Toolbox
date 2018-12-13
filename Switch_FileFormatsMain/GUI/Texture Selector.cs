@@ -84,7 +84,7 @@ namespace FirstPlugin
             Thread = new Thread((ThreadStart)(() =>
             {
                 pictureBoxCustom1.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
-                pictureBoxCustom1.Image = texData.DisplayTexture();
+                pictureBoxCustom1.Image = texData.GetBitmap();
                 //  texSizeMipsLabel.Text = $"Width = {pictureBoxCustom1.Image.Width} Height = {pictureBoxCustom1.Image.Height}";
             }));
             Thread.Start();
@@ -98,7 +98,7 @@ namespace FirstPlugin
             Thread = new Thread((ThreadStart)(() =>
             {
                 pictureBoxCustom1.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
-                pictureBoxCustom1.Image = texData.DisplayTexture();
+                pictureBoxCustom1.Image = texData.GetBitmap();
                 //  texSizeMipsLabel.Text = $"Width = {pictureBoxCustom1.Image.Width} Height = {pictureBoxCustom1.Image.Height}";
             }));
             Thread.Start();

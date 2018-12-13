@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.gL_ControlModern1 = new GL_Core.GL_ControlModern();
             this.animationPanel1 = new Switch_Toolbox.Library.AnimationPanel();
             this.contextMenuStripDark1 = new Switch_Toolbox.Library.Forms.ContextMenuStripDark();
             this.shadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,23 +37,6 @@
             this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripDark1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // gL_ControlModern1
-            // 
-            this.gL_ControlModern1.ActiveCamera = null;
-            this.gL_ControlModern1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gL_ControlModern1.BackColor = System.Drawing.Color.Black;
-            this.gL_ControlModern1.CurrentShader = null;
-            this.gL_ControlModern1.DisplayPolyCount = false;
-            this.gL_ControlModern1.Location = new System.Drawing.Point(-3, 66);
-            this.gL_ControlModern1.MainDrawable = null;
-            this.gL_ControlModern1.Name = "gL_ControlModern1";
-            this.gL_ControlModern1.Size = new System.Drawing.Size(791, 388);
-            this.gL_ControlModern1.Stereoscopy = false;
-            this.gL_ControlModern1.TabIndex = 0;
-            this.gL_ControlModern1.VSync = false;
             // 
             // animationPanel1
             // 
@@ -138,7 +120,6 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(781, 522);
             this.Controls.Add(this.animationPanel1);
-            this.Controls.Add(this.gL_ControlModern1);
             this.Controls.Add(this.contextMenuStripDark1);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)((((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
@@ -159,7 +140,6 @@
 
         #endregion
 
-        public GL_Core.GL_ControlModern gL_ControlModern1;
         public AnimationPanel animationPanel1;
         private Forms.ContextMenuStripDark contextMenuStripDark1;
         private System.Windows.Forms.ToolStripMenuItem shadingToolStripMenuItem;

@@ -320,7 +320,7 @@ namespace FirstPlugin
                 {
                     if (ftexContainer.Textures.ContainsKey(tex.Name))
                     {
-                        BindGLTexture(tex, ftexContainer.Textures[tex.Name].renderedTex.display);
+                        BindGLTexture(tex, ftexContainer.Textures[tex.Name].RenderableTex.display);
                     }
                 }
             }
@@ -330,7 +330,7 @@ namespace FirstPlugin
                 {
                     if (bntx.Textures.ContainsKey(tex.Name))
                     {
-                        BindGLTexture(tex, bntx.Textures[tex.Name].renderedGLTex.display);
+                        BindGLTexture(tex, bntx.Textures[tex.Name].RenderableTex.display);
                     }
                 }
             }

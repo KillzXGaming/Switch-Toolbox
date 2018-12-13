@@ -44,6 +44,9 @@ namespace Switch_Toolbox
                     case "OpenStartupWindow":
                         bool.TryParse(node.InnerText, out Runtime.OpenStartupWindow);
                         break;
+                    case "DisableUpdatePrompt":
+                        bool.TryParse(node.InnerText, out Runtime.DisableUpdatePrompt);
+                        break;
                     case "DisableViewport":
                         bool.TryParse(node.InnerText, out Runtime.DisableViewport);
                         break;
@@ -109,6 +112,7 @@ namespace Switch_Toolbox
             parentNode.AppendChild(mainSettingsNode);
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "DisableViewport", Runtime.DisableViewport.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "DisableUpdatePrompt", Runtime.DisableUpdatePrompt.ToString()));
         }
         private static void AppendOCompressionFilelistSettings(XmlDocument doc, XmlNode parentNode)
         {

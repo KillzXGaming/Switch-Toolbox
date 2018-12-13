@@ -144,6 +144,9 @@ namespace Switch_Toolbox.Library
 
         public static void DrawCube(Vector3 center, float size)
         {
+            if (Viewport.Instance.gL_ControlModern1 == null)
+                return;
+
             DrawRectangularPrism(center, size, size, size, false);
         }
 

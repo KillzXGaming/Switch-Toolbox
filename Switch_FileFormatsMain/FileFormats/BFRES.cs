@@ -173,6 +173,9 @@ namespace FirstPlugin
 
         public override void OnClick(TreeView treeView)
         {
+            if (Viewport.Instance.gL_ControlModern1 == null)
+                return;
+
             //If has models
             if (Nodes.ContainsKey("FMDL"))
             {

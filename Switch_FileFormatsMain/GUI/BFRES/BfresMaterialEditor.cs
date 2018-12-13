@@ -207,8 +207,7 @@ namespace FirstPlugin
                         FoundTexture = true;
 
                         TextureData tex = bntx.Textures[item.Text];
-                        TextureData.BRTI_Texture renderedTex = tex.renderedGLTex;
-                        Bitmap temp = tex.GLTextureToBitmap(renderedTex, renderedTex.display);
+                        Bitmap temp = tex.GetBitmap();
 
                         textureImageList.Images.Add(tex.Text, temp);
 
@@ -225,8 +224,7 @@ namespace FirstPlugin
                         FoundTexture = true;
 
                         FTEX tex = ftexCont.Textures[item.Text];
-                        FTEX.RenderableTex renderedTex = tex.renderedTex;
-                        Bitmap temp = tex.GLTextureToBitmap(renderedTex, renderedTex.display);
+                        Bitmap temp = tex.GetBitmap();
 
                         textureImageList.Images.Add(tex.Text, temp);
 

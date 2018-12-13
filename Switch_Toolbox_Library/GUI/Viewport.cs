@@ -18,8 +18,33 @@ namespace Switch_Toolbox.Library
         public Viewport()
         {
             InitializeComponent();
+
+            if (Runtime.DisableViewport)
+                return;
+
+            SetViewport();
             LoadViewportRuntimeValues();
             LoadShadingModes();
+        }
+        public GL_Core.GL_ControlModern gL_ControlModern1;
+        private void SetViewport()
+        {
+            gL_ControlModern1 = new GL_ControlModern();
+            gL_ControlModern1.ActiveCamera = null;
+            gL_ControlModern1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            gL_ControlModern1.BackColor = System.Drawing.Color.Black;
+            gL_ControlModern1.CurrentShader = null;
+            gL_ControlModern1.DisplayPolyCount = false;
+            gL_ControlModern1.Location = new System.Drawing.Point(-3, 66);
+            gL_ControlModern1.MainDrawable = null;
+            gL_ControlModern1.Name = "gL_ControlModern1";
+            gL_ControlModern1.Size = new System.Drawing.Size(791, 388);
+            gL_ControlModern1.Stereoscopy = false;
+            gL_ControlModern1.TabIndex = 0;
+            gL_ControlModern1.VSync = false;
+            Controls.Add(this.gL_ControlModern1);
         }
 
         public static Viewport Instance
@@ -32,6 +57,9 @@ namespace Switch_Toolbox.Library
 
         public void UpdateViewport()
         {
+            if (Runtime.DisableViewport)
+                return;
+
             if (gL_ControlModern1 != null)
                 gL_ControlModern1.Refresh();
             if (GL_ControlLegacy != null)
@@ -39,7 +67,7 @@ namespace Switch_Toolbox.Library
         }
         public void RenderToTexture()
         {
-            if (gL_ControlModern1 == null)
+            if (gL_ControlModern1 == null && !Runtime.DisableViewport)
                 return;
 
             int Framebuffer = 0;
@@ -70,6 +98,9 @@ namespace Switch_Toolbox.Library
         }
         public void LoadViewportRuntimeValues()
         {
+            if (gL_ControlModern1 == null)
+                return;
+
             switch (Runtime.cameraMovement)
             {
                 case Runtime.CameraMovement.Inspect:

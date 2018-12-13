@@ -252,10 +252,8 @@ namespace FirstPlugin
                 Console.WriteLine("  realSize        = " + tex.surface.imageSize);
 
                 List<byte[]> mips = GTX.Decode(tex.surface);
-                tex.renderedTex.mipmaps.Add(mips);
-                tex.renderedTex.width = (int)tex.surface.width;
-                tex.renderedTex.height = (int)tex.surface.height;
-
+                tex.Surfaces.Add(new STGenericTexture.Surface() { mipmaps = mips });
+                tex.RenderableTex.LoadOpenGLTexture(tex);
                 curTex++;
             }
         }
@@ -341,7 +339,6 @@ namespace FirstPlugin
         public class TextureData : STGenericTexture
         {
             public SurfaceInfoParse surface;
-            public RenderableTex renderedTex = new RenderableTex();
 
             public TextureData()
             {
@@ -398,26 +395,6 @@ namespace FirstPlugin
                         break;
                 }
             }
-            internal void SaveBitMap(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
-            {
-                Bitmap bitMap = DisplayTexture(MipLevel, SurfaceLevel);
-
-                bitMap.Save(FileName);
-            }
-            internal void SaveDDS(string FileName)
-            {
-                DDS dds = new DDS();
-                dds.header = new DDS.Header();
-                dds.header.width = (uint)renderedTex.width;
-                dds.header.height = (uint)renderedTex.width;
-                dds.header.mipmapCount = (uint)renderedTex.mipmaps[0].Count;
-
-                dds.header.pitchOrLinearSize = (uint)renderedTex.mipmaps[0][0].Length;
-
-             
-
-                dds.Save(dds, FileName, surfaces);
-            }
             private void Replace(object sender, EventArgs args)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
@@ -437,62 +414,8 @@ namespace FirstPlugin
             }
             public void Replace(string FileName)
             {
-                string ext = System.IO.Path.GetExtension(FileName);
-                ext = ext.ToLower();
-
-                GTXImporterSettings setting = new GTXImporterSettings();
-                GTXTextureImporter importer = new GTXTextureImporter();
-
-                switch (ext)
-                {
-                    case ".dds":
-                        setting.LoadDDS(FileName, null);
-                        break;
-                    default:
-                        setting.LoadBitMap(FileName);
-                        importer.LoadSetting(setting);
-                        break;
-                }
-
-                if (importer.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-
-                    if (setting.GenerateMipmaps)
-                    {
-                        setting.DataBlockOutput.Clear();
-                        setting.DataBlockOutput.Add(setting.GenerateMips());
-                    }
-
-                    if (setting.DataBlockOutput != null)
-                    {
-                        var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
-                       
-                    }
-                    else
-                    {
-                        MessageBox.Show("Something went wrong???");
-                    }
-                    UpdateEditor();
-                }
+           
             }
-            public class RenderableTex
-            {
-                public int width, height;
-                public int display;
-                public PixelInternalFormat pixelInternalFormat;
-                public PixelFormat pixelFormat;
-                public PixelType pixelType = PixelType.UnsignedByte;
-                public int mipMapCount;
-                public List<List<byte[]>> mipmaps = new List<List<byte[]>>();
-                public byte[] data;
-
-                public class Surface
-                {
-
-                }
-            }
-
             public override void OnClick(TreeView treeView)
             {
                 UpdateEditor();
@@ -500,34 +423,7 @@ namespace FirstPlugin
 
             public void UpdateEditor()
             {
-                if (Viewport.Instance.gL_ControlModern1.Visible == false)
-                    PluginRuntime.FSHPDockState = WeifenLuo.WinFormsUI.Docking.DockState.Document;
-
-                GTXEditor docked = (GTXEditor)LibraryGUI.Instance.GetContentDocked(new GTXEditor());
-                if (docked == null)
-                {
-                    docked = new GTXEditor();
-                    LibraryGUI.Instance.LoadDockContent(docked, PluginRuntime.FSHPDockState);
-                }
-                docked.Text = Text;
-                docked.Dock = DockStyle.Fill;
-                docked.LoadPicture(DisplayTexture());
-                docked.LoadProperty(this);
-            }
-
-            public Bitmap DisplayTexture(int DisplayMipIndex = 0, int ArrayIndex = 0)
-            {
-                if (renderedTex.mipmaps.Count <= 0)
-                {
-                    throw new Exception("No texture data found");
-                }
-
-                uint width = (uint)Math.Max(1, renderedTex.width >> DisplayMipIndex);
-                uint height = (uint)Math.Max(1, renderedTex.height >> DisplayMipIndex);
-
-                byte[] data = renderedTex.mipmaps[ArrayIndex][DisplayMipIndex];
-
-                return FTEX.DecodeBlock(data, width, height, (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)surface.format);
+         
             }
         }
         public class SurfaceInfoParse : GTX.GX2Surface

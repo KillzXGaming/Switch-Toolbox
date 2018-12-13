@@ -135,7 +135,7 @@ namespace Switch_Toolbox.Library
         {
             foreach (IFileFormat file in FileManager.GetFileFormats())
             {
-                if (file.IFileInfo.IsActive)
+                if (file.IFileInfo != null && file.IFileInfo.IsActive)
                 {
                     DialogResult dialogResult = MessageBox.Show("Are you sure you want to close this tab? Doing so may result in losing progress.", "", MessageBoxButtons.YesNo);
                     if (dialogResult != DialogResult.Yes)

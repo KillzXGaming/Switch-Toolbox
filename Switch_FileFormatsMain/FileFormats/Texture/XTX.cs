@@ -200,12 +200,10 @@ namespace FirstPlugin
                 }
             }
         }
-        public class TextureInfo : TreeNodeFile
+        public class TextureInfo : STGenericTexture
         {
             public UInt64 DataSize { get; set; }
             public uint Alignment { get; set; }
-            public uint Width { get; set; }
-            public uint Height { get; set; }
             public uint Depth { get; set; }
             public uint Target { get; set; }
             public XTXFormats.XTXImageFormat Format { get; set; }
@@ -213,7 +211,6 @@ namespace FirstPlugin
             public uint SliceSize { get; set; }
             public uint[] MipOffsets { get; set; }
             public BlockHeader DataBlockHeader { get; set; }
-            public List<byte[]> mipmaps = new List<byte[]>();
             public byte[] ImageData;
 
 
@@ -252,79 +249,9 @@ namespace FirstPlugin
                 EndBlockHeader.Read(reader);
             }
 
-            public Bitmap DisplayImage(int mipLevel = 0, int arrayLevel = 0)
-            {
-                LoadTexture();
-
-                Bitmap decomp;
-
-                if (Format == XTXFormats.XTXImageFormat.BC5S)
-                    return DDSCompressor.DecompressBC5(mipmaps[0], (int)Width, (int)Height, true);
-
-                byte[] d = null;
-                if (IsCompressedFormat(Format))
-                    d = DDSCompressor.DecompressBlock(mipmaps[0], (int)Width, (int)Height, GetCompressedDXGI_FORMAT(Format));
-                else
-                    d = DDSCompressor.DecodePixelBlock(mipmaps[0], (int)Width, (int)Height, GetUncompressedDXGI_FORMAT(Format));
-
-                if (d != null)
-                {
-                    decomp = BitmapExtension.GetBitmap(d, (int)Width, (int)Height);
-                    return TextureData.SwapBlueRedChannels(decomp);
-                }
-                return null;
-            }
-            private static DDS.DXGI_FORMAT GetCompressedDXGI_FORMAT(XTXFormats.XTXImageFormat Format)
-            {
-                switch (Format)
-                {
-                    case XTXFormats.XTXImageFormat.DXT1: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
-                    case XTXFormats.XTXImageFormat.DXT3: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM;
-                    case XTXFormats.XTXImageFormat.DXT5: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
-                    case XTXFormats.XTXImageFormat.BC4U: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM;
-                    case XTXFormats.XTXImageFormat.BC4S: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM;
-                    case XTXFormats.XTXImageFormat.BC5U: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM;
-                    case XTXFormats.XTXImageFormat.BC5S: return DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM;
-                    default:
-                        throw new Exception($"Cannot convert format {Format}");
-                }
-            }
-            private static bool IsCompressedFormat(XTXFormats.XTXImageFormat Format)
-            {
-                switch (Format)
-                {
-                    case XTXFormats.XTXImageFormat.DXT1:
-                    case XTXFormats.XTXImageFormat.DXT3:
-                    case XTXFormats.XTXImageFormat.DXT5:
-                    case XTXFormats.XTXImageFormat.BC4U:
-                    case XTXFormats.XTXImageFormat.BC4S:
-                    case XTXFormats.XTXImageFormat.BC5U:
-                    case XTXFormats.XTXImageFormat.BC5S:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-            private static DDS.DXGI_FORMAT GetUncompressedDXGI_FORMAT(XTXFormats.XTXImageFormat Format)
-            {
-                switch (Format)
-                {
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_R8: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RG8: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB10A2: return DDS.DXGI_FORMAT.DXGI_FORMAT_R10G10B10A2_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB565: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G6R5_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB5A1: return DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA4: return DDS.DXGI_FORMAT.DXGI_FORMAT_B4G4R4A4_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8_SRGB: return DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-                    default:
-                        throw new Exception($"Cannot convert format {Format}");
-                }
-            }
-
             public void LoadTexture()
             {
-                mipmaps.Clear();
+                Surfaces.Clear();
 
                 Console.WriteLine(Format);
 
@@ -340,6 +267,7 @@ namespace FirstPlugin
                 int TileMode = 0;
 
                 uint bpp = XTXFormats.bpps((uint)Format);
+                List<byte[]> mips = new List<byte[]>();
 
                 int blockHeightShift = 0;
                 for (int mipLevel = 0; mipLevel < MipOffsets.Length; mipLevel++)
@@ -376,12 +304,9 @@ namespace FirstPlugin
                     byte[] result_ = new byte[size];
                     Array.Copy(result, 0, result_, 0, size);
 
-                    mipmaps.Add(result_);
-                    Console.WriteLine("bpp " + bpp);
-                    Console.WriteLine("result_ " + size);
-                    Console.WriteLine("width " + width);
-                    Console.WriteLine("height " + height);
+                    mips.Add(result_);
                 }
+                Surfaces.Add(new Surface() { mipmaps = mips });
             }
         }
     }

@@ -342,7 +342,7 @@ namespace Bfres.Structs
                         System.IO.File.WriteAllBytes(sfd.FileName, csv.Save());
                         break;
                     default:
-                        List<STGenericTexture> surfaces = new List<STGenericTexture>();
+                        List<STGenericTexture> Surfaces = new List<STGenericTexture>();
                         foreach (FSHP fshp in shapes)
                         {
                             foreach (var bntx in PluginRuntime.bntxContainers)
@@ -351,7 +351,7 @@ namespace Bfres.Structs
                                 {
                                     if (bntx.Textures.ContainsKey(tex.Name))
                                     {
-                                        surfaces.Add(bntx.Textures[tex.Name]);
+                                        Surfaces.Add(bntx.Textures[tex.Name]);
                                     }
                                 }
                             }
@@ -361,15 +361,15 @@ namespace Bfres.Structs
                                 {
                                     if (ftex.Textures.ContainsKey(tex.Name))
                                     {
-                                        surfaces.Add(ftex.Textures[tex.Name]);
+                                        Surfaces.Add(ftex.Textures[tex.Name]);
                                     }
                                 }
                             }
                         }
-                        Console.WriteLine("tex count " + surfaces.Count);
+                        Console.WriteLine("tex count " + Surfaces.Count);
 
                         AssimpData assimp = new AssimpData();
-                        assimp.SaveFromModel(this, sfd.FileName, surfaces);
+                        assimp.SaveFromModel(this, sfd.FileName, Surfaces);
                         break;
                 }
             }

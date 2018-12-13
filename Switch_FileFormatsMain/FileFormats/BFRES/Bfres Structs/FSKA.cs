@@ -236,7 +236,6 @@ namespace Bfres.Structs
 
             FrameCount = ska.FrameCount;
             SkeletalAnim = ska;
-
             foreach (BoneAnim bn in ska.BoneAnims)
             {
                 FSKANode bonean = new FSKANode(bn);

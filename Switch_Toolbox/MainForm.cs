@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -32,20 +32,26 @@ namespace Switch_Toolbox
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
 
-        bool AttachCommit = false;
+        bool DebugProgram = false;
+
         public MainForm()
         {
+            if (DebugProgram)
+                System.AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+
             InitializeComponent();
-
-            string commit = "";
-            if (AttachCommit)
-                commit = $"Commit: {Runtime.CommitInfo}";
-
-            Text = $"Switch Toolbox | Compile Date: {Runtime.CompileDate} Version: {Runtime.ProgramVersion} {commit}";
+            UpdateToolbar();
 
             ShaderTools.executableDir = executableDir;
 
-            Config.StartupFromFile(MainForm.executableDir + "\\config.xml");
+            try
+            {
+                Config.StartupFromFile(executableDir + "\\config.xml");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load config file! {ex}");
+            }
 
             GenericPluginLoader.LoadPlugin();
             foreach (var plugin in GenericPluginLoader._Plugins)
@@ -57,6 +63,12 @@ namespace Switch_Toolbox
             settings.Close();
             Reload();
             LoadPluginFileContextMenus();
+        }
+        private void ExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+            MessageBox.Show(e.Message);
+            MessageBox.Show($"Runtime terminating: {args.IsTerminating}");
         }
         private List<IMenuExtension> menuExtentions = new List<IMenuExtension>();
         private void LoadPluginContextMenus(Type[] types)
@@ -82,6 +94,12 @@ namespace Switch_Toolbox
                     RegisterMenuExtIndex(menuStrip1, ext.TitleBarExtensions, menuStrip1.Items.Count);
 
             }
+        }
+        private void UpdateToolbar()
+        {
+            string commit = $"Commit: {Runtime.CommitInfo}";
+
+            Text = $"Switch Toolbox | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate}";
         }
         private void LoadPluginFileContextMenus()
         {
@@ -118,6 +136,13 @@ namespace Switch_Toolbox
 
         private void Form4_Load(object sender, EventArgs e)
         {
+            VersionCheck version = new VersionCheck();
+            Runtime.ProgramVersion = version.ProgramVersion;
+            Runtime.CommitInfo = version.CommitInfo;
+            Runtime.CompileDate = version.CompileDate;
+
+            UpdateToolbar();
+
             LoadObjectList();
             LoadRecentList();
             foreach (string item in RecentFiles)
@@ -131,6 +156,12 @@ namespace Switch_Toolbox
                 fileRecent.ForeColor = Color.White;
                 recentToolStripMenuItem.DropDownItems.Add(fileRecent); //add the menu to "recent" menu
             }
+            ThreadStart t = new ThreadStart(UpdateProgram.CheckLatest);
+            Thread thread = new Thread(t);
+            thread.Start();
+
+            Application.Idle += Application_Idle;
+
             LibraryGUI.Instance.dockPanel = dockPanel1;
 
             if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
@@ -138,12 +169,46 @@ namespace Switch_Toolbox
                 OpenTKSharedResources.InitializeSharedResources();
             }
 
-            if (Runtime.OpenStartupWindow)
+            if (Runtime.OpenStartupWindow && !UpdateProgram.CanUpdate)
             {
                 Startup_Window window = new Startup_Window();
                 window.TopMost = true;
                 window.Show();
             }
+        }
+        bool UpdatePromptShown = false;
+        private void Application_Idle(object sender, EventArgs e)
+        {
+            if (UpdateProgram.CanUpdate && !Runtime.DisableUpdatePrompt)
+            {
+                if (!UpdatePromptShown)
+                {
+                    //Prompt once for the user to update the tool. 
+                    UpdatePromptShown = true;
+                    DialogResult result;
+                    using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
+                    {
+                         result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName}!" +
+                        $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    }
+                    if (result == DialogResult.Yes)
+                    {
+                        UpdateApplication();
+                    }
+                }
+            }
+        }
+        private void UpdateApplication()
+        {
+            //Start updating while program is closed
+            Process proc = new Process();
+            proc.StartInfo.FileName = Path.Combine(executableDir, "Updater.exe");
+            proc.StartInfo.WorkingDirectory = executableDir;
+            proc.StartInfo.CreateNoWindow = false;
+            proc.StartInfo.Arguments = "-d -i -b";
+            proc.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            proc.Start();
+            Application.Exit();
         }
         const int MRUnumber = 6;
         private void SaveRecentFile(string path)
@@ -234,89 +299,61 @@ namespace Switch_Toolbox
         public void OpenFile(string FileName, byte[] data = null, bool Compressed = false,
             CompressionType CompType = CompressionType.None)
         {
-            Reload();
-            if (data == null)
-                data = File.ReadAllBytes(FileName);
-
-            if (File.Exists(FileName))
-                SaveRecentFile(FileName);
-
-            FileReader f = new FileReader(data);
-
-            uint Identifier = f.ReadUInt32();
-            f.Seek(0, SeekOrigin.Begin);
-
-            string Magic = f.ReadMagic(0, 4);
-            string Magic2 = f.ReadMagic(0, 2);
-            string Magic3 = f.ReadMagic((int)f.BaseStream.Length - 7, 3);
-
- 
-            //Determine if the file is compressed or not
-            if (Magic == "Yaz0")
+            try
             {
-                data = EveryFileExplorer.YAZ0.Decompress(data).ToArray();
-                OpenFile(FileName, data, true, CompressionType.Yaz0);
-                return;
-            }
-            if (Identifier == 0x28B52FFD || Identifier == 0xFD2FB528)
-            {
-                data = STLibraryCompression.ZSTD.Decompress(f.getSection(0, data.Length));
-                OpenFile(FileName, data, true, CompressionType.Zstb);
-                return;
-            }
-            if (Magic == "ZLIB")
-            {
-                data = FileReader.InflateZLIB(f.getSection(64, data.Length - 64));
-                OpenFile(FileName, data, true, CompressionType.Zlib);
-                return;
-            }
-            if (Path.GetExtension(FileName) == ".cmp" && CompType == CompressionType.None)
-            {
-                f.Position = 0;
-                int OuSize = f.ReadInt32();
-                int InSize = data.Length - 4;
-                data = STLibraryCompression.Type_LZ4F.Decompress(f.getSection(4, InSize));
-                OpenFile(FileName, data, true, CompressionType.Lz4f);
-                return;
-            }
+                Reload();
+                if (data == null)
+                    data = File.ReadAllBytes(FileName);
 
-            f.Dispose();
-            f.Close();
+                if (File.Exists(FileName))
+                    SaveRecentFile(FileName);
 
-             //Check magic first regardless of extension
-            foreach (IFileFormat format in SupportedFormats)
-            {
-                if (format.Magic == Magic || format.Magic == Magic3 || format.Magic == Magic2 || format.Magic.Reverse() == Magic2)
+                FileReader f = new FileReader(data);
+
+                uint Identifier = f.ReadUInt32();
+                f.Seek(0, SeekOrigin.Begin);
+
+                string Magic = f.ReadMagic(0, 4);
+                string Magic2 = f.ReadMagic(0, 2);
+                string Magic3 = f.ReadMagic((int)f.BaseStream.Length - 7, 3);
+
+
+                //Determine if the file is compressed or not
+                if (Magic == "Yaz0")
                 {
-                    format.CompressionType = CompType;
-                    format.FileIsCompressed = Compressed;
-                    format.Data = data;
-                    format.FileName = Path.GetFileName(FileName);
-                    format.FilePath = FileName;
-                    format.Load();
-
-                    if (format is TreeNode)
-                    {
-                        ObjectList.Instance.treeView1.Nodes.Add((TreeNode)format);
-                    }
-
-                    if (format.CanSave)
-                    {
-                        saveAsToolStripMenuItem.Enabled = true;
-                        saveToolStripMenuItem.Enabled = true;
-                    }
-                    if (format.UseEditMenu)
-                        editToolStripMenuItem.Enabled = true;
-
+                    data = EveryFileExplorer.YAZ0.Decompress(data).ToArray();
+                    OpenFile(FileName, data, true, CompressionType.Yaz0);
                     return;
                 }
-            }
-            //If magic fails, then check extensions
-            foreach (IFileFormat format in SupportedFormats)
-            {
-                foreach (string ext in format.Extension)
+                if (Identifier == 0x28B52FFD || Identifier == 0xFD2FB528)
                 {
-                    if (ext.Remove(0, 1) == Path.GetExtension(FileName))
+                    data = STLibraryCompression.ZSTD.Decompress(f.getSection(0, data.Length));
+                    OpenFile(FileName, data, true, CompressionType.Zstb);
+                    return;
+                }
+                if (Magic == "ZLIB")
+                {
+                    data = FileReader.InflateZLIB(f.getSection(64, data.Length - 64));
+                    OpenFile(FileName, data, true, CompressionType.Zlib);
+                    return;
+                }
+                if (Path.GetExtension(FileName) == ".cmp" && CompType == CompressionType.None)
+                {
+                    f.Position = 0;
+                    int OuSize = f.ReadInt32();
+                    int InSize = data.Length - 4;
+                    data = STLibraryCompression.Type_LZ4F.Decompress(f.getSection(4, InSize));
+                    OpenFile(FileName, data, true, CompressionType.Lz4f);
+                    return;
+                }
+
+                f.Dispose();
+                f.Close();
+
+                //Check magic first regardless of extension
+                foreach (IFileFormat format in SupportedFormats)
+                {
+                    if (format.Magic == Magic || format.Magic == Magic3 || format.Magic == Magic2 || format.Magic.Reverse() == Magic2)
                     {
                         format.CompressionType = CompType;
                         format.FileIsCompressed = Compressed;
@@ -341,6 +378,41 @@ namespace Switch_Toolbox
                         return;
                     }
                 }
+                //If magic fails, then check extensions
+                foreach (IFileFormat format in SupportedFormats)
+                {
+                    foreach (string ext in format.Extension)
+                    {
+                        if (ext.Remove(0, 1) == Path.GetExtension(FileName))
+                        {
+                            format.CompressionType = CompType;
+                            format.FileIsCompressed = Compressed;
+                            format.Data = data;
+                            format.FileName = Path.GetFileName(FileName);
+                            format.FilePath = FileName;
+                            format.Load();
+
+                            if (format is TreeNode)
+                            {
+                                ObjectList.Instance.treeView1.Nodes.Add((TreeNode)format);
+                            }
+
+                            if (format.CanSave)
+                            {
+                                saveAsToolStripMenuItem.Enabled = true;
+                                saveToolStripMenuItem.Enabled = true;
+                            }
+                            if (format.UseEditMenu)
+                                editToolStripMenuItem.Enabled = true;
+
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open file! \n {ex}");
             }
         }
         private void DisposeControls()
@@ -485,8 +557,6 @@ namespace Switch_Toolbox
         private void saveConfigToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Config.Save();
-
-            //    dockPanel1.SaveAsXml("DockStates/" + dockPanel1.Text + ".xml");
         }
 
         private void dockPanel1_DockChanged(object sender, EventArgs e)

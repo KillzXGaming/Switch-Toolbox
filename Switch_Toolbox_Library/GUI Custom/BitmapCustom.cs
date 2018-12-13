@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
@@ -30,7 +31,15 @@ namespace Switch_Toolbox.Library
         }
         public static Bitmap Resize(Image original, int width, int height)
         {
-            return new Bitmap(original, new Size(width, height));
+            Bitmap bitmap = new Bitmap(width, height);
+            using (Graphics gr = Graphics.FromImage(bitmap))
+            {
+                gr.SmoothingMode = SmoothingMode.HighQuality;
+                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                gr.DrawImage(original, new Rectangle(0, 0, width, height));
+            }
+            return bitmap;
         }
         public static Bitmap GetBitmap(byte[] Buffer, int Width, int Height, PixelFormat pixelFormat = PixelFormat.Format32bppArgb)
         {
