@@ -3,9 +3,44 @@ A tool to edit many formats of Nintendo Switch and some Wii U.
 
 ## Changelog
 
-v0.73 Changelog
-- Param default values can be set on import for models. (Colors reset to white, bake coords are reset)
-- Fixed some bugs.
+v0.8.5.1
+ - Basic .nutexb dds injection. Must be same width/height and format due to .arc size limitations atm!
+
+v0.8.4 - v0.8.5
+- Textures for Wii U deswizzle properly thanks to AboodXD. 
+- Zstb compressed files will be detected and decompressed automatically on open. 
+- Textures BC1-BC5 will show properly if DirectXTex is not working on older windows versions. Small work around atm.
+- Improper transformations (like bad rotations) should be fixed now. 
+- Basic GTX file viewing
+- Fixed BNTX texture alignment if there is only one texture present in the file. 
+- Many more bug fixes to enhance the user experience. 
+
+v0.8.3
+- Support all nutexb formats from .arc.
+- Fix brightness issues for nutexb srgb (using unorm for decoding atm).
+
+v0.8.2 Changelog
+ - Fixed nutexb errors (incorrect sizes)
+ - Batch exporting nutexb works properly now. Will export with offset for unique name.
+ - DDS save properly to open in photoshop and other programs. 
+
+v0.8.1 Changelog
+ - Fixed error messages and freezes from nutexb.
+
+v0.8 Changelog
+- DDS compression reworked allowing png importing, and previewing of all DDS formats from [DirectXTex](https://github.com/Microsoft/DirectXTex).
+- Exporting/importing of all animation types as binary.
+- .Nutexb previewing/exporting. (and batch exporting)
+- DAE/FBX rigging supported. Models will no longer show invisible. 
+- Improvements to BFRES library. Some games may work better now. 
+- Channel types are now set on import. May fix normal map issues.
+- Archives use double click for opening files
+- DDS cubemaps can be imported
+- GFPAK repacking (untested)
+- Animations for skeleton animations can be played (thanks to smash forge). 
+- Improvements to UI. May load quicker. 
+- Update bake map placeholder textures to look proper.
+- Many improvements and big fixes!
 
 v0.72 Changelog
 - Fixed crashes from RGBA DDS.
@@ -15,8 +50,6 @@ v0.71 Changelog
 - Stability improvements. 
 - Add byml editor back in.
 - Some bug fixes and exception issues
-
-## Features
 
 This tool currently features:
 - BFRES
@@ -30,6 +63,9 @@ This tool currently features:
    - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
    - Can export as binary, dds, png, tga, etc.
    - Can preview mipmap and surface(array) levels.
+- NUTEXB
+     - Can export as binary, dds, png, tga, etc.
+     - Can preview.
 - SARC
    - Supported editing/saving data opened. (Automatically saves data opened in objectlist if supported)
    - Supports padding (Thanks to Exelix and AboodXD)
@@ -40,9 +76,9 @@ This tool currently features:
    - Preview collision models.
    - Replace/Export as obj (Thanks to Exelix)
 - BFFNT
-   - Can extract font images (BNTX)
+   - Can extract font images and preview their image arrays (BNTX)
 - GFPAK
-   - Can extract files.
+   - Can extract, edit, and rebuild (untested).
 
 ## Building
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
