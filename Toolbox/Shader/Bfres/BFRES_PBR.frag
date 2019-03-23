@@ -121,15 +121,15 @@ uniform int UseRoughnessMap;
 int isTransparent;
 
 struct VertexAttributes {
-    vec3 objectPosition;
-    vec2 texCoord;
-    vec2 texCoord2;
-    vec2 texCoord3;
-    vec4 vertexColor;
-    vec3 normal;
-    vec3 viewNormal;
-    vec3 tangent;
-    vec3 bitangent;
+	vec3 objectPosition;
+	vec2 texCoord;
+	vec2 texCoord2;
+	vec2 texCoord3;
+	vec4 vertexColor;
+	vec3 normal;
+	vec3 viewNormal;
+	vec3 tangent;
+	vec3 bitangent;
 	};
 
 out vec4 fragColor;
@@ -157,99 +157,99 @@ vec3 CalcBumpedNormal(vec3 normal, sampler2D normalMap, VertexAttributes vert, f
 
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
-    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
-    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+	return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
-    float a      = roughness*roughness;
-    float a2     = a*a;
-    float NdotH  = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH*NdotH;
+	float a      = roughness*roughness;
+	float a2     = a*a;
+	float NdotH  = max(dot(N, H), 0.0);
+	float NdotH2 = NdotH*NdotH;
 
-    float num   = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
+	float num   = a2;
+	float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+	denom = PI * denom * denom;
 
-    return num / denom;
+	return num / denom;
 }
 
 float GeometrySchlickGGX(float NdotV, float roughness)
 {
-    float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
+	float r = (roughness + 1.0);
+	float k = (r*r) / 8.0;
 
-    float num   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
+	float num   = NdotV;
+	float denom = NdotV * (1.0 - k) + k;
 
-    return num / denom;
+	return num / denom;
 }
 
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+	float NdotV = max(dot(N, V), 0.0);
+	float NdotL = max(dot(N, L), 0.0);
+	float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+	float ggx1  = GeometrySchlickGGX(NdotL, roughness);
 
-    return ggx1 * ggx2;
+	return ggx1 * ggx2;
 }
 
 vec3 saturation(vec3 rgb, float adjustment)
 {
-    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
-    vec3 intensity = vec3(dot(rgb, W));
-    return mix(intensity, rgb, adjustment);
+	const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+	vec3 intensity = vec3(dot(rgb, W));
+	return mix(intensity, rgb, adjustment);
 }
 
 void main()
 {
-    fragColor = vec4(1);
+	fragColor = vec4(1);
 
-    // Create a struct for passing all the vertex attributes to other functions.
-    VertexAttributes vert;
-    vert.objectPosition = objectPosition;
-    vert.texCoord = f_texcoord0;
-    vert.texCoord2 = f_texcoord1;
-    vert.texCoord3 = f_texcoord2;
-    vert.vertexColor = vertexColor;
-    vert.normal = normal;
-    vert.tangent = tangent;
-    vert.bitangent = bitangent;
+	// Create a struct for passing all the vertex attributes to other functions.
+	VertexAttributes vert;
+	vert.objectPosition = objectPosition;
+	vert.texCoord = f_texcoord0;
+	vert.texCoord2 = f_texcoord1;
+	vert.texCoord3 = f_texcoord2;
+	vert.vertexColor = vertexColor;
+	vert.normal = normal;
+	vert.tangent = tangent;
+	vert.bitangent = bitangent;
 
-    vec3 lightColor = vec3(10);
+	vec3 lightColor = vec3(10);
 
-    // Wireframe color.
-    if (colorOverride == 1)
-    {
-        fragColor = vec4(1);
-        return;
-    }
+	// Wireframe color.
+	if (colorOverride == 1)
+	{
+		fragColor = vec4(1);
+		return;
+	}
 
 	vec3 albedo = vec3(1);
-    if (HasDiffuse == 1)
-        albedo = pow(texture(DiffuseMap	, f_texcoord0).rgb, vec3(gamma));
+	if (HasDiffuse == 1)
+		albedo = pow(texture(DiffuseMap	, f_texcoord0).rgb, vec3(gamma));
 
 	float metallic = 0;
-    if (HasMetalnessMap == 1)
-        metallic = texture(MetalnessMap, f_texcoord0).r;
+	if (HasMetalnessMap == 1)
+		metallic = texture(MetalnessMap, f_texcoord0).r;
 
 	float roughness = 0.5;
-    if (HasRoughnessMap == 1)
-        roughness = texture(RoughnessMap, f_texcoord0).r;
+	if (HasRoughnessMap == 1)
+		roughness = texture(RoughnessMap, f_texcoord0).r;
 
 	float ao = 1;
-    if (HasShadowMap == 1 && bake_shadow_type == 0 || UseAOMap == 1)
-        ao = texture(BakeShadowMap, f_texcoord1).r;
+	if (HasShadowMap == 1 && bake_shadow_type == 0 || UseAOMap == 1)
+		ao = texture(BakeShadowMap, f_texcoord1).r;
 
 	float shadow = 1;
-    if (HasShadowMap == 1 && bake_shadow_type == 1)
-        shadow = texture(BakeShadowMap, f_texcoord1).g;
+	if (HasShadowMap == 1 && bake_shadow_type == 1)
+		shadow = texture(BakeShadowMap, f_texcoord1).g;
 
 	float cavity = 1;
 
@@ -259,17 +259,17 @@ void main()
 
 	vec3 lightMapColor = vec3(1);
 	float lightMapIntensity = 0;
-    if (HasLightMap == 1)
-    {
-        lightMapColor = texture(BakeLightMap, f_texcoord1).rgb;
-        lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
-    }
+	if (HasLightMap == 1)
+	{
+		lightMapColor = texture(BakeLightMap, f_texcoord1).rgb;
+		lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
+	}
 
 	float specIntensity = 1;
 
 	if (HasMRA == 1) //Kirby Star Allies PBR map
 	{
-	    //Note KSA has no way to tell if one gets unused or not because shaders :(
+		//Note KSA has no way to tell if one gets unused or not because shaders :(
 		//Usually it's just metalness with roughness and works fine
 		metallic = texture(MRA, f_texcoord0).r;
 		roughness = texture(MRA, f_texcoord0).g;
@@ -277,84 +277,84 @@ void main()
 		ao = texture(MRA, f_texcoord0).a;
 	}
 
-    // Calculate shading vectors.
-    vec3 I = vec3(0,0,-1) * mat3(mtxMdl * mtxCam);
-    vec3 N = normal;
+	// Calculate shading vectors.
+	vec3 I = vec3(0,0,-1) * mat3(mtxMdl * mtxCam);
+	vec3 N = normal;
 	if (HasNormalMap == 1 && useNormalMap == 1)
 		N = CalcBumpedNormal(normal, NormalMap, vert, 0);
 
-    vec3 V = normalize(I); // view
+	vec3 V = normalize(I); // view
 	vec3 L = normalize(specLightDirection); // Light
 	vec3 H = normalize(specLightDirection + I); // half angle
-    vec3 R = reflect(I, N); // reflection
+	vec3 R = reflect(I, N); // reflection
 
-    vec3 f0 = mix(vec3(0.04), albedo, metallic); // dialectric
-    vec3 kS = FresnelSchlickRoughness(max(dot(N, V), 0.0), f0, roughness);
+	vec3 f0 = mix(vec3(0.04), albedo, metallic); // dialectric
+	vec3 kS = FresnelSchlickRoughness(max(dot(N, V), 0.0), f0, roughness);
 
-    vec3 kD = 1.0 - kS;
-    kD *= 1.0 - metallic;
+	vec3 kD = 1.0 - kS;
+	kD *= 1.0 - metallic;
 
-    BakedData ShadowBake = ShadowMapBaked(BakeShadowMap,BakeLightMap, f_texcoord1, f_texcoord2, int(bake_shadow_type),int(bake_light_type), int(bake_calc_type), N );
+	BakedData ShadowBake = ShadowMapBaked(BakeShadowMap,BakeLightMap, f_texcoord1, f_texcoord2, int(bake_shadow_type),int(bake_light_type), int(bake_calc_type), N );
 
 	vec3 LightingDiffuse = vec3(0);
 	if (HasLightMap == 1)
 	{
-	    vec3 LightIntensity = vec3(0.1);
+		vec3 LightIntensity = vec3(0.1);
 		LightingDiffuse += ShadowBake.indirectLighting.rgb * LightIntensity;
 	}
 
-    // Diffuse pass
-    vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
-    vec3 diffuseTerm = diffuseIblColor * albedo;
-    diffuseTerm *= kD;
-    diffuseTerm *= cavity;
-    diffuseTerm *= ao;
-    diffuseTerm *= shadow;
+	// Diffuse pass
+	vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
+	vec3 diffuseTerm = diffuseIblColor * albedo;
+	diffuseTerm *= kD;
+	diffuseTerm *= cavity;
+	diffuseTerm *= ao;
+	diffuseTerm *= shadow;
 	diffuseTerm += LightingDiffuse;
 
-    // Adjust for metalness.
-  //  diffuseTerm *= clamp(1 - metallic, 0, 1);
+	// Adjust for metalness.
+	//  diffuseTerm *= clamp(1 - metallic, 0, 1);
 
 
-  //  diffuseTerm *= vec3(1) - kS.xxx;
+	//  diffuseTerm *= vec3(1) - kS.xxx;
 
-    // Specular pass.
-    int maxSpecularLod = 8;
-    vec3 specularIblColor = textureLod(specularIbl, R, roughness * maxSpecularLod).rgb;
-
-
-    vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
-    vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
-    vec3 specularTerm = specularIblColor * brdfTerm * specIntensity * 0.7f;
+	// Specular pass.
+	int maxSpecularLod = 8;
+	vec3 specularIblColor = textureLod(specularIbl, R, roughness * maxSpecularLod).rgb;
 
 
-    // Add render passes.
-    fragColor.rgb = vec3(0);
-    fragColor.rgb += diffuseTerm;
-    fragColor.rgb += specularTerm;
-
-    // Global brightness adjustment.
-    fragColor.rgb *= 2.5;
-
-   fragColor *= min(pickingColor, vec4(1));
-
-    fragColor.rgb *= min(boneWeightsColored, vec3(1));
+	vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+	vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
+	vec3 specularTerm = specularIblColor * brdfTerm * specIntensity * 0.7f;
 
 
-    // Convert back to sRGB.
-    fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
+	// Add render passes.
+	fragColor.rgb = vec3(0);
+	fragColor.rgb += diffuseTerm;
+	fragColor.rgb += specularTerm;
 
-    // Alpha calculations.
-    float alpha = texture(DiffuseMap, f_texcoord0).a;
-    fragColor.a = alpha;
+	// Global brightness adjustment.
+	fragColor.rgb *= 2.5;
+
+	fragColor *= min(pickingColor, vec4(1));
+
+	fragColor.rgb *= min(boneWeightsColored, vec3(1));
 
 
-	 // Toggles rendering of individual color channels for all render modes.
-    fragColor.rgb *= vec3(renderR, renderG, renderB);
-    if (renderR == 1 && renderG == 0 && renderB == 0)
-        fragColor.rgb = fragColor.rrr;
-    else if (renderG == 1 && renderR == 0 && renderB == 0)
-        fragColor.rgb = fragColor.ggg;
-    else if (renderB == 1 && renderR == 0 && renderG == 0)
-        fragColor.rgb = fragColor.bbb;
+	// Convert back to sRGB.
+	fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
+
+	// Alpha calculations.
+	float alpha = texture(DiffuseMap, f_texcoord0).a;
+	fragColor.a = alpha;
+
+
+		// Toggles rendering of individual color channels for all render modes.
+	fragColor.rgb *= vec3(renderR, renderG, renderB);
+	if (renderR == 1 && renderG == 0 && renderB == 0)
+		fragColor.rgb = fragColor.rrr;
+	else if (renderG == 1 && renderR == 0 && renderB == 0)
+		fragColor.rgb = fragColor.ggg;
+	else if (renderB == 1 && renderR == 0 && renderG == 0)
+		fragColor.rgb = fragColor.bbb;
 }
