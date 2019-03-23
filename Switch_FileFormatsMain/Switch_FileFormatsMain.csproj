@@ -1,0 +1,1080 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A11705CF-A6A3-41C3-875A-E1CFD8080F09}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FirstPlugin</RootNamespace>
+    <AssemblyName>FirstPlugin.Plg</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Toolbox\bin\Release\Lib\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Toolbox\bin\Release\Lib\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AampCommon">
+      <HintPath>..\Toolbox\Lib\AampCommon.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AampV1Library">
+      <HintPath>..\Toolbox\Lib\AampV1Library.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AampV2Library">
+      <HintPath>..\Toolbox\Lib\AampV2Library.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BarsLibrary">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\BarsLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BezelEngineArchive_Lib">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BfshaLibrary, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolbox\Lib\BfshaLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="ByamlExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolbox\Lib\ByamlExt.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CSCore">
+      <HintPath>..\Toolbox\bin\Release\Lib\CSCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="EditorCoreCommon">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KCLExt">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\KCLExt.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LibHac">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\LibHac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="NAudio">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\NAudio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolbox\Lib\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ObjectListView">
+      <HintPath>..\Toolbox\Lib\ObjectListView.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SARCExt">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SARCExt.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SELib">
+      <HintPath>..\Toolbox\Lib\SELib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SFGraphics">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SFGraphics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SFGraphics.Utils">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.BinaryData">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.Maths">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Syroot.Maths.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.Bfres">
+      <HintPath>..\Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bfres">
+      <HintPath>..\Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bntx">
+      <HintPath>..\Toolbox\Lib\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers">
+      <HintPath>.\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory">
+      <HintPath>.\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>.\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VGAudio">
+      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\VGAudio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="FileFormats\AAMP\AAMP.cs" />
+    <Compile Include="FileFormats\Archives\TMPK.cs" />
+    <Compile Include="FileFormats\Audio\Archives\BARS.cs" />
+    <Compile Include="FileFormats\Audio\BARSLIST.cs" />
+    <Compile Include="FileFormats\Audio\BCSTM.cs" />
+    <Compile Include="FileFormats\Archives\BEA.cs" />
+    <Compile Include="FileFormats\Audio\BCWAV.cs" />
+    <Compile Include="FileFormats\Audio\BFWAV.cs" />
+    <Compile Include="FileFormats\Audio\BRWAV.cs" />
+    <Compile Include="FileFormats\Audio\HPS.cs" />
+    <Compile Include="FileFormats\Audio\IDSP.cs" />
+    <Compile Include="FileFormats\Audio\MP3.cs" />
+    <Compile Include="FileFormats\Audio\Ogg.cs" />
+    <Compile Include="FileFormats\Audio\WAV.cs" />
+    <Compile Include="FileFormats\BFRES\BFRESGroup.cs" />
+    <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
+    <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
+    <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
+    <Compile Include="FileFormats\Font\BFFNT.cs" />
+    <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
+    <Compile Include="FileFormats\Shader\SHARCFBNX.cs" />
+    <Compile Include="FileFormats\Texture\BFLIM.cs" />
+    <Compile Include="FileFormats\Layout\BFLAN.cs" />
+    <Compile Include="FileFormats\Layout\BFLYT.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\CurveHelper.cs" />
+    <Compile Include="FileFormats\BFRES\BFRES.cs" />
+    <Compile Include="GL\Helpers\DepthGLControl.cs" />
+    <Compile Include="GL\ShaderData\AglShaderOdyssey.cs" />
+    <Compile Include="GL\ShaderData\AglShaderTurbo.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\ResourceFile.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\ExternalFiles.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FVIS.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FMAA.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FMDL\FMAT.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FSCN.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FSHA.cs" />
+    <Compile Include="FileFormats\Audio\BFSTM.cs" />
+    <Compile Include="FileFormats\Archives\NARC.cs" />
+    <Compile Include="FileFormats\Rom\ROMFS.cs" />
+    <Compile Include="FileFormats\Archives\SDF.cs" />
+    <Compile Include="FileFormats\Shader\SHARCFB.cs" />
+    <Compile Include="FileFormats\Audio\BRSTM.cs" />
+    <Compile Include="GL\Helpers\AlphaGLControl.cs" />
+    <Compile Include="GL\Helpers\ColorGLControl.cs" />
+    <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.Designer.cs">
+      <DependentUpon>BoneVisualAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisListEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisListEditor.Designer.cs">
+      <DependentUpon>BoneVisListEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.Designer.cs">
+      <DependentUpon>VisObjectAddDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\VertexAttributeInputListEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\VertexAttributeInputListEdit.Designer.cs">
+      <DependentUpon>VertexAttributeInputListEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\SamplerInputListEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\SamplerInputListEdit.Designer.cs">
+      <DependentUpon>SamplerInputListEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ParamValueEditorBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\booleanPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\booleanPanel.Designer.cs">
+      <DependentUpon>booleanPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\BoundingBoxListEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\BoundingBoxListEditor.Designer.cs">
+      <DependentUpon>BoundingBoxListEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\CopyUVChannelDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\CopyUVChannelDialog.Designer.cs">
+      <DependentUpon>CopyUVChannelDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\FaceIndiceListViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\FaceIndiceListViewer.Designer.cs">
+      <DependentUpon>FaceIndiceListViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\SubMeshEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\SubMeshEditor.Designer.cs">
+      <DependentUpon>SubMeshEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\VertexBufferCreator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\VertexBufferCreator.Designer.cs">
+      <DependentUpon>VertexBufferCreator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\VertexBufferEncodeEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\VertexBufferEncodeEditor.Designer.cs">
+      <DependentUpon>VertexBufferEncodeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\AddSamplerKeyGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\AddSamplerKeyGroup.Designer.cs">
+      <DependentUpon>AddSamplerKeyGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\AddTextureKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\AddTextureKey.Designer.cs">
+      <DependentUpon>AddTextureKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GIF\GifToTexturePatternAnimation.cs" />
+    <Compile Include="GUI\BFRES\TexturePattern\TexPatternInfoEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\TexPatternInfoEditor.Designer.cs">
+      <DependentUpon>TexPatternInfoEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.Designer.cs">
+      <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Byaml\TurboMunntEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\TurboMunntEditor.Designer.cs">
+      <DependentUpon>TurboMunntEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MarioCostumeEditor.cs" />
+    <Compile Include="GUI\AAMP\AampV1Editor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\AAMP\AampV1Editor.Designer.cs">
+      <DependentUpon>AampV1Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\AAMP\AampV2Editor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\AAMP\AampV2Editor.Designer.cs">
+      <DependentUpon>AampV2Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\AAMP\EditBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\AAMP\EditBox.Designer.cs" />
+    <Compile Include="GUI\AnimationLoader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\AnimationLoader.Designer.cs">
+      <DependentUpon>AnimationLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresEditor.Designer.cs">
+      <DependentUpon>BfresEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresHeaderEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresHeaderEditor.Designer.cs">
+      <DependentUpon>BfresHeaderEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneAnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneAnimEditor.Designer.cs">
+      <DependentUpon>BoneAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ColorPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ColorPicker.Designer.cs">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ColorWheel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ColorWheel.Designer.cs">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ShaderParamEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ShaderParamEditor.Designer.cs">
+      <DependentUpon>ShaderParamEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel.Designer.cs">
+      <DependentUpon>TexSrtPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector1SliderPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector1SliderPanel.Designer.cs">
+      <DependentUpon>vector1SliderPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector2SliderPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector2SliderPanel.Designer.cs">
+      <DependentUpon>vector2SliderPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector3SliderPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector3SliderPanel.Designer.cs">
+      <DependentUpon>vector3SliderPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector4SliderPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\vector4SliderPanel.Designer.cs">
+      <DependentUpon>vector4SliderPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\VolatileFlagEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\VolatileFlagEditor.Designer.cs">
+      <DependentUpon>VolatileFlagEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\KeyShapeList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\KeyShapeList.Designer.cs">
+      <DependentUpon>KeyShapeList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\VertexBufferList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\VertexBufferList.Designer.cs">
+      <DependentUpon>VertexBufferList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\BoneIndexList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\BoneIndexList.Designer.cs">
+      <DependentUpon>BoneIndexList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\BoneInfoPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\BoneInfoPanel.Designer.cs">
+      <DependentUpon>BoneInfoPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\DebugInfoBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\DebugInfoBox.Designer.cs">
+      <DependentUpon>DebugInfoBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneAnims\BoneAnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BoneAnims\BoneAnimEditor.Designer.cs">
+      <DependentUpon>BoneAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\BfresShapeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\BfresShapeEditor.Designer.cs">
+      <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\SubFileEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\SubFileEditor.Designer.cs">
+      <DependentUpon>SubFileEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\ShaderOptionsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\ShaderOptionsEditor.Designer.cs">
+      <DependentUpon>ShaderOptionsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\NewFolder1\SamplerEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\NewFolder1\SamplerEditor.Designer.cs">
+      <DependentUpon>SamplerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderStateEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderStateEditor.Designer.cs">
+      <DependentUpon>RenderStateEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\SamplerEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\SamplerEditor.Designer.cs">
+      <DependentUpon>SamplerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\SamplerListEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\SamplerListEdit.Designer.cs">
+      <DependentUpon>SamplerListEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderInfoEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderInfoEditor.Designer.cs">
+      <DependentUpon>RenderInfoEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderInfoDataEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderInfoDataEditor.Designer.cs">
+      <DependentUpon>RenderInfoDataEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\BfresTexturePatternEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\BfresTexturePatternEditor.Designer.cs">
+      <DependentUpon>BfresTexturePatternEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\FrameTextureThumbnail.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\TexturePattern\FrameTextureThumbnail.Designer.cs">
+      <DependentUpon>FrameTextureThumbnail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\ParamAnim\AnimParamEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\ParamAnim\AnimParamEditor.Designer.cs">
+      <DependentUpon>AnimParamEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\AnimKeyViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\AnimKeyViewer.Designer.cs">
+      <DependentUpon>AnimKeyViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Scene\SceneAnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Scene\SceneAnimEditor.Designer.cs">
+      <DependentUpon>SceneAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\ShaderBinaryDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\ShaderBinaryDisplay.Designer.cs">
+      <DependentUpon>ShaderBinaryDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\ShaderEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\ShaderEditor.Designer.cs">
+      <DependentUpon>ShaderEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\TexturePatternAnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\TexturePatternAnimEditor.Designer.cs">
+      <DependentUpon>TexturePatternAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\UserDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\UserDataEditor.Designer.cs">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\UserDataParser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\UserDataParser.Designer.cs">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\UserDataWrapper.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FSHU.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FMDL\FSHP.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FMDL\FSKL.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FTXP.cs" />
+    <Compile Include="FileFormats\BFRES\BfresSwitch.cs" />
+    <Compile Include="FileFormats\BFRES\BfresWiiU.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FMDL.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FSKA.cs" />
+    <Compile Include="FileFormats\BFRES\KsaShader.cs" />
+    <Compile Include="FileFormats\Audio\Archives\BFSAR.cs" />
+    <Compile Include="FileFormats\Shader\BFSHA.cs" />
+    <Compile Include="FileFormats\Shader\BNSH.cs" />
+    <Compile Include="FileFormats\Byaml\BYAML.cs" />
+    <Compile Include="FileFormats\Turbo\Course_MapCamera_bin.cs" />
+    <Compile Include="FileFormats\Custom\CsvModels.cs" />
+    <Compile Include="FileFormats\Archives\GFPAK.cs" />
+    <Compile Include="FileFormats\Collision\KCL.cs" />
+    <Compile Include="FileFormats\Message\MSBT.cs" />
+    <Compile Include="FileFormats\Rom\NCA.cs" />
+    <Compile Include="FileFormats\Rom\NSP.cs" />
+    <Compile Include="FileFormats\Effects\PCTL.cs" />
+    <Compile Include="FileFormats\Archives\SARC.cs" />
+    <Compile Include="FileFormats\Shader\SHARC.cs" />
+    <Compile Include="FileFormats\Texture\BNTX.cs" />
+    <Compile Include="FileFormats\Effects\EFF.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FTEX.cs" />
+    <Compile Include="FileFormats\Texture\GTXFile.cs" />
+    <Compile Include="FileFormats\Texture\NUTEXB.cs" />
+    <Compile Include="FileFormats\Texture\TexConv.cs" />
+    <Compile Include="FileFormats\Texture\XTX.cs" />
+    <Compile Include="FileFormats\Rom\XCI.cs" />
+    <Compile Include="GetSwitchKeys.cs" />
+    <Compile Include="GL\BFRES_Render.cs" />
+    <Compile Include="GUI\Advanced Editor\TextureViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\TextureViewer.Designer.cs">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\AttributeEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\AttributeEditor.Designer.cs">
+      <DependentUpon>AttributeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMuuntStructs.cs" />
+    <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.Designer.cs">
+      <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.Designer.cs">
+      <DependentUpon>CourseMunntEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditor.Designer.cs">
+      <DependentUpon>EmitterEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresModelImportSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresModelImportSettings.Designer.cs">
+      <DependentUpon>BfresModelImportSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BntxSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BntxSelector.Designer.cs">
+      <DependentUpon>BntxSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\CopyMaterialMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\CopyMaterialMenu.Designer.cs">
+      <DependentUpon>CopyMaterialMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\BFAVEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\BFAVEditor.Designer.cs">
+      <DependentUpon>BFAVEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\BfresBoneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\BfresBoneEditor.Designer.cs">
+      <DependentUpon>BfresBoneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\BfresLODMeshEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Shape\BfresLODMeshEditor.Designer.cs">
+      <DependentUpon>BfresLODMeshEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\BfresMaterialEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\BfresMaterialEditor.Designer.cs">
+      <DependentUpon>BfresMaterialEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\ShaderOptionsEditBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderAssign\ShaderOptionsEditBox.Designer.cs">
+      <DependentUpon>ShaderOptionsEditBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\VisibiltyAnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\VisibiltyAnimEditor.Designer.cs">
+      <DependentUpon>VisibiltyAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\FormLoader.cs" />
+    <Compile Include="GUI\KeySelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\KeySelection.Designer.cs" />
+    <Compile Include="GUI\TextureLoader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureLoader.Designer.cs">
+      <DependentUpon>TextureLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\Importers\GTXImporterSettings.cs" />
+    <Compile Include="GUI\TextureUI\Importers\GTXTextureImporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\Importers\GTXTextureImporter.Designer.cs" />
+    <Compile Include="GUI\Byaml\ByamlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\ByamlEditor.Designer.cs">
+      <DependentUpon>ByamlEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\PreviewEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Advanced Editor\PreviewEditor.Designer.cs">
+      <DependentUpon>PreviewEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\FSKLEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Skeleton\FSKLEditor.Designer.cs">
+      <DependentUpon>FSKLEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderInfoEnums.cs" />
+    <Compile Include="GUI\Editors\VertexAttributeDataList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\VertexAttributeDataList.Designer.cs">
+      <DependentUpon>VertexAttributeDataList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\PreviewFormatList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\PreviewFormatList.Designer.cs">
+      <DependentUpon>PreviewFormatList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\Texture Selector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\Texture Selector.Designer.cs">
+      <DependentUpon>Texture Selector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\Importers\BinaryTextureImporterList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TextureUI\Importers\BinaryTextureImporterList.Designer.cs">
+      <DependentUpon>BinaryTextureImporterList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\TextureUI\Importers\CreateGx2Texture.cs" />
+    <Compile Include="GUI\TextureUI\Importers\TextureImporterSettings.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="NodeWrappers\Archives\BFRESWrapper.cs" />
+    <Compile Include="NodeWrappers\BfresFilters.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PluginRuntime.cs" />
+    <Compile Include="XML\BfresMaterial2XML.cs" />
+    <Compile Include="XML\Bfsha2Xml.cs" />
+    <Compile Include="XML\Sharc2XML.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InjectTexErrored.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GUI\AAMP\EditBox.resx" />
+    <EmbeddedResource Include="GUI\Advanced Editor\TextureViewer.resx">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\AnimationLoader.resx">
+      <DependentUpon>AnimationLoader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\AttributeEditor.resx">
+      <DependentUpon>AttributeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresEditor.resx">
+      <DependentUpon>BfresEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresHeaderEditor.resx">
+      <DependentUpon>BfresHeaderEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BoneAnimEditor.resx">
+      <DependentUpon>BoneAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.resx">
+      <DependentUpon>BoneVisualAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BoneVisualAnims\BoneVisListEditor.resx">
+      <DependentUpon>BoneVisListEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.resx">
+      <DependentUpon>VisObjectAddDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderAssign\VertexAttributeInputListEdit.resx">
+      <DependentUpon>VertexAttributeInputListEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderAssign\SamplerInputListEdit.resx">
+      <DependentUpon>SamplerInputListEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\ColorPicker.resx">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\ColorWheel.resx">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\ShaderParamEditor.resx">
+      <DependentUpon>ShaderParamEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel.resx">
+      <DependentUpon>TexSrtPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\booleanPanel.resx">
+      <DependentUpon>booleanPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\vector1SliderPanel.resx">
+      <DependentUpon>vector1SliderPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\vector2SliderPanel.resx">
+      <DependentUpon>vector2SliderPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\vector3SliderPanel.resx">
+      <DependentUpon>vector3SliderPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\vector4SliderPanel.resx">
+      <DependentUpon>vector4SliderPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\VolatileFlagEditor.resx">
+      <DependentUpon>VolatileFlagEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\CopyUVChannelDialog.resx">
+      <DependentUpon>CopyUVChannelDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\FaceIndiceListViewer.resx">
+      <DependentUpon>FaceIndiceListViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\KeyShapeList.resx">
+      <DependentUpon>KeyShapeList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\SubMeshEditor.resx">
+      <DependentUpon>SubMeshEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\VertexBufferCreator.resx">
+      <DependentUpon>VertexBufferCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\VertexBufferEncodeEditor.resx">
+      <DependentUpon>VertexBufferEncodeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\VertexBufferList.resx">
+      <DependentUpon>VertexBufferList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Skeleton\BoneIndexList.resx">
+      <DependentUpon>BoneIndexList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Skeleton\BoneInfoPanel.resx">
+      <DependentUpon>BoneInfoPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\DebugInfoBox.resx">
+      <DependentUpon>DebugInfoBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BoneAnims\BoneAnimEditor.resx">
+      <DependentUpon>BoneAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\BfresShapeEditor.resx">
+      <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\SubFileEditor.resx">
+      <DependentUpon>SubFileEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderAssign\ShaderOptionsEditor.resx">
+      <DependentUpon>ShaderOptionsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\NewFolder1\SamplerEditor.resx">
+      <DependentUpon>SamplerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\RenderStateEditor.resx">
+      <DependentUpon>RenderStateEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\SamplerEditor.resx">
+      <DependentUpon>SamplerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\SamplerListEdit.resx">
+      <DependentUpon>SamplerListEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\RenderInfoEditor.resx">
+      <DependentUpon>RenderInfoEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\RenderInfoDataEditor.resx">
+      <DependentUpon>RenderInfoDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\TexturePattern\AddSamplerKeyGroup.resx">
+      <DependentUpon>AddSamplerKeyGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\TexturePattern\AddTextureKey.resx">
+      <DependentUpon>AddTextureKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\TexturePattern\BfresTexturePatternEditor.resx">
+      <DependentUpon>BfresTexturePatternEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\TexturePattern\FrameTextureThumbnail.resx">
+      <DependentUpon>FrameTextureThumbnail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\TexturePattern\TexPatternInfoEditor.resx">
+      <DependentUpon>TexPatternInfoEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.resx">
+      <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Byaml\TurboMunntEditor.resx">
+      <DependentUpon>TurboMunntEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\ParamAnim\AnimParamEditor.resx">
+      <DependentUpon>AnimParamEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\AnimKeyViewer.resx">
+      <DependentUpon>AnimKeyViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.resx">
+      <DependentUpon>CourseMunntEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.resx">
+      <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditor.resx">
+      <DependentUpon>EmitterEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresModelImportSettings.resx">
+      <DependentUpon>BfresModelImportSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BntxSelector.resx">
+      <DependentUpon>BntxSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\CopyMaterialMenu.resx">
+      <DependentUpon>CopyMaterialMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\BFAVEditor.resx">
+      <DependentUpon>BFAVEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Skeleton\BfresBoneEditor.resx">
+      <DependentUpon>BfresBoneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Shape\BfresLODMeshEditor.resx">
+      <DependentUpon>BfresLODMeshEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\BfresMaterialEditor.resx">
+      <DependentUpon>BfresMaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderAssign\ShaderOptionsEditBox.resx">
+      <DependentUpon>ShaderOptionsEditBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Scene\SceneAnimEditor.resx">
+      <DependentUpon>SceneAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\ShaderBinaryDisplay.resx">
+      <DependentUpon>ShaderBinaryDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\ShaderEditor.resx">
+      <DependentUpon>ShaderEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\TexturePatternAnimEditor.resx">
+      <DependentUpon>TexturePatternAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\UserDataEditor.resx">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\UserDataParser.resx">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\VisibiltyAnimEditor.resx">
+      <DependentUpon>VisibiltyAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\KeySelection.resx" />
+    <EmbeddedResource Include="GUI\Byaml\ByamlEditor.resx">
+      <DependentUpon>ByamlEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Advanced Editor\PreviewEditor.resx">
+      <DependentUpon>PreviewEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Skeleton\FSKLEditor.resx">
+      <DependentUpon>FSKLEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\VertexAttributeDataList.resx">
+      <DependentUpon>VertexAttributeDataList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PreviewFormatList.resx">
+      <DependentUpon>PreviewFormatList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\Texture Selector.resx">
+      <DependentUpon>Texture Selector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureLoader.resx">
+      <DependentUpon>TextureLoader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\Importers\BinaryTextureImporterList.resx">
+      <DependentUpon>BinaryTextureImporterList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\Importers\GTXTextureImporter.resx">
+      <DependentUpon>GTXTextureImporter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GL_EditorFramework-master\Gl_EditorFramework\Gl_EditorFramework.csproj">
+      <Project>{d593a72d-554d-40fb-9967-503cb15a744f}</Project>
+      <Name>Gl_EditorFramework</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
+      <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
+      <Name>Switch_Toolbox_Library</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TextureError.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrowMinimize .png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Basic_Nrm.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Basic_NrmBC5.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Black.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\White.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="AxWMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+      <Private>False</Private>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Basic_Bake_st0.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Basic_Bake_st1.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrowMinimize 1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GridBackground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RemoveIcon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

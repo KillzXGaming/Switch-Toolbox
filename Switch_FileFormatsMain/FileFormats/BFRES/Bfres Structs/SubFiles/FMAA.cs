@@ -1,0 +1,726 @@
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Forms;
+using FirstPlugin;
+using Syroot.NintenTools.NSW.Bfres;
+using FirstPlugin.Forms;
+using Switch_Toolbox.Library.Animations;
+
+namespace Bfres.Structs
+{
+    public class FMAA : MaterialAnimation
+    {
+        private static readonly string ShaderParamAnimType = "_fsp";
+        private static readonly string ShaderParamAnimType2= "_sp";
+        private static readonly string TexturePatternAnimType = "_ftp";
+        private static readonly string TexturePatternAnimType2 = "_tp";
+        private static readonly string TextureSrtAnimType = "_fts";
+        private static readonly string TextureSrtAnimType2 = "_ts";
+        private static readonly string ColorAnimType = "_fcl";
+        private static readonly string ColorAnimType2 = "_cl";
+        private static readonly string VisibiltyAnimType = "_fvm";
+        private static readonly string VisibiltyAnimType2 = "_vm";
+
+        public static bool IsShaderParamAnimation(string name) {
+            return name.Contains(ShaderParamAnimType) ||
+                   name.Contains(ShaderParamAnimType2);
+        }
+        public static bool IsSRTAnimation(string name){
+            return name.Contains(TextureSrtAnimType) ||
+                   name.Contains(TextureSrtAnimType2);
+        }
+        public static bool IsTexturePattern(string name) {
+            return name.Contains(TexturePatternAnimType) ||
+                   name.Contains(TexturePatternAnimType2);
+        }
+        public static bool IsColorAnimation(string name) {
+            return name.Contains(ColorAnimType) ||
+                   name.Contains(ColorAnimType2);
+        }
+        public static bool IsVisibiltyAnimation(string name) {
+            return name.Contains(VisibiltyAnimType) ||
+                   name.Contains(VisibiltyAnimType2);
+        }
+
+        public class MaterialAnimEntry : Material
+        {
+            public FMAA matAnimWrapper;
+
+            public MaterialAnimData MaterialAnimData;
+
+            public MaterialAnimEntry(string name) : base(name)
+            {
+            }
+
+            public void LoadMaterial(MaterialAnimData data, FMAA materialAnimation)
+            {
+                MaterialAnimData = data;
+                matAnimWrapper = materialAnimation;
+            }
+
+            public void CreateSampler(string Name, bool IsConstant)
+            {
+                var mat = MaterialAnimData;
+
+                var SamplerInfo = new TexturePatternAnimInfo();
+                if (IsConstant)
+                {
+                    SamplerInfo.BeginConstant = (ushort)mat.Constants.Count;
+                    SamplerInfo.CurveIndex = (ushort)65535;
+                }
+                else
+                {
+                    SamplerInfo.BeginConstant = (ushort)65535;
+                    SamplerInfo.CurveIndex = (uint)mat.Curves.Count;
+                }
+                mat.TexturePatternAnimInfos.Add(SamplerInfo);
+
+                BfresSamplerAnim sampler = new BfresSamplerAnim(SamplerInfo.Name, matAnimWrapper, this);
+                Samplers.Add(sampler);
+
+            }
+
+            public MaterialAnimData SaveData()
+            {
+                MaterialAnimData.Name = Text;
+                return MaterialAnimData;
+            }
+        }
+
+        public void UpdateMaterialBinds()
+        {
+            MaterialAnim.TextureBindArray = new List<long>();
+
+            ushort[] binds = new ushort[MaterialAnim.MaterialAnimDataList.Count];
+
+            for (int i = 0; i < binds.Length; i++)
+                binds[i] = ushort.MaxValue;
+            for (int i = 0; i < MaterialAnim.TextureNames.Count; i++)
+                MaterialAnim.TextureBindArray.Add(- 1);
+
+            MaterialAnim.BindIndices = binds;
+        }
+
+        public override void UpdateAnimationData()
+        {
+            MaterialAnim.FrameCount = FrameCount;
+            MaterialAnim.TextureNames = Textures;
+        }
+
+        public void SaveAnimData()
+        {
+            if (!IsEdited)
+                return;
+
+            MaterialAnim.FrameCount = FrameCount;
+            MaterialAnim.TextureNames = Textures;
+
+            int TexturePatternCurveIndex = 0;
+            int ParamCurveIndex = 0;
+
+            MaterialAnimData data = new MaterialAnimData();
+            MaterialAnim.MaterialAnimDataList.Add(data);
+
+            foreach (MaterialAnimEntry mat in Materials)
+            {
+                mat.MaterialAnimData = new MaterialAnimData();
+                mat.MaterialAnimData.Name = mat.Text;
+
+                //Set default indices as unused for now
+                mat.MaterialAnimData.BeginVisalConstantIndex = -1;
+                mat.MaterialAnimData.ShaderParamCurveIndex = -1;
+                mat.MaterialAnimData.TexturePatternCurveIndex = -1;
+                mat.MaterialAnimData.VisalCurveIndex = -1;
+                mat.MaterialAnimData.VisualConstantIndex = -1;
+
+                //Load our first curve index if a sampler or param has one
+                SavePatternInfos(data, mat, TexturePatternCurveIndex);
+                SaveParamInfos(data, mat, ParamCurveIndex);
+            }
+
+            UpdateMaterialBinds();
+        }
+
+        private void SavePatternInfos(MaterialAnimData data, Material mat, int TexturePatternCurveIndex)
+        {
+            bool SetBeginCurve = false;
+            foreach (var sampler in mat.Samplers)
+            {
+                //If constant, create a constant instance with the first value set
+                if (sampler.group.Constant)
+                {
+                    AnimConstant animConstant = new AnimConstant();
+                    animConstant.AnimDataOffset = 0;
+                    animConstant.Value = sampler.group.GetValue(0);
+                    data.Constants.Add(animConstant);
+                }
+                else if (sampler.group.Keys.Count > 0)
+                {
+                    //If a sampler is not constant and uses curve data, then we need to set our begin curve index
+                    if (!SetBeginCurve)
+                    {
+                        data.TexturePatternCurveIndex += TexturePatternCurveIndex;
+                        data.BeginVisalConstantIndex += 0; //This is usually 0 so set it
+
+                        SetBeginCurve = true;
+                    }
+
+                    //Create a curve to store all the index data in for each frame
+                    AnimCurve curve = new AnimCurve();
+                    curve.AnimDataOffset = 0;
+
+                    //Set our data types. Pattern and visibilty are always the same type
+                    if (AnimType == AnimationType.TexturePattern)
+                        curve.CurveType = AnimCurveType.StepInt;
+                    else if (AnimType == AnimationType.Visibilty)
+                        curve.CurveType = AnimCurveType.StepBool;
+                    else
+                    {
+                        if (sampler.group.InterpolationType == InterpolationType.HERMITE)
+                            curve.CurveType = AnimCurveType.Cubic;
+                        if (sampler.group.InterpolationType == InterpolationType.LINEAR)
+                            curve.CurveType = AnimCurveType.Linear;
+                        if (sampler.group.InterpolationType == InterpolationType.STEP)
+                            curve.CurveType = AnimCurveType.StepInt;
+                        if (sampler.group.InterpolationType == InterpolationType.STEPBOOL)
+                            curve.CurveType = AnimCurveType.StepBool;
+                    }
+
+                    curve.Delta = 0;
+                    curve.EndFrame = FrameCount;
+                    curve.StartFrame = 0;
+                    curve.FrameType = AnimCurveFrameType.Byte;
+                    curve.Scale = 1;
+                    curve.Offset = 0;
+
+                    List<float> Frames = new List<float>();
+                    List<float> Keys = new List<float>();
+
+                    for (int frame = 0; frame < sampler.group.Keys.Count; frame++)
+                    {
+                        float currentIndex = sampler.group.GetValue(frame);
+                        if (frame > 0)
+                        {
+                            float previousIndex = sampler.group.GetValue(frame - 1);
+                            if (currentIndex != previousIndex)
+                            {
+                                //Add key frame if texture not loaded previously
+                                Frames.Add(frame);
+                                Keys.Add(currentIndex);
+                            }
+                        }
+                        else
+                        {
+                            //Add the first key frame value. We would add base values here but switch has none
+                            Frames.Add(frame);
+                            Keys.Add(currentIndex);
+                        }
+                    }
+
+
+                    for (int i = 0; i <Keys.Count; i++)
+                    {
+                        curve.Keys[i, 0] = Keys[i];
+                    }
+
+                    curve.Frames = Frames.ToArray();
+
+                    TexturePatternCurveIndex += 1;
+                }
+            }
+        }
+
+        private void SaveParamInfos(MaterialAnimData data, Material mat, int ParamCurveIndex)
+        {
+            foreach (var param in mat.Params)
+            {
+                //Set our begin curve index
+                bool SetBeginCurve = false;
+                if (!SetBeginCurve)
+                {
+                    data.ShaderParamCurveIndex += ParamCurveIndex;
+                    data.BeginVisalConstantIndex += 0; //This is usually 0 so set it
+
+                    SetBeginCurve = true;
+                }
+
+                foreach (var value in  param.Values)
+                {
+                    if (value.Constant)
+                    {
+                        AnimConstant animConstant = new AnimConstant();
+                        animConstant.AnimDataOffset = 0;
+                        animConstant.Value = value.GetValue(0); //Set our constant value
+                        data.Constants.Add(animConstant);
+                    }
+                    else if (value.Keys.Count > 0) //Else create curves for each param value
+                    {
+                        //If constant, create a constant instance with the first value set
+                        AnimCurve curve = new AnimCurve();
+                        curve.AnimDataOffset = value.AnimDataOffset;
+                        curve.Scale = value.Scale;
+                        curve.Offset = value.Offset;
+
+                        data.Curves.Add(curve);
+                    }
+                }
+            }
+        }
+
+        public void UpdateMaterials(Material mat)
+        {
+
+        }
+
+        private string GetString(string Name)
+        {
+            StringBuilder builder = new StringBuilder(Name);
+
+            builder.Replace(ShaderParamAnimType, "");
+            builder.Replace(TexturePatternAnimType, "");
+            builder.Replace(TextureSrtAnimType, "");
+            builder.Replace(ColorAnimType, "");
+            builder.Replace(VisibiltyAnimType, "");
+
+            return builder.ToString();
+        }
+
+        public string SetName()
+        {
+            Text = GetString(Text); //Remove any extension just in case
+
+            //Add extension to the end of the string based on type
+            if (AnimType == AnimationType.Color)
+                Text += ColorAnimType;
+            else if (AnimType == AnimationType.ShaderParam)
+                Text += ShaderParamAnimType;
+            else if (AnimType == AnimationType.TexturePattern)
+                Text += TexturePatternAnimType;
+            else if (AnimType == AnimationType.TextureSrt)
+                Text += TextureSrtAnimType;
+            else if (AnimType == AnimationType.Visibilty)
+                Text += VisibiltyAnimType;
+            else
+                Text += ShaderParamAnimType;
+
+            MaterialAnim.Name = Text;
+
+            return Text;
+        }
+
+        public BFRESRender BFRESRender;
+        public MaterialAnim MaterialAnim;
+        public FMAA()
+        {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            ImageKey = "materialAnim";
+            SelectedImageKey = "materialAnim";
+
+            ContextMenuStrip = new ContextMenuStrip();
+            LoadFileMenus(false);
+        }
+
+        protected void NewAction(object sender, EventArgs e) { NewMaterialAnim(); }
+
+        public void NewMaterialAnim()
+        {
+            var mat = new MaterialAnimEntry("NewMaterialTarget");
+            mat.LoadMaterial(new MaterialAnimData() { Name = mat.Text }, this);
+            Materials.Add(mat);
+        }
+
+        public override void OnClick(TreeView treeView) => UpdateEditor();
+
+        public void UpdateEditor(){
+            ((BFRES)Parent.Parent.Parent).LoadEditors(this);
+        }
+
+        public ResFile GetResFile()
+        {
+            return ((BFRESGroupNode)Parent).GetResFile();
+        }
+
+        public FMAA(MaterialAnim anim, AnimationType type) { LoadAnim(anim); AnimType = type; }
+
+        private void LoadAnim(MaterialAnim anim)
+        {
+            Initialize();
+
+            MaterialAnim = anim;
+            FrameCount = MaterialAnim.FrameCount;
+            Text = GetString(anim.Name);
+
+            if (anim.TextureNames != null)
+            {
+                foreach (var name in anim.TextureNames)
+                    Textures.Add(name);
+            }
+
+            foreach (var matanim in anim.MaterialAnimDataList)
+            {
+                var mat = new MaterialAnimEntry(matanim.Name);
+                mat.MaterialAnimData = matanim;
+                Materials.Add(mat);
+
+                foreach (var param in matanim.ParamAnimInfos)
+                {
+                    FSHU.BfresParamAnim paramInfo = new FSHU.BfresParamAnim(param.Name);
+                    mat.Params.Add(paramInfo);
+
+                    paramInfo.Type = AnimationType.ShaderParam;
+
+                    //There is no better way to determine if the param is a color type afaik
+                    if (anim.Name.Contains(ColorAnimType) || param.Name.Contains("color"))
+                        paramInfo.Type = AnimationType.Color;
+                    else if (anim.Name.Contains(TextureSrtAnimType))
+                        paramInfo.Type = AnimationType.TexturePattern;
+                    else if (anim.Name.Contains(ShaderParamAnimType))
+                        paramInfo.Type = AnimationType.ShaderParam;
+
+                    //Get constant anims
+                    for (int constant = 0; constant < param.ConstantCount; constant++)
+                    {
+                        int index = constant + param.BeginConstant;
+
+                        Animation.KeyGroup keyGroup = new Animation.KeyGroup();
+                        keyGroup.Keys.Add(new Animation.KeyFrame()
+                        {
+                            InterType = InterpolationType.CONSTANT,
+                            Frame = 0,
+                            Value = matanim.Constants[index].Value,
+                        });
+
+                        paramInfo.Values.Add(new Animation.KeyGroup()
+                        {
+                            
+                            AnimDataOffset = matanim.Constants[index].AnimDataOffset,
+                            Keys = keyGroup.Keys,
+                        });
+                    }
+
+                    for (int curve = 0; curve < param.FloatCurveCount + param.IntCurveCount; curve++)
+                    {
+                        int index = curve + param.BeginCurve;
+
+                        Animation.KeyGroup keyGroup = CurveHelper.CreateTrack(matanim.Curves[index]);
+                        keyGroup.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
+
+                        paramInfo.Values.Add(new Animation.KeyGroup()
+                        {
+                            AnimDataOffset = keyGroup.AnimDataOffset,
+                            Keys = keyGroup.Keys,
+                        });
+                    }
+                }
+
+                foreach (TexturePatternAnimInfo SamplerInfo in matanim.TexturePatternAnimInfos)
+                {
+                    BfresSamplerAnim sampler = new BfresSamplerAnim(SamplerInfo.Name, this, mat);
+                    mat.Samplers.Add(sampler);
+
+
+                    int textureIndex = 0;
+                    uint animOffset = 0;
+
+                    if (SamplerInfo.BeginConstant != 65535)
+                    {
+                        animOffset = matanim.Constants[SamplerInfo.BeginConstant].AnimDataOffset;
+                        textureIndex = matanim.Constants[SamplerInfo.BeginConstant].Value;
+
+                        var group = new Animation.KeyGroup();
+                        group.AnimDataOffset = animOffset;
+                        group.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = textureIndex });
+                        group.Constant = true;
+
+                        sampler.group =  group;
+                    }
+                    if (SamplerInfo.CurveIndex != 65535)
+                    {
+                        int index = (int)SamplerInfo.CurveIndex;
+
+                        Animation.KeyGroup keyGroup = CurveHelper.CreateTrack(matanim.Curves[index]);
+                        keyGroup.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
+                        sampler.group = new KeyGroup()
+                        {
+                            AnimDataOffset = keyGroup.AnimDataOffset,
+                            Keys = keyGroup.Keys,
+                        };
+                    }
+                }
+            }
+        }
+
+
+        public class BfresSamplerAnim : Material.Sampler
+        {
+            FMAA MatAnimWrapper;
+            MaterialAnimEntry MatWrapper;
+
+            public BfresSamplerAnim(string Name, FMAA materialAnimation, MaterialAnimEntry material)
+            {
+                MatWrapper = material;
+                MatAnimWrapper = materialAnimation;
+                Text = Name;
+            }
+
+            public override string GetActiveTextureName(int frame)
+            {
+                uint val = (uint)group.GetValue(frame);
+                return MatAnimWrapper.Textures[(int)val];
+            }
+
+            public void AddKeyFrame(string TextureName, int Frame, bool IsConstant = false)
+            {
+                group.Constant = IsConstant;
+
+                var MatAnim = MatAnimWrapper.MaterialAnim;
+
+                //Add the texture if it does not exist for both wrapper and bfres itself
+                if (!MatAnim.TextureNames.Contains(TextureName))
+                    MatAnim.TextureNames.Add(TextureName);
+                if (!MatAnimWrapper.Textures.Contains(TextureName))
+                    MatAnimWrapper.Textures.Add(TextureName);
+
+                //Set our index
+                int index = MatAnimWrapper.Textures.IndexOf(TextureName);
+
+                //For non constants we load a curve
+                if (!group.Constant)
+                {
+                }
+            }
+
+            private AnimCurve CreateAnimCurve()
+            {
+                //Create empty curve
+                AnimCurve curve = new AnimCurve();
+                curve.Offset = 0;
+                curve.StartFrame = 0;
+                curve.EndFrame = MatAnimWrapper.FrameCount;
+                curve.CurveType = AnimCurveType.StepInt;
+                curve.AnimDataOffset = 0;
+                curve.Scale = 1;
+
+                //Start with sbyte. Increase only if index is > 255
+                curve.KeyType = AnimCurveKeyType.SByte; 
+
+                //Set by frame count
+                curve.FrameType = CurveHelper.GetFrameType((uint)MatAnimWrapper.FrameCount);
+
+                return curve;
+            }
+
+            public override STGenericTexture GetActiveTexture(int frame)
+            {
+                uint val = (uint)group.GetValue(frame);
+
+                foreach (var bntx in PluginRuntime.bntxContainers)
+                {
+                    try
+                    {
+                        string name = MatAnimWrapper.Textures[(int)val];
+
+                        if (bntx.Textures.ContainsKey(name))
+                            return bntx.Textures[name];
+                    }
+                    catch
+                    {
+                        throw new Exception("Index out of range " + val);
+                    }
+                }
+                return null;
+            }
+        }
+
+        public override void NextFrame(Viewport viewport)
+        {
+            if (Frame >= FrameCount) return;
+
+            //Loop through each drawable bfres in the active viewport to display the anim
+            foreach (var drawable in viewport.scene.objects)
+            {
+                if (drawable is BFRESRender)
+                    LoadMaterialAnimation(((BFRESRender)drawable).models);
+            }
+        }
+
+        private void LoadMaterialAnimation(List<FMDL> models)
+        {
+            //Loop through each FMDL's materials until it matches the material anim
+            foreach (var model in models)
+            {
+                foreach (Material matAnim in Materials)
+                {
+                    if (model.materials.ContainsKey(matAnim.Text))
+                        EditMaterial(model.materials[matAnim.Text], matAnim);
+                }
+            }
+        }
+
+        private void EditMaterial(FMAT material, Material matAnim)
+        {
+            //Alright material animations have a total of 5 types.
+            //SRT (type of shader param)
+            //Color (type of shader param)
+            //Shader param
+            //Visibily animation
+            //Texture pattern animation
+
+            SetMaterialVisualAnimation(material, matAnim);
+            SetShaderParamAnimation(material, matAnim);
+            SetTextureAnimation(material, matAnim);
+        }
+
+        private void SetMaterialVisualAnimation(FMAT material, Material matAnim)
+        {
+        }
+
+        private void SetShaderParamAnimation(FMAT material, Material matAnim)
+        {
+            if (matAnim.Params.Count == 0)
+                return;
+
+            //Loop through param list for shader param anims
+            //These store a list of values with offsets to the value
+            //Then we'll update the active texture
+            foreach (FSHU.BfresParamAnim paramAnim in matAnim.Params)
+            {
+                if (material.matparam.ContainsKey(paramAnim.Text))
+                {
+                    //First we get the active param that we want to alter
+                    BfresShaderParam prm = material.matparam[paramAnim.Text];
+                    BfresShaderParam animatedprm = new BfresShaderParam();
+                    if (!material.animatedMatParams.ContainsKey(prm.Name))
+                        material.animatedMatParams.Add(prm.Name, animatedprm);
+                    animatedprm.Name = prm.Name;
+                    animatedprm.ValueUint = prm.ValueUint;
+                    animatedprm.ValueBool = prm.ValueBool;
+                    animatedprm.ValueFloat = prm.ValueFloat;
+                    animatedprm.ValueSrt2D = prm.ValueSrt2D;
+                    animatedprm.ValueSrt3D = prm.ValueSrt3D;
+                    animatedprm.ValueTexSrt = prm.ValueTexSrt;
+                    animatedprm.ValueTexSrtEx = prm.ValueTexSrtEx;
+
+                    foreach (var group in paramAnim.Values)
+                    {
+                        //The offset determines the value starting from 0.
+                        int index = 0;
+                        if (prm.ValueFloat != null)
+                        {
+                            if (group.AnimDataOffset != 0)
+                                index = (int)group.AnimDataOffset / sizeof(float);
+
+                            animatedprm.ValueFloat[index] = group.GetValue(Frame);
+                        }
+                        if (prm.ValueInt != null)
+                        {
+
+                        }
+                        if (prm.ValueUint != null)
+                        {
+
+                        }
+                        if (prm.ValueBool != null)
+                        {
+
+                        }
+                        if (prm.Type == ShaderParamType.Srt3D)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueSrt3D.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueSrt3D.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueSrt3D.Scaling.Z = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueSrt3D.Rotation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueSrt3D.Rotation.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 20) prm.ValueSrt3D.Rotation.Z = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 24) prm.ValueSrt3D.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 28) prm.ValueSrt3D.Translation.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 32) prm.ValueSrt3D.Translation.Z = group.GetValue(Frame);
+                        }
+                        if (prm.Type == ShaderParamType.Srt2D)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueSrt2D.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueSrt2D.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueSrt2D.Rotation = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueSrt2D.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueSrt2D.Translation.X = group.GetValue(Frame);
+                        }
+                        if (prm.Type == ShaderParamType.TexSrt)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueTexSrt.Mode = (TexSrtMode)(uint)group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueTexSrt.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueTexSrt.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueTexSrt.Rotation = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueTexSrt.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 20) prm.ValueTexSrt.Translation.Y = group.GetValue(Frame);
+                        }
+                        if (prm.Type == ShaderParamType.TexSrtEx)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueTexSrtEx.Mode = (TexSrtMode)(uint)group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueTexSrtEx.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueTexSrtEx.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueTexSrtEx.Rotation = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueTexSrtEx.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 20) prm.ValueTexSrtEx.Translation.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 24) prm.ValueTexSrtEx.MatrixPointer = (uint)group.GetValue(Frame);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetTextureAnimation(FMAT material, Material matAnim)
+        {
+            if (matAnim.Samplers.Count == 0)
+                return;
+
+            //Loop through sampler list for texture anims
+            //These store a list of indices (step curve) to grab a texture name list
+            //Then we'll update the active texture
+            foreach (Material.Sampler samplerAnim in matAnim.Samplers)
+            {
+                foreach (MatTexture texture in material.TextureMaps)
+                {
+                    if (texture.SamplerName == samplerAnim.Text)
+                    {
+                        texture.textureState = STGenericMatTexture.TextureState.Animated;
+
+                        uint index = (uint)samplerAnim.group.GetValue(Frame);
+                        texture.animatedTexName = Textures[(int)index];
+                    }
+                }
+            }
+        }
+
+        public override string ExportFilter => FileFilters.GetFilter(typeof(FMAA));
+
+        public override void Export(string FileName)
+        {
+            MaterialAnim.Export(FileName, GetResFile());
+        }
+        public override void Replace(string FileName)
+        {
+            string ext = Utils.GetExtension(FileName);
+
+            if (ext == ".bftxp")
+            {
+                MaterialAnim.Import(FileName);
+                MaterialAnim.Name = Text;
+                LoadAnim(MaterialAnim);
+            }
+            else if (ext == ".gif" || ext == ".png" || ext == ".apng")
+            {
+                BNTX bntx = PluginRuntime.bntxContainers[0];
+                GifToTexturePatternAnimation anim = new GifToTexturePatternAnimation(FileName, bntx, this);
+                MaterialAnim.Name = Text;
+                LoadAnim(MaterialAnim);
+            }
+        }
+    }
+}

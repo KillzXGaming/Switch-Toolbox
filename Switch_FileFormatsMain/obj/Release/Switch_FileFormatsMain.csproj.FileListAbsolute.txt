@@ -1,0 +1,230 @@
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll.config
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csprojAssemblyReference.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\Interop.WMPLib.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\AxInterop.WMPLib.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.ResolveComReference.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.TextureOpenEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.TextureViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.AttributeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresModelImportSettings.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.FloatsIntsValuePanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BoolValuesPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.BFRES.RenderInfoAdd.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.SamplerEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BntxSelector.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.CopyMaterialMenu.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BFAVEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresBoneEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresLODMeshEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresProperties.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.FMATEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresShaderOptionsEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.FSHPEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.TexturePatternEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BNTXEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.ByamlEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.PreviewEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.Editors.FSKLEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.RenderInfoValueEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.VertexAttributeDataList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.PreviewFormatList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.SetParamDialog.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.SRTValuesPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.Texture_Selector.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.BinaryTextureImporterList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.TextureFormatExport.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.Properties.Resources.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.GenerateResource.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CoreCompileInputs.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CopyComplete
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Switch_FileFormatsMain\obj\Release\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll.config
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll.config
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csprojAssemblyReference.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\Interop.WMPLib.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\AxInterop.WMPLib.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.ResolveComReference.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.TextureViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimationLoader.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.AttributeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.DebugInfoBox.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerEditor2.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.RenderStateEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerListEdit.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.RenderInfoEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderOptionsEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderParamEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.RenderInfoDataEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimColorViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimKeyViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Turbo.CourseMunntEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Turbo.MK8MapCameraEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.EmitterEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresModelImportSettings.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BntxSelector.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.CopyMaterialMenu.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BFAVEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresBoneEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresLODMeshEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FMATEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.ShaderOptionsEditBox.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SceneAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexturePatternAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.UserDataEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.UserDataParser.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VisibiltyAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.KeySelection.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.ByamlEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.PreviewEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.VertexAttributeDataList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.PreviewFormatList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Texture_Selector.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BinaryTextureImporterList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.GTXTextureImporter.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Properties.Resources.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.GenerateResource.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CoreCompileInputs.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CopyComplete
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresHeaderEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TextureLoader.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SubFileEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneAnimEditor2.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BoneInfoPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresShapeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneIndexList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FSKLEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VolatileFlagEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.AAMP.EditBox.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresTexturePatternEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FrameTextureThumbnail.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.KeyShapeList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexBufferList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ColorPicker.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ColorWheel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexSrtPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector2SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector3SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector4SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector1SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderBinaryDisplay.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexBufferEncodeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.CopyUVChannelDialog.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.booleanPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexBufferCreator.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SubMeshEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneVisualAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VisObjectAddDialog.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AddTextureKey.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexAttributeInputListEdit.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerInputListEdit.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AddSamplerKeyGroup.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FaceIndiceListViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TurboMunntEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexPatternMaterialEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexPatternInfoEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneVisListEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll.config
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Toolbox\bin\Release\Lib\Plugins\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csprojAssemblyReference.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\Interop.WMPLib.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\AxInterop.WMPLib.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.ResolveComReference.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.AAMP.EditBox.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.TextureViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimationLoader.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.AttributeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresHeaderEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneVisualAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneVisListEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VisObjectAddDialog.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexAttributeInputListEdit.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerInputListEdit.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ColorPicker.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ColorWheel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderParamEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexSrtPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.booleanPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector1SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector2SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector3SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.vector4SliderPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VolatileFlagEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.CopyUVChannelDialog.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FaceIndiceListViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.KeyShapeList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SubMeshEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexBufferCreator.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexBufferEncodeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VertexBufferList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneIndexList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BoneInfoPanel.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.DebugInfoBox.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BoneAnimEditor2.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresShapeEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SubFileEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderOptionsEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerEditor2.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.RenderStateEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerListEdit.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.RenderInfoEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.RenderInfoDataEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AddSamplerKeyGroup.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AddTextureKey.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresTexturePatternEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FrameTextureThumbnail.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexPatternInfoEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexPatternMaterialEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TurboMunntEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimKeyViewer.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Turbo.CourseMunntEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Turbo.MK8MapCameraEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.EmitterEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresModelImportSettings.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BntxSelector.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.CopyMaterialMenu.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BFAVEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresBoneEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresLODMeshEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FMATEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.ShaderOptionsEditBox.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SceneAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderBinaryDisplay.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ShaderEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TexturePatternAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.UserDataEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.UserDataParser.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.VisibiltyAnimEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.KeySelection.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.ByamlEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.PreviewEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.FSKLEditor.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.VertexAttributeDataList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.PreviewFormatList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Texture_Selector.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TextureLoader.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.BinaryTextureImporterList.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.GTXTextureImporter.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Properties.Resources.resources
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.GenerateResource.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CoreCompileInputs.cache
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CopyComplete
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Plg.dll
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Plg.pdb
+C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimParamEditor.resources

@@ -1,0 +1,715 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DirectXTexNet</name>
+    </assembly>
+    <members>
+        <member name="F:DirectXTexNet.CP_FLAGS.NONE">
+            <summary>
+            Normal operation
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.LEGACY_DWORD">
+            <summary>
+            Assume pitch is DWORD aligned instead of BYTE aligned
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.PARAGRAPH">
+            <summary>
+            Assume pitch is 16-byte aligned instead of BYTE aligned
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.YMM">
+            <summary>
+            Assume pitch is 32-byte aligned instead of BYTE aligned
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.ZMM">
+            <summary>
+            The ZMM
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.PAGE4K">
+            <summary>
+            Assume pitch is 4096-byte aligned instead of BYTE aligned
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.BAD_DXTN_TAILS">
+            <summary>
+            BC formats with malformed mipchain blocks smaller than 4x4
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.BPP24">
+            <summary>
+            Override with a legacy 24 bits-per-pixel format size
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.BPP16">
+            <summary>
+            Override with a legacy 16 bits-per-pixel format size
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CP_FLAGS.BPP8">
+            <summary>
+            Override with a legacy 8 bits-per-pixel format size
+            </summary>
+        </member>
+        <member name="T:DirectXTexNet.TEX_MISC_FLAG">
+            <summary>
+            Subset here matches D3D10_RESOURCE_MISC_FLAG and D3D11_RESOURCE_MISC_FLAG
+            </summary>
+        </member>
+        <member name="T:DirectXTexNet.TEX_ALPHA_MODE">
+            <summary>
+            Matches DDS_ALPHA_MODE, encoded in MISC_FLAGS2
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.LEGACY_DWORD">
+            <summary>
+            Assume pitch is DWORD aligned instead of BYTE aligned (used by some legacy DDS files)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.NO_LEGACY_EXPANSION">
+            <summary>
+            Do not implicitly convert legacy formats that result in larger pixel sizes (24 bpp, 3:3:2, A8L8, A4L4, P8, A8P8)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.NO_R10B10G10A2_FIXUP">
+            <summary>
+            Do not use work-around for long-standing D3DX DDS file format issue which reversed the 10:10:10:2 color order masks
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.FORCE_RGB">
+            <summary>
+            Convert DXGI 1.1 BGR formats to DXGI_FORMAT_R8G8B8A8_UNORM to avoid use of optional WDDM 1.1 formats
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.NO_16BPP">
+            <summary>
+            Conversions avoid use of 565, 5551, and 4444 formats and instead expand to 8888 to avoid use of optional WDDM 1.2 formats
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.EXPAND_LUMINANCE">
+            <summary>
+            When loading legacy luminance formats expand replicating the color channels rather than leaving them packed (L8, L16, A8L8)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.BAD_DXTN_TAILS">
+            <summary>
+            Some older DXTn DDS files incorrectly handle mipchain tails for blocks smaller than 4x4
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.FORCE_DX10_EXT">
+            <summary>
+            Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.DDS_FLAGS.FORCE_DX10_EXT_MISC2">
+            <summary>
+            FORCE_DX10_EXT including miscFlags2 information (result may not be compatible with D3DX10 or D3DX11)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.FORCE_RGB">
+            <summary>
+            Loads DXGI 1.1 BGR formats as DXGI_FORMAT_R8G8B8A8_UNORM to avoid use of optional WDDM 1.1 formats
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.NO_X2_BIAS">
+            <summary>
+            Loads DXGI 1.1 X2 10:10:10:2 format as DXGI_FORMAT_R10G10B10A2_UNORM
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.NO_16BPP">
+            <summary>
+            Loads 565, 5551, and 4444 formats as 8888 to avoid use of optional WDDM 1.2 formats
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.ALLOW_MONO">
+            <summary>
+            Loads 1-bit monochrome (black and white) as R1_UNORM rather than 8-bit grayscale
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.ALL_FRAMES">
+            <summary>
+            Loads all images in a multi-frame file, converting/resizing to match the first frame as needed, defaults to 0th frame otherwise
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.IGNORE_SRGB">
+            <summary>
+            Ignores sRGB metadata if present in the file
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.DITHER">
+            <summary>
+            Use ordered 4x4 dithering for any required conversions
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.DITHER_DIFFUSION">
+            <summary>
+            Use error-diffusion dithering for any required conversions
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.FILTER_POINT">
+            <summary>
+            Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.FILTER_LINEAR">
+            <summary>
+            Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.FILTER_CUBIC">
+            <summary>
+            Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WIC_FLAGS.FILTER_FANT">
+            <summary>
+            Filtering mode to use for any required image resizing (only needed when loading arrays of differently sized images; defaults to Fant)
+            Combination of Linear and Box filter
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.WRAP_U">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.WRAP_V">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.WRAP_W">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.WRAP">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.MIRROR_V">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.MIRROR_W">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.MIRROR">
+            <summary>
+            Wrap vs. Mirror vs. Clamp filtering options
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.SEPARATE_ALPHA">
+            <summary>
+            Resize color and alpha channel independently
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.FLOAT_X2BIAS">
+            <summary>
+            Enable *2 - 1 conversion cases for unorm to/from float and positive-only float formats
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.RGB_COPY_RED">
+            <summary>
+            When converting RGB to R, defaults to using grayscale. These flags indicate copying a specific channel instead
+            When converting RGB to RG, defaults to copying RED | GREEN. These flags control which channels are selected instead.
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.RGB_COPY_GREEN">
+            <summary>
+            When converting RGB to R, defaults to using grayscale. These flags indicate copying a specific channel instead
+            When converting RGB to RG, defaults to copying RED | GREEN. These flags control which channels are selected instead.
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.RGB_COPY_BLUE">
+            <summary>
+            When converting RGB to R, defaults to using grayscale. These flags indicate copying a specific channel instead
+            When converting RGB to RG, defaults to copying RED | GREEN. These flags control which channels are selected instead.
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.DITHER">
+            <summary>
+            Use ordered 4x4 dithering for any required conversions
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.DITHER_DIFFUSION">
+            <summary>
+            Use error-diffusion dithering for any required conversions
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.POINT">
+            <summary>
+            Filtering mode to use for any required image resizing
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.LINEAR">
+            <summary>
+            Filtering mode to use for any required image resizing
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.CUBIC">
+            <summary>
+            Filtering mode to use for any required image resizing
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.BOX">
+            <summary>
+            Filtering mode to use for any required image resizing
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.FANT">
+            <summary>
+            Filtering mode to use for any required image resizing
+            Equiv to Box filtering for mipmap generation
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.TRIANGLE">
+            <summary>
+            Filtering mode to use for any required image resizing
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.SRGB">
+            <summary>
+            sRGB to/from RGB for use in conversion operations
+            if the input format type is IsSRGB(), then SRGB_IN is on by default
+            if the output format type is IsSRGB(), then SRGB_OUT is on by default
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.FORCE_NON_WIC">
+            <summary>
+            Forces use of the non-WIC path when both are an option
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_FILTER_FLAGS.FORCE_WIC">
+            <summary>
+            Forces use of the WIC path even when logic would have picked a non-WIC path when both are an option
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_PMALPHA_FLAGS.IGNORE_SRGB">
+            <summary>
+            ignores sRGB colorspace conversions
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_PMALPHA_FLAGS.REVERSE">
+            <summary>
+            converts from premultiplied alpha back to straight alpha
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_PMALPHA_FLAGS.SRGB">
+            <summary>
+            if the input format type is IsSRGB(), then SRGB_IN is on by default
+            if the output format type is IsSRGB(), then SRGB_OUT is on by default
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.RGB_DITHER">
+            <summary>
+            Enables dithering RGB colors for BC1-3 compression
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.A_DITHER">
+            <summary>
+            Enables dithering alpha for BC1-3 compression
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.DITHER">
+            <summary>
+            Enables both RGB and alpha dithering for BC1-3 compression
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.UNIFORM">
+            <summary>
+            Uniform color weighting for BC1-3 compression; by default uses perceptual weighting
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.BC7_USE_3SUBSETS">
+            <summary>
+            Enables exhaustive search for BC7 compress for mode 0 and 2; by default skips trying these modes
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.BC7_QUICK">
+            <summary>
+            Minimal modes (usually mode 6) for BC7 compression
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.SRGB">
+            <summary>
+            if the input format type is IsSRGB(), then SRGB_IN is on by default
+            if the output format type is IsSRGB(), then SRGB_OUT is on by default
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TEX_COMPRESS_FLAGS.PARALLEL">
+            <summary>
+            Compress is free to use multithreading to improve performance (by default it does not use multithreading)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.CHANNEL_RED">
+            <summary>
+            Channel selection when evaluting color value for height
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.CHANNEL_GREEN">
+            <summary>
+            Channel selection when evaluting color value for height
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.CHANNEL_BLUE">
+            <summary>
+            Channel selection when evaluting color value for height
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.CHANNEL_ALPHA">
+            <summary>
+            Channel selection when evaluting color value for height
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.CHANNEL_LUMINANCE">
+            <summary>
+            Channel selection when evaluting color value for height
+            Luminance is a combination of red, green, and blue
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.MIRROR_U">
+            <summary>
+            Use mirror semantics for scanline references (defaults to wrap)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.MIRROR_V">
+            <summary>
+            Use mirror semantics for scanline references (defaults to wrap)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.MIRROR">
+            <summary>
+            Use mirror semantics for scanline references (defaults to wrap)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.INVERT_SIGN">
+            <summary>
+            Inverts normal sign
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CNMAP_FLAGS.COMPUTE_OCCLUSION">
+            <summary>
+            Computes a crude occlusion term stored in the alpha channel
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IMAGE1_SRGB">
+            <summary>
+            Indicates that image needs gamma correction before comparision
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IMAGE2_SRGB">
+            <summary>
+            Indicates that image needs gamma correction before comparision
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IGNORE_RED">
+            <summary>
+            Ignore the channel when computing MSE
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IGNORE_GREEN">
+            <summary>
+            Ignore the channel when computing MSE
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IGNORE_BLUE">
+            <summary>
+            Ignore the channel when computing MSE
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IGNORE_ALPHA">
+            <summary>
+            Ignore the channel when computing MSE
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IMAGE1_X2_BIAS">
+            <summary>
+            Indicates that image should be scaled and biased before comparison (i.e. UNORM -> SNORM)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.CMSE_FLAGS.IMAGE2_X2_BIAS">
+            <summary>
+            Indicates that image should be scaled and biased before comparison (i.e. UNORM -> SNORM)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.BMP">
+            <summary>
+            Windows Bitmap (.bmp)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.JPEG">
+            <summary>
+            Joint Photographic Experts Group (.jpg, .jpeg)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.PNG">
+            <summary>
+            Portable Network Graphics (.png)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.TIFF">
+            <summary>
+            Tagged Image File Format  (.tif, .tiff)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.GIF">
+            <summary>
+            Graphics Interchange Format  (.gif)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.WMP">
+            <summary>
+            Windows Media Photo / HD Photo / JPEG XR (.hdp, .jxr, .wdp)
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.WICCodecs.ICO">
+            <summary>
+            Windows Icon (.ico)
+            </summary>
+        </member>
+        <member name="T:DirectXTexNet.EvaluatePixelsDelegate">
+            <summary>
+            The delegate used for the EvaluateImage method.
+            </summary>
+            <param name="pixels">The pixels. This a row of Pixels with each pixel normally represented as RBGA in 4x32bit float (0.0-1.0).</param>
+            <param name="width">The width.</param>
+            <param name="y">The y/row index.</param>
+        </member>
+        <member name="T:DirectXTexNet.TransformPixelsDelegate">
+            <summary>
+            The delegate used for the EvaluateImage method.
+            </summary>
+            <param name="outPixels">
+            The out pixels to write to. This a row of Pixels with each pixel normally represented as RBGA in 4x32bit float
+            (0.0-1.0).
+            </param>
+            <param name="inPixels">The input pixels. This a row of Pixels with each pixel normally represented as RBGA in 4x32bit float (0.0-1.0).</param>
+            <param name="width">The width.</param>
+            <param name="y">The y/row index.</param>
+        </member>
+        <member name="T:DirectXTexNet.Image">
+            <summary>
+            This is an immutable class representing the native Image struct.
+            It also keeps a reference to a parent to prevent finalizing of the parent when the image is still used.
+            But it's still strongly encouraged to manually dispose ScratchImages.
+            </summary>
+        </member>
+        <member name="T:DirectXTexNet.TexMetadata">
+            <summary>
+            This class represents the native TexMetadata struct. A managed class is used to simplify passing it by reference.
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TexMetadata.Height">
+            <summary>
+            The height. Should be 1 for 1D textures.
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TexMetadata.Depth">
+            <summary>
+            The depth. Should be 1 for 1D or 2D textures.
+            </summary>
+        </member>
+        <member name="F:DirectXTexNet.TexMetadata.ArraySize">
+            <summary>
+            The array size. For cubemap, this is a multiple of 6.
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.ComputeImageIndex(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Computes the image index for the specified values. If the image index is out of range <see cref="F:DirectXTexNet.TexHelper.IndexOutOfRange" /> is returned.
+            </summary>
+            <param name="mip">The mip.</param>
+            <param name="item">The item.</param>
+            <param name="slice">The slice.</param>
+            <returns>The image index. If the image index is out of range <see cref="F:DirectXTexNet.TexHelper.IndexOutOfRange" /> is returned.</returns>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.OwnsData">
+            <summary>
+            Whether this ScratchImage owns the pixel data;
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.GetPixels">
+            <summary>
+            Normally GetImage().pixels should be used instead, because this only returns a pointer to the pixel data if this image owns the pixel data.
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.GetPixelsSize">
+            <summary>
+            This only returns a value if this image owns the pixel data.
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.IsAlphaAllOpaque">
+            <summary>
+            Determines whether all pixels are opaque. This method is not supported by temporary scratch images.
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.CreateImageCopy(System.Int32,System.Boolean,DirectXTexNet.CP_FLAGS)">
+            <summary>
+            Creates a new ScratchImage (deep copy).
+            </summary>
+            <param name="imageIndex">Index of the image to make a copy of.</param>
+            <param name="allow1D">if set to <c>true</c> and the height of the image is 1 a 1D Texture is created instead a 2D Texture.</param>
+            <param name="flags">The flags.</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.CreateArrayCopy(System.Int32,System.Int32,System.Boolean,DirectXTexNet.CP_FLAGS)">
+            <summary>
+            Creates a new Array ScratchImage (deep copy).
+            </summary>
+            <param name="startIndex">The start index.</param>
+            <param name="nImages">The n images.</param>
+            <param name="allow1D">if set to <c>true</c> and the height of the image is 1 a 1D Texture is created instead a 2D Texture.</param>
+            <param name="flags">The flags.</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.CreateCopyWithEmptyMipMaps(System.Int32,DirectXTexNet.DXGI_FORMAT,DirectXTexNet.CP_FLAGS,System.Boolean)">
+            <summary>
+            Creates a copy of the image but with empty mip maps (not part of original DirectXTex). 
+            Can be used to generate the mip maps by other means (DirectXTex MipMap Generation is pretty slow).
+            </summary>
+            <param name="levels">The levels.</param>
+            <param name="fmt">The format.</param>
+            <param name="flags">The flags.</param>
+            <param name="zeroOutMipMaps">if set to <c>true</c> the mip map levels are zeroed out.</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.Resize(System.Int32,System.Int32,DirectXTexNet.TEX_FILTER_FLAGS)">
+            <summary>
+            Resize the image to width x height. Defaults to Fant filtering. Note for a complex resize, the result will always have mipLevels == 1.
+            </summary>
+            <param name="width">The width.</param>
+            <param name="height">The height.</param>
+            <param name="filter">The filter.</param>
+            <returns>The resized image.</returns>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.ConvertToSinglePlane(System.Int32)">
+            <summary>
+            Converts the image from a planar format to an equivalent non-planar format.
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.ConvertToSinglePlane">
+            <summary>
+            Converts the image from a planar format to an equivalent non-planar format.
+            </summary>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.GenerateMipMaps(System.Int32,DirectXTexNet.TEX_FILTER_FLAGS,System.Int32,System.Boolean)">
+            <summary>
+            Generates the mip maps.
+            </summary>
+            <param name="imageIndex">Index of the image.</param>
+            <param name="filter">The filter. Defaults to Fant filtering which is equivalent to a box filter.</param>
+            <param name="levels">
+            Levels of '0' indicates a full mipchain, otherwise is generates that number of total levels (including the source base
+            image).
+            </param>
+            <param name="allow1D">if set to <c>true</c> and the height of the image is 1 a 1D Texture is created instead a 2D Texture.</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.GenerateMipMaps(DirectXTexNet.TEX_FILTER_FLAGS,System.Int32)">
+            <summary>
+            Generates the mip maps.
+            </summary>
+            <param name="filter">The filter. Defaults to Fant filtering which is equivalent to a box filter.</param>
+            <param name="levels">
+            Levels of '0' indicates a full mipchain, otherwise is generates that number of total levels (including the source base
+            image).
+            </param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.GenerateMipMaps3D(System.Int32,System.Int32,DirectXTexNet.TEX_FILTER_FLAGS,System.Int32)">
+            <summary>
+            Generates the mip maps.
+            </summary>
+            <param name="startIndex">The start index.</param>
+            <param name="depth">The depth.</param>
+            <param name="filter">The filter. Defaults to Fant filtering which is equivalent to a box filter.</param>
+            <param name="levels">
+            Levels of '0' indicates a full mipchain, otherwise is generates that number of total levels (including the source base
+            image).
+            </param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.GenerateMipMaps3D(DirectXTexNet.TEX_FILTER_FLAGS,System.Int32)">
+            <summary>
+            Generates the mip maps.
+            </summary>
+            <param name="filter">The filter. Defaults to Fant filtering which is equivalent to a box filter.</param>
+            <param name="levels">
+            Levels of '0' indicates a full mipchain, otherwise is generates that number of total levels (including the source base
+            image).
+            </param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.PremultiplyAlpha(System.Int32,DirectXTexNet.TEX_PMALPHA_FLAGS)">
+            <summary>
+            Converts to/from a premultiplied alpha version of the texture.
+            </summary>
+            <param name="imageIndex">Index of the image.</param>
+            <param name="flags">The flags.</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.PremultiplyAlpha(DirectXTexNet.TEX_PMALPHA_FLAGS)">
+            <summary>
+            Converts to/from a premultiplied alpha version of the texture.
+            </summary>
+            <param name="flags">The flags.</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.Compress(System.Int32,DirectXTexNet.DXGI_FORMAT,DirectXTexNet.TEX_COMPRESS_FLAGS,System.Single)">
+            <summary>
+            Compresses the specified source image. Note that threshold is only used by BC1.
+            </summary>
+            <param name="imageIndex">Index of the image.</param>
+            <param name="format">The format.</param>
+            <param name="compress">The compress.</param>
+            <param name="threshold">The threshold. Default 0.5</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.Compress(System.Int32,System.IntPtr,DirectXTexNet.DXGI_FORMAT,DirectXTexNet.TEX_COMPRESS_FLAGS,System.Single)">
+            <summary>
+            DirectCompute-based compression
+            </summary>
+            <param name="imageIndex">Index of the image.</param>
+            <param name="pDevice">The device.</param>
+            <param name="format">The format.</param>
+            <param name="compress">The compress.</param>
+            <param name="alphaWeight">The alpha weight (is only used by BC7. 1.0 is the typical value to use).</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.Compress(DirectXTexNet.DXGI_FORMAT,DirectXTexNet.TEX_COMPRESS_FLAGS,System.Single)">
+            <summary>
+            Compresses the specified source image. Note that threshold is only used by BC1.
+            </summary>
+            <param name="format">The format.</param>
+            <param name="compress">The compress.</param>
+            <param name="threshold">The threshold. Default 0.5</param>
+        </member>
+        <member name="M:DirectXTexNet.ScratchImage.Compress(System.IntPtr,DirectXTexNet.DXGI_FORMAT,DirectXTexNet.TEX_COMPRESS_FLAGS,System.Single)">
+            <summary>
+            DirectCompute-based compression
+            </summary>
+            <param name="pDevice">The device.</param>
+            <param name="format">The format.</param>
+            <param name="compress">The compress.</param>
+            <param name="alphaWeight">The alpha weight (is only used by BC7. 1.0 is the typical value to use).</param>
+        </member>
+        <member name="M:DirectXTexNet.TexHelper.ComputeImageIndex(DirectXTexNet.TexMetadata,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Computes the image index for the specified values. If the image index is out of range <see cref="F:DirectXTexNet.TexHelper.IndexOutOfRange" /> is returned.
+            The ScratchImage provide a ComputeImageIndex method as well, which should be used preferrably.
+            </summary>
+            <param name="metadata">The metadata.</param>
+            <param name="mip">The mip.</param>
+            <param name="item">The item.</param>
+            <param name="slice">The slice.</param>
+            <returns>
+            The image index. If the image index is out of range <see cref="F:DirectXTexNet.TexHelper.IndexOutOfRange" /> is returned.
+            </returns>
+        </member>
+        <member name="M:DirectXTexNet.TexHelper.InitializeTemporary(DirectXTexNet.Image[],DirectXTexNet.TexMetadata,System.IDisposable[])">
+            <summary>
+            Creates a temporary image collection (Not part of the original DirectXTex). This does not copy the data. Be sure to not dispose the original ScratchImages that were combined in this
+            collection. Alternatively the ownership of the original ScratchImage(s) can be passed to this instance.
+            </summary>
+            <param name="images">The images.</param>
+            <param name="metadata">The metadata.</param>
+            <param name="takeOwnershipOf">Optional objects this instance should take ownership of.</param>
+        </member>
+    </members>
+</doc>

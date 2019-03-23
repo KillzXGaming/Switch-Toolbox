@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Switch_Toolbox.Library.Forms
+{
+    public class STPanel : Panel
+    {
+        public STPanel()
+        {
+            ForeColor = FormThemes.BaseTheme.FormForeColor;
+            BackColor = FormThemes.BaseTheme.FormBackColor;
+        }
+    }
+}
