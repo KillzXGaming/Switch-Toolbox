@@ -445,7 +445,11 @@ namespace Bfres.Structs
                                 if (bntx.Textures.ContainsKey(texref.Name))
                                     textures.Add(bntx.Textures[texref.Name]);
                             }
-
+                            foreach (var ftexCont in PluginRuntime.ftexContainers)
+                            {
+                                if (ftexCont.ResourceNodes.ContainsKey(texref.Name))
+                                    textures.Add((FTEX)ftexCont.ResourceNodes[texref.Name]);
+                            }
                         }
                     }
 
