@@ -56,7 +56,7 @@ This tool currently features:
 - TMPK
   - Can extract files and decompress
 - MP3, OGG, IDSP, HPS, WAV, BFWAV, BFSTM, BCWAV, BCWAV
- - Can listen to audio and convert between certain formats. Thanks to VGAudio and CSCore
+  - Can listen to audio and convert between certain formats. Thanks to VGAudio and CSCore
 	
 
    
