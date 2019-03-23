@@ -113,10 +113,9 @@ namespace Toolbox
         #region Updater
         private void Application_Idle(object sender, EventArgs e)
         {
-            if (UpdateProgram.CanUpdate && !Runtime.EnableVersionCheck)
+            if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck)
             {
                 //Prompt once for the user to update the tool. 
-                UpdatePromptShown = true;
                 DialogResult result;
                 using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
                 {
