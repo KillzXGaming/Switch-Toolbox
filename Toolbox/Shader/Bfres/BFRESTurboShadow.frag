@@ -30,13 +30,14 @@ struct BakedData
 BakedData ShadowMapBaked(sampler2D ShadowMap, sampler2D LightMap, vec2 texCoordBake0, vec2 texCoordBake1, int ShadowType, int LightType, int CalcType, vec3 NormalMap) {
     BakedData bake0;
 
+    bake0.indirectLighting = vec3(0);
+
 	if (CalcType != -1)
 	{
          vec4 bakeTex0 = texture(ShadowMap, texCoordBake0);
 
 	    if (CalcType == 0 || CalcType == 1)
 		{
-		    	bake0.indirectLighting =  gsys_bake_light_scale * bakeTex0.rgb;
 		}
 	}
 	else

@@ -91,6 +91,9 @@ uniform float enable_fresnel;
 uniform float enable_emission;
 uniform float cSpecularType;
 
+// Shader Options
+uniform float bake_light_type;
+uniform float bake_calc_type;
 
 // Texture Map Toggles
 uniform int HasDiffuse;
@@ -134,7 +137,17 @@ out vec4 fragColor;
 #define gamma 2.2
 const float PI = 3.14159265359;
 
+struct BakedData
+{
+	float shadowIntensity;
+	float aoIntensity;
+	vec3 indirectLighting;
+};
+
 // Defined in BFRES_Utility.frag.
+
+BakedData ShadowMapBaked(sampler2D ShadowMap, sampler2D LightMap, vec2 texCoordBake0, vec2 texCoordBake1, int ShadowType, int LightType, int CalcType, vec3 NormalMap);
+
 vec3 CalcBumpedNormal(vec3 normal, sampler2D normalMap, VertexAttributes vert, float texCoordIndex);
 //float AmbientOcclusionBlend(sampler2D BakeShadowMap, VertexAttributes vert, float ao_density);
 //vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color);
@@ -281,6 +294,15 @@ void main()
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;
 
+    BakedData ShadowBake = ShadowMapBaked(BakeShadowMap,BakeLightMap, f_texcoord1, f_texcoord2, int(bake_shadow_type),int(bake_light_type), int(bake_calc_type), N );
+
+	vec3 LightingDiffuse = vec3(0);
+	if (HasLightMap == 1)
+	{
+	    vec3 LightIntensity = vec3(0.1);
+		LightingDiffuse += ShadowBake.indirectLighting.rgb * LightIntensity;
+	}
+
     // Diffuse pass
     vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
     vec3 diffuseTerm = diffuseIblColor * albedo;
@@ -288,6 +310,7 @@ void main()
     diffuseTerm *= cavity;
     diffuseTerm *= ao;
     diffuseTerm *= shadow;
+	diffuseTerm += LightingDiffuse;
 
     // Adjust for metalness.
   //  diffuseTerm *= clamp(1 - metallic, 0, 1);

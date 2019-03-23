@@ -105,13 +105,13 @@ namespace Toolbox
         private void camMoveComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Runtime.cameraMovement = (Runtime.CameraMovement)camMoveComboBox.SelectedIndex;
-            UpdateViewportSettings();
+            UpdateViewportSettings(true);
         }
 
         private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
         {
             Runtime.stereoscopy = chkBoxStereoscopy.Checked;
-            UpdateViewportSettings();
+            UpdateViewportSettings(true);
         }
         private void camNearNumUD_ValueChanged(object sender, EventArgs e)
         {
@@ -165,7 +165,7 @@ namespace Toolbox
             UpdateViewportSettings();
         }
 
-        private void UpdateViewportSettings()
+        private void UpdateViewportSettings(bool UpdateRuntimeValues = false)
         {
             if (IsStartup)
                 return;
@@ -174,7 +174,9 @@ namespace Toolbox
             if (viewport == null)
                 return;
 
-            viewport.LoadViewportRuntimeValues();
+            if (UpdateRuntimeValues) //Update only if necessary since it can be slow
+                viewport.LoadViewportRuntimeValues();
+
             viewport.UpdateViewport();
         }
 

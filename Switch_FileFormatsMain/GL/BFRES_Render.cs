@@ -166,7 +166,7 @@ namespace FirstPlugin
 
             normalsShaderProgram = new ShaderProgram(new Shader[] { normalsFrag, normalsVert, normalsGeom });
             debugShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, debugFrag, defaultVert, utiltyFrag, shadowMapAGL });
-            pbrShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, PbrFrag, defaultVert });
+            pbrShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, PbrFrag, defaultVert, shadowMapAGL });
             solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
         }
 
