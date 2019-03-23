@@ -651,8 +651,6 @@ namespace Bfres.Structs
                             foreach (STGenericMaterial mat in assimp.materials)
                             {
                                 FMAT fmat = new FMAT();
-                                materials.Add(fmat.Text, fmat);
-                                Nodes["FmatFolder"].Nodes.Add(fmat);
 
                                 if (resFileU != null)
                                 {
@@ -785,6 +783,9 @@ namespace Bfres.Structs
                                     fmat.Material.Name = Text;
                                     fmat.SetMaterial(fmat.Material);
                                 }
+
+                                materials.Add(fmat.Text, fmat);
+                                Nodes["FmatFolder"].Nodes.Add(fmat);
                             }
 
                         }

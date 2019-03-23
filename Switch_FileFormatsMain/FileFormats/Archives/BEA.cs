@@ -123,8 +123,8 @@ namespace FirstPlugin
             Text = FileName;
             CanSave = true;
 
-            BezelEngineArchive bea = new BezelEngineArchive(stream);
-         //   FillTreeNodes(this, beaFile.FileList);
+            beaFile = new BezelEngineArchive(stream);
+            FillTreeNodes(this, beaFile.FileList);
 
 
             ContextMenu = new ContextMenu();
