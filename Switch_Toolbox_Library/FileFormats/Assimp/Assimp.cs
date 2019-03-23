@@ -256,7 +256,7 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public const int BoneRotation = 90;
+        public const int BoneRotation = 0;
 
         private List<Node> tempBoneNodes = new List<Node>();
         private void CreateByNode(Node node, STSkeleton skeleton, short SmoothIndex, short RigidIndex, bool IsRoot, ref Assimp.Matrix4x4 rootTransform)

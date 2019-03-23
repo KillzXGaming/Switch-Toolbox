@@ -1039,10 +1039,10 @@ namespace Bfres.Structs
             {
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
                 {
-                    //     Console.WriteLine("Old " + vtx.pos);
-                    //  vtx.pos = TransformLocal(vtx.pos);
-                    //  vtx.nrm = TransformLocal(vtx.nrm, false);
-                    //     Console.WriteLine("New " + vtx.pos);
+                    Console.WriteLine("Old " + vtx.pos);
+                    vtx.pos = TransformLocal(vtx.pos);
+                    vtx.nrm = TransformLocal(vtx.nrm, false);
+                    Console.WriteLine("New " + vtx.pos);
                 }
                 //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
                 //Console.WriteLine($"Index count {vtx.boneIds.Count}");

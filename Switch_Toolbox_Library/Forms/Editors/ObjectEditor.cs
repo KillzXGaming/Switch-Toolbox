@@ -231,13 +231,18 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        bool UpdateViewport = false;
         private void treeViewCustom1_AfterCheck(object sender, TreeViewEventArgs e)
         {
+            UpdateViewport = false;
+
             if (e.Node is STGenericModel)
             {
                 CheckChildNodes(e.Node, e.Node.Checked);
             }
-            LibraryGUI.Instance.UpdateViewport();
+
+            if (UpdateViewport)
+                LibraryGUI.Instance.UpdateViewport();
         }
 
         private void CheckChildNodes(TreeNode node, bool IsChecked)
@@ -250,6 +255,8 @@ namespace Switch_Toolbox.Library.Forms
                     CheckChildNodes(n, IsChecked);
                 }
             }
+
+            UpdateViewport = true; //Update viewport on the last node checked
         }
 
         private void treeViewCustom1_DrawNode(object sender, DrawTreeNodeEventArgs e)
