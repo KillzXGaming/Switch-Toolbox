@@ -28,32 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.animationPanel1 = new Switch_Toolbox.Library.AnimationPanel();
             this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelViewport = new Switch_Toolbox.Library.Forms.STPanel();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vewportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.animationPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // animationPanel1
-            // 
-            this.animationPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.animationPanel1.CurrentAnimation = null;
-            this.animationPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.animationPanel1.Location = new System.Drawing.Point(0, 422);
-            this.animationPanel1.Name = "animationPanel1";
-            this.animationPanel1.Size = new System.Drawing.Size(781, 100);
-            this.animationPanel1.TabIndex = 1;
             // 
             // normalsShadingToolStripMenuItem
             // 
@@ -79,6 +67,7 @@
             this.viewToolStripMenuItem,
             this.shadingToolStripMenuItem,
             this.resetCameraToolStripMenuItem,
+            this.resetPoseToolStripMenuItem,
             this.optionsToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
@@ -104,35 +93,15 @@
             // 
             // modelToolStripMenuItem
             // 
-            this.modelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bonesToolStripMenuItem});
             this.modelToolStripMenuItem.Name = "modelToolStripMenuItem";
             this.modelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.modelToolStripMenuItem.Text = "Model";
             // 
-            // bonesToolStripMenuItem
-            // 
-            this.bonesToolStripMenuItem.Name = "bonesToolStripMenuItem";
-            this.bonesToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
-            this.bonesToolStripMenuItem.Text = "Bones";
-            // 
             // animationToolStripMenuItem
             // 
-            this.animationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.animationPanelToolStripMenuItem});
             this.animationToolStripMenuItem.Name = "animationToolStripMenuItem";
             this.animationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.animationToolStripMenuItem.Text = "Animation";
-            // 
-            // animationPanelToolStripMenuItem
-            // 
-            this.animationPanelToolStripMenuItem.Checked = true;
-            this.animationPanelToolStripMenuItem.CheckOnClick = true;
-            this.animationPanelToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.animationPanelToolStripMenuItem.Name = "animationPanelToolStripMenuItem";
-            this.animationPanelToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.animationPanelToolStripMenuItem.Text = "Timeline";
-            this.animationPanelToolStripMenuItem.Click += new System.EventHandler(this.animationPanelToolStripMenuItem_Click);
             // 
             // shadingToolStripMenuItem
             // 
@@ -159,9 +128,16 @@
             // reloadShadersToolStripMenuItem
             // 
             this.reloadShadersToolStripMenuItem.Name = "reloadShadersToolStripMenuItem";
-            this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.reloadShadersToolStripMenuItem.Text = "Reload Shaders";
             this.reloadShadersToolStripMenuItem.Click += new System.EventHandler(this.reloadShadersToolStripMenuItem_Click);
+            // 
+            // resetPoseToolStripMenuItem
+            // 
+            this.resetPoseToolStripMenuItem.Name = "resetPoseToolStripMenuItem";
+            this.resetPoseToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
+            this.resetPoseToolStripMenuItem.Text = "Reset Pose";
+            this.resetPoseToolStripMenuItem.Click += new System.EventHandler(this.resetPoseToolStripMenuItem_Click);
             // 
             // Viewport
             // 
@@ -180,19 +156,17 @@
         }
 
         #endregion
-        public AnimationPanel animationPanel1;
         private System.Windows.Forms.ToolStripMenuItem normalsShadingToolStripMenuItem;
         private Forms.STPanel panelViewport;
         private Forms.STMenuStrip stContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem vewportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modelToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bonesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem animationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem animationPanelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetCameraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shadingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadShadersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetPoseToolStripMenuItem;
     }
 }

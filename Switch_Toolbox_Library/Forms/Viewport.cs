@@ -269,15 +269,7 @@ namespace Switch_Toolbox.Library
 
         private void contextMenuStripDark1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (animationPanelToolStripMenuItem.Checked)
-            {
-                animationPanelToolStripMenuItem.Checked = false;
 
-            }
-            else
-            {
-                animationPanelToolStripMenuItem.Checked = true;
-            }
         }
 
         public void FormClosing()
@@ -317,6 +309,17 @@ namespace Switch_Toolbox.Library
         {
             if (GL_ControlModern != null)
                 GL_ControlModern.ReloadShaders();
+        }
+
+        private void resetPoseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var animationPanel1 = LibraryGUI.Instance.GetAnimationPanel();
+
+            if (animationPanel1 != null)
+            {
+                if (animationPanel1.CurrentAnimation != null)
+                    animationPanel1.ResetModels();
+            }
         }
     }
 }

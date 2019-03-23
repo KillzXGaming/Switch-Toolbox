@@ -93,14 +93,14 @@ namespace Bfres.Structs
                             ResU.Bone bone = new ResU.Bone();
                             bone.Import(FileName, GetResFileU());
 
-                            BfresWiiU.ReadBone(bn, bone);
+                            BfresWiiU.ReadBone(bn, bone, false);
                         }
                         else
                         {
                             Bone bone = new Bone();
                             bone.Import(FileName);
 
-                            BfresSwitch.ReadBone(bn, bone);
+                            BfresSwitch.ReadBone(bn, bone, false);
                         }
                     }
                 }
@@ -246,7 +246,7 @@ namespace Bfres.Structs
                 BoneU = new ResU.Bone();
                 BoneU.Name = CheckDuplicateBoneNames("NewBone");
 
-                BfresWiiU.ReadBone(bn, BoneU);
+                BfresWiiU.ReadBone(bn, BoneU, false);
                 Nodes.Add(bn);
             }
             else
@@ -254,7 +254,7 @@ namespace Bfres.Structs
                 Bone = new Bone();
                 Bone.Name = CheckDuplicateBoneNames("NewBone");
 
-                BfresSwitch.ReadBone(bn, Bone);
+                BfresSwitch.ReadBone(bn, Bone, false);
                 Nodes.Add(bn);
             }
         }
@@ -275,7 +275,7 @@ namespace Bfres.Structs
                     BoneU.Import(ofd.FileName, GetResFileU());
                     BoneU.Name = CheckDuplicateBoneNames(BoneU.Name);
 
-                    BfresWiiU.ReadBone(bn, BoneU);
+                    BfresWiiU.ReadBone(bn, BoneU, false);
                     Nodes.Add(bn);
                 }
                 else
@@ -284,7 +284,7 @@ namespace Bfres.Structs
                     Bone.Import(ofd.FileName);
                     Bone.Name = CheckDuplicateBoneNames(Bone.Name);
 
-                    BfresSwitch.ReadBone(bn, Bone);
+                    BfresSwitch.ReadBone(bn, Bone, false);
                     Nodes.Add(bn);
                 }
             }

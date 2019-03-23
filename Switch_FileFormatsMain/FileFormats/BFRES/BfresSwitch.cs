@@ -536,7 +536,7 @@ namespace FirstPlugin
 
 
         }
-        public static void ReadBone(this BfresBone bone, Bone bn, bool SetParent = false)
+        public static void ReadBone(this BfresBone bone, Bone bn, bool SetParent = true)
         {
             bone.Bone = bn;
             bone.FlagVisible = bn.Flags.HasFlag(BoneFlags.Visible);
@@ -544,7 +544,7 @@ namespace FirstPlugin
             bone.RigidMatrixIndex = bn.RigidMatrixIndex;
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
             bone.BillboardIndex = bn.BillboardIndex;
-            if (!SetParent)
+            if (SetParent)
                 bone.parentIndex = bn.ParentIndex;
 
             bone.scale = new float[3];

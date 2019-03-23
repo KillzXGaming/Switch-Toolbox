@@ -212,9 +212,18 @@ namespace FirstPlugin.Forms
             stPropertyGrid1.LoadProperty(anim.TexPatternAnim, OnPropertyChanged);
             userDataEditor1.LoadUserData(anim.TexPatternAnim.UserData);
 
-            BfresTexturePatternEditor editor = new BfresTexturePatternEditor();
+            BfresTexturePatternEditor editor = (BfresTexturePatternEditor)GetActiveControl(typeof(BfresTexturePatternEditor));
+            if (editor == null)
+            {
+                stPanel2.Controls.Clear();
+
+                editor = new BfresTexturePatternEditor();
+                editor.Dock = DockStyle.Fill;
+                stPanel2.Controls.Add(editor);
+            }
+
             editor.LoadAnim(anim);
-            stPanel1.Controls.Add(editor);
+            editor.Refresh();
         }
 
         public void OnPropertyChanged()

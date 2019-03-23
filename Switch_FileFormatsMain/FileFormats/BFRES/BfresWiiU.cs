@@ -342,7 +342,7 @@ namespace FirstPlugin
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
             bone.BillboardIndex = bn.BillboardIndex;
 
-            if (!SetParent)
+            if (SetParent)
                 bone.parentIndex = bn.ParentIndex;
             bone.scale = new float[3];
             bone.rotation = new float[4];
