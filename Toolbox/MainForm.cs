@@ -111,25 +111,21 @@ namespace Toolbox
         }
 
         #region Updater
-        bool UpdatePromptShown = false;
         private void Application_Idle(object sender, EventArgs e)
         {
             if (UpdateProgram.CanUpdate && !Runtime.EnableVersionCheck)
             {
-                if (!UpdatePromptShown)
+                //Prompt once for the user to update the tool. 
+                UpdatePromptShown = true;
+                DialogResult result;
+                using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
                 {
-                    //Prompt once for the user to update the tool. 
-                    UpdatePromptShown = true;
-                    DialogResult result;
-                    using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
-                    {
-                        result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName}!" +
-                       $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                    }
-                    if (result == DialogResult.Yes)
-                    {
-                        UpdateApplication();
-                    }
+                    result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName}!" +
+                   $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                }
+                if (result == DialogResult.Yes)
+                {
+                    UpdateApplication();
                 }
             }
         }

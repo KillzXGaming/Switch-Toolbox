@@ -267,27 +267,23 @@ namespace FirstPlugin
         bool IsLoaded = false;
         public override void OnClick(TreeView treeView)
         {
-            if (!Runtime.DisableViewport)
+            Viewport editor = (Viewport)LibraryGUI.Instance.GetActiveContent(typeof(Viewport));
+
+            if (editor == null)
             {
-                Viewport editor = (Viewport)LibraryGUI.Instance.GetActiveContent(typeof(Viewport));
-
-                if (editor == null)
-                {
-                    editor = new Viewport();
-                    LibraryGUI.Instance.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-
-                if (!IsLoaded)
-                {
-                    editor.AddDrawable(Renderer);
-                    editor.LoadObjects();
-                }
-             
-
-                IsLoaded = true;
+                editor = new Viewport();
+                LibraryGUI.Instance.LoadEditor(editor);
             }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+
+            if (!IsLoaded)
+            {
+                editor.AddDrawable(Renderer);
+                editor.LoadObjects();
+            }
+
+            IsLoaded = true;
         }
 
         public MarioKart.MK7.KCL kcl = null;
