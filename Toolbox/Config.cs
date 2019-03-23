@@ -47,8 +47,8 @@ namespace Toolbox
                     case "OpenStartupWindow":
                         bool.TryParse(node.InnerText, out Runtime.OpenStartupWindow);
                         break;
-                    case "DisableViewport":
-                        bool.TryParse(node.InnerText, out Runtime.DisableViewport);
+                    case "EnableVersionCheck":
+                        bool.TryParse(node.InnerText, out Runtime.EnableVersionCheck);
                         break;
                     case "RenderModels":
                         bool.TryParse(node.InnerText, out Runtime.RenderModels);
@@ -230,7 +230,7 @@ namespace Toolbox
 
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
-            mainSettingsNode.AppendChild(createNode(doc, "DisableViewport", Runtime.DisableViewport.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "FormTheme", Switch_Toolbox.Library.Forms.FormThemes.ActivePreset.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "MaximizeMdiWindow", Runtime.MaximizeMdiWindow.ToString()));
         }

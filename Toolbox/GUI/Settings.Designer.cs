@@ -61,7 +61,6 @@
             this.chkBoxStereoscopy = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.panel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.disableViewportCHKBX = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.GLSLVerLabel = new Switch_Toolbox.Library.Forms.STLabel();
             this.openGLVerLabel = new Switch_Toolbox.Library.Forms.STLabel();
             this.btnSave = new Switch_Toolbox.Library.Forms.STButton();
@@ -86,6 +85,7 @@
             this.bgGradientTop = new System.Windows.Forms.PictureBox();
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.preferredTexFormatCB = new System.Windows.Forms.ComboBox();
+            this.enableVersionCheckCHK = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -581,24 +581,13 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.disableViewportCHKBX);
+            this.panel1.Controls.Add(this.enableVersionCheckCHK);
             this.panel1.Controls.Add(this.GLSLVerLabel);
             this.panel1.Controls.Add(this.openGLVerLabel);
             this.panel1.Location = new System.Drawing.Point(3, 4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(215, 96);
             this.panel1.TabIndex = 5;
-            // 
-            // disableViewportCHKBX
-            // 
-            this.disableViewportCHKBX.AutoSize = true;
-            this.disableViewportCHKBX.Location = new System.Drawing.Point(0, 67);
-            this.disableViewportCHKBX.Name = "disableViewportCHKBX";
-            this.disableViewportCHKBX.Size = new System.Drawing.Size(105, 17);
-            this.disableViewportCHKBX.TabIndex = 16;
-            this.disableViewportCHKBX.Text = "Disable Viewport";
-            this.disableViewportCHKBX.UseVisualStyleBackColor = true;
-            this.disableViewportCHKBX.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
             // 
             // GLSLVerLabel
             // 
@@ -885,6 +874,17 @@
             this.preferredTexFormatCB.TabIndex = 0;
             this.preferredTexFormatCB.SelectedIndexChanged += new System.EventHandler(this.preferredTexFormatCB_SelectedIndexChanged);
             // 
+            // enableVersionCheckCHK
+            // 
+            this.enableVersionCheckCHK.AutoSize = true;
+            this.enableVersionCheckCHK.Location = new System.Drawing.Point(0, 67);
+            this.enableVersionCheckCHK.Name = "enableVersionCheckCHK";
+            this.enableVersionCheckCHK.Size = new System.Drawing.Size(131, 17);
+            this.enableVersionCheckCHK.TabIndex = 16;
+            this.enableVersionCheckCHK.Text = "Enable Version Check";
+            this.enableVersionCheckCHK.UseVisualStyleBackColor = true;
+            this.enableVersionCheckCHK.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -949,7 +949,6 @@
         private Switch_Toolbox.Library.Forms.STLabel label7;
         private Switch_Toolbox.Library.Forms.NumericUpDownInt yazoCompressionLevelUD;
         private Switch_Toolbox.Library.Forms.STPanel panel3;
-        private Switch_Toolbox.Library.Forms.STCheckBox disableViewportCHKBX;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxEnablePBR;
         private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -981,5 +980,6 @@
         private Switch_Toolbox.Library.Forms.STButton redChannelBtn;
         private Switch_Toolbox.Library.Forms.STLabel stLabel9;
         private Switch_Toolbox.Library.Forms.NumericUpDownFloat cameraMaxSpeedUD;
+        private Switch_Toolbox.Library.Forms.STCheckBox enableVersionCheckCHK;
     }
 }

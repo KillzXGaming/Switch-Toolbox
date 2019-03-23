@@ -37,11 +37,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\AssimpNet.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\AssimpNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Be.Windows.Forms.HexBox">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Be.Windows.Forms.HexBox.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\Be.Windows.Forms.HexBox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CSCore, Version=1.2.1.2, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
@@ -62,15 +62,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="K4os.Compression.LZ4, Version=1.1.0.0, Culture=neutral, PublicKeyToken=27d14aecb5186925, processorArchitecture=MSIL">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\K4os.Compression.LZ4.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\K4os.Compression.LZ4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="K4os.Compression.LZ4.Streams, Version=1.1.0.0, Culture=neutral, PublicKeyToken=27d14aecb5186925, processorArchitecture=MSIL">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\K4os.Compression.LZ4.Streams.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\K4os.Compression.LZ4.Streams.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="K4os.Hash.xxHash, Version=1.0.5.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\K4os.Hash.xxHash.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\K4os.Hash.xxHash.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LZ4, Version=1.0.15.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
@@ -89,26 +89,26 @@
     </Reference>
     <Reference Include="Octokit, Version=0.31.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Octokit.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\Octokit.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\OpenTK.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="SARCExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SARCExt.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\SARCExt.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ScintillaNET">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\ScintillaNET.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\ScintillaNET.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ScintillaNET FindReplaceDialog">
@@ -126,11 +126,11 @@
       <HintPath>..\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
     </Reference>
     <Reference Include="Syroot.BinaryData">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.Maths">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Syroot.Maths.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\Syroot.Maths.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -174,7 +174,7 @@
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="ZstdNet, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\ZstdNet.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\ZstdNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

@@ -28,6 +28,8 @@ namespace Toolbox
 
         public MainForm()
         {
+            FormThemes.ActivePreset = FormThemes.Preset.Dark;
+
             Runtime.MainForm = this;
             LoadConfig();
 
@@ -112,7 +114,7 @@ namespace Toolbox
         bool UpdatePromptShown = false;
         private void Application_Idle(object sender, EventArgs e)
         {
-            if (UpdateProgram.CanUpdate && !Runtime.DisableUpdatePrompt)
+            if (UpdateProgram.CanUpdate && !Runtime.EnableVersionCheck)
             {
                 if (!UpdatePromptShown)
                 {

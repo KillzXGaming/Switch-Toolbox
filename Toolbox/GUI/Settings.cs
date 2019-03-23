@@ -62,7 +62,7 @@ namespace Toolbox
             camFarNumUD.Value = (decimal)Runtime.CameraFar;
             previewScaleUD.Value = (decimal)Runtime.previewScale;
             yazoCompressionLevelUD.Value = Runtime.Yaz0CompressionLevel;
-            disableViewportCHKBX.Checked = Runtime.DisableViewport;
+            enableVersionCheckCHK.Checked = Runtime.EnableVersionCheck;
             chkBoxEnablePBR.Checked = Runtime.EnablePBR;
             chkBoxMdiMaximized.Checked = Runtime.MaximizeMdiWindow;
             chkBoxDisplayBones.Checked = Runtime.renderBones;
@@ -156,7 +156,7 @@ namespace Toolbox
 
         private void checkBox1_CheckedChanged_2(object sender, EventArgs e)
         {
-            Runtime.DisableViewport = disableViewportCHKBX.Checked;
+            Runtime.EnableVersionCheck = enableVersionCheckCHK.Checked;
         }
 
         private void chkBoxEnablePBR_CheckedChanged(object sender, EventArgs e)

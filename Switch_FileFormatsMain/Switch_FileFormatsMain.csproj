@@ -52,11 +52,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="BarsLibrary">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\BarsLibrary.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\BarsLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BezelEngineArchive_Lib">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BfshaLibrary, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -69,24 +69,24 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="CSCore">
-      <HintPath>..\Toolbox\bin\Release\Lib\CSCore.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\CSCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EditorCoreCommon">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KCLExt">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\KCLExt.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\KCLExt.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LibHac">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\LibHac.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\LibHac.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\NAudio.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\NAudio.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -111,7 +111,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="SARCExt">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SARCExt.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\SARCExt.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SELib">
@@ -119,19 +119,19 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SFGraphics">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SFGraphics.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\SFGraphics.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SFGraphics.Utils">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.BinaryData">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.Maths">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\Syroot.Maths.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\Syroot.Maths.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.Bfres">
@@ -173,7 +173,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="VGAudio">
-      <HintPath>..\..\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\VGAudio.dll</HintPath>
+      <HintPath>..\Toolbox\Lib\VGAudio.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
