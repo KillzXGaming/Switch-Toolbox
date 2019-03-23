@@ -34,9 +34,9 @@ namespace FirstPlugin.Forms
 
         public BfresEditor()
         {
-            InitializeComponent();
+            InitializeComponent();  
 
-            STConsole stConsole = new STConsole();
+            STConsole stConsole = STConsole.Instance;
             stConsole.BorderStyle = BorderStyle.None;
             stConsole.Dock = DockStyle.Fill;
             tabPage4.Controls.Add(stConsole);

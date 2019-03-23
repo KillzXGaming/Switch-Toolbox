@@ -289,6 +289,8 @@ namespace FirstPlugin
         public MarioKart.MK7.KCL kcl = null;
         public void Read(byte[] file_data)
         {
+            data = file_data;
+
             try
             {
                 Endianness = Syroot.BinaryData.ByteOrder.LittleEndian;

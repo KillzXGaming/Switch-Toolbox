@@ -577,6 +577,8 @@ namespace FirstPlugin
             ushort SmoothIndex = 0;
             foreach (STBone genericBone in fskl.bones)
             {
+                STConsole.WriteLine($"Applying bone " + genericBone.Text);
+
                 genericBone.BillboardIndex = ushort.MaxValue;
 
                 BfresBone bn = new BfresBone(fskl);
