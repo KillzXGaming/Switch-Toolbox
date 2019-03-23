@@ -50,7 +50,7 @@
             this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.button2.Location = new System.Drawing.Point(17, 7);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(50, 21);
+            this.button2.Size = new System.Drawing.Size(34, 21);
             this.button2.TabIndex = 2;
             this.button2.UseVisualStyleBackColor = false;
             // 
@@ -113,9 +113,9 @@
             this.animationPlayBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.animationPlayBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.animationPlayBtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.animationPlayBtn.Location = new System.Drawing.Point(73, 7);
+            this.animationPlayBtn.Location = new System.Drawing.Point(57, 7);
             this.animationPlayBtn.Name = "animationPlayBtn";
-            this.animationPlayBtn.Size = new System.Drawing.Size(50, 21);
+            this.animationPlayBtn.Size = new System.Drawing.Size(31, 21);
             this.animationPlayBtn.TabIndex = 1;
             this.animationPlayBtn.UseVisualStyleBackColor = false;
             this.animationPlayBtn.Click += new System.EventHandler(this.animationPlayBtn_Click);

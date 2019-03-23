@@ -544,7 +544,7 @@ namespace FirstPlugin
             bone.RigidMatrixIndex = bn.RigidMatrixIndex;
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
             bone.BillboardIndex = bn.BillboardIndex;
-            if (SetParent)
+            if (!SetParent)
                 bone.parentIndex = bn.ParentIndex;
 
             bone.scale = new float[3];

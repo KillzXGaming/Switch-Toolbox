@@ -32,7 +32,10 @@ namespace Switch_Toolbox
                         latest.TargetCommitish,
                         latest.Assets[0].UpdatedAt.ToString());
 
-                    if (Runtime.ProgramVersion != latest.TagName)
+                    ParseVersion(latest.TagName);
+
+
+                    if (Runtime.ProgramVersion != latest.TagName && Major >= 1)
                     {
                         CanUpdate = true;
                         LatestRelease = latest;
@@ -45,6 +48,19 @@ namespace Switch_Toolbox
                 Console.WriteLine($"Failed to get latest update\n{ex.ToString()}");
             }
         }
+
+        public static int Major;
+        public static int Minor;
+        public static int Revision;
+
+        static void ParseVersion(string TagName)
+        {
+            char[] chars = TagName.ToCharArray();
+
+            Major = int.Parse(chars[1].ToString());
+
+        }
+
         static async Task GetReleases(GitHubClient client)
         {
             List<Release> Releases = new List<Release>();

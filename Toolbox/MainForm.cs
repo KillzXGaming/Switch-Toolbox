@@ -102,7 +102,6 @@ namespace Toolbox
 
             if (int.TryParse(Version[0].ToString(), out major))
             {
-
                 if (major <= 2)
                 {
                     Runtime.UseLegacyGL = true;
@@ -111,9 +110,10 @@ namespace Toolbox
         }
 
         #region Updater
+        bool UsePrompt = true;
         private void Application_Idle(object sender, EventArgs e)
         {
-            if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck)
+            if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck && UsePrompt)
             {
                 //Prompt once for the user to update the tool. 
                 DialogResult result;
@@ -126,6 +126,8 @@ namespace Toolbox
                 {
                     UpdateApplication();
                 }
+                else
+                    UsePrompt = false;
             }
         }
         private void UpdateApplication()
