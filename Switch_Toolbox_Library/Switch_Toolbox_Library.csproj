@@ -121,9 +121,11 @@
     </Reference>
     <Reference Include="SFGraphics">
       <HintPath>..\Toolbox\Lib\SFGraphics.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SFGraphics.Utils">
       <HintPath>..\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
