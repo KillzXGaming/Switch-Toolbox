@@ -1,20 +1,8 @@
 # Switch-Toolbox
 A tool to edit many formats of Nintendo Switch and some Wii U. 
 
-## Changelog
-
-v0.73 Changelog
-- Param default values can be set on import for models. (Colors reset to white, bake coords are reset)
-- Fixed some bugs.
-
-v0.72 Changelog
-- Fixed crashes from RGBA DDS.
-- Added an option to disable viewport. (May be quicker, and for those who use old GL versions).
-
-v0.71 Changelog
-- Stability improvements. 
-- Add byml editor back in.
-- Some bug fixes and exception issues
+## Changelog 1.0 Experimental / BETA
+https://docs.google.com/spreadsheets/d/16JLhGBJL5U5hpKWspL-pzYIaRL23X1YKEmia6pbsGbc/edit#gid=1386834576
 
 ## Features
 
@@ -22,11 +10,13 @@ This tool currently features:
 - BFRES
    - Model importing (dae, fbx, obj, and csv)
    - Material editing (Render info, texture mapping, parameters, etc)
-   - Material  copying
+   - Material copying
    - Animation and model sub section can be exported/imported.
    - Can delete, add, replace individual objects from an fmdl.
    - Can create new sub sections and data
    - Can preview skeletal, SRT, param, texture pattern, and bone visual animations. (Param ones will vary)
+   - Can export and import fully rigged models with bone support.
+   - Can convert gif files to texture pattern animations. Very WIP atm.
 - BNTX
    - Can add/remove textures.
    - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
@@ -55,6 +45,20 @@ This tool currently features:
    - Can view options, samplers, attributes, and uniform blocks.
 - BNSH
    - Can extract shader vertex and fragment shaders from variations/programs
+- SHARCFB and SHARC
+   - Basic preview of some shader program data.
+- AAMP
+   - Can edit v1 AAMP (Wii U) and preview v2 AAMP
+- NUTEXB
+   - Can extract and replace textures.
+- PTCL
+   - Can edit colors (Wii U) and preview textures. Switch ptcl can only preview both atm.
+- TMPK
+  - Can extract files and decompress
+- MP3, OGG, IDSP, HPS, WAV, BFWAV, BFSTM, BCWAV, BCWAV
+ - Can listen to audio and convert between certain formats. Thanks to VGAudio and CSCore
+	
+
    
 ## Building
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
@@ -88,14 +92,13 @@ Libraries
 - [SF Graphics by SMG (Experimental](https://github.com/ScanMountGoat/SFGraphics) (currently just a placeholder for shader workflow and some useful things)
 - [Audio & MIDI library](https://github.com/naudio/NAudio)
 - [VGAudio](https://github.com/Thealexbarney/VGAudio)
+- [CSCore](https://github.com/filoe/cscore)
 - [Assimp](https://bitbucket.org/Starnick/assimpnet/src/master/)
 - [OpenTK](https://github.com/opentk/opentk)
 - [BezelEngineArchive Library](https://github.com/KillzXGaming/BEA-Library-Editor)
 - [Syroot BinaryData](https://gitlab.com/Syroot/BinaryData)
 - [Syroot Maths](https://gitlab.com/Syroot/Maths)
 - [Syroot Bfres Library (Wii U)](https://gitlab.com/Syroot/NintenTools.Bfres)
-- [Costura for embedding data for plugins](https://github.com/Fody/Costura) 
-- [CsvHelper (unused atm but planned to be used](https://joshclose.github.io/CsvHelper/)
 
 License
  in Switch_Toolbox\Lib\Licenses
