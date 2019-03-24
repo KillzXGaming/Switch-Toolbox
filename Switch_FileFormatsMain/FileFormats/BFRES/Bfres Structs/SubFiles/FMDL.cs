@@ -418,6 +418,13 @@ namespace Bfres.Structs
                 }
                 UpdateVertexData();
             }
+            else
+            {
+                foreach (var shape in shapes) {
+                    shape.SaveVertexBuffer();
+                }
+                UpdateVertexData();
+            }
         }
 
         public override void Unload()

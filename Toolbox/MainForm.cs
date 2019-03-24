@@ -774,6 +774,7 @@ namespace Toolbox
             }
         }
 
+        bool IsChanged = false;
         private void MainForm_MdiChildActivate(object sender, EventArgs e)
         {
             if (this.ActiveMdiChild == null)
@@ -784,7 +785,11 @@ namespace Toolbox
             // If no any child form, hide tabControl 
             else
             {
-              //  ResetAnimPanel();
+                if (IsChanged)
+                {
+                    ResetAnimPanel();
+                    IsChanged = false;
+                }
 
                 // If child form is new and no has tabPage, 
                 // create new tabPage 
@@ -863,6 +868,8 @@ namespace Toolbox
                 tpCheck.BackColor = FormThemes.BaseTheme.TabPageInactive;
 
             SetFormatSettings(GetActiveIFileFormat());
+
+            IsChanged = true;
 
             if (tabForms.SelectedTab != null)
             {
