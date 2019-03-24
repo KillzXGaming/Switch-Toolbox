@@ -784,7 +784,7 @@ namespace Toolbox
             // If no any child form, hide tabControl 
             else
             {
-                ResetAnimPanel();
+              //  ResetAnimPanel();
 
                 // If child form is new and no has tabPage, 
                 // create new tabPage 

@@ -43,6 +43,8 @@ namespace Bfres.Structs
             ContextMenuStrip = new ContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Bone Target", null, NewAction, Keys.Control | Keys.W));
             LoadFileMenus(false);
+
+            OpenAnimationData();
         }
 
         protected void NewAction(object sender, EventArgs e) { NewBoneAnim(); }

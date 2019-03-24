@@ -195,8 +195,6 @@ namespace FirstPlugin
         {
             string dir = Path.GetDirectoryName(sarc.FullName);
 
-            Console.WriteLine("CurrentFullName " + sarc.FullName);
-
             if (dir == string.Empty)
                 sarc.FullName = sarc.Text;
             else
