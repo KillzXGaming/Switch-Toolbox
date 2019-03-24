@@ -150,7 +150,7 @@ BakedData ShadowMapBaked(sampler2D ShadowMap, sampler2D LightMap, vec2 texCoordB
 
 vec3 CalcBumpedNormal(vec3 normal, sampler2D normalMap, VertexAttributes vert, float texCoordIndex);
 //float AmbientOcclusionBlend(sampler2D BakeShadowMap, VertexAttributes vert, float ao_density);
-//vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color);
+vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color);
 
 // Shader code adapted from learnopengl.com's PBR tutorial:
 // https://learnopengl.com/PBR/Theory
@@ -253,9 +253,9 @@ void main()
 
 	float cavity = 1;
 
-	vec3 emission = vec3(0);
-//    if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
-//		emission.rgb += EmissionPass(EmissionMap, emission_intensity, vert, 0, emission_color);
+	vec3 emissionTerm = vec3(0);
+    if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
+		emissionTerm.rgb += EmissionPass(EmissionMap, emission_intensity, vert, 0, emission_color);
 
 	vec3 lightMapColor = vec3(1);
 	float lightMapIntensity = 0;
@@ -310,7 +310,7 @@ void main()
     diffuseTerm *= cavity;
     diffuseTerm *= ao;
     diffuseTerm *= shadow;
-	diffuseTerm += LightingDiffuse;
+    diffuseTerm += LightingDiffuse;
 
     // Adjust for metalness.
   //  diffuseTerm *= clamp(1 - metallic, 0, 1);
@@ -332,6 +332,7 @@ void main()
     fragColor.rgb = vec3(0);
     fragColor.rgb += diffuseTerm;
     fragColor.rgb += specularTerm;
+    fragColor.rgb += emissionTerm;
 
     // Global brightness adjustment.
     fragColor.rgb *= 2.5;

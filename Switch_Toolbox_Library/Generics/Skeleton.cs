@@ -224,7 +224,7 @@ namespace Switch_Toolbox.Library
         {
             CheckBuffers();
 
-            if (!Runtime.OpenTKInitialized || !Runtime.renderBones)
+            if (!Runtime.OpenTKInitialized || !Runtime.renderBones || solidColorShaderProgram == null)
                 return;
 
             GL.UseProgram(0);

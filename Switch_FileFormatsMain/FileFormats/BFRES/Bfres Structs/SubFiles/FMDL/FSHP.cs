@@ -876,15 +876,28 @@ namespace Bfres.Structs
             else
                 Shape = BfresSwitch.SaveShape(this);
         }
-        public IList<ushort> GetIndices()
+        public List<ushort> GetIndices(FSKL fskl)
         {
-            IList<ushort> indices = new List<ushort>();
+            List<ushort> indices = new List<ushort>();
 
             List<string> BoneNodes = new List<string>();
             foreach (Vertex vtx in vertices)
             {
+                foreach (int index in vtx.boneIds)
+                {
+                    var bone = fskl.bones[fskl.Node_Array[index]];
 
+                    ushort ind = (ushort)fskl.bones.IndexOf(bone);
+                    if (!indices.Contains(ind))
+                    {
+                        STConsole.WriteLine($"Saving bone index {bone.Name} {index}");
+                        indices.Add(ind);
+                    }
+
+                }
             }
+            STConsole.WriteLine($"Total Indices for {Text}  {indices.Count}");
+
             return indices;
         }
         public Vector3 TransformLocal(Vector3 position, bool IsPos = true)

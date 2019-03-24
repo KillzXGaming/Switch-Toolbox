@@ -146,6 +146,29 @@ namespace FirstPlugin
                 editor.Refresh();
         }
 
+        //Used for adding new skeleton drawables
+        public void AddSkeletonDrawable(STSkeleton skeleton)
+        {
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            if (bfresEditor != null)
+            {
+                bfresEditor.AddDrawable(skeleton);
+            }
+
+            drawables.Add(skeleton);
+        }
+
+        public void RemoveSkeletonDrawable(STSkeleton skeleton)
+        {
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            if (bfresEditor != null)
+            {
+                bfresEditor.RemoveDrawable(skeleton);
+            }
+
+            drawables.Remove(skeleton);
+        }
+
         List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
         public void LoadEditors(object SelectedSection)
         {

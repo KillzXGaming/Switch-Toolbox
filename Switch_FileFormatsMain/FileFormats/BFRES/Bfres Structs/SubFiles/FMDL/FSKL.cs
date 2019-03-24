@@ -211,6 +211,36 @@ namespace Bfres.Structs
             SmoothMatrixIndex = genericBone.SmoothMatrixIndex;
         }
 
+        public void GenericToBfresBone()
+        {
+            if (BoneU != null)
+            {
+                BoneU.Position = new Syroot.Maths.Vector3F(position[0], position[1], position[2]);
+                BoneU.Scale = new Syroot.Maths.Vector3F(scale[0], scale[1], scale[2]);
+                BoneU.Rotation = new Syroot.Maths.Vector4F(rotation[0], rotation[1], rotation[2], rotation[3]);
+                BoneU.Name = Text;
+                BoneU.Flags = FlagVisible ? ResU.BoneFlags.Visible : 0;
+                BoneU.ParentIndex = (ushort)parentIndex;
+                BoneU.SmoothMatrixIndex = SmoothMatrixIndex;
+                BoneU.RigidMatrixIndex = RigidMatrixIndex;
+
+                SetTransforms();
+            }
+            else
+            {
+                Bone.Position = new Syroot.Maths.Vector3F(position[0], position[1], position[2]);
+                Bone.Scale = new Syroot.Maths.Vector3F(scale[0], scale[1], scale[2]);
+                Bone.Rotation = new Syroot.Maths.Vector4F(rotation[0], rotation[1], rotation[2], rotation[3]);
+                Bone.Name = Text;
+                Bone.Flags = FlagVisible ? BoneFlags.Visible : 0;
+                Bone.ParentIndex = (ushort)parentIndex;
+                Bone.SmoothMatrixIndex = SmoothMatrixIndex;
+                Bone.RigidMatrixIndex = RigidMatrixIndex;
+
+                SetTransforms();
+            }
+        }
+
         public void SetTransforms()
         {
             if (BoneU != null)

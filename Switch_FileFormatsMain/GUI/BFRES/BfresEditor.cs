@@ -108,6 +108,22 @@ namespace FirstPlugin.Forms
             }
         }
 
+        public void AddDrawable(AbstractGlDrawable draw)
+        {
+            Drawables.Add(draw);
+
+            if (!viewport.scene.staticObjects.Contains(draw) &&
+                !viewport.scene.objects.Contains(draw))
+            {
+                viewport.AddDrawable(draw);
+            }
+        }
+
+        public void RemoveDrawable(AbstractGlDrawable draw)
+        {
+            Drawables.Remove(draw);
+            viewport.RemoveDrawable(draw);
+        }
 
         public override void OnControlClosing()
         {

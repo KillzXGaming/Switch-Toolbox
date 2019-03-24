@@ -112,9 +112,11 @@ namespace Switch_Toolbox.Library
         public void AddDrawable(AbstractGlDrawable Drawabale)
         {
             if (Drawabale is EditableObject)
-                editor.editableDrawables.Add((EditableObject)Drawabale);
+                scene.objects.Add((EditableObject)Drawabale);
             else
-                editor.staticDrawables.Add(Drawabale);
+                scene.staticObjects.Add(Drawabale);
+
+            UpdateScene();
         }
 
         public void RemoveDrawable(AbstractGlDrawable Drawabale)

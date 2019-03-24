@@ -265,47 +265,54 @@ namespace Switch_Toolbox.Library
             Matrix4x4 world = trafo * rootTransform;
             var transformMat = AssimpHelper.TKMatrix(world);
 
+            int matchedBoneIndex = skeleton.bones.FindIndex(item => item.Name == node.Name);
 
-            tempBoneNodes.Add(node);
-
-            STBone bone = new STBone();
-            bone.skeletonParent = skeleton;
-            skeleton.bones.Add(bone);
-
-            bone.Text = node.Name;
-            bone.SmoothMatrixIndex = (short)skeleton.bones.IndexOf(bone);
-            bone.RigidMatrixIndex = -1; //Todo calculate these
-
-            STConsole.WriteLine($"-".Repeat(30));
-            STConsole.WriteLine($"Processing Bone {bone.Text}");
-            STConsole.WriteLine($"SmoothMatrixIndex {bone.SmoothMatrixIndex}");
-            STConsole.WriteLine($"RigidMatrixIndex {bone.RigidMatrixIndex}");
-            STConsole.WriteLine($"Transform Matrix {transformMat}");
-            STConsole.WriteLine($"-".Repeat(30));
-
-
-            if (IsRoot)
+            if (matchedBoneIndex < 0)
             {
-                bone.parentIndex = -1;
-                transformMat = AssimpHelper.TKMatrix(world * Matrix4x4.FromRotationX(MathHelper.DegreesToRadians(BoneRotation)));
+                tempBoneNodes.Add(node);
+
+                STBone bone = new STBone();
+                bone.skeletonParent = skeleton;
+                skeleton.bones.Add(bone);
+
+                bone.Text = node.Name;
+                bone.SmoothMatrixIndex = (short)skeleton.bones.IndexOf(bone);
+                bone.RigidMatrixIndex = -1; //Todo calculate these
+
+                STConsole.WriteLine($"-".Repeat(30));
+                STConsole.WriteLine($"Processing Bone {bone.Text}");
+                STConsole.WriteLine($"SmoothMatrixIndex {bone.SmoothMatrixIndex}");
+                STConsole.WriteLine($"RigidMatrixIndex {bone.RigidMatrixIndex}");
+                STConsole.WriteLine($"Transform Matrix {transformMat}");
+                STConsole.WriteLine($"-".Repeat(30));
+
+                if (IsRoot)
+                {
+                    bone.parentIndex = -1;
+                    transformMat = AssimpHelper.TKMatrix(world * Matrix4x4.FromRotationX(MathHelper.DegreesToRadians(BoneRotation)));
+                }
+                else
+                {
+                    if (tempBoneNodes.Contains(node.Parent))
+                        bone.parentIndex = tempBoneNodes.IndexOf(node.Parent);
+                }
+
+
+                var scale = transformMat.ExtractScale();
+                var rotation = transformMat.ExtractRotation();
+                var position = transformMat.ExtractTranslation();
+
+                var rotEular = AssimpHelper.ToEular(rotation);
+
+                bone.position = new float[] { position.X, position.Y, position.Z };
+                bone.scale = new float[] { scale.X, scale.Y, scale.Z };
+                bone.rotation = new float[] { rotEular.X, rotEular.Y, rotEular.Z, 0 };
             }
             else
             {
-                if (tempBoneNodes.Contains(node.Parent))
-                    bone.parentIndex = tempBoneNodes.IndexOf(node.Parent);
+                STConsole.WriteLine($"Duplicate node name found for bone {node.Name}!", Color.Red);
             }
 
-
-            var scale = transformMat.ExtractScale();
-            var rotation = transformMat.ExtractRotation();
-            var position = transformMat.ExtractTranslation();
-
-            var rotEular = AssimpHelper.ToEular(rotation);
-
-            bone.position = new float[] { position.X, position.Y, position.Z };
-            bone.scale = new float[] { scale.X, scale.Y, scale.Z };
-            bone.rotation = new float[] { rotEular.X, rotEular.Y, rotEular.Z, 0 };
-            
             foreach (Node child in node.Children)
                 CreateByNode(child, skeleton, SmoothIndex, RigidIndex, false, ref rootTransform);
         }

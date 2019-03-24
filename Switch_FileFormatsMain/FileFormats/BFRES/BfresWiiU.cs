@@ -876,7 +876,7 @@ namespace FirstPlugin
             }
             return ShapeU;
         }
-        public static void SaveSkeleton(FSKL fskl)
+        public static void SaveSkeleton(FSKL fskl, List<STBone> Bones)
         {
             fskl.node.SkeletonU.Bones.Clear();
             fskl.node.SkeletonU.MatrixToBoneList = new List<ushort>();
@@ -885,37 +885,42 @@ namespace FirstPlugin
             fskl.node.Nodes.Clear();
 
             ushort SmoothIndex = 0;
-            foreach (STBone genericBone in fskl.bones)
+            foreach (STBone genericBone in Bones)
             {
                 genericBone.BillboardIndex = ushort.MaxValue;
 
+                //Clone a generic bone with the generic data
                 BfresBone bn = new BfresBone(fskl);
                 bn.CloneBaseInstance(genericBone);
 
+                //Set the bfres bone data
                 if (bn.BoneU == null)
                     bn.BoneU = new Bone();
-
-                bn.BoneU.Position = new Syroot.Maths.Vector3F(bn.position[0], bn.position[1], bn.position[2]);
-                bn.BoneU.Scale = new Syroot.Maths.Vector3F(bn.scale[0], bn.scale[1], bn.scale[2]);
-                bn.BoneU.Rotation = new Syroot.Maths.Vector4F(bn.rotation[0], bn.rotation[1], bn.rotation[2], bn.rotation[3]);
-                bn.BoneU.Name = bn.Text;
-                bn.BoneU.Flags = bn.FlagVisible ? BoneFlags.Visible : 0;
-                bn.BoneU.ParentIndex = (ushort)bn.parentIndex;
-                bn.SetTransforms();
-                bn.BoneU.SmoothMatrixIndex = bn.SmoothMatrixIndex;
-                bn.BoneU.RigidMatrixIndex = bn.RigidMatrixIndex;
-
-                fskl.node.SkeletonU.Bones.Add(bn.Text, bn.BoneU);
-
-                if (bn.Parent == null)
-                    fskl.node.Nodes.Add(bn);
+                bn.GenericToBfresBone();
 
                 if (bn.SmoothMatrixIndex != short.MaxValue)
                     fskl.node.SkeletonU.MatrixToBoneList.Add(SmoothIndex++);
 
                 fskl.node.SkeletonU.InverseModelMatrices.Add(Syroot.Maths.Matrix3x4.Zero);
+
+                fskl.bones.Add(bn);
             }
 
+            foreach (BfresBone wrapper in fskl.bones)
+            {
+                //Check duplicated names
+                List<string> names = fskl.bones.Select(o => o.Text).ToList();
+                wrapper.Text = Utils.RenameDuplicateString(names, wrapper.Text);
+
+                wrapper.BoneU.Name = wrapper.Text;
+                fskl.node.SkeletonU.Bones.Add(wrapper.Text, wrapper.BoneU);
+
+                //Add bones to tree
+                if (wrapper.Parent == null)
+                {
+                    fskl.node.Nodes.Add(wrapper);
+                }
+            }
 
             fskl.Node_Array = new int[fskl.node.SkeletonU.MatrixToBoneList.Count];
             int nodes = 0;

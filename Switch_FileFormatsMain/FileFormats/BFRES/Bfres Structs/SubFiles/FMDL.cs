@@ -99,6 +99,8 @@ namespace Bfres.Structs
 
             if (dialogResult == DialogResult.Yes)
             {
+                ((BFRES)Parent.Parent).RemoveSkeletonDrawable(Skeleton);
+
                 shapes.Clear();
                 materials.Clear();
 
@@ -418,6 +420,16 @@ namespace Bfres.Structs
             }
         }
 
+        public override void Unload()
+        {
+            if (Parent != null)
+                ((BFRES)Parent.Parent).RemoveSkeletonDrawable(Skeleton);
+
+            shapes.Clear();
+            materials.Clear();
+            Nodes.Clear();
+        }
+
         public override string ExportFilter => FileFilters.GetFilter(typeof(FMDL));
 
         public override void Export(string FileName)
@@ -589,9 +601,9 @@ namespace Bfres.Structs
                             //Todo find better way. Currently uses import settings now
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            shape.BoneIndices = shape.GetIndices(Skeleton);
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer();
-                            shape.BoneIndices = new List<ushort>();
 
                             if (IsWiiU)
                             {
@@ -608,6 +620,16 @@ namespace Bfres.Structs
                                     SubMeshCount = 1,
                                 });
                             }
+
+                            if (IsWiiU)
+                            {
+                                BfresWiiU.ReadShapesVertices(shape, shape.ShapeU, shape.VertexBufferU, this);
+                            }
+                            else
+                            {
+                                BfresSwitch.ReadShapesVertices(shape, shape.Shape, shape.VertexBuffer, this);
+                            }
+
 
                             Nodes["FshpFolder"].Nodes.Add(shape);
                             shapes.Add(shape);
@@ -794,15 +816,11 @@ namespace Bfres.Structs
                             if (assimp.skeleton.bones.Count > 0)
                             {
                                 Skeleton.bones.Clear();
-                                foreach (var bone in assimp.skeleton.bones)
-                                {
-                                    Skeleton.bones.Add(bone);
-                                }
                         
                                 if (IsWiiU)
-                                    BfresWiiU.SaveSkeleton(Skeleton);
+                                    BfresWiiU.SaveSkeleton(Skeleton, assimp.skeleton.bones);
                                 else
-                                    BfresSwitch.SaveSkeleton(Skeleton);
+                                    BfresSwitch.SaveSkeleton(Skeleton, assimp.skeleton.bones);
                             }
                         }
 
@@ -854,10 +872,10 @@ namespace Bfres.Structs
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            shape.BoneIndices = shape.GetIndices(Skeleton);
 
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer();
-                            shape.BoneIndices = new List<ushort>();
 
                             if (IsWiiU)
                             {

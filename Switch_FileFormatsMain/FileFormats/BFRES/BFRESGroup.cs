@@ -148,8 +148,8 @@ namespace Bfres.Structs
                 fmdl.ModelU.Shapes.Add("NewShape", shape);
                 fmdl.ModelU.Materials.Add("NewMaterial", new ResU.Material() { Name = "NewMaterial" });
 
-
                 BfresWiiU.ReadModel(fmdl, fmdl.ModelU);
+                ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
             }
             else
             {
@@ -175,6 +175,7 @@ namespace Bfres.Structs
                 fmdl.Model.VertexBuffers.Add(VertexBuffer);
 
                 BfresSwitch.ReadModel(fmdl, fmdl.Model);
+                ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
             }
 
             AddNode(fmdl, "NewModel");
@@ -244,6 +245,9 @@ namespace Bfres.Structs
                             fmdl.ModelU.Skeleton = skeleton;
                             fmdl.ModelU.Shapes.Add("NeShape", new ResU.Shape() { Name = "NeShape" });
                             fmdl.ModelU.VertexBuffers.Add(new ResU.VertexBuffer() { });
+
+                            BfresWiiU.ReadModel(fmdl, fmdl.ModelU);
+                            ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
                         }
                         else
                         {
@@ -259,6 +263,7 @@ namespace Bfres.Structs
                             fmdl.Model.VertexBuffers.Add(new ResNX.VertexBuffer() { });
 
                             BfresSwitch.ReadModel(fmdl, fmdl.Model);
+                            ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
                         }
                         fmdl.Replace(FileName, resFileNX, resFileU);
 
@@ -387,14 +392,13 @@ namespace Bfres.Structs
             {
                 foreach (var node in Nodes)
                 {
-                        if (node is STGenericWrapper)
+                    if (node is STGenericWrapper)
                     {
                         ((STGenericWrapper)node).Unload();
                         RemoveChild(((STGenericWrapper)node));
                     }
                 }
                 
-
                 Nodes.Clear();
             }
         }
