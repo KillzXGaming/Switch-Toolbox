@@ -366,6 +366,8 @@ namespace Switch_Toolbox.Library
             Dispose();
         }
 
+
+
         private void AnimationPanel_Load(object sender, EventArgs e)
         {
             Viewport viewport = LibraryGUI.Instance.GetActiveViewport();

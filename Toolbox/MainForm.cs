@@ -584,7 +584,7 @@ namespace Toolbox
             }
             else if (ActiveMdiChild is ImageEditorForm)
             {
-              return  ((ImageEditorForm)ActiveMdiChild).GetActiveFile();
+                return ((ImageEditorForm)ActiveMdiChild).GetActiveFile();
             }
             else if (ActiveMdiChild is AudioPlayer)
             {
@@ -715,7 +715,7 @@ namespace Toolbox
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-         
+
         }
 
         private void MainForm_DragEnter(object sender, DragEventArgs e)
@@ -765,6 +765,14 @@ namespace Toolbox
             }
         }
 
+        private void ResetAnimPanel()
+        {
+            if (LibraryGUI.Instance.GetAnimationPanel() != null)
+            {
+                LibraryGUI.Instance.GetAnimationPanel().CurrentAnimation = null;
+            }
+        }
+
         private void MainForm_MdiChildActivate(object sender, EventArgs e)
         {
             if (this.ActiveMdiChild == null)
@@ -775,6 +783,8 @@ namespace Toolbox
             // If no any child form, hide tabControl 
             else
             {
+                ResetAnimPanel();
+
                 // If child form is new and no has tabPage, 
                 // create new tabPage 
                 if (this.ActiveMdiChild.Tag == null)
