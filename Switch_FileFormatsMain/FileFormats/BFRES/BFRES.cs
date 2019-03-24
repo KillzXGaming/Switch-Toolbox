@@ -174,9 +174,11 @@ namespace FirstPlugin
         {
             BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
 
+            bool HasModels = BFRESRender.models.Count > 0;
+
             if (bfresEditor == null)
             {
-                bfresEditor = new BfresEditor();
+                bfresEditor = new BfresEditor(HasModels);
                 bfresEditor.Dock = DockStyle.Fill;
                 LibraryGUI.Instance.LoadEditor(bfresEditor);
             }

@@ -133,8 +133,6 @@ namespace Bfres.Structs
             if (Tex2Swizzle != 0)
                 setting.swizzle = Tex2Swizzle;
 
-            setting.swizzle = 0;
-
             importer.LoadSetting(setting);
 
             if (importer.ShowDialog() == DialogResult.OK)
@@ -193,8 +191,6 @@ namespace Bfres.Structs
 
             if (Tex2Swizzle != 0)
                 setting.swizzle = Tex2Swizzle;
-
-            setting.swizzle = 0;
 
             importer.LoadSetting(setting);
 

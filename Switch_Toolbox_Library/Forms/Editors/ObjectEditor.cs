@@ -181,8 +181,6 @@ namespace Switch_Toolbox.Library.Forms
                 if (AnimName.Length > 3)
                     AnimName = AnimName.Substring(3);
 
-                Console.WriteLine("AnimName " + AnimName);
-
                 Animation running = new Animation(AnimName);
                 running.ReplaceMe((Animation)e.Node);
                 running.Tag = e.Node;
@@ -225,7 +223,6 @@ namespace Switch_Toolbox.Library.Forms
 
                 if (LibraryGUI.Instance.GetAnimationPanel() != null)
                 {
-                    Console.WriteLine("running" + running.Text);
                     LibraryGUI.Instance.GetAnimationPanel().CurrentAnimation = running;
                 }
             }

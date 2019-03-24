@@ -32,7 +32,7 @@ namespace FirstPlugin.Forms
 
         AnimationPanel animationPanel;
 
-        public BfresEditor()
+        public BfresEditor(bool HasModels)
         {
             InitializeComponent();  
 
@@ -57,7 +57,8 @@ namespace FirstPlugin.Forms
             }
             stPanel5.Controls.Add(viewport);
 
-            stTabControl1.SelectedIndex = 1;
+            if (HasModels)
+                stTabControl1.SelectedIndex = 1;
         }
 
         public UserControl GetActiveEditor(Type type)
