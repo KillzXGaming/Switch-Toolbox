@@ -72,11 +72,10 @@ namespace Switch_Toolbox.Library.Forms
 
         public void OnPropertyChanged() { }
 
-        public void Reset()
+        public void ResetChannels()
         {
-        //    foreach (var page in tempPages)
-           //     stTabControl1.TabPages.Remove(page);
-
+            imgList.Images.Clear();
+            channelListView.Refresh();
         }
 
         ImageEditorBase imageEditor;

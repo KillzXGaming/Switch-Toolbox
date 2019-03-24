@@ -171,6 +171,8 @@ namespace Switch_Toolbox.Library.Forms
 
         public void LoadImage(STGenericTexture texture)
         {
+            ResetChannelEditor();
+
             HasBeenEdited = false;
 
             if (texture.CanEdit)
@@ -178,8 +180,6 @@ namespace Switch_Toolbox.Library.Forms
                 imageToolStripMenuItem.Enabled = true;
                 adjustmentsToolStripMenuItem.Enabled = true;
             }
-
-            propertiesEditor.Reset();
 
             ActiveTexture = texture;
             CurMipDisplayLevel = 0;
@@ -484,6 +484,12 @@ namespace Switch_Toolbox.Library.Forms
 
             propertiesEditor.LoadImage(new Bitmap(bitmap), this);
         }
+
+        private void ResetChannelEditor()
+        {
+            propertiesEditor.ResetChannels();
+        }
+
         private void InvokeMethod()
         {
         }
@@ -635,7 +641,6 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             UpdateMipDisplay();
-            propertiesEditor.Reset();
         }
 
         private void resizeToolStripMenuItem_Click(object sender, EventArgs e)
