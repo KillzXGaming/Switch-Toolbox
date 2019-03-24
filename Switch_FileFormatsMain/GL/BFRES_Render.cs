@@ -814,6 +814,9 @@ namespace FirstPlugin
             shader.SetVector3("emission_color", new Vector3(1, 1, 1));
             shader.SetVector3("specular_color", new Vector3(1, 1, 1));
 
+            
+            shader.SetFloat("fuv1_mtx", 0);
+
             //SRT
             shader.SetVector4("tex_mtx0", new Vector4(1, 1, 1, 1));
             shader.SetVector2("SRT_Scale", new Vector2(1, 1));
@@ -823,10 +826,13 @@ namespace FirstPlugin
 
             shader.SetInt("selectedBoneIndex", Runtime.SelectedBoneIndex);
 
+            SetUniformData(mat, shader, "base_color_mul_color");
 
             shader.SetInt("enableCellShading", 0);
             bool HasTans = m.vertexAttributes.Any(x => x.Name == "_t0");
             shader.SetBoolToInt("hasTangents", HasTans);
+
+            SetUniformData(mat, shader, "fuv1_mtx");
 
             SetUniformData(mat, shader, "gsys_bake_st0");
             SetUniformData(mat, shader, "gsys_bake_st1");

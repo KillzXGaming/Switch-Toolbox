@@ -5,6 +5,9 @@ uniform mat4 mtxMdl;
 uniform mat4 sphereMatrix;
 uniform mat4 previewScale;
 
+ //This may not be correct, however any SRT used with this flag is used for special effects not supported yet!
+uniform float fuv1_mtx;
+
 in vec3 vPosition;
 in vec3 vNormal;
 in vec3 vTangent;
@@ -174,8 +177,10 @@ void main()
      else
         f_texcoord2 = vec2((vUV1 * vec2(1)) + sampler3.zw);
 
-
-     f_texcoord0 = vec2((vUV0 * SRT_Scale.xy) + SRT_Translate.xy);
+	if (fuv1_mtx != 1)
+	{
+	     f_texcoord0 = vec2((vUV0 * SRT_Scale.xy) + SRT_Translate.xy);
+	}
 
 
     f_texcoord3 = vUV2;
