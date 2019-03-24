@@ -51,7 +51,8 @@ namespace Toolbox
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var viewport = new Viewport();
+            //Create an instance of this to help load open gl data easier and quicker after boot
+            var viewport = new Viewport(false);
 
             VersionCheck version = new VersionCheck();
             Runtime.ProgramVersion = version.ProgramVersion;

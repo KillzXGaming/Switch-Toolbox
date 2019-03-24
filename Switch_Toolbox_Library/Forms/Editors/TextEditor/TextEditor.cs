@@ -145,6 +145,13 @@ namespace Switch_Toolbox.Library.Forms
             const int padding = 4;
             scintilla1.Margins[0].Width = scintilla1.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
             this.maxLineNumberCharLength = maxLineNumberCharLength;
+
+            if (scintilla1.Lines.Count > 0)
+            {
+                if (scintilla1.Lines[0].Text.Contains("<?xml")) {
+                    IsXML = true;
+                }
+            }
         }
 
         private void scintilla1_Insert(object sender, ModificationEventArgs e)

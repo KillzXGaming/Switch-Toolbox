@@ -55,7 +55,10 @@ namespace FirstPlugin.Forms
                 viewport = new Viewport();
                 viewport.Dock = DockStyle.Fill;
             }
+
             stPanel5.Controls.Add(viewport);
+
+            OnLoadedTab();
 
             if (HasModels)
                 stTabControl1.SelectedIndex = 1;

@@ -24,7 +24,7 @@ namespace Switch_Toolbox.Library
 
         Runtime.ViewportEditor editor;
 
-        public Viewport()
+        public Viewport(bool LoadDrawables = true)
         {
             this.DoubleBuffered = true;
 
@@ -44,6 +44,9 @@ namespace Switch_Toolbox.Library
             }
 
             shadingToolStripMenuItem.Text = $"Shading: [{Runtime.viewportShading.ToString()}]";
+
+            if (LoadDrawables)
+                LoadBaseDrawables();
         }
 
         private void shadingToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -126,9 +129,8 @@ namespace Switch_Toolbox.Library
             else
                 scene.staticObjects.Remove(Drawabale);
         }
-        protected override void OnLoad(EventArgs e)
+        private void LoadBaseDrawables()
         {
-            base.OnLoad(e);
             var floor = new DrawableFloor();
             scene.staticObjects.Add(floor);
             var xyzLnes = new DrawableXyzLines();
