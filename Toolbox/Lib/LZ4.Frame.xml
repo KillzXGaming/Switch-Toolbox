@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LZ4.Frame</name>
+    </assembly>
+    <members>
+        <member name="T:LZ4.Frame.LZ4MaxBlockSize">
+            <summary>
+            Max size for each LZ4 block
+            </summary>
+        </member>
+        <member name="F:LZ4.Frame.LZ4MaxBlockSize.Auto">
+            <summary>
+            4MB by default
+            </summary>
+        </member>
+        <member name="F:LZ4.Frame.LZ4MaxBlockSize.KB64">
+            <summary>
+            64 KB
+            </summary>
+        </member>
+        <member name="F:LZ4.Frame.LZ4MaxBlockSize.KB256">
+            <summary>
+            256 KB
+            </summary>
+        </member>
+        <member name="F:LZ4.Frame.LZ4MaxBlockSize.MB1">
+            <summary>
+            1 MB
+            </summary>
+        </member>
+        <member name="F:LZ4.Frame.LZ4MaxBlockSize.MB4">
+            <summary>
+            4 MB
+            </summary>
+        </member>
+        <member name="T:LZ4.Frame.LZ4Frame">
+            <summary>
+            LZ4 Frame Compression
+            </summary>
+        </member>
+        <member name="F:LZ4.Frame.LZ4Frame.MAGIC">
+            <summary>
+            LZ4 Frame Header Signature
+            </summary>
+        </member>
+        <member name="M:LZ4.Frame.LZ4Frame.Compress(System.IO.Stream,LZ4.Frame.LZ4MaxBlockSize,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            LZ4 Frame Compress
+            </summary>
+            <param name="input">stream to be compressed (won't be closed)</param>
+            <param name="blockSizeType">max size (before compress) per block</param>
+            <param name="useIndependenceBlock">only True works</param>
+            <param name="useUncompressedBlock">If a block is better not to compress, will use original data</param>
+            <param name="useBlockChecksum">Checksum for every block, not recommended</param>
+            <param name="useContentChecksum">Checksum for whole content, recommended</param>
+            <param name="useContentSize">If content size can be get, there's no reason to set it to False</param>
+            <returns></returns>
+        </member>
+        <member name="M:LZ4.Frame.LZ4Frame.Decompress(System.IO.Stream)">
+            <summary>
+            LZ4 Frame Decompress
+            </summary>
+            <param name="input">stream to be decompressed (won't be closed)</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

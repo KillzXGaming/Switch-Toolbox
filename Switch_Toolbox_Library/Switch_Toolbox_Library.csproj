@@ -77,6 +77,9 @@
       <HintPath>..\packages\lz4net.1.0.15.93\lib\net4-client\LZ4.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="LZ4.Frame">
+      <HintPath>..\Toolbox\Lib\LZ4.Frame.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

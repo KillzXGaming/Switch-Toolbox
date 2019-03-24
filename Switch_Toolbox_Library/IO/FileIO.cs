@@ -54,9 +54,9 @@ namespace Switch_Toolbox.Library.IO
             }
             if (extension == ".cmp")
             {
+                FileIsCompressed = true;
                 CompressionType = CompressionType.Lz4f;
             }
-
 
             if (EnableDialog && FileIsCompressed)
             {
@@ -449,25 +449,14 @@ namespace Switch_Toolbox.Library.IO
             }
             public static byte[] Compress(byte[] data)
             {
-                LZ4EncoderSettings settings = new LZ4EncoderSettings();
-                settings.ChainBlocks = false;
-         //       settings.BlockSize = K4os.Compression.LZ4.Internal.Mem.M1;
-
-                using (MemoryStream mem = new MemoryStream())
+                var stream = new MemoryStream();
+                using (var writer = new FileWriter(stream))
                 {
-                    var encodeSettings = new LZ4EncoderSettings();
-                    using (var source = LZ4Stream.Encode(mem, settings))
-                    {
-                        source.Write(data, 0, data.Length);
-
-                        var newMem = new MemoryStream();
-                        BinaryWriter writer = new BinaryWriter(newMem);
-                        writer.Write((uint)data.Length);
-                        writer.Write(mem.ToArray());
-                        writer.Write((uint)973407368);
-                        return newMem.ToArray();
-                    }
+                    writer.Write(data.Length);
+                    byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data), LZ4.Frame.LZ4MaxBlockSize.Auto, true, true, false, false, true);
+                    writer.Write(buffer, 0, buffer.Length);
                 }
+                return stream.ToArray();
             }
         }
         public class Type_LZ4

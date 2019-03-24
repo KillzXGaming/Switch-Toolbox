@@ -271,6 +271,9 @@
     <Content Include="Lib\EditorCoreCommon.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Lib\Extensions.Data.xxHash.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\FirstPlugin.Plg.dll" />
     <Content Include="Lib\GL_Core.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -307,6 +310,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\LZ4.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\LZ4.Frame.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\NAudio.dll">
