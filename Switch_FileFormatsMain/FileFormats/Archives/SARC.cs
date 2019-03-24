@@ -14,8 +14,8 @@ namespace FirstPlugin
     public class SARC : TreeNodeFile, IFileFormat
     {
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "SARC", "SARC", "SARC", "SARC", "SARC" };
-        public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sblarc", "*.sbactorpack" };
+        public string[] Description { get; set; } = new string[] { "SARC", "SARC", "SARC", "SARC", "SARC", "SARC" };
+        public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sblarc", "*.sbactorpack", ".arc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -195,10 +195,14 @@ namespace FirstPlugin
         {
             string dir = Path.GetDirectoryName(sarc.FullName);
 
+            Console.WriteLine("CurrentFullName " + sarc.FullName);
+
             if (dir == string.Empty)
                 sarc.FullName = sarc.Text;
             else
                 sarc.FullName = Path.Combine(dir, sarc.Text);
+
+            sarc.FullName = sarc.FullName.Replace(@"\", "/");
 
             sarcData.Files.Add(sarc.FullName, sarc.Data);
         }

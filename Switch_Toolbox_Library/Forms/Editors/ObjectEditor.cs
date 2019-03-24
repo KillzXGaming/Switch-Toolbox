@@ -129,6 +129,8 @@ namespace Switch_Toolbox.Library.Forms
                 return true;
             if (obj is STBone)
                 return true;
+            if (obj is STGenericMaterial)
+                return true;
 
             return false;
         }

@@ -909,6 +909,14 @@ namespace Bfres.Structs
             else
                 return Vector3.TransformNormal(position, trans);
         }
+        public static Vector3 transform(Vector3 input, Matrix4 matrix)
+        {   
+            Vector3 output = new Vector3();
+            output.X = input.X * matrix.M11 + input.Y * matrix.M21 + input.Z * matrix.M31 + matrix.M41;
+            output.Y = input.X * matrix.M12 + input.Y * matrix.M22 + input.Z * matrix.M32 + matrix.M42;
+            output.Z = input.X * matrix.M13 + input.Y * matrix.M23 + input.Z * matrix.M33 + matrix.M43;
+            return output;      
+        }
         public void SaveVertexBuffer()
         {
             if (IsWiiU)

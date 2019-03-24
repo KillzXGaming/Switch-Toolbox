@@ -186,7 +186,6 @@ namespace FirstPlugin
                     else
                         GL.Color4(Color.OrangeRed);
 
-
                     foreach (FSHP.BoundingBox box in m.boundingBoxes)
                     {
                         RenderTools.DrawRectangularPrism(box.Center, box.Extend.X, box.Extend.Y, box.Extend.Z, true);
@@ -602,7 +601,13 @@ namespace FirstPlugin
 
             if (m.Checked && mdl.Skeleton.bones[m.BoneIndex].Visible)
             {
-                if ((m.IsSelected))
+                shader.SetVector3("materialSelectColor", new Vector3(0));
+                if (m.GetMaterial().IsSelected)
+                {
+                    shader.SetVector3("materialSelectColor", ColorUtility.ToVector3(Color.FromArgb(0,163,204)));
+                    DrawModelSelection(m, shader);
+                }
+                else if ((m.IsSelected))
                 {
                     DrawModelSelection(m, shader);
                 }
@@ -813,7 +818,6 @@ namespace FirstPlugin
             shader.SetVector3("albedo_tex_color", new Vector3(1, 1, 1));
             shader.SetVector3("emission_color", new Vector3(1, 1, 1));
             shader.SetVector3("specular_color", new Vector3(1, 1, 1));
-
             
             shader.SetFloat("fuv1_mtx", 0);
 

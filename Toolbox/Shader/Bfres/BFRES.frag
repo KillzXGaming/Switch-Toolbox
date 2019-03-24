@@ -52,6 +52,8 @@ uniform vec4 pickingColor;
 
 uniform int isTransparent;
 
+uniform vec3 materialSelectColor;
+
 // Shader Params
 uniform float normal_map_weight;
 uniform float ao_density;
@@ -259,6 +261,8 @@ void main()
         fragColor *= min(vert.vertexColor, vec4(1));
 
     fragColor *= min(vec4(albedo_tex_color, 1), vec4(1));
+
+    fragColor.rgb += materialSelectColor * 0.5f;
 
     // Toggles rendering of individual color channels for all render modes.
     fragColor.rgb *= vec3(renderR, renderG, renderB);
