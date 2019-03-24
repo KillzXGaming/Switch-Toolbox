@@ -310,7 +310,7 @@ void main()
     diffuseTerm *= cavity;
     diffuseTerm *= ao;
     diffuseTerm *= shadow;
-	diffuseTerm += LightingDiffuse;
+diffuseTerm += LightingDiffuse;
 
     // Adjust for metalness.
   //  diffuseTerm *= clamp(1 - metallic, 0, 1);
