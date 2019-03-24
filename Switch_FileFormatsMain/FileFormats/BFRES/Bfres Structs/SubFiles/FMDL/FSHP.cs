@@ -690,21 +690,24 @@ namespace Bfres.Structs
                 foreach (string bn in v.boneNames)
                 {
                     if (!boneNames.Contains(bn))
+                    {
                         boneNames.Add(bn);
+                    }
                 }
             }
 
-            int index = 0;
             foreach (STBone bone in mdl.Skeleton.bones)
             {
                 foreach (string bnam in boneNames)
                 {
                     if (bone.Text == bnam)
                     {
+                        int index = boneNames.IndexOf(bone.Text);
+                        STConsole.WriteLine($"Adding bone to shape index list! {bone.Text} {index}");
+
                         BoneIndices.Add((ushort)index);
                     }
                 }
-                index++;
             }
         }
         public void CreateBoneList(STGenericObject ob, FMDL mdl)
@@ -900,9 +903,12 @@ namespace Bfres.Structs
 
             return indices;
         }
-        public Vector3 TransformLocal(Vector3 position, bool IsPos = true)
+        public Vector3 TransformLocal(Vector3 position, int BoneIndex, bool IsPos = true)
         {
-            Matrix4 trans = Matrix4.CreateTranslation(0, 0, 0);
+            var skel = GetParentModel().Skeleton;
+            var bone = skel.bones[skel.Node_Array[BoneIndex]];
+
+            Matrix4 trans = bone.invert;
 
             if (IsPos)
                 return Vector3.TransformPosition(position, trans);
@@ -1060,9 +1066,13 @@ namespace Bfres.Structs
             {
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
                 {
+                    int boneId = BoneIndex;
+                    if (VertexSkinCount == 1)
+                        boneId = vtx.boneIds[0];
+
                     Console.WriteLine("Old " + vtx.pos);
-                    vtx.pos = TransformLocal(vtx.pos);
-                    vtx.nrm = TransformLocal(vtx.nrm, false);
+                    vtx.pos = TransformLocal(vtx.pos, boneId);
+                    vtx.nrm = TransformLocal(vtx.nrm, boneId, false);
                     Console.WriteLine("New " + vtx.pos);
                 }
                 //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
