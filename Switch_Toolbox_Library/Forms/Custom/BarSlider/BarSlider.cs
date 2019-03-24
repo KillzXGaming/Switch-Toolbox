@@ -166,9 +166,8 @@ namespace BarSlider
         {
             TextEditorActive = true;
 
-            prevPos = Cursor.Position;
-
             Cursor.Show();
+            prevPos = Cursor.Position;
 
             textBox.Location = new Point(30, ClientSize.Height / 2 - 5);
             textBox.Text = Value.ToString();
@@ -1578,7 +1577,7 @@ namespace BarSlider
             Cursor.Hide();
 
             base.OnMouseDown(e);
-           if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
              /*   Capture = true;
                 if (Scroll != null) Scroll(this, new ScrollEventArgs(ScrollEventType.ThumbTrack, _trackerValue));

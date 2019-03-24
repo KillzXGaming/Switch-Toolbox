@@ -156,36 +156,40 @@ namespace FirstPlugin.Forms
             {
 
                 case ShaderParamType.Float:
-                    Values = $"[ {param.ValueFloat[0]} ]";
+                    Values = $"[ {RoundParam(param.ValueFloat[0])} ]";
                     break;
                 case ShaderParamType.Float2:
-                    Values = $"[ {param.ValueFloat[0]} ," +
-                   $" {param.ValueFloat[1]} ]";
+                    Values = $"[ {RoundParam(param.ValueFloat[0])} ," +
+                              $" {RoundParam(param.ValueFloat[1])} ]";
                     break;
                 case ShaderParamType.Float3:
-                    Values = $"[ {param.ValueFloat[0]} ," +
-                    $" {param.ValueFloat[1]} ," +
-                    $"  {param.ValueFloat[2]} ,]";
+                    Values = $"[ {RoundParam(param.ValueFloat[0])} ," +
+                              $" {RoundParam(param.ValueFloat[1])} ," +
+                             $"  {RoundParam(param.ValueFloat[2])} ,]";
                     break;
                 case ShaderParamType.Float4:
-                    Values = $"[ {param.ValueFloat[0]} ," +
-                    $" {param.ValueFloat[1]} ," +
-                    $"  {param.ValueFloat[2]} ," +
-                    $"  {param.ValueFloat[3]} ]";
+                    Values = $"[ {RoundParam(param.ValueFloat[0])} ," +
+                              $" {RoundParam(param.ValueFloat[1])} ," +
+                             $"  {RoundParam(param.ValueFloat[2])} ," +
+                             $"  {RoundParam(param.ValueFloat[3])} ]";
                     break;
                 case ShaderParamType.TexSrt:
                     Values = $"[ {param.ValueTexSrt.Mode} ," +
-                   $" {param.ValueTexSrt.Scaling.X} ," +
-                   $" {param.ValueTexSrt.Scaling.Y} ," +
-                   $" {param.ValueTexSrt.Rotation}, " +
-                   $" {param.ValueTexSrt.Translation.X}," +
-                   $" {param.ValueTexSrt.Translation.X} ]";
+                             $" {RoundParam(param.ValueTexSrt.Scaling.X)} ," +
+                             $" {RoundParam(param.ValueTexSrt.Scaling.Y)} ," +
+                             $" {RoundParam(param.ValueTexSrt.Rotation)}, " +
+                             $" {RoundParam(param.ValueTexSrt.Translation.X)}," +
+                             $" {RoundParam(param.ValueTexSrt.Translation.X)} ]";
                     break;
             }
 
             Console.WriteLine(String.Format("{0,-30} {1,-30}", param.Name, Values));
 
             return Values;
+        }
+
+        private float RoundParam(float Value) {
+            return (float)Math.Round(Value, 2);
         }
     }
 }
