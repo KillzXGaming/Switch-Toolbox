@@ -7,7 +7,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library.Forms
@@ -25,6 +25,12 @@ namespace Switch_Toolbox.Library.Forms
             channelListView.BackColor = FormThemes.BaseTheme.FormBackColor;
             channelListView.ForeColor = FormThemes.BaseTheme.FormForeColor;
             channelListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+
+            channelListView.Items.Add("RGBA", 0);
+            channelListView.Items.Add("Red", 1);
+            channelListView.Items.Add("Green", 2);
+            channelListView.Items.Add("Blue", 3);
+            channelListView.Items.Add("Alpha", 4);
         }
         public List<TabPage> tempPages = new List<TabPage>();
         public void AddTabPage(UserControl control, Type type)
@@ -80,25 +86,48 @@ namespace Switch_Toolbox.Library.Forms
         {
             imageEditor = editor;
 
-            var image = picBoxImg;
+            //Resize texture to hopefully prevent slow loading
+            var image = BitmapExtension.Resize(picBoxImg, 65, 65);
 
-            channelListView.Items.Clear();
             imgList.Images.Clear();
-            imgList.Images.Add(image);
-            imgList.Images.Add(BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Red));
-            imgList.Images.Add(BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Green));
-            imgList.Images.Add(BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Blue));
-            imgList.Images.Add(BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Alpha));
-            imgList.ImageSize = new Size(65,65);
+            imgList.ImageSize = new Size(65, 65);
             imgList.ColorDepth = ColorDepth.Depth32Bit;
+
+            Thread Thread = new Thread((ThreadStart)(() =>
+            {
+                LoadImage(image);
+                Bitmap red = BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Red);
+                LoadImage(red);
+                Bitmap green = BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Green);
+                LoadImage(green);
+                Bitmap blue = BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Blue);
+                LoadImage(blue);
+                Bitmap alpha = BitmapExtension.ShowChannel(new Bitmap(image), STChannelType.Alpha);
+                LoadImage(alpha);
+
+                red.Dispose();
+                green.Dispose();
+                blue.Dispose();
+                alpha.Dispose();
+            }));
+            Thread.Start();
 
             channelListView.FullRowSelect = true;
             channelListView.SmallImageList = imgList;
-            channelListView.Items.Add("RGBA", 0);
-            channelListView.Items.Add("Red", 1);
-            channelListView.Items.Add("Green", 2);
-            channelListView.Items.Add("Blue", 3);
-            channelListView.Items.Add("Alpha", 4);
+        }
+
+        private void LoadImage(Bitmap image)
+        {
+            if (channelListView.InvokeRequired)
+            {
+                channelListView.Invoke((MethodInvoker)delegate {
+                    // Running on the UI thread
+                    imgList.Images.Add(image);
+                    var dummy = imgList.Handle;
+
+                    channelListView.Refresh();
+                });
+            }
         }
 
         private void redPB_Click(object sender, EventArgs e)

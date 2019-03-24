@@ -212,7 +212,7 @@ namespace Switch_Toolbox.Library.Forms
             {
                 isFinished = value;
 
-                if (isFinished == true)
+                if (isFinished == true && CurrentChannelIndex == 0)
                 {
                     LoadChannelEditor(pictureBoxCustom1.Image);
                 }
@@ -239,8 +239,12 @@ namespace Switch_Toolbox.Library.Forms
 
         public event DataAcquired OnDataAcquiredEvent;
 
+        private bool DecodeProcessFinished = false; //Used to determine when the decode process is done
+
         private void UpdatePictureBox(int ChannelIndex = 0)
         {
+            DecodeProcessFinished = false;
+
             PushImage(Properties.Resources.LoadingImage);
 
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
@@ -263,6 +267,7 @@ namespace Switch_Toolbox.Library.Forms
                     }
                 }
 
+                DecodeProcessFinished = true;
 
                 // BitmapExtension.SetChannels(image, HasRedChannel, HasBlueChannel, HasGreenChannel, HasAlphaChannel);
                 PushImage(image);
@@ -280,6 +285,10 @@ namespace Switch_Toolbox.Library.Forms
             else
             {
                 pictureBoxCustom1.Image = image;
+                pictureBoxCustom1.Refresh();
+
+                if (DecodeProcessFinished)
+                    IsFinished = true;
             }
         }
 
@@ -287,8 +296,12 @@ namespace Switch_Toolbox.Library.Forms
         {
             pictureBoxCustom1.Image = (Image)sender;
             pictureBoxCustom1.Refresh();
+
+            if (DecodeProcessFinished)
+                IsFinished = true;
         }
 
+        public int CurrentChannelIndex;
 
         bool IsCancelled = false;
         public void UpdateMipDisplay()
@@ -313,10 +326,10 @@ namespace Switch_Toolbox.Library.Forms
             TotalArrayCount = ActiveTexture.ArrayCount - 1;
 
 
-            int ChannelIndex = 0;
+            CurrentChannelIndex = 0;
 
             if (propertiesEditor != null && propertiesEditor.channelListView.SelectedIndices.Count > 0)
-                ChannelIndex = propertiesEditor.channelListView.SelectedIndices[0];
+                CurrentChannelIndex = propertiesEditor.channelListView.SelectedIndices[0];
 
             if (this.Thread != null && this.Thread.IsAlive && Thread.ThreadState.ToString() != "AbortRequested")
             {
@@ -325,7 +338,7 @@ namespace Switch_Toolbox.Library.Forms
 
             Thread = new Thread((ThreadStart)(() =>
             {
-                UpdatePictureBox(ChannelIndex);
+                UpdatePictureBox(CurrentChannelIndex);
             }));
             Thread.Start();
 
