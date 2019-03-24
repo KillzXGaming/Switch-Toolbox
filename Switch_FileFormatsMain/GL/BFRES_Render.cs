@@ -292,6 +292,8 @@ namespace FirstPlugin
             control.UpdateModelMatrix(ModelTransform);
 
             Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
+            shader.SetMatrix4x4("previewScale", ref previewScale);
+
             Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
 
             Matrix4 sphereMatrix = camMat;

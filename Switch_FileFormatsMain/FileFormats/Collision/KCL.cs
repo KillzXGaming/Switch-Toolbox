@@ -554,8 +554,8 @@ namespace FirstPlugin
                 SetRenderSettings(defaultShaderProgram);
 
                 Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
-
                 Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
+                defaultShaderProgram.SetMatrix4x4("previewScale", ref previewScale);
 
                 GL.Disable(EnableCap.CullFace);
 

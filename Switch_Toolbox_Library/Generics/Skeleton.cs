@@ -59,7 +59,7 @@ namespace Switch_Toolbox.Library
                         else
                             position = bone * rotation * vec4((point.xyz - vec3(0, 1, 0)) * scale, 1);
                     }
-					gl_Position =  mtxCam  * mtxMdl  * vec4(position.xyz, 1);
+					gl_Position =  mtxCam  * mtxMdl * previewScale * vec4(position.xyz, 1);
 
 				}");
 

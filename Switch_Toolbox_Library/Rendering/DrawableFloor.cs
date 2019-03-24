@@ -89,7 +89,7 @@ namespace Switch_Toolbox.Library.Rendering
             control.CurrentShader = solidColorShaderProgram;
 
             Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
-            Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
+            Matrix4 camMat =  control.mtxCam * control.mtxProj;
             Matrix4 invertedCamera = camMat.Inverted();
             Vector3 lightDirection = new Vector3(0f, 0f, -1f);
 
