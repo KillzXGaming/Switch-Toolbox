@@ -278,6 +278,7 @@ namespace Bfres.Structs
 
                 BfresWiiU.ReadBone(bn, BoneU, false);
                 Nodes.Add(bn);
+                skeletonParent.bones.Add(bn);
             }
             else
             {
@@ -286,6 +287,7 @@ namespace Bfres.Structs
 
                 BfresSwitch.ReadBone(bn, Bone, false);
                 Nodes.Add(bn);
+                skeletonParent.bones.Add(bn);
             }
         }
 
@@ -307,6 +309,7 @@ namespace Bfres.Structs
 
                     BfresWiiU.ReadBone(bn, BoneU, false);
                     Nodes.Add(bn);
+                    skeletonParent.bones.Add(bn);
                 }
                 else
                 {
@@ -316,6 +319,7 @@ namespace Bfres.Structs
 
                     BfresSwitch.ReadBone(bn, Bone, false);
                     Nodes.Add(bn);
+                    skeletonParent.bones.Add(bn);
                 }
             }
         }
