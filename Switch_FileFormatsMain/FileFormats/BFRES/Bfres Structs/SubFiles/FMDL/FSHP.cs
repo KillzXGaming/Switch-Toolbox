@@ -1067,7 +1067,7 @@ namespace Bfres.Structs
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
                 {
                     int boneId = BoneIndex;
-                    if (VertexSkinCount == 1)
+                    if (VertexSkinCount == 1 && vtx.boneIds.Count > 0)
                         boneId = vtx.boneIds[0];
 
                     Console.WriteLine("Old " + vtx.pos);

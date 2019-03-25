@@ -595,6 +595,9 @@ namespace Bfres.Structs
                         foreach (STGenericObject obj in csvModel.objects)
                         {
                             FSHP shape = new FSHP();
+                            Nodes["FshpFolder"].Nodes.Add(shape);
+                            shapes.Add(shape);
+
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
                             shape.MaterialIndex = 0;
@@ -636,10 +639,6 @@ namespace Bfres.Structs
                             {
                                 BfresSwitch.ReadShapesVertices(shape, shape.Shape, shape.VertexBuffer, this);
                             }
-
-
-                            Nodes["FshpFolder"].Nodes.Add(shape);
-                            shapes.Add(shape);
                         }
                         Cursor.Current = Cursors.Default;
                     }
