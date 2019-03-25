@@ -1,13 +1,17 @@
 # Switch-Toolbox
-A tool to edit many formats of Nintendo Switch and some Wii U. 
+A tool to edit many formats of Nintendo Switch and Wii U. 
 
 ## Changelog 1.0 Experimental / BETA
 https://docs.google.com/spreadsheets/d/16JLhGBJL5U5hpKWspL-pzYIaRL23X1YKEmia6pbsGbc/edit#gid=1386834576
+
+## Experimental Releases
+1.0 R1 Experimental BETA https://drive.google.com/file/d/14nmv7rv1vlbpAcmOGm_EI0iXWDDMNlmW/view?usp=sharing
 
 ## Features
 
 This tool currently features:
 - BFRES
+   - Fully supports Wii U and Switch.
    - Model importing (dae, fbx, obj, and csv)
    - Material editing (Render info, texture mapping, parameters, etc)
    - Material copying
