@@ -903,17 +903,42 @@ namespace Bfres.Structs
 
             return indices;
         }
-        public Vector3 TransformLocal(Vector3 position, int BoneIndex, bool IsPos = true)
+        public Vector3 TransformLocal(Vector3 position, int BoneIndex,bool IsSingleBind,  bool IsPos = true)
         {
-            var skel = GetParentModel().Skeleton;
-            var bone = skel.bones[skel.Node_Array[BoneIndex]];
+            try
+            {
+                var skel = GetParentModel().Skeleton;
+                Matrix4 trans = Matrix4.Identity;
 
-            Matrix4 trans = bone.invert;
+                if (IsSingleBind)
+                {
+                    if (BoneIndex >= skel.Node_Array.Length || BoneIndex == -1)
+                        return position;
 
-            if (IsPos)
-                return Vector3.TransformPosition(position, trans);
-            else
-                return Vector3.TransformNormal(position, trans);
+                    var bone = skel.bones[skel.Node_Array[BoneIndex]];
+                    trans = bone.invert;
+
+                    if (IsPos)
+                        return Vector3.TransformPosition(position, trans);
+                    else
+                        return Vector3.TransformNormal(position, trans);
+                }
+                else
+                {
+                    var bone = skel.bones[BoneIndex];
+                    trans = bone.invert;
+
+                    if (IsPos)
+                        return Vector3.TransformPosition(position, trans);
+                    else
+                        return Vector3.TransformNormal(position, trans);
+                }
+            }
+            catch
+            {
+                STConsole.WriteLine("Failed to bind bone to mesh " + Text, System.Drawing.Color.Red);
+                return position;
+            }
         }
         public static Vector3 transform(Vector3 input, Matrix4 matrix)
         {   
@@ -1071,8 +1096,8 @@ namespace Bfres.Structs
                         boneId = vtx.boneIds[0];
 
                     Console.WriteLine("Old " + vtx.pos);
-                    vtx.pos = TransformLocal(vtx.pos, boneId);
-                    vtx.nrm = TransformLocal(vtx.nrm, boneId, false);
+                    vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
+                    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
                     Console.WriteLine("New " + vtx.pos);
                 }
                 //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");

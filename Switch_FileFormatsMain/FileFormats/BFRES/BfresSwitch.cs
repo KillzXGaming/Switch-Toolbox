@@ -89,9 +89,9 @@ namespace FirstPlugin
         {
             if (model == null)
                 model = new FMDL();
+
             model.Text = mdl.Name;
             model.Skeleton = new FSKL(mdl.Skeleton);
-
             model.Nodes[2] = model.Skeleton.node;
 
             model.Model = mdl;
@@ -100,7 +100,7 @@ namespace FirstPlugin
                 FMAT FMAT = new FMAT();
                 FMAT.Text = mat.Name;
                 FMAT.ReadMaterial(mat);
-                model.Nodes[1].Nodes.Add(FMAT);
+                model.Nodes["FmatFolder"].Nodes.Add(FMAT);
                 model.materials.Add(FMAT.Text, FMAT);
             }
             foreach (Shape shp in mdl.Shapes)
@@ -110,9 +110,10 @@ namespace FirstPlugin
                 ReadShapesVertices(mesh, shp, vertexBuffer, model);
                 mesh.MaterialIndex = shp.MaterialIndex;
 
-                model.Nodes[0].Nodes.Add(mesh);
+                model.Nodes["FshpFolder"].Nodes.Add(mesh);
                 model.shapes.Add(mesh);
             }
+
         }
         public static Shape SaveShape(FSHP fshp)
         {

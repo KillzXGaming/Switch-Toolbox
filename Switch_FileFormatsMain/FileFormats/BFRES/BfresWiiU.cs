@@ -97,6 +97,10 @@ namespace FirstPlugin
         }
         public static void ReadModel(FMDL model, Model mdl)
         {
+            Console.WriteLine("matcount " + mdl.Materials.Count);
+            Console.WriteLine("shpcount " + mdl.Shapes.Count);
+            Console.WriteLine("skelcount " + mdl.Skeleton.Bones.Count);
+
             if (model == null)
                 model = new FMDL();
             model.Text = mdl.Name;
@@ -115,6 +119,7 @@ namespace FirstPlugin
             }
             foreach (Shape shp in mdl.Shapes.Values)
             {
+
                 VertexBuffer vertexBuffer = mdl.VertexBuffers[shp.VertexBufferIndex];
                 Material material = mdl.Materials[shp.MaterialIndex];
                 FSHP mesh = new FSHP();

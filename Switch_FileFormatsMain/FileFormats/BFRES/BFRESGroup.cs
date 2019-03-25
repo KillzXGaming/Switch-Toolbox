@@ -235,6 +235,7 @@ namespace Bfres.Structs
                         if (IsWiiU)
                         {
                             fmdl.ModelU = new ResU.Model();
+                            fmdl.ModelU = new ResU.Model();
                             fmdl.ModelU.Name = ResourceName;
 
                             var skeleton = new ResU.Skeleton();
@@ -243,8 +244,6 @@ namespace Bfres.Structs
                             skeleton.Bones.Add("Root", new ResU.Bone() { Name = "Root" });
 
                             fmdl.ModelU.Skeleton = skeleton;
-                            fmdl.ModelU.Shapes.Add("NeShape", new ResU.Shape() { Name = "NeShape" });
-                            fmdl.ModelU.VertexBuffers.Add(new ResU.VertexBuffer() { });
 
                             BfresWiiU.ReadModel(fmdl, fmdl.ModelU);
                             ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
@@ -259,8 +258,6 @@ namespace Bfres.Structs
                             skeleton.Bones.Add(new ResNX.Bone() { Name = "Root" });
 
                             fmdl.Model.Skeleton = skeleton;
-                            fmdl.Model.Shapes.Add(new ResNX.Shape() { Name = "NeShape" });
-                            fmdl.Model.VertexBuffers.Add(new ResNX.VertexBuffer() { });
 
                             BfresSwitch.ReadModel(fmdl, fmdl.Model);
                             ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);

@@ -48,6 +48,7 @@ namespace Bfres.Structs
             public fsklNode()
             {
                 Text = "Skeleton";
+                Name = "Skeleton";
 
                 ImageKey = "skeleton";
                 SelectedImageKey = "skeleton";

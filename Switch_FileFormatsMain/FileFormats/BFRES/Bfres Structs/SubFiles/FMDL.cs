@@ -563,8 +563,6 @@ namespace Bfres.Structs
                         mdl.Name = Text;
                         BfresSwitch.ReadModel(this, mdl);
                     }
-                    UpdateVertexData();
-
                     IsEdited = true;
 
                     Cursor.Current = Cursors.Default;
