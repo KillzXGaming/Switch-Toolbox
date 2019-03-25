@@ -189,7 +189,6 @@ namespace FirstPlugin
             }
 
             fshp.boundingRadius = shp.RadiusArray.ToList();
-
             fshp.VertexBufferIndex = shp.VertexBufferIndex;
             fshp.Shape = shp;
             fshp.VertexBuffer = vertexBuffer;
