@@ -109,6 +109,7 @@ namespace FirstPlugin
         {
             IsLoaded = false;
             IsBoneListLoaded = false;
+            IsMatListLoaded = false;
             lodDisplayCB.Items.Clear();
             lodListView.Items.Clear();
             bonesCB.Items.Clear();
@@ -157,7 +158,7 @@ namespace FirstPlugin
             if (!IsLoaded)
                 return;
 
-            if (materialComboBox1.SelectedIndex >= 0 && IsLoaded)
+            if (materialComboBox1.SelectedIndex >= 0 && IsMatListLoaded)
             {
                 activeShape.MaterialIndex = materialComboBox1.SelectedIndex;
                 materialIndexUD.Value = materialComboBox1.SelectedIndex;
@@ -213,7 +214,6 @@ namespace FirstPlugin
         }
 
         private void materialComboBox1_Click(object sender, EventArgs e) {
-            ReloadMaterialList();
         }
 
         private void materialComboBox1_KeyDown(object sender, KeyEventArgs e) {

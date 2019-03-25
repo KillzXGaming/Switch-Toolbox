@@ -10,7 +10,7 @@ namespace FirstPlugin
 {
     public class FileFilters
     {
-        public static string BNTX_TEX = GetFilter(".bftex, .dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".gif");
+        public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".gif");
         public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".gif");
         public static string FMDL = GetFilter(".bfmdl", ".dae", ".fbx", ".obj", ".csv");
         public static string FSKL = GetFilter(".bfskl");

@@ -263,7 +263,7 @@ namespace FirstPlugin
             }
         }
 
-        KCLRendering Renderer;
+        public KCLRendering Renderer;
         bool IsLoaded = false;
         public override void OnClick(TreeView treeView)
         {

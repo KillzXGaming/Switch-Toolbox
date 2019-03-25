@@ -951,7 +951,7 @@ namespace Bfres.Structs
                     mat.Material.Name = Utils.RenameDuplicateString(keyList, mat.Material.Name);
                     keyList.Clear();
 
-                    Text = mat.Material.Name;
+                    mat.Text = mat.Material.Name;
 
                     materials.Add(mat.Text, mat);
                     Nodes["FmatFolder"].Nodes.Add(mat);

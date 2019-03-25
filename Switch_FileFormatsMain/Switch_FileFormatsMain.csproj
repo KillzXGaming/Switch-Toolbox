@@ -323,6 +323,7 @@
     <Compile Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.Designer.cs">
       <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Byaml\CourseMuuntStructs.cs" />
     <Compile Include="GUI\Byaml\TurboMunntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -620,7 +621,6 @@
     <Compile Include="GUI\AttributeEditor.Designer.cs">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMuuntStructs.cs" />
     <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.cs">
       <SubType>Form</SubType>
     </Compile>

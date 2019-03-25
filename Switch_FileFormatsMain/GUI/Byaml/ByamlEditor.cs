@@ -34,22 +34,13 @@ namespace FirstPlugin
         public string FileName = "";
         bool pathSupport;
         ushort bymlVer;
-        public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, string name = "")
+
+        public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
         {
             InitializeComponent();
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
-
-            if (name == "course_muunt.byaml")
-            {
-                Controls.Clear();
-
-                TurboMunntEditor editor = new TurboMunntEditor();
-                editor.LoadCourseInfo();
-                Controls.Add(editor);
-                return;
-            }
 
             if (!IsSaveDialog)
             {
@@ -58,8 +49,22 @@ namespace FirstPlugin
                 stPanel1.Dock = DockStyle.Fill;
             }
 
+         /*   if (byaml.FileName == "course_muunt.byaml")
+            {
+                pathSupport = true;
+
+                stPanel1.Controls.Remove(treeView1);
+
+                TurboMunntEditor editor = new TurboMunntEditor();
+                editor.Dock = DockStyle.Fill;
+                editor.LoadCourseInfo(by, byaml.FilePath);
+                stPanel1.Controls.Add(editor);
+                return;
+            }*/
+
+
             byteOrder = defaultOrder;
-            FileName = name;
+            FileName = byaml.FileName;
             byml = by;
             pathSupport = _pathSupport;
             bymlVer = _ver;
@@ -91,7 +96,7 @@ namespace FirstPlugin
         }
 
         Stream saveStream = null;
-        public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, Stream saveTo, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, string name = "") : this(by, _pathSupport, _ver, defaultOrder, IsSaveDialog, name)
+        public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, Stream saveTo, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null) : this(by, _pathSupport, _ver, defaultOrder, IsSaveDialog, byaml)
         {
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
@@ -257,7 +262,7 @@ namespace FirstPlugin
             opn.Filter = "byml file | *.byml";
             if (opn.ShowDialog() == DialogResult.OK)
             {
-                OpenByml(opn.FileName);
+                OpenByml(opn.FileName, new BYAML());
             }
         }
 
@@ -266,25 +271,25 @@ namespace FirstPlugin
             return MessageBox.Show("Does this game support paths ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes;
         }
 
-        public static void OpenByml(string Filename) =>
-            OpenByml(new FileStream(Filename, FileMode.Open), Filename);
+        public static void OpenByml(string Filename, BYAML byaml) =>
+            OpenByml(new FileStream(Filename, FileMode.Open), byaml, Filename);
 
-        public static void OpenByml(Stream file, string FileName = "") =>
-            OpenByml(file, FileName, SupportPaths());
+        public static void OpenByml(Stream file, BYAML byaml, string FileName = "") =>
+            OpenByml(file, byaml, FileName, SupportPaths());
 
-        public static void OpenByml(Stream file, string FileName, bool paths) =>
-            OpenByml(file, FileName, paths, null, false);
+        public static void OpenByml(Stream file, BYAML byaml, string FileName, bool paths) =>
+            OpenByml(file, byaml, FileName, paths, null, false);
 
-        public static void OpenByml(Stream file, string FileName, bool? paths, Stream saveStream, bool AsDialog)
+        public static void OpenByml(Stream file, BYAML byaml, string FileName, bool? paths, Stream saveStream, bool AsDialog)
         {
             bool _paths = paths == null ? SupportPaths() : paths.Value;
             var byml = ByamlFile.LoadN(file, _paths);
-            OpenByml(byml, FileName, saveStream, AsDialog);
+            OpenByml(byml, byaml, saveStream, AsDialog);
         }
 
-        public static void OpenByml(BymlFileData data, string FileName, Stream saveStream = null, bool AsDialog = false)
+        public static void OpenByml(BymlFileData data, BYAML byaml, Stream saveStream = null, bool AsDialog = false)
         {
-            var form = new ByamlEditor(data.RootNode, data.SupportPaths, saveStream, data.Version, data.byteOrder, AsDialog, FileName);
+            var form = new ByamlEditor(data.RootNode, data.SupportPaths, saveStream, data.Version, data.byteOrder, AsDialog, byaml);
 
             if (saveStream != null && saveStream.CanWrite)
             {

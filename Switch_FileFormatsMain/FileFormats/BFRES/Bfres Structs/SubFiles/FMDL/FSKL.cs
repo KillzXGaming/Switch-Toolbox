@@ -117,7 +117,10 @@ namespace Bfres.Structs
 
             public override void Export(string FileName)
             {
-                Skeleton.Export(FileName, ((FMDL)Parent).GetResFile());
+                if (SkeletonU != null)
+                    SkeletonU.Export(FileName, ((FMDL)Parent).GetResFileU());
+                else
+                    Skeleton.Export(FileName, ((FMDL)Parent).GetResFile());
             }
 
             public override void Replace(string FileName)

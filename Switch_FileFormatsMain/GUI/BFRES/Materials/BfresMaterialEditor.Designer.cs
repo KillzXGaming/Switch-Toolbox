@@ -109,6 +109,7 @@
             this.textBoxShaderModel.Name = "textBoxShaderModel";
             this.textBoxShaderModel.Size = new System.Drawing.Size(257, 20);
             this.textBoxShaderModel.TabIndex = 41;
+            this.textBoxShaderModel.TextChanged += new System.EventHandler(this.textBoxShaderModel_TextChanged);
             // 
             // stTabControl1
             // 
@@ -260,6 +261,7 @@
             this.textBoxShaderArchive.Name = "textBoxShaderArchive";
             this.textBoxShaderArchive.Size = new System.Drawing.Size(257, 20);
             this.textBoxShaderArchive.TabIndex = 39;
+            this.textBoxShaderArchive.TextChanged += new System.EventHandler(this.textBoxShaderArchive_TextChanged);
             // 
             // label1
             // 
@@ -277,6 +279,7 @@
             this.textBoxMaterialName.Name = "textBoxMaterialName";
             this.textBoxMaterialName.Size = new System.Drawing.Size(257, 20);
             this.textBoxMaterialName.TabIndex = 37;
+            this.textBoxMaterialName.TextChanged += new System.EventHandler(this.textBoxMaterialName_TextChanged);
             // 
             // stLabel1
             // 

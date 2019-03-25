@@ -1,0 +1,3361 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Syroot.NintenTools.MarioKart8</name>
+    </assembly>
+    <members>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.AIBattle.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in an AIBattle.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.AIRace.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in an AIRace.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Audio.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in an Audio.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.BinFile">
+            <summary>
+            Represents binary data organized in sections, groups, and items.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFile"/> class.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFile"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to create the instance from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.#ctor(System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFile"/> class from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to create the instance from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after creating the instance.
+            </param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.BinFile.ID">
+            <summary>
+            Gets or sets the unique file identifier.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.BinFile.Format">
+            <summary>
+            Gets or sets the <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFileFormat"/> into which the file is serialized.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.BinFile.Sections">
+            <summary>
+            Gets the available <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> instances in this file.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.Load(System.String)">
+            <summary>
+            Loads the instance data from the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to load the instance data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the instance data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the instance data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.Save(System.String)">
+            <summary>
+            Saves the instance data in the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to save the instance data in.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the instance data in the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the instance data in.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after saving the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.BinFile.GetSectionByID(System.UInt32)">
+            <summary>
+            Returns the <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> with the given <paramref name="id"/>. If no such section exists, an
+            <see cref="T:System.ArgumentException"/> is thrown.
+            </summary>
+            <param name="id">The ID of the <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to retrieve.</param>
+            <returns>The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> with the given ID.</returns>
+            <exception cref="T:System.ArgumentException">No section with the given ID exists.</exception>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.BinFileFormat">
+            <summary>
+            Represents the known formats of <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFile"/> data.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.BinData.BinFileFormat.MarioKart8">
+            <summary>
+            The original Mario Kart 8 format, stored in big endian.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.BinData.BinFileFormat.MarioKart8Deluxe">
+            <summary>
+            The slightly extended Mario Kart 8 Deluxe format, stored in little endian.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Course.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a Course.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Dlc.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a DLC.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Dword">
+            <summary>
+            Represents a 4-byte value which can hold differently typed data.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Int32">
+            <summary>
+            The data as an <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Int32"/>.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Single">
+            <summary>
+            The data as a <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Single"/>.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.op_Implicit(System.Int32)~Syroot.NintenTools.MarioKart8.BinData.Dword">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> instance.
+            </summary>
+            <param name="value">The <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Int32"/> value to represent in the new <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.op_Implicit(System.Single)~Syroot.NintenTools.MarioKart8.BinData.Dword">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> instance.
+            </summary>
+            <param name="value">The <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Single"/> value to represent in the new <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.op_Implicit(Syroot.NintenTools.MarioKart8.BinData.Dword)~System.Int32">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Int32"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> value to represent in the new <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Int32"/> instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.op_Implicit(Syroot.NintenTools.MarioKart8.BinData.Dword)~System.Single">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> value to represent in the new <see cref="F:Syroot.NintenTools.MarioKart8.BinData.Dword.Single"/> instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.GetTypeCode">
+            <summary>
+            Returns the <see cref="T:System.TypeCode"/> for this instance.
+            </summary>
+            <returns>The enumerated constant that is the <see cref="T:System.TypeCode"/> of the class or value type that
+            implements this interface.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToBoolean(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToByte(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToChar(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToDateTime(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToDecimal(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToDouble(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent double-precision floating-point number using the
+            specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A double-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToInt16(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToInt32(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 32-bit signed integer using the specified
+            culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 32-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToInt64(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 64-bit signed integer using the specified
+            culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 64-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToSByte(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToSingle(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent single-precision floating-point number using the
+            specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A single-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToString(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToType(System.Type,System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an <see cref="T:System.Object"/> of the specified <see cref="T:System.Type"/> that has
+            an equivalent value, using the specified culture-specific formatting information.
+            </summary>
+            <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted.
+            </param>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An <see cref="T:System.Object"/> instance of type conversionType whose value is equivalent to the value of
+            this instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToUInt16(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToUInt32(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.Dword.ToUInt64(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.DwordSectionData">
+            <summary>
+            Represents a 2-dimensional array of structs consisting of <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Dword"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.DwordSectionData.Data">
+            <summary>
+            Gets the strongly-typed <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> data.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.DwordSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Load(Syroot.BinaryData.BinaryDataReader,Syroot.NintenTools.MarioKart8.BinData.Section,System.Int32)">
+            <summary>
+            Deserializes the section data available in the given <paramref name="reader"/> for the given
+            <paramref name="section"/> with the specified <paramref name="sectionDataSize"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to deserialize data from.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to read the data for.</param>
+            <param name="sectionDataSize">The raw size of the section data without the header in bytes.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.DwordSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Save(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.BinData.Section)">
+            <summary>
+            Serializes the section data into the given <paramref name="writer"/> for the given
+            <paramref name="section"/>.
+            </summary>
+            <param name="writer">The <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> to serialize data with.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to write the data for.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.FileIdentifier">
+            <summary>
+            Represents the file identifiers of <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFile"/> instances.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Highlight.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a Highlight.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.IndexedStringSectionData">
+            <summary>
+            Represents a 2-dimensional array of indexed <see cref="T:System.String"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.IndexedStringSectionData.Data">
+            <summary>
+            Gets the strongly-typed <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> data.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.IndexedStringSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Load(Syroot.BinaryData.BinaryDataReader,Syroot.NintenTools.MarioKart8.BinData.Section,System.Int32)">
+            <summary>
+            Deserializes the section data available in the given <paramref name="reader"/> for the given
+            <paramref name="section"/> with the specified <paramref name="sectionDataSize"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to deserialize data from.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to read the data for.</param>
+            <param name="sectionDataSize">The raw size of the section data without the header in bytes.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.IndexedStringSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Save(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.BinData.Section)">
+            <summary>
+            Serializes the section data into the given <paramref name="writer"/> for the given
+            <paramref name="section"/>.
+            </summary>
+            <param name="writer">The <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> to serialize data with.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to write the data for.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.ISectionData">
+            <summary>
+            Represents the common interface for strongly-typed <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> data.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.ISectionData.Load(Syroot.BinaryData.BinaryDataReader,Syroot.NintenTools.MarioKart8.BinData.Section,System.Int32)">
+            <summary>
+            Deserializes the section data available in the given <paramref name="reader"/> for the given
+            <paramref name="section"/> with the specified <paramref name="sectionDataSize"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to deserialize data from.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to read the data for.</param>
+            <param name="sectionDataSize">The raw size of the section data without the header in bytes.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.ISectionData.Save(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.BinData.Section)">
+            <summary>
+            Serializes the section data into the given <paramref name="writer"/> for the given
+            <paramref name="section"/>.
+            </summary>
+            <param name="writer">The <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> to serialize data with.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to write the data for.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Item.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in an Item.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Item.RaceItemSet">
+            <summary>
+            Represents the item sets available for versus races.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Item.RaceDistanceType">
+            <summary>
+            Represents the distances used according to AI players participating in the race.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Item.BattleItemSet">
+            <summary>
+            Represents the item sets available for battle mode.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Item.BattleDistanceType">
+            <summary>
+            Represents the distance game states in battle modes.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.MiiVoice.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a MiiVoice.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Obj.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in an Obj.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.OpenFlag.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in an OpenFlag.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Parts.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a Parts.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a Performance.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.WeightStat">
+            <summary>
+            Represents the weight stats stored at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.OffroadStat">
+            <summary>
+            Represents the offroad stats stored at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.TurboStatMK8">
+            <summary>
+            Represents the turbo stats stored at the resulting group element indices of Mario Kart 8.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.TurboStatMK8D">
+            <summary>
+            Represents the turbo stats stored at the resulting group element indices of Mario Kart 8 Deluxe.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.SpeedStat">
+            <summary>
+            Represents the speed stats stored at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.SpeedAirStat">
+            <summary>
+            Represents the speed air stats stored at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.HandlingStat">
+            <summary>
+            Represents the handling stats stored at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.HandlingAirStat">
+            <summary>
+            Represents the handling air stats stored at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.PointSetAttrib">
+            <summary>
+            Represents the point set attributes at the resulting group element indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.KartPointSetMK8">
+            <summary>
+            Represents the kart point sets stored at the resulting group indices of Mario Kart 8.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.KartPointSetMK8D">
+            <summary>
+            Represents the kart point sets stored at the resulting group indices of Mario Kart 8 Deluxe.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.DriverPointSetMK8">
+            <summary>
+            Represents the driver point sets stored at the resulting group indices of Mario Kart 8.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.DriverPointSetMK8D">
+            <summary>
+            Represents the driver point point sets stored at the resulting group indices of Mario Kart 8 Deluxe.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.TirePointSet">
+            <summary>
+            Represents the tire point sets stored at the resulting group indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Performance.GliderPointSet">
+            <summary>
+            Represents the glider point sets stored at the resulting group indices.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.RawSectionData">
+            <summary>
+            Represents untyped raw byte array data.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.RawSectionData.Data">
+            <summary>
+            Gets the strongly-typed <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> data.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.RawSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Load(Syroot.BinaryData.BinaryDataReader,Syroot.NintenTools.MarioKart8.BinData.Section,System.Int32)">
+            <summary>
+            Deserializes the section data available in the given <paramref name="reader"/> for the given
+            <paramref name="section"/> with the specified <paramref name="sectionDataSize"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to deserialize data from.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to read the data for.</param>
+            <param name="sectionDataSize">The raw size of the section data without the header in bytes.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.RawSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Save(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.BinData.Section)">
+            <summary>
+            Serializes the section data into the given <paramref name="writer"/> for the given
+            <paramref name="section"/>.
+            </summary>
+            <param name="writer">The <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> to serialize data with.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to write the data for.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.Section">
+            <summary>
+            Represents a section in a <see cref="T:Syroot.NintenTools.MarioKart8.BinData.BinFile"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.ID">
+            <summary>
+            Gets or sets the unique identifier of this section.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.ParamCount">
+            <summary>
+            Gets or sets a parameter typically specifying a number of elements in an instance.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.ParamRepeat">
+            <summary>
+            Gets or sets a parameter typically specifying how many instances are available.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.ParamDeluxe">
+            <summary>
+            Gets or sets a parameter only available in Mario Kart 8 Deluxe files.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.ParamUnknown">
+            <summary>
+            Gets or sets an unknown parameter typically specifying the instance data format.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.Data">
+            <summary>
+            Gets or sets the raw bytes of this section.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.Section.Name">
+            <summary>
+            Gets a readable representation of the <see cref="P:Syroot.NintenTools.MarioKart8.BinData.Section.ID"/>.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.StringSectionData">
+            <summary>
+            Represents a 2-dimensional array of <see cref="T:System.String"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.StringSectionData.Data">
+            <summary>
+            Gets the strongly-typed <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> data.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.StringSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Load(Syroot.BinaryData.BinaryDataReader,Syroot.NintenTools.MarioKart8.BinData.Section,System.Int32)">
+            <summary>
+            Deserializes the section data available in the given <paramref name="reader"/> for the given
+            <paramref name="section"/> with the specified <paramref name="sectionDataSize"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to deserialize data from.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to read the data for.</param>
+            <param name="sectionDataSize">The raw size of the section data without the header in bytes.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.StringSectionData.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Save(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.BinData.Section)">
+            <summary>
+            Serializes the section data into the given <paramref name="writer"/> for the given
+            <paramref name="section"/>.
+            </summary>
+            <param name="writer">The <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> to serialize data with.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to write the data for.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.StructSectionData`1">
+            <summary>
+            Represents a 2-dimensional array of instances of a specific struct.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.BinData.StructSectionData`1.Data">
+            <summary>
+            Gets the strongly-typed <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> data.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.StructSectionData`1.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Load(Syroot.BinaryData.BinaryDataReader,Syroot.NintenTools.MarioKart8.BinData.Section,System.Int32)">
+            <summary>
+            Deserializes the section data available in the given <paramref name="reader"/> for the given
+            <paramref name="section"/> with the specified <paramref name="sectionDataSize"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to deserialize data from.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to read the data for.</param>
+            <param name="sectionDataSize">The raw size of the section data without the header in bytes.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.BinData.StructSectionData`1.Syroot#NintenTools#MarioKart8#BinData#ISectionData#Save(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.BinData.Section)">
+            <summary>
+            Serializes the section data into the given <paramref name="writer"/> for the given
+            <paramref name="section"/>.
+            </summary>
+            <param name="writer">The <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> to serialize data with.</param>
+            <param name="section">The <see cref="T:Syroot.NintenTools.MarioKart8.BinData.Section"/> to write the data for.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.BinData.UI.SectionIdentifier">
+            <summary>
+            Represents the available section identifiers in a UI.bin file.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.ByteExtensions">
+            <summary>
+            Represents extension methods for <see cref="T:System.Byte"/> instances.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.EnableBit(System.Byte,System.Int32)">
+            <summary>
+            Returns the current byte with the bit at the <paramref name="index"/> set (being 1).
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="index">The 0-based index of the bit to enable.</param>
+            <returns>The current byte with the bit enabled.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.DisableBit(System.Byte,System.Int32)">
+            <summary>
+            Returns the current byte with the bit at the <paramref name="index"/> cleared (being 0).
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="index">The 0-based index of the bit to disable.</param>
+            <returns>The current byte with the bit disabled.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.GetBit(System.Byte,System.Int32)">
+            <summary>
+            Returns a value indicating whether the bit at the <paramref name="index"/> in the current byte is enabled
+            or disabled.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="index">The 0-based index of the bit to check.</param>
+            <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.RotateBits(System.Byte,System.Int32)">
+            <summary>
+            Returns the current byte with all bits rotated in the given <paramref name="direction"/>, where positive
+            directions rotate left and negative directions rotate right.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="direction">The direction in which to rotate, where positive directions rotate left.</param>
+            <returns>The current byte with the bits rotated.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.SetBit(System.Byte,System.Int32,System.Boolean)">
+            <summary>
+            Returns the current byte with the bit at the <paramref name="index"/> enabled or disabled, according to
+            <paramref name="enable"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="index">The 0-based index of the bit to enable or disable.</param>
+            <param name="enable"><c>true</c> to enable the bit; otherwise <c>false</c>.</param>
+            <returns>The current byte with the bit enabled or disabled.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.ToggleBit(System.Byte,System.Int32)">
+            <summary>
+            Returns the current byte with the bit at the <paramref name="index"/> enabled when it is disabled or
+            disabled when it is enabled.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="index">The 0-based index of the bit to toggle.</param>
+            <returns>The current byte with the bit toggled.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.DecodeByte(System.Byte,System.Int32)">
+            <summary>
+            Returns an <see cref="T:System.Byte"/> instance represented by the given number of <paramref name="bits"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="bits">The number of least significant bits which are used to store the <see cref="T:System.Byte"/>
+            value.</param>
+            <returns>The decoded <see cref="T:System.Byte"/>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.DecodeByte(System.Byte,System.Int32,System.Int32)">
+            <summary>
+            Returns an <see cref="T:System.Byte"/> instance represented by the given number of <paramref name="bits"/>, starting
+            at the <paramref name="firstBit"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="bits">The number of least significant bits which are used to store the <see cref="T:System.Byte"/>
+            value.</param>
+            <param name="firstBit">The first bit of the encoded value.</param>
+            <returns>The decoded <see cref="T:System.Byte"/>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.DecodeSByte(System.Byte,System.Int32)">
+            <summary>
+            Returns an <see cref="T:System.SByte"/> instance represented by the given number of <paramref name="bits"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="bits">The number of least significant bits which are used to store the <see cref="T:System.SByte"/>
+            value.</param>
+            <returns>The decoded <see cref="T:System.SByte"/>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.DecodeSByte(System.Byte,System.Int32,System.Int32)">
+            <summary>
+            Returns an <see cref="T:System.SByte"/> instance represented by the given number of <paramref name="bits"/>, starting
+            at the <paramref name="firstBit"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="bits">The number of least significant bits which are used to store the <see cref="T:System.SByte"/>
+            value.</param>
+            <param name="firstBit">The first bit of the encoded value.</param>
+            <returns>The decoded <see cref="T:System.SByte"/>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.Encode(System.Byte,System.Byte,System.Int32)">
+            <summary>
+            Returns the current byte with the given <paramref name="value"/> set into the given number of
+            <paramref name="bits"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="value">The value to encode.</param>
+            <param name="bits">The number of bits which are used to store the <see cref="T:System.Byte"/> value.</param>
+            <returns>The current byte with the value encoded into it.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.Encode(System.Byte,System.Byte,System.Int32,System.Int32)">
+            <summary>
+            Returns the current byte with the given <paramref name="value"/> set into the given number of
+            <paramref name="bits"/> starting at <paramref name="firstBit"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="value">The value to encode.</param>
+            <param name="bits">The number of bits which are used to store the <see cref="T:System.Byte"/> value.</param>
+            <param name="firstBit">The first bit used for the encoded value.</param>
+            <returns>The current byte with the value encoded into it.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.Encode(System.Byte,System.SByte,System.Int32)">
+            <summary>
+            Returns the current byte with the given <paramref name="value"/> set into the given number of
+            <paramref name="bits"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="value">The value to encode.</param>
+            <param name="bits">The number of bits which are used to store the <see cref="T:System.SByte"/> value.</param>
+            <returns>The current byte with the value encoded into it.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ByteExtensions.Encode(System.Byte,System.SByte,System.Int32,System.Int32)">
+            <summary>
+            Returns the current byte with the given <paramref name="value"/> set into the given number of
+            <paramref name="bits"/> starting at <paramref name="firstBit"/>.
+            </summary>
+            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
+            <param name="value">The value to encode.</param>
+            <param name="bits">The number of bits which are used to store the <see cref="T:System.SByte"/> value.</param>
+            <param name="firstBit">The first bit used for the encoded value.</param>
+            <returns>The current byte with the value encoded into it.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Collisions.CourseOctreeNode">
+            <summary>
+            Represents a node in a course model octree.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.CourseOctreeNode.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.CourseOctreeNode"/> class with an empty key.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.CourseOctreeNode.#ctor(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.CourseOctreeNode"/> class with the key and data read from the
+            given <paramref name="reader"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to read the node data with.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.CourseOctreeNode.ModelIndex">
+            <summary>
+            Gets the index to the model referenced by this node in the model array of the file this node belongs to.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Collisions.KclFace">
+            <summary>
+            Represents a triangle as stored in a collision file.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.Length">
+            <summary>
+            The length of this triangle.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.PositionIndex">
+            <summary>
+            The 0-based index of the positional vector in the position array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.DirectionIndex">
+            <summary>
+            The 0-based index of the direction normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.Normal1Index">
+            <summary>
+            The first 0-based index of the normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.Normal2Index">
+            <summary>
+            The second 0-based index of the normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.Normal3Index">
+            <summary>
+            The third 0-based index of the normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.CollisionFlags">
+            <summary>
+            The collision flags determining in-game behavior when colliding with this polygon.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.KclFace.GlobalIndex">
+            <summary>
+            The 0-based index of the triangle in the KCL file this triangle belongs to.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFace.#ctor(System.Single,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFace"/> struct with the given values.
+            </summary>
+            <param name="length">The length of this triangle.</param>
+            <param name="positionIndex">The 0-based index of the positional vector in the position array of the model
+            this triangle belongs to.</param>
+            <param name="directionIndex">The 0-based index of the direction normal in the normal array of the model this
+            triangle belongs to.</param>
+            <param name="normalIndex1">The first 0-based index of the normal in the normal array of the model this
+            triangle belongs to.</param>
+            <param name="normalIndex2">The second 0-based index of the normal in the normal array of the model this
+            triangle belongs to.</param>
+            <param name="normalIndex3">The third 0-based index of the normal in the normal array of the model this
+            triangle belongs to.</param>
+            <param name="collisionFlags">The collision flags determining in-game behavior when colliding with this
+            polygon.</param>
+            <param name="globalIndex">The 0-based index of the triangle in the triangle array of the model this
+            triangle belongs to.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Collisions.KclFile">
+            <summary>
+            Represents the collision model of a course which sorts polygons into an octree to allow fast spatial lookups.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFile"/> class.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.#ctor(Syroot.NintenTools.MarioKart8.Common.ObjModel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFile"/> class, created from the given
+            <paramref name="objModel"/>.
+            </summary>
+            <param name="objModel">The <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/> to create the collision data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFile"/> class from the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file from which the instance will be loaded.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing triangles.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.#ctor(System.IO.Stream,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFile"/> class from the given stream.
+            </summary>
+            <param name="stream">The stream from which the instance will be loaded.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing triangles.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after creating the instance.
+            </param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclFile.MinCoordinate">
+            <summary>
+            Gets the smallest coordinate spanned by the octree in this file.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclFile.MaxCoordinate">
+            <summary>
+            Gets the biggest coordinate spanned by the octree in this file.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclFile.CoordinateShift">
+            <summary>
+            Gets the coordinate shift required to compute indices into the octree.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Unknown">
+            <summary>
+            Gets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclFile.CourseOctreeRoot">
+            <summary>
+            Gets the root node of the course model octree. Can be <c>null</c> if no octree was loaded or created yet.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Models">
+            <summary>
+            Gets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclModel"/> instances referenced by the course octree.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Load(System.String)">
+            <summary>
+            Loads the data from the given file, including the octree.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Load(System.String,System.Boolean)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing models.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>, including the octree.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Load(System.IO.Stream,System.Boolean,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing models.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Save(System.String)">
+            <summary>
+            Saves the data in the given file.
+            </summary>
+            <param name="fileName">The name of the file to save the data in.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclFile.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the data into the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the data to.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after saving the instance.
+            </param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Collisions.KclModel">
+            <summary>
+            Represents a model referenced in a <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFile"/> which can hold up to 65535 triangles.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclModel"/> class from the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file from which the instance will be loaded.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing triangles.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.#ctor(System.IO.Stream,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclModel"/> class from the given stream.
+            </summary>
+            <param name="stream">The stream from which the instance will be loaded.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing triangles.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after creating the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.#ctor(Syroot.NintenTools.MarioKart8.Common.ObjModel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclModel"/> class, created from the given
+            <paramref name="objModel"/>.
+            </summary>
+            <param name="objModel">The <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/> to create the collision data from.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.MinCoordinate">
+            <summary>
+            Gets or sets the smallest coordinate of the cube spanned by the model.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.CoordinateMask">
+            <summary>
+            Gets the coordinate mask required to compute indices into the octree.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.CoordinateShift">
+            <summary>
+            Gets the coordinate shift required to compute indices into the octree.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Positions">
+            <summary>
+            Gets the array of vertex positions.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Normals">
+            <summary>
+            Gets the array of vertex normals.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Faces">
+            <summary>
+            Gets the array of triangles.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.KclModel.ModelOctreeRoots">
+            <summary>
+            Gets the root nodes of the model triangle octree. Can be <c>null</c> if no octree was loaded or created yet.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Load(System.String)">
+            <summary>
+            Loads the data from the given file, including the octree.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Load(System.String,System.Boolean)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing triangles.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>, including the octree.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Load(System.IO.Stream,System.Boolean,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="loadOctree"><c>true</c> to also load the octree referencing triangles.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Save(System.String)">
+            <summary>
+            Saves the data in the given file.
+            </summary>
+            <param name="fileName">The name of the file to save the data in.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.KclModel.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the data into the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the data to.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after saving the instance.
+            </param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Collisions.ModelOctreeNode">
+            <summary>
+            Represents a node in a model triangle octree.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.ModelOctreeNode.#ctor(Syroot.BinaryData.BinaryDataReader,System.Int64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.ModelOctreeNode"/> class with the key and data read from the
+            given <paramref name="reader"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to read the node data with.</param>
+            <param name="parentOffset">The required offset of the start of the parent node.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.ModelOctreeNode.#ctor(System.Collections.Generic.Dictionary{System.UInt16,Syroot.NintenTools.MarioKart8.Triangle},Syroot.Maths.Vector3F,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.ModelOctreeNode"/> class, initializing children and
+            subdivisions from the given list of faces sorted into a cube of the given <paramref name="cubeSize"/>.
+            </summary>
+            <param name="triangles">The dictionary of <see cref="T:Syroot.NintenTools.MarioKart8.Triangle"/> instances which have to be sorted into this
+            octree, with the key being their original index in the model.</param>
+            <param name="cubePosition">The offset of the cube.</param>
+            <param name="cubeSize">The size of the cube.</param>
+            <param name="maxTrianglesInCube">The maximum number of triangles to sort into this node.</param>
+            <param name="minCubeSize">The minimum size a cube can be subdivided to.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.ModelOctreeNode.TriangleIndices">
+            <summary>
+            Gets the indices to triangles of the model appearing in this cube.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1">
+            <summary>
+            Represents the base for an octree node.
+            </summary>
+            <typeparam name="T">The type of the octree node.</typeparam>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1.ChildCount">
+            <summary>
+            The number of children of an octree node.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1._flagMask">
+            <summary>
+            The bits storing the flags of this node.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1.#ctor(System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1"/> class with the given octree node
+            <paramref name="key"/>.
+            </summary>
+            <param name="key">The octree node key with which the node can be referenced.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1.Key">
+            <summary>
+            Gets the octree key used to reference this node.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1.Children">
+            <summary>
+            Gets the eight children of this node.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>An enumerator that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Collisions.OctreeNodeBase`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Common.ObjModel">
+            <summary>
+            Represents a 3D model stored in the Wavefront OBJ format.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Common.ObjModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/> class.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Common.ObjModel.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/> class from the given stream.
+            </summary>
+            <param name="stream">The stream from which the instance will be loaded.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Common.ObjModel.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/> class from the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file from which the instance will be loaded.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Common.ObjModel.Positions">
+            <summary>
+            Gets or sets the list of positions of the model's vertices.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Common.ObjModel.TexCoords">
+            <summary>
+            Gets or sets the list of texture coordinates of the model's vertices.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Common.ObjModel.Normals">
+            <summary>
+            Gets or sets the list of normals of the model's vertices.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Common.ObjModel.Faces">
+            <summary>
+            Gets or sets the list of faces of the model.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Common.ObjModel.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Common.ObjModel.Load(System.String)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Common.ObjFace">
+            <summary>
+            Represents a triangle in an <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Common.ObjFace.Vertices">
+            <summary>
+            The three <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjVertex"/> vertices which define this triangle.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Common.ObjVertex">
+            <summary>
+            Represents the indices required to define a vertex of an <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Common.ObjVertex.PositionIndex">
+            <summary>
+            The index of the spatial position in the positions array of the owning <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Common.ObjVertex.TexCoordIndex">
+            <summary>
+            The index of the texture coordinates in the texture coordinate array of the owning <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Common.ObjVertex.NormalIndex">
+            <summary>
+            The index of the normal in the normal array of the owning <see cref="T:Syroot.NintenTools.MarioKart8.Common.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Area">
+            <summary>
+            Represents an area controlling different things inside of it.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Area.AreaShape">
+            <summary>
+            Gets or set the shape the outer form of this area spans.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Area.AreaType">
+            <summary>
+            Gets or sets the action taken for objects in this area.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Area.CameraAreas">
+            <summary>
+            Gets or sets a list of indices to unknown areas, possibly triggering replay cameras.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Area.Path">
+            <summary>
+            Gets or sets a <see cref="P:Syroot.NintenTools.MarioKart8.Courses.Area.Path"/> instance used by this area when <see cref="P:Syroot.NintenTools.MarioKart8.Courses.Area.AreaType"/> is set to
+            <see cref="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.None"/> or <see cref="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Unknown2"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Area.PullPath">
+            <summary>
+            Gets or sets a <see cref="P:Syroot.NintenTools.MarioKart8.Courses.Area.PullPath"/> instance determining the direction objects in this area are pulled
+            along when the <see cref="P:Syroot.NintenTools.MarioKart8.Courses.Area.AreaType"/> is set to <see cref="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Pull"/>.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Area.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between BYAML instances to be resolved to provide real instances
+            instead of the raw values in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Area.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between BYAML instances to be serialized into raw values stored in the
+            BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.AreaFlag">
+            <summary>
+            Represents the &quot;AreaFlag&quot; list of 4 integer values inside of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ClipPattern"/>.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.AreaShape">
+            <summary>
+            Represents the outer forms an area or clip area spans.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaShape.Cube">
+            <summary>
+            The area spans a cuboid region.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaShape.Sphere">
+            <summary>
+            The area spans a spherical region.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.AreaType">
+            <summary>
+            Represents the action taken for objects inside of an area or clip area.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.None">
+            <summary>
+            No special action will be taken.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Unknown1">
+            <summary>
+            Unknown area type. Appears in Mario Circuit and Twisted Mansion.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Unknown2">
+            <summary>
+            Unknown area type. Appears almost everywhere.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Pull">
+            <summary>
+            Objects are moved along a specified path.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Roam">
+            <summary>
+            Objects will roam randomly inside of this area.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Clip">
+            <summary>
+            Specifies that this is a clip area. Not valid for areas.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F">
+            <summary>
+            Represents a <see cref="T:Syroot.Maths.Vector3"/> serializable as BYAML data.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F.X">
+            <summary>
+            The X float component.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F.Y">
+            <summary>
+            The Y float component.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F.Z">
+            <summary>
+            The Z float component.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F"/> struct with the given values for the X, Y and
+            Z components.
+            </summary>
+            <param name="x">The value of the X component.</param>
+            <param name="y">The value of the Y component.</param>
+            <param name="z">The value of the Z component.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F.op_Implicit(Syroot.Maths.Vector3F)~Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F">
+            <summary>
+            Implicit conversion from <see cref="T:Syroot.Maths.Vector3F"/>.
+            </summary>
+            <param name="vector">The <see cref="T:Syroot.Maths.Vector3F"/> to convert from.</param>
+            <returns>The retrieved <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ByamlVector3F"/>.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Clip">
+            <summary>
+            Represents an element of the Clip array, which consists of 4 integer values.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ClipArea">
+            <summary>
+            Represents an clip area controlling model clipping.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ClipArea.AreaShape">
+            <summary>
+            Gets or set the shape the outer form of this clip area spans. Only <see cref="F:Syroot.NintenTools.MarioKart8.Courses.AreaShape.Cube"/> is known for
+            these to be valid.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ClipArea.AreaType">
+            <summary>
+            Gets or sets the action taken for this clip area. Only <see cref="F:Syroot.NintenTools.MarioKart8.Courses.AreaType.Clip"/> is valid for clip areas.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ClipPattern">
+            <summary>
+            Represents the clip pattern node in a course definition file.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ClipPattern.StartOnly">
+            <summary>
+            Gets or sets the unknown &quot;StartOnly&quot; value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ClipPattern.AreaFlag">
+            <summary>
+            Gets or sets the <see cref="P:Syroot.NintenTools.MarioKart8.Courses.ClipPattern.AreaFlag"/> instance.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition">
+            <summary>
+            Represents the contents of a *_muunt*.byaml file, holding information about the properties, paths and objects on
+            a course.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> class from the given stream.
+            </summary>
+            <param name="stream">The stream from which the instance will be loaded.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> class from the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file from which the instance will be loaded.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.EffectSW">
+            <summary>
+            Gets or sets a globally applied effect index.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.HeadLight">
+            <summary>
+            Gets or sets a value indicating how headlights are turned on or off on this course.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.IsFirstLeft">
+            <summary>
+            Gets or sets a value which indicates whether the first curve is a left turn. Has to be in sync with
+            <see cref="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.FirstCurve"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.FirstCurve">
+            <summary>
+            Gets or sets a value which indicates whether the first curve is a &quot;left&quot; or &quot;right&quot;
+            turn. Has to be in sync with <see cref="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.IsFirstLeft"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.IsJugemAbove">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.JugemAbove">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.LapJugemPos">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.LapCount">
+            <summary>
+            Gets or sets the number of laps which have to be driven to finish the track.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ObjParams">
+            <summary>
+            Gets or sets a list of Obj parameters which are applied globally.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.PatternCount">
+            <summary>
+            Gets or sets the number of pattern sets out of which one is picked randomly at start.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Areas">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Area"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.EffectAreas">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.EffectArea"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Clips">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Clip"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ClipAreas">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ClipArea"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ClipPattern">
+            <summary>
+            Gets or sets the <see cref="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ClipPattern"/> instance.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Paths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Path"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.EnemyPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.GCameraPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GCameraPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.GlidePaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GlidePath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.GravityPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GravityPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ItemPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ItemPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.JugemPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.JugemPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.LapPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.LapPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ObjPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ObjPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.PullPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PullPath"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.MapObjIdList">
+            <summary>
+            Gets or sets the list of ObjId's of objects to load for the track.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.MapObjResList">
+            <summary>
+            Gets or sets the list of ResName's of objects to load for the track.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Objs">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Obj"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.SoundObjs">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.SoundObj"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.IntroCameras">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.IntroCamera"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.ReplayCameras">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera"/> instances.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Load(System.String)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Save(System.String)">
+            <summary>
+            Saves the data in the given file.
+            </summary>
+            <param name="fileName">The name of the file to save the data in.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the data into the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the data to.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after saving the instance.
+            </param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.DeserializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Reads data from the given <paramref name="dictionary"/> to satisfy members.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to read the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.SerializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Writes instance members into the given <paramref name="dictionary"/> to store them as BYAML data.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.Dictionary`2"/> to store the data in.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.CourseHeadLight">
+            <summary>
+            Specifies how headlights are displayed on a course.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.CourseHeadLight.Off">
+            <summary>
+            Headlights are globally turned off.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.CourseHeadLight.On">
+            <summary>
+            Headlights are globally turned on.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.CourseHeadLight.ByLapPath">
+            <summary>
+            The lap path decides when headlights are turned on.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.EffectArea">
+            <summary>
+            Represents an effect area controlling visual effects inside of it.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.EffectArea.EffectSW">
+            <summary>
+            Gets or sets the index of the effect played in this area.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPath">
+            <summary>
+            Represents a path the AI drives.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.EnemyPath.ReturnPoints">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy"/> instances.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPathPoint">
+            <summary>
+            Represents a point of an <see cref="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.EnemyPathPoint.BattleFlag">
+            <summary>
+            Gets or sets an unknown battle flag.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.EnemyPathPoint.PathDir">
+            <summary>
+            Gets or sets an unknown point direction.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.EnemyPathPoint.Priority">
+            <summary>
+            Gets or sets an unknown point priority.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.EnemyPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.GCameraPath">
+            <summary>
+            Represents a path of the game camera.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.GCameraPathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GCameraPath"/>.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.GCameraPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.GlidePath">
+            <summary>
+            Represents a path a gliding driver is flying along.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GlidePath.GlideType">
+            <summary>
+            Gets or sets a value indicating the type of gliding.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GlidePath.IsUp">
+            <summary>
+            Gets or sets a value indicating whether this is an updraft glide.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.GlidePathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GlidePath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GlidePathPoint.Cannon">
+            <summary>
+            Gets or sets a value indicating whether the driver is pulled as if shot through a cannon.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.GlidePathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.GravityPath">
+            <summary>
+            Represents a path controlling the gravity direction of the course.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GravityPath.GCameraPaths">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GCameraPath"/> instances this gravity path uses.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.GravityPath.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.GravityPath.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.GravityPathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.GravityPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GravityPathPoint.CameraHeight">
+            <summary>
+            Gets or sets a distance possibly controlling how far from the ground the camera is positioned.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GravityPathPoint.GlideOnly">
+            <summary>
+            Gets or sets a value possibly indicating whether this gravity path is only effective when gliding.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.GravityPathPoint.Transform">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.GravityPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ICourseReferencable">
+            <summary>
+            Represents a BYAML element which references others and thus must resolve and build the dependencies.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ICourseReferencable.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ICourseReferencable.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.IntroCamera">
+            <summary>
+            Represents a camera move played in the introductionary course video played at the start of offline races.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Num">
+            <summary>
+            Gets or sets the index of the camera in the intro camera array.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Time">
+            <summary>
+            Gets or sets the number of frames the camera is active.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Type">
+            <summary>
+            Gets or sets an unknown camera type.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.AtPath">
+            <summary>
+            Gets or sets a value referencing an unknown path property.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Path">
+            <summary>
+            Gets or sets a <see cref="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Path"/> on which this camera moves along.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Fovy">
+            <summary>
+            Gets or sets the field of view angle possibly at the start of the move.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.Fovy2">
+            <summary>
+            Gets or sets the field of view angle possibly at the end of the move.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.FovySpeed">
+            <summary>
+            Gets or sets a speed possibly controlling how the FoV change is done.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course file objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.IntroCamera.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ItemPath">
+            <summary>
+            Represents a path an item like a red shell takes.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ItemPathPoint">
+            <summary>
+            Represents a point of an <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ItemPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ItemPathPoint.Hover">
+            <summary>
+            Gets or sets a value possibly indicating whether the item is allowed to move above the original path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ItemPathPoint.ItemPriority">
+            <summary>
+            Gets or sets an unknown priority.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ItemPathPoint.SearchArea">
+            <summary>
+            Gets or sets a value indicating an unknown search area.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ItemPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.JugemPath">
+            <summary>
+            Represents a path possibly determining where Lakitu resets drivers back to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.JugemPath.PtNum">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.JugemPath.SplitWidth">
+            <summary>
+            Gets or sets a value possibly indicating the thickness of the path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.JugemPath.ObjPt">
+            <summary>
+            Gets a BYAML path embedded in this path for unknown reasons.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.JugemPathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.JugemPath"/>.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.JugemPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.LapPath">
+            <summary>
+            Represents a path which drivers need to taken to complete a lap.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPath.Group">
+            <summary>
+            Gets or sets a value indicating the group the lap path belongs to, possibly for multiple routes.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPath.ReturnPointsError">
+            <summary>
+            Gets or sets an unknown value, possibly handling Lakitu return locations and referencing
+            <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPath.ReturnPoints">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint"/> instances.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPath.GravityPaths">
+            <summary>
+            Gets or sets a list of <see cref="P:Syroot.NintenTools.MarioKart8.Courses.LapPath.GravityPaths"/> instances used by this lap path.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.LapPath.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.LapPath.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.LapPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.CheckPoint">
+            <summary>
+            Gets or sets a value possibly indicating whether this is a required point to complete a lap.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.ClipIndex">
+            <summary>
+            Gets or sets a possible index into a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Clip"/> instance.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.ClipIndexDlc">
+            <summary>
+            Gets or sets a possible index into a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Clip"/> instance. DLC courses use this index, stored in
+            &quot;ClipNum&quot; instead of &quot;ClipIdx&quot;.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.HeadLightSW">
+            <summary>
+            Gets or sets a value indicating whether headlights are turned on on this part of the path when
+            <see cref="P:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition.HeadLight"/> is set to <see cref="F:Syroot.NintenTools.MarioKart8.Courses.CourseHeadLight.ByLapPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.LapCheck">
+            <summary>
+            Gets or sets a value possibly indicating whether this point increases the lap count.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.MapCameraFovy">
+            <summary>
+            Gets or sets the field of view angle of the camera at this part of the path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.MapCameraY">
+            <summary>
+            Gets or sets the height distance of the camera at this part of the path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.ReturnPosition">
+            <summary>
+            Gets or sets a value handling a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint"/> or -1 if there is no return point.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.SoundSW">
+            <summary>
+            Gets or sets an index to a sound effect played at this part of the path or -1 if there is no additional
+            effect.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.LapPathPoint.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion">
+            <summary>
+            Represents the possible game modes in which a unit object can appear.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion.None">
+            <summary>
+            No mode.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion.Multi2P">
+            <summary>
+            Multiplayer mode with 2 players (vertical splitscreen).
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion.Multi4P">
+            <summary>
+            Multiplayer mode with 3 or 4 players (quad splitscreen).
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion.WiFi">
+            <summary>
+            Online 1-player mode.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion.WiFi2P">
+            <summary>
+            Online 2-player mode (vertical splitscreen).
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusionExtensions">
+            <summary>
+            Represents a set of extension methods for the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion"/> enumeration.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ModeInclusionExtensions.FromDictionary(Syroot.NintenTools.MarioKart8.Courses.ModeInclusion,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Gets a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion"/> value according to the Multi2P, Multi4P, WiFi2P and WiFi4P entries of the
+            given <paramref name="dictionary"/>.
+            </summary>
+            <param name="modeInclusion">The extended <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion"/> instance.</param>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to retrieve the entries from.</param>
+            <returns>A <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion"/> value according to the dictionary.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ModeInclusionExtensions.ToDictionary(Syroot.NintenTools.MarioKart8.Courses.ModeInclusion,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Sets the entries of the given <paramref name="dictionary"/> according to the current instance.
+            </summary>
+            <param name="modeInclusion">The extended <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ModeInclusion"/> instance.</param>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to configure.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Obj">
+            <summary>
+            Represents an Obj placed on the course.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ObjId">
+            <summary>
+            Gets or sets the ID determining the type of this object.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.NoCol">
+            <summary>
+            Gets or sets a value indicating whether collision detection with this Obj will be skipped.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.TopView">
+            <summary>
+            Gets or sets an unknown setting which has never been used in the original courses.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.Single">
+            <summary>
+            Gets or sets an unknown setting.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.Speed">
+            <summary>
+            Gets or sets the speed in which a path is followed.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.Path">
+            <summary>
+            Gets or sets the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Path"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.PathPoint">
+            <summary>
+            Gets or sets the point in the <see cref="P:Syroot.NintenTools.MarioKart8.Courses.Obj.Path"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.LapPath">
+            <summary>
+            Gets or sets the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.LapPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.LapPathPoint">
+            <summary>
+            Gets or sets the point in the <see cref="P:Syroot.NintenTools.MarioKart8.Courses.Obj.LapPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ObjPath">
+            <summary>
+            Gets or sets the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ObjPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ObjPathPoint">
+            <summary>
+            Gets or sets the point in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ObjPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.EnemyPath1">
+            <summary>
+            Gets or sets the first <see cref="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.EnemyPath2">
+            <summary>
+            Gets or sets the second <see cref="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ItemPath1">
+            <summary>
+            Gets or sets the first <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ItemPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ItemPath2">
+            <summary>
+            Gets or sets the second <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ItemPath"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ParentArea">
+            <summary>
+            Gets or sets the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Area"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ParentObj">
+            <summary>
+            Gets or sets the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Obj"/> this Obj is attached to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.ModeInclusion">
+            <summary>
+            Gets or sets the game modes in which this Obj will appear.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Obj.Params">
+            <summary>
+            Gets or sets an array of 8 float values further controlling object behavior.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Obj.DeserializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Reads data from the given <paramref name="dictionary"/> to satisfy members.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to read the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Obj.SerializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Writes instance members into the given <paramref name="dictionary"/> to store them as BYAML data.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.Dictionary`2"/> to store the data in.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Obj.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Obj.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ObjPath">
+            <summary>
+            Represents a path for Objs.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPath.IsClosed">
+            <summary>
+            Gets or sets a value indicating whether this path is circular and that the last point connects to the first.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPath.PtNum">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPath.SplitWidth">
+            <summary>
+            Gets or sets a value possibly indicating the thickness of the path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPath.ObjPt">
+            <summary>
+            Gets a BYAML path point embedded in this path for unknown reasons.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ObjPathPoint">
+            <summary>
+            Represents a point of an <see cref="T:Syroot.NintenTools.MarioKart8.Courses.ObjPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPathPoint.PathIndex">
+            <summary>
+            Gets or sets an index into the points of the parent's BYAML path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPathPoint.Prm1">
+            <summary>
+            Gets or sets the first parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ObjPathPoint.Prm2">
+            <summary>
+            Gets or sets the second parameter.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ObjPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition">
+            <summary>
+            Represents an entry of the objflow.byaml file, describing how an Obj is loaded and behaves in-game.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.AiReact">
+            <summary>
+            Gets or sets the way the AI interacts with this Obj.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.CalcCut">
+            <summary>
+            Gets or sets a value possibly indicating if the AI should check this Obj when trying to take a cut.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Clip">
+            <summary>
+            Gets or sets a value possibly indicating whether this object can be clipped from view.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ClipRadius">
+            <summary>
+            Gets or sets a distance possibly indicating when the object should be clipped from view.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ColOffsetY">
+            <summary>
+            Gets or sets a height offset of a generic collision box.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ColShape">
+            <summary>
+            Gets or sets the shape of a generic collision box.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ColSize">
+            <summary>
+            Gets or sets the size of a generic collision box.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.DemoCameraCheck">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Items">
+            <summary>
+            Gets or sets a list of unknown values.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ItemObjs">
+            <summary>
+            Gets or sets a list of unknown values.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Karts">
+            <summary>
+            Gets or sets a list of unknown values.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.KartObjs">
+            <summary>
+            Gets or sets a list of unknown values.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Label">
+            <summary>
+            Gets or sets the name of the Obj.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.LightSetting">
+            <summary>
+            Gets or sets an unknown light setting.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Lod1">
+            <summary>
+            Gets or sets a distance possibly indicating when the object should be rendered with full detail.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Lod2">
+            <summary>
+            Gets or sets a distance possibly indicating when the object should be rendered with a lower detail second
+            LoD model.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Lod_NoDisp">
+            <summary>
+            Gets or sets a distance possibly indicating when the object should not be drawn at all anymore.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.MgrId">
+            <summary>
+            Gets or sets an object manager ID.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ModelDraw">
+            <summary>
+            Gets or sets a possible type determining how the object is rendered.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ModelEffNo">
+            <summary>
+            Gets or sets an unknown model effect number.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ModelName">
+            <summary>
+            Gets or sets an optional model name.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.MoveBeforeSync">
+            <summary>
+            Gets or sets a value indicating whether this object already moves before the online sync is done.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.NotCreate">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ObjId">
+            <summary>
+            Gets or sets the ID of the Obj with which it is reference in <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> files.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Offset">
+            <summary>
+            Gets or sets an offset.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.Origin">
+            <summary>
+            Gets or sets the origin type of the model.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.PackunEat">
+            <summary>
+            Gets or sets a value indicating whether the piranha plant item targets and tries to eat this item.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.PathType">
+            <summary>
+            Gets or sets the path type this Obj possibly requires.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.PylonReact">
+            <summary>
+            Gets or sets a value possibly indicating how pylons Objs react to this object (a pylon can destroy an item
+            box upon touching for example).
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.ResNames">
+            <summary>
+            Gets or sets the list of resource names.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition.VR">
+            <summary>
+            Gets or sets a value indicating whether this object should be handled as a skydome or not.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Objs.AiReact">
+            <summary>
+            Represents the possibly AI reactions to an <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition"/>.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.Objs.AiReact.None">
+            <summary>
+            The AI takes no action.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.Objs.AiReact.Repel">
+            <summary>
+            The AI tries to circumvent this Obj.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.Objs.AiReact.Attract">
+            <summary>
+            The AI tries to collide with this Obj.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.Objs.AiReact.Unknown3">
+            <summary>
+            An unknown AI reaction.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb">
+            <summary>
+            Represents the contents of the objflow.byaml file, holding <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition"/> entries describing all
+            the available Objs in-game.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb"/> class from the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file from which the instance will be loaded.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb"/> class from the given stream.
+            </summary>
+            <param name="stream">The stream from which the instance will be loaded.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb.Definitions">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinition"/> instances in this database.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb.Save(System.String)">
+            <summary>
+            Saves the definitions into the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file in which the definitions will be stored.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.Objs.ObjDefinitionDb.Save(System.IO.Stream)">
+            <summary>
+            Saves the definitions into the the given stream.
+            </summary>
+            <param name="stream">The stream in which the definitions will be stored.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.Path">
+            <summary>
+            Represents a tangentially smoothed path used for different aspects in the game.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Path.Delete">
+            <summary>
+            Gets or sets a value possibly indicating whether Objs using this path are dispoed after reaching the end
+            of the (non-closed) path.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Path.IsClosed">
+            <summary>
+            Gets or sets a value indicating whether this path is circular and that the last point connects to the first.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.Path.RailType">
+            <summary>
+            Gets or sets an unknown rail type.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PathBase`2">
+            <summary>
+            Represents a path used for different aspects in the game.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathBase`2.Points">
+            <summary>
+            Gets or sets the list of point instances making up this path.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathBase`2.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathBase`2.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.Path"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPoint.Prm1">
+            <summary>
+            Gets or sets the first parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPoint.Prm2">
+            <summary>
+            Gets or sets the second parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPoint.ControlPoints">
+            <summary>
+            Gets or sets the list of tangential smoothing points (must be exactly 2).
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2">
+            <summary>
+            Represents a point of a path of type <typeparamref name="TPath"/>.
+            </summary>
+            <typeparam name="TPath">The type of the path this point belongs to.</typeparam>
+            <typeparam name="TPoint">The type of the point itself.</typeparam>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.PathInternal">
+            <summary>
+            Gets or sets the path without any following logic.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.Path">
+            <summary>
+            Gets the parent path holding this point.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.Index">
+            <summary>
+            Gets the index of this point in the parent path or -1 if there is no parent.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.Rotate">
+            <summary>
+            Gets or sets the rotation of the object in radian.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.Scale">
+            <summary>
+            Gets or sets the scale of the object. Might be optional for specific path types.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.Translate">
+            <summary>
+            Gets or sets the position at which the object is placed.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.PreviousPoints">
+            <summary>
+            Gets or sets the list of point instances preceeding this one.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.NextPoints">
+            <summary>
+            Gets or sets the list of point instances following this one.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.PreviousPointIndices">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointReference"/> instances for preceeding points.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.NextPointIndices">
+            <summary>
+            Gets or sets the list of <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointReference"/> instances for succeeding points.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointBase`2.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2">
+            <summary>
+            Represents a list of points forming a path.
+            </summary>
+            <typeparam name="TPath">The type of the path holding the points.</typeparam>
+            <typeparam name="TPoint">The type of the points.</typeparam>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Parent">
+            <summary>
+            Gets the path consisting of the points in this collection.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.IsFixedSize">
+            <summary>
+            Gets a value indicating whether the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> has a fixed size.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> is read-only.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.IsSynchronized">
+            <summary>
+            Gets a value indicating whether access to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> is
+            synchronized (thread safe).
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.SyncRoot">
+            <summary>
+            Not supported by this class.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.System#Collections#IList#Item(System.Int32)">
+            <summary>
+            Gets or sets the element at the given <paramref name="index"/>.
+            </summary>
+            <param name="index">The index of the element..</param>
+            <returns>The element at the given index.</returns>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Item(System.Int32)">
+            <summary>
+            Gets or sets the point at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the point to get or set.</param>
+            <returns>The point at the specified index.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Add(`1)">
+            <summary>
+            Adds a point to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+            <param name="item">The point to add to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Add(System.Object)">
+            <summary>
+            Adds a point to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> and returns the index at which it was
+            added.
+            </summary>
+            <param name="value">The point to add to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+            <returns>The index at which the point was added.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.AddRange(System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Adds the point instances of the specified collection to the end of the
+            <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+            <param name="instances">The collection whose elements should be added to the end of the
+            <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>. The collection itself cannot be <c>null</c>, but it can
+            contain elements that are <c>null</c>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Clear">
+            <summary>
+            Removes all items from the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Contains(`1)">
+            <summary>
+            Determines whether the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> contains a specific point.
+            </summary>
+            <param name="item">The point to locate in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </param>
+            <returns><c>true</c> if the point is found in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>;
+            otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Contains(System.Object)">
+            <summary>
+            Determines whether the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> contains a specific point.
+            </summary>
+            <param name="value">The point to locate in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </param>
+            <returns><c>true</c> if the point is found in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>;
+            otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.CopyTo(`1[],System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> to an <see cref="T:System.Array"/>,
+            starting at a particular <see cref="T:System.Array"/> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied
+            from <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>. The <see cref="T:System.Array"/> must have zero-based
+            indexing.</param>
+            <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.CopyTo(System.Array,System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> to an <see cref="T:System.Array"/>,
+            starting at a particular <see cref="T:System.Array"/> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied
+            from <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>. The <see cref="T:System.Array"/> must have zero-based
+            indexing.</param>
+            <param name="index">The zero-based index in <paramref name="array"/> at which copying begins.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>An enumerator that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.IndexOf(`1)">
+            <summary>
+            Determines the index of a specific item in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+            <returns>The index of the point if found in the list; otherwise, -1.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.IndexOf(System.Object)">
+            <summary>
+            Determines the index of a specific item in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+            <param name="value">The object to locate in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+            <returns>The index of the point if found in the list; otherwise, -1.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Insert(System.Int32,`1)">
+            <summary>
+            Inserts a point to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which the point should be inserted.</param>
+            <param name="item">The point to insert into the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Insert(System.Int32,System.Object)">
+            <summary>
+            Inserts a point to the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which the point should be inserted.</param>
+            <param name="value">The point to insert into the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Remove(`1)">
+            <summary>
+            Removes the first occurrence of a specific point from the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+            <param name="item">The point to remove from the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+            <returns><c>true</c> if the point was successfully removed from the
+            <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>; otherwise, <c>false</c>. This method also returns
+            <c>false</c> if the point is not found in the original <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.Remove(System.Object)">
+            <summary>
+            Removes the first occurrence of a specific point from the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.
+            </summary>
+            <param name="value">The point to remove from the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/>.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.RemoveAt(System.Int32)">
+            <summary>
+            Removes the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2"/> point at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the point to remove.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointCollection`2.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerable"/> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PathPointReference">
+            <summary>
+            Represents the serialized index to a path and a point in it from the course definition.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointReference.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointReference"/> class.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PathPointReference.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PathPointReference"/> class with the given indices.
+            </summary>
+            <param name="pathIndex">The path index.</param>
+            <param name="pointIndex">The point index.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointReference.PathIndex">
+            <summary>
+            Gets or sets the index of the path instance referenced from the list of enemy paths in the course
+            definition.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PathPointReference.PointIndex">
+            <summary>
+            Gets or sets the index of the path point of the path referenced by <see cref="P:Syroot.NintenTools.MarioKart8.Courses.PathPointReference.PathIndex"/>.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PrmObject">
+            <summary>
+            Represents an object on a course which is translated, rotated and scaled in space.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PrmObject.Prm1">
+            <summary>
+            Gets or sets the first parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PrmObject.Prm2">
+            <summary>
+            Gets or sets the second parameter.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PullPath">
+            <summary>
+            Represents a path a driver is pulled along.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.PullPathPoint">
+            <summary>
+            Represents a point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.PullPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PullPathPoint.Prm1">
+            <summary>
+            Gets or sets the first parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.PullPathPoint.Prm2">
+            <summary>
+            Gets or sets the second parameter.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.PullPathPoint.GetPathReferenceList(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Returns the array of paths in the <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> which can be referenced by previous and
+            next points.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> to get the paths from.</param>
+            <returns>The array of paths which can be referenced.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera">
+            <summary>
+            Represents the camera movements and cuts triggered by drivers in the replay video.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.AngleX">
+            <summary>
+            Gets or sets an unknown angle on the X axis.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.AngleY">
+            <summary>
+            Gets or sets an unknown angle on the Y axis.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.AutoFovy">
+            <summary>
+            Gets or sets a value indicating whether the field of view angle is computed in accordance to the distance to
+            the driver who triggered the camera.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Type">
+            <summary>
+            Gets or sets an unknown camera type.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Path">
+            <summary>
+            Gets or sets the <see cref="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Path"/> this camera moves along.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.DepthOfField">
+            <summary>
+            Gets or sets a value indicating the blur effect for far-away geometry.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Distance">
+            <summary>
+            Gets or sets the distance of the camera to the driver.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Follow">
+            <summary>
+            Gets or sets a value indicating whether to lock the view target onto the driver who triggered the camera.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Fovy">
+            <summary>
+            Gets or sets the field of view angle possibly at the start of the move.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Fovy2">
+            <summary>
+            Gets or sets the field of view angle possibly at the end of the move.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.FovySpeed">
+            <summary>
+            Gets or sets a speed possibly controlling how the FoV change is done.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Group">
+            <summary>
+            Gets or sets the group this camera belongs to.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Prm1">
+            <summary>
+            Gets or sets the first parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Prm2">
+            <summary>
+            Gets or sets the second parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Pitch">
+            <summary>
+            Gets or sets the rotation around the X axis.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Yaw">
+            <summary>
+            Gets or sets the rotation around the Y axis.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.Roll">
+            <summary>
+            Gets or sets the rotation around the Z axis.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between BYAML instances to be resolved to provide real instances
+            instead of the raw values in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReplayCamera.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between BYAML instances to be serialized into raw values stored in the
+            BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint">
+            <summary>
+            Represents a return point of a <see cref="T:Syroot.NintenTools.MarioKart8.Courses.LapPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.ReturnType">
+            <summary>
+            Gets or sets an unknown return type.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.HasError">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.JugemPathPoint">
+            <summary>
+            Gets or sets a referenced <see cref="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.JugemPathPoint"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.Normal">
+            <summary>
+            Gets or sets the spatial normal.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.Position">
+            <summary>
+            Gets or sets the spatial position.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.Tangent">
+            <summary>
+            Gets or sets the spatial tangent.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReturnPoint.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy">
+            <summary>
+            Represents a return point of an <see cref="T:Syroot.NintenTools.MarioKart8.Courses.EnemyPath"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.ReturnType">
+            <summary>
+            Gets or sets an unknown return type.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.HasError">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.JugemIndex">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.JugemPath">
+            <summary>
+            Gets or sets an unknown value.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.Normal">
+            <summary>
+            Gets or sets the spatial normal.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.Position">
+            <summary>
+            Gets or sets the spatial position.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.Tangent">
+            <summary>
+            Gets or sets the spatial tangent.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.DeserializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Reads data from the given <paramref name="dictionary"/> to satisfy members.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to read the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.SerializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Writes instance members into the given <paramref name="dictionary"/> to store them as BYAML data.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.Dictionary`2"/> to store the data in.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.DeserializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references of course data objects to be resolved to provide real instances instead of the raw values
+            in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.ReturnPointEnemy.SerializeReferences(Syroot.NintenTools.MarioKart8.Courses.CourseDefinition)">
+            <summary>
+            Allows references between course objects to be serialized into raw values stored in the BYAML.
+            </summary>
+            <param name="courseDefinition">The <see cref="T:Syroot.NintenTools.MarioKart8.Courses.CourseDefinition"/> providing the objects.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.ReturnPointErrorType">
+            <summary>
+            Gets or sets values seen in hasError members.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ReturnPointErrorType.None">
+            <summary>
+            Unknown value.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Courses.ReturnPointErrorType.NoCollision">
+            <summary>
+            Unknown value. Name is a guess on the ReturnPointEnemy names seen for hasError as it is the only other
+            appearing integer for ReturnPoint.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.SoundObj">
+            <summary>
+            Represents a region in which a sound is emitted.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SoundObj.ModeInclusion">
+            <summary>
+            Gets or sets the game modes in which this Obj will appear.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SoundObj.Prm1">
+            <summary>
+            Gets or sets the first parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SoundObj.Prm2">
+            <summary>
+            Gets or sets the second parameter.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SoundObj.Single">
+            <summary>
+            Gets or sets an unknown setting.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SoundObj.TopView">
+            <summary>
+            Gets or sets an unknown setting which has never been used in the original courses.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.SoundObj.DeserializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Reads data from the given <paramref name="dictionary"/> to satisfy members.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to read the data from.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Courses.SoundObj.SerializeByaml(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Writes instance members into the given <paramref name="dictionary"/> to store them as BYAML data.
+            </summary>
+            <param name="dictionary">The <see cref="T:System.Collections.Generic.Dictionary`2"/> to store the data in.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.SpatialObject">
+            <summary>
+            Represents an object on a course which is translated, rotated and scaled in space.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SpatialObject.Rotate">
+            <summary>
+            Gets or sets the rotation of the object in radians.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SpatialObject.Scale">
+            <summary>
+            Gets or sets the scale of the object.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.SpatialObject.Translate">
+            <summary>
+            Gets or sets the position at which the object is placed.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Courses.UnitObject">
+            <summary>
+            Represents an object in the course which can be referenced by its <see cref="P:Syroot.NintenTools.MarioKart8.Courses.UnitObject.UnitIdNum"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Courses.UnitObject.UnitIdNum">
+            <summary>
+            Gets or sets a number identifying this object. Can be non-unique or 0 without any issues.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.ILoadable">
+            <summary>
+            Represents data which can be loaded by providing a <see cref="T:System.IO.Stream"/> to read from.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ILoadable.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after saving the instance.
+            </param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.ILoadableFile">
+            <summary>
+            Represents a file which can be loaded by providing a file name.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ILoadableFile.Load(System.String)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.IO.BinaryDataReaderExtensions">
+            <summary>
+            Represents extension methods for <see cref="T:Syroot.BinaryData.BinaryDataReader"/> instances.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataReaderExtensions.ReadTriangles(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFace"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFace"/> instances.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataReaderExtensions.ReadVector3(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Vector3"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector3"/> instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataReaderExtensions.ReadVector3s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Vector3"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector3"/> instances.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataReaderExtensions.ReadVector3F(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Vector3F"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector3F"/> instance.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataReaderExtensions.ReadVector3Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Vector3F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector3F"/> instances.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.IO.BinaryDataWriterExtensions">
+            <summary>
+            Represents extension methods for <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> instances.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.NintenTools.MarioKart8.Collisions.KclFace[])">
+            <summary>
+            Writes <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFace"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="T:Syroot.NintenTools.MarioKart8.Collisions.KclFace"/> instances.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Vector3"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Vector3"/> instance.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3[])">
+            <summary>
+            Writes <see cref="T:Syroot.Maths.Vector3"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="T:Syroot.Maths.Vector3"/> instances.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3F)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Vector3F"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Vector3F"/> instance.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.IO.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3F[])">
+            <summary>
+            Writes <see cref="T:Syroot.Maths.Vector3F"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="T:Syroot.Maths.Vector3F"/> instances.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.ISaveable">
+            <summary>
+            Represents data which can be saved by providing a <see cref="T:System.IO.Stream"/>to write to.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ISaveable.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the data into the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the data to.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after saving the instance.
+            </param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.ISaveableFile">
+            <summary>
+            Represents a file which can be saved by providing a file name.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.ISaveableFile.Save(System.String)">
+            <summary>
+            Saves the data in the given file.
+            </summary>
+            <param name="fileName">The name of the file to save the data in.</param>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Maths">
+            <summary>
+            Represents a collection of mathematical functions.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Maths.GetNext2Exponent(System.Single)">
+            <summary>
+            Gets the next power of 2 which results in a value bigger than or equal to <paramref name="value"/>.
+            </summary>
+            <param name="value">The value to which the next power of 2 will be determined.</param>
+            <returns>The next power of resulting in a value bigger than or equal to the given value.</returns>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Maths.TriangleCubeOverlap(Syroot.NintenTools.MarioKart8.Triangle,Syroot.Maths.Vector3F,System.Single)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="triangle"/> overlaps a cube positioned at the
+            <paramref name="cubeCenter"/> expanding with <paramref name="cubeHalfSize"/>.
+            </summary>
+            <param name="triangle">The <see cref="T:Syroot.NintenTools.MarioKart8.Triangle"/> to check for overlaps.</param>
+            <param name="cubeCenter">The positional <see cref="T:Syroot.Maths.Vector3F"/> at which the cube originates.</param>
+            <param name="cubeHalfSize">The half length of one edge of the cube.</param>
+            <returns><c>true</c> when the triangle intersects with the cube, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="T:Syroot.NintenTools.MarioKart8.Triangle">
+            <summary>
+            Represents a polygon in 3-dimensional space, defined by 3 vertices storing their positions.
+            </summary>
+        </member>
+        <member name="F:Syroot.NintenTools.MarioKart8.Triangle.Vertices">
+            <summary>
+            Gets the vertices which store the corner positions of the triangle.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.MarioKart8.Triangle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syroot.NintenTools.MarioKart8.Triangle"/> class.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.MarioKart8.Triangle.Normal">
+            <summary>
+            Gets the face normal of this triangle.
+            </summary>
+        </member>
+    </members>
+</doc>

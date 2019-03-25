@@ -302,5 +302,17 @@ namespace FirstPlugin.Forms
                 material.shaderassign.attributes = editor.GetNewInputs();
             }
         }
+
+        private void textBoxMaterialName_TextChanged(object sender, EventArgs e){
+            material.Text = textBoxMaterialName.Text;
+        }
+
+        private void textBoxShaderArchive_TextChanged(object sender, EventArgs e) {
+            material.shaderassign.ShaderArchive = textBoxShaderArchive.Text;
+        }
+
+        private void textBoxShaderModel_TextChanged(object sender, EventArgs e) {
+            material.shaderassign.ShaderModel = textBoxShaderModel.Text;
+        }
     }
 }

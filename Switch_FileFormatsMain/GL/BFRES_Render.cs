@@ -599,7 +599,7 @@ namespace FirstPlugin
        //     if (!mdl.Skeleton.bones[m.boneIndx].Visible)
        //         m.Checked = false;
 
-            if (m.Checked && mdl.Skeleton.bones[m.BoneIndex].Visible)
+            if (m.Checked && mdl.Skeleton.bones.Count > 0 && mdl.Skeleton.bones[m.BoneIndex].Visible)
             {
                 shader.SetVector3("materialSelectColor", new Vector3(0));
                 if (m.GetMaterial().IsSelected)

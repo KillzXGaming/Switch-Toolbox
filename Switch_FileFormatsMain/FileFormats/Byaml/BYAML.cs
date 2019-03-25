@@ -69,7 +69,7 @@ namespace FirstPlugin
 
         public ByamlEditor OpenForm()
         {
-            ByamlEditor editor = new ByamlEditor(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, FileName);
+            ByamlEditor editor = new ByamlEditor(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, this);
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
@@ -82,9 +82,7 @@ namespace FirstPlugin
 
             IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
-            Console.WriteLine($"IsDialog " + IsDialog);
-
-            data = ByamlFile.LoadN(stream, false);
+            data = ByamlFile.LoadN(stream, true);
         }
         public void Unload()
         {
