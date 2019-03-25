@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox
+namespace Toolbox
 {
     public partial class CreditsWindow : Form
     {

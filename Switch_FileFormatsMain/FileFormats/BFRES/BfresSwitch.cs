@@ -179,8 +179,6 @@ namespace FirstPlugin
         public static void ReadShapesVertices(FSHP fshp, Shape shp, VertexBuffer vertexBuffer, FMDL model)
         {
             fshp.boundingBoxes.Clear();
-            fshp.boundingRadius.Clear();
-            fshp.BoneIndices.Clear();
 
             foreach (Bounding bnd in shp.SubMeshBoundings)
             {
@@ -189,10 +187,8 @@ namespace FirstPlugin
                 box.Extend = new Vector3(bnd.Extent.X, bnd.Extent.Y, bnd.Extent.Z);
                 fshp.boundingBoxes.Add(box);
             }
-            foreach (float rad in shp.RadiusArray)
-            {
-                fshp.boundingRadius.Add(rad);
-            }
+
+            fshp.boundingRadius = shp.RadiusArray.ToList();
 
             fshp.VertexBufferIndex = shp.VertexBufferIndex;
             fshp.Shape = shp;
@@ -203,11 +199,7 @@ namespace FirstPlugin
             fshp.TargetAttribCount = shp.TargetAttribCount;
             fshp.MaterialIndex = shp.MaterialIndex;
 
-            if (shp.SkinBoneIndices != null)
-            {
-                foreach (ushort bn in shp.SkinBoneIndices)
-                    fshp.BoneIndices.Add(bn);
-            }
+            fshp.BoneIndices = shp.SkinBoneIndices.ToList();
 
             ReadMeshes(fshp, shp);
             ReadVertexBuffer(fshp, vertexBuffer, model);

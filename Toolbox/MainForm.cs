@@ -899,5 +899,16 @@ namespace Toolbox
             FileAssociationForm form = new FileAssociationForm();
             form.ShowDialog();
         }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreditsWindow window = new CreditsWindow();
+            window.Show();
+        }
     }
 }

@@ -15,9 +15,6 @@ namespace Switch_Toolbox.Library.Animations
             {
                 anim.NextFrame(skeleton);
 
-                //Add frames to the playing animation
-                anim.Frame += 1f;
-
                 //Reset it when it reaches the total frame count
                 if (anim.Frame >= anim.FrameCount)
                     anim.Frame = 0;
@@ -36,6 +33,9 @@ namespace Switch_Toolbox.Library.Animations
                     seAnim.AddRotationKey(boneAnim.Text, frame, rotation.X, rotation.Y, rotation.Z, rotation.W);
                     seAnim.AddScaleKey(boneAnim.Text, frame, scale.X, scale.Y, scale.Z);
                 }
+
+                //Add frames to the playing animation
+                anim.Frame += 1f;
             }
 
             seAnim.Write(FileName);
