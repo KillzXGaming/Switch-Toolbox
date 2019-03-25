@@ -917,22 +917,17 @@ namespace Bfres.Structs
 
                     var bone = skel.bones[skel.Node_Array[BoneIndex]];
                     trans = bone.invert;
-
-                    if (IsPos)
-                        return Vector3.TransformPosition(position, trans);
-                    else
-                        return Vector3.TransformNormal(position, trans);
                 }
                 else
                 {
                     var bone = skel.bones[BoneIndex];
                     trans = bone.invert;
-
-                    if (IsPos)
-                        return Vector3.TransformPosition(position, trans);
-                    else
-                        return Vector3.TransformNormal(position, trans);
                 }
+
+                if (IsPos)
+                    return Vector3.TransformPosition(position, trans);
+                else
+                    return Vector3.TransformNormal(position, trans);
             }
             catch
             {
