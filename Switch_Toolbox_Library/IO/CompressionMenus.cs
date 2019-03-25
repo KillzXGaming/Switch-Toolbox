@@ -115,7 +115,13 @@ namespace Switch_Toolbox.Library.IO
                         SaveFileForCompression(STLibraryCompression.ZSTD.Decompress(data));
                         break;
                     case CompressionType.Lz4f:
-                        SaveFileForCompression(STLibraryCompression.Type_LZ4F.Decompress(data));
+                        using (var reader = new FileReader(data))
+                        {
+                            reader.Position = 0;
+                            int OuSize = reader.ReadInt32();
+                            int InSize = data.Length - 4;
+                            SaveFileForCompression(STLibraryCompression.Type_LZ4F.Decompress(reader.getSection(4, InSize)));
+                        }
                         break;
                     case CompressionType.Lz4:
                         SaveFileForCompression(STLibraryCompression.Type_LZ4.Decompress(data));
