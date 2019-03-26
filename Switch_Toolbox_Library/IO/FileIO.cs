@@ -76,7 +76,7 @@ namespace Switch_Toolbox.Library.IO
                             data = STLibraryCompression.Type_LZ4.Compress(data);
                             break;
                         case CompressionType.Lz4f:
-                            data = STLibraryCompression.Type_LZ4.Compress(data);
+                            data = STLibraryCompression.Type_LZ4F.Compress(data);
                             break;
                         case CompressionType.Gzip:
                             data = STLibraryCompression.GZIP.Compress(data);
