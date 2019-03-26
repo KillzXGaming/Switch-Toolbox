@@ -97,10 +97,6 @@ namespace FirstPlugin
         }
         public static void ReadModel(FMDL model, Model mdl)
         {
-            Console.WriteLine("matcount " + mdl.Materials.Count);
-            Console.WriteLine("shpcount " + mdl.Shapes.Count);
-            Console.WriteLine("skelcount " + mdl.Skeleton.Bones.Count);
-
             if (model == null)
                 model = new FMDL();
             model.Text = mdl.Name;
@@ -659,7 +655,6 @@ namespace FirstPlugin
                     shaderParam.PaddingLength = param.PaddingLength;
 
                     reader.Seek(param.DataOffset, System.IO.SeekOrigin.Begin);
-                    Console.WriteLine(shaderParam.Name + " " + shaderParam.Type + " " + shaderParam.HasPadding);
                     shaderParam.ReadValue(reader, (int)param.DataSize);
 
                     m.matparam.Add(param.Name, shaderParam);

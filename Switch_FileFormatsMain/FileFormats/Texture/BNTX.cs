@@ -166,6 +166,7 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Import, Keys.Control | Keys.R));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Texture", null, ImportTextureAction, Keys.Control | Keys.I));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Textures (From Folder)", null, ReplaceAll, Keys.Control | Keys.T));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Textures", null, ExportAll, Keys.Control | Keys.A));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
@@ -522,6 +523,27 @@ namespace FirstPlugin
                 GC.Collect();
             }
         }
+
+        private void ReplaceAll(object sender, EventArgs args)
+        {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
+                {
+                    string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
+
+                    foreach (TextureData node in Textures.Values)
+                    {
+                        if (FileName == node.Text)
+                        {
+                            node.Replace(file);
+                        }
+                    }
+                }
+            }
+        }
+
         private void ExportAll(object sender, EventArgs args)
         {
             List<string> Formats = new List<string>();
