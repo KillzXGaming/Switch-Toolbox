@@ -599,7 +599,8 @@ namespace Switch_Toolbox.Library
         {  
             if (RenderableTex == null)
                 RenderableTex = new RenderableTex();
-           
+
+            RenderableTex.GLInitialized = false;
             RenderableTex.LoadOpenGLTexture(this);
         }
         public static bool IsAtscFormat(TEX_FORMAT Format)

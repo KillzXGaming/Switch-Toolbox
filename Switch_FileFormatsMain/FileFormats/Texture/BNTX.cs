@@ -1061,6 +1061,7 @@ namespace FirstPlugin
             Texture = setting.FromBitMap(setting.DataBlockOutput, setting);
             Texture.Name = Text;
             Load(Texture);
+
             LoadOpenGLTexture();
 
             UpdateBfresTextureMapping();
