@@ -204,6 +204,8 @@ namespace Switch_Toolbox.Library
             matTex.wrapModeS = SetWrapMode(tex.WrapModeU);
             matTex.wrapModeT = SetWrapMode(tex.WrapModeV);
 
+            STConsole.WriteLine($"Getting assimp texture slot {matTex.Name} Type {matTex.Type}");
+
             return matTex;
         }
         private int SetWrapMode(TextureWrapMode wrap)

@@ -867,12 +867,14 @@ namespace Bfres.Structs
                             shape.vertexAttributes = settings.CreateNewAttributes();
                             shape.BoneIndex = obj.BoneIndex;
 
+                            STConsole.WriteLine(Text + " " + obj.MaterialIndex);
+
                             if (UseMats)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
                                 shape.MaterialIndex = 0;
 
-                            if (materials.Count >= shape.MaterialIndex)
+                            if (shape.MaterialIndex >= materials.Count)
                                 shape.MaterialIndex = 0;
 
                             shape.Text = obj.ObjectName;
