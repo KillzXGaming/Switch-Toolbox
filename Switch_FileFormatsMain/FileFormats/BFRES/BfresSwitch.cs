@@ -85,6 +85,7 @@ namespace FirstPlugin
             }
             return model;
         }
+
         public static void ReadModel(FMDL model, Model mdl)
         {
             if (model == null)
@@ -92,7 +93,8 @@ namespace FirstPlugin
 
             model.Text = mdl.Name;
             model.Skeleton = new FSKL(mdl.Skeleton);
-            model.Nodes[2] = model.Skeleton.node;
+            model.Nodes.RemoveAt(2);
+            model.Nodes.Add(model.Skeleton.node);
 
             model.Model = mdl;
             foreach (Material mat in mdl.Materials)

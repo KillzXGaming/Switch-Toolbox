@@ -102,7 +102,8 @@ namespace FirstPlugin
             model.Text = mdl.Name;
             model.Skeleton = new FSKL(mdl.Skeleton);
 
-            model.Nodes[2] = model.Skeleton.node;
+            model.Nodes.RemoveAt(2);
+            model.Nodes.Add(model.Skeleton.node);
 
             model.ModelU = mdl;
             foreach (Material mat in mdl.Materials.Values)
