@@ -310,7 +310,15 @@ namespace FirstPlugin
         private void btnRemove_Click(object sender, EventArgs e)
         {
             if (listViewCustom1.SelectedIndices.Count > 0)
-                listViewCustom1.Items.RemoveAt(listViewCustom1.SelectedIndices[0]);
+            {
+                int index = listViewCustom1.SelectedIndices[0];
+                listViewCustom1.Items.RemoveAt(index);
+
+                if (userData != null)
+                    userData.RemoveAt(index);
+                if (userDataNX != null)
+                    userDataNX.RemoveAt(index);
+            }
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
