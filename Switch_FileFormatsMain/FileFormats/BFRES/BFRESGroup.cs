@@ -70,7 +70,7 @@ namespace Bfres.Structs
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("New", null, NewAction, Keys.Control | Keys.N));
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Import", null, ImportAction, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace All", null, ReplaceAllAction, Keys.Control | Keys.R));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace (From Folder)", null, ReplaceAllAction, Keys.Control | Keys.R));
             ContextMenuStrip.Items.Add(new STToolStripSeparator());
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Sort", null, SortAction, Keys.Control | Keys.S));
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));

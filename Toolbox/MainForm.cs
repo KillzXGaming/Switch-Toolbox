@@ -38,6 +38,10 @@ namespace Toolbox
 
             //Redo setting this since designer keeps resetting this
             tabForms.myBackColor = FormThemes.BaseTheme.FormBackColor;
+
+            BtnMdiClose.Visible = false;
+            BtnMdiMinMax.Visible = false;
+            BtnMdiMinimize.Visible = false;
         }
 
         public void Reload()
@@ -823,6 +827,8 @@ namespace Toolbox
                     this.ActiveMdiChild.Tag = tp;
                     this.ActiveMdiChild.FormClosed +=
                         new FormClosedEventHandler(ActiveMdiChild_FormClosed);
+                    this.ActiveMdiChild.SizeChanged +=
+                        new EventHandler(ActiveMdiChild_StateChanged);
                 }
                 else
                 {
@@ -849,6 +855,26 @@ namespace Toolbox
                 if (!tabForms.Visible) tabForms.Visible = true;
 
             }
+        }
+
+        private void ActiveMdiChild_StateChanged(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild == null)
+                return;
+
+            if (ActiveMdiChild.WindowState == FormWindowState.Maximized)
+            {
+                BtnMdiClose.Visible = true;
+                BtnMdiMinMax.Visible = true;
+                BtnMdiMinimize.Visible = true;
+            }
+            else
+            {
+                BtnMdiClose.Visible = false;
+                BtnMdiMinMax.Visible = false;
+                BtnMdiMinimize.Visible = false;
+            }
+
         }
 
         private const int WM_SETREDRAW = 11;
@@ -909,6 +935,91 @@ namespace Toolbox
         {
             CreditsWindow window = new CreditsWindow();
             window.Show();
+        }
+
+        private void BtnMinMax_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnMinMax_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnMinMax_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnClose_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnClose_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnMdiClose_MouseEnter(object sender, System.EventArgs e)
+        {
+            BtnMdiClose.Image = Switch_Toolbox.Library.Properties.Resources.Close_Hover;
+        }
+
+        private void BtnMdiClose_MouseLeave(object sender, System.EventArgs e)
+        {
+            BtnMdiClose.Image = Switch_Toolbox.Library.Properties.Resources.Close;
+        }
+
+        private void BtnMdiMinMax_MouseEnter(object sender, EventArgs e)
+        {
+            BtnMdiMinMax.Image = Switch_Toolbox.Library.Properties.Resources.maximize_sele;
+        }
+
+        private void BtnMdiMinMax_MouseLeave(object sender, EventArgs e)
+        {
+            BtnMdiMinMax.Image = Switch_Toolbox.Library.Properties.Resources.maximize;
+        }
+
+        private void BtnMdiMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            BtnMdiMinimize.Image = Switch_Toolbox.Library.Properties.Resources.minimize_sele;
+        }
+
+        private void BtnMdiMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            BtnMdiMinimize.Image = Switch_Toolbox.Library.Properties.Resources.minimize;
+        }
+
+        private void BtnMdiClose_Click(object sender, EventArgs e)
+        {
+            foreach (var child in this.MdiChildren)
+            {
+                if (child == tabForms.SelectedTab.Tag)
+                {
+                    child.Close();
+                    return;
+                }
+            }
+        }
+
+        private void BtnMdiMinMax_Click(object sender, EventArgs e)
+        {
+            LayoutMdi(MdiLayout.Cascade);
+
+            foreach (STForm frm in this.MdiChildren) frm.MDIWindowed();
+        }
+
+        private void BtnMdiMinimize_Click(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild != null)
+                ActiveMdiChild.WindowState = FormWindowState.Minimized;
         }
     }
 }

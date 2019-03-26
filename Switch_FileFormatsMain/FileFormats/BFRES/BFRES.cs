@@ -708,6 +708,8 @@ namespace FirstPlugin
             if (resFile.ExternalFiles.Count > 0)
             {
                 int index = 0;
+
+                //This also can be set to true if we don't want to rebuild the bntx for debug purposes
                 bool IsTexturesReplaced = false;
 
                 foreach (var anim in resFile.ExternalFiles)

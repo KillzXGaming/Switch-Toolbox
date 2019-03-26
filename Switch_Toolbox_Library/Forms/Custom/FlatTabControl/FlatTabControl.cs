@@ -57,14 +57,14 @@ namespace FlatTabControl
 			leftRightImages = new ImageList();
 			//leftRightImages.ImageSize = new Size(16, 16); // default
 
-		/*	System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FlatTabControl));
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FlatTabControl));
 			Bitmap updownImage = ((System.Drawing.Bitmap)(resources.GetObject("TabIcons.bmp")));
 			
 			if (updownImage != null)
 			{
 				updownImage.MakeTransparent(Color.White);
-				leftRightImages.Images.AddStrip(updownImage);
-			}*/
+			leftRightImages.Images.AddStrip(updownImage);
+			}
 		}
 
 		/// <summary> 

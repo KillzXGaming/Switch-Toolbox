@@ -912,7 +912,7 @@ namespace Switch_Toolbox.Library
             {
                 foreach (var surface in data)
                 {
-                    writer.Write(surface.mipmaps[0]);
+                    writer.Write(Utils.CombineByteArray(surface.mipmaps.ToArray()));
                 }
             }
             else

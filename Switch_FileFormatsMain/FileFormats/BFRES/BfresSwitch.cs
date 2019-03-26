@@ -199,6 +199,9 @@ namespace FirstPlugin
             fshp.TargetAttribCount = shp.TargetAttribCount;
             fshp.MaterialIndex = shp.MaterialIndex;
 
+            if (shp.SkinBoneIndices == null)
+                shp.SkinBoneIndices = new List<ushort>();
+
             fshp.BoneIndices = shp.SkinBoneIndices.ToList();
 
             ReadMeshes(fshp, shp);
@@ -694,14 +697,18 @@ namespace FirstPlugin
                 texture.wrapModeW = (int)mat.Samplers[id].WrapModeW;
                 texture.SamplerName = mat.SamplerDict.GetKey(id);
 
-                Console.WriteLine("Filter " + mat.Samplers[id].FilterMode);
+                string useSampler = texture.SamplerName;
+
+                //Use the fragment sampler in the shader assign section. It's usually more accurate this way
+                if (m.shaderassign.samplers.ContainsKey(texture.SamplerName))
+                    useSampler = m.shaderassign.samplers[texture.SamplerName];
 
                 bool IsAlbedo = Misc.HackyTextureList.Any(TextureName.Contains);
 
 
                 if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
                 {
-                    if (texture.SamplerName == "_a0")
+                    if (useSampler == "_a0")
                     {
                         if (AlbedoCount == 0)
                         {
@@ -710,32 +717,32 @@ namespace FirstPlugin
                             texture.Type = MatTexture.TextureType.Diffuse;
                         }
                     }
-                    if (texture.SamplerName == "_n0")
+                    if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-                    if (texture.SamplerName == "_e0")
+                    if (useSampler == "_e0")
                     {
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
-                    if (texture.SamplerName == "_s0")
+                    if (useSampler == "_s0")
                     {
                         m.HasSpecularMap = true;
                         texture.Type = MatTexture.TextureType.Specular;
                     }
-                    if (texture.SamplerName == "_x0")
+                    if (useSampler == "_x0")
                     {
                         m.HasSphereMap = true;
                         texture.Type = MatTexture.TextureType.SphereMap;
                     }
-                    if (texture.SamplerName == "_b0")
+                    if (useSampler == "_b0")
                     {
                         m.HasShadowMap = true;
                         texture.Type = MatTexture.TextureType.Shadow;
                     }
-                    if (texture.SamplerName == "_b1")
+                    if (useSampler == "_b1")
                     {
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
@@ -743,7 +750,7 @@ namespace FirstPlugin
                 }
                 else if (Runtime.activeGame == Runtime.ActiveGame.SMO)
                 {
-                    if (texture.SamplerName == "_a0")
+                    if (useSampler == "_a0")
                     {
                         if (AlbedoCount == 0)
                         {
@@ -752,12 +759,12 @@ namespace FirstPlugin
                             texture.Type = MatTexture.TextureType.Diffuse;
                         }
                     }
-                    if (texture.SamplerName == "_n0")
+                    if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-                    if (texture.SamplerName == "_e0")
+                    if (useSampler == "_e0")
                     {
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;

@@ -123,7 +123,7 @@ namespace Switch_Toolbox.Library
             return x + 1;
         }
 
-        public static byte[] _swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, int toSwizzle)
+        private static byte[] _swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, int toSwizzle)
         {
             uint block_height = (uint)(1 << blockHeightLog2);
 
@@ -154,7 +154,7 @@ namespace Switch_Toolbox.Library
 
             for (uint y = 0; y < height; y++)
             {
-                for (uint x = 0; x < width; x++)
+                for (uint x = 0; x < width;     x++)
                 {
                     uint pos;
                     uint pos_;
