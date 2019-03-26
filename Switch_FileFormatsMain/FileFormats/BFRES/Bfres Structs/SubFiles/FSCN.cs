@@ -99,13 +99,11 @@ namespace Bfres.Structs
             }
         }
 
-        public FSCN(ResU.SceneAnim scn) { LoadAnim(scn); }
-        public FSCN(SceneAnim scn) { LoadAnim(scn); }
+        public FSCN(ResU.SceneAnim scn) { Initialize(); LoadAnim(scn); }
+        public FSCN(SceneAnim scn) { Initialize(); LoadAnim(scn); }
 
         private void LoadAnim(ResU.SceneAnim scn)
         {
-            Initialize();
-
             Text = scn.Name;
 
             SceneAnimU = scn;
@@ -160,8 +158,20 @@ namespace Bfres.Structs
             public CameraAnim CameraAnim;
             public ResU.CameraAnim CameraAnimU;
 
+            public void Initialize()
+            {
+                CanRename = true;
+                CanReplace = true;
+                CanExport = true;
+                CanDelete = true;
+
+                ContextMenuStrip = new ContextMenuStrip();
+            }
+
             public void LoadAnim(CameraAnim anim)
             {
+                Initialize();
+
                 CameraAnim = anim;
 
                 Text = anim.Name;
@@ -193,6 +203,8 @@ namespace Bfres.Structs
 
             public void LoadAnim(ResU.CameraAnim anim)
             {
+                Initialize();
+
                 CameraAnimU = anim;
 
                 Text = anim.Name;
@@ -233,12 +245,24 @@ namespace Bfres.Structs
 
         public class BfresLightAnim : LightAnimation
         {
+            public void Initialize()
+            {
+                CanRename = true;
+                CanReplace = true;
+                CanExport = true;
+                CanDelete = true;
+
+                ContextMenuStrip = new ContextMenuStrip();
+            }
+
             public void LoadAnim(LightAnim anim)
             {
+                Initialize();
                 Text = anim.Name;
             }
             public void LoadAnim(ResU.LightAnim anim)
             {
+                Initialize();
                 Text = anim.Name;
             }
 
@@ -254,12 +278,24 @@ namespace Bfres.Structs
 
         public class BfresFogAnim : FogAnimation
         {
+            public void Initialize()
+            {
+                CanRename = true;
+                CanReplace = true;
+                CanExport = true;
+                CanDelete = true;
+
+                ContextMenuStrip = new ContextMenuStrip();
+            }
+
             public void LoadAnim(FogAnim anim)
             {
+                Initialize();
                 Text = anim.Name;
             }
             public void LoadAnim(ResU.FogAnim anim)
             {
+                Initialize();
                 Text = anim.Name;
             }
 

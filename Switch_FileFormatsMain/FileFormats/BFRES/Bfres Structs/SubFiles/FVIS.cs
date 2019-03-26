@@ -17,8 +17,18 @@ namespace Bfres.Structs
 
         public FVIS()
         {
+
+        }
+
+        private void Initialize()
+        {
             ImageKey = "visibilityAnim";
             SelectedImageKey = "visibilityAnim";
+
+            CanRename = true;
+            CanReplace = true;
+            CanExport = true;
+            CanDelete = true;
         }
 
         public ResFile GetResFile() {
@@ -144,8 +154,8 @@ namespace Bfres.Structs
             }
         }
 
-        public FVIS(ResU.VisibilityAnim anim) { LoadAnim(anim); }
-        public FVIS(VisibilityAnim anim) { LoadAnim(anim); }
+        public FVIS(ResU.VisibilityAnim anim) { Initialize(); LoadAnim(anim); }
+        public FVIS(VisibilityAnim anim) { Initialize(); LoadAnim(anim); }
 
         private void LoadAnim(ResU.VisibilityAnim vis)
         {

@@ -561,6 +561,12 @@ namespace Bfres.Structs
                         Model mdl = new Model();
                         mdl.Import(FileName, resFileNX);
                         mdl.Name = Text;
+
+                        Console.WriteLine(mdl.ShapeCount);
+                        Console.WriteLine(mdl.MaterialCount);
+                        Console.WriteLine(mdl.VertexBufferCount);
+                        Console.WriteLine(mdl.Skeleton.Bones.Count);
+
                         BfresSwitch.ReadModel(this, mdl);
                     }
                     IsEdited = true;
