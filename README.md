@@ -5,7 +5,7 @@ A tool to edit many formats of Nintendo Switch and Wii U.
 https://docs.google.com/spreadsheets/d/16JLhGBJL5U5hpKWspL-pzYIaRL23X1YKEmia6pbsGbc/edit#gid=1386834576
 
 ## Experimental Releases
-1.0 R1 Experimental BETA https://drive.google.com/file/d/1i_9VIhbNGLmhdv9z-9XrB29qgs0XVBLz/view?usp=sharing
+1.0 R1 Experimental BETA https://drive.google.com/file/d/1i2Bc5K-1C8w8pJMI33YEEgJPN9X3lxhi/view?usp=sharing
 
 ## Features
 
