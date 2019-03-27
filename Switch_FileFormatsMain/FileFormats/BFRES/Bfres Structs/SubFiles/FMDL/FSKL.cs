@@ -75,7 +75,6 @@ namespace Bfres.Structs
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Skeleton", null, ExportAction, Keys.Control | Keys.E));
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
                 ContextMenuStrip.Items.Add(new ToolStripSeparator());
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear All Bones", null, ClearAction, Keys.Control | Keys.C));
             }
 
             public override void Replace(string FileName)
