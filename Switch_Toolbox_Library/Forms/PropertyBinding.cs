@@ -37,7 +37,10 @@ namespace Switch_Toolbox.Library.Forms
             get; set;
         }
 
-        public bool IsBound { get => Property != null; }
+        public bool IsBound
+        {
+            get { return Property != null; }
+        }
 
         private PropertyInfo Property;
         private object BoundObject;

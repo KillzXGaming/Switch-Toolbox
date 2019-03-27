@@ -96,7 +96,7 @@ namespace Switch_Toolbox.Library
                 _fileData.Position = 0;
                 return _fileData;
             }
-            set => _fileData = value;
+            set { _fileData = value; }
         }
     }
 }
