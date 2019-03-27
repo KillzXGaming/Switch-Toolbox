@@ -31,13 +31,15 @@ namespace FlatTabControl
 		private bool bUpDown; // true when the button UpDown is required
 		private ImageList leftRightImages = null;
 		private const int nMargin = 5;
-		private Color mBackColor = Color.Transparent;
-        private Color mShadowColor = Color.Transparent;
+		private Color mBackColor = Color.Empty;
+        private Color mShadowColor = Color.Empty;
 
         public FlatTabControl()
 		{
-			// This call is required by the Windows.Forms Form Designer.
-			InitializeComponent();
+            myBackColor = FormThemes.BaseTheme.FormBackColor;
+
+            // This call is required by the Windows.Forms Form Designer.
+            InitializeComponent();
 
 			// double buffering
 			this.SetStyle(ControlStyles.UserPaint, true);
@@ -46,7 +48,6 @@ namespace FlatTabControl
 			this.SetStyle(ControlStyles.ResizeRedraw, true);
 			this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
-            myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             bUpDown = false;
 

@@ -49,6 +49,7 @@
             this.nameTB.Name = "nameTB";
             this.nameTB.Size = new System.Drawing.Size(227, 20);
             this.nameTB.TabIndex = 0;
+            this.nameTB.TextChanged += new System.EventHandler(this.nameTB_TextChanged);
             // 
             // stLabel1
             // 

@@ -442,7 +442,6 @@ namespace Switch_Toolbox.Library.IO
                     using (var source = LZ4Stream.Decode(new MemoryStream(data)))
                     {
                         source.CopyTo(mem);
-                        mem.Write(data, 0, data.Length);
                     }
                     return mem.ToArray();
                 }
@@ -452,12 +451,8 @@ namespace Switch_Toolbox.Library.IO
                 var stream = new MemoryStream();
                 using (var writer = new FileWriter(stream))
                 {
-                    
                     writer.Write(data.Length);
-
-
-                    MessageBox.Show(data.Length.ToString());
-                    byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data), LZ4.Frame.LZ4MaxBlockSize.Auto, true, true, false, false, true);
+                    byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data), LZ4.Frame.LZ4MaxBlockSize.Auto, true, true, false, true, false);
                     writer.Write(buffer, 0, buffer.Length);
                 }
                 return stream.ToArray();

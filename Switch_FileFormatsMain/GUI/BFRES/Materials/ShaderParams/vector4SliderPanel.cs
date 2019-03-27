@@ -15,7 +15,7 @@ namespace FirstPlugin.Forms
             if (IsColor)
                 return colorPB.BackColor;
             else
-                return Color.Transparent;
+                return Color.Empty;
         }
 
         public Color GetAlphaColor()
@@ -23,7 +23,7 @@ namespace FirstPlugin.Forms
             if (IsColor)
                 return alphaPB.BackColor;
             else
-                return Color.Transparent;
+                return Color.Empty;
         }
 
         public vector4SliderPanel(string UniformName, float[] values, BfresShaderParam param)

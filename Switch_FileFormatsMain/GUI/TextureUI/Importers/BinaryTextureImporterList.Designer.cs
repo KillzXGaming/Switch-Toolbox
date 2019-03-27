@@ -206,7 +206,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BackColor = System.Drawing.Color.Empty;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Location = new System.Drawing.Point(237, 0);

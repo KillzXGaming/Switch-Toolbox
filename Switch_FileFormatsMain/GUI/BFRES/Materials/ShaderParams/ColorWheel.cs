@@ -20,7 +20,7 @@ namespace FirstPlugin.Forms
 
         private void ColorWheel_Paint(object sender, PaintEventArgs e)
         {
-            DrawColorWheel(e.Graphics, Color.Transparent, 0, 0, ClientSize.Width, ClientSize.Height);
+            DrawColorWheel(e.Graphics, Color.Empty, 0, 0, ClientSize.Width, ClientSize.Height);
         }
 
         private void DrawColorWheel(Graphics gr, Color outline_color,

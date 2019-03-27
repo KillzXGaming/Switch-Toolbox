@@ -220,7 +220,7 @@ namespace Switch_Toolbox.Library
 
         private void CalculateTanBitanArrays(List<int> faces, Vector3[] tanArray, Vector3[] bitanArray, bool UseUVLayer2)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count < 3 || lodMeshes.Count <= 0)
                 return;
 
             for (int i = 0; i < lodMeshes[DisplayLODIndex].displayFaceSize; i += 3)

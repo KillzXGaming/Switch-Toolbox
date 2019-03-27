@@ -104,7 +104,7 @@
             // 
             // color1Index0
             // 
-            this.color1Index0.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index0.BackColor = System.Drawing.Color.Empty;
             this.color1Index0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index0.Location = new System.Drawing.Point(181, 46);
             this.color1Index0.Name = "color1Index0";
@@ -116,7 +116,7 @@
             // 
             // color0Index0
             // 
-            this.color0Index0.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index0.BackColor = System.Drawing.Color.Empty;
             this.color0Index0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index0.Location = new System.Drawing.Point(6, 46);
             this.color0Index0.Name = "color0Index0";
@@ -128,7 +128,7 @@
             // 
             // color0Index1
             // 
-            this.color0Index1.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index1.BackColor = System.Drawing.Color.Empty;
             this.color0Index1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index1.Location = new System.Drawing.Point(6, 102);
             this.color0Index1.Name = "color0Index1";
@@ -140,7 +140,7 @@
             // 
             // color1Index1
             // 
-            this.color1Index1.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index1.BackColor = System.Drawing.Color.Empty;
             this.color1Index1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index1.Location = new System.Drawing.Point(181, 102);
             this.color1Index1.Name = "color1Index1";
@@ -152,7 +152,7 @@
             // 
             // color0Index3
             // 
-            this.color0Index3.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index3.BackColor = System.Drawing.Color.Empty;
             this.color0Index3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index3.Location = new System.Drawing.Point(6, 214);
             this.color0Index3.Name = "color0Index3";
@@ -164,7 +164,7 @@
             // 
             // color1Index3
             // 
-            this.color1Index3.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index3.BackColor = System.Drawing.Color.Empty;
             this.color1Index3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index3.Location = new System.Drawing.Point(181, 214);
             this.color1Index3.Name = "color1Index3";
@@ -176,7 +176,7 @@
             // 
             // color0Index2
             // 
-            this.color0Index2.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index2.BackColor = System.Drawing.Color.Empty;
             this.color0Index2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index2.Location = new System.Drawing.Point(6, 158);
             this.color0Index2.Name = "color0Index2";
@@ -188,7 +188,7 @@
             // 
             // color1Index2
             // 
-            this.color1Index2.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index2.BackColor = System.Drawing.Color.Empty;
             this.color1Index2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index2.Location = new System.Drawing.Point(181, 158);
             this.color1Index2.Name = "color1Index2";
@@ -200,7 +200,7 @@
             // 
             // color0Index7
             // 
-            this.color0Index7.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index7.BackColor = System.Drawing.Color.Empty;
             this.color0Index7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index7.Location = new System.Drawing.Point(6, 438);
             this.color0Index7.Name = "color0Index7";
@@ -212,7 +212,7 @@
             // 
             // color1Index7
             // 
-            this.color1Index7.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index7.BackColor = System.Drawing.Color.Empty;
             this.color1Index7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index7.Location = new System.Drawing.Point(181, 438);
             this.color1Index7.Name = "color1Index7";
@@ -224,7 +224,7 @@
             // 
             // color0Index6
             // 
-            this.color0Index6.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index6.BackColor = System.Drawing.Color.Empty;
             this.color0Index6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index6.Location = new System.Drawing.Point(6, 382);
             this.color0Index6.Name = "color0Index6";
@@ -236,7 +236,7 @@
             // 
             // color1Index6
             // 
-            this.color1Index6.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index6.BackColor = System.Drawing.Color.Empty;
             this.color1Index6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index6.Location = new System.Drawing.Point(181, 382);
             this.color1Index6.Name = "color1Index6";
@@ -248,7 +248,7 @@
             // 
             // color0Index5
             // 
-            this.color0Index5.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index5.BackColor = System.Drawing.Color.Empty;
             this.color0Index5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index5.Location = new System.Drawing.Point(6, 326);
             this.color0Index5.Name = "color0Index5";
@@ -260,7 +260,7 @@
             // 
             // color1Index5
             // 
-            this.color1Index5.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index5.BackColor = System.Drawing.Color.Empty;
             this.color1Index5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index5.Location = new System.Drawing.Point(181, 326);
             this.color1Index5.Name = "color1Index5";
@@ -272,7 +272,7 @@
             // 
             // color0Index4
             // 
-            this.color0Index4.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index4.BackColor = System.Drawing.Color.Empty;
             this.color0Index4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index4.Location = new System.Drawing.Point(6, 270);
             this.color0Index4.Name = "color0Index4";
@@ -284,7 +284,7 @@
             // 
             // color1Index4
             // 
-            this.color1Index4.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index4.BackColor = System.Drawing.Color.Empty;
             this.color1Index4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index4.Location = new System.Drawing.Point(181, 270);
             this.color1Index4.Name = "color1Index4";
@@ -408,7 +408,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox2.BackColor = System.Drawing.Color.Empty;
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
             this.pictureBox2.Location = new System.Drawing.Point(14, 192);
             this.pictureBox2.Name = "pictureBox2";
@@ -419,7 +419,7 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox3.BackColor = System.Drawing.Color.Empty;
             this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
             this.pictureBox3.Location = new System.Drawing.Point(14, 361);
             this.pictureBox3.Name = "pictureBox3";
@@ -430,7 +430,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BackColor = System.Drawing.Color.Empty;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.Location = new System.Drawing.Point(14, 41);
             this.pictureBox1.Name = "pictureBox1";

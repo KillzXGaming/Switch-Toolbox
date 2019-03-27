@@ -16,7 +16,7 @@ namespace FirstPlugin.Forms
             if (IsColor)
                 return pictureBox1.BackColor;
             else
-                return Color.Transparent;
+                return Color.Empty;
         }
 
         public vector3SliderPanel(string UniformName, float[] values, BfresShaderParam param)

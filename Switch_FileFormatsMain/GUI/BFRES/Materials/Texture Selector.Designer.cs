@@ -43,7 +43,7 @@
             // 
             // pictureBoxCustom1
             // 
-            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Empty;
             this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
             this.pictureBoxCustom1.Location = new System.Drawing.Point(252, 25);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";

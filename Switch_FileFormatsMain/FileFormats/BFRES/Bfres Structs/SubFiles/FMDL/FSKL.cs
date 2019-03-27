@@ -31,6 +31,16 @@ namespace Bfres.Structs
             return matrices;
         }
 
+        public void AddBone(Bone bone)
+        {
+            node.Skeleton.Bones.Add(bone);
+        }
+
+        public void AddBone(ResU.Bone bone)
+        {
+            node.SkeletonU.Bones.Add(bone.Name, bone);
+        }
+
         public class fsklNode : STGenericWrapper
         {
             public FSKL fskl;
@@ -66,6 +76,31 @@ namespace Bfres.Structs
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
                 ContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear All Bones", null, ClearAction, Keys.Control | Keys.C));
+            }
+
+            public override void Replace(string FileName)
+            {
+                string extension = System.IO.Path.GetExtension(FileName);
+
+                if (extension == ".bfskl")
+                {
+                    if (SkeletonU != null)
+                    {
+                        SkeletonU = new ResU.Skeleton();
+                        SkeletonU.Import(FileName, GetResFileU());
+                        Nodes.Clear();
+                        fskl.bones.Clear();
+                        BfresWiiU.ReadSkeleton(this, SkeletonU, fskl);
+                    }
+                    else
+                    {
+                        Skeleton = new Skeleton();
+                        Skeleton.Import(FileName);
+                        Nodes.Clear();
+                        fskl.bones.Clear();
+                        BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
+                    }
+                }
             }
 
             public ResFile GetResFile()
@@ -124,11 +159,6 @@ namespace Bfres.Structs
                     Skeleton.Export(FileName, ((FMDL)Parent).GetResFile());
             }
 
-            public override void Replace(string FileName)
-            {
-                Skeleton.Export(FileName, ((FMDL)Parent).GetResFile());
-            }
-
             public override void OnClick(TreeView treeView)
             {
                 UpdateEditor();
@@ -154,11 +184,30 @@ namespace Bfres.Structs
             node = new fsklNode();
             node.fskl = this;
             node.SkeletonU = skl;
-            BfresWiiU.SetSkeleton(node, skl, this);
+            BfresWiiU.ReadSkeleton(node, skl, this);
         }
     }
     public class BfresBone : STBone
     {
+        public bool UseSmoothMatrix { get; set; }
+
+        public bool UseRigidMatrix { get; set; }
+
+        public string BoneName
+        {
+            get
+            {
+                if (BoneU != null) return BoneU.Name;
+                else return Bone.Name;
+            }
+            set
+            {
+                if (BoneU != null) BoneU.Name = value;
+                else Bone.Name = value;
+                Text = value;
+            }
+        }
+
         public bool FlagVisible = true;
 
         public ResU.ResDict<ResU.UserData> UserDataU;
@@ -179,6 +228,7 @@ namespace Bfres.Structs
             SelectedImageKey = "bone";
 
             ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Child Bone", null, NewAction, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Child Bone", null, ImportAction, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
@@ -190,7 +240,16 @@ namespace Bfres.Structs
         protected void ImportAction(object sender, EventArgs args) { ImportChild(); }
         protected void ReplaceAction(object sender, EventArgs args) { Replace(); }
         protected void NewAction(object sender, EventArgs args) { NewChild(); }
-        
+        protected void RenameAction(object sender, EventArgs args) { Rename(); }
+
+        public void Rename()
+        {
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(Text);
+
+            if (dialog.ShowDialog() == DialogResult.OK) { BoneName = dialog.textBox1.Text; }
+        }
+
         public void CloneBaseInstance(STBone genericBone)
         {
             Text = genericBone.Text;
@@ -283,6 +342,9 @@ namespace Bfres.Structs
                 BfresWiiU.ReadBone(bn, BoneU, false);
                 Nodes.Add(bn);
                 skeletonParent.bones.Add(bn);
+
+                BoneU.ParentIndex = (ushort)bn.parentIndex;
+                ((FSKL)skeletonParent).AddBone(BoneU);
             }
             else
             {
@@ -290,8 +352,11 @@ namespace Bfres.Structs
                 Bone.Name = CheckDuplicateBoneNames("NewBone");
 
                 BfresSwitch.ReadBone(bn, Bone, false);
+
                 Nodes.Add(bn);
                 skeletonParent.bones.Add(bn);
+
+                ((FSKL)skeletonParent).AddBone(Bone);
             }
         }
 
@@ -314,6 +379,7 @@ namespace Bfres.Structs
                     BfresWiiU.ReadBone(bn, BoneU, false);
                     Nodes.Add(bn);
                     skeletonParent.bones.Add(bn);
+                    ((FSKL)skeletonParent).AddBone(BoneU);
                 }
                 else
                 {
@@ -324,6 +390,7 @@ namespace Bfres.Structs
                     BfresSwitch.ReadBone(bn, Bone, false);
                     Nodes.Add(bn);
                     skeletonParent.bones.Add(bn);
+                    ((FSKL)skeletonParent).AddBone(Bone);
                 }
             }
         }

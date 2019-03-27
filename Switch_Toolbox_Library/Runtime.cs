@@ -68,7 +68,7 @@ namespace Switch_Toolbox.Library
         public static bool UseDebugDomainExceptionHandler;
         public static bool DisableUpdatePrompt;
 
-        public static bool MaximizeMdiWindow = false;
+        public static bool MaximizeMdiWindow = true;
 
         public static GridSettings gridSettings = new GridSettings();
         public class GridSettings

@@ -200,5 +200,10 @@ namespace FirstPlugin
                 SetBoneTransform(activeBone);
             }
         }
+
+        private void boneInfoPanel1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

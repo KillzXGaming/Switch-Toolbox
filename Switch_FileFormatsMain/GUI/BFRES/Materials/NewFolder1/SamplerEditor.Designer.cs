@@ -536,7 +536,7 @@
             this.textureBP.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textureBP.BackColor = System.Drawing.Color.Transparent;
+            this.textureBP.BackColor = System.Drawing.Color.Empty;
             this.textureBP.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("textureBP.BackgroundImage")));
             this.textureBP.Location = new System.Drawing.Point(14, 146);
             this.textureBP.MinimumSize = new System.Drawing.Size(280, 365);

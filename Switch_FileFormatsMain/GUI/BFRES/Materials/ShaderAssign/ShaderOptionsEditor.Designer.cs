@@ -122,7 +122,7 @@
             // ovlColumn1
             // 
             this.ovlColumn1.AspectName = "Name";
-            this.ovlColumn1.HeaderForeColor = System.Drawing.Color.Transparent;
+            this.ovlColumn1.HeaderForeColor = System.Drawing.Color.Empty;
             this.ovlColumn1.Text = "Name";
             this.ovlColumn1.Width = 170;
             // 

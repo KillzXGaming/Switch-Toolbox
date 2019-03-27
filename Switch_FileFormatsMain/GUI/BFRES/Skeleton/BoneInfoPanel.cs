@@ -36,12 +36,16 @@ namespace FirstPlugin
 
             nameIndexUD.Value = bn.GetIndex();
 
-
-            nameTB.Bind(bn, "Text");
+            nameTB.Bind(bn, "BoneName");
             parentIndexUD.Bind(bn, "parentIndex");
             visibleChk.Bind(bn, "IsVisible");
 
             Loaded = true;
+        }
+
+        private void nameTB_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

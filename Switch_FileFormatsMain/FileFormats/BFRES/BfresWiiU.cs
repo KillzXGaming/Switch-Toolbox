@@ -309,7 +309,7 @@ namespace FirstPlugin
             return attd.Data;
         }
 
-        public static void SetSkeleton(this TreeNodeCustom skl, Skeleton skeleton, FSKL RenderableSkeleton)
+        public static void ReadSkeleton(this TreeNodeCustom skl, Skeleton skeleton, FSKL RenderableSkeleton)
         {
             if (skeleton.MatrixToBoneList == null)
                 skeleton.MatrixToBoneList = new List<ushort>();

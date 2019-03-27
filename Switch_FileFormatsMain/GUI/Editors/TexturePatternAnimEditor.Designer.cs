@@ -143,7 +143,7 @@
             // 
             this.stPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.stPanel4.BackColor = System.Drawing.Color.Transparent;
+            this.stPanel4.BackColor = System.Drawing.Color.Empty;
             this.stPanel4.Controls.Add(this.btnStop);
             this.stPanel4.Controls.Add(this.btnForward1);
             this.stPanel4.Controls.Add(this.btnPlay);
@@ -247,7 +247,7 @@
             this.pictureBoxCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Empty;
             this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
             this.pictureBoxCustom1.Location = new System.Drawing.Point(167, 3);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";

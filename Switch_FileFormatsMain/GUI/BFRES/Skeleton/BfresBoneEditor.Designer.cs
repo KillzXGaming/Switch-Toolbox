@@ -155,6 +155,8 @@
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel5);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel6);
             this.stFlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stFlowLayoutPanel1.FixedHeight = false;
+            this.stFlowLayoutPanel1.FixedWidth = true;
             this.stFlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.stFlowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.stFlowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -175,8 +177,8 @@
             this.stDropDownPanel1.PanelName = "Bone Info";
             this.stDropDownPanel1.PanelValueName = "";
             this.stDropDownPanel1.SetIcon = null;
-            this.stDropDownPanel1.SetIconAlphaColor = System.Drawing.Color.Transparent;
-            this.stDropDownPanel1.SetIconColor = System.Drawing.Color.Transparent;
+            this.stDropDownPanel1.SetIconAlphaColor = System.Drawing.Color.Empty;
+            this.stDropDownPanel1.SetIconColor = System.Drawing.Color.Empty;
             this.stDropDownPanel1.Size = new System.Drawing.Size(633, 113);
             this.stDropDownPanel1.TabIndex = 0;
             // 
@@ -186,6 +188,7 @@
             this.boneInfoPanel1.Name = "boneInfoPanel1";
             this.boneInfoPanel1.Size = new System.Drawing.Size(604, 87);
             this.boneInfoPanel1.TabIndex = 1;
+            this.boneInfoPanel1.Load += new System.EventHandler(this.boneInfoPanel1_Load);
             // 
             // stDropDownPanel2
             // 
@@ -199,8 +202,8 @@
             this.stDropDownPanel2.PanelName = "Transform";
             this.stDropDownPanel2.PanelValueName = "";
             this.stDropDownPanel2.SetIcon = null;
-            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.Color.Transparent;
-            this.stDropDownPanel2.SetIconColor = System.Drawing.Color.Transparent;
+            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.Color.Empty;
+            this.stDropDownPanel2.SetIconColor = System.Drawing.Color.Empty;
             this.stDropDownPanel2.Size = new System.Drawing.Size(633, 151);
             this.stDropDownPanel2.TabIndex = 1;
             // 
@@ -627,8 +630,8 @@
             this.stDropDownPanel3.PanelName = "Billboard";
             this.stDropDownPanel3.PanelValueName = "";
             this.stDropDownPanel3.SetIcon = null;
-            this.stDropDownPanel3.SetIconAlphaColor = System.Drawing.Color.Transparent;
-            this.stDropDownPanel3.SetIconColor = System.Drawing.Color.Transparent;
+            this.stDropDownPanel3.SetIconAlphaColor = System.Drawing.Color.Empty;
+            this.stDropDownPanel3.SetIconColor = System.Drawing.Color.Empty;
             this.stDropDownPanel3.Size = new System.Drawing.Size(633, 95);
             this.stDropDownPanel3.TabIndex = 2;
             // 
@@ -703,8 +706,8 @@
             this.stDropDownPanel4.PanelName = "Matricies";
             this.stDropDownPanel4.PanelValueName = "";
             this.stDropDownPanel4.SetIcon = null;
-            this.stDropDownPanel4.SetIconAlphaColor = System.Drawing.Color.Transparent;
-            this.stDropDownPanel4.SetIconColor = System.Drawing.Color.Transparent;
+            this.stDropDownPanel4.SetIconAlphaColor = System.Drawing.Color.Empty;
+            this.stDropDownPanel4.SetIconColor = System.Drawing.Color.Empty;
             this.stDropDownPanel4.Size = new System.Drawing.Size(633, 95);
             this.stDropDownPanel4.TabIndex = 3;
             // 
@@ -795,7 +798,7 @@
             this.stDropDownPanel5.PanelName = "Transform Modes";
             this.stDropDownPanel5.PanelValueName = "";
             this.stDropDownPanel5.SetIcon = null;
-            this.stDropDownPanel5.SetIconAlphaColor = System.Drawing.Color.Transparent;
+            this.stDropDownPanel5.SetIconAlphaColor = System.Drawing.Color.Empty;
             this.stDropDownPanel5.SetIconColor = System.Drawing.Color.Transparent;
             this.stDropDownPanel5.Size = new System.Drawing.Size(633, 136);
             this.stDropDownPanel5.TabIndex = 4;

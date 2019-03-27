@@ -54,6 +54,8 @@ namespace FirstPlugin
                     {
                         var mat = MatrixExenstion.GetMatrixInverted(bone);
 
+                        bn.ParentIndex = (ushort)bone.parentIndex;
+
                         if (bn.SmoothMatrixIndex > -1)
                             model.Skeleton.InverseModelMatrices[bn.SmoothMatrixIndex] = mat;
                     }
