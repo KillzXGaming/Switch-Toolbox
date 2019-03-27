@@ -202,10 +202,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GL_EditorFramework-master\Gl_EditorFramework\Gl_EditorFramework.csproj">
-      <Project>{d593a72d-554d-40fb-9967-503cb15a744f}</Project>
-      <Name>Gl_EditorFramework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
       <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
       <Name>Switch_Toolbox_Library</Name>
@@ -376,6 +372,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="LZ4.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OpenGl_EditorFramework.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OpenGl_EditorFramework.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Projects\Recent\DUMMY.txt" />

@@ -94,6 +94,10 @@
       <HintPath>..\Toolbox\Lib\Octokit.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="OpenGl_EditorFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolbox\OpenGl_EditorFramework.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
       <Private>False</Private>
@@ -882,13 +886,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DataTyypes\IconVec4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GL_EditorFramework-master\Gl_EditorFramework\Gl_EditorFramework.csproj">
-      <Project>{d593a72d-554d-40fb-9967-503cb15a744f}</Project>
-      <Name>Gl_EditorFramework</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Cubemaps\diffuseSDR.dds" />
