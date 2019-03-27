@@ -85,6 +85,8 @@ namespace FirstPlugin.Forms
 
         public void ApplyValueSingles()
         {
+            SetColor(activeParam.Name, activeParam.ValueFloat);
+
             activeParam.ValueFloat = new float[]
             {
                 (float)barSlider1.Value,
@@ -128,7 +130,12 @@ namespace FirstPlugin.Forms
         {
             ColorDialog colorDialog = new ColorDialog();
             colorDialog.Color = pictureBox1.BackColor;
-            colorDialog.ShowDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                barSlider1.Value = colorDialog.Color.R / 255;
+                barSlider2.Value = colorDialog.Color.G / 255;
+                barSlider3.Value = colorDialog.Color.B / 255;
+            }
         }
     }
 }

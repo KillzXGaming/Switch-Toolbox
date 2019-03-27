@@ -45,7 +45,7 @@
             this.alphaPB.Size = new System.Drawing.Size(71, 16);
             this.alphaPB.TabIndex = 6;
             this.alphaPB.TabStop = false;
-            this.alphaPB.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.alphaPB.Click += new System.EventHandler(this.alphaPB_Click);
             // 
             // colorPB
             // 
@@ -54,6 +54,7 @@
             this.colorPB.Size = new System.Drawing.Size(63, 16);
             this.colorPB.TabIndex = 7;
             this.colorPB.TabStop = false;
+            this.colorPB.Click += new System.EventHandler(this.colorPB_Click);
             // 
             // barSlider4
             // 
@@ -65,6 +66,7 @@
             this.barSlider4.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.barSlider4.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.barSlider4.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider4.DataType = null;
             this.barSlider4.DrawSemitransparentThumb = false;
             this.barSlider4.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider4.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -72,6 +74,7 @@
             this.barSlider4.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.barSlider4.ForeColor = System.Drawing.Color.White;
+            this.barSlider4.IncrementAmount = 0.01F;
             this.barSlider4.InputName = "W";
             this.barSlider4.LargeChange = 5F;
             this.barSlider4.Location = new System.Drawing.Point(141, 72);
@@ -109,6 +112,7 @@
             this.barSlider3.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.barSlider3.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.barSlider3.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider3.DataType = null;
             this.barSlider3.DrawSemitransparentThumb = false;
             this.barSlider3.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider3.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -116,6 +120,7 @@
             this.barSlider3.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.barSlider3.ForeColor = System.Drawing.Color.White;
+            this.barSlider3.IncrementAmount = 0.01F;
             this.barSlider3.InputName = "Z";
             this.barSlider3.LargeChange = 5F;
             this.barSlider3.Location = new System.Drawing.Point(3, 72);
@@ -153,6 +158,7 @@
             this.barSlider2.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.barSlider2.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.barSlider2.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider2.DataType = null;
             this.barSlider2.DrawSemitransparentThumb = false;
             this.barSlider2.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider2.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -160,6 +166,7 @@
             this.barSlider2.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.barSlider2.ForeColor = System.Drawing.Color.White;
+            this.barSlider2.IncrementAmount = 0.01F;
             this.barSlider2.InputName = "Y";
             this.barSlider2.LargeChange = 5F;
             this.barSlider2.Location = new System.Drawing.Point(141, 46);
@@ -197,6 +204,7 @@
             this.barSlider1.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.barSlider1.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.barSlider1.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider1.DataType = null;
             this.barSlider1.DrawSemitransparentThumb = false;
             this.barSlider1.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider1.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -204,6 +212,7 @@
             this.barSlider1.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.barSlider1.ForeColor = System.Drawing.Color.White;
+            this.barSlider1.IncrementAmount = 0.01F;
             this.barSlider1.InputName = "X";
             this.barSlider1.LargeChange = 5F;
             this.barSlider1.Location = new System.Drawing.Point(3, 46);
@@ -230,6 +239,7 @@
             this.barSlider1.UseInterlapsedBar = false;
             this.barSlider1.Value = 30F;
             this.barSlider1.ValueChanged += new System.EventHandler(this.barSlider_ValueChanged);
+            this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.barSlider1_Scroll);
             // 
             // vector4SliderPanel
             // 

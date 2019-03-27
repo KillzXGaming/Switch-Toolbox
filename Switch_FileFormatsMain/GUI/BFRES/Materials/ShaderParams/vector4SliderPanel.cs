@@ -3,6 +3,7 @@ using System.Drawing;
 using Switch_Toolbox.Library;
 using Syroot.NintenTools.NSW.Bfres;
 using Bfres.Structs;
+using System.Windows.Forms;
 
 namespace FirstPlugin.Forms
 {
@@ -116,6 +117,8 @@ namespace FirstPlugin.Forms
 
         public void ApplyValueSingles()
         {
+            SetColor(activeParam.Name, activeParam.ValueFloat);
+
             activeParam.ValueFloat = new float[]
             {
                 (float)barSlider1.Value,
@@ -159,7 +162,29 @@ namespace FirstPlugin.Forms
                 OnPanelChanged(activeParam, this);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void colorPB_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = colorPB.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                barSlider1.Value = colorDialog.Color.R / 255;
+                barSlider2.Value = colorDialog.Color.G / 255;
+                barSlider3.Value = colorDialog.Color.B / 255;
+            }
+        }
+
+        private void alphaPB_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = alphaPB.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                barSlider4.Value = colorDialog.Color.R / 255;
+            }
+        }
+
+        private void barSlider1_Scroll(object sender, System.Windows.Forms.ScrollEventArgs e)
         {
 
         }
