@@ -683,7 +683,7 @@ namespace Bfres.Structs
                             {
                                 FMAT fmat = new FMAT();
 
-                                if (resFileU != null)
+                                if (IsWiiU)
                                 {
                                     fmat.MaterialU = new ResU.Material();
                                     fmat.MaterialU.Import(settings.ExternalMaterialPath, resFileU);
@@ -695,7 +695,6 @@ namespace Bfres.Structs
                                     fmat.Material.Import(settings.ExternalMaterialPath);
                                     fmat.ReadMaterial(fmat.Material);
                                 }
-                                
 
                                 fmat.Text = mat.Text;
                                 //Setup placeholder textures
@@ -761,7 +760,7 @@ namespace Bfres.Structs
                                         }
                                     }
                                 }
-                                if (PluginRuntime.ftexContainers.Count > 0)
+                                if (PluginRuntime.ftexContainers.Count > 0 && Parent != null)
                                 {
                                     foreach (var node in Parent.Parent.Nodes)
                                     {
@@ -804,10 +803,10 @@ namespace Bfres.Structs
                                 List<string> keyList = new List<string>(materials.Keys);
                                 fmat.Text = Utils.RenameDuplicateString(keyList, fmat.Text);
 
-                                if (resFileU != null)
+                                if (IsWiiU)
                                 {
                                     fmat.MaterialU.Name = Text;
-                                    fmat.SetMaterial(fmat.MaterialU);
+                                    fmat.SetMaterial(fmat.MaterialU, resFileU);
                                 }
                                 else
                                 {
@@ -842,7 +841,7 @@ namespace Bfres.Structs
                             materials.Add(fmat.Text, fmat);
                             Nodes["FmatFolder"].Nodes.Add(fmat);
 
-                            if (resFileU != null)
+                            if (IsWiiU)
                             {
                                 fmat.MaterialU = new ResU.Material();
                                 fmat.MaterialU.Name = "NewMaterial";

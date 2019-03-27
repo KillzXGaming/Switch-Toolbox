@@ -452,7 +452,11 @@ namespace Switch_Toolbox.Library.IO
                 var stream = new MemoryStream();
                 using (var writer = new FileWriter(stream))
                 {
+                    
                     writer.Write(data.Length);
+
+
+                    MessageBox.Show(data.Length.ToString());
                     byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data), LZ4.Frame.LZ4MaxBlockSize.Auto, true, true, false, false, true);
                     writer.Write(buffer, 0, buffer.Length);
                 }

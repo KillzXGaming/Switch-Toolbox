@@ -90,7 +90,7 @@ namespace FirstPlugin
 
             foreach (FMAT mat in fmdl.materials.Values)
             {
-                SetMaterial(mat, mat.MaterialU);
+                SetMaterial(mat, mat.MaterialU, fmdl.GetResFileU());
                 model.Materials.Add(mat.Text, mat.MaterialU);
             }
             return model;
@@ -396,15 +396,7 @@ namespace FirstPlugin
                 indx++;
             }
         }
-        public static void CreateNewMaterial(string Name)
-        {
-            FMAT mat = new FMAT();
-            mat.Text = Name;
-            mat.MaterialU = new Material();
-
-            SetMaterial(mat, mat.MaterialU);
-        }
-        public static void SetMaterial(this FMAT m, Material mat)
+        public static void SetMaterial(this FMAT m, Material mat, ResFile ResFile)
         {
             mat.Name = m.Text;
 
@@ -424,7 +416,7 @@ namespace FirstPlugin
                 mat.ShaderParamData = ParamData;
 
             WriteRenderInfo(m, mat);
-            WriteTextureRefs(m, mat);
+            WriteTextureRefs(m, mat, ResFile);
             WriteShaderAssign(m.shaderassign, mat);
         }
         public static void ReadMaterial(this FMAT m, Material mat)
@@ -715,7 +707,7 @@ namespace FirstPlugin
                 m.renderinfo.Add(r);
             }
         }
-        public static void WriteTextureRefs(this FMAT m, Material mat)
+        public static void WriteTextureRefs(this FMAT m, Material mat, ResFile resFile)
         {
             mat.TextureRefs = new List<TextureRef>();
             mat.TextureRefs.Clear();
@@ -737,7 +729,7 @@ namespace FirstPlugin
                 mat.Samplers.Add(textu.SamplerName, sampler);
 
                 Texture texMapped = new Texture();
-                m.GetResFileU().Textures.TryGetValue(textu.Name, out texMapped);
+                resFile.Textures.TryGetValue(textu.Name, out texMapped);
                 texref.Texture = texMapped;
 
                 mat.TextureRefs.Add(texref);

@@ -76,6 +76,8 @@ namespace Switch_Toolbox.Library.IO
 
         public void CompressData(CompressionType CompressionType, byte[] data)
         {
+            MessageBox.Show(data.Length.ToString());
+
             switch (CompressionType)
             {
                 case CompressionType.Yaz0:
