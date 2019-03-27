@@ -193,6 +193,7 @@ namespace Toolbox
 
             object file = STFileLoader.OpenFileFormat(FileName);
 
+
             if (file == null) //File might not be supported so return
                 return;
 
@@ -223,6 +224,7 @@ namespace Toolbox
                 return;
             }
 
+
             var node = (TreeNode)file;
 
             //ObjectEditor is for treenode types. Editors will be on the right side, treenodes on the left
@@ -247,6 +249,7 @@ namespace Toolbox
                 editor.treeViewCustom1.Nodes.Add(node); // Add the new nodes
                 editor.treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
             });
+
 
             if (file is TreeNodeFile)
             {
@@ -686,6 +689,10 @@ namespace Toolbox
             if (ActiveMdiChild != null)
                 ActiveMdiChild.Close();
 
+            BtnMdiClose.Visible = false;
+            BtnMdiMinMax.Visible = false;
+            BtnMdiMinimize.Visible = false;
+
             //Force garbage collection.
             GC.Collect();
 
@@ -1003,6 +1010,10 @@ namespace Toolbox
             {
                 if (child == tabForms.SelectedTab.Tag)
                 {
+                    BtnMdiClose.Visible = false;
+                    BtnMdiMinMax.Visible = false;
+                    BtnMdiMinimize.Visible = false;
+
                     child.Close();
                     return;
                 }
