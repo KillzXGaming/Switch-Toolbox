@@ -116,8 +116,11 @@ namespace FirstPlugin.Forms
                 return false;
 
             STDropDownPanel panel = (STDropDownPanel)sender.Parent;
-
             panel.PanelValueName = GetValueString(param);
+
+
+            panel.Refresh();
+
             return true;
         }
 

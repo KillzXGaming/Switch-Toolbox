@@ -63,7 +63,7 @@ namespace FirstPlugin.Forms
             barSlider3.Value = values[2];
         }
 
-        private void SetColor(string UniformName, float[] values)
+        public void SetColor(string UniformName, float[] values)
         {
             IsColor = UniformName.Contains("Color") ||
                       UniformName.Contains("color") ||
@@ -115,11 +115,11 @@ namespace FirstPlugin.Forms
 
         private void barSlider_ValueChanged(object sender, System.EventArgs e)
         {
-            if (activeParam.Type == ShaderParamType.UInt)
+            if (activeParam.Type == ShaderParamType.UInt3)
                 ApplyValueUint();
-            if (activeParam.Type == ShaderParamType.Int)
+            if (activeParam.Type == ShaderParamType.Int3)
                 ApplyValueInt();
-            if (activeParam.Type == ShaderParamType.Float)
+            if (activeParam.Type == ShaderParamType.Float3)
                 ApplyValueSingles();
 
             if (OnPanelChanged != null)
@@ -132,9 +132,16 @@ namespace FirstPlugin.Forms
             colorDialog.Color = pictureBox1.BackColor;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
+                activeParam.ValueFloat = new float[]
+                {
+                    colorDialog.Color.R / 255,
+                    colorDialog.Color.G / 255,
+                    colorDialog.Color.B / 255,
+                };
                 barSlider1.Value = colorDialog.Color.R / 255;
                 barSlider2.Value = colorDialog.Color.G / 255;
                 barSlider3.Value = colorDialog.Color.B / 255;
+                SetColor(activeParam.Name, activeParam.ValueFloat);
             }
         }
     }

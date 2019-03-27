@@ -67,11 +67,11 @@ namespace FirstPlugin.Forms
 
         private void barSlider_ValueChanged(object sender, System.EventArgs e)
         {
-            if (activeParam.Type == ShaderParamType.UInt)
+            if (activeParam.Type == ShaderParamType.UInt2)
                 ApplyValueUint();
-            if (activeParam.Type == ShaderParamType.Int)
+            if (activeParam.Type == ShaderParamType.Int2)
                 ApplyValueInt();
-            if (activeParam.Type == ShaderParamType.Float)
+            if (activeParam.Type == ShaderParamType.Float2)
                 ApplyValueSingles();
 
             if (OnPanelChanged != null)

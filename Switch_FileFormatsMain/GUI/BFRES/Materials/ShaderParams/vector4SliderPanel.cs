@@ -14,7 +14,10 @@ namespace FirstPlugin.Forms
         public Color GetColor()
         {
             if (IsColor)
+            {
+                SetColor(activeParam.Name, activeParam.ValueFloat);
                 return colorPB.BackColor;
+            }
             else
                 return Color.Empty;
         }
@@ -80,7 +83,7 @@ namespace FirstPlugin.Forms
             barSlider4.Value = values[3];
         }
 
-        private void SetColor(string UniformName, float[] values)
+        public void SetColor(string UniformName, float[] values)
         {
 
             IsColor = UniformName.Contains("Color") ||
@@ -151,11 +154,11 @@ namespace FirstPlugin.Forms
 
         private void barSlider_ValueChanged(object sender, System.EventArgs e)
         {
-            if (activeParam.Type == ShaderParamType.UInt)
+            if (activeParam.Type == ShaderParamType.UInt4)
                 ApplyValueUint();
-            if (activeParam.Type == ShaderParamType.Int)
+            if (activeParam.Type == ShaderParamType.Int4)
                 ApplyValueInt();
-            if (activeParam.Type == ShaderParamType.Float)
+            if (activeParam.Type == ShaderParamType.Float4)
                 ApplyValueSingles();
 
             if (OnPanelChanged != null)
