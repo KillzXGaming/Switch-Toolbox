@@ -11,7 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbox", "Toolbox\Toolbox.csproj", "{5E55CA2B-F181-4681-AAFA-A20FEBCF7387}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "GL_EditorFramework-master\Testing\Testing.csproj", "{860B49C9-54E3-4E10-830D-6497B845ED11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
