@@ -116,12 +116,13 @@ namespace FirstPlugin
         //get a reference to the value to change
         class EditableNode
         {
-            public Type type { get => Node[Index].GetType(); }
+            public Type type { get { return Node[Index].GetType(); } }
             dynamic Node;
             dynamic Index;
 
-            public dynamic Get() => Node[Index];
-            public void Set(dynamic value) => Node[Index] = value;
+            public dynamic Get() { return Node[Index]; }
+            public void Set(dynamic value) { Node[Index] = value; }
+
             public string GetTreeViewString()
             {
                 if (Index is int)
