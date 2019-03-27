@@ -825,7 +825,8 @@ namespace Bfres.Structs
                             if (assimp.skeleton.bones.Count > 0)
                             {
                                 Skeleton.bones.Clear();
-                        
+                                Skeleton.node.Nodes.Clear();
+
                                 if (IsWiiU)
                                     BfresWiiU.SaveSkeleton(Skeleton, assimp.skeleton.bones);
                                 else
