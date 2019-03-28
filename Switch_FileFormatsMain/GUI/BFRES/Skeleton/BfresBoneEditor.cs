@@ -122,8 +122,8 @@ namespace FirstPlugin
         private void SetBoneTransform(BfresBone bn)
         {
             bn.position[0] = (float)posXUD.Value;
-            bn.position[1] = (float)posZUD.Value;
-            bn.position[2] = (float)posYUD.Value;
+            bn.position[1] = (float)posYUD.Value;
+            bn.position[2] = (float)posZUD.Value;
 
             bn.rotation[0] = (float)RotXUD.Value;
             bn.rotation[1] = (float)RotYUD.Value;
