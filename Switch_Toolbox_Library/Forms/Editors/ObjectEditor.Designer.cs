@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.searchLbl = new Switch_Toolbox.Library.Forms.STLabel();
             this.searchImgPB = new System.Windows.Forms.PictureBox();
             this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,6 +42,7 @@
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.importToActiveWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
@@ -70,6 +71,26 @@
             this.stPanel1.Size = new System.Drawing.Size(314, 512);
             this.stPanel1.TabIndex = 11;
             this.stPanel1.Resize += new System.EventHandler(this.stPanel1_Resize);
+            // 
+            // treeViewCustom1
+            // 
+            this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.treeViewCustom1.CheckBoxes = true;
+            this.treeViewCustom1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+            this.treeViewCustom1.ImageIndex = 0;
+            this.treeViewCustom1.Location = new System.Drawing.Point(1, 53);
+            this.treeViewCustom1.Name = "treeViewCustom1";
+            this.treeViewCustom1.SelectedImageIndex = 0;
+            this.treeViewCustom1.Size = new System.Drawing.Size(311, 458);
+            this.treeViewCustom1.TabIndex = 0;
+            this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
+            this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
+            this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
+            this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.selectItem);
+            this.treeViewCustom1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewCustom1_DoubleClick);
             // 
             // stPanel3
             // 
@@ -117,31 +138,12 @@
             this.stTextBox1.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
             this.stTextBox1.Leave += new System.EventHandler(this.stTextBox1_Leave);
             // 
-            // treeViewCustom1
-            // 
-            this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.treeViewCustom1.CheckBoxes = true;
-            this.treeViewCustom1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-            this.treeViewCustom1.ImageIndex = 0;
-            this.treeViewCustom1.Location = new System.Drawing.Point(1, 53);
-            this.treeViewCustom1.Name = "treeViewCustom1";
-            this.treeViewCustom1.SelectedImageIndex = 0;
-            this.treeViewCustom1.Size = new System.Drawing.Size(311, 458);
-            this.treeViewCustom1.TabIndex = 0;
-            this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
-            this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
-            this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
-            this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.selectItem);
-            this.treeViewCustom1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewCustom1_DoubleClick);
-            // 
             // stContextMenuStrip1
             // 
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.importToActiveWindowToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
             this.stContextMenuStrip1.Size = new System.Drawing.Size(314, 24);
@@ -196,6 +198,14 @@
             this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
             this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
             // 
+            // importToActiveWindowToolStripMenuItem
+            // 
+            this.importToActiveWindowToolStripMenuItem.Checked = true;
+            this.importToActiveWindowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.importToActiveWindowToolStripMenuItem.Name = "importToActiveWindowToolStripMenuItem";
+            this.importToActiveWindowToolStripMenuItem.Size = new System.Drawing.Size(152, 20);
+            this.importToActiveWindowToolStripMenuItem.Text = "Import to Active Window";
+            // 
             // ObjectEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -231,5 +241,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToActiveWindowToolStripMenuItem;
     }
 }

@@ -14,7 +14,7 @@ using Syroot.NintenTools.NSW.Bntx.GFX;
 
 namespace FirstPlugin
 {
-    public class NUTEXB : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
+    public class NUTEXB : STGenericTexture, IFileFormat
     {
         public override TEX_FORMAT[] SupportedFormats
         {
@@ -139,8 +139,22 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
-        public ImageEditorForm OpenForm()
+
+        public override void OnClick(TreeView treeview)
         {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
+            {
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+
             Properties prop = new Properties();
             prop.Width = Width;
             prop.Height = Height;
@@ -150,16 +164,9 @@ namespace FirstPlugin
             prop.ImageSize = (uint)ImageData.Length;
             prop.Format = NutFormat;
 
-            ImageEditorForm form = new ImageEditorForm();
-            form.editorBase.Text = Text;
-            form.editorBase.Dock = DockStyle.Fill;
-            form.editorBase.AddFileContextEvent("Save", Save);
-            form.editorBase.AddFileContextEvent("Use Size Restrictions", UseSizeRestrictions, true);
-            form.editorBase.AddFileContextEvent("Replace", Replace);
-            form.editorBase.LoadProperties(prop);
-            form.editorBase.LoadImage(this);
-
-            return form;
+            editor.Text = Text;
+            editor.LoadProperties(prop);
+            editor.LoadImage(this);
         }
 
         private void UseSizeRestrictions(object sender, EventArgs args)
@@ -224,25 +231,6 @@ namespace FirstPlugin
             public uint ImageSize { get; set; }
         }
 
-        public void UpdateEditor()
-        {
-            var imgEditor = LibraryGUI.Instance.GetActiveForm();
-            if (imgEditor is ImageEditorForm)
-            {
-                Properties prop = new Properties();
-                prop.Width = Width;
-                prop.Height = Height;
-                prop.Depth = Depth;
-                prop.MipCount = MipCount;
-                prop.ArrayCount = ArrayCount;
-                prop.ImageSize = (uint)ImageData.Length;
-                prop.Format = NutFormat;
-
-                ((ImageEditorForm)imgEditor).Text = Text;
-                ((ImageEditorForm)imgEditor).editorBase.LoadProperties(prop);
-                ((ImageEditorForm)imgEditor).editorBase.LoadImage(this);
-            }
-        }
         class MenuExt : IFileMenuExtension
         {
             public STToolStripItem[] NewFileMenuExtensions => null;
