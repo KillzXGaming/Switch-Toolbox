@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres.GFX;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library.Rendering;
 using Bfres.Structs;
 
 namespace FirstPlugin
 {
-    public partial class BfresModelImportSettings : Form
+    public partial class BfresModelImportSettings : STForm
     {
         public BfresModelImportSettings()
         {
             InitializeComponent();
+
+            tabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             ExternalMaterialPath = PluginRuntime.ExternalFMATPath;
             if (System.IO.File.Exists(PluginRuntime.ExternalFMATPath))

@@ -28,39 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.panel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatPositions = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.panel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label3 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatNormals = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.panel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label5 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatUvs = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.panel4 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label7 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatVertexColors = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.panel5 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label9 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatTangents = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.panel6 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label11 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatBitans = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.panel7 = new System.Windows.Forms.Panel();
+            this.label12 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.panel7 = new Switch_Toolbox.Library.Forms.STPanel();
             this.comboBoxFormatIndices = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
+            this.label15 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.label13 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBoxFormatWeights = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.label14 = new Switch_Toolbox.Library.Forms.STLabel();
             this.chkBoxFlipUvsY = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportBones = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel8 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.label16 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.numericUpDownInt1 = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
             this.chkBoxImportMat = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxParamDefaults = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxRotNegative90Y = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -78,15 +80,15 @@
             this.chkBoxRot90Y = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.checkBox9 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel9 = new Switch_Toolbox.Library.Forms.STPanel();
             this.comboBoxFormatFaces = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.label18 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.label17 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.tabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
-            this.numericUpDownInt1 = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
-            this.label16 = new System.Windows.Forms.Label();
+            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -95,20 +97,27 @@
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInt1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel9.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPageAdvanced.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInt1)).BeginInit();
+            this.stPanel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // contentContainer
+            // 
+            this.contentContainer.Controls.Add(this.tabControl1);
+            this.contentContainer.Size = new System.Drawing.Size(541, 393);
+            this.contentContainer.Controls.SetChildIndex(this.tabControl1, 0);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.comboBoxFormatPositions);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(6, 6);
+            this.panel1.Location = new System.Drawing.Point(16, 17);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(215, 66);
             this.panel1.TabIndex = 1;
@@ -124,10 +133,13 @@
             // 
             // comboBoxFormatPositions
             // 
-            this.comboBoxFormatPositions.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBoxFormatPositions.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatPositions.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatPositions.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatPositions.FormattingEnabled = true;
             this.comboBoxFormatPositions.Location = new System.Drawing.Point(50, 37);
             this.comboBoxFormatPositions.Name = "comboBoxFormatPositions";
+            this.comboBoxFormatPositions.ReadOnly = true;
             this.comboBoxFormatPositions.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatPositions.TabIndex = 1;
             // 
@@ -145,7 +157,7 @@
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.comboBoxFormatNormals);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(3, 78);
+            this.panel2.Location = new System.Drawing.Point(13, 89);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(218, 64);
             this.panel2.TabIndex = 4;
@@ -161,9 +173,13 @@
             // 
             // comboBoxFormatNormals
             // 
+            this.comboBoxFormatNormals.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatNormals.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatNormals.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatNormals.FormattingEnabled = true;
             this.comboBoxFormatNormals.Location = new System.Drawing.Point(53, 34);
             this.comboBoxFormatNormals.Name = "comboBoxFormatNormals";
+            this.comboBoxFormatNormals.ReadOnly = true;
             this.comboBoxFormatNormals.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatNormals.TabIndex = 1;
             // 
@@ -181,7 +197,7 @@
             this.panel3.Controls.Add(this.label5);
             this.panel3.Controls.Add(this.comboBoxFormatUvs);
             this.panel3.Controls.Add(this.label6);
-            this.panel3.Location = new System.Drawing.Point(3, 149);
+            this.panel3.Location = new System.Drawing.Point(13, 160);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(218, 60);
             this.panel3.TabIndex = 5;
@@ -197,10 +213,13 @@
             // 
             // comboBoxFormatUvs
             // 
-            this.comboBoxFormatUvs.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBoxFormatUvs.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatUvs.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatUvs.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatUvs.FormattingEnabled = true;
             this.comboBoxFormatUvs.Location = new System.Drawing.Point(53, 26);
             this.comboBoxFormatUvs.Name = "comboBoxFormatUvs";
+            this.comboBoxFormatUvs.ReadOnly = true;
             this.comboBoxFormatUvs.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatUvs.TabIndex = 1;
             // 
@@ -218,7 +237,7 @@
             this.panel4.Controls.Add(this.label7);
             this.panel4.Controls.Add(this.comboBoxFormatVertexColors);
             this.panel4.Controls.Add(this.label8);
-            this.panel4.Location = new System.Drawing.Point(3, 215);
+            this.panel4.Location = new System.Drawing.Point(13, 226);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(218, 70);
             this.panel4.TabIndex = 6;
@@ -234,11 +253,14 @@
             // 
             // comboBoxFormatVertexColors
             // 
+            this.comboBoxFormatVertexColors.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatVertexColors.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatVertexColors.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatVertexColors.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.comboBoxFormatVertexColors.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
             this.comboBoxFormatVertexColors.FormattingEnabled = true;
             this.comboBoxFormatVertexColors.Location = new System.Drawing.Point(53, 33);
             this.comboBoxFormatVertexColors.Name = "comboBoxFormatVertexColors";
+            this.comboBoxFormatVertexColors.ReadOnly = true;
             this.comboBoxFormatVertexColors.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatVertexColors.TabIndex = 1;
             // 
@@ -256,7 +278,7 @@
             this.panel5.Controls.Add(this.label9);
             this.panel5.Controls.Add(this.comboBoxFormatTangents);
             this.panel5.Controls.Add(this.label10);
-            this.panel5.Location = new System.Drawing.Point(227, 6);
+            this.panel5.Location = new System.Drawing.Point(237, 17);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(280, 66);
             this.panel5.TabIndex = 7;
@@ -272,10 +294,13 @@
             // 
             // comboBoxFormatTangents
             // 
-            this.comboBoxFormatTangents.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBoxFormatTangents.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatTangents.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatTangents.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatTangents.FormattingEnabled = true;
             this.comboBoxFormatTangents.Location = new System.Drawing.Point(60, 37);
             this.comboBoxFormatTangents.Name = "comboBoxFormatTangents";
+            this.comboBoxFormatTangents.ReadOnly = true;
             this.comboBoxFormatTangents.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatTangents.TabIndex = 1;
             // 
@@ -293,7 +318,7 @@
             this.panel6.Controls.Add(this.label11);
             this.panel6.Controls.Add(this.comboBoxFormatBitans);
             this.panel6.Controls.Add(this.label12);
-            this.panel6.Location = new System.Drawing.Point(227, 78);
+            this.panel6.Location = new System.Drawing.Point(237, 89);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(280, 64);
             this.panel6.TabIndex = 8;
@@ -309,9 +334,13 @@
             // 
             // comboBoxFormatBitans
             // 
+            this.comboBoxFormatBitans.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatBitans.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatBitans.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatBitans.FormattingEnabled = true;
             this.comboBoxFormatBitans.Location = new System.Drawing.Point(51, 34);
             this.comboBoxFormatBitans.Name = "comboBoxFormatBitans";
+            this.comboBoxFormatBitans.ReadOnly = true;
             this.comboBoxFormatBitans.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatBitans.TabIndex = 1;
             // 
@@ -331,17 +360,20 @@
             this.panel7.Controls.Add(this.label13);
             this.panel7.Controls.Add(this.comboBoxFormatWeights);
             this.panel7.Controls.Add(this.label14);
-            this.panel7.Location = new System.Drawing.Point(227, 148);
+            this.panel7.Location = new System.Drawing.Point(237, 159);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(280, 96);
             this.panel7.TabIndex = 9;
             // 
             // comboBoxFormatIndices
             // 
-            this.comboBoxFormatIndices.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBoxFormatIndices.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatIndices.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatIndices.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatIndices.FormattingEnabled = true;
             this.comboBoxFormatIndices.Location = new System.Drawing.Point(92, 60);
             this.comboBoxFormatIndices.Name = "comboBoxFormatIndices";
+            this.comboBoxFormatIndices.ReadOnly = true;
             this.comboBoxFormatIndices.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatIndices.TabIndex = 5;
             // 
@@ -366,10 +398,13 @@
             // 
             // comboBoxFormatWeights
             // 
-            this.comboBoxFormatWeights.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBoxFormatWeights.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatWeights.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatWeights.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatWeights.FormattingEnabled = true;
             this.comboBoxFormatWeights.Location = new System.Drawing.Point(92, 30);
             this.comboBoxFormatWeights.Name = "comboBoxFormatWeights";
+            this.comboBoxFormatWeights.ReadOnly = true;
             this.comboBoxFormatWeights.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatWeights.TabIndex = 1;
             // 
@@ -428,10 +463,38 @@
             this.panel8.Controls.Add(this.checkBox9);
             this.panel8.Controls.Add(this.chkBoxFlipUvsY);
             this.panel8.Controls.Add(this.chkBoxImportBones);
-            this.panel8.Location = new System.Drawing.Point(8, 6);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(3, 3);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(498, 322);
+            this.panel8.Size = new System.Drawing.Size(524, 324);
             this.panel8.TabIndex = 11;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(242, 189);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(83, 13);
+            this.label16.TabIndex = 33;
+            this.label16.Text = "Skin Count Limit";
+            // 
+            // numericUpDownInt1
+            // 
+            this.numericUpDownInt1.Location = new System.Drawing.Point(243, 215);
+            this.numericUpDownInt1.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.numericUpDownInt1.Minimum = new decimal(new int[] {
+            -2147483648,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownInt1.Name = "numericUpDownInt1";
+            this.numericUpDownInt1.Size = new System.Drawing.Size(140, 20);
+            this.numericUpDownInt1.TabIndex = 32;
+            this.numericUpDownInt1.ValueChanged += new System.EventHandler(this.numericUpDownInt1_ValueChanged);
             // 
             // chkBoxImportMat
             // 
@@ -471,8 +534,6 @@
             // 
             // textBoxMaterialPath
             // 
-            this.textBoxMaterialPath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBoxMaterialPath.ForeColor = System.Drawing.Color.White;
             this.textBoxMaterialPath.Location = new System.Drawing.Point(3, 241);
             this.textBoxMaterialPath.Name = "textBoxMaterialPath";
             this.textBoxMaterialPath.ReadOnly = true;
@@ -574,7 +635,7 @@
             this.button1.Cursor = System.Windows.Forms.Cursors.Default;
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(420, 296);
+            this.button1.Location = new System.Drawing.Point(445, 296);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 17;
@@ -633,17 +694,20 @@
             this.panel9.Controls.Add(this.comboBoxFormatFaces);
             this.panel9.Controls.Add(this.label18);
             this.panel9.Controls.Add(this.label17);
-            this.panel9.Location = new System.Drawing.Point(227, 248);
+            this.panel9.Location = new System.Drawing.Point(237, 259);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(280, 37);
             this.panel9.TabIndex = 16;
             // 
             // comboBoxFormatFaces
             // 
-            this.comboBoxFormatFaces.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBoxFormatFaces.BorderColor = System.Drawing.Color.Empty;
+            this.comboBoxFormatFaces.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBoxFormatFaces.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatFaces.FormattingEnabled = true;
             this.comboBoxFormatFaces.Location = new System.Drawing.Point(102, 7);
             this.comboBoxFormatFaces.Name = "comboBoxFormatFaces";
+            this.comboBoxFormatFaces.ReadOnly = true;
             this.comboBoxFormatFaces.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatFaces.TabIndex = 5;
             // 
@@ -667,84 +731,61 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPageAdvanced);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(0, 31);
+            this.tabControl1.myBackColor = System.Drawing.Color.Empty;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(520, 360);
+            this.tabControl1.Size = new System.Drawing.Size(538, 359);
             this.tabControl1.TabIndex = 18;
             // 
             // tabPage2
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tabPage2.Controls.Add(this.panel8);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(512, 334);
+            this.tabPage2.Size = new System.Drawing.Size(530, 330);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Model Settings";
             // 
             // tabPageAdvanced
             // 
-            this.tabPageAdvanced.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.tabPageAdvanced.Controls.Add(this.panel1);
-            this.tabPageAdvanced.Controls.Add(this.panel9);
-            this.tabPageAdvanced.Controls.Add(this.panel2);
-            this.tabPageAdvanced.Controls.Add(this.panel4);
-            this.tabPageAdvanced.Controls.Add(this.panel7);
-            this.tabPageAdvanced.Controls.Add(this.panel3);
-            this.tabPageAdvanced.Controls.Add(this.panel6);
-            this.tabPageAdvanced.Controls.Add(this.panel5);
-            this.tabPageAdvanced.ForeColor = System.Drawing.Color.White;
-            this.tabPageAdvanced.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAdvanced.Controls.Add(this.stPanel1);
+            this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(512, 334);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 330);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
-            // numericUpDownInt1
+            // stPanel1
             // 
-            this.numericUpDownInt1.Location = new System.Drawing.Point(243, 215);
-            this.numericUpDownInt1.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericUpDownInt1.Minimum = new decimal(new int[] {
-            -2147483648,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownInt1.Name = "numericUpDownInt1";
-            this.numericUpDownInt1.Size = new System.Drawing.Size(140, 20);
-            this.numericUpDownInt1.TabIndex = 32;
-            this.numericUpDownInt1.ValueChanged += new System.EventHandler(this.numericUpDownInt1_ValueChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(242, 189);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(83, 13);
-            this.label16.TabIndex = 33;
-            this.label16.Text = "Skin Count Limit";
+            this.stPanel1.Controls.Add(this.panel5);
+            this.stPanel1.Controls.Add(this.panel1);
+            this.stPanel1.Controls.Add(this.panel2);
+            this.stPanel1.Controls.Add(this.panel6);
+            this.stPanel1.Controls.Add(this.panel4);
+            this.stPanel1.Controls.Add(this.panel9);
+            this.stPanel1.Controls.Add(this.panel3);
+            this.stPanel1.Controls.Add(this.panel7);
+            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel1.Location = new System.Drawing.Point(3, 3);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(524, 324);
+            this.stPanel1.TabIndex = 17;
             // 
             // BfresModelImportSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(520, 360);
-            this.Controls.Add(this.tabControl1);
-            this.ForeColor = System.Drawing.Color.White;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.ClientSize = new System.Drawing.Size(547, 398);
             this.Name = "BfresModelImportSettings";
             this.Text = "Import Settings";
             this.Load += new System.EventHandler(this.BfresModelImportSettings_Load);
+            this.contentContainer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -761,62 +802,63 @@
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInt1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPageAdvanced.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInt1)).EndInit();
+            this.stPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label2;
+        private Switch_Toolbox.Library.Forms.STPanel panel1;
+        private Switch_Toolbox.Library.Forms.STLabel label2;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatPositions;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label label3;
+        private Switch_Toolbox.Library.Forms.STLabel label1;
+        private Switch_Toolbox.Library.Forms.STPanel panel2;
+        private Switch_Toolbox.Library.Forms.STLabel label3;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatNormals;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label5;
+        private Switch_Toolbox.Library.Forms.STLabel label4;
+        private Switch_Toolbox.Library.Forms.STPanel panel3;
+        private Switch_Toolbox.Library.Forms.STLabel label5;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatUvs;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label label7;
+        private Switch_Toolbox.Library.Forms.STLabel label6;
+        private Switch_Toolbox.Library.Forms.STPanel panel4;
+        private Switch_Toolbox.Library.Forms.STLabel label7;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatVertexColors;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Label label9;
+        private Switch_Toolbox.Library.Forms.STLabel label8;
+        private Switch_Toolbox.Library.Forms.STPanel panel5;
+        private Switch_Toolbox.Library.Forms.STLabel label9;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatTangents;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Label label11;
+        private Switch_Toolbox.Library.Forms.STLabel label10;
+        private Switch_Toolbox.Library.Forms.STPanel panel6;
+        private Switch_Toolbox.Library.Forms.STLabel label11;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatBitans;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Label label13;
+        private Switch_Toolbox.Library.Forms.STLabel label12;
+        private Switch_Toolbox.Library.Forms.STPanel panel7;
+        private Switch_Toolbox.Library.Forms.STLabel label13;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatWeights;
-        private System.Windows.Forms.Label label14;
+        private Switch_Toolbox.Library.Forms.STLabel label14;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatIndices;
-        private System.Windows.Forms.Label label15;
+        private Switch_Toolbox.Library.Forms.STLabel label15;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxFlipUvsY;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportBones;
-        private System.Windows.Forms.Panel panel8;
+        private Switch_Toolbox.Library.Forms.STPanel panel8;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxTransformMatrix;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxRot90Y;
         private System.Windows.Forms.PictureBox pictureBox1;
         private Switch_Toolbox.Library.Forms.STCheckBox checkBox9;
-        private System.Windows.Forms.Panel panel9;
+        private Switch_Toolbox.Library.Forms.STPanel panel9;
         private Switch_Toolbox.Library.Forms.STComboBox comboBoxFormatFaces;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label17;
+        private Switch_Toolbox.Library.Forms.STLabel label18;
+        private Switch_Toolbox.Library.Forms.STLabel label17;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TabControl tabControl1;
+        private Switch_Toolbox.Library.Forms.STTabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPageAdvanced;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxRecalcNormals;
@@ -831,7 +873,8 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxRotNegative90Y;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxParamDefaults;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportMat;
-        private System.Windows.Forms.Label label16;
+        private Switch_Toolbox.Library.Forms.STLabel label16;
         private Switch_Toolbox.Library.Forms.NumericUpDownInt numericUpDownInt1;
+        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
     }
 }
