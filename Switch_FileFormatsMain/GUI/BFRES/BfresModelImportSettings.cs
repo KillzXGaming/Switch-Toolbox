@@ -15,6 +15,8 @@ namespace FirstPlugin
         {
             InitializeComponent();
 
+            CanResize = false;
+
             tabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             ExternalMaterialPath = PluginRuntime.ExternalFMATPath;

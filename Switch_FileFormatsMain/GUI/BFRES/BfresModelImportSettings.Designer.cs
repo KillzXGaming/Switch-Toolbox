@@ -66,7 +66,7 @@
             this.chkBoxImportMat = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxParamDefaults = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxRotNegative90Y = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.textBoxMaterialPath = new System.Windows.Forms.TextBox();
+            this.textBoxMaterialPath = new Switch_Toolbox.Library.Forms.STTextBox();
             this.chkBoxEnableWeightIndices = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxEnableBitans = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxEnableTans = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -109,7 +109,7 @@
             // contentContainer
             // 
             this.contentContainer.Controls.Add(this.tabControl1);
-            this.contentContainer.Size = new System.Drawing.Size(541, 393);
+            this.contentContainer.Size = new System.Drawing.Size(541, 396);
             this.contentContainer.Controls.SetChildIndex(this.tabControl1, 0);
             // 
             // panel1
@@ -466,7 +466,7 @@
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel8.Location = new System.Drawing.Point(3, 3);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(524, 324);
+            this.panel8.Size = new System.Drawing.Size(524, 327);
             this.panel8.TabIndex = 11;
             // 
             // label16
@@ -635,7 +635,7 @@
             this.button1.Cursor = System.Windows.Forms.Cursors.Default;
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(445, 296);
+            this.button1.Location = new System.Drawing.Point(446, 302);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 17;
@@ -740,7 +740,7 @@
             this.tabControl1.myBackColor = System.Drawing.Color.Empty;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(538, 359);
+            this.tabControl1.Size = new System.Drawing.Size(538, 362);
             this.tabControl1.TabIndex = 18;
             // 
             // tabPage2
@@ -749,7 +749,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(530, 330);
+            this.tabPage2.Size = new System.Drawing.Size(530, 333);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Model Settings";
             // 
@@ -869,7 +869,7 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxEnableUVs;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxEnableNormals;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxEnablePositions;
-        private System.Windows.Forms.TextBox textBoxMaterialPath;
+        private Switch_Toolbox.Library.Forms.STTextBox textBoxMaterialPath;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxRotNegative90Y;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxParamDefaults;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportMat;
