@@ -32,7 +32,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.stFlowLayoutPanel1 = new Switch_Toolbox.Library.Forms.STFlowLayoutPanel();
             this.stDropDownPanel1 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
-            this.boneInfoPanel1 = new FirstPlugin.BoneInfoPanel();
+            this.boneInfoPanel1 = new BoneInfoPanel();
             this.stDropDownPanel2 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stLabel5 = new Switch_Toolbox.Library.Forms.STLabel();
@@ -91,7 +91,7 @@
             this.chkTransformCuRotateZero = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkTransformCuRotateTrnaslateZero = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.userDataEditor1 = new FirstPlugin.UserDataEditor();
+            this.userDataEditor1 = new UserDataEditor();
             this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.stFlowLayoutPanel1.SuspendLayout();
@@ -447,7 +447,6 @@
             this.RotYUD.Name = "RotYUD";
             this.RotYUD.Size = new System.Drawing.Size(104, 20);
             this.RotYUD.TabIndex = 24;
-            this.RotYUD.ValueChanged += new System.EventHandler(this.RotYUD_ValueChanged);
             // 
             // RotXUD
             // 
@@ -579,7 +578,6 @@
             this.posXUD.Name = "posXUD";
             this.posXUD.Size = new System.Drawing.Size(105, 20);
             this.posXUD.TabIndex = 16;
-            this.posXUD.ValueChanged += new System.EventHandler(this.posXUD_ValueChanged);
             // 
             // label2
             // 

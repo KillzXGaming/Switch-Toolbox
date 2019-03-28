@@ -58,7 +58,7 @@ namespace Updater
             Console.WriteLine("Booting...");
 
             Thread.Sleep(3000);
-            System.Diagnostics.Process.Start(Path.Combine(folderDir, "Switch_Toolbox.exe"));
+            System.Diagnostics.Process.Start(Path.Combine(folderDir, "Toolbox.exe"));
         }
         static void Install()
         {
