@@ -8,7 +8,7 @@ build:
   verbosity: minimal
 deploy:
 - provider: GitHub
-  tag: EXPERIMENTAL_v1.0r2,5_BETA
+  tag: EXPERIMENTAL_v1.0r2.5_BETA
   release: Experimental Release
   auth_token:
     secure: vDPwgMnjU54ZBjDmIfPNaES/JfhJBkj1yZ1kZwNf3ls8IUjPhVEWR2FDBVV0MySO

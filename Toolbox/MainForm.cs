@@ -700,7 +700,6 @@ namespace Toolbox
         {
             foreach (Form frm in this.MdiChildren) frm.Close();
 
-
             OnMdiWindowClosed();
 
             RenderTools.DisposeTextures();
