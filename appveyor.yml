@@ -4,7 +4,9 @@ environment:
 build:
   project: Switch_Toolbox.sln
   verbosity: minimal
-artifact: Switch-Toolbox-Latest.zip
+artifact:
+ path: Switch-Toolbox-Latest.zip
+ name: Switch-Toolbox-Latest.zip
 deploy:
 - provider: GitHub
   tag: EXPERIMENTAL_v1.0r2,5_BETA
