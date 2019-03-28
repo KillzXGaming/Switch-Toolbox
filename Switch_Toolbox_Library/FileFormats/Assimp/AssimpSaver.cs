@@ -135,7 +135,6 @@ namespace Switch_Toolbox.Library
 
         private void SaveMaterials(Scene scene, STGenericModel model, string FileName, List<STGenericTexture> Textures)
         {
-
             string TextureExtension = ".png";
             string TexturePath = System.IO.Path.GetDirectoryName(FileName);
 
@@ -146,7 +145,6 @@ namespace Switch_Toolbox.Library
                 var bitmap = tex.GetBitmap();
                 bitmap.Save(path);
                 bitmap.Dispose();
-
             }
 
             foreach (var mat in model.Nodes[1].Nodes)
@@ -160,6 +158,7 @@ namespace Switch_Toolbox.Library
                 {
                     TextureSlot slot = new TextureSlot();
                     string path = System.IO.Path.Combine(TexturePath, tex.Name + TextureExtension);
+
                     slot.FilePath = path;
                     slot.UVIndex = 0;
                     slot.Flags = 0;

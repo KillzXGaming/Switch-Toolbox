@@ -792,6 +792,7 @@ namespace Toolbox
             {
                 if (child == tabForms.SelectedTab.Tag)
                 {
+                    OnMdiWindowClosed();
                     child.Close();
                     return;
                 }
@@ -1044,6 +1045,14 @@ namespace Toolbox
 
         private void updateToolstrip_Click(object sender, EventArgs e) {
             UpdateNotifcationClick();
+        }
+
+        private void tabForms_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                this.tabControlContextMenuStrip.Show(this.tabForms, e.Location);
+            }
         }
     }
 }

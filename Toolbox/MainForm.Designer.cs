@@ -56,7 +56,7 @@
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.tabForms = new Switch_Toolbox.Library.Forms.STTabControl();
-            this.tabControlContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tabControlContextMenuStrip = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.closeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.BtnMdiMinimize = new System.Windows.Forms.PictureBox();
@@ -289,6 +289,7 @@
             this.tabForms.TabIndex = 9;
             this.tabForms.Visible = false;
             this.tabForms.SelectedIndexChanged += new System.EventHandler(this.tabForms_SelectedIndexChanged);
+            this.tabForms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabForms_MouseClick);
             // 
             // tabControlContextMenuStrip
             // 
@@ -456,7 +457,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip tabControlContextMenuStrip;
+        private Switch_Toolbox.Library.Forms.STContextMenuStrip tabControlContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fileAssociationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mainSettingsToolStripMenuItem;

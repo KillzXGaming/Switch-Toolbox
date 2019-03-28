@@ -129,6 +129,7 @@ namespace Switch_Toolbox.Library.Forms
             this.TitleBar.Name = "TitleBar";
             this.TitleBar.Size = new System.Drawing.Size(543, 25);
             this.TitleBar.TabIndex = 10;
+            this.TitleBar.DoubleClick += new System.EventHandler(this.TitleBar_DoubleClick);
             this.TitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
             // 
             // LblTitle
@@ -396,6 +397,14 @@ namespace Switch_Toolbox.Library.Forms
 
         Rectangle Top { get { return new Rectangle(0, 0, this.ClientSize.Width, BorderSize); } }
         Rectangle Left { get { return new Rectangle(0, 0, BorderSize, this.ClientSize.Height); } }
+
+        private void TitleBar_DoubleClick(object sender, EventArgs e)
+        {
+            if (canResize)
+            {
+                Maximize();
+            }
+        }
 
         Rectangle Bottom { get { return new Rectangle(0, this.ClientSize.Height - BorderSize, this.ClientSize.Width, BorderSize); } }
         Rectangle Right { get { return new Rectangle(this.ClientSize.Width - BorderSize, 0, BorderSize, this.ClientSize.Height); } }

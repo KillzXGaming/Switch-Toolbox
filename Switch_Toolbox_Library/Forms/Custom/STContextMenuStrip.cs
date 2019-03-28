@@ -62,6 +62,18 @@ namespace Switch_Toolbox.Library.Forms
                 this.Renderer = new MenuRenderer();
             }
         }
+
+        public STContextMenuStrip(IContainer container)
+        {
+                 this.ForeColor = FormThemes.BaseTheme.FormContextMenuForeColor;
+
+            if (FormThemes.ActivePreset != FormThemes.Preset.White)
+            {
+                this.BackColor = titlebarBackColor;
+                this.ForeColor = titlebarForeColor;
+                this.Renderer = new MenuRenderer();
+            }
+        }
     }
 
     public class MenuRenderer : ToolStripProfessionalRenderer
