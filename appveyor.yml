@@ -26,7 +26,6 @@ after_build:
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.pdb"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.exe.config"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Shader"
-  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\ShaderTools"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Assimp32.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Assimp64.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Extensions.Data.xxHash.dll"
