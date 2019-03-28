@@ -1,0 +1,17 @@
+version: 1.0.{build}
+environment:
+  name: Switch-Toolbox
+build:
+  project: Switch_Toolbox.sln
+  verbosity: minimal
+artifact: Switch-Toolbox-Latest.zip
+deploy:
+- provider: GitHub
+  tag: EXPERIMENTAL_v1.0r2,5_BETA
+  release: Experimental Release
+  auth_token:
+    secure: vDPwgMnjU54ZBjDmIfPNaES/JfhJBkj1yZ1kZwNf3ls8IUjPhVEWR2FDBVV0MySO
+  artifact: Switch_Toolbox_v1.0r2,5_BETA
+  draft: false
+  prerelease: true
+  force_update: true

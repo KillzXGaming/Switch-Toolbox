@@ -272,14 +272,17 @@ namespace FirstPlugin
             return MessageBox.Show("Does this game support paths ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes;
         }
 
-        public static void OpenByml(string Filename, BYAML byaml) =>
+        public static void OpenByml(string Filename, BYAML byaml) {
             OpenByml(new FileStream(Filename, FileMode.Open), byaml, Filename);
+        }
 
-        public static void OpenByml(Stream file, BYAML byaml, string FileName = "") =>
+        public static void OpenByml(Stream file, BYAML byaml, string FileName = "") {
             OpenByml(file, byaml, FileName, SupportPaths());
+        }
 
-        public static void OpenByml(Stream file, BYAML byaml, string FileName, bool paths) =>
+        public static void OpenByml(Stream file, BYAML byaml, string FileName, bool paths) {
             OpenByml(file, byaml, FileName, paths, null, false);
+        }
 
         public static void OpenByml(Stream file, BYAML byaml, string FileName, bool? paths, Stream saveStream, bool AsDialog)
         {
