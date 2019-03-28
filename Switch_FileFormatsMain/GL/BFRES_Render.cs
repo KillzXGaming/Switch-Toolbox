@@ -275,7 +275,7 @@ namespace FirstPlugin
 
             if (models.Count > 0)
             {
-                if (models[0].materials.Count > 0)
+                if (models[0].shapes.Count > 0)
                 {
                     if( models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
                         shader = BotwShaderProgram;

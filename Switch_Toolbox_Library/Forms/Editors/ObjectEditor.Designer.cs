@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.searchLbl = new Switch_Toolbox.Library.Forms.STLabel();
@@ -42,7 +43,6 @@
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.importToActiveWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
@@ -62,6 +62,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.activeEditorChkBox);
             this.stPanel1.Controls.Add(this.treeViewCustom1);
             this.stPanel1.Controls.Add(this.stPanel3);
             this.stPanel1.Controls.Add(this.stContextMenuStrip1);
@@ -71,6 +72,17 @@
             this.stPanel1.Size = new System.Drawing.Size(314, 512);
             this.stPanel1.TabIndex = 11;
             this.stPanel1.Resize += new System.EventHandler(this.stPanel1_Resize);
+            // 
+            // activeEditorChkBox
+            // 
+            this.activeEditorChkBox.AutoSize = true;
+            this.activeEditorChkBox.Location = new System.Drawing.Point(93, 4);
+            this.activeEditorChkBox.Name = "activeEditorChkBox";
+            this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
+            this.activeEditorChkBox.TabIndex = 3;
+            this.activeEditorChkBox.Text = "Add Files to Active Editor";
+            this.activeEditorChkBox.UseVisualStyleBackColor = true;
+            this.activeEditorChkBox.CheckedChanged += new System.EventHandler(this.activeEditorChkBox_CheckedChanged);
             // 
             // treeViewCustom1
             // 
@@ -142,8 +154,7 @@
             // 
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.importToActiveWindowToolStripMenuItem});
+            this.viewToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
             this.stContextMenuStrip1.Size = new System.Drawing.Size(314, 24);
@@ -161,7 +172,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Add File";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -176,7 +187,7 @@
             // sortToolStripMenuItem
             // 
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
@@ -197,14 +208,6 @@
             this.splitter1.TabStop = false;
             this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
             this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
-            // 
-            // importToActiveWindowToolStripMenuItem
-            // 
-            this.importToActiveWindowToolStripMenuItem.Checked = true;
-            this.importToActiveWindowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.importToActiveWindowToolStripMenuItem.Name = "importToActiveWindowToolStripMenuItem";
-            this.importToActiveWindowToolStripMenuItem.Size = new System.Drawing.Size(152, 20);
-            this.importToActiveWindowToolStripMenuItem.Text = "Import to Active Window";
             // 
             // ObjectEditor
             // 
@@ -241,6 +244,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importToActiveWindowToolStripMenuItem;
+        private STCheckBox activeEditorChkBox;
     }
 }

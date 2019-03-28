@@ -70,6 +70,8 @@ namespace Switch_Toolbox.Library
 
         public static bool MaximizeMdiWindow = true;
 
+        public static bool AddFilesToActiveObjectEditor = true;
+
         public static GridSettings gridSettings = new GridSettings();
         public class GridSettings
         {

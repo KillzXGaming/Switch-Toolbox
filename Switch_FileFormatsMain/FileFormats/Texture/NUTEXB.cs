@@ -52,7 +52,7 @@ namespace FirstPlugin
             }
         }
 
-        public bool LimitFileSize { get; set; }
+        public bool LimitFileSize { get; set; } = true;
 
         public enum NUTEXImageFormat : byte
         {

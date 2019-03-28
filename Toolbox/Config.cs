@@ -141,6 +141,9 @@ namespace Toolbox
                     case "MaxCameraSpeed":
                         float.TryParse(node.InnerText, out Runtime.MaxCameraSpeed);
                         break;
+                    case "AddFilesToActiveObjectEditor":
+                        bool.TryParse(node.InnerText, out Runtime.AddFilesToActiveObjectEditor);
+                        break;
                 }
             }
         }
@@ -252,6 +255,7 @@ namespace Toolbox
             parentNode.AppendChild(objlistSettingsNode);
             objlistSettingsNode.AppendChild(createNode(doc, "thumbnailSize", Runtime.thumbnailSize.ToString()));
             objlistSettingsNode.AppendChild(createNode(doc, "ListPanelWidth", Runtime.ObjectEditor.ListPanelWidth.ToString()));
+            objlistSettingsNode.AppendChild(createNode(doc, "AddFilesToActiveObjectEditor", Runtime.AddFilesToActiveObjectEditor.ToString()));
         }
         private static void AppendRenderSettings(XmlDocument doc, XmlNode parentNode)
         {

@@ -17,6 +17,19 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ObjectEditor : STForm
     {
+        public bool AddFilesToActiveEditor
+        {
+            get
+            {
+                return activeEditorChkBox.Checked;
+            }
+            set
+            {
+                activeEditorChkBox.Checked = value;
+                Runtime.AddFilesToActiveObjectEditor = value;
+            }
+        }
+
         public static ObjectEditor Instance
         {
             get { return _instance != null ? _instance : (_instance = new ObjectEditor()); }
@@ -33,6 +46,8 @@ namespace Switch_Toolbox.Library.Forms
             searchLbl.BackColor = stTextBox1.BackColor;
 
             treeViewCustom1.BackColor = FormThemes.BaseTheme.ObjectEditorBackColor;
+
+            AddFilesToActiveEditor = Runtime.AddFilesToActiveObjectEditor;
         }
 
         public Viewport GetViewport() => viewport;
@@ -349,6 +364,11 @@ namespace Switch_Toolbox.Library.Forms
         private void stPanel1_Resize(object sender, EventArgs e)
         {
             Runtime.ObjectEditor.ListPanelWidth = stPanel1.Width;
+        }
+
+        private void activeEditorChkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            AddFilesToActiveEditor = activeEditorChkBox.Checked;
         }
     }
 }

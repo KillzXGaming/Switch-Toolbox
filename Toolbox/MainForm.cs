@@ -230,16 +230,45 @@ namespace Toolbox
             var node = (TreeNode)file;
 
             //ObjectEditor is for treenode types. Editors will be on the right side, treenodes on the left
-
             SetFormatSettings((IFileFormat)node);
-            ObjectEditor editor = new ObjectEditor();
 
-            if (InActiveEditor)
+            //Check for active object editors
+            ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+
+            bool IsEditorActive = editor != null;
+
+            //Create one if none are active
+            if (!IsEditorActive)
             {
-                editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+                editor = new ObjectEditor();
             }
 
+            bool useActiveEditor = false;
 
+            //If any are active and we want it to be a new tab then create an instance of one
+            if (InActiveEditor || editor.AddFilesToActiveEditor)
+            {
+                useActiveEditor = true;
+            }
+
+            if (!useActiveEditor || !IsEditorActive)
+            {
+                editor = new ObjectEditor();
+                AddObjectEditorFile(node, editor, true);
+
+                editor.Text = CheckTabDupes(node.Text);
+                editor.Show();
+            }
+            else
+            {
+                AddObjectEditorFile(node, editor, false);
+            }
+
+            SetFormatSettings(GetActiveIFileFormat());
+        }
+
+        private void AddObjectEditorFile(TreeNode file, ObjectEditor editor, bool ClearFiles)
+        {
             TabDupeIndex = 0;
             editor.MdiParent = this;
 
@@ -247,24 +276,16 @@ namespace Toolbox
             editor.treeViewCustom1.Invoke((Action)delegate ()
             {
                 editor.treeViewCustom1.BeginUpdate(); // No visual updates until we say 
-                editor.treeViewCustom1.Nodes.Clear(); // Remove existing nodes
-                editor.treeViewCustom1.Nodes.Add(node); // Add the new nodes
+                if (ClearFiles)
+                    editor.treeViewCustom1.Nodes.Clear(); // Remove existing nodes
+                editor.treeViewCustom1.Nodes.Add(file); // Add the new nodes
                 editor.treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
             });
-
 
             if (file is TreeNodeFile)
             {
                 ((TreeNodeFile)file).OnAfterAdded();
             }
-
-            if (!InActiveEditor)
-            {
-                editor.Text = CheckTabDupes(node.Text);
-                editor.Show();
-            }
-
-            SetFormatSettings(GetActiveIFileFormat());
         }
 
         #endregion
