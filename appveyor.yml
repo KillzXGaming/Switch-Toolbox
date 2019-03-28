@@ -20,10 +20,11 @@ deploy:
 after_build:
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.exe"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.exe.config"
-   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.pdb"
-   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.pdb"
-
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.pdb"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Lib"
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.exe"
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.pdb"
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.exe.config"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Shader"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\ShaderTools"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Assimp32.dll"

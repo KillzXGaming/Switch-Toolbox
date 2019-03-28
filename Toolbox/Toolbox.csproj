@@ -208,6 +208,10 @@
       <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
+    <ProjectReference Include="..\Updater\Updater.csproj">
+      <Project>{d82a2c08-2a65-43af-bda6-a36cc27aa003}</Project>
+      <Name>Updater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assimp32.dll">
