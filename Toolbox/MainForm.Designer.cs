@@ -60,10 +60,11 @@
             this.closeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.BtnMdiMinimize = new System.Windows.Forms.PictureBox();
             this.BtnMdiMinMax = new System.Windows.Forms.PictureBox();
             this.BtnMdiClose = new System.Windows.Forms.PictureBox();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.updateToolstrip = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.tabControlContextMenuStrip.SuspendLayout();
@@ -196,35 +197,35 @@
             // cascadeToolStripMenuItem
             // 
             this.cascadeToolStripMenuItem.Name = "cascadeToolStripMenuItem";
-            this.cascadeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cascadeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.cascadeToolStripMenuItem.Text = "Cascade";
             this.cascadeToolStripMenuItem.Click += new System.EventHandler(this.cascadeToolStripMenuItem_Click);
             // 
             // minimizeToolStripMenuItem
             // 
             this.minimizeToolStripMenuItem.Name = "minimizeToolStripMenuItem";
-            this.minimizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.minimizeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.minimizeToolStripMenuItem.Text = "Minimize";
             this.minimizeToolStripMenuItem.Click += new System.EventHandler(this.minimizeToolStripMenuItem_Click);
             // 
             // maximizeToolStripMenuItem
             // 
             this.maximizeToolStripMenuItem.Name = "maximizeToolStripMenuItem";
-            this.maximizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.maximizeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.maximizeToolStripMenuItem.Text = "Maximize";
             this.maximizeToolStripMenuItem.Click += new System.EventHandler(this.maximizeToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // closeAllToolStripMenuItem
             // 
             this.closeAllToolStripMenuItem.Name = "closeAllToolStripMenuItem";
-            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.closeAllToolStripMenuItem.Text = "Close All";
             this.closeAllToolStripMenuItem.Click += new System.EventHandler(this.closeAllToolStripMenuItem_Click);
             // 
@@ -319,23 +320,13 @@
             // 
             this.stToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1});
+            this.toolStripButton2,
+            this.updateToolstrip});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.stToolStrip1.Name = "stToolStrip1";
             this.stToolStrip1.Size = new System.Drawing.Size(1108, 30);
             this.stToolStrip1.TabIndex = 0;
             this.stToolStrip1.Text = "stToolStrip1";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Enabled = false;
-            this.toolStripButton1.Image = global::Toolbox.Properties.Resources.Save;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 27);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.ToolTipText = "Save File";
             // 
             // BtnMdiMinimize
             // 
@@ -381,6 +372,29 @@
             this.BtnMdiClose.Click += new System.EventHandler(this.BtnMdiClose_Click);
             this.BtnMdiClose.MouseEnter += new System.EventHandler(this.BtnMdiClose_MouseEnter);
             this.BtnMdiClose.MouseLeave += new System.EventHandler(this.BtnMdiClose_MouseLeave);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Enabled = false;
+            this.toolStripButton2.Image = global::Toolbox.Properties.Resources.Save;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 27);
+            this.toolStripButton2.Text = "toolStripButton1";
+            this.toolStripButton2.ToolTipText = "Save File";
+            // 
+            // updateToolstrip
+            // 
+            this.updateToolstrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.updateToolstrip.Enabled = false;
+            this.updateToolstrip.Image = global::Toolbox.Properties.Resources.UpdateIcon;
+            this.updateToolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.updateToolstrip.Name = "updateToolstrip";
+            this.updateToolstrip.Size = new System.Drawing.Size(23, 27);
+            this.updateToolstrip.Text = "toolStripButton1";
+            this.updateToolstrip.ToolTipText = "Update Tool";
+            this.updateToolstrip.Click += new System.EventHandler(this.updateToolstrip_Click);
             // 
             // MainForm
             // 
@@ -447,13 +461,14 @@
         private System.Windows.Forms.ToolStripMenuItem mainSettingsToolStripMenuItem;
         private Switch_Toolbox.Library.Forms.STPanel stPanel2;
         private Switch_Toolbox.Library.Forms.STToolStrip stToolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton updateToolstrip;
         private System.Windows.Forms.ToolStripMenuItem newFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;
         private System.Windows.Forms.PictureBox BtnMdiMinimize;
         private System.Windows.Forms.PictureBox BtnMdiMinMax;
         private System.Windows.Forms.PictureBox BtnMdiClose;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }
 

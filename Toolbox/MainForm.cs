@@ -118,21 +118,25 @@ namespace Toolbox
         {
             if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck && UsePrompt)
             {
-                //Prompt once for the user to update the tool. 
-                DialogResult result;
-                using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
-                {
-                    result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName}!" +
-                   $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                }
-                if (result == DialogResult.Yes)
-                {
-                    UpdateApplication();
-                }
-                else
-                    UsePrompt = false;
+                updateToolstrip.Checked = true;
             }
         }
+
+        private void UpdateNotifcationClick()
+        {
+            //Prompt once for the user to update the tool. 
+            DialogResult result;
+            using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
+            {
+                result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName}!" +
+               $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            }
+            if (result == DialogResult.Yes)
+            {
+                UpdateApplication();
+            }
+        }
+
         private void UpdateApplication()
         {
             //Start updating while program is closed
@@ -1031,6 +1035,11 @@ namespace Toolbox
         {
             if (ActiveMdiChild != null)
                 ActiveMdiChild.WindowState = FormWindowState.Minimized;
+        }
+
+        private void updateToolstrip_Click(object sender, EventArgs e)
+        {
+            UpdateNotifcationClick();
         }
     }
 }

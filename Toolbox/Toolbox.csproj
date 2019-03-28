@@ -395,6 +395,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\Save.png" />
+    <None Include="Resources\UpdateIcon.png" />
     <Content Include="Switch_Toolbox.csproj.user" />
     <Content Include="Tool.ico" />
     <None Include="Resources\Logo.png" />
