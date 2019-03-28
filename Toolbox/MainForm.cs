@@ -39,9 +39,7 @@ namespace Toolbox
             //Redo setting this since designer keeps resetting this
             tabForms.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
-            BtnMdiClose.Visible = false;
-            BtnMdiMinMax.Visible = false;
-            BtnMdiMinimize.Visible = false;
+            OnMdiWindowClosed();
         }
 
         public void Reload()
@@ -689,9 +687,7 @@ namespace Toolbox
             if (ActiveMdiChild != null)
                 ActiveMdiChild.Close();
 
-            BtnMdiClose.Visible = false;
-            BtnMdiMinMax.Visible = false;
-            BtnMdiMinimize.Visible = false;
+            OnMdiWindowClosed();
 
             //Force garbage collection.
             GC.Collect();
@@ -704,13 +700,30 @@ namespace Toolbox
         {
             foreach (Form frm in this.MdiChildren) frm.Close();
 
-            Switch_Toolbox.Library.RenderTools.DisposeTextures();
+
+            OnMdiWindowClosed();
+
+            RenderTools.DisposeTextures();
 
             //Force garbage collection.
             GC.Collect();
 
             // Wait for all finalizers to complete before continuing.
             GC.WaitForPendingFinalizers();
+        }
+
+        private void OnMdiWindowClosed()
+        {
+            BtnMdiClose.Visible = false;
+            BtnMdiMinMax.Visible = false;
+            BtnMdiMinimize.Visible = false;
+        }
+
+        private void OnMdiWindowActived()
+        {
+            BtnMdiClose.Visible = true;
+            BtnMdiMinMax.Visible = true;
+            BtnMdiMinimize.Visible = true;
         }
 
         private void minimizeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -870,18 +883,9 @@ namespace Toolbox
                 return;
 
             if (ActiveMdiChild.WindowState == FormWindowState.Maximized)
-            {
-                BtnMdiClose.Visible = true;
-                BtnMdiMinMax.Visible = true;
-                BtnMdiMinimize.Visible = true;
-            }
+                OnMdiWindowActived();
             else
-            {
-                BtnMdiClose.Visible = false;
-                BtnMdiMinMax.Visible = false;
-                BtnMdiMinimize.Visible = false;
-            }
-
+                OnMdiWindowClosed();
         }
 
         private const int WM_SETREDRAW = 11;
@@ -1010,10 +1014,7 @@ namespace Toolbox
             {
                 if (child == tabForms.SelectedTab.Tag)
                 {
-                    BtnMdiClose.Visible = false;
-                    BtnMdiMinMax.Visible = false;
-                    BtnMdiMinimize.Visible = false;
-
+                    OnMdiWindowClosed();
                     child.Close();
                     return;
                 }
