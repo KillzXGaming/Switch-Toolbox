@@ -59,20 +59,20 @@
             this.tabControlContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.closeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
             this.BtnMdiMinimize = new System.Windows.Forms.PictureBox();
             this.BtnMdiMinMax = new System.Windows.Forms.PictureBox();
             this.BtnMdiClose = new System.Windows.Forms.PictureBox();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
+            this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.updateToolstrip = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.tabControlContextMenuStrip.SuspendLayout();
             this.stPanel2.SuspendLayout();
-            this.stToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BtnMdiMinimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BtnMdiMinMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BtnMdiClose)).BeginInit();
+            this.stToolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -316,18 +316,6 @@
             this.stPanel2.Size = new System.Drawing.Size(1108, 30);
             this.stPanel2.TabIndex = 7;
             // 
-            // stToolStrip1
-            // 
-            this.stToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton2,
-            this.updateToolstrip});
-            this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.stToolStrip1.Name = "stToolStrip1";
-            this.stToolStrip1.Size = new System.Drawing.Size(1108, 30);
-            this.stToolStrip1.TabIndex = 0;
-            this.stToolStrip1.Text = "stToolStrip1";
-            // 
             // BtnMdiMinimize
             // 
             this.BtnMdiMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -373,16 +361,29 @@
             this.BtnMdiClose.MouseEnter += new System.EventHandler(this.BtnMdiClose_MouseEnter);
             this.BtnMdiClose.MouseLeave += new System.EventHandler(this.BtnMdiClose_MouseLeave);
             // 
-            // toolStripButton2
+            // stToolStrip1
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Enabled = false;
-            this.toolStripButton2.Image = global::Toolbox.Properties.Resources.Save;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 27);
-            this.toolStripButton2.Text = "toolStripButton1";
-            this.toolStripButton2.ToolTipText = "Save File";
+            this.stToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripButton,
+            this.updateToolstrip});
+            this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.stToolStrip1.Name = "stToolStrip1";
+            this.stToolStrip1.Size = new System.Drawing.Size(1108, 30);
+            this.stToolStrip1.TabIndex = 0;
+            this.stToolStrip1.Text = "stToolStrip1";
+            // 
+            // saveToolStripButton
+            // 
+            this.saveToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.saveToolStripButton.Enabled = false;
+            this.saveToolStripButton.Image = global::Toolbox.Properties.Resources.Save;
+            this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveToolStripButton.Name = "saveToolStripButton";
+            this.saveToolStripButton.Size = new System.Drawing.Size(23, 27);
+            this.saveToolStripButton.Text = "saveToolStripButton1";
+            this.saveToolStripButton.ToolTipText = "Save File";
+            this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripButton_Click);
             // 
             // updateToolstrip
             // 
@@ -423,11 +424,11 @@
             this.tabControlContextMenuStrip.ResumeLayout(false);
             this.stPanel2.ResumeLayout(false);
             this.stPanel2.PerformLayout();
-            this.stToolStrip1.ResumeLayout(false);
-            this.stToolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BtnMdiMinimize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BtnMdiMinMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BtnMdiClose)).EndInit();
+            this.stToolStrip1.ResumeLayout(false);
+            this.stToolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -468,7 +469,7 @@
         private System.Windows.Forms.PictureBox BtnMdiMinimize;
         private System.Windows.Forms.PictureBox BtnMdiMinMax;
         private System.Windows.Forms.PictureBox BtnMdiClose;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton saveToolStripButton;
     }
 }
 

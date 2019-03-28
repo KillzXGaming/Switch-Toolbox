@@ -614,11 +614,13 @@ namespace Toolbox
             {
                 saveAsToolStripMenuItem.Enabled = true;
                 saveToolStripMenuItem.Enabled = true;
+                saveToolStripButton.Enabled = true;
             }
             else
             {
                 saveAsToolStripMenuItem.Enabled = false;
                 saveToolStripMenuItem.Enabled = false;
+                saveToolStripButton.Enabled = false;
             }
 
             if (format.IFileInfo.UseEditMenu)
@@ -631,6 +633,7 @@ namespace Toolbox
             editToolStripMenuItem.Enabled = false;
             saveAsToolStripMenuItem.Enabled = false;
             saveToolStripMenuItem.Enabled = false;
+            saveToolStripButton.Enabled = false;
         }
 
 
@@ -645,13 +648,15 @@ namespace Toolbox
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) {
             SaveActiveFile();
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+            SaveActiveFile(false);
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e) {
             SaveActiveFile(false);
         }
 
@@ -1037,8 +1042,7 @@ namespace Toolbox
                 ActiveMdiChild.WindowState = FormWindowState.Minimized;
         }
 
-        private void updateToolstrip_Click(object sender, EventArgs e)
-        {
+        private void updateToolstrip_Click(object sender, EventArgs e) {
             UpdateNotifcationClick();
         }
     }
