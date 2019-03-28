@@ -472,7 +472,7 @@ namespace Bfres.Structs
                         }
                     }
 
-                    AssimpData assimp = new AssimpData();
+                    AssimpSaver assimp = new AssimpSaver();
                     assimp.SaveFromModel(this, FileName, textures, Skeleton, Skeleton.Node_Array.ToList());
                     break;
             }

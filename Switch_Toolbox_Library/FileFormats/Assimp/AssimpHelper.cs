@@ -11,6 +11,17 @@ namespace Switch_Toolbox.Library
 {
     public static class AssimpHelper
     {
+        public static Matrix4x4 GetBoneMatrix(STBone bone)
+        {
+            var pos = Matrix4x4.FromTranslation(new Vector3D(bone.position[0], bone.position[1], bone.position[2]));
+            var rotx = Matrix4x4.FromRotationX(bone.rotation[0]);
+            var roty = Matrix4x4.FromRotationY(bone.rotation[1]);
+            var rotz = Matrix4x4.FromRotationZ(bone.rotation[2]);
+            var sca = Matrix4x4.FromScaling(new Vector3D(bone.scale[0], bone.scale[1], bone.scale[2]));
+
+            return sca * (rotx * roty * rotz) * pos;
+        }
+
         public static string GetSaveFilter()
         {
             return "Supported Formats|*.dae;*.stl;*.obj; *.ply; *.x;*.3ds;*.json;|" +

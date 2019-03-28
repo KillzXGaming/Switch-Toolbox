@@ -590,7 +590,7 @@ namespace Bfres.Structs
                         ExportBinaryObject(sfd.FileName);
                         break;
                     default:
-                        AssimpData assimp = new AssimpData();
+                        AssimpSaver assimp = new AssimpSaver();
                         assimp.SaveFromObject(vertices, lodMeshes[DisplayLODIndex].faces, Text, sfd.FileName);
                         break;
                 }
