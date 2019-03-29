@@ -119,6 +119,8 @@ namespace FirstPlugin
             public class Header
             {
                 public List<EmitterSet> emitterSets = new List<EmitterSet>();
+                public List<TextureInfo> Textures = new List<TextureInfo>();
+
                 public bool IsSPBD = false;
 
                 public uint EffectNameTableOffset;
@@ -152,8 +154,9 @@ namespace FirstPlugin
                     uint ShaderParamTableOffset = reader.ReadUInt32();
                     uint ShaderParamTableSize = reader.ReadUInt32();
 
-                    var groupEmitterSets = new TreeNode();
-                    groupEmitterSets.Text = "Emitter Sets";
+                    var groupEmitterSets = new TreeNode("Emitter Sets");
+                    var textureFolder = new TreeNode("Textures");
+                    pctl.Nodes.Add(textureFolder);
                     pctl.Nodes.Add(groupEmitterSets);
 
                     if (IsSPBD)
@@ -167,6 +170,8 @@ namespace FirstPlugin
                         emitterSets.Add(emitterSet);
                         groupEmitterSets.Nodes.Add(emitterSet);
                     }
+                    foreach (var tex in Textures)
+                        textureFolder.Nodes.Add(tex);
                 }
                 public void Write(FileWriter writer, PTCL ptcl)
                 {
@@ -336,7 +341,10 @@ namespace FirstPlugin
                         textureInfo.Read(reader, header, Text);
 
                         if (!textureInfo.IsEmpty())
+                        {
                             DrawableTex.Add(textureInfo);
+                            header.Textures.Add(textureInfo);
+                        }
                     }
                     reader.Seek(pos + 1616, SeekOrigin.Begin);
                     ColorPosition = reader.Position;
