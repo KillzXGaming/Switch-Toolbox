@@ -611,6 +611,7 @@ namespace FirstPlugin
             tex.SurfaceDim = SurfaceDim.Dim2D;
             tex.SampleCount = 1;
             tex.Pitch = 32;
+            tex.MipOffsets = new long[tex.MipCount];
 
             MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
 
