@@ -349,7 +349,12 @@ namespace FirstPlugin
                         if (!textureInfo.IsEmpty())
                         {
                             DrawableTex.Add(textureInfo);
-                            header.Textures.Add(textureInfo);
+
+                            bool HasImage = header.Textures.Any(item => item.DataPos == textureInfo.DataPos);
+                            if (!HasImage)
+                            {
+                                header.Textures.Add(textureInfo);
+                            }
                         }
                     }
                     reader.Seek(pos + 1616, SeekOrigin.Begin);
