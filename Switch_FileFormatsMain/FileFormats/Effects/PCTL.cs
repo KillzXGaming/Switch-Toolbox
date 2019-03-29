@@ -170,8 +170,13 @@ namespace FirstPlugin
                         emitterSets.Add(emitterSet);
                         groupEmitterSets.Nodes.Add(emitterSet);
                     }
+
+                    int index = 0;
                     foreach (var tex in Textures)
+                    {
+                        tex.Text = $"Texture{index++}";
                         textureFolder.Nodes.Add(tex);
+                    }
                 }
                 public void Write(FileWriter writer, PTCL ptcl)
                 {
