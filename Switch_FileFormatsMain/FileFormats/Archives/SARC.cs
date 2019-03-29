@@ -8,7 +8,6 @@ using SARCExt;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.NodeWrappers;
 
 namespace FirstPlugin
 {
@@ -322,14 +321,14 @@ namespace FirstPlugin
             {
                 IFileFormat file = STFileLoader.OpenFileFormat(FullName, Data,false, true, this);
 
-                if (file != null && file is TreeNodeFile || file is STGenericWrapper)
-                {
-                     sarc.OpenedFiles.Add(FullPath, Data);
-                     ReplaceNode(this.Parent, this, (TreeNode)file);
-                }
-                else if (file != null && !SuppressFormDialog)
+                if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)))
                 {
                     OpenFormDialog(file);
+                }
+                else if (file != null)
+                {
+                    sarc.OpenedFiles.Add(FullPath, Data);
+                    ReplaceNode(this.Parent, this, (TreeNode)file);
                 }
             }
 

@@ -10,6 +10,16 @@ namespace Switch_Toolbox.Library
 {
    public class Utils
     {
+        public static bool HasInterface(Type objectType, Type interfaceType)
+        {
+            foreach (var inter in objectType.GetInterfaces())
+            {
+                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == interfaceType)
+                    return true;
+            }
+            return false;
+        }
+
         public static bool IsInDesignMode()
         {
             if (System.Diagnostics.Process.GetCurrentProcess().ProcessName == "devenv")
