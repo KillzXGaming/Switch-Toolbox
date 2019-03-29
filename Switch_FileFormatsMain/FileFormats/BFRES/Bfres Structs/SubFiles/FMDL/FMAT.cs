@@ -25,12 +25,17 @@ namespace Bfres.Structs
 
             ContextMenuStrip = new STContextMenuStrip();
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Material", null, Import, Keys.Control | Keys.I));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Material", null, ImportAction, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Materials", null, ExportAll, Keys.Control | Keys.A));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace (From Folder)",null, ReplaceBatch, Keys.Control | Keys.R));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Materials", null, ExportAllAction, Keys.Control | Keys.A));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace (From Folder)",null, ReplaceBatchAction, Keys.Control | Keys.R));
         }
-        public void ExportAll(object sender, EventArgs args)
+
+        public void ExportAllAction(object sender, EventArgs args) { ExportAll(); }
+        public void ReplaceBatchAction(object sender, EventArgs args) { ReplaceBatch(); }
+        public void ImportAction(object sender, EventArgs args) { Import(); }
+
+        public void ExportAll()
         {
             FolderSelectDialog sfd = new FolderSelectDialog();
 
@@ -44,7 +49,7 @@ namespace Bfres.Structs
                 }
             }
         }
-        public void ReplaceBatch(object sender, EventArgs args)
+        public void ReplaceBatch()
         {
             FolderSelectDialog ofd = new FolderSelectDialog();
 
@@ -65,7 +70,7 @@ namespace Bfres.Structs
             LibraryGUI.Instance.UpdateViewport();
         }
 
-        public void Import(object sender, EventArgs args)
+        public void Import()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Bfres Material |*.bfmat;";
@@ -91,14 +96,71 @@ namespace Bfres.Structs
 
             ContextMenuStrip = new STContextMenuStrip();
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
 
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Copy", null, Copy, Keys.Control | Keys.C));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Copy", null, CopyAction, Keys.Control | Keys.C));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.N));
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.N));
         }
 
+        protected void ExportAction(object sender, EventArgs args) { Export(); }
+        protected void ReplaceAction(object sender, EventArgs args) { Replace(); }
+        protected void CopyAction(object sender, EventArgs args) { Copy(); }
+        protected void RenameAction(object sender, EventArgs args) { Rename(); }
+        protected void DeleteAction(object sender, EventArgs args) { Delete(); }
+
+        public void Delete()
+        {
+            string MappedNames = "";
+            var model = GetParentModel();
+
+            int CurrentIndex = Parent.Nodes.IndexOf(this);
+
+            if (model.materials.Count == 1 && model.shapes.Count > 0)
+            {
+                MessageBox.Show("A single material must exist if any objects exist!", "Material Delete",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
+            foreach (var shape in model.shapes)
+            {
+                if (shape.GetMaterial() == this)
+                {
+                    MappedNames += $"{shape.Text}\n";
+                }
+            }
+            if (MappedNames != "")
+            {
+                var result = STOptionsDialog.Show("Shapes are mapped to this material. Are you sure you want to remove this? (Will default to first material)",
+                    "Material Delete", MappedNames);
+
+                if (result == DialogResult.Yes)
+                {
+                    //Adjust all the indices properly based on this current index
+                    foreach (var shape in model.shapes)
+                    {
+                        //If there are indices higher than this index, shift them
+                        if (shape.MaterialIndex > CurrentIndex)
+                        {
+                            shape.MaterialIndex -= 1;
+                        }
+                    }
+
+                    model.materials.Remove(Text);
+                    Parent.Nodes.Remove(this);
+                }
+            }
+        }
+
+        public FMDL GetParentModel()
+        {
+            return ((FMDL)Parent.Parent);
+        }
 
         public ResFile GetResFile()
         {
@@ -152,7 +214,7 @@ namespace Bfres.Structs
             else
                 Runtime.activeGame = Runtime.ActiveGame.KSA;
         }
-        private void Rename(object sender, EventArgs args)
+        private void Rename()
         {
             RenameDialog dialog = new RenameDialog();
             dialog.SetString(Text);
@@ -164,11 +226,11 @@ namespace Bfres.Structs
                 ((FMDL)Parent.Parent).materials.Add(Text, this);
             }
         }
-        private void Copy(object sender, EventArgs args)
+        private void Copy()
         {
             ((FMDL)Parent.Parent).CopyMaterial(this);
         }
-        private void Export(object sender, EventArgs args)
+        private void Export()
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.bfmat;";
@@ -188,7 +250,7 @@ namespace Bfres.Structs
             else
                 Material.Export(path, GetResFile());
         }
-        private void Replace(object sender, EventArgs args)
+        private void Replace()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Supported Formats|*.bfmat;";

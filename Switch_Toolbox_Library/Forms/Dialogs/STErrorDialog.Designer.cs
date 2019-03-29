@@ -41,7 +41,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Location = new System.Drawing.Point(267, 47);
+            this.btnClose.Location = new System.Drawing.Point(267, 52);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 0;
@@ -55,7 +55,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDetails.Enabled = false;
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDetails.Location = new System.Drawing.Point(12, 47);
+            this.btnDetails.Location = new System.Drawing.Point(12, 52);
             this.btnDetails.Name = "btnDetails";
             this.btnDetails.Size = new System.Drawing.Size(75, 23);
             this.btnDetails.TabIndex = 1;
@@ -68,7 +68,7 @@
             this.btnCopy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopy.Location = new System.Drawing.Point(93, 47);
+            this.btnCopy.Location = new System.Drawing.Point(93, 52);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(102, 23);
             this.btnCopy.TabIndex = 4;
@@ -90,16 +90,16 @@
             // tbDetails
             // 
             this.tbDetails.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.tbDetails.Location = new System.Drawing.Point(12, 78);
+            this.tbDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbDetails.Location = new System.Drawing.Point(12, 83);
             this.tbDetails.MaximumSize = new System.Drawing.Size(328, 100);
             this.tbDetails.Name = "tbDetails";
             this.tbDetails.ReadOnly = true;
             this.tbDetails.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.tbDetails.Size = new System.Drawing.Size(328, 300);
+            this.tbDetails.Size = new System.Drawing.Size(328, 100);
             this.tbDetails.TabIndex = 6;
             this.tbDetails.Text = "";
             this.tbDetails.Visible = false;
-            this.tbDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             // 
             // pictureBox1
             // 
@@ -115,7 +115,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(354, 82);
+            this.ClientSize = new System.Drawing.Size(354, 87);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tbDetails);
             this.Controls.Add(this.lblMessage);

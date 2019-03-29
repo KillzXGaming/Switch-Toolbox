@@ -148,8 +148,8 @@
   <data name="maximized" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\maximized.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Bfres" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bfres.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="RewindArrows2L" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Playback\RewindArrows2L.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconInt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DataTyypes\IconInt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -193,9 +193,6 @@
   <data name="arrowL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrowL.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconCurve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DataTyypes\IconCurve.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="minimize" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Toolbar\images\minimize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -220,9 +217,6 @@
   <data name="Byaml" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Byaml.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Init_false" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CheckBox\Init_false.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="diffuseSDR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cubemaps\diffuseSDR.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -241,6 +235,9 @@
   <data name="specularSDR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cubemaps\specularSDR.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="InjectTexErrored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\InjectTexErrored.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="normalsSphere" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\normalsSphere.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -253,8 +250,8 @@
   <data name="IconList" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DataTyypes\IconList.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconBool" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DataTyypes\IconBool.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Init_false" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CheckBox\Init_false.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBuffer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DataTyypes\IconBuffer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -277,8 +274,14 @@
   <data name="Close_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Toolbar\images\close_sele.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="InfoCheck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\InfoCheck.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="PlayArrowR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Playback\PlayArrowR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NumbericUpDownArrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NumbericUpDownArrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="minimize_sele" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Forms\Toolbar\images\minimize_sele.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -292,14 +295,17 @@
   <data name="brsf" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\brsf.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="maximize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Forms\Toolbar\images\maximize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IconBool" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DataTyypes\IconBool.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="LoadingImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LoadingImage.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="InjectTexErrored" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\InjectTexErrored.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Bfres" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bfres.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCurve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DataTyypes\IconCurve.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Bnsh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bnsh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -315,9 +321,6 @@
   </data>
   <data name="CheckerBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CheckerBackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RewindArrows2L" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Playback\RewindArrows2L.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="skeletonAnimation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\skeletonAnimation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -340,10 +343,13 @@
   <data name="Bntx" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Bntx.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="maximize" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Forms\Toolbar\images\maximize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="minimize1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\minimize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NumbericUpDownArrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NumbericUpDownArrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="QuestionCheck" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QuestionCheck.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

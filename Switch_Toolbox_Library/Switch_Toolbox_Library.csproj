@@ -234,6 +234,12 @@
     <Compile Include="Forms\Custom\STNumericBox.Designer.cs">
       <DependentUpon>STNumericBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Dialogs\STOptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\STOptionsDialog.Designer.cs">
+      <DependentUpon>STOptionsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\Audio\LoopEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -463,9 +469,6 @@
       <DependentUpon>CubeMapFaceCreator.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Dialogs\DialogCenter.cs" />
-    <Compile Include="Forms\Dialogs\STExceptionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\Editors\TransformMeshTool.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -614,6 +617,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\STTextBox.resx">
       <DependentUpon>STTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\STOptionsDialog.resx">
+      <DependentUpon>STOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\STErrorDialog.resx">
       <DependentUpon>STErrorDialog.cs</DependentUpon>
@@ -957,6 +963,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NumbericUpDownArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InfoCheck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QuestionCheck.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AssimpNet.4.1.0\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.4.1.0\build\AssimpNet.targets')" />

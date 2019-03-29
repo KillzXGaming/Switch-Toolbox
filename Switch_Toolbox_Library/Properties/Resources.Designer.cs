@@ -433,6 +433,16 @@ namespace Switch_Toolbox.Library.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap InfoCheck {
+            get {
+                object obj = ResourceManager.GetObject("InfoCheck", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Init_false {
             get {
                 object obj = ResourceManager.GetObject("Init_false", resourceCulture);
@@ -646,6 +656,16 @@ namespace Switch_Toolbox.Library.Properties {
         public static System.Drawing.Bitmap PlayArrowR {
             get {
                 object obj = ResourceManager.GetObject("PlayArrowR", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QuestionCheck {
+            get {
+                object obj = ResourceManager.GetObject("QuestionCheck", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
