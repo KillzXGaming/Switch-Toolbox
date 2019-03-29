@@ -9,6 +9,7 @@ using Switch_Toolbox.Library;
 using System.IO;
 using Syroot.BinaryData;
 using System.Windows.Forms;
+using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
@@ -400,6 +401,32 @@ namespace FirstPlugin
             }
             public class TextureInfo : STGenericTexture
             {
+                public TextureInfo()
+                {
+                    ImageKey = "Texture";
+                    SelectedImageKey = "Texture";
+                }
+
+                public override void OnClick(TreeView treeView)
+                {
+                    UpdateEditor();
+                }
+
+                public void UpdateEditor()
+                {
+                    ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                    if (editor == null)
+                    {
+                        editor = new ImageEditorBase();
+                        editor.Dock = DockStyle.Fill;
+                        LibraryGUI.Instance.LoadEditor(editor);
+                    }
+
+                    editor.Text = Text;
+                    editor.LoadProperties(GenericProperties);
+                    editor.LoadImage(this);
+                }
+
                 public override TEX_FORMAT[] SupportedFormats
                 {
                     get
