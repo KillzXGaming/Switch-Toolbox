@@ -68,6 +68,7 @@ namespace Toolbox
             chkBoxDisplayBones.Checked = Runtime.renderBones;
             boneSizeUD.Value = (decimal)Runtime.bonePointSize;
             cameraMaxSpeedUD.Value = (decimal)Runtime.MaxCameraSpeed;
+            boneXRayChk.Checked = Runtime.boneXrayDisplay;
 
             GLSLVerLabel.Text   = $"Open GL Version: {Runtime.GLSLVersion}";
             openGLVerLabel.Text = $"GLSL Version:     {Runtime.openGLVersion}";
@@ -365,9 +366,12 @@ namespace Toolbox
             UpdateViewportSettings();
         }
 
-        private void cameraMaxSpeedUD_ValueChanged(object sender, EventArgs e)
-        {
+        private void cameraMaxSpeedUD_ValueChanged(object sender, EventArgs e) {
             Runtime.MaxCameraSpeed = (float)cameraMaxSpeedUD.Value;
+        }
+
+        private void boneXRayChk_CheckedChanged(object sender, EventArgs e) {
+            Runtime.boneXrayDisplay = boneXRayChk.Checked;
         }
     }
 }
