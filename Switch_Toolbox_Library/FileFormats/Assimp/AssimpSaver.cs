@@ -103,7 +103,9 @@ namespace Switch_Toolbox.Library
                             //Check if the max amount of weights is higher than the current bone id
                             if (v.boneWeights.Count > j)
                             {
-                                if (v.boneWeights[j] <= 1)
+                                if (v.boneWeights[j] <= 0)
+                                    mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
+                                else if (v.boneWeights[j] <= 1)
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
                                 else
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
