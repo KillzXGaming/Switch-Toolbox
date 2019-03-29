@@ -149,7 +149,7 @@ namespace FirstPlugin
                 arrayLength = 6;
             }
 
-            foreach (var array in DDS.GetArrayFacesBytes(dds, (int)arrayLength))
+            foreach (var array in DDS.GetArrayFacesBytes(dds.bdata, (int)arrayLength))
             {
                 DataBlockOutput.Add(array);
             }

@@ -598,19 +598,59 @@ namespace Switch_Toolbox.Library
 
                    return texture;
                }*/
-        public static List<byte[]> GetArrayFacesBytes(DDS dds, int Length)
+        public static List<byte[]> GetArrayFacesBytes(byte[] data, int Length)
         {
             int Offset = 0;
             List<byte[]> surfaces = new List<byte[]>();
             for (byte i = 0; i < Length; ++i)
             {
-                int size = dds.bdata.Length / Length;
+                int size = data.Length / Length;
 
-                surfaces.Add(Utils.SubArray(dds.bdata, (uint)Offset, (uint)size));
+                surfaces.Add(Utils.SubArray(data, (uint)Offset, (uint)size));
 
                 Offset += size;
             }
             return surfaces;
+        }
+
+        public static List<Surface> GetArrayFaces(STGenericTexture tex, byte[] ImageData, uint Length)
+        {
+            using (FileReader reader = new FileReader(ImageData))
+            {
+                var Surfaces = new List<STGenericTexture.Surface>();
+
+                uint formatSize = GetBytesPerPixel(tex.Format);
+
+                uint Offset = 0;
+                for (byte i = 0; i < Length; ++i)
+                {
+                    var Surface = new STGenericTexture.Surface();
+
+                    uint MipWidth = tex.Width, MipHeight = tex.Height;
+                    for (int j = 0; j < tex.MipCount; ++j)
+                    {
+                        uint size = (MipWidth * MipHeight); //Total pixels
+                        if (IsCompressed(tex.Format))
+                        {
+                            size = (uint)(size * ((float)formatSize / 0x10)); //Bytes per 16 pixels
+                            if (size < formatSize) //Make sure it's at least one block
+                                size = formatSize;
+                        }
+                        else
+                        {
+                            size = (uint)(size * GetBytesPerPixel(tex.Format)); //Bytes per pixel
+                        }
+
+                        MipWidth /= 2;
+                        MipHeight /= 2;
+                        Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
+                        Offset += size;
+                    }
+                    Surfaces.Add(Surface);
+                }
+
+                return Surfaces;
+            }
         }
 
         public static List<Surface> GetArrayFaces(DDS dds, uint Length)
@@ -618,90 +658,6 @@ namespace Switch_Toolbox.Library
             using (FileReader reader = new FileReader(dds.bdata))
             {
                 var Surfaces = new List<STGenericTexture.Surface>();
-
-                /*               Rendering.RenderableTex tex = new Rendering.RenderableTex();
-                                tex.height = (int)dds.header.height;
-                                tex.width = (int)dds.header.width;
-                                byte surfaceCount = 1;
-                                bool isCubemap = (dds.header.caps2 & (uint)DDSCAPS2.CUBEMAP) == (uint)DDSCAPS2.CUBEMAP;
-                                if (isCubemap)
-                                {
-                                    if ((dds.header.caps2 & (uint)DDSCAPS2.CUBEMAP_ALLFACES) == (uint)DDSCAPS2.CUBEMAP_ALLFACES)
-                                        surfaceCount = 6;
-                                    else
-                                        throw new NotImplementedException($"Unsupported cubemap face amount for texture. Six faces are required.");
-                                }
-
-                                bool isBlock = true;
-
-                                switch (dds.header.ddspf.fourCC)
-                                {
-                                    case 0x00000000: //RGBA
-                                        isBlock = false;
-                                        tex.pixelInternalFormat = PixelInternalFormat.Rgba;
-                                        tex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
-                                        break;
-                                    case 0x31545844: //DXT1
-                                        tex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
-                                        break;
-                                    case 0x33545844: //DXT3
-                                        tex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
-                                        break;
-                                    case 0x35545844: //DXT5
-                                        tex.pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
-                                        break;
-                                    case 0x31495441: //ATI1
-                                    case 0x55344342: //BC4U
-                                        tex.pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
-                                        break;
-                                    case 0x32495441: //ATI2
-                                    case 0x55354342: //BC5U
-                                        tex.pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
-                                        break;
-                                    default:
-                                        MessageBox.Show("Unsupported DDS format - 0x" + dds.header.ddspf.fourCC.ToString("x"));
-                                        break;
-                                }
-
-                                uint formatSize = getFormatSize(dds.header.ddspf.fourCC);
-
-                                FileReader d = new FileReader(dds.bdata);
-                                if (dds.header.mipmapCount == 0)
-                                    dds.header.mipmapCount = 1;
-
-                                List<Surface> surfaces = new List<Surface>();
-
-                                uint off = 0;
-                                for (byte i = 0; i < surfaceCount; ++i)
-                                {
-                                    Surface surface = new Surface();
-                                    uint w = dds.header.width, h = dds.header.height;
-                                    for (int j = 0; j < dds.header.mipmapCount; ++j)
-                                    {
-                                        //If texture is DXT5 and isn't square, limit the mipmaps to an amount such that width and height are each always >= 4
-                                        if (tex.pixelInternalFormat == PixelInternalFormat.CompressedRgbaS3tcDxt5Ext && tex.width != tex.height && (w < 4 || h < 4))
-                                            break;
-
-                                        uint s = (w * h); //Total pixels
-                                        if (isBlock)
-                                        {
-                                            s = (uint)(s * ((float)formatSize / 0x10)); //Bytes per 16 pixels
-                                            if (s < formatSize) //Make sure it's at least one block
-                                                s = formatSize;
-                                        }
-                                        else
-                                        {
-                                            s = (uint)(s * (formatSize)); //Bytes per pixel
-                                        }
-
-                                        w /= 2;
-                                        h /= 2;
-                                        surface.mipmaps.Add(d.getSection((int)off, (int)s));
-                                        off += s;
-                                    }
-                                    surfaces.Add(surface);
-                                }*/
-
 
                 uint formatSize = getFormatSize(dds.header.ddspf.fourCC);
                 bool isBlock = getFormatBlock(dds.header.ddspf.fourCC);

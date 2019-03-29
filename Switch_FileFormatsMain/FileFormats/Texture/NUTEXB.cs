@@ -447,6 +447,11 @@ namespace FirstPlugin
             byte padding = reader.ReadByte();
             Text = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
 
+            //We cannot check if it's swizzled properly
+            //So far if the name is blank, it's for Taiko No Tatsujin "Drum 'n' Fun
+            if (Text == "XNT")
+                IsSwizzled = false;
+
             reader.Seek(pos - 48, System.IO.SeekOrigin.Begin); //Subtract size of header
             uint padding2 = reader.ReadUInt32();
             Width = reader.ReadUInt32();
@@ -460,10 +465,6 @@ namespace FirstPlugin
             Alignment = reader.ReadInt32();
             ArrayCount = reader.ReadUInt32(); //6 for cubemaps
             int imagesize = reader.ReadInt32();
-
-            if (Alignment == 0)
-                IsSwizzled = false;
-
             Format = ConvertFormat(NutFormat);
 
             reader.Seek(imagesize, System.IO.SeekOrigin.Begin); //Get mipmap sizes
@@ -626,7 +627,7 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             if (!IsSwizzled)
-                return ImageData;
+                return DDS.GetArrayFaces(this, ImageData,1)[ArrayLevel].mipmaps[0];
 
             int target = 1;
             uint bpp = GetBytesPerPixel(Format);
