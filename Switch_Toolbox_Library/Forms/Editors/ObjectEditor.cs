@@ -252,6 +252,7 @@ namespace Switch_Toolbox.Library.Forms
         private void treeViewCustom1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             UpdateViewport = false;
+            IsModelChecked = false;
 
             if (e.Node is STGenericModel)
             {
