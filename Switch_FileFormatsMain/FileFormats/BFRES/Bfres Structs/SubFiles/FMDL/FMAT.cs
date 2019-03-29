@@ -123,25 +123,21 @@ namespace Bfres.Structs
             {
                 MessageBox.Show("A single material must exist if any objects exist!", "Material Delete",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 return;
             }
 
             foreach (var shape in model.shapes)
             {
                 if (shape.GetMaterial() == this)
-                {
                     MappedNames += $"{shape.Text}\n";
-                }
             }
             if (MappedNames != "")
             {
                 var result = STOptionsDialog.Show("Shapes are mapped to this material. Are you sure you want to remove this? (Will default to first material)",
                     "Material Delete", MappedNames);
 
-                if (result == DialogResult.Yes) {
+                if (result == DialogResult.Yes)
                     RemoveMaterial(model, CurrentIndex);
-                }
             }
             else {
                 RemoveMaterial(model, CurrentIndex);
