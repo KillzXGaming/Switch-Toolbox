@@ -473,7 +473,7 @@ namespace FirstPlugin
 
                 public bool IsEmpty()
                 {
-                    if (Width == 0 || Height == 0 || Format == 0)
+                    if (Width == 0 || Height == 0 || SurfFormat == 0)
                         return true;
                     else
                         return false;
