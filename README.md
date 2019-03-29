@@ -4,8 +4,8 @@ A tool to edit many formats of Nintendo Switch and Wii U.
 ## Changelog 1.0 Experimental / BETA
 https://docs.google.com/spreadsheets/d/16JLhGBJL5U5hpKWspL-pzYIaRL23X1YKEmia6pbsGbc/edit#gid=1386834576
 
-## Experimental Releases
-1.0 R2.1 Experimental BETA https://drive.google.com/open?id=1-4iqwIQz3slPErDGFF28FBNTZuCBCpLt
+## Releases
+https://github.com/KillzXGaming/Switch-Toolbox/releases
 
 ## Features
 
