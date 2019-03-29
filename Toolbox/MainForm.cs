@@ -118,7 +118,7 @@ namespace Toolbox
         {
             if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck && UsePrompt)
             {
-                updateToolstrip.Checked = true;
+                updateToolstrip.Enabled = true;
             }
         }
 
