@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using Switch_Toolbox.Library;
 using Syroot.NintenTools.NSW.Bfres;
@@ -9,7 +11,24 @@ namespace FirstPlugin.Forms
 {
     public partial class vector4SliderPanel : ParamValueEditorBase
     {
-        public bool IsColor { get; set; }
+        public List<string> ColorUniforms = new List<string>()
+        {
+            "Color", "color",
+            "konst0", "konst1", "konst2", "konst3",
+        };
+
+        public bool IsColor
+        {
+            get
+            {
+                if (activeParam != null)
+                {
+                   return ColorUniforms.Any(activeParam.Name.Contains);
+                }
+                else
+                    return false;
+            }
+        }
 
         public Color GetColor()
         {
@@ -47,6 +66,8 @@ namespace FirstPlugin.Forms
             barSlider4.Value = values[3];
 
             SetColor(UniformName, values);
+
+            AdjustPanelHeight();
         }
 
         public vector4SliderPanel(string UniformName, uint[] values, BfresShaderParam param)
@@ -64,6 +85,8 @@ namespace FirstPlugin.Forms
             barSlider2.Value = values[1];
             barSlider3.Value = values[2];
             barSlider4.Value = values[3];
+
+            AdjustPanelHeight();
         }
 
         public vector4SliderPanel(string UniformName, int[] values, BfresShaderParam param)
@@ -81,18 +104,18 @@ namespace FirstPlugin.Forms
             barSlider2.Value = values[1];
             barSlider3.Value = values[2];
             barSlider4.Value = values[3];
+
+            AdjustPanelHeight();
+        }
+
+        private void AdjustPanelHeight()
+        {
+            if (!IsColor)
+                Height -= (colorPB.Height + 6);
         }
 
         public void SetColor(string UniformName, float[] values)
         {
-
-            IsColor = UniformName.Contains("Color") ||
-                                     UniformName.Contains("color") ||
-                                     UniformName.Contains("konst0") ||
-                                     UniformName.Contains("konst1") ||
-                                     UniformName.Contains("konst2") ||
-                                     UniformName.Contains("konst3");
-
             if (IsColor)
             {
                 colorPB.BackColor = Color.FromArgb(
@@ -113,8 +136,6 @@ namespace FirstPlugin.Forms
             {
                 colorPB.Visible = false;
                 alphaPB.Visible = false;
-
-                Height -= 18;
             }
         }
 

@@ -58,6 +58,9 @@
             // 
             // keyShapeListView
             // 
+            this.keyShapeListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.keyShapeListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.keyShapeListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
@@ -76,6 +79,7 @@
             // 
             // btnMoveKeyShapeDown
             // 
+            this.btnMoveKeyShapeDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMoveKeyShapeDown.Enabled = false;
             this.btnMoveKeyShapeDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMoveKeyShapeDown.Location = new System.Drawing.Point(360, 62);
@@ -87,6 +91,7 @@
             // 
             // btnMoveKeyShapeUp
             // 
+            this.btnMoveKeyShapeUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMoveKeyShapeUp.Enabled = false;
             this.btnMoveKeyShapeUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMoveKeyShapeUp.Location = new System.Drawing.Point(360, 32);

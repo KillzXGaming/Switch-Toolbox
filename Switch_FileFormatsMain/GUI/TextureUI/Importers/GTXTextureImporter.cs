@@ -11,6 +11,8 @@ namespace FirstPlugin
 {
     public partial class GTXTextureImporter : Form
     {
+        public bool OverrideMipCounter = false;
+
         public GTXTextureImporter()
         {
             InitializeComponent();
@@ -69,6 +71,22 @@ namespace FirstPlugin
             tileModeCB.SelectedItem = GTX.GX2TileMode.MODE_2D_TILED_THIN1;
             formatComboBox.SelectedItem = GTX.GX2SurfaceFormat.T_BC1_SRGB;
         }
+
+        public void LoadSupportedFormats(TEX_FORMAT[] Formats)
+        {
+            formatComboBox.Items.Clear();
+            foreach (TEX_FORMAT format in Formats)
+            {
+                var Gx2Format = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(format);
+                formatComboBox.Items.Add(Gx2Format);
+            }
+
+            var Gx2DefaultFormat = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
+
+            if (formatComboBox.Items.Contains(Gx2DefaultFormat))
+                formatComboBox.SelectedItem = Gx2DefaultFormat;
+        }
+
         GTXImporterSettings SelectedTexSettings;
 
         List<GTXImporterSettings> settings = new List<GTXImporterSettings>();
@@ -97,7 +115,6 @@ namespace FirstPlugin
         {
             if (SelectedTexSettings.Format == GTX.GX2SurfaceFormat.INVALID)
                 return;
-
 
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
@@ -151,6 +168,15 @@ namespace FirstPlugin
                 SetupSettings();
 
                 MipmapNum.Maximum = SelectedTexSettings.GetTotalMipCount() + 1;
+
+                //Force the mip counter to be the selected mip counter
+                //Some textures like bflim (used for UI) only have 1
+                if (OverrideMipCounter)
+                {
+                    MipmapNum.Maximum = SelectedTexSettings.MipCount;
+                    MipmapNum.Minimum = SelectedTexSettings.MipCount;
+                }
+
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
                 SwizzleNum.Value = SelectedTexSettings.swizzle;

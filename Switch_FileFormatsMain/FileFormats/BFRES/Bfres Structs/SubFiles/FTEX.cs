@@ -169,7 +169,11 @@ namespace Bfres.Structs
                 UpdateEditor();
         }
 
-        public override void Replace(string FileName)
+        public override void Replace(string FileName) {
+            ReplaceTexture(FileName);
+        }
+
+        public void ReplaceTexture(string FileName, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null)
         {
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -189,8 +193,17 @@ namespace Bfres.Structs
             GTXImporterSettings setting = SetImporterSettings(FileName);
             GTXTextureImporter importer = new GTXTextureImporter();
 
+            setting.swizzle = 0;
+
             if (Tex2Swizzle != 0)
                 setting.swizzle = Tex2Swizzle;
+            if (MipMapCount != 0)
+            {
+                setting.MipCount = MipMapCount;
+                importer.OverrideMipCounter = true;
+            }
+            if (SupportedFormats != null)
+                importer.LoadSupportedFormats(SupportedFormats);
 
             importer.LoadSetting(setting);
 
@@ -241,6 +254,9 @@ namespace Bfres.Structs
 
         public void UpdateTex(Texture tex)
         {
+            if (texture == null)
+                texture = new Texture();
+
             texture.Name = tex.Name;
             texture.Data = tex.Data;
             texture.MipData = tex.MipData;
@@ -436,6 +452,7 @@ namespace Bfres.Structs
                 case TEX_FORMAT.R32_FLOAT: return GX2SurfaceFormat.TCD_R32_Float;
                 case TEX_FORMAT.R8G8_UNORM: return GX2SurfaceFormat.TC_R8_G8_UNorm;
                 case TEX_FORMAT.R8_UNORM: return GX2SurfaceFormat.TC_R8_UNorm;
+                case TEX_FORMAT.A8_UNORM: return GX2SurfaceFormat.TC_R8_UNorm;
                 default:
                     throw new Exception($"Cannot convert format {texFormat}");
             }

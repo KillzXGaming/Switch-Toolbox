@@ -78,7 +78,9 @@ namespace Switch_Toolbox.Library
 
         public ImageEditorForm OpenForm()
         {
-            ImageEditorForm form = new ImageEditorForm();
+            bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
+
+            ImageEditorForm form = new ImageEditorForm(IsDialog);
             form.editorBase.Text = Text;
             form.editorBase.Dock = DockStyle.Fill;
             form.editorBase.LoadImage(this);

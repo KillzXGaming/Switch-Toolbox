@@ -48,7 +48,7 @@ namespace FirstPlugin
 
             var SzsFiles = SARCExt.SARC.UnpackRamN(stream);
             sarcData = new SarcData();
-            sarcData.HashOnly = false;
+            sarcData.HashOnly = SzsFiles.HashOnly;
             sarcData.Files = SzsFiles.Files;
             sarcData.endianness = GetByteOrder(stream);
             SarcHash = Utils.GenerateUniqueHashID();
@@ -241,14 +241,11 @@ namespace FirstPlugin
             try
             {
                 CallRecursive(TreeView);
-                CallRecursive(TreeView);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-
-
 
             PreviewEditor editor = new PreviewEditor();
             editor.Show();
@@ -324,7 +321,7 @@ namespace FirstPlugin
             {
                 IFileFormat file = STFileLoader.OpenFileFormat(FullName, Data,false, true, this);
 
-                if (file != null && file is TreeNode)
+                if (file != null && file is TreeNodeFile)
                 {
                      sarc.OpenedFiles.Add(FullPath, Data);
                      ReplaceNode(this.Parent, this, (TreeNode)file);

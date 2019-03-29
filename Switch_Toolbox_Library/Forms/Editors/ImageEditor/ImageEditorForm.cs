@@ -12,9 +12,16 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ImageEditorForm : STForm
     {
-        public ImageEditorForm()
+        public ImageEditorForm(bool UseDialog)
         {
             InitializeComponent();
+
+            if (!UseDialog)
+            {
+                btnSave.Visible = false;
+                btnCancel.Visible = false;
+                stPanel1.Dock = DockStyle.Fill;
+            }
         }
 
         public IFileFormat GetActiveFile()

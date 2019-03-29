@@ -1006,7 +1006,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.vertexBufferList1.Location = new System.Drawing.Point(6, 50);
             this.vertexBufferList1.Name = "vertexBufferList1";
-            this.vertexBufferList1.Size = new System.Drawing.Size(398, 178);
+            this.vertexBufferList1.Size = new System.Drawing.Size(585, 181);
             this.vertexBufferList1.TabIndex = 1;
             // 
             // vertexBufferSkinCountUD
@@ -1123,6 +1123,8 @@
             // 
             // stPanel9
             // 
+            this.stPanel9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.stPanel9.Controls.Add(this.stLabel20);
             this.stPanel9.Controls.Add(this.subMeshesViewBtn);
             this.stPanel9.Controls.Add(this.stLabel21);
@@ -1284,6 +1286,8 @@
             // 
             // lodListView
             // 
+            this.lodListView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lodListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lodListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,

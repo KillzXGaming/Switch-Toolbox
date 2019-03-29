@@ -192,6 +192,7 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.R16_SNORM,             new FormatInfo(2,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R16_UINT,              new FormatInfo(2,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R16_UNORM,             new FormatInfo(2,  1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.A8_UNORM,              new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_SINT,               new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_SNORM,              new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_UINT,               new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
@@ -408,9 +409,9 @@ namespace Switch_Toolbox.Library
             else
             {
                 //If blue channel becomes first, do not swap them!
-                if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
-                    return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
-                else if (IsAtscFormat(Format))
+              //  if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
+                  //  return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
+                if (IsAtscFormat(Format))
                     return ConvertBgraToRgba(ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1));
                 else
                     return ConvertBgraToRgba(DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format));

@@ -248,7 +248,7 @@ namespace FirstPlugin.Forms
         {
             if (imageEditorForm == null || imageEditorForm.IsDisposed)
             {
-                imageEditorForm = new ImageEditorForm();
+                imageEditorForm = new ImageEditorForm(false);
                 imageEditorForm.Show(this);
             }
 

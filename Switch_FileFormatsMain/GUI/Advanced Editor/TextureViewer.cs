@@ -69,6 +69,21 @@ namespace FirstPlugin
                         temp.Dispose();
                     }
                 }
+                foreach (BFLIM tex in PluginRuntime.bflimTextures.Values)
+                {
+                    Bitmap temp = tex.GetBitmap();
+
+                    if (textureListView.InvokeRequired)
+                    {
+                        textureListView.Invoke((MethodInvoker)delegate {
+                            textureListView.Items.Add(tex.Text, imageIndex++);
+                            // Running on the UI thread
+                            textureImageList.Images.Add(temp);
+                            var dummy = textureImageList.Handle;
+                        });
+                    }
+                    temp.Dispose();
+                }
             }));
             Thread.Start();
 
@@ -85,6 +100,24 @@ namespace FirstPlugin
 
         private void textureListView_DoubleClick(object sender, EventArgs e)
         {
+            if (PluginRuntime.bflimTextures.Count > 0)
+            {
+                if (PluginRuntime.bflimTextures.ContainsKey(textureListView.SelectedItems[0].Text))
+                {
+                    var tex = PluginRuntime.bflimTextures[textureListView.SelectedItems[0].Text];
+                    if (imageEditorForm == null || imageEditorForm.IsDisposed)
+                    {
+                        imageEditorForm = new ImageEditorForm(false);
+                        imageEditorForm.Show(this);
+                    }
+
+                    imageEditorForm.editorBase.Text = Text;
+                    imageEditorForm.editorBase.Dock = DockStyle.Fill;
+                    imageEditorForm.editorBase.LoadProperties(tex.GenericProperties);
+                    imageEditorForm.editorBase.LoadImage(tex);
+                }
+            }
+
             foreach (BNTX bntx in PluginRuntime.bntxContainers)
             {
                 if (bntx.Textures.ContainsKey(textureListView.SelectedItems[0].Text))
@@ -93,7 +126,7 @@ namespace FirstPlugin
 
                     if (imageEditorForm == null || imageEditorForm.IsDisposed)
                     {
-                        imageEditorForm = new ImageEditorForm();
+                        imageEditorForm = new ImageEditorForm(false);
                         imageEditorForm.Show(this);
                     }
 

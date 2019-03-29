@@ -573,6 +573,7 @@ namespace FirstPlugin
             writer.Write(ImageData.Length);
             writer.WriteSignature(" XET");
             writer.Write(131073);
+
             writer.Close();
             writer.Dispose();
         }

@@ -36,6 +36,31 @@ namespace FirstPlugin
             }
         }
 
+        public BFLIMFormat ConvertFormatGenericToBflim(TEX_FORMAT Format)
+        {
+            switch (Format)
+            {
+                case TEX_FORMAT.A8_UNORM: return BFLIMFormat.L8_UNORM;
+                case TEX_FORMAT.R8G8_UNORM: return BFLIMFormat.LA8;
+                case TEX_FORMAT.B5G6R5_UNORM: return BFLIMFormat.RGB565;
+                case TEX_FORMAT.R8G8B8A8_UNORM: return BFLIMFormat.RGBA8;
+                case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return BFLIMFormat.RGBA8_SRGB;
+                case TEX_FORMAT.R10G10B10A2_UNORM: return BFLIMFormat.RGB10A2_UNORM;
+                case TEX_FORMAT.B4G4R4A4_UNORM: return BFLIMFormat.RGBA4;
+                case TEX_FORMAT.BC1_UNORM: return BFLIMFormat.BC1_UNORM;
+                case TEX_FORMAT.BC1_UNORM_SRGB: return BFLIMFormat.BC1_SRGB;
+                case TEX_FORMAT.BC2_UNORM: return BFLIMFormat.BC2_UNORM;
+                case TEX_FORMAT.BC2_UNORM_SRGB: return BFLIMFormat.BC2_SRGB;
+                case TEX_FORMAT.BC3_UNORM: return BFLIMFormat.BC3_UNORM;
+                case TEX_FORMAT.BC3_UNORM_SRGB: return BFLIMFormat.BC3_SRGB;
+                case TEX_FORMAT.BC4_UNORM: return BFLIMFormat.BC4A_UNORM;
+                case TEX_FORMAT.BC4_SNORM: return BFLIMFormat.BC4L_UNORM;
+                case TEX_FORMAT.BC5_UNORM: return BFLIMFormat.BC5_UNORM;
+                default:
+                    throw new Exception("Unsupported format " + Format);
+            }
+        }
+
         public override bool CanEdit { get; set; } = false;
 
         public bool CanSave { get; set; }
@@ -63,8 +88,11 @@ namespace FirstPlugin
             }
         }
 
+        ImageEditorForm form;
         public ImageEditorForm OpenForm()
         {
+            bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
+
             Properties prop = new Properties();
             prop.Width = Width;
             prop.Height = Height;
@@ -74,7 +102,7 @@ namespace FirstPlugin
             prop.ImageSize = (uint)ImageData.Length;
             prop.Format = Format;
 
-            ImageEditorForm form = new ImageEditorForm();
+            form = new ImageEditorForm(IsDialog);
             form.editorBase.Text = Text;
             form.editorBase.Dock = DockStyle.Fill;
             form.editorBase.AddFileContextEvent("Save", Save);
@@ -83,6 +111,24 @@ namespace FirstPlugin
             form.editorBase.LoadImage(this);
 
             return form;
+        }
+
+        private void UpdateForm()
+        {
+            if (form != null)
+            {
+                Properties prop = new Properties();
+                prop.Width = Width;
+                prop.Height = Height;
+                prop.Depth = Depth;
+                prop.MipCount = MipCount;
+                prop.ArrayCount = ArrayCount;
+                prop.ImageSize = (uint)ImageData.Length;
+                prop.Format = Format;
+
+                form.editorBase.LoadProperties(prop);
+                form.editorBase.LoadImage(this);
+            }
         }
 
         private void Replace(object sender, EventArgs args)
@@ -100,8 +146,22 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FTEX ftex = new FTEX();
-                ftex.Replace(ofd.FileName);
-                
+                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats);
+                if (ftex.texture != null)
+                {
+                    image.Swizzle = (byte)ftex.texture.Swizzle;
+                    image.BflimFormat = ConvertFormatGenericToBflim(ftex.Format);
+                    image.Height = (ushort)ftex.texture.Height;
+                    image.Width = (ushort)ftex.texture.Width;
+
+                    Format = GetFormat(image.BflimFormat);
+                    Width = image.Width;
+                    Height = image.Height;
+
+                    ImageData = ftex.texture.Data;
+
+                    UpdateForm();
+                }
             }
         }
 
@@ -196,8 +256,11 @@ namespace FirstPlugin
                 reader.Position = 0;
                 ImageData = reader.ReadBytes((int)ImageSize);
 
+                if (!PluginRuntime.bflimTextures.ContainsKey(Text))
+                    PluginRuntime.bflimTextures.Add(Text, this);
             }
         }
+
 
         private TEX_FORMAT GetFormat(BFLIMFormat format)
         {
