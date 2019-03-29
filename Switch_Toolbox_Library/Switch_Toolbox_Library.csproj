@@ -435,6 +435,7 @@
     <Compile Include="Generics\GenericObject.cs" />
     <Compile Include="Generics\GenericTexture.cs" />
     <Compile Include="Generics\RenderableTex.cs" />
+    <Compile Include="Generics\STBone.cs" />
     <Compile Include="Generics\STGenericWrapper.cs" />
     <Compile Include="Generics\TEX_FORMAT.cs" />
     <Compile Include="Forms\Custom\ListViewCustom.cs">
@@ -557,7 +558,7 @@
     <Compile Include="Rendering\DrawableXyzLines.cs" />
     <Compile Include="Rendering\RenderTools.cs" />
     <Compile Include="Rendering\ScreenTriangle.cs" />
-    <Compile Include="Generics\Skeleton.cs" />
+    <Compile Include="Generics\STSkeleton.cs" />
     <Compile Include="Rendering\RenderLib.cs" />
     <Compile Include="Runtime.cs" />
     <Compile Include="FormThemes.cs" />

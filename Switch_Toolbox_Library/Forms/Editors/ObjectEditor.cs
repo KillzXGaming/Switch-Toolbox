@@ -144,6 +144,8 @@ namespace Switch_Toolbox.Library.Forms
                 return true;
             if (obj is STBone)
                 return true;
+            if (obj is STSkeleton)
+                return true;
             if (obj is STGenericMaterial)
                 return true;
 
@@ -246,13 +248,21 @@ namespace Switch_Toolbox.Library.Forms
         }
 
         bool UpdateViewport = false;
+        bool IsModelChecked = false;
         private void treeViewCustom1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             UpdateViewport = false;
 
             if (e.Node is STGenericModel)
             {
+                IsModelChecked = true;
                 CheckChildNodes(e.Node, e.Node.Checked);
+            }
+            else if (e.Node is STGenericObject && !IsModelChecked) {
+                UpdateViewport = true;
+            }
+            else if (e.Node is STBone && !IsModelChecked) {
+                UpdateViewport = true;
             }
 
             if (UpdateViewport)
@@ -277,7 +287,8 @@ namespace Switch_Toolbox.Library.Forms
         {
             e.DrawDefault = true;
 
-            bool IsCheckable = (e.Node is STGenericObject || e.Node is STGenericModel);
+            bool IsCheckable = (e.Node is STGenericObject || e.Node is STGenericModel
+                                                          || e.Node is STBone);
 
             if (!IsCheckable)
                 TreeViewExtensions.HideCheckBox(e.Node);

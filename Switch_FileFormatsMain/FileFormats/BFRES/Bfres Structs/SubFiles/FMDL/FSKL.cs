@@ -74,7 +74,6 @@ namespace Bfres.Structs
                 ContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Skeleton", null, ExportAction, Keys.Control | Keys.E));
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
-                ContextMenuStrip.Items.Add(new ToolStripSeparator());
             }
 
             public override void Replace(string FileName)
@@ -225,6 +224,7 @@ namespace Bfres.Structs
         {
             ImageKey = "bone";
             SelectedImageKey = "bone";
+            Checked = true;
 
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.I));
