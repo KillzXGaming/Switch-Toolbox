@@ -172,5 +172,22 @@ namespace FirstPlugin.Forms
                 OnLoadedTab();
             }
         }
+
+        bool IsTimelineVisable = true;
+        int controlHeight = 0;
+        private void stPanel1_DoubleClick(object sender, EventArgs e)
+        {
+            if (IsTimelineVisable)
+            {
+                controlHeight = stTabControl2.Height;
+                IsTimelineVisable = false;
+                stPanel1.Height -= (controlHeight - 25);
+            }
+            else
+            {
+                IsTimelineVisable = true;
+                stPanel1.Height += (controlHeight + 25);
+            }
+        }
     }
 }

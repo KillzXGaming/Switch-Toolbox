@@ -166,6 +166,7 @@
             this.stPanel1.Name = "stPanel1";
             this.stPanel1.Size = new System.Drawing.Size(440, 186);
             this.stPanel1.TabIndex = 3;
+            this.stPanel1.DoubleClick += new System.EventHandler(this.stPanel1_DoubleClick);
             // 
             // stTabControl2
             // 
