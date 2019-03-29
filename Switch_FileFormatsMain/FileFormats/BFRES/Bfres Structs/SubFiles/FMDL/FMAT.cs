@@ -139,22 +139,29 @@ namespace Bfres.Structs
                 var result = STOptionsDialog.Show("Shapes are mapped to this material. Are you sure you want to remove this? (Will default to first material)",
                     "Material Delete", MappedNames);
 
-                if (result == DialogResult.Yes)
-                {
-                    //Adjust all the indices properly based on this current index
-                    foreach (var shape in model.shapes)
-                    {
-                        //If there are indices higher than this index, shift them
-                        if (shape.MaterialIndex > CurrentIndex)
-                        {
-                            shape.MaterialIndex -= 1;
-                        }
-                    }
-
-                    model.materials.Remove(Text);
-                    Parent.Nodes.Remove(this);
+                if (result == DialogResult.Yes) {
+                    RemoveMaterial(model, CurrentIndex);
                 }
             }
+            else {
+                RemoveMaterial(model, CurrentIndex);
+            }
+        }
+
+        private void RemoveMaterial(FMDL model, int CurrentIndex)
+        {
+            //Adjust all the indices properly based on this current index
+            foreach (var shape in model.shapes)
+            {
+                //If there are indices higher than this index, shift them
+                if (shape.MaterialIndex > CurrentIndex)
+                {
+                    shape.MaterialIndex -= 1;
+                }
+            }
+
+            model.materials.Remove(Text);
+            Parent.Nodes.Remove(this);
         }
 
         public FMDL GetParentModel()
