@@ -534,6 +534,7 @@
             // 
             // textBoxMaterialPath
             // 
+            this.textBoxMaterialPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxMaterialPath.Location = new System.Drawing.Point(3, 241);
             this.textBoxMaterialPath.Name = "textBoxMaterialPath";
             this.textBoxMaterialPath.ReadOnly = true;
@@ -759,7 +760,7 @@
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 330);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 333);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
@@ -776,7 +777,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(3, 3);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(524, 324);
+            this.stPanel1.Size = new System.Drawing.Size(524, 327);
             this.stPanel1.TabIndex = 17;
             // 
             // BfresModelImportSettings
