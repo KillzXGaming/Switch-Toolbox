@@ -131,7 +131,7 @@ namespace Switch_Toolbox.Library.Forms
                     memWav.Position = 0;
 
                     //Load the player
-                     audioChannel.audioPlayer.Open(new MemoryStream(audioChannel.Data),"wav", activeDevice);
+                     audioChannel.audioPlayer.Open(new MemoryStream(audioChannel.Data),"test.wav", activeDevice);
 
                /*     OpenFileDialog openFileDialog = new OpenFileDialog();
                     if (openFileDialog.ShowDialog() == DialogResult.OK)

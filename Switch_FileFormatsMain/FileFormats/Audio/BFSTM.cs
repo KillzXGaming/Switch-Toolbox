@@ -40,6 +40,9 @@ namespace FirstPlugin
 
         public AudioPlayer OpenForm()
         {
+            if (audioData == null)
+                throw new Exception("Audio data is null!");
+
             AudioPlayer form = new AudioPlayer();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
