@@ -204,6 +204,10 @@ namespace FirstPlugin
                             }
                         }
                     }
+
+
+                    writer.Close();
+                    writer.Dispose();
                 }
             }
 

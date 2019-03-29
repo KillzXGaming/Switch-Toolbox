@@ -921,6 +921,8 @@ namespace Switch_Toolbox.Library
             }
 
             writer.Flush();
+            writer.Close();
+            writer.Dispose();
         }
         private void WriteDX10Header(BinaryDataWriter writer)
         {
