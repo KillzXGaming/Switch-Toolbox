@@ -32,10 +32,7 @@ namespace Toolbox
                         latest.TargetCommitish,
                         latest.Assets[0].UpdatedAt.ToString());
 
-                    if (latest.TagName == "v0.8.89")
-                        return;
-
-                    if (Runtime.ProgramVersion != latest.TagName)
+                    if (Runtime.CompileDate != latest.Assets[0].UpdatedAt.ToString())
                     {
                         CanUpdate = true;
                         LatestRelease = latest;
