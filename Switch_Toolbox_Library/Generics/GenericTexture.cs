@@ -586,10 +586,14 @@ namespace Switch_Toolbox.Library
             var data = GetImageData(SurfaceLevel, MipLevel);
             var surfaces = new List<Surface>();
 
+            if (Depth == 0)
+                Depth = 1;
+
             DDS dds = new DDS();
             dds.header = new DDS.Header();
             dds.header.width = Width;
             dds.header.height = Height;
+            dds.header.depth = Depth;
             dds.header.mipmapCount = (uint)MipCount;
             dds.header.pitchOrLinearSize = (uint)data.Length;
             dds.SetFlags((DDS.DXGI_FORMAT)Format);
