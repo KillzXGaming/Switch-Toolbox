@@ -56,8 +56,6 @@ namespace FirstPlugin.Forms
             listViewCustom1.View = View.LargeIcon;
             SetControlSpacing(listViewCustom1, 75, 75);
 
-            Console.WriteLine($"activeBntx " + (activeBntx != null));
-
             if (activeBntx != null)
             {
                 Thread Thread = new Thread((ThreadStart)(() =>
@@ -100,7 +98,6 @@ namespace FirstPlugin.Forms
             }
         }
 
-        int currentBntxCounter = 0;
         private void UpdateContainers()
         {
             //Check for new BNTX or FTEX containers

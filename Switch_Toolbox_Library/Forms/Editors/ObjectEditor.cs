@@ -252,7 +252,6 @@ namespace Switch_Toolbox.Library.Forms
         private void treeViewCustom1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             UpdateViewport = false;
-            IsModelChecked = false;
 
             if (e.Node is STGenericModel)
             {
@@ -282,6 +281,7 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             UpdateViewport = true; //Update viewport on the last node checked
+            IsModelChecked = false;
         }
 
         private void treeViewCustom1_DrawNode(object sender, DrawTreeNodeEventArgs e)
