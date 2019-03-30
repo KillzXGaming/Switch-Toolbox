@@ -105,8 +105,11 @@ namespace FirstPlugin
                          return SurfaceFormat.BC1_UNORM;
                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
                         return SurfaceFormat.BC1_SRGB;
-                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
-     
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
+                        return SurfaceFormat.BC2_UNORM;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
+                        return SurfaceFormat.BC2_SRGB;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
                          return SurfaceFormat.BC3_UNORM;
                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
                         return SurfaceFormat.BC3_SRGB;

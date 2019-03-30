@@ -72,6 +72,18 @@ namespace FirstPlugin
             {
                 switch (dds.DX10header.DXGI_Format)
                 {
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
+                        return GTX.GX2SurfaceFormat.T_BC1_UNORM;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
+                        return GTX.GX2SurfaceFormat.T_BC1_SRGB;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
+                        return GTX.GX2SurfaceFormat.T_BC2_UNORM;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
+                        return GTX.GX2SurfaceFormat.T_BC2_SRGB;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
+                        return GTX.GX2SurfaceFormat.T_BC3_UNORM;
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
+                        return GTX.GX2SurfaceFormat.T_BC3_SRGB;
                     case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
                         return GTX.GX2SurfaceFormat.T_BC4_UNORM;
                     case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
