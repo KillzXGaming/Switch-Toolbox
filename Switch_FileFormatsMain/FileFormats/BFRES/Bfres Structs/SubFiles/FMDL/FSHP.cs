@@ -909,19 +909,22 @@ namespace Bfres.Structs
             {
                 var skel = GetParentModel().Skeleton;
                 Matrix4 trans = Matrix4.Identity;
-
                 if (IsSingleBind)
                 {
                     if (BoneIndex >= skel.Node_Array.Length || BoneIndex == -1)
                         return position;
 
                     var bone = skel.bones[skel.Node_Array[BoneIndex]];
-                    trans = bone.invert;
+
+                    if (trans.Determinant != 0)
+                        trans = bone.invert;
                 }
                 else
                 {
                     var bone = skel.bones[BoneIndex];
-                    trans = bone.invert;
+
+                    if (trans.Determinant != 0)
+                        trans = bone.invert;
                 }
 
                 if (IsPos)
@@ -1090,8 +1093,8 @@ namespace Bfres.Structs
                     if (VertexSkinCount == 1 && vtx.boneIds.Count > 0)
                         boneId = vtx.boneIds[0];
 
-                  //  vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
-                //    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
+                    vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
+                    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
                 }
                 //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
                 //Console.WriteLine($"Index count {vtx.boneIds.Count}");

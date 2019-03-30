@@ -296,7 +296,10 @@ namespace FirstPlugin
             Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
 
             Matrix4 sphereMatrix = camMat;
-            sphereMatrix.Invert();
+
+            if (sphereMatrix.Determinant != 0)
+                sphereMatrix.Invert();
+
             sphereMatrix.Transpose();
             shader.SetMatrix4x4("sphereMatrix", ref sphereMatrix);
 
@@ -308,7 +311,10 @@ namespace FirstPlugin
             shader.SetVector3("difLightColor", new Vector3(1));
             shader.SetVector3("ambLightColor", new Vector3(1));
 
-            Matrix4 invertedCamera = camMat.Inverted();
+            Matrix4 invertedCamera = Matrix4.Identity;
+            if (invertedCamera.Determinant != 0)
+                invertedCamera = camMat.Inverted();
+
             Vector3 lightDirection = new Vector3(0f, 0f, -1f);
 
             //Todo. Maybe change direction via AAMP file (configs shader data)
@@ -427,10 +433,6 @@ namespace FirstPlugin
         {
             for (int i = 0; i < fmdl.Skeleton.Node_Array.Length; i++)
             {
-                //   if (!fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].Visible)
-                //    fshp.Checked = false;
-
-                
                 GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), fmdl.Skeleton.Node_Array[i]);
 
                 Matrix4 transform = fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].invert * fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].Transform;
