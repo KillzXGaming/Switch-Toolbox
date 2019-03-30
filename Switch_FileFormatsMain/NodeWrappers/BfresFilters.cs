@@ -18,7 +18,7 @@ namespace FirstPlugin
         public static string BONE = GetFilter(".bfbn");
         public static string FMAT = GetFilter(".bfmat");
 
-        public static string FSKA = GetFilter(".bfska", ".seanim");
+        public static string FSKA = GetFilter(".bfska", ".seanim", ".smd");
         public static string FMAA = GetFilter(".bfmaa", ".gif");
         public static string FSHU = GetFilter(".bfshu");
 
@@ -102,6 +102,7 @@ namespace FirstPlugin
                     case ".bmp": filters.Add(ext, "Bitmap Image"); break;
                     case ".tiff": filters.Add(ext, "Tagged Image File Format"); break;
                     case ".seanim": filters.Add(ext, "SE Animation"); break;
+                    case ".smd": filters.Add(ext, "Source Model Animation"); break;
                     case ".bftex": filters.Add(ext, "Binary Texture"); break;
                     case ".astc": filters.Add(ext, "Adaptable Scalable Texture Compression"); break;
                     default:

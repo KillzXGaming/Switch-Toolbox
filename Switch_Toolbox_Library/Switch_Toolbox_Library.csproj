@@ -197,10 +197,11 @@
     <Compile Include="Animations\SceneAnimation.cs" />
     <Compile Include="Audio\AudioFileRipper.cs" />
     <Compile Include="Audio\VGAudioFile.cs" />
+    <Compile Include="FileFormats\Animation\SMD.cs" />
     <Compile Include="FileFormats\APNG\APNG.cs" />
     <Compile Include="FileFormats\APNG\CRC.cs" />
     <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
-    <Compile Include="FileFormats\SEANIM.cs" />
+    <Compile Include="FileFormats\Animation\SEANIM.cs" />
     <Compile Include="Forms\BatchFormatExport.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -119,46 +119,60 @@ namespace Bfres.Structs
                     SkeletalAnim.Export(FileName, GetResFile());
                 }
             }
+            else if (ext == ".smd")
+            {
+                STSkeleton skeleton = GetActiveSkeleton();
+
+                if (skeleton != null)
+                    SMD.Save(this, skeleton, FileName);
+                else
+                    throw new Exception("No skeleton found to assign!");
+            }
             else if (ext == ".seanim")
             {
-                STSkeleton skeleton = null;
-
-                var viewport = LibraryGUI.Instance.GetActiveViewport();
-                if (viewport != null)
-                {
-                    foreach (var drawable in viewport.scene.objects)
-                    {
-                        if (drawable is STSkeleton)
-                        {
-                            foreach (var bone in Bones)
-                            {
-                                var animBone = ((STSkeleton)drawable).GetBone(bone.Text);
-
-                                if (animBone != null)
-                                    skeleton = (STSkeleton)drawable;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var model in ((BFRES)Parent.Parent.Parent.Parent).BFRESRender.models)
-                    {
-                        foreach (var bone in Bones)
-                        {
-                            var animBone = model.Skeleton.GetBone(bone.Text);
-
-                            if (animBone != null)
-                                skeleton = model.Skeleton;
-                        }
-                    }
-                }
+                STSkeleton skeleton = GetActiveSkeleton();
 
                 if (skeleton != null)
                     SEANIM.SaveAnimation(FileName, this, skeleton);
                 else
                     throw new Exception("No skeleton found to assign!");
             }
+        }
+
+        private STSkeleton GetActiveSkeleton()
+        {
+            var viewport = LibraryGUI.Instance.GetActiveViewport();
+            if (viewport != null)
+            {
+                foreach (var drawable in viewport.scene.objects)
+                {
+                    if (drawable is STSkeleton)
+                    {
+                        foreach (var bone in Bones)
+                        {
+                            var animBone = ((STSkeleton)drawable).GetBone(bone.Text);
+
+                            if (animBone != null)
+                                return (STSkeleton)drawable;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var model in ((BFRES)Parent.Parent.Parent.Parent).BFRESRender.models)
+                {
+                    foreach (var bone in Bones)
+                    {
+                        var animBone = model.Skeleton.GetBone(bone.Text);
+
+                        if (animBone != null)
+                            return  model.Skeleton;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public override void Replace(string FileName) {
