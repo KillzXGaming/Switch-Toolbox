@@ -594,6 +594,16 @@ namespace Switch_Toolbox.Library
             dds.header.pitchOrLinearSize = (uint)data.Length;
             dds.SetFlags((DDS.DXGI_FORMAT)Format);
 
+            if (dds.IsDX10)
+            {
+                if (dds.DX10header == null)
+                    dds.DX10header = new DDS.DX10Header();
+
+                dds.DX10header.ResourceDim = 3;
+                dds.DX10header.arrayFlag = 1;
+            }
+
+
             dds.Save(dds, FileName, GetSurfaces());
         }
         public void LoadOpenGLTexture()
