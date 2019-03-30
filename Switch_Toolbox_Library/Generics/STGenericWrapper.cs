@@ -84,9 +84,12 @@ namespace Switch_Toolbox.Library.NodeWrappers
             }
         }
 
-        public STGenericWrapper()
+        public STGenericWrapper(bool LoadMenus = true)
         {
-            LoadContextMenus();
+            if (LoadMenus)
+                LoadContextMenus();
+            else
+                ContextMenuStrip = new STContextMenuStrip();
 
             CanExport = true;
             CanReplace = false;

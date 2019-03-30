@@ -8,6 +8,7 @@ using OpenTK;
 using SELib;
 using Switch_Toolbox.Library.NodeWrappers;
 using Switch_Toolbox.Library.IO;
+using Switch_Toolbox.Library.Forms;
 
 namespace Switch_Toolbox.Library.Animations
 {
@@ -53,7 +54,6 @@ namespace Switch_Toolbox.Library.Animations
             Text = Name;
             ImageKey = "anim";
             SelectedImageKey = "anim";
-
         }
 
         public enum RotationType
@@ -64,7 +64,7 @@ namespace Switch_Toolbox.Library.Animations
 
  
 
-        public class KeyNode : STGenericWrapper
+        public class KeyNode : TreeNodeCustom
         {
             public int Hash = -1;
 
@@ -84,12 +84,53 @@ namespace Switch_Toolbox.Library.Animations
             public KeyGroup YSCA = new KeyGroup() { Text = "YSCA" };
             public KeyGroup ZSCA = new KeyGroup() { Text = "ZSCA" };
 
-            public KeyNode(string bname)
+            public KeyNode(string bname, bool LoadContextMenus = true)
             {
-                Text = SearchDuplicateNames(bname);
+                Text = bname;
+               // Text = SearchDuplicateNames(bname);
                 if (bname != null && bname.Equals("")) Text = Hash.ToString("x");
                 ImageKey = "bone";
                 SelectedImageKey = "bone";
+
+                if (LoadContextMenus)
+                    LoadMenus();
+            }
+
+            public void LoadMenus()
+            {
+                //File Operations
+                ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.N));
+                ContextMenuStrip.Items.Add(new ToolStripSeparator());
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
+            }
+
+            protected void DeleteAction(object sender, EventArgs e) { Delete(); Unload(); }
+            protected void RenameAction(object sender, EventArgs e) { Rename(); }
+
+            public virtual void Delete()
+            {
+                if (Parent != null)
+                {
+                    Remove();
+                }
+            }
+
+            public virtual void Unload()
+            {
+                foreach (var node in Nodes)
+                    if (node is STGenericWrapper)
+                        ((STGenericWrapper)node).Unload();
+
+                Nodes.Clear();
+            }
+
+            public virtual void Rename()
+            {
+                RenameDialog dialog = new RenameDialog();
+                dialog.SetString(Text);
+
+                if (dialog.ShowDialog() == DialogResult.OK) { Text = dialog.textBox1.Text; }
             }
 
             public Vector3 GetPosition(float frame)

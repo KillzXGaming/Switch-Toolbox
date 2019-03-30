@@ -51,7 +51,7 @@ namespace Bfres.Structs
 
         public void NewBoneAnim()
         {
-            var boneAnim = new BoneAnimNode("NewBoneTarget");
+            var boneAnim = new BoneAnimNode("NewBoneTarget", true);
 
             if (Nodes.Count <= 0)
             {
@@ -91,6 +91,7 @@ namespace Bfres.Structs
             {
                 foreach (var bone in Bones)
                 {
+                    bone.LoadMenus();
                     Nodes.Add(bone);
                 }
                 this.Expand();
@@ -221,7 +222,7 @@ namespace Bfres.Structs
 
             foreach (BoneAnim bn in ska.BoneAnims)
             {
-                BoneAnimNode bone = new BoneAnimNode(bn.Name);
+                BoneAnimNode bone = new BoneAnimNode(bn.Name, false);
                 bone.BoneAnim = bn;
                 bone.UseSegmentScaleCompensate = bn.ApplySegmentScaleCompensate;
 
@@ -280,7 +281,7 @@ namespace Bfres.Structs
 
             foreach (ResU.BoneAnim bn in ska.BoneAnims)
             {
-                BoneAnimNode bone = new BoneAnimNode(bn.Name);
+                BoneAnimNode bone = new BoneAnimNode(bn.Name, false);
                 bone.BoneAnimU = bn;
                 bone.UseSegmentScaleCompensate = bn.ApplySegmentScaleCompensate;
 
@@ -537,7 +538,7 @@ namespace Bfres.Structs
                 return BoneAnim;
             }
 
-            public BoneAnimNode(string bname) : base(bname)
+            public BoneAnimNode(string bname, bool LoadContextMenus) : base(bname, LoadContextMenus)
             {
 
             }
