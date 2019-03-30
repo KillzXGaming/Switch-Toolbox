@@ -47,6 +47,8 @@ namespace Switch_Toolbox.Library.Forms
 
                 currentFrame = value;
 
+                FrameChanged?.Invoke(this, new EventArgs());
+
                 Refresh();
             }
         }
@@ -65,22 +67,7 @@ namespace Switch_Toolbox.Library.Forms
                 }
                 else
                 {
-                    #region resolve collsions
-                    if (frameLeft < 0)
-                    {
-                        frameRight -= frameLeft;
-                        if (frameRight > frameCount)
-                            frameRight = frameCount;
-                        frameLeft = 0;
-                    }
-                    else if (frameRight > frameCount)
-                    {
-                        frameLeft += frameCount - frameRight;
-                        if (frameLeft < 0)
-                            frameLeft = 0;
-                        frameRight = frameCount;
-                    }
-                    #endregion
+                    ResolveCollision();
                 }
 
                 Refresh();
@@ -143,6 +130,12 @@ namespace Switch_Toolbox.Library.Forms
             {
                 currentFrame = Math.Min(Math.Max(0, (int)Math.Round(((e.Location.X - 20) * (frameRight - frameLeft) / (Width - 40.0) + frameLeft))), frameCount);
                 FrameChanged?.Invoke(this, new EventArgs());
+
+                double delta = e.Location.X * (frameRight - frameLeft) / (Width - 40.0);
+                frameLeft -= delta;
+                frameRight -= delta;
+
+                ResolveCollision();
                 Refresh();
             }
             else if (e.Button == MouseButtons.Right)
@@ -151,19 +144,7 @@ namespace Switch_Toolbox.Library.Forms
                 frameLeft -= delta;
                 frameRight -= delta;
 
-                #region resolve collsions
-                if (frameLeft < 0)
-                {
-                    frameRight -= frameLeft;
-                    frameLeft = 0;
-                }
-                else if (frameRight > frameCount)
-                {
-                    frameLeft += frameCount - frameRight;
-                    frameRight = frameCount;
-                }
-                #endregion
-
+                ResolveCollision();
                 Refresh();
             }
 
@@ -181,7 +162,14 @@ namespace Switch_Toolbox.Library.Forms
             frameLeft = Math.Min(-1, (frameLeft - frameOrigin)) * delta + frameOrigin;
             frameRight = Math.Max(1, (frameRight - frameOrigin)) * delta + frameOrigin;
 
-            #region resolve collsions
+            ResolveCollision();
+
+            Refresh();
+        }
+
+        #region resolve collsions
+        private void ResolveCollision()
+        {
             if (frameLeft < 0)
             {
                 frameRight -= frameLeft;
@@ -196,10 +184,8 @@ namespace Switch_Toolbox.Library.Forms
                     frameLeft = 0;
                 frameRight = frameCount;
             }
-            #endregion
-
-            Refresh();
         }
+        #endregion
 
         protected override CreateParams CreateParams
         {
@@ -209,6 +195,10 @@ namespace Switch_Toolbox.Library.Forms
                 cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
                 return cp;
             }
+        }
+
+        private void TimeLine_Resize(object sender, EventArgs e) {
+            ResolveCollision();
         }
     }
 }

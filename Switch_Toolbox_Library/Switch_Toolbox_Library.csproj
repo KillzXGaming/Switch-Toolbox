@@ -697,6 +697,9 @@
     <EmbeddedResource Include="Forms\Editors\TextEditor\TextEditorForm.resx">
       <DependentUpon>TextEditorForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\TimeLine.resx">
+      <DependentUpon>TimeLine.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\TransformMeshTool.resx">
       <DependentUpon>TransformMeshTool.cs</DependentUpon>
     </EmbeddedResource>

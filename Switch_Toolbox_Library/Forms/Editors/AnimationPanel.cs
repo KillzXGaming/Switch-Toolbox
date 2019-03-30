@@ -108,6 +108,7 @@ namespace Switch_Toolbox.Library
 
             animationTrackBar.BackColor = FormThemes.BaseTheme.FormBackColor;
             animationTrackBar.ForeColor = FormThemes.BaseTheme.FormForeColor;
+            animationTrackBar.FrameChanged += new EventHandler(animationTrackBar_ValueChanged);
 
           /*  animationTrackBar.ThumbInnerColor = FormThemes.BaseTheme.TimelineThumbColor;
             animationTrackBar.ThumbOuterColor = FormThemes.BaseTheme.TimelineThumbColor;
@@ -196,6 +197,9 @@ namespace Switch_Toolbox.Library
 
         private void animationPlayBtn_Click(object sender, EventArgs e)
         {
+            if (currentAnimation == null || currentAnimation.FrameCount <= 0)
+                return;
+
             if (AnimationPlayerState == PlayerState.Playing)
                 Pause();
             else
@@ -353,7 +357,6 @@ namespace Switch_Toolbox.Library
                 currentFrameUpDown.Value = totalFrame.Value;
 
             animationTrackBar.CurrentFrame = (int)currentFrameUpDown.Value;
-
             animationTrackBar.Refresh();
         }
 
