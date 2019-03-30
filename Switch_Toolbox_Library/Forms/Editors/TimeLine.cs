@@ -21,7 +21,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public int CurrentFrame
         {
-            get => currentFrame;
+            get { return currentFrame; }
             set
             {
                 if (FollowCurrentFrame)
@@ -55,7 +55,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public int FrameCount
         {
-            get => frameCount;
+            get { return frameCount; }
             set
             {
                 frameCount = value;
