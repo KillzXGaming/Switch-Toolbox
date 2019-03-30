@@ -101,7 +101,16 @@ namespace FirstPlugin
 
                 switch (dds.DX10header.DXGI_Format)
                 {
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
+                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
+                         return SurfaceFormat.BC1_UNORM;
+                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
+                        return SurfaceFormat.BC1_SRGB;
+                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
+     
+                         return SurfaceFormat.BC3_UNORM;
+                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
+                        return SurfaceFormat.BC3_SRGB;
+                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
                         return SurfaceFormat.BC4_UNORM;
                     case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
                         return SurfaceFormat.BC4_SNORM;
