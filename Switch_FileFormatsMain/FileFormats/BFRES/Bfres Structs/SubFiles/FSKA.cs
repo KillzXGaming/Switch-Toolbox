@@ -8,6 +8,7 @@ using ResU = Syroot.NintenTools.Bfres;
 using FirstPlugin;
 using OpenTK;
 using Switch_Toolbox.Library.Animations;
+using Switch_Toolbox.Library.Forms;
 using SELib;
 
 namespace Bfres.Structs
@@ -40,7 +41,7 @@ namespace Bfres.Structs
             ImageKey = "skeletonAnimation";
             SelectedImageKey = "skeletonAnimation";
 
-            ContextMenuStrip = new ContextMenuStrip();
+            ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Bone Target", null, NewAction, Keys.Control | Keys.W));
             LoadFileMenus(false);
 
