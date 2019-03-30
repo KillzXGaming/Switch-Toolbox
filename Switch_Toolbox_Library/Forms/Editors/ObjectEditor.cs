@@ -257,6 +257,7 @@ namespace Switch_Toolbox.Library.Forms
             {
                 IsModelChecked = true;
                 CheckChildNodes(e.Node, e.Node.Checked);
+                IsModelChecked = false;
             }
             else if (e.Node is STGenericObject && !IsModelChecked) {
                 UpdateViewport = true;
@@ -266,7 +267,9 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             if (UpdateViewport)
+            {
                 LibraryGUI.Instance.UpdateViewport();
+            }
         }
 
         private void CheckChildNodes(TreeNode node, bool IsChecked)
@@ -281,7 +284,6 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             UpdateViewport = true; //Update viewport on the last node checked
-            IsModelChecked = false;
         }
 
         private void treeViewCustom1_DrawNode(object sender, DrawTreeNodeEventArgs e)
