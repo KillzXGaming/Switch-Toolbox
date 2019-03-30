@@ -134,15 +134,17 @@ namespace FirstPlugin
 
                 ToggleOkButton(true);
 
-                if (SelectedTexSettings.Format == SurfaceFormat.BC5_SNORM)
-                {
-                    bitmap = DDSCompressor.DecompressBC5(SelectedTexSettings.DataBlockOutput[0],
-                (int)SelectedTexSettings.TexWidth, (int)SelectedTexSettings.TexHeight, true);
-                }
-                else
-                {
-                    bitmap = TextureData.DecodeBlockGetBitmap(SelectedTexSettings.DataBlockOutput[0],
-                    SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight, TextureData.ConvertFormat(SelectedTexSettings.Format));
+                if (SelectedTexSettings.DataBlockOutput.Count > 0) {
+                    if (SelectedTexSettings.Format == SurfaceFormat.BC5_SNORM)
+                    {
+                        bitmap = DDSCompressor.DecompressBC5(SelectedTexSettings.DataBlockOutput[0],
+                    (int)SelectedTexSettings.TexWidth, (int)SelectedTexSettings.TexHeight, true);
+                    }
+                    else
+                    {
+                        bitmap = STGenericTexture.DecodeBlockGetBitmap(SelectedTexSettings.DataBlockOutput[0],
+                        SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight, TextureData.ConvertFormat(SelectedTexSettings.Format));
+                    }
                 }
 
                 if (pictureBox1.InvokeRequired)
