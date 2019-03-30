@@ -1040,7 +1040,7 @@ namespace Switch_Toolbox.Library
                         bpp /= 3;
                         break;
                 }
-                if (bpp == 24) ;
+                if (bpp == 24) { }
 
                 widtha = nextPow2(width);
                 heighta = nextPow2(height);
