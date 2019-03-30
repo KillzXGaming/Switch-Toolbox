@@ -122,6 +122,9 @@ namespace Updater
                 if (Directory.Exists(downloadName + "/"))
                     Directory.Delete(downloadName + "/", true);
                 ZipFile.ExtractToDirectory(downloadName + ".zip", downloadName + "/");
+
+                //Zip not needed anymore
+                File.Delete(downloadName + ".zip");
                 string versionTxt = Path.Combine(Path.GetFullPath(downloadName + "/"), "Version.txt");
 
                 using (StreamWriter writer = new StreamWriter(versionTxt))
