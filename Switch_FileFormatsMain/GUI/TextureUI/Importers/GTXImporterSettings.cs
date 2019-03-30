@@ -31,77 +31,6 @@ namespace FirstPlugin
         public GX2AAMode AAMode = GX2AAMode.Mode1X;
         public float alphaRef = 0.5f;
 
-        private GTX.GX2SurfaceFormat LoadDDSFormat(uint fourCC, DDS dds = null, bool IsSRGB = false)
-        {
-            bool IsDX10 = false;
-
-            switch (fourCC)
-            {
-                case DDS.FOURCC_DXT1:
-                    if (IsSRGB)
-                        return GTX.GX2SurfaceFormat.T_BC1_SRGB;
-                    else
-                        return GTX.GX2SurfaceFormat.T_BC1_UNORM;
-                case DDS.FOURCC_DXT3:
-                    if (IsSRGB)
-                        return GTX.GX2SurfaceFormat.T_BC2_SRGB;
-                    else
-                        return GTX.GX2SurfaceFormat.T_BC2_UNORM;
-                case DDS.FOURCC_DXT5:
-                    if (IsSRGB)
-                        return GTX.GX2SurfaceFormat.T_BC3_SRGB;
-                    else
-                        return GTX.GX2SurfaceFormat.T_BC3_UNORM;
-                case DDS.FOURCC_BC4U:
-                    return GTX.GX2SurfaceFormat.T_BC4_UNORM;
-                case DDS.FOURCC_ATI1:
-                    return GTX.GX2SurfaceFormat.T_BC4_UNORM;
-                case DDS.FOURCC_ATI2:
-                    return GTX.GX2SurfaceFormat.T_BC5_UNORM;
-                case DDS.FOURCC_BC5U:
-                    return GTX.GX2SurfaceFormat.T_BC5_UNORM;
-                case DDS.FOURCC_BC5S:
-                    return GTX.GX2SurfaceFormat.T_BC5_SNORM;
-                case DDS.FOURCC_DX10:
-                    IsDX10 = true;
-                    break;
-                default:
-                    return GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
-            }
-            if (IsDX10)
-            {
-                switch (dds.DX10header.DXGI_Format)
-                {
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
-                        return GTX.GX2SurfaceFormat.T_BC1_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
-                        return GTX.GX2SurfaceFormat.T_BC1_SRGB;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
-                        return GTX.GX2SurfaceFormat.T_BC2_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
-                        return GTX.GX2SurfaceFormat.T_BC2_SRGB;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
-                        return GTX.GX2SurfaceFormat.T_BC3_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
-                        return GTX.GX2SurfaceFormat.T_BC3_SRGB;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
-                        return GTX.GX2SurfaceFormat.T_BC4_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
-                        return GTX.GX2SurfaceFormat.T_BC4_SNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_TYPELESS:
-                        return GTX.GX2SurfaceFormat.T_BC4_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
-                        return GTX.GX2SurfaceFormat.T_BC5_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
-                        return GTX.GX2SurfaceFormat.T_BC5_SNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_TYPELESS:
-                        return GTX.GX2SurfaceFormat.T_BC5_UNORM;
-                    default:
-                        throw new Exception($"Format {dds.DX10header.DXGI_Format} not supported!");
-                }
-            }
-            throw new Exception($"This shouldn't happen :(");
-        }
         public void LoadDDS(string FileName, byte[] FileData = null)
         {
             TexName = Path.GetFileNameWithoutExtension(FileName);
@@ -122,7 +51,7 @@ namespace FirstPlugin
             }
             DataBlockOutput.Add(dds.bdata);
 
-            Format = LoadDDSFormat(dds.header.ddspf.fourCC, dds, IsSRGB);
+            Format = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(dds.Format);;
         }
 
         public void LoadBitMap(Image Image, string FileName)

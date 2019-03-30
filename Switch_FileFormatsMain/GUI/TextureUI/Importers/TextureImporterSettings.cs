@@ -55,91 +55,6 @@ namespace FirstPlugin
         public bool GenerateMipmaps = false; //If bitmap and count more that 1 then geenrate
         public float alphaRef = 0.5f;
 
-        private SurfaceFormat LoadDDSFormat(uint fourCC, DDS dds = null, bool IsSRGB = false)
-        {
-            bool IsDX10 = false;
-
-            switch (fourCC)
-            {
-                case DDS.FOURCC_DXT1:
-                    if (IsSRGB)
-                        return SurfaceFormat.BC1_SRGB;
-                    else
-                        return SurfaceFormat.BC1_UNORM;
-                case DDS.FOURCC_DXT3:
-                    if (IsSRGB)
-                        return SurfaceFormat.BC2_SRGB;
-                    else
-                        return SurfaceFormat.BC2_UNORM;
-                case DDS.FOURCC_DXT5:
-                    if (IsSRGB)
-                        return SurfaceFormat.BC3_SRGB;
-                    else
-                        return SurfaceFormat.BC3_UNORM;
-                case DDS.FOURCC_BC4U:
-                    return SurfaceFormat.BC4_UNORM;
-                case DDS.FOURCC_BC4S:
-                    return SurfaceFormat.BC4_SNORM;
-                case DDS.FOURCC_ATI1:
-                    return SurfaceFormat.BC4_UNORM;
-                case DDS.FOURCC_ATI2:
-                    return SurfaceFormat.BC5_UNORM;
-                case DDS.FOURCC_BC5U:
-                    return SurfaceFormat.BC5_UNORM;
-                case DDS.FOURCC_BC5S:
-                    return SurfaceFormat.BC5_SNORM;
-                case DDS.FOURCC_DX10:
-                    IsDX10 = true;
-                    break;
-                default:
-                    return SurfaceFormat.R8_G8_B8_A8_SRGB;
-            }
-            Console.WriteLine(IsDX10);
-            if (IsDX10)
-            {
-                Console.WriteLine(dds.DX10header.DXGI_Format);
-
-                switch (dds.DX10header.DXGI_Format)
-                {
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
-                         return SurfaceFormat.BC1_UNORM;
-                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
-                        return SurfaceFormat.BC1_SRGB;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM:
-                        return SurfaceFormat.BC2_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB:
-                        return SurfaceFormat.BC2_SRGB;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM:
-                         return SurfaceFormat.BC3_UNORM;
-                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB:
-                        return SurfaceFormat.BC3_SRGB;
-                   case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
-                        return SurfaceFormat.BC4_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
-                        return SurfaceFormat.BC4_SNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC4_TYPELESS:
-                        return SurfaceFormat.BC4_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
-                        return SurfaceFormat.BC5_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
-                        return SurfaceFormat.BC5_SNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC5_TYPELESS:
-                        return SurfaceFormat.BC5_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
-                        return SurfaceFormat.BC6_FLOAT;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16:
-                        return SurfaceFormat.BC6_UFLOAT;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
-                        return SurfaceFormat.BC7_UNORM;
-                    case DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
-                        return SurfaceFormat.BC7_SRGB;
-                    default:
-                        throw new Exception($"Format {dds.DX10header.DXGI_Format} not supported!");
-                }
-            }
-            throw new Exception($"This shouldn't happen :(");
-        }
-
         public void LoadDDS(string FileName, byte[] FileData = null, TextureData tree = null)
         {
             TexName = Path.GetFileNameWithoutExtension(FileName);
@@ -166,8 +81,7 @@ namespace FirstPlugin
                 DataBlockOutput.Add(array);
             }
 
-
-            Format = LoadDDSFormat(dds.header.ddspf.fourCC, dds, IsSRGB);
+            Format = TextureData.GenericToBntxSurfaceFormat(dds.Format);
         }
 
         public void LoadASTC(string FileName)
