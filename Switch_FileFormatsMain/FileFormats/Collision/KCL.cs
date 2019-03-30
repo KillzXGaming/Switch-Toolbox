@@ -283,11 +283,10 @@ namespace FirstPlugin
         {
             if (viewport == null)
             {
+                viewport = new Viewport();
                 viewport.Dock = DockStyle.Fill;
-                viewport.AddDrawable(Renderer);
-                viewport.LoadObjects();
-                LibraryGUI.Instance.LoadEditor(viewport);
             }
+            LibraryGUI.Instance.LoadEditor(viewport);
 
             viewport.Text = Text;
 
