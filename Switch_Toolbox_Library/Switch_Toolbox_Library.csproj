@@ -369,6 +369,12 @@
     <Compile Include="Forms\Editors\TextEditor\TextEditorForm.Designer.cs">
       <DependentUpon>TextEditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\TimeLine.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\TimeLine.Designer.cs">
+      <DependentUpon>TimeLine.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Extensions\MDICustom.cs" />
     <Compile Include="Forms\Editors\ObjectEditor.cs">
       <SubType>Form</SubType>

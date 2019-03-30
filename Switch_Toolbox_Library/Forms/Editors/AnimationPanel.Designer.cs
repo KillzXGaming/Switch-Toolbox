@@ -34,8 +34,8 @@
             this.totalFrame = new System.Windows.Forms.NumericUpDown();
             this.currentFrameUpDown = new System.Windows.Forms.NumericUpDown();
             this.animationPlayBtn = new System.Windows.Forms.Button();
-            this.animationTrackBar = new ColorSlider.ColorSlider();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.animationTrackBar = new Switch_Toolbox.Library.Forms.TimeLine();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalFrame)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.currentFrameUpDown)).BeginInit();
@@ -120,45 +120,6 @@
             this.animationPlayBtn.UseVisualStyleBackColor = false;
             this.animationPlayBtn.Click += new System.EventHandler(this.animationPlayBtn_Click);
             // 
-            // animationTrackBar
-            // 
-            this.animationTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.animationTrackBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.BorderRoundRectSize = new System.Drawing.Size(8, 8);
-            this.animationTrackBar.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.animationTrackBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.animationTrackBar.ForeColor = System.Drawing.Color.Silver;
-            this.animationTrackBar.LargeChange = ((uint)(5u));
-            this.animationTrackBar.Location = new System.Drawing.Point(0, 16);
-            this.animationTrackBar.MouseEffects = false;
-            this.animationTrackBar.Name = "animationTrackBar";
-            this.animationTrackBar.ScaleDivisions = 10;
-            this.animationTrackBar.ScaleSubDivisions = 5;
-            this.animationTrackBar.ShowDivisionsText = true;
-            this.animationTrackBar.ShowSmallScale = true;
-            this.animationTrackBar.Size = new System.Drawing.Size(631, 147);
-            this.animationTrackBar.SmallChange = ((uint)(0u));
-            this.animationTrackBar.TabIndex = 3;
-            this.animationTrackBar.Text = "colorSlider1";
-            this.animationTrackBar.ThumbInnerColor = System.Drawing.Color.Olive;
-            this.animationTrackBar.ThumbOuterColor = System.Drawing.Color.Olive;
-            this.animationTrackBar.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.animationTrackBar.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
-            this.animationTrackBar.ThumbSize = new System.Drawing.Size(5, 128);
-            this.animationTrackBar.TickAdd = 0F;
-            this.animationTrackBar.TickColor = System.Drawing.Color.Gray;
-            this.animationTrackBar.TickDivide = 1F;
-            this.animationTrackBar.Value = 0;
-            this.animationTrackBar.ValueChanged += new System.EventHandler(this.animationTrackBar_ValueChanged);
-            this.animationTrackBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.colorSlider1_Scroll);
-            // 
             // stPanel1
             // 
             this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -168,12 +129,24 @@
             this.stPanel1.Size = new System.Drawing.Size(631, 16);
             this.stPanel1.TabIndex = 5;
             // 
+            // animationTrackBar
+            // 
+            this.animationTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.animationTrackBar.CurrentFrame = 0;
+            this.animationTrackBar.FrameCount = 1000;
+            this.animationTrackBar.Location = new System.Drawing.Point(0, 14);
+            this.animationTrackBar.Name = "animationTrackBar";
+            this.animationTrackBar.Size = new System.Drawing.Size(631, 149);
+            this.animationTrackBar.TabIndex = 6;
+            // 
             // AnimationPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.stPanel1);
             this.Controls.Add(this.animationTrackBar);
+            this.Controls.Add(this.stPanel1);
             this.Controls.Add(this.panel1);
             this.Name = "AnimationPanel";
             this.Size = new System.Drawing.Size(631, 194);
@@ -190,8 +163,6 @@
         }
 
         #endregion
-
-        private ColorSlider.ColorSlider animationTrackBar;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button animationPlayBtn;
         private System.Windows.Forms.Panel panel1;
@@ -199,5 +170,6 @@
         private System.Windows.Forms.NumericUpDown currentFrameUpDown;
         private Forms.STPanel stPanel1;
         private Forms.STCheckBox loopChkBox;
+        private Forms.TimeLine animationTrackBar;
     }
 }

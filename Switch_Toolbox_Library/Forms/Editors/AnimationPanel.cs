@@ -76,9 +76,7 @@ namespace Switch_Toolbox.Library
                 totalFrame.Maximum = frameCount;
                 totalFrame.Value = frameCount;
                 currentFrameUpDown.Maximum = frameCount;
-                animationTrackBar.TickDivide = 1;
-                animationTrackBar.Maximum = frameCount;
-                animationTrackBar.Minimum = 0;
+                animationTrackBar.FrameCount = frameCount;
                 currentFrameUpDown.Value = 1;
                 currentFrameUpDown.Value = 0;
             }
@@ -111,7 +109,7 @@ namespace Switch_Toolbox.Library
             animationTrackBar.BackColor = FormThemes.BaseTheme.FormBackColor;
             animationTrackBar.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
-            animationTrackBar.ThumbInnerColor = FormThemes.BaseTheme.TimelineThumbColor;
+          /*  animationTrackBar.ThumbInnerColor = FormThemes.BaseTheme.TimelineThumbColor;
             animationTrackBar.ThumbOuterColor = FormThemes.BaseTheme.TimelineThumbColor;
 
             this.animationTrackBar.BarInnerColor = FormThemes.BaseTheme.FormBackColor;
@@ -120,7 +118,7 @@ namespace Switch_Toolbox.Library
             this.animationTrackBar.ElapsedInnerColor = FormThemes.BaseTheme.FormBackColor;
             this.animationTrackBar.ElapsedPenColorBottom = FormThemes.BaseTheme.FormBackColor;
             this.animationTrackBar.ElapsedPenColorTop = FormThemes.BaseTheme.FormBackColor;
-
+            */
             panel1.BackColor = FormThemes.BaseTheme.FormBackColor;
             animationPlayBtn.BackColor = FormThemes.BaseTheme.FormBackColor;
             button2.BackColor = FormThemes.BaseTheme.FormBackColor;
@@ -180,7 +178,7 @@ namespace Switch_Toolbox.Library
 
         private void AdvanceNextFrame()
         {
-            if (animationTrackBar.Value == animationTrackBar.Maximum)
+            if (animationTrackBar.CurrentFrame == animationTrackBar.FrameCount)
             {
                 if (IsLooping)
                     currentFrameUpDown.Value = 0;
@@ -216,9 +214,8 @@ namespace Switch_Toolbox.Library
                 if (currentAnimation.Tag is Animation)
                     ((Animation)currentAnimation.Tag).FrameCount = (int)totalFrame.Value;
                 currentAnimation.FrameCount = (int)totalFrame.Value;
-                animationTrackBar.Value = 0;
-                animationTrackBar.Maximum = currentAnimation.FrameCount;
-                animationTrackBar.Minimum = 0;
+                animationTrackBar.CurrentFrame = 0;
+                animationTrackBar.FrameCount = currentAnimation.FrameCount;
             }
         }
         private void UpdateViewport()
@@ -266,12 +263,12 @@ namespace Switch_Toolbox.Library
         }
 
         private void nextButton_Click(object sender, EventArgs e) {
-            if (animationTrackBar.Value < animationTrackBar.Maximum)
-                animationTrackBar.Value++;
+            if (animationTrackBar.CurrentFrame < animationTrackBar.FrameCount)
+                animationTrackBar.CurrentFrame++;
         }
         private void prevButton_Click(object sender, EventArgs e) {
-              if (animationTrackBar.Value > 0)
-                animationTrackBar.Value--;
+              if (animationTrackBar.CurrentFrame > 0)
+                animationTrackBar.CurrentFrame--;
         }
 
         private void animationTrackBar_Scroll(object sender, EventArgs e)
@@ -281,9 +278,9 @@ namespace Switch_Toolbox.Library
 
         private void animationTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            currentFrameUpDown.Value = animationTrackBar.Value;
+            currentFrameUpDown.Value = animationTrackBar.CurrentFrame;
             UpdateViewport();
-            SetAnimationsToFrame(animationTrackBar.Value);
+            SetAnimationsToFrame(animationTrackBar.CurrentFrame);
 
             if (!renderThreadIsUpdating || !IsPlaying)
                 UpdateViewport();
@@ -355,7 +352,7 @@ namespace Switch_Toolbox.Library
             if (currentFrameUpDown.Value > totalFrame.Value)
                 currentFrameUpDown.Value = totalFrame.Value;
 
-            animationTrackBar.Value = (int)currentFrameUpDown.Value;
+            animationTrackBar.CurrentFrame = (int)currentFrameUpDown.Value;
 
             animationTrackBar.Refresh();
         }

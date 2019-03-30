@@ -167,7 +167,7 @@ namespace Bfres.Structs
                         var animBone = model.Skeleton.GetBone(bone.Text);
 
                         if (animBone != null)
-                            return  model.Skeleton;
+                            return model.Skeleton;
                     }
                 }
             }
