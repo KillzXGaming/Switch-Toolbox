@@ -296,9 +296,21 @@ namespace FirstPlugin
                 }
                 if (fshp.VertexSkinCount == 0)
                 {
-                    Matrix4 NoBindFix = model.Skeleton.bones[fshp.BoneIndex].Transform;
-                    v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
-                    v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
+                    try
+                    {
+                        if (model.Skeleton.bones.Count > 0) {
+                            Matrix4 NoBindFix = model.Skeleton.bones[fshp.BoneIndex].Transform;
+                            v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
+                            v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
+                        }
+                    }
+                    catch //Matrix failed. Print the coordinate data of the bone
+                    {
+                        Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].Text);
+                        Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetPosition());
+                        Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetRotation());
+                        Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetScale());
+                    }
                 }
                 fshp.vertices.Add(v);
             }

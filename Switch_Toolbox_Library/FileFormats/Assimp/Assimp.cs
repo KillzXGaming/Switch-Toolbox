@@ -146,7 +146,6 @@ namespace Switch_Toolbox.Library
                 for (int i = 0; i < _meshChannels.Length; i++)
                 {
                     _meshChannels[i] = new MeshAnimationChannel();
-
                 }
             }
 
@@ -454,7 +453,6 @@ namespace Switch_Toolbox.Library
                     {
                         foreach (VertexWeight w in bn.VertexWeights)
                         {
-                            //  vertices[w.VertexID].pos = Vector3.TransformPosition(vertices[w.VertexID].pos, AssimpHelper.TKMatrix(bn.OffsetMatrix));
                             vertices[w.VertexID].boneWeights.Add(w.Weight);
                             vertices[w.VertexID].boneNames.Add(bn.Name);
                             BoneNames.Add(bn.Name);

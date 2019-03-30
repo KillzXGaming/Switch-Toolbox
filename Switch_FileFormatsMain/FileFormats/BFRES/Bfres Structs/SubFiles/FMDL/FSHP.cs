@@ -1090,10 +1090,8 @@ namespace Bfres.Structs
                     if (VertexSkinCount == 1 && vtx.boneIds.Count > 0)
                         boneId = vtx.boneIds[0];
 
-                    Console.WriteLine("Old " + vtx.pos);
-                    vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
-                    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
-                    Console.WriteLine("New " + vtx.pos);
+                  //  vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
+                //    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
                 }
                 //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
                 //Console.WriteLine($"Index count {vtx.boneIds.Count}");

@@ -263,24 +263,38 @@ namespace FirstPlugin
             }
         }
 
+        Viewport viewport
+        {
+            get
+            {
+                var editor = LibraryGUI.Instance.GetObjectEditor();
+                return editor.GetViewport();
+            }
+            set
+            {
+                var editor = LibraryGUI.Instance.GetObjectEditor();
+                editor.LoadViewport(value);
+            }
+        }
+
         public KCLRendering Renderer;
         bool IsLoaded = false;
         public override void OnClick(TreeView treeView)
         {
-            Viewport editor = (Viewport)LibraryGUI.Instance.GetActiveContent(typeof(Viewport));
-
-            if (editor == null)
+            if (viewport == null)
             {
-                editor = new Viewport();
-                LibraryGUI.Instance.LoadEditor(editor);
+                viewport.Dock = DockStyle.Fill;
+                viewport.AddDrawable(Renderer);
+                viewport.LoadObjects();
+                LibraryGUI.Instance.LoadEditor(viewport);
             }
-            editor.Text = Text;
-            editor.Dock = DockStyle.Fill;
+
+            viewport.Text = Text;
 
             if (!IsLoaded)
             {
-                editor.AddDrawable(Renderer);
-                editor.LoadObjects();
+                viewport.AddDrawable(Renderer);
+                viewport.LoadObjects();
             }
 
             IsLoaded = true;

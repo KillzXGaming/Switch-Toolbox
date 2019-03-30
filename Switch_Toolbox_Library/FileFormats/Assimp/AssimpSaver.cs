@@ -158,9 +158,14 @@ namespace Switch_Toolbox.Library
 
                 foreach (var tex in genericMat.TextureMaps)
                 {
-                    TextureSlot slot = new TextureSlot();
+                    int index = Textures.FindIndex(r => r.Text.Equals(tex.Name));
+
                     string path = System.IO.Path.Combine(TexturePath, tex.Name + TextureExtension);
 
+                    if (!File.Exists(path))
+                        throw new Exception("Texture not found to map");
+
+                    TextureSlot slot = new TextureSlot();
                     slot.FilePath = path;
                     slot.UVIndex = 0;
                     slot.Flags = 0;
@@ -192,22 +197,22 @@ namespace Switch_Toolbox.Library
 
                     if (tex.wrapModeS == 0)
                         slot.WrapModeU = TextureWrapMode.Wrap;
-                    if (tex.wrapModeS == 1)
+                    else if (tex.wrapModeS == 1)
                         slot.WrapModeU = TextureWrapMode.Mirror;
-                    if (tex.wrapModeS == 2)
+                    else if (tex.wrapModeS == 2)
                         slot.WrapModeU = TextureWrapMode.Clamp;
+                    else
+                        slot.WrapModeU = TextureWrapMode.Wrap;
+                    
                     if (tex.wrapModeT == 0)
                         slot.WrapModeV = TextureWrapMode.Wrap;
-                    if (tex.wrapModeT == 1)
+                    else if (tex.wrapModeT == 1)
                         slot.WrapModeV = TextureWrapMode.Mirror;
-                    if (tex.wrapModeT == 2)
+                    else if (tex.wrapModeT == 2)
                         slot.WrapModeV = TextureWrapMode.Clamp;
                     else
-                    {
-                        slot.WrapModeU = TextureWrapMode.Wrap;
                         slot.WrapModeV = TextureWrapMode.Wrap;
-                    }
-
+                    
                     material.AddMaterialTexture(ref slot);
                 }
                 scene.Materials.Add(material);
