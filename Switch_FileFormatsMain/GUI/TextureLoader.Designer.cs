@@ -53,6 +53,9 @@
             this.stComboBox1.Size = new System.Drawing.Size(158, 21);
             this.stComboBox1.TabIndex = 12;
             this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);
+            this.stComboBox1.Click += new System.EventHandler(this.stComboBox1_Click);
+            this.stComboBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.stComboBox1_KeyDown);
+            this.stComboBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.stComboBox1_MouseDown);
             // 
             // listViewCustom1
             // 
@@ -88,6 +91,7 @@
             this.barSlider1.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
             this.barSlider1.ForeColor = System.Drawing.Color.White;
+            this.barSlider1.IncrementAmount = 0.01F;
             this.barSlider1.InputName = null;
             this.barSlider1.LargeChange = 10F;
             this.barSlider1.Location = new System.Drawing.Point(240, 3);

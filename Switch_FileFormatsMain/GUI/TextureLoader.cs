@@ -43,14 +43,6 @@ namespace FirstPlugin.Forms
                 ColorDepth = ColorDepth.Depth32Bit,
                 ImageSize = new Size(70, 70),
             };
-
-            int i = 0;
-            foreach (var tex in PluginRuntime.bntxContainers)
-                stComboBox1.Items.Add($"BNTX File {i++}");
-
-            i = 0;
-            foreach (var tex in PluginRuntime.ftexContainers)
-                stComboBox1.Items.Add($"FTEX Folder {i++}");
         }
 
         public void LoadTexture()
@@ -108,7 +100,25 @@ namespace FirstPlugin.Forms
             }
         }
 
+        int currentBntxCounter = 0;
+        private void UpdateContainers()
+        {
+            //Check for new BNTX or FTEX containers
+            //If they are all loaded in the combo box, return to prevent clearing on switching everytime
+            int total = PluginRuntime.bntxContainers.Count + PluginRuntime.ftexContainers.Count;
+            if (stComboBox1.Items.Count == total)
+                return;
 
+            stComboBox1.Items.Clear();
+
+            int i = 0;
+            foreach (var tex in PluginRuntime.bntxContainers)
+                stComboBox1.Items.Add($"BNTX File {i++}");
+
+            i = 0;
+            foreach (var tex in PluginRuntime.ftexContainers)
+                stComboBox1.Items.Add($"FTEX Folder {i++}");
+        }
 
         private void stComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -336,6 +346,18 @@ namespace FirstPlugin.Forms
                     tex.Replace(ofd.FileName);
                 }
             }
+        }
+
+        private void stComboBox1_Click(object sender, EventArgs e) {
+            UpdateContainers();
+        }
+
+        private void stComboBox1_MouseDown(object sender, MouseEventArgs e) {
+            UpdateContainers();
+        }
+
+        private void stComboBox1_KeyDown(object sender, KeyEventArgs e) {
+            UpdateContainers();
         }
     }
 }
