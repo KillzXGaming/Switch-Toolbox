@@ -212,6 +212,9 @@
     <Compile Include="Forms\BatchFormatExport.Designer.cs">
       <DependentUpon>BatchFormatExport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\Animation\BoneAnimTimeline.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Custom\DropdownPanel\ExpandCollapseEventArgs.cs" />
     <Compile Include="Forms\Custom\DropdownPanel\STCollapsePanelButton.cs">
       <SubType>UserControl</SubType>
@@ -373,10 +376,10 @@
     <Compile Include="Forms\Editors\TextEditor\TextEditorForm.Designer.cs">
       <DependentUpon>TextEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Editors\TimeLine.cs">
+    <Compile Include="Forms\Editors\Animation\TimeLine.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Editors\TimeLine.Designer.cs">
+    <Compile Include="Forms\Editors\Animation\TimeLine.Designer.cs">
       <DependentUpon>TimeLine.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Extensions\MDICustom.cs" />
@@ -506,10 +509,10 @@
     <Compile Include="IO\StringExtension.cs" />
     <Compile Include="IO\STStream.cs" />
     <Compile Include="Plugin\GenericPluginLoader.cs" />
-    <Compile Include="Forms\Editors\AnimationPanel.cs">
+    <Compile Include="Forms\Editors\Animation\AnimationPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Editors\AnimationPanel.Designer.cs">
+    <Compile Include="Forms\Editors\Animation\AnimationPanel.Designer.cs">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\AssimpMeshSelector.cs">
@@ -635,7 +638,7 @@
     <EmbeddedResource Include="Forms\Dialogs\STErrorDialog.resx">
       <DependentUpon>STErrorDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\AnimationPanel.resx">
+    <EmbeddedResource Include="Forms\Editors\Animation\AnimationPanel.resx">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\Assimp Settings.resx">
@@ -701,7 +704,7 @@
     <EmbeddedResource Include="Forms\Editors\TextEditor\TextEditorForm.resx">
       <DependentUpon>TextEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\TimeLine.resx">
+    <EmbeddedResource Include="Forms\Editors\Animation\TimeLine.resx">
       <DependentUpon>TimeLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\TransformMeshTool.resx">
