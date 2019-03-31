@@ -219,9 +219,6 @@
     <Content Include="Assimp64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="DirectXTexNetImpl.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="libzstd.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -387,10 +384,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Projects\Recent\DUMMY.txt" />
-    <Content Include="x64\DirectXTexNetImpl.dll">
+    <Content Include="Lib\x64\DirectXTexNetImpl.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="x86\DirectXTexNetImpl.dll">
+    <Content Include="Lib\x86\DirectXTexNetImpl.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\Save.png" />
