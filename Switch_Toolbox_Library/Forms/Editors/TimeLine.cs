@@ -15,39 +15,74 @@ namespace Switch_Toolbox.Library.Forms
         public TimeLine()
         {
             InitializeComponent();
+            timer.Interval = 10;
+            timer.Tick += Timer_Tick;
         }
 
         public event EventHandler FrameChanged;
 
+        private Timer timer = new Timer();
+
+        public bool Locked { get; private set; } = false;
+
+        public void Play()
+        {
+            Locked = true;
+        }
+
+        public void Stop()
+        {
+            Locked = false;
+        }
+
+        private void ResolveCollision()
+        {
+            if (frameLeft < 0)
+            {
+                frameRight -= frameLeft;
+                frameLeft = 0;
+            }
+            else if (frameRight > lastFrame)
+            {
+                frameLeft += lastFrame - frameRight;
+                frameRight = lastFrame;
+            }
+        }
+
+        private void ResolveFitting()
+        {
+            if (frameLeft < 0)
+            {
+                frameRight -= frameLeft;
+                if (frameRight > lastFrame)
+                    frameRight = lastFrame;
+                frameLeft = 0;
+            }
+            else if (frameRight > lastFrame)
+            {
+                frameLeft += lastFrame - frameRight;
+                if (frameLeft < 0)
+                    frameLeft = 0;
+                frameRight = lastFrame;
+            }
+        }
+
         public int CurrentFrame
         {
-            get { return currentFrame; }
+            get => currentFrame;
             set
             {
-                if (FollowCurrentFrame)
+                if (FollowCurrentFrame && !(Focused && MouseButtons == MouseButtons.Right))
                 {
                     double delta = value - (frameRight + frameLeft) * 0.5;
                     frameLeft += delta;
                     frameRight += delta;
 
-                    #region resolve collsions
-                    if (frameLeft < 0)
-                    {
-                        frameRight -= frameLeft;
-                        frameLeft = 0;
-                    }
-                    else if (frameRight > frameCount)
-                    {
-                        frameLeft += frameCount - frameRight;
-                        frameRight = frameCount;
-                    }
-                    #endregion
+                    ResolveCollision();
 
                 }
 
                 currentFrame = value;
-
-                FrameChanged?.Invoke(this, new EventArgs());
 
                 Refresh();
             }
@@ -55,10 +90,10 @@ namespace Switch_Toolbox.Library.Forms
 
         public int FrameCount
         {
-            get { return frameCount; }
+            get => lastFrame + 1;
             set
             {
-                frameCount = value;
+                lastFrame = value - 1;
 
                 if (value == 1)
                 {
@@ -67,8 +102,11 @@ namespace Switch_Toolbox.Library.Forms
                 }
                 else
                 {
-                    ResolveCollision();
+                    ResolveFitting();
                 }
+
+                if (currentFrame > lastFrame)
+                    currentFrame = lastFrame;
 
                 Refresh();
             }
@@ -77,7 +115,7 @@ namespace Switch_Toolbox.Library.Forms
         public bool FollowCurrentFrame = true;
 
         private int currentFrame = 0;
-        private int frameCount = 1000;
+        private int lastFrame = 1000;
 
         private double frameLeft = 0;
         private double frameRight = 200;
@@ -92,13 +130,15 @@ namespace Switch_Toolbox.Library.Forms
         private static Pen pen1 = new Pen(new SolidBrush(Color.FromArgb(30, 30, 30)), 2);
         private static Pen pen2 = new Pen(new SolidBrush(Color.FromArgb(100, 100, 20)), 2);
 
+        private static Font font = new Font(new FontFamily("arial"), 10);
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             double currentFrameX = 20 + (currentFrame - frameLeft) * (Width - 40.0) / (frameRight - frameLeft);
 
             e.Graphics.FillRectangle(brush2, new Rectangle(0, 0, Width, Height));
-            e.Graphics.FillRectangle(brush3, new Rectangle(0, 0, Width, TextRenderer.MeasureText("" + currentFrame, Font).Height));
+            e.Graphics.FillRectangle(brush3, new Rectangle(0, 0, Width, TextRenderer.MeasureText("" + currentFrame, font).Height));
 
             double step = 50 * (frameRight - frameLeft) / Width;
             if (step > 10)
@@ -108,84 +148,139 @@ namespace Switch_Toolbox.Library.Forms
                 step = Math.Round(Math.Max(1, step));
             }
 
-            for (double frame = Math.Round(frameLeft / step) * step; frame <= frameRight; frame += step)
+            if (lastFrame != 0)
             {
-                double frameX = 20 + (frame - frameLeft) * (Width - 40.0) / (frameRight - frameLeft);
+                double max;
+                if (frameRight < lastFrame)
+                    max = Math.Min(frameRight + step, lastFrame);
+                else
+                    max = frameRight - step;
 
-                e.Graphics.DrawLine(pen1, new Point((int)frameX, TextRenderer.MeasureText("" + frame, Font).Height), new Point((int)frameX, Height));
+                for (double frame = Math.Floor(frameLeft / step) * step; frame <= max; frame += step)
+                {
+                    double frameX = 20 + (frame - frameLeft) * (Width - 40.0) / (frameRight - frameLeft);
 
-                e.Graphics.DrawString("" + frame, Font, brush4, new Point((int)frameX - TextRenderer.MeasureText("" + frame, Font).Width / 2, 0));
+                    e.Graphics.DrawLine(pen1, new Point((int)frameX, TextRenderer.MeasureText("" + frame, font).Height), new Point((int)frameX, Height));
+
+                    e.Graphics.DrawString("" + frame, font, brush4, new Point((int)frameX - TextRenderer.MeasureText("" + frame, font).Width / 2, 0));
+                }
             }
 
-            e.Graphics.DrawLine(pen2, new Point((int)currentFrameX, TextRenderer.MeasureText("" + currentFrame, Font).Height), new Point((int)currentFrameX, Height));
 
+            if (frameRight == lastFrame)
+            {
+                //draw last frame regardless of the steps
+                double x = Width - 20;
 
-            e.Graphics.DrawString("" + currentFrame, Font, brush1, new Point((int)currentFrameX - TextRenderer.MeasureText("" + currentFrame, Font).Width / 2, 0));
+                e.Graphics.DrawLine(pen1, new Point((int)x, TextRenderer.MeasureText("" + lastFrame, font).Height), new Point((int)x, Height));
+
+                e.Graphics.DrawString("" + lastFrame, font, brush4, new Point((int)x - TextRenderer.MeasureText("" + lastFrame, font).Width / 2, 0));
+            }
+
+            e.Graphics.DrawLine(pen2, new Point((int)currentFrameX, TextRenderer.MeasureText("" + currentFrame, font).Height), new Point((int)currentFrameX, Height));
+
+            e.Graphics.DrawString("" + currentFrame, font, brush1, new Point((int)currentFrameX - TextRenderer.MeasureText("" + currentFrame, font).Width / 2, 0));
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            double step;
+            if (lastMousePos.X < 20)
+            {
+                step = (20 - lastMousePos.X) * (frameRight - frameLeft) / Width;
+                frameLeft -= step;
+                frameRight -= step;
+
+                #region resolve collsions
+                if (frameLeft < 0)
+                {
+                    frameRight -= frameLeft;
+                    frameLeft = 0;
+                }
+                #endregion
+            }
+            else
+            {
+                step = (lastMousePos.X - Width + 20) * (frameRight - frameLeft) / Width;
+                frameLeft += step;
+                frameRight += step;
+
+                #region resolve collsions
+                if (frameRight > lastFrame)
+                {
+                    frameLeft += lastFrame - frameRight;
+                    frameRight = lastFrame;
+                }
+                #endregion
+            }
+
+            currentFrame = Math.Min(Math.Max(0, (int)Math.Round(((lastMousePos.X - 20) * (frameRight - frameLeft) / (Width - 40.0) + frameLeft))), lastFrame);
+            FrameChanged?.Invoke(this, new EventArgs());
+            Refresh();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+            if (lastFrame == 0)
+                return;
+
             if (e.Button == MouseButtons.Left)
             {
-                currentFrame = Math.Min(Math.Max(0, (int)Math.Round(((e.Location.X - 20) * (frameRight - frameLeft) / (Width - 40.0) + frameLeft))), frameCount);
+
+                timer.Enabled = (e.X < 20 || e.X > Width - 20);
+                Locked = true;
+                currentFrame = Math.Min(Math.Max(0, (int)Math.Round(((e.X - 20) * (frameRight - frameLeft) / (Width - 40.0) + frameLeft))), lastFrame);
                 FrameChanged?.Invoke(this, new EventArgs());
-
-                double delta = e.Location.X * (frameRight - frameLeft) / (Width - 40.0);
-                frameLeft -= delta;
-                frameRight -= delta;
-
-                ResolveCollision();
                 Refresh();
             }
             else if (e.Button == MouseButtons.Right)
             {
-                double delta = (e.Location.X - lastMousePos.X) * (frameRight - frameLeft) / (Width - 40.0);
+                double delta = (e.X - lastMousePos.X) * (frameRight - frameLeft) / (Width - 40.0);
                 frameLeft -= delta;
                 frameRight -= delta;
 
                 ResolveCollision();
+
                 Refresh();
             }
 
             lastMousePos = e.Location;
         }
 
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            timer.Stop();
+            Locked = false;
+            base.OnMouseUp(e);
+        }
+
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
+            if (lastFrame == 0)
+                return;
+
+            if (frameRight - frameLeft <= 2 && e.Delta > 0)
+                return;
 
             double delta = 1 + Math.Min(Math.Max(-0.5, -e.Delta * 0.00390625), 0.5);
 
-            double frameOrigin = Math.Min(Math.Max(0, ((e.Location.X - 20) * (frameRight - frameLeft) / (Width - 40.0) + frameLeft)), frameCount);
+            double frameOrigin = Math.Min(Math.Max(0, ((e.X - 20) * (frameRight - frameLeft) / (Width - 40.0) + frameLeft)), lastFrame);
 
             frameLeft = Math.Min(-1, (frameLeft - frameOrigin)) * delta + frameOrigin;
             frameRight = Math.Max(1, (frameRight - frameOrigin)) * delta + frameOrigin;
 
-            ResolveCollision();
+            ResolveFitting();
 
             Refresh();
         }
 
-        #region resolve collsions
-        private void ResolveCollision()
+        protected override void OnResize(EventArgs e)
         {
-            if (frameLeft < 0)
-            {
-                frameRight -= frameLeft;
-                if (frameRight > frameCount)
-                    frameRight = frameCount;
-                frameLeft = 0;
-            }
-            else if (frameRight > frameCount)
-            {
-                frameLeft += frameCount - frameRight;
-                if (frameLeft < 0)
-                    frameLeft = 0;
-                frameRight = frameCount;
-            }
+            Refresh();
+            base.OnResize(e);
         }
-        #endregion
 
         protected override CreateParams CreateParams
         {
@@ -195,10 +290,6 @@ namespace Switch_Toolbox.Library.Forms
                 cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
                 return cp;
             }
-        }
-
-        private void TimeLine_Resize(object sender, EventArgs e) {
-            ResolveCollision();
         }
     }
 }

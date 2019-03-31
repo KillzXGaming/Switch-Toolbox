@@ -108,7 +108,7 @@ namespace Switch_Toolbox.Library
 
             animationTrackBar.BackColor = FormThemes.BaseTheme.FormBackColor;
             animationTrackBar.ForeColor = FormThemes.BaseTheme.FormForeColor;
-            animationTrackBar.FrameChanged += new EventHandler(animationTrackBar_ValueChanged);
+           // animationTrackBar.FrameChanged += new EventHandler(animationTrackBar_ValueChanged);
 
           /*  animationTrackBar.ThumbInnerColor = FormThemes.BaseTheme.TimelineThumbColor;
             animationTrackBar.ThumbOuterColor = FormThemes.BaseTheme.TimelineThumbColor;
@@ -138,12 +138,14 @@ namespace Switch_Toolbox.Library
         {
             AnimationPlayerState = PlayerState.Playing;
             UpdateAnimationUI();
+            animationTrackBar.Play();
         }
 
         private void Pause()
         {
             AnimationPlayerState = PlayerState.Stop;
             UpdateAnimationUI();
+            animationTrackBar.Stop();
         }
 
         private void Stop()
@@ -280,15 +282,20 @@ namespace Switch_Toolbox.Library
 
         }
 
-        private void animationTrackBar_ValueChanged(object sender, EventArgs e)
+        private void animationTrackBar_ValueChanged()
         {
-            currentFrameUpDown.Value = animationTrackBar.CurrentFrame;
+
+        }
+
+        private void OnFrameAdvanced()
+        {
             UpdateViewport();
             SetAnimationsToFrame(animationTrackBar.CurrentFrame);
 
             if (!renderThreadIsUpdating || !IsPlaying)
                 UpdateViewport();
         }
+
         private void SetAnimationsToFrame(int frameNum)
         {
             if (currentAnimation == null)
@@ -357,7 +364,7 @@ namespace Switch_Toolbox.Library
                 currentFrameUpDown.Value = totalFrame.Value;
 
             animationTrackBar.CurrentFrame = (int)currentFrameUpDown.Value;
-            animationTrackBar.Refresh();
+            OnFrameAdvanced();
         }
 
         public void AnimationPanel_FormClosed()
