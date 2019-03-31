@@ -38,6 +38,7 @@
   <ItemGroup>
     <Reference Include="AssimpNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
       <HintPath>..\packages\AssimpNet.4.1.0\lib\net40\AssimpNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Be.Windows.Forms.HexBox">
       <HintPath>..\Toolbox\Lib\Be.Windows.Forms.HexBox.dll</HintPath>
@@ -78,6 +79,7 @@
     </Reference>
     <Reference Include="LZ4.Frame">
       <HintPath>..\Toolbox\Lib\LZ4.Frame.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
@@ -97,6 +99,7 @@
     <Reference Include="OpenGl_EditorFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\OpenGl_EditorFramework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
@@ -145,7 +148,7 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Buffers">
       <HintPath>..\Switch_FileFormatsMain\System.Buffers.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -153,11 +156,12 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Memory">
       <HintPath>..\Switch_FileFormatsMain\System.Memory.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>..\Switch_FileFormatsMain\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">

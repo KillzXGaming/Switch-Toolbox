@@ -205,6 +205,7 @@
     <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
       <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
       <Name>Switch_Toolbox_Library</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Updater\Updater.csproj">
       <Project>{d82a2c08-2a65-43af-bda6-a36cc27aa003}</Project>

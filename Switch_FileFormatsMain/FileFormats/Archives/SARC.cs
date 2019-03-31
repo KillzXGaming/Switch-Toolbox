@@ -53,7 +53,7 @@ namespace FirstPlugin
             sarcData.endianness = GetByteOrder(stream);
             SarcHash = Utils.GenerateUniqueHashID();
 
-            FillTreeNodes(this, SzsFiles.Files, SarcHash);
+            FillTreeNodes(this, SzsFiles.Files, sarcData.HashOnly);
 
             Text = FileName;
 
@@ -427,7 +427,7 @@ namespace FirstPlugin
                 }
             }
         }
-        void FillTreeNodes(TreeNode root, Dictionary<string, byte[]> files, string SarcHash)
+        void FillTreeNodes(TreeNode root, Dictionary<string, byte[]> files, bool HashOnly)
         {
             var rootText = root.Text;
             var rootTextLength = rootText.Length;
@@ -435,6 +435,9 @@ namespace FirstPlugin
             foreach (var node in nodeStrings)
             {
                 string nodeString = node.Key;
+
+                if (HashOnly)
+                    nodeString = SARCExt.SARC.TryGetNameFromHashTable(nodeString);
 
                 var roots = nodeString.Split(new char[] { '/' },
                     StringSplitOptions.RemoveEmptyEntries);
@@ -459,7 +462,7 @@ namespace FirstPlugin
                         var folder = new FolderEntry(parentName, 0, 0);
                         if (rootIndex == roots.Length - 1)
                         {
-                            var file = SetupFileEntry(node.Value, parentName, node.Key, SarcHash);
+                            var file = SetupFileEntry(node.Value, parentName, node.Key);
                             file.Name = nodeName;
                             parentNode.Nodes.Add(file);
                             parentNode = file;
@@ -502,7 +505,7 @@ namespace FirstPlugin
             return finalList;
         }
 
-        public SarcEntry SetupFileEntry(byte[] data, string name, string fullName, string SarchHash)
+        public SarcEntry SetupFileEntry(byte[] data, string name, string fullName)
         {
             SarcEntry sarcEntry = new SarcEntry();
             sarcEntry.FullName = fullName;
@@ -510,7 +513,6 @@ namespace FirstPlugin
             sarcEntry.Text = name;
             sarcEntry.sarc = this;
             sarcEntry.Data = data;
-            sarcEntry.sarcHash = SarcHash;
 
             Console.WriteLine(name);
 
