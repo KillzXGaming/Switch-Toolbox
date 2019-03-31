@@ -148,7 +148,7 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Buffers">
       <HintPath>..\Switch_FileFormatsMain\System.Buffers.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -156,7 +156,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Memory">
       <HintPath>..\Switch_FileFormatsMain\System.Memory.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
