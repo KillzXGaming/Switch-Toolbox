@@ -84,16 +84,8 @@ namespace Switch_Toolbox.Library
             foreach (int index in parent.MeshIndices)
                 objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
 
-            if (scene.HasMeshes && scene.Meshes.Any(x => x.HasBones))
-            {
-                foreach (Node child in parent.Children)
-                    BuildNode(child, ref rootTransform);
-            }
-            else
-            {
-                foreach (Node child in parent.Children)
-                    BuildNode(child, ref world);
-            }
+            foreach (Node child in parent.Children)
+                BuildNode(child, ref world);
         }
         public void LoadScene()
         {
@@ -344,12 +336,6 @@ namespace Switch_Toolbox.Library
             obj.ObjectName = msh.Name;
             obj.boneList = GetBoneList(msh);
             obj.VertexSkinCount = (byte)GetVertexSkinCount(msh);
-
-            Console.WriteLine($"MESH {msh.Name}");
-            Console.WriteLine($"HasUv0 {obj.HasUv0}");
-            Console.WriteLine($"HasIndices {obj.HasIndices}");
-            Console.WriteLine($"HasWeights {obj.HasWeights}");
-
 
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
