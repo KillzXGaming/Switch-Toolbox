@@ -202,6 +202,7 @@
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
+    <Compile Include="FileFormats\Hashes\SAHT.cs" />
     <Compile Include="FileFormats\Shader\SHARCFBNX.cs" />
     <Compile Include="FileFormats\Texture\BFLIM.cs" />
     <Compile Include="FileFormats\Layout\BFLAN.cs" />
