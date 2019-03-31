@@ -225,12 +225,12 @@ namespace Switch_Toolbox.Library
             Matrix4x4 world = trafo * rootTransform;
             Matrix4 worldTK = AssimpHelper.TKMatrix(world);
 
-
-
             bool IsBone = boneNames.Contains(node.Name) && !boneNames.Contains(node.Parent.Name) ||
-                          node.Name == "Skl_Root" || node.Name == "nw4f_root";
+                          node.Name.Contains("Skl_Root") || node.Name.Contains("nw4f_root");
 
-            Console.WriteLine("node list " + node.Name + " " + IsBone);
+            string ParentArmatureName = "";
+            if (node.Parent != null)
+                ParentArmatureName = node.Parent.Name;
 
             short SmoothIndex = 0;
             short RigidIndex = -1;
@@ -238,9 +238,11 @@ namespace Switch_Toolbox.Library
             //Loop through all the bones. If the parent is not in the bone list, then it's Parent is the root
             if (IsBone)
             {
+                Console.WriteLine("ParentArmatureName " + ParentArmatureName);
+
                 var idenity = Matrix4x4.Identity;
                 var Root = node.Parent;
-                CreateByNode(node, skeleton, SmoothIndex, RigidIndex, true, ref idenity);
+                CreateByNode(node, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
             }
             else
             {
@@ -252,7 +254,8 @@ namespace Switch_Toolbox.Library
         public const int BoneRotation = 0;
 
         private List<Node> tempBoneNodes = new List<Node>();
-        private void CreateByNode(Node node, STSkeleton skeleton, short SmoothIndex, short RigidIndex, bool IsRoot, ref Assimp.Matrix4x4 rootTransform)
+        private void CreateByNode(Node node, STSkeleton skeleton, string ParentArmatureName, 
+            short SmoothIndex, short RigidIndex, bool IsRoot, ref Assimp.Matrix4x4 rootTransform)
         {
             Matrix4x4 trafo = node.Transform;
             Matrix4x4 world = trafo * rootTransform;
@@ -269,6 +272,12 @@ namespace Switch_Toolbox.Library
                 skeleton.bones.Add(bone);
 
                 bone.Text = node.Name;
+
+                if (node.Name.Contains($"{ParentArmatureName}"))
+                {
+                    bone.Text = node.Name.Replace($"{ParentArmatureName}_", "");
+                }
+
                 bone.SmoothMatrixIndex = (short)skeleton.bones.IndexOf(bone);
                 bone.RigidMatrixIndex = -1; //Todo calculate these
 
@@ -307,7 +316,7 @@ namespace Switch_Toolbox.Library
             }
 
             foreach (Node child in node.Children)
-                CreateByNode(child, skeleton, SmoothIndex, RigidIndex, false, ref rootTransform);
+                CreateByNode(child, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, false, ref rootTransform);
         }
         public STGenericObject CreateGenericObject(Mesh msh, int Index, Matrix4 transform)
         {
