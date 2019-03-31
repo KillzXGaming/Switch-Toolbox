@@ -166,6 +166,7 @@ namespace Switch_Toolbox.Library
                 case FOURCC_ATI1:
                 case FOURCC_ATI2:
                 case FOURCC_BC5U:
+                case FOURCC_BC5S:
                     return true;
                 default:
                     return false;
@@ -193,6 +194,7 @@ namespace Switch_Toolbox.Library
                     return 0x8;
                 case FOURCC_ATI2:
                 case FOURCC_BC5U:
+                case FOURCC_BC5S:
                     return 0x10;
                 default:
                     return 0;
@@ -720,6 +722,9 @@ namespace Switch_Toolbox.Library
                     return TEX_FORMAT.BC5_UNORM;
                 case FOURCC_BC5U:
                     return TEX_FORMAT.BC5_UNORM;
+                case FOURCC_BC5S:
+                    return TEX_FORMAT.BC5_SNORM;
+
                 case FOURCC_RXGB:
                     return TEX_FORMAT.R8G8B8A8_UNORM;
                 default:
@@ -826,6 +831,7 @@ namespace Switch_Toolbox.Library
                     case FOURCC_BC4U:
                     case FOURCC_ATI2:
                     case FOURCC_BC5U:
+                    case FOURCC_BC5S:
                         return true;
                     default:
                         return false;
