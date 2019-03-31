@@ -64,7 +64,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public int CurrentFrame
         {
-            get => currentFrame;
+            get { return currentFrame; }
             set
             {
                 if (FollowCurrentFrame && !(Focused && MouseButtons == MouseButtons.Right))
@@ -85,7 +85,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public int FrameCount
         {
-            get => lastFrame + 1;
+            get { return lastFrame + 1; }
             set
             {
                 lastFrame = value - 1;
