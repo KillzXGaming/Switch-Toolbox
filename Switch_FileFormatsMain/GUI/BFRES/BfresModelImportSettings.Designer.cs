@@ -552,6 +552,7 @@
             this.chkBoxEnableWeightIndices.TabIndex = 25;
             this.chkBoxEnableWeightIndices.Text = "Enable Indices/Weights";
             this.chkBoxEnableWeightIndices.UseVisualStyleBackColor = true;
+            this.chkBoxEnableWeightIndices.CheckedChanged += new System.EventHandler(this.chkBoxEnableAttribute_CheckedChanged);
             // 
             // chkBoxEnableBitans
             // 
@@ -562,6 +563,7 @@
             this.chkBoxEnableBitans.TabIndex = 24;
             this.chkBoxEnableBitans.Text = "Enable Bitangents";
             this.chkBoxEnableBitans.UseVisualStyleBackColor = true;
+            this.chkBoxEnableBitans.CheckedChanged += new System.EventHandler(this.chkBoxEnableAttribute_CheckedChanged);
             // 
             // chkBoxEnableTans
             // 
@@ -760,7 +762,7 @@
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 333);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(192, 71);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
@@ -777,7 +779,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(3, 3);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(524, 327);
+            this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
             // BfresModelImportSettings

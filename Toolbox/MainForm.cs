@@ -128,7 +128,7 @@ namespace Toolbox
             DialogResult result;
             using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
             {
-                result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName}  {UpdateProgram.LatestRelease.Body}!" +
+                result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName} \n\n{UpdateProgram.LatestRelease.Body}!" +
                $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
             }
             if (result == DialogResult.Yes)

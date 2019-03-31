@@ -345,6 +345,12 @@ namespace Switch_Toolbox.Library
             obj.boneList = GetBoneList(msh);
             obj.VertexSkinCount = (byte)GetVertexSkinCount(msh);
 
+            Console.WriteLine($"MESH {msh.Name}");
+            Console.WriteLine($"HasUv0 {obj.HasUv0}");
+            Console.WriteLine($"HasIndices {obj.HasIndices}");
+            Console.WriteLine($"HasWeights {obj.HasWeights}");
+
+
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
             lod.IndexFormat = STIndexFormat.UInt16;
@@ -446,6 +452,9 @@ namespace Switch_Toolbox.Library
             }
             if (msh.HasBones)
             {
+                STConsole.WriteLine(msh.Name + " HasBones " + msh.HasBones);
+                STConsole.WriteLine(msh.Name + " BoneCount " + msh.BoneCount);
+
                 for (int i = 0; i < msh.BoneCount; i++)
                 {
                     Bone bn = msh.Bones[i];

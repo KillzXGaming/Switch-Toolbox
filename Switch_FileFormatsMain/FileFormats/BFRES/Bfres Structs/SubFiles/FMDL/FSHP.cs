@@ -745,7 +745,10 @@ namespace Bfres.Structs
                             else
                             {
                                 if (v.boneIds.Count < 4)
+                                {
+                                    STConsole.WriteLine(defBn.Index + " mesh " + Text + " bone " + bn);
                                     v.boneIds.Add(defBn.Index);
+                                }
                             }
                         }
                         i++;

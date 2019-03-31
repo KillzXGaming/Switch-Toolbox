@@ -944,10 +944,10 @@ namespace FirstPlugin
                 case BRESGroupType.SkeletalAnim:
                     foreach (FSKA ska in group.Nodes)
                     {
-                        ska.SkeletalAnim.BoneAnims.Clear();
+                      //  ska.SkeletalAnim.BoneAnims.Clear();
 
-                        foreach (FSKA.BoneAnimNode bone in ska.Bones)
-                            ska.SkeletalAnim.BoneAnims.Add(bone.SaveData());
+                      //  foreach (FSKA.BoneAnimNode bone in ska.Bones)
+                          //  ska.SkeletalAnim.BoneAnims.Add(bone.SaveData());
 
                         ska.SkeletalAnim.Name = ska.Text;
                         resFile.SkeletalAnims.Add(ska.SkeletalAnim);

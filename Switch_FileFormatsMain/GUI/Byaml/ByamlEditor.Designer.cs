@@ -46,6 +46,7 @@
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.stPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -62,9 +63,9 @@
             this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 25);
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(543, 368);
+            this.treeView1.Size = new System.Drawing.Size(543, 336);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.BeforeExpand);
             // 
@@ -157,14 +158,15 @@
             this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel1.Controls.Add(this.treeView1);
             this.stPanel1.Location = new System.Drawing.Point(0, 25);
             this.stPanel1.Name = "stPanel1";
             this.stPanel1.Size = new System.Drawing.Size(543, 336);
             this.stPanel1.TabIndex = 11;
-            this.stPanel1.Controls.Add(this.treeView1);
             // 
             // stButton1
             // 
+            this.stButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.stButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stButton1.Location = new System.Drawing.Point(465, 367);
@@ -176,6 +178,7 @@
             // 
             // stButton2
             // 
+            this.stButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stButton2.Location = new System.Drawing.Point(369, 367);
@@ -196,6 +199,7 @@
             this.Controls.SetChildIndex(this.contentContainer, 0);
             this.contentContainer.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.stPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
