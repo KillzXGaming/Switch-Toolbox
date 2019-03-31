@@ -37,16 +37,6 @@ namespace FirstPlugin
             }
         }
 
-        public void LoadHashLists()
-        {
-            string PathMK7HashFile = System.IO.Path.Combine(Runtime.ExecutableDir, "Lib", "HashList") + "\\Mario Kart 7.saht";
-            string PathMK8DHashFile = System.IO.Path.Combine(Runtime.ExecutableDir, "Lib", "HashList") + "\\Mario Kart 8 Deluxe.saht";
-            string PathMK8HashFile = System.IO.Path.Combine(Runtime.ExecutableDir, "Lib", "HashList") + "\\Mario Kart 8.saht";
-
-            SAHT MK8HashTable = new SAHT(PathMK8HashFile);
-
-        }
-
         public Dictionary<string, byte[]> OpenedFiles = new Dictionary<string, byte[]>();
 
         public SarcData sarcData;
@@ -62,8 +52,6 @@ namespace FirstPlugin
             sarcData.Files = SzsFiles.Files;
             sarcData.endianness = GetByteOrder(stream);
             SarcHash = Utils.GenerateUniqueHashID();
-
-            LoadHashLists();
 
             FillTreeNodes(this, SzsFiles.Files, SarcHash);
 
