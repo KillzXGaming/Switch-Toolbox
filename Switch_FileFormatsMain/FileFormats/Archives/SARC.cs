@@ -195,12 +195,15 @@ namespace FirstPlugin
         {
             string dir = Path.GetDirectoryName(sarc.FullName);
 
-            if (dir == string.Empty)
-                sarc.FullName = sarc.Text;
-            else
-                sarc.FullName = Path.Combine(dir, sarc.Text);
+            if (!sarcData.HashOnly)
+            {
+                if (dir == string.Empty)
+                    sarc.FullName = sarc.Text;
+                else
+                    sarc.FullName = Path.Combine(dir, sarc.Text);
 
-            sarc.FullName = sarc.FullName.Replace(@"\", "/");
+                sarc.FullName = sarc.FullName.Replace(@"\", "/");
+            }
 
             sarcData.Files.Add(sarc.FullName, sarc.Data);
         }
