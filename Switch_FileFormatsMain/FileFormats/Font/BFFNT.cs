@@ -49,10 +49,8 @@ namespace FirstPlugin
             int i = 0;
             foreach (byte[] texture in tglp.SheetDataList)
             {
-                SheetEntry sheet = new SheetEntry();
-                sheet.data = texture;
-                sheet.Text = "Sheet" + i++;
-                Nodes.Add(sheet);
+                BNTX file = (BNTX)STFileLoader.OpenFileFormat("Sheet" + i++, texture);
+                Nodes.Add(file);
             }
         }
         public void Unload()
