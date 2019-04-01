@@ -362,8 +362,12 @@ namespace Switch_Toolbox.Library
             if (currentFrameUpDown.Value > totalFrame.Value)
                 currentFrameUpDown.Value = totalFrame.Value;
 
-            animationTrackBar.CurrentFrame = (int)currentFrameUpDown.Value;
-            OnFrameAdvanced();
+            //Check locked state current frame will change during playing
+            if (animationTrackBar.Locked == false)
+            {
+                animationTrackBar.CurrentFrame = (int)currentFrameUpDown.Value;
+                OnFrameAdvanced();
+            }
         }
 
         public void AnimationPanel_FormClosed()
