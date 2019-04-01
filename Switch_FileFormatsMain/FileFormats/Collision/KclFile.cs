@@ -34,7 +34,7 @@ namespace FirstPlugin
 
         public class OctreeNode
         {
-            public List<ushort> TriangleIndices { get; set; }
+        /*    public List<ushort> TriangleIndices { get; set; }
 
             protected const uint _flagMask = 0b11000000_00000000_00000000_00000000;
 
@@ -84,7 +84,7 @@ namespace FirstPlugin
             public void Write(FileWriter writer)
             {
 
-            }
+            }*/
         }
 
         public class Model
@@ -99,6 +99,5 @@ namespace FirstPlugin
 
             }
         }
-
     }
 }
