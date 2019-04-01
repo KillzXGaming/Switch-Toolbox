@@ -38,7 +38,6 @@
   <ItemGroup>
     <Reference Include="AssimpNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
       <HintPath>..\packages\AssimpNet.4.1.0\lib\net40\AssimpNet.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Be.Windows.Forms.HexBox">
       <HintPath>..\Toolbox\Lib\Be.Windows.Forms.HexBox.dll</HintPath>

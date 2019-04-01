@@ -31,7 +31,7 @@ namespace FirstPlugin.Forms
             scene = new CourseMuuntScene(by);
             if (File.Exists($"{CourseFolder}/course_model.szs"))
             {
-            //    scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
+                scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
                 scene.AddRenderableKcl($"{CourseFolder}/course.kcl");
 
                
@@ -42,13 +42,13 @@ namespace FirstPlugin.Forms
                     kcl.Renderer.UpdateVertexData();
                 }
 
-             /*   foreach (var bfres in scene.BfresObjects)
+                foreach (var bfres in scene.BfresObjects)
                 {
                     viewport.AddDrawable(bfres.BFRESRender);
 
                     bfres.BFRESRender.UpdateVertexData();
                     bfres.BFRESRender.UpdateTextureMaps();
-                }*/
+                }
                 viewport.LoadObjects();
             }
 

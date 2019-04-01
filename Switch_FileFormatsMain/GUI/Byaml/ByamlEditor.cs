@@ -35,6 +35,8 @@ namespace FirstPlugin
         bool pathSupport;
         ushort bymlVer;
 
+        bool useMuunt = true;
+
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
         {
             InitializeComponent();
@@ -49,7 +51,7 @@ namespace FirstPlugin
                 stPanel1.Dock = DockStyle.Fill;
             }
 
-         /*   if (byaml.FileName == "course_muunt.byaml")
+            if (byaml.FileName == "course_muunt.byaml" && useMuunt)
             {
                 pathSupport = true;
 
@@ -60,7 +62,7 @@ namespace FirstPlugin
                 editor.LoadCourseInfo(by, byaml.FilePath);
                 stPanel1.Controls.Add(editor);
                 return;
-            }*/
+            }
 
 
             byteOrder = defaultOrder;

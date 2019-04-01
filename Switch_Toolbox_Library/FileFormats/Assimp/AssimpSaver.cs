@@ -22,6 +22,19 @@ namespace Switch_Toolbox.Library
             SaveMaterials(scene, model, FileName, Textures);
             SaveMeshes(scene, model, skeleton, FileName, NodeArray);
 
+            foreach (var mesh in scene.Meshes)
+            {
+                STConsole.WriteLine(mesh.Name);
+            }
+
+            foreach (var mat in scene.Materials)
+            {
+                foreach (var slot in mat.GetMaterialTextures(TextureType.Diffuse))
+                {
+                    STConsole.WriteLine("Diffuse " + slot.FilePath);
+                }
+            }
+
             using (var v = new AssimpContext())
             {
                 string ext = System.IO.Path.GetExtension(FileName);
@@ -36,10 +49,25 @@ namespace Switch_Toolbox.Library
                 if (ext == ".ply")
                     formatID = "ply";
 
-                if (v.ExportFile(scene, FileName, formatID, PostProcessSteps.ValidateDataStructure))
+                if (v.ExportFile(scene, FileName, formatID))
                     MessageBox.Show($"Exported {FileName} Successfuly!");
                 else
                     MessageBox.Show($"Failed to export {FileName}!");
+
+                Scene newScene = v.ImportFile(FileName);
+
+                foreach (var mesh in newScene.Meshes)
+                {
+                    STConsole.WriteLine(mesh.Name);
+                }
+
+                foreach (var mat in newScene.Materials)
+                {
+                    foreach (var slot in mat.GetMaterialTextures(TextureType.Diffuse))
+                    {
+                        STConsole.WriteLine("Diffuse " + slot.FilePath);
+                    }
+                }
             }
         }
 
@@ -101,16 +129,14 @@ namespace Switch_Toolbox.Library
                             }
 
                             //Check if the max amount of weights is higher than the current bone id
-                            if (v.boneWeights.Count > j)
+                            if (v.boneWeights.Count > j && v.boneWeights[j] > 0)
                             {
-                                if (v.boneWeights[j] <= 0)
-                                    mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
-                                else if (v.boneWeights[j] <= 1)
+                                 if (v.boneWeights[j] <= 1)
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
                                 else
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                             }
-                            else
+                            else if ( v.boneWeights[j] > 0)
                                 mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                         }
                     }

@@ -39,6 +39,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            Text = FileName;
+
             FFNT bffnt = new FFNT();
             bffnt.Read(new FileReader(stream));
 
@@ -50,6 +52,7 @@ namespace FirstPlugin
                 SheetEntry sheet = new SheetEntry();
                 sheet.data = texture;
                 sheet.Text = "Sheet" + i++;
+                Nodes.Add(sheet);
             }
         }
         public void Unload()

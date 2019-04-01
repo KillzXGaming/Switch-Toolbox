@@ -411,9 +411,6 @@ namespace Switch_Toolbox.Library
                 }
             }
 
-            foreach (Bone b in msh.Bones)
-                Console.WriteLine(b.VertexWeights.Count);
-
             if (msh.HasBones)
                 return msh.Bones.Max(b => b.VertexWeightCount);
 

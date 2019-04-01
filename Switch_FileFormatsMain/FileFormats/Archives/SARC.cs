@@ -324,7 +324,7 @@ namespace FirstPlugin
             {
                 IFileFormat file = STFileLoader.OpenFileFormat(FullName, Data,false, true, this);
 
-                if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)))
+                if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)) && !SuppressFormDialog)
                 {
                     OpenFormDialog(file);
                 }
