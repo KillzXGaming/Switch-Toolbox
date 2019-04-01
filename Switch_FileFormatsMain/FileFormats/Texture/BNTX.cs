@@ -787,11 +787,12 @@ namespace FirstPlugin
             MipCount = (uint)tex.TextureData[0].Count;
             Format = ConvertFormat(tex.Format);
 
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new STToolStripItem("Export", Export));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Replace", Replace));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Remove", Remove));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Rename", Rename));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, Remove, Keys.Control | Keys.Delete));
         //   LoadOpenGLTexture();
         }
         public static SurfaceFormat GenericToBntxSurfaceFormat(TEX_FORMAT texFormat)
