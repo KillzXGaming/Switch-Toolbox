@@ -22,19 +22,6 @@ namespace Switch_Toolbox.Library
             SaveMaterials(scene, model, FileName, Textures);
             SaveMeshes(scene, model, skeleton, FileName, NodeArray);
 
-            foreach (var mesh in scene.Meshes)
-            {
-                STConsole.WriteLine(mesh.Name);
-            }
-
-            foreach (var mat in scene.Materials)
-            {
-                foreach (var slot in mat.GetMaterialTextures(TextureType.Diffuse))
-                {
-                    STConsole.WriteLine("Diffuse " + slot.FilePath);
-                }
-            }
-
             using (var v = new AssimpContext())
             {
                 string ext = System.IO.Path.GetExtension(FileName);
