@@ -530,11 +530,8 @@ namespace FirstPlugin
                 }
             }
 
-
             RenderableSkeleton.update();
             RenderableSkeleton.reset();
-
-
         }
         public static void ReadBone(this BfresBone bone, Bone bn, bool SetParent = true)
         {

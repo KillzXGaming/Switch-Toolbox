@@ -340,12 +340,15 @@ namespace FirstPlugin
                 ReadBone(STBone, bone);
                 RenderableSkeleton.bones.Add(STBone);
             }
+            foreach (var bone in RenderableSkeleton.bones) {
+                if (bone.Parent == null)
+                {
+                    skl.Nodes.Add(bone);
+                }
+            }
+
             RenderableSkeleton.update();
             RenderableSkeleton.reset();
-
-            foreach (var bone in RenderableSkeleton.bones)
-                if (bone.Parent == null)
-                    skl.Nodes.Add(bone);
         }
         public static void ReadBone(this BfresBone bone, Bone bn, bool SetParent = true)
         {

@@ -103,19 +103,18 @@ namespace Bfres.Structs
 
             public ResFile GetResFile()
             {
-                return ((BFRESGroupNode)Parent).GetResFile();
+                return ((FMDL)Parent).GetResFile();
             }
 
             public ResU.ResFile GetResFileU()
             {
-                return ((BFRESGroupNode)Parent).GetResFileU();
+                return ((FMDL)Parent).GetResFileU();
             }
 
             public override void Import(string[] FileNames)
             {
                 foreach (var FileName in FileNames)
                 {
-
                     string extension = System.IO.Path.GetExtension(FileName);
 
                     if (extension == ".bfbon")
@@ -427,8 +426,8 @@ namespace Bfres.Structs
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Bone.Import(ofd.FileName);
+                Bone.Name = Text;
             }
-            Bone.Name = Text;
         }
 
         public BfresBone(STSkeleton skeleton)
