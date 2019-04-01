@@ -787,6 +787,7 @@ namespace FirstPlugin
             MipCount = (uint)tex.TextureData[0].Count;
             Format = ConvertFormat(tex.Format);
 
+            ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
