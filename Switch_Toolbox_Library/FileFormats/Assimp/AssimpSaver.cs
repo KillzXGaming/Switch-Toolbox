@@ -55,19 +55,6 @@ namespace Switch_Toolbox.Library
                     MessageBox.Show($"Failed to export {FileName}!");
 
                 Scene newScene = v.ImportFile(FileName);
-
-                foreach (var mesh in newScene.Meshes)
-                {
-                    STConsole.WriteLine(mesh.Name);
-                }
-
-                foreach (var mat in newScene.Materials)
-                {
-                    foreach (var slot in mat.GetMaterialTextures(TextureType.Diffuse))
-                    {
-                        STConsole.WriteLine("Diffuse " + slot.FilePath);
-                    }
-                }
             }
         }
 
