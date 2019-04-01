@@ -59,8 +59,8 @@ namespace FirstPlugin
                     SelectedImageKey = "bntx";
                 }
 
-                ContextMenu = new ContextMenu();
-                ContextMenu.MenuItems.Add(new MenuItem("Export Raw Data", Export));
+                ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
             }
             private void Export(object sender, EventArgs args)
             {

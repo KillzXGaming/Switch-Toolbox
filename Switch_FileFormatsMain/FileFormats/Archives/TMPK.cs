@@ -46,13 +46,14 @@ namespace FirstPlugin
 
         public bool CanAddFiles { get; set; } = true;
         public bool CanRenameFiles { get; set; } = true;
-        public bool CanDelete { get; set; } = true;
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; } = true;
 
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
+
+            CanDelete = true;
 
             using (var reader = new FileReader(stream))
             {

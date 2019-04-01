@@ -466,6 +466,8 @@ namespace FirstPlugin
 
         public void Load(ResU.ResFile res)
         {
+            CanDelete = true;
+
             resFileU = res;
 
             Text = resFileU.Name;

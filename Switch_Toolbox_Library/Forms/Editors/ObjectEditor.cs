@@ -247,6 +247,22 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        public void RemoveFile(TreeNode File)
+        {
+            if (File is IFileFormat) {
+                ((IFileFormat)File).Unload();
+            }
+
+            treeViewCustom1.Nodes.Remove(File);
+        }
+
+        public void ResetControls()
+        {
+            treeViewCustom1.Nodes.Clear();
+            stPanel2.Controls.Clear();
+            Text = "";
+        }
+
         bool UpdateViewport = false;
         bool IsModelChecked = false;
         private void treeViewCustom1_AfterCheck(object sender, TreeViewEventArgs e)

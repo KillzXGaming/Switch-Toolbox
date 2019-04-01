@@ -120,7 +120,7 @@ namespace FirstPlugin
 
             STToolStripItem[] newFileExt = new STToolStripItem[2];
 
-            public MenuExt()
+            public MenuExt()    
             {
                 newFileExt[0] = new STToolStripItem("KCL (Switch)", CreateNew);
                 newFileExt[1] = new STToolStripItem("KCL (Wii U)", CreateNew);

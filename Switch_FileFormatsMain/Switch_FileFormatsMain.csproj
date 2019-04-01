@@ -200,6 +200,7 @@
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
+    <Compile Include="FileFormats\Collision\KclFile.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />

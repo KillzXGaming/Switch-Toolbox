@@ -65,6 +65,7 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Batch Texture Editor", null, PreviewTextures, Keys.Control | Keys.P));
             ContextMenuStrip.Items.Add(new STToolStripSeparator());
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Sort Childern", null, SortChildern, Keys.Control | Keys.E));
+            CanDelete = true;
 
             sarcData.Files.Clear();
         }
@@ -77,6 +78,13 @@ namespace FirstPlugin
         private void PackFromFolder(object sender, EventArgs args)
         {
 
+        }
+
+        private void Delete(object sender, EventArgs args) {
+            Unload();
+            var editor = LibraryGUI.Instance.GetObjectEditor();
+            if (editor != null)
+                editor.ResetControls();
         }
 
         private void SortChildern(object sender, EventArgs args)

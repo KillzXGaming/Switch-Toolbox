@@ -718,6 +718,17 @@ namespace Switch_Toolbox.Library
             return bytes;
         }
 
+        public override void Delete()
+        {
+            DisposeRenderable();
+
+            var editor = LibraryGUI.Instance.GetObjectEditor();
+            if (editor != null)
+            {
+                editor.RemoveFile(this);
+                editor.ResetControls();
+            }
+        }
 
         public Properties GenericProperties
         {

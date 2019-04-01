@@ -13,7 +13,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class BEA : TreeNode, IArchiveFile
+    public class BEA : TreeNodeFile, IArchiveFile
     {
         public bool CanAddFiles { get; set; } = false;
         public bool CanRenameFiles { get; set; } = false;
@@ -126,17 +126,14 @@ namespace FirstPlugin
             beaFile = new BezelEngineArchive(stream);
             FillTreeNodes(this, beaFile.FileList);
 
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save", null, Save, Keys.Control | Keys.S));
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Preview Window", null, PreviewWindow, Keys.Control | Keys.P));
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export All", null, ExportAll, Keys.Control | Keys.E));
 
-            ContextMenu = new ContextMenu();
-            MenuItem save = new MenuItem("Save");
-            ContextMenu.MenuItems.Add(save);
-            save.Click += Save;
-            MenuItem previewFiles = new MenuItem("Preview Window");
-            ContextMenu.MenuItems.Add(previewFiles);
-            previewFiles.Click += PreviewWindow;
-            MenuItem exportAll = new MenuItem("Export All");
-            ContextMenu.MenuItems.Add(exportAll);
-            exportAll.Click += ExportAll;
+            CanDelete = true;
         }
         public void Unload()
         {

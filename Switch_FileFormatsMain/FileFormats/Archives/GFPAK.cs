@@ -46,13 +46,12 @@ namespace FirstPlugin
 
             Text = FileName;
 
-            ContextMenu = new ContextMenu();
-            MenuItem save = new MenuItem("Save");
-            ContextMenu.MenuItems.Add(save);
-            save.Click += Save;
-            MenuItem previewFiles = new MenuItem("Preview Window");
-            ContextMenu.MenuItems.Add(previewFiles);
-            previewFiles.Click += PreviewWindow;
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save", null, Save, Keys.Control | Keys.S));
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Preview Window", null, PreviewWindow, Keys.Control | Keys.P));
+
+            CanDelete = true;
         }
         public void Unload()
         {

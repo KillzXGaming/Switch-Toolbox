@@ -24,13 +24,40 @@ namespace Switch_Toolbox.Library
     }
     public class TreeNodeFile : TreeNodeCustom
     {
+        public bool CanDelete
+        {
+            set
+            {
+                if (value == true)
+                {
+                    if (ContextMenuStrip == null)
+                        ContextMenuStrip = new STContextMenuStrip();
+
+                    ContextMenuStrip.Items.Add(new STToolStipMenuItem("Delete", null, Delete, Keys.Control | Keys.Delete));
+                }
+            }
+        }
+
         public TreeNodeFile()
         {
+
         }
+
         public TreeNodeFile(string text)
         {
             Text = text;
         }
+
+        private void Delete(object sender, EventArgs args)
+        {
+            var editor = LibraryGUI.Instance.GetObjectEditor();
+            if (editor != null)
+            {
+                editor.RemoveFile(this);
+                editor.ResetControls();
+            }
+        }
+
         public virtual void OnAfterAdded() //After added to treeview
         {
 

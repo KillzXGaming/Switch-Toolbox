@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library.Animations;
+using Switch_Toolbox.Library;
 using System.Windows.Forms;
 using ResU = Syroot.NintenTools.Bfres;
 using ResNX = Syroot.NintenTools.NSW.Bfres;
@@ -20,12 +20,21 @@ namespace FirstPlugin.NodeWrappers
         }
 
         public bool IsWiiU { get; set; }
+      
 
         public void LoadMenus(bool isWiiUBfres)
         {
         }
 
-
+        public override void Delete()
+        {
+            var editor = LibraryGUI.Instance.GetObjectEditor();
+            if (editor != null)
+            {
+                editor.RemoveFile(this);
+                editor.ResetControls();
+            }
+        }
 
         protected void ImportModelAction(object sender, EventArgs e) { ImportModel(); }
         protected void ImportEmbeddedFileAction(object sender, EventArgs e) { ImportEmbeddedFile(); }
