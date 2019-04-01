@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Tool.ico</ApplicationIcon>
+    <ApplicationIcon>skeleton_dQ9_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -392,6 +392,7 @@
     </Content>
     <None Include="Resources\Save.png" />
     <None Include="Resources\UpdateIcon.png" />
+    <Content Include="skeleton_dQ9_icon.ico" />
     <Content Include="Switch_Toolbox.csproj.user" />
     <Content Include="Tool.ico" />
     <None Include="Resources\Logo.png" />
