@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="AssimpNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99 - Copy\Toolbox\Lib\AssimpNet.dll</HintPath>
+      <HintPath>.\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="Be.Windows.Forms.HexBox">
       <HintPath>..\Toolbox\Lib\Be.Windows.Forms.HexBox.dll</HintPath>
