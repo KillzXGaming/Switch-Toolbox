@@ -73,5 +73,10 @@ namespace FirstPlugin.Forms
         {
 
         }
+
+        private void viewIntroCameraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

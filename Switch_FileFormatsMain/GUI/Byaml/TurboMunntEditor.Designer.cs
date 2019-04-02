@@ -29,21 +29,25 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
-            this.objectCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.objectCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.viewIntroCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.stPanel1.SuspendLayout();
             this.stPanel2.SuspendLayout();
+            this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
+            this.stMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -57,30 +61,13 @@
             this.splitContainer1.Panel1.Controls.Add(this.stPanel2);
             this.splitContainer1.Panel1.Controls.Add(this.splitter1);
             this.splitContainer1.Panel1.Controls.Add(this.stPanel1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.stMenuStrip1);
             this.splitContainer1.Size = new System.Drawing.Size(780, 492);
             this.splitContainer1.SplitterDistance = 170;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // stPanel1
-            // 
-            this.stPanel1.Controls.Add(this.stButton2);
-            this.stPanel1.Controls.Add(this.stButton1);
-            this.stPanel1.Controls.Add(this.listViewCustom1);
-            this.stPanel1.Controls.Add(this.stPanel3);
-            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.stPanel1.Location = new System.Drawing.Point(0, 0);
-            this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(170, 317);
-            this.stPanel1.TabIndex = 0;
-            // 
-            // splitter1
-            // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter1.Location = new System.Drawing.Point(0, 317);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(170, 3);
-            this.splitter1.TabIndex = 1;
-            this.splitter1.TabStop = false;
             // 
             // stPanel2
             // 
@@ -101,14 +88,46 @@
             this.stPropertyGrid1.Size = new System.Drawing.Size(170, 172);
             this.stPropertyGrid1.TabIndex = 0;
             // 
-            // stPanel3
+            // splitter1
             // 
-            this.stPanel3.Controls.Add(this.objectCB);
-            this.stPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.stPanel3.Location = new System.Drawing.Point(0, 0);
-            this.stPanel3.Name = "stPanel3";
-            this.stPanel3.Size = new System.Drawing.Size(170, 32);
-            this.stPanel3.TabIndex = 0;
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(0, 317);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(170, 3);
+            this.splitter1.TabIndex = 1;
+            this.splitter1.TabStop = false;
+            // 
+            // stPanel1
+            // 
+            this.stPanel1.Controls.Add(this.stButton2);
+            this.stPanel1.Controls.Add(this.stButton1);
+            this.stPanel1.Controls.Add(this.listViewCustom1);
+            this.stPanel1.Controls.Add(this.stPanel3);
+            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.stPanel1.Location = new System.Drawing.Point(0, 0);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(170, 317);
+            this.stPanel1.TabIndex = 0;
+            // 
+            // stButton2
+            // 
+            this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton2.Location = new System.Drawing.Point(52, 288);
+            this.stButton2.Name = "stButton2";
+            this.stButton2.Size = new System.Drawing.Size(57, 23);
+            this.stButton2.TabIndex = 2;
+            this.stButton2.Text = "Remove";
+            this.stButton2.UseVisualStyleBackColor = false;
+            // 
+            // stButton1
+            // 
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(3, 288);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(43, 23);
+            this.stButton1.TabIndex = 1;
+            this.stButton1.Text = "Add";
+            this.stButton1.UseVisualStyleBackColor = false;
             // 
             // listViewCustom1
             // 
@@ -122,6 +141,15 @@
             this.listViewCustom1.Size = new System.Drawing.Size(167, 250);
             this.listViewCustom1.TabIndex = 1;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
+            // 
+            // stPanel3
+            // 
+            this.stPanel3.Controls.Add(this.objectCB);
+            this.stPanel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.stPanel3.Location = new System.Drawing.Point(0, 0);
+            this.stPanel3.Name = "stPanel3";
+            this.stPanel3.Size = new System.Drawing.Size(170, 32);
+            this.stPanel3.TabIndex = 0;
             // 
             // objectCB
             // 
@@ -138,25 +166,22 @@
             this.objectCB.TabIndex = 0;
             this.objectCB.SelectedIndexChanged += new System.EventHandler(this.objectCB_SelectedIndexChanged);
             // 
-            // stButton1
+            // stMenuStrip1
             // 
-            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(3, 288);
-            this.stButton1.Name = "stButton1";
-            this.stButton1.Size = new System.Drawing.Size(43, 23);
-            this.stButton1.TabIndex = 1;
-            this.stButton1.Text = "Add";
-            this.stButton1.UseVisualStyleBackColor = false;
+            this.stMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewIntroCameraToolStripMenuItem});
+            this.stMenuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.stMenuStrip1.Name = "stMenuStrip1";
+            this.stMenuStrip1.Size = new System.Drawing.Size(606, 24);
+            this.stMenuStrip1.TabIndex = 0;
+            this.stMenuStrip1.Text = "stMenuStrip1";
             // 
-            // stButton2
+            // viewIntroCameraToolStripMenuItem
             // 
-            this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton2.Location = new System.Drawing.Point(52, 288);
-            this.stButton2.Name = "stButton2";
-            this.stButton2.Size = new System.Drawing.Size(57, 23);
-            this.stButton2.TabIndex = 2;
-            this.stButton2.Text = "Remove";
-            this.stButton2.UseVisualStyleBackColor = false;
+            this.viewIntroCameraToolStripMenuItem.Name = "viewIntroCameraToolStripMenuItem";
+            this.viewIntroCameraToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
+            this.viewIntroCameraToolStripMenuItem.Text = "View Intro Camera";
+            this.viewIntroCameraToolStripMenuItem.Click += new System.EventHandler(this.viewIntroCameraToolStripMenuItem_Click);
             // 
             // TurboMunntEditor
             // 
@@ -166,11 +191,15 @@
             this.Name = "TurboMunntEditor";
             this.Size = new System.Drawing.Size(780, 492);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.stPanel1.ResumeLayout(false);
             this.stPanel2.ResumeLayout(false);
+            this.stPanel1.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
+            this.stMenuStrip1.ResumeLayout(false);
+            this.stMenuStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -187,5 +216,7 @@
         private Switch_Toolbox.Library.Forms.STComboBox objectCB;
         private Switch_Toolbox.Library.Forms.STButton stButton2;
         private Switch_Toolbox.Library.Forms.STButton stButton1;
+        private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem viewIntroCameraToolStripMenuItem;
     }
 }
