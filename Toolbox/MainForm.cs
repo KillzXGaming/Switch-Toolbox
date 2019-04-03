@@ -505,7 +505,7 @@ namespace Toolbox
         {
             string commit = $"Commit: {Runtime.CommitInfo}";
 
-            Text = $"San's Toolbox | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate}";
+            Text = $"Switch Toolbox | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate}";
         }
 
         private void LoadPLugins()
