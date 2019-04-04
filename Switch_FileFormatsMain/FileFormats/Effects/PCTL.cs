@@ -824,12 +824,26 @@ namespace FirstPlugin
                         botwTex.Add((TEXR)((SectionBase)node).BinaryData);
                 }
 
+                int index = 0;
                 if (botwTex.Count > 0)
                 {
+                    TreeNode textureFolder = new TreeNode("Textures");
+                    ptcl.Nodes.Add(textureFolder);
+
+                    List<TEXR> TextureList = new List<TEXR>();
+
                     foreach (var emitter in emitters)
                     {
                         foreach (TEXR tex in botwTex)
                         {
+                            bool HasImage = TextureList.Any(item => item.data == tex.data);
+                            if (!HasImage)
+                            {
+                                tex.Text = "Texture " + index++;
+                                textureFolder.Nodes.Add(tex);
+                            }
+                            TextureList.Add(tex);
+
                             foreach (var sampler in emitter.Samplers)
                             {
                                 if (sampler.TextureID == tex.TextureID)
@@ -839,6 +853,7 @@ namespace FirstPlugin
                             }
                         }
                     }
+                    TextureList.Clear();
                 }
 
 
@@ -1147,6 +1162,32 @@ namespace FirstPlugin
                         TEX_FORMAT.R8G8_UNORM,
                     };
                 }
+            }
+
+            public TEXR()
+            {
+                ImageKey = "Texture";
+                SelectedImageKey = "Texture";
+            }
+
+            public override void OnClick(TreeView treeView)
+            {
+                UpdateEditor();
+            }
+
+            public void UpdateEditor()
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                if (editor == null)
+                {
+                    editor = new ImageEditorBase();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+
+                editor.Text = Text;
+                editor.LoadProperties(GenericProperties);
+                editor.LoadImage(this);
             }
 
             public override bool CanEdit { get; set; } = false;
