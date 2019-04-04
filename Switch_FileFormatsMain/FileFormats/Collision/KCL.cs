@@ -55,48 +55,14 @@ namespace FirstPlugin
 
         public KCL()
         {
-            OdysseyPresetToolstrip = new STToolStripItem("Mario Odyssey", PresetChanged) { Checked = true };
-            Mk8PresetToolstrip = new STToolStripItem("Mario Kart 8 Wii U / Deluxe", PresetChanged);
-            Splatoon2PresetToolstrip = new STToolStripItem("Splatoon 2", PresetChanged);
-            SplatoonPresetToolstrip = new STToolStripItem("Splatoon", PresetChanged);
-            OtherPresetToolstrip = new STToolStripItem("Other", PresetChanged);
-
-            STToolStripItem GamePresetToolstrip = new STToolStripItem("Game Preset");
-            GamePresetToolstrip.DropDownItems.Add(OdysseyPresetToolstrip);
-            GamePresetToolstrip.DropDownItems.Add(Mk8PresetToolstrip);
-            GamePresetToolstrip.DropDownItems.Add(Splatoon2PresetToolstrip);
-            GamePresetToolstrip.DropDownItems.Add(SplatoonPresetToolstrip);
-            GamePresetToolstrip.DropDownItems.Add(OtherPresetToolstrip);
-
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStripItem("Save", Save));
-            ContextMenuStrip.Items.Add(GamePresetToolstrip);
             ContextMenuStrip.Items.Add(new STToolStripItem("Export", Export));
             ContextMenuStrip.Items.Add(new STToolStripItem("Replace", Replace));
             EndiannessToolstrip = new STToolStripItem("Big Endian Mode", SwapEndianess) { Checked = true };
             ContextMenuStrip.Items.Add(EndiannessToolstrip);
             CanSave = true;
             IFileInfo = new IFileInfo();
-        }
-
-        public void PresetChanged(object sender, EventArgs args)
-        {
-            OdysseyPresetToolstrip.Checked = false;
-            Mk8PresetToolstrip.Checked = false;
-            Splatoon2PresetToolstrip.Checked = false;
-            SplatoonPresetToolstrip.Checked = false;
-            OtherPresetToolstrip.Checked = false;
-
-            if (sender is STToolStipMenuItem) {
-                ((STToolStipMenuItem)sender).Checked = true;
-            }
-
-            ApplyPresets(data);
-        }
-
-        private void ApplyPresets(byte[] Data)
-        {
-
         }
 
         public void Load(System.IO.Stream stream)

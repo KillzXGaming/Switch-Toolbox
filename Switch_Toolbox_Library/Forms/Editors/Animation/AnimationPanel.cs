@@ -77,7 +77,6 @@ namespace Switch_Toolbox.Library
                 totalFrame.Value = frameCount;
                 currentFrameUpDown.Maximum = frameCount;
                 animationTrackBar.FrameCount = frameCount;
-                currentFrameUpDown.Value = 1;
                 currentFrameUpDown.Value = 0;
             }
         }
@@ -188,7 +187,7 @@ namespace Switch_Toolbox.Library
                 else
                     Stop();
             }
-            else
+            else if (!animationTrackBar.Locked)
             {
                 currentFrameUpDown.Value++;
             }
@@ -348,7 +347,7 @@ namespace Switch_Toolbox.Library
 
 
             //Add frames to the playing animation
-            currentAnimation.Frame += 1f;
+            currentAnimation.Frame += frameNum;
 
             //Reset it when it reaches the total frame count
             if (currentAnimation.Frame >= currentAnimation.FrameCount)
@@ -363,11 +362,11 @@ namespace Switch_Toolbox.Library
                 currentFrameUpDown.Value = totalFrame.Value;
 
             //Check locked state current frame will change during playing
-            if (animationTrackBar.Locked == false)
+            if (!animationTrackBar.Locked)
             {
                 animationTrackBar.CurrentFrame = (int)currentFrameUpDown.Value;
-                OnFrameAdvanced();
             }
+            OnFrameAdvanced();
         }
 
         public void AnimationPanel_FormClosed()
