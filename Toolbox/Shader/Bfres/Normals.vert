@@ -20,7 +20,7 @@ out VS_OUT {
 uniform mat4 mtxProj;
 uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
-uniform mat4 mtxCamTest;
+uniform mat4 camMtx;
 
 // Skinning uniforms
 uniform mat4 bones[200];
@@ -76,6 +76,6 @@ void main()
 
 
     gl_Position = mtxCam * mtxMdl * vec4(objPos.xyz, 1.0); 
-    mat3 normalMatrix = mat3(transpose(inverse(mtxCamTest * mtxMdl)));
+    mat3 normalMatrix = mat3(transpose(inverse(camMtx * mtxMdl)));
     vs_out.normal = normalize(vec3(mtxProj * vec4(normalMatrix * normal, 0.0)));
 }

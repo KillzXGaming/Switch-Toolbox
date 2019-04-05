@@ -51,7 +51,7 @@ namespace FirstPlugin
                 stPanel1.Dock = DockStyle.Fill;
             }
 
-            if (byaml.FileName == "course_muunt.byaml" && useMuunt)
+            if (byaml.FileName == "course_muunt_debug.byaml" && useMuunt)
             {
                 pathSupport = true;
 

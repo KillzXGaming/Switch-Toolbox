@@ -3,7 +3,6 @@
 uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
 uniform mat4 sphereMatrix;
-uniform mat4 previewScale;
 
  //This may not be correct, however any SRT used with this flag is used for special effects not supported yet!
 uniform float fuv1_mtx;
@@ -139,7 +138,7 @@ void main()
 	if (vBone.x != -1.0)
 		objPos = skin(vPosition, index);
 
-	vec4 position = mtxCam  * mtxMdl  * previewScale *  vec4(objPos.xyz, 1.0);
+	vec4 position = mtxCam  * mtxMdl *  vec4(objPos.xyz, 1.0);
 
     normal = vNormal;
     viewNormal = mat3(sphereMatrix) * normal.xyz;
@@ -150,12 +149,12 @@ void main()
 
     if (RigidSkinning == 1)
     {
-	     position = mtxCam  * mtxMdl *  previewScale *  (bones[index.x] * vec4(vPosition, 1.0));
+	     position = mtxCam  * mtxMdl *  (bones[index.x] * vec4(vPosition, 1.0));
 		 normal = mat3(bones[index.x]) * vNormal.xyz * 1;
 	}
 	if (NoSkinning == 1)
     {
-	    position = mtxCam  * mtxMdl *  previewScale *  (SingleBoneBindTransform * vec4(vPosition, 1.0));
+	    position = mtxCam  * mtxMdl *  (SingleBoneBindTransform * vec4(vPosition, 1.0));
 		normal = mat3(SingleBoneBindTransform) * vNormal.xyz * 1;
 		//normal = normalize(normal);
 	}

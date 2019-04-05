@@ -141,7 +141,7 @@ namespace Switch_Toolbox.Library
             if (UseSkybox)
             {
                 var skybox = new DrawableSkybox();
-                scene.staticObjects.Add(skybox);
+              //  scene.staticObjects.Add(skybox);
             }
             else if (Runtime.renderBackGround)
             {
@@ -149,7 +149,9 @@ namespace Switch_Toolbox.Library
                 scene.staticObjects.Add(background);
             }
 
-            LoadFog();
+        //    scene.objects.Add(new SingleObject(new Vector3(0, 0, 0)));
+
+            // LoadFog();
 
             Runtime.OpenTKInitialized = true;
         }

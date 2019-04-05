@@ -20,7 +20,7 @@ void main()
     color = vColor;
 	position = vPosition;
 
-    gl_Position =  mtxCam  * mtxMdl * previewScale * vec4(vPosition.xyz, 1.0);
+    gl_Position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
 
     vec3 distance = (vPosition.xyz + vec3(5, 5, 5))/2;
 

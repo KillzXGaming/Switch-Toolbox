@@ -233,7 +233,18 @@ namespace Toolbox
             SetFormatSettings((IFileFormat)node);
 
             //Check for active object editors
-            ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+            Form editor = (Form)LibraryGUI.Instance.GetActiveForm();
+
+            bool useActiveEditor = false;
+
+            if (editor != null && editor is ObjectEditor)
+            {
+                //If any are active and we want it to be a new tab then create an instance of one
+                if (InActiveEditor || ((ObjectEditor)editor).AddFilesToActiveEditor)
+                {
+                    useActiveEditor = true;
+                }
+            }
 
             bool IsEditorActive = editor != null;
 
@@ -243,25 +254,17 @@ namespace Toolbox
                 editor = new ObjectEditor();
             }
 
-            bool useActiveEditor = false;
-
-            //If any are active and we want it to be a new tab then create an instance of one
-            if (InActiveEditor || editor.AddFilesToActiveEditor)
-            {
-                useActiveEditor = true;
-            }
-
             if (!useActiveEditor || !IsEditorActive)
             {
                 editor = new ObjectEditor();
-                AddObjectEditorFile(node, editor, true);
+                AddObjectEditorFile(node, (ObjectEditor)editor, true);
 
                 editor.Text = CheckTabDupes(node.Text);
                 editor.Show();
             }
             else
             {
-                AddObjectEditorFile(node, editor, false);
+                AddObjectEditorFile(node, (ObjectEditor)editor, false);
             }
 
             SetFormatSettings(GetActiveIFileFormat());

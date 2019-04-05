@@ -76,6 +76,9 @@
       <HintPath>..\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Gl_EditorFramework">
+      <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
+    </Reference>
     <Reference Include="KCLExt">
       <HintPath>..\Toolbox\Lib\KCLExt.dll</HintPath>
       <Private>False</Private>
@@ -97,9 +100,6 @@
     <Reference Include="ObjectListView">
       <HintPath>..\Toolbox\Lib\ObjectListView.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="OpenGl_EditorFramework">
-      <HintPath>..\Toolbox\OpenGl_EditorFramework.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
@@ -328,11 +328,15 @@
     <Compile Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.Designer.cs">
       <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuuntStructs.cs" />
-    <Compile Include="GUI\Byaml\TurboMunntEditor.cs">
+    <Compile Include="GUI\Byaml\CourseMuunt\CourseMuuntStructs.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\IObject.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\RenderablePathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\ReturnPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\PathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Byaml\TurboMunntEditor.Designer.cs">
+    <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.Designer.cs">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="MarioCostumeEditor.cs" />
@@ -919,7 +923,7 @@
     <EmbeddedResource Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.resx">
       <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Byaml\TurboMunntEditor.resx">
+    <EmbeddedResource Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.resx">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\ParamAnim\AnimParamEditor.resx">

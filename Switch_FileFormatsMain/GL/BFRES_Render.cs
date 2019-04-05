@@ -21,13 +21,15 @@ namespace FirstPlugin
 {
     public class BFRESRender : EditableObject
     {
-       public Matrix4 ModelTransform = Matrix4.Identity;
-        Vector3 Position;
+        public Matrix4 ModelTransform = Matrix4.Identity;
+        Vector3 position = new Vector3(0);
 
         protected bool Selected = false;
         public bool Hovered = false;
 
         public override bool IsSelected() => Selected;
+
+        public override bool IsSelected(int partIndex) => Selected;
 
         // gl buffer objects
         int vbo_position;
@@ -37,10 +39,10 @@ namespace FirstPlugin
         {
             get
             {
-                List<FMDL> fmdls = new List<FMDL>(); 
+                List<FMDL> fmdls = new List<FMDL>();
                 foreach (var node in ResFileNode.Nodes)
                 {
-                    if (node is BFRESGroupNode && 
+                    if (node is BFRESGroupNode &&
                         ((BFRESGroupNode)node).Type == BRESGroupType.Models)
                     {
                         foreach (FMDL mdl in ((BFRESGroupNode)node).Nodes)
@@ -84,7 +86,7 @@ namespace FirstPlugin
 
         #region Rendering
 
-        
+
         public ShaderProgram BotwShaderProgram;
         public ShaderProgram normalsShaderProgram;
         public ShaderProgram debugShaderProgram;
@@ -97,7 +99,7 @@ namespace FirstPlugin
             string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.frag";
             string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.vert";
 
-            
+
             string pathBotwFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_Botw.frag";
 
             string pathPbrFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_PBR.frag";
@@ -107,7 +109,7 @@ namespace FirstPlugin
 
             string pathUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\Utility.frag";
 
-            
+
 
             string pathDebugFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_Debug.frag";
             string pathNormalsFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\Normals.frag";
@@ -118,7 +120,7 @@ namespace FirstPlugin
             var defaultVert = new VertexShader(System.IO.File.ReadAllText(pathVert));
 
             var BotwtFrag = new FragmentShader(System.IO.File.ReadAllText(pathBotwFrag));
-            
+
             var shadowMapAGL = new FragmentShader(System.IO.File.ReadAllText(pathBfresTurboShadow));
 
             var PbrFrag = new FragmentShader(System.IO.File.ReadAllText(pathPbrFrag));
@@ -249,12 +251,15 @@ namespace FirstPlugin
             return new Vector4(center, radius);
         }
 
-        public override void Draw(GL_ControlModern control, Pass pass)
-        {
-
+        public override void Draw(GL_ControlModern control, Pass pass) {
+            DrawBfres(control, pass);
         }
 
-        public override void Draw(GL_ControlModern control, Pass pass, EditorScene editorScene)
+        public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene) {
+            DrawBfres(control, pass);
+        }
+
+        private void DrawBfres(GL_ControlModern control, Pass pass)
         {
             if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
@@ -262,8 +267,6 @@ namespace FirstPlugin
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
             if (!buffersWereInitialized)
                 GenerateBuffers();
-
-            Hovered = (editorScene.hovered == this);
 
             if (Hovered == true)
                 throw new Exception("model selected");
@@ -277,7 +280,7 @@ namespace FirstPlugin
             {
                 if (models[0].shapes.Count > 0)
                 {
-                    if( models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
+                    if (models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
                         shader = BotwShaderProgram;
                 }
             }
@@ -288,12 +291,9 @@ namespace FirstPlugin
 
             control.CurrentShader = shader;
 
-            control.UpdateModelMatrix(ModelTransform);
+            control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
 
-            Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
-            shader.SetMatrix4x4("previewScale", ref previewScale);
-
-            Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
+            Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
 
             Matrix4 sphereMatrix = camMat;
 
@@ -305,8 +305,7 @@ namespace FirstPlugin
 
             SetRenderSettings(shader);
 
-            Color pickingColor = control.nextPickingColor();
-            
+            Vector4 pickingColor = control.nextPickingColor();
 
             shader.SetVector3("difLightColor", new Vector3(1));
             shader.SetVector3("ambLightColor", new Vector3(1));
@@ -331,9 +330,12 @@ namespace FirstPlugin
             {
                 control.CurrentShader = normalsShaderProgram;
 
-                Matrix4 projection = control.mtxProj;
+                Matrix4 projection = control.ProjectionMatrix;
+                Matrix4 camMtx = control.CameraMatrix;
 
                 normalsShaderProgram.SetMatrix4x4("mtxProj", ref projection);
+                normalsShaderProgram.SetMatrix4x4("camMtx", ref camMtx);
+
                 normalsShaderProgram.SetFloat("normalsLength", Runtime.normalsLineLength);
 
                 DrawModels(normalsShaderProgram, control);
@@ -1075,51 +1077,81 @@ namespace FirstPlugin
             GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
 
-        public override void ApplyTransformationToSelection(DeltaTransform deltaTransform)
-        {
-            Position += deltaTransform.Translation;
-        }
-
         public override bool CanStartDragging() => true;
 
-        public override Vector3 GetSelectionCenter()
+        public override BoundingBox GetSelectionBox()
         {
-            return Position;
+            Vector3 Min = new Vector3(0);
+            Vector3 Max = new Vector3(0);
+
+            foreach (var model in models)
+            {
+                foreach (var shape in model.shapes)
+                {
+                    foreach (var vertex in shape.vertices)
+                    {
+                        Min.X = Math.Min(Min.X, vertex.pos.X);
+                        Min.Y = Math.Min(Min.Y, vertex.pos.Y);
+                        Min.Z = Math.Min(Min.Z, vertex.pos.Z);
+                        Max.X = Math.Max(Min.X, vertex.pos.X);
+                        Max.Y = Math.Max(Min.Y, vertex.pos.Y);
+                        Max.Z = Math.Max(Min.Z, vertex.pos.Z);
+                    }
+                }
+            }
+
+            return new BoundingBox()
+            {
+                minX = Min.X,
+                minY = Min.Y,
+                minZ = Min.Z,
+                maxX = Max.X,
+                maxY = Max.Y,
+                maxZ = Max.Z,
+            };
         }
 
-        public override uint Select(int index, I3DControl control)
+
+        public override uint SelectAll(GL_ControlBase control)
         {
             Selected = true;
-            control.AttachPickingRedrawer();
-            return 0;
+            return REDRAW;
         }
 
-        public override uint SelectDefault(I3DControl control)
+        public override uint SelectDefault(GL_ControlBase control)
         {
             Selected = true;
-            control.AttachPickingRedrawer();
-            return 0;
+            return REDRAW;
         }
 
-        public override uint SelectAll(I3DControl control)
+        public override uint Select(int partIndex, GL_ControlBase control)
         {
             Selected = true;
-            control.AttachPickingRedrawer();
-            return 0;
+            return REDRAW;
         }
 
-        public override uint Deselect(int index, I3DControl control)
+        public override uint Deselect(int partIndex, GL_ControlBase control)
         {
             Selected = false;
-            control.DetachPickingRedrawer();
-            return 0;
+            return REDRAW;
         }
 
-        public override uint DeselectAll(I3DControl control)
+        public override uint DeselectAll(GL_ControlBase control)
         {
             Selected = false;
-            control.DetachPickingRedrawer();
-            return 0;
+            return REDRAW;
+        }
+
+        public override Vector3 Position
+        {
+            get
+            {
+                return position;
+            }
+            set
+            {
+                position = value;
+            }
         }
 
         #endregion

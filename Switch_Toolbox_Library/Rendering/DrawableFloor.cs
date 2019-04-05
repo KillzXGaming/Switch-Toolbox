@@ -21,7 +21,7 @@ namespace Switch_Toolbox.Library.Rendering
             Texture,
         }
 
-        protected static ShaderProgram solidColorShaderProgram;
+        private ShaderProgram gridShaderProgram;
 
         int vbo_position;
 
@@ -84,23 +84,20 @@ namespace Switch_Toolbox.Library.Rendering
             if (!Runtime.OpenTKInitialized)
                 return;
 
-            GL.Disable(EnableCap.CullFace);
+         //   GL.Disable(EnableCap.CullFace);
 
-            control.CurrentShader = solidColorShaderProgram;
+            control.CurrentShader = gridShaderProgram;
 
             Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
-            Matrix4 camMat =  control.mtxCam * control.mtxProj;
-            Matrix4 invertedCamera = camMat.Inverted();
-            Vector3 lightDirection = new Vector3(0f, 0f, -1f);
+           
+            gridShaderProgram.SetMatrix4x4("previewScale", ref previewScale);
 
-            solidColorShaderProgram.SetMatrix4x4("mvpMatrix", ref camMat);
-
-            solidColorShaderProgram.EnableVertexAttributes();
-            Draw(solidColorShaderProgram);
-            solidColorShaderProgram.DisableVertexAttributes();
+            gridShaderProgram.EnableVertexAttributes();
+            Draw(gridShaderProgram);
+            gridShaderProgram.DisableVertexAttributes();
 
             GL.UseProgram(0);
-            GL.Enable(EnableCap.CullFace);
+          //  GL.Enable(EnableCap.CullFace);
         }
 
         private void Attributes(ShaderProgram shader)
@@ -163,13 +160,15 @@ namespace Switch_Toolbox.Library.Rendering
             var solidColorVert = new VertexShader(
               @"#version 330
 				in vec3 vPosition;
-				uniform mat4 mvpMatrix;
+
+	            uniform mat4 mtxMdl;
+				uniform mat4 mtxCam;
 
 				void main(){
-					gl_Position = mvpMatrix * vec4(vPosition.xyz, 1);
+					gl_Position = mtxMdl * mtxCam * vec4(vPosition.xyz, 1);
 				}");
 
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+            gridShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
         }
 
         public override void Prepare(GL_ControlLegacy control)

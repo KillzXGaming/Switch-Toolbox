@@ -103,7 +103,7 @@ namespace FirstPlugin
                 if (opn.ShowDialog() != DialogResult.OK) return;
                 var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(opn.FileName)), null);
 
-                string name = Path.GetFileNameWithoutExtension(opn.FileName);
+                string name = System.IO.Path.GetFileNameWithoutExtension(opn.FileName);
 
                 var f = MarioKart.MK7.KCL.FromOBJ(mod);
 
@@ -385,12 +385,14 @@ namespace FirstPlugin
 
         public class KCLRendering : EditableObject
         {
-            public Vector3 Position = new Vector3(0, 0, 0);
+            public Vector3 position = new Vector3(0, 0, 0);
 
             protected bool Selected = false;
             protected bool Hovered = false;
 
             public override bool IsSelected() => Selected;
+            public override bool IsSelected(int partIndex) => Selected;
+
             public bool IsHovered() => Selected;
 
             // gl buffer objects
@@ -554,12 +556,9 @@ namespace FirstPlugin
                     return;
             }
 
-            public override void Draw(GL_ControlModern control, Pass pass)
-            {
+            public override void Draw(GL_ControlModern control, Pass pass) { }
 
-            }
-
-            public override void Draw(GL_ControlModern control, Pass pass, EditorScene editorScene)
+            public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
             {
                 CheckBuffers();
 
@@ -568,13 +567,15 @@ namespace FirstPlugin
 
                 control.CurrentShader = defaultShaderProgram;
 
+                control.UpdateModelMatrix(
+                Matrix4.CreateScale(Runtime.previewScale) *
+                Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(position) : position));
+
                 defaultShaderProgram.EnableVertexAttributes();
 
                 SetRenderSettings(defaultShaderProgram);
 
-                Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
-                Matrix4 camMat = previewScale * control.mtxCam * control.mtxProj;
-                defaultShaderProgram.SetMatrix4x4("previewScale", ref previewScale);
+                Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
 
                 GL.Disable(EnableCap.CullFace);
 
@@ -668,51 +669,78 @@ namespace FirstPlugin
                 GL.Uniform1(shader["colorOverride"], 0);
             }
 
-            public override void ApplyTransformationToSelection(DeltaTransform deltaTransform)
-            {
-                Position += deltaTransform.Translation;
-            }
-
             public override bool CanStartDragging() => true;
 
-            public override Vector3 GetSelectionCenter()
+            public override BoundingBox GetSelectionBox()
             {
-                return Position;
+                Vector3 Min = new Vector3(0);
+                Vector3 Max = new Vector3(0);
+
+                foreach (var model in models)
+                {
+                    foreach (var vertex in model.vertices)
+                    {
+                        Min.X = Math.Min(Min.X, vertex.pos.X);
+                        Min.Y = Math.Min(Min.Y, vertex.pos.Y);
+                        Min.Z = Math.Min(Min.Z, vertex.pos.Z);
+                        Max.X = Math.Max(Min.X, vertex.pos.X);
+                        Max.Y = Math.Max(Min.Y, vertex.pos.Y);
+                        Max.Z = Math.Max(Min.Z, vertex.pos.Z);
+                    }
+                }
+
+                return new BoundingBox()
+                {
+                    minX = Min.X,
+                    minY = Min.Y,
+                    minZ = Min.Z,
+                    maxX = Max.X,
+                    maxY = Max.Y,
+                    maxZ = Max.Z,
+                };
             }
 
-            public override uint Select(int index, I3DControl control)
+
+            public override uint SelectAll(GL_ControlBase control)
             {
                 Selected = true;
-                control.AttachPickingRedrawer();
-                return 0;
+                return REDRAW;
             }
 
-            public override uint SelectDefault(I3DControl control)
+            public override uint SelectDefault(GL_ControlBase control)
             {
                 Selected = true;
-                control.AttachPickingRedrawer();
-                return 0;
+                return REDRAW;
             }
 
-            public override uint SelectAll(I3DControl control)
+            public override uint Select(int partIndex, GL_ControlBase control)
             {
                 Selected = true;
-                control.AttachPickingRedrawer();
-                return 0;
+                return REDRAW;
             }
 
-            public override uint Deselect(int index, I3DControl control)
+            public override uint Deselect(int partIndex, GL_ControlBase control)
             {
                 Selected = false;
-                control.DetachPickingRedrawer();
-                return 0;
+                return REDRAW;
             }
 
-            public override uint DeselectAll(I3DControl control)
+            public override uint DeselectAll(GL_ControlBase control)
             {
                 Selected = false;
-                control.DetachPickingRedrawer();
-                return 0;
+                return REDRAW;
+            }
+
+            public override Vector3 Position
+            {
+                get
+                {
+                    return position;
+                }
+                set
+                {
+                    position = value;
+                }
             }
         }
 
@@ -831,8 +859,5 @@ namespace FirstPlugin
                 }
             }
         }
-
-
-
     }
 }

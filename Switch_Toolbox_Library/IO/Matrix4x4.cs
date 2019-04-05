@@ -9,6 +9,24 @@ namespace Switch_Toolbox.Library.IO
 {
     public static class MatrixExenstion
     {
+        public static OpenTK.Matrix4 CreateRotation(OpenTK.Vector3 Normal, OpenTK.Vector3 Tangent)
+        {
+            var mat4 = OpenTK.Matrix4.Identity;
+            var vec3 = OpenTK.Vector3.Cross(Normal, Tangent);
+
+            mat4.M11 = Tangent.X;
+            mat4.M21 = Tangent.Y;
+            mat4.M31 = Tangent.Z;
+            mat4.M12 = Normal.X;
+            mat4.M22 = Normal.Y;
+            mat4.M32 = Normal.Z;
+            mat4.M13 = vec3.X;
+            mat4.M23 = vec3.Y;
+            mat4.M33 = vec3.Z;
+
+            return mat4;
+        }
+
         public static Syroot.Maths.Matrix3x4 GetMatrixInverted(STBone bone)
         {
             return ToMatrix3x4(CalculateInverseMatrix(bone).inverse);

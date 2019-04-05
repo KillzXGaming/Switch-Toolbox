@@ -235,8 +235,9 @@ namespace Bfres.Structs
                         if (IsWiiU)
                         {
                             fmdl.ModelU = new ResU.Model();
-                            fmdl.ModelU = new ResU.Model();
                             fmdl.ModelU.Name = ResourceName;
+                            fmdl.ModelU.Shapes.Add("", new ResU.Shape());
+                            fmdl.ModelU.VertexBuffers.Add(new ResU.VertexBuffer());
 
                             var skeleton = new ResU.Skeleton();
 
@@ -252,6 +253,8 @@ namespace Bfres.Structs
                         {
                             fmdl.Model = new ResNX.Model();
                             fmdl.Model.Name = ResourceName;
+                            fmdl.Model.Shapes.Add(new ResNX.Shape());
+                            fmdl.Model.VertexBuffers.Add(new ResNX.VertexBuffer());
 
                             //Create skeleton with empty bone
                             var skeleton = new ResNX.Skeleton();

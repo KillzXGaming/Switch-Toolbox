@@ -221,6 +221,9 @@
     <Content Include="Assimp64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Gl_EditorFramework.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="libzstd.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -379,12 +382,6 @@
     <Content Include="LZ4.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="OpenGl_EditorFramework.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="OpenGl_EditorFramework.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Projects\Recent\DUMMY.txt" />
     <Content Include="Lib\x64\DirectXTexNetImpl.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -394,7 +391,6 @@
     </Content>
     <None Include="Resources\Save.png" />
     <None Include="Resources\UpdateIcon.png" />
-    <Content Include="skeleton_dQ9_icon.ico" />
     <Content Include="Switch_Toolbox.csproj.user" />
     <Content Include="Tool.ico" />
     <None Include="Resources\Logo.png" />

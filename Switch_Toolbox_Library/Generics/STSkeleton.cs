@@ -15,12 +15,14 @@ namespace Switch_Toolbox.Library
 {
     public class STSkeleton : EditableObject
     {
-        public Vector3 Position = new Vector3(0, 0, 0);
+        public Vector3 position = new Vector3(0, 0, 0);
 
         protected bool Selected = false;
         protected bool Hovered = false;
 
         public override bool IsSelected() => Selected;
+        public override bool IsSelected(int partIndex) => Selected;
+
         public bool IsHovered() => Selected;
 
         public ShaderProgram solidColorShaderProgram;
@@ -42,7 +44,6 @@ namespace Switch_Toolbox.Library
 
                 uniform mat4 mtxCam;
                 uniform mat4 mtxMdl;
-                uniform mat4 previewScale;
 
                 uniform mat4 bone;
                 uniform mat4 parent;
@@ -59,7 +60,7 @@ namespace Switch_Toolbox.Library
                         else
                             position = bone * rotation * vec4((point.xyz - vec3(0, 1, 0)) * scale, 1);
                     }
-					gl_Position =  mtxCam  * mtxMdl * previewScale * vec4(position.xyz, 1);
+					gl_Position =  mtxCam  * mtxMdl * vec4(position.xyz, 1);
 
 				}");
 
@@ -80,15 +81,14 @@ namespace Switch_Toolbox.Library
             GL.DeleteBuffer(vbo_position);
         }
 
-        public override void Draw(GL_ControlLegacy control, Pass pass, EditorScene editorScene)
+        public override void Draw(GL_ControlLegacy control, Pass pass, EditorSceneBase editorScene)
         {
             if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
             foreach (STBone bn in bones)
             {
-                if (bn.Checked)
-                    bn.Render();
+                bn.Render();
             }
         }
 
@@ -99,47 +99,12 @@ namespace Switch_Toolbox.Library
 
             foreach (STBone bn in bones)
             {
-                if (bn.Checked)
-                    bn.Render();
+                bn.Render();
             }
         }
 
         private static List<Vector4> screenPositions = new List<Vector4>()
         {
-     /*       new Vector4(-1f, 1f, -1f, 0),
-            new Vector4(1f, 1f, -1f, 0),
-            new Vector4(1f, 1f, 1f, 0),
-            new Vector4(-1f, 1f, 1f, 0),
-
-            new Vector4(-1f, -1f, 1f, 0),
-            new Vector4(1f, -1f, 1f, 0),
-            new Vector4(1f, -1f, -1f, 0),
-            new Vector4(-1f, -1f, -1f, 0),
-
-            new Vector4(-1f, 1f, 1f, 0),
-            new Vector4(1f, 1f, 1f, 0),
-            new Vector4(1f, -1f, 1f, 0),
-            new Vector4(-1f, -1f, 1f, 0),
-
-            new Vector4(1f, 1f, -1f, 0),
-            new Vector4(-1f, 1f, -1f, 0),
-            new Vector4(-1f, -1f, -1f, 0),
-            new Vector4(1f, -1f, -1f, 0),
-
-            new Vector4(1f, 1f, 1f, 0),
-            new Vector4(1f, 1f, -1f, 0),
-            new Vector4(1f, -1f, -1f, 0),
-            new Vector4(1f, -1f, 1f, 0),
-
-            new Vector4(-1f, 1f, -1f, 0),
-            new Vector4(-1f, 1f, 1f, 0),
-            new Vector4(-1f, -1f, 1f, 0),
-            new Vector4(-1f, -1f, -1f, 0),
-            */
-            
-
-
-
             // cube
             new Vector4(0f, 0f, -1f, 0),
             new Vector4(1f, 0f, 0f, 0),
@@ -222,11 +187,11 @@ namespace Switch_Toolbox.Library
         Color boneColor = Color.FromArgb(255, 240, 240, 0);
         Color selectedBoneColor = Color.FromArgb(255, 240, 240, 240);
 
-        public override void Draw(GL_ControlModern control, Pass pass, EditorScene editorScene)
+        public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
         {
             CheckBuffers();
 
-            if (!Runtime.OpenTKInitialized || !Runtime.renderBones || solidColorShaderProgram == null)
+            if (!Runtime.OpenTKInitialized || !Runtime.renderBones)
                 return;
 
             GL.UseProgram(0);
@@ -237,20 +202,19 @@ namespace Switch_Toolbox.Library
 
             control.CurrentShader = solidColorShaderProgram;
 
-            Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
+            control.UpdateModelMatrix(
+            Matrix4.CreateScale(Runtime.previewScale) *
+            Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(position) : position));
+
 
             solidColorShaderProgram.EnableVertexAttributes();
             solidColorShaderProgram.SetMatrix4x4("rotation", ref prismRotation);
-            solidColorShaderProgram.SetMatrix4x4("previewScale", ref previewScale);
-            
+
             foreach (STBone bn in bones)
             {
-                if (!bn.Checked)
-                    continue;
-
                 solidColorShaderProgram.SetVector4("boneColor", ColorUtility.ToVector4(boneColor));
                 solidColorShaderProgram.SetFloat("scale", Runtime.bonePointSize);
-                
+
                 Matrix4 transform = bn.Transform;
 
                 solidColorShaderProgram.SetMatrix4x4("bone", ref transform);
@@ -451,51 +415,64 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public override void ApplyTransformationToSelection(DeltaTransform deltaTransform)
-        {
-            Position += deltaTransform.Translation;
-        }
-
         public override bool CanStartDragging() => true;
 
-        public override Vector3 GetSelectionCenter()
+        public override BoundingBox GetSelectionBox()
         {
-            return Position;
+            Vector3 Min = new Vector3(0);
+            Vector3 Max = new Vector3(99999);
+
+            return new BoundingBox()
+            {
+                minX = Min.X,
+                minY = Min.Y,
+                minZ = Min.Z,
+                maxX = Max.X,
+                maxY = Max.Y,
+                maxZ = Max.Z,
+            };
         }
 
-        public override uint Select(int index, I3DControl control)
-        {
-            Selected = true;
-            control.AttachPickingRedrawer();
-            return 0;
-        }
-
-        public override uint SelectDefault(I3DControl control)
-        {
-            Selected = true;
-            control.AttachPickingRedrawer();
-            return 0;
-        }
-
-        public override uint SelectAll(I3DControl control)
+        public override uint SelectAll(GL_ControlBase control)
         {
             Selected = true;
-            control.AttachPickingRedrawer();
-            return 0;
+            return REDRAW;
         }
 
-        public override uint Deselect(int index, I3DControl control)
+        public override uint SelectDefault(GL_ControlBase control)
+        {
+            Selected = true;
+            return REDRAW;
+        }
+
+        public override uint Select(int partIndex, GL_ControlBase control)
+        {
+            Selected = true;
+            return REDRAW;
+        }
+
+        public override uint Deselect(int partIndex, GL_ControlBase control)
         {
             Selected = false;
-            control.DetachPickingRedrawer();
-            return 0;
+            return REDRAW;
         }
 
-        public override uint DeselectAll(I3DControl control)
+        public override uint DeselectAll(GL_ControlBase control)
         {
             Selected = false;
-            control.DetachPickingRedrawer();
-            return 0;
+            return REDRAW;
+        }
+
+        public override Vector3 Position
+        {
+            get
+            {
+                return position;
+            }
+            set
+            {
+                position = value;
+            }
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.Enable(EnableCap.TextureCubeMapSeamless);
 
             Matrix4 proj = Matrix4.Identity;
-            Matrix4 rot = Matrix4.CreateFromQuaternion(control.mtxCam.ExtractRotation());
+            Matrix4 rot = Matrix4.CreateFromQuaternion(control.ModelMatrix.ExtractRotation());
 
             GL.UniformMatrix4(defaultShaderProgram["projection"], false, ref proj);
             GL.UniformMatrix4(defaultShaderProgram["rotView"], false, ref rot);
