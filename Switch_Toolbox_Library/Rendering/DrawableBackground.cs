@@ -60,6 +60,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.DepthFunc(DepthFunction.Lequal);
 
             control.CurrentShader = solidColorShaderProgram;
+            control.UpdateModelMatrix(Matrix4.Identity);
 
             solidColorShaderProgram.EnableVertexAttributes();
 

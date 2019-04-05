@@ -87,6 +87,7 @@ namespace Switch_Toolbox.Library.Rendering
          //   GL.Disable(EnableCap.CullFace);
 
             control.CurrentShader = gridShaderProgram;
+            control.UpdateModelMatrix(Matrix4.Identity);
 
             Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
            
