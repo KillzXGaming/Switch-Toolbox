@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
@@ -35,11 +36,11 @@
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
             this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.objectCB = new Switch_Toolbox.Library.Forms.STComboBox();
             this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.viewIntroCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -99,9 +100,9 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.treeViewCustom1);
             this.stPanel1.Controls.Add(this.stButton2);
             this.stPanel1.Controls.Add(this.stButton1);
-            this.stPanel1.Controls.Add(this.listViewCustom1);
             this.stPanel1.Controls.Add(this.stPanel3);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
@@ -128,19 +129,6 @@
             this.stButton1.TabIndex = 1;
             this.stButton1.Text = "Add";
             this.stButton1.UseVisualStyleBackColor = false;
-            // 
-            // listViewCustom1
-            // 
-            this.listViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listViewCustom1.Location = new System.Drawing.Point(3, 30);
-            this.listViewCustom1.Name = "listViewCustom1";
-            this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(167, 250);
-            this.listViewCustom1.TabIndex = 1;
-            this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             // 
             // stPanel3
             // 
@@ -183,6 +171,18 @@
             this.viewIntroCameraToolStripMenuItem.Text = "View Intro Camera";
             this.viewIntroCameraToolStripMenuItem.Click += new System.EventHandler(this.viewIntroCameraToolStripMenuItem_Click);
             // 
+            // treeViewCustom1
+            // 
+            this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewCustom1.ImageIndex = 0;
+            this.treeViewCustom1.Location = new System.Drawing.Point(3, 30);
+            this.treeViewCustom1.Name = "treeViewCustom1";
+            this.treeViewCustom1.SelectedImageIndex = 0;
+            this.treeViewCustom1.Size = new System.Drawing.Size(167, 252);
+            this.treeViewCustom1.TabIndex = 3;
+            // 
             // TurboMunntEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -211,12 +211,12 @@
         private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
         private System.Windows.Forms.Splitter splitter1;
         private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private Switch_Toolbox.Library.Forms.STPanel stPanel3;
         private Switch_Toolbox.Library.Forms.STComboBox objectCB;
         private Switch_Toolbox.Library.Forms.STButton stButton2;
         private Switch_Toolbox.Library.Forms.STButton stButton1;
         private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewIntroCameraToolStripMenuItem;
+        private Switch_Toolbox.Library.TreeViewCustom treeViewCustom1;
     }
 }

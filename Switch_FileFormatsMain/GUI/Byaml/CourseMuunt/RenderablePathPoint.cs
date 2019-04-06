@@ -4,6 +4,7 @@ using GL_EditorFramework.Interfaces;
 using OpenTK;
 using Switch_Toolbox.Library.IO;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
+using FirstPlugin.Turbo.CourseMuuntStructs;
 
 namespace GL_EditorFramework.EditorDrawables
 {
@@ -162,6 +163,7 @@ namespace GL_EditorFramework.EditorDrawables
         public virtual void Translate(Vector3 lastPos, Vector3 translate, int subObj)
         {
             position = lastPos + translate;
+            UpdateNodePosition();
         }
 
         public virtual void UpdatePosition(int subObj)
@@ -172,12 +174,12 @@ namespace GL_EditorFramework.EditorDrawables
         public override bool CanStartDragging() => true;
 
         public override BoundingBox GetSelectionBox() => new BoundingBox(
-            position.X - 0.5f,
-            position.X + 0.5f,
-            position.Y - 0.5f,
-            position.Y + 0.5f,
-            position.Z - 0.5f,
-            position.Z + 0.5f
+            position.X - scale.X,
+            position.X + scale.X,
+            position.Y - scale.Y,
+            position.Y + scale.Y,
+            position.Z - scale.Z,
+            position.Z + scale.Z
             );
 
         public override uint SelectAll(GL_ControlBase control)
@@ -213,6 +215,17 @@ namespace GL_EditorFramework.EditorDrawables
         public override void ApplyTransformActionToSelection(AbstractTransformAction transformAction)
         {
             position = transformAction.newPos(position);
+            UpdateNodePosition();
+        }
+
+        private void UpdateNodePosition()
+        {
+            if (NodeObject is PathPoint)
+            {
+                ((PathPoint)NodeObject).Translate = position;
+                ((PathPoint)NodeObject).Scale = scale;
+                ((PathPoint)NodeObject).Rotate = rotate;
+            }
         }
 
         public override Vector3 Position

@@ -92,23 +92,32 @@ namespace FirstPlugin.Forms
 
         private void objectCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (objectCB.SelectedIndex <= 0)
+            if (objectCB.SelectedIndex >= 0)
             {
                 string Text = objectCB.GetSelectedText();
 
+                treeViewCustom1.Nodes.Clear();
                 if (Text == "Scene")
                 {
                     stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
                 }
-                if (Text == "Lap Paths")
+                else if (Text == "Lap Paths")
                 {
                     stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
 
-                    listViewCustom1.Items.Clear();
                     for (int i = 0; i < scene.LapPaths.Count; i++)
                     {
-                        listViewCustom1.Items.Add("Lap Path Group " + i);
+                        TreeNode group = new TreeNode("Lap Path Group " + i);
+                        treeViewCustom1.Nodes.Add(group);
+                        for (int p = 0; p < scene.LapPaths[i].PathPoints.Count; p++)
+                        {
+                            group.Nodes.Add("Lap Path Point " + p);
+                        }
                     }
+                }
+                else
+                {
+                    stPropertyGrid1.LoadProperty(null, OnPropertyChanged);
                 }
             }
         }
