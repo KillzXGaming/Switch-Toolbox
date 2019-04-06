@@ -392,7 +392,7 @@ namespace Bfres.Structs
             if (!IsEdited && Tex1 != null && Tex1.Contains(".Tex1"))
             {
                 string Tex2 = Tex1.Replace(".Tex1", ".Tex2");
-                Console.WriteLine(Tex2);
+                Console.WriteLine(Tex2 + " " + System.IO.File.Exists(Tex2));
 
                 if (System.IO.File.Exists(Tex2))
                 {
@@ -407,8 +407,12 @@ namespace Bfres.Structs
                     {
                          resFile2 = new ResFile(Tex2);
                     }
+
+                    Console.WriteLine((resFile2.Textures.ContainsKey(texture.Name)));
+
                     if (resFile2.Textures.ContainsKey(texture.Name))
                     {
+                        MipCount = texture.MipCount;
                         texture.MipData = resFile2.Textures[texture.Name].MipData;
                         texture.MipOffsets = resFile2.Textures[texture.Name].MipOffsets;
                         surf.mipData = resFile2.Textures[texture.Name].MipData;
