@@ -117,20 +117,20 @@ namespace FirstPlugin
             Formats.Add(typeof(XTX));
             Formats.Add(typeof(KCL));
             Formats.Add(typeof(BFFNT));
-            Formats.Add(typeof(MSBT));
-            Formats.Add(typeof(BFSAR));
+      //      Formats.Add(typeof(MSBT));
+       //     Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BARS));
-            Formats.Add(typeof(BFLAN));
-            Formats.Add(typeof(BFLYT));
+      //      Formats.Add(typeof(BFLAN));
+       //     Formats.Add(typeof(BFLYT));
             Formats.Add(typeof(GFPAK));
             Formats.Add(typeof(NUTEXB));
             Formats.Add(typeof(GTXFile));
             Formats.Add(typeof(AAMP));
             Formats.Add(typeof(PTCL));
             Formats.Add(typeof(EFF));
-            Formats.Add(typeof(NCA));
-            Formats.Add(typeof(XCI));
-            Formats.Add(typeof(NSP));
+        //    Formats.Add(typeof(NCA));
+        //    Formats.Add(typeof(XCI));
+         //   Formats.Add(typeof(NSP));
             Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));
@@ -149,7 +149,7 @@ namespace FirstPlugin
             Formats.Add(typeof(SHARC));
             Formats.Add(typeof(SHARCFB));
             Formats.Add(typeof(NARC));
-            Formats.Add(typeof(SDF));
+        //    Formats.Add(typeof(SDF));
             Formats.Add(typeof(TMPK));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
