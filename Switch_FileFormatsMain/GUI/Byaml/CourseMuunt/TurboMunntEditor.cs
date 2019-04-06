@@ -7,6 +7,7 @@ using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library;
 using System.Windows.Forms;
 using FirstPlugin.Turbo.CourseMuuntStructs;
+using GL_EditorFramework.EditorDrawables;
 
 namespace FirstPlugin.Forms
 {
@@ -20,6 +21,7 @@ namespace FirstPlugin.Forms
 
             viewport = new Viewport();
             viewport.Dock = DockStyle.Fill;
+            viewport.scene.SelectionChanged += Scene_SelectionChanged;
             splitContainer1.Panel2.Controls.Add(viewport);
         }
 
@@ -75,6 +77,18 @@ namespace FirstPlugin.Forms
                 }
             }
         }
+
+        private void Scene_SelectionChanged(object sender, EventArgs e)
+        {
+            foreach (EditableObject o in viewport.scene.objects)
+            {
+                if (o.IsSelected() && o is RenderablePathPoint)
+                {
+                    stPropertyGrid1.LoadProperty(((RenderablePathPoint)o).NodeObject, OnPropertyChanged);
+                }
+            }
+        }
+
 
         private void objectCB_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -287,7 +287,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             else throw new Exception("Not a dictionary");
 
             foreach (var point in this["PathPt"]) {
-                PathPoints.Add(new PathPoint(point));
+                PathPoints.Add(new LapPatPoint(point));
             }
 
             foreach (var point in this["ReturnPoints"]) {
@@ -331,6 +331,56 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
     }
 
+    public class LapPatPoint: PathPoint
+    {
+        [Category("Properties")]
+        public int CheckPoint
+        {
+            get { return this["CheckPoint"]; }
+            set { this["CheckPoint"] = value;}
+        }
+
+        [Category("Properties")]
+        public int ClipIdx
+        {
+            get { return this["ClipIdx"]; }
+            set { this["ClipIdx"] = value; }
+        }
+
+        [Category("Properties")]
+        public bool HeadLightSW
+        {
+            get { return this["HeadLightSW"]; }
+            set { this["HeadLightSW"] = value; }
+        }
+
+        [Category("Properties")]
+        public int LapCheck
+        {
+            get { return this["LapCheck"]; }
+            set { this["LapCheck"] = value; }
+        }
+
+        [Category("Properties")]
+        public int MapCameraFovy
+        {
+            get { return this["MapCameraFovy"]; }
+            set { this["MapCameraFovy"] = value; }
+        }
+
+        [Category("Properties")]
+        public int MapCameraY
+        {
+            get { return this["MapCameraY"]; }
+            set { this["MapCameraY"] = value; }
+        }
+
+        public LapPatPoint(dynamic bymlNode)
+        {
+            if (bymlNode is Dictionary<string, dynamic>) Prop = (Dictionary<string, dynamic>)bymlNode;
+            else throw new Exception("Not a dictionary");
+        }
+    }
 
     public class PointID : IObject
     {

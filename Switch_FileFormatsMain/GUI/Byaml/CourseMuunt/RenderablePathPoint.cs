@@ -9,6 +9,8 @@ namespace GL_EditorFramework.EditorDrawables
 {
     public class RenderablePathPoint : EditableObject
     {
+        public object NodeObject;
+
         public bool IsNormalTanTransform = false;
 
         protected Vector3 position = new Vector3(0, 0, 0);
@@ -26,7 +28,8 @@ namespace GL_EditorFramework.EditorDrawables
 
         protected static Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
 
-        public RenderablePathPoint(Vector3 pos, Vector3 rot, Vector3 sca) {
+        public RenderablePathPoint(Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject) {
+            NodeObject = nodeObject;
             UpdateTransform(pos, rot, sca);
         }
 
