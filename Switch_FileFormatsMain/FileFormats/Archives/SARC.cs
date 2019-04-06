@@ -360,6 +360,9 @@ namespace FirstPlugin
 
             public override void OnDoubleMouseClick(TreeView treeView)
             {
+                if (Data.Length <= 0)
+                    return;
+
                 IFileFormat file = STFileLoader.OpenFileFormat(FullName, Data,false, true, this);
 
                 if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)) && !SuppressFormDialog)

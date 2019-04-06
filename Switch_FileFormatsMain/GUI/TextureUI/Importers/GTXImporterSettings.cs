@@ -245,8 +245,8 @@ namespace FirstPlugin
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                byte[] SwizzledData = GTX.swizzle(width_, height_, surfOut.height, (uint)Format, surfOut.tileMode, s,
-                        surfOut.pitch, surfOut.bpp, data_);
+                byte[] SwizzledData = GTX.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, s,
+                        surfOut.pitch, surfOut.bpp, data_, 1);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
             }       

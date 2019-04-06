@@ -113,16 +113,16 @@ namespace Switch_Toolbox.Library
 
         public enum GX2SurfaceDimension
         {
-          DIM_1D = 0x0,
-          DIM_2D = 0x1,
-          DIM_3D = 0x2,
-          DIM_CUBE = 0x3,
-          DIM_1D_ARRAY = 0x4,
-          DIM_2D_ARRAY = 0x5,
-          DIM_2D_MSAA = 0x6,
-          DIM_2D_MSAA_ARRAY = 0x7,
-          DIM_FIRST = 0x0,
-          DIM_LAST = 0x7,
+            DIM_1D = 0x0,
+            DIM_2D = 0x1,
+            DIM_3D = 0x2,
+            DIM_CUBE = 0x3,
+            DIM_1D_ARRAY = 0x4,
+            DIM_2D_ARRAY = 0x5,
+            DIM_2D_MSAA = 0x6,
+            DIM_2D_MSAA_ARRAY = 0x7,
+            DIM_FIRST = 0x0,
+            DIM_LAST = 0x7,
         };
         public enum GX2SurfaceFormat
         {
@@ -209,17 +209,17 @@ namespace Switch_Toolbox.Library
         };
         public enum GX2SurfaceUse : uint
         {
-          USE_TEXTURE = 0x1,
-          USE_COLOR_BUFFER = 0x2,
-          USE_DEPTH_BUFFER = 0x4,
-          USE_SCAN_BUFFER = 0x8,
-          USE_FTV = 0x80000000,
-          USE_COLOR_BUFFER_TEXTURE = 0x3,
-          USE_DEPTH_BUFFER_TEXTURE = 0x5,
-          USE_COLOR_BUFFER_FTV = 0x80000002,
-          USE_COLOR_BUFFER_TEXTURE_FTV = 0x80000003,
-          USE_FIRST = 0x1,
-          USE_LAST = 0x8,
+            USE_TEXTURE = 0x1,
+            USE_COLOR_BUFFER = 0x2,
+            USE_DEPTH_BUFFER = 0x4,
+            USE_SCAN_BUFFER = 0x8,
+            USE_FTV = 0x80000000,
+            USE_COLOR_BUFFER_TEXTURE = 0x3,
+            USE_DEPTH_BUFFER_TEXTURE = 0x5,
+            USE_COLOR_BUFFER_FTV = 0x80000002,
+            USE_COLOR_BUFFER_TEXTURE_FTV = 0x80000003,
+            USE_FIRST = 0x1,
+            USE_LAST = 0x8,
         };
         public enum GX2RResourceFlags
         {
@@ -487,11 +487,11 @@ namespace Switch_Toolbox.Library
             if (tex.mipData == null || tex.mipData.Length <= 0)
                 mipCount = 1;
 
-            int ArrayImageize = data.Length / (int)tex.numArray;
+            int ArrayImageize = data.Length / (int)tex.depth;
             int ArrayMipImageize = 0;
 
             if (tex.mipData != null)
-                ArrayMipImageize = tex.mipData.Length / (int)tex.numArray;
+                ArrayMipImageize = tex.mipData.Length / (int)tex.depth;
 
             int dataOffset = 0;
             int mipDataOffset = 0;
@@ -505,7 +505,7 @@ namespace Switch_Toolbox.Library
             bool tiling1dLevelSet = false;
 
             List<List<byte[]>> result = new List<List<byte[]>>();
-            for (int arrayLevel = 0; arrayLevel < tex.numArray; arrayLevel++)
+            for (int arrayLevel = 0; arrayLevel < tex.depth; arrayLevel++)
             {
                 List<byte[]> mips = new List<byte[]>();
                 for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
@@ -525,13 +525,13 @@ namespace Switch_Toolbox.Library
                         surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
                         data = new byte[surfInfo.surfSize];
 
-                        Array.Copy(tex.mipData, (uint)mipDataOffset + mipOffset, data, 0, surfInfo.surfSize);
+                        Array.Copy(tex.mipData, (uint)mipOffset, data, 0, surfInfo.surfSize);
                     }
                     else
                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
 
-                    byte[] deswizzled = deswizzle(width_, height_, surfInfo.height, (uint)tex.format,
-                    surfInfo.tileMode, (uint)tex.swizzle, surfInfo.pitch, surfInfo.bpp, data);
+                    byte[] deswizzled = deswizzle(width_, height_, surfInfo.depth, surfInfo.height, (uint)tex.format,
+                    surfInfo.tileMode, (uint)tex.swizzle, surfInfo.pitch, surfInfo.bpp, data, arrayLevel);
                     //Create a copy and use that to remove uneeded data
                     byte[] result_ = new byte[size];
                     Array.Copy(deswizzled, 0, result_, 0, size);
@@ -553,8 +553,6 @@ namespace Switch_Toolbox.Library
 
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
-
-                break;
             }
 
             if (tiling1dLevelSet)
@@ -573,7 +571,8 @@ namespace Switch_Toolbox.Library
             return (n + d - 1) / d;
         }
 
-        private static uint powTwoAlign_0(uint x, uint align) {
+        private static uint powTwoAlign_0(uint x, uint align)
+        {
             return (x + align - 1) & ~(align - 1);
         }
 
@@ -604,19 +603,19 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public static byte[] deswizzle(uint width, uint height, uint height_, uint format_, uint tileMode, uint swizzle_,
-             uint pitch, uint bpp, byte[] data)
+        public static byte[] deswizzle(uint width, uint height, uint depth, uint height_, uint format_, uint tileMode, uint swizzle_,
+             uint pitch, uint bpp, byte[] data, int depthLevel)
         {
-            return swizzleSurf(width, height, height_, format_, tileMode, swizzle_, pitch, bpp, data, 0);
+            return swizzleSurf(width, height, depth, height_, format_, tileMode, swizzle_, pitch, bpp, data, depthLevel, 0);
         }
-        public static byte[] swizzle(uint width, uint height, uint height_, uint format_, uint tileMode, uint swizzle_,
-     uint pitch, uint bpp, byte[] data)
+        public static byte[] swizzle(uint width, uint height, uint depth, uint height_, uint format_, uint tileMode, uint swizzle_,
+     uint pitch, uint bpp, byte[] data, int depthLevel)
         {
-            return swizzleSurf(width, height, height_, format_, tileMode, swizzle_, pitch, bpp, data, 1);
+            return swizzleSurf(width, height, depth, height_, format_, tileMode, swizzle_, pitch, bpp, data, depthLevel, 1);
         }
 
-        private static byte[] swizzleSurf(uint width, uint height, uint height_, uint format, uint tileMode, uint swizzle_,
-                uint pitch, uint bitsPerPixel, byte[] data, int swizzle)
+        private static byte[] swizzleSurf(uint width, uint height,uint depth, uint height_, uint format, uint tileMode, uint swizzle_,
+                uint pitch, uint bitsPerPixel, byte[] data, int depthLevel, int swizzle)
         {
             uint bytesPerPixel = bitsPerPixel / 8;
             byte[] result = new byte[data.Length];
@@ -634,6 +633,11 @@ namespace Switch_Toolbox.Library
 
             tileMode = GX2TileModeToAddrTileMode(tileMode);
 
+            if (depth > 1)
+            {
+                bankSwizzle = (uint)(depthLevel % 4);
+            }
+
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -642,7 +646,7 @@ namespace Switch_Toolbox.Library
                         pos = (uint)(y * pitch + x) * bytesPerPixel;
                     else if (tileMode == 2 || tileMode == 3)
                     {
-                        pos = computeSurfaceAddrFromCoordMicroTiled((uint)x, (uint)y, 0,0, bitsPerPixel, pitch, (AddrTileMode)tileMode);
+                        pos = computeSurfaceAddrFromCoordMicroTiled((uint)x, (uint)y, 0, 0, bitsPerPixel, pitch, (AddrTileMode)tileMode);
                     }
                     else
                     {
@@ -741,7 +745,7 @@ namespace Switch_Toolbox.Library
                     tileMode = 7;
 
                 var surfOut = getSurfaceInfo((GX2SurfaceFormat)format_, width, height, depth, dim, tileMode, aa, 0);
-                if (width < surfOut.pitchAlign && height<surfOut.heightAlign)
+                if (width < surfOut.pitchAlign && height < surfOut.heightAlign)
                 {
                     if (tileMode == 7)
                         tileMode = 3;
@@ -910,7 +914,7 @@ namespace Switch_Toolbox.Library
         }
 
 
-        private static ulong computeSurfaceAddrFromCoordMicroTiled(uint x, uint y,uint slice,uint sample, uint bpp, uint pitch, AddrTileMode tileMode)
+        private static ulong computeSurfaceAddrFromCoordMicroTiled(uint x, uint y, uint slice, uint sample, uint bpp, uint pitch, AddrTileMode tileMode)
         {
             int microTileThickness = 1;
 
@@ -1394,7 +1398,7 @@ namespace Switch_Toolbox.Library
                 Console.WriteLine(pOut.heightAlign);
                 Console.WriteLine(pOut.depthAlign);
             }
-      
+
 
             if (valid == 0)
                 return 3;
@@ -2056,7 +2060,7 @@ namespace Switch_Toolbox.Library
                     {
                         widtha = width / expandX;
                         heighta = height / expandY;
-                    }   
+                    }
                     else
                     {
                         widtha = (width + expandX - 1) / expandX;
