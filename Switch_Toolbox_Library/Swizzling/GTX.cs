@@ -436,26 +436,26 @@ namespace Switch_Toolbox.Library
 
             var surfdEBUG = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
             Debug(surfdEBUG);
-       /*     Console.WriteLine("");
-            Console.WriteLine("// ----- GX2Surface Decode Info ----- ");
-            Console.WriteLine("  dim             = " + tex.dim);
-            Console.WriteLine("  width           = " + tex.width);
-            Console.WriteLine("  height          = " + tex.height);
-            Console.WriteLine("  depth           = " + tex.depth);
-            Console.WriteLine("  numMips         = " + tex.numMips);
-            Console.WriteLine("  format          = " + (GX2SurfaceFormat)tex.format);
-            Console.WriteLine("  aa              = " + tex.aa);
-            Console.WriteLine("  use             = " + tex.use);
-            Console.WriteLine("  imageSize       = " + tex.imageSize);
-            Console.WriteLine("  mipSize         = " + tex.mipSize);
-            Console.WriteLine("  tileMode        = " + (GX2TileMode)tex.tileMode);
-            Console.WriteLine("  swizzle         = " + tex.swizzle);
-            Console.WriteLine("  alignment       = " + tex.alignment);
-            Console.WriteLine("  pitch           = " + tex.pitch);
-            Console.WriteLine("  bits per pixel  = " + (tex.bpp << 3));
-            Console.WriteLine("  bytes per pixel = " + tex.bpp);
-            Console.WriteLine("  data size       = " + tex.data.Length);
-            Console.WriteLine("  realSize        = " + tex.imageSize);*/
+            /*     Console.WriteLine("");
+                 Console.WriteLine("// ----- GX2Surface Decode Info ----- ");
+                 Console.WriteLine("  dim             = " + tex.dim);
+                 Console.WriteLine("  width           = " + tex.width);
+                 Console.WriteLine("  height          = " + tex.height);
+                 Console.WriteLine("  depth           = " + tex.depth);
+                 Console.WriteLine("  numMips         = " + tex.numMips);
+                 Console.WriteLine("  format          = " + (GX2SurfaceFormat)tex.format);
+                 Console.WriteLine("  aa              = " + tex.aa);
+                 Console.WriteLine("  use             = " + tex.use);
+                 Console.WriteLine("  imageSize       = " + tex.imageSize);
+                 Console.WriteLine("  mipSize         = " + tex.mipSize);
+                 Console.WriteLine("  tileMode        = " + (GX2TileMode)tex.tileMode);
+                 Console.WriteLine("  swizzle         = " + tex.swizzle);
+                 Console.WriteLine("  alignment       = " + tex.alignment);
+                 Console.WriteLine("  pitch           = " + tex.pitch);
+                 Console.WriteLine("  bits per pixel  = " + (tex.bpp << 3));
+                 Console.WriteLine("  bytes per pixel = " + tex.bpp);
+                 Console.WriteLine("  data size       = " + tex.data.Length);
+                 Console.WriteLine("  realSize        = " + tex.imageSize);*/
 
             uint blkWidth, blkHeight;
             if (IsFormatBCN((GX2SurfaceFormat)tex.format))
@@ -476,8 +476,8 @@ namespace Switch_Toolbox.Library
 
             if (surfInfo.depth != 1)
             {
-         //       System.Windows.Forms.MessageBox.Show($"Unsupported Depth {surfInfo.depth} for texture {DebugTextureName}!");
-             //   return new List<List<byte[]>>();
+                //       System.Windows.Forms.MessageBox.Show($"Unsupported Depth {surfInfo.depth} for texture {DebugTextureName}!");
+                //   return new List<List<byte[]>>();
             }
 
             if (tex.numArray == 0)
@@ -490,14 +490,19 @@ namespace Switch_Toolbox.Library
             int ArrayImageize = data.Length / (int)tex.numArray;
             int ArrayMipImageize = 0;
 
-            if (tex.mipData !=  null)
+            if (tex.mipData != null)
                 ArrayMipImageize = tex.mipData.Length / (int)tex.numArray;
 
             int dataOffset = 0;
             int mipDataOffset = 0;
             int TotalImageSize = tex.data.Length;
+            int _swizzle = (int)tex.swizzle << 8;
 
-            uint CurrentTileMode = tex.tileMode;
+            if (tex.tileMode == 0)
+                tex.tileMode = getDefaultGX2TileMode(1, tex.width, tex.height, 1, tex.format, 0, 1);
+
+            int tiling1dLevel = 0;
+            bool tiling1dLevelSet = false;
 
             List<List<byte[]>> result = new List<List<byte[]>>();
             for (int arrayLevel = 0; arrayLevel < tex.numArray; arrayLevel++)
@@ -505,9 +510,6 @@ namespace Switch_Toolbox.Library
                 List<byte[]> mips = new List<byte[]>();
                 for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
                 {
-                    //Reset the tilemode if set from higher mip levels
-                    tex.tileMode = CurrentTileMode;
-
                     uint width_ = (uint)Math.Max(1, tex.width >> mipLevel);
                     uint height_ = (uint)Math.Max(1, tex.height >> mipLevel);
 
@@ -516,23 +518,6 @@ namespace Switch_Toolbox.Library
                     uint mipOffset;
                     if (mipLevel != 0)
                     {
-                        if (mipLevel >= 8)
-                        {
-                            switch (tex.tileMode)
-                            {
-                                case (uint)GTX.GX2TileMode.MODE_1D_TILED_THICK:
-                                case (uint)GTX.GX2TileMode.MODE_2B_TILED_THICK:
-                                case (uint)GTX.GX2TileMode.MODE_2D_TILED_THICK:
-                                case (uint)GTX.GX2TileMode.MODE_3B_TILED_THICK:
-                                case (uint)GTX.GX2TileMode.MODE_3D_TILED_THICK:
-                                    tex.tileMode = (uint)GTX.GX2TileMode.MODE_1D_TILED_THICK;
-                                    break;
-                                default:
-                                    tex.tileMode = (uint)GTX.GX2TileMode.MODE_1D_TILED_THIN1;
-                                    break;
-                            }
-                        }
-
                         mipOffset = (tex.mipOffset[mipLevel - 1]);
                         if (mipLevel == 1)
                             mipOffset -= (uint)surfInfo.surfSize;
@@ -543,7 +528,7 @@ namespace Switch_Toolbox.Library
                         Array.Copy(tex.mipData, (uint)mipDataOffset + mipOffset, data, 0, surfInfo.surfSize);
                     }
                     else
-                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
+                        Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
 
                     byte[] deswizzled = deswizzle(width_, height_, surfInfo.height, (uint)tex.format,
                     surfInfo.tileMode, (uint)tex.swizzle, surfInfo.pitch, surfInfo.bpp, data);
@@ -555,11 +540,28 @@ namespace Switch_Toolbox.Library
 
                 result.Add(mips);
 
+                if (surfInfo.tileMode == 1 || surfInfo.tileMode == 2 ||
+                    surfInfo.tileMode == 3 || surfInfo.tileMode == 16)
+                {
+                    tiling1dLevelSet = true;
+                }
+
+                if (tiling1dLevelSet == false)
+                {
+                    tiling1dLevel += 1;
+                }
+
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
 
                 break;
             }
+
+            if (tiling1dLevelSet)
+                _swizzle |= tiling1dLevel << 16;
+            else
+                _swizzle |= 13 << 16;
+
             return result;
         }
         private static byte[] SubArray(byte[] data, int offset, int length)
@@ -569,6 +571,10 @@ namespace Switch_Toolbox.Library
         private static uint DIV_ROUND_UP(uint n, uint d)
         {
             return (n + d - 1) / d;
+        }
+
+        private static uint powTwoAlign_0(uint x, uint align) {
+            return (x + align - 1) & ~(align - 1);
         }
 
 
@@ -625,6 +631,8 @@ namespace Switch_Toolbox.Library
             }
             pipeSwizzle = (swizzle_ >> 8) & 1;
             bankSwizzle = (swizzle_ >> 9) & 3;
+
+            tileMode = GX2TileModeToAddrTileMode(tileMode);
 
             for (int y = 0; y < height; y++)
             {
@@ -717,6 +725,39 @@ namespace Switch_Toolbox.Library
                 newDim = 0x80000000;
 
             return newDim;
+        }
+
+        private static uint getDefaultGX2TileMode(uint dim, uint width, uint height, uint depth, uint format_, uint aa, uint use)
+        {
+            uint tileMode = 1;
+            bool IsDepthBuffer = (use & 4) != 0;
+            bool isColorBuffer = (use & 2) != 0;
+
+            if (dim != 0 || aa != 0 || IsDepthBuffer)
+            {
+                if (dim != 2 || isColorBuffer)
+                    tileMode = 4;
+                else
+                    tileMode = 7;
+
+                var surfOut = getSurfaceInfo((GX2SurfaceFormat)format_, width, height, depth, dim, tileMode, aa, 0);
+                if (width < surfOut.pitchAlign && height<surfOut.heightAlign)
+                {
+                    if (tileMode == 7)
+                        tileMode = 3;
+                    else
+                        tileMode = 2;
+                }
+            }
+            return tileMode;
+        }
+
+        private static uint GX2TileModeToAddrTileMode(uint tileMode)
+        {
+            if (tileMode == 16)
+                return 0;
+
+            return tileMode;
         }
 
         private static uint computeSurfaceThickness(AddrTileMode tileMode)
@@ -999,15 +1040,14 @@ namespace Switch_Toolbox.Library
 
             if (DebugSurface)
                 Console.WriteLine("baseTileMode " + baseTileMode);
-            if (baseTileMode == 7)
+            if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
             {
-                if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
+                if (baseTileMode == 7)
                     expTileMode = 4;
             }
             else if (baseTileMode == 13)
             {
-                if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
-                    expTileMode = 12;
+                expTileMode = 12;
             }
             else if (baseTileMode == 11)
             {
@@ -1019,10 +1059,9 @@ namespace Switch_Toolbox.Library
                 if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
                     expTileMode = 14;
             }
-            else if (baseTileMode == 2)
+            if (baseTileMode == 2 && numSamples > 1)
             {
-                if (numSamples > 1 && ((4 >> 2) & 1) != 0)
-                    expTileMode = 4;
+                expTileMode = 4;
             }
             else if (baseTileMode == 3)
             {
@@ -1104,9 +1143,9 @@ namespace Switch_Toolbox.Library
                         if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
                             expTileMode = 3;
                     }
-                    else if (expTileMode == 3)
+                    if (numSlicesa < 4)
                     {
-                        if (numSlicesa < 4)
+                        if (expTileMode == 3)
                             expTileMode = 2;
                     }
                     else if (expTileMode == 7)
@@ -1114,9 +1153,9 @@ namespace Switch_Toolbox.Library
                         if (numSlicesa < 4)
                             expTileMode = 4;
                     }
-                    else if (expTileMode == 13 && numSlicesa < 4)
+                    else if (expTileMode == 13)
                     {
-                        expTileMode = 13;
+                        expTileMode = 12;
                     }
 
                     return computeSurfaceMipLevelTileMode(
@@ -1438,30 +1477,23 @@ namespace Switch_Toolbox.Library
             uint pixelsPerPipeInterleave;
             uint baseAlign, pitchAlign, heightAlign;
 
-            if (tileMode != 0)
+            if (tileMode == 0)
             {
-                if (tileMode == 1)
-                {
-                    pixelsPerPipeInterleave = 2048 / bpp;
-                    baseAlign = 256;
-                    pitchAlign = Math.Max(0x40, pixelsPerPipeInterleave);
-                    heightAlign = 1;
-                }
-                else
-                {
-                    baseAlign = 1;
-                    pitchAlign = 1;
-                    heightAlign = 1;
-                }
+                baseAlign = 1;
+                pitchAlign = (bpp != 1 ? (uint)1 : 8);
+                heightAlign = 1;
+            }
+            else if (tileMode == 1)
+            {
+                pixelsPerPipeInterleave = 2048 / bpp;
+                baseAlign = 256;
+                pitchAlign = Math.Max(0x40, pixelsPerPipeInterleave);
+                heightAlign = 1;
             }
             else
             {
                 baseAlign = 1;
-                if (bpp != 1)
-                    pitchAlign = 1;
-                else
-                    pitchAlign = 8;
-
+                pitchAlign = 1;
                 heightAlign = 1;
             }
             pitchAlign = adjustPitchAlignment(flags, pitchAlign);
@@ -1614,7 +1646,7 @@ namespace Switch_Toolbox.Library
                     if (sliceFlags == 1)
                         pOut.sliceSize = (pOut.height * pOut.pitch * pOut.bpp * pIn.numSamples + 7) / 8;
 
-                    else if (((pIn.flags.value >> 5) & 1) != 0)
+                    if (((pIn.flags.value >> 5) & 1) != 0)
                         pOut.sliceSize = (uint)pOut.surfSize;
 
                     else
@@ -1736,7 +1768,7 @@ namespace Switch_Toolbox.Library
 
             if (padDims > 2 || thickness > 1)
             {
-                if (isCube != 0)
+                if (isCube != 0 || cubeAsArray != 0)
                     expNumSlices = nextPow2(expNumSlices);
 
                 if (thickness > 1)
@@ -1989,7 +2021,7 @@ namespace Switch_Toolbox.Library
         private static uint adjustPitchAlignment(Flags flags, uint pitchAlign)
         {
             if (((flags.value >> 13) & 1) != 0)
-                pitchAlign = powTwoAlign(pitchAlign, 0x20);
+                pitchAlign = powTwoAlign_0(pitchAlign, 0x20);
 
             return pitchAlign;
         }
@@ -2223,6 +2255,17 @@ namespace Switch_Toolbox.Library
             return ~(align - 1) & (x + align - 1);
         }
 
+        /// <summary>
+        /// Gets the surface info of a GX2 texture
+        /// </summary>
+        /// <param name="surfaceFormat">The <see cref="GX2SurfaceFormat"/> of the surface.</param>
+        /// <param name="surfaceWidth">The width of the surface.</param>
+        /// <param name="surfaceHeight">The height of the surface.</param>
+        /// <param name="surfaceDepth">The depth of the surface.</param>
+        /// <param name="surfaceDim">The <see cref="GX2SurfaceDim"/ of the surface.</param>
+        /// <param name="surfaceTileMode">The <see cref="GX2TileMode"/ of the surface.</param>
+        /// <param name="surfaceAA">The <see cref="GX2AAMode"/ of the surface.</param>
+        /// <param name="level">The mip level of which the info will be calculated for (first mipmap corresponds to value 1</param>
         public static surfaceOut getSurfaceInfo(GX2SurfaceFormat surfaceFormat, uint surfaceWidth, uint surfaceHeight, uint surfaceDepth, uint surfaceDim, uint surfaceTileMode, uint surfaceAA, int level)
         {
             GX2Surface surface = new GX2Surface();
