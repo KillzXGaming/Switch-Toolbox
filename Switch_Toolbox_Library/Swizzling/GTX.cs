@@ -564,9 +564,10 @@ namespace Switch_Toolbox.Library
 
 
         /*---------------------------------------
-         * 
-         * Code ported from AboodXD's GTX Extractorhttps://github.com/aboood40091/GTX-Extractor/blob/f586dde90bd4a262421a4a565c1556d0079a748e/addrlib/addrlib_cy.pyx
-         * 
+         *
+         * Code ported from AboodXD's GTX Extractor:
+         * https://github.com/aboood40091/GTX-Extractor/blob/cf1a15c41630745d9a0d370bafe5760c1e5f8cbe/addrlib/addrlib_cy.pyx
+         *
          *---------------------------------------*/
 
         public static bool IsFormatBCN(GX2SurfaceFormat Format)
@@ -614,15 +615,16 @@ namespace Switch_Toolbox.Library
                 width = (width + 3) / 4;
                 height = (height + 3) / 4;
             }
+
             pipeSwizzle = (swizzle_ >> 8) & 1;
             bankSwizzle = (swizzle_ >> 9) & 3;
-
-            tileMode = GX2TileModeToAddrTileMode(tileMode);
 
             if (depth > 1)
             {
                 bankSwizzle = (uint)(depthLevel % 4);
             }
+
+            tileMode = GX2TileModeToAddrTileMode(tileMode);
 
             for (int y = 0; y < height; y++)
             {
@@ -632,11 +634,11 @@ namespace Switch_Toolbox.Library
                         pos = (uint)(y * pitch + x) * bytesPerPixel;
                     else if (tileMode == 2 || tileMode == 3)
                     {
-                        pos = computeSurfaceAddrFromCoordMicroTiled((uint)x, (uint)y, 0, 0, bitsPerPixel, pitch, (AddrTileMode)tileMode);
+                        pos = computeSurfaceAddrFromCoordMicroTiled((uint)x, (uint)y, bitsPerPixel, pitch, (AddrTileMode)tileMode);
                     }
                     else
                     {
-                        pos = computeSurfaceAddrFromCoordMacroTiled((uint)x, (uint)y, 0, bitsPerPixel, pitch, height_, (AddrTileMode)tileMode, pipeSwizzle, bankSwizzle);
+                        pos = computeSurfaceAddrFromCoordMacroTiled((uint)x, (uint)y, bitsPerPixel, pitch, height_, (AddrTileMode)tileMode, pipeSwizzle, bankSwizzle);
                     }
 
 
@@ -773,7 +775,7 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        private static uint computePixelIndexWithinMicroTile(uint x, uint y, uint z, uint bpp)
+        private static uint computePixelIndexWithinMicroTile(uint x, uint y, uint bpp)
         {
             switch (bpp)
             {
@@ -903,7 +905,7 @@ namespace Switch_Toolbox.Library
         }
 
 
-        private static ulong computeSurfaceAddrFromCoordMicroTiled(uint x, uint y, uint slice, uint sample, uint bpp, uint pitch, AddrTileMode tileMode)
+        private static ulong computeSurfaceAddrFromCoordMicroTiled(uint x, uint y, uint bpp, uint pitch, AddrTileMode tileMode)
         {
             int microTileThickness = 1;
 
@@ -916,7 +918,7 @@ namespace Switch_Toolbox.Library
             uint microTileIndexY = y >> 3;
 
             ulong microTileOffset = microTileBytes * (microTileIndexX + microTileIndexY * microTilesPerRow);
-            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, slice, bpp);
+            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, bpp);
             ulong pixelOffset = (bpp * pixelIndex) >> 3;
 
             return pixelOffset + microTileOffset;
@@ -924,7 +926,7 @@ namespace Switch_Toolbox.Library
 
         private static byte[] bankSwapOrder = { 0, 1, 3, 2, 6, 7, 5, 4, 0, 0 };
 
-        private static ulong computeSurfaceAddrFromCoordMacroTiled(uint x, uint y, uint z, uint bpp, uint pitch, uint height,
+        private static ulong computeSurfaceAddrFromCoordMacroTiled(uint x, uint y, uint bpp, uint pitch, uint height,
                                                            AddrTileMode tileMode, uint pipeSwizzle, uint bankSwizzle)
         {
 
@@ -936,7 +938,7 @@ namespace Switch_Toolbox.Library
             uint microTileBits = bpp * (microTileThickness * 64);
             uint microTileBytes = (microTileBits + 7) / 8;
 
-            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, z, bpp);
+            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, bpp);
             ulong elemOffset = bpp * pixelIndex;
 
             uint bytesPerSample = microTileBytes;
@@ -1026,32 +1028,25 @@ namespace Switch_Toolbox.Library
             uint macroTileWidth = 32;
             uint macroTileHeight = 16;
             uint tileSlices = computeSurfaceTileSlices(baseTileMode, bpp, numSamples);
+            uint expTileMode = baseTileMode;
 
-
-            uint expTileMode, widtha, heighta, numSlicesa, thickness, microTileBytes;
-            expTileMode = baseTileMode;
+            uint widtha, heighta, numSlicesa, thickness, microTileBytes;
 
             if (DebugSurface)
                 Console.WriteLine("baseTileMode " + baseTileMode);
+
             if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
             {
                 if (baseTileMode == 7)
                     expTileMode = 4;
-            }
-            else if (baseTileMode == 13)
-            {
-                expTileMode = 12;
-            }
-            else if (baseTileMode == 11)
-            {
-                if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
+                else if (baseTileMode == 13)
+                    expTileMode = 12;
+                else if (baseTileMode == 11)
                     expTileMode = 8;
-            }
-            else if (baseTileMode == 15)
-            {
-                if (numSamples > 1 || tileSlices > 1 || isDepth != 0)
+                else if (baseTileMode == 15)
                     expTileMode = 14;
             }
+
             if (baseTileMode == 2 && numSamples > 1)
             {
                 expTileMode = 4;
@@ -1062,9 +1057,7 @@ namespace Switch_Toolbox.Library
                     expTileMode = 2;
 
                 if (numSamples == 2 || numSamples == 4)
-                {
                     expTileMode = 7;
-                }
             }
             else
             {
@@ -1072,18 +1065,7 @@ namespace Switch_Toolbox.Library
             }
             if (DebugSurface)
                 Console.WriteLine("computeSurfaceMipLevelTileMode expTileMode " + expTileMode);
-            if (expTileMode != 12 && expTileMode != 13 && expTileMode != 14 &&
-                expTileMode != 15)
-            {
-                if (expTileMode == 12)
-                    expTileMode = 4;
-                else if (expTileMode == 13)
-                    expTileMode = 7;
-                else if (expTileMode == 14)
-                    expTileMode = 8;
-                else if (expTileMode == 15)
-                    expTileMode = 11;
-            }
+
             if (noRecursive == 0)
             {
                 switch (bpp)
@@ -1094,7 +1076,6 @@ namespace Switch_Toolbox.Library
                         bpp /= 3;
                         break;
                 }
-                if (bpp == 24) { }
 
                 widtha = nextPow2(width);
                 heighta = nextPow2(height);
@@ -1136,19 +1117,15 @@ namespace Switch_Toolbox.Library
                         if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
                             expTileMode = 3;
                     }
+
                     if (numSlicesa < 4)
                     {
                         if (expTileMode == 3)
                             expTileMode = 2;
-                    }
-                    else if (expTileMode == 7)
-                    {
-                        if (numSlicesa < 4)
+                        else if (expTileMode == 7)
                             expTileMode = 4;
-                    }
-                    else if (expTileMode == 13)
-                    {
-                        expTileMode = 12;
+                        else if (expTileMode == 13)
+                            expTileMode = 12;
                     }
 
                     return computeSurfaceMipLevelTileMode(
@@ -1205,7 +1182,7 @@ namespace Switch_Toolbox.Library
             uint pHeightOut = pOut.height;
             uint pNumSlicesOut = pOut.depth;
             uint pTileModeOut = pOut.tileMode;
-            long pSurfSize = pOut.surfSize;
+            uint pSurfSize = (uint)pOut.surfSize;
             uint pBaseAlign = pOut.baseAlign;
             uint pPitchAlign = pOut.pitchAlign;
             uint pHeightAlign = pOut.heightAlign;
@@ -1245,7 +1222,7 @@ namespace Switch_Toolbox.Library
 
             Console.WriteLine("padDims " + padDims);
 
-            if (((flags.value >> 4) & 1) != mipLevel)
+            if ((((flags.value >> 4) & 1) != 0) && (mipLevel == 0))
                 padDims = 2;
 
             Console.WriteLine("padDims " + padDims);
@@ -1392,7 +1369,6 @@ namespace Switch_Toolbox.Library
             if (valid == 0)
                 return 3;
 
-
             return 0;
         }
         private static uint[] computeSurfaceInfoLinear(uint tileMode, uint bpp, uint numSamples, uint pitch, uint height,
@@ -1413,7 +1389,7 @@ namespace Switch_Toolbox.Library
             pitchAlign = compAllignLinear.Item2;
             heightAlign = compAllignLinear.Item3;
 
-            if ((flags.value >> 9 & 1) != mipLevel)
+            if ((((flags.value >> 9) & 1) != 0) && (mipLevel == 0))
             {
                 expPitch /= 3;
                 expPitch = nextPow2(expPitch);
@@ -1449,9 +1425,8 @@ namespace Switch_Toolbox.Library
             expHeight = padimens.Item2;
             expNumSlices = padimens.Item3;
 
-            if (((flags.value >> 9) & 1) != mipLevel)
+            if ((((flags.value >> 9) & 1) != 0) && (mipLevel == 0))
                 expPitch *= 3;
-
 
             slices = expNumSlices * numSamples / microTileThickness;
             pPitchOut = expPitch;
@@ -1513,14 +1488,6 @@ namespace Switch_Toolbox.Library
             return (uint)tileMode;
         }
 
-        private static Tuple<uint, uint, uint, uint> getBitsPerPixel(uint format_)
-        {
-            uint fmtIdx = format_ * 4;
-            return new Tuple<uint, uint, uint, uint>
-                   (formatExInfo[fmtIdx], formatExInfo[fmtIdx + 1],
-                    formatExInfo[fmtIdx + 2], formatExInfo[fmtIdx + 3]);
-        }
-
         private static void computeSurfaceInfo(surfaceIn aSurfIn, surfaceOut pSurfOut)
         {
             if (DebugSurface)
@@ -1532,14 +1499,10 @@ namespace Switch_Toolbox.Library
             pIn = aSurfIn;
             pOut = pSurfOut;
 
-            TileInfo tileInfoNull = new TileInfo();
-            uint sliceFlags = 0;
             uint returnCode = 0;
 
             uint width, height, bpp, elemMode;
             uint expandY, expandX;
-
-            elemMode = 0;
 
             if (pIn.bpp > 0x80)
                 returnCode = 3;
@@ -1575,17 +1538,6 @@ namespace Switch_Toolbox.Library
                     Console.WriteLine("-------------------------------------------");
                 }
 
-                if (useTileIndex(pIn.tileIndex) == 0 && pIn.pTileInfo == null)
-                {
-                    if (pOut.pTileInfo != null)
-                        pIn.pTileInfo = pOut.pTileInfo;
-
-                    else
-                    {
-                        pOut.pTileInfo = tileInfoNull;
-                        pIn.pTileInfo = tileInfoNull;
-                    }
-                }
                 pOut.pixelBits = pIn.bpp;
 
                 if (pIn.format != 0)
@@ -1636,15 +1588,12 @@ namespace Switch_Toolbox.Library
                     if (pIn.format != 0 && (((pIn.flags.value >> 9) & 1) == 0 || pIn.mipLevel == 0))
                         bpp = restoreSurfaceInfo(elemMode, expandX, expandY, bpp);
 
-                    if (sliceFlags == 1)
-                        pOut.sliceSize = (pOut.height * pOut.pitch * pOut.bpp * pIn.numSamples + 7) / 8;
-
                     if (((pIn.flags.value >> 5) & 1) != 0)
                         pOut.sliceSize = (uint)pOut.surfSize;
 
                     else
                     {
-                        pOut.sliceSize = (uint)pOut.surfSize / pOut.depth;
+                        pOut.sliceSize = (uint)(pOut.surfSize / pOut.depth);
 
                         if (pIn.slice == (pIn.numSlices - 1) && pIn.numSlices > 1)
                             pOut.sliceSize += pOut.sliceSize * (pOut.depth - pIn.numSlices);
@@ -1775,7 +1724,6 @@ namespace Switch_Toolbox.Library
             uint pitch, uint height, uint numSlices, uint mipLevel, uint padDims, Flags flags)
         {
             expPitch = pitch;
-
             expHeight = height;
             expNumSlices = numSlices;
 
@@ -2001,11 +1949,7 @@ namespace Switch_Toolbox.Library
                 baseAlign = Math.Max(256, (4 * heightAlign * bpp * pitchAlign + 7) >> 3);
 
             uint microTileBytes = (thickness * numSamples * (bpp << 6) + 7) >> 3;
-            uint numSlicesPerMicroTile;
-            if (microTileBytes < 2048)
-                numSlicesPerMicroTile = 1;
-            else
-                numSlicesPerMicroTile = microTileBytes / 2048;
+            uint numSlicesPerMicroTilenumSlicesPerMicroTile = (microTileBytes < 2048 ? (uint)1 : microTileBytes / 2048);
 
             baseAlign /= numSlicesPerMicroTile;
 
@@ -2139,7 +2083,7 @@ namespace Switch_Toolbox.Library
                 height = Math.Max(1, pIn.height >> (int)pIn.mipLevel);
                 slices = Math.Max(1, pIn.numSlices);
 
-                if (((pIn.flags.value >> 4) & 1) != 0)
+                if (((pIn.flags.value >> 4) & 1) == 0)
                     slices = Math.Max(1, slices >> (int)pIn.mipLevel);
 
                 if (pIn.format != 47 && pIn.format != 48)
@@ -2148,9 +2092,9 @@ namespace Switch_Toolbox.Library
                     height = nextPow2(height);
                     slices = nextPow2(slices);
                 }
-                width = nextPow2(width);
-                height = nextPow2(height);
-                slices = nextPow2(slices);
+                pIn.width = width;
+                pIn.height = height;
+                pIn.numSlices = slices;
             }
         }
 
@@ -2176,10 +2120,10 @@ namespace Switch_Toolbox.Library
                         width *= expandX;
                         height *= expandY;
                     }
-
-                    pOut.pixelPitch = Math.Max(1, width);
-                    pOut.pixelHeight = Math.Max(1, height);
                 }
+
+                pOut.pixelPitch = Math.Max(1, width);
+                pOut.pixelHeight = Math.Max(1, height);
             }
             if (bpp != 0)
             {
@@ -2237,9 +2181,9 @@ namespace Switch_Toolbox.Library
                     pIn.width = nextPow2(width);
                     pIn.height = nextPow2(height);
                     pIn.numSlices = slices;
-
-                    handled = 1;
                 }
+
+                handled = 1;
             }
             return handled;
         }
@@ -2261,23 +2205,21 @@ namespace Switch_Toolbox.Library
         /// <param name="level">The mip level of which the info will be calculated for (first mipmap corresponds to value 1</param>
         public static surfaceOut getSurfaceInfo(GX2SurfaceFormat surfaceFormat, uint surfaceWidth, uint surfaceHeight, uint surfaceDepth, uint surfaceDim, uint surfaceTileMode, uint surfaceAA, int level)
         {
-            GX2Surface surface = new GX2Surface();
-
             uint dim = 0;
             uint width = 0;
             uint blockSize = 0;
-            int numSamples = 0;
-            int hwFormat = 0;
+            uint numSamples = 0;
+            uint hwFormat = 0;
 
             var aSurfIn = new surfaceIn();
             var pSurfOut = new surfaceOut();
 
-            hwFormat = (int)surfaceFormat & 0x3F;
+            hwFormat = surfaceFormat & 0x3F;
 
 
             if (surfaceTileMode == 16)
             {
-                numSamples = 1 << (int)surfaceAA;
+                numSamples = 1 << surfaceAA;
 
                 if (hwFormat < 0x31 || hwFormat > 0x35)
                     blockSize = 1;
@@ -2330,10 +2272,10 @@ namespace Switch_Toolbox.Library
                     pSurfOut.depth = surfaceDepth;
                 }
 
-                pSurfOut.height = (~(blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize;
-                pSurfOut.pixelPitch = (~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
+                pSurfOut.height = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize;
+                pSurfOut.pixelPitch = (uint)(~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
                 pSurfOut.pixelPitch = Math.Max(blockSize, pSurfOut.pixelPitch);
-                pSurfOut.pixelHeight = (~(blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
+                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
                 pSurfOut.pixelHeight = Math.Max(blockSize, pSurfOut.pixelHeight);
                 pSurfOut.pitch = Math.Max(1, pSurfOut.pitch);
                 pSurfOut.height = Math.Max(1, pSurfOut.height);
@@ -2342,7 +2284,7 @@ namespace Switch_Toolbox.Library
                 if (surfaceDim == 2)
                     pSurfOut.sliceSize = (uint)pSurfOut.surfSize;
                 else
-                    pSurfOut.sliceSize = (uint)pSurfOut.surfSize / pSurfOut.depth;
+                    pSurfOut.sliceSize = (uint)(pSurfOut.surfSize / pSurfOut.depth);
 
                 pSurfOut.pitchTileMax = (pSurfOut.pitch >> 3) - 1;
                 pSurfOut.heightTileMax = (pSurfOut.height >> 3) - 1;
@@ -2352,9 +2294,9 @@ namespace Switch_Toolbox.Library
             {
                 aSurfIn.size = 60;
                 aSurfIn.tileMode = surfaceTileMode & 0x0F;
-                aSurfIn.format = (uint)hwFormat;
+                aSurfIn.format = hwFormat;
                 aSurfIn.bpp = formatHwInfo[hwFormat * 4];
-                aSurfIn.numSamples = (uint)1 << (int)surfaceAA;
+                aSurfIn.numSamples = 1 << surfaceAA;
                 aSurfIn.numFrags = aSurfIn.numSamples;
                 aSurfIn.width = (uint)Math.Max(1, surfaceWidth >> level);
                 dim = surfaceDim;
