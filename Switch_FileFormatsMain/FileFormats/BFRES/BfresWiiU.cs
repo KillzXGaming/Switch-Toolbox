@@ -99,6 +99,7 @@ namespace FirstPlugin
         {
             if (model == null)
                 model = new FMDL();
+
             model.Text = mdl.Name;
             model.Skeleton = new FSKL(mdl.Skeleton);
 

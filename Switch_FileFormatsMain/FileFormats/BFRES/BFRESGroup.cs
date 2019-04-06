@@ -237,6 +237,7 @@ namespace Bfres.Structs
                             fmdl.ModelU = new ResU.Model();
                             fmdl.ModelU.Name = ResourceName;
                             fmdl.ModelU.Shapes.Add("", new ResU.Shape());
+                            fmdl.ModelU.Materials.Add("", new ResU.Material());
                             fmdl.ModelU.VertexBuffers.Add(new ResU.VertexBuffer());
 
                             var skeleton = new ResU.Skeleton();
