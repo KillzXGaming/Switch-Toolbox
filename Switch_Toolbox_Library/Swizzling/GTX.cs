@@ -1949,9 +1949,9 @@ namespace Switch_Toolbox.Library
                 baseAlign = Math.Max(256, (4 * heightAlign * bpp * pitchAlign + 7) >> 3);
 
             uint microTileBytes = (thickness * numSamples * (bpp << 6) + 7) >> 3;
-            uint numSlicesPerMicroTilenumSlicesPerMicroTile = (microTileBytes < 2048 ? (uint)1 : microTileBytes / 2048);
+            uint numSlicesPerMicroTile = (microTileBytes < 2048 ? (uint)1 : microTileBytes / 2048);
 
-            baseAlign /= numSlicesPerMicroTilenumSlicesPerMicroTile;
+            baseAlign /= numSlicesPerMicroTile;
 
             return new Tuple<uint, uint, uint, uint, uint>(baseAlign, pitchAlign, heightAlign, macroTileWidth, macroTileHeight);
         }
