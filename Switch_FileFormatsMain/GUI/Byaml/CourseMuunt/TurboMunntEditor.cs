@@ -21,10 +21,12 @@ namespace FirstPlugin.Forms
         {
             InitializeComponent();
 
+            stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
+
             viewport = new Viewport();
             viewport.Dock = DockStyle.Fill;
             viewport.scene.SelectionChanged += Scene_SelectionChanged;
-            splitContainer1.Panel2.Controls.Add(viewport);
+            stPanel4.Controls.Add(viewport);
         }
 
         CourseMuuntScene scene;
@@ -83,8 +85,10 @@ namespace FirstPlugin.Forms
             if (scene.EnemyPaths.Count > 0)
             {
                 objectCB.Items.Add("Enemy Paths");
-                var renderablePath = new RenderablePaths();
-                renderablePath.PathGroups = scene.EnemyPaths;
+                var renderablePath = new RenderableConnectedPaths();
+                foreach (var group in scene.EnemyPaths)
+                    renderablePath.AddGroup(group);
+
                 viewport.AddDrawable(renderablePath);
 
                 foreach (var group in scene.EnemyPaths)

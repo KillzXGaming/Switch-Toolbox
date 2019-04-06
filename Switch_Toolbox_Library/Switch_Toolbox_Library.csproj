@@ -580,7 +580,7 @@
     <Compile Include="STToolStipMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Swizzling\GTX.cs" />
+    <Compile Include="Swizzling\GX2.cs" />
     <Compile Include="Swizzling\TegraX1Swizzle.cs" />
     <Compile Include="ThemeConfig.cs" />
     <Compile Include="UpdateProgram.cs" />

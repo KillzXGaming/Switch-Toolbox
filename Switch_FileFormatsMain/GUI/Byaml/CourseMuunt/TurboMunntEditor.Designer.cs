@@ -30,17 +30,21 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
-            this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
             this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.objectCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.viewIntroCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
+            this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,6 +52,8 @@
             this.stPanel2.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
+            this.stTabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,10 +71,20 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.stTabControl1);
             this.splitContainer1.Panel2.Controls.Add(this.stMenuStrip1);
             this.splitContainer1.Size = new System.Drawing.Size(780, 492);
             this.splitContainer1.SplitterDistance = 170;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // splitter1
+            // 
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(0, 317);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(170, 3);
+            this.splitter1.TabIndex = 1;
+            this.splitter1.TabStop = false;
             // 
             // stPanel2
             // 
@@ -89,15 +105,6 @@
             this.stPropertyGrid1.Size = new System.Drawing.Size(170, 172);
             this.stPropertyGrid1.TabIndex = 0;
             // 
-            // splitter1
-            // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter1.Location = new System.Drawing.Point(0, 317);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(170, 3);
-            this.splitter1.TabIndex = 1;
-            this.splitter1.TabStop = false;
-            // 
             // stPanel1
             // 
             this.stPanel1.Controls.Add(this.treeViewCustom1);
@@ -109,6 +116,18 @@
             this.stPanel1.Name = "stPanel1";
             this.stPanel1.Size = new System.Drawing.Size(170, 317);
             this.stPanel1.TabIndex = 0;
+            // 
+            // treeViewCustom1
+            // 
+            this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewCustom1.ImageIndex = 0;
+            this.treeViewCustom1.Location = new System.Drawing.Point(3, 30);
+            this.treeViewCustom1.Name = "treeViewCustom1";
+            this.treeViewCustom1.SelectedImageIndex = 0;
+            this.treeViewCustom1.Size = new System.Drawing.Size(167, 252);
+            this.treeViewCustom1.TabIndex = 3;
             // 
             // stButton2
             // 
@@ -154,6 +173,41 @@
             this.objectCB.TabIndex = 0;
             this.objectCB.SelectedIndexChanged += new System.EventHandler(this.objectCB_SelectedIndexChanged);
             // 
+            // stTabControl1
+            // 
+            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stTabControl1.Controls.Add(this.tabPage1);
+            this.stTabControl1.Controls.Add(this.tabPage2);
+            this.stTabControl1.Location = new System.Drawing.Point(3, 27);
+            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
+            this.stTabControl1.Name = "stTabControl1";
+            this.stTabControl1.SelectedIndex = 0;
+            this.stTabControl1.Size = new System.Drawing.Size(600, 462);
+            this.stTabControl1.TabIndex = 1;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.stPanel4);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(592, 433);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "3D View";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(592, 433);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "2D View";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // stMenuStrip1
             // 
             this.stMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -171,17 +225,13 @@
             this.viewIntroCameraToolStripMenuItem.Text = "View Intro Camera";
             this.viewIntroCameraToolStripMenuItem.Click += new System.EventHandler(this.viewIntroCameraToolStripMenuItem_Click);
             // 
-            // treeViewCustom1
+            // stPanel4
             // 
-            this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewCustom1.ImageIndex = 0;
-            this.treeViewCustom1.Location = new System.Drawing.Point(3, 30);
-            this.treeViewCustom1.Name = "treeViewCustom1";
-            this.treeViewCustom1.SelectedImageIndex = 0;
-            this.treeViewCustom1.Size = new System.Drawing.Size(167, 252);
-            this.treeViewCustom1.TabIndex = 3;
+            this.stPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel4.Location = new System.Drawing.Point(3, 3);
+            this.stPanel4.Name = "stPanel4";
+            this.stPanel4.Size = new System.Drawing.Size(586, 427);
+            this.stPanel4.TabIndex = 0;
             // 
             // TurboMunntEditor
             // 
@@ -198,6 +248,8 @@
             this.stPanel2.ResumeLayout(false);
             this.stPanel1.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
+            this.stTabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.stMenuStrip1.ResumeLayout(false);
             this.stMenuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -218,5 +270,9 @@
         private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewIntroCameraToolStripMenuItem;
         private Switch_Toolbox.Library.TreeViewCustom treeViewCustom1;
+        private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private Switch_Toolbox.Library.Forms.STPanel stPanel4;
     }
 }
