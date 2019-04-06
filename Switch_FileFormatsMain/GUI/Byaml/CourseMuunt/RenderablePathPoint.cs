@@ -2,34 +2,21 @@
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Switch_Toolbox.Library.IO;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace GL_EditorFramework.EditorDrawables
 {
-    //
-    // Summary:
-    //     An EditableObject that has only one selectable Part. It's represented by a blue block
-    public class RenderablePathPoint : SingleObject
+    public class RenderablePathPoint : EditableObject
     {
-        public RenderablePathPoint(Vector3 pos)
-            : base(pos)
-        {
+        public bool IsNormalTanTransform = false;
 
-        }
-        protected Vector3 ScaleVec3 = new Vector3(0, 0, 0);
-        protected Vector3 RotationVec3 = new Vector3(0, 0, 0);
+        protected Vector3 position = new Vector3(0, 0, 0);
+        protected Vector3 scale = new Vector3(1, 1, 1);
+        protected Vector3 rotate = new Vector3(0, 0, 0);
+
         protected Vector3 Normal = new Vector3(0, 0, 0);
         protected Vector3 Tangent = new Vector3(0, 0, 0);
-
-        bool IsNormalTanTransform = false;
 
         protected bool Selected = false;
 
@@ -39,23 +26,19 @@ namespace GL_EditorFramework.EditorDrawables
 
         protected static Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
 
-        Matrix4 Transform;
-
-        public RenderablePathPoint(Vector3 pos, Vector3 rot, Vector3 scale) : base(pos)
-        {
-            UpdateTransform(pos, rot, scale);
+        public RenderablePathPoint(Vector3 pos, Vector3 rot, Vector3 sca) {
+            UpdateTransform(pos, rot, sca);
         }
 
-        public RenderablePathPoint(Vector3 pos, Vector3 normal, Vector3 tangent, Vector3 scale) : base(pos)
-        {
-            UpdateTransform(pos, normal, tangent, scale);
+        public RenderablePathPoint(Vector3 pos, Vector3 normal, Vector3 tangent, Vector3 sca) {
+            UpdateTransform(pos, normal, tangent, sca);
         }
 
-        public void UpdateTransform(Vector3 pos, Vector3 rot, Vector3 scale)
+        public void UpdateTransform(Vector3 pos, Vector3 rot, Vector3 sca)
         {
-            Position = pos;
-            RotationVec3 = rot;
-            ScaleVec3 = new Vector3(scale / 2);
+            position = pos;
+            rotate = rot;
+            scale = new Vector3(sca / 2);
         }
 
         public void UpdateTransform(Vector3 pos, Vector3 normal, Vector3 tangent, Vector3 scale)
@@ -63,9 +46,8 @@ namespace GL_EditorFramework.EditorDrawables
             IsNormalTanTransform = true;
             Normal = normal;
             Tangent = tangent;
-            ScaleVec3 = new Vector3(scale / 2);
+            scale = new Vector3(scale / 2);
         }
-
 
         public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
         {
@@ -76,16 +58,16 @@ namespace GL_EditorFramework.EditorDrawables
 
             if (IsNormalTanTransform)
             {
-                control.UpdateModelMatrix(Matrix4.CreateScale(ScaleVec3) *
+                control.UpdateModelMatrix(Matrix4.CreateScale(scale) *
                 MatrixExenstion.CreateRotation(Normal, Tangent) *
                 Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(Position) : Position));
             }
             else
             {
-                control.UpdateModelMatrix(Matrix4.CreateScale(ScaleVec3) *
-                (Matrix4.CreateRotationX(RotationVec3.X) *
-                Matrix4.CreateRotationY(RotationVec3.Y) *
-                Matrix4.CreateRotationZ(RotationVec3.Z)) *
+                control.UpdateModelMatrix(Matrix4.CreateScale(scale) *
+                (Matrix4.CreateRotationX(rotate.X) *
+                Matrix4.CreateRotationY(rotate.Y) *
+                Matrix4.CreateRotationZ(rotate.Z)) *
                 Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(Position) : Position));
             }
 
@@ -164,10 +146,82 @@ namespace GL_EditorFramework.EditorDrawables
 
         }
 
+        public override void Prepare(GL_ControlModern control)
+        {
+            Renderers.ColorBlockRenderer.Initialize();
+        }
+
+        public override void Prepare(GL_ControlLegacy control)
+        {
+
+        }
+
+        public virtual void Translate(Vector3 lastPos, Vector3 translate, int subObj)
+        {
+            position = lastPos + translate;
+        }
+
+        public virtual void UpdatePosition(int subObj)
+        {
+
+        }
+
+        public override bool CanStartDragging() => true;
+
+        public override BoundingBox GetSelectionBox() => new BoundingBox(
+            position.X - 0.5f,
+            position.X + 0.5f,
+            position.Y - 0.5f,
+            position.Y + 0.5f,
+            position.Z - 0.5f,
+            position.Z + 0.5f
+            );
+
+        public override uint SelectAll(GL_ControlBase control)
+        {
+            Selected = true;
+            return REDRAW;
+        }
+
+        public override uint SelectDefault(GL_ControlBase control)
+        {
+            Selected = true;
+            return REDRAW;
+        }
+
+        public override uint Select(int partIndex, GL_ControlBase control)
+        {
+            Selected = true;
+            return REDRAW;
+        }
+
+        public override uint Deselect(int partIndex, GL_ControlBase control)
+        {
+            Selected = false;
+            return REDRAW;
+        }
+
+        public override uint DeselectAll(GL_ControlBase control)
+        {
+            Selected = false;
+            return REDRAW;
+        }
+
         public override void ApplyTransformActionToSelection(AbstractTransformAction transformAction)
         {
-            Position = transformAction.newPos(Position);
-            Scale = transformAction.newScale(Scale);
+            position = transformAction.newPos(position);
+        }
+
+        public override Vector3 Position
+        {
+            get
+            {
+                return position;
+            }
+            set
+            {
+                position = value;
+            }
         }
     }
 }

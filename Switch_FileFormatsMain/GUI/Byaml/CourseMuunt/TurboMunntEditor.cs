@@ -45,8 +45,8 @@ namespace FirstPlugin.Forms
 
             foreach (var kcl in scene.KclObjects)
             {
-                viewport.AddDrawable(kcl.Renderer);
-                kcl.Renderer.UpdateVertexData();
+             //   viewport.AddDrawable(kcl.Renderer);
+            //    kcl.Renderer.UpdateVertexData();
             }
 
             foreach (var bfres in scene.BfresObjects)
