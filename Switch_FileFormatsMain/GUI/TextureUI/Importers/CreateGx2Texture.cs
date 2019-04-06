@@ -31,19 +31,8 @@ namespace FirstPlugin
             if (surfOut.depth != 1)
                 throw new Exception($"Unsupported Depth {surfOut.depth}!");
 
-            uint s = 0;
-            switch (tileMode)
-            {
-                case 1:
-                case 2:
-                case 3:
-                case 16:
-                    s = 0;
-                    break;
-                default:
-                    s = 0xd0000 | setting.swizzle << 8;
-                    break;
-            }
+            uint s = (uint)(setting.swizzle << 8);
+
             uint blkWidth, blkHeight;
             if (GTX.IsFormatBCN(Format))
             {
@@ -55,6 +44,13 @@ namespace FirstPlugin
                 blkWidth = 1;
                 blkHeight = 1;
             }
+
+            if (tileMode == 0)
+                tileMode = GTX.getDefaultGX2TileMode(1, setting.TexWidth, setting.TexHeight, 1,(uint)setting.Format, 0, 1);
+
+            int tiling1dLevel = 0;
+            bool tiling1dLevelSet = false;
+
             List<uint> mipOffsets = new List<uint>();
             List<byte[]> Swizzled = new List<byte[]>();
 
@@ -100,7 +96,21 @@ namespace FirstPlugin
                         surfOut.pitch, surfOut.bpp, data_, DepthLevel);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
+
+                if (surfOut.tileMode == 1 || surfOut.tileMode == 2 ||
+                    surfOut.tileMode == 3 || surfOut.tileMode == 16)
+                {
+                    tiling1dLevelSet = true;
+                }
+
+                if (tiling1dLevelSet == false)
+                    tiling1dLevel += 1;
             }
+
+            if (tiling1dLevelSet)
+                s |= (uint)(tiling1dLevel << 16);
+            else
+                s |= (uint)(13 << 16);
 
             GTX.GX2Surface surf = new GTX.GX2Surface();
             surf.depth = setting.Depth;

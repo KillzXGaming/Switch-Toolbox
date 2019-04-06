@@ -500,13 +500,6 @@ namespace Switch_Toolbox.Library
             int dataOffset = 0;
             int mipDataOffset = 0;
             int TotalImageSize = tex.data.Length;
-            int _swizzle = (int)tex.swizzle << 8;
-
-            if (tex.tileMode == 0)
-                tex.tileMode = getDefaultGX2TileMode(1, tex.width, tex.height, 1, tex.format, 0, 1);
-
-            int tiling1dLevel = 0;
-            bool tiling1dLevelSet = false;
 
             List<List<byte[]>> result = new List<List<byte[]>>();
             for (int arrayLevel = 0; arrayLevel < tex.depth; arrayLevel++)
@@ -549,25 +542,9 @@ namespace Switch_Toolbox.Library
 
                 result.Add(mips);
 
-                if (surfInfo.tileMode == 1 || surfInfo.tileMode == 2 ||
-                    surfInfo.tileMode == 3 || surfInfo.tileMode == 16)
-                {
-                    tiling1dLevelSet = true;
-                }
-
-                if (tiling1dLevelSet == false)
-                {
-                    tiling1dLevel += 1;
-                }
-
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
             }
-
-            if (tiling1dLevelSet)
-                _swizzle |= tiling1dLevel << 16;
-            else
-                _swizzle |= 13 << 16;
 
             return result;
         }
@@ -740,7 +717,7 @@ namespace Switch_Toolbox.Library
             return newDim;
         }
 
-        private static uint getDefaultGX2TileMode(uint dim, uint width, uint height, uint depth, uint format_, uint aa, uint use)
+        public static uint getDefaultGX2TileMode(uint dim, uint width, uint height, uint depth, uint format_, uint aa, uint use)
         {
             uint tileMode = 1;
             bool IsDepthBuffer = (use & 4) != 0;
@@ -767,6 +744,9 @@ namespace Switch_Toolbox.Library
 
         private static uint GX2TileModeToAddrTileMode(uint tileMode)
         {
+            if (tileMode == 0)
+                throw new Exception("Use tileMode from getDefaultGX2TileMode().");
+
             if (tileMode == 16)
                 return 0;
 
