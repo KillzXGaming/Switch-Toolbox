@@ -287,7 +287,7 @@ namespace Bfres.Structs
         }
 
         //We reuse GX2 data as it's the same thing
-        public Texture FromGx2Surface(GTX.GX2Surface surf, GTXImporterSettings settings)
+        public Texture FromGx2Surface(GX2.GX2Surface surf, GTXImporterSettings settings)
         {
             Texture tex = new Texture();
             tex.Name = settings.TexName;
@@ -364,9 +364,9 @@ namespace Bfres.Structs
             format = (int)texture.Format;
             int swizzle = (int)texture.Swizzle;
             int pitch = (int)texture.Pitch;
-            uint bpp = GTX.surfaceGetBitsPerPixel((uint)format) >> 3;
+            uint bpp = GX2.surfaceGetBitsPerPixel((uint)format) >> 3;
 
-            GTX.GX2Surface surf = new GTX.GX2Surface();
+            GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.bpp = bpp;
             surf.height = texture.Height;
             surf.width = texture.Width;
@@ -428,7 +428,7 @@ namespace Bfres.Structs
             if (surf.mipData == null)
                 surf.numMips = 1;
 
-            var surfaces = GTX.Decode(surf);
+            var surfaces = GX2.Decode(surf);
 
             if (ArrayLevel >= surfaces.Count)
                 throw new Exception("Invalid amount of surfaces decoded!");

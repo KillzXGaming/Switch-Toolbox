@@ -21,7 +21,7 @@ namespace FirstPlugin
         public uint arrayLength = 1;
         public List<byte[]> DataBlockOutput = new List<byte[]>();
         public List<byte[]> DecompressedData = new List<byte[]>();
-        public GTX.GX2SurfaceFormat Format;
+        public GX2.GX2SurfaceFormat Format;
         public bool GenerateMipmaps;
         public bool IsSRGB;
         public uint tileMode = 4;
@@ -51,7 +51,7 @@ namespace FirstPlugin
             }
             DataBlockOutput.Add(dds.bdata);
 
-            Format = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(dds.Format);;
+            Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(dds.Format);;
         }
 
         public void LoadBitMap(Image Image, string FileName)
@@ -59,7 +59,7 @@ namespace FirstPlugin
             DecompressedData.Clear();
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
-            Format = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
+            Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
 
             GenerateMipmaps = true;
             LoadImage(new Bitmap(Image));
@@ -71,7 +71,7 @@ namespace FirstPlugin
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
 
-            Format = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
+            Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
             GenerateMipmaps = true;
 
             //If a texture is .tga, we need to convert it
@@ -159,17 +159,17 @@ namespace FirstPlugin
                     FTEX.ConvertFromGx2Format((GX2SurfaceFormat)Format), alphaRef));
             }
         }
-        public GTX.GX2Surface CreateGx2Texture(byte[] imageData)
+        public GX2.GX2Surface CreateGx2Texture(byte[] imageData)
         {
             Console.WriteLine("Format " + Format);
 
-            var surfOut = GTX.getSurfaceInfo(Format, TexWidth, TexHeight, 1, 1, tileMode, 0, 0);
+            var surfOut = GX2.getSurfaceInfo(Format, TexWidth, TexHeight, 1, 1, tileMode, 0, 0);
             uint imageSize = (uint)surfOut.surfSize;
             uint alignment = surfOut.baseAlign;
             uint pitch = surfOut.pitch;
             uint mipSize = 0;
             uint dataSize = (uint)imageData.Length;
-            uint bpp = GTX.surfaceGetBitsPerPixel((uint)Format) >> 3;
+            uint bpp = GX2.surfaceGetBitsPerPixel((uint)Format) >> 3;
 
             if (dataSize <= 0)
                 throw new Exception($"Image is empty!!");
@@ -191,7 +191,7 @@ namespace FirstPlugin
                     break;
             }
             uint blkWidth, blkHeight;
-            if (GTX.IsFormatBCN(Format))
+            if (GX2.IsFormatBCN(Format))
             {
                 blkWidth = 4;
                 blkHeight = 4;
@@ -231,7 +231,7 @@ namespace FirstPlugin
 
                 if (mipLevel != 0)
                 {
-                    surfOut = GTX.getSurfaceInfo(Format, TexWidth, TexHeight, 1, 1, tileMode, 0, mipLevel);
+                    surfOut = GX2.getSurfaceInfo(Format, TexWidth, TexHeight, 1, 1, tileMode, 0, mipLevel);
 
                     if (mipLevel == 1)
                         mipOffsets.Add(imageSize);
@@ -245,13 +245,13 @@ namespace FirstPlugin
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                byte[] SwizzledData = GTX.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, s,
+                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, s,
                         surfOut.pitch, surfOut.bpp, data_, 1);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
             }       
 
-            GTX.GX2Surface surf = new GTX.GX2Surface();
+            GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.depth = Depth;
             surf.width = TexWidth;
             surf.height = TexHeight;

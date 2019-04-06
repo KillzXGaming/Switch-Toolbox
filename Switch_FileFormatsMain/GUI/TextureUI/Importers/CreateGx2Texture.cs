@@ -10,19 +10,19 @@ namespace FirstPlugin
 {
     public class GTXSwizzle
     {
-        public static GTX.GX2Surface CreateGx2Texture(byte[] imageData, GTXImporterSettings setting, uint tileMode, uint AAMode)
+        public static GX2.GX2Surface CreateGx2Texture(byte[] imageData, GTXImporterSettings setting, uint tileMode, uint AAMode)
         {
-            var Format = (GTX.GX2SurfaceFormat)setting.Format;
+            var Format = (GX2.GX2SurfaceFormat)setting.Format;
 
             Console.WriteLine("Format " + Format + " " + setting.TexName);
 
-            var surfOut = GTX.getSurfaceInfo(Format, setting.TexWidth, setting.TexHeight, 1, 1, tileMode, 0, 0);
+            var surfOut = GX2.getSurfaceInfo(Format, setting.TexWidth, setting.TexHeight, 1, 1, tileMode, 0, 0);
             uint imageSize = (uint)surfOut.surfSize;
             uint alignment = surfOut.baseAlign;
             uint pitch = surfOut.pitch;
             uint mipSize = 0;
             uint dataSize = (uint)imageData.Length;
-            uint bpp = GTX.surfaceGetBitsPerPixel((uint)setting.Format) >> 3;
+            uint bpp = GX2.surfaceGetBitsPerPixel((uint)setting.Format) >> 3;
             int DepthLevel = 1;
 
             if (dataSize <= 0)
@@ -34,7 +34,7 @@ namespace FirstPlugin
             uint s = (uint)(setting.swizzle << 8);
 
             uint blkWidth, blkHeight;
-            if (GTX.IsFormatBCN(Format))
+            if (GX2.IsFormatBCN(Format))
             {
                 blkWidth = 4;
                 blkHeight = 4;
@@ -46,7 +46,7 @@ namespace FirstPlugin
             }
 
             if (tileMode == 0)
-                tileMode = GTX.getDefaultGX2TileMode(1, setting.TexWidth, setting.TexHeight, 1,(uint)setting.Format, 0, 1);
+                tileMode = GX2.getDefaultGX2TileMode(1, setting.TexWidth, setting.TexHeight, 1,(uint)setting.Format, 0, 1);
 
             int tiling1dLevel = 0;
             bool tiling1dLevelSet = false;
@@ -78,7 +78,7 @@ namespace FirstPlugin
 
                 if (mipLevel != 0)
                 {
-                    surfOut = GTX.getSurfaceInfo(Format, setting.TexWidth, setting.TexHeight, 1, 1, tileMode, 0, mipLevel);
+                    surfOut = GX2.getSurfaceInfo(Format, setting.TexWidth, setting.TexHeight, 1, 1, tileMode, 0, mipLevel);
 
                     if (mipLevel == 1)
                         mipOffsets.Add(imageSize);
@@ -92,7 +92,7 @@ namespace FirstPlugin
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                byte[] SwizzledData = GTX.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, s,
+                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, s,
                         surfOut.pitch, surfOut.bpp, data_, DepthLevel);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
@@ -112,7 +112,7 @@ namespace FirstPlugin
             else
                 s |= (uint)(13 << 16);
 
-            GTX.GX2Surface surf = new GTX.GX2Surface();
+            GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.depth = setting.Depth;
             surf.width = setting.TexWidth;
             surf.height = setting.TexHeight;

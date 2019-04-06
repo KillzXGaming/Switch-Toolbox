@@ -346,26 +346,26 @@ namespace FirstPlugin
         {
             uint bpp = GetBytesPerPixel(Format);
 
-            GTX.GX2Surface surf = new GTX.GX2Surface();
+            GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.bpp = bpp;
             surf.height = image.Height;
             surf.width = image.Width;
-            surf.aa = (uint)GTX.GX2AAMode.GX2_AA_MODE_1X;
+            surf.aa = (uint)GX2.GX2AAMode.GX2_AA_MODE_1X;
             surf.alignment = image.Alignment;
             surf.depth = 1;
-            surf.dim = (uint)GTX.GX2SurfaceDimension.DIM_2D;
+            surf.dim = (uint)GX2.GX2SurfaceDimension.DIM_2D;
             surf.format = (uint)FTEX.ConvertToGx2Format(Format);
-            surf.use = (uint)GTX.GX2SurfaceUse.USE_COLOR_BUFFER;
+            surf.use = (uint)GX2.GX2SurfaceUse.USE_COLOR_BUFFER;
             surf.pitch = 0;
             surf.data = ImageData;
             surf.numMips = 1;
             surf.mipOffset = new uint[0];
             surf.mipData = ImageData;
-            surf.tileMode = (uint)GTX.GX2TileMode.MODE_2D_TILED_THIN1;
+            surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
             surf.swizzle = image.swizzle;
             surf.numArray = 1;
 
-            var surfaces = GTX.Decode(surf);
+            var surfaces = GX2.Decode(surf);
 
             return surfaces[ArrayLevel][MipLevel];
         }

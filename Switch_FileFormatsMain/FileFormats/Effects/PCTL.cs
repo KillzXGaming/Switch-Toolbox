@@ -633,68 +633,68 @@ namespace FirstPlugin
 
                 public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
                 {
-                    uint GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC5_UNORM;
+                    uint GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
 
                     switch (SurfFormat)
                     {
                         case SurfaceFormat.T_BC1_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC1_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC1_UNORM;
                             Format = TEX_FORMAT.BC1_UNORM;
                             break;
                         case SurfaceFormat.T_BC1_SRGB:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC1_SRGB;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC1_SRGB;
                             Format = TEX_FORMAT.BC1_UNORM_SRGB;
                             break;
                         case SurfaceFormat.T_BC2_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC2_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC2_UNORM;
                             Format = TEX_FORMAT.BC2_UNORM;
                             break;
                         case SurfaceFormat.T_BC2_SRGB:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC2_SRGB;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC2_SRGB;
                             Format = TEX_FORMAT.BC2_UNORM_SRGB;
                             break;
                         case SurfaceFormat.T_BC3_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC3_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC3_UNORM;
                             Format = TEX_FORMAT.BC3_UNORM;
                             break;
                         case SurfaceFormat.T_BC3_SRGB:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC3_SRGB;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC3_SRGB;
                             Format = TEX_FORMAT.BC3_UNORM_SRGB;
                             break;
                         case SurfaceFormat.T_BC4_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC4_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC4_UNORM;
                             Format = TEX_FORMAT.BC4_UNORM;
                             break;
                         case SurfaceFormat.T_BC4_SNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC4_SNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC4_SNORM;
                             Format = TEX_FORMAT.BC4_SNORM;
                             break;
                         case SurfaceFormat.T_BC5_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC5_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
                             Format = TEX_FORMAT.BC5_UNORM;
                             break;
                         case SurfaceFormat.T_BC5_SNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC5_SNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_SNORM;
                             Format = TEX_FORMAT.BC5_SNORM;
                             break;
                         case SurfaceFormat.TC_R8_G8_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.TC_R8_G8_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_G8_UNORM;
                             Format = TEX_FORMAT.R8G8_UNORM;
                             break;
                         case SurfaceFormat.TCS_R8_G8_B8_A8_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
                             Format = TEX_FORMAT.R8G8B8A8_UNORM;
                             break;
                         case SurfaceFormat.TCS_R8_G8_B8_A8:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
                             Format = TEX_FORMAT.R8G8B8A8_UNORM;
                             break;
                         case SurfaceFormat.TC_R8_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.TC_R8_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_UNORM;
                             Format = TEX_FORMAT.R8_UNORM;
                             break;
                         case SurfaceFormat.TCS_R5_G6_B5_UNORM:
-                            GX2Format = (uint)GTX.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
+                            GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
                             Format = TEX_FORMAT.B5G6R5_UNORM;
                             break;
                         default:
@@ -704,9 +704,9 @@ namespace FirstPlugin
 
                     int swizzle = (int)Swizzle;
                     int pitch = (int)0;
-                    uint bpp = GTX.surfaceGetBitsPerPixel(GX2Format) >> 3;
+                    uint bpp = GX2.surfaceGetBitsPerPixel(GX2Format) >> 3;
 
-                    GTX.GX2Surface surf = new GTX.GX2Surface();
+                    GX2.GX2Surface surf = new GX2.GX2Surface();
                     surf.bpp = bpp;
                     surf.height = Height;
                     surf.width = Width;
@@ -725,7 +725,7 @@ namespace FirstPlugin
                     surf.swizzle = Swizzle;
                     surf.imageSize = ImageSize;
 
-                    var surfaces = GTX.Decode(surf);
+                    var surfaces = GX2.Decode(surf);
                     return surfaces[ArrayLevel][MipLevel];
                 }
 
@@ -1273,68 +1273,68 @@ namespace FirstPlugin
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
-                uint GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC5_UNORM;
+                uint GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
 
                 switch (SurfFormat)
                 {
                     case SurfaceFormat.T_BC1_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC1_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC1_UNORM;
                         Format = TEX_FORMAT.BC1_UNORM;
                         break;
                     case SurfaceFormat.T_BC1_SRGB:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC1_SRGB;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC1_SRGB;
                         Format = TEX_FORMAT.BC1_UNORM_SRGB;
                         break;
                     case SurfaceFormat.T_BC2_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC2_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC2_UNORM;
                         Format = TEX_FORMAT.BC2_UNORM;
                         break;
                     case SurfaceFormat.T_BC2_SRGB:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC2_SRGB;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC2_SRGB;
                         Format = TEX_FORMAT.BC2_UNORM_SRGB;
                         break;
                     case SurfaceFormat.T_BC3_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC3_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC3_UNORM;
                         Format = TEX_FORMAT.BC3_UNORM;
                         break;
                     case SurfaceFormat.T_BC3_SRGB:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC3_SRGB;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC3_SRGB;
                         Format = TEX_FORMAT.BC3_UNORM_SRGB;
                         break;
                     case SurfaceFormat.T_BC4_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC4_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC4_UNORM;
                         Format = TEX_FORMAT.BC4_UNORM;
                         break;
                     case SurfaceFormat.T_BC4_SNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC4_SNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC4_SNORM;
                         Format = TEX_FORMAT.BC4_SNORM;
                         break;
                     case SurfaceFormat.T_BC5_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC5_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
                         Format = TEX_FORMAT.BC5_UNORM;
                         break;
                     case SurfaceFormat.T_BC5_SNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.T_BC5_SNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_SNORM;
                         Format = TEX_FORMAT.BC5_SNORM;
                         break;
                     case SurfaceFormat.TC_R8_G8_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.TC_R8_G8_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_G8_UNORM;
                         Format = TEX_FORMAT.R8G8_UNORM;
                         break;
                     case SurfaceFormat.TCS_R8_G8_B8_A8_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
                         Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         break;
                     case SurfaceFormat.TCS_R8_G8_B8_A8:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
                         Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         break;
                     case SurfaceFormat.TC_R8_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.TC_R8_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_UNORM;
                         Format = TEX_FORMAT.R8_UNORM;
                         break;
                     case SurfaceFormat.TCS_R5_G6_B5_UNORM:
-                        GX2Format = (uint)GTX.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
                         Format = TEX_FORMAT.B5G6R5_UNORM;
                         break;
                     default:
@@ -1344,9 +1344,9 @@ namespace FirstPlugin
 
                 int swizzle = (int)Swizzle;
                 int pitch = (int)0;
-                uint bpp = GTX.surfaceGetBitsPerPixel(GX2Format) >> 3;
+                uint bpp = GX2.surfaceGetBitsPerPixel(GX2Format) >> 3;
 
-                GTX.GX2Surface surf = new GTX.GX2Surface();
+                GX2.GX2Surface surf = new GX2.GX2Surface();
                 surf.bpp = bpp;
                 surf.height = Height;
                 surf.width = Width;
@@ -1365,7 +1365,7 @@ namespace FirstPlugin
                 surf.swizzle = Swizzle;
                 surf.imageSize = ImageSize;
 
-                var surfaces = GTX.Decode(surf);
+                var surfaces = GX2.Decode(surf);
                 return surfaces[ArrayLevel][MipLevel];
             }
 

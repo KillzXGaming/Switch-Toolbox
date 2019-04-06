@@ -17,59 +17,59 @@ namespace FirstPlugin
         {
             InitializeComponent();
 
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TC_R5_G5_B5_A1_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TC_R4_G4_B4_A4_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TC_R8_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.TC_R8_G8_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R5_G5_B5_A1_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R4_G4_B4_A4_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R8_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R8_G8_UNORM);
 
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC1_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC1_SRGB);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC2_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC2_SRGB);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC3_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC3_SRGB);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC4_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC4_SNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC5_UNORM);
-            formatComboBox.Items.Add(GTX.GX2SurfaceFormat.T_BC5_SNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC1_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC1_SRGB);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC2_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC2_SRGB);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC3_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC3_SRGB);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC4_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC4_SNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC5_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC5_SNORM);
 
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_DEFAULT);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_LINEAR_ALIGNED);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_1D_TILED_THIN1);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_1D_TILED_THICK);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2D_TILED_THIN1);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2D_TILED_THIN2);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2D_TILED_THIN4);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2D_TILED_THICK);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2B_TILED_THIN1);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2B_TILED_THIN2);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2B_TILED_THIN4);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_2B_TILED_THICK);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_3D_TILED_THIN1);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_3D_TILED_THICK);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_3B_TILED_THIN1);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_3B_TILED_THICK);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_LINEAR_SPECIAL);
-            tileModeCB.Items.Add(GTX.GX2TileMode.MODE_DEFAULT_FIX2197);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_DEFAULT);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_LINEAR_ALIGNED);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_1D_TILED_THIN1);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_1D_TILED_THICK);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2D_TILED_THIN1);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2D_TILED_THIN2);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2D_TILED_THIN4);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2D_TILED_THICK);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2B_TILED_THIN1);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2B_TILED_THIN2);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2B_TILED_THIN4);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_2B_TILED_THICK);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3D_TILED_THIN1);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3D_TILED_THICK);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3B_TILED_THIN1);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3B_TILED_THICK);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_LINEAR_SPECIAL);
+            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_DEFAULT_FIX2197);
 
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_1D);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_1D_ARRAY);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_2D);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_2D_ARRAY);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_2D_MSAA);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_2D_MSAA_ARRAY);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_3D);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_CUBE);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_FIRST);
-            ImgDimComb.Items.Add(GTX.GX2SurfaceDimension.DIM_LAST);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_1D);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_1D_ARRAY);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_2D);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_2D_ARRAY);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_2D_MSAA);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_2D_MSAA_ARRAY);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_3D);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_CUBE);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_FIRST);
+            ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_LAST);
 
-            ImgDimComb.SelectedItem = GTX.GX2SurfaceDimension.DIM_2D;
-            tileModeCB.SelectedItem = GTX.GX2TileMode.MODE_2D_TILED_THIN1;
-            formatComboBox.SelectedItem = GTX.GX2SurfaceFormat.T_BC1_SRGB;
+            ImgDimComb.SelectedItem = GX2.GX2SurfaceDimension.DIM_2D;
+            tileModeCB.SelectedItem = GX2.GX2TileMode.MODE_2D_TILED_THIN1;
+            formatComboBox.SelectedItem = GX2.GX2SurfaceFormat.T_BC1_SRGB;
         }
 
         public void LoadSupportedFormats(TEX_FORMAT[] Formats)
@@ -77,11 +77,11 @@ namespace FirstPlugin
             formatComboBox.Items.Clear();
             foreach (TEX_FORMAT format in Formats)
             {
-                var Gx2Format = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(format);
+                var Gx2Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(format);
                 formatComboBox.Items.Add(Gx2Format);
             }
 
-            var Gx2DefaultFormat = (GTX.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
+            var Gx2DefaultFormat = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
 
             if (formatComboBox.Items.Contains(Gx2DefaultFormat))
                 formatComboBox.SelectedItem = Gx2DefaultFormat;
@@ -113,15 +113,15 @@ namespace FirstPlugin
         private Thread Thread;
         public void SetupSettings()
         {
-            if (SelectedTexSettings.Format == GTX.GX2SurfaceFormat.INVALID)
+            if (SelectedTexSettings.Format == GX2.GX2SurfaceFormat.INVALID)
                 return;
 
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            if (formatComboBox.SelectedItem is GTX.GX2SurfaceFormat)
+            if (formatComboBox.SelectedItem is GX2.GX2SurfaceFormat)
             {
-                SelectedTexSettings.Format = (GTX.GX2SurfaceFormat)formatComboBox.SelectedItem;
+                SelectedTexSettings.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
                 listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
             }
             HeightLabel.Text = $"Height: {SelectedTexSettings.TexHeight}";

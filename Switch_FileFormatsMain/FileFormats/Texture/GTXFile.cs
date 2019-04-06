@@ -226,7 +226,7 @@ namespace FirstPlugin
                 TextureData tex = (TextureData)node;
 
                 tex.surface.data = data[curTex];
-                tex.surface.bpp = GTX.surfaceGetBitsPerPixel(tex.surface.format) >> 3;
+                tex.surface.bpp = GX2.surfaceGetBitsPerPixel(tex.surface.format) >> 3;
                 tex.Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)tex.surface.format);
                 tex.Width = tex.surface.width;
                 tex.Height = tex.surface.height;
@@ -408,7 +408,7 @@ namespace FirstPlugin
                 Console.WriteLine("  mip size        = " + surface.mipData.Length);
                 Console.WriteLine("  realSize        = " + surface.imageSize);
 
-                var surfaces = GTX.Decode(surface);
+                var surfaces = GX2.Decode(surface);
 
                 return surfaces[ArrayLevel][MipLevel];
             }
@@ -495,7 +495,7 @@ namespace FirstPlugin
                 editor.AddCustomControl(userDataEditor, typeof(UserDataEditor));
             }
         }
-        public class SurfaceInfoParse : GTX.GX2Surface
+        public class SurfaceInfoParse : GX2.GX2Surface
         {
 
             public void Read(FileReader reader)

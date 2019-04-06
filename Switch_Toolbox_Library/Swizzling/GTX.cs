@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Switch_Toolbox.Library
 {
-    public class GTX
+    public class GX2
     {
         //Some enums and parts from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
         public class GX2Surface
