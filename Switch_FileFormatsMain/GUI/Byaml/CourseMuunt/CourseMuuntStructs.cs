@@ -159,12 +159,14 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
 
         public List<LapPathGroup> LapPaths;
-
+        public List<EnemyPathGroup> EnemyPaths;
+        
         public CourseMuuntScene(dynamic rootNode)
         {
             root = rootNode;
 
             LapPaths = new List<LapPathGroup>();
+            EnemyPaths = new List<EnemyPathGroup>();
 
             if (root.ContainsKey("Area")) {
                 foreach (var area in root["Area"])
@@ -191,8 +193,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 { }
             }
             if (root.ContainsKey("EnemyPath")) {
-                foreach (var enemyPath in root["EnemyPath"])
-                { }
+                foreach (var enemyPath in root["EnemyPath"]) {
+                    EnemyPaths.Add(new EnemyPathGroup(enemyPath));
+                }
             }
             if (root.ContainsKey("GravityPath")) {
                 foreach (var gravityPath in root["GravityPath"])
@@ -270,116 +273,6 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         private dynamic root;
 
 
-    }
-
-    public class LapPathGroup : IObject
-    {
-        public const string N_LapPathGroup = "LapPathGroup";
-        public const string N_ReturnPointsError = "ReturnPointsError";
-        public const string N_UnitIdNum = "UnitIdNum";
-
-        public List<PathPoint> PathPoints = new List<PathPoint>();
-        public List<ReturnPoint> ReturnPoints = new List<ReturnPoint>();
-
-        public LapPathGroup(dynamic bymlNode)
-        {
-            if (bymlNode is Dictionary<string, dynamic>) Prop = (Dictionary<string, dynamic>)bymlNode;
-            else throw new Exception("Not a dictionary");
-
-            foreach (var point in this["PathPt"]) {
-                PathPoints.Add(new LapPatPoint(point));
-            }
-
-            foreach (var point in this["ReturnPoints"]) {
-                ReturnPoints.Add(new ReturnPoint(point));
-            }
-        }
-
-        [Browsable(false)]
-        public Dictionary<string, dynamic> Prop { get; set; } = new Dictionary<string, dynamic>();
-
-        public int LapPathGroupId
-        {
-            get { return this[N_LapPathGroup]; }
-            set { this[N_LapPathGroup] = value; }
-        }
-
-        public int ReturnPointsError
-        {
-            get { return this[N_ReturnPointsError]; }
-            set { this[N_ReturnPointsError] = value; }
-        }
-
-        public int UnitIdNum
-        {
-            get { return this[N_UnitIdNum]; }
-            set { this[N_UnitIdNum] = value; }
-        }
-
-        public dynamic this[string name]
-        {
-            get
-            {
-                if (Prop.ContainsKey(name)) return Prop[name];
-                else return null;
-            }
-            set
-            {
-                if (Prop.ContainsKey(name)) Prop[name] = value;
-                else Prop.Add(name, value);
-            }
-        }
-    }
-
-    public class LapPatPoint: PathPoint
-    {
-        [Category("Properties")]
-        public int CheckPoint
-        {
-            get { return this["CheckPoint"]; }
-            set { this["CheckPoint"] = value;}
-        }
-
-        [Category("Properties")]
-        public int ClipIdx
-        {
-            get { return this["ClipIdx"]; }
-            set { this["ClipIdx"] = value; }
-        }
-
-        [Category("Properties")]
-        public bool HeadLightSW
-        {
-            get { return this["HeadLightSW"]; }
-            set { this["HeadLightSW"] = value; }
-        }
-
-        [Category("Properties")]
-        public int LapCheck
-        {
-            get { return this["LapCheck"]; }
-            set { this["LapCheck"] = value; }
-        }
-
-        [Category("Properties")]
-        public int MapCameraFovy
-        {
-            get { return this["MapCameraFovy"]; }
-            set { this["MapCameraFovy"] = value; }
-        }
-
-        [Category("Properties")]
-        public int MapCameraY
-        {
-            get { return this["MapCameraY"]; }
-            set { this["MapCameraY"] = value; }
-        }
-
-        public LapPatPoint(dynamic bymlNode)
-        {
-            if (bymlNode is Dictionary<string, dynamic>) Prop = (Dictionary<string, dynamic>)bymlNode;
-            else throw new Exception("Not a dictionary");
-        }
     }
 
     public class PointID : IObject

@@ -330,9 +330,11 @@
     </Compile>
     <Compile Include="GUI\Byaml\CourseMuunt\CourseMuuntStructs.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\IObject.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\RenderablePathPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\ReturnPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\PathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\EnemyPaths.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\LapPaths.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\RenderablePathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\ReturnPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\PathPoint.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -8,6 +8,8 @@ using Switch_Toolbox.Library;
 using System.Windows.Forms;
 using FirstPlugin.Turbo.CourseMuuntStructs;
 using GL_EditorFramework.EditorDrawables;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace FirstPlugin.Forms
 {
@@ -72,10 +74,34 @@ namespace FirstPlugin.Forms
                 {
                     foreach (var path in group.PathPoints)
                     {
+                        path.OnPathMoved = OnPathMoved;
                         viewport.AddDrawable(path.RenderablePoint);
                     }
                 }
             }
+
+            if (scene.EnemyPaths.Count > 0)
+            {
+                objectCB.Items.Add("Enemy Paths");
+                var renderablePath = new RenderablePaths();
+                renderablePath.PathGroups = scene.EnemyPaths;
+                viewport.AddDrawable(renderablePath);
+
+                foreach (var group in scene.EnemyPaths)
+                {
+                    foreach (var path in group.PathPoints)
+                    {
+                        path.OnPathMoved = OnPathMoved;
+                        viewport.AddDrawable(path.RenderablePoint);
+                    }
+                }
+            }
+
+            
+        }
+
+        private void OnPathMoved() {
+            stPropertyGrid1.Refresh();
         }
 
         private void Scene_SelectionChanged(object sender, EventArgs e)
