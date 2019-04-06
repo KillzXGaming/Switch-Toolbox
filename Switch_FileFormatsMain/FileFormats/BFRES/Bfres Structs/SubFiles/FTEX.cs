@@ -50,6 +50,8 @@ namespace Bfres.Structs
             }
         }
 
+        bool IsReplaced = false;
+
         public override bool CanEdit { get; set; } = false;
 
         public int format;
@@ -149,13 +151,10 @@ namespace Bfres.Structs
                 {
                     var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
                     var tex = FromGx2Surface(surface, setting);
-                    if (texture == null)
-                        texture = new Texture();
-
                     UpdateTex(tex);
 
                     texture.Name = Text;
-                    IsEdited = true;
+                    IsReplaced = true;
                     Read(texture);
                     LoadOpenGLTexture();
                 }
@@ -182,7 +181,7 @@ namespace Bfres.Structs
             {
                 texture.Import(FileName, ((BFRESGroupNode)Parent).GetResFileU());
                 texture.Name = Text;
-                IsEdited = true;
+                IsReplaced = true;
                 Read(texture);
 
                 if (IsEditorActive())
@@ -215,7 +214,7 @@ namespace Bfres.Structs
                     var tex = FromGx2Surface(surface, setting);
                     UpdateTex(tex);
                     texture.Name = Text;
-                    IsEdited = true;
+                    IsReplaced = true;
                     Read(texture);
                     LoadOpenGLTexture();
                 }
@@ -238,7 +237,7 @@ namespace Bfres.Structs
                         var tex = FromGx2Surface(surface, setting);
                         UpdateTex(tex);
                         texture.Name = Text;
-                        IsEdited = true;
+                        IsReplaced = true;
                         Read(texture);
                         LoadOpenGLTexture();
                     }
@@ -389,10 +388,12 @@ namespace Bfres.Structs
             //Determine tex2 botw files to get mip maps
             string Tex1 = GetFilePath();
 
-            if (!IsEdited && Tex1 != null && Tex1.Contains(".Tex1"))
+            Console.WriteLine("IsEdited " + IsReplaced);
+
+            if (!IsReplaced && Tex1 != null && Tex1.Contains(".Tex1"))
             {
                 string Tex2 = Tex1.Replace(".Tex1", ".Tex2");
-                Console.WriteLine(Tex2 + " " + System.IO.File.Exists(Tex2));
+                Console.WriteLine(Tex2 + " " + System.IO.File.Exists(Tex2) + " " + texture.Name);
 
                 if (System.IO.File.Exists(Tex2))
                 {
