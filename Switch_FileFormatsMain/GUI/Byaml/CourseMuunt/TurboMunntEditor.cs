@@ -29,44 +29,47 @@ namespace FirstPlugin.Forms
         {
             string CourseFolder = System.IO.Path.GetDirectoryName(FilePath);
             scene = new CourseMuuntScene(by);
+
+            if (File.Exists($"{CourseFolder}/course_kcl.szs"))
+                scene.AddRenderableKcl($"{CourseFolder}/course_kcl.szs");
+            if (File.Exists($"{CourseFolder}/course.kcl"))
+                scene.AddRenderableKcl($"{CourseFolder}/course.kcl");
+
             if (File.Exists($"{CourseFolder}/course_model.szs"))
             {
           //      scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
-             //   scene.AddRenderableKcl($"{CourseFolder}/course.kcl");
 
                
-                foreach (var kcl in scene.KclObjects)
-                {
-                    viewport.AddDrawable(kcl.Renderer);
 
-                    kcl.Renderer.UpdateVertexData();
-                }
-
-                foreach (var bfres in scene.BfresObjects)
-                {
-                    viewport.AddDrawable(bfres.BFRESRender);
-
-                    bfres.BFRESRender.UpdateVertexData();
-                    bfres.BFRESRender.UpdateTextureMaps();
-                }
-                viewport.LoadObjects();
             }
+
+            foreach (var kcl in scene.KclObjects)
+            {
+                viewport.AddDrawable(kcl.Renderer);
+                kcl.Renderer.UpdateVertexData();
+            }
+
+            foreach (var bfres in scene.BfresObjects)
+            {
+                viewport.AddDrawable(bfres.BFRESRender);
+
+                bfres.BFRESRender.UpdateVertexData();
+                bfres.BFRESRender.UpdateTextureMaps();
+            }
+            viewport.AddDrawable(new GL_EditorFramework.EditorDrawables.SingleObject(new OpenTK.Vector3(0)));
+
+            viewport.LoadObjects();
 
             objectCB.Items.Add("Scene");
             objectCB.SelectedIndex = 0;
 
-            if (scene.LapPaths.Count > 0)
-            {
+            if (scene.LapPaths.Count > 0) {
                 objectCB.Items.Add("Lap Paths");
 
                 foreach (var group in scene.LapPaths)
                 {
                     foreach (var path in group.PathPoints)
                     {
-                        Console.WriteLine(path.Translate);
-                        Console.WriteLine(path.Rotate);
-                        Console.WriteLine(path.Scale);
-
                         viewport.AddDrawable(path.RenderablePoint);
                     }
                 }

@@ -59,8 +59,10 @@ namespace FirstPlugin
 
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save",null, Save, Keys.Control | Keys.S));
-          //  ContextMenuStrip.Items.Add(new STToolStipMenuItem("Unpack to Folder", null, UnpackToFolder, Keys.Control | Keys.E));
-        //    ContextMenuStrip.Items.Add(new STToolStipMenuItem("Pack From Folder", null, PackFromFolder, Keys.Control | Keys.R));
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename Actor Files (Odyssey)", null, RenameActors, Keys.Control | Keys.S));
+
+            //  ContextMenuStrip.Items.Add(new STToolStipMenuItem("Unpack to Folder", null, UnpackToFolder, Keys.Control | Keys.E));
+            //    ContextMenuStrip.Items.Add(new STToolStipMenuItem("Pack From Folder", null, PackFromFolder, Keys.Control | Keys.R));
             ContextMenuStrip.Items.Add(new STToolStripSeparator());
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Batch Texture Editor", null, PreviewTextures, Keys.Control | Keys.P));
             ContextMenuStrip.Items.Add(new STToolStripSeparator());
@@ -70,6 +72,34 @@ namespace FirstPlugin
             sarcData.Files.Clear();
         }
 
+        private void RenameActors(object sender, EventArgs args)
+        {
+            string ActorName = Path.GetFileNameWithoutExtension(Text);
+
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(ActorName);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string NewActorName = dialog.textBox1.Text;
+                Text = NewActorName + ".szs";
+
+                foreach (TreeNode node in Nodes)
+                {
+                    string NodeName = Path.GetFileNameWithoutExtension(node.Text);
+                    string ext = Utils.GetExtension(node.Text);
+                    if (NodeName == ActorName)
+                    {
+                        node.Text = $"{NewActorName}.{ext}";
+                    }
+                    else if (node.Text.Contains("Attribute.byml"))
+                    {
+                        node.Text = $"{NewActorName}Attribute.byml";
+                    }
+                }
+            }
+        }
+        
         private void UnpackToFolder(object sender, EventArgs args)
         {
 

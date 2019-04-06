@@ -571,8 +571,6 @@ namespace FirstPlugin
                 Matrix4.CreateScale(Runtime.previewScale) *
                 Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(position) : position));
 
-                defaultShaderProgram.EnableVertexAttributes();
-
                 SetRenderSettings(defaultShaderProgram);
 
                 Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
@@ -584,7 +582,6 @@ namespace FirstPlugin
                 GL.Uniform3(defaultShaderProgram["ambLightColor"], new Vector3(1));
 
                 defaultShaderProgram.EnableVertexAttributes();
-                SetRenderSettings(defaultShaderProgram);
 
                 foreach (KCLModel mdl in models)
                 {

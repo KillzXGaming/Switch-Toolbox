@@ -238,12 +238,6 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
 
 
-
-
-
-
-
-
         public List<BFRES> BfresObjects = new List<BFRES>();
         public List<KCL> KclObjects = new List<KCL>();
 
