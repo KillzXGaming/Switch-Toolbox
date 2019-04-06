@@ -1501,7 +1501,7 @@ namespace Switch_Toolbox.Library
 
             uint returnCode = 0;
 
-            uint width, height, bpp, elemMode;
+            uint width, height, bpp, elemMode = 0;
             uint expandY, expandX;
 
             if (pIn.bpp > 0x80)
@@ -1951,7 +1951,7 @@ namespace Switch_Toolbox.Library
             uint microTileBytes = (thickness * numSamples * (bpp << 6) + 7) >> 3;
             uint numSlicesPerMicroTilenumSlicesPerMicroTile = (microTileBytes < 2048 ? (uint)1 : microTileBytes / 2048);
 
-            baseAlign /= numSlicesPerMicroTile;
+            baseAlign /= numSlicesPerMicroTilenumSlicesPerMicroTile;
 
             return new Tuple<uint, uint, uint, uint, uint>(baseAlign, pitchAlign, heightAlign, macroTileWidth, macroTileHeight);
         }
@@ -2214,12 +2214,12 @@ namespace Switch_Toolbox.Library
             var aSurfIn = new surfaceIn();
             var pSurfOut = new surfaceOut();
 
-            hwFormat = surfaceFormat & 0x3F;
+            hwFormat = (uint)((int)surfaceFormat & 0x3F);
 
 
             if (surfaceTileMode == 16)
             {
-                numSamples = 1 << surfaceAA;
+                numSamples = (uint)(1 << (int)surfaceAA);
 
                 if (hwFormat < 0x31 || hwFormat > 0x35)
                     blockSize = 1;
@@ -2296,7 +2296,7 @@ namespace Switch_Toolbox.Library
                 aSurfIn.tileMode = surfaceTileMode & 0x0F;
                 aSurfIn.format = hwFormat;
                 aSurfIn.bpp = formatHwInfo[hwFormat * 4];
-                aSurfIn.numSamples = 1 << surfaceAA;
+                aSurfIn.numSamples = (uint)(1 << (int)surfaceAA);
                 aSurfIn.numFrags = aSurfIn.numSamples;
                 aSurfIn.width = (uint)Math.Max(1, surfaceWidth >> level);
                 dim = surfaceDim;
