@@ -497,12 +497,17 @@ namespace Switch_Toolbox.Library
             int mipDataOffset = 0;
             int TotalImageSize = tex.data.Length;
 
+            uint CurrentTileMode = tex.tileMode;
+
             List<List<byte[]>> result = new List<List<byte[]>>();
             for (int arrayLevel = 0; arrayLevel < tex.numArray; arrayLevel++)
             {
                 List<byte[]> mips = new List<byte[]>();
                 for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
                 {
+                    //Reset the tilemode if set from higher mip levels
+                    tex.tileMode = CurrentTileMode;
+
                     uint width_ = (uint)Math.Max(1, tex.width >> mipLevel);
                     uint height_ = (uint)Math.Max(1, tex.height >> mipLevel);
 
@@ -511,6 +516,23 @@ namespace Switch_Toolbox.Library
                     uint mipOffset;
                     if (mipLevel != 0)
                     {
+                        if (mipLevel >= 8)
+                        {
+                            switch (tex.tileMode)
+                            {
+                                case (uint)GTX.GX2TileMode.MODE_1D_TILED_THICK:
+                                case (uint)GTX.GX2TileMode.MODE_2B_TILED_THICK:
+                                case (uint)GTX.GX2TileMode.MODE_2D_TILED_THICK:
+                                case (uint)GTX.GX2TileMode.MODE_3B_TILED_THICK:
+                                case (uint)GTX.GX2TileMode.MODE_3D_TILED_THICK:
+                                    tex.tileMode = (uint)GTX.GX2TileMode.MODE_1D_TILED_THICK;
+                                    break;
+                                default:
+                                    tex.tileMode = (uint)GTX.GX2TileMode.MODE_1D_TILED_THIN1;
+                                    break;
+                            }
+                        }
+
                         mipOffset = (tex.mipOffset[mipLevel - 1]);
                         if (mipLevel == 1)
                             mipOffset -= (uint)surfInfo.surfSize;
