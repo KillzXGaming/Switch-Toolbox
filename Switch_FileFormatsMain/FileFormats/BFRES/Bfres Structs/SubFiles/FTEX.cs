@@ -418,6 +418,7 @@ namespace Bfres.Structs
                         surf.mipData = resFile2.Textures[texture.Name].MipData;
                         surf.mipOffset = resFile2.Textures[texture.Name].MipOffsets;
                         Tex2Swizzle = resFile2.Textures[texture.Name].Swizzle;
+                        surf.mip_swizzle = Tex2Swizzle;
                     }
                 }
             }

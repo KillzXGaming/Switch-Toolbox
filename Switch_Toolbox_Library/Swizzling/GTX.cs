@@ -27,6 +27,7 @@ namespace Switch_Toolbox.Library
             public uint mipPtr;
             public uint tileMode;
             public uint swizzle;
+            public uint mip_swizzle; //Used for botw Tex2
             public uint alignment;
             public uint pitch;
             public uint bpp;
@@ -513,6 +514,8 @@ namespace Switch_Toolbox.Library
                 List<byte[]> mips = new List<byte[]>();
                 for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
                 {
+                    uint swizzle = tex.swizzle;
+
                     uint width_ = (uint)Math.Max(1, tex.width >> mipLevel);
                     uint height_ = (uint)Math.Max(1, tex.height >> mipLevel);
 
@@ -521,6 +524,9 @@ namespace Switch_Toolbox.Library
                     uint mipOffset;
                     if (mipLevel != 0)
                     {
+                        if (tex.mip_swizzle != 0)
+                            swizzle = tex.mip_swizzle;
+
                         mipOffset = (tex.mipOffset[mipLevel - 1]);
                         if (mipLevel == 1)
                             mipOffset -= (uint)surfInfo.surfSize;
@@ -534,7 +540,7 @@ namespace Switch_Toolbox.Library
                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
 
                     byte[] deswizzled = deswizzle(width_, height_, surfInfo.depth, surfInfo.height, (uint)tex.format,
-                    surfInfo.tileMode, (uint)tex.swizzle, surfInfo.pitch, surfInfo.bpp, data, arrayLevel);
+                    surfInfo.tileMode, (uint)swizzle, surfInfo.pitch, surfInfo.bpp, data, arrayLevel);
                     //Create a copy and use that to remove uneeded data
                     byte[] result_ = new byte[size];
                     Array.Copy(deswizzled, 0, result_, 0, size);
