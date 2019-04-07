@@ -191,7 +191,7 @@ namespace FirstPlugin
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
-                SwizzleNum.Value = SelectedTexSettings.swizzle >> 8;
+                SwizzleNum.Value = SelectedTexSettings.swizzle;
             }
         }
 
@@ -260,7 +260,7 @@ namespace FirstPlugin
             this.SwizzleNum.ForeColor = System.Drawing.Color.White;
             this.SwizzleNum.Location = new System.Drawing.Point(877, 142);
             this.SwizzleNum.Maximum = new decimal(new int[] {
-            7,
+            99999,
             0,
             0,
             0});
@@ -438,6 +438,7 @@ namespace FirstPlugin
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Location = new System.Drawing.Point(237, 0);
