@@ -126,7 +126,7 @@ namespace Switch_Toolbox.Library
             {
                 foreach (var ctrl in Runtime.MainForm.ActiveMdiChild.Controls)
                 {
-                    if (type == null)
+                    if (type == null && type == typeof(UserControl))
                     {
                         return (UserControl)ctrl;
                     }
