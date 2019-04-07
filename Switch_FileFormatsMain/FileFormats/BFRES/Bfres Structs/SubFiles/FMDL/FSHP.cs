@@ -915,12 +915,17 @@ namespace Bfres.Structs
                 if (IsSingleBind)
                 {
                     if (BoneIndex >= skel.Node_Array.Length || BoneIndex == -1)
+                    {
+                        STConsole.WriteLine($"Invalid bone index to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
                         return position;
+                    }
 
                     var bone = skel.bones[skel.Node_Array[BoneIndex]];
 
                     if (trans.Determinant != 0)
                         trans = bone.invert;
+                    else
+                        STConsole.WriteLine($"Determinant for bone transform is 0 to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
                 }
                 else
                 {
@@ -928,6 +933,8 @@ namespace Bfres.Structs
 
                     if (trans.Determinant != 0)
                         trans = bone.invert;
+                    else
+                        STConsole.WriteLine($"Determinant for bone transform is 0 to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
                 }
 
                 if (IsPos)
@@ -954,6 +961,7 @@ namespace Bfres.Structs
             if (IsWiiU)
             {
                 BfresWiiU.SaveVertexBuffer(this);
+                BfresWiiU.ReadShapesVertices(this, ShapeU, VertexBufferU, GetParentModel());
                 return;
             }
 
@@ -1054,6 +1062,8 @@ namespace Bfres.Structs
             helpernx.Attributes = atrib;
             VertexBuffer = helpernx.ToVertexBuffer();
             VertexBuffer.VertexSkinCount = VertexSkinCount;
+
+            BfresSwitch.ReadShapesVertices(this, Shape, VertexBuffer, GetParentModel());
         }
 
         internal List<Syroot.Maths.Vector4F> verts = new List<Syroot.Maths.Vector4F>();
@@ -1088,6 +1098,8 @@ namespace Bfres.Structs
             weights.Clear();
             boneInd.Clear();
 
+            Console.WriteLine($"Mesh {Text} {VertexSkinCount}");
+
             foreach (Vertex vtx in vertices)
             {
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
@@ -1099,8 +1111,8 @@ namespace Bfres.Structs
                     vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
                     vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
                 }
-                //Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
-                //Console.WriteLine($"Index count {vtx.boneIds.Count}");
+           //     Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
+            //    Console.WriteLine($"Index count {vtx.boneIds.Count}");
 
 
                 verts.Add(new Syroot.Maths.Vector4F(vtx.pos.X, vtx.pos.Y, vtx.pos.Z, 1.0f));

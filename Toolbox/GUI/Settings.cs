@@ -372,6 +372,7 @@ namespace Toolbox
 
         private void boneXRayChk_CheckedChanged(object sender, EventArgs e) {
             Runtime.boneXrayDisplay = boneXRayChk.Checked;
+            UpdateViewportSettings();
         }
     }
 }
