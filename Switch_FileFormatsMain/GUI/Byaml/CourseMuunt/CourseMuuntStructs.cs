@@ -163,9 +163,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         public List<ItemPathGroup> ItemPaths;
         public List<GlidePathGroup> GlidePaths;
         public List<SteerAssistPathGroup> SteerAssistPaths;
-
-        
-
+       
         public CourseMuuntScene(dynamic rootNode)
         {
             root = rootNode;

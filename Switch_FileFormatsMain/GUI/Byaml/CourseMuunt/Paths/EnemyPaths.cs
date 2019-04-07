@@ -59,14 +59,16 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
     public class EnemyPathPoint : PathPoint
     {
+        private RenderablePathPoint renderablePoint;
+
         [Browsable(false)]
         public override RenderablePathPoint RenderablePoint
         {
             get
             {
-                var point = new RenderablePathPoint(new Vector4(1f, 0f, 0f, 1f), Translate, Rotate, new OpenTK.Vector3(30), this);
-                point.CanConnect = true;
-                return point;
+                if (renderablePoint == null)
+                    renderablePoint = new RenderablePathPoint(new Vector4(1f, 0f, 0f, 1f), Translate, Rotate, new OpenTK.Vector3(30), this);
+                return renderablePoint;
             }
         }
 

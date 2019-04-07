@@ -62,14 +62,16 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
     public class GlidePathPoint : PathPoint
     {
+        private RenderablePathPoint renderablePoint;
+
         [Browsable(false)]
         public override RenderablePathPoint RenderablePoint
         {
             get
             {
-                var point = new RenderablePathPoint(ColorUtility.ToVector4(Color.FromArgb(252, 93, 11)), Translate, Rotate, new OpenTK.Vector3(30), this);
-                point.CanConnect = true;
-                return point;
+                if (renderablePoint == null)
+                    renderablePoint = new RenderablePathPoint(ColorUtility.ToVector4(Color.FromArgb(252, 93, 11)), Translate, Rotate, new OpenTK.Vector3(30), this);
+                return renderablePoint;
             }
         }
 
