@@ -163,7 +163,7 @@ namespace Switch_Toolbox.Library
                     string path = System.IO.Path.Combine(TexturePath, tex.Name + TextureExtension);
 
                     if (!File.Exists(path))
-                        throw new Exception("Texture not found to map");
+                        continue;
 
                     TextureSlot slot = new TextureSlot();
                     slot.FilePath = path;

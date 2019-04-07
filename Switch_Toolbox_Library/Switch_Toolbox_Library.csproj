@@ -423,6 +423,9 @@
     <Compile Include="Forms\Editors\UV\UVEditor.Designer.cs">
       <DependentUpon>UVEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GL\GLControl2D.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\PropertyBinding.cs" />
     <Compile Include="Forms\STConsole.cs">
       <SubType>Component</SubType>
@@ -710,6 +713,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditor.resx">
       <DependentUpon>UVEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GL\GLControl2D.resx">
+      <DependentUpon>GLControl2D.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Viewport.resx">
       <DependentUpon>Viewport.cs</DependentUpon>

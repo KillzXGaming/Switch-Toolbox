@@ -190,14 +190,12 @@ namespace FirstPlugin
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
-                SwizzleNum.Value = SelectedTexSettings.swizzle;
+                SwizzleNum.Value = (SelectedTexSettings.swizzle >> 8) & 7;
             }
         }
 
-
-        private void SwizzleNum_ValueChanged(object sender, EventArgs e)
-        {
-            SelectedTexSettings.swizzle = (uint)SwizzleNum.Value;
+        private void SwizzleNum_ValueChanged(object sender, EventArgs e) {
+            SelectedTexSettings.swizzle |= (uint)SwizzleNum.Value << 8;
         }
 
 
@@ -259,7 +257,7 @@ namespace FirstPlugin
             this.SwizzleNum.ForeColor = System.Drawing.Color.White;
             this.SwizzleNum.Location = new System.Drawing.Point(877, 142);
             this.SwizzleNum.Maximum = new decimal(new int[] {
-            99999,
+            7,
             0,
             0,
             0});
@@ -352,6 +350,7 @@ namespace FirstPlugin
             this.MipmapNum.Name = "MipmapNum";
             this.MipmapNum.Size = new System.Drawing.Size(130, 16);
             this.MipmapNum.TabIndex = 36;
+            this.MipmapNum.ValueChanged += new System.EventHandler(this.MipmapNum_ValueChanged);
             // 
             // WidthLabel
             // 
@@ -499,5 +498,10 @@ namespace FirstPlugin
         private System.Windows.Forms.ColumnHeader Format;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+
+        private void MipmapNum_ValueChanged(object sender, EventArgs e) {
+            if (SelectedTexSettings != null)
+                SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+        }
     }
 }
