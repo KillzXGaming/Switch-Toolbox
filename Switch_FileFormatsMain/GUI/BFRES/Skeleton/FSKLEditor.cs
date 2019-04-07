@@ -25,6 +25,7 @@ namespace FirstPlugin.Forms
         }
 
         public FSKL activeSkeleton;
+        bool IsLoaded = false;
 
         public void LoadSkeleton(FSKL fskl)
         {
@@ -32,18 +33,22 @@ namespace FirstPlugin.Forms
 
             if (fskl.node.SkeletonU != null)
             {
-                rotationModeCB.Bind(typeof(ResU.SkeletonFlagsRotation), fskl.node.SkeletonU, "FlagsRotation");
-                scalingModeCB.Bind(typeof(ResU.SkeletonFlagsScaling), fskl.node.SkeletonU, "FlagsScaling");
+                Console.WriteLine("FlagsScaling " + fskl.node.SkeletonU.FlagsScaling);
+                rotationModeCB.DataSource = Enum.GetValues(typeof(ResU.SkeletonFlagsRotation));
+                scalingModeCB.DataSource = Enum.GetValues(typeof(ResU.SkeletonFlagsScaling));
                 rotationModeCB.SelectedItem = fskl.node.SkeletonU.FlagsRotation;
                 scalingModeCB.SelectedItem = fskl.node.SkeletonU.FlagsScaling;
+                Console.WriteLine("FlagsScaling " + fskl.node.SkeletonU.FlagsScaling);
             }
             else
             {
-                rotationModeCB.Bind(typeof(SkeletonFlagsRotation), fskl.node.Skeleton, "FlagsRotation");
-                scalingModeCB.Bind(typeof(SkeletonFlagsScaling), fskl.node.Skeleton, "FlagsScaling");
+                rotationModeCB.DataSource = Enum.GetValues(typeof(SkeletonFlagsRotation));
+                scalingModeCB.DataSource = Enum.GetValues(typeof(SkeletonFlagsScaling));
                 rotationModeCB.SelectedItem = fskl.node.Skeleton.FlagsRotation;
                 scalingModeCB.SelectedItem = fskl.node.Skeleton.FlagsScaling;
             }
+
+            IsLoaded = true;
         }
 
         private void btnRgidIndices_Click(object sender, EventArgs e)
@@ -88,6 +93,9 @@ namespace FirstPlugin.Forms
 
         private void ModeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!IsLoaded)
+                return;
+
             if (activeSkeleton.node.SkeletonU != null)
             {
                 activeSkeleton.node.SkeletonU.FlagsRotation = (ResU.SkeletonFlagsRotation)rotationModeCB.SelectedItem;

@@ -58,7 +58,8 @@ namespace FirstPlugin
 
                 rotModeCB.SelectedItem = bone.FlagsRotation;
 
-                billboardModeCB.Bind(typeof(BoneFlagsBillboard), bone, "FlagsBillboard");
+                billboardModeCB.DataSource = Enum.GetValues(typeof(ResU.BoneFlagsBillboard));
+                billboardModeCB.SelectedItem = bone.FlagsBillboard;
 
                 billboardIndexUD.Value = bone.BillboardIndex;
                 smoothIndexUD.Value = bone.SmoothMatrixIndex;
@@ -89,8 +90,8 @@ namespace FirstPlugin
                 rotModeCB.DataSource = Enum.GetValues(typeof(BoneFlagsRotation));
                 rotModeCB.SelectedItem = bone.FlagsRotation;
 
-                billboardModeCB.Bind(typeof(BoneFlagsBillboard), bone, "FlagsBillboard");
-
+                billboardModeCB.DataSource = Enum.GetValues(typeof(ResU.BoneFlagsBillboard));
+                billboardModeCB.SelectedItem = bone.FlagsBillboard;
 
                 billboardIndexUD.Bind(bone, "BillboardIndex");
                 smoothIndexUD.Bind(bone, "SmoothMatrixIndex");
