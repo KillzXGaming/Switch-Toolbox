@@ -130,9 +130,23 @@ namespace Switch_Toolbox.Library
                     {
                         return (UserControl)ctrl;
                     }
-                    if (ctrl.GetType() == type)
+                    else if (ctrl.GetType() == type)
                     {
                         return (UserControl)ctrl;
+                    }
+                    else
+                    {
+                        Console.WriteLine(ctrl);
+
+                        foreach (var inter in ctrl.GetType().GetInterfaces())
+                        {
+                            Console.WriteLine(inter);
+
+                            if (inter.IsGenericType && inter.GetGenericTypeDefinition() == type)
+                            {
+                                return (UserControl)ctrl;
+                            }
+                        }
                     }
                 }
             }

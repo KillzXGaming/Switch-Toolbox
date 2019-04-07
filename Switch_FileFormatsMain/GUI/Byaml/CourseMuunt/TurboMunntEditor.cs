@@ -201,25 +201,42 @@ namespace FirstPlugin.Forms
             }
 
             if (newSelection.Count > 0)
+            {
                 viewport.scene.SelectedObjects = newSelection;
+                viewport.UpdateViewport();
+            }
         }
 
+        bool IsParentChecked = false;
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e) {
-            if (!IsLoaded)
+            if (!IsLoaded || IsParentChecked)
                 return;
 
-            if (e.Node is PathPointNode)
-                ((PathPointNode)e.Node).OnChecked(e.Node.Checked);
-
+            IsParentChecked = true;
             CheckChildNodes(e.Node, e.Node.Checked);
+            IsParentChecked = false; //Update viewport on the last node checked
+
+            viewport.UpdateViewport();
         }
 
         private void CheckChildNodes(TreeNode node, bool IsChecked)
         {
+            OnNodeChecked(node, IsChecked);
             foreach (TreeNode n in node.Nodes)
             {
                 n.Checked = IsChecked;
+                OnNodeChecked(n, IsChecked);
+                if (n.Nodes.Count > 0)
+                {
+                    CheckChildNodes(n, IsChecked);
+                }
             }
+        }
+
+        private void OnNodeChecked(TreeNode node, bool IsChecked)
+        {
+            if (node is PathPointNode)
+                ((PathPointNode)node).OnChecked(IsChecked);
         }
     }
 }

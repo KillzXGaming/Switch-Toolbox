@@ -101,6 +101,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             {
                 foreach (var path in group.PathPoints)
                 {
+                    if (!path.RenderablePoint.IsVisable)
+                        continue;
+
                     if (Use4PointConnection)
                     {
                         for (int i = 0; i < 4; i++)
