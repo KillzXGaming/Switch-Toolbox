@@ -15,7 +15,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         {
             get
             {
-                var point = new RenderablePathPoint(Translate, Rotate, Scale, this);
+                var point = new RenderablePathPoint(new Vector4(0f, 0.25f, 1f, 1f), Translate, Rotate, Scale, this);
                 return point;
             }
         }

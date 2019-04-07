@@ -10,9 +10,20 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
     public class RenderableConnectedPaths : AbstractGlDrawable
     {
+        public Color LineColor = Color.Green;
+
+        public RenderableConnectedPaths(Color color) {
+            LineColor = color;
+        }
+
+        //Lap paths use 4 points for each rectangle
+        //This also applies to gravity paths
+        public bool Use4PointConnection = false;
+
         private static ShaderProgram defaultShaderProgram;
 
         public List<PathGroup> PathGroups = new List<PathGroup>();
+
 
         public void AddGroup(PathGroup group)
         {
@@ -60,7 +71,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                     GL.LineWidth(2f);
                     foreach (var nextPt in path.NextPoints)
                     {
-                        GL.Color3(Color.Blue);
+                        GL.Color3(LineColor);
                         GL.Begin(PrimitiveType.Lines);
                         GL.Vertex3(path.Translate);
                         GL.Vertex3(PathGroups[nextPt.PathID].PathPoints[nextPt.PtID].Translate);
@@ -68,7 +79,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                     }
                     foreach (var prevPt in path.PrevPoints)
                     {
-                        GL.Color3(Color.Blue);
+                        GL.Color3(LineColor);
                         GL.Begin(PrimitiveType.Lines);
                         GL.Vertex3(path.Translate);
                         GL.Vertex3(PathGroups[prevPt.PathID].PathPoints[prevPt.PtID].Translate);
@@ -86,22 +97,32 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             {
                 foreach (var path in group.PathPoints)
                 {
-                    GL.LineWidth(2f);
-                    foreach (var nextPt in path.NextPoints)
+                    if (Use4PointConnection)
                     {
-                        GL.Color3(Color.Blue);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(path.Translate);
-                        GL.Vertex3(PathGroups[nextPt.PathID].PathPoints[nextPt.PtID].Translate);
-                        GL.End();
+                        for (int i = 0; i < 4; i++)
+                        {
+
+                        }
                     }
-                    foreach (var prevPt in path.PrevPoints)
+                    else
                     {
-                        GL.Color3(Color.Blue);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(path.Translate);
-                        GL.Vertex3(PathGroups[prevPt.PathID].PathPoints[prevPt.PtID].Translate);
-                        GL.End();
+                        GL.LineWidth(2f);
+                        foreach (var nextPt in path.NextPoints)
+                        {
+                            GL.Color3(LineColor);
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3(path.Translate);
+                            GL.Vertex3(PathGroups[nextPt.PathID].PathPoints[nextPt.PtID].Translate);
+                            GL.End();
+                        }
+                        foreach (var prevPt in path.PrevPoints)
+                        {
+                            GL.Color3(LineColor);
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3(path.Translate);
+                            GL.Vertex3(PathGroups[prevPt.PathID].PathPoints[prevPt.PtID].Translate);
+                            GL.End();
+                        }
                     }
                 }
             }

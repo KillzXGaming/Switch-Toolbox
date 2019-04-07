@@ -31,10 +31,12 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override bool IsSelected(int partIndex) => Selected;
 
-        protected static Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
+        public Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
 
-        public RenderablePathPoint(Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject) {
+        public RenderablePathPoint(Vector4 color, Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject) {
             NodeObject = nodeObject;
+
+            Color = color;
             UpdateTransform(pos, rot, sca);
         }
 

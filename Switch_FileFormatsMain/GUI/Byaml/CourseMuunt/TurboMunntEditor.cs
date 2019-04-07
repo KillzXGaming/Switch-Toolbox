@@ -73,19 +73,19 @@ namespace FirstPlugin.Forms
             treeView1.Nodes.Add("Scene");
 
             if (scene.EnemyPaths.Count > 0) {
-                AddPathDrawable("Enemy Path", scene.EnemyPaths);
+                AddPathDrawable("Enemy Path", scene.EnemyPaths, Color.Red);
             }
             if (scene.EnemyPaths.Count > 0) {
-                AddPathDrawable("Lap Path", scene.LapPaths, false);
+                AddPathDrawable("Lap Path", scene.LapPaths,Color.Blue, false);
             }
 
             IsLoaded = true;
         }
 
-        private void AddPathDrawable(string Name, IEnumerable<PathGroup> Groups, bool CanConnect = true)
+        private void AddPathDrawable(string Name, IEnumerable<PathGroup> Groups, Color color, bool CanConnect = true)
         {
             //Create a connectable object to connect each point
-            var renderablePathConnected = new RenderableConnectedPaths();
+            var renderablePathConnected = new RenderableConnectedPaths(color);
 
             if (CanConnect) {
                 viewport.AddDrawable(renderablePathConnected);

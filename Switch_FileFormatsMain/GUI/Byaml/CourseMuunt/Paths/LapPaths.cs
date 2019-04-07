@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
+using GL_EditorFramework.EditorDrawables;
+using OpenTK;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
@@ -68,6 +70,17 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
     public class LapPathPoint : PathPoint
     {
+
+        [Browsable(false)]
+        public override RenderablePathPoint RenderablePoint
+        {
+            get
+            {
+                var point = new RenderablePathPoint(new Vector4(0f, 0.25f, 1f, 0.1f), Translate, Rotate, Scale, this);
+                return point;
+            }
+        }
+
         [Category("Properties")]
         public int CheckPoint
         {
