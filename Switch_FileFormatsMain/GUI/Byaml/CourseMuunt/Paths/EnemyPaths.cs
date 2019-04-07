@@ -32,13 +32,13 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         public int EnemyPathGroupId
         {
-            get { return this[N_EnemyPathGroup]; }
+            get { return this[N_EnemyPathGroup] != null ? this[N_EnemyPathGroup] : -1; }
             set { this[N_EnemyPathGroup] = value; }
         }
 
         public int UnitIdNum
         {
-            get { return this[N_UnitIdNum]; }
+            get { return this[N_UnitIdNum] != null ? this[N_UnitIdNum] : -1; }
             set { this[N_UnitIdNum] = value; }
         }
 
@@ -75,14 +75,14 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [Category("Properties")]
         public int BattleFlag
         {
-            get { return this["BattleFlag"]; }
+            get { return this["BattleFlag"] != null ? this["BattleFlag"] : -1; }
             set { this["BattleFlag"] = value; }
         }
 
         [Category("Properties")]
         public int Priority
         {
-            get { return this["Priority"]; }
+            get { return this["Priority"] != null ? this["Priority"] : -1; }
             set { this["Priority"] = value; }
         }
 

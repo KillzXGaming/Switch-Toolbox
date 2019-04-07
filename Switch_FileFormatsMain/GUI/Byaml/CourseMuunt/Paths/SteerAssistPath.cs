@@ -23,7 +23,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
             foreach (var point in this["PathPt"])
             {
-                PathPoints.Add(new EnemyPathPoint(point));
+                PathPoints.Add(new SteerAssistPathPoint(point));
             }
         }
 

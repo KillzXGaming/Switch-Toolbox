@@ -24,7 +24,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
             foreach (var point in this["PathPt"])
             {
-                PathPoints.Add(new EnemyPathPoint(point));
+                PathPoints.Add(new GlidePathPoint(point));
             }
 
             ConnectGroups = false;
@@ -78,28 +78,28 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [Category("Properties")]
         public int GlideType
         {
-            get { return this["GlideType"]; }
+            get { return (this["GlideType"] != null) ? this["GlideType"] : -1; }
             set { this["GlideType"] = value; }
         }
 
         [Category("Properties")]
         public bool IsUp
         {
-            get { return this["IsUp"]; }
+            get { return (this["IsUp"] != null) ? this["IsUp"] : false; }
             set { this["IsUp"] = value; }
         }
 
         [Category("Properties")]
         public int Ascend
         {
-            get { return this["Ascend"]; }
+            get { return (this["Ascend"] != null) ? this["Ascend"] : -1; }
             set { this["Ascend"] = value; }
         }
 
         [Category("Properties")]
         public bool Cannon
         {
-            get { return this["Cannon"]; }
+            get { return (this["Cannon"] != null) ? this["Cannon"] : false; }
             set { this["Cannon"] = value; }
         }
 

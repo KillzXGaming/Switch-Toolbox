@@ -53,7 +53,15 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [Category("Transform")]
         public Vector3 Rotate
         {
-            get { return new Vector3(this[N_Rotate]["X"], this[N_Rotate]["Y"], this[N_Rotate]["Z"]); ; }
+            get {
+                if (this[N_Rotate] == null)
+                    return new Vector3(0, 0, 0);
+
+                return new Vector3(
+               this[N_Rotate]["X"] != null ? this[N_Rotate]["X"] : 0,
+               this[N_Rotate]["Y"] != null ? this[N_Rotate]["Y"] : 0,
+               this[N_Rotate]["Z"] != null ? this[N_Rotate]["Z"] : 0);
+            }
             set
             {
                 this[N_Rotate]["X"] = value.X;
@@ -65,7 +73,16 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [Category("Transform")]
         public Vector3 Scale
         {
-            get { return new Vector3(this[N_Scale]["X"], this[N_Scale]["Y"], this[N_Scale]["Z"]); ; }
+            get
+            {
+                if (this[N_Scale] == null)
+                    return new Vector3(1, 1, 1);
+
+                return new Vector3(
+               this[N_Scale]["X"] != null ? this[N_Scale]["X"] : 1,
+               this[N_Scale]["Y"] != null ? this[N_Scale]["Y"] : 1,
+               this[N_Scale]["Z"] != null ? this[N_Scale]["Z"] : 1);
+            }
             set
             {
                 if (this[N_Scale] != null)
@@ -80,7 +97,16 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [Category("Transform")]
         public Vector3 Translate
         {
-            get { return new Vector3(this[N_Translate]["X"], this[N_Translate]["Y"], this[N_Translate]["Z"]); ; }
+            get
+            {
+                if (this[N_Translate] == null)
+                    return new Vector3(0, 0, 0);
+
+                return new Vector3(
+                 this[N_Translate]["X"] != null ? this[N_Translate]["X"] : 0,
+                 this[N_Translate]["Y"] != null ? this[N_Translate]["Y"] : 0,
+                 this[N_Translate]["Z"] != null ? this[N_Translate]["Z"] : 0);
+            }
             set
             {
                 this[N_Translate]["X"] = value.X;

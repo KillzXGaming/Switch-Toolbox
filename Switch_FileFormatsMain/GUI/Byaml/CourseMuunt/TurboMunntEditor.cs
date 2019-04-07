@@ -16,6 +16,8 @@ namespace FirstPlugin.Forms
     public partial class TurboMunntEditor : UserControl, IViewportContainer
     {
         Viewport viewport;
+        GLControl2D viewport2D;
+
         bool IsLoaded = false;
 
         public TurboMunntEditor()
@@ -31,6 +33,10 @@ namespace FirstPlugin.Forms
             viewport.Dock = DockStyle.Fill;
             viewport.scene.SelectionChanged += Scene_SelectionChanged;
             stPanel4.Controls.Add(viewport);
+
+       //     viewport2D = new GLControl2D();
+        //    viewport2D.Dock = DockStyle.Fill;
+          //  stPanel3.Controls.Add(viewport2D);
         }
 
 
