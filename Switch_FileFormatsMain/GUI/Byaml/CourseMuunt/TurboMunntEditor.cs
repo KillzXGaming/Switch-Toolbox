@@ -75,9 +75,19 @@ namespace FirstPlugin.Forms
             if (scene.EnemyPaths.Count > 0) {
                 AddPathDrawable("Enemy Path", scene.EnemyPaths, Color.Red);
             }
-            if (scene.EnemyPaths.Count > 0) {
+            if (scene.LapPaths.Count > 0) {
                 AddPathDrawable("Lap Path", scene.LapPaths,Color.Blue, false);
             }
+            if (scene.GlidePaths.Count > 0) {
+                AddPathDrawable("Glide Path", scene.GlidePaths, Color.Orange);
+            }
+            if (scene.ItemPaths.Count > 0) {
+                AddPathDrawable("Item Path", scene.ItemPaths, Color.Yellow);
+            }
+            if (scene.SteerAssistPaths.Count > 0) {
+                AddPathDrawable("Steer Assist Path", scene.SteerAssistPaths, Color.Green);
+            }
+            
 
             IsLoaded = true;
         }

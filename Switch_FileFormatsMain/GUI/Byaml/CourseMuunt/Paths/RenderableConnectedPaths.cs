@@ -5,6 +5,7 @@ using GL_EditorFramework.Interfaces;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using System.Drawing;
+using Switch_Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
@@ -40,9 +41,11 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         public override void Prepare(GL_ControlModern control)
         {
             var defaultFrag = new FragmentShader(
-      @"#version 330
+               @"#version 330
+                vec4 LineColor;
+
 				void main(){
-					gl_FragColor = vec4(0,1,0,1);
+					gl_FragColor = LineColor;
 				}");
 
             var defaultVert = new VertexShader(
@@ -92,6 +95,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         public override void Draw(GL_ControlModern control, Pass pass)
         {
             control.CurrentShader = defaultShaderProgram;
+            defaultShaderProgram.SetVector4("LineColor", ColorUtility.ToVector4(LineColor));
 
             foreach (var group in PathGroups)
             {

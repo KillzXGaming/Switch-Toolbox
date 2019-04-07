@@ -70,7 +70,6 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
     public class LapPathPoint : PathPoint
     {
-
         [Browsable(false)]
         public override RenderablePathPoint RenderablePoint
         {

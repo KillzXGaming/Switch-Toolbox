@@ -160,13 +160,21 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         public List<LapPathGroup> LapPaths;
         public List<EnemyPathGroup> EnemyPaths;
+        public List<ItemPathGroup> ItemPaths;
+        public List<GlidePathGroup> GlidePaths;
+        public List<SteerAssistPathGroup> SteerAssistPaths;
+
         
+
         public CourseMuuntScene(dynamic rootNode)
         {
             root = rootNode;
 
             LapPaths = new List<LapPathGroup>();
             EnemyPaths = new List<EnemyPathGroup>();
+            GlidePaths = new List<GlidePathGroup>();
+            ItemPaths = new List<ItemPathGroup>();
+            SteerAssistPaths = new List<SteerAssistPathGroup>();
 
             if (root.ContainsKey("Area")) {
                 foreach (var area in root["Area"])
@@ -192,9 +200,19 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 foreach (var effectArea in root["EffectArea"])
                 { }
             }
+            if (root.ContainsKey("ItemPath")) {
+                foreach (var itemPath in root["ItemPath"]) {
+                    ItemPaths.Add(new ItemPathGroup(itemPath));
+                }
+            }
             if (root.ContainsKey("EnemyPath")) {
                 foreach (var enemyPath in root["EnemyPath"]) {
                     EnemyPaths.Add(new EnemyPathGroup(enemyPath));
+                }
+            }
+            if (root.ContainsKey("GlidePath")) {
+                foreach (var glidePath in root["GlidePath"]) {
+                    GlidePaths.Add(new GlidePathGroup(glidePath));
                 }
             }
             if (root.ContainsKey("GravityPath")) {
@@ -237,6 +255,11 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             if (root.ContainsKey("SoundObj")) {
                 foreach (var soundObj in root["SoundObj"])
                 { }
+            }
+            if (root.ContainsKey("SteerAssistPath")) {
+                foreach (var steerAssistPath in root["SteerAssistPath"]) {
+                    SteerAssistPaths.Add(new SteerAssistPathGroup(steerAssistPath));
+                }
             }
         }
 
