@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class LapPathGroup : IObject
+    public class LapPathGroup : PathGroup, IObject
     {
         public const string N_LapPathGroup = "LapPathGroup";
         public const string N_ReturnPointsError = "ReturnPointsError";
         public const string N_UnitIdNum = "UnitIdNum";
 
-        public List<PathPoint> PathPoints = new List<PathPoint>();
         public List<ReturnPoint> ReturnPoints = new List<ReturnPoint>();
 
         public LapPathGroup(dynamic bymlNode)

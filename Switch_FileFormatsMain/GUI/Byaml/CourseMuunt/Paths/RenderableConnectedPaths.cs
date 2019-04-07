@@ -54,6 +54,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             {
                 foreach (var path in group.PathPoints)
                 {
+                    if (!path.RenderablePoint.IsVisable)
+                        continue;
+
                     GL.LineWidth(2f);
                     foreach (var nextPt in path.NextPoints)
                     {

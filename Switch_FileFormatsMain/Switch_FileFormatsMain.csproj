@@ -343,6 +343,9 @@
     <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.Designer.cs">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathCollectionNode.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathGroupNode.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathPointNode.cs" />
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>UserControl</SubType>

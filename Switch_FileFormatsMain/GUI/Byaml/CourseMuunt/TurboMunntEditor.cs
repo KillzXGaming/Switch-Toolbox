@@ -16,12 +16,16 @@ namespace FirstPlugin.Forms
     public partial class TurboMunntEditor : UserControl
     {
         Viewport viewport;
+        bool IsLoaded = false;
 
         public TurboMunntEditor()
         {
             InitializeComponent();
 
             stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
+
+            treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
+            treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
             viewport = new Viewport();
             viewport.Dock = DockStyle.Fill;
@@ -66,42 +70,51 @@ namespace FirstPlugin.Forms
 
             viewport.LoadObjects();
 
-            objectCB.Items.Add("Scene");
-            objectCB.SelectedIndex = 0;
+            treeView1.Nodes.Add("Scene");
 
-            if (scene.LapPaths.Count > 0) {
-                objectCB.Items.Add("Lap Paths");
-
-                foreach (var group in scene.LapPaths)
-                {
-                    foreach (var path in group.PathPoints)
-                    {
-                        path.OnPathMoved = OnPathMoved;
-                        viewport.AddDrawable(path.RenderablePoint);
-                    }
-                }
+            if (scene.EnemyPaths.Count > 0) {
+                AddPathDrawable("Enemy Path", scene.EnemyPaths);
+            }
+            if (scene.EnemyPaths.Count > 0) {
+                AddPathDrawable("Lap Path", scene.LapPaths, false);
             }
 
-            if (scene.EnemyPaths.Count > 0)
+            IsLoaded = true;
+        }
+
+        private void AddPathDrawable(string Name, IEnumerable<PathGroup> Groups, bool CanConnect = true)
+        {
+            //Create a connectable object to connect each point
+            var renderablePathConnected = new RenderableConnectedPaths();
+
+            if (CanConnect) {
+                viewport.AddDrawable(renderablePathConnected);
+            }
+
+            //Load a node wrapper to the tree
+            var pathNode = new PathCollectionNode(Name);
+            treeView1.Nodes.Add(pathNode);
+
+            int groupIndex = 0;
+            foreach (var group in Groups)
             {
-                objectCB.Items.Add("Enemy Paths");
-                var renderablePath = new RenderableConnectedPaths();
-                foreach (var group in scene.EnemyPaths)
-                    renderablePath.AddGroup(group);
+                if (CanConnect)
+                    renderablePathConnected.AddGroup(group);
 
-                viewport.AddDrawable(renderablePath);
+                var groupNode = new PathGroupNode($"{Name} Group{groupIndex++}");
+                pathNode.Nodes.Add(groupNode);
 
-                foreach (var group in scene.EnemyPaths)
+                int pointIndex = 0;
+                foreach (var path in group.PathPoints)
                 {
-                    foreach (var path in group.PathPoints)
-                    {
-                        path.OnPathMoved = OnPathMoved;
-                        viewport.AddDrawable(path.RenderablePoint);
-                    }
+                    var pontNode = new PathPointNode($"{Name} Point{pointIndex++}");
+                    pontNode.PathPoint = path;
+                    groupNode.Nodes.Add(pontNode);
+
+                    path.OnPathMoved = OnPathMoved;
+                    viewport.AddDrawable(path.RenderablePoint);
                 }
             }
-
-            
         }
 
         private void OnPathMoved() {
@@ -119,39 +132,6 @@ namespace FirstPlugin.Forms
             }
         }
 
-
-        private void objectCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (objectCB.SelectedIndex >= 0)
-            {
-                string Text = objectCB.GetSelectedText();
-
-                treeViewCustom1.Nodes.Clear();
-                if (Text == "Scene")
-                {
-                    stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
-                }
-                else if (Text == "Lap Paths")
-                {
-                    stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
-
-                    for (int i = 0; i < scene.LapPaths.Count; i++)
-                    {
-                        TreeNode group = new TreeNode("Lap Path Group " + i);
-                        treeViewCustom1.Nodes.Add(group);
-                        for (int p = 0; p < scene.LapPaths[i].PathPoints.Count; p++)
-                        {
-                            group.Nodes.Add("Lap Path Point " + p);
-                        }
-                    }
-                }
-                else
-                {
-                    stPropertyGrid1.LoadProperty(null, OnPropertyChanged);
-                }
-            }
-        }
-
         private void OnPropertyChanged()
         {
 
@@ -160,6 +140,58 @@ namespace FirstPlugin.Forms
         private void viewIntroCameraToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            List<EditableObject> newSelection = new List<EditableObject>();
+
+            TreeNode node = treeView1.SelectedNode;
+            if (node == null)
+                return;
+
+            if (node is PathCollectionNode)
+            {
+                foreach (var group in ((PathCollectionNode)node).Nodes)
+                {
+                    foreach (var point in ((PathGroupNode)group).Nodes)
+                    {
+                        newSelection.Add(((PathPointNode)point).PathPoint.RenderablePoint);
+                    }
+                }
+            }
+            if (node is PathGroupNode)
+            {
+                foreach (var point in ((PathGroupNode)node).Nodes)
+                {
+                    newSelection.Add(((PathPointNode)point).PathPoint.RenderablePoint);
+                }
+            }
+            if (node is PathPointNode)
+            {
+                newSelection.Add(((PathPointNode)node).PathPoint.RenderablePoint);
+            }
+
+            if (newSelection.Count > 0)
+                viewport.scene.SelectedObjects = newSelection;
+        }
+
+        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e) {
+            if (!IsLoaded)
+                return;
+
+            if (e.Node is PathPointNode)
+                ((PathPointNode)e.Node).OnChecked(e.Node.Checked);
+
+            CheckChildNodes(e.Node, e.Node.Checked);
+        }
+
+        private void CheckChildNodes(TreeNode node, bool IsChecked)
+        {
+            foreach (TreeNode n in node.Nodes)
+            {
+                n.Checked = IsChecked;
+            }
         }
     }
 }
