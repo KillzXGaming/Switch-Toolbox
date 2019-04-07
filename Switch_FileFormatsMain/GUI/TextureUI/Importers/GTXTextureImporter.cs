@@ -195,6 +195,7 @@ namespace FirstPlugin
         }
 
         private void SwizzleNum_ValueChanged(object sender, EventArgs e) {
+            SelectedTexSettings.swizzle &= GX2.SizzleMask;
             SelectedTexSettings.swizzle |= (uint)SwizzleNum.Value << 8;
         }
 

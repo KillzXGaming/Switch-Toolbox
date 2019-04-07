@@ -11,8 +11,6 @@ namespace GL_EditorFramework.EditorDrawables
 {
     public class RenderablePathPoint : EditableObject
     {
-        public bool IsVisable = true;
-
         public bool CanConnect = true;
 
         public object NodeObject;
@@ -62,7 +60,7 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
         {
-            if (pass == Pass.TRANSPARENT || !IsVisable)
+            if (pass == Pass.TRANSPARENT)
                 return;
 
             bool hovered = editorScene.hovered == this;
@@ -105,7 +103,7 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (pass == Pass.TRANSPARENT || !IsVisable)
+            if (pass == Pass.TRANSPARENT)
                 return;
 
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
@@ -117,7 +115,7 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override void Draw(GL_ControlLegacy control, Pass pass, EditorSceneBase editorScene)
         {
-            if (pass == Pass.TRANSPARENT || !IsVisable)
+            if (pass == Pass.TRANSPARENT)
                 return;
 
             bool hovered = editorScene.hovered == this;
@@ -147,7 +145,7 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
-            if (pass == Pass.TRANSPARENT || !IsVisable)
+            if (pass == Pass.TRANSPARENT)
                 return;
 
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *

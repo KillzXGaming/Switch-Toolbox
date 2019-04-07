@@ -90,22 +90,22 @@ namespace FirstPlugin.Forms
 
             treeView1.Nodes.Add("Scene");
 
+            if (scene.LapPaths.Count > 0) {
+                AddPathDrawable("Lap Path", scene.LapPaths,Color.Blue);
+            }
             if (scene.EnemyPaths.Count > 0) {
                 AddPathDrawable("Enemy Path", scene.EnemyPaths, Color.Red);
             }
-            if (scene.LapPaths.Count > 0) {
-                AddPathDrawable("Lap Path", scene.LapPaths,Color.Blue, false);
-            }
-            if (scene.GlidePaths.Count > 0) {
-                AddPathDrawable("Glide Path", scene.GlidePaths, Color.Orange);
-            }
-            if (scene.ItemPaths.Count > 0) {
-                AddPathDrawable("Item Path", scene.ItemPaths, Color.Yellow);
-            }
-            if (scene.SteerAssistPaths.Count > 0) {
-                AddPathDrawable("Steer Assist Path", scene.SteerAssistPaths, Color.Green);
-            }
-            
+            /*   if (scene.GlidePaths.Count > 0) {
+                   AddPathDrawable("Glide Path", scene.GlidePaths, Color.Orange);
+               }
+               if (scene.ItemPaths.Count > 0) {
+                   AddPathDrawable("Item Path", scene.ItemPaths, Color.Yellow);
+               }
+               if (scene.SteerAssistPaths.Count > 0) {
+                   AddPathDrawable("Steer Assist Path", scene.SteerAssistPaths, Color.Green);
+               }*/
+
 
             IsLoaded = true;
         }
@@ -114,6 +114,9 @@ namespace FirstPlugin.Forms
         {
             //Create a connectable object to connect each point
             var renderablePathConnected = new RenderableConnectedPaths(color);
+
+            if (Name == "Lap Path" || Name == "Gravity Path")
+                renderablePathConnected.Use4PointConnection = true;
 
             if (CanConnect) {
                 viewport.AddDrawable(renderablePathConnected);

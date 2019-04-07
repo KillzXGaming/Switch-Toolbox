@@ -21,7 +21,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         //This also applies to gravity paths
         public bool Use4PointConnection = false;
 
-        private static ShaderProgram defaultShaderProgram;
+        private ShaderProgram defaultShaderProgram;
 
         public List<PathGroup> PathGroups = new List<PathGroup>();
 
@@ -68,7 +68,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             {
                 foreach (var path in group.PathPoints)
                 {
-                    if (!path.RenderablePoint.IsVisable)
+                    if (!path.RenderablePoint.Visible)
                         continue;
 
                     GL.LineWidth(2f);
@@ -101,7 +101,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             {
                 foreach (var path in group.PathPoints)
                 {
-                    if (!path.RenderablePoint.IsVisable)
+                    if (!path.RenderablePoint.Visible)
                         continue;
 
                     if (Use4PointConnection)

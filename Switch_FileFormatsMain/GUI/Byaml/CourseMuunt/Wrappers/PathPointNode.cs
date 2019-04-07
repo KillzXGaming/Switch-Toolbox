@@ -16,7 +16,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         public void OnChecked(bool Checked)
         {
             if (PathPoint != null)
-                PathPoint.RenderablePoint.IsVisable = Checked;
+                PathPoint.RenderablePoint.Visible = Checked;
         }
     }
 }

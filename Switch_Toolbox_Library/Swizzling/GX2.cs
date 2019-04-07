@@ -6,6 +6,8 @@ namespace Switch_Toolbox.Library
 {
     public class GX2
     {
+        public const uint SizzleMask = 0xFF00FF;
+
         //Some enums and parts from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/GTX.cs
         public class GX2Surface
         {
