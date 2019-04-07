@@ -30,6 +30,10 @@ namespace Switch_Toolbox.Library
             {
                 return (((IViewportContainer)viewport).GetViewport());
             }
+            if (Runtime.MainForm.ActiveMdiChild is IViewportContainer)
+            {
+                return ((IViewportContainer)Runtime.MainForm.ActiveMdiChild).GetViewport();
+            }
             if (viewport != null && viewport is Viewport)
             {
                 return ((Viewport)viewport);
@@ -114,6 +118,20 @@ namespace Switch_Toolbox.Library
                         return (UserControl)ctrl;
                     }
                     if (ctrl.GetType() == type) {
+                        return (UserControl)ctrl;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var ctrl in Runtime.MainForm.ActiveMdiChild.Controls)
+                {
+                    if (type == null)
+                    {
+                        return (UserControl)ctrl;
+                    }
+                    if (ctrl.GetType() == type)
+                    {
                         return (UserControl)ctrl;
                     }
                 }

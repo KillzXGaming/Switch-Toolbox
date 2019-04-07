@@ -92,6 +92,7 @@
             this.chkTransformCuRotateTrnaslateZero = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.userDataEditor1 = new UserDataEditor();
+            this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
@@ -123,6 +124,8 @@
             // 
             // stTabControl1
             // 
+            this.stTabControl1.Controls.Add(this.tabPage1);
+            this.stTabControl1.Controls.Add(this.tabPage2);
             this.stTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stTabControl1.Location = new System.Drawing.Point(0, 0);
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
@@ -1012,6 +1015,7 @@
             this.Controls.Add(this.stTabControl1);
             this.Name = "BfresBoneEditor";
             this.Size = new System.Drawing.Size(647, 831);
+            this.stTabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.stFlowLayoutPanel1.ResumeLayout(false);
             this.stDropDownPanel1.ResumeLayout(false);

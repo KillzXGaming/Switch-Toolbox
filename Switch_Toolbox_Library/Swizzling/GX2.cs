@@ -268,7 +268,6 @@ namespace Switch_Toolbox.Library
         {
             MODE_DEFAULT = 0x0,
             MODE_LINEAR_SPECIAL = 0x10,
-            MODE_DEFAULT_FIX2197 = 0x20,
             MODE_LINEAR_ALIGNED = 0x1,
             MODE_1D_TILED_THIN1 = 0x2,
             MODE_1D_TILED_THICK = 0x3,

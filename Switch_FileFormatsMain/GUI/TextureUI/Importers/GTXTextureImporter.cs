@@ -55,7 +55,6 @@ namespace FirstPlugin
             tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3B_TILED_THIN1);
             tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3B_TILED_THICK);
             tileModeCB.Items.Add(GX2.GX2TileMode.MODE_LINEAR_SPECIAL);
-            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_DEFAULT_FIX2197);
 
             ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_1D);
             ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_1D_ARRAY);
@@ -150,7 +149,7 @@ namespace FirstPlugin
         private void tileModeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tileModeCB.SelectedIndex > -1 && SelectedTexSettings != null)
-                SelectedTexSettings.tileMode = (uint)tileModeCB.SelectedItem;
+                SelectedTexSettings.tileMode = (uint)(GX2.GX2TileMode)tileModeCB.SelectedItem;
         }
 
         bool DialogShown = false;
@@ -274,9 +273,9 @@ namespace FirstPlugin
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(769, 142);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(42, 13);
+            this.label5.Size = new System.Drawing.Size(82, 13);
             this.label5.TabIndex = 43;
-            this.label5.Text = "Swizzle";
+            this.label5.Text = "Swizzle Pattern:";
             // 
             // tileModeCB
             // 
