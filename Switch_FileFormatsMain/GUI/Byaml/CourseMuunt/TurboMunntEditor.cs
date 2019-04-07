@@ -13,7 +13,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace FirstPlugin.Forms
 {
-    public partial class TurboMunntEditor : UserControl
+    public partial class TurboMunntEditor : UserControl, IViewportContainer
     {
         Viewport viewport;
         bool IsLoaded = false;
@@ -32,6 +32,18 @@ namespace FirstPlugin.Forms
             viewport.scene.SelectionChanged += Scene_SelectionChanged;
             stPanel4.Controls.Add(viewport);
         }
+
+
+        public Viewport GetViewport() => viewport;
+
+        public void UpdateViewport()
+        {
+            if (viewport != null)
+                viewport.UpdateViewport();
+        }
+
+        public AnimationPanel GetAnimationPanel() => null;
+
 
         CourseMuuntScene scene;
 
