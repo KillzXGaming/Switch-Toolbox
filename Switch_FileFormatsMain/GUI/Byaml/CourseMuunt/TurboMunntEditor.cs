@@ -193,7 +193,18 @@ namespace FirstPlugin.Forms
 
         private void viewIntroCameraToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            foreach (var camera in scene.IntroCameras)
+            {
+                var pathMove = scene.Paths[camera.Camera_Path];
+                var pathLookAt = scene.Paths[camera.Camera_AtPath];
 
+                for (int p = 0; p < pathMove.PathPoints.Count; p++)
+                {
+                    var pathMovePoint = pathMove.PathPoints[p];
+                    var pathLookAtPoint = pathLookAt.PathPoints[p];
+
+                }
+            }
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
