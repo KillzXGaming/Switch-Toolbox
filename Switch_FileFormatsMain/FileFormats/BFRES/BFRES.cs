@@ -204,8 +204,6 @@ namespace FirstPlugin
 
             if (!IsLoaded)
             {
-                bfresEditor.UpdateVertexData = BFRESRender.UpdateVertexData;
-                bfresEditor.UpdateTextureMaps = BFRESRender.UpdateTextureMaps;
                 bfresEditor.OnLoadedTab();
             }
 

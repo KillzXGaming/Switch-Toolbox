@@ -79,7 +79,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             get
             {
                 if (renderablePoint == null)
-                    renderablePoint = new RenderablePathPoint(new Vector4(1f, 0f, 0f, 1f), Translate, Rotate, new OpenTK.Vector3(30), this);
+                    renderablePoint = new RenderablePathPoint(new Vector4(0f, 1f, 1f, 1f), Translate, Rotate, new OpenTK.Vector3(30), this);
                 return renderablePoint;
             }
         }

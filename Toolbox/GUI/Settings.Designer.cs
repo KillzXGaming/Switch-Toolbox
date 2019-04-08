@@ -87,6 +87,13 @@
             this.bgGradientTop = new System.Windows.Forms.PictureBox();
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.preferredTexFormatCB = new System.Windows.Forms.ComboBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.stLabel12 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.SMOPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel11 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.mk8DPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -106,6 +113,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridCellSizeUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -722,6 +730,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stTabControl1.Controls.Add(this.tabPage1);
             this.stTabControl1.Controls.Add(this.tabPage2);
+            this.stTabControl1.Controls.Add(this.tabPage3);
             this.stTabControl1.Location = new System.Drawing.Point(0, 25);
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
             this.stTabControl1.Name = "stTabControl1";
@@ -897,6 +906,77 @@
             this.preferredTexFormatCB.TabIndex = 0;
             this.preferredTexFormatCB.SelectedIndexChanged += new System.EventHandler(this.preferredTexFormatCB_SelectedIndexChanged);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.stLabel12);
+            this.tabPage3.Controls.Add(this.SMOPathTB);
+            this.tabPage3.Controls.Add(this.stLabel11);
+            this.tabPage3.Controls.Add(this.mk8DPathTB);
+            this.tabPage3.Controls.Add(this.stLabel10);
+            this.tabPage3.Controls.Add(this.mk8PathTB);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(541, 395);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Paths";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // stLabel12
+            // 
+            this.stLabel12.AutoSize = true;
+            this.stLabel12.Location = new System.Drawing.Point(6, 70);
+            this.stLabel12.Name = "stLabel12";
+            this.stLabel12.Size = new System.Drawing.Size(76, 13);
+            this.stLabel12.TabIndex = 5;
+            this.stLabel12.Text = "Mario Odyssey";
+            // 
+            // SMOPathTB
+            // 
+            this.SMOPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SMOPathTB.Location = new System.Drawing.Point(112, 68);
+            this.SMOPathTB.Name = "SMOPathTB";
+            this.SMOPathTB.Size = new System.Drawing.Size(258, 20);
+            this.SMOPathTB.TabIndex = 4;
+            this.SMOPathTB.Click += new System.EventHandler(this.SMOPathTB_Click);
+            // 
+            // stLabel11
+            // 
+            this.stLabel11.AutoSize = true;
+            this.stLabel11.Location = new System.Drawing.Point(6, 44);
+            this.stLabel11.Name = "stLabel11";
+            this.stLabel11.Size = new System.Drawing.Size(100, 13);
+            this.stLabel11.TabIndex = 3;
+            this.stLabel11.Text = "Mario Kart 8 Deluxe";
+            // 
+            // mk8DPathTB
+            // 
+            this.mk8DPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mk8DPathTB.Location = new System.Drawing.Point(112, 42);
+            this.mk8DPathTB.Name = "mk8DPathTB";
+            this.mk8DPathTB.Size = new System.Drawing.Size(258, 20);
+            this.mk8DPathTB.TabIndex = 2;
+            this.mk8DPathTB.Click += new System.EventHandler(this.mk8DPathTB_Click);
+            // 
+            // stLabel10
+            // 
+            this.stLabel10.AutoSize = true;
+            this.stLabel10.Location = new System.Drawing.Point(6, 18);
+            this.stLabel10.Name = "stLabel10";
+            this.stLabel10.Size = new System.Drawing.Size(64, 13);
+            this.stLabel10.TabIndex = 1;
+            this.stLabel10.Text = "Mario Kart 8";
+            // 
+            // mk8PathTB
+            // 
+            this.mk8PathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mk8PathTB.Location = new System.Drawing.Point(112, 16);
+            this.mk8PathTB.Name = "mk8PathTB";
+            this.mk8PathTB.Size = new System.Drawing.Size(258, 20);
+            this.mk8PathTB.TabIndex = 0;
+            this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
+
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -929,6 +1009,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridCellSizeUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientBottom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -994,5 +1076,12 @@
         private Switch_Toolbox.Library.Forms.NumericUpDownFloat cameraMaxSpeedUD;
         private Switch_Toolbox.Library.Forms.STCheckBox enableVersionCheckCHK;
         private Switch_Toolbox.Library.Forms.STCheckBox boneXRayChk;
+        private System.Windows.Forms.TabPage tabPage3;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel12;
+        private Switch_Toolbox.Library.Forms.STTextBox SMOPathTB;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel11;
+        private Switch_Toolbox.Library.Forms.STTextBox mk8DPathTB;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel10;
+        private Switch_Toolbox.Library.Forms.STTextBox mk8PathTB;
     }
 }

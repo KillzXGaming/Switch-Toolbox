@@ -17,8 +17,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("Effect Index")]
         public int EffectSW
         {
-            get { return root["EffectSW"]; }
-            set { root["EffectSW"] = value; }
+            get { return (root["EffectSW"] != null) ? root["EffectSW"] : -255; }
+            set { if (value != -255) root["EffectSW"] = value; }
         }
 
         [Description("Enables or disables headlights for the course.")]
@@ -52,7 +52,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
         private string FirstCurve 
         {
-            get { return root["FirstCurve"]; }
+            get { return (root["FirstCurve"] != null) ? root["FirstCurve"] : "left"; }
             set { root["FirstCurve"] = value; }
         }
 
@@ -61,7 +61,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("IsJugemAbove")]
         public bool IsJugemAbove
         {
-            get { return root["IsJugemAbove"]; }
+            get { return (root["IsJugemAbove"] != null) ? root["IsJugemAbove"] : false; }
             set { root["IsJugemAbove"] = value; }
         }
 
@@ -70,8 +70,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("JugemAbove")]
         public int JugemAbove
         {
-            get { return root["JugemAbove"]; }
-            set { root["JugemAbove"] = value; }
+            get { return (root["JugemAbove"] != null) ? root["JugemAbove"] : -1; }
+            set { if (value != -1) root["JugemAbove"] = value; }
         }
 
         [Description("Unknown Value")]
@@ -79,8 +79,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("LapJugemPos")]
         public int LapJugemPos
         {
-            get { return root["LapJugemPos"]; }
-            set { root["LapJugemPos"] = value; }
+            get { return (root["LapJugemPos"] != null) ? root["LapJugemPos"] : -1; }
+            set { if (value != -1) root["LapJugemPos"] = value; }
         }
 
         [Description("The number of laps to be finished during the track.")]
@@ -88,8 +88,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("LapNumber")]
         public int LapNumber
         {
-            get { return root["LapNumber"]; }
-            set { root["LapNumber"] = value; }
+            get { return (root["LapNumber"] != null) ? root["LapNumber"] : -1; }
+            set { if (value != -1) root["LapNumber"] = value; }
         }
 
         [Description("The number of pattern sets picked randomly at start.")]
@@ -97,8 +97,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("PatternNum")]
         public int PatternNum
         {
-            get { return root["PatternNum"]; }
-            set { root["PatternNum"] = value; }
+            get { return (root["PatternNum"] != null) ? root["PatternNum"] : -1; }
+            set { if (value != -1) root["PatternNum"] = value; }
         }
 
 
@@ -304,7 +304,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 return;
 
             KCL kcl = (KCL)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
-            KclObjects.Add(kcl);
+
+            if (kcl != null)
+                KclObjects.Add(kcl);
         }
 
         public void AddRenderableBfres(string FilePath)
@@ -313,7 +315,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 return;
 
             BFRES bfres = (BFRES)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
-            BfresObjects.Add(bfres);
+
+            if (bfres != null)
+                BfresObjects.Add(bfres);
         }
     }
 }

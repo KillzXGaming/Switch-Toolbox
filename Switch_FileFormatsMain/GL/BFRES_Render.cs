@@ -63,7 +63,11 @@ namespace FirstPlugin
         {
             GL.GenBuffers(1, out vbo_position);
             GL.GenBuffers(1, out ibo_elements);
+
+            UpdateVertexData();
+            UpdateTextureMaps();
         }
+
         public void LoadFile(ResU.ResFile resFileU)
         {
             ResFileNode.Load(resFileU);

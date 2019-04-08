@@ -497,6 +497,7 @@ namespace Toolbox
             try
             {
                 Config.StartupFromFile(Runtime.ExecutableDir + "\\config.xml");
+                Config.GamePathsFromFile(Runtime.ExecutableDir + "\\config_paths.xml");
             }
             catch (Exception ex)
             {

@@ -69,6 +69,12 @@ namespace Toolbox
             boneSizeUD.Value = (decimal)Runtime.bonePointSize;
             cameraMaxSpeedUD.Value = (decimal)Runtime.MaxCameraSpeed;
             boneXRayChk.Checked = Runtime.boneXrayDisplay;
+            mk8DPathTB.Text = Runtime.Mk8dGamePath;
+            mk8PathTB.Text = Runtime.Mk8GamePath;
+            SMOPathTB.Text = Runtime.SmoGamePath;
+            mk8DPathTB.ReadOnly = true;
+            mk8PathTB.ReadOnly = true;
+            SMOPathTB.ReadOnly = true;
 
             GLSLVerLabel.Text   = $"Open GL Version: {Runtime.GLSLVersion}";
             openGLVerLabel.Text = $"GLSL Version:     {Runtime.openGLVersion}";
@@ -373,6 +379,32 @@ namespace Toolbox
         private void boneXRayChk_CheckedChanged(object sender, EventArgs e) {
             Runtime.boneXrayDisplay = boneXRayChk.Checked;
             UpdateViewportSettings();
+        }
+
+        private void mk8PathTB_Click(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK) {
+                mk8PathTB.Text = sfd.SelectedPath;
+                Runtime.Mk8GamePath = mk8PathTB.Text;
+            }
+        }
+
+        private void mk8DPathTB_Click(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                mk8DPathTB.Text = sfd.SelectedPath;
+                Runtime.Mk8dGamePath = mk8DPathTB.Text;
+            }
+        }
+
+        private void SMOPathTB_Click(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                SMOPathTB.Text = sfd.SelectedPath;
+                Runtime.SmoGamePath = SMOPathTB.Text;
+            }
         }
     }
 }

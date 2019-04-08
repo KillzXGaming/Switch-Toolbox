@@ -22,6 +22,17 @@ namespace Toolbox
             ReadConfigFromFile(fileName);
         }
 
+        public static void GamePathsFromFile(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                SavePaths();
+                return;
+            }
+
+            ReadConfigFromFile(fileName);
+        }
+
         private static void ReadConfigFromFile(string fileName)
         {
             int discordImageKey;
@@ -144,6 +155,15 @@ namespace Toolbox
                     case "AddFilesToActiveObjectEditor":
                         bool.TryParse(node.InnerText, out Runtime.AddFilesToActiveObjectEditor);
                         break;
+                    case "SmoGamePath":
+                        Runtime.SmoGamePath = node.InnerText;
+                        break;
+                    case "Mk8GamePath":
+                        Runtime.Mk8GamePath = node.InnerText;
+                        break;
+                    case "Mk8dGamePath":
+                        Runtime.Mk8dGamePath = node.InnerText;
+                        break;
                 }
             }
         }
@@ -209,7 +229,27 @@ namespace Toolbox
         {
             XmlDocument doc = CreateXmlFromSettings();
             doc.Save(Runtime.ExecutableDir + "\\config.xml");
+
+            SavePaths();
         }
+
+        private static void SavePaths()
+        {
+            XmlDocument doc = CreatePathXmlFromSettings();
+            doc.Save(Runtime.ExecutableDir + "\\config_paths.xml");
+        }
+
+        private static XmlDocument CreatePathXmlFromSettings()
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlNode mainNode = doc.CreateElement("TOOLCONFIG");
+            doc.AppendChild(mainNode);
+
+            AppendPathSettings(doc, mainNode);
+
+            return doc;
+        }
+
         private static XmlDocument CreateXmlFromSettings()
         {
             XmlDocument doc = new XmlDocument();
@@ -236,6 +276,14 @@ namespace Toolbox
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "FormTheme", Switch_Toolbox.Library.Forms.FormThemes.ActivePreset.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "MaximizeMdiWindow", Runtime.MaximizeMdiWindow.ToString()));
+        }
+        private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode PathsNode = doc.CreateElement("PATHS");
+            parentNode.AppendChild(PathsNode);
+            PathsNode.AppendChild(createNode(doc, "SmoGamePath", Runtime.SmoGamePath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "Mk8GamePath", Runtime.Mk8GamePath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "Mk8dGamePath", Runtime.Mk8dGamePath.ToString()));
         }
         private static void AppendEditorSettings(XmlDocument doc, XmlNode parentNode)
         {

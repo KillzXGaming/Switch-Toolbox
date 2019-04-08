@@ -163,7 +163,7 @@ namespace FirstPlugin
 
                 uint SectionSize = reader.ReadUInt32();
                 uint NameLength = reader.ReadUInt32();
-      
+
                 if (header.Version >= 13)
                 {
                     ushort vertexUnk1 = reader.ReadUInt16();
@@ -216,6 +216,7 @@ namespace FirstPlugin
                     AttributeVariables.Read(reader);
                 }
 
+
                 reader.Seek(SectionSize + pos, System.IO.SeekOrigin.Begin);
             }
         }
@@ -247,7 +248,9 @@ namespace FirstPlugin
                 uint CodeLength = reader.ReadUInt32();
                 uint CodeLength2 = reader.ReadUInt32(); //?????
                 Text = reader.ReadString((int)FileNameLength);
-                Code = reader.ReadString((int)CodeLength);
+             //   Code = reader.ReadString((int)CodeLength, Encoding.UTF32);
+                byte[] CodeData = reader.ReadBytes((int)CodeLength);
+               Code = Encoding.Unicode.GetString(Encoding.Convert(Encoding.Default, Encoding.Unicode, CodeData));
 
                 reader.Seek(SectioSize + pos, System.IO.SeekOrigin.Begin);
             }

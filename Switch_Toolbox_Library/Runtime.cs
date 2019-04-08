@@ -15,6 +15,10 @@ namespace Switch_Toolbox.Library
 
     public class Runtime
     {
+        public static string Mk8GamePath = "";
+        public static string Mk8dGamePath = "";
+        public static string SmoGamePath = "";
+
         public class ImageEditor
         {
             public static bool ShowPropertiesPanel = true;

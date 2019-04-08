@@ -283,7 +283,6 @@ C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Rele
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.TurboMunntEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimParamEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimKeyViewer.resources
-C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Turbo.CourseMunntEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Turbo.MK8MapCameraEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.EmitterEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.BfresModelImportSettings.resources

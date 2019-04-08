@@ -34,9 +34,9 @@ namespace FirstPlugin.Forms
             viewport.scene.SelectionChanged += Scene_SelectionChanged;
             stPanel4.Controls.Add(viewport);
 
-       //     viewport2D = new GLControl2D();
-        //    viewport2D.Dock = DockStyle.Fill;
-          //  stPanel3.Controls.Add(viewport2D);
+            viewport2D = new GLControl2D();
+            viewport2D.Dock = DockStyle.Fill;
+            stPanel3.Controls.Add(viewport2D);
         }
 
 
@@ -65,25 +65,9 @@ namespace FirstPlugin.Forms
 
             if (File.Exists($"{CourseFolder}/course_model.szs"))
             {
-          //      scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
-
-               
-
+                scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
             }
 
-            foreach (var kcl in scene.KclObjects)
-            {
-             //   viewport.AddDrawable(kcl.Renderer);
-            //    kcl.Renderer.UpdateVertexData();
-            }
-
-            foreach (var bfres in scene.BfresObjects)
-            {
-                viewport.AddDrawable(bfres.BFRESRender);
-
-                bfres.BFRESRender.UpdateVertexData();
-                bfres.BFRESRender.UpdateTextureMaps();
-            }
             viewport.AddDrawable(new GL_EditorFramework.EditorDrawables.SingleObject(new OpenTK.Vector3(0)));
 
             viewport.LoadObjects();
@@ -123,7 +107,20 @@ namespace FirstPlugin.Forms
             if (scene.IntroCameras.Count > 0) {
                 AddPathDrawable("IntroCamera", scene.IntroCameras, Color.Pink);
             }
-           
+
+            foreach (var kcl in scene.KclObjects)
+            {
+                viewport.AddDrawable(kcl.Renderer);
+                treeView1.Nodes.Add(kcl);
+                kcl.Checked = true;
+            }
+
+            foreach (var bfres in scene.BfresObjects)
+            {
+                viewport.AddDrawable(bfres.BFRESRender);
+                treeView1.Nodes.Add(bfres);
+                bfres.Checked = true;
+            }
 
             IsLoaded = true;
         }
@@ -211,11 +208,15 @@ namespace FirstPlugin.Forms
         {
             List<EditableObject> newSelection = new List<EditableObject>();
 
-            TreeNode node = treeView1.SelectedNode;
+            TreeNode node = treeView1.SelectedNode; 
             if (node == null)
                 return;
 
-            if (node is PathCollectionNode)
+            if (node.Text == "Scene")
+            {
+                stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
+            }
+            else if (node is PathCollectionNode)
             {
                 foreach (var group in ((PathCollectionNode)node).Nodes)
                 {
@@ -225,14 +226,14 @@ namespace FirstPlugin.Forms
                     }
                 }
             }
-            if (node is PathGroupNode)
+            else if (node is PathGroupNode)
             {
                 foreach (var point in ((PathGroupNode)node).Nodes)
                 {
                     newSelection.Add(((PathPointNode)point).PathPoint.RenderablePoint);
                 }
             }
-            if (node is PathPointNode)
+            else if (node is PathPointNode)
             {
                 newSelection.Add(((PathPointNode)node).PathPoint.RenderablePoint);
             }

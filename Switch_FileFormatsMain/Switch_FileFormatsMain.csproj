@@ -655,12 +655,6 @@
     <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.Designer.cs">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.Designer.cs">
-      <DependentUpon>CourseMunntEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Editors\PTCL\EmitterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -950,9 +944,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\AnimKeyViewer.resx">
       <DependentUpon>AnimKeyViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.resx">
-      <DependentUpon>CourseMunntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.resx">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>

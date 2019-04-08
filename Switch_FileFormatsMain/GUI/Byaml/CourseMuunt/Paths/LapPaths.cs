@@ -86,43 +86,43 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [Category("Properties")]
         public int CheckPoint
         {
-            get { return this["CheckPoint"]; }
-            set { this["CheckPoint"] = value; }
+            get { return this["CheckPoint"] != null ? this["CheckPoint"] : -255; }
+            set { if (value != -255) this["CheckPoint"] = value; }
         }
 
         [Category("Properties")]
         public int ClipIdx
         {
-            get { return this["ClipIdx"]; }
-            set { this["ClipIdx"] = value; }
+            get { return this["ClipIdx"] != null ? this["ClipIdx"] : -255; }
+            set { if (value != -255) this["ClipIdx"] = value; }
         }
 
         [Category("Properties")]
         public bool HeadLightSW
         {
-            get { return this["HeadLightSW"]; }
+            get { return this["HeadLightSW"] != null ? this["HeadLightSW"] : false; }
             set { this["HeadLightSW"] = value; }
         }
 
         [Category("Properties")]
         public int LapCheck
         {
-            get { return this["LapCheck"]; }
-            set { this["LapCheck"] = value; }
+            get { return this["LapCheck"] != null ? this["LapCheck"] : -255; }
+            set { if (value != -255)  this["LapCheck"] = value; }
         }
 
         [Category("Properties")]
         public int MapCameraFovy
         {
-            get { return this["MapCameraFovy"]; }
-            set { this["MapCameraFovy"] = value; }
+            get { return this["MapCameraFovy"] != null ? this["MapCameraFovy"] : -255; }
+            set { if (value != -255) this["MapCameraFovy"] = value; }
         }
 
         [Category("Properties")]
         public int MapCameraY
         {
-            get { return this["MapCameraY"]; }
-            set { this["MapCameraY"] = value; }
+            get { return this["MapCameraY"] != null ? this["MapCameraY"] : -255; }
+            set { if (value != -255) this["MapCameraY"] = value; }
         }
 
         public LapPathPoint(dynamic bymlNode)
