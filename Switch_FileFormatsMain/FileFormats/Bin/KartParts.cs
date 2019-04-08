@@ -102,7 +102,7 @@ namespace FirstPlugin.Turbo
         {
             foreach (Section section in binFile.Sections)
             {
-                if (section.Data is DwordSectionData sectionData)
+                if (section.Data is DwordSectionData)
                     yield return section;
             }
         }
