@@ -141,6 +141,9 @@
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Syroot.NintenTools.MarioKart8">
+      <HintPath>..\Toolbox\Lib\Syroot.NintenTools.MarioKart8.dll</HintPath>
+    </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres">
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
       <Private>False</Private>
@@ -200,6 +203,7 @@
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
+    <Compile Include="FileFormats\Bin\KartParts.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />

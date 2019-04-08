@@ -35,7 +35,12 @@ namespace Bfres.Structs
         {
             get
             {
-                return ((BFRES)Parent).IsWiiU;
+                if (Parent is BFRES)
+                   return ((BFRES)Parent).IsWiiU;
+                else if (Parent.Parent is BFRES)
+                    return ((BFRES)Parent.Parent).IsWiiU;
+                else
+                    return ((BFRES)Parent.Parent.Parent).IsWiiU;
             }
         }
 

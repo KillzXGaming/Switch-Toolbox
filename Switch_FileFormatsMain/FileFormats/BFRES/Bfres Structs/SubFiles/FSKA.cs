@@ -186,9 +186,9 @@ namespace Bfres.Structs
             string ext = Utils.GetExtension(FileName);
             if (ext == ".bfska")
             {
-                if (GetResFileU() != null)
+                if (resFileU != null)
                 {
-                    SkeletalAnimU.Import(FileName, GetResFileU());
+                    SkeletalAnimU.Import(FileName, resFileU);
                     SkeletalAnimU.Name = Text;
                     LoadAnim(SkeletalAnimU);
                 }
@@ -212,7 +212,7 @@ namespace Bfres.Structs
         {
             if (SkeletalAnimU != null)
                 LoadAnimData(SkeletalAnimU);
-            else
+            else if (SkeletalAnim != null)
                 LoadAnimData(SkeletalAnim);
         }
 
