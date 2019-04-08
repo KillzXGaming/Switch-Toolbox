@@ -285,7 +285,6 @@ namespace Switch_Toolbox.Library
             MODE_3D_TILED_THICK = 0xD,
             MODE_3B_TILED_THIN1 = 0xE,
             MODE_3B_TILED_THICK = 0xF,
-            MODE_FIRST = 0x0,
             MODE_LAST = 0x20,
         };
 
