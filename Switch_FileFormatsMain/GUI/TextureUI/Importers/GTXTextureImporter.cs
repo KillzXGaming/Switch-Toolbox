@@ -150,6 +150,13 @@ namespace FirstPlugin
         {
             if (tileModeCB.SelectedIndex > -1 && SelectedTexSettings != null)
                 SelectedTexSettings.tileMode = (uint)(GX2.GX2TileMode)tileModeCB.SelectedItem;
+
+            if (tileModeCB.SelectedIndex != 0 && IsLoaded)
+            {
+                var result = MessageBox.Show("Warning! Only change the tile mode unless you know what you are doing!", "Texture Importer", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Cancel)
+                    tileModeCB.SelectedIndex = 0;
+            }
         }
 
         bool DialogShown = false;
@@ -158,14 +165,6 @@ namespace FirstPlugin
             if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
             {
                 SetupSettings();
-
-                if (formatComboBox.SelectedIndex != 0 && IsLoaded)
-                {
-                    var result = MessageBox.Show("Warning! Only change the tile mode unless you know what you are doing!", "Texture Importer", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Cancel)
-                        formatComboBox.SelectedIndex = 0;
-                }
-
             }
         }
 
