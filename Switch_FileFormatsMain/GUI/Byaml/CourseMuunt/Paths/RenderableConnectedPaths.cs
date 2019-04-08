@@ -23,12 +23,12 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         private ShaderProgram defaultShaderProgram;
 
-        public List<PathGroup> PathGroups = new List<PathGroup>();
+        public List<BasePathGroup> PathGroups = new List<BasePathGroup>();
 
 
-        public void AddGroup(PathGroup group)
+        public void AddGroup(BasePathGroup group)
         {
-            PathGroups.Add(new PathGroup()
+            PathGroups.Add(new BasePathGroup()
             {
                 PathPoints = group.PathPoints,
             });

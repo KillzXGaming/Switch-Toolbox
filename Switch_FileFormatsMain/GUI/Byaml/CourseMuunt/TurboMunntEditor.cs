@@ -93,24 +93,47 @@ namespace FirstPlugin.Forms
             if (scene.LapPaths.Count > 0) {
                 AddPathDrawable("Lap Path", scene.LapPaths,Color.Blue);
             }
+            if (scene.GravityPaths.Count > 0) {
+                AddPathDrawable("Gravity Path", scene.GravityPaths, Color.Purple);
+            }
             if (scene.EnemyPaths.Count > 0) {
                 AddPathDrawable("Enemy Path", scene.EnemyPaths, Color.Red);
             }
-            /*   if (scene.GlidePaths.Count > 0) {
-                   AddPathDrawable("Glide Path", scene.GlidePaths, Color.Orange);
-               }
-               if (scene.ItemPaths.Count > 0) {
-                   AddPathDrawable("Item Path", scene.ItemPaths, Color.Yellow);
-               }
-               if (scene.SteerAssistPaths.Count > 0) {
-                   AddPathDrawable("Steer Assist Path", scene.SteerAssistPaths, Color.Green);
-               }*/
-
+            if (scene.GlidePaths.Count > 0) {
+                AddPathDrawable("Glide Path", scene.GlidePaths, Color.Orange);
+            }
+            if (scene.ItemPaths.Count > 0) {
+                AddPathDrawable("Item Path", scene.ItemPaths, Color.Yellow);
+            }
+            if (scene.PullPaths.Count > 0) {
+                AddPathDrawable("Pull Path", scene.PullPaths, Color.GreenYellow);
+            }
+            if (scene.SteerAssistPaths.Count > 0) {
+                AddPathDrawable("Steer Assist Path", scene.SteerAssistPaths, Color.Green);
+            }
+            if (scene.Paths.Count > 0) {
+                AddPathDrawable("Path", scene.Paths, Color.Black);
+            }
+            if (scene.ObjPaths.Count > 0) {
+              //  AddPathDrawable("Object Path", scene.ObjPaths, Color.DarkSeaGreen);
+            }
+            if (scene.JugemPaths.Count > 0) {
+                AddPathDrawable("Jugem Path", scene.JugemPaths, Color.DarkSeaGreen);
+            }
+            if (scene.IntroCameras.Count > 0) {
+                AddPathDrawable("IntroCamera", scene.IntroCameras, Color.Pink);
+            }
+           
 
             IsLoaded = true;
         }
 
-        private void AddPathDrawable(string Name, IEnumerable<PathGroup> Groups, Color color, bool CanConnect = true)
+        private void AddPathDrawable(string Name, IEnumerable<BasePathPoint> Groups, Color color, bool CanConnect = true)
+        {
+
+        }
+
+        private void AddPathDrawable(string Name, IEnumerable<BasePathGroup> Groups, Color color, bool CanConnect = true)
         {
             //Create a connectable object to connect each point
             var renderablePathConnected = new RenderableConnectedPaths(color);

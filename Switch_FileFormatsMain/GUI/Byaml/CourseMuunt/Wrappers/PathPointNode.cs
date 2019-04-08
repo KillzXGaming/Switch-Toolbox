@@ -11,7 +11,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
     {
         public PathPointNode(string text) { Text = text; Checked = true; }
 
-        public PathPoint PathPoint;
+        public BasePathPoint PathPoint;
 
         public void OnChecked(bool Checked)
         {

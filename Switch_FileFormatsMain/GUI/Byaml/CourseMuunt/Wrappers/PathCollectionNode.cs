@@ -11,6 +11,6 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
     {
         public PathCollectionNode(string text) { Text = text; Checked = true; }
 
-        public List<PathGroup> PathGroups = new List<PathGroup>();
+        public List<BasePathGroup> PathGroups = new List<BasePathGroup>();
     }
 }

@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class ItemPathGroup : PathGroup, IObject
+    public class ItemPathGroup : BasePathGroup, IObject
     {
         public const string N_EnemyPathGroup = "ItemPathGroup";
         public const string N_UnitIdNum = "UnitIdNum";
@@ -57,7 +57,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
     }
 
-    public class ItemPathPoint : PathPoint
+    public class ItemPathPoint : BasePathPoint
     {
         private RenderablePathPoint renderablePoint;
 

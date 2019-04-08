@@ -12,7 +12,7 @@ using Switch_Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class GlidePathGroup : PathGroup, IObject
+    public class GlidePathGroup : BasePathGroup, IObject
     {
         public const string N_GlidePathGroup = "GlidePathGroup";
         public const string N_UnitIdNum = "UnitIdNum";
@@ -60,7 +60,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
     }
 
-    public class GlidePathPoint : PathPoint
+    public class GlidePathPoint : BasePathPoint
     {
         private RenderablePathPoint renderablePoint;
 

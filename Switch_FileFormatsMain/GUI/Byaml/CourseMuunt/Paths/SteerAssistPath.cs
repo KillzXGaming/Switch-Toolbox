@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class SteerAssistPathGroup : PathGroup, IObject
+    public class SteerAssistPathGroup : BasePathGroup, IObject
     {
         public const string N_SteerAssistPathGroup = "SteerAssistPathGroup";
         public const string N_UnitIdNum = "UnitIdNum";
@@ -57,7 +57,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
     }
 
-    public class SteerAssistPathPoint : PathPoint
+    public class SteerAssistPathPoint : BasePathPoint
     {
         private RenderablePathPoint renderablePoint;
 

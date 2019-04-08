@@ -21,8 +21,6 @@ namespace FirstPlugin.Turbo
         {
             InitializeComponent();
         }
-        public List<ObjectNode> Objects = new List<ObjectNode>();
-
         public void LoadObjList()
         {
             if (PluginRuntime.Mk8GamePath == "")
@@ -108,10 +106,6 @@ namespace FirstPlugin.Turbo
             {
 
             }
-            if (byaml.ContainsKey("Obj"))
-            {
-                Objects = LoadObjects(byaml);
-            }
             if (byaml.ContainsKey("Path"))
             {
 
@@ -128,18 +122,6 @@ namespace FirstPlugin.Turbo
             {
 
             }
-        }
-        private List<ObjectNode> LoadObjects(dynamic byaml)
-        {
-            List<ObjectNode> objects = new List<ObjectNode>();
-            foreach (dynamic objNode in byaml["Obj"])
-            {
-                ObjectNode obj = new ObjectNode();
-                objects.Add(obj);
-
-                if (objNode is Dictionary<string, dynamic>) obj.Properties = (Dictionary<string, dynamic>)objNode;
-            }
-            return objects;
         }
         private void LoadEnemyPaths(dynamic byaml)
         {

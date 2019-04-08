@@ -223,14 +223,14 @@ namespace GL_EditorFramework.EditorDrawables
 
         private void UpdateNodePosition()
         {
-            if (NodeObject is PathPoint)
+            if (NodeObject is BasePathPoint)
             {
-                ((PathPoint)NodeObject).Translate = position;
-                ((PathPoint)NodeObject).Scale = scale;
-                ((PathPoint)NodeObject).Rotate = rotate;
+                ((BasePathPoint)NodeObject).Translate = position;
+                ((BasePathPoint)NodeObject).Scale = scale;
+                ((BasePathPoint)NodeObject).Rotate = rotate;
 
-                if (((PathPoint)NodeObject).OnPathMoved != null)
-                    ((PathPoint)NodeObject).OnPathMoved();
+                if (((BasePathPoint)NodeObject).OnPathMoved != null)
+                    ((BasePathPoint)NodeObject).OnPathMoved();
             }
         }
 

@@ -8,7 +8,7 @@ using OpenTK;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class LapPathGroup : PathGroup, IObject
+    public class LapPathGroup : BasePathGroup, IObject
     {
         public const string N_LapPathGroup = "LapPathGroup";
         public const string N_ReturnPointsError = "ReturnPointsError";
@@ -68,7 +68,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
     }
 
-    public class LapPathPoint : PathPoint
+    public class LapPathPoint : BasePathPoint
     {
         private RenderablePathPoint renderablePoint;
 
