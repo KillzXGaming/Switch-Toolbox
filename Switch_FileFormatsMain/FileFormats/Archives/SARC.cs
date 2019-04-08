@@ -90,7 +90,7 @@ namespace FirstPlugin
                     string ext = Utils.GetExtension(node.Text);
                     if (NodeName == ActorName)
                     {
-                        node.Text = $"{NewActorName}.{ext}";
+                        node.Text = $"{NewActorName}{ext}";
                     }
                     else if (node.Text.Contains("Attribute.byml"))
                     {
