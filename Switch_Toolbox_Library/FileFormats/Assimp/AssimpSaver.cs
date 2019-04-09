@@ -110,7 +110,7 @@ namespace Switch_Toolbox.Library
                                 else
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                             }
-                            else if ( v.boneWeights[j] > 0)
+                            else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
                                 mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                         }
                     }

@@ -110,16 +110,16 @@ namespace FirstPlugin.Forms
 
             foreach (var kcl in scene.KclObjects)
             {
-                viewport.AddDrawable(kcl.Renderer);
-                treeView1.Nodes.Add(kcl);
-                kcl.Checked = true;
+            //    viewport.AddDrawable(kcl.Renderer);
+            //    treeView1.Nodes.Add(kcl);
+             //   kcl.Checked = true;
             }
 
             foreach (var bfres in scene.BfresObjects)
             {
-                viewport.AddDrawable(bfres.BFRESRender);
-                treeView1.Nodes.Add(bfres);
-                bfres.Checked = true;
+              //  viewport.AddDrawable(bfres.BFRESRender);
+              //  treeView1.Nodes.Add(bfres);
+             //   bfres.Checked = true;
             }
 
             IsLoaded = true;
@@ -190,16 +190,38 @@ namespace FirstPlugin.Forms
 
         private void viewIntroCameraToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Sort list by camera number/id
+            scene.IntroCameras.Sort((x, y) => x.CameraNum.CompareTo(y.CameraNum));
+
             foreach (var camera in scene.IntroCameras)
             {
                 var pathMove = scene.Paths[camera.Camera_Path];
                 var pathLookAt = scene.Paths[camera.Camera_AtPath];
 
+                //The time elapsed for each point
+                int PathTime = camera.CameraTime / pathMove.PathPoints.Count;
+
+                //Go through each point
                 for (int p = 0; p < pathMove.PathPoints.Count; p++)
                 {
+                    //If lookat path is higher than the move path, break
+                    if (pathLookAt.PathPoints.Count >= p)
+                        break;
+
+                    //Set our points
                     var pathMovePoint = pathMove.PathPoints[p];
                     var pathLookAtPoint = pathLookAt.PathPoints[p];
 
+                    for (int frame = 0; frame < PathTime; frame++)
+                    {
+                        if (viewport.GL_ControlModern != null)
+                        {
+                            viewport.GL_ControlModern.CameraEye = pathLookAtPoint.Translate;
+                            viewport.GL_ControlModern.CameraTarget = pathMovePoint.Translate;
+
+                            viewport.UpdateViewport();
+                        }
+                    }
                 }
             }
         }

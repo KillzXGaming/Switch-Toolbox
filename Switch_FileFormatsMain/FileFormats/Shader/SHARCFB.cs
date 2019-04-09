@@ -313,7 +313,6 @@ namespace FirstPlugin
     public class VariationMacro
     {
         public string Name { get; set; }
-        public string[] Values { get; set; }
         public string Value { get; set; }
 
         public void Read(FileReader reader, uint Version)
@@ -321,38 +320,16 @@ namespace FirstPlugin
             var pos = reader.Position;
             uint SectionSize = reader.ReadUInt32();
 
-            if (Version >= 13)
-            {
-                uint NameLength = reader.ReadUInt32();
-                uint ValueCount = reader.ReadUInt32();
-                Name = reader.ReadString((int)NameLength);
-                Value = reader.ReadString((int)ValueCount);
+            uint NameLength = reader.ReadUInt32();
+            uint ValueLength = reader.ReadUInt32();
+            Name = reader.ReadString((int)NameLength);
+            Value = reader.ReadString((int)ValueLength);
 
-                Values = new string[0];
- 
 
-                Console.WriteLine("VariationMacro ------------------");
-                Console.WriteLine(Name);
-                Console.WriteLine(Value);
-                Console.WriteLine("------------------");
-            }
-            else
-            {
-                uint NameLength = reader.ReadUInt32();
-                uint ValueCount = reader.ReadUInt32();
-                uint Unk = reader.ReadUInt32();
-
-                Name = reader.ReadString((int)NameLength);
-                Values = reader.ReadStrings((int)ValueCount, Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
-
-                foreach (string vl in Values)
-                    Value += $" {vl}";
-
-                Console.WriteLine("VariationMacro ------------------");
-                Console.WriteLine(Name);
-                Console.WriteLine(Value);
-                Console.WriteLine("------------------");
-            }
+            Console.WriteLine("VariationMacro ------------------");
+            Console.WriteLine(Name);
+            Console.WriteLine(Value);
+            Console.WriteLine("------------------");
 
 
             reader.Seek(pos + SectionSize, System.IO.SeekOrigin.Begin);
@@ -407,18 +384,22 @@ namespace FirstPlugin
     public class ShaderSymbolData
     {
         public List<ShaderSymbol> symbols = new List<ShaderSymbol>();
-        public void Read(FileReader reader, uint Version = 12)
+        public void Read(FileReader reader, uint Version = 12, bool SkipReading = false)
         {
             var SectionPos = reader.Position;
             uint SectionSize = reader.ReadUInt32();
             uint SectionCount = reader.ReadUInt32();
 
-            for (int i = 0; i < SectionCount; i++)
+            if (!SkipReading)
             {
-                ShaderSymbol symbol = new ShaderSymbol();
-                symbol.Read(reader, Version);
-                symbols.Add(symbol);
+                for (int i = 0; i < SectionCount; i++)
+                {
+                    ShaderSymbol symbol = new ShaderSymbol();
+                    symbol.Read(reader, Version);
+                    symbols.Add(symbol);
+                }
             }
+
             reader.Seek(SectionPos + SectionSize, System.IO.SeekOrigin.Begin);
         }
     }
