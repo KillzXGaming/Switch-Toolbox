@@ -146,7 +146,7 @@ namespace Bfres.Structs
                     setting.DataBlockOutput.Clear();
                     setting.DataBlockOutput.Add(setting.GenerateMips());
                 }
-
+                    
                 if (setting.DataBlockOutput != null)
                 {
                     var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
