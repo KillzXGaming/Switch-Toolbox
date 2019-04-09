@@ -135,7 +135,6 @@ namespace Switch_Toolbox.Library.Animations
 
             public Vector3 GetPosition(float frame)
             {
-
                 Vector3 pos = new Vector3(0);
 
                 if (XPOS.HasAnimation()) pos.X = XPOS.GetValue(frame);
@@ -153,6 +152,17 @@ namespace Switch_Toolbox.Library.Animations
                 if (YROT.HasAnimation()) rot.Y = YROT.GetValue(frame);
                 if (ZROT.HasAnimation()) rot.Z = ZROT.GetValue(frame);
                 if (WROT.HasAnimation()) rot.W = WROT.GetValue(frame);
+
+                return rot;
+            }
+
+            public Vector3 GetEulerRotation(float frame)
+            {
+                Vector3 rot = new Vector3(0);
+
+                float x = XROT.HasAnimation() ? XROT.GetValue(frame) : 0;
+                float y = YROT.HasAnimation() ? YROT.GetValue(frame) : 0;
+                float z = ZROT.HasAnimation() ? ZROT.GetValue(frame) : 0;
 
                 return rot;
             }

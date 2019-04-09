@@ -17,6 +17,8 @@ namespace Bfres.Structs
 {
     public class FTEX : STGenericTexture
     {
+        public const uint Tex2SwizzleValue = 65536;
+
         public override TEX_FORMAT[] SupportedFormats
         {
             get
@@ -133,7 +135,7 @@ namespace Bfres.Structs
             GTXTextureImporter importer = new GTXTextureImporter();
 
             if (Tex2Swizzle != 0)
-                setting.swizzle = Tex2Swizzle;
+                setting.swizzle = Tex2SwizzleValue;
 
             importer.LoadSetting(setting);
 

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Bfres.Structs;
 using Switch_Toolbox.Library.Forms;
 using BrightIdeasSoftware;
+using OpenTK;
 
 namespace FirstPlugin.Forms
 {
@@ -32,7 +33,6 @@ namespace FirstPlugin.Forms
         {
             listViewCustom2.BeginUpdate();
             listViewCustom2.Items.Clear();
-
 
             FSKA fska = (FSKA)boneAnim.Parent;
 
@@ -63,33 +63,24 @@ namespace FirstPlugin.Forms
                     key.Frame = frame;
                     keyFrames.Add(key);
 
-                    //Load position
-                    if (boneAnim.XPOS.HasAnimation())
-                        key.PosX = boneAnim.XPOS.GetValue(frame);
-                    if (boneAnim.YPOS.HasAnimation())
-                        key.PosY = boneAnim.YPOS.GetValue(frame);
-                    if (boneAnim.ZPOS.HasAnimation())
-                        key.PosZ = boneAnim.ZPOS.GetValue(frame);
+                    Vector3 pos = boneAnim.GetPosition(frame);
+                    var rot = boneAnim.GetRotation(frame);
+                    Vector3 sca = boneAnim.GetScale(frame);
 
-                    //Load Rotation
-                    if (boneAnim.XROT.HasAnimation())
-                        key.RotX = boneAnim.XROT.GetValue(frame);
-                    if (boneAnim.YROT.HasAnimation())
-                        key.RotY = boneAnim.YROT.GetValue(frame);
-                    if (boneAnim.ZROT.HasAnimation())
-                        key.RotZ = boneAnim.ZROT.GetValue(frame);
-                    if (boneAnim.WROT.HasAnimation())
-                        key.RotW = boneAnim.WROT.GetValue(frame);
+                  /*  key.PosX = pos.X;
+                    key.PosY = pos.Y;
+                    key.PosZ = pos.Z;
 
-                    //Load Scale
-                    if (boneAnim.XSCA.HasAnimation())
-                        key.ScaX = boneAnim.XSCA.GetValue(frame);
-                    if (boneAnim.YSCA.HasAnimation())
-                        key.ScaY = boneAnim.YSCA.GetValue(frame);
-                    if (boneAnim.ZSCA.HasAnimation())
-                        key.ScaZ = boneAnim.ZSCA.GetValue(frame);
+                    key.PosX = rot.X;
+                    key.PosY = rot.Y;
+                    key.PosZ = rot.Z;
+                    key.RotW = rot.W;
 
-                    listViewCustom2.Items.Add(key.Frame.ToString()).SubItems.AddRange(
+                    key.ScaX = sca.X;
+                    key.ScaY = sca.Y;
+                    key.ScaZ = sca.Z;*/
+
+              /*      listViewCustom2.Items.Add(key.Frame.ToString()).SubItems.AddRange(
                         new ListViewItem.ListViewSubItem[]
                         {
                              new ListViewItem.ListViewSubItem() { Text = key.PosX.ToString() },
@@ -102,7 +93,7 @@ namespace FirstPlugin.Forms
                              new ListViewItem.ListViewSubItem() { Text = key.ScaX.ToString() },
                              new ListViewItem.ListViewSubItem() { Text = key.ScaY.ToString() },
                              new ListViewItem.ListViewSubItem() { Text = key.ScaZ.ToString() },
-                        });
+                        });*/
                 }
             }
             listViewCustom2.EndUpdate();
