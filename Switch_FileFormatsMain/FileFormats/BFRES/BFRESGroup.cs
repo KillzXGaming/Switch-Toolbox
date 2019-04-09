@@ -35,7 +35,12 @@ namespace Bfres.Structs
         {
             get
             {
-                return ((BFRES)Parent).IsWiiU;
+                if (Parent is BFRES)
+                   return ((BFRES)Parent).IsWiiU;
+                else if (Parent.Parent is BFRES)
+                    return ((BFRES)Parent.Parent).IsWiiU;
+                else
+                    return ((BFRES)Parent.Parent.Parent).IsWiiU;
             }
         }
 
@@ -237,6 +242,7 @@ namespace Bfres.Structs
                             fmdl.ModelU = new ResU.Model();
                             fmdl.ModelU.Name = ResourceName;
                             fmdl.ModelU.Shapes.Add("", new ResU.Shape());
+                            fmdl.ModelU.Materials.Add("", new ResU.Material());
                             fmdl.ModelU.VertexBuffers.Add(new ResU.VertexBuffer());
 
                             var skeleton = new ResU.Skeleton();
@@ -507,7 +513,7 @@ namespace Bfres.Structs
 
                     if (setting.DataBlockOutput != null)
                     {
-                        var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                        var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                         var tex = ftex.FromGx2Surface(surface, setting);
                         ftex.UpdateTex(tex);
 
@@ -560,7 +566,7 @@ namespace Bfres.Structs
                 {
                     FTEX ftex = new FTEX();
                     ftex.texture = new ResU.Texture();
-                    var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                    var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                     var tex = ftex.FromGx2Surface(surface, setting);
                     ftex.UpdateTex(tex);
                     ftex.IsEdited = true;
@@ -634,7 +640,7 @@ namespace Bfres.Structs
             GTXImporterSettings setting = new GTXImporterSettings();
             setting.LoadDDS(TextureName, data);
 
-            var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+            var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
             FTEX ftex = new FTEX();
             ftex.texture = new ResU.Texture();
             ftex.texture = ftex.FromGx2Surface(surface, setting);

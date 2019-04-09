@@ -153,8 +153,9 @@ namespace FirstPlugin
             Formats.Add(typeof(TMPK));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
+            Formats.Add(typeof(Turbo.PartsBIN));
 
-            
+
             return Formats.ToArray();
         }
         #endregion

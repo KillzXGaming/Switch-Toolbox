@@ -141,6 +141,9 @@
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Syroot.NintenTools.MarioKart8">
+      <HintPath>..\Toolbox\Lib\Syroot.NintenTools.MarioKart8.dll</HintPath>
+    </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres">
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
       <Private>False</Private>
@@ -200,6 +203,7 @@
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
+    <Compile Include="FileFormats\Bin\KartParts.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
@@ -328,19 +332,36 @@
     <Compile Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.Designer.cs">
       <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\BaseControlPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\BaseObjPt.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\PointID.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\CourseMuuntStructs.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\IObject.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\GravityPaths.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\IntroCamera.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\ItemPaths.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Paths\EnemyPaths.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\GliderPaths.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\JugemPath.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Paths\LapPaths.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Base\RenderablePathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\ObjPath.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\Paths.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\BasePathGroup.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\PullPath.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\RenderableConnectedPaths.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Paths\ReturnPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\PathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\BasePathPoint.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Paths\SteerAssistPath.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.Designer.cs">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathCollectionNode.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathGroupNode.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathPointNode.cs" />
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>UserControl</SubType>
@@ -638,12 +659,6 @@
     <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.Designer.cs">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.Designer.cs">
-      <DependentUpon>CourseMunntEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Editors\PTCL\EmitterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -933,9 +948,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\AnimKeyViewer.resx">
       <DependentUpon>AnimKeyViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\CourseMunntEditor.resx">
-      <DependentUpon>CourseMunntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.resx">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>

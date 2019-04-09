@@ -17,8 +17,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("Effect Index")]
         public int EffectSW
         {
-            get { return root["EffectSW"]; }
-            set { root["EffectSW"] = value; }
+            get { return (root["EffectSW"] != null) ? root["EffectSW"] : -255; }
+            set { if (value != -255) root["EffectSW"] = value; }
         }
 
         [Description("Enables or disables headlights for the course.")]
@@ -52,7 +52,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
         private string FirstCurve 
         {
-            get { return root["FirstCurve"]; }
+            get { return (root["FirstCurve"] != null) ? root["FirstCurve"] : "left"; }
             set { root["FirstCurve"] = value; }
         }
 
@@ -61,7 +61,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("IsJugemAbove")]
         public bool IsJugemAbove
         {
-            get { return root["IsJugemAbove"]; }
+            get { return (root["IsJugemAbove"] != null) ? root["IsJugemAbove"] : false; }
             set { root["IsJugemAbove"] = value; }
         }
 
@@ -70,8 +70,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("JugemAbove")]
         public int JugemAbove
         {
-            get { return root["JugemAbove"]; }
-            set { root["JugemAbove"] = value; }
+            get { return (root["JugemAbove"] != null) ? root["JugemAbove"] : -1; }
+            set { if (value != -1) root["JugemAbove"] = value; }
         }
 
         [Description("Unknown Value")]
@@ -79,8 +79,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("LapJugemPos")]
         public int LapJugemPos
         {
-            get { return root["LapJugemPos"]; }
-            set { root["LapJugemPos"] = value; }
+            get { return (root["LapJugemPos"] != null) ? root["LapJugemPos"] : -1; }
+            set { if (value != -1) root["LapJugemPos"] = value; }
         }
 
         [Description("The number of laps to be finished during the track.")]
@@ -88,8 +88,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("LapNumber")]
         public int LapNumber
         {
-            get { return root["LapNumber"]; }
-            set { root["LapNumber"] = value; }
+            get { return (root["LapNumber"] != null) ? root["LapNumber"] : -1; }
+            set { if (value != -1) root["LapNumber"] = value; }
         }
 
         [Description("The number of pattern sets picked randomly at start.")]
@@ -97,8 +97,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         [DisplayName("PatternNum")]
         public int PatternNum
         {
-            get { return root["PatternNum"]; }
-            set { root["PatternNum"] = value; }
+            get { return (root["PatternNum"] != null) ? root["PatternNum"] : -1; }
+            set { if (value != -1) root["PatternNum"] = value; }
         }
 
 
@@ -160,13 +160,37 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         public List<LapPathGroup> LapPaths;
         public List<EnemyPathGroup> EnemyPaths;
+        public List<ItemPathGroup> ItemPaths;
+        public List<GlidePathGroup> GlidePaths;
+        public List<SteerAssistPathGroup> SteerAssistPaths;
+        public List<GravityPathGroup> GravityPaths;
+        public List<PullPathGroup> PullPaths;
+        public List<PathGroup> Paths;
+        public List<ObjPathGroup> ObjPaths;
+        public List<JugemPathGroup> JugemPaths;
+        public List<IntroCamera> IntroCameras;
         
+        public List<int> MapObjIdList;
+        public List<string> MapObjResList;
+
         public CourseMuuntScene(dynamic rootNode)
         {
             root = rootNode;
 
             LapPaths = new List<LapPathGroup>();
             EnemyPaths = new List<EnemyPathGroup>();
+            GlidePaths = new List<GlidePathGroup>();
+            ItemPaths = new List<ItemPathGroup>();
+            SteerAssistPaths = new List<SteerAssistPathGroup>();
+            GravityPaths = new List<GravityPathGroup>();
+            PullPaths = new List<PullPathGroup>();
+            Paths = new List<PathGroup>();
+            ObjPaths = new List<ObjPathGroup>();
+            JugemPaths = new List<JugemPathGroup>();
+            IntroCameras = new List<IntroCamera>();
+
+            MapObjIdList = new List<int>();
+            MapObjResList = new List<string>();
 
             if (root.ContainsKey("Area")) {
                 foreach (var area in root["Area"])
@@ -192,22 +216,35 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 foreach (var effectArea in root["EffectArea"])
                 { }
             }
+            if (root.ContainsKey("ItemPath")) {
+                foreach (var itemPath in root["ItemPath"]) {
+                    ItemPaths.Add(new ItemPathGroup(itemPath));
+                }
+            }
             if (root.ContainsKey("EnemyPath")) {
                 foreach (var enemyPath in root["EnemyPath"]) {
                     EnemyPaths.Add(new EnemyPathGroup(enemyPath));
                 }
             }
+            if (root.ContainsKey("GlidePath")) {
+                foreach (var glidePath in root["GlidePath"]) {
+                    GlidePaths.Add(new GlidePathGroup(glidePath));
+                }
+            }
             if (root.ContainsKey("GravityPath")) {
-                foreach (var gravityPath in root["GravityPath"])
-                { }
+                foreach (var gravityPath in root["GravityPath"]) {
+                    GravityPaths.Add(new GravityPathGroup(gravityPath));
+                }
             }
             if (root.ContainsKey("IntroCamera")) {
-                foreach (var introCamera in root["IntroCamera"])
-                { }
+                foreach (var introCamera in root["IntroCamera"]) {
+                    IntroCameras.Add(new IntroCamera(introCamera));
+                }
             }
             if (root.ContainsKey("JugemPath")) {
-                foreach (var jugemPath in root["JugemPath"])
-                { }
+                foreach (var jugemPath in root["JugemPath"]) {
+                   JugemPaths.Add(new JugemPathGroup(jugemPath));
+                }
             }
             if (root.ContainsKey("LapPath")) {
                 foreach (var lapPath in root["LapPath"]) {
@@ -215,20 +252,32 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 }
             }
             if (root.ContainsKey("MapObjIdList")) {
-                foreach (var mapObjIdList in root["MapObjIdList"])
-                { }
+                foreach (var mapObjIdList in root["MapObjIdList"]) {
+                    MapObjIdList.Add(mapObjIdList);
+                }
             }
             if (root.ContainsKey("MapObjResList")) {
-                foreach (var mapObjResList in root["MapObjResList"])
-                { }
+                foreach (var mapObjResList in root["MapObjResList"]) {
+                    MapObjResList.Add(mapObjResList);
+                }
             }
             if (root.ContainsKey("Obj")) {
-                foreach (var obj in root["Obj"])
-                { }
+                foreach (var objPath in root["Obj"]) {
+                }
+            }
+            if (root.ContainsKey("ObjPath")) {
+                foreach (var objPath in root["ObjPath"]) {
+              //      ObjPaths.Add(new ObjPathGroup(objPath));
+                }
+            }
+            if (root.ContainsKey("PullPath")) {
+                foreach (var pullPath in root["PullPath"])
+                    PullPaths.Add(new PullPathGroup(pullPath));
             }
             if (root.ContainsKey("Path")) {
-                foreach (var path in root["Path"])
-                { }
+                foreach (var path in root["Path"]) {
+                   Paths.Add(new PathGroup(path));
+                }
             }
             if (root.ContainsKey("ReplayCamera")) {
                 foreach (var replayCamera in root["ReplayCamera"])
@@ -237,6 +286,11 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             if (root.ContainsKey("SoundObj")) {
                 foreach (var soundObj in root["SoundObj"])
                 { }
+            }
+            if (root.ContainsKey("SteerAssistPath")) {
+                foreach (var steerAssistPath in root["SteerAssistPath"]) {
+                    SteerAssistPaths.Add(new SteerAssistPathGroup(steerAssistPath));
+                }
             }
         }
 
@@ -250,7 +304,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 return;
 
             KCL kcl = (KCL)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
-            KclObjects.Add(kcl);
+
+            if (kcl != null)
+                KclObjects.Add(kcl);
         }
 
         public void AddRenderableBfres(string FilePath)
@@ -259,81 +315,9 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 return;
 
             BFRES bfres = (BFRES)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
-            BfresObjects.Add(bfres);
+
+            if (bfres != null)
+                BfresObjects.Add(bfres);
         }
-    }
-
-    public class IntroCamera
-    {
-
-    }
-
-    public class EnemyPaths
-    {
-        private dynamic root;
-
-
-    }
-
-    public class PointID : IObject
-    {
-        public int PathID
-        {
-            get
-            {
-                return this["PathId"];
-            }
-            set
-            {
-                this["PathId"] = value;
-            }
-        }
-
-        public int PtID
-        {
-            get
-            {
-                return this["PtId"];
-            }
-            set
-            {
-                this["PtId"] = value;
-            }
-        }
-
-        public PointID(dynamic bymlNode)
-        {
-            if (bymlNode is Dictionary<string, dynamic>) Prop = (Dictionary<string, dynamic>)bymlNode;
-            else throw new Exception("Not a dictionary");
-        }
-
-        [Browsable(false)]
-        public Dictionary<string, dynamic> Prop { get; set; } = new Dictionary<string, dynamic>();
-
-        public dynamic this[string name]
-        {
-            get
-            {
-                if (Prop.ContainsKey(name)) return Prop[name];
-                else return null;
-            }
-            set
-            {
-                if (Prop.ContainsKey(name)) Prop[name] = value;
-                else Prop.Add(name, value);
-            }
-        }
-    }
-
-    public class ControlPoint
-    {
-        public Vector3 Point1;
-        public Vector3 Point2;
-    }
-
-    public class ObjectNode
-    {
-        public Dictionary<string, dynamic> Properties { get; set; } = new Dictionary<string, dynamic>();
-
     }
 }

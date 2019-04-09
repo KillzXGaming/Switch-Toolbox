@@ -63,7 +63,11 @@ namespace FirstPlugin
         {
             GL.GenBuffers(1, out vbo_position);
             GL.GenBuffers(1, out ibo_elements);
+
+            UpdateVertexData();
+            UpdateTextureMaps();
         }
+
         public void LoadFile(ResU.ResFile resFileU)
         {
             ResFileNode.Load(resFileU);
@@ -446,8 +450,8 @@ namespace FirstPlugin
         {
             SetDefaultTextureAttributes(mat, shader);
 
-            // GL.ActiveTexture(TextureUnit.Texture0 + 1);
-            //  GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+            GL.ActiveTexture(TextureUnit.Texture0 + 1);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
 
             GL.ActiveTexture(TextureUnit.Texture11);
             GL.Uniform1(shader["weightRamp1"], 11);
@@ -534,7 +538,7 @@ namespace FirstPlugin
         public static int BindTexture(MatTexture tex, bool IsWiiU)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
-        //    GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
 
             string activeTex = tex.Name;
             if (tex.animatedTexName != "")

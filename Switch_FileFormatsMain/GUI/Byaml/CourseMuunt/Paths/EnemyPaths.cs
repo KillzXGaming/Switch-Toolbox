@@ -11,101 +11,10 @@ using System.Drawing;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class RenderablePaths : AbstractGlDrawable
-    {
-        private static ShaderProgram defaultShaderProgram;
-
-        public List<EnemyPathGroup> PathGroups = new List<EnemyPathGroup>();
-
-        public override void Prepare(GL_ControlLegacy control)
-        {
-        }
-
-        public override void Prepare(GL_ControlModern control)
-        {
-            var defaultFrag = new FragmentShader(
-      @"#version 330
-				void main(){
-					gl_FragColor = vec4(0,1,0,1);
-				}");
-
-            var defaultVert = new VertexShader(
-              @"#version 330
-				in vec4 position;
-			
-                uniform mat4 mtxCam;
-                uniform mat4 mtxMdl;
-
-				void main(){
-					gl_Position = mtxCam  * mtxMdl * vec4(position.xyz, 1);
-				}");
-
-            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
-        }
-
-        public override void Draw(GL_ControlLegacy control, Pass pass)
-        {
-            foreach (var group in PathGroups)
-            {
-                foreach (var path in group.PathPoints)
-                {
-                    GL.LineWidth(2f);
-                    foreach (var nextPt in path.NextPoints)
-                    {
-                        GL.Color3(Color.Blue);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(path.Translate);
-                        GL.Vertex3(PathGroups[nextPt.PathID].PathPoints[nextPt.PtID].Translate);
-                        GL.End();
-                    }
-                    foreach (var prevPt in path.PrevPoints)
-                    {
-                        GL.Color3(Color.Blue);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(path.Translate);
-                        GL.Vertex3(PathGroups[prevPt.PathID].PathPoints[prevPt.PtID].Translate);
-                        GL.End();
-                    }
-                }
-            }
-        }
-
-        public override void Draw(GL_ControlModern control, Pass pass)
-        {
-            control.CurrentShader = defaultShaderProgram;
-
-            foreach (var group in PathGroups)
-            {
-                foreach (var path in group.PathPoints)
-                {
-                    GL.LineWidth(2f);
-                    foreach (var nextPt in path.NextPoints)
-                    {
-                        GL.Color3(Color.Blue);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(path.Translate);
-                        GL.Vertex3(PathGroups[nextPt.PathID].PathPoints[nextPt.PtID].Translate);
-                        GL.End();
-                    }
-                    foreach (var prevPt in path.PrevPoints)
-                    {
-                        GL.Color3(Color.Blue);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(path.Translate);
-                        GL.Vertex3(PathGroups[prevPt.PathID].PathPoints[prevPt.PtID].Translate);
-                        GL.End();
-                    }
-                }
-            }
-        }
-    }
-
-    public class EnemyPathGroup : IObject
+    public class EnemyPathGroup : BasePathGroup, IObject
     {
         public const string N_EnemyPathGroup = "EnemyPathGroup";
         public const string N_UnitIdNum = "UnitIdNum";
-
-        public List<PathPoint> PathPoints = new List<PathPoint>();
 
         public EnemyPathGroup(dynamic bymlNode)
         {
@@ -123,13 +32,13 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         public int EnemyPathGroupId
         {
-            get { return this[N_EnemyPathGroup]; }
+            get { return this[N_EnemyPathGroup] != null ? this[N_EnemyPathGroup] : -1; }
             set { this[N_EnemyPathGroup] = value; }
         }
 
         public int UnitIdNum
         {
-            get { return this[N_UnitIdNum]; }
+            get { return this[N_UnitIdNum] != null ? this[N_UnitIdNum] : -1; }
             set { this[N_UnitIdNum] = value; }
         }
 
@@ -148,30 +57,32 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         }
     }
 
-    public class EnemyPathPoint : PathPoint
+    public class EnemyPathPoint : BasePathPoint
     {
+        private RenderablePathPoint renderablePoint;
+
         [Browsable(false)]
         public override RenderablePathPoint RenderablePoint
         {
             get
             {
-                var point = new RenderablePathPoint(Translate, Rotate, new OpenTK.Vector3(30), this);
-                point.CanConnect = true;
-                return point;
+                if (renderablePoint == null)
+                    renderablePoint = new RenderablePathPoint(new Vector4(1f, 0f, 0f, 1f), Translate, Rotate, new OpenTK.Vector3(30), this);
+                return renderablePoint;
             }
         }
 
         [Category("Properties")]
         public int BattleFlag
         {
-            get { return this["BattleFlag"]; }
+            get { return this["BattleFlag"] != null ? this["BattleFlag"] : -1; }
             set { this["BattleFlag"] = value; }
         }
 
         [Category("Properties")]
         public int Priority
         {
-            get { return this["Priority"]; }
+            get { return this["Priority"] != null ? this["Priority"] : -1; }
             set { this["Priority"] = value; }
         }
 

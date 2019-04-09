@@ -2,6 +2,7 @@
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using Switch_Toolbox.Library.IO;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 using FirstPlugin.Turbo.CourseMuuntStructs;
@@ -29,10 +30,12 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override bool IsSelected(int partIndex) => Selected;
 
-        protected static Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
+        public Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
 
-        public RenderablePathPoint(Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject) {
+        public RenderablePathPoint(Vector4 color, Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject) {
             NodeObject = nodeObject;
+
+            Color = color;
             UpdateTransform(pos, rot, sca);
         }
 
@@ -220,14 +223,14 @@ namespace GL_EditorFramework.EditorDrawables
 
         private void UpdateNodePosition()
         {
-            if (NodeObject is PathPoint)
+            if (NodeObject is BasePathPoint)
             {
-                ((PathPoint)NodeObject).Translate = position;
-                ((PathPoint)NodeObject).Scale = scale;
-                ((PathPoint)NodeObject).Rotate = rotate;
+                ((BasePathPoint)NodeObject).Translate = position;
+                ((BasePathPoint)NodeObject).Scale = scale;
+                ((BasePathPoint)NodeObject).Rotate = rotate;
 
-                if (((PathPoint)NodeObject).OnPathMoved != null)
-                    ((PathPoint)NodeObject).OnPathMoved();
+                if (((BasePathPoint)NodeObject).OnPathMoved != null)
+                    ((BasePathPoint)NodeObject).OnPathMoved();
             }
         }
 

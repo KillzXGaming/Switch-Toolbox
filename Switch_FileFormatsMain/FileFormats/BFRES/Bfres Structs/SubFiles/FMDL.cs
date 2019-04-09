@@ -634,15 +634,6 @@ namespace Bfres.Structs
                                     SubMeshCount = 1,
                                 });
                             }
-
-                            if (IsWiiU)
-                            {
-                                BfresWiiU.ReadShapesVertices(shape, shape.ShapeU, shape.VertexBufferU, this);
-                            }
-                            else
-                            {
-                                BfresSwitch.ReadShapesVertices(shape, shape.Shape, shape.VertexBuffer, this);
-                            }
                         }
                         Cursor.Current = Cursors.Default;
                     }
@@ -905,15 +896,6 @@ namespace Bfres.Structs
 
                             List<string> keyList = shapes.Select(o => o.Text).ToList();
                             shape.Text = Utils.RenameDuplicateString(keyList, shape.Text);
-
-                            if (IsWiiU)
-                            {
-                                BfresWiiU.ReadShapesVertices(shape, shape.ShapeU, shape.VertexBufferU, this);
-                            }
-                            else
-                            {
-                                BfresSwitch.ReadShapesVertices(shape, shape.Shape, shape.VertexBuffer, this);
-                            }
                         }
 
 

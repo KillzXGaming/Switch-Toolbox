@@ -13,6 +13,7 @@ namespace FirstPlugin
     {
         public bool OverrideMipCounter = false;
 
+        bool IsLoaded = false;
         public GTXTextureImporter()
         {
             InitializeComponent();
@@ -54,7 +55,6 @@ namespace FirstPlugin
             tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3B_TILED_THIN1);
             tileModeCB.Items.Add(GX2.GX2TileMode.MODE_3B_TILED_THICK);
             tileModeCB.Items.Add(GX2.GX2TileMode.MODE_LINEAR_SPECIAL);
-            tileModeCB.Items.Add(GX2.GX2TileMode.MODE_DEFAULT_FIX2197);
 
             ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_1D);
             ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_1D_ARRAY);
@@ -68,8 +68,10 @@ namespace FirstPlugin
             ImgDimComb.Items.Add(GX2.GX2SurfaceDimension.DIM_LAST);
 
             ImgDimComb.SelectedItem = GX2.GX2SurfaceDimension.DIM_2D;
-            tileModeCB.SelectedItem = GX2.GX2TileMode.MODE_2D_TILED_THIN1;
+            tileModeCB.SelectedItem = GX2.GX2TileMode.MODE_DEFAULT;
             formatComboBox.SelectedItem = GX2.GX2SurfaceFormat.T_BC1_SRGB;
+
+            IsLoaded = true;
         }
 
         public void LoadSupportedFormats(TEX_FORMAT[] Formats)
@@ -147,9 +149,17 @@ namespace FirstPlugin
         private void tileModeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tileModeCB.SelectedIndex > -1 && SelectedTexSettings != null)
-                SelectedTexSettings.tileMode = (uint)tileModeCB.SelectedItem;
+                SelectedTexSettings.tileMode = (uint)(GX2.GX2TileMode)tileModeCB.SelectedItem;
+
+            if (tileModeCB.SelectedIndex != 0 && IsLoaded)
+            {
+                var result = MessageBox.Show("Warning! Only change the tile mode unless you know what you are doing!", "Texture Importer", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Cancel)
+                    tileModeCB.SelectedIndex = 0;
+            }
         }
 
+        bool DialogShown = false;
         private void formatComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
@@ -179,14 +189,13 @@ namespace FirstPlugin
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
-                SwizzleNum.Value = SelectedTexSettings.swizzle;
+                SwizzleNum.Value = (SelectedTexSettings.swizzle >> 8) & 7;
             }
         }
 
-
-        private void SwizzleNum_ValueChanged(object sender, EventArgs e)
-        {
-            SelectedTexSettings.swizzle = (uint)SwizzleNum.Value;
+        private void SwizzleNum_ValueChanged(object sender, EventArgs e) {
+            SelectedTexSettings.swizzle &= GX2.SwizzleMask;
+            SelectedTexSettings.swizzle |= (uint)SwizzleNum.Value << 8;
         }
 
 
@@ -248,7 +257,7 @@ namespace FirstPlugin
             this.SwizzleNum.ForeColor = System.Drawing.Color.White;
             this.SwizzleNum.Location = new System.Drawing.Point(877, 142);
             this.SwizzleNum.Maximum = new decimal(new int[] {
-            -1,
+            7,
             0,
             0,
             0});
@@ -262,16 +271,19 @@ namespace FirstPlugin
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(769, 142);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(42, 13);
+            this.label5.Size = new System.Drawing.Size(82, 13);
             this.label5.TabIndex = 43;
-            this.label5.Text = "Swizzle";
+            this.label5.Text = "Swizzle Pattern:";
             // 
             // tileModeCB
             // 
-            this.tileModeCB.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.tileModeCB.BorderColor = System.Drawing.Color.Empty;
+            this.tileModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.tileModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.tileModeCB.FormattingEnabled = true;
             this.tileModeCB.Location = new System.Drawing.Point(877, 69);
             this.tileModeCB.Name = "tileModeCB";
+            this.tileModeCB.ReadOnly = true;
             this.tileModeCB.Size = new System.Drawing.Size(172, 21);
             this.tileModeCB.TabIndex = 42;
             this.tileModeCB.SelectedIndexChanged += new System.EventHandler(this.tileModeCB_SelectedIndexChanged);
@@ -287,10 +299,13 @@ namespace FirstPlugin
             // 
             // ImgDimComb
             // 
-            this.ImgDimComb.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.ImgDimComb.BorderColor = System.Drawing.Color.Empty;
+            this.ImgDimComb.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.ImgDimComb.ButtonColor = System.Drawing.Color.Empty;
             this.ImgDimComb.FormattingEnabled = true;
             this.ImgDimComb.Location = new System.Drawing.Point(875, 36);
             this.ImgDimComb.Name = "ImgDimComb";
+            this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(172, 21);
             this.ImgDimComb.TabIndex = 40;
             // 
@@ -335,6 +350,7 @@ namespace FirstPlugin
             this.MipmapNum.Name = "MipmapNum";
             this.MipmapNum.Size = new System.Drawing.Size(130, 16);
             this.MipmapNum.TabIndex = 36;
+            this.MipmapNum.ValueChanged += new System.EventHandler(this.MipmapNum_ValueChanged);
             // 
             // WidthLabel
             // 
@@ -356,10 +372,13 @@ namespace FirstPlugin
             // 
             // formatComboBox
             // 
-            this.formatComboBox.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.formatComboBox.BorderColor = System.Drawing.Color.Empty;
+            this.formatComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.formatComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(875, 6);
             this.formatComboBox.Name = "formatComboBox";
+            this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(172, 21);
             this.formatComboBox.TabIndex = 32;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
@@ -367,6 +386,7 @@ namespace FirstPlugin
             // listViewCustom1
             // 
             this.listViewCustom1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Name,
             this.Format});
@@ -416,7 +436,7 @@ namespace FirstPlugin
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Empty;
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Location = new System.Drawing.Point(237, 0);
@@ -478,5 +498,10 @@ namespace FirstPlugin
         private System.Windows.Forms.ColumnHeader Format;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+
+        private void MipmapNum_ValueChanged(object sender, EventArgs e) {
+            if (SelectedTexSettings != null)
+                SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+        }
     }
 }

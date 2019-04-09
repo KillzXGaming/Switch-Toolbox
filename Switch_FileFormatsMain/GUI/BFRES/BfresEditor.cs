@@ -134,9 +134,6 @@ namespace FirstPlugin.Forms
             animationPanel.ClosePanel();
         }
 
-        public Action UpdateVertexData;
-        public Action UpdateTextureMaps;
-
         public void OnLoadedTab()
         {
             //If a model was loaded we don't need to load the drawables again
@@ -155,9 +152,6 @@ namespace FirstPlugin.Forms
             viewport.LoadObjects();
 
             IsLoaded = true;
-
-            UpdateVertexData();
-            UpdateTextureMaps();
         }
 
         private void stTabControl1_TabIndexChanged(object sender, EventArgs e)

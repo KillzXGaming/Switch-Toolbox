@@ -17,6 +17,8 @@ namespace Bfres.Structs
 {
     public class FTEX : STGenericTexture
     {
+        public const uint Tex2SwizzleValue = 65536;
+
         public override TEX_FORMAT[] SupportedFormats
         {
             get
@@ -133,7 +135,7 @@ namespace Bfres.Structs
             GTXTextureImporter importer = new GTXTextureImporter();
 
             if (Tex2Swizzle != 0)
-                setting.swizzle = Tex2Swizzle;
+                setting.swizzle = Tex2SwizzleValue;
 
             importer.LoadSetting(setting);
 
@@ -146,10 +148,10 @@ namespace Bfres.Structs
                     setting.DataBlockOutput.Clear();
                     setting.DataBlockOutput.Add(setting.GenerateMips());
                 }
-
+                    
                 if (setting.DataBlockOutput != null)
                 {
-                    var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                    var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                     var tex = FromGx2Surface(surface, setting);
                     UpdateTex(tex);
 
@@ -210,7 +212,7 @@ namespace Bfres.Structs
             {
                 if (setting.DataBlockOutput != null)
                 {
-                    var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                    var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                     var tex = FromGx2Surface(surface, setting);
                     UpdateTex(tex);
                     texture.Name = Text;
@@ -233,7 +235,7 @@ namespace Bfres.Structs
 
                     if (setting.DataBlockOutput != null)
                     {
-                        var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                        var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                         var tex = FromGx2Surface(surface, setting);
                         UpdateTex(tex);
                         texture.Name = Text;

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using OpenTK;
+using GL_EditorFramework.EditorDrawables;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class ReturnPoint : IObject
+    public class ReturnPoint : BasePathPoint, IObject
     {
         public const string N_Normal = "Normal";
         public const string N_Position = "Position";
@@ -21,26 +22,18 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             else throw new Exception("Not a dictionary");
         }
 
-        [Browsable(false)]
-        public Dictionary<string, dynamic> Prop { get; set; } = new Dictionary<string, dynamic>();
+        private RenderablePathPoint renderablePoint;
 
-        public dynamic this[string name]
+        [Browsable(false)]
+        public override RenderablePathPoint RenderablePoint
         {
             get
             {
-                if (Prop.ContainsKey(name)) return Prop[name];
-                else return null;
-            }
-            set
-            {
-                if (Prop.ContainsKey(name)) Prop[name] = value;
-                else Prop.Add(name, value);
+                if (renderablePoint == null)
+                    renderablePoint = new RenderablePathPoint(new Vector4(1f, 0.0f, 1f, 0.1f), Translate, Rotate, Scale, this);
+                return renderablePoint;
             }
         }
-
-        public List<object> Properties = new List<object>();
-
-        public List<ControlPoint> ControlPoints = new List<ControlPoint>();
 
         public int JugemIndex
         {

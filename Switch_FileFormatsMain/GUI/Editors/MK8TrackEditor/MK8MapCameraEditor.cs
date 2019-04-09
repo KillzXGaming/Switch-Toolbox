@@ -8,13 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library;
 using ByamlExt.Byaml;
 using ByamlExt;
 
 namespace FirstPlugin.Turbo
 {
-    public partial class MK8MapCameraEditor : STForm
+    public partial class MK8MapCameraEditor : STForm, IFIleEditor
     {
+        public List<IFileFormat> GetFileFormats()
+        {
+            return new List<IFileFormat>() { activeCameraFile };
+        }
+
         public MK8MapCameraEditor()
         {
             InitializeComponent();
@@ -25,12 +31,19 @@ namespace FirstPlugin.Turbo
         {
             activeCameraFile = mapCamera;
 
+            var cam = mapCamera.cameraData;
+
             if (activeCameraFile.BigEndian)
                 beBtnRadio.Checked = true;
             else
                 leBtnRadio.Checked = true;
 
             stPropertyGrid1.LoadProperty(activeCameraFile.cameraData, OnPropertyChanged);
+
+            glControl2D1.AddCircle(new OpenTK.Vector2(cam.PositionX, cam.PositionZ));
+            glControl2D1.AddCircle(new OpenTK.Vector2(cam.TargetX, cam.TargetZ));
+
+            glControl2D1.AddRectangle(cam.BoundingWidth, cam.BoundingHeight, new OpenTK.Vector2(cam.PositionX, cam.PositionZ));
         }
 
         public void OnPropertyChanged() { }

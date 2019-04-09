@@ -204,8 +204,6 @@ namespace FirstPlugin
 
             if (!IsLoaded)
             {
-                bfresEditor.UpdateVertexData = BFRESRender.UpdateVertexData;
-                bfresEditor.UpdateTextureMaps = BFRESRender.UpdateTextureMaps;
                 bfresEditor.OnLoadedTab();
             }
 
@@ -767,8 +765,7 @@ namespace FirstPlugin
                         HasTextures = true;
                 }
             }
-  
-
+ 
             if (IsTex1 && HasTextures)
             {
                 STFileSaver.SaveFileFormat(this, FileName);
@@ -776,7 +773,7 @@ namespace FirstPlugin
                 byte[] Tex2 = GenerateTex2();
 
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = FileName + FileName.Replace("Tex1", "Tex2");
+                sfd.FileName = FileName.Replace("Tex1", "Tex2");
                 sfd.DefaultExt = ".sbfres";
 
                 List<IFileFormat> formats = new List<IFileFormat>();

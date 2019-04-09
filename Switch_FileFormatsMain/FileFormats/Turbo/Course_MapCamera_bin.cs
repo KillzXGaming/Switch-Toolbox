@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library;
 using FirstPlugin.Forms;
+using OpenTK;
 
 namespace FirstPlugin.Turbo
 {
@@ -62,18 +63,18 @@ namespace FirstPlugin.Turbo
 
         public class CameraData
         {
-            public float MapPosX { get; set; }
-            public float MapPosY { get; set; }
-            public float MapPosZ { get; set; }
-            public float MapPos2X { get; set; }
-            public float MapPos2Y { get; set; }
-            public float MapPos2Z { get; set; }
+            public float PositionX { get; set; }
+            public float PositionY { get; set; }
+            public float PositionZ { get; set; }
+            public float TargetX { get; set; }
+            public float TargetY { get; set; }
+            public float TargetZ { get; set; }
 
             public float Unk { get; set; }
             public float Unk2 { get; set; }
             public float Unk3 { get; set; }
-            public float Unk4 { get; set; }
-            public float Unk5 { get; set; }
+            public float BoundingWidth { get; set; }
+            public float BoundingHeight { get; set; }
             public byte Unk6 { get; set; }
         }
 
@@ -97,18 +98,21 @@ namespace FirstPlugin.Turbo
             reader.Position = 0;
 
             cameraData = new CameraData();
-            cameraData.MapPosX = reader.ReadSingle();
-            cameraData.MapPosY = reader.ReadSingle();
-            cameraData.MapPosZ = reader.ReadSingle();
-            cameraData.MapPos2X = reader.ReadSingle();
-            cameraData.MapPos2Y = reader.ReadSingle();
-            cameraData.MapPos2Z = reader.ReadSingle();
+            cameraData.PositionX = reader.ReadSingle();
+            cameraData.PositionY = reader.ReadSingle();
+            cameraData.PositionZ = reader.ReadSingle();
+            cameraData.TargetX = reader.ReadSingle();
+            cameraData.TargetY = reader.ReadSingle();
+            cameraData.TargetZ = reader.ReadSingle();
             cameraData.Unk = reader.ReadSingle();
             cameraData.Unk2 = reader.ReadSingle();
             cameraData.Unk3 = reader.ReadSingle();
-            cameraData.Unk4 = reader.ReadSingle();
-            cameraData.Unk5 = reader.ReadSingle();
+            cameraData.BoundingWidth = reader.ReadSingle();
+            cameraData.BoundingHeight = reader.ReadSingle();
             cameraData.Unk6 = reader.ReadByte();
+
+            reader.Close();
+            reader.Dispose();
         }
         public void Write(FileWriter writer)
         {
@@ -117,18 +121,22 @@ namespace FirstPlugin.Turbo
             else
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
 
-            writer.Write(cameraData.MapPosX);
-            writer.Write(cameraData.MapPosY);
-            writer.Write(cameraData.MapPosZ);
-            writer.Write(cameraData.MapPos2X);
-            writer.Write(cameraData.MapPos2Y);
-            writer.Write(cameraData.MapPos2Z);
+            writer.Write(cameraData.PositionX);
+            writer.Write(cameraData.PositionY);
+            writer.Write(cameraData.PositionZ);
+            writer.Write(cameraData.TargetX);
+            writer.Write(cameraData.TargetY);
+            writer.Write(cameraData.TargetZ);
             writer.Write(cameraData.Unk);
             writer.Write(cameraData.Unk2);
             writer.Write(cameraData.Unk3);
-            writer.Write(cameraData.Unk4);
-            writer.Write(cameraData.Unk5);
+            writer.Write(cameraData.BoundingWidth);
+            writer.Write(cameraData.BoundingHeight);
             writer.Write(cameraData.Unk6);
+
+            writer.Flush();
+            writer.Close();
+            writer.Dispose();
         }
     }
 }
