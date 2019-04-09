@@ -149,7 +149,7 @@ namespace Bfres.Structs
 
                 if (setting.DataBlockOutput != null)
                 {
-                    var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                    var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                     var tex = FromGx2Surface(surface, setting);
                     UpdateTex(tex);
 
@@ -210,7 +210,7 @@ namespace Bfres.Structs
             {
                 if (setting.DataBlockOutput != null)
                 {
-                    var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                    var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                     var tex = FromGx2Surface(surface, setting);
                     UpdateTex(tex);
                     texture.Name = Text;
@@ -233,7 +233,7 @@ namespace Bfres.Structs
 
                     if (setting.DataBlockOutput != null)
                     {
-                        var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                        var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                         var tex = FromGx2Surface(surface, setting);
                         UpdateTex(tex);
                         texture.Name = Text;

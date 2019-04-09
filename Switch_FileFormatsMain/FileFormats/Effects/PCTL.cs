@@ -526,7 +526,7 @@ namespace FirstPlugin
                     {
                         if (setting.DataBlockOutput != null)
                         {
-                            var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                            var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                             var newData = Utils.CombineByteArray(surface.data, surface.mipData);
                         }
                     }
@@ -544,7 +544,7 @@ namespace FirstPlugin
 
                             if (setting.DataBlockOutput != null)
                             {
-                                var surface = setting.CreateGx2Texture(setting.DataBlockOutput[0]);
+                                var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                                 var newData = Utils.CombineByteArray(surface.data, surface.mipData);
                                 if (newData.Length != data.Length)
                                     throw new Exception($"Image is not the correct size {newData.Length}. Should be {data.Length}");

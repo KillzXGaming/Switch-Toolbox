@@ -10,8 +10,11 @@ namespace FirstPlugin
 {
     public class GTXSwizzle
     {
-        public static GX2.GX2Surface CreateGx2Texture(byte[] imageData, GTXImporterSettings setting, uint tileMode, uint AAMode)
+        public static GX2.GX2Surface CreateGx2Texture(byte[] imageData, GTXImporterSettings setting)
         {
+            uint tileMode = setting.tileMode;
+            uint aaMode = (uint)setting.AAMode;
+
             var Format = (GX2.GX2SurfaceFormat)setting.Format;
 
             Console.WriteLine("Format " + Format + " " + setting.TexName);
@@ -46,7 +49,7 @@ namespace FirstPlugin
             }
 
             if (tileMode == 0)
-                tileMode = GX2.getDefaultGX2TileMode(1, setting.TexWidth, setting.TexHeight, 1,(uint)setting.Format, 0, 1);
+                tileMode = GX2.getDefaultGX2TileMode((uint)setting.SurfaceDim, setting.TexWidth, setting.TexHeight, 1,(uint)setting.Format, 0, 1);
 
             int tiling1dLevel = 0;
             bool tiling1dLevelSet = false;
@@ -126,7 +129,7 @@ namespace FirstPlugin
             surf.bpp = bpp;
             surf.format = (uint)setting.Format;
             surf.numMips = setting.MipCount;
-            surf.aa = AAMode;
+            surf.aa = aaMode;
             surf.mipOffset = mipOffsets.ToArray();
             surf.numMips = (uint)Swizzled.Count;
             surf.alignment = alignment;
