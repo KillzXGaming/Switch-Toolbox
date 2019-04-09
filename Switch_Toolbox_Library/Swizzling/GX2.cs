@@ -1154,7 +1154,7 @@ namespace Switch_Toolbox.Library
             uint macroTileIndexY = y / macroTileHeight;
             ulong macroTileOffset = (macroTileIndexX + macroTilesPerRow * macroTileIndexY) * macroTileBytes;
 
-            if (isBankSwappedTileMode(tileMode))
+            if (isBankSwappedTileMode(tileMode) != 0)
             {
                 bankSwapWidth = computeSurfaceBankSwappedWidth(tileMode, bpp, 1, pitch);
                 swapIndex = macroTilePitch * macroTileIndexX / bankSwapWidth;
@@ -1210,7 +1210,7 @@ namespace Switch_Toolbox.Library
             if (DebugSurface)
                 Console.WriteLine("computeSurfaceMipLevelTileMode expTileMode " + expTileMode);
 
-            if (noRecursive || level == 0)
+            if (noRecursive != 0 || level == 0)
                 return expTileMode;
 
             switch (bpp)
@@ -1912,8 +1912,7 @@ namespace Switch_Toolbox.Library
                      (flags.value >> 4) & 1,
                      (flags.value >> 7) & 1,
                      pitchAlign,
-                     heightAlign,
-                     microTileThickness);
+                     heightAlign);
 
                 expPitch = padDimens.Item1;
                 expHeight = padDimens.Item2;
@@ -1998,8 +1997,7 @@ namespace Switch_Toolbox.Library
                         (flags.value >> 4) & 1,
                         (flags.value >> 7) & 1,
                         pitchAlign,
-                        heightAlign,
-                        microTileThickness);
+                        heightAlign);
 
                     expPitch = padDimens.Item1;
                     expHeight = padDimens.Item2;
