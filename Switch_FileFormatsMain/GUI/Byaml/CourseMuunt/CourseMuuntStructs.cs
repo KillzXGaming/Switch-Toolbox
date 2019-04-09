@@ -297,6 +297,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         public List<BFRES> BfresObjects = new List<BFRES>();
         public List<KCL> KclObjects = new List<KCL>();
+        public List<AAMP> ParameterArchives = new List<AAMP>();
 
         public void AddRenderableKcl(string FilePath)
         {
@@ -318,6 +319,17 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
             if (bfres != null)
                 BfresObjects.Add(bfres);
+        }
+
+        public void AddParameterArchive(string FilePath)
+        {
+            if (!System.IO.File.Exists(FilePath))
+                return;
+
+            AAMP aamp = (AAMP)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
+
+            if (aamp != null)
+                ParameterArchives.Add(aamp);
         }
     }
 }
