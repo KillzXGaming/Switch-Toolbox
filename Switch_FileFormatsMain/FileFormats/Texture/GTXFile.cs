@@ -104,13 +104,13 @@ namespace FirstPlugin
                 uint dataBlockType;
                 uint mipBlockType;
 
-                if (header.MajorVersion == 6)
+                if (header.MajorVersion == 6 && header.MinorVersion == 0)
                 {
                     surfBlockType = 0x0A;
                     dataBlockType = 0x0B;
                     mipBlockType = 0x0C;
                 }
-                else if (header.MajorVersion == 7)
+                else if (header.MajorVersion == 6 || header.MajorVersion == 7)
                 {
                     surfBlockType = 0x0B;
                     dataBlockType = 0x0C;
@@ -152,13 +152,13 @@ namespace FirstPlugin
             uint dataBlockType;
             uint mipBlockType;
 
-            if (header.MajorVersion == 6)
+            if (header.MajorVersion == 6 && header.MinorVersion == 0)
             {
                 surfBlockType = 0x0A;
                 dataBlockType = 0x0B;
                 mipBlockType = 0x0C;
             }
-            else if (header.MajorVersion == 7)
+            else if (header.MajorVersion == 6 || header.MajorVersion == 7)
             {
                 surfBlockType = 0x0B;
                 dataBlockType = 0x0C;
@@ -192,6 +192,9 @@ namespace FirstPlugin
 
                     var surface = new SurfaceInfoParse();
                     surface.Read(new FileReader(block.data));
+
+                    if (surface.tileMode == 0 || surface.tileMode > 16)
+                        throw new Exception($"Invalid tileMode {surface.tileMode}!");
 
                     if (surface.numMips > 14)
                         throw new Exception($"Invalid number of mip maps {surface.numMips}!");
@@ -262,7 +265,7 @@ namespace FirstPlugin
                 HeaderSize = reader.ReadUInt32();
                 MajorVersion = reader.ReadUInt32();
                 MinorVersion = reader.ReadUInt32();
-                GpuVersion = reader.ReadUInt32();
+                GpuVersion = reader.ReadUInt32(); //Ignored in 6.0
                 AlignMode = reader.ReadUInt32();
             }
             public void Write(FileWriter writer)
@@ -296,8 +299,8 @@ namespace FirstPlugin
                     throw new Exception($"Invalid signature {Signature}! Expected BLK.");
 
                 HeaderSize = reader.ReadUInt32();
-                MajorVersion = reader.ReadUInt32(); //Must be 0x01 for 6.x.x
-                MinorVersion = reader.ReadUInt32(); //Must be 0x00 for 6.x.x
+                MajorVersion = reader.ReadUInt32(); //Must be 0x01 for 6.x
+                MinorVersion = reader.ReadUInt32(); //Must be 0x00 for 6.x
                 BlockType = reader.ReadEnum<BlockType>(false);
                 DataSize = reader.ReadUInt32();
                 Identifier = reader.ReadUInt32();
