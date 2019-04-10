@@ -127,6 +127,9 @@ namespace Bfres.Structs
                             AnimDataOffset = keyGroup.AnimDataOffset,
                             Keys = keyGroup.Keys,
                         });
+
+                        if (paramInfo.Text.Contains("Color") || paramInfo.Text.Contains("color"))
+                            paramInfo.Type = AnimationType.Color;
                     }
                 }
             }

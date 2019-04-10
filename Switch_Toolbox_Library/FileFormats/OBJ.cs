@@ -28,7 +28,7 @@ namespace Switch_Toolbox.Library
         {
             writer.AppendLine($"mtllib {MtlName}");
 
-            int VertexID = 1;
+            int VertexCount = 1;
             foreach (STGenericObject mesh in Model.Nodes[0].Nodes)
             {
                 writer.AppendLine($"o {mesh.Text}");
@@ -45,16 +45,21 @@ namespace Switch_Toolbox.Library
                 if (mat != null)
                     writer.AppendLine($"usemtl {mat.Text}");
 
-                for (int i = 0; i < mesh.faces.Count; i += 3)
+                for (int i = 0; i < mesh.faces.Count; i++)
                 {
-                    int FaceInd0 = VertexID + mesh.faces[i];
-                    int FaceInd1 = VertexID + mesh.faces[i + 1];
-                    int FaceInd2 = VertexID + mesh.faces[i + 2];
+                    int[] indices = new int[3] 
+                    {
+                        mesh.faces[i++],
+                        mesh.faces[i++],
+                        mesh.faces[i]
+                    };
 
-                    writer.AppendLine($"f {FaceInd0}/{FaceInd0}/{FaceInd0}" +
-                                       $" {FaceInd1}/{FaceInd1}/{FaceInd1}" +
-                                       $" {FaceInd2}/{FaceInd2}/{FaceInd2}");
+                    writer.AppendLine($"f {indices[0] + VertexCount}/{indices[0] + VertexCount}/{indices[0] + VertexCount}" +
+                                       $" {indices[1] + VertexCount}/{indices[1] + VertexCount}/{indices[1] + VertexCount}" +
+                                       $" {indices[2] + VertexCount}/{indices[2] + VertexCount}/{indices[2] + VertexCount}");
                 }
+
+                VertexCount += mesh.vertices.Count;
             }
         }
 
