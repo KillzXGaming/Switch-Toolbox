@@ -157,14 +157,17 @@ namespace FirstPlugin.Forms
             {
                 probeLightingConfig = new ProbeLighting();
                 viewport.AddDrawable(probeLightingConfig);
-                treeView1.Nodes.Add(new ProbeLightingWrapper(probeLightingConfig));
+                var probeRoot = new ProbeLightingWrapper(probeLightingConfig);
+                treeView1.Nodes.Add(probeRoot);
 
                 uint index = 0;
                 foreach (var val in aamp.RootNode.childParams)
                 {
                     var entry = new ProbeLighting.Entry();
-                    entry.Index = index;
+                    entry.Index = index++;
                     probeLightingConfig.Entries.Add(entry);
+
+                    probeRoot.Nodes.Add(new ProbeLightingEntryWrapper(entry));
 
                     foreach (var param in val.paramObjects)
                     {
@@ -188,6 +191,8 @@ namespace FirstPlugin.Forms
                         }
                     }
                 }
+
+                aamp.Save("DEBUG_PROBE.aamp");
 
                 foreach (var entry in probeLightingConfig.Entries)
                 {
@@ -251,12 +256,21 @@ namespace FirstPlugin.Forms
         {
             ProbeLighting.Grid grid = new ProbeLighting.Grid();
 
+            var mainBfres = scene.BfresObjects[0];
+            var boundings = mainBfres.BFRESRender.GetSelectionBox();
+
             foreach (var entry in paramEntries)
             {
-                if (entry.HashString == "aabb_min_pos")
+                if (entry.HashString == "aabb_min_pos") {
                     grid.AABB_Max_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
-                if (entry.HashString == "aabb_max_pos")
+
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.minX, boundings.minY, boundings.minZ);
+                }
+                if (entry.HashString == "aabb_max_pos") {
                     grid.AABB_Min_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
+
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.maxX, boundings.maxY, boundings.maxZ);
+                }
                 if (entry.HashString == "voxel_step_pos")
                     grid.Voxel_Step_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
             }
@@ -382,6 +396,23 @@ namespace FirstPlugin.Forms
             {
                 stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
             }
+            else if (node is ProbeLightingWrapper)
+            {
+            }
+            else if (node is ProbeLightingEntryWrapper)
+            {
+                var parent = (ProbeLightingWrapper)node.Parent;
+
+                foreach (var child in parent.Nodes)
+                {
+                   ( (ProbeLightingEntryWrapper)child).entry.Grid.GridColor = new Vector3(9, 0, 0);
+                }
+
+                var probeEntry = (ProbeLightingEntryWrapper)node;
+                probeEntry.entry.Grid.GridColor = new Vector3(1,0,0);
+
+                stPropertyGrid1.LoadProperty(probeEntry.entry, OnPropertyChanged);
+            }
             else if (node is PathCollectionNode)
             {
                 foreach (var group in ((PathCollectionNode)node).Nodes)
@@ -441,6 +472,8 @@ namespace FirstPlugin.Forms
         {
             if (node is PathPointNode)
                 ((PathPointNode)node).OnChecked(IsChecked);
+            if (node is ProbeLightingEntryWrapper)
+                ((ProbeLightingEntryWrapper)node).OnChecked(IsChecked);
         }
     }
 }

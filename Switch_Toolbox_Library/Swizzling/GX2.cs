@@ -754,7 +754,7 @@ namespace Switch_Toolbox.Library
             return swizzleSurf(width, height, depth, format_, tileMode, swizzle_, pitch, bpp, data, depthLevel, 1);
         }
 
-        private static byte[] swizzleSurf(uint width, uint height,uint depth, uint format, uint tileMode, uint swizzle_,
+        private static byte[] swizzleSurf(uint width, uint height, uint depth, uint format, uint tileMode, uint swizzle_,
                 uint pitch, uint bitsPerPixel, byte[] data, int depthLevel, int swizzle)
         {
             uint bytesPerPixel = bitsPerPixel / 8;
@@ -1910,9 +1910,9 @@ namespace Switch_Toolbox.Library
                      tileMode,
                      padDims,
                      (flags.value >> 4) & 1,
-                     (flags.value >> 7) & 1,
                      pitchAlign,
-                     heightAlign);
+                     heightAlign,
+                     microTileThickness);
 
                 expPitch = padDimens.Item1;
                 expHeight = padDimens.Item2;
@@ -1995,9 +1995,9 @@ namespace Switch_Toolbox.Library
                         tileMode,
                         padDims,
                         (flags.value >> 4) & 1,
-                        (flags.value >> 7) & 1,
                         pitchAlign,
-                        heightAlign);
+                        heightAlign,
+                        microTileThickness);
 
                     expPitch = padDimens.Item1;
                     expHeight = padDimens.Item2;

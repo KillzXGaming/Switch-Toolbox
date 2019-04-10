@@ -183,6 +183,15 @@ namespace FirstPlugin
 
         private void DrawBoundingBoxes()
         {
+            var boundings = GetSelectionBox();
+
+            DrawableBoundingBox.DrawBoundingBox(
+                new Vector3(boundings.minX, boundings.minY, boundings.minZ),
+                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ)
+                );
+
+            return;
+
             foreach (FMDL mdl in models)
             {
                 foreach (FSHP m in mdl.shapes)
@@ -1097,9 +1106,9 @@ namespace FirstPlugin
                         Min.X = Math.Min(Min.X, vertex.pos.X);
                         Min.Y = Math.Min(Min.Y, vertex.pos.Y);
                         Min.Z = Math.Min(Min.Z, vertex.pos.Z);
-                        Max.X = Math.Max(Min.X, vertex.pos.X);
-                        Max.Y = Math.Max(Min.Y, vertex.pos.Y);
-                        Max.Z = Math.Max(Min.Z, vertex.pos.Z);
+                        Max.X = Math.Max(Max.X, vertex.pos.X);
+                        Max.Y = Math.Max(Max.Y, vertex.pos.Y);
+                        Max.Z = Math.Max(Max.Z, vertex.pos.Z);
                     }
                 }
             }

@@ -10,11 +10,12 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
     public class ProbeLightingWrapper : TreeNodeCustom
     {
-        ProbeLighting ProbeLightingConfig;
+        public ProbeLighting ProbeLightingConfig;
 
         public ProbeLightingWrapper(ProbeLighting config) {
             Text = "course.bglpbd (Probe Lighting)";
             ProbeLightingConfig = config;
+            Checked = true;
         }
     }
 }
