@@ -204,6 +204,7 @@
     <Compile Include="FileFormats\APNG\CRC.cs" />
     <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
     <Compile Include="FileFormats\Animation\SEANIM.cs" />
+    <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="Forms\BatchFormatExport.cs">
       <SubType>Form</SubType>
     </Compile>

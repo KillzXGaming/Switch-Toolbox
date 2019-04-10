@@ -452,30 +452,37 @@ namespace Bfres.Structs
                     else
                         Model.Export(FileName, GetResFile());
                     break;
+                case ".obj":
+                    OBJ.ExportModel(FileName, this, GetTextures());
+                    break;
                 default:
-
-                    List<STGenericTexture> textures = new List<STGenericTexture>();
-                    foreach (var mat in materials)
-                    {
-                        foreach (var texref in mat.Value.TextureMaps)
-                        {
-                            foreach (var bntx in PluginRuntime.bntxContainers)
-                            {
-                                if (bntx.Textures.ContainsKey(texref.Name))
-                                    textures.Add(bntx.Textures[texref.Name]);
-                            }
-                            foreach (var ftexCont in PluginRuntime.ftexContainers)
-                            {
-                                if (ftexCont.ResourceNodes.ContainsKey(texref.Name))
-                                    textures.Add((FTEX)ftexCont.ResourceNodes[texref.Name]);
-                            }
-                        }
-                    }
-
                     AssimpSaver assimp = new AssimpSaver();
-                    assimp.SaveFromModel(this, FileName, textures, Skeleton, Skeleton.Node_Array.ToList());
+                    assimp.SaveFromModel(this, FileName, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
                     break;
             }
+        }
+
+        private List<STGenericTexture> GetTextures()
+        {
+            List<STGenericTexture> textures = new List<STGenericTexture>();
+            foreach (var mat in materials)
+            {
+                foreach (var texref in mat.Value.TextureMaps)
+                {
+                    foreach (var bntx in PluginRuntime.bntxContainers)
+                    {
+                        if (bntx.Textures.ContainsKey(texref.Name))
+                            textures.Add(bntx.Textures[texref.Name]);
+                    }
+                    foreach (var ftexCont in PluginRuntime.ftexContainers)
+                    {
+                        if (ftexCont.ResourceNodes.ContainsKey(texref.Name))
+                            textures.Add((FTEX)ftexCont.ResourceNodes[texref.Name]);
+                    }
+                }
+            }
+
+            return textures;
         }
 
         public override void Replace(string FileName) {
