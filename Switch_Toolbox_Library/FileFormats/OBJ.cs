@@ -11,6 +11,7 @@ namespace Switch_Toolbox.Library
         public static void ExportModel(string FileName, STGenericModel Model, List<STGenericTexture> Textures)
         {
             string fileNoExt = Path.GetFileNameWithoutExtension(FileName);
+            string fileMtlPath = FileName.Replace("obj", "mtl");
 
             //Write model
             StringBuilder writer = new StringBuilder();
@@ -19,8 +20,8 @@ namespace Switch_Toolbox.Library
 
             //Write materials
             StringBuilder writerMtl = new StringBuilder();
-            SaveMaterials(writer, Model);
-            File.WriteAllText($"{fileNoExt}.mtl", writerMtl.ToString());
+            SaveMaterials(writerMtl, Model);
+            File.WriteAllText(fileMtlPath, writerMtl.ToString());
         }
 
         private static void SaveMeshes(StringBuilder writer, STGenericModel Model, string MtlName)
@@ -80,10 +81,10 @@ namespace Switch_Toolbox.Library
             {
                 writer.AppendLine($"newmtl {mat.Text}");
                 writer.AppendLine($"Ns {Ns}");
-                writer.AppendLine($"Ka {Ka}");
-                writer.AppendLine($"Kd {Kd}");
-                writer.AppendLine($"Ks {Ks}");
-                writer.AppendLine($"Ke {Ke}");
+                writer.AppendLine($"Ka {Ka.X} {Ka.Y} {Ka.Z}");
+                writer.AppendLine($"Kd {Kd.X} {Kd.Y} {Kd.Z}");
+                writer.AppendLine($"Ks {Ks.X} {Ks.Y} {Ks.Z}");
+                writer.AppendLine($"Ke {Ke.X} {Ke.Y} {Ke.Z}");
                 writer.AppendLine($"Ni {Ni}");
                 writer.AppendLine($"d {d}");
                 writer.AppendLine($"illum {illum}");
