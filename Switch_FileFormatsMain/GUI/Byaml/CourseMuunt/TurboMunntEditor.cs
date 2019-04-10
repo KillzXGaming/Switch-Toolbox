@@ -56,9 +56,10 @@ namespace FirstPlugin.Forms
 
         CourseMuuntScene scene;
 
+        string CourseFolder;
         public void LoadCourseInfo(System.Collections.IEnumerable by, string FilePath)
         {
-            string CourseFolder = System.IO.Path.GetDirectoryName(FilePath);
+            CourseFolder = System.IO.Path.GetDirectoryName(FilePath);
             scene = new CourseMuuntScene(by);
 
             //Add collsion (switch)
@@ -192,7 +193,7 @@ namespace FirstPlugin.Forms
                     }
                 }
 
-                aamp.Save("DEBUG_PROBE.aamp");
+                aamp.Save($"{CourseFolder}/DEBUG_PROBE.aamp");
 
                 foreach (var entry in probeLightingConfig.Entries)
                 {
@@ -248,6 +249,14 @@ namespace FirstPlugin.Forms
                 {
                     if (entry.ParamType == aampv1.ParamType.BufferUint)
                         probeEntry.IndexBuffer = (uint[])entry.Value;
+
+                    //Experimental, just fill in indices
+                    uint[] values = (uint[])entry.Value;
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        values[i] = 0;
+                    }
+                    entry.Value = values;
                 }
             }
         }
