@@ -423,13 +423,18 @@ namespace Switch_Toolbox.Library.Forms
 
         private void OnNumbicValueSRT_ValueChanged(object sender, EventArgs e)
         {
-            if (IsSRTLoaded)
+        }
+
+        private void btnApplyTransform_Click(object sender, EventArgs e)
+        {
+            foreach (var shape in ActiveObjects)
             {
-            /*   activeTexture.UVScale.X = (float)scaleXUD.Value;
-                activeTexture.UVScale.Y = (float)scaleYUD.Value;
-                activeTexture.UVTranslate.X = (float)transXUD.Value;
-                activeTexture.UVTranslate.Y = (float)transYUD.Value;
-                gL_ControlLegacy2D1.Invalidate();*/
+                Vector2 Scale = new Vector2( (float)scaleXUD.Value, (float)scaleYUD.Value);
+                Vector2 Translate = new Vector2((float)transXUD.Value, (float)transYUD.Value);
+
+                shape.TransformUVs(Translate, Scale, UvChannelIndex);
+
+                gL_ControlLegacy2D1.Invalidate();
             }
         }
 

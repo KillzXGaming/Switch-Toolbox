@@ -538,6 +538,11 @@ namespace FirstPlugin
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
                     }
+                    else if (texture.SamplerName == "_ao0")
+                    {
+                        texture.Type = MatTexture.TextureType.AO;
+                        m.HasAmbientOcclusionMap = true;
+                    }
                 }
                 else if (Runtime.activeGame == Runtime.ActiveGame.SMO)
                 {
@@ -575,6 +580,11 @@ namespace FirstPlugin
 
                         texture.Type = MatTexture.TextureType.SubSurfaceScattering;
                         m.HasSubSurfaceScatteringMap = true;
+                    }
+                    else if (texture.SamplerName == "_ao0")
+                    {
+                        texture.Type = MatTexture.TextureType.AO;
+                        m.HasAmbientOcclusionMap = true;
                     }
                 }
                 else
@@ -634,6 +644,11 @@ namespace FirstPlugin
                     {
                         texture.Type = MatTexture.TextureType.SubSurfaceScattering;
                         m.HasSubSurfaceScatteringMap = true;
+                    }
+                    else if (texture.SamplerName == "_ao0")
+                    {
+                        texture.Type = MatTexture.TextureType.AO;
+                        m.HasAmbientOcclusionMap = true;
                     }
                 }
 

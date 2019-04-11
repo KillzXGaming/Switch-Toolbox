@@ -186,6 +186,18 @@ namespace Switch_Toolbox.Library
                 v.uv0 = new Vector2(1 - v.uv0.X, v.uv0.Y);
             }
         }
+        public void TransformUVs(Vector2 Translate, Vector2 Scale, int Index)
+        {
+            foreach (Vertex v in vertices)
+            {
+                if (Index == 0)
+                    v.uv0 = (v.uv0 * Scale) + Translate;
+                else if (Index == 1)
+                    v.uv1 = (v.uv1 * Scale) + Translate;
+                else
+                    v.uv2 = (v.uv2 * Scale) + Translate;
+            }
+        }
         public void CalculateTangentBitangent(bool UseUVLayer2)
         {
             if (vertices.Count < 3)

@@ -553,7 +553,6 @@ namespace Bfres.Structs
     }
     public class SwitchSamplerInfo
     {
-        public ResGFX.FilterMode FilterMode;
         public ResGFX.TexClamp TexClampX;
         public ResGFX.TexClamp TexClampY;
         public ResGFX.TexClamp TexClampZ;

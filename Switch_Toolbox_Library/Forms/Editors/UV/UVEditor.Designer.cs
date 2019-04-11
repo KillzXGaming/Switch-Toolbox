@@ -36,11 +36,12 @@
             this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
             this.scaleXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.btnApplyTransform = new Switch_Toolbox.Library.Forms.STButton();
             this.barSlider1 = new BarSlider.BarSlider();
+            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.comboBox2 = new Switch_Toolbox.Library.Forms.STComboBox();
             this.comboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.comboBox2 = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transXUD)).BeginInit();
@@ -181,6 +182,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.btnApplyTransform);
             this.stPanel1.Controls.Add(this.scaleYUD);
             this.stPanel1.Controls.Add(this.barSlider1);
             this.stPanel1.Controls.Add(this.transYUD);
@@ -198,19 +200,38 @@
             this.stPanel1.Size = new System.Drawing.Size(605, 70);
             this.stPanel1.TabIndex = 1;
             // 
+            // btnApplyTransform
+            // 
+            this.btnApplyTransform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyTransform.Location = new System.Drawing.Point(430, 41);
+            this.btnApplyTransform.Name = "btnApplyTransform";
+            this.btnApplyTransform.Size = new System.Drawing.Size(119, 23);
+            this.btnApplyTransform.TabIndex = 9;
+            this.btnApplyTransform.Text = "Apply Transform";
+            this.btnApplyTransform.UseVisualStyleBackColor = false;
+            this.btnApplyTransform.Click += new System.EventHandler(this.btnApplyTransform_Click);
+            // 
             // barSlider1
             // 
+            this.barSlider1.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.barSlider1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.barSlider1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.barSlider1.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
             this.barSlider1.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.barSlider1.BarPenColorMiddle = System.Drawing.Color.Empty;
             this.barSlider1.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
             this.barSlider1.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.barSlider1.DataType = null;
             this.barSlider1.DrawSemitransparentThumb = false;
             this.barSlider1.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
             this.barSlider1.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
+            this.barSlider1.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.barSlider1.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
             this.barSlider1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
             this.barSlider1.ForeColor = System.Drawing.Color.White;
+            this.barSlider1.IncrementAmount = 0.01F;
+            this.barSlider1.InputName = null;
             this.barSlider1.LargeChange = 0.04F;
             this.barSlider1.Location = new System.Drawing.Point(57, 6);
             this.barSlider1.Maximum = 1F;
@@ -234,8 +255,33 @@
             this.barSlider1.TickColor = System.Drawing.Color.White;
             this.barSlider1.TickDivide = 0F;
             this.barSlider1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.barSlider1.UseInterlapsedBar = true;
             this.barSlider1.Value = 0.5F;
             this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.stTrackBar1_Scroll);
+            // 
+            // stLabel2
+            // 
+            this.stLabel2.AutoSize = true;
+            this.stLabel2.Location = new System.Drawing.Point(3, 13);
+            this.stLabel2.Name = "stLabel2";
+            this.stLabel2.Size = new System.Drawing.Size(56, 13);
+            this.stLabel2.TabIndex = 2;
+            this.stLabel2.Text = "Brightness";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox2.BorderColor = System.Drawing.Color.Empty;
+            this.comboBox2.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.comboBox2.ButtonColor = System.Drawing.Color.Empty;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(290, 7);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.ReadOnly = true;
+            this.comboBox2.Size = new System.Drawing.Size(166, 21);
+            this.comboBox2.TabIndex = 5;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // comboBox1
             // 
@@ -246,6 +292,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(550, 7);
             this.comboBox1.Name = "comboBox1";
+            this.comboBox1.ReadOnly = true;
             this.comboBox1.Size = new System.Drawing.Size(52, 21);
             this.comboBox1.TabIndex = 3;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -259,28 +306,6 @@
             this.stLabel1.Size = new System.Drawing.Size(82, 13);
             this.stLabel1.TabIndex = 4;
             this.stLabel1.Text = "Active Channel:";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox2.BorderColor = System.Drawing.Color.Empty;
-            this.comboBox2.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.comboBox2.ButtonColor = System.Drawing.Color.Empty;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(290, 7);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(166, 21);
-            this.comboBox2.TabIndex = 5;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-            // 
-            // stLabel2
-            // 
-            this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(3, 13);
-            this.stLabel2.Name = "stLabel2";
-            this.stLabel2.Size = new System.Drawing.Size(56, 13);
-            this.stLabel2.TabIndex = 2;
-            this.stLabel2.Text = "Brightness";
             // 
             // UVEditor
             // 
@@ -314,5 +339,6 @@
         private NumericUpDownFloat transYUD;
         private NumericUpDownFloat scaleYUD;
         private BarSlider.BarSlider barSlider1;
+        private STButton btnApplyTransform;
     }
 }
