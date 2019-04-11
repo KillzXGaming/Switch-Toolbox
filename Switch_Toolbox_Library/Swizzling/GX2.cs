@@ -2363,7 +2363,7 @@ namespace Switch_Toolbox.Library
                     pSurfOut.height = 1;
                     pSurfOut.depth = 1;
                 }
-                else if (dim == 1)
+                else if (dim == 1 || dim == 6)
                 {
                     pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = 1;
@@ -2383,14 +2383,14 @@ namespace Switch_Toolbox.Library
                     pSurfOut.height = 1;
                     pSurfOut.depth = surfaceDepth;
                 }
-                else if (dim == 5)
+                else if (dim == 5 || dim == 7)
                 {
                     pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = surfaceDepth;
                 }
 
                 pSurfOut.pixelPitch = width;
-                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & (Math.Max(1, surfaceHeight >> level) + blockSize - 1));
+                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1));
                 pSurfOut.height = (uint)(pSurfOut.pixelHeight / blockSize);
                 pSurfOut.surfSize = pSurfOut.bpp * numSamples * pSurfOut.depth * pSurfOut.height * pSurfOut.pitch >> 3;
 
@@ -2419,7 +2419,7 @@ namespace Switch_Toolbox.Library
                     aSurfIn.height = 1;
                     aSurfIn.numSlices = 1;
                 }
-                else if (dim == 1)
+                else if (dim == 1 || dim == 6)
                 {
                     aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
                     aSurfIn.numSlices = 1;
@@ -2440,17 +2440,7 @@ namespace Switch_Toolbox.Library
                     aSurfIn.height = 1;
                     aSurfIn.numSlices = (uint)surfaceDepth;
                 }
-                else if (dim == 5)
-                {
-                    aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    aSurfIn.numSlices = (uint)surfaceDepth;
-                }
-                else if (dim == 6)
-                {
-                    aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    aSurfIn.numSlices = 1;
-                }
-                else if (dim == 7)
+                else if (dim == 5 || dim == 7)
                 {
                     aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
                     aSurfIn.numSlices = (uint)surfaceDepth;
