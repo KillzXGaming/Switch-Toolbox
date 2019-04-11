@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -2346,10 +2346,7 @@ namespace Switch_Toolbox.Library
                 else
                     blockSize = 4;
 
-                width = (uint)(~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
-
-                if (hwFormat == 0x35)
-                    return pSurfOut;
+                width = (uint)(~(blockSize - 1) & (Math.Max(1, surfaceWidth >> level) + blockSize - 1));
 
                 pSurfOut.bpp = formatHwInfo[hwFormat * 4];
                 pSurfOut.size = 96;
@@ -2366,7 +2363,7 @@ namespace Switch_Toolbox.Library
                     pSurfOut.height = 1;
                     pSurfOut.depth = 1;
                 }
-                else if (dim == 1)
+                else if (dim == 1 || dim == 6)
                 {
                     pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = 1;
@@ -2386,19 +2383,15 @@ namespace Switch_Toolbox.Library
                     pSurfOut.height = 1;
                     pSurfOut.depth = surfaceDepth;
                 }
-                else if (dim == 5)
+                else if (dim == 5 || dim == 7)
                 {
                     pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = surfaceDepth;
                 }
 
-                pSurfOut.height = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize;
-                pSurfOut.pixelPitch = (uint)(~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
-                pSurfOut.pixelPitch = Math.Max(blockSize, pSurfOut.pixelPitch);
-                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
-                pSurfOut.pixelHeight = Math.Max(blockSize, pSurfOut.pixelHeight);
-                pSurfOut.pitch = Math.Max(1, pSurfOut.pitch);
-                pSurfOut.height = Math.Max(1, pSurfOut.height);
+                pSurfOut.pixelPitch = width;
+                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1));
+                pSurfOut.height = (uint)(pSurfOut.pixelHeight / blockSize);
                 pSurfOut.surfSize = pSurfOut.bpp * numSamples * pSurfOut.depth * pSurfOut.height * pSurfOut.pitch >> 3;
 
                 if (surfaceDim == 2)
@@ -2426,7 +2419,7 @@ namespace Switch_Toolbox.Library
                     aSurfIn.height = 1;
                     aSurfIn.numSlices = 1;
                 }
-                else if (dim == 1)
+                else if (dim == 1 || dim == 6)
                 {
                     aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
                     aSurfIn.numSlices = 1;
@@ -2447,17 +2440,7 @@ namespace Switch_Toolbox.Library
                     aSurfIn.height = 1;
                     aSurfIn.numSlices = (uint)surfaceDepth;
                 }
-                else if (dim == 5)
-                {
-                    aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    aSurfIn.numSlices = (uint)surfaceDepth;
-                }
-                else if (dim == 6)
-                {
-                    aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    aSurfIn.numSlices = 1;
-                }
-                else if (dim == 7)
+                else if (dim == 5 || dim == 7)
                 {
                     aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
                     aSurfIn.numSlices = (uint)surfaceDepth;
