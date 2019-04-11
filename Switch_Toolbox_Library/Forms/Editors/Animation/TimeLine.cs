@@ -74,11 +74,9 @@ namespace Switch_Toolbox.Library.Forms
                     frameRight += delta;
 
                     ResolveCollision();
-
                 }
 
                 currentFrame = value;
-
                 Refresh();
             }
         }
