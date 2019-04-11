@@ -9,6 +9,8 @@ namespace FirstPlugin
 {
     public class PluginRuntime
     {
+        public static bool UseSimpleBfresEditor = false;
+
         public static Dictionary<string, BFLIM> bflimTextures = new Dictionary<string, BFLIM>();
         public static List<BNTX> bntxContainers = new List<BNTX>();
         public static List<BFRESGroupNode> ftexContainers = new List<BFRESGroupNode>();

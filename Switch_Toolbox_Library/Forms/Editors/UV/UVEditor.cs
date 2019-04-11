@@ -44,7 +44,7 @@ namespace Switch_Toolbox.Library.Forms
         }
         public ActiveTexture activeTexture = new ActiveTexture();
 
-        public float brightness = 0; //To see uv maps easier
+        public float brightness = 0.5f; //To see uv maps easier
         public int UvChannelIndex = 0;
         public STGenericMaterial ActiveMaterial;
 
@@ -55,6 +55,8 @@ namespace Switch_Toolbox.Library.Forms
         bool IsSRTLoaded = false;
         public void Reset()
         {
+            barSlider1.Value = brightness;
+
             scaleXUD.Value = 1;
             scaleYUD.Value = 1;
             transXUD.Value = 0;
@@ -350,7 +352,7 @@ namespace Switch_Toolbox.Library.Forms
         private void OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Delta > 0 && ZoomValue > 0) ZoomValue += 0.1f;
-            if (e.Delta < 0 && ZoomValue < 5 && ZoomValue > 0.1) ZoomValue -= 0.1f;
+            if (e.Delta < 0 && ZoomValue < 30 && ZoomValue > 0.1) ZoomValue -= 0.1f;
 
             gL_ControlLegacy2D1.Invalidate();
         }

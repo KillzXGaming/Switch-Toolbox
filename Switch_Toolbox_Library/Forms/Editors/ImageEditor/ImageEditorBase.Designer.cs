@@ -37,6 +37,7 @@
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
             this.blueChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.toggleAlphaChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.saveBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.arrayLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
             this.BtmMipsLeft = new Switch_Toolbox.Library.Forms.STButton();
@@ -53,6 +54,7 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertyGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.channelViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reEncodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +66,6 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toggleAlphaChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -93,7 +94,7 @@
             // 
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.splitContainer1.Size = new System.Drawing.Size(715, 502);
-            this.splitContainer1.SplitterDistance = 519;
+            this.splitContainer1.SplitterDistance = 520;
             this.splitContainer1.TabIndex = 5;
             // 
             // stPanel2
@@ -102,7 +103,7 @@
             this.stPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.stPanel2.Location = new System.Drawing.Point(0, 501);
             this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(519, 1);
+            this.stPanel2.Size = new System.Drawing.Size(520, 1);
             this.stPanel2.TabIndex = 1;
             // 
             // stPanel1
@@ -118,7 +119,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(519, 502);
+            this.stPanel1.Size = new System.Drawing.Size(520, 502);
             this.stPanel1.TabIndex = 2;
             // 
             // alphaChannelBtn
@@ -141,7 +142,7 @@
             this.stPanel4.Controls.Add(this.pictureBoxCustom1);
             this.stPanel4.Location = new System.Drawing.Point(3, 74);
             this.stPanel4.Name = "stPanel4";
-            this.stPanel4.Size = new System.Drawing.Size(513, 425);
+            this.stPanel4.Size = new System.Drawing.Size(514, 425);
             this.stPanel4.TabIndex = 8;
             // 
             // pictureBoxCustom1
@@ -151,7 +152,7 @@
             this.pictureBoxCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
-            this.pictureBoxCustom1.Size = new System.Drawing.Size(513, 425);
+            this.pictureBoxCustom1.Size = new System.Drawing.Size(514, 425);
             this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxCustom1.TabIndex = 1;
             this.pictureBoxCustom1.TabStop = false;
@@ -182,6 +183,19 @@
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(715, 51);
             this.stPanel3.TabIndex = 3;
+            // 
+            // toggleAlphaChk
+            // 
+            this.toggleAlphaChk.AutoSize = true;
+            this.toggleAlphaChk.Checked = true;
+            this.toggleAlphaChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toggleAlphaChk.Location = new System.Drawing.Point(50, 7);
+            this.toggleAlphaChk.Name = "toggleAlphaChk";
+            this.toggleAlphaChk.Size = new System.Drawing.Size(83, 17);
+            this.toggleAlphaChk.TabIndex = 15;
+            this.toggleAlphaChk.Text = "Show Alpha";
+            this.toggleAlphaChk.UseVisualStyleBackColor = true;
+            this.toggleAlphaChk.CheckedChanged += new System.EventHandler(this.toggleAlphaChk_CheckedChanged);
             // 
             // saveBtn
             // 
@@ -307,7 +321,7 @@
             this.adjustmentsToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(519, 24);
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(520, 24);
             this.stContextMenuStrip1.TabIndex = 0;
             this.stContextMenuStrip1.Text = "stContextMenuStrip1";
             // 
@@ -330,7 +344,8 @@
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.propertyGridToolStripMenuItem,
-            this.channelViewToolStripMenuItem});
+            this.channelViewToolStripMenuItem,
+            this.displayVerticalToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -341,16 +356,23 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
             // 
             // channelViewToolStripMenuItem
             // 
             this.channelViewToolStripMenuItem.Name = "channelViewToolStripMenuItem";
-            this.channelViewToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.channelViewToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.channelViewToolStripMenuItem.Text = "Channel View";
             this.channelViewToolStripMenuItem.Click += new System.EventHandler(this.channelViewToolStripMenuItem_Click);
+            // 
+            // displayVerticalToolStripMenuItem
+            // 
+            this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
+            this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
             // 
             // imageToolStripMenuItem
             // 
@@ -439,19 +461,6 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
-            // toggleAlphaChk
-            // 
-            this.toggleAlphaChk.AutoSize = true;
-            this.toggleAlphaChk.Checked = true;
-            this.toggleAlphaChk.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toggleAlphaChk.Location = new System.Drawing.Point(50, 7);
-            this.toggleAlphaChk.Name = "toggleAlphaChk";
-            this.toggleAlphaChk.Size = new System.Drawing.Size(83, 17);
-            this.toggleAlphaChk.TabIndex = 15;
-            this.toggleAlphaChk.Text = "Show Alpha";
-            this.toggleAlphaChk.UseVisualStyleBackColor = true;
-            this.toggleAlphaChk.CheckedChanged += new System.EventHandler(this.toggleAlphaChk_CheckedChanged);
-            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -511,5 +520,6 @@
         private STButton saveBtn;
         private System.Windows.Forms.ToolStripMenuItem reEncodeToolStripMenuItem;
         private STCheckBox toggleAlphaChk;
+        private System.Windows.Forms.ToolStripMenuItem displayVerticalToolStripMenuItem;
     }
 }

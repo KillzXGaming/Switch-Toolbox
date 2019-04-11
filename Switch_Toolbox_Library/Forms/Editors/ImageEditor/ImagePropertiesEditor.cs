@@ -45,6 +45,11 @@ namespace Switch_Toolbox.Library.Forms
             stTabControl1.TabPages.Add(page);
         }
 
+        public void HideHintPanel(bool HideHint)
+        {
+            stPropertyGrid1.DisableHintDisplay = HideHint;
+        }
+
         public UserControl GetActiveTabControl(Type type)
         {
             foreach (TabPage pge in stTabControl1.TabPages)

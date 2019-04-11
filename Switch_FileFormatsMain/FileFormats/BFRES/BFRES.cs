@@ -169,198 +169,210 @@ namespace FirstPlugin
             drawables.Remove(skeleton);
         }
 
+        
+
         List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
         public void LoadEditors(object SelectedSection)
         {
-            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 
-            bool HasModels = BFRESRender.models.Count > 0;
-
-            if (bfresEditor == null)
+            if (IsSimpleEditor)
             {
-                bfresEditor = new BfresEditor(HasModels);
-                bfresEditor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(bfresEditor);
+
             }
-
-            var toolstrips = new List<ToolStripMenuItem>();
-            var menu = new ToolStripMenuItem("Animation Loader", null, AnimLoader);
-
-            toolstrips.Add(menu);
-
-            bool IsLoaded = drawables.Count != 0;
-
-            bfresEditor.IsLoaded = IsLoaded;
-
-            if (drawables.Count <= 0)
+            else
             {
-                //Add drawables
-                drawables.Add(BFRESRender);
-                foreach (var mdl in BFRESRender.models)
-                    drawables.Add(mdl.Skeleton);
-            }
-            bfresEditor.LoadViewport(drawables, toolstrips);
 
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
 
-            if (!IsLoaded)
-            {
-                bfresEditor.OnLoadedTab();
-            }
+                bool HasModels = BFRESRender.models.Count > 0;
 
-            if (SelectedSection is BFRES)
-            {
-                STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
-                if (editor == null)
+                if (bfresEditor == null)
                 {
-                    editor = new STPropertyGrid();
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
+                    bfresEditor = new BfresEditor(HasModels);
+                    bfresEditor.Dock = DockStyle.Fill;
+                    LibraryGUI.Instance.LoadEditor(bfresEditor);
                 }
-                editor.Text = Text;
 
-                if (resFile != null)
-                    editor.LoadProperty(resFile, OnPropertyChanged);
-                else
-                    editor.LoadProperty(resFileU, OnPropertyChanged);
-            }
-            else if (SelectedSection is BFRESGroupNode)
-            {
-                STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
-                if (editor == null)
+                var toolstrips = new List<ToolStripMenuItem>();
+                var menu = new ToolStripMenuItem("Animation Loader", null, AnimLoader);
+
+                toolstrips.Add(menu);
+
+                bool IsLoaded = drawables.Count != 0;
+
+                bfresEditor.IsLoaded = IsLoaded;
+
+                if (drawables.Count <= 0)
                 {
-                    editor = new STPropertyGrid();
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
+                    //Add drawables
+                    drawables.Add(BFRESRender);
+                    foreach (var mdl in BFRESRender.models)
+                        drawables.Add(mdl.Skeleton);
                 }
-                editor.Text = Text;
-                editor.LoadProperty(null, null);
-            }
-            else if(SelectedSection is FSKL.fsklNode)
-            {
-                FSKLEditor editor = (FSKLEditor)bfresEditor.GetActiveEditor(typeof(FSKLEditor));
-                if (editor == null)
+                bfresEditor.LoadViewport(drawables, toolstrips);
+
+
+                if (!IsLoaded)
                 {
-                    editor = new FSKLEditor();
+                    bfresEditor.OnLoadedTab();
+                }
+
+                if (SelectedSection is BFRES)
+                {
+                    STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
+                    if (editor == null)
+                    {
+                        editor = new STPropertyGrid();
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.Text = Text;
+
+                    if (resFile != null)
+                        editor.LoadProperty(resFile, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(resFileU, OnPropertyChanged);
+                }
+                else if (SelectedSection is BFRESGroupNode)
+                {
+                    STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
+                    if (editor == null)
+                    {
+                        editor = new STPropertyGrid();
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.Text = Text;
+                    editor.LoadProperty(null, null);
+                }
+                else if (SelectedSection is FSKL.fsklNode)
+                {
+                    FSKLEditor editor = (FSKLEditor)bfresEditor.GetActiveEditor(typeof(FSKLEditor));
+                    if (editor == null)
+                    {
+                        editor = new FSKLEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadSkeleton(((FSKL.fsklNode)SelectedSection).fskl);
+                }
+                else if (SelectedSection is BfresBone)
+                {
+                    BfresBoneEditor editor = (BfresBoneEditor)bfresEditor.GetActiveEditor(typeof(BfresBoneEditor));
+                    if (editor == null)
+                    {
+                        editor = new BfresBoneEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadBone((BfresBone)SelectedSection);
+                }
+                else if (SelectedSection is FSHP)
+                {
+                    BfresShapeEditor editor = (BfresShapeEditor)bfresEditor.GetActiveEditor(typeof(BfresShapeEditor));
+                    if (editor == null)
+                    {
+                        editor = new BfresShapeEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadShape((FSHP)SelectedSection);
+                }
+                else if (SelectedSection is FMAT)
+                {
+                    FMATEditor editor = (FMATEditor)bfresEditor.GetActiveEditor(typeof(FMATEditor));
+                    if (editor == null)
+                    {
+                        editor = new FMATEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadMaterial((FMAT)SelectedSection);
+                }
+                else if (SelectedSection is FSKA.BoneAnimNode)
+                {
+                    BoneAnimEditor editor = (BoneAnimEditor)bfresEditor.GetActiveEditor(typeof(BoneAnimEditor));
+                    if (editor == null)
+                    {
+                        editor = new BoneAnimEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadBoneAnim((FSKA.BoneAnimNode)SelectedSection);
+                }
+                else if (SelectedSection is FSCN.BfresCameraAnim)
+                {
+                    SceneAnimEditor editor = (SceneAnimEditor)bfresEditor.GetActiveEditor(typeof(SceneAnimEditor));
+                    if (editor == null)
+                    {
+                        editor = new SceneAnimEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadCameraAnim((FSCN.BfresCameraAnim)SelectedSection);
+                }
+                else if (SelectedSection is FSCN.BfresLightAnim)
+                {
+                    SceneAnimEditor editor = (SceneAnimEditor)bfresEditor.GetActiveEditor(typeof(SceneAnimEditor));
+                    if (editor == null)
+                    {
+                        editor = new SceneAnimEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadLightAnim((FSCN.BfresLightAnim)SelectedSection);
+                }
+                else if (SelectedSection is FSCN.BfresFogAnim)
+                {
+                    SceneAnimEditor editor = (SceneAnimEditor)bfresEditor.GetActiveEditor(typeof(SceneAnimEditor));
+                    if (editor == null)
+                    {
+                        editor = new SceneAnimEditor();
+                        editor.Text = Text;
+                        editor.Dock = DockStyle.Fill;
+                        bfresEditor.LoadEditor(editor);
+                    }
+                    editor.LoadFogAnim((FSCN.BfresFogAnim)SelectedSection);
+                }
+                else if (SelectedSection is FMDL)
+                    OpenSubFileEditor<FMDL>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FSKA)
+                    OpenSubFileEditor<FSKA>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FSHU)
+                    OpenSubFileEditor<FSHU>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FSCN)
+                    OpenSubFileEditor<FSCN>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FSHA)
+                    OpenSubFileEditor<FSHA>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FTXP)
+                    OpenSubFileEditor<FTXP>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FMAA)
+                    OpenSubFileEditor<FMAA>(SelectedSection, bfresEditor);
+                else if (SelectedSection is FVIS)
+                    OpenSubFileEditor<FVIS>(SelectedSection, bfresEditor);
+
+
+                /*   else if (SelectedSection is FMAA && ((FMAA)SelectedSection).AnimType == MaterialAnimation.AnimationType.TexturePattern)
+                {
+                    BfresTexturePatternEditor editor = (BfresTexturePatternEditor)bfresEditor.GetActiveEditor(typeof(BfresTexturePatternEditor));
+                    if (editor == null)
+                    {
+                        editor = new BfresTexturePatternEditor();
+                        bfresEditor.LoadEditor(editor);
+                    }
                     editor.Text = Text;
                     editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadSkeleton(((FSKL.fsklNode)SelectedSection).fskl);
+                    editor.LoadAnim((FMAA)SelectedSection);
+                }*/
             }
-            else if (SelectedSection is BfresBone)
-            {
-                BfresBoneEditor editor = (BfresBoneEditor)bfresEditor.GetActiveEditor(typeof(BfresBoneEditor));
-                if (editor == null)
-                {
-                    editor = new BfresBoneEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadBone((BfresBone)SelectedSection);
-            }
-            else if (SelectedSection is FSHP)
-            {
-                BfresShapeEditor editor = (BfresShapeEditor)bfresEditor.GetActiveEditor(typeof(BfresShapeEditor));
-                if (editor == null)
-                {
-                    editor = new BfresShapeEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadShape((FSHP)SelectedSection);
-            }
-            else if (SelectedSection is FMAT)
-            {
-                FMATEditor editor = (FMATEditor)bfresEditor.GetActiveEditor(typeof(FMATEditor));
-                if (editor == null)
-                {
-                    editor = new FMATEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadMaterial((FMAT)SelectedSection);
-            }
-            else if (SelectedSection is FSKA.BoneAnimNode)
-            {
-                BoneAnimEditor editor = (BoneAnimEditor)bfresEditor.GetActiveEditor(typeof(BoneAnimEditor));
-                if (editor == null)
-                {
-                    editor = new BoneAnimEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadBoneAnim((FSKA.BoneAnimNode)SelectedSection);
-            }
-            else if (SelectedSection is FSCN.BfresCameraAnim)
-            {
-                SceneAnimEditor editor = (SceneAnimEditor)bfresEditor.GetActiveEditor(typeof(SceneAnimEditor));
-                if (editor == null)
-                {
-                    editor = new SceneAnimEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadCameraAnim((FSCN.BfresCameraAnim)SelectedSection);
-            }
-            else if (SelectedSection is FSCN.BfresLightAnim)
-            {
-                SceneAnimEditor editor = (SceneAnimEditor)bfresEditor.GetActiveEditor(typeof(SceneAnimEditor));
-                if (editor == null)
-                {
-                    editor = new SceneAnimEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadLightAnim((FSCN.BfresLightAnim)SelectedSection);
-            }
-            else if (SelectedSection is FSCN.BfresFogAnim)
-            {
-                SceneAnimEditor editor = (SceneAnimEditor)bfresEditor.GetActiveEditor(typeof(SceneAnimEditor));
-                if (editor == null)
-                {
-                    editor = new SceneAnimEditor();
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
-                }
-                editor.LoadFogAnim((FSCN.BfresFogAnim)SelectedSection);
-            }
-            else if (SelectedSection is FMDL)
-                OpenSubFileEditor<FMDL>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FSKA)
-                OpenSubFileEditor<FSKA>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FSHU)
-                OpenSubFileEditor<FSHU>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FSCN)
-                OpenSubFileEditor<FSCN>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FSHA)
-                OpenSubFileEditor<FSHA>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FTXP)
-                OpenSubFileEditor<FTXP>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FMAA)
-                OpenSubFileEditor<FMAA>(SelectedSection, bfresEditor);
-            else if (SelectedSection is FVIS)
-                OpenSubFileEditor<FVIS>(SelectedSection, bfresEditor);
-
-
-           /*   else if (SelectedSection is FMAA && ((FMAA)SelectedSection).AnimType == MaterialAnimation.AnimationType.TexturePattern)
-           {
-               BfresTexturePatternEditor editor = (BfresTexturePatternEditor)bfresEditor.GetActiveEditor(typeof(BfresTexturePatternEditor));
-               if (editor == null)
-               {
-                   editor = new BfresTexturePatternEditor();
-                   bfresEditor.LoadEditor(editor);
-               }
-               editor.Text = Text;
-               editor.Dock = DockStyle.Fill;
-               editor.LoadAnim((FMAA)SelectedSection);
-           }*/
         }
 
         private SubFileEditor OpenSubFileEditor<T>(object node, BfresEditor bfresEditor) where T : STGenericWrapper

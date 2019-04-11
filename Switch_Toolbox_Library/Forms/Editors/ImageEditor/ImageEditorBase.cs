@@ -114,21 +114,13 @@ namespace Switch_Toolbox.Library.Forms
             propertiesEditor.Dock = DockStyle.Fill;
 
             if (!propertyGridToolStripMenuItem.Checked)
-            {
-                splitContainer1.Panel2Collapsed = true;
-                splitContainer1.Panel2.Hide();
-            }
+                HidePropertyGrid(true);
             else
-            {
-                splitContainer1.Panel2Collapsed = false;
-                splitContainer1.Panel2.Show();
-            }
+                HidePropertyGrid(false);
 
             if (ShowChannelEditor)
-            {
                 LoadChannelEditor(null);
-            }
-
+            
             if (PropertyShowTop)
             {
                 splitContainer1.Panel1.Controls.Add(propertiesEditor);
@@ -680,6 +672,83 @@ namespace Switch_Toolbox.Library.Forms
         private void toggleAlphaChk_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePictureBox();
+        }
+
+        private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (displayVerticalToolStripMenuItem.Checked)
+            {
+                DisplayHorizontal();
+                displayVerticalToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                DisplayVertical();
+                displayVerticalToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void DisplayHorizontal()
+        {
+            var ImagePanel = stPanel1;
+            var PropertiesEditor = propertiesEditor;
+
+            //Swap panels
+            splitContainer1.Panel1.Controls.Clear();
+            splitContainer1.Panel2.Controls.Clear();
+
+            splitContainer1.Orientation = Orientation.Vertical;
+            splitContainer1.Panel1.Controls.Add(ImagePanel);
+            splitContainer1.Panel2.Controls.Add(PropertiesEditor);
+            PropertiesEditor.HideHintPanel(true);
+
+            PropertiesEditor.Width = this.Width / 2;
+
+            splitContainer1.SplitterDistance = this.Width / 2;
+        }
+
+        private void HidePropertyGrid(bool Hide)
+        {
+            if (Hide)
+            {
+                if (splitContainer1.Panel1.Contains(propertiesEditor)) {
+                    splitContainer1.Panel1Collapsed = true;
+                    splitContainer1.Panel1.Hide();
+                }
+                if (splitContainer1.Panel2.Contains(propertiesEditor)) {
+                    splitContainer1.Panel2Collapsed = true;
+                    splitContainer1.Panel2.Hide();
+                }
+            }
+            else
+            {
+                if (splitContainer1.Panel1.Contains(propertiesEditor)) {
+                    splitContainer1.Panel1Collapsed = false;
+                    splitContainer1.Panel1.Show();
+                }
+                if (splitContainer1.Panel2.Contains(propertiesEditor)) {
+                    splitContainer1.Panel2Collapsed = false;
+                    splitContainer1.Panel2.Show();
+                }
+            }
+        }
+
+        private void DisplayVertical()
+        {
+            var ImagePanel = stPanel1;
+            var PropertiesEditor = propertiesEditor;
+
+            //Swap panels
+            splitContainer1.Panel1.Controls.Clear();
+            splitContainer1.Panel2.Controls.Clear();
+
+            splitContainer1.Orientation = Orientation.Horizontal;
+            splitContainer1.Panel2.Controls.Add(ImagePanel);
+            splitContainer1.Panel1.Controls.Add(PropertiesEditor);
+
+            splitContainer1.SplitterDistance = this.Height / 2;
+
+            PropertiesEditor.HideHintPanel(false);
         }
     }
 }
