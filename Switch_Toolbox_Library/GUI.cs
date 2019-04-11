@@ -110,6 +110,9 @@ namespace Switch_Toolbox.Library
         }
         public UserControl GetActiveContent(Type type = null)
         {
+            if (Runtime.MainForm.ActiveMdiChild == null)
+                return null;
+
             if (Runtime.MainForm.ActiveMdiChild is ObjectEditor)
             {
                 foreach (var ctrl in ((ObjectEditor)Runtime.MainForm.ActiveMdiChild).stPanel2.Controls)
