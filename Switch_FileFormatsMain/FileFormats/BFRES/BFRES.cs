@@ -182,7 +182,6 @@ namespace FirstPlugin
             }
             else
             {
-
                 BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
 
                 bool HasModels = BFRESRender.models.Count > 0;

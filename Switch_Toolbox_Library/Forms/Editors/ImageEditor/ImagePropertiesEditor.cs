@@ -47,7 +47,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public void HideHintPanel(bool HideHint)
         {
-            stPropertyGrid1.DisableHintDisplay = HideHint;
+            stPropertyGrid1.ShowHintDisplay = !HideHint;
         }
 
         public UserControl GetActiveTabControl(Type type)

@@ -17,30 +17,25 @@ namespace Switch_Toolbox.Library.Forms
             InitializeComponent();
 
             propertyGrid1.PropertySort = PropertySort.Categorized;
-         /*   this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.CategoryForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
-            this.propertyGrid1.CategorySplitterColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIChildBorderColor;
-            this.propertyGrid1.CommandsActiveLinkColor = System.Drawing.Color.Red;
-            this.propertyGrid1.CommandsBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIParentBackColor;
-            this.propertyGrid1.DisabledItemForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
-            this.propertyGrid1.HelpBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-            this.propertyGrid1.HelpBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-            this.propertyGrid1.HelpForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
-            this.propertyGrid1.LineColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIChildBorderColor;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.SelectedItemWithFocusForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormContextMenuSelectColor;
-            this.propertyGrid1.Size = new System.Drawing.Size(613, 532);
-            this.propertyGrid1.TabIndex = 0;
-            this.propertyGrid1.ToolbarVisible = false;
-            this.propertyGrid1.ViewBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-            this.propertyGrid1.ViewBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-            this.propertyGrid1.ViewForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;*/
+
+            if (FormThemes.ActivePreset != FormThemes.Preset.White)
+            {
+                this.propertyGrid1.CategoryForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
+                this.propertyGrid1.CategorySplitterColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIChildBorderColor;
+                this.propertyGrid1.CommandsActiveLinkColor = System.Drawing.Color.Red;
+                this.propertyGrid1.CommandsBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIParentBackColor;
+                this.propertyGrid1.DisabledItemForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
+                this.propertyGrid1.HelpBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.HelpBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.HelpForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
+                this.propertyGrid1.LineColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.ViewBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.ViewBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.ViewForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
+            }
         }
 
-        public bool DisableHintDisplay
+        public bool ShowHintDisplay
         {
             get
             {

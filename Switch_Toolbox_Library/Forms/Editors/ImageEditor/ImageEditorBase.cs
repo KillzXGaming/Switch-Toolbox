@@ -404,18 +404,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void propertyGridToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!propertyGridToolStripMenuItem.Checked)
-            {
-                propertyGridToolStripMenuItem.Checked = false;
-                splitContainer1.Panel2Collapsed = true;
-                splitContainer1.Panel2.Hide();
-            }
-            else
-            {
-                propertyGridToolStripMenuItem.Checked = true;
-                splitContainer1.Panel2Collapsed = false;
-                splitContainer1.Panel2.Show();
-            }
+            HidePropertyGrid(!propertyGridToolStripMenuItem.Checked);
             Runtime.ImageEditor.ShowPropertiesPanel = propertyGridToolStripMenuItem.Checked;
         }
 
@@ -688,8 +677,37 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        private void HidePropertyGrid(bool Hide)
+        {
+            if (Hide)
+            {
+                if (splitContainer1.Panel1.Controls.Contains(propertiesEditor)) {
+                    splitContainer1.Panel1Collapsed = true;
+                    splitContainer1.Panel1.Hide();
+                }
+                if (splitContainer1.Panel2.Controls.Contains(propertiesEditor)) {
+                    splitContainer1.Panel2Collapsed = true;
+                    splitContainer1.Panel2.Hide();
+                }
+            }
+            else
+            {
+                if (splitContainer1.Panel1.Controls.Contains(propertiesEditor)) {
+                    splitContainer1.Panel1Collapsed = false;
+                    splitContainer1.Panel1.Show();
+                }
+                if (splitContainer1.Panel2.Controls.Contains(propertiesEditor)) {
+                    splitContainer1.Panel2Collapsed = false;
+                    splitContainer1.Panel2.Show();
+                }
+            }
+        }
+
         private void DisplayHorizontal()
         {
+            if (splitContainer1.Panel1Collapsed)
+                return;
+
             var ImagePanel = stPanel1;
             var PropertiesEditor = propertiesEditor;
 
@@ -700,41 +718,18 @@ namespace Switch_Toolbox.Library.Forms
             splitContainer1.Orientation = Orientation.Vertical;
             splitContainer1.Panel1.Controls.Add(ImagePanel);
             splitContainer1.Panel2.Controls.Add(PropertiesEditor);
-            PropertiesEditor.HideHintPanel(true);
+            PropertiesEditor.HideHintPanel(false);
 
             PropertiesEditor.Width = this.Width / 2;
 
             splitContainer1.SplitterDistance = this.Width / 2;
         }
 
-        private void HidePropertyGrid(bool Hide)
-        {
-            if (Hide)
-            {
-                if (splitContainer1.Panel1.Contains(propertiesEditor)) {
-                    splitContainer1.Panel1Collapsed = true;
-                    splitContainer1.Panel1.Hide();
-                }
-                if (splitContainer1.Panel2.Contains(propertiesEditor)) {
-                    splitContainer1.Panel2Collapsed = true;
-                    splitContainer1.Panel2.Hide();
-                }
-            }
-            else
-            {
-                if (splitContainer1.Panel1.Contains(propertiesEditor)) {
-                    splitContainer1.Panel1Collapsed = false;
-                    splitContainer1.Panel1.Show();
-                }
-                if (splitContainer1.Panel2.Contains(propertiesEditor)) {
-                    splitContainer1.Panel2Collapsed = false;
-                    splitContainer1.Panel2.Show();
-                }
-            }
-        }
-
         private void DisplayVertical()
         {
+            if (splitContainer1.Panel2Collapsed)
+                return;
+
             var ImagePanel = stPanel1;
             var PropertiesEditor = propertiesEditor;
 
@@ -748,7 +743,7 @@ namespace Switch_Toolbox.Library.Forms
 
             splitContainer1.SplitterDistance = this.Height / 2;
 
-            PropertiesEditor.HideHintPanel(false);
+            PropertiesEditor.HideHintPanel(true);
         }
     }
 }
