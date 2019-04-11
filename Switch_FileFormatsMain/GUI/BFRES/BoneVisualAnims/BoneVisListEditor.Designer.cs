@@ -102,7 +102,7 @@
             // stPropertyGrid1
             // 
             this.stPropertyGrid1.AutoScroll = true;
-            this.stPropertyGrid1.DisableHintDisplay = true;
+            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Location = new System.Drawing.Point(218, 60);
             this.stPropertyGrid1.Name = "stPropertyGrid1";
             this.stPropertyGrid1.Size = new System.Drawing.Size(248, 356);

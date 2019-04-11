@@ -34,7 +34,7 @@
             // stPropertyGrid1
             // 
             this.stPropertyGrid1.AutoScroll = true;
-            this.stPropertyGrid1.DisableHintDisplay = true;
+            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPropertyGrid1.Location = new System.Drawing.Point(0, 0);
             this.stPropertyGrid1.Name = "stPropertyGrid1";

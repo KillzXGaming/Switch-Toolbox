@@ -231,7 +231,7 @@
             this.stPropertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stPropertyGrid1.AutoScroll = true;
-            this.stPropertyGrid1.DisableHintDisplay = true;
+            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Location = new System.Drawing.Point(300, 153);
             this.stPropertyGrid1.Name = "stPropertyGrid1";
             this.stPropertyGrid1.Size = new System.Drawing.Size(210, 522);
