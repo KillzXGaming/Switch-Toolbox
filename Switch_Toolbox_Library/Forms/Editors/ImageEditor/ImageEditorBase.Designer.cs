@@ -53,7 +53,6 @@
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertyGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.channelViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -344,7 +343,6 @@
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.propertyGridToolStripMenuItem,
-            this.channelViewToolStripMenuItem,
             this.displayVerticalToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -356,21 +354,14 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
-            // 
-            // channelViewToolStripMenuItem
-            // 
-            this.channelViewToolStripMenuItem.Name = "channelViewToolStripMenuItem";
-            this.channelViewToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.channelViewToolStripMenuItem.Text = "Channel View";
-            this.channelViewToolStripMenuItem.Click += new System.EventHandler(this.channelViewToolStripMenuItem_Click);
             // 
             // displayVerticalToolStripMenuItem
             // 
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
-            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
             // 
@@ -502,7 +493,6 @@
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem propertyGridToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem channelViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem imageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem flipHorizontalToolStripMenuItem;
