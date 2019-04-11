@@ -78,7 +78,10 @@ namespace Updater
                     continue;
            
                 if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
+                {
+                    File.SetAttributes(file, FileAttributes.Normal);
                     File.Delete(Path.Combine(folderDir, Path.GetFileName(file)));
+                }
                 File.Move(file, Path.Combine(folderDir, Path.GetFileName(file)));
             }
         }

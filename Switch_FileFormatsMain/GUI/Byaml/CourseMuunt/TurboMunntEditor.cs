@@ -10,6 +10,9 @@ using FirstPlugin.Turbo.CourseMuuntStructs;
 using GL_EditorFramework.EditorDrawables;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using aampv1 = AampV1Library;
+using aampv2 = AampV2Library;
+using Switch_Toolbox.Library.Rendering;
 
 namespace FirstPlugin.Forms
 {
@@ -53,19 +56,41 @@ namespace FirstPlugin.Forms
 
         CourseMuuntScene scene;
 
+        string CourseFolder;
         public void LoadCourseInfo(System.Collections.IEnumerable by, string FilePath)
         {
-            string CourseFolder = System.IO.Path.GetDirectoryName(FilePath);
+            CourseFolder = System.IO.Path.GetDirectoryName(FilePath);
             scene = new CourseMuuntScene(by);
 
+            //Add collsion (switch)
             if (File.Exists($"{CourseFolder}/course_kcl.szs"))
                 scene.AddRenderableKcl($"{CourseFolder}/course_kcl.szs");
+
+            //Add collsion (wii u)
             if (File.Exists($"{CourseFolder}/course.kcl"))
                 scene.AddRenderableKcl($"{CourseFolder}/course.kcl");
 
+            //Add probe lighting config  (wii u)
+            if (File.Exists($"{CourseFolder}/course.bglpbd"))
+                scene.AddParameterArchive($"{CourseFolder}/course.bglpbd");
+
+            //Add probe lighting config  (switch)
+            if (File.Exists($"{CourseFolder}/course_bglpbd.szs"))
+                scene.AddParameterArchive($"{CourseFolder}/course_bglpbd.szs");
+
+
+            //Add course model
             if (File.Exists($"{CourseFolder}/course_model.szs"))
-            {
                 scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
+            
+            foreach (AAMP aamp in scene.ParameterArchives)
+            {
+                if (aamp.aampFileV1 != null)
+                    LoadParameters(aamp.aampFileV1);
+                else if (aamp.aampFileV2 != null)
+                    LoadParameters(aamp.aampFileV2);
+                else
+                    throw new Exception("Failed to load parameter file " + aamp.FileName);
             }
 
             viewport.AddDrawable(new GL_EditorFramework.EditorDrawables.SingleObject(new OpenTK.Vector3(0)));
@@ -110,19 +135,161 @@ namespace FirstPlugin.Forms
 
             foreach (var kcl in scene.KclObjects)
             {
-                viewport.AddDrawable(kcl.Renderer);
-                treeView1.Nodes.Add(kcl);
-                kcl.Checked = true;
+            //    viewport.AddDrawable(kcl.Renderer);
+            //    treeView1.Nodes.Add(kcl);
+             //   kcl.Checked = true;
             }
 
             foreach (var bfres in scene.BfresObjects)
             {
-                viewport.AddDrawable(bfres.BFRESRender);
-                treeView1.Nodes.Add(bfres);
-                bfres.Checked = true;
+              //  viewport.AddDrawable(bfres.BFRESRender);
+              //  treeView1.Nodes.Add(bfres);
+             //   bfres.Checked = true;
             }
 
             IsLoaded = true;
+        }
+
+        ProbeLighting probeLightingConfig;
+
+        private void LoadParameters(aampv1.AampFile aamp)
+        {
+            if (aamp.EffectType == "Probe Data")
+            {
+                probeLightingConfig = new ProbeLighting();
+                viewport.AddDrawable(probeLightingConfig);
+                var probeRoot = new ProbeLightingWrapper(probeLightingConfig);
+                treeView1.Nodes.Add(probeRoot);
+
+                uint index = 0;
+                foreach (var val in aamp.RootNode.childParams)
+                {
+                    var entry = new ProbeLighting.Entry();
+                    entry.Index = index++;
+                    probeLightingConfig.Entries.Add(entry);
+
+                    probeRoot.Nodes.Add(new ProbeLightingEntryWrapper(entry));
+
+                    foreach (var param in val.paramObjects)
+                    {
+                        switch (param.HashString)
+                        {
+                            case "param_obj":
+                                foreach (var data in param.paramEntries) {
+                                    if (data.HashString == "index") entry.Index = (uint)data.Value;
+                                    if (data.HashString == "type") entry.Type = (uint)data.Value;
+                                }
+                                break;
+                            case "grid":
+                                entry.Grid = LoadGridData(param.paramEntries);
+                                break;
+                            case "sh_index_buffer":
+                                LoadIndexBuffer(param.paramEntries, entry);
+                                break;
+                            case "sh_data_buffer":
+                                LoadDataBuffer(param.paramEntries, entry);
+                                break;
+                        }
+                    }
+                }
+
+                aamp.Save($"{CourseFolder}/DEBUG_PROBE.aamp");
+
+                foreach (var entry in probeLightingConfig.Entries)
+                {
+                    Console.WriteLine(entry.Name);
+                    Console.WriteLine($"IndexType {entry.IndexType}");
+                    Console.WriteLine($"DataType {entry.DataType}");
+                    Console.WriteLine($"MaxIndexNum {entry.MaxIndexNum}");
+                    Console.WriteLine($"UsedIndexNum {entry.UsedIndexNum}");
+                    Console.WriteLine($"MaxShDataNum {entry.MaxShDataNum}");
+                    Console.WriteLine($"UsedShDataNum {entry.UsedShDataNum}");
+
+                    Console.WriteLine($"AABB_Max_Position {entry.Grid.AABB_Max_Position}");
+                    Console.WriteLine($"AABB_Min_Position {entry.Grid.AABB_Min_Position}");
+                    Console.WriteLine($"Voxel_Step_Position {entry.Grid.Voxel_Step_Position}");
+
+                    Console.WriteLine($"DataBuffer {entry.DataBuffer.Length}");
+                    Console.WriteLine($"IndexBuffer {entry.IndexBuffer.Length}");
+
+                }
+
+            }
+        }
+
+        private void LoadDataBuffer(aampv1.ParamEntry[] paramEntries, ProbeLighting.Entry probeEntry)
+        {
+            foreach (var entry in paramEntries)
+            {
+                if (entry.HashString == "type")
+                    probeEntry.DataType = (uint)entry.Value;
+                if (entry.HashString == "used_data_num")
+                    probeEntry.UsedShDataNum = (uint)entry.Value;
+                if (entry.HashString == "max_sh_data_num")
+                    probeEntry.MaxShDataNum = (uint)entry.Value;
+                if (entry.HashString == "data_buffer")
+                {
+                    if (entry.ParamType == aampv1.ParamType.BufferFloat)
+                        probeEntry.DataBuffer = (float[])entry.Value;
+                }
+            }
+        }
+
+        private void LoadIndexBuffer(aampv1.ParamEntry[] paramEntries, ProbeLighting.Entry probeEntry)
+        {
+            foreach (var entry in paramEntries)
+            {
+                if (entry.HashString == "type")
+                    probeEntry.IndexType = (uint)entry.Value;
+                if (entry.HashString == "used_index_num")
+                    probeEntry.UsedIndexNum = (uint)entry.Value;
+                if (entry.HashString == "max_index_num")
+                    probeEntry.MaxIndexNum = (uint)entry.Value;
+                if (entry.HashString == "index_buffer")
+                {
+                    if (entry.ParamType == aampv1.ParamType.BufferUint)
+                        probeEntry.IndexBuffer = (uint[])entry.Value;
+
+                    //Experimental, just fill in indices
+                    uint[] values = (uint[])entry.Value;
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        values[i] = 0;
+                    }
+                    entry.Value = values;
+                }
+            }
+        }
+
+        private ProbeLighting.Grid LoadGridData(aampv1.ParamEntry[] paramEntries)
+        {
+            ProbeLighting.Grid grid = new ProbeLighting.Grid();
+
+            var mainBfres = scene.BfresObjects[0];
+            var boundings = mainBfres.BFRESRender.GetSelectionBox();
+
+            foreach (var entry in paramEntries)
+            {
+                if (entry.HashString == "aabb_min_pos") {
+                    grid.AABB_Max_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
+
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.minX, boundings.minY, boundings.minZ);
+                }
+                if (entry.HashString == "aabb_max_pos") {
+                    grid.AABB_Min_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
+
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.maxX, boundings.maxY, boundings.maxZ);
+                }
+                if (entry.HashString == "voxel_step_pos")
+                    grid.Voxel_Step_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
+            }
+
+            return grid;
+        }
+
+        private void LoadParameters(aampv2.AampFile aamp)
+        {
+
         }
 
         private void AddPathDrawable(string Name, IEnumerable<BasePathPoint> Groups, Color color, bool CanConnect = true)
@@ -190,16 +357,38 @@ namespace FirstPlugin.Forms
 
         private void viewIntroCameraToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Sort list by camera number/id
+            scene.IntroCameras.Sort((x, y) => x.CameraNum.CompareTo(y.CameraNum));
+
             foreach (var camera in scene.IntroCameras)
             {
                 var pathMove = scene.Paths[camera.Camera_Path];
                 var pathLookAt = scene.Paths[camera.Camera_AtPath];
 
+                //The time elapsed for each point
+                int PathTime = camera.CameraTime / pathMove.PathPoints.Count;
+
+                //Go through each point
                 for (int p = 0; p < pathMove.PathPoints.Count; p++)
                 {
+                    //If lookat path is higher than the move path, break
+                    if (pathLookAt.PathPoints.Count >= p)
+                        break;
+
+                    //Set our points
                     var pathMovePoint = pathMove.PathPoints[p];
                     var pathLookAtPoint = pathLookAt.PathPoints[p];
 
+                    for (int frame = 0; frame < PathTime; frame++)
+                    {
+                        if (viewport.GL_ControlModern != null)
+                        {
+                            viewport.GL_ControlModern.CameraEye = pathLookAtPoint.Translate;
+                            viewport.GL_ControlModern.CameraTarget = pathMovePoint.Translate;
+
+                            viewport.UpdateViewport();
+                        }
+                    }
                 }
             }
         }
@@ -215,6 +404,23 @@ namespace FirstPlugin.Forms
             if (node.Text == "Scene")
             {
                 stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
+            }
+            else if (node is ProbeLightingWrapper)
+            {
+            }
+            else if (node is ProbeLightingEntryWrapper)
+            {
+                var parent = (ProbeLightingWrapper)node.Parent;
+
+                foreach (var child in parent.Nodes)
+                {
+                   ( (ProbeLightingEntryWrapper)child).entry.Grid.GridColor = new Vector3(9, 0, 0);
+                }
+
+                var probeEntry = (ProbeLightingEntryWrapper)node;
+                probeEntry.entry.Grid.GridColor = new Vector3(1,0,0);
+
+                stPropertyGrid1.LoadProperty(probeEntry.entry, OnPropertyChanged);
             }
             else if (node is PathCollectionNode)
             {
@@ -275,6 +481,8 @@ namespace FirstPlugin.Forms
         {
             if (node is PathPointNode)
                 ((PathPointNode)node).OnChecked(IsChecked);
+            if (node is ProbeLightingEntryWrapper)
+                ((ProbeLightingEntryWrapper)node).OnChecked(IsChecked);
         }
     }
 }

@@ -362,6 +362,8 @@
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathCollectionNode.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathGroupNode.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathPointNode.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingEntryWrapper.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingWrapper.cs" />
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>UserControl</SubType>

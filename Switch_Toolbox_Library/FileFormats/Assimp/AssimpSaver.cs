@@ -36,7 +36,7 @@ namespace Switch_Toolbox.Library
                 if (ext == ".ply")
                     formatID = "ply";
 
-                if (v.ExportFile(scene, FileName, formatID))
+                if (v.ExportFile(scene, FileName, formatID, PostProcessSteps.FlipUVs))
                     MessageBox.Show($"Exported {FileName} Successfuly!");
                 else
                     MessageBox.Show($"Failed to export {FileName}!");
@@ -110,7 +110,7 @@ namespace Switch_Toolbox.Library
                                 else
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                             }
-                            else if ( v.boneWeights[j] > 0)
+                            else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
                                 mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                         }
                     }

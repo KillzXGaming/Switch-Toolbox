@@ -207,7 +207,7 @@ namespace FirstPlugin
 
                 variationSymbolData.Read(reader);
                 variationSymbolDataFull.Read(reader);
-                UniformBlocks.Read(reader, header.Version);
+                UniformBlocks.Read(reader, header.Version, true);
 
                 if (header.Version <= 12)
                 {

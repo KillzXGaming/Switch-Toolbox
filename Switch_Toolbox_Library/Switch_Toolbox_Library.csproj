@@ -204,6 +204,7 @@
     <Compile Include="FileFormats\APNG\CRC.cs" />
     <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
     <Compile Include="FileFormats\Animation\SEANIM.cs" />
+    <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="Forms\BatchFormatExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -570,10 +571,12 @@
     </Compile>
     <Compile Include="PublicEnums.cs" />
     <Compile Include="Rendering\DrawableBackground.cs" />
+    <Compile Include="Rendering\DrawableBoundingBox.cs" />
     <Compile Include="Rendering\DrawableCube.cs" />
     <Compile Include="Rendering\DrawableSkybox.cs" />
     <Compile Include="Rendering\DrawableFloor.cs" />
     <Compile Include="Rendering\DrawableXyzLines.cs" />
+    <Compile Include="Rendering\ProbeLighting.cs" />
     <Compile Include="Rendering\RenderTools.cs" />
     <Compile Include="Rendering\ScreenTriangle.cs" />
     <Compile Include="Generics\STSkeleton.cs" />

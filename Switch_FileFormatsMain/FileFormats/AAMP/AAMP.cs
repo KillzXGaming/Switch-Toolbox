@@ -54,8 +54,8 @@ namespace FirstPlugin
             }
         }
 
-        aampv1.AampFile aampFileV1;
-        aampv2.AampFile aampFileV2;
+        public aampv1.AampFile aampFileV1;
+        public aampv2.AampFile aampFileV2;
 
         AampV1Editor aampEditorV1;
         AampV2Editor aampEditorV2;

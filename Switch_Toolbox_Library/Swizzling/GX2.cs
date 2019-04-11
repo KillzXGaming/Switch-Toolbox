@@ -754,7 +754,7 @@ namespace Switch_Toolbox.Library
             return swizzleSurf(width, height, depth, format_, tileMode, swizzle_, pitch, bpp, data, depthLevel, 1);
         }
 
-        private static byte[] swizzleSurf(uint width, uint height,uint depth, uint format, uint tileMode, uint swizzle_,
+        private static byte[] swizzleSurf(uint width, uint height, uint depth, uint format, uint tileMode, uint swizzle_,
                 uint pitch, uint bitsPerPixel, byte[] data, int depthLevel, int swizzle)
         {
             uint bytesPerPixel = bitsPerPixel / 8;
@@ -1154,7 +1154,7 @@ namespace Switch_Toolbox.Library
             uint macroTileIndexY = y / macroTileHeight;
             ulong macroTileOffset = (macroTileIndexX + macroTilesPerRow * macroTileIndexY) * macroTileBytes;
 
-            if (isBankSwappedTileMode(tileMode))
+            if (isBankSwappedTileMode(tileMode) != 0)
             {
                 bankSwapWidth = computeSurfaceBankSwappedWidth(tileMode, bpp, 1, pitch);
                 swapIndex = macroTilePitch * macroTileIndexX / bankSwapWidth;
@@ -1210,7 +1210,7 @@ namespace Switch_Toolbox.Library
             if (DebugSurface)
                 Console.WriteLine("computeSurfaceMipLevelTileMode expTileMode " + expTileMode);
 
-            if (noRecursive || level == 0)
+            if (noRecursive != 0 || level == 0)
                 return expTileMode;
 
             switch (bpp)
@@ -1910,7 +1910,6 @@ namespace Switch_Toolbox.Library
                      tileMode,
                      padDims,
                      (flags.value >> 4) & 1,
-                     (flags.value >> 7) & 1,
                      pitchAlign,
                      heightAlign,
                      microTileThickness);
@@ -1996,7 +1995,6 @@ namespace Switch_Toolbox.Library
                         tileMode,
                         padDims,
                         (flags.value >> 4) & 1,
-                        (flags.value >> 7) & 1,
                         pitchAlign,
                         heightAlign,
                         microTileThickness);
