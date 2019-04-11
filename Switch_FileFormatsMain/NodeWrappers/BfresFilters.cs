@@ -13,6 +13,7 @@ namespace FirstPlugin
         public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".gif");
         public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".gif");
         public static string FMDL = GetFilter(".bfmdl", ".dae", ".fbx", ".obj", ".csv");
+        public static string FMDL_EXPORT = GetFilter(".bfmdl", ".dae");
         public static string FSKL = GetFilter(".bfskl");
         public static string FSHP = GetFilter(".bfobj");
         public static string BONE = GetFilter(".bfbn");
@@ -30,9 +31,10 @@ namespace FirstPlugin
         public static string FSCN = GetFilter(".bfscn");
         public static string FSHA = GetFilter(".bfspa");
 
-        public static string GetFilter(Type type, object CheckAnimEffect = null)
+        public static string GetFilter(Type type, object CheckAnimEffect = null, bool IsExporting = false)
         {
             if (type == typeof(TextureData)) return BNTX_TEX;
+            else if (type == typeof(FMDL) && IsExporting) return FMDL_EXPORT;
             else if (type == typeof(FMDL)) return FMDL;
             else if (type == typeof(FSHP)) return FSHP;
             else if (type == typeof(FMAT)) return FMAT;

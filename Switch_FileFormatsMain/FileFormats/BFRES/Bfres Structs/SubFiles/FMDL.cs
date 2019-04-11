@@ -437,7 +437,8 @@ namespace Bfres.Structs
             Nodes.Clear();
         }
 
-        public override string ExportFilter => FileFilters.GetFilter(typeof(FMDL));
+        public override string ExportFilter => FileFilters.GetFilter(typeof(FMDL), null, true);
+        public override string ImportFilter => FileFilters.GetFilter(typeof(FMDL));
 
         public override void Export(string FileName)
         {
