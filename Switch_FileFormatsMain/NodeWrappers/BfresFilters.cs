@@ -10,8 +10,8 @@ namespace FirstPlugin
 {
     public class FileFilters
     {
-        public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".gif");
-        public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".gif");
+        public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
         public static string FMDL = GetFilter(".bfmdl", ".dae", ".fbx", ".obj", ".csv");
         public static string FMDL_EXPORT = GetFilter(".bfmdl", ".dae");
         public static string FSKL = GetFilter(".bfskl");
@@ -103,6 +103,7 @@ namespace FirstPlugin
                     case ".jpg": filters.Add(ext, "Joint Photographic Experts Group"); break;
                     case ".bmp": filters.Add(ext, "Bitmap Image"); break;
                     case ".tiff": filters.Add(ext, "Tagged Image File Format"); break;
+                    case ".tif": filters.Add(ext, "Tagged Image File Format"); break;
                     case ".seanim": filters.Add(ext, "SE Animation"); break;
                     case ".smd": filters.Add(ext, "Source Model Animation"); break;
                     case ".bftex": filters.Add(ext, "Binary Texture"); break;
