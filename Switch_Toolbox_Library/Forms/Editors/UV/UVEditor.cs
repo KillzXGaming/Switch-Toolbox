@@ -436,6 +436,11 @@ namespace Switch_Toolbox.Library.Forms
 
                 shape.TransformUVs(Translate, Scale, UvChannelIndex);
 
+                scaleXUD.Value = 1;
+                scaleYUD.Value = 1;
+                transXUD.Value = 0;
+                transYUD.Value = 0;
+
                 gL_ControlLegacy2D1.Invalidate();
             }
         }
