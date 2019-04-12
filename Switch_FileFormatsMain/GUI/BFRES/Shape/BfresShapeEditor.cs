@@ -84,11 +84,13 @@ namespace FirstPlugin
 
             if (fshp.VertexBufferU != null)
             {
+                vertexBufferSkinCountUD.Maximum = (decimal)fshp.VertexBufferU.VertexSkinCount;
                 vertexBufferSkinCountUD.Value = (decimal)fshp.VertexBufferU.VertexSkinCount;
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBufferU);
             }
             else
             {
+                vertexBufferSkinCountUD.Maximum = (decimal)fshp.VertexBufferU.VertexSkinCount;
                 vertexBufferSkinCountUD.Value = (decimal)fshp.VertexBuffer.VertexSkinCount;
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBuffer);
             }
