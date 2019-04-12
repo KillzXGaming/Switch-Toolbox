@@ -1108,12 +1108,9 @@ namespace Bfres.Structs
                     if (VertexSkinCount == 1 && vtx.boneIds.Count > 0)
                         boneId = vtx.boneIds[0];
 
-                 //   vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
-                 //   vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
+                    vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
+                    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
                 }
-           //     Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
-            //    Console.WriteLine($"Index count {vtx.boneIds.Count}");
-
 
                 verts.Add(new Syroot.Maths.Vector4F(vtx.pos.X, vtx.pos.Y, vtx.pos.Z, 1.0f));
                 norms.Add(new Syroot.Maths.Vector4F(vtx.nrm.X, vtx.nrm.Y, vtx.nrm.Z, 0));
