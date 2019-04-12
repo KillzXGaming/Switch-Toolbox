@@ -435,14 +435,14 @@ namespace Switch_Toolbox.Library.Forms
                 Vector2 Translate = new Vector2((float)transXUD.Value, (float)transYUD.Value);
 
                 shape.TransformUVs(Translate, Scale, UvChannelIndex);
-
-                scaleXUD.Value = 1;
-                scaleYUD.Value = 1;
-                transXUD.Value = 0;
-                transYUD.Value = 0;
-
-                gL_ControlLegacy2D1.Invalidate();
             }
+
+            scaleXUD.Value = 1;
+            scaleYUD.Value = 1;
+            transXUD.Value = 0;
+            transYUD.Value = 0;
+
+            gL_ControlLegacy2D1.Invalidate();
         }
 
         private void gL_ControlLegacy2D1_Resize(object sender, EventArgs e)
