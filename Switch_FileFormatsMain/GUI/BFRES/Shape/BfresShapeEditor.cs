@@ -93,6 +93,9 @@ namespace FirstPlugin
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBuffer);
             }
 
+            vtxCountUD.Value = fshp.vertices.Count;
+
+
             if (fshp.ShapeU != null)
                 keyShapeList1.LoadKeyShapes(fshp.ShapeU.KeyShapes);
             else

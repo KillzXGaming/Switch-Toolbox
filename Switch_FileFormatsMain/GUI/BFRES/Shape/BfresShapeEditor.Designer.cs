@@ -84,12 +84,12 @@
             this.boneIndexUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
             this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
             this.vertexBufferDropDownPanel = new Switch_Toolbox.Library.Forms.STDropDownPanel();
-            this.vertexBufferList1 = new Forms.VertexBufferList();
+            this.vertexBufferList1 = new FirstPlugin.Forms.VertexBufferList();
             this.vertexBufferSkinCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
             this.stLabel12 = new Switch_Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel8 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel7 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.keyShapeList3 = new Forms.KeyShapeList();
+            this.keyShapeList3 = new FirstPlugin.Forms.KeyShapeList();
             this.levelOfDetailDropDownPanel = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stButton3 = new Switch_Toolbox.Library.Forms.STButton();
             this.btnFacesView = new Switch_Toolbox.Library.Forms.STButton();
@@ -114,9 +114,11 @@
             this.keyShapeDropDownPanel = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stDropDownPanel5 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel6 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.keyShapeList2 = new Forms.KeyShapeList();
+            this.keyShapeList2 = new FirstPlugin.Forms.KeyShapeList();
             this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.keyShapeList1 = new Forms.KeyShapeList();
+            this.keyShapeList1 = new FirstPlugin.Forms.KeyShapeList();
+            this.vtxCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
+            this.stLabel13 = new Switch_Toolbox.Library.Forms.STLabel();
             this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.stFlowLayoutPanel1.SuspendLayout();
@@ -153,6 +155,7 @@
             this.stDropDownPanel5.SuspendLayout();
             this.stPanel6.SuspendLayout();
             this.stPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.vtxCountUD)).BeginInit();
             this.SuspendLayout();
             // 
             // stTabControl1
@@ -982,6 +985,8 @@
             // vertexBufferDropDownPanel
             // 
             this.vertexBufferDropDownPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.vertexBufferDropDownPanel.Controls.Add(this.vtxCountUD);
+            this.vertexBufferDropDownPanel.Controls.Add(this.stLabel13);
             this.vertexBufferDropDownPanel.Controls.Add(this.vertexBufferList1);
             this.vertexBufferDropDownPanel.Controls.Add(this.vertexBufferSkinCountUD);
             this.vertexBufferDropDownPanel.Controls.Add(this.stLabel12);
@@ -1397,6 +1402,39 @@
             this.keyShapeList1.Size = new System.Drawing.Size(392, 144);
             this.keyShapeList1.TabIndex = 0;
             // 
+            // vtxCountUD
+            // 
+            this.vtxCountUD.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.vtxCountUD.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.vtxCountUD.Location = new System.Drawing.Point(310, 26);
+            this.vtxCountUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.vtxCountUD.Minimum = new decimal(new int[] {
+            -2147483648,
+            0,
+            0,
+            -2147483648});
+            this.vtxCountUD.Name = "vtxCountUD";
+            this.vtxCountUD.ReadOnly = true;
+            this.vtxCountUD.Size = new System.Drawing.Size(121, 20);
+            this.vtxCountUD.TabIndex = 43;
+            // 
+            // stLabel13
+            // 
+            this.stLabel13.AutoSize = true;
+            this.stLabel13.Location = new System.Drawing.Point(234, 28);
+            this.stLabel13.Name = "stLabel13";
+            this.stLabel13.Size = new System.Drawing.Size(71, 13);
+            this.stLabel13.TabIndex = 42;
+            this.stLabel13.Text = "Vertex Count:";
+            // 
             // BfresShapeEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1454,6 +1492,7 @@
             this.stDropDownPanel5.PerformLayout();
             this.stPanel6.ResumeLayout(false);
             this.stPanel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.vtxCountUD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1548,5 +1587,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private Switch_Toolbox.Library.Forms.STButton stButton12;
         private Forms.KeyShapeList keyShapeList1;
+        private Switch_Toolbox.Library.Forms.NumericUpDownInt vtxCountUD;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel13;
     }
 }
