@@ -40,6 +40,7 @@ namespace Toolbox
             tabForms.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             OnMdiWindowClosed();
+            ResetMenus();
         }
 
         public void Reload()
@@ -648,10 +649,20 @@ namespace Toolbox
                 saveToolStripButton.Enabled = false;
             }
 
-            if (format.IFileInfo.UseEditMenu)
-                editToolStripMenuItem.Enabled = true;
-            else
-                editToolStripMenuItem.Enabled = false;
+            var menuExtensions = FileManager.GetMenuExtensions(format);
+
+            editToolStripMenuItem.DropDownItems.Clear();
+
+            if (menuExtensions != null)
+            {
+                if (menuExtensions.EditMenuExtensions != null)
+                {
+                    RegisterMenuExtIndex(editToolStripMenuItem, menuExtensions.EditMenuExtensions, editToolStripMenuItem.DropDownItems.Count);
+
+                    if (editToolStripMenuItem.DropDownItems.Count > 0)
+                        editToolStripMenuItem.Enabled = true;
+                }
+            }
         }
         private void ResetMenus()
         {

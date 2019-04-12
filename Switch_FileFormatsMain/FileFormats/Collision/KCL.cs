@@ -83,6 +83,7 @@ namespace FirstPlugin
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => null;
 
             STToolStripItem[] newFileExt = new STToolStripItem[2];
 

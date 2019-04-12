@@ -142,6 +142,7 @@ namespace FirstPlugin
                 box.Extend = new Vector3(bnd.Extent.X, bnd.Extent.Y, bnd.Extent.Z);
                 fshp.boundingBoxes.Add(box);
             }
+
             foreach (float rad in shp.RadiusArray)
             {
                 fshp.boundingRadius.Add(rad);
@@ -289,7 +290,7 @@ namespace FirstPlugin
                 if (vec4c0.Length > 0)
                     v.col = new Vector4(vec4c0[i].X, vec4c0[i].Y, vec4c0[i].Z, vec4c0[i].W);
 
-                if (fshp.VertexSkinCount == 1)
+        /*        if (fshp.VertexSkinCount == 1)
                 {
                     Matrix4 sb = model.Skeleton.bones[model.Skeleton.Node_Array[v.boneIds[0]]].Transform;
                     v.pos = Vector3.TransformPosition(v.pos, sb);
@@ -312,7 +313,7 @@ namespace FirstPlugin
                         Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetRotation());
                         Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetScale());
                     }
-                }
+                }*/
                 fshp.vertices.Add(v);
             }
         }
@@ -851,11 +852,15 @@ namespace FirstPlugin
             ShapeU.KeyShapes = new ResDict<KeyShape>();
             ShapeU.Name = fshp.Text;
             ShapeU.TargetAttribCount = (byte)fshp.TargetAttribCount;
-            ShapeU.SkinBoneIndices = fshp.BoneIndices;
             ShapeU.SubMeshBoundings = new List<Bounding>();
             ShapeU.RadiusArray = new List<float>();
-            ShapeU.RadiusArray = fshp.boundingRadius;
             ShapeU.Meshes = new List<Mesh>();
+
+            foreach (ushort index in fshp.BoneIndices)
+                ShapeU.SkinBoneIndices.Add(index);
+
+            foreach (float radius in fshp.boundingRadius)
+                ShapeU.RadiusArray.Add(radius);
 
             foreach (FSHP.BoundingBox box in fshp.boundingBoxes)
             {

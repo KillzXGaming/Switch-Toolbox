@@ -61,8 +61,6 @@
             this.chkBoxFlipUvsY = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportBones = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.panel8 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.label16 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.numericUpDownInt1 = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
             this.chkBoxImportMat = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxParamDefaults = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxRotNegative90Y = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -97,7 +95,6 @@
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInt1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel9.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -442,8 +439,6 @@
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.label16);
-            this.panel8.Controls.Add(this.numericUpDownInt1);
             this.panel8.Controls.Add(this.chkBoxImportMat);
             this.panel8.Controls.Add(this.chkBoxParamDefaults);
             this.panel8.Controls.Add(this.chkBoxRotNegative90Y);
@@ -468,33 +463,6 @@
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(524, 327);
             this.panel8.TabIndex = 11;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(242, 189);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(83, 13);
-            this.label16.TabIndex = 33;
-            this.label16.Text = "Skin Count Limit";
-            // 
-            // numericUpDownInt1
-            // 
-            this.numericUpDownInt1.Location = new System.Drawing.Point(243, 215);
-            this.numericUpDownInt1.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericUpDownInt1.Minimum = new decimal(new int[] {
-            -2147483648,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownInt1.Name = "numericUpDownInt1";
-            this.numericUpDownInt1.Size = new System.Drawing.Size(140, 20);
-            this.numericUpDownInt1.TabIndex = 32;
-            this.numericUpDownInt1.ValueChanged += new System.EventHandler(this.numericUpDownInt1_ValueChanged);
             // 
             // chkBoxImportMat
             // 
@@ -805,7 +773,6 @@
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInt1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
@@ -876,8 +843,6 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxRotNegative90Y;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxParamDefaults;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportMat;
-        private Switch_Toolbox.Library.Forms.STLabel label16;
-        private Switch_Toolbox.Library.Forms.NumericUpDownInt numericUpDownInt1;
         private Switch_Toolbox.Library.Forms.STPanel stPanel1;
     }
 }

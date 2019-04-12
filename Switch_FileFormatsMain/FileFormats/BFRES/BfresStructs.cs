@@ -2587,15 +2587,6 @@ namespace Bfres.Structs
             }
             return indices;
         }
-        public Vector3 TransformLocal(Vector3 position, bool IsPos = true)
-        {
-            Matrix4 trans = Matrix4.CreateTranslation(0, 0, 0);
-
-            if (IsPos)
-                return Vector3.TransformPosition(position, trans);
-            else
-                return Vector3.TransformNormal(position, trans);
-        }
         public void SaveVertexBuffer()
         {
             if (BFRES.IsWiiU)

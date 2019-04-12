@@ -329,10 +329,5 @@ namespace FirstPlugin
             else
                 EnableMaterialEdits();
         }
-
-        private void numericUpDownInt1_ValueChanged(object sender, EventArgs e)
-        {
-            SkinCountLimit = (int)numericUpDownInt1.Value;
-        }
     }
 }

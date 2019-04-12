@@ -369,8 +369,6 @@ namespace Bfres.Structs
 
         public void ApplyImportSettings(BfresModelImportSettings settings, FMAT mat)
         {
-        //    VertexSkinCount = settings.SkinCountLimit;
-
             if (settings.FlipUVsVertical)
             {
                 foreach (Vertex v in vertices)
@@ -670,8 +668,10 @@ namespace Bfres.Structs
                                 ApplyImportSettings(settings, GetMaterial());
                                 lodMeshes = obj.lodMeshes;
                                 CreateNewBoundingBoxes();
+
                                 SaveShape(IsWiiU);
                                 SaveVertexBuffer();
+
                                 Cursor.Current = Cursors.Default;
                             }
                         }
@@ -1108,8 +1108,8 @@ namespace Bfres.Structs
                     if (VertexSkinCount == 1 && vtx.boneIds.Count > 0)
                         boneId = vtx.boneIds[0];
 
-                    vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
-                    vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
+                 //   vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
+                 //   vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
                 }
            //     Console.WriteLine($"Weight count {vtx.boneWeights.Count}");
             //    Console.WriteLine($"Index count {vtx.boneIds.Count}");

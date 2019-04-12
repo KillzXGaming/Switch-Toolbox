@@ -33,6 +33,23 @@ namespace Switch_Toolbox.Library
 
             return types.ToArray();
         }
+
+        public static IFileMenuExtension GetMenuExtensions(IFileFormat fileFormat)
+        {
+            foreach (Type type in fileFormat.Types)
+            {
+                Type[] interfaces_array = type.GetInterfaces();
+                for (int i = 0; i < interfaces_array.Length; i++)
+                {
+                    if (interfaces_array[i] == typeof(IFileMenuExtension))
+                    {
+                       return (IFileMenuExtension)Activator.CreateInstance(type);
+                    }
+                }
+            }
+            return null;
+        }
+
         public static IEditor<Forms.STForm>[] GetEditors()
         {
             var editors = new List<IEditor<Forms.STForm>>();

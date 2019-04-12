@@ -418,7 +418,6 @@ namespace Switch_Toolbox.Library
         }
         public List<Vertex> GetVertices(Mesh msh, Matrix4 transform, STGenericObject STobj)
         {
-
             List<Vertex> vertices = new List<Vertex>();
             for (int v = 0; v < msh.VertexCount; v++)
             {

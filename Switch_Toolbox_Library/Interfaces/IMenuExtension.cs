@@ -22,5 +22,6 @@ namespace Switch_Toolbox.Library
         STToolStripItem[] ToolsMenuExtensions { get; }
         STToolStripItem[] TitleBarExtensions { get; }
         STToolStripItem[] ExperimentalMenuExtensions { get; }
+        STToolStripItem[] EditMenuExtensions { get; }
     }
 }

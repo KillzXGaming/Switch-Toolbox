@@ -55,6 +55,7 @@ namespace FirstPlugin
         {
             public STToolStripItem[] NewFileMenuExtensions => newFileExt;
             public STToolStripItem[] NewFromFileMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => editExt;
             public STToolStripItem[] ToolsMenuExtensions => toolExt;
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
@@ -62,9 +63,13 @@ namespace FirstPlugin
 
             STToolStripItem[] toolExt = new STToolStripItem[1];
             STToolStripItem[] newFileExt = new STToolStripItem[2];
+            STToolStripItem[] editExt = new STToolStripItem[1];
 
             public MenuExt()
             {
+                editExt[0] = new STToolStripItem("Use Advanced Editor As Default");
+                editExt[0].Click += AdvancedEditor;
+
                 toolExt[0] = new STToolStripItem("Open Bfres Debugger");
                 toolExt[0].Click += DebugInfo;
 
@@ -72,6 +77,21 @@ namespace FirstPlugin
                 newFileExt[0].Click += NewSwitchBfres;
                 newFileExt[1] = new STToolStripItem("BFRES (Wii U)");
                 newFileExt[1].Click += NewWiiUBfres;
+
+                editExt[0].Checked = !PluginRuntime.UseSimpleBfresEditor;
+            }
+            private void AdvancedEditor(object sender, EventArgs args)
+            {
+                if (editExt[0].Checked)
+                {
+                    editExt[0].Checked = false;
+                   // PluginRuntime.UseSimpleBfresEditor = true;
+                }
+                else
+                {
+                    editExt[0].Checked = true;
+                 //   PluginRuntime.UseSimpleBfresEditor = false;
+                }
             }
             private void NewWiiUBfres(object sender, EventArgs args)
             {
@@ -178,7 +198,43 @@ namespace FirstPlugin
 
             if (IsSimpleEditor)
             {
+                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+                if (editor == null)
+                {
+                    editor = new STPropertyGrid();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+                editor.Text = Text;
 
+                if (SelectedSection is BFRES)
+                {
+                    if (resFile != null)
+                        editor.LoadProperty(resFile, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(resFileU, OnPropertyChanged);
+                }
+                if (SelectedSection is FMDL)
+                {
+                    if (((FMDL)SelectedSection).ModelU != null)
+                        editor.LoadProperty(((FMDL)SelectedSection).ModelU, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(((FMDL)SelectedSection).Model, OnPropertyChanged);
+                }
+                if (SelectedSection is FSHP)
+                {
+                    if (((FSHP)SelectedSection).ShapeU != null)
+                        editor.LoadProperty(((FSHP)SelectedSection).ShapeU, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(((FSHP)SelectedSection).Shape, OnPropertyChanged);
+                }
+                if (SelectedSection is FMAT)
+                {
+                    if (((FMAT)SelectedSection).MaterialU != null)
+                        editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
+                }
             }
             else
             {

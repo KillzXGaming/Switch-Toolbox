@@ -620,7 +620,6 @@ namespace Bfres.Structs
                             shape.CreateNewBoundingBoxes();
                             shape.CreateBoneList(obj, this);
                             shape.CreateIndexList(obj, this);
-                            //Todo find better way. Currently uses import settings now
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                             shape.BoneIndices = shape.GetIndices(Skeleton);
@@ -863,6 +862,7 @@ namespace Bfres.Structs
 
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
+                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                             shape.vertexAttributes = settings.CreateNewAttributes();
                             shape.BoneIndex = obj.BoneIndex;
 
@@ -880,7 +880,6 @@ namespace Bfres.Structs
                             shape.CreateBoneList(obj, this);
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
-                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
                             shape.SaveShape(IsWiiU);
