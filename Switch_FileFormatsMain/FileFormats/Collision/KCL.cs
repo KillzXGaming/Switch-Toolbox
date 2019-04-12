@@ -12,6 +12,7 @@ using System.Drawing;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
 using GL_EditorFramework.EditorDrawables;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
@@ -59,10 +60,22 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(new STToolStripItem("Save", Save));
             ContextMenuStrip.Items.Add(new STToolStripItem("Export", Export));
             ContextMenuStrip.Items.Add(new STToolStripItem("Replace", Replace));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Open Material Editor", OpenMaterialEditor));
             EndiannessToolstrip = new STToolStripItem("Big Endian Mode", SwapEndianess) { Checked = true };
             ContextMenuStrip.Items.Add(EndiannessToolstrip);
             CanSave = true;
             IFileInfo = new IFileInfo();
+        }
+
+        public void OpenMaterialEditor(object sender, EventArgs args)
+        {
+            CollisionMaterialEditor editor = new CollisionMaterialEditor();
+            editor.LoadCollisionValues(kcl, Renderer);
+
+            if (editor.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
 
         public void Load(System.IO.Stream stream)
@@ -386,6 +399,8 @@ namespace FirstPlugin
 
         public class KCLRendering : EditableObject
         {
+            public List<ushort> SelectedTypes = new List<ushort>();
+
             public Vector3 position = new Vector3(0, 0, 0);
 
             protected bool Selected = false;

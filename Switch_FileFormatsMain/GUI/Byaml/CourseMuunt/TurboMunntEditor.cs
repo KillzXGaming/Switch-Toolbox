@@ -142,9 +142,9 @@ namespace FirstPlugin.Forms
 
             foreach (var bfres in scene.BfresObjects)
             {
-              //  viewport.AddDrawable(bfres.BFRESRender);
-              //  treeView1.Nodes.Add(bfres);
-             //   bfres.Checked = true;
+                viewport.AddDrawable(bfres.BFRESRender);
+                treeView1.Nodes.Add(bfres);
+                bfres.Checked = true;
             }
 
             IsLoaded = true;

@@ -270,7 +270,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
               //      ObjPaths.Add(new ObjPathGroup(objPath));
                 }
             }
-            if (root.ContainsKey("PullPath")) {
+         /*   if (root.ContainsKey("PullPath")) {
                 foreach (var pullPath in root["PullPath"])
                     PullPaths.Add(new PullPathGroup(pullPath));
             }
@@ -291,7 +291,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                 foreach (var steerAssistPath in root["SteerAssistPath"]) {
                     SteerAssistPaths.Add(new SteerAssistPathGroup(steerAssistPath));
                 }
-            }
+            }*/
         }
 
 

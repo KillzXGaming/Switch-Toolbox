@@ -365,6 +365,12 @@
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathPointNode.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingEntryWrapper.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingWrapper.cs" />
+    <Compile Include="GUI\KCL\CollisionMaterialEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\KCL\CollisionMaterialEditor.Designer.cs">
+      <DependentUpon>CollisionMaterialEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>UserControl</SubType>
@@ -1002,6 +1008,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\VisibiltyAnimEditor.resx">
       <DependentUpon>VisibiltyAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\KCL\CollisionMaterialEditor.resx">
+      <DependentUpon>CollisionMaterialEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\KeySelection.resx" />
     <EmbeddedResource Include="GUI\Byaml\ByamlEditor.resx">
