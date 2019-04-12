@@ -163,11 +163,19 @@ namespace Switch_Toolbox.Library
 
         public void TransformPosition(Vector3 Position, Vector3 Rotation, Vector3 Scale)
         {
-            Matrix4 BonePosExtra = Utils.TransformValues(Position, Rotation, Scale);
+            Matrix4 positionMat = Matrix4.CreateTranslation(Position);
+            Matrix4 rotXMat = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Rotation.X));
+            Matrix4 rotYMat = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Rotation.Y));
+            Matrix4 rotZMat = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation.Z));
+            Matrix4 scaleMat = Matrix4.CreateScale(Scale);
+
+            Matrix4 Transformation = (rotXMat * rotYMat * rotZMat) * positionMat;
             foreach (Vertex v in vertices)
             {
-                v.pos = Vector3.TransformPosition(v.pos, BonePosExtra);
-                v.nrm = Vector3.TransformNormal(v.nrm, BonePosExtra);
+                v.pos = Vector3.TransformPosition(v.pos, Transformation);
+                v.pos = Vector3.TransformPosition(v.pos, scaleMat);
+
+                v.nrm = Vector3.TransformNormal(v.nrm, Transformation);
             }
         }
 

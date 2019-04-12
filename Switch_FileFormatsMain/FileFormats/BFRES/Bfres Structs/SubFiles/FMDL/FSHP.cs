@@ -1098,8 +1098,6 @@ namespace Bfres.Structs
             weights.Clear();
             boneInd.Clear();
 
-            Console.WriteLine($"Mesh {Text} {VertexSkinCount}");
-
             foreach (Vertex vtx in vertices)
             {
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
