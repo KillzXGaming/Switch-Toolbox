@@ -2201,15 +2201,6 @@ namespace Bfres.Structs
                 }
             }
         }
-        public void TransformPosition(Vector3 Position, Vector3 Rotation, Vector3 Scale)
-        {
-            Matrix4 BonePosExtra = Utils.TransformValues(Position, Rotation, Scale);
-            foreach (Vertex v in vertices)
-            {
-                v.pos = Vector3.TransformPosition(v.pos, BonePosExtra);
-                v.nrm = Vector3.TransformNormal(v.pos, BonePosExtra);
-            }
-        }
         private void OpenMaterialEditor(object sender, EventArgs args)
         {
             FormLoader.LoadMatEditor(GetMaterial());

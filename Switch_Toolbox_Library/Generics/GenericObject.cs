@@ -172,9 +172,7 @@ namespace Switch_Toolbox.Library
             Matrix4 Transformation = (rotXMat * rotYMat * rotZMat) * positionMat;
             foreach (Vertex v in vertices)
             {
-                v.pos = Vector3.TransformPosition(v.pos, Transformation);
-                v.pos = Vector3.TransformPosition(v.pos, scaleMat);
-
+                v.pos = Vector3.TransformPosition(v.pos, scaleMat * Transformation);
                 v.nrm = Vector3.TransformNormal(v.nrm, Transformation);
             }
         }

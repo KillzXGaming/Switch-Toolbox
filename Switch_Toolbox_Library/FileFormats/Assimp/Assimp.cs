@@ -418,6 +418,8 @@ namespace Switch_Toolbox.Library
         }
         public List<Vertex> GetVertices(Mesh msh, Matrix4 transform, STGenericObject STobj)
         {
+            Matrix4 NormalsTransform = Matrix4.CreateFromQuaternion(transform.ExtractRotation());
+
             List<Vertex> vertices = new List<Vertex>();
             for (int v = 0; v < msh.VertexCount; v++)
             {
@@ -426,7 +428,7 @@ namespace Switch_Toolbox.Library
                 if (msh.HasVertices)
                     vert.pos = Vector3.TransformPosition(AssimpHelper.FromVector(msh.Vertices[v]), transform);
                 if (msh.HasNormals)
-                    vert.nrm = Vector3.TransformNormal(AssimpHelper.FromVector(msh.Normals[v]), transform);
+                    vert.nrm = Vector3.TransformNormal(AssimpHelper.FromVector(msh.Normals[v]), NormalsTransform);
                 if (msh.HasTextureCoords(0))
                     vert.uv0 = new Vector2(msh.TextureCoordinateChannels[0][v].X, msh.TextureCoordinateChannels[0][v].Y);
                 if (msh.HasTextureCoords(1))
