@@ -290,7 +290,7 @@ namespace FirstPlugin
                 if (vec4c0.Length > 0)
                     v.col = new Vector4(vec4c0[i].X, vec4c0[i].Y, vec4c0[i].Z, vec4c0[i].W);
 
-        /*        if (fshp.VertexSkinCount == 1)
+                if (fshp.VertexSkinCount == 1)
                 {
                     Matrix4 sb = model.Skeleton.bones[model.Skeleton.Node_Array[v.boneIds[0]]].Transform;
                     v.pos = Vector3.TransformPosition(v.pos, sb);
@@ -313,7 +313,7 @@ namespace FirstPlugin
                         Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetRotation());
                         Console.WriteLine(model.Skeleton.bones[fshp.BoneIndex].GetScale());
                     }
-                }*/
+                }
                 fshp.vertices.Add(v);
             }
         }
