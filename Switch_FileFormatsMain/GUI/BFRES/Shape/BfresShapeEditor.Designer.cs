@@ -86,12 +86,12 @@
             this.vertexBufferDropDownPanel = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.vtxCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
             this.stLabel13 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.vertexBufferList1 = new FirstPlugin.Forms.VertexBufferList();
+            this.vertexBufferList1 = new Forms.VertexBufferList();
             this.vertexBufferSkinCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
             this.stLabel12 = new Switch_Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel8 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel7 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.keyShapeList3 = new FirstPlugin.Forms.KeyShapeList();
+            this.keyShapeList3 = new Forms.KeyShapeList();
             this.levelOfDetailDropDownPanel = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stButton3 = new Switch_Toolbox.Library.Forms.STButton();
             this.btnFacesView = new Switch_Toolbox.Library.Forms.STButton();
@@ -116,9 +116,9 @@
             this.keyShapeDropDownPanel = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stDropDownPanel5 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel6 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.keyShapeList2 = new FirstPlugin.Forms.KeyShapeList();
+            this.keyShapeList2 = new Forms.KeyShapeList();
             this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.keyShapeList1 = new FirstPlugin.Forms.KeyShapeList();
+            this.keyShapeList1 = new Forms.KeyShapeList();
             this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.stFlowLayoutPanel1.SuspendLayout();

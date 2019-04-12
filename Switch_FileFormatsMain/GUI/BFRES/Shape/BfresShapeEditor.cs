@@ -95,6 +95,7 @@ namespace FirstPlugin
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBuffer);
             }
 
+            vtxCountUD.Maximum = fshp.vertices.Count;
             vtxCountUD.Value = fshp.vertices.Count;
 
 
