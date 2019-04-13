@@ -194,5 +194,31 @@ namespace FirstPlugin.Forms
         private float RoundParam(float Value) {
             return (float)Math.Round(Value, 2);
         }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Material Params|*.xml;";
+            sfd.DefaultExt = ".xml";
+            sfd.FileName = material.Text + ".MatParams";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                FMAT2XML.Save(material, sfd.FileName, true);
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Material Params|*.xml;";
+            ofd.DefaultExt = ".xml";
+            ofd.FileName = material.Text + ".MatParams";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FMAT2XML.Read(material, ofd.FileName, true);
+            }
+        }
     }
 }

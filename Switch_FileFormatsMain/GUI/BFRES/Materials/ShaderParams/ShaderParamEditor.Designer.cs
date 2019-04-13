@@ -31,6 +31,8 @@
             this.stFlowLayoutPanel1 = new Switch_Toolbox.Library.Forms.STFlowLayoutPanel();
             this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnExport = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnImport = new Switch_Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // stFlowLayoutPanel1
@@ -39,6 +41,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stFlowLayoutPanel1.AutoScroll = true;
+            this.stFlowLayoutPanel1.FixedHeight = false;
+            this.stFlowLayoutPanel1.FixedWidth = true;
             this.stFlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.stFlowLayoutPanel1.Location = new System.Drawing.Point(3, 29);
             this.stFlowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -67,10 +71,34 @@
             this.stButton2.Text = "Remove";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
+            // btnExport
+            // 
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Location = new System.Drawing.Point(183, 3);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(75, 23);
+            this.btnExport.TabIndex = 3;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // btnImport
+            // 
+            this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImport.Location = new System.Drawing.Point(264, 3);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(75, 23);
+            this.btnImport.TabIndex = 4;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = false;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // ShaderParamEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnImport);
+            this.Controls.Add(this.btnExport);
             this.Controls.Add(this.stButton2);
             this.Controls.Add(this.stButton1);
             this.Controls.Add(this.stFlowLayoutPanel1);
@@ -85,5 +113,7 @@
         private Switch_Toolbox.Library.Forms.STFlowLayoutPanel stFlowLayoutPanel1;
         private Switch_Toolbox.Library.Forms.STButton stButton1;
         private Switch_Toolbox.Library.Forms.STButton stButton2;
+        private Switch_Toolbox.Library.Forms.STButton btnExport;
+        private Switch_Toolbox.Library.Forms.STButton btnImport;
     }
 }
