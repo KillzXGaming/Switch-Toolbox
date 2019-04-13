@@ -101,6 +101,8 @@ namespace FirstPlugin
             prop.ArrayCount = ArrayCount;
             prop.ImageSize = (uint)ImageData.Length;
             prop.Format = Format;
+            prop.TileMode = image.TileMode;
+            prop.Swizzle = image.Swizzle;
 
             form = new ImageEditorForm(IsDialog);
             form.editorBase.Text = Text;
@@ -115,7 +117,7 @@ namespace FirstPlugin
 
         private void UpdateForm()
         {
-            if (form != null)
+            if (form != null && image != null)
             {
                 Properties prop = new Properties();
                 prop.Width = Width;
@@ -125,7 +127,9 @@ namespace FirstPlugin
                 prop.ArrayCount = ArrayCount;
                 prop.ImageSize = (uint)ImageData.Length;
                 prop.Format = Format;
-
+                prop.TileMode = image.TileMode;
+                prop.Swizzle = image.Swizzle;
+           
                 form.editorBase.LoadProperties(prop);
                 form.editorBase.LoadImage(this);
             }
@@ -146,7 +150,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats);
+                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true);
                 if (ftex.texture != null)
                 {
                     image.Swizzle = (byte)ftex.texture.Swizzle;
@@ -223,6 +227,17 @@ namespace FirstPlugin
             [Description("The image size in bytes.")]
             [Category("Image Info")]
             public uint ImageSize { get; set; }
+
+            [Browsable(true)]
+            [ReadOnly(true)]
+            [Description("The image tilemode.")]
+            [Category("Image Info")]
+            public GX2.GX2TileMode TileMode { get; set; }
+
+            [Browsable(true)]
+            [ReadOnly(true)]
+            [Category("Image Info")]
+            public uint Swizzle { get; set; }
         }
 
         Header header;
@@ -362,7 +377,7 @@ namespace FirstPlugin
             surf.mipOffset = new uint[0];
             surf.mipData = ImageData;
             surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
-            surf.swizzle = image.swizzle;
+            surf.swizzle = image.Swizzle;
             surf.numArray = 1;
 
             var surfaces = GX2.Decode(surf);
@@ -435,17 +450,29 @@ namespace FirstPlugin
             public ushort Height;
             public ushort Alignment;
             public BFLIMFormat BflimFormat;
-            public byte Swizzle;
+            public byte Flags;
 
-            public uint swizzle
+            public GX2.GX2TileMode TileMode
             {
                 get
                 {
-                    return (uint)(((int)((uint)this.Swizzle >> 5) & 7) << 8);
+                    return (GX2.GX2TileMode) ((int)Flags & 31);
                 }
                 set
                 {
-                    this.Swizzle = (byte)((int)this.Swizzle & 31 | (int)(byte)(value >> 8) << 5);
+                    Flags = (byte)((int)Flags & 224 | (int)(byte)value & 31);
+                }
+            }
+
+            public uint Swizzle
+            {
+                get
+                {
+                    return (uint)(((int)((uint)Flags >> 5) & 7) << 8);
+                }
+                set
+                {
+                    Flags = (byte)((int)Flags & 31 | (int)(byte)(value >> 8) << 5);
                 }
             }
 
@@ -457,7 +484,7 @@ namespace FirstPlugin
                 Height = reader.ReadUInt16();
                 Alignment = reader.ReadUInt16();
                 BflimFormat = reader.ReadEnum<BFLIMFormat>(true);
-                Swizzle = reader.ReadByte();
+                Flags = reader.ReadByte();
             }
 
             public void Write(FileWriter writer)
@@ -468,7 +495,7 @@ namespace FirstPlugin
                 writer.Write(Height);
                 writer.Write(Alignment);
                 writer.Write(BflimFormat, true);
-                writer.Write(Swizzle);
+                writer.Write(Flags);
             }
         }
     }

@@ -74,6 +74,22 @@ namespace FirstPlugin
             IsLoaded = true;
         }
 
+        public bool ReadOnlySwizzle
+        {
+            set
+            {
+                SwizzleNum.ReadOnly = value;
+            }
+        }
+
+        public bool ReadOnlyTileMode
+        {
+            set
+            {
+                tileModeCB.ReadOnly = value;
+            }
+        }
+
         public void LoadSupportedFormats(TEX_FORMAT[] Formats)
         {
             formatComboBox.Items.Clear();
