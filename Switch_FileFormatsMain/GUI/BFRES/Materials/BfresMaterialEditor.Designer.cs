@@ -92,7 +92,7 @@
             this.chkboxVisible.TabIndex = 43;
             this.chkboxVisible.Text = "Visible";
             this.chkboxVisible.UseVisualStyleBackColor = true;
-            this.chkboxVisible.CheckedChanged += new System.EventHandler(this.chkboxVisible_CheckedChanged_1);
+            this.chkboxVisible.CheckedChanged += new System.EventHandler(this.chkboxVisible_CheckedChanged);
             // 
             // label3
             // 

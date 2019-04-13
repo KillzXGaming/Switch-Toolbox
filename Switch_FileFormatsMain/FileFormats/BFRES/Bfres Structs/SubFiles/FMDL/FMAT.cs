@@ -174,7 +174,7 @@ namespace Bfres.Structs
             return ((FMDL)Parent.Parent).GetResFileU();
         }
 
-        public bool Enabled = true;
+        public bool Enabled { get; set; } = true;
         public bool isTransparent = false;
 
         public override void OnClick(TreeView treeView)

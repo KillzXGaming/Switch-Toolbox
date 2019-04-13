@@ -602,11 +602,13 @@ namespace FirstPlugin
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
+            var mat = m.GetMaterial();
+
             if (shader != normalsShaderProgram)
             {
-                SetRenderPass(m.GetMaterial(), shader, m, m.DisplayId);
-                SetUniforms(m.GetMaterial(), shader, m, m.DisplayId);
-                SetTextureUniforms(m.GetMaterial(), m, shader);
+                SetRenderPass(mat, shader, m, m.DisplayId);
+                SetUniforms(mat, shader, m, m.DisplayId);
+                SetTextureUniforms(mat, m, shader);
             }
             SetBoneUniforms(shader, mdl, m);
             ApplyTransformFix(mdl, m, shader);
@@ -616,7 +618,7 @@ namespace FirstPlugin
        //     if (!mdl.Skeleton.bones[m.boneIndx].Visible)
        //         m.Checked = false;
 
-            if (m.Checked && mdl.Skeleton.bones.Count > 0 && mdl.Skeleton.bones[m.BoneIndex].Visible)
+            if (m.Checked && mdl.Skeleton.bones.Count > 0 && mdl.Skeleton.bones[m.BoneIndex].Visible && mat.Enabled)
             {
                 shader.SetVector3("materialSelectColor", new Vector3(0));
                 if (m.GetMaterial().IsSelected)

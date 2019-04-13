@@ -64,7 +64,7 @@ namespace FirstPlugin.Forms
 
             SetActiveGameByShader(material.shaderassign.ShaderArchive, material.shaderassign.ShaderModel);
 
-            chkboxVisible.Checked = mat.Enabled;
+            chkboxVisible.Bind(material, "Enabled");
 
             FillForm();
 
@@ -235,9 +235,8 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private void chkboxVisible_CheckedChanged(object sender, EventArgs e)
-        {
-            material.Enabled = chkboxVisible.Checked;
+        private void chkboxVisible_CheckedChanged(object sender, EventArgs e) {
+            LibraryGUI.Instance.UpdateViewport();
         }
 
         private void textureRefListView_SelectedIndexChanged(object sender, EventArgs e)
@@ -313,10 +312,6 @@ namespace FirstPlugin.Forms
 
         private void textBoxShaderModel_TextChanged(object sender, EventArgs e) {
             material.shaderassign.ShaderModel = textBoxShaderModel.Text;
-        }
-
-        private void chkboxVisible_CheckedChanged_1(object sender, EventArgs e) {
-            material.Enabled = chkboxVisible.Enabled;
         }
     }
 }
