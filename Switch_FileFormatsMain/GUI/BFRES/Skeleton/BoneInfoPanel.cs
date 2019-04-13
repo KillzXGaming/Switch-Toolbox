@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;
+using Switch_Toolbox.Library;
 
 namespace FirstPlugin
 {
@@ -49,6 +43,7 @@ namespace FirstPlugin
         }
 
         private void visibleChk_CheckedChanged(object sender, EventArgs e) {
+            LibraryGUI.Instance.UpdateViewport();
         }
     }
 }
