@@ -86,6 +86,7 @@
             this.visibleChk.Size = new System.Drawing.Size(15, 14);
             this.visibleChk.TabIndex = 4;
             this.visibleChk.UseVisualStyleBackColor = true;
+            this.visibleChk.CheckedChanged += new System.EventHandler(this.visibleChk_CheckedChanged);
             // 
             // stLabel3
             // 

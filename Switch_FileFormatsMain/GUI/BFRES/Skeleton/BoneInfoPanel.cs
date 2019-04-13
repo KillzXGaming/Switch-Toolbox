@@ -38,7 +38,7 @@ namespace FirstPlugin
 
             nameTB.Bind(bn, "BoneName");
             parentIndexUD.Bind(bn, "parentIndex");
-            visibleChk.Bind(bn, "IsVisible");
+            visibleChk.Bind(bn, "Visible");
 
             Loaded = true;
         }
@@ -46,6 +46,9 @@ namespace FirstPlugin
         private void nameTB_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void visibleChk_CheckedChanged(object sender, EventArgs e) {
         }
     }
 }

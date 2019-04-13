@@ -36,17 +36,17 @@
             this.textBoxShaderModel = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.samplerEditor1 = new Forms.SamplerEditor();
+            this.samplerEditor1 = new FirstPlugin.Forms.SamplerEditor();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.uvEditor1 = new Switch_Toolbox.Library.Forms.UVEditor();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.shaderParamEditor1 = new Forms.ShaderParamEditor();
+            this.shaderParamEditor1 = new FirstPlugin.Forms.ShaderParamEditor();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.renderInfoEditor1 = new Forms.RenderInfoEditor();
+            this.renderInfoEditor1 = new FirstPlugin.Forms.RenderInfoEditor();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.shaderOptionsEditor1 = new Forms.ShaderOptionsEditor();
+            this.shaderOptionsEditor1 = new FirstPlugin.Forms.ShaderOptionsEditor();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.userDataEditor = new UserDataEditor();
+            this.userDataEditor = new FirstPlugin.UserDataEditor();
             this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.textBoxShaderArchive = new Switch_Toolbox.Library.Forms.STTextBox();
             this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
@@ -92,6 +92,7 @@
             this.chkboxVisible.TabIndex = 43;
             this.chkboxVisible.Text = "Visible";
             this.chkboxVisible.UseVisualStyleBackColor = true;
+            this.chkboxVisible.CheckedChanged += new System.EventHandler(this.chkboxVisible_CheckedChanged_1);
             // 
             // label3
             // 

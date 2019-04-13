@@ -314,5 +314,9 @@ namespace FirstPlugin.Forms
         private void textBoxShaderModel_TextChanged(object sender, EventArgs e) {
             material.shaderassign.ShaderModel = textBoxShaderModel.Text;
         }
+
+        private void chkboxVisible_CheckedChanged_1(object sender, EventArgs e) {
+            material.Enabled = chkboxVisible.Enabled;
+        }
     }
 }
