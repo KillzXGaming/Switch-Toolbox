@@ -192,9 +192,14 @@ namespace FirstPlugin.Forms
             colorDialog.Color = colorPB.BackColor;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                barSlider1.Value = colorDialog.Color.R / 255;
-                barSlider2.Value = colorDialog.Color.G / 255;
-                barSlider3.Value = colorDialog.Color.B / 255;
+                barSlider1.Value = colorDialog.Color.R / 255f;
+                barSlider2.Value = colorDialog.Color.G / 255f;
+                barSlider3.Value = colorDialog.Color.B / 255f;
+
+                ApplyValueSingles();
+
+                if (OnPanelChanged != null)
+                    OnPanelChanged(activeParam, this);
             }
         }
 
@@ -204,7 +209,12 @@ namespace FirstPlugin.Forms
             colorDialog.Color = alphaPB.BackColor;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                barSlider4.Value = colorDialog.Color.R / 255;
+                barSlider4.Value = colorDialog.Color.R / 255f;
+
+                ApplyValueSingles();
+
+                if (OnPanelChanged != null)
+                    OnPanelChanged(activeParam, this);
             }
         }
 
