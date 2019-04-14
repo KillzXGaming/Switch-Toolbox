@@ -90,7 +90,7 @@ namespace FirstPlugin
             }
             else
             {
-                vertexBufferSkinCountUD.Maximum = (decimal)fshp.VertexBufferU.VertexSkinCount;
+                vertexBufferSkinCountUD.Maximum = (decimal)fshp.VertexBuffer.VertexSkinCount;
                 vertexBufferSkinCountUD.Value = (decimal)fshp.VertexBuffer.VertexSkinCount;
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBuffer);
             }
