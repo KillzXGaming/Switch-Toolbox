@@ -67,6 +67,8 @@ namespace Switch_Toolbox.Library
             }
             else
             {
+                STConsole.WriteLine("No root node found! Will default to Idenity Matrix!", Color.Red);
+
                 int Index = 0;
                 foreach (Mesh msh in scene.Meshes)
                 {
@@ -81,8 +83,19 @@ namespace Switch_Toolbox.Library
             Matrix4x4 world = trafo * rootTransform;
             Matrix4 worldTK = AssimpHelper.TKMatrix(world);
 
+
+            if (parent.MeshCount > 0)
+            {
+                STConsole.WriteLine($"Transform node {parent.Name}");
+                STConsole.WriteLine($"Translation {worldTK.ExtractTranslation()}");
+                STConsole.WriteLine($"Rotation {worldTK.ExtractRotation()}");
+                STConsole.WriteLine($"Scale {worldTK.ExtractScale()}");
+            }
+
             foreach (int index in parent.MeshIndices)
+            {
                 objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
+            }
 
             foreach (Node child in parent.Children)
                 BuildNode(child, ref world);
