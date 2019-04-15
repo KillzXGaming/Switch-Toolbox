@@ -350,18 +350,73 @@ namespace Bfres.Structs
             Height = tex.Height;
             Format = ConvertFromGx2Format(tex.Format);
             ArrayCount = tex.ArrayLength;
+            MipCount = tex.MipCount;
+
             if (tex.ArrayLength == 0)
                 ArrayCount = tex.Depth; //Some older bfres don't use array length????
 
-            MipCount = tex.MipCount;
-
-            if (tex.MipData == null || tex.MipData.Length <= 0)
+            if (texture.MipData == null || texture.MipData.Length <= 0)
                 MipCount = 1;
+        }
+
+        public void UpdateMipMaps()
+        {
+            LoadTex2Bfres();
+            LoadTex2MipMaps();
+
+            if (texture.MipData != null && texture.MipData.Length > 0)
+                MipCount = texture.MipCount;
         }
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
             throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+        }
+
+        ResFile ResFileTexture2;
+
+        private void LoadTex2Bfres()
+        {
+            if (ResFileTexture2 != null)
+                return;
+
+            //Determine tex2 botw files to get mip maps
+            string Tex1 = GetFilePath();
+
+            if (!IsReplaced && Tex1 != null && Tex1.Contains(".Tex1"))
+            {
+                string Tex2 = Tex1.Replace(".Tex1", ".Tex2");
+                Console.WriteLine(Tex2 + " " + System.IO.File.Exists(Tex2) + " " + texture.Name);
+
+                if (System.IO.File.Exists(Tex2))
+                {
+                    if (Tex2.EndsWith(".sbfres"))
+                    {
+                        ResFileTexture2 = new ResFile(new System.IO.MemoryStream(
+                                        EveryFileExplorer.YAZ0.Decompress(Tex2)));
+                    }
+                    else
+                    {
+                        ResFileTexture2 = new ResFile(Tex2);
+                    }
+                }
+            }
+        }
+
+        private void LoadTex2MipMaps()
+        {
+            if (ResFileTexture2 == null || IsReplaced)
+                return;
+
+            Console.WriteLine((ResFileTexture2.Textures.ContainsKey(texture.Name)));
+
+            if (ResFileTexture2.Textures.ContainsKey(texture.Name))
+            {
+                texture.MipCount = ResFileTexture2.Textures[texture.Name].MipCount;
+                texture.MipData = ResFileTexture2.Textures[texture.Name].MipData;
+                texture.MipOffsets = ResFileTexture2.Textures[texture.Name].MipOffsets;
+                Tex2Swizzle = ResFileTexture2.Textures[texture.Name].Swizzle;
+            }
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
@@ -370,6 +425,9 @@ namespace Bfres.Structs
             int swizzle = (int)texture.Swizzle;
             int pitch = (int)texture.Pitch;
             uint bpp = GX2.surfaceGetBitsPerPixel((uint)format) >> 3;
+
+            LoadTex2Bfres();
+            LoadTex2MipMaps();
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.bpp = bpp;
@@ -390,48 +448,13 @@ namespace Bfres.Structs
             surf.swizzle = texture.Swizzle;
             surf.numArray = texture.ArrayLength;
 
-            //Determine tex2 botw files to get mip maps
-            string Tex1 = GetFilePath();
-
-            Console.WriteLine("IsEdited " + IsReplaced);
-
-            if (!IsReplaced && Tex1 != null && Tex1.Contains(".Tex1"))
-            {
-                string Tex2 = Tex1.Replace(".Tex1", ".Tex2");
-                Console.WriteLine(Tex2 + " " + System.IO.File.Exists(Tex2) + " " + texture.Name);
-
-                if (System.IO.File.Exists(Tex2))
-                {
-                    ResFile resFile2;
-
-                    if (Tex2.EndsWith(".sbfres"))
-                    {
-                        resFile2 = new ResFile(new System.IO.MemoryStream(
-                                        EveryFileExplorer.YAZ0.Decompress(Tex2)));
-                    }
-                    else
-                    {
-                         resFile2 = new ResFile(Tex2);
-                    }
-
-                    Console.WriteLine((resFile2.Textures.ContainsKey(texture.Name)));
-
-                    if (resFile2.Textures.ContainsKey(texture.Name))
-                    {
-                        MipCount = texture.MipCount;
-                        texture.MipData = resFile2.Textures[texture.Name].MipData;
-                        texture.MipOffsets = resFile2.Textures[texture.Name].MipOffsets;
-                        surf.mipData = resFile2.Textures[texture.Name].MipData;
-                        surf.mipOffset = resFile2.Textures[texture.Name].MipOffsets;
-                        Tex2Swizzle = resFile2.Textures[texture.Name].Swizzle;
-                        surf.mip_swizzle = Tex2Swizzle;
-                    }
-                }
-            }
-
+            if (Tex2Swizzle != 0)
+                surf.mip_swizzle = Tex2Swizzle;
 
             if (surf.mipData == null)
                 surf.numMips = 1;
+
+            MipCount = surf.numMips;
 
             var surfaces = GX2.Decode(surf);
 

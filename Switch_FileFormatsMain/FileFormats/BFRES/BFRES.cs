@@ -562,7 +562,11 @@ namespace FirstPlugin
             if (resFileU.Textures.Count > 0)
             {
                 foreach (ResU.Texture tex in resFileU.Textures.Values)
-                    texturesFolder.AddNode(new FTEX(tex));
+                {
+                    var ftex = new FTEX(tex);
+                    texturesFolder.AddNode(ftex);
+                    ftex.UpdateMipMaps();
+                }
             }
             if (resFileU.SkeletalAnims.Count > 0)
             {
@@ -881,11 +885,10 @@ namespace FirstPlugin
                     {
                         if (resFileTex2.Textures.ContainsKey(tex.Text))
                         {
-                            resFileTex2.Textures[tex.Text].Data = null;
                             resFileTex2.Textures[tex.Text].MipData = tex.texture.MipData;
                             resFileTex2.Textures[tex.Text].MipOffsets = tex.texture.MipOffsets;
                             resFileTex2.Textures[tex.Text].MipCount = tex.texture.MipCount;
-                            resFileTex2.Textures[tex.Text].Swizzle = 65536;
+                            resFileTex2.Textures[tex.Text].Swizzle = tex.Tex2Swizzle;
                         }
                     }
                 }
@@ -898,8 +901,6 @@ namespace FirstPlugin
 
         private void SaveTex2(string fileName)
         {
-            var resFileU = BFRESRender.ResFileNode.resFileU;
-
             bool Compressed = fileName.EndsWith("sbfres");
 
             byte[] data;

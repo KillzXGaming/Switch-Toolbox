@@ -293,6 +293,23 @@ namespace Switch_Toolbox.Library.Forms
                 IsFinished = true;
         }
 
+        private void UpdateImageCounter()
+        {
+            if (ActiveTexture == null)
+                return;
+
+            if (ActiveTexture.ArrayCount == 0)
+                ActiveTexture.ArrayCount = 1;
+            if (ActiveTexture.MipCount == 0)
+                ActiveTexture.MipCount = 1;
+
+            TotalMipCount = ActiveTexture.MipCount - 1;
+            TotalArrayCount = ActiveTexture.ArrayCount - 1;
+
+            arrayLevelCounterLabel.Text = $"Array Level: {CurArrayDisplayLevel} / {TotalArrayCount}";
+            mipLevelCounterLabel.Text = $"Mip Level: {CurMipDisplayLevel} / {TotalMipCount}";
+        }
+
         public int CurrentChannelIndex;
 
         bool IsCancelled = false;
@@ -308,15 +325,6 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             IsFinished = false;
-
-            if (ActiveTexture.ArrayCount == 0)
-                ActiveTexture.ArrayCount = 1;
-            if (ActiveTexture.MipCount == 0)
-                ActiveTexture.MipCount = 1;
-
-            TotalMipCount = ActiveTexture.MipCount - 1;
-            TotalArrayCount = ActiveTexture.ArrayCount - 1;
-
 
             CurrentChannelIndex = 0;
 
@@ -334,10 +342,7 @@ namespace Switch_Toolbox.Library.Forms
             }));
             Thread.Start();
 
-
-            arrayLevelCounterLabel.Text = $"Array Level: {CurArrayDisplayLevel} / {TotalArrayCount}";
-            mipLevelCounterLabel.Text = $"Mip Level: {CurMipDisplayLevel} / {TotalMipCount}";
-
+            UpdateImageCounter();
 
             if (CurMipDisplayLevel != TotalMipCount)
                 BtnMipsRight.Enabled = true;
