@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 using System.ComponentModel;
+using Switch_Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
@@ -172,6 +173,8 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         
         public List<int> MapObjIdList;
         public List<string> MapObjResList;
+
+        public IFileFormat MapCamera;
 
         public CourseMuuntScene(dynamic rootNode)
         {

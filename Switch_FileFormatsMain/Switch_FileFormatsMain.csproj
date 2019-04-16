@@ -336,6 +336,7 @@
     <Compile Include="GUI\Byaml\CourseMuunt\Base\BaseControlPoint.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Base\BaseObjPt.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Base\PointID.cs" />
+    <Compile Include="GUI\Byaml\CourseMuunt\Base\RenderableConnectedMapPoints.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\CourseMuuntStructs.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\IObject.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Paths\GravityPaths.cs" />

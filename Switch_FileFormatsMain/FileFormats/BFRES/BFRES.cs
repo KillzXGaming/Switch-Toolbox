@@ -85,12 +85,12 @@ namespace FirstPlugin
                 if (editExt[0].Checked)
                 {
                     editExt[0].Checked = false;
-                   // PluginRuntime.UseSimpleBfresEditor = true;
+                    PluginRuntime.UseSimpleBfresEditor = true;
                 }
                 else
                 {
                     editExt[0].Checked = true;
-                 //   PluginRuntime.UseSimpleBfresEditor = false;
+                    PluginRuntime.UseSimpleBfresEditor = false;
                 }
             }
             private void NewWiiUBfres(object sender, EventArgs args)
@@ -189,8 +189,6 @@ namespace FirstPlugin
             drawables.Remove(skeleton);
         }
 
-        
-
         List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
         public void LoadEditors(object SelectedSection)
         {
@@ -214,27 +212,29 @@ namespace FirstPlugin
                     else
                         editor.LoadProperty(resFileU, OnPropertyChanged);
                 }
-                if (SelectedSection is FMDL)
+                else if (SelectedSection is FMDL)
                 {
                     if (((FMDL)SelectedSection).ModelU != null)
                         editor.LoadProperty(((FMDL)SelectedSection).ModelU, OnPropertyChanged);
                     else
                         editor.LoadProperty(((FMDL)SelectedSection).Model, OnPropertyChanged);
                 }
-                if (SelectedSection is FSHP)
+                else if (SelectedSection is FSHP)
                 {
                     if (((FSHP)SelectedSection).ShapeU != null)
                         editor.LoadProperty(((FSHP)SelectedSection).ShapeU, OnPropertyChanged);
                     else
                         editor.LoadProperty(((FSHP)SelectedSection).Shape, OnPropertyChanged);
                 }
-                if (SelectedSection is FMAT)
+                else if (SelectedSection is FMAT)
                 {
                     if (((FMAT)SelectedSection).MaterialU != null)
                         editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
                     else
                         editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
                 }
+                else
+                    editor.LoadProperty(null, OnPropertyChanged);
             }
             else
             {

@@ -3071,6 +3071,11 @@
             Gets or sets flags specifying how a <see cref="T:Syroot.NintenTools.Bfres.Material"/> is rendered.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.Bfres.Material.Visible">
+            <summary>
+            Gets or sets the visible flag to display the material.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.Bfres.Material.TextureRefs">
             <summary>
             Gets or sets the list of <see cref="T:Syroot.NintenTools.Bfres.TextureRef"/> instances referencing the <see cref="T:Syroot.NintenTools.Bfres.Texture"/> instances

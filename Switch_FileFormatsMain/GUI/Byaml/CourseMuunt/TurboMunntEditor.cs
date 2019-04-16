@@ -13,6 +13,8 @@ using OpenTK.Graphics.OpenGL;
 using aampv1 = AampV1Library;
 using aampv2 = AampV2Library;
 using Switch_Toolbox.Library.Rendering;
+using Switch_Toolbox.Library.IO;
+using FirstPlugin.Turbo;
 
 namespace FirstPlugin.Forms
 {
@@ -82,7 +84,34 @@ namespace FirstPlugin.Forms
             //Add course model
             if (File.Exists($"{CourseFolder}/course_model.szs"))
                 scene.AddRenderableBfres($"{CourseFolder}/course_model.szs");
-            
+
+            //Add camera mini map parameters
+            if (File.Exists($"{CourseFolder}/course_mapcamera.bin"))
+                scene.MapCamera = STFileLoader.OpenFileFormat($"{CourseFolder}/course_mapcamera.bin");
+
+            if (scene.MapCamera != null)
+            {
+                var cam = (Course_MapCamera_bin)scene.MapCamera;
+
+                var pointConnection = new RenderableConnectedMapPoints(Color.Blue);
+
+                Vector4 PositionColor = new Vector4(1,0,0, 1);
+                Vector4 TargetColor = new Vector4(0, 1, 0, 1);
+
+                Vector3 CamTranslate = new Vector3(cam.cameraData.PositionX, cam.cameraData.PositionY, cam.cameraData.PositionZ);
+                Vector3 CamTargetTranslate = new Vector3(cam.cameraData.TargetX, cam.cameraData.TargetY, cam.cameraData.TargetZ);
+
+                var point1 = new RenderablePathPoint(PositionColor, CamTranslate, new Vector3(0), new Vector3(100), null);
+                var point2 = new RenderablePathPoint(TargetColor, CamTargetTranslate, new Vector3(0), new Vector3(100), null);
+
+                pointConnection.AddRenderable(point1);
+                pointConnection.AddRenderable(point2);
+
+                viewport.AddDrawable(pointConnection);
+                viewport.AddDrawable(point1);
+                viewport.AddDrawable(point2);
+            }
+
             foreach (AAMP aamp in scene.ParameterArchives)
             {
                 if (aamp.aampFileV1 != null)
