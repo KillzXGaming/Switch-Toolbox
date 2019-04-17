@@ -20,7 +20,8 @@ namespace FirstPlugin
                 setting.TexHeight,
                 setting.Depth,
                 (uint)setting.Format,
-                setting.swizzle,
+                setting.SwizzlePattern,
+                setting.MipSwizzle,
                 (uint)setting.SurfaceDim,
                 setting.MipCount);
         }

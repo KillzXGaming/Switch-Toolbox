@@ -25,7 +25,10 @@ namespace FirstPlugin
         public bool GenerateMipmaps;
         public bool IsSRGB;
         public uint tileMode = 4;
-        public uint swizzle = 4;
+
+        public uint SwizzlePattern = 0;
+        public uint MipSwizzle = 0;
+
         public GX2CompSel[] compSel = new GX2CompSel[4];
         public GX2SurfaceDim SurfaceDim = GX2SurfaceDim.Dim2D;
         public GX2AAMode AAMode = GX2AAMode.Mode1X;

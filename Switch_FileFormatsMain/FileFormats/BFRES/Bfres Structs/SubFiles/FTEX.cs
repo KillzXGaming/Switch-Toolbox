@@ -132,11 +132,11 @@ namespace Bfres.Structs
         public void ReplaceImage(Image image, string FileName)
         {
             GTXImporterSettings setting = SetImporterSettings(image, FileName);
+            setting.MipSwizzle = Tex2Swizzle;
+
             GTXTextureImporter importer = new GTXTextureImporter();
 
-            if (Tex2Swizzle != 0)
-                setting.swizzle = Tex2SwizzleValue;
-
+            setting.MipSwizzle = Tex2Swizzle;
             importer.LoadSetting(setting);
 
             if (importer.ShowDialog() == DialogResult.OK)
@@ -193,14 +193,13 @@ namespace Bfres.Structs
             }
 
             GTXImporterSettings setting = SetImporterSettings(FileName);
+            setting.MipSwizzle = Tex2Swizzle;
+
             GTXTextureImporter importer = new GTXTextureImporter();
 
-            setting.swizzle = 0;
             importer.ReadOnlySwizzle = IsSwizzleReadOnly;
             importer.ReadOnlyTileMode = IsSwizzleReadOnly;
 
-            if (Tex2Swizzle != 0)
-                setting.swizzle = Tex2Swizzle;
             if (MipMapCount != 0)
             {
                 setting.MipCount = MipMapCount;

@@ -208,7 +208,10 @@ namespace FirstPlugin
 
         private void MipmapNum_ValueChanged(object sender, EventArgs e)
         {
-            SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+            if (MipmapNum.Value > 0)
+                SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+            else
+                SelectedTexSettings.MipCount = 1;
         }
     }
 }

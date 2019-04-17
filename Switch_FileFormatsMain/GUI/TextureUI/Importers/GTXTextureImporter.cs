@@ -205,16 +205,13 @@ namespace FirstPlugin
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
-                SwizzleNum.Value = (SelectedTexSettings.swizzle >> 8) & 7;
+                SwizzleNum.Value = SelectedTexSettings.SwizzlePattern;
             }
         }
 
         private void SwizzleNum_ValueChanged(object sender, EventArgs e) {
-       //     SelectedTexSettings.swizzle &= GX2.SwizzleMask;
-      //      SelectedTexSettings.swizzle |= (uint)SwizzleNum.Value << 8;
+            SelectedTexSettings.SwizzlePattern = (uint)SwizzleNum.Value;
         }
-
-
 
         /// <summary>
         /// Required designer variable.
@@ -517,7 +514,12 @@ namespace FirstPlugin
 
         private void MipmapNum_ValueChanged(object sender, EventArgs e) {
             if (SelectedTexSettings != null)
-                SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+            {
+                if (MipmapNum.Value > 0)
+                    SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+                else
+                    SelectedTexSettings.MipCount = 1;
+            }
         }
     }
 }

@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library
+namespace Switch_Toolbox.Library.Test
 {
+    //Todo fix swizzle issues with this one
     public class GX2
     {
         public const uint SwizzleMask = 0xFF00FF;
@@ -46,8 +47,6 @@ namespace Switch_Toolbox.Library
             public byte[] compSel;
             public uint[] texRegs;
         };
-
-        public static int m_configFlags = 4;
 
         public static uint expPitch = 0;
         public static uint expHeight = 0;
@@ -490,7 +489,7 @@ namespace Switch_Toolbox.Library
                 if (mipLevel != 0)
                 {
                     if (mipSwizzle != 0)
-                        swizzleValue = mipSwizzle;
+                        swizzleValue = mipSwizzle; //Overwrite swizzle value for mip maps for botw tex2
 
                     surfOut = GX2.getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, mipLevel);
 
@@ -506,8 +505,8 @@ namespace Switch_Toolbox.Library
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, swizzleValue,
-                        surfOut.pitch, surfOut.bpp, data_, DepthLevel);
+                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, 0, 1, surfOut.tileMode, swizzleValue,
+                        surfOut.pitch, surfOut.bpp, 0, 0, data_);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
 
@@ -517,7 +516,7 @@ namespace Switch_Toolbox.Library
                     tiling1dLevelSet = true;
                 }
 
-                if (tiling1dLevelSet == false)
+                if (!tiling1dLevelSet)
                     tiling1dLevel += 1;
             }
 
@@ -551,7 +550,6 @@ namespace Switch_Toolbox.Library
             for (int mipLevel = 1; mipLevel < Swizzled.Count; mipLevel++)
             {
                 mips.Add(Swizzled[mipLevel]);
-                Console.WriteLine(Swizzled[mipLevel].Length);
             }
             surf.mipData = Utils.CombineByteArray(mips.ToArray());
             mips.Clear();
@@ -695,8 +693,8 @@ namespace Switch_Toolbox.Library
                     else
                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
 
-                    byte[] deswizzled = deswizzle(width_, height_, surfInfo.depth, surfInfo.height, (uint)tex.format,
-                    surfInfo.tileMode, (uint)swizzle, surfInfo.pitch, surfInfo.bpp, data, arrayLevel);
+                    byte[] deswizzled = deswizzle(width_, height_, surfInfo.depth, surfInfo.height, (uint)tex.format, 0, tex.use,
+                    surfInfo.tileMode, (uint)swizzle, surfInfo.pitch, surfInfo.bpp, (uint)arrayLevel, 0, data);
                     //Create a copy and use that to remove uneeded data
                     byte[] result_ = new byte[size];
                     Array.Copy(deswizzled, 0, result_, 0, size);
@@ -720,11 +718,6 @@ namespace Switch_Toolbox.Library
         private static uint DIV_ROUND_UP(uint n, uint d)
         {
             return (n + d - 1) / d;
-        }
-
-        private static uint powTwoAlign_0(uint x, uint align)
-        {
-            return (x + align - 1) & ~(align - 1);
         }
 
 
@@ -755,19 +748,19 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public static byte[] deswizzle(uint width, uint height, uint depth, uint height_, uint format_, uint tileMode, uint swizzle_,
-             uint pitch, uint bpp, byte[] data, int depthLevel)
+        public static byte[] deswizzle(uint width, uint height, uint depth, uint height_, uint format_, uint aa, uint use, uint tileMode, uint swizzle_,
+             uint pitch, uint bpp, uint slice, uint sample, byte[] data)
         {
-            return swizzleSurf(width, height, depth, height_, format_, tileMode, swizzle_, pitch, bpp, data, depthLevel, 0);
+            return swizzleSurf(width, height, depth, format_, aa, use, tileMode, swizzle_, pitch, bpp, slice, sample, data, 0);
         }
-        public static byte[] swizzle(uint width, uint height, uint depth, uint height_, uint format_, uint tileMode, uint swizzle_,
-     uint pitch, uint bpp, byte[] data, int depthLevel)
+        public static byte[] swizzle(uint width, uint height, uint depth, uint height_, uint format_, uint aa, uint use, uint tileMode, uint swizzle_,
+     uint pitch, uint bpp, uint slice, uint sample, byte[] data)
         {
-            return swizzleSurf(width, height, depth, height_, format_, tileMode, swizzle_, pitch, bpp, data, depthLevel, 1);
+            return swizzleSurf(width, height, depth, format_, aa, use, tileMode, swizzle_, pitch, bpp, slice, sample, data, 1);
         }
 
-        private static byte[] swizzleSurf(uint width, uint height, uint depth, uint height_, uint format, uint tileMode, uint swizzle_,
-                uint pitch, uint bitsPerPixel, byte[] data, int depthLevel, int swizzle)
+        private static byte[] swizzleSurf(uint width, uint height, uint depth, uint format, uint aa, uint use, uint tileMode, uint swizzle_,
+                uint pitch, uint bitsPerPixel, uint slice, uint sample, byte[] data, int swizzle)
         {
             uint bytesPerPixel = bitsPerPixel / 8;
             byte[] result = new byte[data.Length];
@@ -786,24 +779,29 @@ namespace Switch_Toolbox.Library
 
             if (depth > 1)
             {
-                bankSwizzle = (uint)(depthLevel % 4);
+                bankSwizzle = (uint)(slice % 4);
             }
 
             tileMode = GX2TileModeToAddrTileMode(tileMode);
+
+            bool IsDepth = (use & 4) != 0;
+            uint numSamples = (uint)(1 << (int)aa);
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     if (tileMode == 0 || tileMode == 1)
-                        pos = (uint)(y * pitch + x) * bytesPerPixel;
+                    {
+                        pos = computeSurfaceAddrFromCoordLinear((uint)x, (uint)y, slice, sample, bytesPerPixel, pitch, height, depth);
+                    }
                     else if (tileMode == 2 || tileMode == 3)
                     {
-                        pos = computeSurfaceAddrFromCoordMicroTiled((uint)x, (uint)y, bitsPerPixel, pitch, (AddrTileMode)tileMode);
+                        pos = computeSurfaceAddrFromCoordMicroTiled((uint)x, (uint)y, slice, bitsPerPixel, pitch, height, (AddrTileMode)tileMode, IsDepth);
                     }
                     else
                     {
-                        pos = computeSurfaceAddrFromCoordMacroTiled((uint)x, (uint)y, bitsPerPixel, pitch, height_, (AddrTileMode)tileMode, pipeSwizzle, bankSwizzle);
+                        pos = computeSurfaceAddrFromCoordMacroTiled((uint)x, (uint)y, slice, sample, bitsPerPixel, pitch, height, numSamples, (AddrTileMode)tileMode, IsDepth, pipeSwizzle, bankSwizzle);
                     }
 
 
@@ -940,35 +938,95 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        private static uint computePixelIndexWithinMicroTile(uint x, uint y, uint bpp)
+        private static uint computePixelIndexWithinMicroTile(uint x, uint y, uint z, uint bpp, AddrTileMode tileMode, bool IsDepth)
         {
-            switch (bpp)
+            uint pixelBit0 = 0;
+            uint pixelBit1 = 0;
+            uint pixelBit2 = 0;
+            uint pixelBit3 = 0;
+            uint pixelBit4 = 0;
+            uint pixelBit5 = 0;
+            uint pixelBit6 = 0;
+            uint pixelBit7 = 0;
+            uint pixelBit8 = 0;
+
+            uint thickness = computeSurfaceThickness(tileMode);
+
+            if (IsDepth)
             {
-                case 0x08:
-                    return (32 * ((y & 4) >> 2) | 16 * (y & 1) | 8 * ((y & 2) >> 1) |
-                            4 * ((x & 4) >> 2) | 2 * ((x & 2) >> 1) | x & 1);
-
-                case 0x10:
-                    return (32 * ((y & 4) >> 2) | 16 * ((y & 2) >> 1) | 8 * (y & 1) |
-                            4 * ((x & 4) >> 2) | 2 * ((x & 2) >> 1) | x & 1);
-
-                case 0x20:
-                case 0x60:
-                    return (32 * ((y & 4) >> 2) | 16 * ((y & 2) >> 1) | 8 * ((x & 4) >> 2) |
-                            4 * (y & 1) | 2 * ((x & 2) >> 1) | x & 1);
-
-                case 0x40:
-                    return (32 * ((y & 4) >> 2) | 16 * ((y & 2) >> 1) | 8 * ((x & 4) >> 2) |
-                            4 * ((x & 2) >> 1) | 2 * (y & 1) | x & 1);
-
-                case 0x80:
-                    return (32 * ((y & 4) >> 2) | 16 * ((y & 2) >> 1) | 8 * ((x & 4) >> 2) |
-                            4 * ((x & 2) >> 1) | 2 * (x & 1) | y & 1);
-
-                default:
-                    return (32 * ((y & 4) >> 2) | 16 * ((y & 2) >> 1) | 8 * ((x & 4) >> 2) |
-                            4 * (y & 1) | 2 * ((x & 2) >> 1) | x & 1);
+                pixelBit0 = x & 1;
+                pixelBit1 = y & 1;
+                pixelBit2 = (x & 2) >> 1;
+                pixelBit3 = (y & 2) >> 1;
+                pixelBit4 = (x & 4) >> 2;
+                pixelBit5 = (y & 4) >> 2;
             }
+            else
+            {
+                switch (bpp)
+                {
+                    case 8:
+                        pixelBit0 = x & 1;
+                        pixelBit1 = (x & 2) >> 1;
+                        pixelBit2 = (x & 4) >> 2;
+                        pixelBit3 = (y & 2) >> 1;
+                        pixelBit4 = y & 1;
+                        pixelBit5 = (y & 4) >> 2;
+                        break;
+                    case 0x10:
+                        pixelBit0 = x & 1;
+                        pixelBit1 = (x & 2) >> 1;
+                        pixelBit2 = (x & 4) >> 2;
+                        pixelBit3 = y & 1;
+                        pixelBit4 = (y & 2) >> 1;
+                        pixelBit5 = (y & 4) >> 2;
+                        break;
+                    case 0x20:
+                    case 0x60:
+                        pixelBit0 = x & 1;
+                        pixelBit1 = (x & 2) >> 1;
+                        pixelBit2 = y & 1;
+                        pixelBit3 = (x & 4) >> 2;
+                        pixelBit4 = (y & 2) >> 1;
+                        pixelBit5 = (y & 4) >> 2;
+                        break;
+                    case 0x40:
+                        pixelBit0 = x & 1;
+                        pixelBit1 = y & 1;
+                        pixelBit2 = (x & 2) >> 1;
+                        pixelBit3 = (x & 4) >> 2;
+                        pixelBit4 = (y & 2) >> 1;
+                        pixelBit5 = (y & 4) >> 2;
+                        break;
+                    case 0x80:
+                        pixelBit0 = y & 1;
+                        pixelBit1 = x & 1;
+                        pixelBit2 = (x & 2) >> 1;
+                        pixelBit3 = (x & 4) >> 2;
+                        pixelBit4 = (y & 2) >> 1;
+                        pixelBit5 = (y & 4) >> 2;
+                        break;
+                    default:
+                        pixelBit0 = x & 1;
+                        pixelBit1 = (x & 2) >> 1;
+                        pixelBit2 = y & 1;
+                        pixelBit3 = (x & 4) >> 2;
+                        pixelBit4 = (y & 2) >> 1;
+                        pixelBit5 = (y & 4) >> 2;
+                        break;
+                }
+            }
+
+            if (thickness > 1)
+            {
+                pixelBit6 = z & 1;
+                pixelBit7 = (z & 2) >> 1;
+            }
+
+            if (thickness == 8)
+                pixelBit8 = (z & 4) >> 2;
+
+            return (pixelBit8 << 8) | (pixelBit7 << 7) | (pixelBit6 << 6) | 32 * pixelBit5 | 16 * pixelBit4 | 8 * pixelBit3 | 4 * pixelBit2 | pixelBit0 | 2 * pixelBit1;
         }
 
         private static uint computePipeFromCoordWoRotation(uint x, uint y)
@@ -980,6 +1038,29 @@ namespace Switch_Toolbox.Library
         private static uint computeBankFromCoordWoRotation(uint x, uint y)
         {
             return ((y >> 5) ^ (x >> 3)) & 1 | 2 * (((y >> 4) ^ (x >> 4)) & 1);
+        }
+
+        private static uint computeSurfaceRotationFromTileMode(AddrTileMode tileMode)
+        {
+            switch (tileMode)
+            {
+                case AddrTileMode.ADDR_TM_2D_TILED_THIN1:
+                case AddrTileMode.ADDR_TM_2D_TILED_THIN2:
+                case AddrTileMode.ADDR_TM_2D_TILED_THIN4:
+                case AddrTileMode.ADDR_TM_2D_TILED_THICK:
+                case AddrTileMode.ADDR_TM_2B_TILED_THIN1:
+                case AddrTileMode.ADDR_TM_2B_TILED_THIN2:
+                case AddrTileMode.ADDR_TM_2B_TILED_THIN4:
+                case AddrTileMode.ADDR_TM_2B_TILED_THICK:
+                    return 2;
+                case AddrTileMode.ADDR_TM_3D_TILED_THIN1:
+                case AddrTileMode.ADDR_TM_3D_TILED_THICK:
+                case AddrTileMode.ADDR_TM_3B_TILED_THIN1:
+                case AddrTileMode.ADDR_TM_3B_TILED_THICK:
+                    return 1;
+                default:
+                    return 0;
+            }
         }
 
         private static uint isThickMacroTiled(AddrTileMode tileMode)
@@ -1031,7 +1112,7 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        private static uint computeSurfaceBankSwappedWidth(AddrTileMode tileMode, uint bpp, uint pitch, uint numSamples)
+        private static uint computeSurfaceBankSwappedWidth(AddrTileMode tileMode, uint bpp, uint numSamples, uint pitch)
         {
             if (isBankSwappedTileMode(tileMode) == 0)
                 return 0;
@@ -1069,11 +1150,15 @@ namespace Switch_Toolbox.Library
             return bankSwapWidth;
         }
 
+        private static ulong computeSurfaceAddrFromCoordLinear(uint x, uint y, uint slice, uint sample, uint bpp, uint pitch, uint height, uint numSlices)
+        {
+            uint sliceOffset = pitch * height * (slice + sample * numSlices);
+            return (y * pitch + x + sliceOffset) * bpp;
+        }
 
-        private static ulong computeSurfaceAddrFromCoordMicroTiled(uint x, uint y, uint bpp, uint pitch, AddrTileMode tileMode)
+        private static ulong computeSurfaceAddrFromCoordMicroTiled(uint x, uint y, uint slice, uint bpp, uint pitch, uint height, AddrTileMode tileMode, bool IsDepth)
         {
             int microTileThickness = 1;
-
             if (tileMode == AddrTileMode.ADDR_TM_1D_TILED_THICK)
                 microTileThickness = 4;
 
@@ -1081,46 +1166,64 @@ namespace Switch_Toolbox.Library
             uint microTilesPerRow = pitch >> 3;
             uint microTileIndexX = x >> 3;
             uint microTileIndexY = y >> 3;
+            uint microTileIndexZ = slice / (uint)microTileThickness;
 
             ulong microTileOffset = microTileBytes * (microTileIndexX + microTileIndexY * microTilesPerRow);
-            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, bpp);
+            ulong sliceBytes = (ulong)(pitch * height * microTileThickness * bpp + 7) / 8;
+            ulong sliceOffset = microTileIndexZ * sliceBytes;
+
+            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, slice, bpp, tileMode, IsDepth);
             ulong pixelOffset = (bpp * pixelIndex) >> 3;
 
-            return pixelOffset + microTileOffset;
+            return pixelOffset + microTileOffset + sliceOffset;
         }
 
         private static byte[] bankSwapOrder = { 0, 1, 3, 2, 6, 7, 5, 4, 0, 0 };
 
-        private static ulong computeSurfaceAddrFromCoordMacroTiled(uint x, uint y, uint bpp, uint pitch, uint height,
-                                                           AddrTileMode tileMode, uint pipeSwizzle, uint bankSwizzle)
+        private static ulong computeSurfaceAddrFromCoordMacroTiled(uint x, uint y, uint slice, uint sample, uint bpp, uint pitch, uint height,
+                                                          uint numSamples, AddrTileMode tileMode, bool IsDepth, uint pipeSwizzle, uint bankSwizzle)
         {
-
-            uint sampleSlice, numSamples, samplesPerSlice;
-            uint numSampleSplits, bankSwapWidth, swapIndex;
-
             uint microTileThickness = computeSurfaceThickness(tileMode);
 
-            uint microTileBits = bpp * (microTileThickness * 64);
+            uint microTileBits = numSamples * bpp * (microTileThickness * 64);
             uint microTileBytes = (microTileBits + 7) / 8;
 
-            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, bpp);
-            ulong elemOffset = bpp * pixelIndex;
+            uint pixelIndex = computePixelIndexWithinMicroTile(x, y, slice, bpp, tileMode, IsDepth);
+            uint bytesPerSample = microTileBytes / numSamples;
+            uint sampleOffset = 0;
+            uint pixelOffset = 0;
+            uint samplesPerSlice = 0;
+            uint numSampleSplits = 0;
+            uint sampleSlice = 0;
 
-            uint bytesPerSample = microTileBytes;
-
-            if (microTileBytes <= 2048)
+            if (IsDepth)
             {
-                numSamples = 1;
-                sampleSlice = 0;
+                sampleOffset = bpp * sample;
+                pixelOffset = numSamples * bpp * pixelIndex;
+            }
+            else
+            {
+                sampleOffset = sample * (microTileBits / numSamples);
+                pixelOffset = bpp * pixelIndex;
             }
 
+            uint elemOffset = pixelOffset + sampleOffset;
+
+            if (numSamples <= 1 || microTileBytes <= 2048)
+            {
+                samplesPerSlice = numSamples;
+                numSampleSplits = 1;
+                sampleSlice = 0;
+            }
             else
             {
                 samplesPerSlice = 2048 / bytesPerSample;
-                numSampleSplits = 1;
+                numSampleSplits = numSamples / samplesPerSlice;
                 numSamples = samplesPerSlice;
-                sampleSlice = (uint)(elemOffset / (microTileBits / numSampleSplits));
-                elemOffset %= microTileBits / numSampleSplits;
+
+                uint tileSliceBits = microTileBits / numSampleSplits;
+                sampleSlice = elemOffset / tileSliceBits;
+                elemOffset %= tileSliceBits;
             }
 
             elemOffset = (elemOffset + 7) / 8;
@@ -1129,13 +1232,22 @@ namespace Switch_Toolbox.Library
             uint bank = computeBankFromCoordWoRotation(x, y);
 
             uint swizzle_ = pipeSwizzle + 2 * bankSwizzle;
-            uint bankPipe = ((pipe + 2 * bank) ^ (6 * sampleSlice ^ swizzle_)) % 8;
+            uint bankPipe = pipe + 2 * bank;
+            uint rotation = computeSurfaceRotationFromTileMode(tileMode);
+            uint sliceIn = slice;
+
+            if (isThickMacroTiled(tileMode) != 0)
+                sliceIn >>= 2;
+
+            bankPipe ^= 2 * sampleSlice * 3 ^ (swizzle_ + sliceIn * rotation);
+            bankPipe ^= 2 * sampleSlice * 3 ^ (swizzle_ + sliceIn * rotation);
+            bankPipe %= 8;
 
             pipe = bankPipe % 2;
             bank = bankPipe / 2;
 
             uint sliceBytes = (height * pitch * microTileThickness * bpp * numSamples + 7) / 8;
-            uint sliceOffset = sliceBytes * (sampleSlice / microTileThickness);
+            uint sliceOffset = sliceBytes * (sampleSlice + numSampleSplits * slice) / microTileThickness;
 
             uint macroTilePitch = 32;
             uint macroTileHeight = 16;
@@ -1166,24 +1278,15 @@ namespace Switch_Toolbox.Library
             uint macroTileIndexY = y / macroTileHeight;
             ulong macroTileOffset = (macroTileIndexX + macroTilesPerRow * macroTileIndexY) * macroTileBytes;
 
-            switch (tileMode)
+            if (isBankSwappedTileMode(tileMode) != 0)
             {
-                case AddrTileMode.ADDR_TM_2B_TILED_THIN1:
-                case AddrTileMode.ADDR_TM_2B_TILED_THIN2:
-                case AddrTileMode.ADDR_TM_2B_TILED_THIN4:
-                case AddrTileMode.ADDR_TM_2B_TILED_THICK:
-                case AddrTileMode.ADDR_TM_3B_TILED_THIN1:
-                case AddrTileMode.ADDR_TM_3B_TILED_THICK:
-                    {
-                        bankSwapWidth = computeSurfaceBankSwappedWidth(tileMode, bpp, pitch, 1);
-                        swapIndex = macroTilePitch * macroTileIndexX / bankSwapWidth;
-                        bank ^= bankSwapOrder[swapIndex & 3];
-                        break;
-                    }
+                uint bankSwapWidth = computeSurfaceBankSwappedWidth(tileMode, bpp, 1, pitch);
+                uint swapIndex = macroTilePitch * macroTileIndexX / bankSwapWidth;
+                bank ^= bankSwapOrder[swapIndex & 3];
             }
 
             ulong totalOffset = elemOffset + ((macroTileOffset + sliceOffset) >> 3);
-            return bank << 9 | pipe << 8 | 255 & totalOffset | (ulong)((int)totalOffset & -256) << 3;
+            return bank << 9 | pipe << 8 | totalOffset & 255 | (ulong)((int)totalOffset & -256) << 3;
         }
 
         public static uint computeSurfaceMipLevelTileMode(uint baseTileMode, uint bpp, uint level, uint width, uint height,
@@ -1231,83 +1334,79 @@ namespace Switch_Toolbox.Library
             if (DebugSurface)
                 Console.WriteLine("computeSurfaceMipLevelTileMode expTileMode " + expTileMode);
 
-            if (noRecursive == 0)
+            if (noRecursive != 0 || level == 0)
+                return expTileMode;
+
+            switch (bpp)
             {
-                switch (bpp)
-                {
-                    case 24:
-                    case 48:
-                    case 96:
-                        bpp /= 3;
-                        break;
-                }
-
-                widtha = nextPow2(width);
-                heighta = nextPow2(height);
-                numSlicesa = nextPow2(numSlices);
-
-                if (level != 0)
-                {
-                    expTileMode = convertToNonBankSwappedMode((AddrTileMode)expTileMode);
-                    thickness = computeSurfaceThickness((AddrTileMode)expTileMode);
-                    microTileBytes = (numSamples * bpp * (thickness << 6) + 7) >> 3;
-
-                    if (microTileBytes < 256)
-                    {
-                        widthAlignFactor = Math.Max(1, 256 / microTileBytes);
-                    }
-                    if (expTileMode == 4 || expTileMode == 12)
-                    {
-                        if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
-                            expTileMode = 2;
-                    }
-                    else if (expTileMode == 5)
-                    {
-                        macroTileWidth = 16;
-                        macroTileHeight = 32;
-
-                        if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
-                            expTileMode = 2;
-                    }
-                    else if (expTileMode == 6)
-                    {
-                        macroTileWidth = 8;
-                        macroTileHeight = 64;
-
-                        if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
-                            expTileMode = 2;
-                    }
-                    else if (expTileMode == 7 || expTileMode == 13)
-                    {
-                        if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
-                            expTileMode = 3;
-                    }
-
-                    if (numSlicesa < 4)
-                    {
-                        if (expTileMode == 3)
-                            expTileMode = 2;
-                        else if (expTileMode == 7)
-                            expTileMode = 4;
-                        else if (expTileMode == 13)
-                            expTileMode = 12;
-                    }
-
-                    return computeSurfaceMipLevelTileMode(
-                    expTileMode,
-                    bpp,
-                    level,
-                    widtha,
-                    heighta,
-                    numSlicesa,
-                    numSamples,
-                    isDepth,
-                    1);
-                }
+                case 24:
+                case 48:
+                case 96:
+                    bpp /= 3;
+                    break;
             }
 
-            return expTileMode;
+            widtha = nextPow2(width);
+            heighta = nextPow2(height);
+            numSlicesa = nextPow2(numSlices);
+
+            expTileMode = convertToNonBankSwappedMode((AddrTileMode)expTileMode);
+            thickness = computeSurfaceThickness((AddrTileMode)expTileMode);
+            microTileBytes = (numSamples * bpp * (thickness << 6) + 7) >> 3;
+
+            if (microTileBytes < 256)
+            {
+                widthAlignFactor = Math.Max(1, 256 / microTileBytes);
+            }
+            if (expTileMode == 4 || expTileMode == 12)
+            {
+                if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
+                    expTileMode = 2;
+            }
+            else if (expTileMode == 5)
+            {
+                macroTileWidth = 16;
+                macroTileHeight = 32;
+
+                if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
+                    expTileMode = 2;
+            }
+            else if (expTileMode == 6)
+            {
+                macroTileWidth = 8;
+                macroTileHeight = 64;
+
+                if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
+                    expTileMode = 2;
+            }
+            else if (expTileMode == 7 || expTileMode == 13)
+            {
+                if ((widtha < widthAlignFactor * macroTileWidth) || heighta < macroTileHeight)
+                    expTileMode = 3;
+            }
+
+            if (numSlicesa < 4)
+            {
+                if (expTileMode == 3)
+                    expTileMode = 2;
+                else if (expTileMode == 7)
+                    expTileMode = 4;
+                else if (expTileMode == 13)
+                    expTileMode = 12;
+            }
+
+            return computeSurfaceMipLevelTileMode(
+            expTileMode,
+            bpp,
+            level,
+            widtha,
+            heighta,
+            numSlicesa,
+            numSamples,
+            isDepth,
+            1);
         }
+
         private static uint computeSurfaceTileSlices(uint tileMode, uint bpp, uint numSamples)
         {
             uint bytePerSample = ((bpp << 6) + 7) >> 3;
@@ -1325,11 +1424,6 @@ namespace Switch_Toolbox.Library
             }
 
             return tileSlices;
-        }
-
-        private static int getFillSizeFieldsFlags()
-        {
-            return (m_configFlags >> 6) & 1;
         }
 
         private static uint ComputeSurfaceInfoEx()
@@ -1581,7 +1675,6 @@ namespace Switch_Toolbox.Library
             tileMode,
             padDims,
             (flags.value >> 4) & 1,
-            (flags.value >> 7) & 1,
             pitchAlign,
             heightAlign,
             microTileThickness);
@@ -1820,7 +1913,6 @@ namespace Switch_Toolbox.Library
                 expTileMode,
                 padDims,
                 (flags.value >> 4) & 1,
-                (flags.value >> 7) & 1,
                 pitchAlign,
                 heightAlign,
                 microTileThickness);
@@ -1848,14 +1940,7 @@ namespace Switch_Toolbox.Library
 
             return new uint[] { valid, pPitchOut, pHeightOut, pNumSlicesOut, pSurfSize, pTileModeOut, pBaseAlign, pPitchAlign, pHeightAlign, pDepthAlign };
         }
-        private static uint IsPow2(uint dim)
-        {
-            if ((dim & (dim - 1)) == 0)
-                return 1;
-            else
-                return 0;
-        }
-        private static Tuple<uint, uint, uint> padDimensions(uint tileMode, uint padDims, uint isCube, uint cubeAsArray, uint pitchAlign, uint heightAlign, uint sliceAlign)
+        private static Tuple<uint, uint, uint> padDimensions(uint tileMode, uint padDims, uint isCube, uint pitchAlign, uint heightAlign, uint sliceAlign)
         {
             uint thickness = computeSurfaceThickness((AddrTileMode)tileMode);
             if (padDims == 0)
@@ -1865,7 +1950,7 @@ namespace Switch_Toolbox.Library
                 expPitch = powTwoAlign(expPitch, pitchAlign);
             else
             {
-                expPitch = pitchAlign + expPitch - 1;
+                expPitch += pitchAlign - 1;
                 expPitch /= pitchAlign;
                 expPitch *= pitchAlign;
             }
@@ -1875,7 +1960,7 @@ namespace Switch_Toolbox.Library
 
             if (padDims > 2 || thickness > 1)
             {
-                if (isCube != 0 || cubeAsArray != 0)
+                if (isCube != 0)
                     expNumSlices = nextPow2(expNumSlices);
 
                 if (thickness > 1)
@@ -1940,7 +2025,7 @@ namespace Switch_Toolbox.Library
                 macroWidth = tup.Item4;
                 macroHeight = tup.Item5;
 
-                bankSwappedWidth = computeSurfaceBankSwappedWidth((AddrTileMode)tileMode, bpp, pitch, numSamples);
+                bankSwappedWidth = computeSurfaceBankSwappedWidth((AddrTileMode)tileMode, bpp, numSamples, pitch);
 
                 if (bankSwappedWidth > pitchAlign)
                     pitchAlign = bankSwappedWidth;
@@ -1949,7 +2034,6 @@ namespace Switch_Toolbox.Library
                      tileMode,
                      padDims,
                      (flags.value >> 4) & 1,
-                     (flags.value >> 7) & 1,
                      pitchAlign,
                      heightAlign,
                      microTileThickness);
@@ -2027,7 +2111,7 @@ namespace Switch_Toolbox.Library
                     macroWidth = tup.Item4;
                     macroHeight = tup.Item5;
 
-                    bankSwappedWidth = computeSurfaceBankSwappedWidth((AddrTileMode)tileMode, bpp, pitch, numSamples);
+                    bankSwappedWidth = computeSurfaceBankSwappedWidth((AddrTileMode)tileMode, bpp, numSamples, pitch);
                     if (bankSwappedWidth > pitchAlign)
                         pitchAlign = bankSwappedWidth;
 
@@ -2035,7 +2119,6 @@ namespace Switch_Toolbox.Library
                         tileMode,
                         padDims,
                         (flags.value >> 4) & 1,
-                        (flags.value >> 7) & 1,
                         pitchAlign,
                         heightAlign,
                         microTileThickness);
@@ -2123,7 +2206,7 @@ namespace Switch_Toolbox.Library
         private static uint adjustPitchAlignment(Flags flags, uint pitchAlign)
         {
             if (((flags.value >> 13) & 1) != 0)
-                pitchAlign = powTwoAlign_0(pitchAlign, 0x20);
+                pitchAlign = powTwoAlign(pitchAlign, 0x20);
 
             return pitchAlign;
         }
@@ -2202,10 +2285,6 @@ namespace Switch_Toolbox.Library
                 return pIn.bpp;
             }
 
-            return 0;
-        }
-        private static uint useTileIndex(int index)
-        {
             return 0;
         }
         private static void computeMipLevel()
@@ -2391,10 +2470,7 @@ namespace Switch_Toolbox.Library
                 else
                     blockSize = 4;
 
-                width = (uint)(~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
-
-                if (hwFormat == 0x35)
-                    return pSurfOut;
+                width = (uint)(~(blockSize - 1) & (Math.Max(1, surfaceWidth >> level) + blockSize - 1));
 
                 pSurfOut.bpp = formatHwInfo[hwFormat * 4];
                 pSurfOut.size = 96;
@@ -2411,7 +2487,7 @@ namespace Switch_Toolbox.Library
                     pSurfOut.height = 1;
                     pSurfOut.depth = 1;
                 }
-                else if (dim == 1)
+                else if (dim == 1 || dim == 6)
                 {
                     pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = 1;
@@ -2431,19 +2507,15 @@ namespace Switch_Toolbox.Library
                     pSurfOut.height = 1;
                     pSurfOut.depth = surfaceDepth;
                 }
-                else if (dim == 5)
+                else if (dim == 5 || dim == 7)
                 {
                     pSurfOut.height = Math.Max(1, surfaceHeight >> level);
                     pSurfOut.depth = surfaceDepth;
                 }
 
-                pSurfOut.height = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1)) / blockSize;
-                pSurfOut.pixelPitch = (uint)(~(blockSize - 1) & ((surfaceWidth >> level) + blockSize - 1));
-                pSurfOut.pixelPitch = Math.Max(blockSize, pSurfOut.pixelPitch);
-                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & ((surfaceHeight >> level) + blockSize - 1));
-                pSurfOut.pixelHeight = Math.Max(blockSize, pSurfOut.pixelHeight);
-                pSurfOut.pitch = Math.Max(1, pSurfOut.pitch);
-                pSurfOut.height = Math.Max(1, pSurfOut.height);
+                pSurfOut.pixelPitch = width;
+                pSurfOut.pixelHeight = (uint)(~(blockSize - 1) & (pSurfOut.height + blockSize - 1));
+                pSurfOut.height = (uint)(pSurfOut.pixelHeight / blockSize);
                 pSurfOut.surfSize = pSurfOut.bpp * numSamples * pSurfOut.depth * pSurfOut.height * pSurfOut.pitch >> 3;
 
                 if (surfaceDim == 2)
@@ -2471,7 +2543,7 @@ namespace Switch_Toolbox.Library
                     aSurfIn.height = 1;
                     aSurfIn.numSlices = 1;
                 }
-                else if (dim == 1)
+                else if (dim == 1 || dim == 6)
                 {
                     aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
                     aSurfIn.numSlices = 1;
@@ -2492,17 +2564,7 @@ namespace Switch_Toolbox.Library
                     aSurfIn.height = 1;
                     aSurfIn.numSlices = (uint)surfaceDepth;
                 }
-                else if (dim == 5)
-                {
-                    aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    aSurfIn.numSlices = (uint)surfaceDepth;
-                }
-                else if (dim == 6)
-                {
-                    aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
-                    aSurfIn.numSlices = 1;
-                }
-                else if (dim == 7)
+                else if (dim == 5 || dim == 7)
                 {
                     aSurfIn.height = (uint)Math.Max(1, surfaceHeight >> level);
                     aSurfIn.numSlices = (uint)surfaceDepth;
@@ -2524,6 +2586,9 @@ namespace Switch_Toolbox.Library
 
                 pSurfOut = pOut;
             }
+            if (pSurfOut.tileMode == 0)
+                pSurfOut.tileMode = 16;
+
             return pSurfOut;
         }
     }
