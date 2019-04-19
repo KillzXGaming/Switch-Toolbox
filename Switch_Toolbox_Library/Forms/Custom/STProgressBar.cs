@@ -21,7 +21,11 @@ namespace Switch_Toolbox.Library
         {
             set
             {
-                progressBar1.Value = value;
+                if (value > 100)
+                    progressBar1.Value = 0;
+                else
+                    progressBar1.Value = value;
+
                 if (value >= 100)
                     Close();
                 progressBar1.Refresh();

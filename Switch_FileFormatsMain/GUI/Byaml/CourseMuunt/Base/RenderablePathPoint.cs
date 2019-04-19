@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using Switch_Toolbox.Library.IO;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 using FirstPlugin.Turbo.CourseMuuntStructs;
+using FirstPlugin.Turbo;
 
 namespace GL_EditorFramework.EditorDrawables
 {
@@ -231,6 +232,21 @@ namespace GL_EditorFramework.EditorDrawables
 
                 if (((BasePathPoint)NodeObject).OnPathMoved != null)
                     ((BasePathPoint)NodeObject).OnPathMoved();
+            }
+            if (NodeObject is Course_MapCamera_bin)
+            {
+                if (Color == new Vector4(1, 0, 0, 1))
+                {
+                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionX = position.X;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionY = position.Y;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionZ = position.Z;
+                }
+                else
+                {
+                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetX = position.X;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetY = position.Y;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetZ = position.Z;
+                }
             }
         }
 

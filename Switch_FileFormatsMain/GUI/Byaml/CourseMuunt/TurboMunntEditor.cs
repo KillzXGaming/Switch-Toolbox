@@ -93,23 +93,31 @@ namespace FirstPlugin.Forms
             {
                 var cam = (Course_MapCamera_bin)scene.MapCamera;
 
+                var wrapper = new MapCameraWrapper();
+                wrapper.Text = "course_mapcamera.bin";
+                wrapper.CameraFile = cam;
+
                 var pointConnection = new RenderableConnectedMapPoints(Color.Blue);
 
-                Vector4 PositionColor = new Vector4(1,0,0, 1);
+                Vector4 PositionColor = new Vector4(1, 0, 0, 1);
                 Vector4 TargetColor = new Vector4(0, 1, 0, 1);
+
+                Vector3 BoundingScale = new Vector3(cam.cameraData.BoundingWidth, 1, cam.cameraData.BoundingHeight);
 
                 Vector3 CamTranslate = new Vector3(cam.cameraData.PositionX, cam.cameraData.PositionY, cam.cameraData.PositionZ);
                 Vector3 CamTargetTranslate = new Vector3(cam.cameraData.TargetX, cam.cameraData.TargetY, cam.cameraData.TargetZ);
 
-                var point1 = new RenderablePathPoint(PositionColor, CamTranslate, new Vector3(0), new Vector3(100), null);
-                var point2 = new RenderablePathPoint(TargetColor, CamTargetTranslate, new Vector3(0), new Vector3(100), null);
+                wrapper.MapCameraPosition = new RenderablePathPoint(PositionColor, CamTranslate, new Vector3(0), new Vector3(100), cam);
+                wrapper.MapCameraTarget = new RenderablePathPoint(TargetColor, CamTargetTranslate, new Vector3(0), BoundingScale, cam);
 
-                pointConnection.AddRenderable(point1);
-                pointConnection.AddRenderable(point2);
+                pointConnection.AddRenderable(wrapper.MapCameraPosition);
+                pointConnection.AddRenderable(wrapper.MapCameraTarget);
 
                 viewport.AddDrawable(pointConnection);
-                viewport.AddDrawable(point1);
-                viewport.AddDrawable(point2);
+                viewport.AddDrawable(wrapper.MapCameraPosition);
+                viewport.AddDrawable(wrapper.MapCameraTarget);
+
+                treeView1.Nodes.Add(wrapper);
             }
 
             foreach (AAMP aamp in scene.ParameterArchives)
@@ -128,8 +136,16 @@ namespace FirstPlugin.Forms
 
             treeView1.Nodes.Add("Scene");
 
+
+            foreach (var bfres in scene.BfresObjects)
+            {
+                viewport.AddDrawable(bfres.BFRESRender);
+                treeView1.Nodes.Add(bfres);
+                bfres.Checked = true;
+            }
+
             if (scene.LapPaths.Count > 0) {
-                AddPathDrawable("Lap Path", scene.LapPaths,Color.Blue);
+                AddPathDrawable("Lap Path", scene.LapPaths, Color.Blue);
             }
             if (scene.GravityPaths.Count > 0) {
                 AddPathDrawable("Gravity Path", scene.GravityPaths, Color.Purple);
@@ -153,7 +169,7 @@ namespace FirstPlugin.Forms
                 AddPathDrawable("Path", scene.Paths, Color.Black);
             }
             if (scene.ObjPaths.Count > 0) {
-              //  AddPathDrawable("Object Path", scene.ObjPaths, Color.DarkSeaGreen);
+                //  AddPathDrawable("Object Path", scene.ObjPaths, Color.DarkSeaGreen);
             }
             if (scene.JugemPaths.Count > 0) {
                 AddPathDrawable("Jugem Path", scene.JugemPaths, Color.DarkSeaGreen);
@@ -164,19 +180,52 @@ namespace FirstPlugin.Forms
 
             foreach (var kcl in scene.KclObjects)
             {
-            //    viewport.AddDrawable(kcl.Renderer);
-            //    treeView1.Nodes.Add(kcl);
-             //   kcl.Checked = true;
+                //    viewport.AddDrawable(kcl.Renderer);
+                //    treeView1.Nodes.Add(kcl);
+                //   kcl.Checked = true;
             }
 
-            foreach (var bfres in scene.BfresObjects)
-            {
-                viewport.AddDrawable(bfres.BFRESRender);
-                treeView1.Nodes.Add(bfres);
-                bfres.Checked = true;
-            }
 
             IsLoaded = true;
+        }
+
+        public class MapCameraWrapper : TreeNodeCustom
+        {
+            public RenderablePathPoint MapCameraPosition;
+            public RenderablePathPoint MapCameraTarget;
+            public Course_MapCamera_bin CameraFile;
+
+            public MapCameraWrapper()
+            {
+                ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save", null, Save, Keys.Control | Keys.S));
+            }
+
+            private void Save(object sender, EventArgs args)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllBytes(sfd.FileName, CameraFile.Save());
+                }
+            }
+        }
+
+        private void UpdateCameraMapCoordinates(MapCameraWrapper wrapper)
+        {
+            if (scene.MapCamera != null)
+            {
+                var cam = wrapper.CameraFile;
+
+                Vector3 BoundingScale = new Vector3(cam.cameraData.BoundingWidth, 1, cam.cameraData.BoundingHeight);
+
+                Vector3 CamTranslate = new Vector3(cam.cameraData.PositionX, cam.cameraData.PositionY, cam.cameraData.PositionZ);
+                Vector3 CamTargetTranslate = new Vector3(cam.cameraData.TargetX, cam.cameraData.TargetY, cam.cameraData.TargetZ);
+
+                wrapper.MapCameraPosition.Position = CamTranslate;
+                wrapper.MapCameraPosition.Scale = BoundingScale;
+                wrapper.MapCameraTarget.Position = CamTargetTranslate;
+            }
         }
 
         ProbeLighting probeLightingConfig;
@@ -381,7 +430,12 @@ namespace FirstPlugin.Forms
 
         private void OnPropertyChanged()
         {
+            var node = treeView1.SelectedNode;
 
+            if (node is MapCameraWrapper)
+            {
+                UpdateCameraMapCoordinates((MapCameraWrapper)node);
+            }
         }
 
         private void viewIntroCameraToolStripMenuItem_Click(object sender, EventArgs e)
@@ -430,9 +484,14 @@ namespace FirstPlugin.Forms
             if (node == null)
                 return;
 
+
             if (node.Text == "Scene")
             {
                 stPropertyGrid1.LoadProperty(scene, OnPropertyChanged);
+            }
+            else if (node is MapCameraWrapper)
+            {
+                stPropertyGrid1.LoadProperty( ((MapCameraWrapper)node).CameraFile.cameraData, OnPropertyChanged);
             }
             else if (node is ProbeLightingWrapper)
             {

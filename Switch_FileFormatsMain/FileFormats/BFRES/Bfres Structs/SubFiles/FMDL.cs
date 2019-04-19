@@ -660,6 +660,14 @@ namespace Bfres.Structs
                     settings.SetModelAttributes(assimp.objects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)
                     {
+                        STProgressBar progressBar = new STProgressBar();
+                        progressBar.Text = "Model Importing";
+                        progressBar.Task = "Importing DAE...";
+                        progressBar.Value = 0;
+                        progressBar.StartPosition = FormStartPosition.CenterScreen;
+                        progressBar.Show();
+                        progressBar.Refresh();
+
                         bool UseMats = settings.ExternalMaterialPath != string.Empty;
 
                         if (Replace)
@@ -677,8 +685,13 @@ namespace Bfres.Structs
                         }
                         if (UseMats)
                         {
+                            int curMat = 0;
                             foreach (STGenericMaterial mat in assimp.materials)
                             {
+                                progressBar.Task = $"Generating material { mat.Text } {curMat} / {assimp.materials.Count}";
+                                progressBar.Value = ((curMat++ * 100) / assimp.materials.Count);
+                                progressBar.Refresh();
+
                                 FMAT fmat = new FMAT();
 
                                 if (IsWiiU)
@@ -818,6 +831,9 @@ namespace Bfres.Structs
 
                         }
 
+                        progressBar.Task = "Importing Bones... ";
+                        progressBar.Refresh();
+
                         if (settings.ImportBones)
                         {
                             if (assimp.skeleton.bones.Count > 0)
@@ -854,15 +870,34 @@ namespace Bfres.Structs
                             }
                         }
 
+                        Console.WriteLine("Processing Data. Object count " + assimp.objects.Count);
+
+                        int curShp = 0;
                         foreach (STGenericObject obj in assimp.objects)
                         {
+                            if (obj.ObjectName == "")
+                                obj.ObjectName = $"Mesh {curShp}";
+
+                            progressBar.Task = $"Generating shape {obj.ObjectName} { curShp} / { assimp.materials.Count}";
+                            progressBar.Value = ((curShp++ * 100) / assimp.materials.Count);
+                            progressBar.Refresh();
+
+
                             FSHP shape = new FSHP();
                             Nodes["FshpFolder"].Nodes.Add(shape);
                             shapes.Add(shape);
 
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
+
+                            progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
+                            progressBar.Task = $"Creating Attributes. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.vertexAttributes = settings.CreateNewAttributes();
                             shape.BoneIndex = obj.BoneIndex;
 
@@ -876,14 +911,40 @@ namespace Bfres.Structs
 
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
+
+                            progressBar.Task = $"Creating Bounding Boxes. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.CreateNewBoundingBoxes();
+
+                            progressBar.Task = $"Creating Bone list. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.CreateBoneList(obj, this);
+
+                            progressBar.Task = $"Creating Index list. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.CreateIndexList(obj, this);
+
+                            progressBar.Task = $"Applying Settings. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
+
+                            progressBar.Task = $"Setting bone indices. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.BoneIndices = shape.GetIndices(Skeleton);
-                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
+                            progressBar.Task = $"Saving shape. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
 
                             shape.SaveShape(IsWiiU);
+
+                            progressBar.Task = $"Saving vertex buffer. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
                             shape.SaveVertexBuffer();
 
                             if (IsWiiU)
@@ -902,10 +963,16 @@ namespace Bfres.Structs
                                 });
                             }
 
+                            progressBar.Task = $"Checking name duplicates. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
+
                             List<string> keyList = shapes.Select(o => o.Text).ToList();
                             shape.Text = Utils.RenameDuplicateString(keyList, shape.Text);
                         }
 
+                        progressBar.Value = 100;
+                        progressBar.Close();
 
                         IsEdited = true;
 
