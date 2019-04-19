@@ -150,7 +150,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats);
+                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true);
                 if (ftex.texture != null)
                 {
                     image.Swizzle = (byte)ftex.texture.Swizzle;
