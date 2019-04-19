@@ -27,6 +27,7 @@ namespace FirstPlugin
         public uint tileMode = 4;
 
         public uint SwizzlePattern = 0;
+        public uint Swizzle = 0;
         public uint MipSwizzle = 0;
 
         public GX2CompSel[] compSel = new GX2CompSel[4];

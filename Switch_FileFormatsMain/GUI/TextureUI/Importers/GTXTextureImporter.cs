@@ -205,12 +205,13 @@ namespace FirstPlugin
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
-                SwizzleNum.Value = SelectedTexSettings.SwizzlePattern;
+                SwizzleNum.Value = (SelectedTexSettings.Swizzle >> 8) & 7;
             }
         }
 
         private void SwizzleNum_ValueChanged(object sender, EventArgs e) {
-            SelectedTexSettings.SwizzlePattern = (uint)SwizzleNum.Value;
+            SelectedTexSettings.Swizzle &= GX2.SwizzleMask;
+            SelectedTexSettings.Swizzle |= (uint)SwizzleNum.Value << 8;
         }
 
         /// <summary>

@@ -432,7 +432,7 @@ namespace Switch_Toolbox.Library
         static bool DebugSurface = false;
 
         public static GX2Surface CreateGx2Texture(byte[] imageData, string Name, uint TileMode, uint AAMode,
-            uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint mipSwizzle, uint SurfaceDim, uint MipCount)
+            uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint SurfaceDim, uint MipCount)
         {
             var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, 0);
             uint imageSize = (uint)surfOut.surfSize;
@@ -474,8 +474,6 @@ namespace Switch_Toolbox.Library
 
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
-                uint swizzleValue = s;
-
                 var result = TextureHelper.GetCurrentMipSize(Width, Height, blkWidth, blkHeight, bpp, mipLevel);
 
                 uint offset = result.Item1;
@@ -489,9 +487,6 @@ namespace Switch_Toolbox.Library
 
                 if (mipLevel != 0)
                 {
-                    if (mipSwizzle != 0)
-                        swizzleValue = mipSwizzle;
-
                     surfOut = GX2.getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, mipLevel);
 
                     if (mipLevel == 1)
@@ -506,7 +501,7 @@ namespace Switch_Toolbox.Library
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, swizzleValue,
+                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, surfOut.tileMode, s,
                         surfOut.pitch, surfOut.bpp, data_, DepthLevel);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());

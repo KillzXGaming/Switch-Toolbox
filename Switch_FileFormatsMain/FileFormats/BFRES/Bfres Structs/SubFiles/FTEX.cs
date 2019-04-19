@@ -134,9 +134,10 @@ namespace Bfres.Structs
             GTXImporterSettings setting = SetImporterSettings(image, FileName);
             setting.MipSwizzle = Tex2Swizzle;
 
-            GTXTextureImporter importer = new GTXTextureImporter();
+            if (Tex2Swizzle != 0)
+                setting.Swizzle = Tex2SwizzleValue;
 
-            setting.MipSwizzle = Tex2Swizzle;
+            GTXTextureImporter importer = new GTXTextureImporter();
             importer.LoadSetting(setting);
 
             if (importer.ShowDialog() == DialogResult.OK)
@@ -199,6 +200,9 @@ namespace Bfres.Structs
 
             importer.ReadOnlySwizzle = IsSwizzleReadOnly;
             importer.ReadOnlyTileMode = IsSwizzleReadOnly;
+
+            if (Tex2Swizzle != 0)
+                setting.Swizzle = Tex2Swizzle;
 
             if (MipMapCount != 0)
             {
