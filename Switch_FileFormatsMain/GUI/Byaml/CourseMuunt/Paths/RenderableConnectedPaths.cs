@@ -97,8 +97,11 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             control.CurrentShader = defaultShaderProgram;
             defaultShaderProgram.SetVector4("LineColor", ColorUtility.ToVector4(LineColor));
 
+            int groupID = 0;
             foreach (var group in PathGroups)
             {
+                int pathID = 0;
+
                 foreach (var path in group.PathPoints)
                 {
                     if (!path.RenderablePoint.Visible)
@@ -116,14 +119,19 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                         GL.LineWidth(2f);
                         foreach (var nextPt in path.NextPoints)
                         {
+                            CheckInvalidConnection(nextPt, groupID, pathID);
+
                             GL.Color3(LineColor);
                             GL.Begin(PrimitiveType.Lines);
                             GL.Vertex3(path.Translate);
                             GL.Vertex3(PathGroups[nextPt.PathID].PathPoints[nextPt.PtID].Translate);
                             GL.End();
                         }
+
                         foreach (var prevPt in path.PrevPoints)
                         {
+                            CheckInvalidConnection(prevPt, groupID, pathID);
+
                             GL.Color3(LineColor);
                             GL.Begin(PrimitiveType.Lines);
                             GL.Vertex3(path.Translate);
@@ -131,7 +139,28 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
                             GL.End();
                         }
                     }
+
+                    pathID++;
                 }
+
+                groupID++;
+            }
+        }
+
+        private void CheckInvalidConnection(PointID pathPoint, int groupID, int pathID)
+        {
+            try
+            {
+                var point = PathGroups[pathPoint.PathID].PathPoints[pathPoint.PtID];
+            }
+            catch (Exception ex)
+            {
+                Switch_Toolbox.Library.Forms.STErrorDialog.Show($"Invalid path points! Group {groupID} Path {pathID}", "Path Creator",
+                    $"Group {groupID} \n" +
+                    $"Path {pathID} \n" +
+                    $"Group ID {pathPoint.PathID} \n" +
+                    $"Point ID {pathPoint.PtID} \n" +
+                    $"{ex}");
             }
         }
     }
