@@ -155,7 +155,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             }
             catch (Exception ex)
             {
-                Switch_Toolbox.Library.Forms.STErrorDialog.Show($"Invalid path points! Group {groupID} Path {pathID}", "Path Creator",
+                Switch_Toolbox.Library.Forms.STErrorDialog.Show($"Invalid path points at Group {groupID} Path {pathID}! Invalid connection to group {pathPoint.PathID} point {pathPoint.PtID}", "Path Creator",
                     $"Group {groupID} \n" +
                     $"Path {pathID} \n" +
                     $"Group ID {pathPoint.PathID} \n" +

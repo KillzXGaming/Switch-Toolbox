@@ -140,33 +140,88 @@ namespace FirstPlugin
             }
         }
 
-        void parseDictNode(IDictionary<string, dynamic> node, TreeNodeCollection addto)
+        void parseDictNode(IDictionary<string, dynamic> node)
         {
             foreach (string k in node.Keys)
             {
-                TreeNode current = addto.Add(k);
-                if (node[k] is IDictionary<string, dynamic>)
+                if ((node[k] is Dictionary<string, dynamic>) ||
+                (node[k] is List<dynamic>) ||
+                (node[k] is List<ByamlPathPoint>))
                 {
-                    current.Text += " : <Dictionary>";
-                    current.Tag = node[k];
-                    current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
+                    continue;
                 }
-                else if (node[k] is IList<dynamic>)
+
+
+                string ValueText = (node[k] == null ? "<NULL>" : node[k].ToString());
+                string NameText = k;
+                Type ValueType = node[k].GetType();
+                string TypeString = ValueType.ToString().Replace("System.", "");
+
+                ListViewItem item = new ListViewItem(NameText);
+                item.SubItems.Add(TypeString);
+                item.SubItems.Add(ValueText);
+                if (node[k] != null) item.Tag = new EditableNode(node, k);
+
+                listViewCustom1.Items.Add(item);
+            }
+        }
+
+
+        void parseArrayNode(IList<dynamic> list)
+        {
+            foreach (dynamic k in list)
+            {
+                if ((k is Dictionary<string, dynamic>) ||
+                (k is List<dynamic>) ||
+                (k is List<ByamlPathPoint>))
                 {
-                    current.Text += " : <Array>";
-                    current.Tag = ((IList<dynamic>)node[k]);
-                    current.Nodes.Add("✯✯dummy✯✯");
+                    continue;
                 }
-                else if (node[k] is IList<ByamlPathPoint>)
+
+                string ValueText = (k == null ? "<NULL>" : k.ToString());
+
+                Type ValueType = k.GetType();
+
+                ListViewItem item = new ListViewItem(ValueText);
+                item.SubItems.Add(ValueType.ToString());
+                item.SubItems.Add(ValueText);
+
+                listViewCustom1.Items.Add(item);
+            }
+        }
+
+        void parseDictNode(IDictionary<string, dynamic> node, TreeNodeCollection addto)
+        {
+            int dictionaryIndex = 0;
+            int arrayIndex = 0;
+            int pathPointIndex = 0;
+
+            foreach (string k in node.Keys)
+            {
+                if (node[k] is IDictionary<string, dynamic> ||
+                    node[k] is IList<dynamic> ||
+                    node[k] is IList<ByamlPathPoint>)
                 {
-                    current.Text += " : <PathPointArray>";
-                    current.Tag = ((IList<ByamlPathPoint>)node[k]);
-                    parsePathPointArray(node[k], current.Nodes);
-                }
-                else
-                {
-                    current.Text = current.Text + " : " + (node[k] == null ? "<NULL>" : node[k].ToString());
-                    if (node[k] != null) current.Tag = new EditableNode(node, k);
+                    TreeNode current = addto.Add(k);
+
+                    if (node[k] is IDictionary<string, dynamic>)
+                    {
+                        current.Text += $" : <Dictionary> {dictionaryIndex++}";
+                        current.Tag = node[k];
+                        current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
+                    }
+                    else if (node[k] is IList<dynamic>)
+                    {
+                        current.Text += $" : <Array> {arrayIndex++}";
+                        current.Tag = ((IList<dynamic>)node[k]);
+                        current.Nodes.Add("✯✯dummy✯✯");
+                    }
+                    else if (node[k] is IList<ByamlPathPoint>)
+                    {
+                        current.Text += $" : <PathPointArray> {pathPointIndex++}";
+                        current.Tag = ((IList<ByamlPathPoint>)node[k]);
+                        parsePathPointArray(node[k], current.Nodes);
+                    }
                 }
             }
         }
@@ -184,32 +239,38 @@ namespace FirstPlugin
 
         void parseArrayNode(IList<dynamic> list, TreeNodeCollection addto)
         {
+            int dictionaryIndex = 0;
+            int arrayIndex = 0;
+            int pathPointIndex = 0;
+
+
             int index = 0;
             foreach (dynamic k in list)
             {
-                if (k is IDictionary<string, dynamic>)
+                if (k is IDictionary<string, dynamic> ||
+                    k is IList<dynamic> ||
+                    k is IList<ByamlPathPoint>)
                 {
-                    TreeNode current = addto.Add("<Dictionary>");
-                    current.Tag = ((IDictionary<string, dynamic>)k);
-                    current.Nodes.Add("✯✯dummy✯✯");
+                    if (k is IDictionary<string, dynamic>)
+                    {
+                        TreeNode current = addto.Add($"<Dictionary> {dictionaryIndex++}");
+                        current.Tag = ((IDictionary<string, dynamic>)k);
+                        current.Nodes.Add("✯✯dummy✯✯");
+                    }
+                    else if (k is IList<dynamic>)
+                    {
+                        TreeNode current = addto.Add($"<Array> {arrayIndex++}");
+                        current.Tag = ((IList<dynamic>)k);
+                        current.Nodes.Add("✯✯dummy✯✯");
+                    }
+                    else if (k is IList<ByamlPathPoint>)
+                    {
+                        TreeNode current = addto.Add($"<PathPointArray> {pathPointIndex++}");
+                        current.Tag = ((IList<ByamlPathPoint>)k);
+                        parsePathPointArray(k, current.Nodes);
+                    }
                 }
-                else if (k is IList<dynamic>)
-                {
-                    TreeNode current = addto.Add("<Array>");
-                    current.Tag = ((IList<dynamic>)k);
-                    current.Nodes.Add("✯✯dummy✯✯");
-                }
-                else if (k is IList<ByamlPathPoint>)
-                {
-                    TreeNode current = addto.Add("<PathPointArray>");
-                    current.Tag = ((IList<ByamlPathPoint>)k);
-                    parsePathPointArray(k, current.Nodes);
-                }
-                else
-                {
-                    var n = addto.Add(k == null ? "<NULL>" : k.ToString());
-                    if (k != null) n.Tag = new EditableNode(list, index);
-                }
+
                 index++;
             }
         }
@@ -233,7 +294,7 @@ namespace FirstPlugin
         private void ContextMenuOpening(object sender, CancelEventArgs e)
         {
             CopyNode.Enabled = treeView1.SelectedNode != null;
-            editValueNodeMenuItem.Enabled = treeView1.SelectedNode != null && treeView1.SelectedNode.Tag is EditableNode;
+            editValueNodeMenuItem.Enabled = listViewCustom1.SelectedItems.Count > 0 && listViewCustom1.SelectedItems[0].Tag is EditableNode;
         }
 
         private void CopyNode_Click(object sender, EventArgs e)
@@ -316,7 +377,10 @@ namespace FirstPlugin
 
         private void editValueNodeMenuItem_Click(object sender, EventArgs e)
         {
-            var node = treeView1.SelectedNode.Tag as EditableNode;
+            if (listViewCustom1.SelectedItems.Count <= 0)
+                return;
+
+            var node = listViewCustom1.SelectedItems[0].Tag as EditableNode;
             if (node == null) return;
 
             if (node.Get() is ByamlPathPoint)
@@ -331,7 +395,34 @@ namespace FirstPlugin
                 if (value.Trim() == "") return;
                 node.Set(ByamlTypeHelper.ConvertValue(node.type, value));
             }
-            treeView1.SelectedNode.Text = node.GetTreeViewString();
+
+            ResetValues();
+        }
+
+        private void ResetValues()
+        {
+            if (treeView1.SelectedNode == null)
+                return;
+
+            listViewCustom1.Items.Clear();
+
+            var targetNodeCollection = treeView1.SelectedNode.Nodes;
+
+            dynamic target = treeView1.SelectedNode.Tag;
+
+            if (target is IDictionary<string, dynamic>)
+            {
+                parseDictNode((IDictionary<string, dynamic>)target);
+            }
+            else if (target is IList<dynamic>)
+            {
+                parseArrayNode((IList<dynamic>)target);
+            }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            ResetValues();
         }
 
         private void addNodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -372,6 +463,23 @@ namespace FirstPlugin
                 parseDictNode((IDictionary<string, dynamic>)target, targetNodeCollection);
             }
             else throw new Exception();
+
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count <= 0) 
+                return;
+
+            dynamic target = listViewCustom1.SelectedItems[0].Tag;
+
+            int index = listViewCustom1.Items.IndexOf(listViewCustom1.SelectedItems[0]);
+
+            listViewCustom1.Items.RemoveAt(index);
+        }
+
+        private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
         }
 
@@ -422,6 +530,20 @@ namespace FirstPlugin
             treeView1.Nodes.Clear();
             byml = XmlConverter.ToByml(t.ReadToEnd()).RootNode;
             ParseBymlFirstNode();
+        }
+
+        private void contentContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void listViewCustom1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Point pt = listViewCustom1.PointToScreen(e.Location);
+                stContextMenuStrip1.Show(pt);
+            }
         }
     }
 }
