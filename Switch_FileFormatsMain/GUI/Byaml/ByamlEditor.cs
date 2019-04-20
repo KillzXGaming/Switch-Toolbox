@@ -77,7 +77,7 @@ namespace FirstPlugin
 
         void ParseBymlFirstNode()
         {
-            TreeNode root = new TreeNode("root");
+            TreeNode root = new TreeNode(FileName);
             root.Tag = byml;
             treeView1.Nodes.Add(root);
             treeView1.SelectedNode = root;
