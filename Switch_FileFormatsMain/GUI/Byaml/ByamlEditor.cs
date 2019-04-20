@@ -77,10 +77,15 @@ namespace FirstPlugin
 
         void ParseBymlFirstNode()
         {
+            TreeNode root = new TreeNode("root");
+            root.Tag = byml;
+            treeView1.Nodes.Add(root);
+            treeView1.SelectedNode = root;
+
             //the first node should always be a dictionary node
             if (byml is Dictionary<string, dynamic>)
             {
-                parseDictNode(byml, treeView1.Nodes);
+                parseDictNode(byml, root.Nodes);
             }
             else if (byml is List<dynamic>)
             {
@@ -88,7 +93,7 @@ namespace FirstPlugin
                 {
                     MessageBox.Show("This byml is empty");
                 }
-                parseArrayNode(byml, treeView1.Nodes);
+                parseArrayNode(byml, root.Nodes);
             }
             else if (byml is List<ByamlPathPoint>)
             {
