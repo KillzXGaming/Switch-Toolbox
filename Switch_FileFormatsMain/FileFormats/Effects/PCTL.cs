@@ -424,33 +424,20 @@ namespace FirstPlugin
 
                 public override void Replace(string FileName)
                 {
+                    int OriginalSize = data.Length;
+
                     FTEX ftex = new FTEX();
                     ftex.ReplaceTexture(FileName, MipCount, SupportedFormats, true, true, true, Format);
                     if (ftex.texture != null)
                     {
+                        if (ftex.texture.Data.Length != OriginalSize)
+                            throw new Exception("Image size does not match! Make sure mip map count, format, height and width are all the same!");
+
                         Swizzle = (byte)ftex.texture.Swizzle;
 
                         data = ftex.texture.Data;
 
                         UpdateEditor();
-                    }
-                }
-
-                private void Replace(object sender, EventArgs args)
-                {
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                                 "Microsoft DDS |*.dds|" +
-                                 "Portable Network Graphics |*.png|" +
-                                 "Joint Photographic Experts Group |*.jpg|" +
-                                 "Bitmap Image |*.bmp|" +
-                                 "Tagged Image File Format |*.tiff|" +
-                                 "All files(*.*)|*.*";
-
-                    ofd.Multiselect = false;
-                    if (ofd.ShowDialog() == DialogResult.OK)
-                    {
- 
                     }
                 }
 
