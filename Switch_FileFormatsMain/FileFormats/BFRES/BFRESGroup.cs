@@ -396,12 +396,13 @@ namespace Bfres.Structs
 
             if (result == DialogResult.Yes)
             {
-                foreach (var node in Nodes)
+                foreach (TreeNode node in Nodes)
                 {
                     if (node is STGenericWrapper)
                     {
                         ((STGenericWrapper)node).Unload();
                         RemoveChild(((STGenericWrapper)node));
+                        ResourceNodes.Remove(node.Text);
                     }
                 }
                 

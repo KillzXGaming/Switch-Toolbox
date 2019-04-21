@@ -129,6 +129,12 @@ namespace Bfres.Structs
             return importer;
         }
 
+        public override void Unload()
+        {
+            DisposeRenderable();
+            Nodes.Clear();
+        }
+
         public void ReplaceImage(Image image, string FileName)
         {
             GTXImporterSettings setting = SetImporterSettings(image, FileName);
