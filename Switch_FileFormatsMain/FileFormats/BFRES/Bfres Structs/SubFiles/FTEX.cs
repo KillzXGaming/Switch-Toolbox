@@ -173,7 +173,7 @@ namespace Bfres.Structs
                 }
             }
 
-            if (IsEditorActive())
+            if (IsEditorActive() && IsReplaced)
                 UpdateEditor();
         }
 
@@ -265,7 +265,7 @@ namespace Bfres.Structs
                     }
                 }
             }
-            if (IsEditorActive())
+            if (IsEditorActive() && IsReplaced)
                 UpdateEditor();
         }
 

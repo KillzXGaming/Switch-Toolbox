@@ -179,22 +179,25 @@ namespace FirstPlugin
                         tex.Text = $"Texture{index++}";
                         textureFolder.Nodes.Add(tex);
                     }
+
+                    reader.Dispose();
+                    reader.Close();
                 }
                 public void Write(FileWriter writer, PTCL ptcl)
                 {
                     writer.ByteOrder = ByteOrder.BigEndian;
                     writer.Write(ptcl.data.ToArray());
 
+                    foreach (TextureInfo tex in ptcl.headerU.Textures)
+                    {
+                        //write texture blocks. Some slots are empty so check if it exists
+                        tex.Write(writer, this);
+                    }
+
                     foreach (EmitterSet emitterSets in emitterSets)
                     {
                         foreach (EmitterU emitter in emitterSets.Nodes)
                         {
-                            foreach (TextureInfo tex in emitter.DrawableTex)
-                            {
-                                //write texture blocks. Some slots are empty so check if it exists
-                                tex.Write(writer, this);
-                            }
-
                             writer.Seek(((EmitterU)emitter).ColorPosition, SeekOrigin.Begin);
                             foreach (var color0 in emitter.Color0Array)
                             {
@@ -213,7 +216,7 @@ namespace FirstPlugin
                         }
                     }
 
-
+                    writer.Flush();
                     writer.Close();
                     writer.Dispose();
                 }
@@ -403,6 +406,8 @@ namespace FirstPlugin
             }
             public class TextureInfo : STGenericTexture
             {
+                public const uint Alignment = 8192;
+
                 public TextureInfo()
                 {
                     ImageKey = "Texture";
@@ -424,20 +429,40 @@ namespace FirstPlugin
 
                 public override void Replace(string FileName)
                 {
-                    int OriginalSize = data.Length;
-
                     FTEX ftex = new FTEX();
                     ftex.ReplaceTexture(FileName, MipCount, SupportedFormats, true, true, true, Format);
                     if (ftex.texture != null)
                     {
-                        if (ftex.texture.Data.Length != OriginalSize)
-                            throw new Exception("Image size does not match! Make sure mip map count, format, height and width are all the same!");
+                        byte[] ImageData = ftex.texture.Data;
+
+                        if (ftex.texture.MipData != null)
+                            ImageData = Utils.CombineByteArray(ftex.texture.Data, ftex.texture.MipData);
+
+                        ImageData = AlignData(ImageData);
+
+                        if (ImageData.Length != ImageSize)
+                            throw new Exception($"Image size does not match! Make sure mip map count, format, height and width are all the same! Original Size {ImageSize} Import {ImageData.Length}");
 
                         Swizzle = (byte)ftex.texture.Swizzle;
 
-                        data = ftex.texture.Data;
+
+                        data = ImageData;
 
                         UpdateEditor();
+                    }
+                }
+
+                public byte[] AlignData(byte[] data)
+                {
+                    using (var mem = new MemoryStream(data))
+                    {
+                        using (var writer = new FileWriter(mem))
+                        {
+                            writer.Write(data);
+                            writer.Align((int)Alignment);
+
+                            return mem.ToArray();
+                        }
                     }
                 }
 
@@ -689,7 +714,7 @@ namespace FirstPlugin
                     surf.height = Height;
                     surf.width = Width;
                     surf.aa = (uint)0;
-                    surf.alignment = 0;
+                    surf.alignment = Alignment;
                     surf.depth = Depth;
                     surf.dim = 0x1;
                     surf.format = GX2Format;
@@ -782,6 +807,9 @@ namespace FirstPlugin
                 }
 
                 MapTextureIDs(ptcl);
+
+                reader.Dispose();
+                reader.Close();
             }
             private void MapTextureIDs(PTCL ptcl)
             {
@@ -888,6 +916,10 @@ namespace FirstPlugin
                     writer.Align(8);
                     section.Write(writer);
                 }
+
+                writer.Flush();
+                writer.Close();
+                writer.Dispose();
             }
         }
 

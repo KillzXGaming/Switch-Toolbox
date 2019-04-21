@@ -580,11 +580,11 @@ namespace Switch_Toolbox.Library
             return surf;
         }
 
-        private static int RoundUp(int X, int Y)
+        public static int RoundUp(int X, int Y)
         {
             return ((X - 1) | (Y - 1)) + 1;
         }
-        private static uint RoundUp(uint X, uint Y)
+        public static uint RoundUp(uint X, uint Y)
         {
             return ((X - 1) | (Y - 1)) + 1;
         }
