@@ -502,7 +502,6 @@ namespace Bfres.Structs
                     ftex.IsEdited = true;
                     ftex.Read(ftex.texture);
                     AddNode(ftex);
-                    return;
                 }
                 else if (ext == ".dds" || ext == ".dds2")
                 {
@@ -531,17 +530,20 @@ namespace Bfres.Structs
             if (settings.Count == 0)
             {
                 importer.Dispose();
-                return;
             }
-
-            importer.LoadSettings(settings);
-            if (importer.ShowDialog() == DialogResult.OK)
+            else
             {
-                ImportTexture(settings);
+                importer.LoadSettings(settings);
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    ImportTexture(settings);
+
+                    settings.Clear();
+
+                    GC.Collect();
+                    Cursor.Current = Cursors.Default;
+                }
             }
-            settings.Clear();
-            GC.Collect();
-            Cursor.Current = Cursors.Default;
         }
 
         public GTXImporterSettings LoadSettings(System.Drawing.Image image, string Name)
