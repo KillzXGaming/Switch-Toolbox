@@ -890,11 +890,6 @@ namespace Bfres.Structs
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
 
-                            progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
-                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
-
                             progressBar.Task = $"Creating Attributes. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
@@ -936,6 +931,14 @@ namespace Bfres.Structs
                             progressBar.Refresh();
 
                             shape.BoneIndices = shape.GetIndices(Skeleton);
+
+                            progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
+                            progressBar.Refresh();
+
+                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
+                            Console.WriteLine($"VertexSkinCount 1 {shape.VertexSkinCount}");
+
 
                             progressBar.Task = $"Saving shape. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
