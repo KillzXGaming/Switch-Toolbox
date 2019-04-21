@@ -184,11 +184,18 @@ namespace FirstPlugin
                 }
 
                 string ValueText = (k == null ? "<NULL>" : k.ToString());
+                string ValueTypeString = "";
 
-                Type ValueType = k.GetType();
+                if (k == null)
+                    ValueTypeString = "NULL";
+                else
+                {
+                    Type ValueType = k.GetType();
+                    ValueTypeString = ValueType.ToString();
+                }
 
                 ListViewItem item = new ListViewItem(ValueText);
-                item.SubItems.Add(ValueType.ToString());
+                item.SubItems.Add(ValueTypeString);
                 item.SubItems.Add(ValueText);
 
                 listViewCustom1.Items.Add(item);

@@ -5,13 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Switch_Toolbox.Library.IO;
 using Syroot.BinaryData;
+using System.IO;
 
 namespace FirstPlugin
 {
     public class SAHT
     {
-        public SAHT(string FileName) {
-            Read(new FileReader(FileName));
+        public string FileName { get; set; }
+
+        public SAHT(string fileName) {
+            FileName  = fileName;
+            Read(new FileReader(fileName));
         }
 
         public List<HashEntry> HashEntries = new List<HashEntry>();
@@ -32,10 +36,19 @@ namespace FirstPlugin
                 HashEntries.Add(entry);
             }
 
+            ToTextFile();
+        }
+
+        public void ToTextFile()
+        {
+            StringWriter writer = new StringWriter();
+
             foreach (var entry in HashEntries)
             {
-                Console.WriteLine(entry.Hash + " " + entry.Name);
+                writer.WriteLine($"{entry.Name}={entry.Hash.ToString("x")}");
             }
+
+            File.WriteAllText(FileName + ".txt", writer.ToString());
         }
 
         public class HashEntry
