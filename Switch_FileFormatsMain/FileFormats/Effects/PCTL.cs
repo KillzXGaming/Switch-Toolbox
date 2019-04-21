@@ -425,7 +425,7 @@ namespace FirstPlugin
                 public override void Replace(string FileName)
                 {
                     FTEX ftex = new FTEX();
-                    ftex.ReplaceTexture(FileName, 1, SupportedFormats, true, true, true, Format);
+                    ftex.ReplaceTexture(FileName, MipCount, SupportedFormats, true, true, true, Format);
                     if (ftex.texture != null)
                     {
                         Swizzle = (byte)ftex.texture.Swizzle;
@@ -485,10 +485,6 @@ namespace FirstPlugin
                             TEX_FORMAT.BC4_SNORM,
                             TEX_FORMAT.BC5_UNORM,
                             TEX_FORMAT.BC5_SNORM,
-                            TEX_FORMAT.BC6H_UF16,
-                            TEX_FORMAT.BC6H_SF16,
-                            TEX_FORMAT.BC7_UNORM,
-                            TEX_FORMAT.BC7_UNORM_SRGB,
                             TEX_FORMAT.B5G5R5A1_UNORM,
                             TEX_FORMAT.B5G6R5_UNORM,
                             TEX_FORMAT.B8G8R8A8_UNORM_SRGB,
@@ -531,8 +527,6 @@ namespace FirstPlugin
                 public uint TileMode;
                 public uint Swizzle;
                 public byte WrapMode;
-                public byte Depth;
-                public uint MipCount;
                 public uint CompSel;
                 public uint ImageSize;
                 public uint ImageOffset;
@@ -561,7 +555,7 @@ namespace FirstPlugin
 
                     if (header.IsSPBD)
                     {
-                        MipCount = reader.ReadUInt32();
+                        uint MipCount = reader.ReadUInt32();
                         CompSel = reader.ReadUInt32();
                         uint enableMipLevel = reader.ReadUInt32();
                         uint mipBias = reader.ReadUInt32();
@@ -578,7 +572,7 @@ namespace FirstPlugin
                         byte unk = reader.ReadByte();
                         Depth = reader.ReadByte();
                         byte unk1 = reader.ReadByte();
-                        MipCount = reader.ReadUInt32();
+                        uint MipCount = reader.ReadUInt32();
                         CompSel = reader.ReadUInt32();
                         uint enableMipLevel = reader.ReadUInt32();
                         uint mipBias = reader.ReadUInt32();
@@ -591,13 +585,17 @@ namespace FirstPlugin
                     }
                     ArrayCount = 1;
 
-
                     if (Width != 0 && Height != 0 && SurfFormat != 0)
                     {
                         using (reader.TemporarySeek(header.TextureBlockTableOffset + DataPos, SeekOrigin.Begin))
                         {
                             data = reader.ReadBytes((int)ImageSize);
                         }
+                    }
+
+                    if (data != null && data.Length > 0)
+                    {
+                        ConvertFormat();
                     }
 
                     reader.Seek(164, SeekOrigin.Current);
@@ -619,10 +617,10 @@ namespace FirstPlugin
                     throw new NotImplementedException("Cannot set image data! Operation not implemented!");
                 }
 
-                public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
-                {
-                    uint GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
+                uint GX2Format = 0;
 
+                private void ConvertFormat()
+                {
                     switch (SurfFormat)
                     {
                         case SurfaceFormat.T_BC1_UNORM:
@@ -688,8 +686,10 @@ namespace FirstPlugin
                         default:
                             throw new Exception("Format unsupported! " + SurfFormat);
                     }
+                }
 
-
+                public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+                {
                     int swizzle = (int)Swizzle;
                     int pitch = (int)0;
                     uint bpp = GX2.surfaceGetBitsPerPixel(GX2Format) >> 3;

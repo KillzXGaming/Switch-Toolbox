@@ -90,6 +90,14 @@ namespace FirstPlugin
             }
         }
 
+        public bool ReadOnlyFormat
+        {
+            set
+            {
+                formatComboBox.ReadOnly = value;
+            }
+        }
+
         public void LoadSupportedFormats(TEX_FORMAT[] Formats)
         {
             formatComboBox.Items.Clear();

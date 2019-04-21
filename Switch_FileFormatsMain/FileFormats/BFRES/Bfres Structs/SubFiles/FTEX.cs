@@ -206,12 +206,10 @@ namespace Bfres.Structs
 
             importer.ReadOnlySwizzle = IsSwizzleReadOnly;
             importer.ReadOnlyTileMode = IsSwizzleReadOnly;
-
+            importer.ReadOnlyFormat = IsFormatReadOnly;
+            
             if (Tex2Swizzle != 0)
                 setting.Swizzle = Tex2Swizzle;
-
-            if (DefaultFormat != TEX_FORMAT.UNKNOWN)
-                setting.Format = (GX2.GX2SurfaceFormat)ConvertToGx2Format(DefaultFormat);
 
             if (MipMapCount != 0)
             {
@@ -222,6 +220,9 @@ namespace Bfres.Structs
                 importer.LoadSupportedFormats(SupportedFormats);
 
             importer.LoadSetting(setting);
+
+            if (DefaultFormat != TEX_FORMAT.UNKNOWN)
+                setting.Format = (GX2.GX2SurfaceFormat)ConvertToGx2Format(DefaultFormat);
 
             if (ext == ".dds")
             {

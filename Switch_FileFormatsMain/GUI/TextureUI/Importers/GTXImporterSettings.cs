@@ -63,6 +63,7 @@ namespace FirstPlugin
             DecompressedData.Clear();
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
+
             Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
 
             GenerateMipmaps = true;
