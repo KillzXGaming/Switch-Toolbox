@@ -503,6 +503,10 @@ namespace Bfres.Structs
                 case TEX_FORMAT.R8G8_UNORM: return GX2SurfaceFormat.TC_R8_G8_UNorm;
                 case TEX_FORMAT.R8_UNORM: return GX2SurfaceFormat.TC_R8_UNorm;
                 case TEX_FORMAT.A8_UNORM: return GX2SurfaceFormat.TC_R8_UNorm;
+                case TEX_FORMAT.B8G8R8A8_UNORM: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm;
+                case TEX_FORMAT.B8G8R8A8_UNORM_SRGB: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB;
+                case TEX_FORMAT.B5_G5_R5_A1_UNORM: return GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm;
+                case TEX_FORMAT.R32G8X24_FLOAT: return GX2SurfaceFormat.T_R32_Float_X8_X24;
                 default:
                     throw new Exception($"Cannot convert format {texFormat}");
             }
