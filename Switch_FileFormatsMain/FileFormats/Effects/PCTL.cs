@@ -559,7 +559,10 @@ namespace FirstPlugin
                         byte unk = reader.ReadByte();
                         Depth = reader.ReadByte();
                         byte unk1 = reader.ReadByte();
-                        uint MipCount = reader.ReadUInt32();
+                        uint mipCount = reader.ReadUInt32();
+                        if (mipCount < 14)
+                            MipCount = mipCount;
+
                         CompSel = reader.ReadUInt32();
                         uint enableMipLevel = reader.ReadUInt32();
                         uint mipBias = reader.ReadUInt32();
@@ -693,7 +696,7 @@ namespace FirstPlugin
                     surf.use = 0x1;
                     surf.pitch = 0;
                     surf.data = data;
-                    surf.numMips = 1;
+                    surf.numMips = MipCount;
                     surf.mipOffset = new uint[0];
                     surf.mipData = null;
                     surf.tileMode = TileMode;
