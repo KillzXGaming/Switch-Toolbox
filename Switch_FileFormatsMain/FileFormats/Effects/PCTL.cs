@@ -10,6 +10,7 @@ using System.IO;
 using Syroot.BinaryData;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
+using Bfres.Structs;
 
 namespace FirstPlugin
 {
@@ -191,11 +192,7 @@ namespace FirstPlugin
                             foreach (TextureInfo tex in emitter.DrawableTex)
                             {
                                 //write texture blocks. Some slots are empty so check if it exists
-                                if (tex.data != null)
-                                {
-                                    writer.Seek(TextureBlockTableOffset + tex.DataPos, SeekOrigin.Begin);
-                                    writer.Write(tex.data);
-                                }
+                                tex.Write(writer, this);
                             }
 
                             writer.Seek(((EmitterU)emitter).ColorPosition, SeekOrigin.Begin);
@@ -417,6 +414,46 @@ namespace FirstPlugin
                     UpdateEditor();
                 }
 
+                public override string ExportFilter => FileFilters.FTEX;
+                public override string ReplaceFilter => FileFilters.FTEX;
+
+                public override void Export(string FileName)
+                {
+                    Export(FileName, false, false, 0, 0);
+                }
+
+                public override void Replace(string FileName)
+                {
+                    FTEX ftex = new FTEX();
+                    ftex.ReplaceTexture(FileName, 1, SupportedFormats, true, true);
+                    if (ftex.texture != null)
+                    {
+                        Swizzle = (byte)ftex.texture.Swizzle;
+
+                        data = ftex.texture.Data;
+
+                        UpdateEditor();
+                    }
+                }
+
+                private void Replace(object sender, EventArgs args)
+                {
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                                 "Microsoft DDS |*.dds|" +
+                                 "Portable Network Graphics |*.png|" +
+                                 "Joint Photographic Experts Group |*.jpg|" +
+                                 "Bitmap Image |*.bmp|" +
+                                 "Tagged Image File Format |*.tiff|" +
+                                 "All files(*.*)|*.*";
+
+                    ofd.Multiselect = false;
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+ 
+                    }
+                }
+
                 public void UpdateEditor()
                 {
                     ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
@@ -511,72 +548,12 @@ namespace FirstPlugin
                         return false;
                 }
 
-                public void Replace(string FileName)
-                {
-                    string ext = System.IO.Path.GetExtension(FileName);
-                    ext = ext.ToLower();
-
-                    GTXImporterSettings setting = SetImporterSettings(FileName);
-                    GTXTextureImporter importer = new GTXTextureImporter();
-                    setting.MipCount = MipCount;
-
-                    importer.LoadSetting(setting);
-
-                    if (ext == ".dds")
-                    {
-                        if (setting.DataBlockOutput != null)
-                        {
-                            var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                            var newData = Utils.CombineByteArray(surface.data, surface.mipData);
-                        }
-                    }
-                    else
-                    {
-                        if (importer.ShowDialog() == DialogResult.OK)
-                        {
-                            Cursor.Current = Cursors.WaitCursor;
-
-                            if (setting.GenerateMipmaps)
-                            {
-                                setting.DataBlockOutput.Clear();
-                                setting.DataBlockOutput.Add(setting.GenerateMips());
-                            }
-
-                            if (setting.DataBlockOutput != null)
-                            {
-                                var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                                var newData = Utils.CombineByteArray(surface.data, surface.mipData);
-                                if (newData.Length != data.Length)
-                                    throw new Exception($"Image is not the correct size {newData.Length}. Should be {data.Length}");
-                            }
-                            else
-                            {
-                                MessageBox.Show("Something went wrong???");
-                            }
-                        }
-                    }
-                }
-                public static GTXImporterSettings SetImporterSettings(string name)
-                {
-                    var importer = new GTXImporterSettings();
-                    string ext = System.IO.Path.GetExtension(name);
-                    ext = ext.ToLower();
-
-                    switch (ext)
-                    {
-                        case ".dds":
-                            importer.LoadDDS(name);
-                            break;
-                        default:
-                            importer.LoadBitMap(name);
-                            break;
-                    }
-
-                    return importer;
-                }
-
                 public void Read(FileReader reader, Header header, string EmitterName)
                 {
+                    CanReplace = true;
+                    CanRename = false;
+                    
+
                     Width = reader.ReadUInt16();
                     Height = reader.ReadUInt16();
                     TileMode = reader.ReadUInt32();
@@ -624,6 +601,17 @@ namespace FirstPlugin
                     }
 
                     reader.Seek(164, SeekOrigin.Current);
+                }
+
+                public void Write(FileWriter writer, Header header)
+                {
+                    if (data != null && data.Length > 0)
+                    {
+                        using (writer.TemporarySeek(header.TextureBlockTableOffset + DataPos, SeekOrigin.Begin))
+                        {
+                            writer.Write(data);
+                        }
+                    }
                 }
 
                 public override void SetImageData(Bitmap bitmap, int ArrayLevel)
