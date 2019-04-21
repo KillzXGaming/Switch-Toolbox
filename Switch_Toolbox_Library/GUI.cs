@@ -65,10 +65,9 @@ namespace Switch_Toolbox.Library
         }
         public void CreateMdiWindow(STForm form, bool Show = true)
         {
-            form.MdiParent = Application.OpenForms[0];
+            var mainform = Application.OpenForms[0];
 
-            if (Show)
-                form.Show();
+            ((IMdiContainer)mainform).AddChildContainer(form);
         }
         public ObjectEditor GetObjectEditor()
         {

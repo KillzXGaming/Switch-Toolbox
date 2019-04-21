@@ -18,7 +18,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Toolbox
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IMdiContainer
     {
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
@@ -26,8 +26,17 @@ namespace Toolbox
         IFileFormat[] SupportedFormats;
         IFileMenuExtension[] FileMenuExtensions;
 
+        public void AddChildContainer(Form form)
+        {
+            TabDupeIndex = 0;
+            form.Text = CheckTabDupes(form.Text);
+            form.MdiParent = this;
+            form.Show();
+        }
+
         public MainForm()
         {
+
             FormThemes.ActivePreset = FormThemes.Preset.Dark;
 
             Runtime.MainForm = this;

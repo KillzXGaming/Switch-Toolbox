@@ -498,6 +498,7 @@
     <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="Interfaces\IEditor.cs" />
     <Compile Include="Interfaces\IFIleEditor.cs" />
+    <Compile Include="Interfaces\IMdiContainer.cs" />
     <Compile Include="Interfaces\IMenuExtension.cs" />
     <Compile Include="Interfaces\ITexture.cs" />
     <Compile Include="Interfaces\IViewportContainer.cs" />
