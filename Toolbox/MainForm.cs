@@ -32,6 +32,16 @@ namespace Toolbox
             form.Text = CheckTabDupes(form.Text);
             form.MdiParent = this;
             form.Show();
+
+            IFileFormat activeFile;
+
+            if (form is ObjectEditor)
+                activeFile = ((ObjectEditor)form).GetActiveFile();
+            else
+                activeFile = GetActiveIFileFormat();
+
+            if (activeFile != null)
+                SetFormatSettings(activeFile);
         }
 
         public MainForm()
