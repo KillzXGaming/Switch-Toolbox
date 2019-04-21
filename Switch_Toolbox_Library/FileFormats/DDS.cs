@@ -165,6 +165,8 @@ namespace Switch_Toolbox.Library
                 case FOURCC_DXT5:
                 case FOURCC_ATI1:
                 case FOURCC_ATI2:
+                case FOURCC_BC4U:
+                case FOURCC_BC4S:
                 case FOURCC_BC5U:
                 case FOURCC_BC5S:
                     return true;
@@ -191,6 +193,7 @@ namespace Switch_Toolbox.Library
                     return 0x10;
                 case FOURCC_ATI1:
                 case FOURCC_BC4U:
+                case FOURCC_BC4S:
                     return 0x8;
                 case FOURCC_ATI2:
                 case FOURCC_BC5U:
@@ -707,19 +710,15 @@ namespace Switch_Toolbox.Library
                 case FOURCC_DXT1:
                     return TEX_FORMAT.BC1_UNORM;
                 case FOURCC_DXT2:
-                    return TEX_FORMAT.BC2_UNORM;
                 case FOURCC_DXT3:
                     return TEX_FORMAT.BC2_UNORM;
                 case FOURCC_DXT4:
-                    return TEX_FORMAT.BC3_UNORM;
                 case FOURCC_DXT5:
                     return TEX_FORMAT.BC3_UNORM;
                 case FOURCC_ATI1:
-                    return TEX_FORMAT.BC4_UNORM;
                 case FOURCC_BC4U:
                     return TEX_FORMAT.BC4_UNORM;
                 case FOURCC_ATI2:
-                    return TEX_FORMAT.BC5_UNORM;
                 case FOURCC_BC5U:
                     return TEX_FORMAT.BC5_UNORM;
                 case FOURCC_BC5S:
@@ -771,7 +770,13 @@ namespace Switch_Toolbox.Library
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
+                    header.ddspf.fourCC = FOURCC_DX10;
                     pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
+                    if (DX10header == null)
+                        DX10header = new DX10Header();
+
+                    IsDX10 = true;
+                    DX10header.DXGI_Format = Format;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
                 case DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
