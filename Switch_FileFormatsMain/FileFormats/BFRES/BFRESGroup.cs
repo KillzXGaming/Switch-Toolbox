@@ -402,10 +402,10 @@ namespace Bfres.Structs
                     {
                         ((STGenericWrapper)node).Unload();
                         RemoveChild(((STGenericWrapper)node));
-                        ResourceNodes.Remove(node.Text);
                     }
                 }
-                
+
+                ResourceNodes.Clear();
                 Nodes.Clear();
             }
         }
