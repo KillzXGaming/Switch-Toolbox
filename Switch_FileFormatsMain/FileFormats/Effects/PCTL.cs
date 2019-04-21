@@ -425,7 +425,7 @@ namespace FirstPlugin
                 public override void Replace(string FileName)
                 {
                     FTEX ftex = new FTEX();
-                    ftex.ReplaceTexture(FileName, 1, SupportedFormats, true, true);
+                    ftex.ReplaceTexture(FileName, 1, SupportedFormats, true, true, true, Format);
                     if (ftex.texture != null)
                     {
                         Swizzle = (byte)ftex.texture.Swizzle;

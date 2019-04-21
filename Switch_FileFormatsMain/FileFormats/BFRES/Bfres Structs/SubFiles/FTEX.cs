@@ -182,7 +182,7 @@ namespace Bfres.Structs
         }
 
         public void ReplaceTexture(string FileName, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null,
-            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false)
+            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN)
         {
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -209,6 +209,9 @@ namespace Bfres.Structs
 
             if (Tex2Swizzle != 0)
                 setting.Swizzle = Tex2Swizzle;
+
+            if (DefaultFormat != TEX_FORMAT.UNKNOWN)
+                setting.Format = (GX2.GX2SurfaceFormat)ConvertToGx2Format(DefaultFormat);
 
             if (MipMapCount != 0)
             {
