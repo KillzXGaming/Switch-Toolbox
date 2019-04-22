@@ -233,6 +233,31 @@ namespace FirstPlugin
                     else
                         editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
                 }
+                else if (SelectedSection is BfresBone)
+                {
+                    if (((BfresBone)SelectedSection).BoneU != null)
+                        editor.LoadProperty(((BfresBone)SelectedSection).BoneU, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(((BfresBone)SelectedSection).Bone, OnPropertyChanged);
+                }
+                else if (SelectedSection is FSKL)
+                {
+                    if (((FSKL)SelectedSection).node.SkeletonU != null)
+                        editor.LoadProperty(((FSKL)SelectedSection).node.SkeletonU, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(((FSKL)SelectedSection).node.Skeleton, OnPropertyChanged);
+                }
+                else if (SelectedSection is FSKA)
+                {
+                    if (((FSKA)SelectedSection).SkeletalAnimU != null)
+                        editor.LoadProperty(((FSKA)SelectedSection).SkeletalAnimU, OnPropertyChanged);
+                    else
+                        editor.LoadProperty(((FSKA)SelectedSection).SkeletalAnim, OnPropertyChanged);
+                }
+                else if (SelectedSection is FMAA)
+                {
+                    editor.LoadProperty(((FMAA)SelectedSection).MaterialAnim, OnPropertyChanged);
+                }
                 else
                     editor.LoadProperty(null, OnPropertyChanged);
             }
