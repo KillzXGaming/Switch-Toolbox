@@ -344,9 +344,12 @@ namespace Switch_Toolbox.Library
                         return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false);
                     else
                     {
-                        Runtime.OpenTKInitialized = true;
-                        LoadOpenGLTexture();
-                        return RenderableTex.GLTextureToBitmap(RenderableTex);
+                        if (Runtime.UseViewport)
+                        {
+                            Runtime.OpenTKInitialized = true;
+                            LoadOpenGLTexture();
+                            return RenderableTex.GLTextureToBitmap(RenderableTex);
+                        }
                     }
                 }
                 catch
@@ -611,7 +614,10 @@ namespace Switch_Toolbox.Library
             dds.Save(dds, FileName, GetSurfaces());
         }
         public void LoadOpenGLTexture()
-        {  
+        {
+            if (!Runtime.UseViewport)
+                return;
+
             if (RenderableTex == null)
                 RenderableTex = new RenderableTex();
 
