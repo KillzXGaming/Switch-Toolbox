@@ -3619,15 +3619,15 @@
             Initializes a new instance of the <see cref="T:Syroot.NintenTools.Bfres.Shape"/> class.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.Bfres.Shape.Flags">
+            <summary>
+            Gets or sets flags determining which data is available for this instance.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.Bfres.Shape.Name">
             <summary>
             Gets or sets the name with which the instance can be referenced uniquely in <see cref="T:Syroot.NintenTools.Bfres.ResDict`1"/>
             instances.
-            </summary>
-        </member>
-        <member name="P:Syroot.NintenTools.Bfres.Shape.Flags">
-            <summary>
-            Gets or sets flags determining which data is available for this instance.
             </summary>
         </member>
         <member name="P:Syroot.NintenTools.Bfres.Shape.MaterialIndex">
