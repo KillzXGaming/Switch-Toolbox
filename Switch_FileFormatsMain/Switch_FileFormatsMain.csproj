@@ -372,6 +372,12 @@
     <Compile Include="GUI\KCL\CollisionMaterialEditor.Designer.cs">
       <DependentUpon>CollisionMaterialEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Message\MSBTEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Message\MSBTEditor.Designer.cs">
+      <DependentUpon>MSBTEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>UserControl</SubType>
@@ -1025,6 +1031,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\VertexAttributeDataList.resx">
       <DependentUpon>VertexAttributeDataList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Message\MSBTEditor.resx">
+      <DependentUpon>MSBTEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PreviewFormatList.resx">
       <DependentUpon>PreviewFormatList.cs</DependentUpon>
