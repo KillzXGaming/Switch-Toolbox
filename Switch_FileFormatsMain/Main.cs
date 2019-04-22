@@ -117,7 +117,9 @@ namespace FirstPlugin
             Formats.Add(typeof(XTX));
             Formats.Add(typeof(KCL));
             Formats.Add(typeof(BFFNT));
-      //      Formats.Add(typeof(MSBT));
+            Formats.Add(typeof(MSBT));
+            Formats.Add(typeof(XLINK));
+            
        //     Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BARS));
       //      Formats.Add(typeof(BFLAN));

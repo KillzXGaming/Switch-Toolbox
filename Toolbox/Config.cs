@@ -164,6 +164,9 @@ namespace Toolbox
                     case "Mk8dGamePath":
                         Runtime.Mk8dGamePath = node.InnerText;
                         break;
+                    case "renderBoundingBoxes":
+                        bool.TryParse(node.InnerText, out Runtime.renderBoundingBoxes);
+                        break;
                 }
             }
         }
@@ -319,6 +322,7 @@ namespace Toolbox
             renderSettingsNode.AppendChild(createNode(doc, "renderReflection", Runtime.renderReflection.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "renderSpecular", Runtime.renderSpecular.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "renderBones", Runtime.renderBones.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "renderBoundingBoxes", Runtime.renderBoundingBoxes.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "useNormalMap", Runtime.useNormalMap.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "ViewportWidth", Runtime.ViewportEditor.Width.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "normalsLineLength", Runtime.normalsLineLength.ToString()));

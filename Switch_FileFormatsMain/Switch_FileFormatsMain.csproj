@@ -215,6 +215,7 @@
     <Compile Include="FileFormats\Layout\BFLYT.cs" />
     <Compile Include="FileFormats\BFRES\Bfres Structs\CurveHelper.cs" />
     <Compile Include="FileFormats\BFRES\BFRES.cs" />
+    <Compile Include="FileFormats\XLINK\XLINK.cs" />
     <Compile Include="GL\Helpers\DepthGLControl.cs" />
     <Compile Include="GL\ShaderData\AglShaderOdyssey.cs" />
     <Compile Include="GL\ShaderData\AglShaderTurbo.cs" />

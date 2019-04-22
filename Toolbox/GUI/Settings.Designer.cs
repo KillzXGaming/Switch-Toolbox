@@ -94,6 +94,7 @@
             this.mk8DPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.displayBoundingBoxeChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -166,6 +167,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.displayBoundingBoxeChk);
             this.panel2.Controls.Add(this.boneXRayChk);
             this.panel2.Controls.Add(this.stLabel9);
             this.panel2.Controls.Add(this.cameraMaxSpeedUD);
@@ -206,7 +208,7 @@
             // boneXRayChk
             // 
             this.boneXRayChk.AutoSize = true;
-            this.boneXRayChk.Location = new System.Drawing.Point(268, 137);
+            this.boneXRayChk.Location = new System.Drawing.Point(252, 137);
             this.boneXRayChk.Name = "boneXRayChk";
             this.boneXRayChk.Size = new System.Drawing.Size(120, 17);
             this.boneXRayChk.TabIndex = 30;
@@ -449,7 +451,7 @@
             // chkBoxDisplayPolyCount
             // 
             this.chkBoxDisplayPolyCount.AutoSize = true;
-            this.chkBoxDisplayPolyCount.Location = new System.Drawing.Point(268, 160);
+            this.chkBoxDisplayPolyCount.Location = new System.Drawing.Point(252, 160);
             this.chkBoxDisplayPolyCount.Name = "chkBoxDisplayPolyCount";
             this.chkBoxDisplayPolyCount.Size = new System.Drawing.Size(114, 17);
             this.chkBoxDisplayPolyCount.TabIndex = 13;
@@ -549,7 +551,7 @@
             // chkBoxDisplayBones
             // 
             this.chkBoxDisplayBones.AutoSize = true;
-            this.chkBoxDisplayBones.Location = new System.Drawing.Point(268, 114);
+            this.chkBoxDisplayBones.Location = new System.Drawing.Point(252, 114);
             this.chkBoxDisplayBones.Name = "chkBoxDisplayBones";
             this.chkBoxDisplayBones.Size = new System.Drawing.Size(93, 17);
             this.chkBoxDisplayBones.TabIndex = 7;
@@ -975,7 +977,16 @@
             this.mk8PathTB.Size = new System.Drawing.Size(258, 20);
             this.mk8PathTB.TabIndex = 0;
             this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
-
+            // 
+            // displayBoundingBoxeChk
+            // 
+            this.displayBoundingBoxeChk.AutoSize = true;
+            this.displayBoundingBoxeChk.Location = new System.Drawing.Point(252, 183);
+            this.displayBoundingBoxeChk.Name = "displayBoundingBoxeChk";
+            this.displayBoundingBoxeChk.Size = new System.Drawing.Size(140, 17);
+            this.displayBoundingBoxeChk.TabIndex = 31;
+            this.displayBoundingBoxeChk.Text = "Display Bounding Boxes";
+            this.displayBoundingBoxeChk.CheckedChanged += new System.EventHandler(this.displayBoundingBoxeChk_CheckedChanged);
             // 
             // Settings
             // 
@@ -1083,5 +1094,6 @@
         private Switch_Toolbox.Library.Forms.STTextBox mk8DPathTB;
         private Switch_Toolbox.Library.Forms.STLabel stLabel10;
         private Switch_Toolbox.Library.Forms.STTextBox mk8PathTB;
+        private Switch_Toolbox.Library.Forms.STCheckBox displayBoundingBoxeChk;
     }
 }

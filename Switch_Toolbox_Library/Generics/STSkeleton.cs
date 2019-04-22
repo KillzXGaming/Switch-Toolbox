@@ -10,6 +10,9 @@ using OpenTK.Graphics.OpenGL;
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
+using Switch_Toolbox.Library.Rendering;
+
+using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace Switch_Toolbox.Library
 {
@@ -187,6 +190,18 @@ namespace Switch_Toolbox.Library
         Color boneColor = Color.FromArgb(255, 240, 240, 0);
         Color selectedBoneColor = Color.FromArgb(255, 240, 240, 240);
 
+        private void DrawBoundingBoxes()
+        {
+            var boundings = GetSelectionBox();
+
+            DrawableBoundingBox.DrawBoundingBox(
+                new Vector3(boundings.minX, boundings.minY, boundings.minZ),
+                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ)
+                );
+
+            return;
+        }
+
         public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
         {
             CheckBuffers();
@@ -200,11 +215,14 @@ namespace Switch_Toolbox.Library
             if (Runtime.boneXrayDisplay)
                 GL.Disable(EnableCap.DepthTest);
 
+            if (Runtime.renderBoundingBoxes)
+                DrawBoundingBoxes();
+
             control.CurrentShader = solidColorShaderProgram;
 
             control.UpdateModelMatrix(
             Matrix4.CreateScale(Runtime.previewScale) *
-            Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(position) : position));
+            Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
 
 
             solidColorShaderProgram.EnableVertexAttributes();
@@ -415,22 +433,48 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public override bool CanStartDragging() => true;
-
         public override BoundingBox GetSelectionBox()
         {
-            Vector3 Min = new Vector3(0);
-            Vector3 Max = new Vector3(99999);
+            BoundingBox box = BoundingBox.Default;
 
-            return new BoundingBox()
+            for (int i = 1; i < bones.Count; i++)
             {
-                minX = Min.X,
-                minY = Min.Y,
-                minZ = Min.Z,
-                maxX = Max.X,
-                maxY = Max.Y,
-                maxZ = Max.Z,
-            };
+                box.Include(bones[i - 1].pos);
+                box.Include(bones[i].pos);
+            }
+
+            return box;
+        }
+
+        public override LocalOrientation GetLocalOrientation(int partIndex)
+        {
+            return new LocalOrientation(position);
+        }
+
+        public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
+        {
+            localOrientation = new LocalOrientation(position);
+            dragExclusively = false;
+            return Selected;
+        }
+
+        public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
+        {
+            return true;
+
+            BoundingBox box;
+            for (int i = 1; i < bones.Count; i++)
+            {
+                box = BoundingBox.Default;
+                box.Include(bones[i - 1].pos);
+                box.Include(bones[i].pos);
+
+                if (pos.X < box.maxX + range && pos.X > box.minX - range &&
+                    pos.Y < box.maxY + range && pos.Y > box.minY - range &&
+                    pos.Z < box.maxZ + range && pos.Z > box.minZ - range)
+                    return true;
+            }
+            return false;
         }
 
         public override uint SelectAll(GL_ControlBase control)

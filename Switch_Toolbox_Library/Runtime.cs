@@ -126,7 +126,7 @@ namespace Switch_Toolbox.Library
         public static bool renderFresnel = true;
         public static bool renderSpecular = true;
         public static bool renderReflection = true;
-        public static bool renderBoundingBoxes = true;
+        public static bool renderBoundingBoxes = false;
         public static bool renderNormalMap = true;
         public static bool renderVertColor = true;
         public static bool renderBfresPbr = false;

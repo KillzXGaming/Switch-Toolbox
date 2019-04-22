@@ -65,36 +65,38 @@ namespace Switch_Toolbox.Library.IO
 
             return RealSignature;
         }
-        public string LoadString(int StringReadSize = 2, DataType OffsetType = DataType.uint64, Encoding encoding = null)
+
+        public string LoadString(bool IsRelative, Type OffsetType, Encoding encoding = null, uint ReadStringLength = 0)
         {
+            long pos = Position;
+
             long offset = 0;
             int size = 0;
 
-            switch (OffsetType)
-            {
-                case DataType.int64:
-                    offset = ReadInt64();
-                    break;
-                case DataType.int32:
-                    offset = ReadInt32();
-                    break;
-                case DataType.uint64:
-                    offset = (long)ReadUInt64();
-                    break;
-                case DataType.uint32:
-                    offset = ReadUInt32();
-                    break;
-            }
+            if (OffsetType == typeof(long))
+                offset = ReadInt64();
+            if (OffsetType == typeof(ulong))
+                offset = (long)ReadUInt64();
+            if (OffsetType == typeof(uint))
+                offset = ReadUInt32();
+            if (OffsetType == typeof(int))
+                offset = ReadInt32();
 
             if (offset == 0) return null;
+
+            if (IsRelative)
+                offset = offset + pos;
 
             encoding = encoding ?? Encoding;
             using (TemporarySeek(offset, SeekOrigin.Begin))
             {
-                if (StringReadSize == 2)
-                    size = ReadInt16();
-                if (StringReadSize == 4)
-                    size = ReadInt32();
+                //Read the size of the string if set
+                uint stringLength = 0;
+
+                if (ReadStringLength == 2)
+                    stringLength = ReadUInt16();
+                if (ReadStringLength == 4)
+                    stringLength = ReadUInt32();
 
                 return ReadString(BinaryStringFormat.ZeroTerminated, encoding);
             }

@@ -55,7 +55,7 @@ namespace FirstPlugin
             {
                 pathSupport = true;
 
-                stPanel1.Controls.Remove(treeView1);
+                stPanel1.Controls.Remove(splitContainer1);
 
                 TurboMunntEditor editor = new TurboMunntEditor();
                 editor.Dock = DockStyle.Fill;
@@ -159,8 +159,14 @@ namespace FirstPlugin
 
                 string ValueText = (node[k] == null ? "<NULL>" : node[k].ToString());
                 string NameText = k;
-                Type ValueType = node[k].GetType();
-                string TypeString = ValueType.ToString().Replace("System.", "");
+                string TypeText = "";
+
+                if (node[k] == null)
+                    TypeText = "NULL";
+                else
+                    TypeText = node[k].GetType().ToString();
+
+                string TypeString = TypeText.Replace("System.", "");
 
                 ListViewItem item = new ListViewItem(NameText);
                 item.SubItems.Add(TypeString);
@@ -220,13 +226,13 @@ namespace FirstPlugin
                     {
                         current.Text += $" : <Dictionary> {dictionaryIndex++}";
                         current.Tag = node[k];
-                        current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
+                     //   current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
                     }
                     else if (node[k] is IList<dynamic>)
                     {
                         current.Text += $" : <Array> {arrayIndex++}";
                         current.Tag = ((IList<dynamic>)node[k]);
-                        current.Nodes.Add("✯✯dummy✯✯");
+                    //    current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (node[k] is IList<ByamlPathPoint>)
                     {
@@ -267,13 +273,13 @@ namespace FirstPlugin
                     {
                         TreeNode current = addto.Add($"<Dictionary> {dictionaryIndex++}");
                         current.Tag = ((IDictionary<string, dynamic>)k);
-                        current.Nodes.Add("✯✯dummy✯✯");
+                       // current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (k is IList<dynamic>)
                     {
                         TreeNode current = addto.Add($"<Array> {arrayIndex++}");
                         current.Tag = ((IList<dynamic>)k);
-                        current.Nodes.Add("✯✯dummy✯✯");
+                     //   current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (k is IList<ByamlPathPoint>)
                     {
@@ -476,6 +482,7 @@ namespace FirstPlugin
             }
             else throw new Exception();
 
+            ResetValues();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)

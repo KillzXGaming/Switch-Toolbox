@@ -72,6 +72,8 @@ namespace Toolbox
             mk8DPathTB.Text = Runtime.Mk8dGamePath;
             mk8PathTB.Text = Runtime.Mk8GamePath;
             SMOPathTB.Text = Runtime.SmoGamePath;
+            displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
+
             mk8DPathTB.ReadOnly = true;
             mk8PathTB.ReadOnly = true;
             SMOPathTB.ReadOnly = true;
@@ -405,6 +407,11 @@ namespace Toolbox
                 SMOPathTB.Text = sfd.SelectedPath;
                 Runtime.SmoGamePath = SMOPathTB.Text;
             }
+        }
+
+        private void displayBoundingBoxeChk_CheckedChanged(object sender, EventArgs e)
+        {
+            Runtime.renderBoundingBoxes = displayBoundingBoxeChk.Checked;
         }
     }
 }

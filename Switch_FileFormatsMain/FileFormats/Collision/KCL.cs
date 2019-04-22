@@ -13,6 +13,7 @@ using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
 using GL_EditorFramework.EditorDrawables;
 using FirstPlugin.Forms;
+using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace FirstPlugin
 {
@@ -485,8 +486,10 @@ namespace FirstPlugin
                 var solidColorFrag = new FragmentShader(
                @"#version 330
 				uniform vec4 color;
+				out vec4 FragColor;
+
 				void main(){
-					gl_FragColor = color;
+					FragColor = color;
 				}");
 
                 var solidColorVert = new VertexShader(
@@ -526,8 +529,10 @@ namespace FirstPlugin
                 var solidColorFrag = new FragmentShader(
           @"#version 330
 				uniform vec4 color;
+                out vec4 FragColor;
+
 				void main(){
-					gl_FragColor = color;
+					FragColor = color;
 				}");
 
                 var solidColorVert = new VertexShader(
@@ -585,7 +590,7 @@ namespace FirstPlugin
 
                 control.UpdateModelMatrix(
                 Matrix4.CreateScale(Runtime.previewScale) *
-                Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(position) : position));
+                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
 
                 SetRenderSettings(defaultShaderProgram);
 
@@ -682,8 +687,6 @@ namespace FirstPlugin
                 GL.Uniform1(shader["colorOverride"], 0);
             }
 
-            public override bool CanStartDragging() => true;
-
             public override BoundingBox GetSelectionBox()
             {
                 Vector3 Min = new Vector3(0);
@@ -711,6 +714,32 @@ namespace FirstPlugin
                     maxY = Max.Y,
                     maxZ = Max.Z,
                 };
+            }
+
+            public override LocalOrientation GetLocalOrientation(int partIndex)
+            {
+                return new LocalOrientation(position);
+            }
+
+            public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
+            {
+                localOrientation = new LocalOrientation(position);
+                dragExclusively = false;
+                return Selected;
+            }
+
+            public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
+            {
+                range = 20000; //Make the range large for now. Todo go back to this
+
+                BoundingBox box = GetSelectionBox();
+
+                if (pos.X < box.maxX + range && pos.X > box.minX - range &&
+                  pos.Y < box.maxY + range && pos.Y > box.minY - range &&
+                  pos.Z < box.maxZ + range && pos.Z > box.minZ - range)
+                    return true;
+
+                return false;
             }
 
 

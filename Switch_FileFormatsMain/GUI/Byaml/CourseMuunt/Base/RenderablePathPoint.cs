@@ -64,13 +64,13 @@ namespace GL_EditorFramework.EditorDrawables
             if (pass == Pass.TRANSPARENT)
                 return;
 
-            bool hovered = editorScene.hovered == this;
+            bool hovered = editorScene.Hovered == this;
 
             if (IsNormalTanTransform)
             {
                 control.UpdateModelMatrix(Matrix4.CreateScale(scale) *
                 MatrixExenstion.CreateRotation(Normal, Tangent) *
-                Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(Position) : Position));
+                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(Position) : Position));
             }
             else
             {
@@ -78,7 +78,7 @@ namespace GL_EditorFramework.EditorDrawables
                 (Matrix4.CreateRotationX(rotate.X) *
                 Matrix4.CreateRotationY(rotate.Y) *
                 Matrix4.CreateRotationZ(rotate.Z)) *
-                Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(Position) : Position));
+                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(Position) : Position));
             }
 
             Vector4 blockColor;
@@ -98,7 +98,7 @@ namespace GL_EditorFramework.EditorDrawables
             else
                 blockColor = Color;
 
-            Renderers.ColorBlockRenderer.Draw(control, pass, blockColor, lineColor, control.nextPickingColor());
+            Renderers.ColorBlockRenderer.Draw(control, pass, blockColor, lineColor, control.NextPickingColor());
 
         }
 
@@ -110,7 +110,7 @@ namespace GL_EditorFramework.EditorDrawables
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
                 Matrix4.CreateTranslation(position));
 
-            Renderers.ColorBlockRenderer.Draw(control, pass, Color, Color, control.nextPickingColor());
+            Renderers.ColorBlockRenderer.Draw(control, pass, Color, Color, control.NextPickingColor());
 
         }
 
@@ -119,10 +119,10 @@ namespace GL_EditorFramework.EditorDrawables
             if (pass == Pass.TRANSPARENT)
                 return;
 
-            bool hovered = editorScene.hovered == this;
+            bool hovered = editorScene.Hovered == this;
 
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
-                Matrix4.CreateTranslation(Selected ? editorScene.currentAction.newPos(position) : position));
+                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
 
             Vector4 blockColor;
             Vector4 lineColor;
@@ -141,7 +141,7 @@ namespace GL_EditorFramework.EditorDrawables
             else
                 blockColor = Color;
 
-            Renderers.ColorBlockRenderer.Draw(control, pass, blockColor, lineColor, control.nextPickingColor());
+            Renderers.ColorBlockRenderer.Draw(control, pass, blockColor, lineColor, control.NextPickingColor());
         }
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
@@ -152,7 +152,7 @@ namespace GL_EditorFramework.EditorDrawables
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
                 Matrix4.CreateTranslation(position));
 
-            Renderers.ColorBlockRenderer.Draw(control, pass, Color, Color, control.nextPickingColor());
+            Renderers.ColorBlockRenderer.Draw(control, pass, Color, Color, control.NextPickingColor());
 
         }
 
@@ -174,8 +174,6 @@ namespace GL_EditorFramework.EditorDrawables
 
         public virtual void UpdatePosition(int subObj) {
         }
-
-        public override bool CanStartDragging() => true;
 
         public override BoundingBox GetSelectionBox() => new BoundingBox(
             position.X - scale.X,
@@ -218,8 +216,25 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override void ApplyTransformActionToSelection(AbstractTransformAction transformAction)
         {
-            position = transformAction.newPos(position);
+            position = transformAction.NewPos(position);
             UpdateNodePosition();
+        }
+
+        public override LocalOrientation GetLocalOrientation(int partIndex)
+        {
+            return new LocalOrientation(position);
+        }
+
+        public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
+        {
+            localOrientation = new LocalOrientation(position);
+            dragExclusively = false;
+            return Selected;
+        }
+
+        public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
+        {
+            return (pos - position).LengthSquared < rangeSquared;
         }
 
         private void UpdateNodePosition()

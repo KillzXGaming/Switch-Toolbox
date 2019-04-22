@@ -16,6 +16,7 @@ using Switch_Toolbox.Library.Forms;
 using ResU = Syroot.NintenTools.Bfres;
 using Bfres.Structs;
 using GL_EditorFramework.EditorDrawables;
+using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace FirstPlugin
 {
@@ -318,7 +319,7 @@ namespace FirstPlugin
 
             SetRenderSettings(shader);
 
-            Vector4 pickingColor = control.nextPickingColor();
+            Vector4 pickingColor = control.NextPickingColor();
 
             shader.SetVector3("difLightColor", new Vector3(1));
             shader.SetVector3("ambLightColor", new Vector3(1));
@@ -1092,8 +1093,6 @@ namespace FirstPlugin
             GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
 
-        public override bool CanStartDragging() => true;
-
         public override BoundingBox GetSelectionBox()
         {
             Vector3 Min = new Vector3(0);
@@ -1149,6 +1148,32 @@ namespace FirstPlugin
         {
             Selected = false;
             return REDRAW;
+        }
+
+        public override LocalOrientation GetLocalOrientation(int partIndex)
+        {
+            return new LocalOrientation(position);
+        }
+
+        public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
+        {
+            localOrientation = new LocalOrientation(position);
+            dragExclusively = false;
+            return Selected;
+        }
+
+        public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
+        {
+            range = 20000; //Make the range large for now. Todo go back to this
+
+            BoundingBox box = GetSelectionBox();
+
+            if (pos.X < box.maxX + range && pos.X > box.minX - range &&
+              pos.Y < box.maxY + range && pos.Y > box.minY - range &&
+              pos.Z < box.maxZ + range && pos.Z > box.minZ - range)
+                return true;
+
+            return false;
         }
 
         public override uint DeselectAll(GL_ControlBase control)

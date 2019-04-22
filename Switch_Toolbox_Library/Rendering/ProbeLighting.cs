@@ -292,8 +292,10 @@ namespace Switch_Toolbox.Library.Rendering
             var Frag = new FragmentShader(
              @"#version 330
 				uniform vec3 gridColor;
+				out vec4 FragColor;
+
 				void main(){
-					gl_FragColor = vec4(gridColor, 1);
+					FragColor = vec4(gridColor, 1);
 				}");
             var Vert = new VertexShader(
               @"#version 330

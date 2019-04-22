@@ -86,7 +86,7 @@ namespace Switch_Toolbox.Library.Rendering
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT || solidColorShaderProgram == null)
                 return;
 
             bool buffersWereInitialized = vbo_position != 0;
@@ -169,9 +169,10 @@ namespace Switch_Toolbox.Library.Rendering
             var solidColorFrag = new FragmentShader(
                          @"#version 330
                 in vec3 color;
+				out vec4 FragColor;
 
 				void main(){
-					gl_FragColor = vec4(color, 0.2);
+					FragColor = vec4(color, 0.2);
 				}");
             var solidColorVert = new VertexShader(
               @"#version 330

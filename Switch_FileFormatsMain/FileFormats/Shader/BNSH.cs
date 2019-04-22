@@ -90,7 +90,7 @@ namespace FirstPlugin
                 ushort ByteOrderMark = reader.ReadUInt16();
                 byte Alignment = reader.ReadByte();
                 byte Target = reader.ReadByte();
-                FileName = reader.LoadString(0, DataType.uint32);
+                FileName = reader.LoadString(false, typeof(uint), null, 0);
                 uint PathOffset = reader.ReadUInt32();
                 uint RelocationTableOffset = reader.ReadUInt32();
                 uint FileSize = reader.ReadUInt32();

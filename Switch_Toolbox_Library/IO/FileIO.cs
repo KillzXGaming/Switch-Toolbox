@@ -158,6 +158,11 @@ namespace Switch_Toolbox.Library.IO
 
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true, CompressionType.Yaz0);
             }
+            if (MagicHex == 0x28B52FFD || MagicHex == 0xFD2FB528)
+            {
+                data = STLibraryCompression.ZSTD.Decompress(fileReader.getSection(0, data.Length));
+                return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true, CompressionType.Zstb);
+            }
             if (Magic == "ZLIB")
             {
                 if (data == null)

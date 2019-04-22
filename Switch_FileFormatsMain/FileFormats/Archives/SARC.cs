@@ -364,6 +364,8 @@ namespace FirstPlugin
                     return;
 
                 IFileFormat file = STFileLoader.OpenFileFormat(FullName, Data,false, true, this);
+                if (file == null) //File returns null if no supported format is found
+                    return; 
 
                 if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)) && !SuppressFormDialog)
                 {

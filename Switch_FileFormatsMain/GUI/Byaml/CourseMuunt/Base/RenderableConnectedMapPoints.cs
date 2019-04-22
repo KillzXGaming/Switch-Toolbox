@@ -36,9 +36,10 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             var defaultFrag = new FragmentShader(
                @"#version 330
                 vec4 LineColor;
+               out vec4 FragColor;
 
 				void main(){
-					gl_FragColor = LineColor;
+					FragColor = LineColor;
 				}");
 
             var defaultVert = new VertexShader(

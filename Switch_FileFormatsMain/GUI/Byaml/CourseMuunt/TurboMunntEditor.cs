@@ -466,7 +466,7 @@ namespace FirstPlugin.Forms
                     {
                         if (viewport.GL_ControlModern != null)
                         {
-                            viewport.GL_ControlModern.CameraEye = pathLookAtPoint.Translate;
+                          //  viewport.GL_ControlModern.CameraEye = pathLookAtPoint.Translate;
                             viewport.GL_ControlModern.CameraTarget = pathMovePoint.Translate;
 
                             viewport.UpdateViewport();

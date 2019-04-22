@@ -46,7 +46,6 @@ namespace Toolbox
 
         public MainForm()
         {
-
             FormThemes.ActivePreset = FormThemes.Preset.Dark;
 
             Runtime.MainForm = this;
@@ -111,6 +110,21 @@ namespace Toolbox
             }
 
             openedFiles.Clear();
+
+            if (Runtime.UseDebugDomainExceptionHandler)
+            {
+                AppDomain currentDomain = AppDomain.CurrentDomain;
+                currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
+            }
+        }
+
+        static void MyHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+            MessageBox.Show("MyHandler caught : " + e.Message);
+            MessageBox.Show("Runtime terminating: {0}", args.IsTerminating.ToString());
+
+           
         }
 
         private void ParseGLVersion()

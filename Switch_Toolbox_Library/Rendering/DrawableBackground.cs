@@ -46,7 +46,7 @@ namespace Switch_Toolbox.Library.Rendering
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (pass == Pass.TRANSPARENT)
+            if (pass == Pass.TRANSPARENT || solidColorShaderProgram == null)
                 return;
 
             bool buffersWereInitialized = vbo_position != 0;
