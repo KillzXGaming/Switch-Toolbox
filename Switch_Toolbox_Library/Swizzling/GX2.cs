@@ -429,6 +429,57 @@ namespace Switch_Toolbox.Library
             Console.WriteLine($"tileType      {surf.tileType}");
             Console.WriteLine($"tileIndex     {surf.tileIndex}");
         }
+
+        public static void GenerateMipSurfaceData(GX2Surface surface)
+        {
+            var surfOut = getSurfaceInfo((GX2SurfaceFormat)surface.format, surface.width, surface.height, 1, 1, surface.tileMode, 0, 0);
+
+            uint blkWidth, blkHeight;
+            if (GX2.IsFormatBCN((GX2SurfaceFormat)surface.format))
+            {
+                blkWidth = 4;
+                blkHeight = 4;
+            }
+            else
+            {
+                blkWidth = 1;
+                blkHeight = 1;
+            }
+
+            uint bpp = GX2.surfaceGetBitsPerPixel((uint)surface.format) >> 3;
+
+            surface.mipOffset = new uint[surface.numMips];
+            uint imageSize = (uint)surfOut.surfSize;
+            uint alignment = surfOut.baseAlign;
+            uint mipSize = 0;
+
+            for (int mipLevel = 0; mipLevel < surface.numMips; mipLevel++)
+            {
+                var result = TextureHelper.GetCurrentMipSize(surface.width, surface.height, blkWidth, blkHeight, bpp, mipLevel);
+
+                uint offset = result.Item1;
+                uint size = result.Item2;
+
+                byte[] data_ = new byte[size];
+
+                if (mipLevel != 0)
+                {
+                    surfOut = GX2.getSurfaceInfo((GX2SurfaceFormat)surface.format, surface.width, surface.height, 1, 1, surface.tileMode, 0, mipLevel);
+
+                    if (mipLevel == 1)
+                        surface.mipOffset[mipLevel] = imageSize;
+                    else
+                        surface.mipOffset[mipLevel] = mipSize;
+                }
+
+                data_ = Utils.CombineByteArray(data_, new byte[surfOut.surfSize - size]);
+                byte[] dataAlignBytes = new byte[RoundUp(mipSize, surfOut.baseAlign) - mipSize];
+
+                if (mipLevel != 0)
+                    mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
+            }
+        }
+
         static bool DebugSurface = false;
 
         public static GX2Surface CreateGx2Texture(byte[] imageData, string Name, uint TileMode, uint AAMode,
@@ -685,7 +736,10 @@ namespace Switch_Toolbox.Library
                         surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
                         data = new byte[surfInfo.surfSize];
 
-                        Array.Copy(tex.mipData, (uint)mipOffset, data, 0, surfInfo.surfSize);
+                        if (tex.data == tex.mipData)
+                            Array.Copy(tex.mipData, (uint)mipOffset, data, 0, surfInfo.surfSize);
+                        else
+                            Array.Copy(tex.mipData, (uint)mipOffset, data, 0, surfInfo.surfSize);
                     }
                     else
                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);

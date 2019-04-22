@@ -722,11 +722,18 @@ namespace FirstPlugin
                     surf.pitch = 0;
                     surf.data = data;
                     surf.numMips = MipCount;
-                    surf.mipOffset = new uint[0];
+                    surf.mipOffset = new uint[MipCount];
                     surf.mipData = null;
                     surf.tileMode = TileMode;
                     surf.swizzle = Swizzle;
                     surf.imageSize = ImageSize;
+
+                   // GX2.GenerateMipSurfaceData(surf);
+
+                    foreach (var mipoffset in surf.mipOffset)
+                    {
+                        Console.WriteLine($"mipoffset {mipoffset}");
+                    }
 
                     var surfaces = GX2.Decode(surf);
                     return surfaces[ArrayLevel][MipLevel];

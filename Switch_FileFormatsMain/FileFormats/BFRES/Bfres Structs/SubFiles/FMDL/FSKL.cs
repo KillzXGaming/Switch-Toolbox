@@ -415,7 +415,10 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Bone.Export(sfd.FileName, GetResFile());
+                if (BoneU != null)
+                    BoneU.Export(sfd.FileName, GetResFileU());
+                else
+                    Bone.Export(sfd.FileName, GetResFile());
             }
         }
         public void Replace()
@@ -425,8 +428,16 @@ namespace Bfres.Structs
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Bone.Import(ofd.FileName);
-                Bone.Name = Text;
+                if (BoneU != null)
+                {
+                    BoneU.Import(ofd.FileName, GetResFileU());
+                    BoneU.Name = Text;
+                }
+                else
+                {
+                    Bone.Import(ofd.FileName);
+                    Bone.Name = Text;
+                }
             }
         }
 
