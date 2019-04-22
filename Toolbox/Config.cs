@@ -167,6 +167,9 @@ namespace Toolbox
                     case "renderBoundingBoxes":
                         bool.TryParse(node.InnerText, out Runtime.renderBoundingBoxes);
                         break;
+                    case "UseViewport":
+                        bool.TryParse(node.InnerText, out Runtime.UseViewport);
+                        break;
                 }
             }
         }
@@ -274,6 +277,8 @@ namespace Toolbox
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
 
+            
+            mainSettingsNode.AppendChild(createNode(doc, "UseViewport", Runtime.UseViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));

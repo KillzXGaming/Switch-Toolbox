@@ -72,9 +72,6 @@ namespace Toolbox
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //Create an instance of this to help load open gl data easier and quicker after boot
-            var viewport = new Viewport(false);
-
             VersionCheck version = new VersionCheck();
             Runtime.ProgramVersion = version.ProgramVersion;
             Runtime.CommitInfo = version.CommitInfo;
@@ -86,14 +83,20 @@ namespace Toolbox
 
             Application.Idle += Application_Idle;
 
-            if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
+            if (Runtime.UseViewport)
             {
-                Runtime.OpenTKInitialized = true;
+                //Create an instance of this to help load open gl data easier and quicker after boot
+                var viewport = new Viewport(false);
 
-                Runtime.renderer = GL.GetString(StringName.Renderer);
-                Runtime.openGLVersion = GL.GetString(StringName.Version);
-                Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
-                ParseGLVersion();
+                if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
+                {
+                    Runtime.OpenTKInitialized = true;
+
+                    Runtime.renderer = GL.GetString(StringName.Renderer);
+                    Runtime.openGLVersion = GL.GetString(StringName.Version);
+                    Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
+                    ParseGLVersion();
+                }
             }
 
             LoadPLugins();

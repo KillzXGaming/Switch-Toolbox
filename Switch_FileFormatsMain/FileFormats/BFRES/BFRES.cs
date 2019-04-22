@@ -290,8 +290,9 @@ namespace FirstPlugin
                     foreach (var mdl in BFRESRender.models)
                         drawables.Add(mdl.Skeleton);
                 }
-                bfresEditor.LoadViewport(drawables, toolstrips);
 
+                if (Runtime.UseViewport)
+                    bfresEditor.LoadViewport(drawables, toolstrips);
 
                 if (!IsLoaded)
                 {

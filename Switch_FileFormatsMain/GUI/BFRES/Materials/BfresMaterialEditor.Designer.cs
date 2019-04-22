@@ -38,7 +38,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.samplerEditor1 = new Forms.SamplerEditor();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.uvEditor1 = new Switch_Toolbox.Library.Forms.UVEditor();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.shaderParamEditor1 = new Forms.ShaderParamEditor();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -151,7 +150,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.uvEditor1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -159,16 +157,6 @@
             this.tabPage1.TabIndex = 6;
             this.tabPage1.Text = "UV View";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // uvEditor1
-            // 
-            this.uvEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uvEditor1.Location = new System.Drawing.Point(3, 3);
-            this.uvEditor1.Name = "uvEditor1";
-            this.uvEditor1.Size = new System.Drawing.Size(524, 504);
-            this.uvEditor1.TabIndex = 0;
-            this.uvEditor1.Load += new System.EventHandler(this.uvEditor1_Load);
-            this.uvEditor1.Click += new System.EventHandler(this.uvEditor1_Click);
             // 
             // tabPage3
             // 
@@ -394,7 +382,6 @@
         private RenderInfoEditor renderInfoEditor1;
         private ShaderOptionsEditor shaderOptionsEditor1;
         private System.Windows.Forms.TabPage tabPage1;
-        private Switch_Toolbox.Library.Forms.UVEditor uvEditor1;
         private Switch_Toolbox.Library.Forms.STLabel stLabel1;
         private Switch_Toolbox.Library.Forms.STButton btnViotileFlags;
         private Switch_Toolbox.Library.Forms.STButton btnSamplerInputEditor;

@@ -36,6 +36,9 @@ namespace FirstPlugin.Forms
         {
 
         }
+
+        UVEditor uvEditor1 = null;
+
         public void LoadMaterial(FMAT mat)
         {
             if (mat.MaterialU != null)
@@ -67,6 +70,21 @@ namespace FirstPlugin.Forms
             chkboxVisible.Bind(material, "Enabled");
 
             FillForm();
+
+            if (Runtime.UseViewport)
+            {
+                LoadUVEditor();
+            }
+        }
+
+        private void LoadUVEditor()
+        {
+            uvEditor1 = new UVEditor();
+
+            this.uvEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uvEditor1.Load += new System.EventHandler(this.uvEditor1_Load);
+            this.uvEditor1.Click += new System.EventHandler(this.uvEditor1_Click);
+            this.tabPage1.Controls.Add(this.uvEditor1);
 
             uvEditor1.ActiveObjects.Clear();
             uvEditor1.Textures.Clear();
@@ -105,6 +123,7 @@ namespace FirstPlugin.Forms
             uvEditor1.ActiveMaterial = material;
             uvEditor1.Refresh();
         }
+
         private UVEditor.ActiveTexture LoadTextureUvMap(STGenericMatTexture texmap, STGenericTexture genericTexture)
         {
             Vector2 scale = new Vector2(1);

@@ -104,6 +104,8 @@ namespace Switch_Toolbox.Library
 
         public static bool renderFloorLines = true;
 
+        public static bool UseViewport = true;
+
         //Viewport Background
         public static BackgroundStyle backgroundStyle = BackgroundStyle.Gradient;
         public static bool renderBackGround = true;

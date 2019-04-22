@@ -20,7 +20,10 @@ namespace FirstPlugin.Forms
         {
             get
             {
-               var editor = LibraryGUI.Instance.GetObjectEditor();
+                if (!Runtime.UseViewport)
+                    return null;
+
+                var editor = LibraryGUI.Instance.GetObjectEditor();
                return editor.GetViewport();
             }
             set
@@ -50,13 +53,14 @@ namespace FirstPlugin.Forms
             stTabControl2.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
 
-            if (viewport == null)
+            if (viewport == null && Runtime.UseViewport)
             {
                 viewport = new Viewport();
                 viewport.Dock = DockStyle.Fill;
             }
 
-            stPanel5.Controls.Add(viewport);
+            if (Runtime.UseViewport)
+                stPanel5.Controls.Add(viewport);
 
             OnLoadedTab();
 
@@ -93,7 +97,7 @@ namespace FirstPlugin.Forms
 
         public void UpdateViewport()
         {
-            if (viewport != null)
+            if (viewport != null && Runtime.UseViewport)
                 viewport.UpdateViewport();
         }
 
@@ -103,6 +107,9 @@ namespace FirstPlugin.Forms
 
         public void LoadViewport(List<AbstractGlDrawable> drawables, List<ToolStripMenuItem> customContextMenus = null)
         {
+            if (!Runtime.UseViewport)
+                return;
+
             Drawables = drawables;
 
             if (customContextMenus != null)
@@ -114,6 +121,9 @@ namespace FirstPlugin.Forms
 
         public void AddDrawable(AbstractGlDrawable draw)
         {
+            if (!Runtime.UseViewport)
+                return;
+
             Drawables.Add(draw);
 
             if (!viewport.scene.staticObjects.Contains(draw) &&
@@ -125,6 +135,9 @@ namespace FirstPlugin.Forms
 
         public void RemoveDrawable(AbstractGlDrawable draw)
         {
+            if (!Runtime.UseViewport)
+                return;
+
             Drawables.Remove(draw);
             viewport.RemoveDrawable(draw);
         }
@@ -137,7 +150,7 @@ namespace FirstPlugin.Forms
         public void OnLoadedTab()
         {
             //If a model was loaded we don't need to load the drawables again
-            if (IsLoaded || Drawables == null)
+            if (IsLoaded || Drawables == null || !Runtime.UseViewport)
                 return;
 
             foreach (var draw in Drawables)
