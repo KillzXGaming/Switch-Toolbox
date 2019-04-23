@@ -1122,6 +1122,23 @@
             </summary>
             <returns>The value of the <see cref="P:Syroot.NintenTools.Bfres.ResString.String"/> property.</returns>
         </member>
+        <member name="M:Syroot.NintenTools.Bfres.SetProperty.SetBrowsableProperty``1(System.String,System.Boolean)">
+            <summary>
+            Set the Browsable property.
+            NOTE: Be sure to decorate the property with [Browsable(true)]
+            </summary>
+            <param name="PropertyName">Name of the variable</param>
+            <param name="bIsBrowsable">Browsable Value</param>
+        </member>
+        <member name="M:Syroot.NintenTools.Bfres.SetProperty.SetBrowsableProperty``1(``0,System.String,System.Boolean)">
+            <summary>
+            Set the Browsable property.
+            NOTE: Be sure to decorate the property with [Browsable(true)]
+            </summary>
+            <param name="obj">An instance of the object whose property should be modified.</param>
+            <param name="PropertyName">Name of the variable</param>
+            <param name="bIsBrowsable">Browsable Value</param>
+        </member>
         <member name="T:Syroot.NintenTools.Bfres.Srt2D">
             <summary>
             Represents a 2D transformation.
