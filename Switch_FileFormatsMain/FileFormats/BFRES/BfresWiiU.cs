@@ -336,6 +336,7 @@ namespace FirstPlugin
                 nodes++;
             }
 
+            RenderableSkeleton.bones.Clear();
             foreach (Bone bone in skeleton.Bones.Values)
             {
                 BfresBone STBone = new BfresBone(RenderableSkeleton);

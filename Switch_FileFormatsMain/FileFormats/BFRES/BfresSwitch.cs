@@ -517,12 +517,15 @@ namespace FirstPlugin
                 nodes++;
             }
 
+            RenderableSkeleton.bones.Clear();
             foreach (Bone bone in skeleton.Bones)
             {
                 BfresBone STBone = new BfresBone(RenderableSkeleton);
                 ReadBone(STBone, bone);
                 RenderableSkeleton.bones.Add(STBone);
             }
+
+            skl.Nodes.Clear();
             foreach (var bone in RenderableSkeleton.bones){
                 if (bone.Parent == null)
                 {
