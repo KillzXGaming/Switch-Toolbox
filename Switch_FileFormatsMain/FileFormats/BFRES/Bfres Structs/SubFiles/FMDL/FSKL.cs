@@ -49,7 +49,8 @@ namespace Bfres.Structs
             public ResU.Skeleton SkeletonU;
 
             public override string ExportFilter => FileFilters.GetFilter(typeof(FSKL));
-            public override string ImportFilter => FileFilters.GetFilter(typeof(FSKL));
+            public override string ImportFilter => FileFilters.GetFilter(typeof(BfresBone));
+            public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSKL));
 
             public BFRESRender GetRenderer()
             {
@@ -71,6 +72,7 @@ namespace Bfres.Structs
             {
                 ContextMenuStrip = new STContextMenuStrip();
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Bone", null, ImportAction, Keys.Control | Keys.I));
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Bones", null, ExportAllAction, Keys.Control | Keys.B));
                 ContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Matching Bones (From Skeleton)", null, ReplaceMatchingFileAction, Keys.Control | Keys.S));
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Matching Bones (From Folder)", null, ReplaceMatchingFolderAction, Keys.Control | Keys.F));
@@ -79,13 +81,52 @@ namespace Bfres.Structs
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
             }
 
+            protected void ExportAllAction(object sender, EventArgs args) { ExportAl(); }
             protected void ReplaceMatchingFileAction(object sender, EventArgs args) { ReplaceMatchingFile(); }
             protected void ReplaceMatchingFolderAction(object sender, EventArgs args) { ReplaceMatchingFolder(); }
+
+            public void ExportAl()
+            {
+                if (Nodes.Count <= 0)
+                    return;
+
+                string formats = FileFilters.BONE;
+
+                string[] forms = formats.Split('|');
+
+                List<string> Formats = new List<string>();
+
+                for (int i = 0; i < forms.Length; i++)
+                {
+                    if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
+                    {
+                        if (!forms[i].StartsWith("*"))
+                            Formats.Add(forms[i]);
+                    }
+                }
+
+                FolderSelectDialog sfd = new FolderSelectDialog();
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = sfd.SelectedPath;
+
+                    BatchFormatExport form = new BatchFormatExport(Formats);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        string extension = form.GetSelectedExtension();
+
+                        foreach (BfresBone node in fskl.bones)
+                        {
+                            ((BfresBone)node).Export($"{folderPath}\\{node.Text}{extension}");
+                        }
+                    }
+                }
+            }
 
             public void ReplaceMatchingFile( )
             {
                 OpenFileDialog ofd = new OpenFileDialog();
-                ofd.DefaultExt = ImportFilter;
+                ofd.DefaultExt = ReplaceFilter;
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
@@ -541,13 +582,24 @@ namespace Bfres.Structs
             sfd.FileName = Text;
 
             if (sfd.ShowDialog() == DialogResult.OK)
+                Export(sfd.FileName);
+        }
+
+        public void Export(string FileName)
+        {
+            string extension = System.IO.Path.GetExtension(FileName);
+
+            switch (extension)
             {
-                if (BoneU != null)
-                    BoneU.Export(sfd.FileName, GetResFileU());
-                else
-                    Bone.Export(sfd.FileName, GetResFile());
+                default:
+                    if (BoneU != null)
+                        BoneU.Export(FileName, GetResFileU());
+                    else
+                        Bone.Export(FileName, GetResFile());
+                    break;
             }
         }
+
         public void Replace()
         {
             OpenFileDialog ofd = new OpenFileDialog();
