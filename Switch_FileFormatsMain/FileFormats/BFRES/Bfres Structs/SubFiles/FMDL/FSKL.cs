@@ -72,8 +72,104 @@ namespace Bfres.Structs
                 ContextMenuStrip = new STContextMenuStrip();
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Bone", null, ImportAction, Keys.Control | Keys.I));
                 ContextMenuStrip.Items.Add(new ToolStripSeparator());
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Matching Bones (From Skeleton)", null, ReplaceMatchingFileAction, Keys.Control | Keys.S));
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Matching Bones (From Folder)", null, ReplaceMatchingFolderAction, Keys.Control | Keys.F));
+                ContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Skeleton", null, ExportAction, Keys.Control | Keys.E));
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
+            }
+
+            protected void ReplaceMatchingFileAction(object sender, EventArgs args) { ReplaceMatchingFile(); }
+            protected void ReplaceMatchingFolderAction(object sender, EventArgs args) { ReplaceMatchingFolder(); }
+
+            public void ReplaceMatchingFile( )
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.DefaultExt = ImportFilter;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    string extension = System.IO.Path.GetExtension(ofd.FileName);
+
+                    if (extension == ".bfskl")
+                    {
+                        if (SkeletonU != null)
+                        {
+                            ResU.Skeleton SkeltonTemp = new ResU.Skeleton();
+                            SkeltonTemp.Import(ofd.FileName, GetResFileU());
+                          
+                            foreach (BfresBone bone in fskl.bones)
+                            {
+                                if (SkeltonTemp.Bones.ContainsKey(bone.Text))
+                                    bone.CopyData(SkeltonTemp.Bones[bone.Text]);
+                            }
+
+                            BfresWiiU.ReadSkeleton(this, SkeletonU, fskl);
+                        }
+                        else
+                        {
+                            Skeleton = new Skeleton();
+                            Skeleton.Import(ofd.FileName);
+
+                            Skeleton SkeltonTemp = new Skeleton();
+                            SkeltonTemp.Import(ofd.FileName);
+
+                            foreach (BfresBone bone in fskl.bones)
+                            {
+                                if (SkeltonTemp.BoneDict.ContainsKey(bone.Text))
+                                {
+                                    int index = SkeltonTemp.BoneDict.GetIndex(bone.Text);
+                                    bone.CopyData(SkeltonTemp.Bones[index]);
+                                }
+                            }
+
+                            BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
+                        }
+                    }
+                }
+            }
+
+            public void ReplaceMatchingFolder()
+            {
+                FolderSelectDialog ofd = new FolderSelectDialog();
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (var file in System.IO.Directory.GetFiles(ofd.SelectedPath))
+                    {
+                        string extension = System.IO.Path.GetExtension(file);
+
+                        if (extension == ".bfbon")
+                        {
+                            if (SkeletonU != null)
+                            {
+                                ResU.Bone BoneTemp = new ResU.Bone();
+                                BoneTemp.Import(file, GetResFileU());
+
+                                foreach (BfresBone bone in fskl.bones)
+                                {
+                                    if (BoneTemp.Name == bone.Text)
+                                        bone.CopyData(BoneTemp);
+                                }
+
+                                BfresWiiU.ReadSkeleton(this, SkeletonU, fskl);
+                            }
+                            else
+                            {
+                                Bone BoneTemp = new Bone();
+                                BoneTemp.Import(file);
+
+                                foreach (BfresBone bone in fskl.bones)
+                                {
+                                    if (BoneTemp.Name == bone.Text)
+                                        bone.CopyData(BoneTemp);
+                                }
+
+                                BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
+                            }
+                        }
+                    }
+                }
             }
 
             public override void Replace(string FileName)
@@ -203,6 +299,40 @@ namespace Bfres.Structs
                 else Bone.Name = value;
                 Text = value;
             }
+        }
+
+        public void CopyData(ResU.Bone newBone)
+        {
+            BoneU.BillboardIndex = newBone.BillboardIndex;
+            BoneU.Flags = newBone.Flags;
+            BoneU.FlagsBillboard = newBone.FlagsBillboard;
+            BoneU.FlagsRotation = newBone.FlagsRotation;
+            BoneU.FlagsTransform = newBone.FlagsTransform;
+            BoneU.FlagsTransformCumulative = newBone.FlagsTransformCumulative;
+            BoneU.InverseMatrix = newBone.InverseMatrix;
+            BoneU.ParentIndex = newBone.ParentIndex;
+            BoneU.RigidMatrixIndex = newBone.RigidMatrixIndex;
+            BoneU.SmoothMatrixIndex = newBone.SmoothMatrixIndex;
+            BoneU.Position = newBone.Position;
+            BoneU.Rotation = newBone.Rotation;
+            BoneU.Scale = newBone.Scale;
+            BoneU.UserData = newBone.UserData;
+        }
+        public void CopyData(Bone newBone)
+        {
+            Bone.BillboardIndex = newBone.BillboardIndex;
+            Bone.Flags = newBone.Flags;
+            Bone.FlagsBillboard = newBone.FlagsBillboard;
+            Bone.FlagsRotation = newBone.FlagsRotation;
+            Bone.FlagsTransform = newBone.FlagsTransform;
+            Bone.FlagsTransformCumulative = newBone.FlagsTransformCumulative;
+            Bone.ParentIndex = newBone.ParentIndex;
+            Bone.RigidMatrixIndex = newBone.RigidMatrixIndex;
+            Bone.SmoothMatrixIndex = newBone.SmoothMatrixIndex;
+            Bone.Position = newBone.Position;
+            Bone.Rotation = newBone.Rotation;
+            Bone.Scale = newBone.Scale;
+            Bone.UserData = newBone.UserData;
         }
 
         public bool FlagVisible = true;

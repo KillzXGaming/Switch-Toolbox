@@ -431,7 +431,7 @@ namespace FirstPlugin.Forms
                 texSampler.DepthCompareEnabled = false;
                 texSampler.DepthCompareFunc = ResUGX2.GX2CompareFunction.Never;
                 texSampler.MagFilter = ResUGX2.GX2TexXYFilterType.Point;
-                texSampler.MaxAnisotropicRatio = ResUGX2.GX2TexAnisoRatio.TwoToOne;
+                texSampler.MaxAnisotropicRatio = ResUGX2.GX2TexAnisoRatio.Ratio_1_1;
                 texSampler.MinFilter = ResUGX2.GX2TexXYFilterType.Point;
                 texSampler.MipFilter = ResUGX2.GX2TexMipFilterType.Linear;
                 texSampler.ZFilter = 0;
