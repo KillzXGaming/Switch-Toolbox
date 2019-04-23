@@ -281,7 +281,7 @@ namespace Bfres.Structs
                 BoneU.Rotation = new Syroot.Maths.Vector4F(rotation[0], rotation[1], rotation[2], rotation[3]);
                 BoneU.Name = Text;
                 BoneU.Flags = FlagVisible ? ResU.BoneFlags.Visible : 0;
-                BoneU.ParentIndex = (ushort)parentIndex;
+                BoneU.ParentIndex = (short)parentIndex;
                 BoneU.SmoothMatrixIndex = SmoothMatrixIndex;
                 BoneU.RigidMatrixIndex = RigidMatrixIndex;
 
@@ -294,7 +294,7 @@ namespace Bfres.Structs
                 Bone.Rotation = new Syroot.Maths.Vector4F(rotation[0], rotation[1], rotation[2], rotation[3]);
                 Bone.Name = Text;
                 Bone.Flags = FlagVisible ? BoneFlags.Visible : 0;
-                Bone.ParentIndex = (ushort)parentIndex;
+                Bone.ParentIndex = (short)parentIndex;
                 Bone.SmoothMatrixIndex = SmoothMatrixIndex;
                 Bone.RigidMatrixIndex = RigidMatrixIndex;
 
@@ -341,7 +341,7 @@ namespace Bfres.Structs
                 Nodes.Add(bn);
                 skeletonParent.bones.Add(bn);
 
-                BoneU.ParentIndex = (ushort)bn.parentIndex;
+                BoneU.ParentIndex = (short)bn.parentIndex;
                 ((FSKL)skeletonParent).AddBone(BoneU);
             }
             else

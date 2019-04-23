@@ -271,7 +271,7 @@ namespace Switch_Toolbox.Library
 
         public void DisposeRenderable()
         {
-            if (RenderableTex != null)
+            if (RenderableTex != null && Runtime.UseViewport)
             {
                 RenderableTex.Dispose();
                 RenderableTex = null;

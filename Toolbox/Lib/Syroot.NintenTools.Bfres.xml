@@ -2968,6 +2968,7 @@
             <summary>
             Gets or sets the minimum LoD level.
             </summary>
+            
         </member>
         <member name="P:Syroot.NintenTools.Bfres.GX2.TexSampler.MaxLod">
             <summary>

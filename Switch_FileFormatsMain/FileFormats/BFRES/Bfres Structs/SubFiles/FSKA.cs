@@ -221,13 +221,16 @@ namespace Bfres.Structs
             Nodes.Clear();
             Bones.Clear();
 
-            foreach (BoneAnim bn in ska.BoneAnims)
+            for (int i = 0; i < ska.BoneAnims.Count; i++)
             {
+                var bn = ska.BoneAnims[i];
+
                 BoneAnimNode bone = new BoneAnimNode(bn.Name, false);
                 bone.BoneAnim = bn;
                 bone.UseSegmentScaleCompensate = bn.ApplySegmentScaleCompensate;
 
                 Bones.Add(bone);
+                Nodes.Add(bone);
 
                 if (ska.FlagsRotate == SkeletalAnimFlagsRotate.EulerXYZ)
                     bone.RotType = Animation.RotationType.EULER;
@@ -287,6 +290,7 @@ namespace Bfres.Structs
                 bone.UseSegmentScaleCompensate = bn.ApplySegmentScaleCompensate;
 
                 Bones.Add(bone);
+            //    Nodes.Add(bone);
 
                 if (ska.FlagsRotate == ResU.SkeletalAnimFlagsRotate.EulerXYZ)
                     bone.RotType = Animation.RotationType.EULER;

@@ -916,7 +916,7 @@ namespace FirstPlugin
             ushort SmoothIndex = 0;
             foreach (STBone genericBone in Bones)
             {
-                genericBone.BillboardIndex = ushort.MaxValue;
+                genericBone.BillboardIndex = -1;
 
                 //Clone a generic bone with the generic data
                 BfresBone bn = new BfresBone(fskl);

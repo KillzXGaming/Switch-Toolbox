@@ -321,3 +321,4 @@ C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Toolbox\bin\Release\Lib\Plugins
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.CopyComplete
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.CollisionMaterialEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.MSBTEditor.resources
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.SamplerEditorSimple.resources

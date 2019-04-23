@@ -82,15 +82,28 @@ namespace FirstPlugin
             }
             private void AdvancedEditor(object sender, EventArgs args)
             {
+                BFRES file = null;
+
+                ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+                if (editor != null)
+                {
+                    file = (BFRES)editor.GetActiveFile();                }
+
                 if (editExt[0].Checked)
                 {
                     editExt[0].Checked = false;
                     PluginRuntime.UseSimpleBfresEditor = true;
+
+                    if (file != null)
+                        file.LoadSimpleMode();
                 }
                 else
                 {
                     editExt[0].Checked = true;
                     PluginRuntime.UseSimpleBfresEditor = false;
+
+                    if (file != null)
+                        file.LoadAdvancedMode();
                 }
             }
             private void NewWiiUBfres(object sender, EventArgs args)
@@ -189,6 +202,74 @@ namespace FirstPlugin
             drawables.Remove(skeleton);
         }
 
+        public void LoadAdvancedMode()
+        {
+            foreach (var model in BFRESRender.models)
+            {
+                foreach (var mat in model.materials.Values)
+                {
+                    foreach (var tex in mat.TextureMaps)
+                    {
+                        mat.Nodes.RemoveByKey(tex.Name);
+                    }
+                }
+            }
+        }
+
+        public void LoadSimpleMode()
+        {
+            ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+            if (editor == null)
+                return;
+
+            editor.treeViewCustom1.BeginUpdate();
+
+            foreach (var model in BFRESRender.models)
+            {
+                foreach (var mat in model.materials.Values)
+                {
+                    mat.Nodes.Clear();
+
+                    foreach (MatTexture tex in mat.TextureMaps)
+                    {
+                        mat.Nodes.Add(new MatTextureWrapper(tex.Name, tex.Name, tex));
+                    }
+                }
+            }
+
+            foreach (TreeNode node in Nodes)
+            {
+               if (node is BFRESAnimFolder)
+                {
+                    foreach (BFRESGroupNode animFolder in node.Nodes)
+                    {
+                        if (animFolder.Type == BRESGroupType.SkeletalAnim)
+                        {
+                            foreach (FSKA anim in animFolder.Nodes)
+                            {
+                                foreach (FSKA.BoneAnimNode bone in ((FSKA)anim).Bones)
+                                {
+                                    int index = 0;
+                                    if (bone.BoneAnimU != null)
+                                    {
+                                        foreach (var curve in bone.BoneAnimU.Curves)
+                                            bone.Nodes.Add("Anim Curve " + index++);
+                                    }
+                                    else
+                                    {
+                                        foreach (var curve in bone.BoneAnim.Curves)
+                                            bone.Nodes.Add("Anim Curve " + index++);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            editor.treeViewCustom1.EndUpdate();
+        }
+
         List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
         public void LoadEditors(object SelectedSection)
         {
@@ -196,6 +277,20 @@ namespace FirstPlugin
 
             if (IsSimpleEditor)
             {
+                if (SelectedSection is MatTextureWrapper)
+                {
+                    SamplerEditorSimple editorT = (SamplerEditorSimple)LibraryGUI.Instance.GetActiveContent(typeof(SamplerEditorSimple));
+                    if (editorT == null)
+                    {
+                        editorT = new SamplerEditorSimple();
+                        editorT.Dock = DockStyle.Fill;
+                        LibraryGUI.Instance.LoadEditor(editorT);
+                    }
+                    editorT.Text = Text;
+                    editorT.LoadTexture(((MatTextureWrapper)SelectedSection).textureMap);
+                    return;
+                }
+
                 STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
                 if (editor == null)
                 {
@@ -231,7 +326,7 @@ namespace FirstPlugin
                     if (((FMAT)SelectedSection).MaterialU != null)
                         editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
                     else
-                        editor.LoadProperty(((FMAT)SelectedSection).MaterialU, OnPropertyChanged);
+                        editor.LoadProperty(((FMAT)SelectedSection).Material, OnPropertyChanged);
                 }
                 else if (SelectedSection is BfresBone)
                 {
@@ -240,12 +335,12 @@ namespace FirstPlugin
                     else
                         editor.LoadProperty(((BfresBone)SelectedSection).Bone, OnPropertyChanged);
                 }
-                else if (SelectedSection is FSKL)
+                else if (SelectedSection is FSKL.fsklNode)
                 {
-                    if (((FSKL)SelectedSection).node.SkeletonU != null)
-                        editor.LoadProperty(((FSKL)SelectedSection).node.SkeletonU, OnPropertyChanged);
+                    if (((FSKL.fsklNode)SelectedSection).SkeletonU != null)
+                        editor.LoadProperty(((FSKL.fsklNode)SelectedSection).SkeletonU, OnPropertyChanged);
                     else
-                        editor.LoadProperty(((FSKL)SelectedSection).node.Skeleton, OnPropertyChanged);
+                        editor.LoadProperty(((FSKL.fsklNode)SelectedSection).Skeleton, OnPropertyChanged);
                 }
                 else if (SelectedSection is FSKA)
                 {
@@ -287,8 +382,9 @@ namespace FirstPlugin
                 {
                     //Add drawables
                     drawables.Add(BFRESRender);
-                    foreach (var mdl in BFRESRender.models)
-                        drawables.Add(mdl.Skeleton);
+
+                    for (int m = 0; m < BFRESRender.models.Count; m++)
+                        drawables.Add(BFRESRender.models[m].Skeleton);
                 }
 
                 if (Runtime.UseViewport)
@@ -496,7 +592,6 @@ namespace FirstPlugin
                 reader.Position = 0;
             }
 
-
             LoadMenus(IsWiiU);
 
        
@@ -504,15 +599,15 @@ namespace FirstPlugin
             BFRESRender.ModelTransform = MarioCostumeEditor.SetTransform(FileName);
             BFRESRender.ResFileNode = this;
 
+
             if (IsWiiU)
             {
-                BFRESRender.LoadFile(new Syroot.NintenTools.Bfres.ResFile(stream));
+                LoadFile(new Syroot.NintenTools.Bfres.ResFile(stream));
             }
             else
             {
-                BFRESRender.LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(stream));
+                LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(stream));
             }
-
         }
         public void Unload()
         {
@@ -555,7 +650,7 @@ namespace FirstPlugin
             LoadEditors(this);
         }
 
-        public void Load(ResU.ResFile res)
+        public void LoadFile(ResU.ResFile res)
         {
             CanDelete = true;
 
@@ -578,18 +673,18 @@ namespace FirstPlugin
 
             if (resFileU.Models.Count > 0)
             {
-                foreach (ResU.Model mdl in resFileU.Models.Values)
+                for (int i = 0; i < resFileU.Models.Count; i++)
                 {
                     var fmdl = new FMDL();
-                    BfresWiiU.ReadModel(fmdl, mdl);
+                    BfresWiiU.ReadModel(fmdl, resFileU.Models[i]);
                     modelFolder.AddNode(fmdl);
                 }
             }
             if (resFileU.Textures.Count > 0)
             {
-                foreach (ResU.Texture tex in resFileU.Textures.Values)
+                for (int i = 0; i < resFileU.Textures.Count; i++)
                 {
-                    var ftex = new FTEX(tex);
+                    var ftex = new FTEX(resFileU.Textures[i]);
                     texturesFolder.AddNode(ftex);
                     ftex.UpdateMipMaps();
                 }
@@ -599,72 +694,72 @@ namespace FirstPlugin
                 var group = new BFRESGroupNode(BRESGroupType.SkeletalAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.SkeletalAnim anim in resFileU.SkeletalAnims.Values)
-                    group.AddNode(new FSKA(anim));
+                for (int i = 0; i < resFileU.SkeletalAnims.Count; i++)
+                    group.AddNode(new FSKA(resFileU.SkeletalAnims[i]));
             }
             if (resFileU.ShaderParamAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.ShaderParamAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.ShaderParamAnim anim in resFileU.ShaderParamAnims.Values)
-                    group.AddNode(new FSHU(anim, MaterialAnimation.AnimationType.ShaderParam));
+                for (int i = 0; i < resFileU.ShaderParamAnims.Count; i++)
+                    group.AddNode(new FSHU(resFileU.ShaderParamAnims[i], MaterialAnimation.AnimationType.ShaderParam));
             }
             if (resFileU.ColorAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.ColorAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.ShaderParamAnim anim in resFileU.ColorAnims.Values)
-                    group.AddNode(new FSHU(anim, MaterialAnimation.AnimationType.Color));
+                for (int i = 0; i < resFileU.ColorAnims.Count; i++)
+                    group.AddNode(new FSHU(resFileU.ColorAnims[i], MaterialAnimation.AnimationType.Color));
             }
             if (resFileU.TexSrtAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.TexSrtAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.ShaderParamAnim anim in resFileU.TexSrtAnims.Values)
-                    group.AddNode(new FSHU(anim, MaterialAnimation.AnimationType.TexturePattern));
+                for (int i = 0; i < resFileU.TexSrtAnims.Count; i++)
+                    group.AddNode(new FSHU(resFileU.TexSrtAnims[i], MaterialAnimation.AnimationType.TexturePattern));
             }
             if (resFileU.TexPatternAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.TexPatAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.TexPatternAnim anim in resFileU.TexPatternAnims.Values)
-                    group.AddNode(new FTXP(anim));
+                for (int i = 0; i < resFileU.TexPatternAnims.Count; i++)
+                    group.AddNode(new FTXP(resFileU.TexPatternAnims[i]));
             }
             if (resFileU.ShapeAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.ShapeAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.ShapeAnim anim in resFileU.ShapeAnims.Values)
-                    group.AddNode(new FSHA(anim));
+                for (int i = 0; i < resFileU.ShapeAnims.Count; i++)
+                    group.AddNode(new FSHA(resFileU.ShapeAnims[i]));
             }
             if (resFileU.BoneVisibilityAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.BoneVisAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.VisibilityAnim anim in resFileU.BoneVisibilityAnims.Values)
-                    group.AddNode(new FVIS(anim));
+                for (int i = 0; i < resFileU.BoneVisibilityAnims.Count; i++)
+                    group.AddNode(new FVIS(resFileU.BoneVisibilityAnims[i]));
             }
             if (resFileU.MatVisibilityAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.MatVisAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.VisibilityAnim anim in resFileU.BoneVisibilityAnims.Values)
-                    group.AddNode(new FVIS(anim));
+                for (int i = 0; i < resFileU.MatVisibilityAnims.Count; i++)
+                    group.AddNode(new FVIS(resFileU.MatVisibilityAnims[i]));
             }
             if (resFileU.SceneAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.SceneAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ResU.SceneAnim anim in resFileU.SceneAnims.Values)
-                    group.AddNode(new FSCN(anim));
+                for (int i = 0; i < resFileU.SceneAnims.Count; i++)
+                    group.AddNode(new FSCN(resFileU.SceneAnims[i]));
             }
             if (resFileU.ExternalFiles.Count > 0)
             {
@@ -673,8 +768,11 @@ namespace FirstPlugin
                     externalFilesFolder.AddNode(new ExternalFileData(anim.Key, anim.Value.Data));
                 }
             }
+
+            if (PluginRuntime.UseSimpleBfresEditor)
+                LoadSimpleMode();
         }
-        public void Load(ResFile res)
+        public void LoadFile(ResFile res)
         {
             resFile = res;
 
@@ -700,10 +798,10 @@ namespace FirstPlugin
 
             if (resFile.Models.Count > 0)
             {
-                foreach (Model mdl in resFile.Models)
+                for (int i = 0; i < resFile.Models.Count; i++)
                 {
                     var fmdl = new FMDL();
-                    BfresSwitch.ReadModel(fmdl, mdl);
+                    BfresSwitch.ReadModel(fmdl, resFile.Models[i]);
                     modelFolder.AddNode(fmdl);
                 }
             }
@@ -712,8 +810,8 @@ namespace FirstPlugin
                 var group = new BFRESGroupNode(BRESGroupType.SkeletalAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (SkeletalAnim anim in resFile.SkeletalAnims)
-                    group.AddNode(new FSKA(anim));
+                for (int i = 0; i < resFile.SkeletalAnims.Count; i++)
+                    group.AddNode(new FSKA(resFile.SkeletalAnims[i]));
             }
             if (resFile.MaterialAnims.Count > 0)
             {
@@ -731,8 +829,9 @@ namespace FirstPlugin
                 bool HasMatVisAnim = false;
                 bool HasMaterialAnim = false;
 
-                foreach (MaterialAnim anim in resFile.MaterialAnims)
+                for (int i = 0; i < resFile.MaterialAnims.Count; i++)
                 {
+                    var anim = resFile.MaterialAnims[i];
                     if (FMAA.IsShaderParamAnimation(anim.Name))
                     {
                         group.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.ShaderParam));
@@ -783,24 +882,24 @@ namespace FirstPlugin
                 var group = new BFRESGroupNode(BRESGroupType.BoneVisAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (VisibilityAnim anim in resFile.BoneVisibilityAnims)
-                    group.AddNode(new FVIS(anim));
+                for (int i = 0; i < resFile.BoneVisibilityAnims.Count; i++)
+                    group.AddNode(new FVIS(resFile.BoneVisibilityAnims[i]));
             }
             if (resFile.SceneAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.SceneAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (SceneAnim anim in resFile.SceneAnims)
-                    group.AddNode(new FSCN(anim));
+                for (int i = 0; i < resFile.SceneAnims.Count; i++)
+                    group.AddNode(new FSCN(resFile.SceneAnims[i]));
             }
             if (resFile.ShapeAnims.Count > 0)
             {
                 var group = new BFRESGroupNode(BRESGroupType.ShapeAnim);
                 animFolder.Nodes.Add(group);
 
-                foreach (ShapeAnim anim in resFile.ShapeAnims)
-                    group.AddNode(new FSHA(anim));
+                for (int i = 0; i < resFile.ShapeAnims.Count; i++)
+                    group.AddNode(new FSHA(resFile.ShapeAnims[i]));
             }
             if (resFile.ExternalFiles.Count > 0)
             {
@@ -837,6 +936,9 @@ namespace FirstPlugin
                     }
                 }
             }
+
+            if (PluginRuntime.UseSimpleBfresEditor)
+                LoadSimpleMode();
         }
 
         public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)

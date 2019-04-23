@@ -54,7 +54,7 @@ namespace FirstPlugin
                     {
                         var mat = MatrixExenstion.GetMatrixInverted(bone);
 
-                        bn.ParentIndex = (ushort)bone.parentIndex;
+                        bn.ParentIndex = (short)bone.parentIndex;
 
                         if (bn.SmoothMatrixIndex > -1)
                             model.Skeleton.InverseModelMatrices[bn.SmoothMatrixIndex] = mat;
@@ -572,7 +572,7 @@ namespace FirstPlugin
             ushort SmoothIndex = 0;
             foreach (STBone genericBone in Bones)
             {
-                genericBone.BillboardIndex = ushort.MaxValue;
+                genericBone.BillboardIndex = -1;
 
                 STConsole.WriteLine($"Applying bone " + genericBone.Text);
 

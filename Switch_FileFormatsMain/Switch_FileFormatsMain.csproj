@@ -200,7 +200,7 @@
     <Compile Include="FileFormats\Audio\MP3.cs" />
     <Compile Include="FileFormats\Audio\Ogg.cs" />
     <Compile Include="FileFormats\Audio\WAV.cs" />
-    <Compile Include="FileFormats\BFRES\BFRESGroup.cs" />
+    <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
@@ -308,6 +308,12 @@
     </Compile>
     <Compile Include="GUI\BFRES\Shape\VertexBufferEncodeEditor.Designer.cs">
       <DependentUpon>VertexBufferEncodeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Texture Sampler\SamplerEditorSimple.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Texture Sampler\SamplerEditorSimple.Designer.cs">
+      <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\TexturePattern\AddSamplerKeyGroup.cs">
       <SubType>Form</SubType>
@@ -938,6 +944,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\RenderInfoDataEditor.resx">
       <DependentUpon>RenderInfoDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Texture Sampler\SamplerEditorSimple.resx">
+      <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\TexturePattern\AddSamplerKeyGroup.resx">
       <DependentUpon>AddSamplerKeyGroup.cs</DependentUpon>

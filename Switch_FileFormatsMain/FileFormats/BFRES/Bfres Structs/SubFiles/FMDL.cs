@@ -1036,7 +1036,7 @@ namespace Bfres.Structs
         private void CreateBones(STBone bone)
         {
             Bone bn = new Bone();
-            bn.BillboardIndex = (ushort)bone.BillboardIndex;
+            bn.BillboardIndex = (short)bone.BillboardIndex;
             bn.Flags = BoneFlags.Visible;
             bn.FlagsRotation = BoneFlagsRotation.EulerXYZ;
             bn.FlagsTransform = BoneFlagsTransform.None;

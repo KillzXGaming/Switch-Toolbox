@@ -530,6 +530,31 @@ namespace Bfres.Structs
         }
 
     }
+
+    public class MatTextureWrapper : TreeNodeCustom
+    {
+        public MatTexture textureMap;
+
+        public MatTextureWrapper(string key, string text, MatTexture texture)
+        {
+            Name = key;
+            Text = text;
+            textureMap = texture;
+
+            ImageKey = "texture";
+            SelectedImageKey = "texture";
+        }
+
+        public override void OnClick(TreeView treeView)
+        {
+            UpdateEditor();
+        }
+        public void UpdateEditor()
+        {
+            ((BFRES)Parent.Parent.Parent.Parent.Parent).LoadEditors(this);
+        }
+    }
+
     public class MatTexture : STGenericMatTexture
     {
         public string animatedTexName = "";

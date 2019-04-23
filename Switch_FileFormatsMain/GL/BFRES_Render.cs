@@ -69,15 +69,6 @@ namespace FirstPlugin
             UpdateTextureMaps();
         }
 
-        public void LoadFile(ResU.ResFile resFileU)
-        {
-            ResFileNode.Load(resFileU);
-        }
-        public void LoadFile(ResFile resFile)
-        {
-            ResFileNode.Load(resFile);
-        }
-
         public void Destroy()
         {
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;

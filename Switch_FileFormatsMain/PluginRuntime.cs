@@ -9,7 +9,7 @@ namespace FirstPlugin
 {
     public class PluginRuntime
     {
-        public static bool UseSimpleBfresEditor = false;
+        public static bool UseSimpleBfresEditor = true;
 
         public static Dictionary<string, BFLIM> bflimTextures = new Dictionary<string, BFLIM>();
         public static List<BNTX> bntxContainers = new List<BNTX>();

@@ -25,7 +25,7 @@ namespace Switch_Toolbox.Library
 
         public STSkeleton skeletonParent;
         public BoneRotationType RotationType;
-        public ushort BillboardIndex;
+        public short BillboardIndex;
         public short RigidMatrixIndex;
         public short SmoothMatrixIndex;
 
