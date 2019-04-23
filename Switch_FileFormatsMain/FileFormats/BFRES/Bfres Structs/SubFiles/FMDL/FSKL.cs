@@ -108,9 +108,6 @@ namespace Bfres.Structs
                         }
                         else
                         {
-                            Skeleton = new Skeleton();
-                            Skeleton.Import(ofd.FileName);
-
                             Skeleton SkeltonTemp = new Skeleton();
                             SkeltonTemp.Import(ofd.FileName);
 
