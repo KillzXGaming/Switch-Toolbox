@@ -342,6 +342,8 @@ namespace FirstPlugin
                 ReadBone(STBone, bone);
                 RenderableSkeleton.bones.Add(STBone);
             }
+
+            skl.Nodes.Clear();
             foreach (var bone in RenderableSkeleton.bones) {
                 if (bone.Parent == null)
                 {
