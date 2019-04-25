@@ -149,7 +149,11 @@ namespace FirstPlugin.Forms
 
         public bool IsLoaded = false;
 
+        //All drawables for this particular editor
         List<AbstractGlDrawable> Drawables;
+
+        //Drawables removed but the viewport is toggled off to update
+        List<AbstractGlDrawable> RemovedDrawables = new List<AbstractGlDrawable>(); 
 
         public void LoadViewport(List<AbstractGlDrawable> drawables, List<ToolStripMenuItem> customContextMenus = null)
         {
@@ -191,6 +195,7 @@ namespace FirstPlugin.Forms
             if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
             {
                 IsLoaded = false;
+                RemovedDrawables.Add(draw);
                 return;
             }
 
@@ -216,6 +221,9 @@ namespace FirstPlugin.Forms
                     viewport.AddDrawable(draw);
                 }
             }
+
+            foreach (var draw in RemovedDrawables)
+                viewport.RemoveDrawable(draw);
 
             viewport.LoadObjects();
 
