@@ -105,6 +105,7 @@ namespace FirstPlugin.Forms
             item.SubItems.Clear();
             item.Text = entry.HashString;
             item.Tag = entry;
+            item.UseItemStyleForSubItems = false;
             item.SubItems.Add(entry.ParamType.ToString());
             string ValueText = "";
 
@@ -153,10 +154,10 @@ namespace FirstPlugin.Forms
                     break;
             }
 
+            item.SubItems.Add(ValueText);
+
             if (color != System.Drawing.Color.Empty)
-                item.SubItems.Add(new ListViewItem.ListViewSubItem(item, ValueText, item.ForeColor, color, item.Font));
-            else
-                item.SubItems.Add(ValueText);
+                item.SubItems[2].BackColor = color;
         }
 
         public override void OnEntryDeletion(object obj, TreeNode objNode)
