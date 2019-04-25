@@ -102,6 +102,7 @@ namespace FirstPlugin.Forms
 
         private void SetListItemParamObject(ParamEntry entry, ListViewItem item)
         {
+            item.SubItems.Clear();
             item.Text = entry.HashString;
             item.Tag = entry;
             item.SubItems.Add(entry.ParamType.ToString());
