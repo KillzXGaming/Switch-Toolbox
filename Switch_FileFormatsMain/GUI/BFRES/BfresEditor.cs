@@ -41,6 +41,12 @@ namespace FirstPlugin.Forms
 
                 if (viewport != null)
                     OnLoadedTab();
+                else
+                {
+                    viewport = new Viewport();
+                    viewport.Dock = DockStyle.Fill;
+                    OnLoadedTab();
+                }
             }
             else
             {
@@ -142,6 +148,7 @@ namespace FirstPlugin.Forms
 
 
         public bool IsLoaded = false;
+
         List<AbstractGlDrawable> Drawables;
 
         public void LoadViewport(List<AbstractGlDrawable> drawables, List<ToolStripMenuItem> customContextMenus = null)
@@ -165,7 +172,10 @@ namespace FirstPlugin.Forms
             Drawables.Add(draw);
 
             if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
+            {
+                IsLoaded = false;
                 return;
+            }
 
             if (!viewport.scene.staticObjects.Contains(draw) &&
                 !viewport.scene.objects.Contains(draw))
@@ -179,7 +189,10 @@ namespace FirstPlugin.Forms
             Drawables.Remove(draw);
 
             if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
+            {
+                IsLoaded = false;
                 return;
+            }
 
             viewport.RemoveDrawable(draw);
         }
