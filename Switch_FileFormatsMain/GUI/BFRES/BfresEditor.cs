@@ -56,7 +56,7 @@ namespace FirstPlugin.Forms
                     return null;
 
                 var editor = LibraryGUI.Instance.GetObjectEditor();
-               return editor.GetViewport();
+                return editor.GetViewport();
             }
             set
             {
@@ -69,13 +69,13 @@ namespace FirstPlugin.Forms
 
         public BfresEditor(bool HasModels)
         {
-            InitializeComponent();  
+            InitializeComponent();
 
             STConsole stConsole = STConsole.Instance;
             stConsole.BorderStyle = BorderStyle.None;
             stConsole.Dock = DockStyle.Fill;
             tabPage4.Controls.Add(stConsole);
-            
+
             animationPanel = new AnimationPanel();
             animationPanel.CurrentAnimation = null;
             animationPanel.Dock = DockStyle.Fill;
@@ -157,10 +157,10 @@ namespace FirstPlugin.Forms
 
         public void AddDrawable(AbstractGlDrawable draw)
         {
-            if (!Runtime.UseViewport)
-                return;
-
             Drawables.Add(draw);
+
+            if (!Runtime.UseViewport || !Runtime.DisplayViewport)
+                return;
 
             if (!viewport.scene.staticObjects.Contains(draw) &&
                 !viewport.scene.objects.Contains(draw))
@@ -171,10 +171,11 @@ namespace FirstPlugin.Forms
 
         public void RemoveDrawable(AbstractGlDrawable draw)
         {
-            if (!Runtime.UseViewport)
+            Drawables.Remove(draw);
+
+            if (!Runtime.UseViewport || !Runtime.DisplayViewport)
                 return;
 
-            Drawables.Remove(draw);
             viewport.RemoveDrawable(draw);
         }
 
