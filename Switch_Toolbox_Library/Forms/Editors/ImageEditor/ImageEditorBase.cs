@@ -108,6 +108,8 @@ namespace Switch_Toolbox.Library.Forms
             imageBGComboBox.SelectedItem = Runtime.pictureBoxStyle;
             UpdateBackgroundImage();
 
+            SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
+
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
 
             propertiesEditor = new ImagePropertiesEditor();
@@ -137,6 +139,11 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             OnDataAcquiredEvent += new DataAcquired(ThreadReportsDataAquiredEvent);
+        }
+
+        public void SetEditorOrientation(bool ToVertical)
+        {
+            displayVerticalToolStripMenuItem.Checked = ToVertical;
         }
 
         private void UpdateBackgroundImage()
@@ -668,16 +675,34 @@ namespace Switch_Toolbox.Library.Forms
             UpdatePictureBox();
         }
 
-        private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void propertyGridToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void displayVerticalToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             if (displayVerticalToolStripMenuItem.Checked)
             {
                 DisplayHorizontal();
-                displayVerticalToolStripMenuItem.Checked = false;
+                Runtime.ImageEditor.DisplayVertical = false;
             }
             else
             {
                 DisplayVertical();
+                Runtime.ImageEditor.DisplayVertical = true;
+            }
+        }
+
+        private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (displayVerticalToolStripMenuItem.Checked)
+            {
+                displayVerticalToolStripMenuItem.Checked = false;
+            }
+            else
+            {
                 displayVerticalToolStripMenuItem.Checked = true;
             }
         }
@@ -710,7 +735,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void DisplayHorizontal()
         {
-            if (splitContainer1.Panel1Collapsed)
+            if (splitContainer1.Panel1Collapsed || propertiesEditor == null)
                 return;
 
             var ImagePanel = stPanel1;

@@ -10,28 +10,23 @@ using System.Windows.Forms;
 using AampV1Library;
 using Syroot.Maths;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin.Forms
 {
-    public partial class AampV1Editor : UserControl
+    public partial class AampV1Editor : AampEditorBase
     {
-        public AampV1Editor()
+        public AampV1Editor(AAMP aamp, bool IsSaveDialog) : base(aamp, IsSaveDialog)
         {
-            InitializeComponent();
+            treeView1.Nodes.Add(aamp.FileName);
+            LoadFile(aamp.aampFileV1, treeView1.Nodes[0]);
         }
 
         public void LoadImages(TreeView treeView, TreeNode parentNode)
         {
             foreach (TreeNode nodes in TreeViewExtensions.Collect(parentNode.Nodes))
             {
-                if (nodes is EditableEntry)
-                {
-                    if (((EditableEntry)nodes).entry.ParamType == ParamType.Color4F)
-                    {
-                        nodes.ImageIndex += treeView.ImageList.Images.Count;
-                        nodes.SelectedImageIndex = nodes.ImageIndex;
-                    }
-                }
+
             }
 
             foreach (var image in Images)
@@ -43,10 +38,147 @@ namespace FirstPlugin.Forms
             LoadChildNodes(aampFile.RootNode, parentNode);
         }
 
+        public override void TreeView_AfterSelect()
+        {
+            var node = treeView1.SelectedNode;
+
+            if (node.Tag != null)
+            {
+                if (node.Tag is ParamObject) {
+                    LoadObjectDataList((ParamObject)node.Tag);
+                }
+            }
+        }
+
+        public override void AddParamEntry(TreeNode parentNode)
+        {
+            if (parentNode.Tag != null && parentNode.Tag is ParamObject)
+            {
+                ParamEntry entry = new ParamEntry();
+                entry.ParamType = ParamType.Float;
+                entry.HashString = "NewEntry";
+                entry.Value = 0;
+
+                ListViewItem item = new ListViewItem();
+                SetListItemParamObject(entry, item);
+
+                OpenNewParamEditor(entry,(ParamObject)parentNode.Tag, item);
+            }
+        }
+
+        public override void RenameParamEntry(ListViewItem SelectedItem)
+        {
+            if (SelectedItem.Tag != null && SelectedItem.Tag is ParamEntry)
+            {
+                RenameDialog dialog = new RenameDialog();
+                dialog.SetString(SelectedItem.Text);
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    string NewString = dialog.textBox1.Text;
+
+                    ((ParamEntry)SelectedItem.Tag).HashString = NewString;
+                }
+            }
+        }
+
+        public override void OnEditorClick(ListViewItem SelectedItem)
+        {
+            if (SelectedItem.Tag != null && SelectedItem.Tag is ParamEntry)
+            {
+                OpenEditor((ParamEntry)SelectedItem.Tag, SelectedItem);
+            }
+        }
+
+        private void LoadObjectDataList(ParamObject paramObj)
+        {
+            listViewCustom1.Items.Clear();
+            foreach (var entry in paramObj.paramEntries)
+            {
+                ListViewItem item = new ListViewItem(entry.HashString);
+                SetListItemParamObject(entry, item);
+                listViewCustom1.Items.Add(item);
+            }
+        }
+
+        private void SetListItemParamObject(ParamEntry entry, ListViewItem item)
+        {
+            item.Text = entry.HashString;
+            item.Tag = entry;
+            item.SubItems.Add(entry.ParamType.ToString());
+            string ValueText = "";
+
+            System.Drawing.Color color = System.Drawing.Color.Empty;
+
+            switch (entry.ParamType)
+            {
+                case ParamType.Boolean:
+                case ParamType.Float:
+                case ParamType.Int:
+                case ParamType.Uint:
+                    ValueText = $"{entry.Value}";
+                    break;
+                case ParamType.String64:
+                case ParamType.String32:
+                case ParamType.String256:
+                case ParamType.StringRef:
+                    string enocdedString = Encoding.UTF8.GetString((byte[])entry.Value);
+                    ValueText = $"{enocdedString}";
+                    break;
+                case ParamType.Vector2F:
+                    var vec2 = (Vector2F)entry.Value;
+                    ValueText = $"{vec2.X} {vec2.Y}";
+                    break;
+                case ParamType.Vector3F:
+                    var vec3 = (Vector3F)entry.Value;
+                    ValueText = $"{vec3.X} {vec3.Y} {vec3.Z}";
+                    break;
+                case ParamType.Vector4F:
+                    var vec4 = (Vector4F)entry.Value;
+                    ValueText = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
+                    break;
+                case ParamType.Color4F:
+                    var col = (Vector4F)entry.Value;
+                    ValueText = $"{col.X} {col.Y} {col.Z} {col.W}";
+
+                    int ImageIndex = Images.Count;
+
+                    color = System.Drawing.Color.FromArgb(
+                    EditBox.FloatToIntClamp(col.W),
+                    EditBox.FloatToIntClamp(col.X),
+                    EditBox.FloatToIntClamp(col.Y),
+                    EditBox.FloatToIntClamp(col.Z));
+                    break;
+                default:
+                    break;
+            }
+
+            if (color != System.Drawing.Color.Empty)
+                item.SubItems.Add(new ListViewItem.ListViewSubItem(item, ValueText, item.ForeColor, color, item.Font));
+            else
+                item.SubItems.Add(ValueText);
+        }
+
+        public override void OnEntryDeletion(object obj, TreeNode objNode)
+        {
+            if (obj is ParamEntry)
+            {
+                var paramObjectParent = (ParamObject)objNode.Tag;
+
+                var entryList = new List<ParamEntry>();
+                for (int i = 0; i < paramObjectParent.paramEntries.Length; i++)
+                    entryList.Add(paramObjectParent.paramEntries[i]);
+
+                entryList.Remove((ParamEntry)obj);
+
+                paramObjectParent.paramEntries = entryList.ToArray();
+            }
+        }
+
         public void LoadChildNodes(ParamList paramList, TreeNode parentNode)
         {
             TreeNode newNode = new TreeNode(paramList.HashString);
-     
+            newNode.Tag = paramList;
+
             parentNode.Nodes.Add(newNode);
 
             //Add lists and objects if exits
@@ -72,117 +204,41 @@ namespace FirstPlugin.Forms
             string groupName = paramObj.GroupHashString;
 
             var objNode = new TreeNode(name);
+            objNode.Tag = paramObj;
             parentNode.Nodes.Add(objNode);
+        }
 
-            foreach (var entry in paramObj.paramEntries)
+        private void OpenNewParamEditor(ParamEntry entry, ParamObject paramObject, ListViewItem SelectedItem)
+        {
+            EditBox editor = new EditBox();
+            editor.LoadEntry(entry);
+            editor.ToggleNameEditing(true);
+
+            if (editor.ShowDialog() == DialogResult.OK)
             {
-                var entryNode = new EditableEntry($"{entry.HashString}");
-                entryNode.ImageIndex = 0;
-                entryNode.ImageKey = "empty";
-                entryNode.SelectedImageKey = "empty";
+                editor.SaveEntry();
+                SetListItemParamObject(entry, SelectedItem);
+                listViewCustom1.Items.Add(SelectedItem);
 
-                switch (entry.ParamType)
-                {
-                    case ParamType.Boolean:
-                    case ParamType.Float:
-                    case ParamType.Int:
-                    case ParamType.Uint:
-                    case ParamType.String64:
-                    case ParamType.String32:
-                    case ParamType.String256:
-                    case ParamType.StringRef:
-                        entryNode.Text = $"{entry.HashString} {entry.Value}";
-                        break;
-                    case ParamType.Vector2F:
-                        var vec2 = (Vector2F)entry.Value;
-                        entryNode.Text = $"{entry.HashString} {vec2.X} {vec2.Y}";
-                        break;
-                    case ParamType.Vector3F:
-                        var vec3 = (Vector3F)entry.Value;
-                        entryNode.Text = $"{entry.HashString} {vec3.X} {vec3.Y} {vec3.Z}";
-                        break;
-                    case ParamType.Vector4F:
-                        var vec4 = (Vector4F)entry.Value;
-                        entryNode.Text = $"{entry.HashString} {vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
-                        break;
-                    case ParamType.Color4F:
-                        var col = (Vector4F)entry.Value;
-                        entryNode.Text = $"{entry.HashString} {col.X} {col.Y} {col.Z} {col.W}";
+                var entryList = new List<ParamEntry>();
+                for (int i = 0; i < paramObject.paramEntries.Length; i++)
+                    entryList.Add(paramObject.paramEntries[i]);
 
-                        int ImageIndex = Images.Count;
-                        entryNode.ImageIndex = ImageIndex;
-
-                        var color = System.Drawing.Color.FromArgb(
-                        EditBox.FloatToIntClamp(col.W),
-                        EditBox.FloatToIntClamp(col.X),
-                        EditBox.FloatToIntClamp(col.Y),
-                        EditBox.FloatToIntClamp(col.Z));
-
-                        Bitmap bmp = new Bitmap(32, 32);
-                        Graphics g = Graphics.FromImage(bmp);
-                        g.Clear(color);
-
-                        Images.Add(bmp);
-                        break;
-                    default:
-                        break;
-                }
-
-                entryNode.entry = entry;
-                objNode.Nodes.Add(entryNode);
+                entryList.Add(entry);
+                paramObject.paramEntries = entryList.ToArray();
             }
         }
 
-        public class EditableEntry : TreeNode
+        private void OpenEditor(ParamEntry entry, ListViewItem SelectedItem)
         {
-            public ParamEntry entry;
-            public EditableEntry(string name)
+            EditBox editor = new EditBox();
+            editor.LoadEntry(entry);
+            editor.ToggleNameEditing(true);
+
+            if (editor.ShowDialog() == DialogResult.OK)
             {
-                Text = name;
-
-                ContextMenu = new ContextMenu();
-                ContextMenu.MenuItems.Add(new MenuItem("Edit", OpenEditor));
-            }
-
-            private void OpenEditor(object sender, EventArgs e)
-            {
-                EditBox editor = new EditBox();
-                editor.LoadEntry(entry);
-
-                if (editor.ShowDialog() == DialogResult.OK)
-                {
-                    editor.SaveEntry();
-
-                    switch (entry.ParamType)
-                    {
-                        case ParamType.Boolean:
-                        case ParamType.Float:
-                        case ParamType.Int:
-                        case ParamType.Uint:
-                        case ParamType.String64:
-                        case ParamType.String32:
-                        case ParamType.String256:
-                        case ParamType.StringRef:
-                            Text = $"{entry.HashString} {entry.Value}";
-                            break;
-                        case ParamType.Vector2F:
-                            var vec2 = (Vector2F)entry.Value;
-                            Text = $"{entry.HashString} {vec2.X} {vec2.Y}";
-                            break;
-                        case ParamType.Vector3F:
-                            var vec3 = (Vector3F)entry.Value;
-                            Text = $"{entry.HashString} {vec3.X} {vec3.Y} {vec3.Z}";
-                            break;
-                        case ParamType.Vector4F:
-                            var vec4 = (Vector4F)entry.Value;
-                            Text = $"{entry.HashString} {vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
-                            break;
-                        case ParamType.Color4F:
-                            var col = (Vector4F)entry.Value;
-                            Text = $"{entry.HashString} {col.X} {col.Y} {col.Z} {col.W}";
-                            break;
-                    }
-                }
+                editor.SaveEntry();
+                SetListItemParamObject(entry, SelectedItem);
             }
         }
     }

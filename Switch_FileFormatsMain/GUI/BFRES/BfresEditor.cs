@@ -16,11 +16,43 @@ namespace FirstPlugin.Forms
 {
     public partial class BfresEditor : STUserControl, IViewportContainer
     {
+        private bool _displayViewport = true;
+
+        public bool DisplayViewport
+        {
+            get
+            {
+                return _displayViewport;
+            }
+            set
+            {
+                _displayViewport = value;
+                SetupViewport();
+            }
+        }
+
+        private void SetupViewport()
+        {
+            if (DisplayViewport == true && Runtime.UseViewport)
+            {
+                stPanel5.Controls.Add(viewport);
+                splitContainer1.Panel1Collapsed = false;
+                toggleViewportToolStripBtn.Image = Properties.Resources.ViewportIcon;
+            }
+            else
+            {
+                stPanel5.Controls.Clear();
+                splitContainer1.Panel1Collapsed = true;
+                toggleViewportToolStripBtn.Image = Properties.Resources.ViewportIconDisable;
+                OnLoadedTab();
+            }
+        }
+
         Viewport viewport
         {
             get
             {
-                if (!Runtime.UseViewport)
+                if (!Runtime.UseViewport || !DisplayViewport)
                     return null;
 
                 var editor = LibraryGUI.Instance.GetObjectEditor();
@@ -49,9 +81,7 @@ namespace FirstPlugin.Forms
             animationPanel.Dock = DockStyle.Fill;
             timelineTabPage.Controls.Add(animationPanel);
 
-            stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
             stTabControl2.myBackColor = FormThemes.BaseTheme.FormBackColor;
-
 
             if (viewport == null && Runtime.UseViewport)
             {
@@ -59,13 +89,15 @@ namespace FirstPlugin.Forms
                 viewport.Dock = DockStyle.Fill;
             }
 
-            if (Runtime.UseViewport)
+            if (Runtime.UseViewport && Runtime.DisplayViewport)
                 stPanel5.Controls.Add(viewport);
+            else
+                splitContainer1.Panel1Collapsed = true;
 
             OnLoadedTab();
 
-            if (HasModels)
-                stTabControl1.SelectedIndex = 1;
+            if (HasModels && Runtime.DisplayViewport)
+                DisplayViewport = true;
         }
 
         public UserControl GetActiveEditor(Type type)
@@ -87,6 +119,8 @@ namespace FirstPlugin.Forms
 
         public void LoadEditor(UserControl Control)
         {
+            Control.Dock = DockStyle.Fill;
+
             splitContainer1.Panel2.Controls.Clear();
             splitContainer1.Panel2.Controls.Add(Control);
         }
@@ -107,16 +141,18 @@ namespace FirstPlugin.Forms
 
         public void LoadViewport(List<AbstractGlDrawable> drawables, List<ToolStripMenuItem> customContextMenus = null)
         {
-            if (!Runtime.UseViewport)
-                return;
-
             Drawables = drawables;
+
+            if (!Runtime.UseViewport || !DisplayViewport)
+                return;
 
             if (customContextMenus != null)
             {
                 foreach (var menu in customContextMenus)
                     viewport.LoadCustomMenuItem(menu);
             }
+
+            OnLoadedTab();
         }
 
         public void AddDrawable(AbstractGlDrawable draw)
@@ -174,10 +210,7 @@ namespace FirstPlugin.Forms
 
         private void stTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (stTabControl1.SelectedIndex == 1)
-            {
-                OnLoadedTab();
-            }
+
         }
 
         bool IsTimelineVisable = true;
@@ -195,6 +228,21 @@ namespace FirstPlugin.Forms
                 IsTimelineVisable = true;
                 stPanel1.Height += (controlHeight + 25);
             }
+        }
+
+        private void toggleViewportToolStripBtn_Click(object sender, EventArgs e)
+        {
+            if (Runtime.DisplayViewport)
+            {
+                Runtime.DisplayViewport = false;
+            }
+            else
+            {
+                Runtime.DisplayViewport = true;
+            }
+
+            DisplayViewport = Runtime.DisplayViewport;
+            Config.Save();
         }
     }
 }

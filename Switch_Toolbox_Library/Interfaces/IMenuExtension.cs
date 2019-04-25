@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Switch_Toolbox.Library.Forms;
+using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library
 {
@@ -23,5 +24,6 @@ namespace Switch_Toolbox.Library
         STToolStripItem[] TitleBarExtensions { get; }
         STToolStripItem[] ExperimentalMenuExtensions { get; }
         STToolStripItem[] EditMenuExtensions { get; }
+        ToolStripButton[] IconButtonMenuExtensions { get; }
     }
 }

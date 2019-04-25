@@ -356,6 +356,7 @@
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
             this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
+            this.propertyGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.propertyGridToolStripMenuItem_CheckedChanged);
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
             // 
             // displayVerticalToolStripMenuItem
@@ -363,6 +364,7 @@
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
             this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
+            this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
             // 
             // imageToolStripMenuItem

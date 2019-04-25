@@ -23,6 +23,11 @@ namespace FirstPlugin.Forms
                 typeCB.Items.Add(type);
         }
 
+        public void ToggleNameEditing(bool CanEdit)
+        {
+            nameTB.Enabled = CanEdit;
+        }
+
         ParamEntry paramEntry;
         Aampv2.ParamEntry paramEntryV2;
 
@@ -81,6 +86,9 @@ namespace FirstPlugin.Forms
         public void SaveEntry()
         {
             paramEntry.ParamType = (ParamType)typeCB.SelectedItem;
+
+            if (nameTB.Enabled)
+                paramEntry.HashString = nameTB.Text;
 
             switch (paramEntry.ParamType)
             {

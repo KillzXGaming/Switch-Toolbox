@@ -429,24 +429,27 @@ namespace FirstPlugin
 
                 public override void Replace(string FileName)
                 {
+                    int size = data.Length;
+
                     FTEX ftex = new FTEX();
                     ftex.ReplaceTexture(FileName, MipCount, SupportedFormats, true, true, true, Format);
                     if (ftex.texture != null)
                     {
                         byte[] ImageData = ftex.texture.Data;
 
+
                         if (ftex.texture.MipData != null)
                             ImageData = Utils.CombineByteArray(ftex.texture.Data, ftex.texture.MipData);
 
-                        ImageData = AlignData(ImageData);
-
-                        if (ImageData.Length != ImageSize)
-                            throw new Exception($"Image size does not match! Make sure mip map count, format, height and width are all the same! Original Size {ImageSize} Import {ImageData.Length}");
+                      //  if (ImageData.Length != size)
+                           // MessageBox.Show($"Image size does not match! Make sure mip map count, format, height and width are all the same! Original Size {size} Import {ImageData.Length}", );
 
                         Swizzle = (byte)ftex.texture.Swizzle;
 
+                        byte[] NewData = new byte[size];
+                        Array.Copy(ImageData, 0, NewData, 0, size);
 
-                        data = ImageData;
+                        data = NewData;
 
                         UpdateEditor();
                     }

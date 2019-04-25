@@ -61,6 +61,7 @@ namespace FirstPlugin
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
             public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
 
             STToolStripItem[] toolExt = new STToolStripItem[1];
             STToolStripItem[] newFileExt = new STToolStripItem[1];
@@ -221,6 +222,12 @@ namespace FirstPlugin
         }
         public override void OnClick(TreeView treeView)
         {
+            if (Parent != null && Parent is BFRES)
+            {
+                ((BFRES)Parent).LoadEditors(this);
+                return;
+            }
+
             STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
             if (editor == null)
             {
@@ -945,6 +952,12 @@ namespace FirstPlugin
 
         public void UpdateEditor()
         {
+            if (Parent != null && Parent.Parent != null && Parent.Parent is BFRES)
+            {
+                ((BFRES)Parent.Parent).LoadEditors(this);
+                return;
+            }
+
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)
             {

@@ -170,6 +170,9 @@ namespace Toolbox
                     case "UseViewport":
                         bool.TryParse(node.InnerText, out Runtime.UseViewport);
                         break;
+                    case "DisplayViewport":
+                        bool.TryParse(node.InnerText, out Runtime.DisplayViewport);
+                        break;
                 }
             }
         }
@@ -278,6 +281,7 @@ namespace Toolbox
             parentNode.AppendChild(mainSettingsNode);
 
             
+            mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseViewport", Runtime.UseViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));

@@ -602,6 +602,11 @@ namespace Toolbox
                     RegisterMenuExtIndex(compressionToolStripMenuItem, ext.CompressionMenuExtensions, compressionToolStripMenuItem.DropDownItems.Count);
             }
         }
+        void RegisterMenuExtIndex(ToolStrip target, ToolStripButton[] list, int index = 0)
+        {
+            foreach (var i in list)
+                target.Items.Insert(index++, i);
+        }
         void RegisterMenuExtIndex(ToolStripMenuItem target, STToolStripItem[] list, int index = 0)
         {
             foreach (var i in list)
@@ -688,6 +693,11 @@ namespace Toolbox
             var menuExtensions = FileManager.GetMenuExtensions(format);
 
             editToolStripMenuItem.DropDownItems.Clear();
+            for (int i = 0; i < stToolStrip1.Items.Count; i++)
+            {
+                if (i > 1)
+                    stToolStrip1.Items.RemoveAt(i);
+            }
 
             if (menuExtensions != null)
             {
@@ -697,6 +707,10 @@ namespace Toolbox
 
                     if (editToolStripMenuItem.DropDownItems.Count > 0)
                         editToolStripMenuItem.Enabled = true;
+                }
+                if (menuExtensions.IconButtonMenuExtensions != null)
+                {
+                    RegisterMenuExtIndex(stToolStrip1, menuExtensions.IconButtonMenuExtensions, stToolStrip1.Items.Count);
                 }
             }
         }

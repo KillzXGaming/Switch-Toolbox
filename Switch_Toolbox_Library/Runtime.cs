@@ -22,6 +22,7 @@ namespace Switch_Toolbox.Library
         public class ImageEditor
         {
             public static bool ShowPropertiesPanel = true;
+            public static bool DisplayVertical = false;
         }
         public class ObjectEditor
         {
@@ -104,7 +105,8 @@ namespace Switch_Toolbox.Library
 
         public static bool renderFloorLines = true;
 
-        public static bool UseViewport = true;
+        public static bool UseViewport = true; //Removes all acess to viewport
+        public static bool DisplayViewport = true; //Only displays it in editors if true
 
         //Viewport Background
         public static BackgroundStyle backgroundStyle = BackgroundStyle.Gradient;

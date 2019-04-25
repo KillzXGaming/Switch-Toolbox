@@ -60,6 +60,7 @@ namespace FirstPlugin
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
 
             STToolStripItem[] toolExt = new STToolStripItem[1];
             STToolStripItem[] newFileExt = new STToolStripItem[2];
@@ -67,19 +68,14 @@ namespace FirstPlugin
 
             public MenuExt()
             {
-                editExt[0] = new STToolStripItem("Use Advanced Editor As Default");
-                editExt[0].Click += AdvancedEditor;
-
-                toolExt[0] = new STToolStripItem("Open Bfres Debugger");
-                toolExt[0].Click += DebugInfo;
-
-                newFileExt[0] = new STToolStripItem("BFRES (Switch)");
-                newFileExt[0].Click += NewSwitchBfres;
-                newFileExt[1] = new STToolStripItem("BFRES (Wii U)");
-                newFileExt[1].Click += NewWiiUBfres;
+                editExt[0] = new STToolStripItem("Use Advanced Editor As Default", AdvancedEditor);
+                toolExt[0] = new STToolStripItem("Open Bfres Debugger", DebugInfo);
+                newFileExt[0] = new STToolStripItem("BFRES (Switch)", NewSwitchBfres);
+                newFileExt[1] = new STToolStripItem("BFRES (Wii U)", NewWiiUBfres);
 
                 editExt[0].Checked = !PluginRuntime.UseSimpleBfresEditor;
             }
+
             private void AdvancedEditor(object sender, EventArgs args)
             {
                 BFRES file = null;
@@ -306,30 +302,128 @@ namespace FirstPlugin
         List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
         public void LoadEditors(object SelectedSection)
         {
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            bool HasModels = BFRESRender.models.Count > 0;
+
+            if (bfresEditor == null)
+            {
+                bfresEditor = new BfresEditor(HasModels);
+                bfresEditor.Dock = DockStyle.Fill;
+                LibraryGUI.Instance.LoadEditor(bfresEditor);
+            }
+
+            if (SelectedSection is FTEX)
+            {
+                ImageEditorBase editorFtex = (ImageEditorBase)bfresEditor.GetActiveEditor(typeof(ImageEditorBase));
+                if (editorFtex == null)
+                {
+                    editorFtex = new ImageEditorBase();
+                    editorFtex.Dock = DockStyle.Fill;
+
+                    bfresEditor.LoadEditor(editorFtex);
+                }
+                editorFtex.Text = Text;
+                editorFtex.LoadProperties(((FTEX)SelectedSection).texture);
+                editorFtex.LoadImage((FTEX)SelectedSection);
+                if (Runtime.DisplayViewport)
+                    editorFtex.SetEditorOrientation(true);
+
+                if (((FTEX)SelectedSection).texture.UserData != null)
+                {
+                    UserDataEditor userEditor = (UserDataEditor)editorFtex.GetActiveTabEditor(typeof(UserDataEditor));
+                    if (userEditor == null)
+                    {
+                        userEditor = new UserDataEditor();
+                        userEditor.Name = "User Data";
+                        editorFtex.AddCustomControl(userEditor, typeof(UserDataEditor));
+                    }
+                    userEditor.LoadUserData(((FTEX)SelectedSection).texture.UserData);
+                }
+                return;
+            }
+
+            if (SelectedSection is TextureData)
+            {
+                ImageEditorBase editor = (ImageEditorBase)bfresEditor.GetActiveEditor(typeof(ImageEditorBase));
+                if (editor == null)
+                {
+                    editor = new ImageEditorBase();
+                    editor.Dock = DockStyle.Fill;
+                    bfresEditor.LoadEditor(editor);
+                }
+                if (((TextureData)SelectedSection).Texture.UserData != null)
+                {
+                    UserDataEditor userEditor = (UserDataEditor)editor.GetActiveTabEditor(typeof(UserDataEditor));
+                    if (userEditor == null)
+                    {
+                        userEditor = new UserDataEditor();
+                        userEditor.Name = "User Data";
+                        editor.AddCustomControl(userEditor, typeof(UserDataEditor));
+                    }
+                    userEditor.LoadUserData(((TextureData)SelectedSection).Texture.UserData.ToList());
+                }
+
+                editor.Text = Text;
+                if (Runtime.DisplayViewport)
+                    editor.SetEditorOrientation(true);
+
+                editor.LoadProperties(((TextureData)SelectedSection).Texture);
+                editor.LoadImage((TextureData)SelectedSection);
+                return;
+            }
+
+            if (SelectedSection is BNTX)
+            {
+                STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
+                if (editor == null)
+                {
+                    editor = new STPropertyGrid();
+                    editor.Dock = DockStyle.Fill;
+                    bfresEditor.LoadEditor(editor);
+                }
+                editor.LoadProperty(((BNTX)SelectedSection).BinaryTexFile, OnPropertyChanged);
+                return;
+            }
+
+            if (SelectedSection is ExternalFileData)
+            {
+                HexEditor editor = (HexEditor)bfresEditor.GetActiveEditor(typeof(HexEditor));
+                if (editor == null)
+                {
+                    editor = new HexEditor();
+                    editor.Dock = DockStyle.Fill;
+                    bfresEditor.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.LoadData(((ExternalFileData)SelectedSection).Data);
+                return;
+            }
+
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 
             if (IsSimpleEditor)
             {
                 if (SelectedSection is MatTextureWrapper)
                 {
-                    SamplerEditorSimple editorT = (SamplerEditorSimple)LibraryGUI.Instance.GetActiveContent(typeof(SamplerEditorSimple));
+                    SamplerEditorSimple editorT = (SamplerEditorSimple)bfresEditor.GetActiveEditor(typeof(SamplerEditorSimple));
                     if (editorT == null)
                     {
                         editorT = new SamplerEditorSimple();
                         editorT.Dock = DockStyle.Fill;
-                        LibraryGUI.Instance.LoadEditor(editorT);
+                        bfresEditor.LoadEditor(editorT);
                     }
                     editorT.Text = Text;
                     editorT.LoadTexture(((MatTextureWrapper)SelectedSection).textureMap);
                     return;
                 }
+           
 
-                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+                STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
                 if (editor == null)
                 {
                     editor = new STPropertyGrid();
                     editor.Dock = DockStyle.Fill;
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    bfresEditor.LoadEditor(editor);
                 }
                 editor.Text = Text;
 
@@ -391,17 +485,6 @@ namespace FirstPlugin
             }
             else
             {
-                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
-
-                bool HasModels = BFRESRender.models.Count > 0;
-
-                if (bfresEditor == null)
-                {
-                    bfresEditor = new BfresEditor(HasModels);
-                    bfresEditor.Dock = DockStyle.Fill;
-                    LibraryGUI.Instance.LoadEditor(bfresEditor);
-                }
-
                 var toolstrips = new List<ToolStripMenuItem>();
                 var menu = new ToolStripMenuItem("Animation Loader", null, AnimLoader);
 

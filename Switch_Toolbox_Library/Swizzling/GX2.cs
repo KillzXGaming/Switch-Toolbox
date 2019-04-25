@@ -485,7 +485,10 @@ namespace Switch_Toolbox.Library
         public static GX2Surface CreateGx2Texture(byte[] imageData, string Name, uint TileMode, uint AAMode,
             uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint SurfaceDim, uint MipCount)
         {
-            var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, 0);
+            var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, Depth, SurfaceDim, TileMode, AAMode, 0);
+            Console.WriteLine("Imported surfSize" + surfOut.surfSize);
+            Console.WriteLine("Imported data block" + imageData.Length);
+
             uint imageSize = (uint)surfOut.surfSize;
             uint alignment = surfOut.baseAlign;
             uint pitch = surfOut.pitch;
@@ -2429,8 +2432,6 @@ namespace Switch_Toolbox.Library
             var pSurfOut = new surfaceOut();
 
             hwFormat = (uint)((int)surfaceFormat & 0x3F);
-
-
             if (surfaceTileMode == 16)
             {
                 numSamples = (uint)(1 << (int)surfaceAA);

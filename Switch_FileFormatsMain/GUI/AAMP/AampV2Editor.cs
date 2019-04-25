@@ -13,11 +13,10 @@ using Switch_Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
-    public partial class AampV2Editor : UserControl
+    public partial class AampV2Editor : AampEditorBase
     {
-        public AampV2Editor()
+        public AampV2Editor(AAMP aamp, bool IsSaveDialog) : base (aamp, IsSaveDialog)
         {
-            InitializeComponent();
         }
 
         public void LoadFile(AampFile aampFile, TreeNode parentNode)

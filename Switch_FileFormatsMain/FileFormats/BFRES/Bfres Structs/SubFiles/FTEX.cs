@@ -615,6 +615,12 @@ namespace Bfres.Structs
         }
         public void UpdateEditor()
         {
+            if (Parent != null && Parent.Parent != null && Parent.Parent is BFRES)
+            {
+                ((BFRES)Parent.Parent).LoadEditors(this);
+                return;
+            }
+
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)
             {

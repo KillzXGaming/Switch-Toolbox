@@ -55,6 +55,7 @@ namespace FirstPlugin
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => experimentalMenu;
             public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
 
             STToolStripItem[] experimentalMenu = new STToolStripItem[1];
             public MenuExt()

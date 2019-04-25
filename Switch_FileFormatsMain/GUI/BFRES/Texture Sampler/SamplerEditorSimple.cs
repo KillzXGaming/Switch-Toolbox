@@ -72,5 +72,65 @@ namespace FirstPlugin.Forms
         {
 
         }
+
+        public void SetEditorOrientation(bool ToVertical)
+        {
+            displayVerticalToolStripMenuItem.Checked = ToVertical;
+        }
+
+        private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (displayVerticalToolStripMenuItem.Checked)
+            {
+                DisplayHorizontal();
+            }
+            else
+            {
+                DisplayVertical();
+            }
+        }
+
+        private void DisplayHorizontal()
+        {
+            if (splitContainer2.Panel1Collapsed)
+                return;
+
+            var ImagePanel = stPanel1;
+            var PropertiesEditor = stPropertyGrid1;
+
+            //Swap panels
+            splitContainer2.Panel1.Controls.Clear();
+            splitContainer2.Panel2.Controls.Clear();
+
+            splitContainer2.Orientation = Orientation.Vertical;
+            splitContainer2.Panel1.Controls.Add(ImagePanel);
+            splitContainer2.Panel2.Controls.Add(PropertiesEditor);
+            stPropertyGrid1.ShowHintDisplay = true;
+
+            PropertiesEditor.Width = this.Width / 2;
+
+            splitContainer2.SplitterDistance = this.Width / 2;
+        }
+
+        private void DisplayVertical()
+        {
+            if (splitContainer2.Panel2Collapsed)
+                return;
+
+            var ImagePanel = stPanel1;
+            var PropertiesEditor = stPropertyGrid1;
+
+            //Swap panels
+            splitContainer2.Panel1.Controls.Clear();
+            splitContainer2.Panel2.Controls.Clear();
+
+            splitContainer2.Orientation = Orientation.Horizontal;
+            splitContainer2.Panel2.Controls.Add(ImagePanel);
+            splitContainer2.Panel1.Controls.Add(PropertiesEditor);
+
+            splitContainer2.SplitterDistance = this.Height / 2;
+
+            stPropertyGrid1.ShowHintDisplay = false;
+        }
     }
 }

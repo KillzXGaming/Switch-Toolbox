@@ -236,6 +236,12 @@
     <Compile Include="FileFormats\Audio\BRSTM.cs" />
     <Compile Include="GL\Helpers\AlphaGLControl.cs" />
     <Compile Include="GL\Helpers\ColorGLControl.cs" />
+    <Compile Include="GUI\AAMP\AampEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\AAMP\AampEditor.Designer.cs">
+      <DependentUpon>AampEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -401,16 +407,10 @@
     </Compile>
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\AAMP\AampV1Editor.Designer.cs">
-      <DependentUpon>AampV1Editor.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\AampV2Editor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\AAMP\AampV2Editor.Designer.cs">
-      <DependentUpon>AampV2Editor.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\EditBox.cs">
       <SubType>Form</SubType>
@@ -835,6 +835,9 @@
     <None Include="Resources\InjectTexErrored.dds" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GUI\AAMP\AampEditor.resx">
+      <DependentUpon>AampEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\AAMP\EditBox.resx" />
     <EmbeddedResource Include="GUI\Advanced Editor\TextureViewer.resx">
       <DependentUpon>TextureViewer.cs</DependentUpon>
@@ -1083,6 +1086,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1145,6 +1149,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\RemoveIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Texture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ViewportIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ViewportIconDisable.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

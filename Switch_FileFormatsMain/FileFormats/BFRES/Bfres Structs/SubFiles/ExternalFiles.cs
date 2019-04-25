@@ -34,15 +34,7 @@ namespace Bfres.Structs
 
         private void UpdateEditor()
         {
-            HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
-            if (editor == null)
-            {
-                editor = new HexEditor();
-                editor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(editor);
-            }
-            editor.Text = Text;
-            editor.LoadData(Data);
+            ((BFRES)Parent.Parent).LoadEditors(this);
         }
         
         public override void Replace(string FileName)

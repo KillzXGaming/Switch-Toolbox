@@ -240,6 +240,7 @@ namespace FirstPlugin
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
             public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
 
             STToolStripItem[] toolExt = new STToolStripItem[1];
             public MenuExt()
