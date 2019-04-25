@@ -46,8 +46,8 @@ namespace FirstPlugin
             }
         }
 
-        Header header;
-        WiiU.Header headerU;
+        public Header header;
+        public WiiU.Header headerU;
         byte[] data;
 
         bool IsWiiU = false;

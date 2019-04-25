@@ -34,13 +34,14 @@
             this.barSlider3 = new BarSlider.BarSlider();
             this.barSlider2 = new BarSlider.BarSlider();
             this.barSlider1 = new BarSlider.BarSlider();
+            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.alphaPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorPB)).BeginInit();
             this.SuspendLayout();
             // 
             // alphaPB
             // 
-            this.alphaPB.Location = new System.Drawing.Point(207, 27);
+            this.alphaPB.Location = new System.Drawing.Point(208, 29);
             this.alphaPB.Name = "alphaPB";
             this.alphaPB.Size = new System.Drawing.Size(71, 16);
             this.alphaPB.TabIndex = 6;
@@ -49,7 +50,7 @@
             // 
             // colorPB
             // 
-            this.colorPB.Location = new System.Drawing.Point(140, 27);
+            this.colorPB.Location = new System.Drawing.Point(141, 29);
             this.colorPB.Name = "colorPB";
             this.colorPB.Size = new System.Drawing.Size(63, 16);
             this.colorPB.TabIndex = 7;
@@ -77,7 +78,7 @@
             this.barSlider4.IncrementAmount = 0.01F;
             this.barSlider4.InputName = "W";
             this.barSlider4.LargeChange = 5F;
-            this.barSlider4.Location = new System.Drawing.Point(141, 72);
+            this.barSlider4.Location = new System.Drawing.Point(141, 77);
             this.barSlider4.Maximum = 100F;
             this.barSlider4.Minimum = 0F;
             this.barSlider4.Name = "barSlider4";
@@ -123,7 +124,7 @@
             this.barSlider3.IncrementAmount = 0.01F;
             this.barSlider3.InputName = "Z";
             this.barSlider3.LargeChange = 5F;
-            this.barSlider3.Location = new System.Drawing.Point(3, 72);
+            this.barSlider3.Location = new System.Drawing.Point(3, 77);
             this.barSlider3.Maximum = 100F;
             this.barSlider3.Minimum = 0F;
             this.barSlider3.Name = "barSlider3";
@@ -169,7 +170,7 @@
             this.barSlider2.IncrementAmount = 0.01F;
             this.barSlider2.InputName = "Y";
             this.barSlider2.LargeChange = 5F;
-            this.barSlider2.Location = new System.Drawing.Point(141, 46);
+            this.barSlider2.Location = new System.Drawing.Point(141, 51);
             this.barSlider2.Maximum = 100F;
             this.barSlider2.Minimum = 0F;
             this.barSlider2.Name = "barSlider2";
@@ -215,7 +216,7 @@
             this.barSlider1.IncrementAmount = 0.01F;
             this.barSlider1.InputName = "X";
             this.barSlider1.LargeChange = 5F;
-            this.barSlider1.Location = new System.Drawing.Point(3, 46);
+            this.barSlider1.Location = new System.Drawing.Point(3, 51);
             this.barSlider1.Maximum = 100F;
             this.barSlider1.Minimum = 0F;
             this.barSlider1.Name = "barSlider1";
@@ -241,10 +242,20 @@
             this.barSlider1.ValueChanged += new System.EventHandler(this.barSlider_ValueChanged);
             this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.barSlider1_Scroll);
             // 
+            // stTextBox1
+            // 
+            this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.stTextBox1.Location = new System.Drawing.Point(3, 3);
+            this.stTextBox1.Name = "stTextBox1";
+            this.stTextBox1.ReadOnly = true;
+            this.stTextBox1.Size = new System.Drawing.Size(275, 20);
+            this.stTextBox1.TabIndex = 8;
+            // 
             // vector4SliderPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.stTextBox1);
             this.Controls.Add(this.colorPB);
             this.Controls.Add(this.alphaPB);
             this.Controls.Add(this.barSlider4);
@@ -252,10 +263,11 @@
             this.Controls.Add(this.barSlider2);
             this.Controls.Add(this.barSlider1);
             this.Name = "vector4SliderPanel";
-            this.Size = new System.Drawing.Size(282, 100);
+            this.Size = new System.Drawing.Size(282, 105);
             ((System.ComponentModel.ISupportInitialize)(this.alphaPB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorPB)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -267,5 +279,6 @@
         private BarSlider.BarSlider barSlider4;
         private System.Windows.Forms.PictureBox alphaPB;
         private System.Windows.Forms.PictureBox colorPB;
+        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

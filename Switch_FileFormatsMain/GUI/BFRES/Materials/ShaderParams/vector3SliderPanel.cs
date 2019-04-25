@@ -21,9 +21,11 @@ namespace FirstPlugin.Forms
 
         public vector3SliderPanel(string UniformName, float[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
             barSlider1.DataType = typeof(float);
             barSlider2.DataType = typeof(float);
             barSlider3.DataType = typeof(float);
@@ -37,9 +39,11 @@ namespace FirstPlugin.Forms
 
         public vector3SliderPanel(string UniformName, int[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
             barSlider1.DataType = typeof(int);
             barSlider2.DataType = typeof(int);
             barSlider3.DataType = typeof(int);
@@ -51,9 +55,11 @@ namespace FirstPlugin.Forms
 
         public vector3SliderPanel(string UniformName, uint[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
             barSlider1.DataType = typeof(uint);
             barSlider2.DataType = typeof(int);
             barSlider3.DataType = typeof(int);
@@ -74,6 +80,10 @@ namespace FirstPlugin.Forms
 
             if (IsColor)
             {
+                barSlider1.Minimum = 0;
+                barSlider2.Minimum = 0;
+                barSlider3.Minimum = 0;
+
                 var SetColor = Color.FromArgb(255,
                               Utils.FloatToIntClamp(values[0]),
                               Utils.FloatToIntClamp(values[1]),

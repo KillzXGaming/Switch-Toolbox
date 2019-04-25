@@ -51,9 +51,10 @@ namespace FirstPlugin.Forms
 
         public vector4SliderPanel(string UniformName, float[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
 
             barSlider1.DataType = typeof(float);
             barSlider2.DataType = typeof(float);
@@ -72,9 +73,10 @@ namespace FirstPlugin.Forms
 
         public vector4SliderPanel(string UniformName, uint[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
 
             barSlider1.DataType = typeof(uint);
             barSlider2.DataType = typeof(uint);
@@ -91,9 +93,10 @@ namespace FirstPlugin.Forms
 
         public vector4SliderPanel(string UniformName, int[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
 
             barSlider1.DataType = typeof(int);
             barSlider2.DataType = typeof(int);
@@ -118,6 +121,11 @@ namespace FirstPlugin.Forms
         {
             if (IsColor)
             {
+                barSlider1.Minimum = 0;
+                barSlider2.Minimum = 0;
+                barSlider3.Minimum = 0;
+                barSlider4.Minimum = 0;
+
                 colorPB.BackColor = Color.FromArgb(
                     Utils.FloatToIntClamp(255),
                     Utils.FloatToIntClamp(values[0]),
@@ -142,7 +150,6 @@ namespace FirstPlugin.Forms
         public void ApplyValueSingles()
         {
             SetColor(activeParam.Name, activeParam.ValueFloat);
-
             activeParam.ValueFloat = new float[]
             {
                 (float)barSlider1.Value,

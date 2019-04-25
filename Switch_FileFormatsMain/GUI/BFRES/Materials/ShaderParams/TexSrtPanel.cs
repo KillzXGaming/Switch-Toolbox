@@ -17,9 +17,10 @@ namespace FirstPlugin.Forms
     {
         public TexSrtPanel(TexSrt TexSrt, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
 
             scalingModeCN.Bind(typeof(TexSrtMode), TexSrt, "Mode");
             scalingModeCN.SelectedItem = TexSrt.Mode;

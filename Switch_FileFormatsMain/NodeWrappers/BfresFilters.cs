@@ -31,6 +31,8 @@ namespace FirstPlugin
         public static string FSCN = GetFilter(".bfscn");
         public static string FSHA = GetFilter(".bfspa");
 
+        public static string NUTEXB = GetFilter(".dds",".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+
         public static string GetFilter(Type type, object CheckAnimEffect = null, bool IsExporting = false)
         {
             if (type == typeof(TextureData)) return BNTX_TEX;

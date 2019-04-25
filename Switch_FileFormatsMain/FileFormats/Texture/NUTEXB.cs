@@ -235,50 +235,61 @@ namespace FirstPlugin
         {
             public STToolStripItem[] NewFileMenuExtensions => null;
             public STToolStripItem[] NewFromFileMenuExtensions => null;
-            public STToolStripItem[] ToolsMenuExtensions => newFileExt;
+            public STToolStripItem[] ToolsMenuExtensions => toolExt;
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
             public STToolStripItem[] EditMenuExtensions => null;
 
-            STToolStripItem[] newFileExt = new STToolStripItem[1];
+            STToolStripItem[] toolExt = new STToolStripItem[1];
             public MenuExt()
             {
-                newFileExt[0] = new STToolStripItem("Batch Export NUTEXB");
-                newFileExt[0].Click += Export;
+                toolExt[0] = new STToolStripItem("Batch Export NUTEXB");
+                toolExt[0].Click += Export;
             }
             private void Export(object sender, EventArgs args)
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Multiselect = true;
+                string formats = FileFilters.NUTEXB;
 
-                if (ofd.ShowDialog() == DialogResult.OK)
+                string[] forms = formats.Split('|');
+
+                List<string> Formats = new List<string>();
+                for (int i = 0; i < forms.Length; i++)
                 {
-                    foreach (string file in ofd.FileNames)
+                    if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
                     {
-                        NUTEXB texture = new NUTEXB();
-                        texture.Read(new FileReader(file));
+                        if (!forms[i].StartsWith("*"))
+                            Formats.Add(forms[i]);
+                    }
+                }
 
-                        Console.WriteLine(texture.Format.ToString("x") + " " + file + " " + texture.Text);
-                        try
+                BatchFormatExport form = new BatchFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string extension = form.GetSelectedExtension();
+
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.Multiselect = true;
+
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (string file in ofd.FileNames)
                         {
-                            Bitmap bitmap = texture.GetBitmap();
+                            NUTEXB texture = new NUTEXB();
+                            texture.Read(new FileReader(file));
 
-                            if (bitmap != null)
-                                bitmap.Save(System.IO.Path.GetFullPath(file) + texture.ArcOffset + texture.Text + ".png");
-                            else
-                                Console.WriteLine(" Not supported Format! " + texture.Format);
+                            try
+                            {
+                                texture.Export(System.IO.Path.GetFullPath(file) + texture.ArcOffset + texture.Text + extension);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Something went wrong??");
+                            }
 
-                            if (bitmap != null)
-                                bitmap.Dispose();
+                            texture = null;
+                            GC.Collect();
                         }
-                        catch
-                        {
-                            Console.WriteLine("Something went wrong??");
-                        }
-
-                        texture = null;
-                        GC.Collect();
                     }
                 }
             }
@@ -292,16 +303,13 @@ namespace FirstPlugin
         public byte[] ImageData;
         public string ArcOffset; //Temp for exporting in batch 
 
+        public override string ExportFilter => FileFilters.NUTEXB;
+        public override string ReplaceFilter => FileFilters.NUTEXB;
+
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                         "Microsoft DDS |*.dds|" +
-                         "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";
+            ofd.Filter = FileFilters.NUTEXB;
 
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -446,11 +454,12 @@ namespace FirstPlugin
 
             reader.Seek(pos - 112, System.IO.SeekOrigin.Begin); //Subtract size where the name occurs
             byte padding = reader.ReadByte();
+            string StrMagic = reader.ReadString(3);
             Text = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
 
             //We cannot check if it's swizzled properly
-            //So far if the name is blank, it's for Taiko No Tatsujin "Drum 'n' Fun
-            if (Text == "XNT")
+            //So far if this part is blank, it's for Taiko No Tatsujin "Drum 'n' Fun
+            if (StrMagic != "XNT")
                 IsSwizzled = false;
 
             reader.Seek(pos - 48, System.IO.SeekOrigin.Begin); //Subtract size of header
@@ -559,6 +568,7 @@ namespace FirstPlugin
             }
             long stringPos = writer.Position;
             writer.Write((byte)0x20);
+            writer.WriteSignature("XNT");
             writer.WriteString(Text);
             writer.Seek(stringPos + 0x40, System.IO.SeekOrigin.Begin);
             writer.Seek(4); //padding

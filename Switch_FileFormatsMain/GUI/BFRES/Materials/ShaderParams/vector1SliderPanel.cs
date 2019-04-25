@@ -6,8 +6,10 @@ namespace FirstPlugin.Forms
     public partial class vector1SliderPanel : ParamValueEditorBase
     {
         public vector1SliderPanel(float[] values, BfresShaderParam param) {
-            activeParam = param;
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
             barSlider1.DataType = typeof(float);
 
             barSlider1.Value = values[0];
@@ -15,8 +17,10 @@ namespace FirstPlugin.Forms
 
         public vector1SliderPanel(int[] values, BfresShaderParam param)
         {
-            activeParam = param;
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
             barSlider1.DataType = typeof(int);
 
             barSlider1.Value = values[0];
@@ -24,8 +28,10 @@ namespace FirstPlugin.Forms
 
         public vector1SliderPanel(uint[] values, BfresShaderParam param)
         {
-            activeParam = param;
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
             barSlider1.DataType = typeof(uint);
 
             barSlider1.Value = values[0];

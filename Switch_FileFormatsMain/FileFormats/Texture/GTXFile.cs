@@ -500,7 +500,6 @@ namespace FirstPlugin
         }
         public class SurfaceInfoParse : GX2.GX2Surface
         {
-
             public void Read(FileReader reader)
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;

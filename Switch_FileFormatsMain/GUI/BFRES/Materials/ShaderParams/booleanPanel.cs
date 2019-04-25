@@ -8,9 +8,10 @@ namespace FirstPlugin.Forms
     {
         public booleanPanel(bool[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
 
             if (values.Length >= 1)
                 stCheckBox1.Checked = values[0];

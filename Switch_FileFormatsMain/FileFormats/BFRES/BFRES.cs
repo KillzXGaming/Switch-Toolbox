@@ -253,12 +253,25 @@ namespace FirstPlugin
                                     if (bone.BoneAnimU != null)
                                     {
                                         foreach (var curve in bone.BoneAnimU.Curves)
-                                            bone.Nodes.Add("Anim Curve " + index++);
+                                            GetSkeletonAnimCurveOffset(curve.AnimDataOffset);
                                     }
                                     else
                                     {
                                         foreach (var curve in bone.BoneAnim.Curves)
-                                            bone.Nodes.Add("Anim Curve " + index++);
+                                            GetSkeletonAnimCurveOffset(curve.AnimDataOffset);
+                                    }
+                                }
+                            }
+                        }
+                        if (animFolder.Type == BRESGroupType.ColorAnim)
+                        {
+                            foreach (var anim in animFolder.Nodes)
+                            {
+                                if (anim is FMAA)
+                                {
+                                    foreach (FMAA.MaterialAnimEntry mat in ((FSKA)anim).Nodes)
+                                    {
+
                                     }
                                 }
                             }
@@ -268,6 +281,26 @@ namespace FirstPlugin
             }
 
             editor.treeViewCustom1.EndUpdate();
+        }
+
+        private string GetSkeletonAnimCurveOffset(uint offset)
+        {
+            switch ((FSKA.TrackType)offset)
+            {
+                case FSKA.TrackType.XPOS: return "Translate_X";
+                case FSKA.TrackType.YPOS: return "Translate_Y";
+                case FSKA.TrackType.ZPOS: return "Translate_Z";
+                case FSKA.TrackType.XROT: return "Rotate_X";
+                case FSKA.TrackType.YROT: return "Rotate_Y";
+                case FSKA.TrackType.ZROT: return "Rotate_Z";
+                case FSKA.TrackType.WROT: return "Rotate_W";
+                case FSKA.TrackType.XSCA: return "Scale_X";
+                case FSKA.TrackType.YSCA: return "Scale_Y";
+                case FSKA.TrackType.ZSCA: return "Scale_Z";
+                default:  offset.ToString(); break;
+            }
+
+            return "";
         }
 
         List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();

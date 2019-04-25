@@ -8,7 +8,7 @@ using Switch_Toolbox.Library;
 
 namespace FirstPlugin
 {
-    public class EFF : TreeNodeFile, IFileFormat
+    public class EFF : TreeNodeFile,IFileFormat
     {
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Namco Effect" };

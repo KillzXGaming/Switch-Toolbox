@@ -32,6 +32,7 @@
             this.stCheckBox2 = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stCheckBox3 = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stCheckBox4 = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
             this.SuspendLayout();
             // 
             // stCheckBox1
@@ -74,16 +75,26 @@
             this.stCheckBox4.Text = "Value4";
             this.stCheckBox4.UseVisualStyleBackColor = true;
             // 
+            // stTextBox1
+            // 
+            this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.stTextBox1.Location = new System.Drawing.Point(3, 2);
+            this.stTextBox1.Name = "stTextBox1";
+            this.stTextBox1.ReadOnly = true;
+            this.stTextBox1.Size = new System.Drawing.Size(276, 20);
+            this.stTextBox1.TabIndex = 6;
+            // 
             // booleanPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.stTextBox1);
             this.Controls.Add(this.stCheckBox3);
             this.Controls.Add(this.stCheckBox4);
             this.Controls.Add(this.stCheckBox2);
             this.Controls.Add(this.stCheckBox1);
             this.Name = "booleanPanel";
-            this.Size = new System.Drawing.Size(282, 78);
+            this.Size = new System.Drawing.Size(282, 82);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -94,5 +105,6 @@
         private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox2;
         private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox3;
         private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox4;
+        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

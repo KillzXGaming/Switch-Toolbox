@@ -206,6 +206,7 @@
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
     <Compile Include="FileFormats\Bin\KartParts.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
+    <Compile Include="FileFormats\Effects\EFCF.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="FileFormats\Layout\BFLYT.cs" />
     <Compile Include="FileFormats\BFRES\Bfres Structs\CurveHelper.cs" />
     <Compile Include="FileFormats\BFRES\BFRES.cs" />
+    <Compile Include="FileFormats\Texture\NUT.cs" />
     <Compile Include="FileFormats\XLINK\XLINK.cs" />
     <Compile Include="GL\Helpers\DepthGLControl.cs" />
     <Compile Include="GL\ShaderData\AglShaderOdyssey.cs" />
@@ -263,6 +265,12 @@
     </Compile>
     <Compile Include="GUI\BFRES\Materials\ShaderAssign\SamplerInputListEdit.Designer.cs">
       <DependentUpon>SamplerInputListEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ParamValueDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\ParamValueDialog.Designer.cs">
+      <DependentUpon>ParamValueDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\Materials\ShaderParams\ParamValueEditorBase.cs">
       <SubType>UserControl</SubType>
@@ -373,6 +381,12 @@
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathPointNode.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingEntryWrapper.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingWrapper.cs" />
+    <Compile Include="GUI\Editors\EffectTableEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\EffectTableEditor.Designer.cs">
+      <DependentUpon>EffectTableEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\KCL\CollisionMaterialEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -861,6 +875,9 @@
     <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\ColorWheel.resx">
       <DependentUpon>ColorWheel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\ParamValueDialog.resx">
+      <DependentUpon>ParamValueDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\ShaderParamEditor.resx">
       <DependentUpon>ShaderParamEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -974,6 +991,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\AnimKeyViewer.resx">
       <DependentUpon>AnimKeyViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\EffectTableEditor.resx">
+      <DependentUpon>EffectTableEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.resx">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>

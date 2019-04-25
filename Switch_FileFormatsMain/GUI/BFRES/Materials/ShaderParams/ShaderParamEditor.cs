@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres;
 using Switch_Toolbox.Library.Forms;
+using OpenTK;
 
 namespace FirstPlugin.Forms
 {
@@ -20,91 +21,192 @@ namespace FirstPlugin.Forms
             InitializeComponent();
         }
 
+        public ImageList il = new ImageList();
+
         FMAT material;
 
         public void InitializeShaderParamList(FMAT mat)
         {
             material = mat;
 
-            stFlowLayoutPanel1.SuspendLayout();
-            stFlowLayoutPanel1.Controls.Clear();
+            int CurParam = 0;
 
-
-            foreach (BfresShaderParam param in mat.matparam.Values)
+            shaderParamListView.Items.Clear();
+            foreach (BfresShaderParam prm in mat.matparam.Values)
             {
-                if (param.Type == ShaderParamType.Bool ||
-                    param.Type == ShaderParamType.Bool2 ||
-                    param.Type == ShaderParamType.Bool3 ||
-                    param.Type == ShaderParamType.Bool4)
+                string DisplayValue = "";
+
+                var item = new ListViewItem(prm.Name);
+
+                switch (prm.Type)
                 {
-                    booleanPanel panel = new booleanPanel(param.ValueBool, param);
-                    LoadDropPanel(panel, param);
+                    case ShaderParamType.Float:
+                    case ShaderParamType.Float2:
+                    case ShaderParamType.Float2x2:
+                    case ShaderParamType.Float2x3:
+                    case ShaderParamType.Float2x4:
+                    case ShaderParamType.Float3x2:
+                    case ShaderParamType.Float3x3:
+                    case ShaderParamType.Float3x4:
+                    case ShaderParamType.Float4x2:
+                    case ShaderParamType.Float4x3:
+                    case ShaderParamType.Float4x4:
+                        DisplayValue = SetValueToString(prm.ValueFloat);
+                        break;
+                    case ShaderParamType.Float3:
+                        DisplayValue = SetValueToString(prm.ValueFloat);
+                        break;
+                    case ShaderParamType.Float4:
+                        DisplayValue = SetValueToString(prm.ValueFloat);
+                        break;
                 }
-                if (param.Type == ShaderParamType.TexSrt)
+
+                item.UseItemStyleForSubItems = false;
+                item.SubItems.Add(DisplayValue);
+                item.SubItems.Add("");
+                item.SubItems[2].BackColor = GetColor(prm);
+                shaderParamListView.View = View.Details;
+                shaderParamListView.Items.Add(item);
+                CurParam++;
+            }
+            il.ImageSize = new Size(10, 10);
+            shaderParamListView.SmallImageList = il;
+            shaderParamListView.FullRowSelect = true;
+        }
+
+        private Color GetColor(BfresShaderParam prm)
+        {
+            Vector4 col = new Vector4();
+
+            switch (prm.Type)
+            {
+                case ShaderParamType.Float3:
+                    col = new Vector4(prm.ValueFloat[0], prm.ValueFloat[1], prm.ValueFloat[2], 1);
+                    break;
+                case ShaderParamType.Float4:
+                    col = new Vector4(prm.ValueFloat[0], prm.ValueFloat[1], prm.ValueFloat[2], prm.ValueFloat[3]);
+                    break;
+            }
+
+            bool IsColor = prm.Name.Contains("Color") || prm.Name.Contains("color");
+
+            Color SetColor = Color.FromArgb(40, 40, 40);
+
+            if (IsColor)
+            {
+                int someIntX = (int)Math.Ceiling(col.X * 255);
+                int someIntY = (int)Math.Ceiling(col.Y * 255);
+                int someIntZ = (int)Math.Ceiling(col.Z * 255);
+                int someIntW = (int)Math.Ceiling(col.W * 255);
+                if (someIntX <= 255 && someIntY <= 255 && someIntZ <= 255 && someIntW <= 255)
                 {
-                    TexSrtPanel panel = new TexSrtPanel(param.ValueTexSrt, param);
-                    LoadDropPanel(panel, param);
+                    Console.WriteLine($"{prm.Name} R {someIntX} G {someIntY} B {someIntZ}");
+
+                    SetColor = Color.FromArgb(
+                255,
+                someIntX,
+                someIntY,
+                someIntZ
+                );
                 }
-                if (param.Type == ShaderParamType.Float)
-                {
-                    vector1SliderPanel panel = new vector1SliderPanel(param.ValueFloat, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Float2)
-                {
-                    vector2SliderPanel panel = new vector2SliderPanel(param.ValueFloat, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Float3)
-                {
-                    vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueFloat, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Float4)
-                {
-                    vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueFloat, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.UInt)
-                {
-                    vector1SliderPanel panel = new vector1SliderPanel(param.ValueUint, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.UInt2)
-                {
-                    vector2SliderPanel panel = new vector2SliderPanel(param.ValueUint, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.UInt3)
-                {
-                    vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueUint, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.UInt4)
-                {
-                    vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueUint, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Int)
-                {
-                    vector1SliderPanel panel = new vector1SliderPanel(param.ValueInt, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Int2)
-                {
-                    vector2SliderPanel panel = new vector2SliderPanel(param.ValueInt, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Int3)
-                {
-                    vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueInt, param);
-                    LoadDropPanel(panel, param);
-                }
-                if (param.Type == ShaderParamType.Int4)
-                {
-                    vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueInt, param);
-                    LoadDropPanel(panel, param);
-                }
+            }
+
+            return SetColor;
+        }
+
+        private string SetValueToString(object values)
+        {
+            if (values is float[])
+                return string.Join(" , ", values as float[]);
+            else if (values is bool[])
+                return string.Join(" , ", values as bool[]);
+            else if (values is int[])
+                return string.Join(" , ", values as int[]);
+            else if (values is uint[])
+                return string.Join(" , ", values as uint[]);
+            else
+                return "";
+        }
+
+        STFlowLayoutPanel stFlowLayoutPanel1;
+        private void LoadDropDownPanel(BfresShaderParam param)
+        {
+            stFlowLayoutPanel1 = new STFlowLayoutPanel();
+            stFlowLayoutPanel1.Dock = DockStyle.Fill;
+            stFlowLayoutPanel1.SuspendLayout();
+
+            if (param.Type == ShaderParamType.Bool ||
+               param.Type == ShaderParamType.Bool2 ||
+               param.Type == ShaderParamType.Bool3 ||
+               param.Type == ShaderParamType.Bool4)
+            {
+                booleanPanel panel = new booleanPanel(param.ValueBool, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.TexSrt)
+            {
+                TexSrtPanel panel = new TexSrtPanel(param.ValueTexSrt, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Float)
+            {
+                vector1SliderPanel panel = new vector1SliderPanel(param.ValueFloat, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Float2)
+            {
+                vector2SliderPanel panel = new vector2SliderPanel(param.ValueFloat, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Float3)
+            {
+                vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueFloat, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Float4)
+            {
+                vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueFloat, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.UInt)
+            {
+                vector1SliderPanel panel = new vector1SliderPanel(param.ValueUint, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.UInt2)
+            {
+                vector2SliderPanel panel = new vector2SliderPanel(param.ValueUint, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.UInt3)
+            {
+                vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueUint, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.UInt4)
+            {
+                vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueUint, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Int)
+            {
+                vector1SliderPanel panel = new vector1SliderPanel(param.ValueInt, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Int2)
+            {
+                vector2SliderPanel panel = new vector2SliderPanel(param.ValueInt, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Int3)
+            {
+                vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueInt, param);
+                LoadDropPanel(panel, param);
+            }
+            if (param.Type == ShaderParamType.Int4)
+            {
+                vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueInt, param);
+                LoadDropPanel(panel, param);
             }
 
             stFlowLayoutPanel1.ResumeLayout();
@@ -122,6 +224,37 @@ namespace FirstPlugin.Forms
             panel.Refresh();
 
             return true;
+        }
+
+        public void LoadDialogDropPanel(ParamValueDialog control, BfresShaderParam param)
+        {
+            ParamValueEditorBase panel = new ParamValueEditorBase();
+
+            switch (param.Type)
+            {
+                case ShaderParamType.Float: panel = new vector1SliderPanel(param.ValueFloat, param); break;
+                case ShaderParamType.Float2: panel = new vector2SliderPanel(param.ValueFloat, param); break;
+                case ShaderParamType.Float3: panel = new vector3SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.Float4: panel = new vector4SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.Int: panel = new vector1SliderPanel(param.ValueFloat, param); break;
+                case ShaderParamType.Int2: panel = new vector2SliderPanel(param.ValueFloat, param); break;
+                case ShaderParamType.Int3: panel = new vector3SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.Int4: panel = new vector4SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.UInt: panel = new vector1SliderPanel(param.ValueFloat, param); break;
+                case ShaderParamType.UInt2: panel = new vector2SliderPanel(param.ValueFloat, param); break;
+                case ShaderParamType.UInt3: panel = new vector3SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.UInt4: panel = new vector4SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.TexSrt: panel = new TexSrtPanel(param.ValueTexSrt,param); break;
+                case ShaderParamType.Bool: panel = new booleanPanel(param.ValueBool, param); break;
+                case ShaderParamType.Bool2: panel = new booleanPanel(param.ValueBool, param); break;
+                case ShaderParamType.Bool3: panel = new booleanPanel(param.ValueBool, param); break;
+                case ShaderParamType.Bool4: panel = new booleanPanel(param.ValueBool, param); break;
+            }
+            control.Width = panel.Width;
+            control.Height = panel.Height + 70;
+            control.CanResize = false;
+            control.BackColor = FormThemes.BaseTheme.DropdownPanelBackColor;
+            control.AddControl(panel);
         }
 
         public void LoadDropPanel(ParamValueEditorBase control, BfresShaderParam param)
@@ -218,6 +351,37 @@ namespace FirstPlugin.Forms
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FMAT2XML.Read(material, ofd.FileName, true);
+            }
+        }
+
+        private void shaderParamListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void shaderParamListView_Click(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void shaderParamListView_DoubleClick(object sender, EventArgs e)
+        {
+            if (shaderParamListView.SelectedItems.Count > 0)
+            {
+                var currentItem = shaderParamListView.SelectedItems[0];
+
+                if (material.matparam.ContainsKey(currentItem.Text))
+                {
+                    ParamValueDialog dialog = new ParamValueDialog();
+                    LoadDialogDropPanel(dialog, material.matparam[currentItem.Text]);
+                    dialog.Location = currentItem.Position;
+
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        currentItem.SubItems[1].Text = GetValueString(material.matparam[currentItem.Text]);
+                        currentItem.SubItems[2].BackColor = GetColor(material.matparam[currentItem.Text]);
+                    }
+                }
             }
         }
     }

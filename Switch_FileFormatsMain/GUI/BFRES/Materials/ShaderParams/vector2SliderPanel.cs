@@ -7,9 +7,11 @@ namespace FirstPlugin.Forms
     {
         public vector2SliderPanel(float[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
             barSlider1.DataType = typeof(float);
             barSlider2.DataType = typeof(float);
 
@@ -19,9 +21,11 @@ namespace FirstPlugin.Forms
 
         public vector2SliderPanel(int[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
             barSlider1.DataType = typeof(int);
             barSlider2.DataType = typeof(int);
 
@@ -31,9 +35,11 @@ namespace FirstPlugin.Forms
 
         public vector2SliderPanel(uint[] values, BfresShaderParam param)
         {
-            activeParam = param;
-
             InitializeComponent();
+
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
             barSlider1.DataType = typeof(uint);
             barSlider2.DataType = typeof(uint);
 

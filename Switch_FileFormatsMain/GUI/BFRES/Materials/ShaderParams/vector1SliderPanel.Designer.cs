@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.barSlider1 = new BarSlider.BarSlider();
+            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
             this.SuspendLayout();
             // 
             // barSlider1
@@ -41,15 +42,20 @@
             this.barSlider1.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.barSlider1.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.barSlider1.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider1.DataType = null;
             this.barSlider1.DrawSemitransparentThumb = false;
             this.barSlider1.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider1.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider1.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
             this.barSlider1.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.barSlider1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.barSlider1.ForeColor = this.ForeColor;
+            this.barSlider1.IncrementAmount = 0.01F;
             this.barSlider1.InputName = "X";
             this.barSlider1.LargeChange = 5F;
-            this.barSlider1.Location = new System.Drawing.Point(3, 24);
+            this.barSlider1.Location = new System.Drawing.Point(3, 29);
+            this.barSlider1.Maximum = 300000F;
+            this.barSlider1.Minimum = -300000F;
             this.barSlider1.Name = "barSlider1";
             this.barSlider1.Precision = 0.01F;
             this.barSlider1.ScaleDivisions = 1;
@@ -71,23 +77,32 @@
             this.barSlider1.UseInterlapsedBar = false;
             this.barSlider1.Value = 30F;
             this.barSlider1.ValueChanged += new System.EventHandler(this.barSlider1_ValueChanged);
-            this.barSlider1.Maximum = 300000;
-            this.barSlider1.Minimum = -300000;
-            this.barSlider1.ForeColor = this.ForeColor;
+            // 
+            // stTextBox1
+            // 
+            this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.stTextBox1.Location = new System.Drawing.Point(3, 3);
+            this.stTextBox1.Name = "stTextBox1";
+            this.stTextBox1.ReadOnly = true;
+            this.stTextBox1.Size = new System.Drawing.Size(276, 20);
+            this.stTextBox1.TabIndex = 2;
             // 
             // vector1SliderPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.stTextBox1);
             this.Controls.Add(this.barSlider1);
             this.Name = "vector1SliderPanel";
-            this.Size = new System.Drawing.Size(282, 52);
+            this.Size = new System.Drawing.Size(282, 57);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private BarSlider.BarSlider barSlider1;
+        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

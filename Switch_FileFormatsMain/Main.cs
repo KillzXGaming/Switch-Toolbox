@@ -126,13 +126,16 @@ namespace FirstPlugin
        //     Formats.Add(typeof(BFLYT));
             Formats.Add(typeof(GFPAK));
             Formats.Add(typeof(NUTEXB));
+            Formats.Add(typeof(NUT));
             Formats.Add(typeof(GTXFile));
             Formats.Add(typeof(AAMP));
             Formats.Add(typeof(PTCL));
             Formats.Add(typeof(EFF));
+            Formats.Add(typeof(EFCF));
+            
         //    Formats.Add(typeof(NCA));
         //    Formats.Add(typeof(XCI));
-         //   Formats.Add(typeof(NSP));
+        //   Formats.Add(typeof(NSP));
             Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));

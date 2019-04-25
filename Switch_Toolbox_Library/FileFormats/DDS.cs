@@ -97,6 +97,21 @@ namespace Switch_Toolbox.Library
         public const uint FOURCC_ATI2 = 0x32495441;
         public const uint FOURCC_RXGB = 0x42475852;
 
+        // RGBA Masks
+        private static int[] A1R5G5B5_MASKS = { 0x7C00, 0x03E0, 0x001F, 0x8000 };
+        private static int[] X1R5G5B5_MASKS = { 0x7C00, 0x03E0, 0x001F, 0x0000 };
+        private static int[] A4R4G4B4_MASKS = { 0x0F00, 0x00F0, 0x000F, 0xF000 };
+        private static int[] X4R4G4B4_MASKS = { 0x0F00, 0x00F0, 0x000F, 0x0000 };
+        private static int[] R5G6B5_MASKS = { 0xF800, 0x07E0, 0x001F, 0x0000 };
+        private static int[] R8G8B8_MASKS = { 0xFF0000, 0x00FF00, 0x0000FF, 0x000000 };
+        private static uint[] A8B8G8R8_MASKS = { 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000 };
+        private static int[] X8B8G8R8_MASKS = { 0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000 };
+        private static uint[] A8R8G8B8_MASKS = { 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000 };
+        private static int[] X8R8G8B8_MASKS = { 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00000000 };
+
+        private static int[] L8_MASKS = { 0x000000FF, 0x0000 ,};
+        private static int[] A8L8_MASKS = { 0x000000FF, 0x0F00, };
+
         public enum CubemapFace
         {
             PosX,
@@ -156,8 +171,6 @@ namespace Switch_Toolbox.Library
         {
             switch (fourCC)
             {
-                case 0x00000000: //RGBA
-                    return false;
                 case FOURCC_DXT1:
                 case FOURCC_DXT2:
                 case FOURCC_DXT3:
@@ -175,34 +188,6 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public static uint getFormatSize(uint fourCC)
-        {
-            switch (fourCC)
-            {
-                case 0x00000000: //RGBA
-                    return 0x4;
-                case FOURCC_DXT1:
-                    return 0x8;
-                case FOURCC_DXT2:
-                    return 0x10;
-                case FOURCC_DXT3:
-                    return 0x10;
-                case FOURCC_DXT4:
-                    return 0x10;
-                case FOURCC_DXT5:
-                    return 0x10;
-                case FOURCC_ATI1:
-                case FOURCC_BC4U:
-                case FOURCC_BC4S:
-                    return 0x8;
-                case FOURCC_ATI2:
-                case FOURCC_BC5U:
-                case FOURCC_BC5S:
-                    return 0x10;
-                default:
-                    return 0;
-            }
-        }
         public void SetFourCC(DXGI_FORMAT Format)
         {
             switch (Format)
@@ -222,7 +207,6 @@ namespace Switch_Toolbox.Library
             }
         }
         public bool IsDX10;
-        public uint imageSize;
 
         public Header header;
         public DX10Header DX10header;
@@ -513,12 +497,36 @@ namespace Switch_Toolbox.Library
                 ReadDX10Header(reader);
             }
 
-            if (IsCompressed())
+            bool IsCompressed = false;
+            bool HasLuminance = false;
+            bool HasAlpha = false;
+            bool IsRGB = false;
+
+            if (header.ddspf.flags == 4)
+                IsCompressed = true;
+            else if (header.ddspf.flags == (uint)DDPF.LUMINANCE || header.ddspf.flags == 2)
+                HasLuminance = true;
+            else if (header.ddspf.flags == 0x20001)
             {
-                imageSize = ((header.width + 3) >> 2) * ((header.height + 3) >> 2) * getFormatSize(header.ddspf.fourCC);
+                HasLuminance = true;
+                HasAlpha = true;
             }
-            else
-                imageSize = header.width * header.height * getFormatSize(header.ddspf.fourCC);
+            else if (header.ddspf.flags == (uint)DDPF.RGB)
+            {
+                IsRGB = true;
+            }
+            else if (header.ddspf.flags == 0x41)
+            {
+                IsRGB = true;
+                HasAlpha = true;
+                HasAlpha = true;
+            }
+
+            Format = GetFormat();
+
+            if (!IsDX10 && !IsCompressed) {
+                Format = GetUncompressedType(IsRGB, HasAlpha, HasLuminance, header.ddspf);
+            }
 
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
             bdata = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position));
@@ -526,11 +534,89 @@ namespace Switch_Toolbox.Library
             reader.Dispose();
             reader.Close();
 
+
             ArrayCount = 1;
             MipCount = header.mipmapCount;
             Width = header.width;
             Height = header.height;
-            Format = GetFormat();
+        }
+        private TEX_FORMAT GetUncompressedType(bool IsRGB, bool HasAlpha, bool HasLuminance, Header.DDS_PixelFormat header)
+        {
+            uint bpp = header.RGBBitCount;
+            uint RedMask = header.RBitMask;
+            uint GreenMask = header.GBitMask;
+            uint BlueMask = header.BBitMask;
+            uint AlphaMask = HasAlpha ? header.ABitMask : 0;
+
+            if (HasLuminance)
+            {
+                throw new Exception("Luminance not supported!");
+            }
+            else if (IsRGB)
+            {
+                if (bpp == 16)
+                {
+                    if (RedMask == A1R5G5B5_MASKS[0] && GreenMask == A1R5G5B5_MASKS[1] && BlueMask == A1R5G5B5_MASKS[2] && AlphaMask == A1R5G5B5_MASKS[3])
+                    {
+                        return TEX_FORMAT.B5G5R5A1_UNORM;
+                    }
+                    else if (RedMask == X1R5G5B5_MASKS[0] && GreenMask == X1R5G5B5_MASKS[1] && BlueMask == X1R5G5B5_MASKS[2] && AlphaMask == X1R5G5B5_MASKS[3])
+                    {
+                        return TEX_FORMAT.B5G6R5_UNORM;
+                    }
+                    else if (RedMask == A4R4G4B4_MASKS[0] && GreenMask == A4R4G4B4_MASKS[1] && BlueMask == A4R4G4B4_MASKS[2] && AlphaMask == A4R4G4B4_MASKS[3])
+                    {
+                        return TEX_FORMAT.B4G4R4A4_UNORM;
+                    }
+                    else if (RedMask == X4R4G4B4_MASKS[0] && GreenMask == X4R4G4B4_MASKS[1] && BlueMask == X4R4G4B4_MASKS[2] && AlphaMask == X4R4G4B4_MASKS[3])
+                    {
+                        return TEX_FORMAT.B4G4R4A4_UNORM;
+                    }
+                    else if (RedMask == R5G6B5_MASKS[0] && GreenMask == R5G6B5_MASKS[1] && BlueMask == R5G6B5_MASKS[2] && AlphaMask == R5G6B5_MASKS[3])
+                    {
+                        return TEX_FORMAT.B5G6R5_UNORM;
+                    }
+                    else
+                    {
+                        throw new Exception("Unsupported 16 bit image!");
+                    }
+                }
+                else if (bpp == 24)
+                {
+                    if (RedMask == R8G8B8_MASKS[0] && GreenMask == R8G8B8_MASKS[1] && BlueMask == R8G8B8_MASKS[2] && AlphaMask == R8G8B8_MASKS[3])
+                    {
+                        return TEX_FORMAT.R8G8_B8G8_UNORM;
+                    }
+                    else
+                    {
+                        throw new Exception("Unsupported 24 bit image!");
+                    }
+                }
+                else if (bpp == 32)
+                {
+                    if (RedMask == A8B8G8R8_MASKS[0] && GreenMask == A8B8G8R8_MASKS[1] && BlueMask == A8B8G8R8_MASKS[2] && AlphaMask == A8B8G8R8_MASKS[3])
+                    {
+                        return TEX_FORMAT.R8G8B8A8_UNORM;
+                    }
+                    else if (RedMask == X8B8G8R8_MASKS[0] && GreenMask == X8B8G8R8_MASKS[1] && BlueMask == X8B8G8R8_MASKS[2] && AlphaMask == X8B8G8R8_MASKS[3])
+                    {
+                        return TEX_FORMAT.R8G8_B8G8_UNORM;
+                    }
+                    else if (RedMask == A8R8G8B8_MASKS[0] && GreenMask == A8R8G8B8_MASKS[1] && BlueMask == A8R8G8B8_MASKS[2] && AlphaMask == A8R8G8B8_MASKS[3])
+                    {
+                        return TEX_FORMAT.R8G8B8A8_UNORM;
+                    }
+                    else if (RedMask == X8R8G8B8_MASKS[0] && GreenMask == X8R8G8B8_MASKS[1] && BlueMask == X8R8G8B8_MASKS[2] && AlphaMask == X8R8G8B8_MASKS[3])
+                    {
+                        return TEX_FORMAT.R8G8_B8G8_UNORM;
+                    }
+                    else
+                    {
+                        throw new Exception("Unsupported 32 bit image!");
+                    }
+                }
+            }
+            return TEX_FORMAT.UNKNOWN;
         }
         private void ReadDX10Header(BinaryDataReader reader)
         {
@@ -663,9 +749,9 @@ namespace Switch_Toolbox.Library
             using (FileReader reader = new FileReader(dds.bdata))
             {
                 var Surfaces = new List<STGenericTexture.Surface>();
-
-                uint formatSize = getFormatSize(dds.header.ddspf.fourCC);
-                bool isBlock = getFormatBlock(dds.header.ddspf.fourCC);
+              
+                uint formatSize = GetBytesPerPixel(dds.Format);
+                bool isBlock = dds.IsCompressed();
                 if (dds.header.mipmapCount == 0)
                     dds.header.mipmapCount = 1;
 
@@ -818,6 +904,12 @@ namespace Switch_Toolbox.Library
                     case DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
                     case DXGI_FORMAT.DXGI_FORMAT_BC5_TYPELESS:
                     case DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC6H_TYPELESS:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
+                    case DXGI_FORMAT.DXGI_FORMAT_BC7_TYPELESS:
                         return true;
                     default:
                         return false;
@@ -843,7 +935,7 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
-        public void Save(DDS dds, string FileName, List<STGenericTexture.Surface> data = null)
+        public void Save(DDS dds, string FileName, List<Surface> data = null)
         {
             FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
             var header = dds.header;

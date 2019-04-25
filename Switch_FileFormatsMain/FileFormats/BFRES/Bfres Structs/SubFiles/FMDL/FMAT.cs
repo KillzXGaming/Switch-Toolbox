@@ -319,7 +319,7 @@ namespace Bfres.Structs
     public class BfresShaderParam
     {
         public ShaderParamType Type;
-        public string Name;
+        public string Name { get; set; }
 
         public bool HasPadding;
         public int PaddingLength = 0;

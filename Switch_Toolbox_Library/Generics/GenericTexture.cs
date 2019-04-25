@@ -412,8 +412,8 @@ namespace Switch_Toolbox.Library
             else
             {
                 //If blue channel becomes first, do not swap them!
-              //  if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
-                  //  return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
+                if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
+                    return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
                 if (IsAtscFormat(Format))
                     return ConvertBgraToRgba(ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1));
                 else
@@ -586,8 +586,7 @@ namespace Switch_Toolbox.Library
         }
         public void SaveDDS(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {
-            var data = GetImageData(SurfaceLevel, MipLevel);
-            var surfaces = new List<Surface>();
+            var surfaces = GetSurfaces();
 
             if (Depth == 0)
                 Depth = 1;
@@ -598,8 +597,12 @@ namespace Switch_Toolbox.Library
             dds.header.height = Height;
             dds.header.depth = Depth;
             dds.header.mipmapCount = (uint)MipCount;
-            dds.header.pitchOrLinearSize = (uint)data.Length;
-            dds.SetFlags((DDS.DXGI_FORMAT)Format);
+            dds.header.pitchOrLinearSize = (uint)surfaces[0].mipmaps[0].Length;
+
+            if (surfaces.Count > 0)
+                dds.SetFlags((DDS.DXGI_FORMAT)Format);
+            else
+                dds.SetFlags((DDS.DXGI_FORMAT)Format);
 
             if (dds.IsDX10)
             {
@@ -607,11 +610,11 @@ namespace Switch_Toolbox.Library
                     dds.DX10header = new DDS.DX10Header();
 
                 dds.DX10header.ResourceDim = 3;
-                dds.DX10header.arrayFlag = 1;
+                dds.DX10header.arrayFlag = (uint)surfaces.Count;
             }
 
 
-            dds.Save(dds, FileName, GetSurfaces());
+            dds.Save(dds, FileName, surfaces);
         }
         public void LoadOpenGLTexture()
         {
@@ -715,6 +718,9 @@ namespace Switch_Toolbox.Library
         }
         private static byte[] ConvertBgraToRgba(byte[] bytes)
         {
+            if (bytes == null)
+                throw new Exception("Data block returned null. Make sure the parameters and image properties are correct!");
+
             for (int i = 0; i < bytes.Length; i += 4)
             {
                 var temp = bytes[i];

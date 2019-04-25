@@ -38,6 +38,7 @@
             this.rotXUD = new BarSlider.BarSlider();
             this.transXUD = new BarSlider.BarSlider();
             this.transYUD = new BarSlider.BarSlider();
+            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
             this.SuspendLayout();
             // 
             // scalingModeCN
@@ -46,7 +47,7 @@
             this.scalingModeCN.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Inset;
             this.scalingModeCN.ButtonColor = System.Drawing.Color.Empty;
             this.scalingModeCN.FormattingEnabled = true;
-            this.scalingModeCN.Location = new System.Drawing.Point(214, 25);
+            this.scalingModeCN.Location = new System.Drawing.Point(214, 33);
             this.scalingModeCN.Name = "scalingModeCN";
             this.scalingModeCN.ReadOnly = true;
             this.scalingModeCN.Size = new System.Drawing.Size(121, 21);
@@ -56,7 +57,7 @@
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(133, 28);
+            this.stLabel1.Location = new System.Drawing.Point(133, 36);
             this.stLabel1.Name = "stLabel1";
             this.stLabel1.Size = new System.Drawing.Size(75, 13);
             this.stLabel1.TabIndex = 1;
@@ -71,6 +72,7 @@
             this.scaYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.scaYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.scaYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.scaYUD.DataType = null;
             this.scaYUD.DrawSemitransparentThumb = false;
             this.scaYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -78,9 +80,10 @@
             this.scaYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.scaYUD.ForeColor = System.Drawing.Color.White;
+            this.scaYUD.IncrementAmount = 0.01F;
             this.scaYUD.InputName = "Y";
             this.scaYUD.LargeChange = 5F;
-            this.scaYUD.Location = new System.Drawing.Point(204, 57);
+            this.scaYUD.Location = new System.Drawing.Point(204, 65);
             this.scaYUD.Maximum = 100F;
             this.scaYUD.Minimum = 0F;
             this.scaYUD.Name = "scaYUD";
@@ -108,7 +111,7 @@
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(7, 57);
+            this.stLabel2.Location = new System.Drawing.Point(7, 65);
             this.stLabel2.Name = "stLabel2";
             this.stLabel2.Size = new System.Drawing.Size(37, 13);
             this.stLabel2.TabIndex = 2;
@@ -117,7 +120,7 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(7, 91);
+            this.stLabel3.Location = new System.Drawing.Point(7, 99);
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(50, 13);
             this.stLabel3.TabIndex = 3;
@@ -126,7 +129,7 @@
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(0, 125);
+            this.stLabel4.Location = new System.Drawing.Point(0, 133);
             this.stLabel4.Name = "stLabel4";
             this.stLabel4.Size = new System.Drawing.Size(62, 13);
             this.stLabel4.TabIndex = 4;
@@ -141,6 +144,7 @@
             this.scaXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.scaXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.scaXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.scaXUD.DataType = null;
             this.scaXUD.DrawSemitransparentThumb = false;
             this.scaXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -148,9 +152,10 @@
             this.scaXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.scaXUD.ForeColor = System.Drawing.Color.White;
+            this.scaXUD.IncrementAmount = 0.01F;
             this.scaXUD.InputName = "X";
             this.scaXUD.LargeChange = 5F;
-            this.scaXUD.Location = new System.Drawing.Point(67, 57);
+            this.scaXUD.Location = new System.Drawing.Point(67, 65);
             this.scaXUD.Maximum = 100F;
             this.scaXUD.Minimum = 0F;
             this.scaXUD.Name = "scaXUD";
@@ -184,6 +189,7 @@
             this.rotXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.rotXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.rotXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.rotXUD.DataType = null;
             this.rotXUD.DrawSemitransparentThumb = false;
             this.rotXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.rotXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -191,9 +197,10 @@
             this.rotXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.rotXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.rotXUD.ForeColor = System.Drawing.Color.White;
+            this.rotXUD.IncrementAmount = 0.01F;
             this.rotXUD.InputName = "X";
             this.rotXUD.LargeChange = 5F;
-            this.rotXUD.Location = new System.Drawing.Point(67, 88);
+            this.rotXUD.Location = new System.Drawing.Point(67, 96);
             this.rotXUD.Maximum = 100F;
             this.rotXUD.Minimum = 0F;
             this.rotXUD.Name = "rotXUD";
@@ -227,6 +234,7 @@
             this.transXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.transXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.transXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.transXUD.DataType = null;
             this.transXUD.DrawSemitransparentThumb = false;
             this.transXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.transXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -234,9 +242,10 @@
             this.transXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.transXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.transXUD.ForeColor = System.Drawing.Color.White;
+            this.transXUD.IncrementAmount = 0.01F;
             this.transXUD.InputName = "X";
             this.transXUD.LargeChange = 5F;
-            this.transXUD.Location = new System.Drawing.Point(67, 119);
+            this.transXUD.Location = new System.Drawing.Point(67, 127);
             this.transXUD.Maximum = 100F;
             this.transXUD.Minimum = 0F;
             this.transXUD.Name = "transXUD";
@@ -270,6 +279,7 @@
             this.transYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.transYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.transYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.transYUD.DataType = null;
             this.transYUD.DrawSemitransparentThumb = false;
             this.transYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.transYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -277,9 +287,10 @@
             this.transYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.transYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.transYUD.ForeColor = System.Drawing.Color.White;
+            this.transYUD.IncrementAmount = 0.01F;
             this.transYUD.InputName = "Y";
             this.transYUD.LargeChange = 5F;
-            this.transYUD.Location = new System.Drawing.Point(204, 119);
+            this.transYUD.Location = new System.Drawing.Point(204, 127);
             this.transYUD.Maximum = 100F;
             this.transYUD.Minimum = 0F;
             this.transYUD.Name = "transYUD";
@@ -304,10 +315,20 @@
             this.transYUD.Value = 30F;
             this.transYUD.ValueChanged += new System.EventHandler(this.barSlider_ValueChanged);
             // 
+            // stTextBox1
+            // 
+            this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.stTextBox1.Location = new System.Drawing.Point(3, 3);
+            this.stTextBox1.Name = "stTextBox1";
+            this.stTextBox1.ReadOnly = true;
+            this.stTextBox1.Size = new System.Drawing.Size(332, 20);
+            this.stTextBox1.TabIndex = 10;
+            // 
             // TexSrtPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.stTextBox1);
             this.Controls.Add(this.transXUD);
             this.Controls.Add(this.transYUD);
             this.Controls.Add(this.rotXUD);
@@ -319,7 +340,7 @@
             this.Controls.Add(this.stLabel1);
             this.Controls.Add(this.scalingModeCN);
             this.Name = "TexSrtPanel";
-            this.Size = new System.Drawing.Size(338, 150);
+            this.Size = new System.Drawing.Size(338, 155);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -337,5 +358,6 @@
         private BarSlider.BarSlider rotXUD;
         private BarSlider.BarSlider transXUD;
         private BarSlider.BarSlider transYUD;
+        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

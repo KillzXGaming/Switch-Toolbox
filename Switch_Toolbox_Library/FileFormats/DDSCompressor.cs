@@ -497,6 +497,9 @@ namespace Switch_Toolbox.Library
         public static unsafe byte[] DecompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
             Console.WriteLine(format);
+            Console.WriteLine(data.Length);
+            Console.WriteLine(width);
+            Console.WriteLine(height);
 
             long inputRowPitch;
             long inputSlicePitch;
