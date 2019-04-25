@@ -937,6 +937,12 @@ namespace Bfres.Structs
 
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
+                            if (shape.VertexSkinCount == 1)
+                            {
+                                int boneIndex = shape.BoneIndices[0];
+                                shape.BoneIndex = boneIndex;
+                            }
+
                             Console.WriteLine($"VertexSkinCount 1 {shape.VertexSkinCount}");
 
 
