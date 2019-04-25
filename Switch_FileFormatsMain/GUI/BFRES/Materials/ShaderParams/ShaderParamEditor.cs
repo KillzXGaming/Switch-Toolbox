@@ -34,37 +34,9 @@ namespace FirstPlugin.Forms
             shaderParamListView.Items.Clear();
             foreach (BfresShaderParam prm in mat.matparam.Values)
             {
-                string DisplayValue = "";
-
                 var item = new ListViewItem(prm.Name);
+                ShaderParamToListItem(prm, item);
 
-                switch (prm.Type)
-                {
-                    case ShaderParamType.Float:
-                    case ShaderParamType.Float2:
-                    case ShaderParamType.Float2x2:
-                    case ShaderParamType.Float2x3:
-                    case ShaderParamType.Float2x4:
-                    case ShaderParamType.Float3x2:
-                    case ShaderParamType.Float3x3:
-                    case ShaderParamType.Float3x4:
-                    case ShaderParamType.Float4x2:
-                    case ShaderParamType.Float4x3:
-                    case ShaderParamType.Float4x4:
-                        DisplayValue = SetValueToString(prm.ValueFloat);
-                        break;
-                    case ShaderParamType.Float3:
-                        DisplayValue = SetValueToString(prm.ValueFloat);
-                        break;
-                    case ShaderParamType.Float4:
-                        DisplayValue = SetValueToString(prm.ValueFloat);
-                        break;
-                }
-
-                item.UseItemStyleForSubItems = false;
-                item.SubItems.Add(DisplayValue);
-                item.SubItems.Add("");
-                item.SubItems[2].BackColor = GetColor(prm);
                 shaderParamListView.View = View.Details;
                 shaderParamListView.Items.Add(item);
                 CurParam++;
@@ -72,6 +44,42 @@ namespace FirstPlugin.Forms
             il.ImageSize = new Size(10, 10);
             shaderParamListView.SmallImageList = il;
             shaderParamListView.FullRowSelect = true;
+        }
+
+        private void ShaderParamToListItem(BfresShaderParam prm, ListViewItem item )
+        {
+            item.SubItems.Clear();
+            item.Text = prm.Name;
+
+            string DisplayValue = "";
+
+            switch (prm.Type)
+            {
+                case ShaderParamType.Float:
+                case ShaderParamType.Float2:
+                case ShaderParamType.Float2x2:
+                case ShaderParamType.Float2x3:
+                case ShaderParamType.Float2x4:
+                case ShaderParamType.Float3x2:
+                case ShaderParamType.Float3x3:
+                case ShaderParamType.Float3x4:
+                case ShaderParamType.Float4x2:
+                case ShaderParamType.Float4x3:
+                case ShaderParamType.Float4x4:
+                    DisplayValue = SetValueToString(prm.ValueFloat);
+                    break;
+                case ShaderParamType.Float3:
+                    DisplayValue = SetValueToString(prm.ValueFloat);
+                    break;
+                case ShaderParamType.Float4:
+                    DisplayValue = SetValueToString(prm.ValueFloat);
+                    break;
+            }
+
+            item.UseItemStyleForSubItems = false;
+            item.SubItems.Add(DisplayValue);
+            item.SubItems.Add("");
+            item.SubItems[2].BackColor = GetColor(prm);
         }
 
         private Color GetColor(BfresShaderParam prm)
@@ -378,8 +386,7 @@ namespace FirstPlugin.Forms
 
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        currentItem.SubItems[1].Text = GetValueString(material.matparam[currentItem.Text]);
-                        currentItem.SubItems[2].BackColor = GetColor(material.matparam[currentItem.Text]);
+                        ShaderParamToListItem(material.matparam[currentItem.Text], shaderParamListView.SelectedItems[0]);
                     }
                 }
             }
