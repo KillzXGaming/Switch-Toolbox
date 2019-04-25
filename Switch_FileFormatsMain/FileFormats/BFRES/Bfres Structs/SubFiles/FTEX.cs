@@ -141,7 +141,7 @@ namespace Bfres.Structs
             setting.MipSwizzle = Tex2Swizzle;
 
             if (Tex2Swizzle != 0)
-                setting.Swizzle = Tex2SwizzleValue;
+                setting.Swizzle = Tex2Swizzle;
 
             GTXTextureImporter importer = new GTXTextureImporter();
             importer.LoadSetting(setting);
