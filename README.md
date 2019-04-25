@@ -36,6 +36,8 @@ This tool currently features:
    - Preview collision models.
    - Replace/Export as obj (Thanks to Exelix)
 - BFFNT
+   - Can extract and replace images.
+- BFFNT
    - Can extract font images (BNTX)
 - GFPAK
    - Supported editing/saving data opened. (Automatically saves data opened if supported)
@@ -55,8 +57,14 @@ This tool currently features:
    - Can edit v1 AAMP (Wii U) and preview v2 AAMP
 - NUTEXB
    - Can extract and replace textures.
-- PTCL
-   - Can edit colors (Wii U) and preview textures. Switch ptcl can only preview both atm.
+- PTCL & EFFN
+   - Can edit colors (Wii U) and edit textures (Wii U). Switch ptcl can only preview both atm.
+- EFC
+   - Can preview effect tables and link PTCL.
+- NUT
+   - Can preview NTWU, NTP3, and NTWD variants. Editng will be soon
+- MSBT
+   - Very basic previewing.
 - TMPK
   - Can extract files and decompress
 - MP3, OGG, IDSP, HPS, WAV, BFWAV, BFSTM, BCWAV, BCWAV
