@@ -71,7 +71,7 @@ namespace FirstPlugin.Forms
 
             FillForm();
 
-            if (Runtime.UseViewport)
+            if (Runtime.UseOpenGL)
             {
                 LoadUVEditor();
             }

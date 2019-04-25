@@ -167,8 +167,8 @@ namespace Toolbox
                     case "renderBoundingBoxes":
                         bool.TryParse(node.InnerText, out Runtime.renderBoundingBoxes);
                         break;
-                    case "UseViewport":
-                        bool.TryParse(node.InnerText, out Runtime.UseViewport);
+                    case "UseOpenGL":
+                        bool.TryParse(node.InnerText, out Runtime.UseOpenGL);
                         break;
                     case "DisplayViewport":
                         bool.TryParse(node.InnerText, out Runtime.DisplayViewport);
@@ -282,7 +282,7 @@ namespace Toolbox
 
             
             mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
-            mainSettingsNode.AppendChild(createNode(doc, "UseViewport", Runtime.UseViewport.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "UseOpenGL", Runtime.UseOpenGL.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));

@@ -303,7 +303,7 @@ namespace FirstPlugin
         bool IsLoaded = false;
         public override void OnClick(TreeView treeView)
         {
-            if (Runtime.UseViewport)
+            if (Runtime.UseOpenGL)
             {
                 if (viewport == null)
                 {

@@ -105,7 +105,7 @@ namespace Switch_Toolbox.Library
 
         public static bool renderFloorLines = true;
 
-        public static bool UseViewport = true; //Removes all acess to viewport
+        public static bool UseOpenGL = true; //Removes all acess to opengl functionality. Useful for old PCs
         public static bool DisplayViewport = true; //Only displays it in editors if true
 
         //Viewport Background

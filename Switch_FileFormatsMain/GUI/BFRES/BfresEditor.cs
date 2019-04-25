@@ -33,18 +33,20 @@ namespace FirstPlugin.Forms
 
         private void SetupViewport()
         {
-            if (DisplayViewport == true && Runtime.UseViewport)
+            if (DisplayViewport == true && Runtime.UseOpenGL)
             {
                 stPanel5.Controls.Add(viewport);
                 splitContainer1.Panel1Collapsed = false;
                 toggleViewportToolStripBtn.Image = Properties.Resources.ViewportIcon;
+
+                if (viewport != null)
+                    OnLoadedTab();
             }
             else
             {
                 stPanel5.Controls.Clear();
                 splitContainer1.Panel1Collapsed = true;
                 toggleViewportToolStripBtn.Image = Properties.Resources.ViewportIconDisable;
-                OnLoadedTab();
             }
         }
 
@@ -52,7 +54,7 @@ namespace FirstPlugin.Forms
         {
             get
             {
-                if (!Runtime.UseViewport || !DisplayViewport)
+                if (!Runtime.UseOpenGL || !DisplayViewport)
                     return null;
 
                 var editor = LibraryGUI.Instance.GetObjectEditor();
@@ -83,21 +85,24 @@ namespace FirstPlugin.Forms
 
             stTabControl2.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
-            if (viewport == null && Runtime.UseViewport)
+            //Always create an instance of the viewport unless opengl is disabled
+            if (viewport == null && Runtime.UseOpenGL)
             {
                 viewport = new Viewport();
                 viewport.Dock = DockStyle.Fill;
             }
 
-            if (Runtime.UseViewport && Runtime.DisplayViewport)
+            //If the option is enabled by settings, and it has models display the viewport
+            if (Runtime.UseOpenGL && Runtime.DisplayViewport && HasModels)
+            {
                 stPanel5.Controls.Add(viewport);
-            else
-                splitContainer1.Panel1Collapsed = true;
-
-            OnLoadedTab();
-
-            if (HasModels && Runtime.DisplayViewport)
                 DisplayViewport = true;
+            }
+            else
+            {
+                DisplayViewport = false;
+                splitContainer1.Panel1Collapsed = true;
+            }
         }
 
         public UserControl GetActiveEditor(Type type)
@@ -131,7 +136,7 @@ namespace FirstPlugin.Forms
 
         public void UpdateViewport()
         {
-            if (viewport != null && Runtime.UseViewport)
+            if (viewport != null && Runtime.UseOpenGL && Runtime.DisplayViewport)
                 viewport.UpdateViewport();
         }
 
@@ -143,7 +148,7 @@ namespace FirstPlugin.Forms
         {
             Drawables = drawables;
 
-            if (!Runtime.UseViewport || !DisplayViewport)
+            if (!Runtime.UseOpenGL || !DisplayViewport)
                 return;
 
             if (customContextMenus != null)
@@ -159,7 +164,7 @@ namespace FirstPlugin.Forms
         {
             Drawables.Add(draw);
 
-            if (!Runtime.UseViewport || !Runtime.DisplayViewport)
+            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
                 return;
 
             if (!viewport.scene.staticObjects.Contains(draw) &&
@@ -173,7 +178,7 @@ namespace FirstPlugin.Forms
         {
             Drawables.Remove(draw);
 
-            if (!Runtime.UseViewport || !Runtime.DisplayViewport)
+            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
                 return;
 
             viewport.RemoveDrawable(draw);
@@ -184,10 +189,10 @@ namespace FirstPlugin.Forms
             animationPanel.ClosePanel();
         }
 
-        public void OnLoadedTab()
+        private void OnLoadedTab()
         {
             //If a model was loaded we don't need to load the drawables again
-            if (IsLoaded || Drawables == null || !Runtime.UseViewport)
+            if (IsLoaded || Drawables == null || !Runtime.UseOpenGL || !Runtime.DisplayViewport)
                 return;
 
             foreach (var draw in Drawables)

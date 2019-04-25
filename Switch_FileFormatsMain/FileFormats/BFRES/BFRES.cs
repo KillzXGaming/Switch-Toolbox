@@ -503,13 +503,8 @@ namespace FirstPlugin
                         drawables.Add(BFRESRender.models[m].Skeleton);
                 }
 
-                if (Runtime.UseViewport)
+                if (Runtime.UseOpenGL)
                     bfresEditor.LoadViewport(drawables, toolstrips);
-
-                if (!IsLoaded)
-                {
-                    bfresEditor.OnLoadedTab();
-                }
 
                 if (SelectedSection is BFRES)
                 {

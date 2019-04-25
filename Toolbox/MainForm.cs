@@ -83,7 +83,7 @@ namespace Toolbox
 
             Application.Idle += Application_Idle;
 
-            if (Runtime.UseViewport)
+            if (Runtime.UseOpenGL)
             {
                 //Create an instance of this to help load open gl data easier and quicker after boot
                 var viewport = new Viewport(false);

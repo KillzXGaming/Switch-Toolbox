@@ -271,7 +271,7 @@ namespace Switch_Toolbox.Library
 
         public void DisposeRenderable()
         {
-            if (RenderableTex != null && Runtime.UseViewport)
+            if (RenderableTex != null && Runtime.UseOpenGL)
             {
                 RenderableTex.Dispose();
                 RenderableTex = null;
@@ -344,7 +344,7 @@ namespace Switch_Toolbox.Library
                         return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false);
                     else
                     {
-                        if (Runtime.UseViewport)
+                        if (Runtime.UseOpenGL)
                         {
                             Runtime.OpenTKInitialized = true;
                             LoadOpenGLTexture();
@@ -618,7 +618,7 @@ namespace Switch_Toolbox.Library
         }
         public void LoadOpenGLTexture()
         {
-            if (!Runtime.UseViewport)
+            if (!Runtime.UseOpenGL)
                 return;
 
             if (RenderableTex == null)
