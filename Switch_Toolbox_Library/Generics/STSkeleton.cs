@@ -230,6 +230,9 @@ namespace Switch_Toolbox.Library
 
             foreach (STBone bn in bones)
             {
+                if (!bn.Checked)
+                    continue;
+
                 solidColorShaderProgram.SetVector4("boneColor", ColorUtility.ToVector4(boneColor));
                 solidColorShaderProgram.SetFloat("scale", Runtime.bonePointSize);
 
