@@ -37,7 +37,7 @@ This tool currently features:
    - Replace/Export as obj (Thanks to Exelix)
 - BFFNT
    - Can extract and replace images.
-- BFFNT
+- BFLIM
    - Can extract font images (BNTX)
 - GFPAK
    - Supported editing/saving data opened. (Automatically saves data opened if supported)
