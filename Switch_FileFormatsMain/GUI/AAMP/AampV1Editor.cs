@@ -22,17 +22,6 @@ namespace FirstPlugin.Forms
             LoadFile(aamp.aampFileV1, treeView1.Nodes[0]);
         }
 
-        public void LoadImages(TreeView treeView, TreeNode parentNode)
-        {
-            foreach (TreeNode nodes in TreeViewExtensions.Collect(parentNode.Nodes))
-            {
-
-            }
-
-            foreach (var image in Images)
-                treeView.ImageList.Images.Add(image);
-        }
-
         public void LoadFile(AampFile aampFile, TreeNode parentNode)
         {
             LoadChildNodes(aampFile.RootNode, parentNode);
