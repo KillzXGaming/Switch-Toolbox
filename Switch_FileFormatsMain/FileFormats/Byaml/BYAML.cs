@@ -25,6 +25,10 @@ namespace FirstPlugin
         {
             using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
             {
+                //File too small to have any data
+                if (stream.Length <= 16)
+                    return false;
+
                 if (reader.CheckSignature(2, "BY") || reader.CheckSignature(2, "YB"))
                     return true;
                 else

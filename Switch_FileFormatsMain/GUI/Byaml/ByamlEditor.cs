@@ -182,6 +182,8 @@ namespace FirstPlugin
         {
             foreach (dynamic k in list)
             {
+                Console.WriteLine("array item " + k.ToString());
+
                 if ((k is Dictionary<string, dynamic>) ||
                 (k is List<dynamic>) ||
                 (k is List<ByamlPathPoint>))
@@ -200,9 +202,11 @@ namespace FirstPlugin
                     ValueTypeString = ValueType.ToString();
                 }
 
+
                 ListViewItem item = new ListViewItem(ValueText);
                 item.SubItems.Add(ValueTypeString);
                 item.SubItems.Add(ValueText);
+                if (k != null) item.Tag = new EditableNode(k, k);
 
                 listViewCustom1.Items.Add(item);
             }
@@ -226,13 +230,13 @@ namespace FirstPlugin
                     {
                         current.Text += $" : <Dictionary> {dictionaryIndex++}";
                         current.Tag = node[k];
-                     //   current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
+                        current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
                     }
                     else if (node[k] is IList<dynamic>)
                     {
                         current.Text += $" : <Array> {arrayIndex++}";
                         current.Tag = ((IList<dynamic>)node[k]);
-                    //    current.Nodes.Add("✯✯dummy✯✯");
+                        current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (node[k] is IList<ByamlPathPoint>)
                     {
@@ -273,13 +277,12 @@ namespace FirstPlugin
                     {
                         TreeNode current = addto.Add($"<Dictionary> {dictionaryIndex++}");
                         current.Tag = ((IDictionary<string, dynamic>)k);
-                       // current.Nodes.Add("✯✯dummy✯✯");
+                        current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (k is IList<dynamic>)
                     {
                         TreeNode current = addto.Add($"<Array> {arrayIndex++}");
                         current.Tag = ((IList<dynamic>)k);
-                     //   current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (k is IList<ByamlPathPoint>)
                     {
