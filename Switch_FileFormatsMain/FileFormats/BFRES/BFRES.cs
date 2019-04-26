@@ -437,7 +437,9 @@ namespace FirstPlugin
                 else if (SelectedSection is FMDL)
                 {
                     if (((FMDL)SelectedSection).ModelU != null)
+                    {
                         editor.LoadProperty(((FMDL)SelectedSection).ModelU, OnPropertyChanged);
+                    }
                     else
                         editor.LoadProperty(((FMDL)SelectedSection).Model, OnPropertyChanged);
                 }

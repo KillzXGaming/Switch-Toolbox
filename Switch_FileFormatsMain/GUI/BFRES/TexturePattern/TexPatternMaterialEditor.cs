@@ -71,8 +71,8 @@ namespace FirstPlugin.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            activeAnim.Materials.Add(new MaterialAnimation.Material());
-            listViewCustom1.Items.Add("");
+            activeAnim.Materials.Add(new MaterialAnimation.Material() { Text = "NewMaterial"});
+            listViewCustom1.Items.Add("NewMaterial");
         }
 
         private void nameTB_TextChanged(object sender, EventArgs e)
