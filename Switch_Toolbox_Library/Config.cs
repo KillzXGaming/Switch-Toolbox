@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Drawing;
 using System.IO;
-using Switch_Toolbox.Library;
 
-namespace Toolbox
+namespace Switch_Toolbox.Library
 {
     //Based on
     // https://github.com/jam1garner/Smash-Forge/blob/26e0dcbd84cdf8a4ffe3fbe0b0317520a4099286/Smash%20Forge/Filetypes/Application/Config.cs
-    class Config
+    public class Config
     {
         public static void StartupFromFile(string fileName)
         {
@@ -173,6 +172,12 @@ namespace Toolbox
                     case "DisplayViewport":
                         bool.TryParse(node.InnerText, out Runtime.DisplayViewport);
                         break;
+                    case "DisplayVertical":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.DisplayVertical);
+                        break;
+                    case "ShowPropertiesPanel":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.ShowPropertiesPanel);
+                        break;
                 }
             }
         }
@@ -266,6 +271,7 @@ namespace Toolbox
             doc.AppendChild(mainNode);
 
             AppendMainFormSettings(doc, mainNode);
+            AppendImageEditorSettings(doc, mainNode);
             AppendObjectlistSettings(doc, mainNode);
             AppendRenderSettings(doc, mainNode);
             AppendOCompressionFilelistSettings(doc, mainNode);
@@ -288,6 +294,13 @@ namespace Toolbox
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "FormTheme", Switch_Toolbox.Library.Forms.FormThemes.ActivePreset.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "MaximizeMdiWindow", Runtime.MaximizeMdiWindow.ToString()));
+        }
+        private static void AppendImageEditorSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode PathsNode = doc.CreateElement("ImageEditor");
+            parentNode.AppendChild(PathsNode);
+            PathsNode.AppendChild(createNode(doc, "DisplayVertical", Runtime.ImageEditor.DisplayVertical.ToString()));
+            PathsNode.AppendChild(createNode(doc, "ShowPropertiesPanel", Runtime.ImageEditor.ShowPropertiesPanel.ToString()));
         }
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
         {

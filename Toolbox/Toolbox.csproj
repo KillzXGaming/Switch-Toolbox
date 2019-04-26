@@ -63,7 +63,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
     <Compile Include="GUI\AF_FileAssociations.cs" />
     <Compile Include="GUI\Credits.cs">
       <SubType>Form</SubType>

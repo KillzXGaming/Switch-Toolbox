@@ -685,14 +685,16 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (displayVerticalToolStripMenuItem.Checked)
             {
-                DisplayHorizontal();
-                Runtime.ImageEditor.DisplayVertical = false;
-            }
-            else
-            {
                 DisplayVertical();
                 Runtime.ImageEditor.DisplayVertical = true;
             }
+            else
+            {
+                DisplayHorizontal();
+                Runtime.ImageEditor.DisplayVertical = false;
+            }
+
+            Config.Save();
         }
 
         private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
