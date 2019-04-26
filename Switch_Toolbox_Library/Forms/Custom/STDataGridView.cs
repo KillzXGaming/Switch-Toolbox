@@ -34,27 +34,23 @@ namespace Switch_Toolbox.Library.Forms
             {
                 GridColor = FormThemes.BaseTheme.ConsoleEditorBackColor;
             }
-
-
             EnableHeadersVisualStyles = false;
-
-
-            GridViewCellStyle = new DataGridViewCellStyle()
-            {
-                BackColor = FormThemes.BaseTheme.FormBackColor,
-                ForeColor = FormThemes.BaseTheme.FormForeColor
-            };
-
             Refresh();
         }
 
         public void ApplyStyles()
         {
             foreach (DataGridViewColumn column in Columns)
-                column.DefaultCellStyle = GridViewCellStyle;
+            {
+                column.DefaultCellStyle.BackColor = FormThemes.BaseTheme.FormBackColor;
+                column.DefaultCellStyle.ForeColor = FormThemes.BaseTheme.FormForeColor;
+            }
 
             foreach (DataGridViewRow row in Rows)
-                row.DefaultCellStyle = GridViewCellStyle;
+            {
+                row.DefaultCellStyle.BackColor = FormThemes.BaseTheme.FormBackColor;
+                row.DefaultCellStyle.ForeColor = FormThemes.BaseTheme.FormForeColor;
+            }
         }
 
         private void InitializeComponent()
@@ -66,9 +62,7 @@ namespace Switch_Toolbox.Library.Forms
             // 
             this.BackgroundColor = Color.Gray;
             this.GridColor = Color.Black;
-
             this.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.STDataGridView_CellClick);
-            this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.STDataGridView_CellContentClick);
             this.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.STDataGridView_CellPainting);
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);

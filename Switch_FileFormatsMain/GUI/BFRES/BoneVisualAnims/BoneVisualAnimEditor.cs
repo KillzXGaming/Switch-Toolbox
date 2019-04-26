@@ -94,16 +94,16 @@ namespace FirstPlugin.Forms
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
 
+            int rowIndex = 0;
             for (int frame = 0; frame < vis.FrameCount; frame++)
             {
                 if (IsKeyed(vis, frame))
                 {
-                    int rowIndex = 0;
-                    if (frame != 0)
-                        rowIndex = this.dataGridView1.Rows.Add();
-
+                    rowIndex = this.dataGridView1.Rows.Add();
                     var row = this.dataGridView1.Rows[rowIndex];
-                    row.Cells["FrameColumn"].Value = frame;
+                    Console.WriteLine("rowIndex " + rowIndex);
+
+                    row.Cells["FrameColumn"].Value = frame.ToString();
 
                     for (int curve = 0; curve < vis.Values.Count; curve++)
                     {
