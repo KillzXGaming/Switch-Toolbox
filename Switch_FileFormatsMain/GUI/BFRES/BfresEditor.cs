@@ -213,6 +213,8 @@ namespace FirstPlugin.Forms
             if (IsLoaded || Drawables == null || !Runtime.UseOpenGL || !Runtime.DisplayViewport)
                 return;
 
+            Console.WriteLine("drawables count " + Drawables.Count);
+
             foreach (var draw in Drawables)
             {
                 if (!viewport.scene.staticObjects.Contains(draw) &&

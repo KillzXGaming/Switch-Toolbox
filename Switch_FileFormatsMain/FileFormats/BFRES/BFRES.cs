@@ -399,6 +399,24 @@ namespace FirstPlugin
                 return;
             }
 
+            var toolstrips = new List<ToolStripMenuItem>();
+            var menu = new ToolStripMenuItem("Animation Loader", null, AnimLoader);
+
+            toolstrips.Add(menu);
+
+            if (drawables.Count <= 0)
+            {
+                //Add drawables
+                drawables.Add(BFRESRender);
+
+                for (int m = 0; m < BFRESRender.models.Count; m++)
+                    drawables.Add(BFRESRender.models[m].Skeleton);
+            }
+
+            if (Runtime.UseOpenGL)
+                bfresEditor.LoadViewport(drawables, toolstrips);
+
+
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 
             if (IsSimpleEditor)
@@ -487,27 +505,7 @@ namespace FirstPlugin
             }
             else
             {
-                var toolstrips = new List<ToolStripMenuItem>();
-                var menu = new ToolStripMenuItem("Animation Loader", null, AnimLoader);
-
-                toolstrips.Add(menu);
-
-                bool IsLoaded = drawables.Count != 0;
-
-                bfresEditor.IsLoaded = IsLoaded;
-
-                if (drawables.Count <= 0)
-                {
-                    //Add drawables
-                    drawables.Add(BFRESRender);
-
-                    for (int m = 0; m < BFRESRender.models.Count; m++)
-                        drawables.Add(BFRESRender.models[m].Skeleton);
-                }
-
-                if (Runtime.UseOpenGL)
-                    bfresEditor.LoadViewport(drawables, toolstrips);
-
+       
                 if (SelectedSection is BFRES)
                 {
                     STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
