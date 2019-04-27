@@ -686,13 +686,13 @@ namespace Switch_Toolbox.Library.Forms
             if (displayVerticalToolStripMenuItem.Checked)
             {
                 DisplayVertical();
-                Runtime.ImageEditor.DisplayVertical = true;
             }
             else
             {
                 DisplayHorizontal();
-                Runtime.ImageEditor.DisplayVertical = false;
             }
+
+            Runtime.ImageEditor.DisplayVertical = displayVerticalToolStripMenuItem.Checked;
 
             Config.Save();
         }
@@ -759,7 +759,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void DisplayVertical()
         {
-            if (splitContainer1.Panel2Collapsed)
+            if (splitContainer1.Panel2Collapsed || propertiesEditor == null)
                 return;
 
             var ImagePanel = stPanel1;
