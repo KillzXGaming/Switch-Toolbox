@@ -41,6 +41,11 @@ namespace Bfres.Structs
             node.SkeletonU.Bones.Add(bone.Name, bone);
         }
 
+        public FMDL GetModelParent()
+        {
+            return (FMDL)node.Parent;
+        }
+
         public class fsklNode : STGenericWrapper
         {
             public FSKL fskl;
@@ -409,6 +414,7 @@ namespace Bfres.Structs
         protected void ReplaceAction(object sender, EventArgs args) { Replace(); }
         protected void NewAction(object sender, EventArgs args) { NewChild(); }
         protected void RenameAction(object sender, EventArgs args) { Rename(); }
+        protected void DeleteAction(object sender, EventArgs args) { Delete(); }
 
         public void Rename()
         {
@@ -526,6 +532,56 @@ namespace Bfres.Structs
 
                 ((FSKL)skeletonParent).AddBone(Bone);
             }
+        }
+
+        public void Delete()
+        {
+            //For these to work
+            //Shift bone node array in skeleton
+            //Shift all indices in each shape's bone list
+            //Shift every index in all the vertices indices from the changed node array
+            //Shift every bone index in the shape
+            //Shift each smooth index in each bone
+            //Shift each rigid index in each bone
+            //Remove the existing inverse matrix from the list
+
+            string MappedNames = "";
+            var model = ((FSKL)skeletonParent).GetModelParent();
+
+            int CurrentIndex = GetIndex();
+
+            if (model.Skeleton.bones.Count == 1)
+            {
+                MessageBox.Show("A single bone must exist in every model!", "Bone Delete",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            foreach (var shape in model.shapes)
+            {
+                if (shape.BoneIndex == CurrentIndex)
+                    MappedNames += $"{shape.Text}\n";
+
+                if (shape.BoneIndices.Contains((ushort)CurrentIndex))
+                    MappedNames += $"{shape.Text}\n";
+            }
+            if (MappedNames != "")
+            {
+                var result = STOptionsDialog.Show("Shapes are mapped to this bone. Are you sure you want to remove this? (Will default to first bone)",
+                    "Bone Delete", MappedNames);
+
+                if (result == DialogResult.Yes)
+                    RemoveBone(model, CurrentIndex);
+            }
+            else
+            {
+                RemoveBone(model, CurrentIndex);
+            }
+        }
+
+        private void RemoveBone(FMDL model, int CurrentIndex)
+        {
+
         }
 
         public void ImportChild()
