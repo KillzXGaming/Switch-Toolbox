@@ -13,6 +13,8 @@ namespace Switch_Toolbox.Library
 {
     public class AssimpData
     {
+        public bool UseTransformMatrix = true;
+
         public Scene scene;
 
         public List<STGenericObject> objects = new List<STGenericObject>();
@@ -79,10 +81,14 @@ namespace Switch_Toolbox.Library
         }
         private void BuildNode(Node parent, ref Matrix4x4 rootTransform)
         {
-            Matrix4x4 trafo = parent.Transform;
-            Matrix4x4 world = trafo * rootTransform;
-            Matrix4 worldTK = AssimpHelper.TKMatrix(world);
-
+            Matrix4x4 world = rootTransform;
+            Matrix4 worldTK = Matrix4.Identity;
+            if (UseTransformMatrix)
+            {
+                Matrix4x4 trafo = parent.Transform;
+                world = trafo * rootTransform;
+                 worldTK = AssimpHelper.TKMatrix(world);
+            }
 
             if (parent.MeshCount > 0)
             {

@@ -259,6 +259,7 @@ namespace Bfres.Structs
                         {
                             ResU.Bone bone = new ResU.Bone();
                             bone.Import(FileName, GetResFileU());
+                            bone.ParentIndex = -1;
 
                             BfresWiiU.ReadBone(bn, bone, false);
                         }
@@ -266,6 +267,7 @@ namespace Bfres.Structs
                         {
                             Bone bone = new Bone();
                             bone.Import(FileName);
+                            bone.ParentIndex = -1;
 
                             BfresSwitch.ReadBone(bn, bone, false);
                         }
@@ -541,10 +543,12 @@ namespace Bfres.Structs
                     BoneU = new ResU.Bone();
                     BoneU.Import(ofd.FileName, GetResFileU());
                     BoneU.Name = CheckDuplicateBoneNames(BoneU.Name);
-
                     BfresWiiU.ReadBone(bn, BoneU, false);
+
                     Nodes.Add(bn);
                     skeletonParent.bones.Add(bn);
+
+                    BoneU.ParentIndex = (short)bn.parentIndex;
                     ((FSKL)skeletonParent).AddBone(BoneU);
                 }
                 else
@@ -552,10 +556,12 @@ namespace Bfres.Structs
                     Bone = new Bone();
                     Bone.Import(ofd.FileName);
                     Bone.Name = CheckDuplicateBoneNames(Bone.Name);
-
                     BfresSwitch.ReadBone(bn, Bone, false);
+
                     Nodes.Add(bn);
                     skeletonParent.bones.Add(bn);
+
+                    BoneU.ParentIndex = (short)bn.parentIndex;
                     ((FSKL)skeletonParent).AddBone(Bone);
                 }
             }
