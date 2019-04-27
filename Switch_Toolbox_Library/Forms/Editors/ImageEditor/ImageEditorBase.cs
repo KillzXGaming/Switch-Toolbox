@@ -97,6 +97,9 @@ namespace Switch_Toolbox.Library.Forms
         {
             InitializeComponent();
 
+            propertiesEditor = new ImagePropertiesEditor();
+            propertiesEditor.Dock = DockStyle.Fill;
+
             saveBtn.Enabled = HasBeenEdited;
 
             imageToolStripMenuItem.Enabled = false;
@@ -111,9 +114,6 @@ namespace Switch_Toolbox.Library.Forms
             SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
 
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
-
-            propertiesEditor = new ImagePropertiesEditor();
-            propertiesEditor.Dock = DockStyle.Fill;
 
             if (!propertyGridToolStripMenuItem.Checked)
                 HidePropertyGrid(true);
