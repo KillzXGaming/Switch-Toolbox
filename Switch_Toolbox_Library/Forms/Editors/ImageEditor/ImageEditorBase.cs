@@ -113,6 +113,10 @@ namespace Switch_Toolbox.Library.Forms
 
             SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
 
+            //If it's horizontal we need to update it manually 
+            if (!Runtime.ImageEditor.DisplayVertical)
+                SetOrientation();
+
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
 
             if (!propertyGridToolStripMenuItem.Checked)
@@ -122,21 +126,6 @@ namespace Switch_Toolbox.Library.Forms
 
             if (ShowChannelEditor)
                 LoadChannelEditor(null);
-            
-            if (PropertyShowTop)
-            {
-                splitContainer1.Panel1.Controls.Add(propertiesEditor);
-                splitContainer1.Panel2.Controls.Add(stPanel1);
-
-                splitContainer1.Orientation = Orientation.Horizontal;
-            }
-            else
-            {
-                splitContainer1.Panel2.Controls.Add(propertiesEditor);
-                splitContainer1.Panel1.Controls.Add(stPanel1);
-
-                splitContainer1.Orientation = Orientation.Vertical;
-            }
 
             OnDataAcquiredEvent += new DataAcquired(ThreadReportsDataAquiredEvent);
         }
@@ -683,6 +672,12 @@ namespace Switch_Toolbox.Library.Forms
 
         private void displayVerticalToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
+            SetOrientation();
+            Config.Save();
+        }
+
+        private void SetOrientation()
+        {
             if (displayVerticalToolStripMenuItem.Checked)
             {
                 DisplayVertical();
@@ -693,8 +688,6 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             Runtime.ImageEditor.DisplayVertical = displayVerticalToolStripMenuItem.Checked;
-
-            Config.Save();
         }
 
         private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -772,10 +765,10 @@ namespace Switch_Toolbox.Library.Forms
             splitContainer1.Orientation = Orientation.Horizontal;
             splitContainer1.Panel2.Controls.Add(ImagePanel);
             splitContainer1.Panel1.Controls.Add(PropertiesEditor);
+            PropertiesEditor.HideHintPanel(true);
 
             splitContainer1.SplitterDistance = this.Height / 2;
 
-            PropertiesEditor.HideHintPanel(true);
         }
     }
 }
