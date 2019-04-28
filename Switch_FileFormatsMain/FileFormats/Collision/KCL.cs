@@ -118,10 +118,9 @@ namespace FirstPlugin
                 OpenFileDialog opn = new OpenFileDialog();
                 if (opn.ShowDialog() != DialogResult.OK) return;
                 var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(opn.FileName)), null);
+                var f = MarioKart.MK7.KCL.FromOBJ(mod);
 
                 string name = System.IO.Path.GetFileNameWithoutExtension(opn.FileName);
-
-                var f = MarioKart.MK7.KCL.FromTestObj(opn.FileName);
 
                 KCL kcl = new KCL();
                 kcl.Text = name;
@@ -398,26 +397,26 @@ namespace FirstPlugin
                     kclmodel.vertices.Add(vtx3);
 
                     #region FindMaxMin
-                    if (triangle.PointA.X < min.X) min.X = triangle.PointA.X;
-                    if (triangle.PointA.Y < min.Y) min.Y = triangle.PointA.Y;
-                    if (triangle.PointA.Z < min.Z) min.Z = triangle.PointA.Z;
-                    if (triangle.PointA.X > max.X) max.X = triangle.PointA.X;
-                    if (triangle.PointA.Y > max.Y) max.Y = triangle.PointA.Y;
-                    if (triangle.PointA.Z > max.Z) max.Z = triangle.PointA.Z;
+                    if (triangle.PointA.X < min.X) min.X = (float)triangle.PointA.X;
+                    if (triangle.PointA.Y < min.Y) min.Y = (float)triangle.PointA.Y;
+                    if (triangle.PointA.Z < min.Z) min.Z = (float)triangle.PointA.Z;
+                    if (triangle.PointA.X > max.X) max.X = (float)triangle.PointA.X;
+                    if (triangle.PointA.Y > max.Y) max.Y = (float)triangle.PointA.Y;
+                    if (triangle.PointA.Z > max.Z) max.Z = (float)triangle.PointA.Z;
 
-                    if (triangle.PointB.X < min.X) min.X = triangle.PointB.X;
-                    if (triangle.PointB.Y < min.Y) min.Y = triangle.PointB.Y;
-                    if (triangle.PointB.Z < min.Z) min.Z = triangle.PointB.Z;
-                    if (triangle.PointB.X > max.X) max.X = triangle.PointB.X;
-                    if (triangle.PointB.Y > max.Y) max.Y = triangle.PointB.Y;
-                    if (triangle.PointB.Z > max.Z) max.Z = triangle.PointB.Z;
+                    if (triangle.PointB.X < min.X) min.X = (float)triangle.PointB.X;
+                    if (triangle.PointB.Y < min.Y) min.Y = (float)triangle.PointB.Y;
+                    if (triangle.PointB.Z < min.Z) min.Z = (float)triangle.PointB.Z;
+                    if (triangle.PointB.X > max.X) max.X = (float)triangle.PointB.X;
+                    if (triangle.PointB.Y > max.Y) max.Y = (float)triangle.PointB.Y;
+                    if (triangle.PointB.Z > max.Z) max.Z = (float)triangle.PointB.Z;
 
-                    if (triangle.PointC.X < min.X) min.X = triangle.PointC.X;
-                    if (triangle.PointC.Y < min.Y) min.Y = triangle.PointC.Y;
-                    if (triangle.PointC.Z < min.Z) min.Z = triangle.PointC.Z;
-                    if (triangle.PointC.X > max.X) max.X = triangle.PointC.X;
-                    if (triangle.PointC.Y > max.Y) max.Y = triangle.PointC.Y;
-                    if (triangle.PointC.Z > max.Z) max.Z = triangle.PointC.Z;
+                    if (triangle.PointC.X < min.X) min.X = (float)triangle.PointC.X;
+                    if (triangle.PointC.Y < min.Y) min.Y = (float)triangle.PointC.Y;
+                    if (triangle.PointC.Z < min.Z) min.Z = (float)triangle.PointC.Z;
+                    if (triangle.PointC.X > max.X) max.X = (float)triangle.PointC.X;
+                    if (triangle.PointC.Y > max.Y) max.Y = (float)triangle.PointC.Y;
+                    if (triangle.PointC.Z > max.Z) max.Z = (float)triangle.PointC.Z;
                     #endregion
                 }
 
@@ -841,7 +840,7 @@ namespace FirstPlugin
         }
 
         //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods
-        public static Vector3 Vec3D_To_Vec3(LibEveryFileExplorer.Collections.Vector3 v)
+        public static Vector3 Vec3D_To_Vec3(System.Windows.Media.Media3D.Vector3D v)
         {
             return new Vector3((float)v.X, (float)v.Y, (float)v.Z);
         }
