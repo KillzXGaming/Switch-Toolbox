@@ -40,10 +40,68 @@ namespace FirstPlugin
 
             Reset();
 
+            LoadColors(Emitter);
 
-            for (int i = 0; i < 8; i++)
+            if (Emitter.DrawableTex.Count <= 0)
+                return;
+
+            if (Emitter.DrawableTex[0].MipCount > 0)
             {
+                pictureBox1.Image = Imaging.GetLoadingImage();
+                pictureBox1.Image = Emitter.DrawableTex[0].GetBitmap();
+
+                TBTexture0.Text = Emitter.DrawableTex[0].Text;
             }
+            if (Emitter.DrawableTex.Count < 2)
+                return;
+
+            if (Emitter.DrawableTex[1].MipCount > 0)
+            {
+                pictureBox2.Image = Imaging.GetLoadingImage();
+                pictureBox2.Image = Emitter.DrawableTex[1].GetBitmap();
+                TBTexture1.Text = Emitter.DrawableTex[1].Text;
+            }
+            if (Emitter.DrawableTex.Count < 3)
+                return;
+
+            if (Emitter.DrawableTex[2].MipCount > 0)
+            {
+                pictureBox3.Image = Imaging.GetLoadingImage();
+                pictureBox3.Image = Emitter.DrawableTex[2].GetBitmap();
+                TBTexture2.Text = Emitter.DrawableTex[2].Text;
+            }
+
+            Thread = new Thread((ThreadStart)(() =>
+            {
+          
+            }));
+
+            try
+            {
+
+           /*     Thread Thread2 = new Thread((ThreadStart)(() =>
+                {
+                    pictureBox2.Image = Imaging.GetLoadingImage();
+                    pictureBox2.Image = Emitter.DrawableTex[1].GetBitmap();
+                }));
+                Thread Thread3 = new Thread((ThreadStart)(() =>
+                {
+                    pictureBox3.Image = Imaging.GetLoadingImage();
+                    pictureBox3.Image = Emitter.DrawableTex[2].GetBitmap();
+                }));*/
+
+            }
+            catch
+            {
+
+            }
+        }
+
+        bool IsColorsLoaded = false;
+
+        private void LoadColors(PTCL.Emitter Emitter)
+        {
+            IsColorsLoaded = false;
 
             color0Index0.BackColor = Emitter.Color0s[0];
             color0Index1.BackColor = Emitter.Color0s[1];
@@ -81,67 +139,9 @@ namespace FirstPlugin
             color1TB7.Text = Utils.ColorToHex(Emitter.Color1s[6]);
             color1TB8.Text = Utils.ColorToHex(Emitter.Color1s[7]);
 
-
-            if (Emitter.DrawableTex.Count <= 0)
-                return;
-
-            if (Emitter.DrawableTex[0].MipCount > 0)
-            {
-                var contextMenuStrip1 = new ContextMenuStrip();
-                contextMenuStrip1.Items.Add("Replace", null, ReplaceImage0);
-                contextMenuStrip1.Items.Add("Export", null, ExportImage0);
-
-                pictureBox1.Image = Imaging.GetLoadingImage();
-                pictureBox1.Image = Emitter.DrawableTex[0].GetBitmap();
-                pictureBox1.ContextMenuStrip = contextMenuStrip1;
-
-                TBTexture0.Text = Emitter.DrawableTex[0].Text;
-            }
-            if (Emitter.DrawableTex.Count < 2)
-                return;
-
-            if (Emitter.DrawableTex[1].MipCount > 0)
-            {
-                pictureBox2.Image = Imaging.GetLoadingImage();
-                pictureBox2.Image = Emitter.DrawableTex[1].GetBitmap();
-                TBTexture1.Text = Emitter.DrawableTex[1].Text;
-            }
-            if (Emitter.DrawableTex.Count < 3)
-                return;
-
-            if (Emitter.DrawableTex[2].MipCount > 0)
-            {
-                pictureBox3.Image = Imaging.GetLoadingImage();
-                pictureBox3.Image = Emitter.DrawableTex[2].GetBitmap();
-                TBTexture2.Text = Emitter.DrawableTex[2].Text;
-            }
-
-
-            Thread = new Thread((ThreadStart)(() =>
-            {
-          
-            }));
-
-            try
-            {
-
-           /*     Thread Thread2 = new Thread((ThreadStart)(() =>
-                {
-                    pictureBox2.Image = Imaging.GetLoadingImage();
-                    pictureBox2.Image = Emitter.DrawableTex[1].GetBitmap();
-                }));
-                Thread Thread3 = new Thread((ThreadStart)(() =>
-                {
-                    pictureBox3.Image = Imaging.GetLoadingImage();
-                    pictureBox3.Image = Emitter.DrawableTex[2].GetBitmap();
-                }));*/
-
-            }
-            catch
-            {
-
-            }
+            IsColorsLoaded = true;
         }
+
         private void ExportImage0(object sender, EventArgs e)
         {
             ActiveEmitter.DrawableTex[0].ExportImage();
@@ -203,6 +203,47 @@ namespace FirstPlugin
 
                     button.BackColor = dialog.Color;
                 }
+            }
+        }
+
+        private void hexTB_TextChanged(object sender, EventArgs e)
+        {
+            if (!IsColorsLoaded)
+                return;
+
+            if (sender is TextBox)
+            {
+                ((TextBox)sender).MaxLength = 8;
+
+                if (((TextBox)sender).Text.Length != 8)
+                    return;
+
+
+                Color[] colors0 = new Color[8];
+                Color[] colors1 = new Color[8];
+
+                colors0[0] = Utils.HexToColor(color0TB.Text);
+                colors0[1] = Utils.HexToColor(color0TB2.Text);
+                colors0[2] = Utils.HexToColor(color0TB3.Text);
+                colors0[3] = Utils.HexToColor(color0TB4.Text);
+                colors0[4] = Utils.HexToColor(color0TB5.Text);
+                colors0[5] = Utils.HexToColor(color0TB6.Text);
+                colors0[6] = Utils.HexToColor(color0TB7.Text);
+                colors0[7] = Utils.HexToColor(color0TB8.Text);
+
+                colors1[0] = Utils.HexToColor(color1TB.Text);
+                colors1[1] = Utils.HexToColor(color1TB2.Text);
+                colors1[2] = Utils.HexToColor(color1TB3.Text);
+                colors1[3] = Utils.HexToColor(color1TB4.Text);
+                colors1[4] = Utils.HexToColor(color1TB5.Text);
+                colors1[5] = Utils.HexToColor(color1TB6.Text);
+                colors1[6] = Utils.HexToColor(color1TB7.Text);
+                colors1[7] = Utils.HexToColor(color1TB8.Text);
+
+                ActiveEmitter.Color0s = colors0;
+                ActiveEmitter.Color1s = colors1;
+
+                LoadColors(ActiveEmitter);
             }
         }
     }

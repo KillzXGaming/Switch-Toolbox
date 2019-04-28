@@ -102,7 +102,7 @@ namespace FirstPlugin
 
             STToolStripItem[] newFileExt = new STToolStripItem[2];
 
-            public MenuExt()    
+            public MenuExt()
             {
                 newFileExt[0] = new STToolStripItem("KCL (Switch)", CreateNew);
                 newFileExt[1] = new STToolStripItem("KCL (Wii U)", CreateNew);
@@ -121,7 +121,7 @@ namespace FirstPlugin
 
                 string name = System.IO.Path.GetFileNameWithoutExtension(opn.FileName);
 
-                var f = MarioKart.MK7.KCL.FromOBJ(mod);
+                var f = MarioKart.MK7.KCL.FromTestObj(opn.FileName);
 
                 KCL kcl = new KCL();
                 kcl.Text = name;
@@ -343,6 +343,9 @@ namespace FirstPlugin
         }
         public void Read(MarioKart.MK7.KCL kcl)
         {
+            Vector3 min = new Vector3();
+            Vector3 max = new Vector3();
+
             Nodes.Clear();
             Renderer.models.Clear();
 
@@ -393,8 +396,33 @@ namespace FirstPlugin
                     kclmodel.vertices.Add(vtx);
                     kclmodel.vertices.Add(vtx2);
                     kclmodel.vertices.Add(vtx3);
+
+                    #region FindMaxMin
+                    if (triangle.PointA.X < min.X) min.X = triangle.PointA.X;
+                    if (triangle.PointA.Y < min.Y) min.Y = triangle.PointA.Y;
+                    if (triangle.PointA.Z < min.Z) min.Z = triangle.PointA.Z;
+                    if (triangle.PointA.X > max.X) max.X = triangle.PointA.X;
+                    if (triangle.PointA.Y > max.Y) max.Y = triangle.PointA.Y;
+                    if (triangle.PointA.Z > max.Z) max.Z = triangle.PointA.Z;
+
+                    if (triangle.PointB.X < min.X) min.X = triangle.PointB.X;
+                    if (triangle.PointB.Y < min.Y) min.Y = triangle.PointB.Y;
+                    if (triangle.PointB.Z < min.Z) min.Z = triangle.PointB.Z;
+                    if (triangle.PointB.X > max.X) max.X = triangle.PointB.X;
+                    if (triangle.PointB.Y > max.Y) max.Y = triangle.PointB.Y;
+                    if (triangle.PointB.Z > max.Z) max.Z = triangle.PointB.Z;
+
+                    if (triangle.PointC.X < min.X) min.X = triangle.PointC.X;
+                    if (triangle.PointC.Y < min.Y) min.Y = triangle.PointC.Y;
+                    if (triangle.PointC.Z < min.Z) min.Z = triangle.PointC.Z;
+                    if (triangle.PointC.X > max.X) max.X = triangle.PointC.X;
+                    if (triangle.PointC.Y > max.Y) max.Y = triangle.PointC.Y;
+                    if (triangle.PointC.Z > max.Z) max.Z = triangle.PointC.Z;
+                    #endregion
                 }
 
+                Renderer.Max = max;
+                Renderer.Min = min;
                 Renderer.models.Add(kclmodel);
                 Nodes.Add(kclmodel);
 
@@ -404,6 +432,9 @@ namespace FirstPlugin
 
         public class KCLRendering : EditableObject
         {
+            public Vector3 Max = new Vector3(0);
+            public Vector3 Min = new Vector3(0);
+
             public List<ushort> SelectedTypes = new List<ushort>();
 
             public Vector3 position = new Vector3(0, 0, 0);
@@ -474,6 +505,23 @@ namespace FirstPlugin
                 GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
 
                 LibraryGUI.Instance.UpdateViewport();
+            }
+
+            public void DrawGlobalOctree()
+            {
+                var size = Max - Min;
+                var BoxSize = size / 2f;
+                for (int k = 0; k < 2; k++)
+                {
+                    for (int l = 0; l < 2; l++)
+                    {
+                        for (int m = 0; m < 2; m++)
+                        {
+                            var Boxmin = Min + new Vector3(BoxSize.X * m, BoxSize.Y * l, BoxSize.Z * k);
+                            var pos = new Vector3(BoxSize.X * m, BoxSize.Y * l, BoxSize.Z * k);
+                        }
+                    }
+                }
             }
 
             public ShaderProgram defaultShaderProgram;
@@ -619,6 +667,8 @@ namespace FirstPlugin
                 GL.Disable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
+
+                DrawGlobalOctree();
             }
             private void SetRenderSettings(ShaderProgram shader)
             {
@@ -791,7 +841,7 @@ namespace FirstPlugin
         }
 
         //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods
-        public static Vector3 Vec3D_To_Vec3(System.Windows.Media.Media3D.Vector3D v)
+        public static Vector3 Vec3D_To_Vec3(LibEveryFileExplorer.Collections.Vector3 v)
         {
             return new Vector3((float)v.X, (float)v.Y, (float)v.Z);
         }

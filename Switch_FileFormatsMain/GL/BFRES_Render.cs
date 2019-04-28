@@ -179,7 +179,8 @@ namespace FirstPlugin
 
             DrawableBoundingBox.DrawBoundingBox(
                 new Vector3(boundings.minX, boundings.minY, boundings.minZ),
-                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ)
+                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ),
+                new Vector3(0)
                 );
 
             return;
@@ -350,6 +351,8 @@ namespace FirstPlugin
             GL.Disable(EnableCap.DepthTest);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
+
+            DrawBoundingBoxes();
         }
 
         private void DrawModels(ShaderProgram shader, GL_ControlModern control)

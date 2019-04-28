@@ -36,6 +36,22 @@ namespace Switch_Toolbox.Library
                   color.A.ToString("X2");
         }
 
+        public static Color HexToColor(string HexText)
+        {
+            try
+            {
+                return Color.FromArgb(
+                int.Parse(HexText.Substring(6, 2), System.Globalization.NumberStyles.HexNumber),
+                int.Parse(HexText.Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
+                int.Parse(HexText.Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
+                int.Parse(HexText.Substring(4, 2), System.Globalization.NumberStyles.HexNumber));
+            }
+            catch
+            {
+                throw new Exception("Invalid Hex Format!");
+            }
+        }
+
         public static int FloatToIntClamp(float r)
         {
             return Clamp((int)(r * 255), 0, 255);

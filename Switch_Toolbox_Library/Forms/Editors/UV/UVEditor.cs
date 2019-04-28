@@ -162,7 +162,7 @@ namespace Switch_Toolbox.Library.Forms
             GL.End();
 
             GL.Begin(PrimitiveType.Lines);
-            GL.LineWidth(3);
+            GL.LineWidth(3);    
             GL.Vertex2(v3 * scaleUv + transUv);
             GL.Vertex2(v1 * scaleUv + transUv);
             GL.End();

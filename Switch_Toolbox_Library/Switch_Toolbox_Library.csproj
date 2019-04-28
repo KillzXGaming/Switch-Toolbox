@@ -571,6 +571,7 @@
     </Compile>
     <Compile Include="PublicEnums.cs" />
     <Compile Include="Rendering\DrawableBackground.cs" />
+    <Compile Include="Rendering\DrawableDividedCube.cs" />
     <Compile Include="Rendering\DrawableBoundingBox.cs" />
     <Compile Include="Rendering\DrawableCube.cs" />
     <Compile Include="Rendering\DrawableSkybox.cs" />

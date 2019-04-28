@@ -196,7 +196,8 @@ namespace Switch_Toolbox.Library
 
             DrawableBoundingBox.DrawBoundingBox(
                 new Vector3(boundings.minX, boundings.minY, boundings.minZ),
-                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ)
+                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ),
+                new Vector3(0)
                 );
 
             return;

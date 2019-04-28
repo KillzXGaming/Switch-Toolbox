@@ -104,7 +104,6 @@
             // 
             // color1Index0
             // 
-            this.color1Index0.BackColor = System.Drawing.Color.Empty;
             this.color1Index0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index0.Location = new System.Drawing.Point(181, 46);
             this.color1Index0.Name = "color1Index0";
@@ -116,7 +115,6 @@
             // 
             // color0Index0
             // 
-            this.color0Index0.BackColor = System.Drawing.Color.Empty;
             this.color0Index0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index0.Location = new System.Drawing.Point(6, 46);
             this.color0Index0.Name = "color0Index0";
@@ -128,7 +126,6 @@
             // 
             // color0Index1
             // 
-            this.color0Index1.BackColor = System.Drawing.Color.Empty;
             this.color0Index1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index1.Location = new System.Drawing.Point(6, 102);
             this.color0Index1.Name = "color0Index1";
@@ -140,7 +137,6 @@
             // 
             // color1Index1
             // 
-            this.color1Index1.BackColor = System.Drawing.Color.Empty;
             this.color1Index1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index1.Location = new System.Drawing.Point(181, 102);
             this.color1Index1.Name = "color1Index1";
@@ -152,7 +148,6 @@
             // 
             // color0Index3
             // 
-            this.color0Index3.BackColor = System.Drawing.Color.Empty;
             this.color0Index3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index3.Location = new System.Drawing.Point(6, 214);
             this.color0Index3.Name = "color0Index3";
@@ -164,7 +159,6 @@
             // 
             // color1Index3
             // 
-            this.color1Index3.BackColor = System.Drawing.Color.Empty;
             this.color1Index3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index3.Location = new System.Drawing.Point(181, 214);
             this.color1Index3.Name = "color1Index3";
@@ -176,7 +170,6 @@
             // 
             // color0Index2
             // 
-            this.color0Index2.BackColor = System.Drawing.Color.Empty;
             this.color0Index2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index2.Location = new System.Drawing.Point(6, 158);
             this.color0Index2.Name = "color0Index2";
@@ -188,7 +181,6 @@
             // 
             // color1Index2
             // 
-            this.color1Index2.BackColor = System.Drawing.Color.Empty;
             this.color1Index2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index2.Location = new System.Drawing.Point(181, 158);
             this.color1Index2.Name = "color1Index2";
@@ -200,7 +192,6 @@
             // 
             // color0Index7
             // 
-            this.color0Index7.BackColor = System.Drawing.Color.Empty;
             this.color0Index7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index7.Location = new System.Drawing.Point(6, 438);
             this.color0Index7.Name = "color0Index7";
@@ -212,7 +203,6 @@
             // 
             // color1Index7
             // 
-            this.color1Index7.BackColor = System.Drawing.Color.Empty;
             this.color1Index7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index7.Location = new System.Drawing.Point(181, 438);
             this.color1Index7.Name = "color1Index7";
@@ -224,7 +214,6 @@
             // 
             // color0Index6
             // 
-            this.color0Index6.BackColor = System.Drawing.Color.Empty;
             this.color0Index6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index6.Location = new System.Drawing.Point(6, 382);
             this.color0Index6.Name = "color0Index6";
@@ -236,7 +225,6 @@
             // 
             // color1Index6
             // 
-            this.color1Index6.BackColor = System.Drawing.Color.Empty;
             this.color1Index6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index6.Location = new System.Drawing.Point(181, 382);
             this.color1Index6.Name = "color1Index6";
@@ -248,7 +236,6 @@
             // 
             // color0Index5
             // 
-            this.color0Index5.BackColor = System.Drawing.Color.Empty;
             this.color0Index5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index5.Location = new System.Drawing.Point(6, 326);
             this.color0Index5.Name = "color0Index5";
@@ -260,7 +247,6 @@
             // 
             // color1Index5
             // 
-            this.color1Index5.BackColor = System.Drawing.Color.Empty;
             this.color1Index5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index5.Location = new System.Drawing.Point(181, 326);
             this.color1Index5.Name = "color1Index5";
@@ -272,7 +258,6 @@
             // 
             // color0Index4
             // 
-            this.color0Index4.BackColor = System.Drawing.Color.Empty;
             this.color0Index4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color0Index4.Location = new System.Drawing.Point(6, 270);
             this.color0Index4.Name = "color0Index4";
@@ -284,7 +269,6 @@
             // 
             // color1Index4
             // 
-            this.color1Index4.BackColor = System.Drawing.Color.Empty;
             this.color1Index4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.color1Index4.Location = new System.Drawing.Point(181, 270);
             this.color1Index4.Name = "color1Index4";
@@ -296,119 +280,150 @@
             // 
             // color0TB
             // 
+            this.color0TB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB.Location = new System.Drawing.Point(62, 62);
             this.color0TB.Name = "color0TB";
             this.color0TB.Size = new System.Drawing.Size(100, 20);
             this.color0TB.TabIndex = 19;
+            this.color0TB.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB2
             // 
+            this.color0TB2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB2.Location = new System.Drawing.Point(62, 118);
             this.color0TB2.Name = "color0TB2";
             this.color0TB2.Size = new System.Drawing.Size(100, 20);
             this.color0TB2.TabIndex = 20;
+            this.color0TB2.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB4
             // 
+            this.color0TB4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB4.Location = new System.Drawing.Point(62, 230);
             this.color0TB4.Name = "color0TB4";
             this.color0TB4.Size = new System.Drawing.Size(100, 20);
             this.color0TB4.TabIndex = 22;
+            this.color0TB4.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB3
             // 
+            this.color0TB3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB3.Location = new System.Drawing.Point(62, 174);
             this.color0TB3.Name = "color0TB3";
             this.color0TB3.Size = new System.Drawing.Size(100, 20);
             this.color0TB3.TabIndex = 21;
+            this.color0TB3.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB6
             // 
+            this.color0TB6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB6.Location = new System.Drawing.Point(62, 342);
             this.color0TB6.Name = "color0TB6";
             this.color0TB6.Size = new System.Drawing.Size(100, 20);
             this.color0TB6.TabIndex = 24;
+            this.color0TB6.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB5
             // 
+            this.color0TB5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB5.Location = new System.Drawing.Point(62, 286);
             this.color0TB5.Name = "color0TB5";
             this.color0TB5.Size = new System.Drawing.Size(100, 20);
             this.color0TB5.TabIndex = 23;
+            this.color0TB5.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB8
             // 
+            this.color0TB8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB8.Location = new System.Drawing.Point(62, 454);
             this.color0TB8.Name = "color0TB8";
             this.color0TB8.Size = new System.Drawing.Size(100, 20);
             this.color0TB8.TabIndex = 26;
+            this.color0TB8.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color0TB7
             // 
+            this.color0TB7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color0TB7.Location = new System.Drawing.Point(62, 398);
             this.color0TB7.Name = "color0TB7";
             this.color0TB7.Size = new System.Drawing.Size(100, 20);
             this.color0TB7.TabIndex = 25;
+            this.color0TB7.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB8
             // 
+            this.color1TB8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB8.Location = new System.Drawing.Point(250, 454);
             this.color1TB8.Name = "color1TB8";
             this.color1TB8.Size = new System.Drawing.Size(100, 20);
             this.color1TB8.TabIndex = 34;
+            this.color1TB8.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB7
             // 
+            this.color1TB7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB7.Location = new System.Drawing.Point(250, 398);
             this.color1TB7.Name = "color1TB7";
             this.color1TB7.Size = new System.Drawing.Size(100, 20);
             this.color1TB7.TabIndex = 33;
+            this.color1TB7.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB6
             // 
+            this.color1TB6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB6.Location = new System.Drawing.Point(250, 342);
             this.color1TB6.Name = "color1TB6";
             this.color1TB6.Size = new System.Drawing.Size(100, 20);
             this.color1TB6.TabIndex = 32;
+            this.color1TB6.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB5
             // 
+            this.color1TB5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB5.Location = new System.Drawing.Point(250, 286);
             this.color1TB5.Name = "color1TB5";
             this.color1TB5.Size = new System.Drawing.Size(100, 20);
             this.color1TB5.TabIndex = 31;
+            this.color1TB5.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB4
             // 
+            this.color1TB4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB4.Location = new System.Drawing.Point(250, 230);
             this.color1TB4.Name = "color1TB4";
             this.color1TB4.Size = new System.Drawing.Size(100, 20);
             this.color1TB4.TabIndex = 30;
+            this.color1TB4.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB3
             // 
+            this.color1TB3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB3.Location = new System.Drawing.Point(250, 174);
             this.color1TB3.Name = "color1TB3";
             this.color1TB3.Size = new System.Drawing.Size(100, 20);
             this.color1TB3.TabIndex = 29;
+            this.color1TB3.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB2
             // 
+            this.color1TB2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB2.Location = new System.Drawing.Point(250, 118);
             this.color1TB2.Name = "color1TB2";
             this.color1TB2.Size = new System.Drawing.Size(100, 20);
             this.color1TB2.TabIndex = 28;
+            this.color1TB2.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // color1TB
             // 
+            this.color1TB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.color1TB.Location = new System.Drawing.Point(250, 62);
             this.color1TB.Name = "color1TB";
             this.color1TB.Size = new System.Drawing.Size(100, 20);
             this.color1TB.TabIndex = 27;
+            this.color1TB.TextChanged += new System.EventHandler(this.hexTB_TextChanged);
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Empty;
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
             this.pictureBox2.Location = new System.Drawing.Point(14, 192);
             this.pictureBox2.Name = "pictureBox2";
@@ -419,7 +434,6 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackColor = System.Drawing.Color.Empty;
             this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
             this.pictureBox3.Location = new System.Drawing.Point(14, 361);
             this.pictureBox3.Name = "pictureBox3";
@@ -430,7 +444,6 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Empty;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.Location = new System.Drawing.Point(14, 41);
             this.pictureBox1.Name = "pictureBox1";
@@ -531,6 +544,7 @@
             // 
             // TBTexture0
             // 
+            this.TBTexture0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TBTexture0.Location = new System.Drawing.Point(14, 15);
             this.TBTexture0.Name = "TBTexture0";
             this.TBTexture0.Size = new System.Drawing.Size(150, 20);
@@ -538,6 +552,7 @@
             // 
             // TBTexture2
             // 
+            this.TBTexture2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TBTexture2.Location = new System.Drawing.Point(14, 335);
             this.TBTexture2.Name = "TBTexture2";
             this.TBTexture2.Size = new System.Drawing.Size(150, 20);
@@ -545,6 +560,7 @@
             // 
             // TBTexture1
             // 
+            this.TBTexture1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TBTexture1.Location = new System.Drawing.Point(14, 166);
             this.TBTexture1.Name = "TBTexture1";
             this.TBTexture1.Size = new System.Drawing.Size(150, 20);

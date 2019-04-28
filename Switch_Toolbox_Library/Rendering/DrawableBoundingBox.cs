@@ -24,33 +24,39 @@ namespace Switch_Toolbox.Library.Rendering
             return vertices;
         }
 
-        public static void DrawBoundingBox(Vector3 Min, Vector3 Max)
+        public static void DrawBoundingBox(Vector3 Min, Vector3 Max, Vector3 Position)
         {
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.PushMatrix();
+            GL.LoadIdentity();
+
+            GL.Translate(0,0,0);
+
             var vertices = GetBoundingVertices(Min, Max);
 
             GL.Begin(PrimitiveType.LineLoop);
-            GL.Vertex3(vertices[0]);
-            GL.Vertex3(vertices[1]);
-            GL.Vertex3(vertices[3]);
-            GL.Vertex3(vertices[2]);
+            GL.Vertex3(Position + vertices[0]);
+            GL.Vertex3(Position + vertices[1]);
+            GL.Vertex3(Position + vertices[3]);
+            GL.Vertex3(Position + vertices[2]);
             GL.End();
 
             GL.Begin(PrimitiveType.LineLoop);
-            GL.Vertex3(vertices[4]);
-            GL.Vertex3(vertices[5]);
-            GL.Vertex3(vertices[7]);
-            GL.Vertex3(vertices[6]);
+            GL.Vertex3(Position + vertices[4]);
+            GL.Vertex3(Position + vertices[5]);
+            GL.Vertex3(Position + vertices[7]);
+            GL.Vertex3(Position + vertices[6]);
             GL.End();
 
             GL.Begin(PrimitiveType.Lines);
-            GL.Vertex3(vertices[0]);
-            GL.Vertex3(vertices[4]);
-            GL.Vertex3(vertices[1]);
-            GL.Vertex3(vertices[5]);
-            GL.Vertex3(vertices[3]);
-            GL.Vertex3(vertices[7]);
-            GL.Vertex3(vertices[2]);
-            GL.Vertex3(vertices[6]);
+            GL.Vertex3(Position + vertices[0]);
+            GL.Vertex3(Position + vertices[4]);
+            GL.Vertex3(Position + vertices[1]);
+            GL.Vertex3(Position + vertices[5]);
+            GL.Vertex3(Position + vertices[3]);
+            GL.Vertex3(Position + vertices[7]);
+            GL.Vertex3(Position + vertices[2]);
+            GL.Vertex3(Position + vertices[6]);
             GL.End();
         }
     }
