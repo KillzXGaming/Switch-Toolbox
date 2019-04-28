@@ -12,6 +12,8 @@ namespace FirstPlugin
     {
         public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
         public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string GTX = GetFilter(".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+
         public static string FMDL = GetFilter(".bfmdl", ".dae", ".fbx", ".obj", ".csv");
         public static string FMDL_EXPORT = GetFilter(".bfmdl", ".dae");
         public static string FSKL = GetFilter(".bfskl");

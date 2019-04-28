@@ -419,8 +419,8 @@ namespace FirstPlugin
                     UpdateEditor();
                 }
 
-                public override string ExportFilter => FileFilters.FTEX;
-                public override string ReplaceFilter => FileFilters.FTEX;
+                public override string ExportFilter => FileFilters.GTX;
+                public override string ReplaceFilter => FileFilters.GTX;
 
                 public override void Export(string FileName)
                 {
