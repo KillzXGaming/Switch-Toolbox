@@ -429,7 +429,7 @@ namespace FirstPlugin
             }
         }
 
-        public class KCLRendering : EditableObject
+        public class KCLRendering : AbstractGlDrawable
         {
             public Vector3 Max = new Vector3(0);
             public Vector3 Min = new Vector3(0);
@@ -441,8 +441,8 @@ namespace FirstPlugin
             protected bool Selected = false;
             protected bool Hovered = false;
 
-            public override bool IsSelected() => Selected;
-            public override bool IsSelected(int partIndex) => Selected;
+           // public override bool IsSelected() => Selected;
+          //  public override bool IsSelected(int partIndex) => Selected;
 
             public bool IsHovered() => Selected;
 
@@ -628,9 +628,7 @@ namespace FirstPlugin
                     return;
             }
 
-            public override void Draw(GL_ControlModern control, Pass pass) { }
-
-            public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
+            public override void Draw(GL_ControlModern control, Pass pass)
             {
                 CheckBuffers();
 
@@ -639,9 +637,9 @@ namespace FirstPlugin
 
                 control.CurrentShader = defaultShaderProgram;
 
-                control.UpdateModelMatrix(
-                Matrix4.CreateScale(Runtime.previewScale) *
-                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
+            //    control.UpdateModelMatrix(
+          //      Matrix4.CreateScale(Runtime.previewScale) *
+             //   Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
 
                 SetRenderSettings(defaultShaderProgram);
 
@@ -666,8 +664,6 @@ namespace FirstPlugin
                 GL.Disable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
-
-                DrawGlobalOctree();
             }
             private void SetRenderSettings(ShaderProgram shader)
             {
@@ -740,7 +736,7 @@ namespace FirstPlugin
                 GL.Uniform1(shader["colorOverride"], 0);
             }
 
-            public override BoundingBox GetSelectionBox()
+       /*     public override BoundingBox GetSelectionBox()
             {
                 Vector3 Min = new Vector3(0);
                 Vector3 Max = new Vector3(0);
@@ -836,7 +832,7 @@ namespace FirstPlugin
                 {
                     position = value;
                 }
-            }
+            }*/
         }
 
         //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods
