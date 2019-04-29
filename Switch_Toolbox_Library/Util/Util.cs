@@ -36,6 +36,12 @@ namespace Switch_Toolbox.Library
                   color.A.ToString("X2");
         }
 
+        public static void DeleteIfExists(string FilePath)
+        {
+            if (File.Exists(FilePath))
+                File.Delete(FilePath);
+        }
+
         public static Color HexToColor(string HexText)
         {
             try

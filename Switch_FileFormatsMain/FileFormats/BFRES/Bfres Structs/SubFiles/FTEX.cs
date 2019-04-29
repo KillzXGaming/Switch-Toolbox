@@ -54,7 +54,7 @@ namespace Bfres.Structs
 
         bool IsReplaced = false;
 
-        public override bool CanEdit { get; set; } = false;
+        public override bool CanEdit { get; set; } = true;
 
         public int format;
         public Texture texture;
@@ -159,7 +159,7 @@ namespace Bfres.Structs
                 if (setting.DataBlockOutput != null)
                 {
                     var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                    var tex = FromGx2Surface(surface, setting);
+                    var tex = FromGx2Surface(surface, setting.TexName);
                     UpdateTex(tex);
 
                     texture.Name = Text;
@@ -229,7 +229,7 @@ namespace Bfres.Structs
                 if (setting.DataBlockOutput != null)
                 {
                     var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                    var tex = FromGx2Surface(surface, setting);
+                    var tex = FromGx2Surface(surface, setting.TexName);
                     UpdateTex(tex);
                     texture.Name = Text;
                     IsReplaced = true;
@@ -252,7 +252,7 @@ namespace Bfres.Structs
                     if (setting.DataBlockOutput != null)
                     {
                         var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                        var tex = FromGx2Surface(surface, setting);
+                        var tex = FromGx2Surface(surface, setting.TexName);
                         UpdateTex(tex);
                         texture.Name = Text;
                         IsReplaced = true;
@@ -305,10 +305,10 @@ namespace Bfres.Structs
         }
 
         //We reuse GX2 data as it's the same thing
-        public Texture FromGx2Surface(GX2.GX2Surface surf, GTXImporterSettings settings)
+        public Texture FromGx2Surface(GX2.GX2Surface surf, string Name)
         {
             Texture tex = new Texture();
-            tex.Name = settings.TexName;
+            tex.Name = Name;
             tex.Path = "";
             tex.AAMode = (GX2AAMode)surf.aa;
             tex.Alignment = (uint)surf.alignment;
@@ -350,7 +350,6 @@ namespace Bfres.Structs
         {
             CanReplace = true;
             CanDelete = true;
-            CanEdit = false;
             CanExport = true;
 
             ImageKey = "Texture";
@@ -383,7 +382,53 @@ namespace Bfres.Structs
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+            if (bitmap == null)
+                return; //Image is likely disposed and not needed to be applied
+
+            texture.Format = ConvertToGx2Format(Format);
+            texture.Width = (uint)bitmap.Width;
+            texture.Height = (uint)bitmap.Height;
+
+            if (MipCount != 1)
+            {
+                MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+                if (MipCount == 0)
+                    MipCount = 1;
+            }
+
+            texture.MipCount = MipCount;
+            texture.MipOffsets = new uint[MipCount];
+
+            try
+            {
+                //Create image block from bitmap first
+                var data = GenerateMipsAndCompress(bitmap, Format);
+
+                //Swizzle and create surface
+                var surface = GX2.CreateGx2Texture(data, Text,
+                    (uint)texture.TileMode,
+                    (uint)texture.AAMode,
+                    (uint)texture.Width,
+                    (uint)texture.Height,
+                    (uint)texture.Depth,
+                    (uint)texture.Format,
+                    (uint)texture.Swizzle,
+                    (uint)texture.Dim,
+                    (uint)texture.MipCount
+                    );
+
+                var tex = FromGx2Surface(surface, texture.Name);
+                UpdateTex(tex);
+
+                IsEdited = true;
+                Read(texture);
+                LoadOpenGLTexture();
+                LibraryGUI.Instance.UpdateViewport();
+            }
+            catch (Exception ex)
+            {
+                STErrorDialog.Show("Failed to swizzle and compress image " + Text, "Error", ex.ToString());
+            }
         }
 
         ResFile ResFileTexture2;

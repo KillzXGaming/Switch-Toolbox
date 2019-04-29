@@ -7,11 +7,16 @@ using System.Linq;
 using System.Activities.Statements;
 using System.Threading;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.IO;
+using System.Diagnostics;
 
 namespace Switch_Toolbox.Library.Forms
 {
     public partial class ImageEditorBase : UserControl
     {
+        public FileSystemWatcher FileWatcher;
+
         private Thread Thread;
 
         int CurMipDisplayLevel = 0;
@@ -21,6 +26,7 @@ namespace Switch_Toolbox.Library.Forms
         public STGenericTexture ActiveTexture;
 
         public bool PropertyShowTop = false;
+        public bool CanModify = true;
 
         //Instead of disabling/enabling channels, this will only show the selected channel
         public bool UseChannelToggle = false; 
@@ -104,6 +110,7 @@ namespace Switch_Toolbox.Library.Forms
 
             imageToolStripMenuItem.Enabled = false;
             adjustmentsToolStripMenuItem.Enabled = false;
+            editBtn.BackgroundImage = BitmapExtension.GrayScale(Properties.Resources.Edit);
 
             foreach (var type in Enum.GetValues(typeof(Runtime.PictureBoxBG)).Cast<Runtime.PictureBoxBG>())
                 imageBGComboBox.Items.Add(type);
@@ -128,6 +135,18 @@ namespace Switch_Toolbox.Library.Forms
                 LoadChannelEditor(null);
 
             OnDataAcquiredEvent += new DataAcquired(ThreadReportsDataAquiredEvent);
+
+            SetUpFileSystemWatcher();
+        }
+
+        private void SetUpFileSystemWatcher()
+        {
+            FileWatcher = new FileSystemWatcher();
+            FileWatcher.Path = Path.GetTempPath();
+            FileWatcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            FileWatcher.EnableRaisingEvents = false;
+            FileWatcher.Changed += new FileSystemEventHandler(OnFileWatcherChanged);
+            FileWatcher.Filter = "";
         }
 
         public void SetEditorOrientation(bool ToVertical)
@@ -155,9 +174,19 @@ namespace Switch_Toolbox.Library.Forms
         }
 
         public void LoadProperties(object prop) => propertiesEditor.LoadProperties(prop);
-       
 
         public void LoadImage(STGenericTexture texture)
+        {
+            editBtn.Enabled = false;
+
+            //Disable the file watcher when an image is switched
+            FileWatcher.EnableRaisingEvents = false;
+            FileWatcher.Filter = "";
+
+            UpdateImage(texture);
+        }
+
+        private void UpdateImage(STGenericTexture texture)
         {
             ResetChannelEditor();
 
@@ -170,6 +199,17 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             ActiveTexture = texture;
+
+            if (ActiveTexture.CanEdit)
+            {
+                editBtn.Enabled = true;
+                editBtn.BackgroundImage = Properties.Resources.Edit;
+            }
+            else
+            {
+                editBtn.BackgroundImage = BitmapExtension.GrayScale(Properties.Resources.Edit);
+            }
+
             CurMipDisplayLevel = 0;
             CurArrayDisplayLevel = 0;
             hasBeenEdited = false;
@@ -769,6 +809,91 @@ namespace Switch_Toolbox.Library.Forms
 
             splitContainer1.SplitterDistance = this.Height / 2;
 
+        }
+
+        private void editBtn_Click(object sender, EventArgs e) {
+            EditInExternalProgram();
+        }
+
+        private void editInExternalProgramToolStripMenuItem_Click(object sender, EventArgs e) {
+            EditInExternalProgram();
+        }
+
+        private void EditInExternalProgram(bool UseDefaultEditor = true)
+        {
+            if (!ActiveTexture.CanEdit)
+                return;
+
+            string UseExtension = ".dds";
+
+            string TemporaryName = Path.GetTempFileName();
+            Utils.DeleteIfExists(Path.ChangeExtension(TemporaryName, UseExtension));
+            File.Move(TemporaryName, Path.ChangeExtension(TemporaryName, UseExtension));
+            TemporaryName = Path.ChangeExtension(TemporaryName, ".dds");
+
+            ActiveTexture.SaveDDS(TemporaryName);
+
+            if (UseDefaultEditor)
+                Process.Start(TemporaryName);
+            else
+                ShowOpenWithDialog(TemporaryName);
+
+            FileWatcher.Filter = Path.GetFileName(TemporaryName);
+
+            //Start watching for changes
+            FileWatcher.EnableRaisingEvents = true;
+        }
+
+        public static Process ShowOpenWithDialog(string path)
+        {
+            var args = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "shell32.dll");
+            args += ",OpenAs_RunDLL " + path;
+            return Process.Start("rundll32.exe", args);
+        }
+
+        private void OnFileWatcherChanged(object sender, FileSystemEventArgs e)
+        {
+            string FileName = e.FullPath;
+
+            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            var Result = MessageBox.Show("Texture has been modifed in external program! Would you like to apply the edits?", "Texture Editor",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+            if (Result == DialogResult.Yes)
+            {
+                 if (FileName.EndsWith(".dds"))
+                 {
+                    DDS dds = new DDS(FileName);
+                    SaveAndApplyImage(dds.GetBitmap());
+                }
+                else
+                {
+                    SaveAndApplyImage(new Bitmap(FileName));
+                }
+            }
+            else
+            {
+                FileWatcher.Filter = "";
+                FileWatcher.EnableRaisingEvents = false;
+            }
+        }
+
+        private void SaveAndApplyImage(Bitmap image)
+        {
+            if (saveBtn.InvokeRequired)
+            {
+                saveBtn.Invoke(new MethodInvoker(
+                delegate ()
+                {
+                    UpdateEdit(image);
+                    ApplyEdit();
+                }));
+            }
+            else
+            {
+                UpdateEdit(image);
+                ApplyEdit();
+            }
         }
     }
 }

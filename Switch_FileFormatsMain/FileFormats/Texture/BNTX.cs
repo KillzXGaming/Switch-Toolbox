@@ -367,6 +367,7 @@ namespace FirstPlugin
                     Nodes.Add(setting.textureData);
                     Textures.Add(setting.textureData.Text, setting.textureData);
                     setting.textureData.LoadOpenGLTexture();
+                    LibraryGUI.Instance.UpdateViewport();
                 }
                 else
                 {
@@ -802,7 +803,6 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, Remove, Keys.Control | Keys.Delete));
-        //   LoadOpenGLTexture();
         }
         public static SurfaceFormat GenericToBntxSurfaceFormat(TEX_FORMAT texFormat)
         {
@@ -1160,7 +1160,6 @@ namespace FirstPlugin
             Texture.MipCount = MipCount;
             Texture.MipOffsets = new long[MipCount];
 
-
             try
             {
                 Texture.TextureData[ArrayLevel].Clear(); //Clear previous mip maps
@@ -1173,13 +1172,14 @@ namespace FirstPlugin
                 //Combine mip map data
                 byte[] combinedMips = Utils.CombineByteArray(mipmaps.ToArray());
                 Texture.TextureData[ArrayLevel][0] = combinedMips;
+
+                LoadOpenGLTexture();
+                LibraryGUI.Instance.UpdateViewport();
             }
             catch (Exception ex)
             {
                 STErrorDialog.Show("Failed to swizzle and compress image " + Text, "Error", ex.ToString());
             }
-
-
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)

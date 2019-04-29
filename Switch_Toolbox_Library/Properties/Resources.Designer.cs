@@ -293,6 +293,16 @@ namespace Switch_Toolbox.Library.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Edit {
+            get {
+                object obj = ResourceManager.GetObject("Edit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap ErrorCheck {
             get {
                 object obj = ResourceManager.GetObject("ErrorCheck", resourceCulture);
@@ -816,6 +826,16 @@ namespace Switch_Toolbox.Library.Properties {
         public static System.Drawing.Bitmap TextureError {
             get {
                 object obj = ResourceManager.GetObject("TextureError", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap TextureMaterialMap {
+            get {
+                object obj = ResourceManager.GetObject("TextureMaterialMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

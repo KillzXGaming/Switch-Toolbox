@@ -996,6 +996,12 @@
   <ItemGroup>
     <None Include="Resources\QuestionCheck.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TextureMaterialMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Edit.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

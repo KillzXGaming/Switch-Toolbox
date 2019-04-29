@@ -107,6 +107,7 @@ namespace Switch_Toolbox.Library
             imgList.Images.Add("material", Properties.Resources.materialSphere);
             imgList.Images.Add("model", Properties.Resources.model);
             imgList.Images.Add("folder", Properties.Resources.skeleton);
+            imgList.Images.Add("TextureMaterialMap", Properties.Resources.TextureMaterialMap);
 
             //Data types
             imgList.Images.Add("bool", Properties.Resources.IconBool);

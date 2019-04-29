@@ -37,6 +37,7 @@
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
             this.blueChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.toggleAlphaChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.saveBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.arrayLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
@@ -55,6 +56,7 @@
             this.propertyGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editInExternalProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reEncodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flipHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,6 +172,7 @@
             // 
             // stPanel3
             // 
+            this.stPanel3.Controls.Add(this.editBtn);
             this.stPanel3.Controls.Add(this.toggleAlphaChk);
             this.stPanel3.Controls.Add(this.saveBtn);
             this.stPanel3.Controls.Add(this.arrayLevelCounterLabel);
@@ -183,12 +186,27 @@
             this.stPanel3.Size = new System.Drawing.Size(715, 51);
             this.stPanel3.TabIndex = 3;
             // 
+            // editBtn
+            // 
+            this.editBtn.BackColor = System.Drawing.Color.Transparent;
+            this.editBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.Edit;
+            this.editBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.editBtn.Enabled = false;
+            this.editBtn.FlatAppearance.BorderSize = 0;
+            this.editBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.editBtn.Location = new System.Drawing.Point(40, 3);
+            this.editBtn.Name = "editBtn";
+            this.editBtn.Size = new System.Drawing.Size(24, 23);
+            this.editBtn.TabIndex = 16;
+            this.editBtn.UseVisualStyleBackColor = false;
+            this.editBtn.Click += new System.EventHandler(this.editBtn_Click);
+            // 
             // toggleAlphaChk
             // 
             this.toggleAlphaChk.AutoSize = true;
             this.toggleAlphaChk.Checked = true;
             this.toggleAlphaChk.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toggleAlphaChk.Location = new System.Drawing.Point(50, 7);
+            this.toggleAlphaChk.Location = new System.Drawing.Point(85, 7);
             this.toggleAlphaChk.Name = "toggleAlphaChk";
             this.toggleAlphaChk.Size = new System.Drawing.Size(83, 17);
             this.toggleAlphaChk.TabIndex = 15;
@@ -354,7 +372,7 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.propertyGridToolStripMenuItem_CheckedChanged);
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
@@ -362,7 +380,7 @@
             // displayVerticalToolStripMenuItem
             // 
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
-            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
             this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
@@ -370,6 +388,7 @@
             // imageToolStripMenuItem
             // 
             this.imageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editInExternalProgramToolStripMenuItem,
             this.resizeToolStripMenuItem,
             this.reEncodeToolStripMenuItem,
             this.flipHorizontalToolStripMenuItem,
@@ -380,6 +399,13 @@
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.imageToolStripMenuItem.Text = "Image";
+            // 
+            // editInExternalProgramToolStripMenuItem
+            // 
+            this.editInExternalProgramToolStripMenuItem.Name = "editInExternalProgramToolStripMenuItem";
+            this.editInExternalProgramToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.editInExternalProgramToolStripMenuItem.Text = "Edit In External Program";
+            this.editInExternalProgramToolStripMenuItem.Click += new System.EventHandler(this.editInExternalProgramToolStripMenuItem_Click);
             // 
             // resizeToolStripMenuItem
             // 
@@ -513,5 +539,7 @@
         private System.Windows.Forms.ToolStripMenuItem reEncodeToolStripMenuItem;
         private STCheckBox toggleAlphaChk;
         private System.Windows.Forms.ToolStripMenuItem displayVerticalToolStripMenuItem;
+        private STButton editBtn;
+        private System.Windows.Forms.ToolStripMenuItem editInExternalProgramToolStripMenuItem;
     }
 }

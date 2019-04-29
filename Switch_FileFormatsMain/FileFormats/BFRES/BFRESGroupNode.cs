@@ -514,7 +514,7 @@ namespace Bfres.Structs
                     if (setting.DataBlockOutput != null)
                     {
                         var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                        var tex = ftex.FromGx2Surface(surface, setting);
+                        var tex = ftex.FromGx2Surface(surface, setting.TexName);
                         ftex.UpdateTex(tex);
 
                         ftex.IsEdited = true;
@@ -570,7 +570,7 @@ namespace Bfres.Structs
                     FTEX ftex = new FTEX();
                     ftex.texture = new ResU.Texture();
                     var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                    var tex = ftex.FromGx2Surface(surface, setting);
+                    var tex = ftex.FromGx2Surface(surface, setting.TexName);
                     ftex.UpdateTex(tex);
                     ftex.IsEdited = true;
 
@@ -646,7 +646,7 @@ namespace Bfres.Structs
             var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
             FTEX ftex = new FTEX();
             ftex.texture = new ResU.Texture();
-            ftex.texture = ftex.FromGx2Surface(surface, setting);
+            ftex.texture = ftex.FromGx2Surface(surface, setting.TexName);
             ftex.IsEdited = true;
             ftex.Read(ftex.texture);
 

@@ -541,8 +541,8 @@ namespace Bfres.Structs
             Text = text;
             textureMap = texture;
 
-            ImageKey = "texture";
-            SelectedImageKey = "texture";
+            ImageKey = "TextureMaterialMap";
+            SelectedImageKey = "TextureMaterialMap";
         }
 
         public override void OnClick(TreeView treeView)

@@ -297,10 +297,12 @@ namespace Switch_Toolbox.Library
 
             return true;
         }
-        public static bool GrayScale(Bitmap b)
+        public static Bitmap GrayScale(Image b) { return GrayScale(new Bitmap(b));
+        }
+        public static Bitmap GrayScale(Bitmap b)
         {
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
-        ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+        ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             int stride = bmData.Stride;
             System.IntPtr Scan0 = bmData.Scan0;
 
@@ -308,9 +310,9 @@ namespace Switch_Toolbox.Library
             {
                 byte* p = (byte*)(void*)Scan0;
 
-                int nOffset = stride - b.Width * 3;
+                int nOffset = stride - b.Width * 4;
 
-                byte red, green, blue;
+                byte red, green, blue, alpha;
 
                 for (int y = 0; y < b.Height; ++y)
                 {
@@ -319,12 +321,13 @@ namespace Switch_Toolbox.Library
                         blue = p[0];
                         green = p[1];
                         red = p[2];
+                        alpha = p[3];
 
                         p[0] = p[1] = p[2] = (byte)(.299 * red
                             + .587 * green
                             + .114 * blue);
 
-                        p += 3;
+                        p += 4;
                     }
                     p += nOffset;
                 }
@@ -332,7 +335,7 @@ namespace Switch_Toolbox.Library
 
             b.UnlockBits(bmData);
 
-            return true;
+            return b;
         }
         public static bool Invert(Bitmap b)
         {

@@ -68,12 +68,36 @@ namespace Switch_Toolbox.Library.Forms
 
         public void LoadProperties(object prop)
         {
-            stPropertyGrid1.LoadProperty(prop, OnPropertyChanged);
-            stPropertyGrid1.Refresh();
+            if (stPropertyGrid1.InvokeRequired)
+            {
+                stPropertyGrid1.Invoke(new MethodInvoker(
+                delegate ()
+                {
+                    stPropertyGrid1.LoadProperty(prop, OnPropertyChanged);
+                    stPropertyGrid1.Refresh();
+                }));
+            }
+            else
+            {
+                stPropertyGrid1.LoadProperty(prop, OnPropertyChanged);
+                stPropertyGrid1.Refresh();
+            }
         }
 
-        public void UpdateProperties() => stPropertyGrid1.Refresh();
-        
+        public void UpdateProperties()
+        {
+            if (stPropertyGrid1.InvokeRequired)
+            {
+                stPropertyGrid1.Invoke(new MethodInvoker(
+           delegate ()
+           {
+               stPropertyGrid1.Refresh();
+           }));
+            }
+            else
+                stPropertyGrid1.Refresh();
+        }
+
 
         public void OnPropertyChanged() { }
 
