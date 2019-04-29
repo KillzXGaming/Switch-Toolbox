@@ -596,8 +596,10 @@ namespace Switch_Toolbox.Library.Forms
                 HasBeenEdited = false;
             }
 
+            if (ActiveTexture.EditedImages != null) { 
             ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
             ActiveTexture.EditedImages[CurArrayDisplayLevel] = null;
+            }
 
             progressBar.Value = 100;
         }
@@ -901,6 +903,7 @@ namespace Switch_Toolbox.Library.Forms
             Image Image = pictureBoxCustom1.Image;
             if (Image != null)
             {
+                HasBeenEdited = true;
                 //Applying edits will generate mip maps
                 ApplyEdit();
                 UpdateEdit(Image);
