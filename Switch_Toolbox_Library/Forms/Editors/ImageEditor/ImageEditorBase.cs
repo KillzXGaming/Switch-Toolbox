@@ -582,7 +582,7 @@ namespace Switch_Toolbox.Library.Forms
             progressBar.StartPosition = FormStartPosition.CenterScreen;
             progressBar.Show();
             progressBar.Refresh();
-
+            progressBar.IsConstant = true;
 
             Image Image = pictureBoxCustom1.Image;
             if (Image != null)

@@ -31,6 +31,22 @@ namespace Switch_Toolbox.Library
                 progressBar1.Refresh();
             }
         }
+
+        public bool IsConstant
+        {
+            set
+            {
+                if (value)
+                    progressBar1.Style = ProgressBarStyle.Continuous;
+                else
+                    progressBar1.Style = ProgressBarStyle.Marquee;
+            }
+            get
+            {
+                return progressBar1.Style == ProgressBarStyle.Continuous;
+            }
+        }
+
         public string Task
         {
             set
