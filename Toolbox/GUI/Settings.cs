@@ -125,18 +125,18 @@ namespace Toolbox
         private void camNearNumUD_ValueChanged(object sender, EventArgs e)
         {
             Runtime.CameraNear = (float)camNearNumUD.Value;
-            UpdateViewportSettings();
+            UpdateViewportSettings(true);
         }
 
         private void camFarNumUD_ValueChanged(object sender, EventArgs e)
         {
             Runtime.CameraFar = (float)camFarNumUD.Value;
-            UpdateViewportSettings();
+            UpdateViewportSettings(true);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-         //   UpdateViewportSettings();
+            UpdateViewportSettings(true);
 
             Config.Save();
             this.Close();
