@@ -67,6 +67,7 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -372,7 +373,7 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.propertyGridToolStripMenuItem_CheckedChanged);
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
@@ -380,7 +381,7 @@
             // displayVerticalToolStripMenuItem
             // 
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
-            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
             this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
@@ -389,6 +390,7 @@
             // 
             this.imageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editInExternalProgramToolStripMenuItem,
+            this.generateMipmapsToolStripMenuItem,
             this.resizeToolStripMenuItem,
             this.reEncodeToolStripMenuItem,
             this.flipHorizontalToolStripMenuItem,
@@ -480,6 +482,13 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
+            // generateMipmapsToolStripMenuItem
+            // 
+            this.generateMipmapsToolStripMenuItem.Name = "generateMipmapsToolStripMenuItem";
+            this.generateMipmapsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.generateMipmapsToolStripMenuItem.Text = "Generate Mipmaps";
+            this.generateMipmapsToolStripMenuItem.Click += new System.EventHandler(this.generateMipmapsToolStripMenuItem_Click);
+            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -541,5 +550,6 @@
         private System.Windows.Forms.ToolStripMenuItem displayVerticalToolStripMenuItem;
         private STButton editBtn;
         private System.Windows.Forms.ToolStripMenuItem editInExternalProgramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateMipmapsToolStripMenuItem;
     }
 }

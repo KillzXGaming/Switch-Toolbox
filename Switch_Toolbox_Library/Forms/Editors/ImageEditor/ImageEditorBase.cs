@@ -895,5 +895,16 @@ namespace Switch_Toolbox.Library.Forms
                 ApplyEdit();
             }
         }
+
+        private void generateMipmapsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Image Image = pictureBoxCustom1.Image;
+            if (Image != null)
+            {
+                //Applying edits will generate mip maps
+                UpdateEdit(Image);
+                ApplyEdit();
+            }
+        }
     }
 }
