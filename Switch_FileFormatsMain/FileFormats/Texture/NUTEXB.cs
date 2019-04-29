@@ -601,7 +601,8 @@ namespace FirstPlugin
                 return;
             }
 
-            MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+            if (!LimitFileSize)
+                MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
 
             Texture tex = new Texture();
             tex.Height = (uint)bitmap.Height;
