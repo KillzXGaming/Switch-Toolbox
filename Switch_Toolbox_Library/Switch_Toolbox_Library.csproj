@@ -334,6 +334,12 @@
     <Compile Include="Forms\Editors\HexEditor\SearchHex.Designer.cs">
       <DependentUpon>SearchHex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\ImageEditor\ImageProgramSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\ImageEditor\ImageProgramSettings.Designer.cs">
+      <DependentUpon>ImageProgramSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\ImageEditor\ImagePropertiesEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -667,6 +673,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\HexEditor\SearchHex.resx">
       <DependentUpon>SearchHex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\ImageEditor\ImageProgramSettings.resx">
+      <DependentUpon>ImageProgramSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\ImageEditor\ImagePropertiesEditor.resx">
       <DependentUpon>ImagePropertiesEditor.cs</DependentUpon>
