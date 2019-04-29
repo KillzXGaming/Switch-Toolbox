@@ -147,6 +147,8 @@ namespace Switch_Toolbox.Library
                 var bitmap = tex.GetBitmap();
                 bitmap.Save(path);
                 bitmap.Dispose();
+
+                GC.Collect();
             }
 
             foreach (var mat in model.Nodes[1].Nodes)

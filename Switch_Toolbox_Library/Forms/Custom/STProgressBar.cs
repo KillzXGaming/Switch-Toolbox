@@ -37,13 +37,16 @@ namespace Switch_Toolbox.Library
             set
             {
                 if (value)
+                {
                     progressBar1.Style = ProgressBarStyle.Marquee;
+                    progressBar1.MarqueeAnimationSpeed = 100;
+                }
                 else
                     progressBar1.Style = ProgressBarStyle.Blocks;
             }
             get
             {
-                return progressBar1.Style == ProgressBarStyle.Blocks;
+                return progressBar1.Style == ProgressBarStyle.Marquee;
             }
         }
 

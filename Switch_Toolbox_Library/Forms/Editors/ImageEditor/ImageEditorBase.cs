@@ -579,10 +579,10 @@ namespace Switch_Toolbox.Library.Forms
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Applying Edits";
             progressBar.Value = 0;
+            progressBar.IsConstant = true;
             progressBar.StartPosition = FormStartPosition.CenterScreen;
             progressBar.Show();
             progressBar.Refresh();
-            progressBar.IsConstant = true;
 
             Image Image = pictureBoxCustom1.Image;
             if (Image != null)
