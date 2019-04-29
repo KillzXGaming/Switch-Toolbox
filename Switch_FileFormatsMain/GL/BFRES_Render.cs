@@ -20,17 +20,19 @@ using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace FirstPlugin
 {
-    public class BFRESRender : EditableObject
+    public class BFRESRender : AbstractGlDrawable
     {
         public Matrix4 ModelTransform = Matrix4.Identity;
         Vector3 position = new Vector3(0);
 
+        public static Vector4 hoverColor = new Vector4(1);
+        public static Vector4 selectColor = new Vector4(1);
+
         protected bool Selected = false;
         public bool Hovered = false;
 
-        public override bool IsSelected() => Selected;
-
-        public override bool IsSelected(int partIndex) => Selected;
+        public bool IsSelected() => Selected;
+     //  public override bool IsSelected(int partIndex) => Selected;
 
         // gl buffer objects
         int vbo_position;
@@ -173,7 +175,7 @@ namespace FirstPlugin
 
         }
 
-        private void DrawBoundingBoxes()
+      /*  private void DrawBoundingBoxes()
         {
             var boundings = GetSelectionBox();
 
@@ -200,7 +202,7 @@ namespace FirstPlugin
                     }
                 }
             }
-        }
+        }*/
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
@@ -261,9 +263,9 @@ namespace FirstPlugin
             DrawBfres(control, pass);
         }
 
-        public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene) {
+ /*       public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene) {
             DrawBfres(control, pass);
-        }
+        }*/
 
         private void DrawBfres(GL_ControlModern control, Pass pass)
         {
@@ -351,8 +353,6 @@ namespace FirstPlugin
             GL.Disable(EnableCap.DepthTest);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
-
-            DrawBoundingBoxes();
         }
 
         private void DrawModels(ShaderProgram shader, GL_ControlModern control)
@@ -1087,7 +1087,7 @@ namespace FirstPlugin
             GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
 
-        public override BoundingBox GetSelectionBox()
+  /*      public override BoundingBox GetSelectionBox()
         {
             Vector3 Min = new Vector3(0);
             Vector3 Max = new Vector3(0);
@@ -1186,7 +1186,7 @@ namespace FirstPlugin
             {
                 position = value;
             }
-        }
+        }*/
 
         #endregion
     }

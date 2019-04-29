@@ -213,7 +213,7 @@ namespace Bfres.Structs
                 return;
 
             //Loop through each drawable bfres in the active viewport to display the anim
-            foreach (var drawable in viewport.scene.objects)
+            foreach (var drawable in viewport.scene.staticObjects)
             {
                 if (drawable is BFRESRender)
                     HideBones(((BFRESRender)drawable).models);

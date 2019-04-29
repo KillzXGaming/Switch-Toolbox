@@ -1091,7 +1091,7 @@ namespace FirstPlugin
             if (viewport == null)
                 return;
 
-            foreach (var drawable in viewport.scene.objects)
+            foreach (var drawable in viewport.scene.staticObjects)
             {
                 if (drawable is BFRESRender)
                 {

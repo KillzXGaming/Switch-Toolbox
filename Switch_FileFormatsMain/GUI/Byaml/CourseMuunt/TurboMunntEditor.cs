@@ -344,7 +344,7 @@ namespace FirstPlugin.Forms
             ProbeLighting.Grid grid = new ProbeLighting.Grid();
 
             var mainBfres = scene.BfresObjects[0];
-            var boundings = mainBfres.BFRESRender.GetSelectionBox();
+        /*    var boundings = mainBfres.BFRESRender.GetSelectionBox();
 
             foreach (var entry in paramEntries)
             {
@@ -360,7 +360,7 @@ namespace FirstPlugin.Forms
                 }
                 if (entry.HashString == "voxel_step_pos")
                     grid.Voxel_Step_Position = Utils.ToVec3((Syroot.Maths.Vector3F)entry.Value);
-            }
+            }*/
 
             return grid;
         }
