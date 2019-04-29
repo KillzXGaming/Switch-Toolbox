@@ -37,13 +37,13 @@ namespace Switch_Toolbox.Library
             set
             {
                 if (value)
-                    progressBar1.Style = ProgressBarStyle.Continuous;
-                else
                     progressBar1.Style = ProgressBarStyle.Marquee;
+                else
+                    progressBar1.Style = ProgressBarStyle.Blocks;
             }
             get
             {
-                return progressBar1.Style == ProgressBarStyle.Continuous;
+                return progressBar1.Style == ProgressBarStyle.Blocks;
             }
         }
 
