@@ -902,8 +902,8 @@ namespace Switch_Toolbox.Library.Forms
             if (Image != null)
             {
                 //Applying edits will generate mip maps
-                UpdateEdit(Image);
                 ApplyEdit();
+                UpdateEdit(Image);
             }
         }
     }
