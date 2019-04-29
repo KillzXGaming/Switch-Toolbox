@@ -32,19 +32,23 @@
             this.textureImageFormatCB = new Switch_Toolbox.Library.Forms.STComboBox();
             this.textureFileFormatCB = new Switch_Toolbox.Library.Forms.STComboBox();
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.stButton1);
             this.contentContainer.Controls.Add(this.textureFileFormatCB);
             this.contentContainer.Controls.Add(this.stLabel2);
             this.contentContainer.Controls.Add(this.textureImageFormatCB);
             this.contentContainer.Controls.Add(this.stLabel1);
+            this.contentContainer.Size = new System.Drawing.Size(393, 133);
             this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
             this.contentContainer.Controls.SetChildIndex(this.textureImageFormatCB, 0);
             this.contentContainer.Controls.SetChildIndex(this.stLabel2, 0);
             this.contentContainer.Controls.SetChildIndex(this.textureFileFormatCB, 0);
+            this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
             // 
             // stLabel1
             // 
@@ -88,11 +92,22 @@
             this.stLabel2.TabIndex = 13;
             this.stLabel2.Text = "File Format:";
             // 
+            // stButton1
+            // 
+            this.stButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(308, 107);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(75, 23);
+            this.stButton1.TabIndex = 15;
+            this.stButton1.Text = "Ok";
+            this.stButton1.UseVisualStyleBackColor = false;
+            // 
             // ImageProgramSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 398);
+            this.ClientSize = new System.Drawing.Size(399, 138);
             this.Name = "ImageProgramSettings";
             this.Text = "ImageProgramSettings";
             this.contentContainer.ResumeLayout(false);
@@ -107,5 +122,6 @@
         private STComboBox textureImageFormatCB;
         private STComboBox textureFileFormatCB;
         private STLabel stLabel2;
+        private STButton stButton1;
     }
 }

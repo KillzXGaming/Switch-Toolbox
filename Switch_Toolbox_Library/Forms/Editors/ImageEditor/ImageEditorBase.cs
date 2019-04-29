@@ -821,44 +821,50 @@ namespace Switch_Toolbox.Library.Forms
             EditInExternalProgram();
         }
 
+        private TEX_FORMAT FormatToChange = TEX_FORMAT.UNKNOWN;
         private void EditInExternalProgram(bool UseDefaultEditor = true)
         {
             if (!ActiveTexture.CanEdit)
                 return;
 
-            string UseExtension = ".dds";
-
-            string TemporaryName = Path.GetTempFileName();
-            Utils.DeleteIfExists(Path.ChangeExtension(TemporaryName, UseExtension));
-            File.Move(TemporaryName, Path.ChangeExtension(TemporaryName, UseExtension));
-            TemporaryName = Path.ChangeExtension(TemporaryName, UseExtension);
-
-            switch (UseExtension)
+            ImageProgramSettings settings = new ImageProgramSettings();
+            settings.LoadImage(ActiveTexture);
+            if (settings.ShowDialog() == DialogResult.OK)
             {
-                case ".dds":
-                    ActiveTexture.SaveDDS(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
-                    break;
-                case ".astc":
-                    ActiveTexture.SaveASTC(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
-                    break;
-                case ".tga":
-                    ActiveTexture.SaveTGA(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
-                    break;
-                default:
-                    ActiveTexture.SaveBitMap(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
-                    break;
+                string UseExtension = settings.GetSelectedExtension();
+                FormatToChange = settings.GetSelectedImageFormat();
+
+                string TemporaryName = Path.GetTempFileName();
+                Utils.DeleteIfExists(Path.ChangeExtension(TemporaryName, UseExtension));
+                File.Move(TemporaryName, Path.ChangeExtension(TemporaryName, UseExtension));
+                TemporaryName = Path.ChangeExtension(TemporaryName, UseExtension);
+
+                switch (UseExtension)
+                {
+                    case ".dds":
+                        ActiveTexture.SaveDDS(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        break;
+                    case ".astc":
+                        ActiveTexture.SaveASTC(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        break;
+                    case ".tga":
+                        ActiveTexture.SaveTGA(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        break;
+                    default:
+                        ActiveTexture.SaveBitMap(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        break;
+                }
+
+                if (UseDefaultEditor)
+                    Process.Start(TemporaryName);
+                else
+                    ShowOpenWithDialog(TemporaryName);
+
+                FileWatcher.Filter = Path.GetFileName(TemporaryName);
+
+                //Start watching for changes
+                FileWatcher.EnableRaisingEvents = true;
             }
-
-
-            if (UseDefaultEditor)
-                Process.Start(TemporaryName);
-            else
-                ShowOpenWithDialog(TemporaryName);
-
-            FileWatcher.Filter = Path.GetFileName(TemporaryName);
-
-            //Start watching for changes
-            FileWatcher.EnableRaisingEvents = true;
         }
 
         public static Process ShowOpenWithDialog(string path)
@@ -878,6 +884,9 @@ namespace Switch_Toolbox.Library.Forms
 
             if (Result == DialogResult.Yes)
             {
+                if (FormatToChange != TEX_FORMAT.UNKNOWN)
+                    ActiveTexture.Format = FormatToChange;
+
                  if (FileName.EndsWith(".dds"))
                  {
                     DDS dds = new DDS(FileName);
