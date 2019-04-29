@@ -595,11 +595,13 @@ namespace FirstPlugin
         {
             if (!IsSwizzled)
             {
-             //   MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+                MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+                ImageData = GenerateMipsAndCompress(bitmap, Format);
 
-              //  ImageData = GenerateMipsAndCompress(bitmap, Format);
                 return;
             }
+
+            MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
 
             Texture tex = new Texture();
             tex.Height = (uint)bitmap.Height;
@@ -626,9 +628,8 @@ namespace FirstPlugin
             tex.SurfaceDim = SurfaceDim.Dim2D;
             tex.SampleCount = 1;
             tex.Pitch = 32;
-            tex.MipOffsets = new long[tex.MipCount];
 
-            MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+            tex.MipOffsets = new long[tex.MipCount];
 
             var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(tex,
                 GenerateMipsAndCompress(bitmap, Format), MipCount);
