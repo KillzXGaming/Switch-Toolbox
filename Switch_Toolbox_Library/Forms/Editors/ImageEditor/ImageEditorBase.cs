@@ -831,9 +831,24 @@ namespace Switch_Toolbox.Library.Forms
             string TemporaryName = Path.GetTempFileName();
             Utils.DeleteIfExists(Path.ChangeExtension(TemporaryName, UseExtension));
             File.Move(TemporaryName, Path.ChangeExtension(TemporaryName, UseExtension));
-            TemporaryName = Path.ChangeExtension(TemporaryName, ".dds");
+            TemporaryName = Path.ChangeExtension(TemporaryName, UseExtension);
 
-            ActiveTexture.SaveDDS(TemporaryName);
+            switch (UseExtension)
+            {
+                case ".dds":
+                    ActiveTexture.SaveDDS(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                    break;
+                case ".astc":
+                    ActiveTexture.SaveASTC(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                    break;
+                case ".tga":
+                    ActiveTexture.SaveTGA(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                    break;
+                default:
+                    ActiveTexture.SaveBitMap(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                    break;
+            }
+
 
             if (UseDefaultEditor)
                 Process.Start(TemporaryName);

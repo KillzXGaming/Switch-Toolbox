@@ -79,13 +79,28 @@ namespace Bfres.Structs
             ContextMenuStrip.Items.Add(new STToolStripSeparator());
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Sort", null, SortAction, Keys.Control | Keys.S));
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
+
+            if (Type == BRESGroupType.Textures)
+            {
+                ContextMenuStrip.Items.Add(new STToolStripSeparator());
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Batch Generate Mipmaps", null, BatchGenerateMipmapsAction, Keys.Control | Keys.M));
+            }
         }
 
         public override string ExportFilter { get { return GetSubfileExtensions(); } }
         public override string ImportFilter { get { return GetSubfileExtensions(); } }
 
         protected void NewAction(object sender, EventArgs e) { NewSubFile(); }
+        protected void BatchGenerateMipmapsAction(object sender, EventArgs e) { BatchGenerateMipmaps(); }
 
+        public void BatchGenerateMipmaps()
+        {
+            foreach (FTEX texture in Nodes)
+            {
+                texture.SetImageData(texture.GetBitmap(), 0);
+                
+            }
+        }
 
         public BFRESGroupNode(string name) : base() { Text = name; }
         public BFRESGroupNode(BRESGroupType type) : base() { Type = type; SetNameByType(); }

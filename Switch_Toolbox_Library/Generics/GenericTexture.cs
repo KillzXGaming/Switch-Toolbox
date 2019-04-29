@@ -580,7 +580,7 @@ namespace Switch_Toolbox.Library
         }
         public void SaveBitMap(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {
-            Bitmap bitMap = GetBitmap(MipLevel, SurfaceLevel);
+            Bitmap bitMap = GetBitmap(SurfaceLevel, MipLevel);
             bitMap.Save(FileName);
             bitMap.Dispose();
         }
