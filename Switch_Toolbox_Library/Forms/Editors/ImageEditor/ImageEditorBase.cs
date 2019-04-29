@@ -596,7 +596,7 @@ namespace Switch_Toolbox.Library.Forms
                 HasBeenEdited = false;
             }
 
-            if (ActiveTexture.EditedImages != null) { 
+            if (ActiveTexture.EditedImages != null && ActiveTexture.EditedImages[CurArrayDisplayLevel] != null) { 
             ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
             ActiveTexture.EditedImages[CurArrayDisplayLevel] = null;
             }
