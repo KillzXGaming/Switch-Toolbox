@@ -40,16 +40,37 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
             Text = FileName;
             LoadFile(stream);
+
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
         }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.DefaultExt = "xtx";
+            sfd.Filter = "Supported Formats|*.xtx;";
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
+        }
+
         public void Unload()
         {
 
         }
+
         public byte[] Save()
         {
-            return null;
+            MemoryStream mem = new MemoryStream();
+            SaveFile(new FileWriter(mem));
+            return mem.ToArray();
         }
 
         public class XTXFormats
@@ -127,12 +148,19 @@ namespace FirstPlugin
         public uint HeaderSize { get; set; }
         public uint MajorVersion { get; set; }
         public uint MinorVersion { get; set; }
-        public BlockHeader blockHeader { get; set; }
+        public List<BlockHeader> Blocks { get; set; }
+        public List<TextureInfo> TextureInfos { get; set; }
+        public List<byte[]> TextureBlocks { get; set; }
+
         private const int texHeadBlkType = 2;
         private const int dataBlkType = 3;
 
         public void LoadFile(Stream data)
         {
+            Blocks = new List<BlockHeader>();
+            TextureInfos = new List<TextureInfo>();
+            TextureBlocks = new List<byte[]>();
+
             FileReader reader = new FileReader(data);
             string Signature = reader.ReadString(4, Encoding.ASCII);
             if (Signature != "DFvN")
@@ -142,12 +170,104 @@ namespace FirstPlugin
             MajorVersion = reader.ReadUInt32();
             MinorVersion = reader.ReadUInt32();
 
-            blockHeader = new BlockHeader();
-            blockHeader.Read(reader);
-            Nodes.Add(blockHeader.textureInfo);
+            uint TextureBlockType = 2;
+            uint DataBlockType = 3;
+
+            reader.Seek(HeaderSize, SeekOrigin.Begin);
+
+            bool blockB = false;
+            bool blockC = false;
+
+            uint ImageInfo = 0;
+            uint images = 0;
+
+            while (reader.Position < reader.BaseStream.Length)
+            {
+                Console.WriteLine("BLOCK POS " + reader.Position);
+                BlockHeader blockHeader = new BlockHeader();
+                blockHeader.Read(reader);
+                Blocks.Add(blockHeader);
+
+                if ((uint)blockHeader.BlockType == TextureBlockType)
+                {
+                    ImageInfo += 1;
+                    blockB = true;
+                
+                    TextureInfo textureInfo = new TextureInfo();
+                    textureInfo.Read(new FileReader(blockHeader.Data));
+                    textureInfo.Text = "Texture " + ImageInfo;
+                    TextureInfos.Add(textureInfo);
+                }
+                if ((uint)blockHeader.BlockType == DataBlockType)
+                {
+                    images += 1;
+                    blockC = true;
+
+                    TextureBlocks.Add(blockHeader.Data);
+                }
+                    
+            }
 
             reader.Close();
             reader.Dispose();
+
+            int curTex = 0;
+
+            foreach (var tex in TextureInfos) {
+                tex.ImageData = TextureBlocks[curTex++];
+                Nodes.Add(tex);
+            }
+        }
+
+        public void SaveFile(FileWriter writer)
+        {
+            SetupBlockSaving();
+
+            int Alignment = 512;
+            uint TextureInfoType = 2;
+            uint TextureBlockType = 3;
+
+            writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+            writer.WriteSignature("DFvN");
+            writer.Write(HeaderSize);
+            writer.Write(MajorVersion);
+            writer.Write(MinorVersion);
+            writer.Seek(HeaderSize, SeekOrigin.Begin);
+
+            int curTexBlock = 0;
+            int curTexImage = 0;
+
+            foreach (var block in Blocks)
+            {
+                if (block.BlockType == TextureBlockType)
+                {
+                    block.Data = TextureBlocks[curTexBlock++];
+                    block.WriteHeader(writer);
+                    block.WriteBlock(writer, Alignment);
+                }
+                else if (block.BlockType == TextureInfoType)
+                {
+                    block.Data = TextureInfos[curTexImage++].Write();
+                    block.WriteHeader(writer);
+                    block.WriteBlock(writer, Alignment);
+                }
+                else
+                {
+                    block.WriteHeader(writer);
+                    block.WriteBlock(writer, 0x24);
+                }
+            }
+
+            writer.Close();
+            writer.Dispose();
+        }
+
+        private void SetupBlockSaving()
+        {
+            foreach (var textureInfo in TextureInfos)
+            {
+
+            }
         }
 
         public class BlockHeader
@@ -157,11 +277,13 @@ namespace FirstPlugin
             public uint BlockType { get; set; }
             public uint GlobalBlockIndex { get; set; }
             public uint IncBlockTypeIndex { get; set; }
-            public TextureInfo textureInfo { get; set; }
             public long DataOffset;
+            public byte[] Data;
 
             public void Read(FileReader reader)
             {
+                var pos = reader.Position;
+
                 string Signature = reader.ReadString(4, Encoding.ASCII);
                 if (Signature != "HBvN")
                     throw new Exception($"Invalid signature {Signature}! Expected HBvN.");
@@ -173,16 +295,40 @@ namespace FirstPlugin
                 GlobalBlockIndex = reader.ReadUInt32();
                 IncBlockTypeIndex = reader.ReadUInt32();
 
-                int indx = 0;
-                if (BlockType == texHeadBlkType)
-                {
-                    textureInfo = new TextureInfo();
-                    textureInfo.Read(reader);
-                    textureInfo.Text = "Texture " + indx++;
-                }
-                if (BlockType == dataBlkType)
-                {
+                reader.Seek((int)pos + DataOffset, SeekOrigin.Begin);
+                Data = reader.ReadBytes((int)DataSize);
+            }
 
+            private long headerPos = 0;
+            public void WriteHeader(FileWriter writer)
+            {
+                headerPos = writer.Position;
+
+                writer.WriteSignature("HBvN");
+                writer.Write(BlockSize);
+                writer.Write(Data.Length);
+                writer.Write(DataOffset);
+                writer.Write(BlockType);
+                writer.Write(BlockType);
+                writer.Write(GlobalBlockIndex);
+                writer.Write(IncBlockTypeIndex);
+            }
+
+            public void WriteBlock(FileWriter writer, int Alignment)
+            {
+                DataOffset = writer.Position;
+                using (writer.TemporarySeek(headerPos + 12, SeekOrigin.Begin)) {
+                    writer.Write(DataOffset);
+                }
+
+                writer.Seek((int)(BlockSize + headerPos), SeekOrigin.Begin);
+                writer.Write(Data);
+                writer.Align(Alignment);
+
+                uint TotalDataSize =(uint)(writer.Position - (BlockSize + headerPos));
+
+                using (writer.TemporarySeek(headerPos + 8, SeekOrigin.Begin)) {
+                    writer.Write(TotalDataSize);
                 }
             }
         }
@@ -212,18 +358,18 @@ namespace FirstPlugin
                 }
             }
 
-            public override bool CanEdit { get; set; } = false;
+            public override bool CanEdit { get; set; } = true;
 
             public UInt64 DataSize { get; set; }
             public uint Alignment { get; set; }
-            public uint Depth { get; set; }
             public uint Target { get; set; }
             public XTXFormats.XTXImageFormat XTXFormat { get; set; }
-            public uint MipCount { get; set; }
             public uint SliceSize { get; set; }
             public uint[] MipOffsets { get; set; }
-            public BlockHeader DataBlockHeader { get; set; }
             public byte[] ImageData;
+
+            public override string ExportFilter => FileFilters.XTX;
+            public override string ReplaceFilter => FileFilters.XTX;
 
             public void Read(FileReader reader)
             {
@@ -234,34 +380,71 @@ namespace FirstPlugin
                 Depth = reader.ReadUInt32();
                 Target = reader.ReadUInt32();
                 XTXFormat = reader.ReadEnum<XTXFormats.XTXImageFormat>(true);
-                Format = ConvertFormat(XTXFormat);
-
                 MipCount = reader.ReadUInt32();
+                SliceSize = reader.ReadUInt32();
+
+                Format = ConvertFormat(XTXFormat);
                 ArrayCount = 1;
 
-                SliceSize = reader.ReadUInt32();
-                long offPos = reader.Position;
-                MipOffsets = reader.ReadUInt32s((int)MipCount);
+                ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
+            }
 
-                reader.Seek(offPos + 68, SeekOrigin.Begin);
-                byte[] Layout = reader.ReadBytes(8);
-                byte Sparse = reader.ReadByte();
-                reader.Seek(3);
-                long DataBlockOff = reader.Position;
+            public byte[] Write()
+            {
+                MemoryStream mem = new MemoryStream();
 
-                DataBlockHeader = new BlockHeader();
-                DataBlockHeader.Read(reader);
+                FileWriter writer = new FileWriter(mem);
+                writer.Write(DataSize);
+                writer.Write(Alignment);
+                writer.Write(Width);
+                writer.Write(Height);
+                writer.Write(Depth);
+                writer.Write(Target);
+                writer.Write(XTXFormat, true);
+                writer.Write(MipCount);
+                writer.Write(SliceSize);
+                writer.Close();
+                writer.Dispose();
 
-                reader.Seek(DataBlockOff + DataBlockHeader.DataOffset, SeekOrigin.Begin);
-                long datastart = reader.Position;
-                ImageData = reader.ReadBytes((int)DataSize);
+                return mem.ToArray();
+            }
 
-                if (ImageData.Length == 0)
-                    throw new System.Exception("Empty data size!");
+            public override void Export(string FileName)
+            {
+                Export(FileName);
+            }
 
-                reader.Seek(DataBlockOff + DataBlockHeader.DataOffset + (long)DataBlockHeader.DataSize, SeekOrigin.Begin);
-                BlockHeader EndBlockHeader = new BlockHeader();
-                EndBlockHeader.Read(reader);            }
+            public override void Replace(string FileName)
+            {
+                var bntxFile = new BNTX();
+                var tex = new TextureData();
+                tex.Replace(FileName, MipCount, Format);
+
+                //If it's null, the operation is cancelled
+                if (tex.Texture == null)
+                    return;
+
+                var surfacesNew = tex.GetSurfaces();
+                var surfaces = GetSurfaces();
+
+                ImageData = tex.Texture.TextureData[0][0];
+
+                Width = tex.Texture.Width;
+                Height = tex.Texture.Height;
+                MipCount = tex.Texture.MipCount;
+
+                Format = tex.Format;
+                XTXFormat = ConvertFromGenericFormat(tex.Format);
+
+                MipOffsets = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length)[0];
+
+                surfacesNew.Clear();
+                surfaces.Clear();
+
+                UpdateEditor();
+            }
 
             public override void OnClick(TreeView treeview)
             {
@@ -279,6 +462,29 @@ namespace FirstPlugin
                 }
                 editor.Text = Text;
                 editor.LoadImage(this);
+            }
+
+            private static XTXFormats.XTXImageFormat ConvertFromGenericFormat(TEX_FORMAT Format)
+            {
+                switch (Format)
+                {
+                    case TEX_FORMAT.BC1_UNORM: return XTXFormats.XTXImageFormat.DXT1;
+                    case TEX_FORMAT.BC2_UNORM: return XTXFormats.XTXImageFormat.DXT3;
+                    case TEX_FORMAT.BC3_UNORM: return XTXFormats.XTXImageFormat.DXT5;
+                    case TEX_FORMAT.BC4_UNORM: return XTXFormats.XTXImageFormat.BC4U;
+                    case TEX_FORMAT.BC4_SNORM: return XTXFormats.XTXImageFormat.BC4S;
+                    case TEX_FORMAT.BC5_UNORM: return XTXFormats.XTXImageFormat.BC5U;
+                    case TEX_FORMAT.R8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_R8;
+                    case TEX_FORMAT.R8G8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RG8;
+                    case TEX_FORMAT.R10G10B10A2_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB10A2;
+                    case TEX_FORMAT.B5G6R5_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB565;
+                    case TEX_FORMAT.B5G5R5A1_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB5A1;
+                    case TEX_FORMAT.B4G4R4A4_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA4;
+                    case TEX_FORMAT.R8G8B8A8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8;
+                    case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8_SRGB;
+                    default:
+                        throw new Exception($"Cannot convert format {Format}");
+                }
             }
 
             private static TEX_FORMAT ConvertFormat(XTXFormats.XTXImageFormat Format)
@@ -307,75 +513,50 @@ namespace FirstPlugin
 
             public override void SetImageData(Bitmap bitmap, int ArrayLevel)
             {
-                throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+                if (bitmap == null)
+                    return; //Image is likely disposed and not needed to be applied
+
+                MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+
+                XTXFormat = ConvertFromGenericFormat(Format);
+
+                var tex = new Syroot.NintenTools.NSW.Bntx.Texture();
+                tex.Height = (uint)bitmap.Height;
+                tex.Width = (uint)bitmap.Width;
+                tex.Format = TextureData.GenericToBntxSurfaceFormat(Format);
+                tex.Name = Text;
+                tex.Path = "";
+                tex.TextureData = new List<List<byte[]>>();
+
+                STChannelType[] channels = SetChannelsByFormat(Format);
+                tex.sparseBinding = 0; //false
+                tex.sparseResidency = 0; //false
+                tex.Flags = 0;
+                tex.Swizzle = 0;
+                tex.textureLayout = 0;
+                tex.Regs = new uint[0];
+                tex.AccessFlags = 0x20;
+                tex.ArrayLength = (uint)ArrayLevel;
+                tex.MipCount = MipCount;
+                tex.Depth = Depth;
+                tex.Dim = Syroot.NintenTools.NSW.Bntx.GFX.Dim.Dim2D;
+                tex.TileMode = Syroot.NintenTools.NSW.Bntx.GFX.TileMode.Default;
+                tex.textureLayout2 = 0x010007;
+                tex.SurfaceDim = Syroot.NintenTools.NSW.Bntx.GFX.SurfaceDim.Dim2D;
+                tex.SampleCount = 1;
+                tex.Pitch = 32;
+
+                tex.MipOffsets = new long[tex.MipCount];
+
+                var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(tex,
+                    GenerateMipsAndCompress(bitmap, Format), MipCount);
+
+                ImageData = Utils.CombineByteArray(mipmaps.ToArray());
             }
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
-                uint bpp = GetBytesPerPixel(Format);
-                uint blkWidth = GetBlockHeight(Format);
-                uint blkHeight = GetBlockWidth(Format);
-                uint blkDepth = GetBlockDepth(Format);
-
-                uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
-                uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-
-                int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
-
-                int TileMode = 0;
-
-
-                List<byte[]> mips = new List<byte[]>();
-
-                int blockHeightShift = 0;
-                for (int mipLevel = 0; mipLevel < MipOffsets.Length; mipLevel++)
-                {
-
-                    uint width = (uint)Math.Max(1, Width >> mipLevel);
-                    uint height = (uint)Math.Max(1, Height >> mipLevel);
-                    uint depth = (uint)Math.Max(1, Depth >> mipLevel);
-
-                    //  uint size = width * height * bpp;
-                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
-
-                    byte[] Output = new byte[size];
-
-                    uint mipOffset;
-                    if (mipLevel != 0)
-                    {
-                        mipOffset = (MipOffsets[mipLevel - 1]);
-                        if (mipLevel == 1)
-                            mipOffset -= (uint)size;
-
-                        Array.Copy(ImageData, mipOffset, Output, 0, size);
-                    }
-                    else
-                        Output = ImageData;
-
-                    byte[] output = new byte[size];
-                    Console.WriteLine(mipLevel + " " + size);
-
-                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                        blockHeightShift += 1;
-
-                    byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, (int)Target, bpp, (uint)TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), Output);
-                    //Create a copy and use that to remove uneeded data
-                    byte[] result_ = new byte[size];
-                    Array.Copy(result, 0, result_, 0, size);
-
-                    result = null;
-
-                    if (MipLevel == mipLevel)
-                        return result_;
-
-                    Console.WriteLine("bpp " + bpp);
-                    Console.WriteLine("result_ " + size);
-                    Console.WriteLine("width " + width);
-                    Console.WriteLine("height " + height);
-
-                    break;
-                }
-                return new byte[0];
+                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, (int)Target);
             }
         }
     }

@@ -34,6 +34,7 @@ namespace FirstPlugin
         public static string FSHA = GetFilter(".bfspa");
 
         public static string NUTEXB = GetFilter(".dds",".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string XTX = GetFilter(".dds", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
 
         public static string GetFilter(Type type, object CheckAnimEffect = null, bool IsExporting = false)
         {

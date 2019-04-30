@@ -13,6 +13,23 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class HexEditor : UserControl
     {
+        FindOptions _findOptions = new FindOptions();
+
+        public bool EnableMenuBar
+        {
+            set
+            {
+                if (value)
+                    stContextMenuStrip1.Show();
+                else
+                    stContextMenuStrip1.Hide();
+            }
+            get
+            {
+                return stContextMenuStrip1.Visible;
+            }
+        }
+
         public HexEditor()
         {
             InitializeComponent();
@@ -30,6 +47,9 @@ namespace Switch_Toolbox.Library.Forms
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SearchHex searchHex = new SearchHex();
+            searchHex.HexBox = hexBox1;
+            searchHex.FindOptions = _findOptions;
+
             if (searchHex.ShowDialog() == DialogResult.OK)
             {
                 FindOptions options = new FindOptions();

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library.Test
+namespace Switch_Toolbox.Library.NEW
 {
     //Todo fix swizzle issues with this one
     public class GX2
@@ -431,7 +431,7 @@ namespace Switch_Toolbox.Library.Test
         static bool DebugSurface = false;
 
         public static GX2Surface CreateGx2Texture(byte[] imageData, string Name, uint TileMode, uint AAMode,
-            uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint mipSwizzle, uint SurfaceDim, uint MipCount)
+            uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint SurfaceDim, uint MipCount)
         {
             var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, 0);
             uint imageSize = (uint)surfOut.surfSize;
@@ -488,9 +488,6 @@ namespace Switch_Toolbox.Library.Test
 
                 if (mipLevel != 0)
                 {
-                    if (mipSwizzle != 0)
-                        swizzleValue = mipSwizzle; //Overwrite swizzle value for mip maps for botw tex2
-
                     surfOut = GX2.getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, mipLevel);
 
                     if (mipLevel == 1)
@@ -705,8 +702,6 @@ namespace Switch_Toolbox.Library.Test
 
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
-
-                break;
             }
 
             return result;

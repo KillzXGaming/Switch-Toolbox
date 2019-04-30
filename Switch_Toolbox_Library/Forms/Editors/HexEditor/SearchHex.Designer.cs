@@ -28,46 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.chkBoxMatchCase = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.components = new System.ComponentModel.Container();
+            this.txtFind = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.chkMatchCase = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.btnOK = new Switch_Toolbox.Library.Forms.STButton();
             this.hexFind = new Be.Windows.Forms.HexBox();
             this.radioBtnText = new System.Windows.Forms.RadioButton();
             this.raditnHex = new System.Windows.Forms.RadioButton();
+            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.timerPercent = new System.Windows.Forms.Timer(this.components);
+            this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // stTextBox1
+            // contentContainer
             // 
-            this.stTextBox1.Location = new System.Drawing.Point(27, 63);
-            this.stTextBox1.Name = "stTextBox1";
-            this.stTextBox1.Size = new System.Drawing.Size(381, 20);
-            this.stTextBox1.TabIndex = 1;
+            this.contentContainer.Controls.Add(this.raditnHex);
+            this.contentContainer.Controls.Add(this.radioBtnText);
+            this.contentContainer.Controls.Add(this.hexFind);
+            this.contentContainer.Controls.Add(this.btnOK);
+            this.contentContainer.Controls.Add(this.chkMatchCase);
+            this.contentContainer.Controls.Add(this.txtFind);
+            this.contentContainer.Size = new System.Drawing.Size(392, 267);
+            this.contentContainer.Controls.SetChildIndex(this.txtFind, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkMatchCase, 0);
+            this.contentContainer.Controls.SetChildIndex(this.btnOK, 0);
+            this.contentContainer.Controls.SetChildIndex(this.hexFind, 0);
+            this.contentContainer.Controls.SetChildIndex(this.radioBtnText, 0);
+            this.contentContainer.Controls.SetChildIndex(this.raditnHex, 0);
             // 
-            // chkBoxMatchCase
+            // txtFind
             // 
-            this.chkBoxMatchCase.AutoSize = true;
-            this.chkBoxMatchCase.Location = new System.Drawing.Point(324, 40);
-            this.chkBoxMatchCase.Name = "chkBoxMatchCase";
-            this.chkBoxMatchCase.Size = new System.Drawing.Size(84, 17);
-            this.chkBoxMatchCase.TabIndex = 2;
-            this.chkBoxMatchCase.Text = "Check Case";
-            this.chkBoxMatchCase.UseVisualStyleBackColor = true;
+            this.txtFind.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtFind.Location = new System.Drawing.Point(4, 54);
+            this.txtFind.Name = "txtFind";
+            this.txtFind.Size = new System.Drawing.Size(381, 20);
+            this.txtFind.TabIndex = 1;
             // 
-            // stButton1
+            // chkMatchCase
             // 
-            this.stButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.stButton1.Location = new System.Drawing.Point(333, 247);
-            this.stButton1.Name = "stButton1";
-            this.stButton1.Size = new System.Drawing.Size(75, 23);
-            this.stButton1.TabIndex = 3;
-            this.stButton1.Text = "Ok";
-            this.stButton1.UseVisualStyleBackColor = false;
-            this.stButton1.Click += new System.EventHandler(this.stButton1_Click);
+            this.chkMatchCase.AutoSize = true;
+            this.chkMatchCase.Location = new System.Drawing.Point(301, 31);
+            this.chkMatchCase.Name = "chkMatchCase";
+            this.chkMatchCase.Size = new System.Drawing.Size(84, 17);
+            this.chkMatchCase.TabIndex = 2;
+            this.chkMatchCase.Text = "Check Case";
+            this.chkMatchCase.UseVisualStyleBackColor = true;
+            // 
+            // btnOK
+            // 
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Location = new System.Drawing.Point(310, 238);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.TabIndex = 3;
+            this.btnOK.Text = "Ok";
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.stButton1_Click);
             // 
             // hexFind
             // 
             this.hexFind.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.hexFind.Location = new System.Drawing.Point(27, 112);
+            this.hexFind.Location = new System.Drawing.Point(4, 103);
             this.hexFind.Name = "hexFind";
             this.hexFind.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
             this.hexFind.Size = new System.Drawing.Size(371, 129);
@@ -76,50 +98,56 @@
             // radioBtnText
             // 
             this.radioBtnText.AutoSize = true;
-            this.radioBtnText.Location = new System.Drawing.Point(27, 40);
+            this.radioBtnText.Location = new System.Drawing.Point(4, 31);
             this.radioBtnText.Name = "radioBtnText";
             this.radioBtnText.Size = new System.Drawing.Size(46, 17);
             this.radioBtnText.TabIndex = 5;
             this.radioBtnText.TabStop = true;
             this.radioBtnText.Text = "Text";
             this.radioBtnText.UseVisualStyleBackColor = true;
+            this.radioBtnText.CheckedChanged += new System.EventHandler(this.radioBtn_CheckedChanged);
+            this.radioBtnText.Enter += new System.EventHandler(this.radioBtnText_Enter);
             // 
             // raditnHex
             // 
             this.raditnHex.AutoSize = true;
-            this.raditnHex.Location = new System.Drawing.Point(27, 89);
+            this.raditnHex.Location = new System.Drawing.Point(4, 80);
             this.raditnHex.Name = "raditnHex";
             this.raditnHex.Size = new System.Drawing.Size(44, 17);
             this.raditnHex.TabIndex = 6;
             this.raditnHex.TabStop = true;
             this.raditnHex.Text = "Hex";
             this.raditnHex.UseVisualStyleBackColor = true;
+            this.raditnHex.CheckedChanged += new System.EventHandler(this.radioBtn_CheckedChanged);
+            this.raditnHex.Enter += new System.EventHandler(this.raditnHex_Enter);
+            // 
+            // timerPercent
+            // 
+            this.timerPercent.Tick += new System.EventHandler(this.timerPercent_Tick);
             // 
             // SearchHex
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(420, 282);
-            this.Controls.Add(this.raditnHex);
-            this.Controls.Add(this.radioBtnText);
-            this.Controls.Add(this.hexFind);
-            this.Controls.Add(this.stButton1);
-            this.Controls.Add(this.chkBoxMatchCase);
-            this.Controls.Add(this.stTextBox1);
+            this.ClientSize = new System.Drawing.Size(398, 272);
             this.Name = "SearchHex";
             this.Text = "Find";
+            this.Activated += new System.EventHandler(this.SearchHex_Activated);
+            this.contentContainer.ResumeLayout(false);
+            this.contentContainer.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private STTextBox stTextBox1;
-        private Switch_Toolbox.Library.Forms.STCheckBox chkBoxMatchCase;
-        private STButton stButton1;
+        private STTextBox txtFind;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkMatchCase;
+        private STButton btnOK;
         private Be.Windows.Forms.HexBox hexFind;
         private System.Windows.Forms.RadioButton radioBtnText;
         private System.Windows.Forms.RadioButton raditnHex;
+        private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Timer timerPercent;
     }
 }

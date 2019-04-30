@@ -28,6 +28,8 @@ namespace FirstPlugin.Forms
             listViewCustom1.HeaderStyle = ColumnHeaderStyle.None;
             listViewCustom1.FullRowSelect = true;
             listViewCustom1.CanResizeList = false;
+
+            hexEditor1.EnableMenuBar = false;
         }
 
         MSBT activeMessageFile;
@@ -40,7 +42,7 @@ namespace FirstPlugin.Forms
             {
                 foreach (var text in msbt.header.Text2.TextData)
                 {
-                    string listText = text;
+                    string listText = text.GetTextLabel(ShowPreviewText, msbt.header.StringEncoding);
 
                     if (listText.Length > 25)
                         listText = $"{listText.Substring(0, 25)}......";
@@ -62,7 +64,9 @@ namespace FirstPlugin.Forms
                 var textSection = activeMessageFile.header.Text2;
                 if (textSection != null)
                 {
-                  textEditor1.FillEditor(textSection.TextData[index]);
+                    editTextTB.Text = textSection.TextData[index].GetText(activeMessageFile.header.StringEncoding);
+                    originalTextTB.Text = textSection.OriginalTextData[index].GetText(activeMessageFile.header.StringEncoding);
+                    hexEditor1.LoadData(textSection.TextData[index].Data);
                 }
             }
         }

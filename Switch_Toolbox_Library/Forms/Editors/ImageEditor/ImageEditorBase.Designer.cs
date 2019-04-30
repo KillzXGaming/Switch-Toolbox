@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
@@ -35,6 +36,8 @@
             this.alphaChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
+            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blueChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
@@ -52,11 +55,16 @@
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editInExternalProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertyGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editInExternalProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reEncodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flipHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,13 +75,13 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
+            this.stContextMenuStrip2.SuspendLayout();
             this.stPanel3.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -128,7 +136,7 @@
             // 
             this.alphaChannelBtn.BackColor = System.Drawing.Color.Silver;
             this.alphaChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.alphaChannelBtn.Location = new System.Drawing.Point(448, 1);
+            this.alphaChannelBtn.Location = new System.Drawing.Point(464, 1);
             this.alphaChannelBtn.Name = "alphaChannelBtn";
             this.alphaChannelBtn.Size = new System.Drawing.Size(21, 21);
             this.alphaChannelBtn.TabIndex = 17;
@@ -151,6 +159,7 @@
             // 
             this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
+            this.pictureBoxCustom1.ContextMenuStrip = this.stContextMenuStrip2;
             this.pictureBoxCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
@@ -159,11 +168,25 @@
             this.pictureBoxCustom1.TabIndex = 1;
             this.pictureBoxCustom1.TabStop = false;
             // 
+            // stContextMenuStrip2
+            // 
+            this.stContextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyImageToolStripMenuItem});
+            this.stContextMenuStrip2.Name = "stContextMenuStrip2";
+            this.stContextMenuStrip2.Size = new System.Drawing.Size(139, 26);
+            // 
+            // copyImageToolStripMenuItem
+            // 
+            this.copyImageToolStripMenuItem.Name = "copyImageToolStripMenuItem";
+            this.copyImageToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.copyImageToolStripMenuItem.Text = "Copy Image";
+            this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
+            // 
             // blueChannelBtn
             // 
             this.blueChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.blueChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.blueChannelBtn.Location = new System.Drawing.Point(421, 1);
+            this.blueChannelBtn.Location = new System.Drawing.Point(437, 1);
             this.blueChannelBtn.Name = "blueChannelBtn";
             this.blueChannelBtn.Size = new System.Drawing.Size(21, 21);
             this.blueChannelBtn.TabIndex = 16;
@@ -184,7 +207,7 @@
             this.stPanel3.Controls.Add(this.btnLeftArray);
             this.stPanel3.Location = new System.Drawing.Point(0, 24);
             this.stPanel3.Name = "stPanel3";
-            this.stPanel3.Size = new System.Drawing.Size(715, 51);
+            this.stPanel3.Size = new System.Drawing.Size(520, 51);
             this.stPanel3.TabIndex = 3;
             // 
             // editBtn
@@ -297,7 +320,7 @@
             // 
             this.greenChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.greenChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.greenChannelBtn.Location = new System.Drawing.Point(394, 1);
+            this.greenChannelBtn.Location = new System.Drawing.Point(410, 1);
             this.greenChannelBtn.Name = "greenChannelBtn";
             this.greenChannelBtn.Size = new System.Drawing.Size(21, 21);
             this.greenChannelBtn.TabIndex = 15;
@@ -311,10 +334,10 @@
             this.imageBGComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.imageBGComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.imageBGComboBox.FormattingEnabled = true;
-            this.imageBGComboBox.Location = new System.Drawing.Point(233, 1);
+            this.imageBGComboBox.Location = new System.Drawing.Point(262, 2);
             this.imageBGComboBox.Name = "imageBGComboBox";
             this.imageBGComboBox.ReadOnly = true;
-            this.imageBGComboBox.Size = new System.Drawing.Size(130, 21);
+            this.imageBGComboBox.Size = new System.Drawing.Size(115, 21);
             this.imageBGComboBox.TabIndex = 2;
             this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
             // 
@@ -322,7 +345,7 @@
             // 
             this.redChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.redChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.redChannelBtn.Location = new System.Drawing.Point(367, 1);
+            this.redChannelBtn.Location = new System.Drawing.Point(383, 1);
             this.redChannelBtn.Name = "redChannelBtn";
             this.redChannelBtn.Size = new System.Drawing.Size(21, 21);
             this.redChannelBtn.TabIndex = 14;
@@ -334,6 +357,7 @@
             // 
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.imageToolStripMenuItem,
             this.adjustmentsToolStripMenuItem});
@@ -358,6 +382,45 @@
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem,
+            this.editInExternalProgramToolStripMenuItem,
+            this.copyToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // undoToolStripMenuItem
+            // 
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            // 
+            // editInExternalProgramToolStripMenuItem
+            // 
+            this.editInExternalProgramToolStripMenuItem.Name = "editInExternalProgramToolStripMenuItem";
+            this.editInExternalProgramToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.editInExternalProgramToolStripMenuItem.Text = "With External Program";
+            this.editInExternalProgramToolStripMenuItem.Click += new System.EventHandler(this.editInExternalProgramToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -373,7 +436,7 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.propertyGridToolStripMenuItem_CheckedChanged);
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
@@ -381,7 +444,7 @@
             // displayVerticalToolStripMenuItem
             // 
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
-            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
             this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
@@ -389,7 +452,6 @@
             // imageToolStripMenuItem
             // 
             this.imageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editInExternalProgramToolStripMenuItem,
             this.generateMipmapsToolStripMenuItem,
             this.resizeToolStripMenuItem,
             this.reEncodeToolStripMenuItem,
@@ -402,12 +464,12 @@
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.imageToolStripMenuItem.Text = "Image";
             // 
-            // editInExternalProgramToolStripMenuItem
+            // generateMipmapsToolStripMenuItem
             // 
-            this.editInExternalProgramToolStripMenuItem.Name = "editInExternalProgramToolStripMenuItem";
-            this.editInExternalProgramToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.editInExternalProgramToolStripMenuItem.Text = "Edit In External Program";
-            this.editInExternalProgramToolStripMenuItem.Click += new System.EventHandler(this.editInExternalProgramToolStripMenuItem_Click);
+            this.generateMipmapsToolStripMenuItem.Name = "generateMipmapsToolStripMenuItem";
+            this.generateMipmapsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.generateMipmapsToolStripMenuItem.Text = "Generate Mipmaps";
+            this.generateMipmapsToolStripMenuItem.Click += new System.EventHandler(this.generateMipmapsToolStripMenuItem_Click);
             // 
             // resizeToolStripMenuItem
             // 
@@ -482,13 +544,6 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
-            // generateMipmapsToolStripMenuItem
-            // 
-            this.generateMipmapsToolStripMenuItem.Name = "generateMipmapsToolStripMenuItem";
-            this.generateMipmapsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.generateMipmapsToolStripMenuItem.Text = "Generate Mipmaps";
-            this.generateMipmapsToolStripMenuItem.Click += new System.EventHandler(this.generateMipmapsToolStripMenuItem_Click);
-            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -503,6 +558,7 @@
             this.stPanel1.PerformLayout();
             this.stPanel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();
+            this.stContextMenuStrip2.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
             this.stContextMenuStrip1.ResumeLayout(false);
@@ -549,7 +605,13 @@
         private STCheckBox toggleAlphaChk;
         private System.Windows.Forms.ToolStripMenuItem displayVerticalToolStripMenuItem;
         private STButton editBtn;
-        private System.Windows.Forms.ToolStripMenuItem editInExternalProgramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateMipmapsToolStripMenuItem;
+        private STContextMenuStrip stContextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem copyImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editInExternalProgramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
     }
 }

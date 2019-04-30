@@ -354,7 +354,7 @@ namespace FirstPlugin
                     Format = tex.Format;
                     NutFormat = ConvertGenericToNutFormat(tex.Format);
 
-                    mipSizes = GenerateMipSizes();
+                    mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
                 }
                 
                 surfacesNew.Clear();
@@ -364,65 +364,7 @@ namespace FirstPlugin
             }
         }
 
-        private List<uint[]> GenerateMipSizes(uint SurfaceCount = 1)
-        {
-            List<uint[]> MipMapSizes = new List<uint[]>();
-
-            uint bpp = GetBytesPerPixel(Format);
-            uint blkWidth = GetBlockWidth(Format);
-            uint blkHeight = GetBlockHeight(Format);
-            uint blkDepth = GetBlockDepth(Format);
-
-            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
-            uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-
-            uint Pitch = 0;
-            uint DataAlignment = 512;
-
-            int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
-
-            uint ArrayCount = (uint)mipSizes.Count;
-
-            uint ArrayOffset = 0;
-            for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
-            {
-                uint SurfaceSize = 0;
-                int blockHeightShift = 0;
-
-                uint[] MipOffsets = new uint[MipCount];
-
-                for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
-                {
-                    uint width = (uint)Math.Max(1, Width >> mipLevel);
-                    uint height = (uint)Math.Max(1, Height >> mipLevel);
-                    uint depth = (uint)Math.Max(1, Depth >> mipLevel);
-
-                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
-
-                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                        blockHeightShift += 1;
-
-                    uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
-                    uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
-
-                    //Calculate the mip size instead
-                    byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
-                    SurfaceSize += (uint)AlignedData.Length;
-                    MipOffsets[mipLevel] = (SurfaceSize);
-
-                    //Get the first mip offset and current one and the total image size
-                    int msize = (int)((MipOffsets[0] + ImageData.Length - MipOffsets[mipLevel]) / ArrayCount);
-
-                    Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                    SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
-                }
-                ArrayOffset += (uint)(ImageData.Length / ArrayCount);
-
-                MipMapSizes.Add(MipOffsets);
-            }
-
-            return MipMapSizes;
-        }
+      
 
         private void Export(object sender, EventArgs args)
         {
@@ -643,83 +585,7 @@ namespace FirstPlugin
             if (!IsSwizzled)
                 return DDS.GetArrayFaces(this, ImageData,1)[ArrayLevel].mipmaps[0];
 
-            int target = 1;
-            uint bpp = GetBytesPerPixel(Format);
-            uint blkWidth = GetBlockWidth(Format);
-            uint blkHeight = GetBlockHeight(Format);
-            uint blkDepth = GetBlockDepth(Format);
-
-            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
-            uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-
-            uint Pitch = 0;
-            uint DataAlignment = 512;
-            uint TileMode = 0;
-
-            int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
-
-            uint ArrayCount = (uint)mipSizes.Count;
-
-            uint ArrayOffset = 0;
-            for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
-            {
-                uint SurfaceSize = 0;
-                int blockHeightShift = 0;
-
-                List<uint> MipOffsets = new List<uint>();
-
-                for (int mipLevel = 0; mipLevel < mipSizes[arrayLevel].Length; mipLevel++)
-                {
-                    uint width  = (uint)Math.Max(1, Width >> mipLevel);
-                    uint height = (uint)Math.Max(1, Height >> mipLevel);
-                    uint depth  = (uint)Math.Max(1, Depth >> mipLevel);
-
-                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
-
-                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                        blockHeightShift += 1;
-
-
-                    uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
-                    uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
-
-                    //Calculate the mip size instead
-                    byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
-                    SurfaceSize += (uint)AlignedData.Length;
-                    MipOffsets.Add(SurfaceSize);
-
-                    //Get the first mip offset and current one and the total image size
-                    int msize = (int)((MipOffsets[0] + ImageData.Length - MipOffsets[mipLevel]) / ArrayCount);
-
-                    byte[] data_ = Utils.SubArray(ImageData, ArrayOffset + MipOffsets[mipLevel], (uint)msize);
-
-                    try
-                    {
-                        Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                        SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
-
-                        Console.WriteLine($"{width} {height} {blkWidth} {blkHeight} {target} {bpp} {TileMode} {(int)Math.Max(0, BlockHeightLog2 - blockHeightShift)} {data_.Length}");
-                        byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
-                        //Create a copy and use that to remove uneeded data
-                        byte[] result_ = new byte[size];
-                        Array.Copy(result, 0, result_, 0, size);
-                        result = null;
-
-                        if (ArrayLevel == arrayLevel && MipLevel == mipLevel)
-                            return result_;
-                    }
-                    catch (Exception e)
-                    {
-                        System.Windows.Forms.MessageBox.Show($"Failed to swizzle texture {Text}!");
-                        Console.WriteLine(e);
-
-                        return new byte[0];
-                    }
-                }
-
-                ArrayOffset += (uint)(ImageData.Length / ArrayCount);
-            }
-            return new byte[0];
+            return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
         }
         MenuItem save = new MenuItem("Save");
         MenuItem export = new MenuItem("Export");

@@ -15,6 +15,61 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ImageEditorBase : UserControl
     {
+        private int _currentCacheIndex = -1;
+
+        private int currentCacheIndex
+        {
+            get
+            {
+                return _currentCacheIndex;
+            }
+            set
+            {
+
+                SetRedoUndoMenuStrips(value);
+                _currentCacheIndex = value;
+            }
+        }
+
+        private void SetRedoUndoMenuStrips(int index)
+        {
+            if (index < ImageCache.Count && ImageCache.Count > 0 && index != -1)
+                redoToolStripMenuItem.Enabled = true;
+            else
+                redoToolStripMenuItem.Enabled = false;
+
+            if (index > 0 && ImageCache.Count > 0)
+                undoToolStripMenuItem.Enabled = true;
+            else
+                undoToolStripMenuItem.Enabled = false;
+
+        }
+
+        private List<Image> _imageCache = new List<Image>();
+
+        private List<Image> ImageCache
+        {
+            get
+            {
+                return _imageCache;
+            }
+            set
+            {
+                _imageCache = value;
+
+                SetRedoUndoMenuStrips(currentCacheIndex);
+
+                if (_imageCache.Count > 0)
+                {
+                    undoToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    undoToolStripMenuItem.Enabled = false;
+                }
+            }
+        }
+
         public FileSystemWatcher FileWatcher;
 
         private Thread Thread;
@@ -137,6 +192,9 @@ namespace Switch_Toolbox.Library.Forms
             OnDataAcquiredEvent += new DataAcquired(ThreadReportsDataAquiredEvent);
 
             SetUpFileSystemWatcher();
+
+            undoToolStripMenuItem.Enabled = false;
+            redoToolStripMenuItem.Enabled = false;
         }
 
         private void SetUpFileSystemWatcher()
@@ -547,8 +605,14 @@ namespace Switch_Toolbox.Library.Forms
             if (Image != null)
             {
                 Image.RotateFlip(rotation);
-                UpdateEdit(Image);
+                UpdateEditCached(Image);
             }
+        }
+
+        private void UpdateEditCached(Image image)
+        {
+          //  ImageCache.Add(new Bitmap(image));
+            UpdateEdit(image);
         }
 
         private void UpdateEdit(Image image)
@@ -670,7 +734,7 @@ namespace Switch_Toolbox.Library.Forms
             resizeEditor.LoadImage(pictureBoxCustom1.Image);
             if (resizeEditor.ShowDialog() == DialogResult.OK)
             {
-                UpdateEdit(resizeEditor.newImage);
+                UpdateEditCached(resizeEditor.newImage);
             }
         }
 
@@ -684,7 +748,7 @@ namespace Switch_Toolbox.Library.Forms
                 ActiveTexture.Format = encodingEditor.Format;
                 ActiveTexture.MipCount = (uint)encodingEditor.MipCount;
 
-                UpdateEdit(encodingEditor.newImage);
+                UpdateEditCached(encodingEditor.newImage);
             }
         }
 
@@ -814,10 +878,6 @@ namespace Switch_Toolbox.Library.Forms
             EditInExternalProgram();
         }
 
-        private void editInExternalProgramToolStripMenuItem_Click(object sender, EventArgs e) {
-            EditInExternalProgram();
-        }
-
         private TEX_FORMAT FormatToChange = TEX_FORMAT.UNKNOWN;
         private void EditInExternalProgram(bool UseDefaultEditor = true)
         {
@@ -915,7 +975,7 @@ namespace Switch_Toolbox.Library.Forms
                 saveBtn.Invoke(new MethodInvoker(
                 delegate ()
                 {
-                    UpdateEdit(image);
+                    UpdateEditCached(image);
                     ApplyEdit(image);
 
                     //Update the image with decoding as format could change
@@ -925,7 +985,7 @@ namespace Switch_Toolbox.Library.Forms
             }
             else
             {
-                UpdateEdit(image);
+                UpdateEditCached(image);
                 ApplyEdit(image);
 
                 //Update the image with decoding as format could change
@@ -945,8 +1005,55 @@ namespace Switch_Toolbox.Library.Forms
 
                 //Apply edits first to update mip map data
                 ApplyEdit(Image);
-                UpdateEdit(Image);
+                UpdateEditCached(Image);
             }
+        }
+
+        private void copyImageToolStripMenuItem_Click(object sender, EventArgs e) {
+            Clipboard.SetImage(pictureBoxCustom1.Image);
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e) {
+            Clipboard.SetImage(pictureBoxCustom1.Image);
+        }
+
+        private void editInExternalProgramToolStripMenuItem_Click(object sender, EventArgs e) {
+            EditInExternalProgram();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentCacheIndex == 0)
+                return;
+
+            if (currentCacheIndex == -1)
+            {
+                currentCacheIndex = ImageCache.Count - 1;
+            }
+            else
+            {
+                currentCacheIndex -= 1;
+            }
+
+            UpdateEdit(ImageCache[currentCacheIndex]);
+            ApplyEdit(ImageCache[currentCacheIndex]);
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentCacheIndex == ImageCache.Count)
+                return;
+
+            if (currentCacheIndex == -1) {
+                currentCacheIndex = ImageCache.Count;
+            }
+            else
+            {
+                currentCacheIndex += 1;
+            }
+
+            UpdateEdit(ImageCache[currentCacheIndex]);
+            ApplyEdit(ImageCache[currentCacheIndex]);
         }
     }
 }

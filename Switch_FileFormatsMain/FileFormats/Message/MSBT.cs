@@ -71,18 +71,12 @@ namespace FirstPlugin
             public ushort ByteOrderMark;
             public ushort Padding;
             public ushort Unknown;
+            public Encoding StringEncoding = Encoding.Unicode;
 
-            public EncodingType StringEncoding;
             public byte Version;
             public List<MSBTEntry> entries = new List<MSBTEntry>();
 
             byte[] Reserved = new byte[10];
-
-            public enum EncodingType : byte
-            {
-                UTF8 = 0,
-                UTF16 = 1,
-            }
 
             public LBL1 Label1;
             public NLI1 NLI1;
@@ -95,12 +89,14 @@ namespace FirstPlugin
                 ByteOrderMark = reader.ReadUInt16();
                 reader.CheckByteOrderMark(ByteOrderMark);
                 Padding = reader.ReadUInt16();
-                StringEncoding = reader.ReadEnum<EncodingType>(true);
+                byte encoding = reader.ReadByte();
                 Version = reader.ReadByte();
                 ushort SectionCount = reader.ReadUInt16();
                 ushort Unknown = reader.ReadUInt16();
                 uint FileSize = reader.ReadUInt32();
                 Reserved = reader.ReadBytes(10);
+
+                StringEncoding = (encoding == 0x01 ? Encoding.BigEndianUnicode : Encoding.UTF8);
 
                 for (int i = 0; i < SectionCount; i++)
                 {
@@ -113,10 +109,6 @@ namespace FirstPlugin
 
                     switch (Signature)
                     {
-                        //   Label1 = new LBL1();
-                        //  Label1.Read(reader, this);
-                        //  entries.Add(Label1);
-
                         case "NLI1":
                             NLI1 = new NLI1();
                             NLI1.Read(reader, this);
@@ -127,10 +119,14 @@ namespace FirstPlugin
                             Text2.Read(reader, this);
                             entries.Add(Text2);
                             break;
+                        case "LBL1":
+                            Label1 = new LBL1();
+                            Label1.Read(reader, this);
+                            entries.Add(Label1);
+                            break;
                         case "ATR1":
                         case "ATO1":
                         case "TSY1":
-                        case "LBL1":
                         default:
                             MSBTEntry entry = new MSBTEntry();
                             entry.Signature = Signature;
@@ -158,7 +154,7 @@ namespace FirstPlugin
                 writer.WriteSignature("MsgStdBn");
                 writer.Write(ByteOrderMark);
                 writer.Write(Padding);
-                writer.Write(StringEncoding, true);
+                writer.Write(StringEncoding == Encoding.UTF8 ? (byte)0 : (byte)1);
                 writer.Write(Version);
                 writer.Write((ushort)entries.Count);
                 writer.Write(Unknown);
@@ -178,10 +174,68 @@ namespace FirstPlugin
             }
         }
 
+        public class LabelGroup
+        {
+            public uint NumberOfLabels;
+            public uint Offset;
+        }
+
+        public class LabelEntry : MSBTEntry
+        {
+            private uint _index;
+
+            public uint Length;
+            public string Name;
+            public uint Checksum;
+            public StringEntry String;
+
+            public uint Index
+            {
+                get { return _index; }
+                set { _index = value; }
+            }
+
+            public byte[] Value
+            {
+                get { return String.Data; }
+                set { String.Data = value; }
+            }
+        }
+
+        public class StringEntry : MSBTEntry
+        {
+            private uint _index;
+
+            public StringEntry(byte[] data)
+            {
+                Data = data;
+            }
+
+            public uint Index
+            {
+                get { return _index; }
+                set { _index = value; }
+            }
+
+            public string GetTextLabel(bool ShowText, Encoding encoding)
+            {
+                if (ShowText)
+                    return $"{_index + 1} {GetText(encoding)}";
+                else
+                    return $"{_index + 1}";
+            }
+
+            public string GetText(Encoding encoding)
+            {
+                return encoding.GetString(Data);
+            }
+        }
+
         public class TXT2 : MSBTEntry
         {
             public uint[] Offsets;
-            public List<string> TextData = new List<string>(); 
+            public List<StringEntry> TextData = new List<StringEntry>();
+            public List<StringEntry> OriginalTextData = new List<StringEntry>();
 
             public override void Read(FileReader reader, Header header)
             {
@@ -193,31 +247,26 @@ namespace FirstPlugin
 
                 for (int i = 0; i < EntryCount; i++)
                 {
-                    if (i == 0)
-
                     reader.Position = Offsets[i] + Position;
-                    ReadMessageString(reader);
+                    ReadMessageString(reader, (uint)i);
                 }
             }
 
-            private void ReadMessageString(FileReader reader)
+            private void ReadMessageString(FileReader reader, uint index)
             {
-                List<char> chars = new List<char>();
+                List<byte> chars = new List<byte>();
 
-                short charCheck = reader.ReadInt16(); 
+                short charCheck = reader.ReadInt16();
                 while (charCheck != 0)
                 {
-                    if (charCheck == 0x0E) //Control code
-                    {
-                        chars.AddRange(GetControlCode(reader));
-                    }
-                    else
-                        chars.Add((char)charCheck);
+                    chars.Add((byte)(charCheck >> 8));
+                    chars.Add((byte)(charCheck & 255));
 
                     charCheck = reader.ReadInt16();
                 }
 
-                TextData.Add(new string(chars.ToArray()));
+                TextData.Add(new StringEntry(chars.ToArray()) { Index = index, });
+                OriginalTextData.Add(new StringEntry(chars.ToArray()) { Index = index, });
             }
 
             private char[] GetControlCode(FileReader reader)
@@ -403,31 +452,38 @@ namespace FirstPlugin
 
         public class LBL1 : MSBTEntry
         {
-            public List<Tuple<string, int>> Labels = null;
+            public List<LabelGroup> Groups = new List<LabelGroup>();
+            public List<LabelEntry> Labels = new List<LabelEntry>();
 
             public override void Read(FileReader reader, Header header)
             {
-                Labels = new List<Tuple<string, int>>();
-
                 Padding = reader.ReadBytes(8);
+                long pos = reader.Position;
                 EntryCount = reader.ReadUInt32();
 
                 for (int i = 0; i < EntryCount; i++)
                 {
-                    uint LabelCount = reader.ReadUInt32();
-                    uint Offset = reader.ReadUInt32();
+                    LabelGroup group = new LabelGroup();
+                    group.NumberOfLabels = reader.ReadUInt32();
+                    group.Offset = reader.ReadUInt32();
+                    Groups.Add(group);
+                }
 
-                    using (reader.TemporarySeek(Offset))
+                foreach (LabelGroup group in Groups)
+                {
+                    reader.Seek(pos + group.Offset, SeekOrigin.Begin);
+                    for (int i = 0; i < group.NumberOfLabels; i++)
                     {
-                        for (int l = 0; l < LabelCount; l++)
-                        {
-                            byte stringSize = reader.ReadByte();
-                            string Text = reader.ReadString(stringSize, Encoding.ASCII);
-                            int index = reader.ReadInt32();
-                            Labels.Add(Tuple.Create(Text, index));
-                        }
+                        LabelEntry entry = new LabelEntry();
+                            entry.Length = reader.ReadByte();
+                        entry.Name = reader.ReadString((int)entry.Length);
+                        entry.Index = reader.ReadUInt32();
+                        entry.Checksum = (uint)Groups.IndexOf(group);
+                        Labels.Add(entry);
                     }
                 }
+
+                reader.Align(8);
             }
 
             public override void Write(FileWriter writer, Header header)
@@ -435,12 +491,12 @@ namespace FirstPlugin
                 writer.WriteSignature(Signature);
                 writer.Write(Data.Length);
                 writer.Write(Padding);
+
+                for (int i = 0; i < Groups.Count; i++)
+                {
+
+                }
             }
-        }
-
-        public class LabelEntry
-        {
-
         }
 
         public class MSBTEntry

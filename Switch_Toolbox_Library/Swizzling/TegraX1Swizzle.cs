@@ -8,17 +8,75 @@ namespace Switch_Toolbox.Library
 {
     public class TegraX1Swizzle
     {
-        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel)
+        public static List<uint[]> GenerateMipSizes(TEX_FORMAT Format, uint Width, uint Height, uint Depth, uint SurfaceCount, uint MipCount, uint ImageSize)
         {
-            int target = 1;
-            uint bpp       = STGenericTexture.GetBytesPerPixel(texture.Format);
-            uint blkWidth  = STGenericTexture.GetBlockWidth(texture.Format);
+            List<uint[]> MipMapSizes = new List<uint[]>();
+
+            uint bpp = STGenericTexture.GetBytesPerPixel(Format);
+            uint blkWidth = STGenericTexture.GetBlockWidth(Format);
+            uint blkHeight = STGenericTexture.GetBlockHeight(Format);
+            uint blkDepth = STGenericTexture.GetBlockDepth(Format);
+
+            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
+            uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
+
+            uint Pitch = 0;
+            uint DataAlignment = 512;
+
+            int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
+
+            uint ArrayCount = SurfaceCount;
+
+            uint ArrayOffset = 0;
+            for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
+            {
+                uint SurfaceSize = 0;
+                int blockHeightShift = 0;
+
+                uint[] MipOffsets = new uint[MipCount];
+
+                for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                {
+                    uint width = (uint)Math.Max(1, Width >> mipLevel);
+                    uint height = (uint)Math.Max(1, Height >> mipLevel);
+                    uint depth = (uint)Math.Max(1, Depth >> mipLevel);
+
+                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+
+                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                        blockHeightShift += 1;
+
+                    uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
+                    uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
+
+                    //Calculate the mip size instead
+                    byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
+                    SurfaceSize += (uint)AlignedData.Length;
+                    MipOffsets[mipLevel] = (SurfaceSize);
+
+                    //Get the first mip offset and current one and the total image size
+                    int msize = (int)((MipOffsets[0] + ImageSize - MipOffsets[mipLevel]) / ArrayCount);
+
+                    Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
+                    SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
+                }
+                ArrayOffset += (uint)(ImageSize / ArrayCount);
+
+                MipMapSizes.Add(MipOffsets);
+            }
+
+            return MipMapSizes;
+        }
+
+        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int target = 1)
+        {
+            uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
+            uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
-            uint blkDepth  = STGenericTexture.GetBlockDepth(texture.Format);
+            uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
 
             uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
             uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-            uint tileMode = 0;
 
             uint Pitch = 0;
             uint DataAlignment = 512;
@@ -65,7 +123,7 @@ namespace Switch_Toolbox.Library
                         SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
 
                         Console.WriteLine($"{width} {height} {blkWidth} {blkHeight} {target} {bpp} {TileMode} {(int)Math.Max(0, BlockHeightLog2 - blockHeightShift)} {data_.Length}");
-                        byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
+                        byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
                         //Create a copy and use that to remove uneeded data
                         byte[] result_ = new byte[size];
                         Array.Copy(result, 0, result_, 0, size);

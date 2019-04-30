@@ -163,7 +163,7 @@ namespace Switch_Toolbox.Library.IO
                 data = STLibraryCompression.ZSTD.Decompress(fileReader.getSection(0, data.Length));
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true, CompressionType.Zstb);
             }
-            if (Magic == "ZLIB")
+            if (Magic == "ZLIB" || Path.GetExtension(FileName) == ".z")
             {
                 if (data == null)
                     data = File.ReadAllBytes(FileName);
