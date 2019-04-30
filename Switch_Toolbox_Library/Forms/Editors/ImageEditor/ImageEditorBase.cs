@@ -881,17 +881,24 @@ namespace Switch_Toolbox.Library.Forms
 
             if (Result == DialogResult.Yes)
             {
-                if (FormatToChange != TEX_FORMAT.UNKNOWN)
+                bool DecodeTextureBack = false;
+                if (FormatToChange != TEX_FORMAT.UNKNOWN && ActiveTexture.Format != FormatToChange)
+                {
                     ActiveTexture.Format = FormatToChange;
+                    DecodeTextureBack = true;
+                }
 
-                 if (FileName.EndsWith(".dds"))
+                if (FileName.EndsWith(".dds"))
                  {
                     DDS dds = new DDS(FileName);
-                    SaveAndApplyImage(dds.GetBitmap());
+                    if (dds.Format != ActiveTexture.Format)
+                        DecodeTextureBack = true;
+
+                    SaveAndApplyImage(dds.GetBitmap(), DecodeTextureBack);
                 }
                 else
                 {
-                    SaveAndApplyImage(new Bitmap(FileName));
+                    SaveAndApplyImage(new Bitmap(FileName), DecodeTextureBack);
                 }
             }
             else
@@ -901,7 +908,7 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        private void SaveAndApplyImage(Bitmap image)
+        private void SaveAndApplyImage(Bitmap image, bool DecodeBack)
         {
             if (saveBtn.InvokeRequired)
             {
@@ -912,7 +919,8 @@ namespace Switch_Toolbox.Library.Forms
                     ApplyEdit(image);
 
                     //Update the image with decoding as format could change
-                    UpdateImage(ActiveTexture);
+                    if (DecodeBack)
+                        UpdateImage(ActiveTexture);
                 }));
             }
             else
@@ -921,7 +929,8 @@ namespace Switch_Toolbox.Library.Forms
                 ApplyEdit(image);
 
                 //Update the image with decoding as format could change
-                UpdateImage(ActiveTexture);
+                if (DecodeBack)
+                    UpdateImage(ActiveTexture);
             }
 
             propertiesEditor.UpdateProperties();
