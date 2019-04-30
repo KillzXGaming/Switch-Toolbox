@@ -726,17 +726,23 @@ namespace Bfres.Structs
                 CurNode++;
             }
 
+            List<string> BonesNotMatched = new List<string>();
 
+            int vtxIndex = 0;
             foreach (Vertex v in ob.vertices)
             {
                 List<int> RigidIds = new List<int>();
                 foreach (string bn in v.boneNames)
                 {
+                    bool HasMatch = false;
+
                     int i = 0;
                     foreach (var defBn in nodeArrStrings.Select((Value, Index) => new { Value, Index }))
                     {
                         if (bn == defBn.Value)
                         {
+                            HasMatch = true;
+
                             //Add these after smooth matrices
                             if (nodeRigidIndex[i] != -1)
                             {
@@ -753,7 +759,14 @@ namespace Bfres.Structs
                         }
                         i++;
                     }
+
+                    if (!HasMatch && !BonesNotMatched.Contains(bn))
+                    {
+                        BonesNotMatched.Add(bn);
+                        STConsole.WriteLine($"No bone matches {bn}. Vertices will remain unmapped for this bone!", System.Drawing.Color.Red);
+                    }
                 }
+
                 if (RigidIds.Count > 0)
                 {
                     foreach (int id in RigidIds)
@@ -762,7 +775,11 @@ namespace Bfres.Structs
                             v.boneIds.Add(id);
                     }
                 }
+
+                vtxIndex++;
             }
+
+            BonesNotMatched.Clear();
         }
         public void CreateNewBoundingBoxes()
         {

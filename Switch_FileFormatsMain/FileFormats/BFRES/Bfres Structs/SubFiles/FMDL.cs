@@ -622,7 +622,15 @@ namespace Bfres.Structs
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
+
                             shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            if (shape.VertexSkinCount == 1)
+                            {
+                                int boneIndex = shape.BoneIndices[0];
+                                shape.BoneIndex = boneIndex;
+                            }
+                            Console.WriteLine($"VertexSkinCount {shape.VertexSkinCount}");
+
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer();
 
