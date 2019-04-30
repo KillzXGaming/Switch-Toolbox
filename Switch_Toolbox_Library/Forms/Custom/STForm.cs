@@ -23,6 +23,10 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        public void AddControl(Control control) {
+            contentContainer.Controls.Add(control);
+        }
+
         public override string Text
         {
             get

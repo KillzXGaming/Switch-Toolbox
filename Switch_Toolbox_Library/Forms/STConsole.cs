@@ -15,6 +15,9 @@ namespace Switch_Toolbox.Library
 
         public STConsole()
         {
+            BorderStyle = BorderStyle.None;
+            Dock = DockStyle.Fill;
+
             BackColor = FormThemes.BaseTheme.ConsoleEditorBackColor;
             ForeColor = FormThemes.BaseTheme.TextForeColor;
 

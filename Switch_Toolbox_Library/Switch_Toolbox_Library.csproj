@@ -438,6 +438,12 @@
     <Compile Include="Forms\STConsole.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\STConsoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\STConsoleForm.Designer.cs">
+      <DependentUpon>STConsoleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TrackbarKeyEditor.cs" />
     <Compile Include="Forms\TrackbarKeyEditor.Designer.cs">
       <DependentUpon>TrackbarKeyEditor.cs</DependentUpon>
@@ -732,6 +738,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GL\GLControl2D.resx">
       <DependentUpon>GLControl2D.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\STConsoleForm.resx">
+      <DependentUpon>STConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Viewport.resx">
       <DependentUpon>Viewport.cs</DependentUpon>

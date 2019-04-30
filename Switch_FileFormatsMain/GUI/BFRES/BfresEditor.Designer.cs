@@ -30,17 +30,16 @@
         {
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
+            this.toggleViewportToolStripBtn = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stTabControl2 = new Switch_Toolbox.Library.Forms.STTabControl();
             this.timelineTabPage = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.textureLoader1 = new Forms.TextureLoader();
             this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.toggleViewportToolStripBtn = new System.Windows.Forms.ToolStripButton();
             this.stPanel2.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -71,6 +70,16 @@
             this.stToolStrip1.Size = new System.Drawing.Size(712, 25);
             this.stToolStrip1.TabIndex = 2;
             this.stToolStrip1.Text = "stToolStrip1";
+            // 
+            // toggleViewportToolStripBtn
+            // 
+            this.toggleViewportToolStripBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleViewportToolStripBtn.Image = global::FirstPlugin.Properties.Resources.ViewportIcon;
+            this.toggleViewportToolStripBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleViewportToolStripBtn.Name = "toggleViewportToolStripBtn";
+            this.toggleViewportToolStripBtn.Size = new System.Drawing.Size(23, 22);
+            this.toggleViewportToolStripBtn.Text = "toolStripButton1";
+            this.toggleViewportToolStripBtn.Click += new System.EventHandler(this.toggleViewportToolStripBtn_Click);
             // 
             // splitContainer1
             // 
@@ -120,7 +129,6 @@
             // stTabControl2
             // 
             this.stTabControl2.Controls.Add(this.timelineTabPage);
-            this.stTabControl2.Controls.Add(this.tabPage4);
             this.stTabControl2.Controls.Add(this.tabPage5);
             this.stTabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stTabControl2.Location = new System.Drawing.Point(0, 0);
@@ -139,16 +147,6 @@
             this.timelineTabPage.TabIndex = 3;
             this.timelineTabPage.Text = "Timeline";
             this.timelineTabPage.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(432, 117);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "Console";
-            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
@@ -176,16 +174,6 @@
             this.stPanel5.Name = "stPanel5";
             this.stPanel5.Size = new System.Drawing.Size(440, 515);
             this.stPanel5.TabIndex = 2;
-            // 
-            // toggleViewportToolStripBtn
-            // 
-            this.toggleViewportToolStripBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleViewportToolStripBtn.Image = global::FirstPlugin.Properties.Resources.ViewportIcon;
-            this.toggleViewportToolStripBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleViewportToolStripBtn.Name = "toggleViewportToolStripBtn";
-            this.toggleViewportToolStripBtn.Size = new System.Drawing.Size(23, 22);
-            this.toggleViewportToolStripBtn.Text = "toolStripButton1";
-            this.toggleViewportToolStripBtn.Click += new System.EventHandler(this.toggleViewportToolStripBtn_Click);
             // 
             // BfresEditor
             // 
@@ -217,7 +205,6 @@
         private Switch_Toolbox.Library.Forms.STPanel stPanel1;
         private Switch_Toolbox.Library.Forms.STTabControl stTabControl2;
         private System.Windows.Forms.TabPage timelineTabPage;
-        private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
         private Forms.TextureLoader textureLoader1;
         private Switch_Toolbox.Library.Forms.STPanel stPanel5;

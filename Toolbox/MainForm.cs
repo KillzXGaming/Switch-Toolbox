@@ -1140,5 +1140,11 @@ namespace Toolbox
                 this.tabControlContextMenuStrip.Show(this.tabForms, e.Location);
             }
         }
+
+        private void consoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new STConsoleForm();
+            form.Show(this);
+        }
     }
 }

@@ -79,11 +79,6 @@ namespace FirstPlugin.Forms
         {
             InitializeComponent();
 
-            STConsole stConsole = STConsole.Instance;
-            stConsole.BorderStyle = BorderStyle.None;
-            stConsole.Dock = DockStyle.Fill;
-            tabPage4.Controls.Add(stConsole);
-
             animationPanel = new AnimationPanel();
             animationPanel.CurrentAnimation = null;
             animationPanel.Dock = DockStyle.Fill;
