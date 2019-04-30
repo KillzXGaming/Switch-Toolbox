@@ -355,7 +355,7 @@ namespace Switch_Toolbox.Library.Forms
             {
                 var message = MessageBox.Show("This texture has been edited! Would you like to apply the changes made?", "Texture Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (message == DialogResult.Yes)
-                    ApplyEdit();
+                    ApplyEdit(pictureBoxCustom1.Image);
 
                 HasBeenEdited = false;
             }
@@ -574,7 +574,7 @@ namespace Switch_Toolbox.Library.Forms
             HasBeenEdited = true;
         }
 
-        private void ApplyEdit()
+        private void ApplyEdit(Image Image)
         {
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Applying Edits";
@@ -584,17 +584,13 @@ namespace Switch_Toolbox.Library.Forms
             progressBar.Show();
             progressBar.Refresh();
 
-            Image Image = pictureBoxCustom1.Image;
-            if (Image != null)
-            {
-                ActiveTexture.Width = (uint)Image.Width;
-                ActiveTexture.Height = (uint)Image.Height;
+            ActiveTexture.Width = (uint)Image.Width;
+            ActiveTexture.Height = (uint)Image.Height;
 
-                ActiveTexture.SetImageData(new Bitmap(Image), CurArrayDisplayLevel);
+            ActiveTexture.SetImageData(new Bitmap(Image), CurArrayDisplayLevel);
 
-                CurMipDisplayLevel = 0;
-                HasBeenEdited = false;
-            }
+            CurMipDisplayLevel = 0;
+            HasBeenEdited = false;
 
             if (ActiveTexture.EditedImages != null && ActiveTexture.EditedImages[CurArrayDisplayLevel] != null) { 
             ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
@@ -606,7 +602,8 @@ namespace Switch_Toolbox.Library.Forms
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            ApplyEdit();
+            if (pictureBoxCustom1.Image != null)
+                ApplyEdit(pictureBoxCustom1.Image);
         }
 
         private void ChannelBtn_Click(object sender, EventArgs e)
@@ -912,14 +909,22 @@ namespace Switch_Toolbox.Library.Forms
                 delegate ()
                 {
                     UpdateEdit(image);
-                    ApplyEdit();
+                    ApplyEdit(image);
+
+                    //Update the image with decoding as format could change
+                    UpdateImage(ActiveTexture);
                 }));
             }
             else
             {
                 UpdateEdit(image);
-                ApplyEdit();
+                ApplyEdit(image);
+
+                //Update the image with decoding as format could change
+                UpdateImage(ActiveTexture);
             }
+
+            propertiesEditor.UpdateProperties();
         }
 
         private void generateMipmapsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -928,8 +933,9 @@ namespace Switch_Toolbox.Library.Forms
             if (Image != null)
             {
                 HasBeenEdited = true;
-                //Applying edits will generate mip maps
-                ApplyEdit();
+
+                //Apply edits first to update mip map data
+                ApplyEdit(Image);
                 UpdateEdit(Image);
             }
         }
