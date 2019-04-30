@@ -693,6 +693,7 @@
             this.billboardModeCB.ReadOnly = true;
             this.billboardModeCB.Size = new System.Drawing.Size(144, 21);
             this.billboardModeCB.TabIndex = 0;
+            this.billboardModeCB.SelectedIndexChanged += new System.EventHandler(this.billboardModeCB_SelectedIndexChanged);
             // 
             // stDropDownPanel4
             // 

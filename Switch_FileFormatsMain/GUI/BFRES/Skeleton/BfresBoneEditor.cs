@@ -211,5 +211,19 @@ namespace FirstPlugin
         {
 
         }
+
+        private void billboardModeCB_SelectedIndexChanged(object sender, EventArgs e) {
+            if (activeBone == null || !IsLoaded)
+                return;
+
+            if (activeBone.BoneU != null)
+            {
+                activeBone.BoneU.FlagsBillboard = (ResU.BoneFlagsBillboard)billboardModeCB.SelectedItem;
+            }
+            else
+            {
+                activeBone.Bone.FlagsBillboard = (BoneFlagsBillboard)billboardModeCB.SelectedItem;
+            }
+        }
     }
 }
