@@ -243,18 +243,18 @@ namespace FirstPlugin
                 {
                     block.Data = TextureBlocks[curTexBlock++];
                     block.WriteHeader(writer);
-                    block.WriteBlock(writer, Alignment);
+                    block.WriteBlock(writer, 512);
                 }
                 else if (block.BlockType == TextureInfoType)
                 {
                     block.Data = TextureInfos[curTexImage++].Write();
                     block.WriteHeader(writer);
-                    block.WriteBlock(writer, Alignment);
+                    block.WriteBlock(writer);
                 }
                 else
                 {
                     block.WriteHeader(writer);
-                    block.WriteBlock(writer, 0x24);
+                    block.WriteBlock(writer);
                 }
             }
 
@@ -306,29 +306,37 @@ namespace FirstPlugin
 
                 writer.WriteSignature("HBvN");
                 writer.Write(BlockSize);
-                writer.Write(Data.Length);
-                writer.Write(DataOffset);
-                writer.Write(BlockType);
+                writer.Write((ulong)Data.Length);
+                writer.Write((ulong)DataOffset);
                 writer.Write(BlockType);
                 writer.Write(GlobalBlockIndex);
                 writer.Write(IncBlockTypeIndex);
             }
 
-            public void WriteBlock(FileWriter writer, int Alignment)
+            public void WriteBlock(FileWriter writer, int DataAlignment = 0)
             {
-                DataOffset = writer.Position;
-                using (writer.TemporarySeek(headerPos + 12, SeekOrigin.Begin)) {
-                    writer.Write(DataOffset);
+                //From the block size goto where the data will start
+                writer.Seek((int)(BlockSize + headerPos), SeekOrigin.Begin);
+
+                //Add alignment if necessary
+                if (DataAlignment != 0)
+                    writer.Align(DataAlignment);
+
+                var blockPos = writer.Position;
+
+                //Satisfy the offset
+                using (writer.TemporarySeek(headerPos + 16, SeekOrigin.Begin))
+                {
+                    //Offset starts from the block header
+                    writer.Write(blockPos - headerPos);
                 }
 
-                writer.Seek((int)(BlockSize + headerPos), SeekOrigin.Begin);
                 writer.Write(Data);
-                writer.Align(Alignment);
 
-                uint TotalDataSize =(uint)(writer.Position - (BlockSize + headerPos));
-
+                //Set the total size
+                uint TotalDataSize =(uint)(writer.Position - blockPos);
                 using (writer.TemporarySeek(headerPos + 8, SeekOrigin.Begin)) {
-                    writer.Write(TotalDataSize);
+                    writer.Write((ulong)TotalDataSize);
                 }
             }
         }
@@ -371,6 +379,8 @@ namespace FirstPlugin
             public override string ExportFilter => FileFilters.XTX;
             public override string ReplaceFilter => FileFilters.XTX;
 
+            private byte[] unknownData;
+
             public void Read(FileReader reader)
             {
                 DataSize = reader.ReadUInt64();
@@ -382,6 +392,8 @@ namespace FirstPlugin
                 XTXFormat = reader.ReadEnum<XTXFormats.XTXImageFormat>(true);
                 MipCount = reader.ReadUInt32();
                 SliceSize = reader.ReadUInt32();
+                MipOffsets = reader.ReadUInt32s((int)MipCount);
+                unknownData = reader.ReadBytes(0x38);
 
                 Format = ConvertFormat(XTXFormat);
                 ArrayCount = 1;
@@ -396,7 +408,7 @@ namespace FirstPlugin
                 MemoryStream mem = new MemoryStream();
 
                 FileWriter writer = new FileWriter(mem);
-                writer.Write(DataSize);
+                writer.Write((ulong)DataSize);
                 writer.Write(Alignment);
                 writer.Write(Width);
                 writer.Write(Height);
@@ -405,6 +417,8 @@ namespace FirstPlugin
                 writer.Write(XTXFormat, true);
                 writer.Write(MipCount);
                 writer.Write(SliceSize);
+                writer.Write(MipOffsets);
+                writer.Write(unknownData);
                 writer.Close();
                 writer.Dispose();
 
