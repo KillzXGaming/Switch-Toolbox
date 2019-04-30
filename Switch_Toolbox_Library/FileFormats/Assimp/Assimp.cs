@@ -57,11 +57,13 @@ namespace Switch_Toolbox.Library
                 {
                     MessageBox.Show($"Failed to load assimp! Make sure you have Assimp32.dll next to the program!");
                 }
-                Console.WriteLine(e);
+                else
+                    MessageBox.Show($"{e.ToString()}");
             }
         }
         public void processNode()
         {
+            Console.WriteLine($"Mesh Count " + scene.MeshCount);
             Matrix4x4 identity = Matrix4x4.Identity;
             if (scene.RootNode != null)
             {
@@ -101,6 +103,16 @@ namespace Switch_Toolbox.Library
             foreach (int index in parent.MeshIndices)
             {
                 objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
+            }
+
+            if (objects.Count <= 0)
+            {
+                int Index = 0;
+                foreach (Mesh msh in scene.Meshes)
+                {
+                    objects.Add(CreateGenericObject(msh, Index, Matrix4.Identity));
+                    Index++;
+                }
             }
 
             foreach (Node child in parent.Children)
