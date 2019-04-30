@@ -1145,7 +1145,7 @@ namespace Toolbox
 
         private void consoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (form == null)
+            if (form == null || form.IsDisposed)
             {
                 form = new STConsoleForm();
                 form.Show(this);
