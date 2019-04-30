@@ -163,11 +163,19 @@ namespace Switch_Toolbox.Library.IO
                 data = STLibraryCompression.ZSTD.Decompress(fileReader.getSection(0, data.Length));
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true, CompressionType.Zstb);
             }
-            if (Magic == "ZLIB" || Path.GetExtension(FileName) == ".z")
+            if (Path.GetExtension(FileName) == ".z" && CompType == CompressionType.None)
             {
                 if (data == null)
                     data = File.ReadAllBytes(FileName);
 
+                data = STLibraryCompression.ZLIB.Decompress(fileReader.getSection(2, data.Length - 2));
+                return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true, CompressionType.Zlib);
+            }
+            if (Magic == "ZLIB")
+            {
+                if (data == null)
+                    data = File.ReadAllBytes(FileName);
+                    
                 data = STLibraryCompression.GZIP.Decompress(fileReader.getSection(64, data.Length - 64));
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true, CompressionType.Zlib);
             }
@@ -310,16 +318,15 @@ namespace Switch_Toolbox.Library.IO
 
         public class ZLIB
         {
-            public static byte[] Decompress(byte[] b, uint DecompSize)
+            public static byte[] Decompress(byte[] b)
             {
                 var output = new MemoryStream();
-                using (var compressedStream = new MemoryStream(b))
-                using (var zipStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
-                {
-                    zipStream.CopyTo(output);
-                    zipStream.Close();
-                    output.Position = 0;
-                    return output.ToArray();
+                using (var compressedStream = new MemoryStream(b)) {
+                    using (var zipStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
+                    {
+                        zipStream.CopyTo(output);
+                        return output.ToArray();
+                    }
                 }
             }
 

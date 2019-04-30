@@ -204,7 +204,7 @@ namespace FirstPlugin
             else if (header.Version > 22)
                 decomp = STLibraryCompression.Type_LZ4.Decompress(CompressedBlock);
             else
-                decomp = STLibraryCompression.ZLIB.Decompress(CompressedBlock, Header.DecompressedSize);
+                decomp = STLibraryCompression.ZLIB.Decompress(CompressedBlock);
 
             //Now it's decompressed lets parse!
             using (var reader = new FileReader(decomp))

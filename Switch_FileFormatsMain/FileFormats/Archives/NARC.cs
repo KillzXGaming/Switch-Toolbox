@@ -136,7 +136,7 @@ namespace FirstPlugin
                     reader.Close();
                     reader.Dispose();
 
-                    data = STLibraryCompression.ZLIB.Decompress(filedata, decompSize);
+                    data = STLibraryCompression.ZLIB.Decompress(filedata);
                 }
                 return data;
             }
