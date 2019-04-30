@@ -42,11 +42,18 @@ namespace FirstPlugin
 
         public void LoadBone(BfresBone bn)
         {
-            activeBone = bn;
-
             IsLoaded = false;
 
+            rotModeCB.Items.Clear();
+            billboardModeCB.Items.Clear();
+
+            activeBone = bn;
+
+
             boneInfoPanel1.LoadBone(bn);
+
+            foreach (var item in Enum.GetValues(typeof(BoneFlagsRotation)))
+                rotModeCB.Items.Add(item);
 
             if (bn.BoneU != null)
             {
@@ -54,11 +61,10 @@ namespace FirstPlugin
                 
                 userDataEditor1.LoadUserData(bone.UserData);
 
-                rotModeCB.DataSource = Enum.GetValues(typeof(ResU.BoneFlagsRotation));
+                foreach (var item in Enum.GetValues(typeof(ResU.BoneFlagsBillboard)))
+                    billboardModeCB.Items.Add(item);
 
                 rotModeCB.SelectedItem = bone.FlagsRotation;
-
-                billboardModeCB.DataSource = Enum.GetValues(typeof(ResU.BoneFlagsBillboard));
                 billboardModeCB.SelectedItem = bone.FlagsBillboard;
 
                 billboardIndexUD.Value = bone.BillboardIndex;
@@ -86,11 +92,10 @@ namespace FirstPlugin
                 var bone = bn.Bone;
                 userDataEditor1.LoadUserData(bone.UserData.ToList());
 
+                foreach (var item in Enum.GetValues(typeof(BoneFlagsBillboard)))
+                    billboardModeCB.Items.Add(item);
 
-                rotModeCB.DataSource = Enum.GetValues(typeof(BoneFlagsRotation));
                 rotModeCB.SelectedItem = bone.FlagsRotation;
-
-                billboardModeCB.DataSource = Enum.GetValues(typeof(ResU.BoneFlagsBillboard));
                 billboardModeCB.SelectedItem = bone.FlagsBillboard;
 
                 billboardIndexUD.Bind(bone, "BillboardIndex");

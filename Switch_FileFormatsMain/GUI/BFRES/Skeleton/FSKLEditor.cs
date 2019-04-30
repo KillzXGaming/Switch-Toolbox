@@ -29,21 +29,33 @@ namespace FirstPlugin.Forms
 
         public void LoadSkeleton(FSKL fskl)
         {
+            IsLoaded = false;
+
+            rotationModeCB.DataSource = null;
+            scalingModeCB.DataSource = null;
+            rotationModeCB.Items.Clear();
+            scalingModeCB.Items.Clear();
+
             activeSkeleton = fskl;
 
             if (fskl.node.SkeletonU != null)
             {
-                Console.WriteLine("FlagsScaling " + fskl.node.SkeletonU.FlagsScaling);
-                rotationModeCB.DataSource = Enum.GetValues(typeof(ResU.SkeletonFlagsRotation));
-                scalingModeCB.DataSource = Enum.GetValues(typeof(ResU.SkeletonFlagsScaling));
+                foreach (var item in Enum.GetValues(typeof(ResU.SkeletonFlagsRotation)))
+                    rotationModeCB.Items.Add(item);
+                foreach (var item in Enum.GetValues(typeof(ResU.SkeletonFlagsScaling)))
+                    scalingModeCB.Items.Add(item);
+
                 rotationModeCB.SelectedItem = fskl.node.SkeletonU.FlagsRotation;
                 scalingModeCB.SelectedItem = fskl.node.SkeletonU.FlagsScaling;
                 Console.WriteLine("FlagsScaling " + fskl.node.SkeletonU.FlagsScaling);
             }
             else
             {
-                rotationModeCB.DataSource = Enum.GetValues(typeof(SkeletonFlagsRotation));
-                scalingModeCB.DataSource = Enum.GetValues(typeof(SkeletonFlagsScaling));
+                foreach (var item in Enum.GetValues(typeof(SkeletonFlagsRotation)))
+                    rotationModeCB.Items.Add(item);
+                foreach (var item in Enum.GetValues(typeof(SkeletonFlagsScaling)))
+                    scalingModeCB.Items.Add(item);
+
                 rotationModeCB.SelectedItem = fskl.node.Skeleton.FlagsRotation;
                 scalingModeCB.SelectedItem = fskl.node.Skeleton.FlagsScaling;
             }
