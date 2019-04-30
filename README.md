@@ -26,6 +26,11 @@ This tool currently features:
    - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
    - Can export as binary, dds, png, tga, etc.
    - Can preview mipmap and surface(array) levels.
+- XTX
+   - Can add/remove textures.
+   - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
+   - Can export as dds, png, tga, etc.
+   - Can preview mipmaplevels.
 - SARC
    - Supported editing/saving data opened. (Automatically saves data opened if supported)
    - Supports padding (Thanks to Exelix and AboodXD)
@@ -43,10 +48,6 @@ This tool currently features:
    - Supported editing/saving data opened. (Automatically saves data opened if supported)
 - BEA
    - Supported editing/saving data opened. (Automatically saves data opened if supported)
-- XTX
-   - Can preview textures.
-- NARC
-   - Can extract files. (Thanks to Gericom/EFE)
 - BFSHA
    - Can view options, samplers, attributes, and uniform blocks.
 - BNSH
