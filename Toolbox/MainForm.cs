@@ -1141,10 +1141,16 @@ namespace Toolbox
             }
         }
 
+        STConsoleForm form;
+
         private void consoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new STConsoleForm();
-            form.Show(this);
+            if (form == null)
+            {
+                form = new STConsoleForm();
+                form.Show(this);
+            }
+            form.Focus();
         }
     }
 }
