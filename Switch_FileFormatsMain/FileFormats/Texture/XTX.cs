@@ -205,7 +205,6 @@ namespace FirstPlugin
 
                     TextureBlocks.Add(blockHeader.Data);
                 }
-                    
             }
 
             reader.Close();
@@ -479,6 +478,7 @@ namespace FirstPlugin
                 }
                 editor.Text = Text;
                 editor.LoadImage(this);
+                editor.LoadProperties(GenericProperties);
             }
 
             private static XTXFormats.XTXImageFormat ConvertFromGenericFormat(TEX_FORMAT Format)
