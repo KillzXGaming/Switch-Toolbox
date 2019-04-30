@@ -205,6 +205,8 @@
     <Compile Include="FileFormats\APNG\CRC.cs" />
     <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
     <Compile Include="FileFormats\Animation\SEANIM.cs" />
+    <Compile Include="FileFormats\DAE\collada_schema_1_4.cs" />
+    <Compile Include="FileFormats\DAE\DAE.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="Forms\BatchFormatExport.cs">
       <SubType>Form</SubType>

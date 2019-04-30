@@ -221,11 +221,11 @@ namespace FirstPlugin
 
         public void SaveFile(FileWriter writer)
         {
-            SetupBlockSaving();
-
             int Alignment = 512;
             uint TextureInfoType = 2;
             uint TextureBlockType = 3;
+
+            SetupBlockSaving(TextureBlockType);
 
             writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
             writer.WriteSignature("DFvN");
@@ -241,7 +241,6 @@ namespace FirstPlugin
             {
                 if (block.BlockType == TextureBlockType)
                 {
-                    block.Data = TextureBlocks[curTexBlock++];
                     block.WriteHeader(writer);
                     block.WriteBlock(writer, 512);
                 }
@@ -262,11 +261,15 @@ namespace FirstPlugin
             writer.Dispose();
         }
 
-        private void SetupBlockSaving()
+        private void SetupBlockSaving(uint TextureBlockType)
         {
-            foreach (var textureInfo in TextureInfos)
+            int curTex = 0;
+            foreach (var block in Blocks)
             {
-
+                if (block.BlockType == TextureBlockType)
+                {
+                    block.Data = TextureInfos[curTex].ImageData;
+                }
             }
         }
 
