@@ -163,6 +163,12 @@ namespace Switch_Toolbox.Library
                     case "Mk8dGamePath":
                         Runtime.Mk8dGamePath = node.InnerText;
                         break;
+                    case "TpGamePath":
+                        Runtime.TpGamePath = node.InnerText;
+                        break;
+                    case "BotwGamePath":
+                        Runtime.BotwGamePath = node.InnerText;
+                        break;
                     case "renderBoundingBoxes":
                         bool.TryParse(node.InnerText, out Runtime.renderBoundingBoxes);
                         break;
@@ -309,6 +315,8 @@ namespace Switch_Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "SmoGamePath", Runtime.SmoGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "Mk8GamePath", Runtime.Mk8GamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "Mk8dGamePath", Runtime.Mk8dGamePath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "TpGamePath", Runtime.TpGamePath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "BotwGamePath", Runtime.BotwGamePath.ToString()));
         }
         private static void AppendEditorSettings(XmlDocument doc, XmlNode parentNode)
         {

@@ -33,6 +33,7 @@
             this.chkBoxNormalMap = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.shadingComboBox = new System.Windows.Forms.ComboBox();
             this.panel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.displayBoundingBoxeChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.boneXRayChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel9 = new Switch_Toolbox.Library.Forms.STLabel();
             this.cameraMaxSpeedUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
@@ -94,7 +95,10 @@
             this.mk8DPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.displayBoundingBoxeChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stLabel13 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.botwGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel14 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.tpGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -204,6 +208,16 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(534, 293);
             this.panel2.TabIndex = 4;
+            // 
+            // displayBoundingBoxeChk
+            // 
+            this.displayBoundingBoxeChk.AutoSize = true;
+            this.displayBoundingBoxeChk.Location = new System.Drawing.Point(252, 183);
+            this.displayBoundingBoxeChk.Name = "displayBoundingBoxeChk";
+            this.displayBoundingBoxeChk.Size = new System.Drawing.Size(140, 17);
+            this.displayBoundingBoxeChk.TabIndex = 31;
+            this.displayBoundingBoxeChk.Text = "Display Bounding Boxes";
+            this.displayBoundingBoxeChk.CheckedChanged += new System.EventHandler(this.displayBoundingBoxeChk_CheckedChanged);
             // 
             // boneXRayChk
             // 
@@ -910,6 +924,10 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.stLabel13);
+            this.tabPage3.Controls.Add(this.botwGamePathTB);
+            this.tabPage3.Controls.Add(this.stLabel14);
+            this.tabPage3.Controls.Add(this.tpGamePathTB);
             this.tabPage3.Controls.Add(this.stLabel12);
             this.tabPage3.Controls.Add(this.SMOPathTB);
             this.tabPage3.Controls.Add(this.stLabel11);
@@ -978,15 +996,41 @@
             this.mk8PathTB.TabIndex = 0;
             this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
             // 
-            // displayBoundingBoxeChk
+            // stLabel13
             // 
-            this.displayBoundingBoxeChk.AutoSize = true;
-            this.displayBoundingBoxeChk.Location = new System.Drawing.Point(252, 183);
-            this.displayBoundingBoxeChk.Name = "displayBoundingBoxeChk";
-            this.displayBoundingBoxeChk.Size = new System.Drawing.Size(140, 17);
-            this.displayBoundingBoxeChk.TabIndex = 31;
-            this.displayBoundingBoxeChk.Text = "Display Bounding Boxes";
-            this.displayBoundingBoxeChk.CheckedChanged += new System.EventHandler(this.displayBoundingBoxeChk_CheckedChanged);
+            this.stLabel13.AutoSize = true;
+            this.stLabel13.Location = new System.Drawing.Point(6, 122);
+            this.stLabel13.Name = "stLabel13";
+            this.stLabel13.Size = new System.Drawing.Size(98, 13);
+            this.stLabel13.TabIndex = 9;
+            this.stLabel13.Text = "Breath Of The Wild";
+            // 
+            // botwGamePathTB
+            // 
+            this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.botwGamePathTB.Location = new System.Drawing.Point(112, 120);
+            this.botwGamePathTB.Name = "botwGamePathTB";
+            this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
+            this.botwGamePathTB.TabIndex = 8;
+            this.botwGamePathTB.TextChanged += new System.EventHandler(this.botwGamePathTB_TextChanged);
+            // 
+            // stLabel14
+            // 
+            this.stLabel14.AutoSize = true;
+            this.stLabel14.Location = new System.Drawing.Point(6, 96);
+            this.stLabel14.Name = "stLabel14";
+            this.stLabel14.Size = new System.Drawing.Size(105, 13);
+            this.stLabel14.TabIndex = 7;
+            this.stLabel14.Text = "Twilight Princess HD";
+            // 
+            // tpGamePathTB
+            // 
+            this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tpGamePathTB.Location = new System.Drawing.Point(112, 94);
+            this.tpGamePathTB.Name = "tpGamePathTB";
+            this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
+            this.tpGamePathTB.TabIndex = 6;
+            this.tpGamePathTB.TextChanged += new System.EventHandler(this.tpGamePathTB_TextChanged);
             // 
             // Settings
             // 
@@ -1095,5 +1139,9 @@
         private Switch_Toolbox.Library.Forms.STLabel stLabel10;
         private Switch_Toolbox.Library.Forms.STTextBox mk8PathTB;
         private Switch_Toolbox.Library.Forms.STCheckBox displayBoundingBoxeChk;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel13;
+        private Switch_Toolbox.Library.Forms.STTextBox botwGamePathTB;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel14;
+        private Switch_Toolbox.Library.Forms.STTextBox tpGamePathTB;
     }
 }

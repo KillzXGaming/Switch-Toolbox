@@ -72,6 +72,9 @@ namespace Toolbox
             mk8DPathTB.Text = Runtime.Mk8dGamePath;
             mk8PathTB.Text = Runtime.Mk8GamePath;
             SMOPathTB.Text = Runtime.SmoGamePath;
+            botwGamePathTB.Text = Runtime.BotwGamePath;
+            tpGamePathTB.Text = Runtime.TpGamePath;
+
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
             mk8DPathTB.ReadOnly = true;
@@ -406,6 +409,24 @@ namespace Toolbox
             {
                 SMOPathTB.Text = sfd.SelectedPath;
                 Runtime.SmoGamePath = SMOPathTB.Text;
+            }
+        }
+
+        private void tpGamePathTB_TextChanged(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                SMOPathTB.Text = sfd.SelectedPath;
+                Runtime.TpGamePath = SMOPathTB.Text;
+            }
+        }
+
+        private void botwGamePathTB_TextChanged(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                SMOPathTB.Text = sfd.SelectedPath;
+                Runtime.BotwGamePath = SMOPathTB.Text;
             }
         }
 

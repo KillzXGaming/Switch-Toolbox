@@ -18,6 +18,8 @@ namespace Switch_Toolbox.Library
         public static string Mk8GamePath = "";
         public static string Mk8dGamePath = "";
         public static string SmoGamePath = "";
+        public static string TpGamePath = "";
+        public static string BotwGamePath = "";
 
         public class ImageEditor
         {
