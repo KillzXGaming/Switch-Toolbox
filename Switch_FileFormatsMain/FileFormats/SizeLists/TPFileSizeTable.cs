@@ -26,5 +26,14 @@ namespace FirstPlugin
                 Console.WriteLine(FileName + " " + Size);
             }
         }
+
+        public void Write(FileWriter writer)
+        {
+            foreach (var file in FileSizes)
+            {
+                writer.Write(file.Key, BinaryStringFormat.ZeroTerminated);
+                writer.Write(file.Value.ToString(), BinaryStringFormat.ZeroTerminated);
+            }
+        }
     }
 }

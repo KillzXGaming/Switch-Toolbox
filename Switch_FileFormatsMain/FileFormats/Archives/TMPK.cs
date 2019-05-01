@@ -54,7 +54,8 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             TPFileSizeTable table = new TPFileSizeTable();
-            table.Read(new FileReader("G:\\Wii U\\DATA\\USA\\GAMES\\THE LEGEND OF ZELDA Twilight Princess HD[000500001019E500]\\content\\FileSizeList.txt"));
+            table.Read(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
+            table.Write(new FileWriter($"{Runtime.TpGamePath}/FileSizeListTEST.txt"));
 
             Text = FileName;
 
