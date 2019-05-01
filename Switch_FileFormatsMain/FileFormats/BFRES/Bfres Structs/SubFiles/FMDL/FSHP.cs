@@ -197,7 +197,7 @@ namespace Bfres.Structs
                     lodMeshes.Remove(lodMeshes[i]);
             }
 
-            SaveVertexBuffer();
+            SaveShape(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
