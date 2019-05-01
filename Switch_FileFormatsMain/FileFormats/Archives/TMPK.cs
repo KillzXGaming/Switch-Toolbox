@@ -11,11 +11,6 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class TMPKFileInfo : ArchiveFileInfo
-    {
-
-    }
-
     public class TMPK : TreeNodeFile, IArchiveFile
     {
         public bool CanSave { get; set; }
@@ -54,12 +49,13 @@ namespace FirstPlugin
         public Dictionary<long, string> SavedStringEntries = new Dictionary<long, string>();
 
         public uint Alignment;
+        public static readonly uint DefaultAlignment = 4;
 
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
 
-            CanDelete = true;
+            CanSave = true;
 
             using (var reader = new FileReader(stream))
             {
@@ -72,19 +68,32 @@ namespace FirstPlugin
                 for (int i = 0; i < FileCount; i++)
                 {
                     var info = new FileInfo(reader);
-
-                    TMPKFileInfo archive = new TMPKFileInfo();
-                    archive.FileData = new System.IO.MemoryStream(info.Data);
-                    archive.Name = info.Text;
-
                     Nodes.Add(info);
                     files.Add(info);
                 }
+            }
+
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.E));
+        }
+
+        private void Save(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.DefaultExt = "pack";
+            sfd.Filter = "Supported Formats|*.pack;";
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
         }
 
         private void SaveFile(FileWriter writer)
         {
+            writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
             writer.WriteSignature("TMPK");
             writer.Write(files.Count);
             writer.Write(Alignment);
@@ -99,8 +108,25 @@ namespace FirstPlugin
             }
             for (int i = 0; i < files.Count; i++)
             {
-
+                writer.WriteUint32Offset(files[i]._posHeader);
+                writer.Write(files[i].Text, Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
             }
+            for (int i = 0; i < files.Count; i++)
+            {
+                SetAlignment(writer, files[i].Text);
+                writer.WriteUint32Offset(files[i]._posHeader + 4);
+                writer.Write(files[i].Data);
+            }
+        }
+
+        private void SetAlignment(FileWriter writer, string FileName)
+        {
+            if (FileName.EndsWith(".gmx"))
+                writer.Align(0x40);
+            else if (FileName.EndsWith(".gtx"))
+                writer.Align(0x2000);
+            else
+                writer.Write(DefaultAlignment);
         }
 
         public class FileInfo : TreeNodeCustom
@@ -187,10 +213,6 @@ namespace FirstPlugin
                 ContextMenu.MenuItems.Add(export);
                 export.Click += Export;
             }
-
-            public void Write(FileWriter writer)
-            {
-            }
         }    
 
         public void Unload()
@@ -199,7 +221,9 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            return null;
+            var mem = new System.IO.MemoryStream();
+            SaveFile(new FileWriter(mem));
+            return mem.ToArray();
         }
 
 
