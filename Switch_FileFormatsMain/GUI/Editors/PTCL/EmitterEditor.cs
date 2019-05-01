@@ -148,9 +148,9 @@ namespace FirstPlugin
         }
         private void ReplaceImage0(object sender, EventArgs e)
         {
-            if (ActiveEmitter is PTCL.WiiU.EmitterU)
+            if (ActiveEmitter is PTCL_WiiU.EmitterU)
             {
-                var emitter = (PTCL.WiiU.EmitterU)ActiveEmitter;
+                var emitter = (PTCL_WiiU.EmitterU)ActiveEmitter;
 
                 OpenFileDialog ofd = new OpenFileDialog();
                 ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
@@ -164,7 +164,7 @@ namespace FirstPlugin
                 ofd.Multiselect = false;
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    ((PTCL.WiiU.TextureInfo)emitter.DrawableTex[0]).Replace(ofd.FileName);
+                    ((PTCL_WiiU.TextureInfo)emitter.DrawableTex[0]).Replace(ofd.FileName);
                 }
             }
         }
