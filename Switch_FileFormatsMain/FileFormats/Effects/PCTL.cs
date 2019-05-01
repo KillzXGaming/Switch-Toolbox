@@ -511,11 +511,11 @@ namespace FirstPlugin
             {
                 switch (Signature)
                 {
-                    case "PRMA":
+                    case "G3PR":
                         byte[] BinaryBFRESFile = new byte[0];
                         if (BinaryData != null)
                         {
-                            BinaryBFRESFile = ((BNTX)BinaryData).Save();
+                            BinaryBFRESFile = ((BFRES)BinaryData).Save();
                             SectionSize = (uint)BinaryBFRESFile.Length;
                         }
                         SaveHeader(writer, BinaryBFRESFile, 4096);
