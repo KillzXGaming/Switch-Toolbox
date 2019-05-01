@@ -47,6 +47,7 @@ namespace FirstPlugin
         public List<FileInfo> files = new List<FileInfo>();
         public Dictionary<long, byte[]> SavedDataEntries = new Dictionary<long, byte[]>();
         public Dictionary<long, string> SavedStringEntries = new Dictionary<long, string>();
+        public Dictionary<string, uint> ArchiveSizes = new Dictionary<string, uint>();
 
         public uint Alignment;
         public static readonly uint DefaultAlignment = 4;
@@ -84,17 +85,10 @@ namespace FirstPlugin
 
             if (Runtime.TpGamePath != "" && Directory.Exists(Runtime.TpGamePath))
             {
+                string TablePath = $"{Runtime.TpGamePath}/FileSizeList.txt";
 
+                TPFileSizeTable.SetTables(this);
             }
-
-            string TablePath = $"{Runtime.TpGamePath}/FileSizeList.txt";
-
-            TPFileSizeTable table = new TPFileSizeTable();
-            table.Read(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
-
-            var tableSave = new MemoryStream();
-            table.Write(new FileWriter(tableSave));
-            File.WriteAllBytes($"{Runtime.TpGamePath}/FileSizeListTEST.txt", tableSave.ToArray());
         }
 
         private void Save(object sender, EventArgs args)
@@ -114,6 +108,8 @@ namespace FirstPlugin
 
         private void SaveFile(FileWriter writer)
         {
+            ArchiveSizes.Clear();
+
             writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
             writer.WriteSignature("TMPK");
@@ -127,6 +123,8 @@ namespace FirstPlugin
                 writer.Write(uint.MaxValue);
                 writer.Write(files[i].Data.Length); //Padding
                 writer.Write(0); //Padding
+
+                ArchiveSizes.Add(files[i].Text, (uint)files[i].Data.Length);
             }
             for (int i = 0; i < files.Count; i++)
             {

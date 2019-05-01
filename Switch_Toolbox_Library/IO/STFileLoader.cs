@@ -56,7 +56,6 @@ namespace Switch_Toolbox.Library.IO
             if (CompType != CompressionType.None)
                 CompressedFileSize = (uint)fileReader.BaseStream.Length;
 
-
             if (fileReader.BaseStream.Length <= 4)
             {
                 fileReader.Close();
