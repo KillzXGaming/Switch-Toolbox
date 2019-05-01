@@ -335,24 +335,15 @@ namespace Switch_Toolbox.Library.IO
 
             public static byte[] Compress(byte[] b, uint Position = 0)
             {
-                //Set position and write the first 2 bytes if necessary
-                MemoryStream mem = new MemoryStream();
-                using (var decompressedStream = new FileWriter(new MemoryStream()))
-                {
-                    if (Position == 2)
-                    {
-                        decompressedStream.Write(0x780A);
-                        decompressedStream.Write(b);
-                    }
-                }
-
                 var output = new MemoryStream();
-                using (var decompressedStream = new MemoryStream(mem.ToArray()))
+                output.Write(new byte[] { 0x78, 0xDA }, 0, 2);
+
+                using (var decompressedStream = new MemoryStream(output.ToArray()))
                 {
-                    decompressedStream.Position = Position;
                     using (var zipStream = new DeflateStream(output, CompressionMode.Compress))
                     {
-                        decompressedStream.CopyTo(zipStream);
+                        zipStream.Write(b, 2, b.Length);
+
                         return output.ToArray();
                     }
                 }

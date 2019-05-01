@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using Switch_Toolbox.Library.Forms;
 using Bfres.Structs;
+using System.IO;
 
 namespace FirstPlugin
 {
@@ -119,16 +120,26 @@ namespace FirstPlugin
                 else
                     throw new Exception($"Unsupported GTX version {header.MajorVersion}");
 
-                writer.Seek(header.HeaderSize, System.IO.SeekOrigin.Begin);
-                foreach (var tex in textures)
-                {
-                    tex.surface.Write(writer);
-                }
+                int imageInfoIndex = 0;
+                int imageBlockIndex = 0;
+                int imageMipBlockIndex = 0;
 
+                writer.Seek(header.HeaderSize, System.IO.SeekOrigin.Begin);
                 foreach (var block in blocks)
                 {
                     if ((uint)block.BlockType == surfBlockType)
                     {
+                        block.data = textures[imageInfoIndex++].surface.Write();
+                        block.Write(writer);
+                    }
+                    else if ((uint)block.BlockType == dataBlockType)
+                    {
+                        block.data = textures[imageBlockIndex++].surface.data;
+                        block.Write(writer);
+                    }
+                    else if ((uint)block.BlockType == mipBlockType)
+                    {
+                        block.data = textures[imageMipBlockIndex++].surface.mipData;
                         block.Write(writer);
                     }
                     else
@@ -318,7 +329,7 @@ namespace FirstPlugin
                 writer.Write(MajorVersion);
                 writer.Write(MinorVersion);
                 writer.Write(BlockType, false);
-                writer.Write(DataSize);
+                writer.Write(data.Length);
                 writer.Write(Identifier);
                 writer.Write(index);
                 writer.Seek(blockStart + HeaderSize, System.IO.SeekOrigin.Begin);
@@ -361,7 +372,7 @@ namespace FirstPlugin
                 }
             }
 
-            public override bool CanEdit { get; set; } = false;
+            public override bool CanEdit { get; set; } = true;
 
             public SurfaceInfoParse surface;
 
@@ -370,21 +381,96 @@ namespace FirstPlugin
                 ImageKey = "Texture";
                 SelectedImageKey = "Texture";
 
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
-                MenuItem replace = new MenuItem("Replace");
-                ContextMenu.MenuItems.Add(replace);
-                replace.Click += Replace;
-                MenuItem remove = new MenuItem("Remove");
-                ContextMenu.MenuItems.Add(remove);
-                remove.Click += Remove;
+                LoadContextMenus();
+
+                CanDelete = false;
+                CanRename = false;
+            }
+
+            public override string ExportFilter => FileFilters.GTX;
+            public override string ReplaceFilter => FileFilters.GTX;
+
+            private void ApplySurface(GX2.GX2Surface NewSurface)
+            {
+                surface.aa = NewSurface.aa;
+                surface.alignment = NewSurface.alignment;
+                surface.bpp = NewSurface.bpp;
+                surface.compSel = NewSurface.compSel;
+                surface.data = NewSurface.data;
+                surface.depth = NewSurface.depth;
+                surface.dim = NewSurface.dim;
+                surface.firstMip = NewSurface.firstMip;
+                surface.firstSlice = NewSurface.firstSlice;
+                surface.format = NewSurface.format;
+                surface.height = NewSurface.height;
+                surface.imageCount = NewSurface.imageCount;
+                surface.imageSize = NewSurface.imageSize;
+                surface.mipData = NewSurface.mipData;
+                surface.mipOffset = NewSurface.mipOffset;
+                surface.numArray = NewSurface.numArray;
+                surface.numMips = NewSurface.numMips;
+                surface.pitch = NewSurface.pitch;
+                surface.resourceFlags = NewSurface.resourceFlags;
+                surface.swizzle = NewSurface.swizzle;
+                surface.texRegs = NewSurface.texRegs;
+                surface.tileMode = NewSurface.tileMode;
+                surface.use = NewSurface.use;
+                surface.width = NewSurface.width;
+
+                SetChannelComponents();
+            }
+
+            private void SetChannelComponents()
+            {
+                surface.compSel = new byte[4] { 0, 1, 2, 3 };
             }
 
             public override void SetImageData(Bitmap bitmap, int ArrayLevel)
             {
-                throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+                if (bitmap == null)
+                    return; //Image is likely disposed and not needed to be applied
+
+                surface.format = (uint)FTEX.ConvertToGx2Format(Format);
+                surface.width = (uint)bitmap.Width;
+                surface.height = (uint)bitmap.Height;
+
+                if (MipCount != 1)
+                {
+                    MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
+                    if (MipCount == 0)
+                        MipCount = 1;
+                }
+
+                surface.numMips = MipCount;
+                surface.mipOffset = new uint[MipCount];
+
+                try
+                {
+                    //Create image block from bitmap first
+                    var data = GenerateMipsAndCompress(bitmap, Format);
+
+                    //Swizzle and create surface
+                    var NewSurface = GX2.CreateGx2Texture(data, Text,
+                        (uint)surface.tileMode,
+                        (uint)surface.aa,
+                        (uint)surface.width,
+                        (uint)surface.height,
+                        (uint)surface.depth,
+                        (uint)surface.format,
+                        (uint)surface.swizzle,
+                        (uint)surface.dim,
+                        (uint)surface.numMips
+                        );
+
+                    ApplySurface(NewSurface);
+                    IsEdited = true;
+                    LoadOpenGLTexture();
+                    LibraryGUI.Instance.UpdateViewport();
+                }
+                catch (Exception ex)
+                {
+                    STErrorDialog.Show("Failed to swizzle and compress image " + Text, "Error", ex.ToString());
+                }
             }
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
@@ -415,65 +501,49 @@ namespace FirstPlugin
 
                 return surfaces[ArrayLevel][MipLevel];
             }
-            private void Remove(object sender, EventArgs args)
-            {
+            private void Remove(object sender, EventArgs args) {
                 ((GTXFile)Parent).Nodes.Remove(this);
             }
-            private void Export(object sender, EventArgs args)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
-                sfd.DefaultExt = "bftex";
-                sfd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                             "Binary Texture |*.bftex|" +
-                             "Microsoft DDS |*.dds|" +
-                             "Portable Network Graphics |*.png|" +
-                             "Joint Photographic Experts Group |*.jpg|" +
-                             "Bitmap Image |*.bmp|" +
-                             "Tagged Image File Format |*.tiff|" +
-                             "All files(*.*)|*.*";
 
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    Export(sfd.FileName);
-                }
+            public override void Export(string FileName) {
+                Export(FileName);
             }
-            public void Export(string FileName, bool ExportSurfaceLevel = false,
-     bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
-            {
-                string ext = System.IO.Path.GetExtension(FileName);
-                ext = ext.ToLower();
 
-                switch (ext)
+            public override void Replace(string FileName)
+            {
+                FTEX ftex = new FTEX();
+                ftex.ReplaceTexture(FileName, 1, SupportedFormats, true, true);
+                if (ftex.texture != null)
                 {
-                    case ".dds":
-                        SaveDDS(FileName);
-                        break;
-                    default:
-                        SaveBitMap(FileName);
-                        break;
-                }
-            }
-            private void Replace(object sender, EventArgs args)
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                             "Microsoft DDS |*.dds|" +
-                             "Portable Network Graphics |*.png|" +
-                             "Joint Photographic Experts Group |*.jpg|" +
-                             "Bitmap Image |*.bmp|" +
-                             "Tagged Image File Format |*.tiff|" +
-                             "All files(*.*)|*.*";
+                    surface.swizzle = ftex.texture.Swizzle;
+                    surface.format = (uint)ftex.texture.Format;
+                    surface.aa = (uint)ftex.texture.AAMode;
+                    surface.alignment = (uint)ftex.texture.Alignment;
+                    surface.dim = (uint)ftex.texture.Dim;
+                    surface.width = (uint)ftex.texture.Width;
+                    surface.height = (uint)ftex.texture.Height;
+                    surface.depth = (uint)ftex.texture.Depth;
+                    surface.numMips = (uint)ftex.texture.MipCount;
+                    surface.imageSize = (uint)ftex.texture.Data.Length;
+                    surface.mipSize = (uint)ftex.texture.MipData.Length;
+                    surface.data = ftex.texture.Data;
+                    surface.mipData = ftex.texture.MipData;
+                    surface.mipOffset = ftex.texture.MipOffsets;
+                    surface.firstSlice = ftex.texture.ViewSliceFirst;
+                    surface.numSlices = ftex.texture.ViewSliceCount;
+                    surface.imageCount = ftex.texture.ArrayLength;
+                    surface.pitch = ftex.texture.Pitch;
+                    SetChannelComponents();
 
-                ofd.Multiselect = false;
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    Replace(ofd.FileName);
-                }
-            }
-            public void Replace(string FileName)
-            {
+                    Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)surface.format);
+                    Width = surface.width;
+                    Height = surface.height;
 
+                    ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+
+                    if (editor != null)
+                        UpdateEditor();
+                }
             }
             public override void OnClick(TreeView treeView)
             {
@@ -491,11 +561,8 @@ namespace FirstPlugin
                     LibraryGUI.Instance.LoadEditor(editor);
                 }
                 editor.Text = Text;
-
-                UserDataEditor userDataEditor = new UserDataEditor();
-                userDataEditor.Name = "User Data";
+                editor.LoadProperties(FTEX.FromGx2Surface(surface, Text));
                 editor.LoadImage(this);
-                editor.AddCustomControl(userDataEditor, typeof(UserDataEditor));
             }
         }
         public class SurfaceInfoParse : GX2.GX2Surface
@@ -528,8 +595,12 @@ namespace FirstPlugin
                 compSel = reader.ReadBytes(4);
                 texRegs = reader.ReadUInt32s(5);
             }
-            public void Write(FileWriter writer)
+            public byte[] Write()
             {
+                MemoryStream mem = new MemoryStream();
+
+                FileWriter writer = new FileWriter(mem);
+                writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 writer.Write(dim);
                 writer.Write(width);
                 writer.Write(height);
@@ -546,13 +617,37 @@ namespace FirstPlugin
                 writer.Write(swizzle);
                 writer.Write(alignment);
                 writer.Write(pitch);
-                writer.Write(mipOffset);
+
+                for (int i = 0; i < 13; i++)
+                {
+                    if (mipOffset.Length > i)
+                        writer.Write(mipOffset[i]);
+                    else
+                        writer.Write(0);
+                }
+
                 writer.Write(firstMip);
                 writer.Write(imageCount);
                 writer.Write(firstSlice);
                 writer.Write(numSlices);
-                writer.Write(compSel);
-                writer.Write(texRegs);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (compSel != null && compSel.Length > i)
+                        writer.Write(compSel[i]);
+                    else
+                        writer.Write((byte)0);
+                }
+
+                for (int i = 0; i < 5; i++)
+                {
+                    if (texRegs != null && texRegs.Length > i)
+                        writer.Write(texRegs[i]);
+                    else
+                        writer.Write(0);
+                }
+
+                return mem.ToArray();
             }
         }
     }

@@ -31,6 +31,12 @@ namespace Bfres.Structs
 
     public class BFRESGroupNode : STGenericWrapper
     {
+        public bool ShowNewContextMenu
+        {
+            set { ContextMenuStrip.Items[0].Visible = value; }
+            get { return ContextMenuStrip.Items[0].Visible; }
+        }
+
         public bool IsWiiU
         {
             get
@@ -72,6 +78,7 @@ namespace Bfres.Structs
             CanDelete = false;
 
             //Folder Operations
+
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("New", null, NewAction, Keys.Control | Keys.N));
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Import", null, ImportAction, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
@@ -529,7 +536,7 @@ namespace Bfres.Structs
                     if (setting.DataBlockOutput != null)
                     {
                         var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                        var tex = ftex.FromGx2Surface(surface, setting.TexName);
+                        var tex = FTEX.FromGx2Surface(surface, setting.TexName);
                         ftex.UpdateTex(tex);
 
                         ftex.IsEdited = true;
@@ -585,7 +592,7 @@ namespace Bfres.Structs
                     FTEX ftex = new FTEX();
                     ftex.texture = new ResU.Texture();
                     var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
-                    var tex = ftex.FromGx2Surface(surface, setting.TexName);
+                    var tex = FTEX.FromGx2Surface(surface, setting.TexName);
                     ftex.UpdateTex(tex);
                     ftex.IsEdited = true;
 
@@ -661,7 +668,7 @@ namespace Bfres.Structs
             var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
             FTEX ftex = new FTEX();
             ftex.texture = new ResU.Texture();
-            ftex.texture = ftex.FromGx2Surface(surface, setting.TexName);
+            ftex.texture = FTEX.FromGx2Surface(surface, setting.TexName);
             ftex.IsEdited = true;
             ftex.Read(ftex.texture);
 

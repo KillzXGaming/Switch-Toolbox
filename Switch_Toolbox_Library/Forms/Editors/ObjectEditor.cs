@@ -17,6 +17,53 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ObjectEditor : STForm
     {
+        private TreeView _fieldsTreeCache;
+
+        public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
+        public void EndUpdate() { treeViewCustom1.EndUpdate(); }
+
+        public void AddNodeCollection (TreeNodeCollection nodes, bool ClearNodes)
+        {
+            // Invoke the treeview to add the nodes
+            treeViewCustom1.Invoke((Action)delegate ()
+            {
+                treeViewCustom1.BeginUpdate(); // No visual updates until we say 
+                if (ClearNodes)
+                    treeViewCustom1.Nodes.Clear(); // Remove existing nodes
+
+                foreach (TreeNode node in nodes)
+                    treeViewCustom1.Nodes.Add(node); // Add the new nodes
+
+                treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
+            });
+
+        }
+
+        public TreeNodeCollection GetNodes() { return treeViewCustom1.Nodes; }
+
+        public void AddNode(TreeNode node, bool ClearAllNodes = false)
+        {
+            // Invoke the treeview to add the nodes
+            treeViewCustom1.Invoke((Action)delegate ()
+            {
+                treeViewCustom1.BeginUpdate(); // No visual updates until we say 
+              //  if (ClearAllNodes)
+               //     ClearNodes();
+                
+
+                treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
+            });
+
+            treeViewCustom1.Nodes.Add(node); // Add the new nodes
+     //       _fieldsTreeCache.Nodes.Add(node);
+        }
+
+        public void ClearNodes()
+        {
+            treeViewCustom1.Nodes.Clear();
+          //  _fieldsTreeCache.Nodes.Clear();
+        }
+
         public bool AddFilesToActiveEditor
         {
             get
@@ -39,6 +86,8 @@ namespace Switch_Toolbox.Library.Forms
         public ObjectEditor()
         {
             InitializeComponent();
+
+            _fieldsTreeCache = new TreeView();
 
             if (Runtime.ObjectEditor.ListPanelWidth > 0)
                 stPanel1.Width = Runtime.ObjectEditor.ListPanelWidth;
@@ -180,7 +229,7 @@ namespace Switch_Toolbox.Library.Forms
                     ((IFileFormat)node).Unload();
                 }
             }
-            treeViewCustom1.Nodes.Clear();
+            ClearNodes();
         }
 
         private void selectItem(object sender, TreeNodeMouseClickEventArgs e)
@@ -347,6 +396,35 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        private void SearchText(string searchText)
+        {
+            //blocks repainting tree till all objects loaded
+            this.treeViewCustom1.BeginUpdate();
+            this.treeViewCustom1.Nodes.Clear();
+            if (searchText != string.Empty)
+            {
+                foreach (TreeNode _parentNode in _fieldsTreeCache.Nodes)
+                {
+                    foreach (TreeNode _childNode in _parentNode.Nodes)
+                    {
+                        if (_childNode.Text.StartsWith(searchText))
+                        {
+                            this.treeViewCustom1.Nodes.Add((TreeNode)_childNode.Clone());
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (TreeNode _node in this._fieldsTreeCache.Nodes)
+                {
+                    treeViewCustom1.Nodes.Add((TreeNode)_node.Clone());
+                }
+            }
+            //enables redrawing tree after all objects have been added
+            this.treeViewCustom1.EndUpdate();
+        }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -370,7 +448,7 @@ namespace Switch_Toolbox.Library.Forms
             if (file is TreeNode)
             {
                 var node = (TreeNode)file;
-                treeViewCustom1.Nodes.Add(node);
+                AddNode(node);
             }
             else
             {

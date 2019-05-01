@@ -131,7 +131,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor();
                 editor.Text = name;
-                editor.treeViewCustom1.Nodes.Add(kcl);
+                editor.AddNode(kcl);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
         }

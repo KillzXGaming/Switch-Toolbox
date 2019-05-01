@@ -13,6 +13,7 @@ namespace Switch_Toolbox.Library.Forms
             InitializeComponent();
 
             StartPosition = FormStartPosition.CenterParent;
+            button2.Select();
         }
         public void SetString(string Default)
         {

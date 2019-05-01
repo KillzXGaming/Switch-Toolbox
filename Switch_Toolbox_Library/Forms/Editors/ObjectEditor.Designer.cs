@@ -235,7 +235,7 @@
         public STPanel stPanel2;
         private STPanel stPanel1;
         private STPanel stPanel3;
-        public TreeViewCustom treeViewCustom1;
+        private TreeViewCustom treeViewCustom1;
         private STMenuStrip stContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private STTextBox stTextBox1;

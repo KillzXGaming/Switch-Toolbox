@@ -49,6 +49,12 @@ namespace FirstPlugin
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; } = true;
 
+        public List<FileInfo> files = new List<FileInfo>();
+        public Dictionary<long, byte[]> SavedDataEntries = new Dictionary<long, byte[]>();
+        public Dictionary<long, string> SavedStringEntries = new Dictionary<long, string>();
+
+        public uint Alignment;
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
@@ -61,7 +67,7 @@ namespace FirstPlugin
 
                 reader.ReadSignature(4, "TMPK");
                 uint FileCount = reader.ReadUInt32();
-                uint Alignment = reader.ReadUInt32();
+                Alignment = reader.ReadUInt32();
                 uint padding = reader.ReadUInt32();
                 for (int i = 0; i < FileCount; i++)
                 {
@@ -72,12 +78,35 @@ namespace FirstPlugin
                     archive.Name = info.Text;
 
                     Nodes.Add(info);
+                    files.Add(info);
                 }
+            }
+        }
+
+        private void SaveFile(FileWriter writer)
+        {
+            writer.WriteSignature("TMPK");
+            writer.Write(files.Count);
+            writer.Write(Alignment);
+            writer.Write(0);
+            for (int i = 0; i < files.Count; i++)
+            {
+                files[i]._posHeader = writer.Position;
+                writer.Write(uint.MaxValue);
+                writer.Write(uint.MaxValue);
+                writer.Write(files[i].Data.Length); //Padding
+                writer.Write(0); //Padding
+            }
+            for (int i = 0; i < files.Count; i++)
+            {
+
             }
         }
 
         public class FileInfo : TreeNodeCustom
         {
+            internal long _posHeader;
+
             public byte[] Data;
 
             public FileInfo()
@@ -99,6 +128,28 @@ namespace FirstPlugin
                 {
                     File.WriteAllBytes(sfd.FileName, Data);
                 }
+            }
+
+            public override void OnDoubleMouseClick(TreeView treeView)
+            {
+                if (Data.Length <= 0)
+                    return;
+
+                IFileFormat file = STFileLoader.OpenFileFormat(Text, Data, false, true, this);
+                if (file == null) //File returns null if no supported format is found
+                    return;
+
+                ReplaceNode(this.Parent, this, (TreeNode)file);
+            }
+
+            public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
+            {
+                if (NewNode == null)
+                    return;
+
+                int index = node.Nodes.IndexOf(replaceNode);
+                node.Nodes.RemoveAt(index);
+                node.Nodes.Insert(index, NewNode);
             }
 
             public override void OnClick(TreeView treeview)
@@ -136,8 +187,11 @@ namespace FirstPlugin
                 ContextMenu.MenuItems.Add(export);
                 export.Click += Export;
             }
-        }
-    
+
+            public void Write(FileWriter writer)
+            {
+            }
+        }    
 
         public void Unload()
         {

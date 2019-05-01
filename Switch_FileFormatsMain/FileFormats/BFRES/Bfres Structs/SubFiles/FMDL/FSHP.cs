@@ -115,6 +115,10 @@ namespace Bfres.Structs
             lodMenu.DropDownItems.Add(new ToolStripMenuItem("Clear LOD Meshes", null, ClearLODMeshes));
             ContextMenuStrip.Items.Add(lodMenu);
 
+            ToolStripMenuItem boundingsMenu = new ToolStripMenuItem("Boundings");
+            boundingsMenu.DropDownItems.Add(new ToolStripMenuItem("Regenerate Bounding Boxes/Radius", null, GenerateBoundingBoxes));
+            ContextMenuStrip.Items.Add(boundingsMenu);
+
             ToolStripMenuItem uvMenu = new ToolStripMenuItem("UVs");
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Vertical)", null, FlipUvsVertical));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Horizontal)", null, FlipUvsHorizontal));
@@ -186,9 +190,34 @@ namespace Bfres.Structs
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
+
+        private void GenerateBoundingBoxes(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            CreateNewBoundingBoxes();
+            SaveShape(GetResFileU() != null);
+            UpdateVertexData();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void GenerateLODMeshes(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            //Todo add lod generating
+
+            CreateNewBoundingBoxes();
+
+            SaveShape(GetResFileU() != null);
+            UpdateVertexData();
+            Cursor.Current = Cursors.Default;
+        }
+
         private void ClearLODMeshes(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            DisplayLODIndex = 0; //Force index to prevent errors
 
             //Clear all but first base mesh
             for (int i = 0; i < lodMeshes.Count; i++)

@@ -112,7 +112,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor();
                 editor.Text = "Untitled-" + 0;
-                editor.treeViewCustom1.Nodes.Add(bfres);
+                editor.AddNode(bfres);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
             private void NewSwitchBfres(object sender, EventArgs args)
@@ -125,7 +125,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor();
                 editor.Text = "Untitled-" + 0;
-                editor.treeViewCustom1.Nodes.Add(bfres);
+                editor.AddNode(bfres);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
             private void DebugInfo(object sender, EventArgs args)
@@ -218,7 +218,7 @@ namespace FirstPlugin
             if (editor == null)
                 return;
 
-            editor.treeViewCustom1.BeginUpdate();
+            editor.BeginUpdate();
 
             foreach (var model in BFRESRender.models)
             {
@@ -276,7 +276,7 @@ namespace FirstPlugin
                 }
             }
 
-            editor.treeViewCustom1.EndUpdate();
+            editor.EndUpdate();
         }
 
         private string GetSkeletonAnimCurveOffset(uint offset)
@@ -773,6 +773,8 @@ namespace FirstPlugin
             var texturesFolder = new BFRESGroupNode(BRESGroupType.Textures);
             var animFolder = new BFRESAnimFolder();
             var externalFilesFolder = new BFRESGroupNode(BRESGroupType.Embedded);
+
+            texturesFolder.ShowNewContextMenu = false;
 
             Nodes.Add(modelFolder);
             Nodes.Add(texturesFolder);

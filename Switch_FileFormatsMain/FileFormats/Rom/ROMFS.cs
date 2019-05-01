@@ -127,7 +127,7 @@ namespace FirstPlugin
                 ObjectEditor editor = new ObjectEditor();
                 editor.Text = text;
                 LibraryGUI.Instance.CreateMdiWindow(editor, true);
-                editor.treeViewCustom1.Nodes.Add((TreeNode)fileFormat);
+                editor.AddNode((TreeNode)fileFormat);
             }
         }
 

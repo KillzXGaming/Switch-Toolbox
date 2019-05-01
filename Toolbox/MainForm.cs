@@ -312,16 +312,7 @@ namespace Toolbox
         {
             TabDupeIndex = 0;
             editor.MdiParent = this;
-
-            // Invoke the treeview to add the nodes
-            editor.treeViewCustom1.Invoke((Action)delegate ()
-            {
-                editor.treeViewCustom1.BeginUpdate(); // No visual updates until we say 
-                if (ClearFiles)
-                    editor.treeViewCustom1.Nodes.Clear(); // Remove existing nodes
-                editor.treeViewCustom1.Nodes.Add(file); // Add the new nodes
-                editor.treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
-            });
+            editor.AddNode(file, ClearFiles);
 
             if (file is TreeNodeFile)
             {
@@ -402,7 +393,7 @@ namespace Toolbox
 
         private void SaveNodeFormats(ObjectEditor editor, bool UseSaveDialog, bool UseCompressDialog)
         {
-            foreach (var node in editor.treeViewCustom1.Nodes)
+            foreach (var node in editor.GetNodes())
             {
                 if (node is IFileFormat)
                 {
@@ -1042,8 +1033,7 @@ namespace Toolbox
 
         private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreditsWindow window = new CreditsWindow();
-            window.Show();
+  
         }
 
         private void BtnMinMax_Click(object sender, EventArgs e)
@@ -1154,6 +1144,26 @@ namespace Toolbox
                 form.Show(this);
             }
             form.Focus();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CreditsWindow window = new CreditsWindow();
+            window.Show();
+        }
+
+        private void githubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox");
+        }
+
+        private void reportBugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new GithubIssueDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                dialog.CreateIssue();
+            }
         }
     }
 }

@@ -76,6 +76,12 @@
     <Compile Include="GUI\FileAssociationForm.Designer.cs">
       <DependentUpon>FileAssociationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\GithubIssueDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\GithubIssueDialog.Designer.cs">
+      <DependentUpon>GithubIssueDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\NodeWrappers.cs" />
     <Compile Include="GUI\PluginManager.cs">
       <SubType>Form</SubType>
@@ -110,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FileAssociationForm.resx">
       <DependentUpon>FileAssociationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GithubIssueDialog.resx">
+      <DependentUpon>GithubIssueDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PluginManager.resx">
       <DependentUpon>PluginManager.cs</DependentUpon>

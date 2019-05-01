@@ -83,7 +83,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor();
                 editor.Text = "Untitled-" + 0;
-                editor.treeViewCustom1.Nodes.Add(bntx);
+                editor.AddNode(bntx);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
             private void Export(object sender, EventArgs args)

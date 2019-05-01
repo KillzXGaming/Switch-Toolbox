@@ -80,23 +80,4 @@ namespace Switch_Toolbox.Library
             return false;
         }
     }
-
-    public abstract class ArchiveFileInfo : TreeNodeCustom
-    {
-        IFileFormat FileFormat = null; //Format attached for saving
-
-        protected Stream _fileData = null;
-
-        public string FileName { get; set; } = string.Empty;  //Full File Name
-        public string Name { get; set; } = string.Empty; //File Name (No Path)
-        public virtual Stream FileData 
-        {
-            get
-            {
-                _fileData.Position = 0;
-                return _fileData;
-            }
-            set { _fileData = value; }
-        }
-    }
 }

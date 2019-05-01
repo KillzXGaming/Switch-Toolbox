@@ -305,7 +305,7 @@ namespace Bfres.Structs
         }
 
         //We reuse GX2 data as it's the same thing
-        public Texture FromGx2Surface(GX2.GX2Surface surf, string Name)
+        public static Texture FromGx2Surface(GX2.GX2Surface surf, string Name)
         {
             Texture tex = new Texture();
             tex.Name = Name;
