@@ -53,10 +53,6 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            TPFileSizeTable table = new TPFileSizeTable();
-            table.Read(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
-            table.Write(new FileWriter($"{Runtime.TpGamePath}/FileSizeListTEST.txt"));
-
             Text = FileName;
 
             CanSave = true;
@@ -81,6 +77,26 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.E));
         }
 
+        private void SatisfyFileSizeTable()
+        {
+            uint TotalDecompressedSize = IFileInfo.DecompressedSize;
+            uint TotalCompressedSize = IFileInfo.CompressedSize;
+
+            if (Runtime.TpGamePath != "" && Directory.Exists(Runtime.TpGamePath))
+            {
+
+            }
+
+            string TablePath = $"{Runtime.TpGamePath}/FileSizeList.txt";
+
+            TPFileSizeTable table = new TPFileSizeTable();
+            table.Read(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
+
+            var tableSave = new MemoryStream();
+            table.Write(new FileWriter(tableSave));
+            File.WriteAllBytes($"{Runtime.TpGamePath}/FileSizeListTEST.txt", tableSave.ToArray());
+        }
+
         private void Save(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -91,6 +107,8 @@ namespace FirstPlugin
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
+
+                SatisfyFileSizeTable();
             }
         }
 
@@ -121,6 +139,8 @@ namespace FirstPlugin
                 writer.WriteUint32Offset(files[i]._posHeader + 4);
                 writer.Write(files[i].Data);
             }
+            writer.Close();
+            writer.Dispose();
         }
 
         private void SetAlignment(FileWriter writer, string FileName)

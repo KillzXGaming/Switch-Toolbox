@@ -37,5 +37,7 @@ namespace Switch_Toolbox.Library
         public virtual bool IsActive { get; set; }
         public virtual bool InArchive { get; set; }
         public virtual int Alignment { get; set; } //Alignment to save the file back. Also used for Yaz0 comp sometimes
+        public virtual uint DecompressedSize { get; set; }
+        public virtual uint CompressedSize { get; set; }
     }
 }
