@@ -189,8 +189,6 @@ namespace FirstPlugin
                     uint padding3 = reader.ReadUInt32();
                 }
 
-
-
                 long pos = reader.Position;
 
                 reader.Seek(EmitterOffset, SeekOrigin.Begin);

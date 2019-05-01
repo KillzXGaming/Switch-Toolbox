@@ -53,12 +53,16 @@ namespace Switch_Toolbox.Library.IO
                 Write(pos);
             }
         }
-        public void WriteUint32Offset(long target)
+
+        //
+        // RelativeOffsetPosition controls the relative position the offset starts at
+        //
+        public void WriteUint32Offset(long target, long RelativeOffsetPosition = 0) 
         {
             long pos = Position;
             using (TemporarySeek(target, SeekOrigin.Begin))
             {
-                Write((uint)pos);
+                Write((uint)pos - (uint)RelativeOffsetPosition);
             }
         }
     }
