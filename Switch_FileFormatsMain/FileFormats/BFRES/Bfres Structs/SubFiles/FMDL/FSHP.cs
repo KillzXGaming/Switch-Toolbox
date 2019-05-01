@@ -197,6 +197,8 @@ namespace Bfres.Structs
                     lodMeshes.Remove(lodMeshes[i]);
             }
 
+            CreateNewBoundingBoxes();
+
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
