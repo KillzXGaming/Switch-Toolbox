@@ -1012,7 +1012,7 @@
             this.botwGamePathTB.Name = "botwGamePathTB";
             this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
             this.botwGamePathTB.TabIndex = 8;
-            this.botwGamePathTB.TextChanged += new System.EventHandler(this.botwGamePathTB_TextChanged);
+            this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
             // 
             // stLabel14
             // 
@@ -1030,7 +1030,7 @@
             this.tpGamePathTB.Name = "tpGamePathTB";
             this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
             this.tpGamePathTB.TabIndex = 6;
-            this.tpGamePathTB.TextChanged += new System.EventHandler(this.tpGamePathTB_TextChanged);
+            this.tpGamePathTB.Click += new System.EventHandler(this.tpGamePathTB_Click);
             // 
             // Settings
             // 

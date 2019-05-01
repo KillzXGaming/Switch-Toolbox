@@ -412,7 +412,7 @@ namespace Toolbox
             }
         }
 
-        private void tpGamePathTB_TextChanged(object sender, EventArgs e) {
+        private void tpGamePathTB_Click(object sender, EventArgs e) {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -421,7 +421,7 @@ namespace Toolbox
             }
         }
 
-        private void botwGamePathTB_TextChanged(object sender, EventArgs e) {
+        private void botwGamePathTB_Click(object sender, EventArgs e) {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
