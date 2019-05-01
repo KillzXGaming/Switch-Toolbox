@@ -511,41 +511,32 @@ namespace FirstPlugin
             {
                 switch (Signature)
                 {
-                    case "GRTF":
-                        byte[] BinaryFile = new byte[0];
+                    case "PRMA":
+                        byte[] BinaryBFRESFile = new byte[0];
                         if (BinaryData != null)
                         {
-                            BinaryFile = ((BNTX)BinaryData).Save();
-                            SectionSize = (uint)BinaryFile.Length;
+                            BinaryBFRESFile = ((BNTX)BinaryData).Save();
+                            SectionSize = (uint)BinaryBFRESFile.Length;
                         }
-
-                        long BasePosition = writer.Position;
-
-                        writer.WriteSignature(Signature);
-                        writer.Write(SectionSize);
-                        long _ofsChildPos = writer.Position;
-                        writer.Write(NullOffset); //Childern Offset
-                        long _ofsNextPos = writer.Position;
-                        writer.Write(NullOffset); //Next Offet for later
-                        writer.Write(Unkown);
-                        long _ofsBinaryPos = writer.Position;
-                        writer.Write(NullOffset);
-                        writer.Write(Unkown3);
-                        writer.Write(SubSectionCount);
-
-                        if (ChildSections.Count > 0)
-                            writer.WriteUint32Offset(_ofsChildPos, BasePosition);
-
-                        foreach (var child in ChildSections)
+                        SaveHeader(writer, BinaryBFRESFile, 4096);
+                        break;
+                    case "GRTF":
+                        byte[] BinaryBNTXFile = new byte[0];
+                        if (BinaryData != null)
                         {
-                            child.Write(writer); //Save childern (GTNT)
+                            BinaryBNTXFile = ((BNTX)BinaryData).Save();
+                            SectionSize = (uint)BinaryBNTXFile.Length;
                         }
-                        writer.Align(4096); //Align the file
-                        writer.WriteUint32Offset(_ofsBinaryPos, BasePosition); //Save binary offset
-                        writer.Write(BinaryFile); //Save bntx
-
-                        if (NextSectionOffset != NullOffset)
-                            writer.WriteUint32Offset(_ofsNextPos, BasePosition);
+                        SaveHeader(writer, BinaryBNTXFile, 4096);
+                        break;
+                    case "GRSN":
+                        byte[] BinaryBNSHFile = new byte[0];
+                        if (BinaryData != null)
+                        {
+                          //  BinaryBNSHFile = ((BNSH)BinaryData).Save();
+                           // SectionSize = (uint)BinaryBNSHFile.Length;
+                        }
+                        SaveHeader(writer, data, 4096);
                         break;
                     default:
                         writer.Write(data);
@@ -564,6 +555,41 @@ namespace FirstPlugin
                       writer.Write(Unkown);
                       writer.Write(Unkown3);
                       writer.Write(SubSectionCount);*/
+            }
+
+            private void SaveHeader(FileWriter writer, byte[] BinaryFile, int BinaryAlignment)
+            {
+                long BasePosition = writer.Position;
+
+                writer.WriteSignature(Signature);
+                writer.Write(SectionSize);
+                long _ofsChildPos = writer.Position;
+                writer.Write(NullOffset); //Childern Offset
+                long _ofsNextPos = writer.Position;
+                writer.Write(NullOffset); //Next Offet for later
+                writer.Write(Unkown);
+                long _ofsBinaryPos = writer.Position;
+                writer.Write(NullOffset);
+                writer.Write(Unkown3);
+                writer.Write(SubSectionCount);
+
+                if (ChildSections.Count > 0)
+                    writer.WriteUint32Offset(_ofsChildPos, BasePosition);
+
+                foreach (var child in ChildSections)
+                {
+                    child.Write(writer); //Save childern (GTNT)
+                }
+
+                if (BinaryFile != null && BinaryFile.Length > 0)
+                {
+                    writer.Align(BinaryAlignment); //Align the file
+                    writer.WriteUint32Offset(_ofsBinaryPos, BasePosition); //Save binary offset
+                    writer.Write(BinaryFile); //Save bntx
+                }
+
+                if (NextSectionOffset != NullOffset)
+                    writer.WriteUint32Offset(_ofsNextPos, BasePosition);
             }
         }
 
