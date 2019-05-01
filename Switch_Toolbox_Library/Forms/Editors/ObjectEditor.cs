@@ -49,8 +49,7 @@ namespace Switch_Toolbox.Library.Forms
                 treeViewCustom1.BeginUpdate(); // No visual updates until we say 
               //  if (ClearAllNodes)
                //     ClearNodes();
-                
-
+               
                 treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
             });
 

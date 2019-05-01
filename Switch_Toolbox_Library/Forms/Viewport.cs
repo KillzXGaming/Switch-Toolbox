@@ -293,7 +293,7 @@ namespace Switch_Toolbox.Library
                 GL_ControlLegacy.CamRotX = 0;
                 GL_ControlLegacy.CamRotY = 0;
                 GL_ControlLegacy.CameraTarget = new OpenTK.Vector3(0);
-                GL_ControlLegacy.CameraDistance = -10f;
+                GL_ControlLegacy.CameraDistance = 10f;
                 GL_ControlLegacy.Refresh();
             }
             else
@@ -301,7 +301,7 @@ namespace Switch_Toolbox.Library
                 GL_ControlModern.CamRotX = 0;
                 GL_ControlModern.CamRotY = 0;
                 GL_ControlModern.CameraTarget = new OpenTK.Vector3(0);
-                GL_ControlModern.CameraDistance = -10f;
+                GL_ControlModern.CameraDistance = 10f;
                 GL_ControlModern.Refresh();
             }
         }
