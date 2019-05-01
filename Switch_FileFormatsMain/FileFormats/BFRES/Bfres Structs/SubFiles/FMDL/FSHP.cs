@@ -111,6 +111,10 @@ namespace Bfres.Structs
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
 
+            ToolStripMenuItem lodMenu = new ToolStripMenuItem("Level Of Detail");
+            lodMenu.DropDownItems.Add(new ToolStripMenuItem("Clear LOD Meshes", null, ClearLODMeshes));
+            ContextMenuStrip.Items.Add(lodMenu);
+
             ToolStripMenuItem uvMenu = new ToolStripMenuItem("UVs");
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Vertical)", null, FlipUvsVertical));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Horizontal)", null, FlipUvsHorizontal));
@@ -178,6 +182,21 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             SmoothNormals();
+            SaveVertexBuffer();
+            UpdateVertexData();
+            Cursor.Current = Cursors.Default;
+        }
+        private void ClearLODMeshes(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            //Clear all but first base mesh
+            for (int i = 0; i < lodMeshes.Count; i++)
+            {
+                if (i != 0)
+                    lodMeshes.Remove(lodMeshes[i]);
+            }
+
             SaveVertexBuffer();
             UpdateVertexData();
             Cursor.Current = Cursors.Default;

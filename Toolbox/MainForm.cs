@@ -33,6 +33,7 @@ namespace Toolbox
             form.MdiParent = this;
             form.Show();
 
+
             IFileFormat activeFile;
 
             if (form is ObjectEditor)
@@ -915,7 +916,9 @@ namespace Toolbox
                 if (this.ActiveMdiChild.Tag == null)
                 {
                     if (Runtime.MaximizeMdiWindow && ActiveMdiChild.WindowState != FormWindowState.Maximized)
+                    {
                         ((STForm)this.ActiveMdiChild).Maximize();
+                    }
 
                     int tpIndex = 0;
                     foreach (TabPage tpCheck in tabForms.TabPages)

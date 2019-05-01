@@ -81,6 +81,9 @@ namespace Switch_Toolbox.Library.IO
                         case CompressionType.Gzip:
                             data = STLibraryCompression.GZIP.Compress(data);
                             break;
+                        case CompressionType.Zlib:
+                            data = STLibraryCompression.ZLIB.Compress(data, 2);
+                            break;
                         default:
                             MessageBox.Show($"Compression Type {CompressionType} not supported!!");
                             break;
@@ -325,6 +328,31 @@ namespace Switch_Toolbox.Library.IO
                     using (var zipStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
                     {
                         zipStream.CopyTo(output);
+                        return output.ToArray();
+                    }
+                }
+            }
+
+            public static byte[] Compress(byte[] b, uint Position = 0)
+            {
+                //Set position and write the first 2 bytes if necessary
+                MemoryStream mem = new MemoryStream();
+                using (var decompressedStream = new FileWriter(new MemoryStream()))
+                {
+                    if (Position == 2)
+                    {
+                        decompressedStream.Write(0x780A);
+                        decompressedStream.Write(b);
+                    }
+                }
+
+                var output = new MemoryStream();
+                using (var decompressedStream = new MemoryStream(mem.ToArray()))
+                {
+                    decompressedStream.Position = Position;
+                    using (var zipStream = new DeflateStream(output, CompressionMode.Compress))
+                    {
+                        decompressedStream.CopyTo(zipStream);
                         return output.ToArray();
                     }
                 }
