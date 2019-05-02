@@ -290,6 +290,7 @@ namespace FirstPlugin
                 writer.Write(32);
                 writer.Write(Flag);
                 writer.Write(BlockOffset);
+                writer.Write(0);
                 long _ofsFileSize = writer.Position;
                 writer.Write(0);
                 writer.Seek(BlockOffset, SeekOrigin.Begin);
@@ -297,7 +298,7 @@ namespace FirstPlugin
                 foreach (var section in Sections)
                 {
                     writer.Align(8);
-                    section.Write(writer);
+                    section.Write(writer, this);
                 }
 
                 using (writer.TemporarySeek(_ofsFileSize, SeekOrigin.Begin))
@@ -310,6 +311,8 @@ namespace FirstPlugin
                 writer.Dispose();
             }
         }
+
+        static bool ChildHasBinary = false;
 
         //  public static readonly uint NullOffset = 0xFFFFFFFF;
         public class SectionBase : TreeNodeCustom
@@ -326,6 +329,7 @@ namespace FirstPlugin
             public uint SubSectionCount;
 
             public object BinaryData;
+            public byte[] BinaryDataBytes;
 
             public List<SectionBase> ChildSections = new List<SectionBase>();
             public byte[] data;
@@ -378,13 +382,17 @@ namespace FirstPlugin
 
                 if (SubSectionOffset != NullOffset)
                 {
+                    uint tempCount = 0;
+
                     //Some sections will point to sub sections but have no count? (GRSN to GRSC)
                     //This will work decently for now
                     if (SubSectionCount == 0)
-                        SubSectionCount = 1;
+                    {
+                        tempCount = 1;
+                    }
 
                     reader.Seek(Position + SubSectionOffset, SeekOrigin.Begin);
-                    for (int i = 0; i < SubSectionCount; i++)
+                    for (int i = 0; i < SubSectionCount + tempCount; i++)
                     {
                         var ChildSection = new SectionBase();
                         Nodes.Add(ChildSection);
@@ -412,6 +420,14 @@ namespace FirstPlugin
 
             private void ReadSectionData(SectionBase section, Header ptclHeader, FileReader reader)
             {
+                if (section.BinaryDataOffset != NullOffset)
+                {
+                    using (reader.TemporarySeek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin))
+                    {
+                        BinaryDataBytes = reader.ReadBytes((int)section.SectionSize);
+                    }
+                }
+
                 switch (section.Signature)
                 {
                     case "TEXR":
@@ -527,51 +543,43 @@ namespace FirstPlugin
                 }
             }
 
-            public void Write(FileWriter writer)
+            public void Write(FileWriter writer, PTCL.Header header)
             {
                 switch (Signature)
                 {
                     case "GRSN":
-                        byte[] BinaryBNSH2File = new byte[0];
-                        if (BinaryData != null)
-                        {
-                            BinaryBNSH2File = ((byte[])BinaryData);
-                            SectionSize = (uint)BinaryBNSH2File.Length;
-                        }
-                        SaveHeader(writer, BinaryBNSH2File, 4096);
+                        SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "GRSC":
-                        byte[] BinaryBNSHFile = new byte[0];
-                        if (BinaryData != null)
-                        {
-                            BinaryBNSHFile = ((byte[])BinaryData);
-                            SectionSize = (uint)BinaryBNSHFile.Length;
-                        }
-                        SaveHeader(writer, data, 4096);
+                        SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "G3PR":
-                        byte[] BinaryBFRESFile = new byte[0];
-                        if (BinaryData != null)
-                        {
-                            BinaryBFRESFile = ((BFRES)BinaryData).Save();
-                            SectionSize = (uint)BinaryBFRESFile.Length;
-                        }
-                        SaveHeader(writer, BinaryBFRESFile, 4096);
+                         SaveHeader(writer, header, ((BFRES)BinaryData).Save(), 4096);
+                        //  SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "GRTF":
-                        byte[] BinaryBNTXFile = new byte[0];
-                        if (BinaryData != null)
+                        SaveHeader(writer, header, ((BNTX)BinaryData).Save(), 4096);
+                        // SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        break;
+                    case "EMTR":
+                        //Write all the data first
+                        long _emitterPos = writer.Position;
+                        writer.Write(data);
+                        foreach (var child in ChildSections)
                         {
-                            BinaryBNTXFile = ((BNTX)BinaryData).Save();
-                            SectionSize = (uint)BinaryBNTXFile.Length;
+                            child.Write(writer, header);
                         }
-                        SaveHeader(writer, BinaryBNTXFile, 4096);
+
+                        using (writer.TemporarySeek(_emitterPos, SeekOrigin.Begin))
+                        {
+                            ((Emitter)BinaryData).Write(writer, header);
+                        }
                         break;
                     default:
                         writer.Write(data);
                         foreach (var child in ChildSections)
                         {
-                            child.Write(writer);
+                            child.Write(writer, header);
                         }
                         break;
                 }
@@ -586,19 +594,31 @@ namespace FirstPlugin
                       writer.Write(SubSectionCount);*/
             }
 
-            private void SaveHeader(FileWriter writer, byte[] BinaryFile, int BinaryAlignment)
+            public class BinarySavedEntry
             {
+                public long Position;
+                public long _ofsData;
+                public byte[] Data;
+            }
+
+            public List<BinarySavedEntry> BinariesSaved = new List<BinarySavedEntry>();
+
+            private void SaveHeader(FileWriter writer,Header header, byte[] BinaryFile, int BinaryAlignment)
+            {
+                if (BinaryFile != null && BinaryFile.Length > 0)
+                    SectionSize = (uint)BinaryFile.Length;
+
                 long BasePosition = writer.Position;
 
                 writer.WriteSignature(Signature);
                 writer.Write(SectionSize);
                 long _ofsChildPos = writer.Position;
-                writer.Write(NullOffset); //Childern Offset
+                writer.Write(NullOffset); //Childern Offset for later
                 long _ofsNextPos = writer.Position;
                 writer.Write(NullOffset); //Next Offet for later
                 writer.Write(Unkown);
                 long _ofsBinaryPos = writer.Position;
-                writer.Write(NullOffset);
+                writer.Write(NullOffset); //Binary Offset for later
                 writer.Write(Unkown3);
                 writer.Write(SubSectionCount);
 
@@ -607,14 +627,43 @@ namespace FirstPlugin
 
                 foreach (var child in ChildSections)
                 {
-                    child.Write(writer); //Save childern (GTNT)
+                    if (child.BinaryData != null)
+                    {
+                        //Skip binaries for childern first
+                        ChildHasBinary = true;
+                        BinariesSaved.Add(new BinarySavedEntry()
+                        {
+                            Position = writer.Position,
+                            _ofsData = writer.Position + 20,
+                            Data = child.BinaryDataBytes,
+                        });
+                        child.Write(writer, header); //Save childern
+                        ChildHasBinary = false; //Now all children headers have been written
+                    }
+                    else
+                        child.Write(writer, header); //Save childern
                 }
 
-                if (BinaryFile != null && BinaryFile.Length > 0)
+                if (!ChildHasBinary)
                 {
-                    writer.Align(BinaryAlignment); //Align the file
-                    writer.WriteUint32Offset(_ofsBinaryPos, BasePosition); //Save binary offset
-                    writer.Write(BinaryFile); //Save bntx
+                    if (BinaryFile != null && BinaryFile.Length > 0)
+                    {
+                        writer.Align(BinaryAlignment); //Align the file
+                        Console.WriteLine($"{Signature} DATA BLOCK " + writer.Position + " " + BinaryFile.Length);
+
+                        writer.WriteUint32Offset(_ofsBinaryPos, BasePosition); //Save binary offset
+                        writer.Write(BinaryFile); //Save binary data
+                    }
+
+                    foreach (var binary in BinariesSaved)
+                    {
+                        writer.Align(4096); //Align the file
+                        Console.WriteLine($"{Signature} DATA BLOCK " + writer.Position + " " + BinaryFile.Length);
+
+                        writer.WriteUint32Offset(binary._ofsData, binary.Position); //Save binary offset
+                        writer.Write(binary.Data); //Save binary data
+                    }
+                    BinariesSaved.Clear();
                 }
 
                 if (NextSectionOffset != NullOffset)
@@ -949,6 +998,40 @@ namespace FirstPlugin
                     Samplers.Add(samplerInfo);
                 }
             }
+
+            public void Write(FileWriter writer, Header header)
+            {
+                uint Position = (uint)writer.Position;
+
+                writer.Seek(Position + 880, SeekOrigin.Begin);
+                for (int i = 0; i < 8; i++)
+                {
+                    writer.Write(Color0Array[i].R);
+                    writer.Write(Color0Array[i].G);
+                    writer.Write(Color0Array[i].B);
+                    writer.Seek(4);
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    writer.Write(Color0Array[i].A);
+                    writer.Seek(12);
+
+                    int alpha = Utils.FloatToIntClamp(Color0Array[i].A);
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    writer.Write(Color1Array[i].R);
+                    writer.Write(Color1Array[i].G);
+                    writer.Write(Color1Array[i].B);
+                    writer.Seek(4);
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    writer.Write(Color1Array[i].A);
+                    writer.Seek(12);
+                }
+            }
+
             public class SamplerInfo
             {
                 public ulong TextureID;
