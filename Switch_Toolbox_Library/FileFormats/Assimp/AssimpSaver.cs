@@ -21,7 +21,11 @@ namespace Switch_Toolbox.Library
             SaveSkeleton(skeleton, scene.RootNode);
             SaveMaterials(scene, model, FileName, Textures);
             SaveMeshes(scene, model, skeleton, FileName, NodeArray);
+            SaveScene(FileName, scene);
+        }
 
+        private void SaveScene(string FileName, Scene scene)
+        {
             using (var v = new AssimpContext())
             {
                 string ext = System.IO.Path.GetExtension(FileName);
@@ -40,8 +44,6 @@ namespace Switch_Toolbox.Library
                     MessageBox.Show($"Exported {FileName} Successfuly!");
                 else
                     MessageBox.Show($"Failed to export {FileName}!");
-
-                Scene newScene = v.ImportFile(FileName);
             }
         }
 
@@ -50,80 +52,8 @@ namespace Switch_Toolbox.Library
             int MeshIndex = 0;
             foreach (var obj in model.Nodes[0].Nodes)
             {
-                var genericObj = (STGenericObject)obj;
-
-                Mesh mesh = new Mesh(genericObj.Text, PrimitiveType.Triangle);
-                mesh.MaterialIndex = genericObj.MaterialIndex;
-
-                List<Vector3D> textureCoords0 = new List<Vector3D>();
-                List<Vector3D> textureCoords1 = new List<Vector3D>();
-                List<Vector3D> textureCoords2 = new List<Vector3D>();
-                List<Color4D> vertexColors = new List<Color4D>();
-
-                int vertexID = 0;
-                foreach (Vertex v in genericObj.vertices)
-                {
-                    mesh.Vertices.Add(new Vector3D(v.pos.X, v.pos.Y, v.pos.Z));
-                    mesh.Normals.Add(new Vector3D(v.nrm.X, v.nrm.Y, v.nrm.Z));
-                    textureCoords0.Add(new Vector3D(v.uv0.X, v.uv0.Y, 0));
-                    textureCoords1.Add(new Vector3D(v.uv1.X, v.uv1.Y, 0));
-                    textureCoords2.Add(new Vector3D(v.uv2.X, v.uv2.Y, 0));
-                    vertexColors.Add(new Color4D(v.col.X, v.col.Y, v.col.Z, v.col.W));
-                    mesh.TextureCoordinateChannels[0] = textureCoords0;
-                    mesh.TextureCoordinateChannels[1] = textureCoords1;
-                    mesh.TextureCoordinateChannels[2] = textureCoords2;
-                    mesh.VertexColorChannels[0] = vertexColors;
-
-                    for (int j = 0; j < v.boneIds.Count; j++)
-                    {
-                        if (j < genericObj.VertexSkinCount)
-                        {
-                            //Get the bone via the node array and bone index from the vertex
-                            STBone STbone = skeleton.bones[NodeArray[v.boneIds[j]]];
-
-                            //Find the index of a bone. If it doesn't exist then we add it
-                            int boneInd = mesh.Bones.FindIndex(x => x.Name == STbone.Text);
-
-                            if (boneInd == -1)
-                            {
-                                var matrices = Switch_Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(STbone);
-
-                                //Set the inverse matrix
-                                Matrix4x4 transform = matrices.inverse.FromNumerics();
-
-                                //Create a new assimp bone
-                                Bone bone = new Bone();
-                                bone.Name = STbone.Text;
-                                bone.OffsetMatrix = transform;
-
-                                mesh.Bones.Add(bone);
-                                BoneNames.Add(bone.Name);
-
-                                boneInd = mesh.Bones.IndexOf(bone); //Set the index of the bone for the vertex weight
-                            }
-
-                            //Check if the max amount of weights is higher than the current bone id
-                            if (v.boneWeights.Count > j && v.boneWeights[j] > 0)
-                            {
-                                 if (v.boneWeights[j] <= 1)
-                                    mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
-                                else
-                                    mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
-                            }
-                            else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
-                                mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
-                        }
-                    }
-                    vertexID++;
-                }
-                List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
-                for (int f = 0; f < faces.Count; f++)
-                    mesh.Faces.Add(new Face(new int[] { faces[f++], faces[f++], faces[f] }));
-
-                mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
-
+                var mesh = SaveMesh((STGenericObject)obj, skeleton, NodeArray);
                 scene.Meshes.Add(mesh);
-
                 MeshIndex++;
             }
             Node geomNode = new Node(Path.GetFileNameWithoutExtension(FileName), scene.RootNode);
@@ -133,6 +63,81 @@ namespace Switch_Toolbox.Library
                 geomNode.MeshIndices.Add(ob);
             }
             scene.RootNode.Children.Add(geomNode);
+        }
+
+        private Mesh SaveMesh(STGenericObject genericObj, STSkeleton skeleton, List<int> NodeArray)
+        {
+            Mesh mesh = new Mesh(genericObj.Text, PrimitiveType.Triangle);
+            mesh.MaterialIndex = genericObj.MaterialIndex;
+
+            List<Vector3D> textureCoords0 = new List<Vector3D>();
+            List<Vector3D> textureCoords1 = new List<Vector3D>();
+            List<Vector3D> textureCoords2 = new List<Vector3D>();
+            List<Color4D> vertexColors = new List<Color4D>();
+
+            int vertexID = 0;
+            foreach (Vertex v in genericObj.vertices)
+            {
+                mesh.Vertices.Add(new Vector3D(v.pos.X, v.pos.Y, v.pos.Z));
+                mesh.Normals.Add(new Vector3D(v.nrm.X, v.nrm.Y, v.nrm.Z));
+                textureCoords0.Add(new Vector3D(v.uv0.X, v.uv0.Y, 0));
+                textureCoords1.Add(new Vector3D(v.uv1.X, v.uv1.Y, 0));
+                textureCoords2.Add(new Vector3D(v.uv2.X, v.uv2.Y, 0));
+                vertexColors.Add(new Color4D(v.col.X, v.col.Y, v.col.Z, v.col.W));
+                mesh.TextureCoordinateChannels[0] = textureCoords0;
+                mesh.TextureCoordinateChannels[1] = textureCoords1;
+                mesh.TextureCoordinateChannels[2] = textureCoords2;
+                mesh.VertexColorChannels[0] = vertexColors;
+
+                for (int j = 0; j < v.boneIds.Count; j++)
+                {
+                    if (j < genericObj.VertexSkinCount)
+                    {
+                        //Get the bone via the node array and bone index from the vertex
+                        STBone STbone = skeleton.bones[NodeArray[v.boneIds[j]]];
+
+                        //Find the index of a bone. If it doesn't exist then we add it
+                        int boneInd = mesh.Bones.FindIndex(x => x.Name == STbone.Text);
+
+                        if (boneInd == -1)
+                        {
+                            var matrices = Switch_Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(STbone);
+
+                            //Set the inverse matrix
+                            Matrix4x4 transform = matrices.inverse.FromNumerics();
+
+                            //Create a new assimp bone
+                            Bone bone = new Bone();
+                            bone.Name = STbone.Text;
+                            bone.OffsetMatrix = transform;
+
+                            mesh.Bones.Add(bone);
+                            BoneNames.Add(bone.Name);
+
+                            boneInd = mesh.Bones.IndexOf(bone); //Set the index of the bone for the vertex weight
+                        }
+
+                        //Check if the max amount of weights is higher than the current bone id
+                        if (v.boneWeights.Count > j && v.boneWeights[j] > 0)
+                        {
+                            if (v.boneWeights[j] <= 1)
+                                mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
+                            else
+                                mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
+                        }
+                        else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
+                            mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
+                    }
+                }
+                vertexID++;
+            }
+            List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
+            for (int f = 0; f < faces.Count; f++)
+                mesh.Faces.Add(new Face(new int[] { faces[f++], faces[f++], faces[f] }));
+
+            mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
+
+            return mesh;
         }
 
         private void SaveMaterials(Scene scene, STGenericModel model, string FileName, List<STGenericTexture> Textures)
@@ -222,48 +227,20 @@ namespace Switch_Toolbox.Library
 
         }
 
-        public void SaveFromObject(List<Vertex> vertices, List<int> faces, string MeshName, string FileName)
+        public void SaveFromObject(STGenericObject genericObject, string FileName)
         {
             Scene scene = new Scene();
             scene.RootNode = new Node("Root");
 
-            Mesh mesh = new Mesh(MeshName, PrimitiveType.Triangle);
-
-            List<Vector3D> textureCoords0 = new List<Vector3D>();
-            List<Vector3D> textureCoords1 = new List<Vector3D>();
-            List<Vector3D> textureCoords2 = new List<Vector3D>();
-            List<Color4D> vertexColors = new List<Color4D>();
-
-            foreach (Vertex v in vertices)
-            {
-                mesh.Vertices.Add(new Vector3D(v.pos.X, v.pos.Y, v.pos.Z));
-                mesh.Normals.Add(new Vector3D(v.nrm.X, v.nrm.Y, v.nrm.Z));
-                textureCoords0.Add(new Vector3D(v.uv0.X, v.uv0.Y, 0));
-                textureCoords1.Add(new Vector3D(v.uv1.X, v.uv1.Y, 0));
-                textureCoords2.Add(new Vector3D(v.uv2.X, v.uv2.Y, 0));
-                vertexColors.Add(new Color4D(v.col.X, v.col.Y, v.col.Z, v.col.W));
-                mesh.TextureCoordinateChannels[0] = textureCoords0;
-                mesh.TextureCoordinateChannels[1] = textureCoords1;
-                mesh.TextureCoordinateChannels[2] = textureCoords2;
-                mesh.VertexColorChannels[0] = vertexColors;
-            }
-            for (int f = 0; f < faces.Count; f++)
-            {
-                mesh.Faces.Add(new Face(new int[] { faces[f++], faces[f++], faces[f] }));
-            }
+            var mesh = SaveMesh(genericObject, null, null);
             mesh.MaterialIndex = 0;
-
-            mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
             scene.Meshes.Add(mesh);
 
             Material material = new Material();
             material.Name = "NewMaterial";
             scene.Materials.Add(material);
 
-            using (var v = new AssimpContext())
-            {
-                v.ExportFile(scene, FileName, "obj");
-            }
+            SaveScene(FileName, scene);
         }
 
         private void SaveSkeleton(STSkeleton skeleton, Node parentNode)

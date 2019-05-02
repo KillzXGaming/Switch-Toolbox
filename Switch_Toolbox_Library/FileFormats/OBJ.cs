@@ -24,6 +24,17 @@ namespace Switch_Toolbox.Library
             File.WriteAllText(fileMtlPath, writerMtl.ToString());
         }
 
+        public static void ExportMesh(string FileName, STGenericObject genericMesh)
+        {
+            string fileNoExt = Path.GetFileNameWithoutExtension(FileName);
+            string fileMtlPath = FileName.Replace("obj", "mtl");
+
+            //Write mesh
+            StringBuilder writer = new StringBuilder();
+            SaveMesh(writer, genericMesh, null, 0);
+            File.WriteAllText(FileName, writer.ToString());
+        }
+
         private static void SaveMeshes(StringBuilder writer, STGenericModel Model, string MtlName)
         {
             writer.AppendLine($"mtllib {MtlName}");
@@ -31,36 +42,41 @@ namespace Switch_Toolbox.Library
             int VertexCount = 1;
             foreach (STGenericObject mesh in Model.Nodes[0].Nodes)
             {
-                writer.AppendLine($"o {mesh.Text}");
-                writer.AppendLine($"g {mesh.Text}");
-
-                foreach (var v in mesh.vertices)
-                {
-                    writer.AppendLine($"v {v.pos.X} {v.pos.Y} {v.pos.Z}");
-                    writer.AppendLine($"vn {v.nrm.X} {v.nrm.Y} {v.nrm.Z}");
-                    writer.AppendLine($"vt {v.uv0.X} {v.uv0.Y}");
-                }
                 var mat = GetMaterial(mesh.MaterialIndex, Model);
+                SaveMesh(writer, mesh, mat, VertexCount);
+            }
+        }
 
-                if (mat != null)
-                    writer.AppendLine($"usemtl {mat.Text}");
+        private static void SaveMesh(StringBuilder writer,  STGenericObject mesh, STGenericMaterial mat, int VertexCount)
+        {
+            writer.AppendLine($"o {mesh.Text}");
+            writer.AppendLine($"g {mesh.Text}");
 
-                for (int i = 0; i < mesh.faces.Count; i++)
+            foreach (var v in mesh.vertices)
+            {
+                writer.AppendLine($"v {v.pos.X} {v.pos.Y} {v.pos.Z}");
+                writer.AppendLine($"vn {v.nrm.X} {v.nrm.Y} {v.nrm.Z}");
+                writer.AppendLine($"vt {v.uv0.X} {v.uv0.Y}");
+            }
+
+            if (mat != null)
+                writer.AppendLine($"usemtl {mat.Text}");
+
+            for (int i = 0; i < mesh.faces.Count; i++)
+            {
+                int[] indices = new int[3]
                 {
-                    int[] indices = new int[3] 
-                    {
                         mesh.faces[i++],
                         mesh.faces[i++],
                         mesh.faces[i]
-                    };
+                };
 
-                    writer.AppendLine($"f {indices[0] + VertexCount}/{indices[0] + VertexCount}/{indices[0] + VertexCount}" +
-                                       $" {indices[1] + VertexCount}/{indices[1] + VertexCount}/{indices[1] + VertexCount}" +
-                                       $" {indices[2] + VertexCount}/{indices[2] + VertexCount}/{indices[2] + VertexCount}");
-                }
-
-                VertexCount += mesh.vertices.Count;
+                writer.AppendLine($"f {indices[0] + VertexCount}/{indices[0] + VertexCount}/{indices[0] + VertexCount}" +
+                                   $" {indices[1] + VertexCount}/{indices[1] + VertexCount}/{indices[1] + VertexCount}" +
+                                   $" {indices[2] + VertexCount}/{indices[2] + VertexCount}/{indices[2] + VertexCount}");
             }
+
+            VertexCount += mesh.vertices.Count;
         }
 
         private static STGenericMaterial GetMaterial(int MaterialIndex, STGenericModel Model)

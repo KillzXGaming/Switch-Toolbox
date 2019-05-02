@@ -618,12 +618,7 @@ namespace Bfres.Structs
         public void Export(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.bfobj;*.fbx;*.dae; *.obj;|" +
-             "Bfres Object (shape/vertices) |*.bfobj|" +
-             "FBX |*.fbx|" +
-             "DAE |*.dae|" +
-             "OBJ |*.obj|" +
-             "All files(*.*)|*.*";
+            sfd.Filter = FileFilters.FSHP; 
             sfd.DefaultExt = ".bfobj";
             sfd.FileName = Text;
 
@@ -637,9 +632,12 @@ namespace Bfres.Structs
                     case ".bfobj":
                         ExportBinaryObject(sfd.FileName);
                         break;
+                    case ".obj":
+                        OBJ.ExportMesh(sfd.FileName, this);
+                        break;
                     default:
                         AssimpSaver assimp = new AssimpSaver();
-                        assimp.SaveFromObject(vertices, lodMeshes[DisplayLODIndex].faces, Text, sfd.FileName);
+                        assimp.SaveFromObject(this, sfd.FileName);
                         break;
                 }
             }
