@@ -170,7 +170,7 @@ namespace FirstPlugin.Forms
         {
             Drawables.Add(draw);
 
-            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
+            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport || viewport == null)
             {
                 IsLoaded = false;
                 return;
