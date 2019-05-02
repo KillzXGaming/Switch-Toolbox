@@ -89,46 +89,51 @@ namespace Switch_Toolbox.Library
                 mesh.TextureCoordinateChannels[2] = textureCoords2;
                 mesh.VertexColorChannels[0] = vertexColors;
 
-                for (int j = 0; j < v.boneIds.Count; j++)
+                if (skeleton != null)
                 {
-                    if (j < genericObj.VertexSkinCount)
+                    for (int j = 0; j < v.boneIds.Count; j++)
                     {
-                        //Get the bone via the node array and bone index from the vertex
-                        STBone STbone = skeleton.bones[NodeArray[v.boneIds[j]]];
-
-                        //Find the index of a bone. If it doesn't exist then we add it
-                        int boneInd = mesh.Bones.FindIndex(x => x.Name == STbone.Text);
-
-                        if (boneInd == -1)
+                        if (j < genericObj.VertexSkinCount)
                         {
-                            var matrices = Switch_Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(STbone);
+                            //Get the bone via the node array and bone index from the vertex
+                            STBone STbone = skeleton.bones[NodeArray[v.boneIds[j]]];
 
-                            //Set the inverse matrix
-                            Matrix4x4 transform = matrices.inverse.FromNumerics();
+                            //Find the index of a bone. If it doesn't exist then we add it
+                            int boneInd = mesh.Bones.FindIndex(x => x.Name == STbone.Text);
 
-                            //Create a new assimp bone
-                            Bone bone = new Bone();
-                            bone.Name = STbone.Text;
-                            bone.OffsetMatrix = transform;
+                            if (boneInd == -1)
+                            {
+                                var matrices = Switch_Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(STbone);
 
-                            mesh.Bones.Add(bone);
-                            BoneNames.Add(bone.Name);
+                                //Set the inverse matrix
+                                Matrix4x4 transform = matrices.inverse.FromNumerics();
 
-                            boneInd = mesh.Bones.IndexOf(bone); //Set the index of the bone for the vertex weight
-                        }
+                                //Create a new assimp bone
+                                Bone bone = new Bone();
+                                bone.Name = STbone.Text;
+                                bone.OffsetMatrix = transform;
 
-                        //Check if the max amount of weights is higher than the current bone id
-                        if (v.boneWeights.Count > j && v.boneWeights[j] > 0)
-                        {
-                            if (v.boneWeights[j] <= 1)
-                                mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
-                            else
+                                mesh.Bones.Add(bone);
+                                BoneNames.Add(bone.Name);
+
+                                boneInd = mesh.Bones.IndexOf(bone); //Set the index of the bone for the vertex weight
+                            }
+
+                            //Check if the max amount of weights is higher than the current bone id
+                            if (v.boneWeights.Count > j && v.boneWeights[j] > 0)
+                            {
+                                if (v.boneWeights[j] <= 1)
+                                    mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
+                                else
+                                    mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
+                            }
+                            else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
                                 mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                         }
-                        else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
-                            mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                     }
                 }
+
+               
                 vertexID++;
             }
             List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
