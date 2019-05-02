@@ -17,7 +17,7 @@ namespace FirstPlugin
         public static string FMDL = GetFilter(".bfmdl", ".dae", ".fbx", ".obj", ".csv");
         public static string FMDL_EXPORT = GetFilter(".bfmdl", ".dae");
         public static string FSKL = GetFilter(".bfskl");
-        public static string FSHP = GetFilter(".bfobj");
+        public static string FSHP = GetFilter(".bfobj", ".dae");
         public static string BONE = GetFilter(".bfbon");
         public static string FMAT = GetFilter(".bfmat");
 
