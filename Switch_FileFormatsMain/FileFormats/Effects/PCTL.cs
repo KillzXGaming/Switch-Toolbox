@@ -290,6 +290,7 @@ namespace FirstPlugin
                 writer.Write(32);
                 writer.Write(Flag);
                 writer.Write(BlockOffset);
+                long _ofsFileSize = writer.Position;
                 writer.Write(0);
                 writer.Seek(BlockOffset, SeekOrigin.Begin);
 
@@ -297,6 +298,11 @@ namespace FirstPlugin
                 {
                     writer.Align(8);
                     section.Write(writer);
+                }
+
+                using (writer.TemporarySeek(_ofsFileSize, SeekOrigin.Begin))
+                {
+                    writer.Write(writer.BaseStream.Length);
                 }
 
                 writer.Flush();
@@ -471,7 +477,21 @@ namespace FirstPlugin
                         break;
                     case "GRSN":
                         section.Text = "Shaders";
+                        
+                        if (section.BinaryDataOffset != NullOffset)
+                        {
+                            reader.Seek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin);
+                            BinaryData = reader.ReadBytes((int)section.SectionSize);
+                        }
                         break;
+                    case "GRSC":
+                        section.Text = "Shaders 2";
+                        if (section.BinaryDataOffset != NullOffset)
+                        {
+                            reader.Seek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin);
+                            BinaryData = reader.ReadBytes((int)section.SectionSize);
+                        }
+                        break;  
                     case "G3PR":
                         if (section.BinaryDataOffset != NullOffset)
                         {
@@ -511,6 +531,24 @@ namespace FirstPlugin
             {
                 switch (Signature)
                 {
+                    case "GRSN":
+                        byte[] BinaryBNSH2File = new byte[0];
+                        if (BinaryData != null)
+                        {
+                            BinaryBNSH2File = ((byte[])BinaryData);
+                            SectionSize = (uint)BinaryBNSH2File.Length;
+                        }
+                        SaveHeader(writer, BinaryBNSH2File, 4096);
+                        break;
+                    case "GRSC":
+                        byte[] BinaryBNSHFile = new byte[0];
+                        if (BinaryData != null)
+                        {
+                            BinaryBNSHFile = ((byte[])BinaryData);
+                            SectionSize = (uint)BinaryBNSHFile.Length;
+                        }
+                        SaveHeader(writer, data, 4096);
+                        break;
                     case "G3PR":
                         byte[] BinaryBFRESFile = new byte[0];
                         if (BinaryData != null)
@@ -528,15 +566,6 @@ namespace FirstPlugin
                             SectionSize = (uint)BinaryBNTXFile.Length;
                         }
                         SaveHeader(writer, BinaryBNTXFile, 4096);
-                        break;
-                    case "GRSN":
-                        byte[] BinaryBNSHFile = new byte[0];
-                        if (BinaryData != null)
-                        {
-                          //  BinaryBNSHFile = ((BNSH)BinaryData).Save();
-                           // SectionSize = (uint)BinaryBNSHFile.Length;
-                        }
-                        SaveHeader(writer, data, 4096);
                         break;
                     default:
                         writer.Write(data);
