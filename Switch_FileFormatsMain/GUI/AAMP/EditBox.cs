@@ -18,9 +18,6 @@ namespace FirstPlugin.Forms
         public EditBox()
         {
             InitializeComponent();
-
-            foreach (var type in Enum.GetValues(typeof(ParamType)).Cast<ParamType>())
-                typeCB.Items.Add(type);
         }
 
         public void ToggleNameEditing(bool CanEdit)
@@ -33,24 +30,29 @@ namespace FirstPlugin.Forms
 
         public void LoadEntry(Aampv2.ParamEntry entry)
         {
+            typeCB.Items.Clear();
+
+            foreach (var type in Enum.GetValues(typeof(AampV2Library.ParamType)).Cast<AampV2Library.ParamType>())
+                typeCB.Items.Add(type);
+
             paramEntryV2 = entry;
             nameTB.Text = entry.HashString;
             typeCB.SelectedItem = entry.ParamType;
 
             dataTB.Text = entry.Value.ToString();
 
-            switch (paramEntry.ParamType)
+            switch (entry.ParamType)
             {
-                case ParamType.Vector2F:
+                case AampV2Library.ParamType.Vector2F:
                     var vec2 = (Vector2F)entry.Value;
                     dataTB.Text = $"{vec2.X} {vec2.Y}";
                     break;
-                case ParamType.Vector3F:
+                case AampV2Library.ParamType.Vector3F:
                     var vec3 = (Vector3F)entry.Value;
                     dataTB.Text = $"{vec3.X} {vec3.Y} {vec3.Z}";
                     break;
-                case ParamType.Vector4F:
-                case ParamType.Color4F:
+                case AampV2Library.ParamType.Vector4F:
+                case AampV2Library.ParamType.Color4F:
                     var vec4 = (Vector4F)entry.Value;
                     dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
                     break;
@@ -59,13 +61,18 @@ namespace FirstPlugin.Forms
 
         public void LoadEntry(ParamEntry entry)
         {
+            typeCB.Items.Clear();
+
+            foreach (var type in Enum.GetValues(typeof(ParamType)).Cast<ParamType>())
+                typeCB.Items.Add(type);
+
             paramEntry = entry;
             nameTB.Text = entry.HashString;
             typeCB.SelectedItem = entry.ParamType;
 
             dataTB.Text = entry.Value.ToString();
 
-            switch (paramEntry.ParamType)
+            switch (entry.ParamType)
             {
                 case ParamType.Vector2F:
                     var vec2 = (Vector2F)entry.Value;
