@@ -73,10 +73,8 @@ namespace FirstPlugin
 
             ReadGx2(new FileReader(stream));
 
-            ContextMenu = new ContextMenu();
-            MenuItem save = new MenuItem("Save");
-            ContextMenu.MenuItems.Add(save);
-            save.Click += Save;
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S));
         }
         private void Save(object sender, EventArgs args)
         {

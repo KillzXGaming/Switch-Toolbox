@@ -59,7 +59,6 @@ namespace FirstPlugin
             Text = FileName;
             CanSave = true;
 
-
             FileReader reader = new FileReader(new MemoryStream(data));
 
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -82,10 +81,8 @@ namespace FirstPlugin
             reader.Close();
             reader.Dispose();
 
-            ContextMenu = new ContextMenu();
-            MenuItem save = new MenuItem("Save");
-            ContextMenu.MenuItems.Add(save);
-            save.Click += Save;
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S));
         }
 
         public void Unload()
