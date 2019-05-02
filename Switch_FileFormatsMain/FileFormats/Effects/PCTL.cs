@@ -567,7 +567,7 @@ namespace FirstPlugin
                             child.Write(writer, header);
                         }
 
-                        using (writer.TemporarySeek(_emitterPos, SeekOrigin.Begin))
+                        using (writer.TemporarySeek(_emitterPos + BinaryDataOffset +16 + 64, SeekOrigin.Begin))
                         {
                             ((Emitter)BinaryData).Write(writer, header);
                         }
@@ -1006,26 +1006,24 @@ namespace FirstPlugin
                     writer.Write(Color0Array[i].R);
                     writer.Write(Color0Array[i].G);
                     writer.Write(Color0Array[i].B);
-                    writer.Seek(4);
+                    writer.Seek(4, SeekOrigin.Current);
                 }
                 for (int i = 0; i < 8; i++)
                 {
                     writer.Write(Color0Array[i].A);
-                    writer.Seek(12);
-
-                    int alpha = Utils.FloatToIntClamp(Color0Array[i].A);
+                    writer.Seek(12, SeekOrigin.Current);
                 }
                 for (int i = 0; i < 8; i++)
                 {
                     writer.Write(Color1Array[i].R);
                     writer.Write(Color1Array[i].G);
                     writer.Write(Color1Array[i].B);
-                    writer.Seek(4);
+                    writer.Seek(4, SeekOrigin.Current);
                 }
                 for (int i = 0; i < 8; i++)
                 {
                     writer.Write(Color1Array[i].A);
-                    writer.Seek(12);
+                    writer.Seek(12, SeekOrigin.Current);
                 }
             }
 

@@ -85,106 +85,209 @@ namespace FirstPlugin.Forms
 
         public void SaveEntry()
         {
-            paramEntry.ParamType = (ParamType)typeCB.SelectedItem;
-
-            if (nameTB.Enabled)
-                paramEntry.HashString = nameTB.Text;
-
-            switch (paramEntry.ParamType)
+            if (paramEntry != null)
             {
-                case ParamType.Boolean:
-                    bool value = false;
-                    bool.TryParse(dataTB.Text, out value);
-                    paramEntry.Value = value;
-                    break;
-                case ParamType.Float:
-                    float valueF = 0;
-                    float.TryParse(dataTB.Text, out valueF);
-                    paramEntry.Value = valueF;
-                    break;
-                case ParamType.Int:
-                    int valueInt = 0;
-                    int.TryParse(dataTB.Text, out valueInt);
-                    paramEntry.Value = valueInt;
-                    break;
-                case ParamType.Vector2F:
-                    var values2F = dataTB.Text.Split(' ');
-                    if (values2F.Length != 2)
-                    {
+                paramEntry.ParamType = (ParamType)typeCB.SelectedItem;
 
-                    }
-                    else
-                    {
-                        float x, y;
-                        float.TryParse(values2F[0], out x);
-                        float.TryParse(values2F[1], out y);
-                        paramEntry.Value = new Vector2F(x, y);
-                    }
-                    break;
-                case ParamType.Vector3F:
-                    var values3F = dataTB.Text.Split(' ');
-                    if (values3F.Length != 3)
-                    {
+                if (nameTB.Enabled)
+                    paramEntry.HashString = nameTB.Text;
 
-                    }
-                    else
-                    {
-                        float x, y, z;
-                        float.TryParse(values3F[0], out x);
-                        float.TryParse(values3F[1], out y);
-                        float.TryParse(values3F[2], out z);
-                        paramEntry.Value = new Vector3F(x, y, z);
-                    }
-                    break;
-                case ParamType.Vector4F:
-                case ParamType.Color4F:
-                    var values = dataTB.Text.Split(' ');
-                    if (values.Length != 4)
-                    {
+                switch (paramEntry.ParamType)
+                {
+                    case ParamType.Boolean:
+                        bool value = false;
+                        bool.TryParse(dataTB.Text, out value);
+                        paramEntry.Value = value;
+                        break;
+                    case ParamType.Float:
+                        float valueF = 0;
+                        float.TryParse(dataTB.Text, out valueF);
+                        paramEntry.Value = valueF;
+                        break;
+                    case ParamType.Int:
+                        int valueInt = 0;
+                        int.TryParse(dataTB.Text, out valueInt);
+                        paramEntry.Value = valueInt;
+                        break;
+                    case ParamType.Vector2F:
+                        var values2F = dataTB.Text.Split(' ');
+                        if (values2F.Length != 2)
+                        {
 
-                    }
-                    else
-                    {
-                        float x, y, z, w;
-                        float.TryParse(values[0], out x);
-                        float.TryParse(values[1], out y);
-                        float.TryParse(values[2], out z);
-                        float.TryParse(values[3], out w);
-                        paramEntry.Value = new Vector4F(x,y,z,w);
-                    }
-                    break;
-                case ParamType.Uint:
-                    uint valueUInt = 0;
-                    uint.TryParse(dataTB.Text, out valueUInt);
-                    paramEntry.Value = valueUInt;
-                    break;
-                case ParamType.String64:
-                case ParamType.String32:
-                case ParamType.String256:
-                case ParamType.StringRef:
-                    paramEntry.Value = dataTB.Text;
-                    break;
+                        }
+                        else
+                        {
+                            float x, y;
+                            float.TryParse(values2F[0], out x);
+                            float.TryParse(values2F[1], out y);
+                            paramEntry.Value = new Vector2F(x, y);
+                        }
+                        break;
+                    case ParamType.Vector3F:
+                        var values3F = dataTB.Text.Split(' ');
+                        if (values3F.Length != 3)
+                        {
+
+                        }
+                        else
+                        {
+                            float x, y, z;
+                            float.TryParse(values3F[0], out x);
+                            float.TryParse(values3F[1], out y);
+                            float.TryParse(values3F[2], out z);
+                            paramEntry.Value = new Vector3F(x, y, z);
+                        }
+                        break;
+                    case ParamType.Vector4F:
+                    case ParamType.Color4F:
+                        var values = dataTB.Text.Split(' ');
+                        if (values.Length != 4)
+                        {
+
+                        }
+                        else
+                        {
+                            float x, y, z, w;
+                            float.TryParse(values[0], out x);
+                            float.TryParse(values[1], out y);
+                            float.TryParse(values[2], out z);
+                            float.TryParse(values[3], out w);
+                            paramEntry.Value = new Vector4F(x, y, z, w);
+                        }
+                        break;
+                    case ParamType.Uint:
+                        uint valueUInt = 0;
+                        uint.TryParse(dataTB.Text, out valueUInt);
+                        paramEntry.Value = valueUInt;
+                        break;
+                    case ParamType.String64:
+                    case ParamType.String32:
+                    case ParamType.String256:
+                    case ParamType.StringRef:
+                        paramEntry.Value = dataTB.Text;
+                        break;
+                }
             }
+            else
+            {
+                paramEntryV2.ParamType = (AampV2Library.ParamType)typeCB.SelectedItem;
+
+                if (nameTB.Enabled)
+                    paramEntryV2.HashString = nameTB.Text;
+
+                switch (paramEntryV2.ParamType)
+                {
+                    case AampV2Library.ParamType.Boolean:
+                        bool value = false;
+                        bool.TryParse(dataTB.Text, out value);
+                        paramEntryV2.Value = value;
+                        break;
+                    case AampV2Library.ParamType.Float:
+                        float valueF = 0;
+                        float.TryParse(dataTB.Text, out valueF);
+                        paramEntryV2.Value = valueF;
+                        break;
+                    case AampV2Library.ParamType.Int:
+                        int valueInt = 0;
+                        int.TryParse(dataTB.Text, out valueInt);
+                        paramEntryV2.Value = valueInt;
+                        break;
+                    case AampV2Library.ParamType.Vector2F:
+                        var values2F = dataTB.Text.Split(' ');
+                        if (values2F.Length != 2)
+                        {
+
+                        }
+                        else
+                        {
+                            float x, y;
+                            float.TryParse(values2F[0], out x);
+                            float.TryParse(values2F[1], out y);
+                            paramEntryV2.Value = new Vector2F(x, y);
+                        }
+                        break;
+                    case AampV2Library.ParamType.Vector3F:
+                        var values3F = dataTB.Text.Split(' ');
+                        if (values3F.Length != 3)
+                        {
+
+                        }
+                        else
+                        {
+                            float x, y, z;
+                            float.TryParse(values3F[0], out x);
+                            float.TryParse(values3F[1], out y);
+                            float.TryParse(values3F[2], out z);
+                            paramEntryV2.Value = new Vector3F(x, y, z);
+                        }
+                        break;
+                    case AampV2Library.ParamType.Vector4F:
+                    case AampV2Library.ParamType.Color4F:
+                        var values = dataTB.Text.Split(' ');
+                        if (values.Length != 4)
+                        {
+
+                        }
+                        else
+                        {
+                            float x, y, z, w;
+                            float.TryParse(values[0], out x);
+                            float.TryParse(values[1], out y);
+                            float.TryParse(values[2], out z);
+                            float.TryParse(values[3], out w);
+                            paramEntryV2.Value = new Vector4F(x, y, z, w);
+                        }
+                        break;
+                    case AampV2Library.ParamType.Uint:
+                        uint valueUInt = 0;
+                        uint.TryParse(dataTB.Text, out valueUInt);
+                        paramEntryV2.Value = valueUInt;
+                        break;
+                    case AampV2Library.ParamType.String64:
+                    case AampV2Library.ParamType.String32:
+                    case AampV2Library.ParamType.String256:
+                    case AampV2Library.ParamType.StringRef:
+                        paramEntryV2.Value = dataTB.Text;
+                        break;
+                }
+            }    
         }
 
         private void dataTB_TextChanged(object sender, EventArgs e)
         {
-            switch (paramEntry.ParamType)
+            if (paramEntry != null)
             {
-                case ParamType.Color4F:
-                    var values = dataTB.Text.Split(' ');
-                    if (values.Length == 4)
-                    {
-                        float x, y, z, w;
-                        float.TryParse(values[0], out x);
-                        float.TryParse(values[1], out y);
-                        float.TryParse(values[2], out z);
-                        float.TryParse(values[3], out w);
+                switch (paramEntry.ParamType)
+                {
+                    case ParamType.Color4F:
+                        UpdatePictureboxColor();
+                        break;
+                }
+            }
+            else
+            {
+                switch (paramEntryV2.ParamType)
+                {
+                    case AampV2Library.ParamType.Color4F:
+                        UpdatePictureboxColor();
+                        break;
+                }
+            }
+        }
 
-                        pictureBox1.BackColor = System.Drawing.Color.FromArgb(
-                            FloatToIntClamp(w), FloatToIntClamp(x), FloatToIntClamp(y), FloatToIntClamp(z));
-                    }
-                    break;
+        private void UpdatePictureboxColor()
+        {
+            var values = dataTB.Text.Split(' ');
+            if (values.Length == 4)
+            {
+                float x, y, z, w;
+                float.TryParse(values[0], out x);
+                float.TryParse(values[1], out y);
+                float.TryParse(values[2], out z);
+                float.TryParse(values[3], out w);
+
+                pictureBox1.BackColor = System.Drawing.Color.FromArgb(
+                    FloatToIntClamp(w), FloatToIntClamp(x), FloatToIntClamp(y), FloatToIntClamp(z));
             }
         }
 
@@ -202,19 +305,40 @@ namespace FirstPlugin.Forms
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            if (paramEntry.ParamType == ParamType.Color4F)
+            if (paramEntry != null)
             {
-                ColorDialog dlg = new ColorDialog();
-                if (dlg.ShowDialog() == DialogResult.OK)
+                if (paramEntry.ParamType == ParamType.Color4F)
                 {
-                    paramEntry.Value = new Vector4F(
-                        dlg.Color.R / 255.0f,
-                        dlg.Color.G / 255.0f,
-                        dlg.Color.B / 255.0f,
-                        dlg.Color.A / 255.0f);
+                    ColorDialog dlg = new ColorDialog();
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        paramEntry.Value = new Vector4F(
+                            dlg.Color.R / 255.0f,
+                            dlg.Color.G / 255.0f,
+                            dlg.Color.B / 255.0f,
+                            dlg.Color.A / 255.0f);
 
-                    var vec4 = (Vector4F)paramEntry.Value;
-                    dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
+                        var vec4 = (Vector4F)paramEntry.Value;
+                        dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
+                    }
+                }
+            }
+            else
+            {
+                if (paramEntryV2.ParamType == AampV2Library.ParamType.Color4F)
+                {
+                    ColorDialog dlg = new ColorDialog();
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        paramEntryV2.Value = new Vector4F(
+                            dlg.Color.R / 255.0f,
+                            dlg.Color.G / 255.0f,
+                            dlg.Color.B / 255.0f,
+                            dlg.Color.A / 255.0f);
+
+                        var vec4 = (Vector4F)paramEntryV2.Value;
+                        dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
+                    }
                 }
             }
         }
