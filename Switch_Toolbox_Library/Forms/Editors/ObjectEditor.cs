@@ -43,18 +43,28 @@ namespace Switch_Toolbox.Library.Forms
 
         public void AddNode(TreeNode node, bool ClearAllNodes = false)
         {
-            // Invoke the treeview to add the nodes
-            treeViewCustom1.Invoke((Action)delegate ()
+            if (treeViewCustom1.InvokeRequired)
             {
-                treeViewCustom1.BeginUpdate(); // No visual updates until we say 
-              //  if (ClearAllNodes)
-               //     ClearNodes();
-               
-                treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
-            });
+                // Invoke the treeview to add the nodes
+                treeViewCustom1.Invoke((Action)delegate ()
+                {
+                    AddNodes(node, ClearAllNodes);
+                });
+            }
+            else
+            {
+                AddNodes(node, ClearAllNodes);
+            }
+            //       _fieldsTreeCache.Nodes.Add(node);
+        }
 
+        private void AddNodes(TreeNode node, bool ClearAllNodes = false)
+        {
+            treeViewCustom1.BeginUpdate(); // No visual updates until we say 
+            if (ClearAllNodes)
+                ClearNodes();
             treeViewCustom1.Nodes.Add(node); // Add the new nodes
-     //       _fieldsTreeCache.Nodes.Add(node);
+            treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
         }
 
         public void ClearNodes()
