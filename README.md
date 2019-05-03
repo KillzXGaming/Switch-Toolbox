@@ -23,12 +23,12 @@ This tool currently features:
    - Can convert gif files to texture pattern animations. Very WIP atm.
 - BNTX
    - Can add/remove textures.
-   - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
+   - Can import textures as DDS, png, tga, tiff, etc)
    - Can export as binary, dds, png, tga, etc.
    - Can preview mipmap and surface(array) levels.
 - XTX
    - Can add/remove textures.
-   - Can import textures as DDS. (Thanks to AboodXD! png/jpeg, etc planned later)
+   - Can import textures as DDS, png, tga, tiff, etc)
    - Can export as dds, png, tga, etc.
    - Can preview mipmaplevels.
 - SARC
@@ -43,7 +43,9 @@ This tool currently features:
 - BFFNT
    - Can extract and replace images.
 - BFLIM
-   - Can extract font images (BNTX)
+   - Can add/remove textures.
+   - Can import textures as DDS, png, tga, tiff, etc)
+   - Can export as dds, png, tga, etc.
 - GFPAK
    - Supported editing/saving data opened. (Automatically saves data opened if supported)
 - BEA
@@ -55,11 +57,12 @@ This tool currently features:
 - SHARCFB and SHARC
    - Basic preview of some shader program data.
 - AAMP
-   - Can edit v1 AAMP (Wii U) and preview v2 AAMP
+   - Can edit both v1 and v2 AAMP (Wii U and Switch)
 - NUTEXB
    - Can extract and replace textures.
 - PTCL & EFFN
-   - Can edit colors (Wii U) and edit textures (Wii U). Switch ptcl can only preview both atm.
+   - Can edit colors (Wii U) and edit textures (Wii U and Switch). 
+   - Switch ptcl also can rebuild and import models (bfres files are inside)
 - EFC
    - Can preview effect tables and link PTCL.
 - NUT
@@ -68,6 +71,7 @@ This tool currently features:
    - Very basic previewing.
 - TMPK
   - Can extract files and decompress
+  - Can save back. 
 - MP3, OGG, IDSP, HPS, WAV, BFWAV, BFSTM, BCWAV, BCWAV
   - Can listen to audio and convert between certain formats. Thanks to VGAudio and CSCore
 	
@@ -86,7 +90,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - Exelix for Byaml, Sarc and KCL library
 - Syroot for helpful IO extensions and libraries
 - GDK Chan for some DDS decode methods
-- AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, and documentation for GTX and BNTX
+- AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, and documentation for GTX, XTX, and BNTX
 - MelonSpeedruns for logo.
 
 Resources
