@@ -967,9 +967,13 @@ namespace FirstPlugin
             VertexBuffer buffer = new VertexBuffer();
             buffer.Attributes = new ResDict<VertexAttrib>();
 
+            Console.WriteLine("Updating Buffer");
+
             VertexBufferHelper helper = new VertexBufferHelper(buffer, Syroot.BinaryData.ByteOrder.BigEndian);
             List<VertexBufferHelperAttrib> atrib = new List<VertexBufferHelperAttrib>();
             fshp.UpdateVertices();
+
+            Console.WriteLine("Creating Buffer");
 
             foreach (FSHP.VertexAttribute att in fshp.vertexAttributes)
             {

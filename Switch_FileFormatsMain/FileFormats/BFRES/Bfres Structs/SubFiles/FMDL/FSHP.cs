@@ -1025,7 +1025,9 @@ namespace Bfres.Structs
         {
             if (IsWiiU)
             {
+                Console.WriteLine("Saving Buffer");
                 BfresWiiU.SaveVertexBuffer(this);
+                Console.WriteLine("Reading Buffer");
                 BfresWiiU.ReadShapesVertices(this, ShapeU, VertexBufferU, GetParentModel());
                 return;
             }
