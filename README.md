@@ -27,8 +27,7 @@ This tool currently features:
    - Can export as binary, dds, png, tga, etc.
    - Can preview mipmap and surface(array) levels.
 - XTX
-   - Can add/remove textures.
-   - Can import textures as DDS, png, tga, tiff, etc)
+   - Can replace textures as DDS, png, tga, tiff, etc)
    - Can export as dds, png, tga, etc.
    - Can preview mipmaplevels.
 - SARC
