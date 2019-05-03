@@ -60,7 +60,7 @@ This tool currently features:
 - NUTEXB
    - Can extract and replace textures.
 - PTCL & EFFN
-   - Can edit colors (Wii U) and edit textures (Wii U and Switch). 
+   - Can edit colors and textures (Wii U and Switch). 
    - Switch ptcl also can rebuild and import models (bfres files are inside)
 - EFC
    - Can preview effect tables and link PTCL.
