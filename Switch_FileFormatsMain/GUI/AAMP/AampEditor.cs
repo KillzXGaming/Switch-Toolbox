@@ -50,6 +50,57 @@ namespace FirstPlugin.Forms
                 stButton2.Visible = false;
                 stPanel1.Dock = DockStyle.Fill;
             }
+
+            STContextMenuStrip contextMenuStrip1 = new STContextMenuStrip();
+            contextMenuStrip1.Items.Add(new ToolStripMenuItem("Save", null, saveAsToolStripMenuItem_Click, Keys.Control | Keys.I));
+            contextMenuStrip1.Items.Add(new ToolStripSeparator());
+            contextMenuStrip1.Items.Add(new ToolStripMenuItem("Export as Yaml", null, ToYamlAction, Keys.Control | Keys.A));
+            contextMenuStrip1.Items.Add(new ToolStripMenuItem("Open as Yaml", null, OpenYamlEditorAction, Keys.Control | Keys.A));
+
+            this.treeView1.ContextMenuStrip = contextMenuStrip1;
+
+        }
+
+        private void OpenYamlEditorAction(object sender, EventArgs e)
+        {
+            string yaml = "";
+
+            if (AampFile.aampFileV1 != null)
+                yaml = YamlConverter.ToYaml(AampFile.aampFileV1);
+            else
+                yaml = YamlConverter.ToYaml(AampFile.aampFileV2);
+
+            STForm form = new STForm();
+            form.Text = "YAML Text Editor";
+            var panel = new STPanel() { Dock = DockStyle.Fill, };
+            form.AddControl(panel);
+            var editor = new TextEditor() { Dock = DockStyle.Fill, };
+            editor.FillEditor(yaml);
+            editor.IsYAML = true;
+            panel.Controls.Add(editor);
+
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void ToYamlAction(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "YAML|*.yaml;";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string yaml = "";
+
+                if (AampFile.aampFileV1 != null)
+                    yaml = YamlConverter.ToYaml(AampFile.aampFileV1);
+                else
+                    yaml = YamlConverter.ToYaml(AampFile.aampFileV2);
+
+                File.WriteAllText(sfd.FileName, yaml);
+            }
         }
 
         private void CopyNode_Click(object sender, EventArgs e)

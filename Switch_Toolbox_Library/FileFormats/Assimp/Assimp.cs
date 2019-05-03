@@ -8,6 +8,7 @@ using OpenTK;
 using Switch_Toolbox.Library.Rendering;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Animations;
+using Switch_Toolbox.Library.Forms;
 
 namespace Switch_Toolbox.Library
 {
@@ -36,20 +37,26 @@ namespace Switch_Toolbox.Library
         {
             try
             {
-                AssimpContext Importer = new AssimpContext();
+                var settings = new Assimp_Settings();
+                if (settings.ShowDialog() == DialogResult.OK)
+                {
+                    UseTransformMatrix = settings.UseNodeTransform;
 
-                STConsole.WriteLine($"Loading File {FileName}", Color.FromArgb(0, 255, 0));
+                    AssimpContext Importer = new AssimpContext();
 
-                var Flags = PostProcessSteps.Triangulate;
-                Flags |= PostProcessSteps.JoinIdenticalVertices;
-                Flags |= PostProcessSteps.FlipUVs;
-                Flags |= PostProcessSteps.LimitBoneWeights;
-                Flags |= PostProcessSteps.CalculateTangentSpace;
-                Flags |= PostProcessSteps.GenerateNormals;
+                    STConsole.WriteLine($"Loading File {FileName}", Color.FromArgb(0, 255, 0));
 
-                scene = Importer.ImportFile(FileName, Flags);
+                    /*  var Flags = PostProcessSteps.Triangulate;
+                      Flags |= PostProcessSteps.JoinIdenticalVertices;
+                      Flags |= PostProcessSteps.FlipUVs;
+                      Flags |= PostProcessSteps.LimitBoneWeights;
+                      Flags |= PostProcessSteps.CalculateTangentSpace;
+                      Flags |= PostProcessSteps.GenerateNormals;*/
 
-                LoadScene();
+                    scene = Importer.ImportFile(FileName, settings.GetFlags());
+
+                    LoadScene();
+                }
             }
             catch (Exception e)
             {

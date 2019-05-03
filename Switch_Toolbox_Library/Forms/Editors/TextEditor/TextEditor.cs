@@ -16,6 +16,12 @@ namespace Switch_Toolbox.Library.Forms
     {
         FindReplace findReplaceDialog;
 
+        private void ResetTypes()
+        {
+            IsYAML = false;
+            IsXML = false;
+        }
+
         private bool isXML;
         public bool IsXML
         {
@@ -40,6 +46,40 @@ namespace Switch_Toolbox.Library.Forms
                     scintilla1.Styles[Style.Xml.TagUnknown].ForeColor = Color.FromArgb(128, 128, 128);
                     scintilla1.Styles[Style.Xml.Attribute].ForeColor = Color.FromArgb(146, 202, 244);
                     scintilla1.Styles[Style.Xml.AttributeUnknown].ForeColor = Color.FromArgb(146, 202, 244);
+                    scintilla1.Styles[Style.Xml.CData].ForeColor = Color.FromArgb(214, 157, 133);
+                }
+            }
+        }
+
+        private bool isYAML;
+        public bool IsYAML
+        {
+            get
+            {
+                return IsYAML;
+            }
+            set
+            {
+                isYAML = value;
+
+                if (isYAML == true)
+                {
+                    scintilla1.Lexer = (Lexer)48;
+
+                    scintilla1.Styles[Style.Xml.XmlStart].ForeColor = Color.FromArgb(86, 156, 214);
+                    scintilla1.Styles[Style.Xml.XmlEnd].ForeColor = Color.FromArgb(86, 156, 214);
+                    scintilla1.Styles[Style.Xml.Default].ForeColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Xml.Comment].ForeColor = Color.FromArgb(87, 166, 74);
+                    scintilla1.Styles[Style.Xml.Number].ForeColor = Color.FromArgb(214, 157, 133);
+
+
+                    scintilla1.Styles[Style.Xml.DoubleString].ForeColor = Color.FromArgb(180, 180, 180);
+                    scintilla1.Styles[Style.Xml.SingleString].ForeColor = Color.FromArgb(180, 180, 180);
+                    scintilla1.Styles[Style.Xml.Tag].ForeColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Xml.TagEnd].ForeColor = Color.FromArgb(86, 156, 214);
+                    scintilla1.Styles[Style.Xml.TagUnknown].ForeColor = Color.FromArgb(86, 156, 214);
+                    scintilla1.Styles[Style.Xml.Attribute].ForeColor = Color.FromArgb(86, 156, 214);
+                    scintilla1.Styles[Style.Xml.AttributeUnknown].ForeColor = Color.FromArgb(86, 156, 214);
                     scintilla1.Styles[Style.Xml.CData].ForeColor = Color.FromArgb(214, 157, 133);
                 }
             }

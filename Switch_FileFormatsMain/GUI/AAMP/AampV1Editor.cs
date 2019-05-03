@@ -112,8 +112,7 @@ namespace FirstPlugin.Forms
                 case ParamType.String32:
                 case ParamType.String256:
                 case ParamType.StringRef:
-                    string enocdedString = Encoding.UTF8.GetString((byte[])entry.Value);
-                    ValueText = $"{enocdedString}";
+                    ValueText = $"{(string)entry.Value}";
                     break;
                 case ParamType.Vector2F:
                     var vec2 = (Vector2F)entry.Value;

@@ -245,6 +245,7 @@
     <Compile Include="GUI\AAMP\AampEditor.Designer.cs">
       <DependentUpon>AampEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\AAMP\YamlConverter.cs" />
     <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

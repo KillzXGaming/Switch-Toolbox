@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.GUI
+﻿namespace Switch_Toolbox.Library.Forms
 {
     partial class Assimp_Settings
     {
@@ -28,176 +28,250 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox2 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox3 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox4 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox5 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox6 = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.generateNormalsChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.smoothNormalsChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.generateTansBitansChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.flipUVsChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.limtBoneWeightChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox7 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox8 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox9 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox10 = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.preTransformVerticesChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.triangulateChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.joinDupedVertsSk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.leftHandedChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.useNodeTransform = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
-            // checkBox1
+            // contentContainer
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.ForeColor = System.Drawing.Color.White;
-            this.checkBox1.Location = new System.Drawing.Point(14, 16);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(196, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Generate Normals (if none are used)";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.contentContainer.Controls.Add(this.stButton2);
+            this.contentContainer.Controls.Add(this.stButton1);
+            this.contentContainer.Controls.Add(this.useNodeTransform);
+            this.contentContainer.Controls.Add(this.leftHandedChk);
+            this.contentContainer.Controls.Add(this.joinDupedVertsSk);
+            this.contentContainer.Controls.Add(this.triangulateChk);
+            this.contentContainer.Controls.Add(this.preTransformVerticesChk);
+            this.contentContainer.Controls.Add(this.numericUpDown1);
+            this.contentContainer.Controls.Add(this.limtBoneWeightChk);
+            this.contentContainer.Controls.Add(this.flipUVsChk);
+            this.contentContainer.Controls.Add(this.generateTansBitansChk);
+            this.contentContainer.Controls.Add(this.smoothNormalsChk);
+            this.contentContainer.Controls.Add(this.generateNormalsChk);
+            this.contentContainer.Size = new System.Drawing.Size(290, 293);
+            this.contentContainer.Controls.SetChildIndex(this.generateNormalsChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.smoothNormalsChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.generateTansBitansChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.flipUVsChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.limtBoneWeightChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.numericUpDown1, 0);
+            this.contentContainer.Controls.SetChildIndex(this.preTransformVerticesChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.triangulateChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.joinDupedVertsSk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.leftHandedChk, 0);
+            this.contentContainer.Controls.SetChildIndex(this.useNodeTransform, 0);
+            this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
+            this.contentContainer.Controls.SetChildIndex(this.stButton2, 0);
             // 
-            // checkBox2
+            // generateNormalsChk
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.ForeColor = System.Drawing.Color.White;
-            this.checkBox2.Location = new System.Drawing.Point(14, 39);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(103, 17);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "Smooth Normals";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.generateNormalsChk.AutoSize = true;
+            this.generateNormalsChk.Checked = true;
+            this.generateNormalsChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.generateNormalsChk.ForeColor = System.Drawing.Color.White;
+            this.generateNormalsChk.Location = new System.Drawing.Point(9, 59);
+            this.generateNormalsChk.Name = "generateNormalsChk";
+            this.generateNormalsChk.Size = new System.Drawing.Size(196, 17);
+            this.generateNormalsChk.TabIndex = 0;
+            this.generateNormalsChk.Text = "Generate Normals (if none are used)";
+            this.generateNormalsChk.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
+            // smoothNormalsChk
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.ForeColor = System.Drawing.Color.White;
-            this.checkBox3.Location = new System.Drawing.Point(14, 62);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(173, 17);
-            this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "Generate Tangents/Bitangents";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.smoothNormalsChk.AutoSize = true;
+            this.smoothNormalsChk.ForeColor = System.Drawing.Color.White;
+            this.smoothNormalsChk.Location = new System.Drawing.Point(9, 82);
+            this.smoothNormalsChk.Name = "smoothNormalsChk";
+            this.smoothNormalsChk.Size = new System.Drawing.Size(103, 17);
+            this.smoothNormalsChk.TabIndex = 1;
+            this.smoothNormalsChk.Text = "Smooth Normals";
+            this.smoothNormalsChk.UseVisualStyleBackColor = true;
             // 
-            // checkBox4
+            // generateTansBitansChk
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.ForeColor = System.Drawing.Color.White;
-            this.checkBox4.Location = new System.Drawing.Point(14, 85);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(65, 17);
-            this.checkBox4.TabIndex = 3;
-            this.checkBox4.Text = "Flip UVs";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.generateTansBitansChk.AutoSize = true;
+            this.generateTansBitansChk.Checked = true;
+            this.generateTansBitansChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.generateTansBitansChk.ForeColor = System.Drawing.Color.White;
+            this.generateTansBitansChk.Location = new System.Drawing.Point(9, 105);
+            this.generateTansBitansChk.Name = "generateTansBitansChk";
+            this.generateTansBitansChk.Size = new System.Drawing.Size(173, 17);
+            this.generateTansBitansChk.TabIndex = 2;
+            this.generateTansBitansChk.Text = "Generate Tangents/Bitangents";
+            this.generateTansBitansChk.UseVisualStyleBackColor = true;
             // 
-            // checkBox5
+            // flipUVsChk
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.ForeColor = System.Drawing.Color.White;
-            this.checkBox5.Location = new System.Drawing.Point(14, 108);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(65, 17);
-            this.checkBox5.TabIndex = 4;
-            this.checkBox5.Text = "Flip UVs";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.flipUVsChk.AutoSize = true;
+            this.flipUVsChk.Checked = true;
+            this.flipUVsChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.flipUVsChk.ForeColor = System.Drawing.Color.White;
+            this.flipUVsChk.Location = new System.Drawing.Point(9, 128);
+            this.flipUVsChk.Name = "flipUVsChk";
+            this.flipUVsChk.Size = new System.Drawing.Size(65, 17);
+            this.flipUVsChk.TabIndex = 3;
+            this.flipUVsChk.Text = "Flip UVs";
+            this.flipUVsChk.UseVisualStyleBackColor = true;
             // 
-            // checkBox6
+            // limtBoneWeightChk
             // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.ForeColor = System.Drawing.Color.White;
-            this.checkBox6.Location = new System.Drawing.Point(14, 131);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(113, 17);
-            this.checkBox6.TabIndex = 5;
-            this.checkBox6.Text = "Limit bone weights";
-            this.checkBox6.UseVisualStyleBackColor = true;
+            this.limtBoneWeightChk.AutoSize = true;
+            this.limtBoneWeightChk.Checked = true;
+            this.limtBoneWeightChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.limtBoneWeightChk.ForeColor = System.Drawing.Color.White;
+            this.limtBoneWeightChk.Location = new System.Drawing.Point(9, 151);
+            this.limtBoneWeightChk.Name = "limtBoneWeightChk";
+            this.limtBoneWeightChk.Size = new System.Drawing.Size(113, 17);
+            this.limtBoneWeightChk.TabIndex = 5;
+            this.limtBoneWeightChk.Text = "Limit bone weights";
+            this.limtBoneWeightChk.UseVisualStyleBackColor = true;
+            this.limtBoneWeightChk.CheckedChanged += new System.EventHandler(this.limtBoneWeightChk_CheckedChanged);
             // 
             // numericUpDown1
             // 
             this.numericUpDown1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.numericUpDown1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDown1.Enabled = false;
             this.numericUpDown1.ForeColor = System.Drawing.Color.White;
-            this.numericUpDown1.Location = new System.Drawing.Point(137, 130);
+            this.numericUpDown1.Location = new System.Drawing.Point(132, 150);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(120, 16);
             this.numericUpDown1.TabIndex = 6;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
             // 
-            // checkBox7
+            // preTransformVerticesChk
             // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.ForeColor = System.Drawing.Color.White;
-            this.checkBox7.Location = new System.Drawing.Point(14, 154);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(130, 17);
-            this.checkBox7.TabIndex = 7;
-            this.checkBox7.Text = "PreTransform Vertices";
-            this.checkBox7.UseVisualStyleBackColor = true;
+            this.preTransformVerticesChk.AutoSize = true;
+            this.preTransformVerticesChk.ForeColor = System.Drawing.Color.White;
+            this.preTransformVerticesChk.Location = new System.Drawing.Point(9, 174);
+            this.preTransformVerticesChk.Name = "preTransformVerticesChk";
+            this.preTransformVerticesChk.Size = new System.Drawing.Size(130, 17);
+            this.preTransformVerticesChk.TabIndex = 7;
+            this.preTransformVerticesChk.Text = "PreTransform Vertices";
+            this.preTransformVerticesChk.UseVisualStyleBackColor = true;
             // 
-            // checkBox8
+            // triangulateChk
             // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.ForeColor = System.Drawing.Color.White;
-            this.checkBox8.Location = new System.Drawing.Point(14, 177);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(79, 17);
-            this.checkBox8.TabIndex = 8;
-            this.checkBox8.Text = "Triangulate";
-            this.checkBox8.UseVisualStyleBackColor = true;
+            this.triangulateChk.AutoSize = true;
+            this.triangulateChk.Checked = true;
+            this.triangulateChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.triangulateChk.ForeColor = System.Drawing.Color.White;
+            this.triangulateChk.Location = new System.Drawing.Point(9, 197);
+            this.triangulateChk.Name = "triangulateChk";
+            this.triangulateChk.Size = new System.Drawing.Size(79, 17);
+            this.triangulateChk.TabIndex = 8;
+            this.triangulateChk.Text = "Triangulate";
+            this.triangulateChk.UseVisualStyleBackColor = true;
             // 
-            // checkBox9
+            // joinDupedVertsSk
             // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.ForeColor = System.Drawing.Color.White;
-            this.checkBox9.Location = new System.Drawing.Point(14, 200);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(121, 17);
-            this.checkBox9.TabIndex = 9;
-            this.checkBox9.Text = "Join Duped Vertices";
-            this.checkBox9.UseVisualStyleBackColor = true;
+            this.joinDupedVertsSk.AutoSize = true;
+            this.joinDupedVertsSk.Checked = true;
+            this.joinDupedVertsSk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.joinDupedVertsSk.ForeColor = System.Drawing.Color.White;
+            this.joinDupedVertsSk.Location = new System.Drawing.Point(9, 220);
+            this.joinDupedVertsSk.Name = "joinDupedVertsSk";
+            this.joinDupedVertsSk.Size = new System.Drawing.Size(121, 17);
+            this.joinDupedVertsSk.TabIndex = 9;
+            this.joinDupedVertsSk.Text = "Join Duped Vertices";
+            this.joinDupedVertsSk.UseVisualStyleBackColor = true;
             // 
-            // checkBox10
+            // leftHandedChk
             // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.ForeColor = System.Drawing.Color.White;
-            this.checkBox10.Location = new System.Drawing.Point(14, 223);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(109, 17);
-            this.checkBox10.TabIndex = 10;
-            this.checkBox10.Text = "Make left handed";
-            this.checkBox10.UseVisualStyleBackColor = true;
+            this.leftHandedChk.AutoSize = true;
+            this.leftHandedChk.ForeColor = System.Drawing.Color.White;
+            this.leftHandedChk.Location = new System.Drawing.Point(9, 243);
+            this.leftHandedChk.Name = "leftHandedChk";
+            this.leftHandedChk.Size = new System.Drawing.Size(109, 17);
+            this.leftHandedChk.TabIndex = 10;
+            this.leftHandedChk.Text = "Make left handed";
+            this.leftHandedChk.UseVisualStyleBackColor = true;
+            // 
+            // useNodeTransform
+            // 
+            this.useNodeTransform.AutoSize = true;
+            this.useNodeTransform.Checked = true;
+            this.useNodeTransform.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.useNodeTransform.ForeColor = System.Drawing.Color.White;
+            this.useNodeTransform.Location = new System.Drawing.Point(9, 31);
+            this.useNodeTransform.Name = "useNodeTransform";
+            this.useNodeTransform.Size = new System.Drawing.Size(124, 17);
+            this.useNodeTransform.TabIndex = 11;
+            this.useNodeTransform.Text = "Use Node Transform";
+            this.useNodeTransform.UseVisualStyleBackColor = true;
+            // 
+            // stButton1
+            // 
+            this.stButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(207, 267);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(75, 23);
+            this.stButton1.TabIndex = 12;
+            this.stButton1.Text = "Cancel";
+            this.stButton1.UseVisualStyleBackColor = false;
+            // 
+            // stButton2
+            // 
+            this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton2.Location = new System.Drawing.Point(126, 267);
+            this.stButton2.Name = "stButton2";
+            this.stButton2.Size = new System.Drawing.Size(75, 23);
+            this.stButton2.TabIndex = 13;
+            this.stButton2.Text = "Ok";
+            this.stButton2.UseVisualStyleBackColor = false;
             // 
             // Assimp_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.Controls.Add(this.checkBox10);
-            this.Controls.Add(this.checkBox9);
-            this.Controls.Add(this.checkBox8);
-            this.Controls.Add(this.checkBox7);
-            this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.checkBox6);
-            this.Controls.Add(this.checkBox5);
-            this.Controls.Add(this.checkBox4);
-            this.Controls.Add(this.checkBox3);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
+            this.ClientSize = new System.Drawing.Size(297, 298);
             this.Name = "Assimp_Settings";
-            this.Size = new System.Drawing.Size(297, 422);
+            this.Text = "Import Settings";
+            this.contentContainer.ResumeLayout(false);
+            this.contentContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox1;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox2;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox3;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox4;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox5;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox6;
+        private Switch_Toolbox.Library.Forms.STCheckBox generateNormalsChk;
+        private Switch_Toolbox.Library.Forms.STCheckBox smoothNormalsChk;
+        private Switch_Toolbox.Library.Forms.STCheckBox generateTansBitansChk;
+        private Switch_Toolbox.Library.Forms.STCheckBox flipUVsChk;
+        private Switch_Toolbox.Library.Forms.STCheckBox limtBoneWeightChk;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox7;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox8;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox9;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox10;
+        private Switch_Toolbox.Library.Forms.STCheckBox preTransformVerticesChk;
+        private Switch_Toolbox.Library.Forms.STCheckBox triangulateChk;
+        private Switch_Toolbox.Library.Forms.STCheckBox joinDupedVertsSk;
+        private Switch_Toolbox.Library.Forms.STCheckBox leftHandedChk;
+        private STCheckBox useNodeTransform;
+        private STButton stButton2;
+        private STButton stButton1;
     }
 }

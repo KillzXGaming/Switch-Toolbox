@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.IO;
 using Switch_Toolbox.Library.Forms;
+using System.Windows.Forms;
 
 namespace FlatTabControl
 {
@@ -66,12 +67,22 @@ namespace FlatTabControl
 				updownImage.MakeTransparent(Color.White);
 			leftRightImages.Images.AddStrip(updownImage);
 			}
+
+            Refresh();
 		}
 
-		/// <summary> 
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            FindUpDown();
+            UpdateUpDown();
+
+            base.OnSizeChanged(e);
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose( bool disposing )
 		{
 			if( disposing )
 			{
@@ -97,7 +108,7 @@ namespace FlatTabControl
 			if (!Visible)
 				return;
 
-			Rectangle TabControlArea = this.ClientRectangle;
+            Rectangle TabControlArea = this.ClientRectangle;
 			Rectangle TabArea = this.DisplayRectangle;
 
 			//----------------------------
@@ -105,6 +116,8 @@ namespace FlatTabControl
 			Brush br = new SolidBrush(mBackColor); //(SystemColors.Control); UPDATED
 			g.FillRectangle(br, TabControlArea);
 			br.Dispose();
+
+
 			//----------------------------
 
 			//----------------------------
@@ -115,12 +128,11 @@ namespace FlatTabControl
 			TabArea.Inflate(nDelta, nDelta);
 			g.DrawRectangle(border, TabArea);
 			border.Dispose();
-			//----------------------------
+            //----------------------------
 
-
-			//----------------------------
-			// clip region for drawing tabs
-			Region rsaved = g.Clip;
+            //----------------------------
+            // clip region for drawing tabs
+            Region rsaved = g.Clip;
 			Rectangle rreg;
 
 			int nWidth = TabArea.Width + nMargin;
