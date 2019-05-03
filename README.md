@@ -21,47 +21,31 @@ This tool currently features:
    - Can preview skeletal, SRT, param, texture pattern, and bone visual animations. (Param ones will vary)
    - Can export and import fully rigged models with bone support.
    - Can convert gif files to texture pattern animations. Very WIP atm.
+   
+Can Edit Formats
+- BFRES
 - BNTX
-   - Can add/remove textures.
-   - Can import textures as DDS, png, tga, tiff, etc)
-   - Can export as binary, dds, png, tga, etc.
-   - Can preview mipmap and surface(array) levels.
+- NUTEXB
 - XTX
-   - Can replace textures as DDS, png, tga, tiff, etc)
-   - Can export as dds, png, tga, etc.
-   - Can preview mipmaplevels.
 - SARC
-   - Supported editing/saving data opened. (Automatically saves data opened if supported)
-   - Supports padding (Thanks to Exelix and AboodXD)
-   - Can save sarcs in sarcs in sarcs.
 - BARS
-   - Can extract and replace audio files.. (rebuilds the file)
 - KCL
-   - Preview collision models.
-   - Replace/Export as obj (Thanks to Exelix)
 - BFFNT
-   - Can extract and replace images.
 - BFLIM
-   - Can add/remove textures.
-   - Can import textures as DDS, png, tga, tiff, etc)
-   - Can export as dds, png, tga, etc.
 - GFPAK
-   - Supported editing/saving data opened. (Automatically saves data opened if supported)
 - BEA
-   - Supported editing/saving data opened. (Automatically saves data opened if supported)
+- AAMP (Wii U and Switch)
+- PTCL (Wii U and Switch)
+- TMPK
+
+Can Preview
 - BFSHA
    - Can view options, samplers, attributes, and uniform blocks.
 - BNSH
    - Can extract shader vertex and fragment shaders from variations/programs
 - SHARCFB and SHARC
    - Basic preview of some shader program data.
-- AAMP
    - Can edit both v1 and v2 AAMP (Wii U and Switch)
-- NUTEXB
-   - Can extract and replace textures.
-- PTCL & EFFN
-   - Can edit colors and textures (Wii U and Switch). 
-   - Switch ptcl also can rebuild and import models (bfres files are inside)
 - EFC
    - Can preview effect tables and link PTCL.
 - NUT
