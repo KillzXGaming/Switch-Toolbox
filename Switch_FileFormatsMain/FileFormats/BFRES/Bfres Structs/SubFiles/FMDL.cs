@@ -657,7 +657,10 @@ namespace Bfres.Structs
                     break;
                 default:
                     AssimpData assimp = new AssimpData();
-                    assimp.LoadFile(FileName);
+                    bool IsLoaded = assimp.LoadFile(FileName);
+
+                    if (!IsLoaded)
+                        return;
 
                     if (assimp.objects.Count == 0)
                     {

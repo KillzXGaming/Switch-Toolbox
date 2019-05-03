@@ -33,7 +33,7 @@ namespace Switch_Toolbox.Library
         public AssimpData()
         {
         }
-        public void LoadFile(string FileName)
+        public bool LoadFile(string FileName)
         {
             try
             {
@@ -56,7 +56,10 @@ namespace Switch_Toolbox.Library
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
 
                     LoadScene();
+
+                    return true;
                 }
+                return false;
             }
             catch (Exception e)
             {
@@ -66,6 +69,8 @@ namespace Switch_Toolbox.Library
                 }
                 else
                     MessageBox.Show($"{e.ToString()}");
+
+                return false;
             }
         }
         public void processNode()
