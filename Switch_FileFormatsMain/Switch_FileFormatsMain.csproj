@@ -265,6 +265,12 @@
     <Compile Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.Designer.cs">
       <DependentUpon>VisObjectAddDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFRES\Materials\MaterialReplaceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\MaterialReplaceDialog.Designer.cs">
+      <DependentUpon>MaterialReplaceDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFRES\Materials\ShaderAssign\VertexAttributeInputListEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -870,6 +876,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.resx">
       <DependentUpon>VisObjectAddDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\MaterialReplaceDialog.resx">
+      <DependentUpon>MaterialReplaceDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\ShaderAssign\VertexAttributeInputListEdit.resx">
       <DependentUpon>VertexAttributeInputListEdit.cs</DependentUpon>

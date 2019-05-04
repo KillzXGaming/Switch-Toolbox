@@ -63,7 +63,7 @@ namespace Bfres.Structs
                     if (((FMDL)Parent).materials.ContainsKey(Name) &&
                         (file.EndsWith(".bfmat")))
                     {
-                        ((FMDL)Parent).materials[Name].Replace(file);
+                        ((FMDL)Parent).materials[Name].Replace(file, false);
                     }
                 }
             }
@@ -260,22 +260,92 @@ namespace Bfres.Structs
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Replace(ofd.FileName);
+                Replace(ofd.FileName, false);
             }
         }
-        public void Replace(string path)
+        public void Replace(string path, bool UseReplaceDialog)
         {
             if (GetResFileU() != null)
             {
-                MaterialU.Import(path, GetResFileU());
-                MaterialU.Name = Text;
-                BfresWiiU.ReadMaterial(this, MaterialU);
+                if (UseReplaceDialog)
+                {
+                    MaterialReplaceDialog dialog = new MaterialReplaceDialog();
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var mat = new ResU.Material();
+                        mat.Import(path, GetResFileU());
+
+                        if (PluginRuntime.MaterialReplace.SwapRenderInfos)
+                            MaterialU.RenderInfos = mat.RenderInfos;
+                        if (PluginRuntime.MaterialReplace.SwapShaderOptions)
+                            MaterialU.ShaderAssign = mat.ShaderAssign;
+                        if (PluginRuntime.MaterialReplace.SwapShaderParams)
+                        {
+                            MaterialU.ShaderParamData = mat.ShaderParamData;
+                            MaterialU.ShaderParams = mat.ShaderParams;
+                        }
+                        if (PluginRuntime.MaterialReplace.SwapTextures)
+                        {
+                            MaterialU.ShaderAssign.SamplerAssigns = mat.ShaderAssign.SamplerAssigns;
+                            MaterialU.TextureRefs = mat.TextureRefs;
+                            MaterialU.Samplers = mat.Samplers;
+                        }
+                        if (PluginRuntime.MaterialReplace.SwapUserData)
+                            MaterialU.UserData = mat.UserData;
+                    }
+                }
+                else
+                {
+                    MaterialU.Import(path, GetResFileU());
+                    MaterialU.Name = Text;
+                    BfresWiiU.ReadMaterial(this, MaterialU);
+                }
             }
             else
             {
-                Material.Import(path);
-                Material.Name = Text;
-                BfresSwitch.ReadMaterial(this, Material);
+                if (UseReplaceDialog)
+                {
+                    MaterialReplaceDialog dialog = new MaterialReplaceDialog();
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var mat = new Material();
+                        mat.Import(path);
+
+                        if (PluginRuntime.MaterialReplace.SwapRenderInfos)
+                        {
+                            Material.RenderInfoDict = mat.RenderInfoDict;
+                            Material.RenderInfos = mat.RenderInfos;
+                        }
+                        if (PluginRuntime.MaterialReplace.SwapShaderOptions)
+                            Material.ShaderAssign = mat.ShaderAssign;
+                        if (PluginRuntime.MaterialReplace.SwapShaderParams)
+                        {
+                            Material.ShaderParamData = mat.ShaderParamData;
+                            Material.ShaderParams = mat.ShaderParams;
+                            Material.ShaderParamDict = mat.ShaderParamDict;
+                        }
+                        if (PluginRuntime.MaterialReplace.SwapTextures)
+                        {
+                            Material.ShaderAssign.SamplerAssigns = mat.ShaderAssign.SamplerAssigns;
+                            Material.TextureRefs = mat.TextureRefs;
+                            Material.Samplers = mat.Samplers;
+                            Material.SamplerDict = mat.SamplerDict;
+                            Material.SamplerSlotArray = mat.SamplerSlotArray;
+                            Material.TextureSlotArray = mat.TextureSlotArray;
+                        }
+                        if (PluginRuntime.MaterialReplace.SwapUserData)
+                        {
+                            Material.UserDatas = mat.UserDatas;
+                            Material.UserDataDict = mat.UserDataDict;
+                        }
+                    }
+                }
+                else
+                {
+                    Material.Import(path);
+                    Material.Name = Text;
+                    BfresSwitch.ReadMaterial(this, Material);
+                }
             }
         }
 

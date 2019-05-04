@@ -51,6 +51,21 @@ namespace FirstPlugin
                             if (File.Exists(node.InnerText))
                                 PluginRuntime.OdysseyGamePath = node.InnerText;
                         break;
+                    case "SwapRenderInfos":
+                        bool.TryParse(node.InnerText, out PluginRuntime.MaterialReplace.SwapRenderInfos);
+                        break;
+                    case "SwapShaderOptions":
+                        bool.TryParse(node.InnerText, out PluginRuntime.MaterialReplace.SwapShaderOptions);
+                        break;
+                    case "SwapShaderParams":
+                        bool.TryParse(node.InnerText, out PluginRuntime.MaterialReplace.SwapShaderParams);
+                        break;
+                    case "SwapTextures":
+                        bool.TryParse(node.InnerText, out PluginRuntime.MaterialReplace.SwapTextures);
+                        break;
+                    case "SwapUserData":
+                        bool.TryParse(node.InnerText, out PluginRuntime.MaterialReplace.SwapUserData);
+                        break;
                 }
             }
         }
@@ -67,6 +82,8 @@ namespace FirstPlugin
 
             AppendDOCKSettings(doc, mainNode);
             AppendPathSettings(doc, mainNode);
+            AppendMaterialReplaceSettings(doc, mainNode);
+
             return doc;
         }
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
@@ -75,6 +92,16 @@ namespace FirstPlugin
             parentNode.AppendChild(pathSettingsNode);
             pathSettingsNode.AppendChild(createNode(doc, "ExternalFMATPath", PluginRuntime.ExternalFMATPath));
             pathSettingsNode.AppendChild(createNode(doc, "MarioOdysseyGamePath", PluginRuntime.OdysseyGamePath));
+        }
+        private static void AppendMaterialReplaceSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode matReplaceSettingsNode = doc.CreateElement("MAT_REPLACE");
+            parentNode.AppendChild(matReplaceSettingsNode);
+            matReplaceSettingsNode.AppendChild(createNode(doc, "SwapRenderInfos", PluginRuntime.MaterialReplace.SwapRenderInfos.ToString()));
+            matReplaceSettingsNode.AppendChild(createNode(doc, "SwapShaderOptions", PluginRuntime.MaterialReplace.SwapShaderOptions.ToString()));
+            matReplaceSettingsNode.AppendChild(createNode(doc, "SwapShaderParams", PluginRuntime.MaterialReplace.SwapShaderParams.ToString()));
+            matReplaceSettingsNode.AppendChild(createNode(doc, "SwapTextures", PluginRuntime.MaterialReplace.SwapTextures.ToString()));
+            matReplaceSettingsNode.AppendChild(createNode(doc, "SwapUserData", PluginRuntime.MaterialReplace.SwapUserData.ToString()));
         }
         private static void AppendDOCKSettings(XmlDocument doc, XmlNode parentNode)
         {

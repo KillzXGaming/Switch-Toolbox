@@ -367,9 +367,6 @@ namespace Switch_Toolbox.Library.Forms
                         else
                             BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
                     }
-
-                    if (ShowChannelEditor)
-                        LoadChannelEditor(image);
                 }
 
                 DecodeProcessFinished = true;

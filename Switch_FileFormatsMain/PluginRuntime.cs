@@ -9,6 +9,15 @@ namespace FirstPlugin
 {
     public class PluginRuntime
     {
+        public class MaterialReplace
+        {
+            public static bool SwapShaderParams = true;
+            public static bool SwapTextures = false;
+            public static bool SwapShaderOptions = true;
+            public static bool SwapRenderInfos = true;
+            public static bool SwapUserData = true;
+        }
+
         public static bool UseSimpleBfresEditor = false;
 
         public static Dictionary<string, BFLIM> bflimTextures = new Dictionary<string, BFLIM>();

@@ -982,11 +982,15 @@ namespace Bfres.Structs
                                     SubMeshCount = 1,
                                 });
                             }
+                        }
 
-                            progressBar.Task = $"Checking name duplicates. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
+                        progressBar.Task = $"Checking name duplicates.";
+                        progressBar.Value = 99;
+                        progressBar.Refresh();
 
-
+                        //now rename dupes
+                        foreach (var shape in shapes)
+                        {
                             List<string> keyList = shapes.Select(o => o.Text).ToList();
                             shape.Text = Utils.RenameDuplicateString(keyList, shape.Text);
                         }
@@ -1000,6 +1004,8 @@ namespace Bfres.Structs
                     }
                     break;
             }
+
+            Console.WriteLine("Updating Vertex Data");
 
             if (IsEdited)
                 UpdateVertexData();

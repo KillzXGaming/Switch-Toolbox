@@ -131,7 +131,6 @@ namespace Switch_Toolbox.Library
         static int i = 0;
         public static string RenameDuplicateString(List<string> strings, string oldString)
         {
-            i = 0;
             foreach (string s in strings)
             {
                 if (strings.Contains(oldString))
