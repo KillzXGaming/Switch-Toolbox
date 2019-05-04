@@ -132,7 +132,7 @@ namespace Switch_Toolbox.Library
         {
             if (strings.Contains(oldString))
             {
-                oldString = $"oldString{index++}";
+                oldString = $"{oldString}{index++}";
 
                 if (strings.Contains(oldString))
                     return RenameDuplicateString(strings, oldString, index);
