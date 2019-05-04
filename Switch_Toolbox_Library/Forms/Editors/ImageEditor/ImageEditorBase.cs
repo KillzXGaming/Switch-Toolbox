@@ -116,8 +116,6 @@ namespace Switch_Toolbox.Library.Forms
         public bool HasGreenChannel = true;
         public bool HasAlphaChannel = true;
 
-        public bool UseComponetSelector = false;
-
         ImagePropertiesEditor propertiesEditor;
 
         public bool ShowChannelEditor = true;
@@ -160,7 +158,8 @@ namespace Switch_Toolbox.Library.Forms
         {
             InitializeComponent();
 
-            componentSelector.Checked = UseComponetSelector;
+            useComponentSelectorToolStripMenuItem.Checked = Runtime.ImageEditor.UseComponetSelector;
+            displayAlphaToolStripMenuItem.Checked = Runtime.ImageEditor.DisplayAlpha;
 
             propertiesEditor = new ImagePropertiesEditor();
             propertiesEditor.Dock = DockStyle.Fill;
@@ -354,15 +353,20 @@ namespace Switch_Toolbox.Library.Forms
                     BitmapExtension.SetChannel(image, STChannelType.Alpha, STChannelType.Alpha, STChannelType.Alpha, STChannelType.One);
                 else
                 {
-                    if (UseComponetSelector)
+                    if (Runtime.ImageEditor.UseComponetSelector)
                     {
-                        if (displayAlphaToolStripMenuItem.Checked)
+                        if (Runtime.ImageEditor.DisplayAlpha)
                             BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, ActiveTexture.AlphaChannel);
                         else
                             BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
                     }
                     else
-                        BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
+                    {
+                        if (Runtime.ImageEditor.DisplayAlpha)
+                            BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.Alpha);
+                        else
+                            BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
+                    }
                 }
 
                 DecodeProcessFinished = true;
@@ -998,7 +1002,8 @@ namespace Switch_Toolbox.Library.Forms
             if (currentCacheIndex == ImageCache.Count)
                 return;
 
-            if (currentCacheIndex == -1) {
+            if (currentCacheIndex == -1)
+            {
                 currentCacheIndex = ImageCache.Count;
             }
             else
@@ -1010,20 +1015,36 @@ namespace Switch_Toolbox.Library.Forms
             ApplyEdit(ImageCache[currentCacheIndex]);
         }
 
-        private void componentSelector_CheckedChanged(object sender, EventArgs e)
-        {
-            UseComponetSelector = useComponentSelectorToolStripMenuItem.Checked;
-            UpdateMipDisplay();
-        }
-
-        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
+        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e) {
+            UpdateAlphaEnable();
         }
 
         private void useComponentSelectorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (useComponentSelectorToolStripMenuItem.Checked)
+                useComponentSelectorToolStripMenuItem.Checked = false;
+            else
+                useComponentSelectorToolStripMenuItem.Checked = true;
 
+            Runtime.ImageEditor.UseComponetSelector = useComponentSelectorToolStripMenuItem.Checked;
+            UpdateMipDisplay();
+        }
+
+        private void UpdateAlphaEnable()
+        {
+            if (displayAlphaToolStripMenuItem.Checked)
+                displayAlphaToolStripMenuItem.Checked = false;
+            else
+                displayAlphaToolStripMenuItem.Checked = true;
+
+            alphaBtn.Enabled = displayAlphaToolStripMenuItem.Checked; 
+            Runtime.ImageEditor.DisplayAlpha = displayAlphaToolStripMenuItem.Checked;
+            UpdateMipDisplay();
+        }
+
+        private void alphaBtn_Click(object sender, EventArgs e)
+        {
+            UpdateAlphaEnable();
         }
     }
 }

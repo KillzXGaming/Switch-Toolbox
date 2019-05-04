@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip();
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.alphaBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.saveBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.arrayLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
@@ -58,6 +58,8 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertyGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useComponentSelectorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,8 +72,6 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.displayAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.useComponentSelectorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -165,6 +165,7 @@
             // 
             // stPanel3
             // 
+            this.stPanel3.Controls.Add(this.alphaBtn);
             this.stPanel3.Controls.Add(this.editBtn);
             this.stPanel3.Controls.Add(this.saveBtn);
             this.stPanel3.Controls.Add(this.arrayLevelCounterLabel);
@@ -177,6 +178,21 @@
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(520, 51);
             this.stPanel3.TabIndex = 3;
+            // 
+            // alphaBtn
+            // 
+            this.alphaBtn.BackColor = System.Drawing.Color.Transparent;
+            this.alphaBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.AlphaIcon;
+            this.alphaBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.alphaBtn.Enabled = false;
+            this.alphaBtn.FlatAppearance.BorderSize = 0;
+            this.alphaBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.alphaBtn.Location = new System.Drawing.Point(70, 3);
+            this.alphaBtn.Name = "alphaBtn";
+            this.alphaBtn.Size = new System.Drawing.Size(24, 23);
+            this.alphaBtn.TabIndex = 17;
+            this.alphaBtn.UseVisualStyleBackColor = false;
+            this.alphaBtn.Click += new System.EventHandler(this.alphaBtn_Click);
             // 
             // editBtn
             // 
@@ -382,6 +398,20 @@
             this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
             // 
+            // displayAlphaToolStripMenuItem
+            // 
+            this.displayAlphaToolStripMenuItem.Name = "displayAlphaToolStripMenuItem";
+            this.displayAlphaToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.displayAlphaToolStripMenuItem.Text = "Display Alpha";
+            this.displayAlphaToolStripMenuItem.Click += new System.EventHandler(this.displayAlphaToolStripMenuItem_Click);
+            // 
+            // useComponentSelectorToolStripMenuItem
+            // 
+            this.useComponentSelectorToolStripMenuItem.Name = "useComponentSelectorToolStripMenuItem";
+            this.useComponentSelectorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.useComponentSelectorToolStripMenuItem.Text = "Use Component Selector";
+            this.useComponentSelectorToolStripMenuItem.Click += new System.EventHandler(this.useComponentSelectorToolStripMenuItem_Click);
+            // 
             // imageToolStripMenuItem
             // 
             this.imageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -477,20 +507,6 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
-            // displayAlphaToolStripMenuItem
-            // 
-            this.displayAlphaToolStripMenuItem.Name = "displayAlphaToolStripMenuItem";
-            this.displayAlphaToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.displayAlphaToolStripMenuItem.Text = "Display Alpha";
-            this.displayAlphaToolStripMenuItem.Click += new System.EventHandler(this.displayAlphaToolStripMenuItem_Click);
-            // 
-            // useComponentSelectorToolStripMenuItem
-            // 
-            this.useComponentSelectorToolStripMenuItem.Name = "useComponentSelectorToolStripMenuItem";
-            this.useComponentSelectorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.useComponentSelectorToolStripMenuItem.Text = "Use Component Selector";
-            this.useComponentSelectorToolStripMenuItem.Click += new System.EventHandler(this.useComponentSelectorToolStripMenuItem_Click);
-            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -557,5 +573,6 @@
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayAlphaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem useComponentSelectorToolStripMenuItem;
+        private STButton alphaBtn;
     }
 }
