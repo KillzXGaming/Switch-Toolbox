@@ -67,9 +67,8 @@ namespace FirstPlugin
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
             string Signature = reader.ReadString(4, Encoding.ASCII);
 
-            uint Version = reader.ReadUInt32();
-            Console.WriteLine(Version.ToString("x"));
-            if (Version == 0x33000000)
+            byte VersionNum = reader.ReadByte();
+            if (VersionNum != 0)
                 Is3DS = true;
 
             reader.Position = 0;
