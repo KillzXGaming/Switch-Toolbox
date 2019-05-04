@@ -146,11 +146,6 @@ namespace FirstPlugin
 
         private Thread Thread;
 
-        private void SelectedEditedSetting(int index)
-        {
-            listViewCustom1.Items[index].Selected = true;
-        }
-
         public void SetupSettings()
         {
             if (SelectedTexSettings.Format == GX2.GX2SurfaceFormat.INVALID || SelectedIndex == -1)
@@ -163,8 +158,7 @@ namespace FirstPlugin
             {
                 SelectedTexSettings.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
 
-                SelectedEditedSetting(SelectedIndex);
-                listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
+                listViewCustom1.Items[SelectedIndex].SubItems[1].Text = SelectedTexSettings.Format.ToString();
             }
             HeightLabel.Text = $"Height: {SelectedTexSettings.TexHeight}";
             WidthLabel.Text = $"Width: {SelectedTexSettings.TexWidth}";

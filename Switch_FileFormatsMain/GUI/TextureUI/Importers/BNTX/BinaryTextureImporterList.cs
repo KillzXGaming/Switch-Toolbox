@@ -112,11 +112,6 @@ namespace FirstPlugin
             listViewCustom1.Select();
         }
 
-        private void SelectedEditedSetting(int index)
-        {
-            listViewCustom1.Items[index].Selected = true;
-        }
-
         private Thread Thread;
         public void SetupSettings()
         {
@@ -132,8 +127,7 @@ namespace FirstPlugin
             {
                 SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
 
-                SelectedEditedSetting(SelectedIndex);
-                listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
+                listViewCustom1.Items[SelectedIndex].SubItems[1].Text = SelectedTexSettings.Format.ToString();
             }
             Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
 
