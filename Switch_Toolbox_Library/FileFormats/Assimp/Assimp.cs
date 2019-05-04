@@ -80,6 +80,7 @@ namespace Switch_Toolbox.Library
             if (scene.RootNode != null)
             {
                 BuildNode(scene.RootNode, ref identity);
+                Console.WriteLine($"BuildNode Mesh Count " + scene.MeshCount);
             }
             else
             {
@@ -112,19 +113,11 @@ namespace Switch_Toolbox.Library
                 STConsole.WriteLine($"Scale {worldTK.ExtractScale()}");
             }
 
-            foreach (int index in parent.MeshIndices)
+            int Index = 0;
+            foreach (Mesh msh in scene.Meshes)
             {
-                objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
-            }
-
-            if (objects.Count <= 0)
-            {
-                int Index = 0;
-                foreach (Mesh msh in scene.Meshes)
-                {
-                    objects.Add(CreateGenericObject(msh, Index, Matrix4.Identity));
-                    Index++;
-                }
+                objects.Add(CreateGenericObject(msh, Index, Matrix4.Identity));
+                Index++;
             }
 
             foreach (Node child in parent.Children)
@@ -137,6 +130,8 @@ namespace Switch_Toolbox.Library
             skeleton = new STSkeleton();
 
             processNode();
+
+            Console.WriteLine("Scene object coun " + objects.Count);
 
             var idenity = Matrix4x4.Identity;
             BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref idenity);
@@ -157,6 +152,7 @@ namespace Switch_Toolbox.Library
             foreach (var tex in scene.Textures)
             {
             }
+
         }
         public Animations.Animation CreateGenericAnimation(Assimp.Animation animation)
         {
