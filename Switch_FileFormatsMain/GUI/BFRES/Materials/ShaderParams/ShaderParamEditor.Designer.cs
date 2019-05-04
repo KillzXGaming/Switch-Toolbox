@@ -119,7 +119,7 @@
             this.columnHeader11,
             this.columnHeader1,
             this.columnHeader2});
-            this.shaderParamListView.Location = new System.Drawing.Point(3, 35);
+            this.shaderParamListView.Location = new System.Drawing.Point(3, 32);
             this.shaderParamListView.MultiSelect = false;
             this.shaderParamListView.Name = "shaderParamListView";
             this.shaderParamListView.OwnerDraw = true;
@@ -149,7 +149,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "";
-            this.columnHeader2.Width = 12;
+            this.columnHeader2.Width = 25;
             // 
             // ShaderParamEditor
             // 

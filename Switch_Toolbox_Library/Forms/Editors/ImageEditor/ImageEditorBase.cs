@@ -361,17 +361,32 @@ namespace Switch_Toolbox.Library.Forms
                     BitmapExtension.SetChannel(image, STChannelType.Alpha, STChannelType.Alpha, STChannelType.Alpha, STChannelType.One);
                 else
                 {
-                    if (Runtime.ImageEditor.UseComponetSelector)
+                    STChannelType AlphaDisplay = ActiveTexture.AlphaChannel;
+                    if (!Runtime.ImageEditor.DisplayAlpha || HasZeroAlpha())
+                        AlphaDisplay = STChannelType.One;
+
+                    //For RGBA types try to only load the alpha toggle to load quicker
+                    //Loading components would not be necessary as it is default to RGBA
+                    if (UseRGBA())
                     {
                         if (Runtime.ImageEditor.DisplayAlpha)
-                            BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, ActiveTexture.AlphaChannel);
-                        else
-                            BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
+                            BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, AlphaDisplay);
                     }
                     else
                     {
-                        if (!Runtime.ImageEditor.DisplayAlpha)
-                            BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
+                        //Check components for the channels
+                        if (Runtime.ImageEditor.UseComponetSelector)
+                        {
+                            BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, AlphaDisplay);
+                        }
+                        else
+                        {
+                            if (UseRGBA())
+                            {
+                                if (Runtime.ImageEditor.DisplayAlpha)
+                                    BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, AlphaDisplay);
+                            }
+                        }
                     }
                 }
 
@@ -381,6 +396,25 @@ namespace Switch_Toolbox.Library.Forms
                 PushImage(image);
             }
 
+        }
+
+        private bool HasZeroAlpha()
+        {
+            if (ActiveTexture.AlphaChannel == STChannelType.Zero)
+                return true;
+            else
+                return false;
+        }
+
+        private bool UseRGBA()
+        {
+            if (ActiveTexture.RedChannel == STChannelType.Red &&
+                ActiveTexture.GreenChannel == STChannelType.Green &&
+                ActiveTexture.BlueChannel == STChannelType.Blue &&
+                ActiveTexture.AlphaChannel == STChannelType.Alpha)
+                return true;
+            else
+                return false;
         }
 
         private void PushImage(Image image)

@@ -27,7 +27,7 @@ namespace Switch_Toolbox.Library
             public static bool DisplayVertical = false;
 
             public static bool DisplayAlpha = true;
-            public static bool UseComponetSelector = false;
+            public static bool UseComponetSelector = true;
             
         }
         public class ObjectEditor
