@@ -68,7 +68,7 @@ namespace FirstPlugin
             string Signature = reader.ReadString(4, Encoding.ASCII);
 
             byte VersionNum = reader.ReadByte();
-            if (VersionNum != 0)
+            if (VersionNum != 0 && Signature == "SPBD")
                 Is3DS = true;
 
             reader.Position = 0;
