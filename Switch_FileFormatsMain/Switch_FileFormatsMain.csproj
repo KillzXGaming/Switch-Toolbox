@@ -208,6 +208,7 @@
     <Compile Include="FileFormats\Bin\KartParts.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
     <Compile Include="FileFormats\Effects\EFCF.cs" />
+    <Compile Include="FileFormats\Effects\PTCL_3DS.cs" />
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />

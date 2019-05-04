@@ -314,13 +314,20 @@ namespace Switch_Toolbox.Library
                 if (data == null)
                     throw new Exception("Data is null!");
 
-                if (Format == TEX_FORMAT.BC5_SNORM)
-                    return DDSCompressor.DecompressBC5(data, (int)width, (int)height, true);
-
-                Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format),
-                   (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-                return bitmap;
+                switch (Format)
+                {
+                    case TEX_FORMAT.BC5_SNORM:
+                        return DDSCompressor.DecompressBC5(data, (int)width, (int)height, true);
+                    case TEX_FORMAT.ETC1:
+                        return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, false),
+                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    case TEX_FORMAT.ETC1_A4:
+                        return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, true),
+                              (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    default:
+                        return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format),
+                              (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                }
             }
             catch (Exception ex)
             {

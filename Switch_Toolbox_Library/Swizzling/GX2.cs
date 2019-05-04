@@ -646,7 +646,7 @@ namespace Switch_Toolbox.Library
         public static List<List<byte[]>> Decode(GX2Surface tex, string DebugTextureName = "")
         {
             if (tex.data == null || tex.data.Length <= 0)
-                throw new Exception("Invalid GX2 surface data. Make sure to not open Tex2 files if this is one. Those will load automatically next to Tex1!");
+                    throw new Exception("Invalid GX2 surface data. Make sure to not open Tex2 files if this is one. Those will load automatically next to Tex1!");
 
             Console.WriteLine("DECODING TEX " + DebugTextureName);
 

@@ -48,9 +48,12 @@ namespace FirstPlugin
 
         public Header header;
         public PTCL_WiiU.Header headerU;
+        public PTCL_3DS.Header header3DS;
+        
         public byte[] data;
 
         bool IsWiiU = false;
+        bool Is3DS = false;
 
         public void Load(Stream stream)
         {
@@ -64,8 +67,19 @@ namespace FirstPlugin
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
             string Signature = reader.ReadString(4, Encoding.ASCII);
 
+            uint Version = reader.ReadUInt32();
+            Console.WriteLine(Version.ToString("x"));
+            if (Version == 0x33000000)
+                Is3DS = true;
+
             reader.Position = 0;
-            if (Signature == "EFTF" || Signature == "SPBD")
+            if (Is3DS)
+            {
+                reader.ByteOrder = ByteOrder.LittleEndian;
+                header3DS = new PTCL_3DS.Header();
+                header3DS.Read(reader, this);
+            }
+            else if (Signature == "EFTF" || Signature == "SPBD")
             {
                 IsWiiU = true;
                 headerU = new PTCL_WiiU.Header();
@@ -73,7 +87,6 @@ namespace FirstPlugin
             }
             else
             {
-                CanSave = true;
                 header = new Header();
                 header.Read(reader, this);
             }
@@ -92,8 +105,9 @@ namespace FirstPlugin
         public byte[] Save()
         {
             MemoryStream mem = new MemoryStream();
-
-            if (IsWiiU)
+            if (Is3DS)
+                header3DS.Write(new FileWriter(mem), this);
+            else if (IsWiiU)
                 headerU.Write(new FileWriter(mem), this);
             else
                 header.Write(new FileWriter(mem));
