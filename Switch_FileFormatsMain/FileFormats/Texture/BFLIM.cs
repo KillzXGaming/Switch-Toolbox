@@ -61,7 +61,7 @@ namespace FirstPlugin
             }
         }
 
-        public override bool CanEdit { get; set; } = false;
+        public override bool CanEdit { get; set; } = true;
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Layout Image" };
@@ -150,7 +150,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true);
+                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true, false, Format);
                 if (ftex.texture != null)
                 {
                     image.Swizzle = (byte)ftex.texture.Swizzle;
@@ -354,7 +354,48 @@ namespace FirstPlugin
 
         public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
         {
-            throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+            if (bitmap == null || image == null)
+                return; //Image is likely disposed and not needed to be applied
+
+            MipCount = 1;
+            var Gx2Format = FTEX.ConvertToGx2Format(Format);
+
+            try
+            {
+                //Create image block from bitmap first
+                var data = GenerateMipsAndCompress(bitmap, Format);
+
+                //Swizzle and create surface
+                var surface = GX2.CreateGx2Texture(data, Text,
+                    (uint)image.TileMode,
+                    (uint)0,
+                    (uint)image.Width,
+                    (uint)image.Height,
+                    (uint)1,
+                    (uint)Gx2Format,
+                    (uint)0,
+                    (uint)1,
+                    (uint)MipCount
+                    );
+
+                image.Swizzle = (byte)surface.swizzle;
+                image.BflimFormat = ConvertFormatGenericToBflim(Format);
+                image.Height = (ushort)surface.height;
+                image.Width = (ushort)surface.width;
+
+                Width = image.Width;
+                Height = image.Height;
+
+                ImageData = surface.data;
+
+                IsEdited = true;
+                LoadOpenGLTexture();
+                LibraryGUI.Instance.UpdateViewport();
+            }
+            catch (Exception ex)
+            {
+                STErrorDialog.Show("Failed to swizzle and compress image " + Text, "Error", ex.ToString());
+            }
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
