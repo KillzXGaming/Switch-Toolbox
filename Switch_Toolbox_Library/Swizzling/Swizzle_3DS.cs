@@ -6,9 +6,47 @@ using System.Threading.Tasks;
 
 namespace Switch_Toolbox.Library
 {
-    public class Swizzle_3DS
+    public class CTR_3DS
     {
         //From https://github.com/gdkchan/SPICA/blob/42c4181e198b0fd34f0a567345ee7e75b54cb58b/SPICA/PICA/Converters/TextureConverter.cs
+
+        public enum PICASurfaceFormat
+        {
+            RGBA8,
+            RGB8,
+            RGBA5551,
+            RGB565,
+            RGBA4,
+            LA8,
+            HiLo8,
+            L8,
+            A8,
+            LA4,
+            L4,
+            A4,
+            ETC1,
+            ETC1A4
+        }
+
+        public static PICASurfaceFormat ConvertToPICAFormat(TEX_FORMAT GenericFormat)
+        {
+            switch (GenericFormat)
+            {
+                case TEX_FORMAT.R8G8_UNORM: return PICASurfaceFormat.RGB8;
+                case TEX_FORMAT.B5G5R5A1_UNORM: return PICASurfaceFormat.RGBA5551;
+                case TEX_FORMAT.B4G4R4A4_UNORM: return PICASurfaceFormat.RGBA4;
+                case TEX_FORMAT.LA8: return PICASurfaceFormat.LA8;
+                case TEX_FORMAT.HIL08: return PICASurfaceFormat.HiLo8;
+                case TEX_FORMAT.L8: return PICASurfaceFormat.L8;
+                case TEX_FORMAT.A8_UNORM: return PICASurfaceFormat.A8;
+                case TEX_FORMAT.LA4: return PICASurfaceFormat.LA4;
+                case TEX_FORMAT.A4: return PICASurfaceFormat.A4;
+                case TEX_FORMAT.ETC1: return PICASurfaceFormat.ETC1;
+                case TEX_FORMAT.ETC1_A4: return PICASurfaceFormat.ETC1A4;
+                default:
+                    throw new NotImplementedException("Unsupported format! " + GenericFormat);
+            }
+        }
 
         public static int[] SwizzleLUT =
 {
@@ -39,8 +77,8 @@ namespace Switch_Toolbox.Library
                 {
                     for (int Px = 0; Px < 64; Px++)
                     {
-                        int X = Swizzle_3DS.SwizzleLUT[Px] & 7;
-                        int Y = (Swizzle_3DS.SwizzleLUT[Px] - X) >> 3;
+                        int X = SwizzleLUT[Px] & 7;
+                        int Y = (SwizzleLUT[Px] - X) >> 3;
 
                         int OOffet = (TX + X + ((Height - 1 - (TY + Y)) * Width)) * 4;
 

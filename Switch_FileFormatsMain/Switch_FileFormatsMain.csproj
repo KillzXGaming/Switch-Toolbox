@@ -416,6 +416,10 @@
     <Compile Include="GUI\Message\MSBTEditor.Designer.cs">
       <DependentUpon>MSBTEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\TextureUI\Importers\3DS\CTR_3DSImporterSettings.cs" />
+    <Compile Include="GUI\TextureUI\Importers\3DS\CTR_3DSTextureImporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>Form</SubType>
@@ -778,11 +782,10 @@
     <Compile Include="GUI\TextureLoader.Designer.cs">
       <DependentUpon>TextureLoader.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\TextureUI\Importers\GTXImporterSettings.cs" />
-    <Compile Include="GUI\TextureUI\Importers\GTXTextureImporter.cs">
+    <Compile Include="GUI\TextureUI\Importers\GX2\GTXImporterSettings.cs" />
+    <Compile Include="GUI\TextureUI\Importers\GX2\GTXTextureImporter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\TextureUI\Importers\GTXTextureImporter.Designer.cs" />
     <Compile Include="GUI\Byaml\ByamlEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -820,14 +823,14 @@
     <Compile Include="GUI\BFRES\Materials\Texture Selector.Designer.cs">
       <DependentUpon>Texture Selector.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\TextureUI\Importers\BinaryTextureImporterList.cs">
+    <Compile Include="GUI\TextureUI\Importers\BNTX\BinaryTextureImporterList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\TextureUI\Importers\BinaryTextureImporterList.Designer.cs">
+    <Compile Include="GUI\TextureUI\Importers\BNTX\BinaryTextureImporterList.Designer.cs">
       <DependentUpon>BinaryTextureImporterList.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\TextureUI\Importers\CreateGx2Texture.cs" />
-    <Compile Include="GUI\TextureUI\Importers\TextureImporterSettings.cs" />
+    <Compile Include="GUI\TextureUI\Importers\GX2\CreateGx2Texture.cs" />
+    <Compile Include="GUI\TextureUI\Importers\BNTX\TextureImporterSettings.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NodeWrappers\Archives\BFRESWrapper.cs" />
     <Compile Include="NodeWrappers\BfresFilters.cs" />
@@ -1091,10 +1094,13 @@
     <EmbeddedResource Include="GUI\TextureLoader.resx">
       <DependentUpon>TextureLoader.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\TextureUI\Importers\BinaryTextureImporterList.resx">
+    <EmbeddedResource Include="GUI\TextureUI\Importers\3DS\CTR_3DSTextureImporter.resx">
+      <DependentUpon>CTR_3DSTextureImporter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TextureUI\Importers\BNTX\BinaryTextureImporterList.resx">
       <DependentUpon>BinaryTextureImporterList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\TextureUI\Importers\GTXTextureImporter.resx">
+    <EmbeddedResource Include="GUI\TextureUI\Importers\GX2\GTXTextureImporter.resx">
       <DependentUpon>GTXTextureImporter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

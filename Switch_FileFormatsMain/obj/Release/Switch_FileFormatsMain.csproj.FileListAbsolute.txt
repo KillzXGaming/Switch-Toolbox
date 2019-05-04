@@ -326,3 +326,4 @@ C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Rele
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.ParamValueDialog.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AampEditorBase.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.MaterialReplaceDialog.resources
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.CTR_3DSTextureImporter.resources
