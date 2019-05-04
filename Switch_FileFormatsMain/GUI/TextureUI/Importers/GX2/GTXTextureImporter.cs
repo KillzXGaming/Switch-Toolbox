@@ -12,6 +12,8 @@ namespace FirstPlugin
 {
     public partial class GTXTextureImporter : STForm
     {
+        public int SelectedIndex = -1;
+
         public bool OverrideMipCounter = false;
 
         bool IsLoaded = false;
@@ -143,9 +145,15 @@ namespace FirstPlugin
         }
 
         private Thread Thread;
+
+        private void SelectedEditedSetting(int index)
+        {
+            listViewCustom1.Items[index].Selected = true;
+        }
+
         public void SetupSettings()
         {
-            if (SelectedTexSettings.Format == GX2.GX2SurfaceFormat.INVALID)
+            if (SelectedTexSettings.Format == GX2.GX2SurfaceFormat.INVALID || SelectedIndex == -1)
                 return;
 
             if (Thread != null && Thread.IsAlive)
@@ -154,6 +162,8 @@ namespace FirstPlugin
             if (formatComboBox.SelectedItem is GX2.GX2SurfaceFormat)
             {
                 SelectedTexSettings.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
+
+                SelectedEditedSetting(SelectedIndex);
                 listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
             }
             HeightLabel.Text = $"Height: {SelectedTexSettings.TexHeight}";
@@ -202,6 +212,8 @@ namespace FirstPlugin
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
+                SelectedIndex = listViewCustom1.SelectedIndices[0];
+
                 SelectedTexSettings = settings[listViewCustom1.SelectedIndices[0]];
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
 

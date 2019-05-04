@@ -16,6 +16,8 @@ namespace FirstPlugin
 {
     public partial class BinaryTextureImporterList : STForm
     {
+        public int SelectedIndex = -1;
+
         public bool ForceMipCount = false;
 
         public uint SelectedMipCount
@@ -110,10 +112,15 @@ namespace FirstPlugin
             listViewCustom1.Select();
         }
 
+        private void SelectedEditedSetting(int index)
+        {
+            listViewCustom1.Items[index].Selected = true;
+        }
+
         private Thread Thread;
         public void SetupSettings()
         {
-            if (SelectedTexSettings.Format == SurfaceFormat.Invalid)
+            if (SelectedTexSettings.Format == SurfaceFormat.Invalid || SelectedIndex == -1)
                 return;
 
 
@@ -124,6 +131,8 @@ namespace FirstPlugin
             if (formatComboBox.SelectedItem is SurfaceFormat)
             {
                 SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
+
+                SelectedEditedSetting(SelectedIndex);
                 listViewCustom1.SelectedItems[0].SubItems[1].Text = SelectedTexSettings.Format.ToString();
             }
             Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
@@ -192,6 +201,8 @@ namespace FirstPlugin
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
+                SelectedIndex = listViewCustom1.SelectedIndices[0];
+
                 SelectedTexSettings = settings[listViewCustom1.SelectedIndices[0]];
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
 
