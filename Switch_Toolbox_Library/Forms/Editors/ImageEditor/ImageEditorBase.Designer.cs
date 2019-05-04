@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
@@ -191,6 +192,7 @@
             this.alphaBtn.Name = "alphaBtn";
             this.alphaBtn.Size = new System.Drawing.Size(24, 23);
             this.alphaBtn.TabIndex = 17;
+            this.toolTip1.SetToolTip(this.alphaBtn, "Toggle Alpha");
             this.alphaBtn.UseVisualStyleBackColor = false;
             this.alphaBtn.Click += new System.EventHandler(this.alphaBtn_Click);
             // 
@@ -206,6 +208,7 @@
             this.editBtn.Name = "editBtn";
             this.editBtn.Size = new System.Drawing.Size(24, 23);
             this.editBtn.TabIndex = 16;
+            this.toolTip1.SetToolTip(this.editBtn, "Open with default program");
             this.editBtn.UseVisualStyleBackColor = false;
             this.editBtn.Click += new System.EventHandler(this.editBtn_Click);
             // 
@@ -220,6 +223,7 @@
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(24, 23);
             this.saveBtn.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.saveBtn, "Save changes from editor");
             this.saveBtn.UseVisualStyleBackColor = false;
             this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
@@ -574,5 +578,6 @@
         private System.Windows.Forms.ToolStripMenuItem displayAlphaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem useComponentSelectorToolStripMenuItem;
         private STButton alphaBtn;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
