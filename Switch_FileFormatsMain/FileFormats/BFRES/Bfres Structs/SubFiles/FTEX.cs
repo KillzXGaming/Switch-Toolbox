@@ -690,7 +690,7 @@ namespace Bfres.Structs
                 LibraryGUI.Instance.LoadEditor(editor);
             }
             editor.Text = Text;
-            editor.LoadProperties(this.texture, OnPropertyChanged);
+            editor.LoadProperties(this.texture);
             editor.LoadImage(this);
 
             if (texture.UserData != null)

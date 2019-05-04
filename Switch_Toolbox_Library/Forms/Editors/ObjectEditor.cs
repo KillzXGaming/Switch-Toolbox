@@ -186,7 +186,7 @@ namespace Switch_Toolbox.Library.Forms
             {
                 //Check if the object was previously selected
                 //This will disable selection view and other things
-                if (RenderedObjectWasSelected == true)
+                if (RenderedObjectWasSelected)
                 {
                     LibraryGUI.Instance.UpdateViewport();
                     RenderedObjectWasSelected = false;

@@ -84,7 +84,7 @@ namespace Switch_Toolbox.Library.Forms
         public bool CanModify = true;
 
         //Instead of disabling/enabling channels, this will only show the selected channel
-        public bool UseChannelToggle = false; 
+        public bool UseChannelToggle = false;
 
         private bool hasBeenEdited = false;
         public bool HasBeenEdited
@@ -190,9 +190,6 @@ namespace Switch_Toolbox.Library.Forms
                 HidePropertyGrid(true);
             else
                 HidePropertyGrid(false);
-
-            if (ShowChannelEditor)
-                LoadChannelEditor(null);
 
             OnDataAcquiredEvent += new DataAcquired(ThreadReportsDataAquiredEvent);
 
@@ -338,11 +335,22 @@ namespace Switch_Toolbox.Library.Forms
 
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
 
+            if (propertiesEditor.InvokeRequired)
+            {
+                propertiesEditor.Invoke(new MethodInvoker(
+                 delegate ()
+                 {
+                     LoadChannelEditor(image);
+                 }));
+            }
+            else
+            {
+                LoadChannelEditor(image);
+            }
+
+
             if (image != null)
             {
-                if (ShowChannelEditor)
-                    LoadChannelEditor(image);
-
                 if (ChannelIndex == 1)
                     BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.One);
                 else if (ChannelIndex == 2)
@@ -362,9 +370,7 @@ namespace Switch_Toolbox.Library.Forms
                     }
                     else
                     {
-                        if (Runtime.ImageEditor.DisplayAlpha)
-                            BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.Alpha);
-                        else
+                        if (!Runtime.ImageEditor.DisplayAlpha)
                             BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
                     }
                 }
@@ -627,8 +633,8 @@ namespace Switch_Toolbox.Library.Forms
 
         private void UpdateEditCached(Image image)
         {
-          //  ImageCache.Add(new Bitmap(image));
-            UpdateEdit(image);
+            if (IsFinished)
+                UpdateEdit(image);
         }
 
         private void UpdateEdit(Image image)
@@ -672,9 +678,10 @@ namespace Switch_Toolbox.Library.Forms
             CurMipDisplayLevel = 0;
             HasBeenEdited = false;
 
-            if (ActiveTexture.EditedImages != null && ActiveTexture.EditedImages[CurArrayDisplayLevel] != null) { 
-            ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
-            ActiveTexture.EditedImages[CurArrayDisplayLevel] = null;
+            if (ActiveTexture.EditedImages != null && ActiveTexture.EditedImages[CurArrayDisplayLevel] != null)
+            {
+                ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
+                ActiveTexture.EditedImages[CurArrayDisplayLevel] = null;
             }
 
             progressBar.Value = 100;
@@ -698,6 +705,8 @@ namespace Switch_Toolbox.Library.Forms
 
         private void reEncodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!IsFinished)
+                return;
 
             ImageReEncodeDialog encodingEditor = new ImageReEncodeDialog();
             encodingEditor.LoadImage(pictureBoxCustom1.Image, ActiveTexture);
@@ -712,6 +721,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void hueToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!IsFinished)
+                return;
+
             HueSaturationAdjuster hsvEditor = new HueSaturationAdjuster();
             hsvEditor.LoadBitmap(pictureBoxCustom1);
 
@@ -722,6 +734,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void toggleAlphaChk_CheckedChanged(object sender, EventArgs e)
         {
+            if (!IsFinished)
+                return;
+
             UpdatePictureBox();
         }
 
@@ -767,22 +782,26 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (Hide)
             {
-                if (splitContainer1.Panel1.Controls.Contains(propertiesEditor)) {
+                if (splitContainer1.Panel1.Controls.Contains(propertiesEditor))
+                {
                     splitContainer1.Panel1Collapsed = true;
                     splitContainer1.Panel1.Hide();
                 }
-                if (splitContainer1.Panel2.Controls.Contains(propertiesEditor)) {
+                if (splitContainer1.Panel2.Controls.Contains(propertiesEditor))
+                {
                     splitContainer1.Panel2Collapsed = true;
                     splitContainer1.Panel2.Hide();
                 }
             }
             else
             {
-                if (splitContainer1.Panel1.Controls.Contains(propertiesEditor)) {
+                if (splitContainer1.Panel1.Controls.Contains(propertiesEditor))
+                {
                     splitContainer1.Panel1Collapsed = false;
                     splitContainer1.Panel1.Show();
                 }
-                if (splitContainer1.Panel2.Controls.Contains(propertiesEditor)) {
+                if (splitContainer1.Panel2.Controls.Contains(propertiesEditor))
+                {
                     splitContainer1.Panel2Collapsed = false;
                     splitContainer1.Panel2.Show();
                 }
@@ -832,14 +851,15 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
-        private void editBtn_Click(object sender, EventArgs e) {
+        private void editBtn_Click(object sender, EventArgs e)
+        {
             EditInExternalProgram();
         }
 
         private TEX_FORMAT FormatToChange = TEX_FORMAT.UNKNOWN;
         private void EditInExternalProgram(bool UseDefaultEditor = true)
         {
-            if (!ActiveTexture.CanEdit)
+            if (!ActiveTexture.CanEdit || !IsFinished)
                 return;
 
             ImageProgramSettings settings = new ImageProgramSettings();
@@ -907,7 +927,7 @@ namespace Switch_Toolbox.Library.Forms
                 }
 
                 if (FileName.EndsWith(".dds"))
-                 {
+                {
                     DDS dds = new DDS(FileName);
                     if (dds.Format != ActiveTexture.Format)
                         DecodeTextureBack = true;
@@ -967,15 +987,18 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        private void copyImageToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void copyImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             Clipboard.SetImage(pictureBoxCustom1.Image);
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             Clipboard.SetImage(pictureBoxCustom1.Image);
         }
 
-        private void editInExternalProgramToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void editInExternalProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             EditInExternalProgram();
         }
 
@@ -1033,7 +1056,7 @@ namespace Switch_Toolbox.Library.Forms
             else
                 displayAlphaToolStripMenuItem.Checked = true;
 
-            SetAlphaEnableUI(displayAlphaToolStripMenuItem.Checked );
+            SetAlphaEnableUI(displayAlphaToolStripMenuItem.Checked);
 
             Runtime.ImageEditor.DisplayAlpha = displayAlphaToolStripMenuItem.Checked;
             UpdateMipDisplay();
@@ -1047,11 +1070,13 @@ namespace Switch_Toolbox.Library.Forms
                 alphaBtn.BackgroundImage = Properties.Resources.AlphaIconDisabled;
         }
 
-        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             UpdateAlphaEnable();
         }
 
-        private void alphaBtn_Click(object sender, EventArgs e) {
+        private void alphaBtn_Click(object sender, EventArgs e)
+        {
             UpdateAlphaEnable();
         }
     }

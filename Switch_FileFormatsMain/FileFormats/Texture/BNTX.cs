@@ -967,8 +967,6 @@ namespace FirstPlugin
 
         public void UpdateEditor()
         {
-            OnPropertyChanged();
-
             if (Parent != null && Parent.Parent != null && Parent.Parent is BFRES)
             {
                 ((BFRES)Parent.Parent).LoadEditors(this);
@@ -996,7 +994,7 @@ namespace FirstPlugin
 
             editor.Text = Text;
 
-            editor.LoadProperties(Texture, OnPropertyChanged);
+            editor.LoadProperties(Texture);
             editor.LoadImage(this);
         }
 
