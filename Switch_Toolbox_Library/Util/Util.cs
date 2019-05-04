@@ -130,18 +130,16 @@ namespace Switch_Toolbox.Library
 
         public static string RenameDuplicateString(List<string> strings, string oldString, int index = 0)
         {
-            foreach (string s in strings)
+            if (strings.Contains(oldString))
             {
-                if (strings.Contains(oldString))
-                {
-                    oldString = $"oldString{index}";
+                oldString = $"oldString{index++}";
 
-                    if (strings.Contains(oldString))
-                        RenameDuplicateString(strings, oldString, index++);
-                    else
-                        return oldString;
-                }
+                if (strings.Contains(oldString))
+                    return RenameDuplicateString(strings, oldString, index);
+                else
+                    return oldString;
             }
+
             return oldString;
         }
         public static T DeepCopy<T>(T other)
