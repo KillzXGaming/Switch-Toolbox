@@ -581,7 +581,7 @@ namespace Bfres.Structs
                 case GX2SurfaceFormat.TC_R11_G11_B10_Float: return TEX_FORMAT.R11G11B10_FLOAT;
                 case GX2SurfaceFormat.TCD_R16_UNorm: return TEX_FORMAT.R16_UNORM;
                 case GX2SurfaceFormat.TCD_R32_Float: return TEX_FORMAT.R32_FLOAT;
-                case GX2SurfaceFormat.T_R4_G4_UNorm: return TEX_FORMAT.B4G4R4A4_UNORM;
+                case GX2SurfaceFormat.T_R4_G4_UNorm: return TEX_FORMAT.R4G4_UNORM;
                 case GX2SurfaceFormat.TC_R8_G8_UNorm: return TEX_FORMAT.R8G8_UNORM;
                 case GX2SurfaceFormat.TC_R8_UNorm: return TEX_FORMAT.R8_UNORM;
                     case GX2SurfaceFormat.TC_R16_G16_B16_A16_Float: return TEX_FORMAT.R16G16B16A16_FLOAT;

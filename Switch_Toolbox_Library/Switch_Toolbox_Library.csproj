@@ -200,11 +200,7 @@
     <Compile Include="Audio\AudioFileRipper.cs" />
     <Compile Include="Audio\VGAudioFile.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="FileFormats\3DS\HiLo8.cs" />
-    <Compile Include="FileFormats\3DS\A8.cs" />
-    <Compile Include="FileFormats\3DS\L4.cs" />
-    <Compile Include="FileFormats\3DS\LA4.cs" />
-    <Compile Include="FileFormats\3DS\LA8.cs" />
+    <Compile Include="FileFormats\3DS\ETC1.cs" />
     <Compile Include="FileFormats\Animation\SMD.cs" />
     <Compile Include="FileFormats\APNG\APNG.cs" />
     <Compile Include="FileFormats\APNG\CRC.cs" />
@@ -213,9 +209,8 @@
     <Compile Include="FileFormats\DAE\ColladaHelper.cs" />
     <Compile Include="FileFormats\DAE\collada_schema_1_4.cs" />
     <Compile Include="FileFormats\DAE\DAE.cs" />
-    <Compile Include="FileFormats\3DS\ETC1.cs" />
-    <Compile Include="FileFormats\3DS\L8.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
+    <Compile Include="FileFormats\R4G4.cs" />
     <Compile Include="Forms\BatchFormatExport.cs">
       <SubType>Form</SubType>
     </Compile>

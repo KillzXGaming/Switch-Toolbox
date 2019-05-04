@@ -167,5 +167,6 @@ namespace Switch_Toolbox.Library
         LA8 = 235,
         HIL08 = 236,
         A4 = 237,
+        R4G4_UNORM = 238,
     }
 }

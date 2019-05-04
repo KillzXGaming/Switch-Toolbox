@@ -210,6 +210,7 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.A8_UNORM,              new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_SINT,               new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_SNORM,              new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.R4G4_UNORM,            new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_UINT,               new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8_UNORM,              new FormatInfo(1,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R11G11B10_FLOAT,       new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
@@ -344,6 +345,9 @@ namespace Switch_Toolbox.Library
 
                 switch (Format)
                 {
+                    case TEX_FORMAT.R4G4_UNORM:
+                        return BitmapExtension.GetBitmap(R4G4.Decompress(data, (int)width, (int)height, false),
+                        (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     case TEX_FORMAT.BC5_SNORM:
                         return DDSCompressor.DecompressBC5(data, (int)width, (int)height, true);
                     case TEX_FORMAT.ETC1:
