@@ -57,6 +57,16 @@ namespace Bfres.Structs
             public override string ImportFilter => FileFilters.GetFilter(typeof(BfresBone));
             public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSKL));
 
+            private void AddRigidMatrix()
+            {
+
+            }
+
+            private void AddSmoothMatrix()
+            {
+
+            }
+
             public BFRESRender GetRenderer()
             {
                return ((FMDL)Parent.Parent).GetRenderer();

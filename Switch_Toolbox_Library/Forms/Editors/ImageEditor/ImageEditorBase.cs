@@ -302,11 +302,6 @@ namespace Switch_Toolbox.Library.Forms
             set
             {
                 isFinished = value;
-
-                if (isFinished == true && CurrentChannelIndex == 0)
-                {
-                    LoadChannelEditor(pictureBoxCustom1.Image);
-                }
             }
         }
 
@@ -345,6 +340,9 @@ namespace Switch_Toolbox.Library.Forms
 
             if (image != null)
             {
+                if (ShowChannelEditor)
+                    LoadChannelEditor(image);
+
                 if (ChannelIndex == 1)
                     BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.One);
                 else if (ChannelIndex == 2)
@@ -369,6 +367,9 @@ namespace Switch_Toolbox.Library.Forms
                         else
                             BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
                     }
+
+                    if (ShowChannelEditor)
+                        LoadChannelEditor(image);
                 }
 
                 DecodeProcessFinished = true;
