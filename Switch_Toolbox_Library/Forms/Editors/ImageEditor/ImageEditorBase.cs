@@ -235,7 +235,7 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        public void LoadProperties(object prop) => propertiesEditor.LoadProperties(prop);
+        public void LoadProperties(object prop, Action OnPropertyChanged = null) => propertiesEditor.LoadProperties(prop, OnPropertyChanged);
 
         public void LoadImage(STGenericTexture texture)
         {

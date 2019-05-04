@@ -45,6 +45,11 @@ namespace Switch_Toolbox.Library
         {
             RenderableTex = new RenderableTex();
             RenderableTex.GLInitialized = false;
+
+            RedChannel = STChannelType.Red;
+            GreenChannel = STChannelType.Green;
+            BlueChannel = STChannelType.Blue;
+            AlphaChannel = STChannelType.Alpha;
         }
 
         /// <summary>

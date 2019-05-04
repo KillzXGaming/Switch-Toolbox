@@ -364,11 +364,26 @@ namespace Bfres.Structs
             ArrayCount = tex.ArrayLength;
             MipCount = tex.MipCount;
 
+            RedChannel = SetChannel(texture.CompSelR);
+            GreenChannel = SetChannel(texture.CompSelG);
+            BlueChannel = SetChannel(texture.CompSelB);
+            AlphaChannel = SetChannel(texture.CompSelA);
+
             if (tex.ArrayLength == 0)
                 ArrayCount = tex.Depth; //Some older bfres don't use array length????
 
             if (texture.MipData == null || texture.MipData.Length <= 0)
                 MipCount = 1;
+        }
+
+        private STChannelType SetChannel(GX2CompSel comp)
+        {
+            if (comp == GX2CompSel.ChannelR) return STChannelType.Red;
+            else if (comp == GX2CompSel.ChannelG) return STChannelType.Green;
+            else if (comp == GX2CompSel.ChannelB) return STChannelType.Blue;
+            else if (comp == GX2CompSel.ChannelA) return STChannelType.Alpha;
+            else if (comp == GX2CompSel.Always0) return STChannelType.Zero;
+            else return STChannelType.One;
         }
 
         public void UpdateMipMaps()
@@ -675,7 +690,7 @@ namespace Bfres.Structs
                 LibraryGUI.Instance.LoadEditor(editor);
             }
             editor.Text = Text;
-            editor.LoadProperties(this.texture);
+            editor.LoadProperties(this.texture, OnPropertyChanged);
             editor.LoadImage(this);
 
             if (texture.UserData != null)
@@ -688,6 +703,24 @@ namespace Bfres.Structs
                     editor.AddCustomControl(userEditor, typeof(UserDataEditor));
                 }
                 userEditor.LoadUserData(texture.UserData);
+            }
+        }
+
+        private void OnPropertyChanged()
+        {
+            Text = texture.Name;
+
+            MessageBox.Show("UPDATE PROB");
+
+            RedChannel = SetChannel(texture.CompSelR);
+            GreenChannel = SetChannel(texture.CompSelG);
+            BlueChannel = SetChannel(texture.CompSelB);
+            AlphaChannel = SetChannel(texture.CompSelA);
+
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            if (editor != null)
+            {
+                editor.UpdateMipDisplay();
             }
         }
     }

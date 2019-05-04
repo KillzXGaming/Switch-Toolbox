@@ -66,7 +66,7 @@ namespace Switch_Toolbox.Library.Forms
             return null;
         }
 
-        public void LoadProperties(object prop)
+        public void LoadProperties(object prop, Action OnPropertyChanged)
         {
             if (stPropertyGrid1.InvokeRequired)
             {
@@ -97,9 +97,6 @@ namespace Switch_Toolbox.Library.Forms
             else
                 stPropertyGrid1.Refresh();
         }
-
-
-        public void OnPropertyChanged() { }
 
         public void ResetChannels()
         {

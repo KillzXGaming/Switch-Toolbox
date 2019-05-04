@@ -796,6 +796,10 @@ namespace FirstPlugin
             MipCount = (uint)tex.TextureData[0].Count;
             Format = ConvertFormat(tex.Format);
 
+            RedChannel = SetChannel(tex.ChannelRed);
+            GreenChannel = SetChannel(tex.ChannelGreen);
+            BlueChannel = SetChannel(tex.ChannelBlue);
+            AlphaChannel = SetChannel(tex.ChannelAlpha);
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
@@ -804,6 +808,17 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, Remove, Keys.Control | Keys.Delete));
         }
+
+        private STChannelType SetChannel(ChannelType channelType)
+        {
+            if (channelType == ChannelType.Red) return STChannelType.Red;
+            else if (channelType == ChannelType.Green) return STChannelType.Green;
+            else if (channelType == ChannelType.Blue) return STChannelType.Blue;
+            else if (channelType == ChannelType.Alpha) return STChannelType.Alpha;
+            else if (channelType == ChannelType.Zero) return STChannelType.Zero;
+            else return STChannelType.One;
+        }
+
         public static SurfaceFormat GenericToBntxSurfaceFormat(TEX_FORMAT texFormat)
         {
             switch (texFormat)
@@ -979,9 +994,20 @@ namespace FirstPlugin
 
             editor.Text = Text;
 
-            editor.LoadProperties(Texture);
+            editor.LoadProperties(Texture, OnPropertyChanged);
             editor.LoadImage(this);
         }
+
+        private void OnPropertyChanged()
+        {
+            Text = Texture.Name;
+
+            RedChannel = SetChannel(Texture.ChannelRed);
+            GreenChannel = SetChannel(Texture.ChannelGreen);
+            BlueChannel = SetChannel(Texture.ChannelBlue);
+            AlphaChannel = SetChannel(Texture.ChannelAlpha);
+        }
+
         private void Remove(object sender, EventArgs args)
         {
             ((BNTX)Parent).RemoveTexture(this);
