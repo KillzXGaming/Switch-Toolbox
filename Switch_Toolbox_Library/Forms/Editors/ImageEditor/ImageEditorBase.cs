@@ -116,7 +116,7 @@ namespace Switch_Toolbox.Library.Forms
         public bool HasGreenChannel = true;
         public bool HasAlphaChannel = true;
 
-        public bool UseComponetSelector = true;
+        public bool UseComponetSelector = false;
 
         ImagePropertiesEditor propertiesEditor;
 
@@ -159,6 +159,8 @@ namespace Switch_Toolbox.Library.Forms
         public ImageEditorBase()
         {
             InitializeComponent();
+
+            componentSelector.Checked = UseComponetSelector;
 
             propertiesEditor = new ImagePropertiesEditor();
             propertiesEditor.Dock = DockStyle.Fill;
@@ -1066,6 +1068,7 @@ namespace Switch_Toolbox.Library.Forms
         private void componentSelector_CheckedChanged(object sender, EventArgs e)
         {
             UseComponetSelector = componentSelector.Checked;
+            UpdateMipDisplay();
         }
     }
 }
