@@ -83,6 +83,16 @@ namespace Switch_Toolbox.Library.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap AlphaIconDisabled {
+            get {
+                object obj = ResourceManager.GetObject("AlphaIconDisabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Antu_edit_find_mail_svg {
             get {
                 object obj = ResourceManager.GetObject("Antu_edit-find-mail.svg", resourceCulture);

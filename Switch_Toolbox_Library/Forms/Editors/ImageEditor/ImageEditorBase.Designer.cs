@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip();
+            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.alphaBtn = new Switch_Toolbox.Library.Forms.STButton();
@@ -184,7 +185,6 @@
             this.alphaBtn.BackColor = System.Drawing.Color.Transparent;
             this.alphaBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.AlphaIcon;
             this.alphaBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.alphaBtn.Enabled = false;
             this.alphaBtn.FlatAppearance.BorderSize = 0;
             this.alphaBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.alphaBtn.Location = new System.Drawing.Point(70, 3);

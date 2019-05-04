@@ -159,7 +159,9 @@ namespace Switch_Toolbox.Library.Forms
             InitializeComponent();
 
             useComponentSelectorToolStripMenuItem.Checked = Runtime.ImageEditor.UseComponetSelector;
+
             displayAlphaToolStripMenuItem.Checked = Runtime.ImageEditor.DisplayAlpha;
+            SetAlphaEnableUI(Runtime.ImageEditor.DisplayAlpha);
 
             propertiesEditor = new ImagePropertiesEditor();
             propertiesEditor.Dock = DockStyle.Fill;
@@ -1015,10 +1017,6 @@ namespace Switch_Toolbox.Library.Forms
             ApplyEdit(ImageCache[currentCacheIndex]);
         }
 
-        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e) {
-            UpdateAlphaEnable();
-        }
-
         private void useComponentSelectorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (useComponentSelectorToolStripMenuItem.Checked)
@@ -1032,18 +1030,30 @@ namespace Switch_Toolbox.Library.Forms
 
         private void UpdateAlphaEnable()
         {
-            if (displayAlphaToolStripMenuItem.Checked)
+            if (Runtime.ImageEditor.DisplayAlpha)
                 displayAlphaToolStripMenuItem.Checked = false;
             else
                 displayAlphaToolStripMenuItem.Checked = true;
 
-            alphaBtn.Enabled = displayAlphaToolStripMenuItem.Checked; 
+            SetAlphaEnableUI(displayAlphaToolStripMenuItem.Checked );
+
             Runtime.ImageEditor.DisplayAlpha = displayAlphaToolStripMenuItem.Checked;
             UpdateMipDisplay();
         }
 
-        private void alphaBtn_Click(object sender, EventArgs e)
+        private void SetAlphaEnableUI(bool UseAlpha)
         {
+            if (UseAlpha)
+                alphaBtn.BackgroundImage = Properties.Resources.AlphaIcon;
+            else
+                alphaBtn.BackgroundImage = Properties.Resources.AlphaIconDisabled;
+        }
+
+        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e) {
+            UpdateAlphaEnable();
+        }
+
+        private void alphaBtn_Click(object sender, EventArgs e) {
             UpdateAlphaEnable();
         }
     }
