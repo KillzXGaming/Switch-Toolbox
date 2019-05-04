@@ -116,6 +116,8 @@ namespace Switch_Toolbox.Library.Forms
         public bool HasGreenChannel = true;
         public bool HasAlphaChannel = true;
 
+        public bool UseComponetSelector = true;
+
         ImagePropertiesEditor propertiesEditor;
 
         public bool ShowChannelEditor = true;
@@ -347,10 +349,15 @@ namespace Switch_Toolbox.Library.Forms
                     BitmapExtension.SetChannel(image, STChannelType.Alpha, STChannelType.Alpha, STChannelType.Alpha, STChannelType.One);
                 else
                 {
-                    if (!toggleAlphaChk.Checked)
+                    if (UseComponetSelector)
                     {
-                        BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
+                        if (toggleAlphaChk.Checked)
+                            BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, ActiveTexture.AlphaChannel);
+                        else
+                            BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
                     }
+                    else
+                        BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, STChannelType.One);
                 }
 
                 DecodeProcessFinished = true;
@@ -1054,6 +1061,11 @@ namespace Switch_Toolbox.Library.Forms
 
             UpdateEdit(ImageCache[currentCacheIndex]);
             ApplyEdit(ImageCache[currentCacheIndex]);
+        }
+
+        private void componentSelector_CheckedChanged(object sender, EventArgs e)
+        {
+            UseComponetSelector = componentSelector.Checked;
         }
     }
 }

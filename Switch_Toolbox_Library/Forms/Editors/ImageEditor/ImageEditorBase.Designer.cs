@@ -75,6 +75,7 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.componentSelector = new Switch_Toolbox.Library.Forms.STCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -196,6 +197,7 @@
             // 
             // stPanel3
             // 
+            this.stPanel3.Controls.Add(this.componentSelector);
             this.stPanel3.Controls.Add(this.editBtn);
             this.stPanel3.Controls.Add(this.toggleAlphaChk);
             this.stPanel3.Controls.Add(this.saveBtn);
@@ -544,6 +546,19 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
+            // componentSelector
+            // 
+            this.componentSelector.AutoSize = true;
+            this.componentSelector.Checked = true;
+            this.componentSelector.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.componentSelector.Location = new System.Drawing.Point(174, 7);
+            this.componentSelector.Name = "componentSelector";
+            this.componentSelector.Size = new System.Drawing.Size(144, 17);
+            this.componentSelector.TabIndex = 17;
+            this.componentSelector.Text = "Use Component Selector";
+            this.componentSelector.UseVisualStyleBackColor = true;
+            this.componentSelector.CheckedChanged += new System.EventHandler(this.componentSelector_CheckedChanged);
+            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -613,5 +628,6 @@
         private System.Windows.Forms.ToolStripMenuItem editInExternalProgramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
+        private STCheckBox componentSelector;
     }
 }

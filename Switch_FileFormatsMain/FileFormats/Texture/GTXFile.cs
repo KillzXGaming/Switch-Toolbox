@@ -419,6 +419,16 @@ namespace FirstPlugin
                 SetChannelComponents();
             }
 
+            private STChannelType SetChannel(byte compSel)
+            {
+                if (compSel == 0) return STChannelType.Red;
+                else if (compSel == 1) return STChannelType.Green;
+                else if (compSel == 2) return STChannelType.Blue;
+                else if (compSel == 3) return STChannelType.Alpha;
+                else if (compSel == 4) return STChannelType.Zero;
+                else return STChannelType.One;
+            }
+
             private void SetChannelComponents()
             {
                 surface.compSel = new byte[4] { 0, 1, 2, 3 };
@@ -428,6 +438,11 @@ namespace FirstPlugin
             {
                 if (bitmap == null)
                     return; //Image is likely disposed and not needed to be applied
+
+                RedChannel = SetChannel(surface.compSel[0]);
+                GreenChannel = SetChannel(surface.compSel[1]);
+                BlueChannel = SetChannel(surface.compSel[2]);
+                AlphaChannel = SetChannel(surface.compSel[3]);
 
                 surface.format = (uint)FTEX.ConvertToGx2Format(Format);
                 surface.width = (uint)bitmap.Width;
@@ -594,6 +609,7 @@ namespace FirstPlugin
                 compSel = reader.ReadBytes(4);
                 texRegs = reader.ReadUInt32s(5);
             }
+
             public byte[] Write()
             {
                 MemoryStream mem = new MemoryStream();
