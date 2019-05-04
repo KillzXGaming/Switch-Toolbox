@@ -333,6 +333,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void UpdatePictureBox(int ChannelIndex = 0)
         {
+            if (ActiveTexture == null)
+                return;
+
             DecodeProcessFinished = false;
 
             PushImage(Properties.Resources.LoadingImage);
