@@ -465,8 +465,15 @@ namespace FirstPlugin
 
                 if (header.IsSPBD)
                 {
-                    uint MipCount = reader.ReadUInt32();
+                    uint Alignment = reader.ReadUInt32();
+                    uint Pitch = reader.ReadUInt32();
+                    WrapMode = reader.ReadByte(); //11 = repeat, 22 = mirror
+                    byte unk = reader.ReadByte();
+                    byte unk2 = reader.ReadByte();
+                    byte unk3 = reader.ReadByte();
+                    uint mipCount = reader.ReadUInt32();
                     CompSel = reader.ReadUInt32();
+                    uint[] MipOffsets = reader.ReadUInt32s(13);
                     uint enableMipLevel = reader.ReadUInt32();
                     uint mipBias = reader.ReadUInt32();
                     uint originalDataFormat = reader.ReadUInt32();
@@ -497,6 +504,7 @@ namespace FirstPlugin
                     DataPos = reader.ReadUInt32();
                 }
                 ArrayCount = 1;
+                Depth = 1;
 
                 if (Width != 0 && Height != 0 && SurfFormat != 0)
                 {
