@@ -189,6 +189,7 @@ namespace FirstPlugin
 
             while (reader.Position < reader.BaseStream.Length)
             {
+                Console.WriteLine("BLOCK POS " + reader.Position + " " + reader.BaseStream.Length);
                 GTXDataBlock block = new GTXDataBlock();
                 block.Read(reader);
                 blocks.Add(block);

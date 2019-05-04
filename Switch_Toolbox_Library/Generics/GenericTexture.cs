@@ -23,6 +23,16 @@ namespace Switch_Toolbox.Library
         Zero
     }
 
+    public enum PlatformSwizzle
+    {
+        None = 0,
+        Platform_3DS = 1,
+        Platform_Wii = 2,
+        Platform_Gamecube = 3,
+        Platform_WiiU = 4,
+        Platform_Switch = 5,
+    }
+
     public class EditedBitmap
     {
         public int ArrayLevel = 0;
@@ -36,6 +46,11 @@ namespace Switch_Toolbox.Library
             RenderableTex = new RenderableTex();
             RenderableTex.GLInitialized = false;
         }
+
+        /// <summary>
+        /// The swizzle method to use when decoding or encoding back a texture.
+        /// </summary>
+        public PlatformSwizzle PlatformSwizzle;
 
         public bool IsSwizzled { get; set; } = true;
 
@@ -240,6 +255,14 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.ASTC_10x5_SRGB,        new FormatInfo(16, 10, 5, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_10x6_UNORM,       new FormatInfo(16, 10, 6, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_10x6_SRGB,        new FormatInfo(16, 10, 6, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ETC1,                  new FormatInfo(1, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ETC1_A4,               new FormatInfo(1, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.HIL08,                 new FormatInfo(8, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.L4,                    new FormatInfo(1, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.LA4,                   new FormatInfo(1, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.L8,                    new FormatInfo(2, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.LA8,                   new FormatInfo(1, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.A4,                    new FormatInfo(1, 1,  1, 1, TargetBuffer.Color) },
 
             { TEX_FORMAT.D16_UNORM,            new FormatInfo(2, 1, 1, 1, TargetBuffer.Depth)        },
             { TEX_FORMAT.D24_UNORM_S8_UINT,    new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)        },
@@ -313,6 +336,11 @@ namespace Switch_Toolbox.Library
             {
                 if (data == null)
                     throw new Exception("Data is null!");
+
+                if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format)) {
+                    return BitmapExtension.GetBitmap(Swizzle_3DS.DecodeBlock(data, (int)width, (int)height, Format),
+                      (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                }
 
                 switch (Format)
                 {

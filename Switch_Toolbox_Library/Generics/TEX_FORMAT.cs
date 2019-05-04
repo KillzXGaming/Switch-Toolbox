@@ -129,7 +129,6 @@ namespace Switch_Toolbox.Library
         V208 = 131,
         V408 = 132,
         R32G8X24_FLOAT = 133,
-
         ASTC_4x4_UNORM = 134,
         ASTC_4x4_SRGB = 135,
         ASTC_5x4_UNORM = 138,
@@ -162,5 +161,11 @@ namespace Switch_Toolbox.Library
 
         ETC1 = 230,
         ETC1_A4 = 231,
+        L4 = 232,
+        LA4 = 233,
+        L8 = 234,
+        LA8 = 235,
+        HIL08 = 236,
+        A4 = 237,
     }
 }

@@ -189,10 +189,9 @@ namespace Switch_Toolbox.Library.IO
             {
                 using (MemoryStream mem = new MemoryStream())
                 {
-                    using (GZipStream gzip = new GZipStream(new MemoryStream(b), CompressionMode.Decompress))
+                    using (GZipStream source = new GZipStream(new MemoryStream(b), CompressionMode.Decompress))
                     {
-                        gzip.CopyTo(mem);
-                        mem.Write(b, 0, b.Length);
+                        source.CopyTo(mem);
                     }
                     return mem.ToArray();
                 }

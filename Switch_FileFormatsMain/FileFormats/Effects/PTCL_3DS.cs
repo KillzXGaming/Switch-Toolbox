@@ -385,6 +385,7 @@ namespace FirstPlugin
                 {
                     return new TEX_FORMAT[]
                     {
+
                             TEX_FORMAT.BC1_UNORM,
                             TEX_FORMAT.BC1_UNORM_SRGB,
                             TEX_FORMAT.BC2_UNORM,
@@ -395,19 +396,22 @@ namespace FirstPlugin
                             TEX_FORMAT.BC4_SNORM,
                             TEX_FORMAT.BC5_UNORM,
                             TEX_FORMAT.BC5_SNORM,
-                            TEX_FORMAT.B5G5R5A1_UNORM,
-                            TEX_FORMAT.B5G6R5_UNORM,
-                            TEX_FORMAT.B8G8R8A8_UNORM_SRGB,
-                            TEX_FORMAT.B8G8R8A8_UNORM,
-                            TEX_FORMAT.R10G10B10A2_UNORM,
-                            TEX_FORMAT.R16_UNORM,
-                            TEX_FORMAT.B4G4R4A4_UNORM,
-                            TEX_FORMAT.B5_G5_R5_A1_UNORM,
-                            TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
-                            TEX_FORMAT.R8G8B8A8_UNORM,
                             TEX_FORMAT.R8_UNORM,
                             TEX_FORMAT.R8G8_UNORM,
-                            TEX_FORMAT.R32G8X24_FLOAT,
+                            TEX_FORMAT.R8G8B8A8_UNORM,
+                            TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
+                            TEX_FORMAT.R8G8_SNORM,
+                            TEX_FORMAT.B4G4R4A4_UNORM,
+                            TEX_FORMAT.ETC1,
+                            TEX_FORMAT.ETC1_A4,
+                            TEX_FORMAT.HIL08,
+                            TEX_FORMAT.L4,
+                            TEX_FORMAT.A4,
+                            TEX_FORMAT.L8,
+                            TEX_FORMAT.A8_UNORM,
+                            TEX_FORMAT.LA8,
+                            TEX_FORMAT.LA4,
+                            TEX_FORMAT.B5G5R5A1_UNORM,
                     };
                 }
             }
@@ -430,7 +434,7 @@ namespace FirstPlugin
                 T_BC5_SNORM = 12,
                 TC_R8_UNORM = 13,
                 TC_R8_G8_UNORM = 14,
-                TCS_R8_G8_B8_A8_UNORM = 15,
+                TC_R8_G8_B8_A8_SRGB = 15,
                 TC_R8_SNORM = 16,
                 TC_R4_R4_SNORM = 17,
                 ETC1_A4 = 18,
@@ -440,7 +444,13 @@ namespace FirstPlugin
                 A4 = 22,
                 L8 = 23,
                 A8 = 24,
-                TCS_R5_G6_B5_UNORM = 25,
+                LA4 = 25,
+                LA8 = 26,
+                TCS_R5_G5_B5_A1_UNORM = 27,
+                TC_R4_G4_B4_UNORM = 28,
+                TC_R8_G8_B8_A8_UNORM = 29,
+                TC_R8_G8_B8_UNORM = 30,
+                TCS_R5_G6_B5_UNORM = 31,
             };
 
             public uint TileMode;
@@ -465,6 +475,7 @@ namespace FirstPlugin
             {
                 CanReplace = true;
                 CanRename = false;
+                PlatformSwizzle = PlatformSwizzle.Platform_3DS;
 
                 Width = reader.ReadUInt16();
                 Height = reader.ReadUInt16();
@@ -558,14 +569,13 @@ namespace FirstPlugin
                     case SurfaceFormat.TC_R8_G8_UNORM:
                         Format = TEX_FORMAT.R8G8_UNORM;
                         break;
-                    case SurfaceFormat.TCS_R8_G8_B8_A8_UNORM:
-                        Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                    case SurfaceFormat.TC_R8_G8_B8_A8_SRGB:
+                        Format = TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
                         break;
                     case SurfaceFormat.TCS_R8_G8_B8_A8:
                         Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         break;
                     case SurfaceFormat.TC_R8_UNORM:
-                        GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_UNORM;
                         Format = TEX_FORMAT.R8_UNORM;
                         break;
                     case SurfaceFormat.TCS_R5_G6_B5_UNORM:
@@ -578,10 +588,28 @@ namespace FirstPlugin
                         Format = TEX_FORMAT.ETC1_A4;
                         break;
                     case SurfaceFormat.L4:
-                  //      Format = TEX_FORMAT.A8_UNORM;
+                        Format = TEX_FORMAT.L4;
                         break;
                     case SurfaceFormat.L8:
-                      //  Format = TEX_FORMAT.A8_UNORM;
+                        Format = TEX_FORMAT.L8;
+                        break;
+                    case SurfaceFormat.LA4:
+                        Format = TEX_FORMAT.LA4;
+                        break;
+                    case SurfaceFormat.LA8:
+                        Format = TEX_FORMAT.LA8;
+                        break;
+                    case SurfaceFormat.HIL08:
+                        Format = TEX_FORMAT.HIL08;
+                        break;
+                    case SurfaceFormat.TC_R8_G8_B8_A8_UNORM:
+                          Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                        break;
+                    case SurfaceFormat.TC_R4_G4_B4_UNORM:
+                        Format = TEX_FORMAT.B4G4R4A4_UNORM;
+                        break;
+                    case SurfaceFormat.TC_R8_G8_B8_UNORM:
+                        Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         break;
                     default:
                         throw new Exception("Format unsupported! " + SurfFormat);

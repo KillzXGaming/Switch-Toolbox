@@ -137,7 +137,6 @@ namespace Switch_Toolbox.Library.IO
                     CompressionType.Lz4f, DecompressedFileSize, CompressedFileSize);
             }
 
-            fileReader.Dispose();
             fileReader.Close();
 
             Stream stream;
