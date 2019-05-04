@@ -24,16 +24,16 @@ namespace Switch_Toolbox.Library.IO
             byte[] data = FileFormat.Save();
             FileFormat.IFileInfo.DecompressedSize = (uint)data.Length;
 
-            CompressFileFormat(data,
+            byte[] FinalData = CompressFileFormat(data,
                 FileFormat.IFileInfo.FileIsCompressed,
                 FileFormat.IFileInfo.Alignment, 
                 FileFormat.IFileInfo.CompressionType,
                 FileName,
                 EnableDialog);
 
-            FileFormat.IFileInfo.CompressedSize = (uint)data.Length;
+            FileFormat.IFileInfo.CompressedSize = (uint)FinalData.Length;
 
-            File.WriteAllBytes(FileName, data);
+            File.WriteAllBytes(FileName, FinalData);
             MessageBox.Show($"File has been saved to {FileName}");
             Cursor.Current = Cursors.Default;
         }
@@ -42,13 +42,13 @@ namespace Switch_Toolbox.Library.IO
             CompressionType CompressionType, string FileName, bool EnableDialog = true)
         {
             Cursor.Current = Cursors.WaitCursor;
-            CompressFileFormat(data, FileIsCompressed, Alignment, CompressionType, FileName, EnableDialog);
-            File.WriteAllBytes(FileName, data);
+            byte[] FinalData = CompressFileFormat(data, FileIsCompressed, Alignment, CompressionType, FileName, EnableDialog);
+            File.WriteAllBytes(FileName, FinalData);
             MessageBox.Show($"File has been saved to {FileName}");
             Cursor.Current = Cursors.Default;
         }
 
-        private static void CompressFileFormat(byte[] data, bool FileIsCompressed, int Alignment,
+        private static byte[] CompressFileFormat(byte[] data, bool FileIsCompressed, int Alignment,
             CompressionType CompressionType, string FileName, bool EnableDialog = true)
         {
             string extension = Path.GetExtension(FileName);
@@ -73,29 +73,25 @@ namespace Switch_Toolbox.Library.IO
                     switch (CompressionType)
                     {
                         case CompressionType.Yaz0:
-                            data = EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
-                            break;
+                            return EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
                         case CompressionType.Zstb:
-                            data = STLibraryCompression.ZSTD.Compress(data);
-                            break;
+                            return STLibraryCompression.ZSTD.Compress(data);
                         case CompressionType.Lz4:
-                            data = STLibraryCompression.Type_LZ4.Compress(data);
-                            break;
+                            return STLibraryCompression.Type_LZ4.Compress(data);
                         case CompressionType.Lz4f:
-                            data = STLibraryCompression.Type_LZ4F.Compress(data);
-                            break;
+                            return STLibraryCompression.Type_LZ4F.Compress(data);
                         case CompressionType.Gzip:
-                            data = STLibraryCompression.GZIP.Compress(data);
-                            break;
+                            return STLibraryCompression.GZIP.Compress(data);
                         case CompressionType.Zlib:
-                            data = STLibraryCompression.ZLIB.Compress(data, 2);
-                            break;
+                            return STLibraryCompression.ZLIB.Compress(data, 2);
                         default:
                             MessageBox.Show($"Compression Type {CompressionType} not supported!!");
                             break;
                     }
                 }
             }
+
+            return data;
         }
     }
 
