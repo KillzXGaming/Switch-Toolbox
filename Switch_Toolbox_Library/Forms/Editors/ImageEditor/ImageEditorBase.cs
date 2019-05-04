@@ -356,7 +356,7 @@ namespace Switch_Toolbox.Library.Forms
                 {
                     if (UseComponetSelector)
                     {
-                        if (toggleAlphaChk.Checked)
+                        if (displayAlphaToolStripMenuItem.Checked)
                             BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, ActiveTexture.AlphaChannel);
                         else
                             BitmapExtension.SetChannel(image, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
@@ -680,64 +680,6 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (pictureBoxCustom1.Image != null)
                 ApplyEdit(pictureBoxCustom1.Image);
-        }
-
-        private void ChannelBtn_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-
-            if (btn.Text == "R")
-            {
-                if (HasRedChannel) {
-                    HasRedChannel = false;
-                    redChannelBtn.BackColor = FormThemes.BaseTheme.DisabledItemColor;
-                }
-                else {
-                    HasRedChannel = true;
-                    redChannelBtn.BackColor = Color.FromArgb(192, 0, 0);
-                }
-            }
-            else if (btn.Text == "B")
-            {
-                if (HasBlueChannel)
-                {
-                    HasBlueChannel = false;
-                    blueChannelBtn.BackColor = FormThemes.BaseTheme.DisabledItemColor;
-                }
-                else
-                {
-                    HasBlueChannel = true;
-                    blueChannelBtn.BackColor = Color.FromArgb(0, 0, 192);
-                }
-            }
-            else if (btn.Text == "G")
-            {
-                if (HasGreenChannel)
-                {
-                    HasGreenChannel = false;
-                    greenChannelBtn.BackColor = FormThemes.BaseTheme.DisabledItemColor;
-                }
-                else
-                {
-                    HasGreenChannel = true;
-                    greenChannelBtn.BackColor = Color.FromArgb(0, 192, 0);
-                }
-            }
-            else if (btn.Text == "A")
-            {
-                if (HasAlphaChannel)
-                {
-                    HasAlphaChannel = false;
-                    alphaChannelBtn.BackColor = FormThemes.BaseTheme.DisabledItemColor;
-                }
-                else
-                {
-                    HasAlphaChannel = true;
-                    alphaChannelBtn.BackColor = Color.Silver;
-                }
-            }
-
-            UpdateMipDisplay();
         }
 
         private void resizeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1070,8 +1012,18 @@ namespace Switch_Toolbox.Library.Forms
 
         private void componentSelector_CheckedChanged(object sender, EventArgs e)
         {
-            UseComponetSelector = componentSelector.Checked;
+            UseComponetSelector = useComponentSelectorToolStripMenuItem.Checked;
             UpdateMipDisplay();
+        }
+
+        private void displayAlphaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void useComponentSelectorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -184,6 +184,12 @@ namespace Switch_Toolbox.Library
                     case "ShowPropertiesPanel":
                         bool.TryParse(node.InnerText, out Runtime.ImageEditor.ShowPropertiesPanel);
                         break;
+                    case "DisplayAlpha":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.DisplayAlpha);
+                        break;
+                    case "UseComponetSelector":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.UseComponetSelector);
+                        break;
                 }
             }
         }
@@ -307,6 +313,8 @@ namespace Switch_Toolbox.Library
             parentNode.AppendChild(PathsNode);
             PathsNode.AppendChild(createNode(doc, "DisplayVertical", Runtime.ImageEditor.DisplayVertical.ToString()));
             PathsNode.AppendChild(createNode(doc, "ShowPropertiesPanel", Runtime.ImageEditor.ShowPropertiesPanel.ToString()));
+            PathsNode.AppendChild(createNode(doc, "DisplayAlpha", Runtime.ImageEditor.DisplayAlpha.ToString()));
+            PathsNode.AppendChild(createNode(doc, "UseComponetSelector", Runtime.ImageEditor.UseComponetSelector.ToString()));
         }
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
         {

@@ -967,6 +967,8 @@ namespace FirstPlugin
 
         public void UpdateEditor()
         {
+            OnPropertyChanged();
+
             if (Parent != null && Parent.Parent != null && Parent.Parent is BFRES)
             {
                 ((BFRES)Parent.Parent).LoadEditors(this);

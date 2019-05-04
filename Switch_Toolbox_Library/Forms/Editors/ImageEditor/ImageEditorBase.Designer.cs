@@ -33,15 +33,12 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.alphaChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
             this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.blueChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
-            this.toggleAlphaChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.saveBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.arrayLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
             this.BtmMipsLeft = new Switch_Toolbox.Library.Forms.STButton();
@@ -49,9 +46,7 @@
             this.btnRightArray = new Switch_Toolbox.Library.Forms.STButton();
             this.BtnMipsRight = new Switch_Toolbox.Library.Forms.STButton();
             this.btnLeftArray = new Switch_Toolbox.Library.Forms.STButton();
-            this.greenChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.imageBGComboBox = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.redChannelBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,7 +70,8 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.componentSelector = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.displayAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useComponentSelectorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -119,31 +115,15 @@
             // 
             // stPanel1
             // 
-            this.stPanel1.Controls.Add(this.alphaChannelBtn);
             this.stPanel1.Controls.Add(this.stPanel4);
-            this.stPanel1.Controls.Add(this.blueChannelBtn);
             this.stPanel1.Controls.Add(this.stPanel3);
-            this.stPanel1.Controls.Add(this.greenChannelBtn);
             this.stPanel1.Controls.Add(this.imageBGComboBox);
-            this.stPanel1.Controls.Add(this.redChannelBtn);
             this.stPanel1.Controls.Add(this.stContextMenuStrip1);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
             this.stPanel1.Size = new System.Drawing.Size(520, 502);
             this.stPanel1.TabIndex = 2;
-            // 
-            // alphaChannelBtn
-            // 
-            this.alphaChannelBtn.BackColor = System.Drawing.Color.Silver;
-            this.alphaChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.alphaChannelBtn.Location = new System.Drawing.Point(464, 1);
-            this.alphaChannelBtn.Name = "alphaChannelBtn";
-            this.alphaChannelBtn.Size = new System.Drawing.Size(21, 21);
-            this.alphaChannelBtn.TabIndex = 17;
-            this.alphaChannelBtn.Text = "A";
-            this.alphaChannelBtn.UseVisualStyleBackColor = false;
-            this.alphaChannelBtn.Click += new System.EventHandler(this.ChannelBtn_Click);
             // 
             // stPanel4
             // 
@@ -183,23 +163,9 @@
             this.copyImageToolStripMenuItem.Text = "Copy Image";
             this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
             // 
-            // blueChannelBtn
-            // 
-            this.blueChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.blueChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.blueChannelBtn.Location = new System.Drawing.Point(437, 1);
-            this.blueChannelBtn.Name = "blueChannelBtn";
-            this.blueChannelBtn.Size = new System.Drawing.Size(21, 21);
-            this.blueChannelBtn.TabIndex = 16;
-            this.blueChannelBtn.Text = "B";
-            this.blueChannelBtn.UseVisualStyleBackColor = false;
-            this.blueChannelBtn.Click += new System.EventHandler(this.ChannelBtn_Click);
-            // 
             // stPanel3
             // 
-            this.stPanel3.Controls.Add(this.componentSelector);
             this.stPanel3.Controls.Add(this.editBtn);
-            this.stPanel3.Controls.Add(this.toggleAlphaChk);
             this.stPanel3.Controls.Add(this.saveBtn);
             this.stPanel3.Controls.Add(this.arrayLevelCounterLabel);
             this.stPanel3.Controls.Add(this.BtmMipsLeft);
@@ -226,19 +192,6 @@
             this.editBtn.TabIndex = 16;
             this.editBtn.UseVisualStyleBackColor = false;
             this.editBtn.Click += new System.EventHandler(this.editBtn_Click);
-            // 
-            // toggleAlphaChk
-            // 
-            this.toggleAlphaChk.AutoSize = true;
-            this.toggleAlphaChk.Checked = true;
-            this.toggleAlphaChk.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toggleAlphaChk.Location = new System.Drawing.Point(85, 7);
-            this.toggleAlphaChk.Name = "toggleAlphaChk";
-            this.toggleAlphaChk.Size = new System.Drawing.Size(83, 17);
-            this.toggleAlphaChk.TabIndex = 15;
-            this.toggleAlphaChk.Text = "Show Alpha";
-            this.toggleAlphaChk.UseVisualStyleBackColor = true;
-            this.toggleAlphaChk.CheckedChanged += new System.EventHandler(this.toggleAlphaChk_CheckedChanged);
             // 
             // saveBtn
             // 
@@ -318,18 +271,6 @@
             this.btnLeftArray.UseVisualStyleBackColor = true;
             this.btnLeftArray.Click += new System.EventHandler(this.btnLeftArray_Click);
             // 
-            // greenChannelBtn
-            // 
-            this.greenChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.greenChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.greenChannelBtn.Location = new System.Drawing.Point(410, 1);
-            this.greenChannelBtn.Name = "greenChannelBtn";
-            this.greenChannelBtn.Size = new System.Drawing.Size(21, 21);
-            this.greenChannelBtn.TabIndex = 15;
-            this.greenChannelBtn.Text = "G";
-            this.greenChannelBtn.UseVisualStyleBackColor = false;
-            this.greenChannelBtn.Click += new System.EventHandler(this.ChannelBtn_Click);
-            // 
             // imageBGComboBox
             // 
             this.imageBGComboBox.BorderColor = System.Drawing.Color.Empty;
@@ -342,18 +283,6 @@
             this.imageBGComboBox.Size = new System.Drawing.Size(115, 21);
             this.imageBGComboBox.TabIndex = 2;
             this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
-            // 
-            // redChannelBtn
-            // 
-            this.redChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.redChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.redChannelBtn.Location = new System.Drawing.Point(383, 1);
-            this.redChannelBtn.Name = "redChannelBtn";
-            this.redChannelBtn.Size = new System.Drawing.Size(21, 21);
-            this.redChannelBtn.TabIndex = 14;
-            this.redChannelBtn.Text = "R";
-            this.redChannelBtn.UseVisualStyleBackColor = false;
-            this.redChannelBtn.Click += new System.EventHandler(this.ChannelBtn_Click);
             // 
             // stContextMenuStrip1
             // 
@@ -427,7 +356,9 @@
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.propertyGridToolStripMenuItem,
-            this.displayVerticalToolStripMenuItem});
+            this.displayVerticalToolStripMenuItem,
+            this.displayAlphaToolStripMenuItem,
+            this.useComponentSelectorToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -438,7 +369,7 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.propertyGridToolStripMenuItem_CheckedChanged);
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
@@ -446,7 +377,7 @@
             // displayVerticalToolStripMenuItem
             // 
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
-            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
             this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
@@ -546,18 +477,19 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
-            // componentSelector
+            // displayAlphaToolStripMenuItem
             // 
-            this.componentSelector.AutoSize = true;
-            this.componentSelector.Checked = true;
-            this.componentSelector.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.componentSelector.Location = new System.Drawing.Point(174, 7);
-            this.componentSelector.Name = "componentSelector";
-            this.componentSelector.Size = new System.Drawing.Size(144, 17);
-            this.componentSelector.TabIndex = 17;
-            this.componentSelector.Text = "Use Component Selector";
-            this.componentSelector.UseVisualStyleBackColor = true;
-            this.componentSelector.CheckedChanged += new System.EventHandler(this.componentSelector_CheckedChanged);
+            this.displayAlphaToolStripMenuItem.Name = "displayAlphaToolStripMenuItem";
+            this.displayAlphaToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.displayAlphaToolStripMenuItem.Text = "Display Alpha";
+            this.displayAlphaToolStripMenuItem.Click += new System.EventHandler(this.displayAlphaToolStripMenuItem_Click);
+            // 
+            // useComponentSelectorToolStripMenuItem
+            // 
+            this.useComponentSelectorToolStripMenuItem.Name = "useComponentSelectorToolStripMenuItem";
+            this.useComponentSelectorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.useComponentSelectorToolStripMenuItem.Text = "Use Component Selector";
+            this.useComponentSelectorToolStripMenuItem.Click += new System.EventHandler(this.useComponentSelectorToolStripMenuItem_Click);
             // 
             // ImageEditorBase
             // 
@@ -611,13 +543,8 @@
         private System.Windows.Forms.ToolStripMenuItem rotate90ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rotate90CounterClockwiseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rToolStripMenuItem;
-        private STButton alphaChannelBtn;
-        private STButton blueChannelBtn;
-        private STButton greenChannelBtn;
-        private STButton redChannelBtn;
         private STButton saveBtn;
         private System.Windows.Forms.ToolStripMenuItem reEncodeToolStripMenuItem;
-        private STCheckBox toggleAlphaChk;
         private System.Windows.Forms.ToolStripMenuItem displayVerticalToolStripMenuItem;
         private STButton editBtn;
         private System.Windows.Forms.ToolStripMenuItem generateMipmapsToolStripMenuItem;
@@ -628,6 +555,7 @@
         private System.Windows.Forms.ToolStripMenuItem editInExternalProgramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private STCheckBox componentSelector;
+        private System.Windows.Forms.ToolStripMenuItem displayAlphaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem useComponentSelectorToolStripMenuItem;
     }
 }
