@@ -122,6 +122,8 @@ namespace FirstPlugin
             WidthLabel.Text = $"Width {SelectedTexSettings.TexWidth}";
             HeightLabel.Text = $"Height {SelectedTexSettings.TexHeight}";
 
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
 
             if (formatComboBox.SelectedItem is SurfaceFormat)
             {
