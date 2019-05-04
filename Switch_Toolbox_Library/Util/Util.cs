@@ -128,17 +128,16 @@ namespace Switch_Toolbox.Library
             return data.Skip((int)offset).Take((int)length).ToArray();
         }
 
-        static int i = 0;
-        public static string RenameDuplicateString(List<string> strings, string oldString)
+        public static string RenameDuplicateString(List<string> strings, string oldString, int index = 0)
         {
             foreach (string s in strings)
             {
                 if (strings.Contains(oldString))
                 {
-                    oldString += i.ToString();
+                    oldString = $"oldString{index}";
 
                     if (strings.Contains(oldString))
-                        RenameDuplicateString(strings, oldString);
+                        RenameDuplicateString(strings, oldString, index++);
                     else
                         return oldString;
                 }
