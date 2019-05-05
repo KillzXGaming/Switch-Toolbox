@@ -41,12 +41,14 @@
             this.useNodeTransform = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.rotateBonesY90 = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.rotateBonesY90);
             this.contentContainer.Controls.Add(this.stButton2);
             this.contentContainer.Controls.Add(this.stButton1);
             this.contentContainer.Controls.Add(this.useNodeTransform);
@@ -60,7 +62,7 @@
             this.contentContainer.Controls.Add(this.generateTansBitansChk);
             this.contentContainer.Controls.Add(this.smoothNormalsChk);
             this.contentContainer.Controls.Add(this.generateNormalsChk);
-            this.contentContainer.Size = new System.Drawing.Size(290, 293);
+            this.contentContainer.Size = new System.Drawing.Size(290, 336);
             this.contentContainer.Controls.SetChildIndex(this.generateNormalsChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.smoothNormalsChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.generateTansBitansChk, 0);
@@ -74,6 +76,7 @@
             this.contentContainer.Controls.SetChildIndex(this.useNodeTransform, 0);
             this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
             this.contentContainer.Controls.SetChildIndex(this.stButton2, 0);
+            this.contentContainer.Controls.SetChildIndex(this.rotateBonesY90, 0);
             // 
             // generateNormalsChk
             // 
@@ -81,7 +84,7 @@
             this.generateNormalsChk.Checked = true;
             this.generateNormalsChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.generateNormalsChk.ForeColor = System.Drawing.Color.White;
-            this.generateNormalsChk.Location = new System.Drawing.Point(9, 59);
+            this.generateNormalsChk.Location = new System.Drawing.Point(9, 88);
             this.generateNormalsChk.Name = "generateNormalsChk";
             this.generateNormalsChk.Size = new System.Drawing.Size(196, 17);
             this.generateNormalsChk.TabIndex = 0;
@@ -92,7 +95,7 @@
             // 
             this.smoothNormalsChk.AutoSize = true;
             this.smoothNormalsChk.ForeColor = System.Drawing.Color.White;
-            this.smoothNormalsChk.Location = new System.Drawing.Point(9, 82);
+            this.smoothNormalsChk.Location = new System.Drawing.Point(9, 111);
             this.smoothNormalsChk.Name = "smoothNormalsChk";
             this.smoothNormalsChk.Size = new System.Drawing.Size(103, 17);
             this.smoothNormalsChk.TabIndex = 1;
@@ -105,7 +108,7 @@
             this.generateTansBitansChk.Checked = true;
             this.generateTansBitansChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.generateTansBitansChk.ForeColor = System.Drawing.Color.White;
-            this.generateTansBitansChk.Location = new System.Drawing.Point(9, 105);
+            this.generateTansBitansChk.Location = new System.Drawing.Point(9, 134);
             this.generateTansBitansChk.Name = "generateTansBitansChk";
             this.generateTansBitansChk.Size = new System.Drawing.Size(173, 17);
             this.generateTansBitansChk.TabIndex = 2;
@@ -118,7 +121,7 @@
             this.flipUVsChk.Checked = true;
             this.flipUVsChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.flipUVsChk.ForeColor = System.Drawing.Color.White;
-            this.flipUVsChk.Location = new System.Drawing.Point(9, 128);
+            this.flipUVsChk.Location = new System.Drawing.Point(9, 157);
             this.flipUVsChk.Name = "flipUVsChk";
             this.flipUVsChk.Size = new System.Drawing.Size(65, 17);
             this.flipUVsChk.TabIndex = 3;
@@ -131,7 +134,7 @@
             this.limtBoneWeightChk.Checked = true;
             this.limtBoneWeightChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.limtBoneWeightChk.ForeColor = System.Drawing.Color.White;
-            this.limtBoneWeightChk.Location = new System.Drawing.Point(9, 151);
+            this.limtBoneWeightChk.Location = new System.Drawing.Point(9, 180);
             this.limtBoneWeightChk.Name = "limtBoneWeightChk";
             this.limtBoneWeightChk.Size = new System.Drawing.Size(113, 17);
             this.limtBoneWeightChk.TabIndex = 5;
@@ -145,7 +148,7 @@
             this.numericUpDown1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown1.Enabled = false;
             this.numericUpDown1.ForeColor = System.Drawing.Color.White;
-            this.numericUpDown1.Location = new System.Drawing.Point(132, 150);
+            this.numericUpDown1.Location = new System.Drawing.Point(132, 179);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             4,
             0,
@@ -164,7 +167,7 @@
             // 
             this.preTransformVerticesChk.AutoSize = true;
             this.preTransformVerticesChk.ForeColor = System.Drawing.Color.White;
-            this.preTransformVerticesChk.Location = new System.Drawing.Point(9, 174);
+            this.preTransformVerticesChk.Location = new System.Drawing.Point(9, 203);
             this.preTransformVerticesChk.Name = "preTransformVerticesChk";
             this.preTransformVerticesChk.Size = new System.Drawing.Size(130, 17);
             this.preTransformVerticesChk.TabIndex = 7;
@@ -177,7 +180,7 @@
             this.triangulateChk.Checked = true;
             this.triangulateChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.triangulateChk.ForeColor = System.Drawing.Color.White;
-            this.triangulateChk.Location = new System.Drawing.Point(9, 197);
+            this.triangulateChk.Location = new System.Drawing.Point(9, 226);
             this.triangulateChk.Name = "triangulateChk";
             this.triangulateChk.Size = new System.Drawing.Size(79, 17);
             this.triangulateChk.TabIndex = 8;
@@ -190,7 +193,7 @@
             this.joinDupedVertsSk.Checked = true;
             this.joinDupedVertsSk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.joinDupedVertsSk.ForeColor = System.Drawing.Color.White;
-            this.joinDupedVertsSk.Location = new System.Drawing.Point(9, 220);
+            this.joinDupedVertsSk.Location = new System.Drawing.Point(9, 249);
             this.joinDupedVertsSk.Name = "joinDupedVertsSk";
             this.joinDupedVertsSk.Size = new System.Drawing.Size(121, 17);
             this.joinDupedVertsSk.TabIndex = 9;
@@ -201,7 +204,7 @@
             // 
             this.leftHandedChk.AutoSize = true;
             this.leftHandedChk.ForeColor = System.Drawing.Color.White;
-            this.leftHandedChk.Location = new System.Drawing.Point(9, 243);
+            this.leftHandedChk.Location = new System.Drawing.Point(9, 272);
             this.leftHandedChk.Name = "leftHandedChk";
             this.leftHandedChk.Size = new System.Drawing.Size(109, 17);
             this.leftHandedChk.TabIndex = 10;
@@ -214,7 +217,7 @@
             this.useNodeTransform.Checked = true;
             this.useNodeTransform.CheckState = System.Windows.Forms.CheckState.Checked;
             this.useNodeTransform.ForeColor = System.Drawing.Color.White;
-            this.useNodeTransform.Location = new System.Drawing.Point(9, 31);
+            this.useNodeTransform.Location = new System.Drawing.Point(9, 60);
             this.useNodeTransform.Name = "useNodeTransform";
             this.useNodeTransform.Size = new System.Drawing.Size(124, 17);
             this.useNodeTransform.TabIndex = 11;
@@ -225,7 +228,7 @@
             // 
             this.stButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(207, 267);
+            this.stButton1.Location = new System.Drawing.Point(211, 304);
             this.stButton1.Name = "stButton1";
             this.stButton1.Size = new System.Drawing.Size(75, 23);
             this.stButton1.TabIndex = 12;
@@ -236,19 +239,31 @@
             // 
             this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton2.Location = new System.Drawing.Point(126, 267);
+            this.stButton2.Location = new System.Drawing.Point(130, 304);
             this.stButton2.Name = "stButton2";
             this.stButton2.Size = new System.Drawing.Size(75, 23);
             this.stButton2.TabIndex = 13;
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
+            // rotateBonesY90
+            // 
+            this.rotateBonesY90.AutoSize = true;
+            this.rotateBonesY90.ForeColor = System.Drawing.Color.White;
+            this.rotateBonesY90.Location = new System.Drawing.Point(9, 31);
+            this.rotateBonesY90.Name = "rotateBonesY90";
+            this.rotateBonesY90.Size = new System.Drawing.Size(116, 17);
+            this.rotateBonesY90.TabIndex = 14;
+            this.rotateBonesY90.Text = "Rotate Bones 90 Y";
+            this.rotateBonesY90.UseVisualStyleBackColor = true;
+            this.rotateBonesY90.CheckedChanged += new System.EventHandler(this.rotateBonesY90_CheckedChanged);
+            // 
             // Assimp_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.ClientSize = new System.Drawing.Size(297, 298);
+            this.ClientSize = new System.Drawing.Size(297, 341);
             this.Name = "Assimp_Settings";
             this.Text = "Import Settings";
             this.contentContainer.ResumeLayout(false);
@@ -273,5 +288,6 @@
         private STCheckBox useNodeTransform;
         private STButton stButton2;
         private STButton stButton1;
+        private STCheckBox rotateBonesY90;
     }
 }

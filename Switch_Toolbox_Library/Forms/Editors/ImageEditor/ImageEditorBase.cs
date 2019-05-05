@@ -300,6 +300,9 @@ namespace Switch_Toolbox.Library.Forms
             set
             {
                 isFinished = value;
+
+                if (value)
+                    SetBottomBar();
             }
         }
 
@@ -1146,11 +1149,27 @@ namespace Switch_Toolbox.Library.Forms
                 pictureBoxCustom1.AllowClickZoom = false;
                 pictureBoxCustom1.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Fit;
             }
+            SetBottomBar();
         }
 
         private void SaveSettings()
         {
             Config.Save();
+        }
+
+        private void pictureBoxCustom1_ZoomChanged(object sender, EventArgs e) {
+            SetBottomBar();
+        }
+
+        private void SetBottomBar()
+        {
+            if (pictureBoxCustom1.Image != null)
+            {
+                if (Runtime.ImageEditor.EnableImageZoom)
+                    bottomLabel.Text = $"Zoom: {pictureBoxCustom1.Zoom}% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height}";
+                else
+                    bottomLabel.Text = $"Zoom: 100% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height}";
+            }
         }
     }
 }

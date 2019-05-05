@@ -15,6 +15,7 @@ namespace Switch_Toolbox.Library.Forms
     {
         public uint SkinLimitMax = 4;
         public bool UseNodeTransform = true;
+        public bool RotateSkeleton90Y = false;
 
         public Assimp_Settings()
         {
@@ -23,6 +24,8 @@ namespace Switch_Toolbox.Library.Forms
 
         public PostProcessSteps GetFlags()
         {
+            RotateSkeleton90Y = rotateBonesY90.Checked;
+
             UseNodeTransform = useNodeTransform.Checked;
 
             SkinLimitMax = (uint)numericUpDown1.Value;
@@ -53,6 +56,11 @@ namespace Switch_Toolbox.Library.Forms
 
         private void limtBoneWeightChk_CheckedChanged(object sender, EventArgs e) {
             numericUpDown1.Enabled = limtBoneWeightChk.Checked;
+        }
+
+        private void rotateBonesY90_CheckedChanged(object sender, EventArgs e)
+        {
+            RotateSkeleton90Y = rotateBonesY90.Checked;
         }
     }
 }
