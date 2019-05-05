@@ -12,6 +12,8 @@ namespace FirstPlugin
 {
     public partial class CTR_3DSTextureImporter : STForm
     {
+        public int SelectedIndex = -1;
+
         public bool OverrideMipCounter = false;
 
         bool IsLoaded = false;
@@ -109,7 +111,7 @@ namespace FirstPlugin
         private Thread Thread;
         public void SetupSettings()
         {
-            if (SelectedTexSettings.Format == 0)
+            if (SelectedTexSettings.Format == 0 || SelectedIndex == -1)
                 return;
 
             if (Thread != null && Thread.IsAlive)
@@ -162,6 +164,8 @@ namespace FirstPlugin
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
+                SelectedIndex = listViewCustom1.SelectedIndices[0];
+
                 SelectedTexSettings = settings[listViewCustom1.SelectedIndices[0]];
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
 

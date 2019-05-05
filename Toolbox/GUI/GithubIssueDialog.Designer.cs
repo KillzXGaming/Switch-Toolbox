@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.titleTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.infoTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.typeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.typeCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.infoTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.titleTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -62,32 +62,44 @@
             this.stPanel1.Size = new System.Drawing.Size(543, 368);
             this.stPanel1.TabIndex = 11;
             // 
-            // titleTB
+            // stButton2
             // 
-            this.titleTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.titleTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.titleTB.Location = new System.Drawing.Point(12, 71);
-            this.titleTB.Name = "titleTB";
-            this.titleTB.Size = new System.Drawing.Size(512, 29);
-            this.titleTB.TabIndex = 0;
+            this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton2.Location = new System.Drawing.Point(368, 339);
+            this.stButton2.Name = "stButton2";
+            this.stButton2.Size = new System.Drawing.Size(75, 23);
+            this.stButton2.TabIndex = 7;
+            this.stButton2.Text = "Ok";
+            this.stButton2.UseVisualStyleBackColor = false;
             // 
-            // stLabel1
+            // stButton1
             // 
-            this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(9, 55);
-            this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(30, 13);
-            this.stLabel1.TabIndex = 1;
-            this.stLabel1.Text = "Title:";
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(449, 339);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(75, 23);
+            this.stButton1.TabIndex = 6;
+            this.stButton1.Text = "Cancel";
+            this.stButton1.UseVisualStyleBackColor = false;
             // 
-            // infoTB
+            // stLabel3
             // 
-            this.infoTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.infoTB.Location = new System.Drawing.Point(11, 128);
-            this.infoTB.Multiline = true;
-            this.infoTB.Name = "infoTB";
-            this.infoTB.Size = new System.Drawing.Size(512, 205);
-            this.infoTB.TabIndex = 2;
+            this.stLabel3.AutoSize = true;
+            this.stLabel3.Location = new System.Drawing.Point(12, 112);
+            this.stLabel3.Name = "stLabel3";
+            this.stLabel3.Size = new System.Drawing.Size(62, 13);
+            this.stLabel3.TabIndex = 5;
+            this.stLabel3.Text = "Information:";
+            // 
+            // stLabel2
+            // 
+            this.stLabel2.AutoSize = true;
+            this.stLabel2.Location = new System.Drawing.Point(8, 3);
+            this.stLabel2.Name = "stLabel2";
+            this.stLabel2.Size = new System.Drawing.Size(34, 13);
+            this.stLabel2.TabIndex = 4;
+            this.stLabel2.Text = "Type:";
             // 
             // typeCB
             // 
@@ -101,43 +113,33 @@
             this.typeCB.Size = new System.Drawing.Size(159, 21);
             this.typeCB.TabIndex = 3;
             // 
-            // stLabel2
+            // infoTB
             // 
-            this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(8, 3);
-            this.stLabel2.Name = "stLabel2";
-            this.stLabel2.Size = new System.Drawing.Size(34, 13);
-            this.stLabel2.TabIndex = 4;
-            this.stLabel2.Text = "Type:";
+            this.infoTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.infoTB.Location = new System.Drawing.Point(11, 128);
+            this.infoTB.Multiline = true;
+            this.infoTB.Name = "infoTB";
+            this.infoTB.Size = new System.Drawing.Size(512, 205);
+            this.infoTB.TabIndex = 2;
             // 
-            // stLabel3
+            // stLabel1
             // 
-            this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(12, 112);
-            this.stLabel3.Name = "stLabel3";
-            this.stLabel3.Size = new System.Drawing.Size(62, 13);
-            this.stLabel3.TabIndex = 5;
-            this.stLabel3.Text = "Information:";
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(9, 55);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(30, 13);
+            this.stLabel1.TabIndex = 1;
+            this.stLabel1.Text = "Title:";
             // 
-            // stButton1
+            // titleTB
             // 
-            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(449, 339);
-            this.stButton1.Name = "stButton1";
-            this.stButton1.Size = new System.Drawing.Size(75, 23);
-            this.stButton1.TabIndex = 6;
-            this.stButton1.Text = "Cancel";
-            this.stButton1.UseVisualStyleBackColor = false;
-            // 
-            // stButton2
-            // 
-            this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton2.Location = new System.Drawing.Point(368, 339);
-            this.stButton2.Name = "stButton2";
-            this.stButton2.Size = new System.Drawing.Size(75, 23);
-            this.stButton2.TabIndex = 7;
-            this.stButton2.Text = "Ok";
-            this.stButton2.UseVisualStyleBackColor = false;
+            this.titleTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.titleTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleTB.Location = new System.Drawing.Point(12, 71);
+            this.titleTB.Name = "titleTB";
+            this.titleTB.Size = new System.Drawing.Size(512, 29);
+            this.titleTB.TabIndex = 0;
+            this.titleTB.TextChanged += new System.EventHandler(this.titleTB_TextChanged);
             // 
             // GithubIssueDialog
             // 

@@ -100,13 +100,15 @@ namespace Switch_Toolbox.Library
             Matrix4 worldTK = Matrix4.Identity;
             if (UseTransformMatrix)
             {
-                Matrix4x4 trafo = parent.Transform;
-                world = trafo * rootTransform;
+                 Matrix4x4 trafo = parent.Transform;
+                 world = trafo * rootTransform;
                  worldTK = AssimpHelper.TKMatrix(world);
             }
 
             if (parent.MeshCount > 0)
             {
+                
+                STConsole.WriteLine($"Use Transform Matrix {UseTransformMatrix}");
                 STConsole.WriteLine($"Transform node {parent.Name}");
                 STConsole.WriteLine($"Translation {worldTK.ExtractTranslation()}");
                 STConsole.WriteLine($"Rotation {worldTK.ExtractRotation()}");
@@ -116,7 +118,7 @@ namespace Switch_Toolbox.Library
             int Index = 0;
             foreach (Mesh msh in scene.Meshes)
             {
-                objects.Add(CreateGenericObject(msh, Index, Matrix4.Identity));
+                objects.Add(CreateGenericObject(msh, Index, worldTK));
                 Index++;
             }
 

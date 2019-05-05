@@ -381,11 +381,8 @@ namespace Switch_Toolbox.Library.Forms
                         }
                         else
                         {
-                            if (UseRGBA())
-                            {
-                                if (Runtime.ImageEditor.DisplayAlpha)
-                                    BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, AlphaDisplay);
-                            }
+                            if (!Runtime.ImageEditor.DisplayAlpha)
+                                BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, AlphaDisplay);
                         }
                     }
                 }

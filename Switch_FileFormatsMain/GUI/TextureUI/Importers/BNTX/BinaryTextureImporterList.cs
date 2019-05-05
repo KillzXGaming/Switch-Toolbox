@@ -118,7 +118,6 @@ namespace FirstPlugin
             if (SelectedTexSettings.Format == SurfaceFormat.Invalid || SelectedIndex == -1)
                 return;
 
-
             WidthLabel.Text = $"Width {SelectedTexSettings.TexWidth}";
             HeightLabel.Text = $"Height {SelectedTexSettings.TexHeight}";
 

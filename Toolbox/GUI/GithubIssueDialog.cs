@@ -30,13 +30,13 @@ namespace Toolbox
                 MessageBox.Show("Title must not be empty!", "Issue Dialog", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (titleTB.Text.Length > 5)
+            if (titleTB.Text.Length < 5)
             {
                 MessageBox.Show("Title too short! Atleast have 5 or more characters!", "Issue Dialog", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var client = new GitHubClient(new ProductHeaderValue("Switch_Toolbox"));
+            var client = new GitHubClient(new ProductHeaderValue("Switch-Toolbox"));
             var createIssue = new NewIssue(titleTB.Text);
             createIssue.Body = infoTB.Text;
 
@@ -51,6 +51,11 @@ namespace Toolbox
         static async Task CreateIssue(GitHubClient client, NewIssue createIssue)
         {
             var issue = await client.Issue.Create("fake", "test", createIssue);
+        }
+
+        private void titleTB_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
