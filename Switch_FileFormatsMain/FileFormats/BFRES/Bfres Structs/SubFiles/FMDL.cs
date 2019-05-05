@@ -28,6 +28,9 @@ namespace Bfres.Structs
 
         public ResFile GetResFile()
         {
+            if (Parent == null || Parent.Parent == null)
+                return null;
+
             //ResourceFile -> FMDL -> Model Folder -> this
             return ((BFRES)Parent.Parent).resFile;
         }
@@ -1049,7 +1052,8 @@ namespace Bfres.Structs
             UpdateEditor();
         }
         public void UpdateEditor(){
-            ((BFRES)Parent.Parent).LoadEditors(this);
+            if (Parent != null)
+                ((BFRES)Parent.Parent).LoadEditors(this);
         }
 
         private void CreateSkeleton()

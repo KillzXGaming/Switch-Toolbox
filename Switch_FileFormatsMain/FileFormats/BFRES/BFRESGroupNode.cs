@@ -149,7 +149,7 @@ namespace Bfres.Structs
             }
         }
 
-        public void NewModel()
+        public FMDL NewModel(bool AddTreeNode = true)
         {
             FMDL fmdl = new FMDL();
 
@@ -205,7 +205,10 @@ namespace Bfres.Structs
                 ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
             }
 
-            AddNode(fmdl, "NewModel");
+            if (AddTreeNode)
+                AddNode(fmdl, "NewModel");
+
+            return fmdl;
         }
 
         public void NewExternalFile()
@@ -256,49 +259,10 @@ namespace Bfres.Structs
                 switch (Type)
                 {
                     case BRESGroupType.Models:
-                        FMDL fmdl = new FMDL();
+                        FMDL fmdl = NewModel(false);
                         fmdl.Text = ResourceName;
-
-                        if (IsWiiU)
-                        {
-                            fmdl.ModelU = new ResU.Model();
-                            fmdl.ModelU.Name = ResourceName;
-                            fmdl.ModelU.Shapes.Add("", new ResU.Shape());
-                            fmdl.ModelU.Materials.Add("", new ResU.Material());
-                            fmdl.ModelU.VertexBuffers.Add(new ResU.VertexBuffer());
-
-                            var skeleton = new ResU.Skeleton();
-
-                            //Create skeleton with empty bone
-                            skeleton.Bones.Add("Root", new ResU.Bone() { Name = "Root" });
-
-                            fmdl.ModelU.Skeleton = skeleton;
-
-                            BfresWiiU.ReadModel(fmdl, fmdl.ModelU);
-                            ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
-                        }
-                        else
-                        {
-                            fmdl.Model = new ResNX.Model();
-                            fmdl.Model.Name = ResourceName;
-                            fmdl.Model.Shapes.Add(new ResNX.Shape());
-                            fmdl.Model.VertexBuffers.Add(new ResNX.VertexBuffer());
-
-                            //Create skeleton with empty bone
-                            var skeleton = new ResNX.Skeleton();
-                            skeleton.Bones.Add(new ResNX.Bone() { Name = "Root" });
-
-                            fmdl.Model.Skeleton = skeleton;
-
-                            BfresSwitch.ReadModel(fmdl, fmdl.Model);
-                            ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
-                        }
                         fmdl.Replace(FileName, resFileNX, resFileU);
-
-                        Nodes.Add(fmdl);
-
-
-                        fmdl.UpdateVertexData();
+                        AddNode(fmdl);
                         break;
                     case BRESGroupType.SkeletalAnim:
                         FSKA fska = new FSKA();

@@ -187,7 +187,7 @@ namespace FirstPlugin.Forms
         {
             Drawables.Remove(draw);
 
-            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport)
+            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport || viewport == null)
             {
                 IsLoaded = false;
                 RemovedDrawables.Add(draw);

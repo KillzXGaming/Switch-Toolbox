@@ -107,7 +107,6 @@ namespace Switch_Toolbox.Library
 
             if (parent.MeshCount > 0)
             {
-                
                 STConsole.WriteLine($"Use Transform Matrix {UseTransformMatrix}");
                 STConsole.WriteLine($"Transform node {parent.Name}");
                 STConsole.WriteLine($"Translation {worldTK.ExtractTranslation()}");
@@ -118,7 +117,6 @@ namespace Switch_Toolbox.Library
             foreach (int index in parent.MeshIndices)
                 objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
             
-
             foreach (Node child in parent.Children)
                 BuildNode(child, ref world);
         }
