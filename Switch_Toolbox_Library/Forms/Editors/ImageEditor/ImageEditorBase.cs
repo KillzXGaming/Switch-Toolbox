@@ -785,7 +785,7 @@ namespace Switch_Toolbox.Library.Forms
         private void displayVerticalToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             SetOrientation();
-            Config.Save();
+            SaveSettings();
         }
 
         private void SetOrientation()
@@ -1083,6 +1083,7 @@ namespace Switch_Toolbox.Library.Forms
 
             Runtime.ImageEditor.UseComponetSelector = useComponentSelectorToolStripMenuItem.Checked;
             UpdateMipDisplay();
+            SaveSettings();
         }
 
         private void UpdateAlphaEnable()
@@ -1096,6 +1097,8 @@ namespace Switch_Toolbox.Library.Forms
 
             Runtime.ImageEditor.DisplayAlpha = displayAlphaToolStripMenuItem.Checked;
             UpdateMipDisplay();
+
+            SaveSettings();
         }
 
         private void SetAlphaEnableUI(bool UseAlpha)
@@ -1137,6 +1140,12 @@ namespace Switch_Toolbox.Library.Forms
                 pictureBoxCustom1.AllowClickZoom = false;
                 pictureBoxCustom1.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Fit;
             }
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
+            Config.Save();
         }
     }
 }
