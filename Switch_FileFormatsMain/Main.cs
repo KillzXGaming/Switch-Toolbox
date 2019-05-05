@@ -140,6 +140,7 @@ namespace FirstPlugin
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));
             Formats.Add(typeof(BFLIM));
+            Formats.Add(typeof(BCLIM));
             Formats.Add(typeof(BFSTM));
             Formats.Add(typeof(BCSTM));
             Formats.Add(typeof(BRSTM));

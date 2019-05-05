@@ -165,7 +165,6 @@ namespace Bfres.Structs
                         Cursor.Current = Cursors.WaitCursor;
                         shape.CopyUVChannel(dialog.SourceIndex, dialog.DestIndex);
                         shape.SaveVertexBuffer();
-                        UpdateVertexData();
                         Cursor.Current = Cursors.Default;
                     }
 

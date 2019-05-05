@@ -29,15 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBoxCustom1 = new Cyotek.Windows.Forms.ImageBox();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.alphaBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
@@ -74,15 +71,17 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
-            this.stContextMenuStrip2.SuspendLayout();
             this.stPanel3.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
+            this.stContextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -140,30 +139,11 @@
             // 
             // pictureBoxCustom1
             // 
-            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
-            this.pictureBoxCustom1.ContextMenuStrip = this.stContextMenuStrip2;
             this.pictureBoxCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
             this.pictureBoxCustom1.Size = new System.Drawing.Size(514, 425);
-            this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxCustom1.TabIndex = 1;
-            this.pictureBoxCustom1.TabStop = false;
-            // 
-            // stContextMenuStrip2
-            // 
-            this.stContextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyImageToolStripMenuItem});
-            this.stContextMenuStrip2.Name = "stContextMenuStrip2";
-            this.stContextMenuStrip2.Size = new System.Drawing.Size(139, 26);
-            // 
-            // copyImageToolStripMenuItem
-            // 
-            this.copyImageToolStripMenuItem.Name = "copyImageToolStripMenuItem";
-            this.copyImageToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
-            this.copyImageToolStripMenuItem.Text = "Copy Image";
-            this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
+            this.pictureBoxCustom1.TabIndex = 0;
             // 
             // stPanel3
             // 
@@ -375,6 +355,7 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enableZoomToolStripMenuItem,
             this.propertyGridToolStripMenuItem,
             this.displayVerticalToolStripMenuItem,
             this.displayAlphaToolStripMenuItem,
@@ -511,6 +492,27 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
+            // stContextMenuStrip2
+            // 
+            this.stContextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyImageToolStripMenuItem});
+            this.stContextMenuStrip2.Name = "stContextMenuStrip2";
+            this.stContextMenuStrip2.Size = new System.Drawing.Size(139, 26);
+            // 
+            // copyImageToolStripMenuItem
+            // 
+            this.copyImageToolStripMenuItem.Name = "copyImageToolStripMenuItem";
+            this.copyImageToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.copyImageToolStripMenuItem.Text = "Copy Image";
+            this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
+            // 
+            // enableZoomToolStripMenuItem
+            // 
+            this.enableZoomToolStripMenuItem.Name = "enableZoomToolStripMenuItem";
+            this.enableZoomToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.enableZoomToolStripMenuItem.Text = "Enable Zoom";
+            this.enableZoomToolStripMenuItem.Click += new System.EventHandler(this.enableZoomToolStripMenuItem_Click);
+            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -524,18 +526,16 @@
             this.stPanel1.ResumeLayout(false);
             this.stPanel1.PerformLayout();
             this.stPanel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();
-            this.stContextMenuStrip2.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();
+            this.stContextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        public PictureBoxCustom pictureBoxCustom1;
         private STPanel stPanel1;
         private Switch_Toolbox.Library.Forms.STComboBox imageBGComboBox;
         private Switch_Toolbox.Library.Forms.STButton BtnMipsRight;
@@ -579,5 +579,7 @@
         private System.Windows.Forms.ToolStripMenuItem useComponentSelectorToolStripMenuItem;
         private STButton alphaBtn;
         private System.Windows.Forms.ToolTip toolTip1;
+        private Cyotek.Windows.Forms.ImageBox pictureBoxCustom1;
+        private System.Windows.Forms.ToolStripMenuItem enableZoomToolStripMenuItem;
     }
 }

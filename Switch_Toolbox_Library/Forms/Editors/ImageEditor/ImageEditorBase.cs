@@ -159,6 +159,7 @@ namespace Switch_Toolbox.Library.Forms
             InitializeComponent();
 
             useComponentSelectorToolStripMenuItem.Checked = Runtime.ImageEditor.UseComponetSelector;
+            enableZoomToolStripMenuItem.Checked = Runtime.ImageEditor.EnableImageZoom;
 
             displayAlphaToolStripMenuItem.Checked = Runtime.ImageEditor.DisplayAlpha;
             SetAlphaEnableUI(Runtime.ImageEditor.DisplayAlpha);
@@ -219,16 +220,15 @@ namespace Switch_Toolbox.Library.Forms
             switch (Runtime.pictureBoxStyle)
             {
                 case Runtime.PictureBoxBG.Black:
+                    pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Color.Black;
-                    pictureBoxCustom1.BackgroundImage = null;
                     break;
                 case Runtime.PictureBoxBG.White:
+                    pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Color.White;
-                    pictureBoxCustom1.BackgroundImage = null;
                     break;
                 case Runtime.PictureBoxBG.Checkerboard:
-                    pictureBoxCustom1.BackColor = Color.Transparent;
-                    pictureBoxCustom1.BackgroundImage = pictureBoxCustom1.GetCheckerBackground();
+                    pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Client;
                     break;
             }
         }
@@ -323,6 +323,11 @@ namespace Switch_Toolbox.Library.Forms
         public event DataAcquired OnDataAcquiredEvent;
 
         private bool DecodeProcessFinished = false; //Used to determine when the decode process is done
+
+        private void ImagePreviewZoom()
+        {
+
+        }
 
         private void UpdatePictureBox(int ChannelIndex = 0)
         {
@@ -755,12 +760,12 @@ namespace Switch_Toolbox.Library.Forms
             if (!IsFinished)
                 return;
 
-            HueSaturationAdjuster hsvEditor = new HueSaturationAdjuster();
-            hsvEditor.LoadBitmap(pictureBoxCustom1);
+        /*  //  HueSaturationAdjuster hsvEditor = new HueSaturationAdjuster();
+           // hsvEditor.LoadBitmap(pictureBoxCustom1);
 
             if (hsvEditor.ShowDialog() == DialogResult.OK)
             {
-            }
+            }*/
         }
 
         private void toggleAlphaChk_CheckedChanged(object sender, EventArgs e)
@@ -1109,6 +1114,29 @@ namespace Switch_Toolbox.Library.Forms
         private void alphaBtn_Click(object sender, EventArgs e)
         {
             UpdateAlphaEnable();
+        }
+
+        private void enableZoomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (enableZoomToolStripMenuItem.Checked)
+                enableZoomToolStripMenuItem.Checked = false;
+            else
+                enableZoomToolStripMenuItem.Checked = true;
+
+            Runtime.ImageEditor.EnableImageZoom = enableZoomToolStripMenuItem.Checked;
+
+            if (enableZoomToolStripMenuItem.Checked)
+            {
+                pictureBoxCustom1.AllowZoom = true;
+                pictureBoxCustom1.AllowClickZoom = true;
+                pictureBoxCustom1.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Normal;
+            }
+            else
+            {
+                pictureBoxCustom1.AllowZoom = false;
+                pictureBoxCustom1.AllowClickZoom = false;
+                pictureBoxCustom1.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Fit;
+            }
         }
     }
 }

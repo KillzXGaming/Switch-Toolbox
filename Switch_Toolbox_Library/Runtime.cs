@@ -26,9 +26,12 @@ namespace Switch_Toolbox.Library
             public static bool ShowPropertiesPanel = true;
             public static bool DisplayVertical = false;
 
+
             public static bool DisplayAlpha = true;
             public static bool UseComponetSelector = true;
-            
+
+            public static bool EnableImageZoom = true;
+            public static bool EnablePixelGrid = false;
         }
         public class ObjectEditor
         {

@@ -49,6 +49,9 @@
       <HintPath>..\Toolbox\Lib\CSCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Cyotek.Windows.Forms.ImageBox">
+      <HintPath>..\Toolbox\Lib\Cyotek.Windows.Forms.ImageBox.dll</HintPath>
+    </Reference>
     <Reference Include="DarkUI">
       <HintPath>..\Toolbox\Lib\DarkUI.dll</HintPath>
       <Private>False</Private>

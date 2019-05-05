@@ -190,9 +190,16 @@ namespace Switch_Toolbox.Library
                     case "UseComponetSelector":
                         bool.TryParse(node.InnerText, out Runtime.ImageEditor.UseComponetSelector);
                         break;
+                    case "EnableImageZoom":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.EnableImageZoom);
+                        break;
+                    case "EnablePixelGrid":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.EnablePixelGrid);
+                        break;
                 }
             }
         }
+
         private static bool TryParsePoint(XmlNode node, ref Point point)
         {
             try
@@ -315,6 +322,8 @@ namespace Switch_Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "ShowPropertiesPanel", Runtime.ImageEditor.ShowPropertiesPanel.ToString()));
             PathsNode.AppendChild(createNode(doc, "DisplayAlpha", Runtime.ImageEditor.DisplayAlpha.ToString()));
             PathsNode.AppendChild(createNode(doc, "UseComponetSelector", Runtime.ImageEditor.UseComponetSelector.ToString()));
+            PathsNode.AppendChild(createNode(doc, "EnablePixelGrid", Runtime.ImageEditor.EnablePixelGrid.ToString()));
+            PathsNode.AppendChild(createNode(doc, "EnableImageZoom", Runtime.ImageEditor.EnableImageZoom.ToString()));
         }
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
         {

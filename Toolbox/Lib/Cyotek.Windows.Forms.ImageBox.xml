@@ -1,0 +1,2862 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cyotek.Windows.Forms.ImageBox</name>
+    </assembly>
+    <members>
+        <member name="T:Cyotek.Windows.Forms.ImageBox">
+            <summary>
+              Component for displaying images with support for scrolling and zooming.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.#ctor">
+            <summary>
+              Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ImageBox" /> class.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AllowClickZoomChanged">
+            <summary>
+              Occurs when the AllowClickZoom property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AllowDoubleClickChanged">
+            <summary>
+              Occurs when the AllowDoubleClick property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AllowFreePanChanged">
+            <summary>
+            Occurs when the AllowFreePan property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AllowUnfocusedMouseWheelChanged">
+            <summary>
+            Occurs when the AllowUnfocusedMouseWheel property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AllowZoomChanged">
+            <summary>
+              Occurs when the AllowZoom property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AutoCenterChanged">
+            <summary>
+              Occurs when the AutoCenter property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.AutoPanChanged">
+            <summary>
+              Occurs when the AutoPan property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.DropShadowSizeChanged">
+            <summary>
+              Occurs when the DropShadowSize property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.GridCellSizeChanged">
+            <summary>
+              Occurs when the GridSizeCell property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.GridColorAlternateChanged">
+            <summary>
+              Occurs when the GridColorAlternate property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.GridColorChanged">
+            <summary>
+              Occurs when the GridColor property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.GridDisplayModeChanged">
+            <summary>
+              Occurs when the GridDisplayMode property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.GridScaleChanged">
+            <summary>
+              Occurs when the GridScale property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ImageBorderColorChanged">
+            <summary>
+              Occurs when the ImageBorderColor property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ImageBorderStyleChanged">
+            <summary>
+              Occurs when the ImageBorderStyle property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ImageChanged">
+            <summary>
+              Occurs when the Image property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.InterpolationModeChanged">
+            <summary>
+              Occurs when the InterpolationMode property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.InvertMouseChanged">
+            <summary>
+              Occurs when the InvertMouse property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.LimitSelectionToImageChanged">
+            <summary>
+              Occurs when the LimitSelectionToImage property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.PanEnd">
+            <summary>
+              Occurs when panning the control completes.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.PanModeChanged">
+            <summary>
+            Occurs when the PanMode property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.PanStart">
+            <summary>
+              Occurs when panning the control starts.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.PixelGridColorChanged">
+            <summary>
+              Occurs when the PixelGridColor property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.PixelGridThresholdChanged">
+            <summary>
+            Occurs when the PixelGridThreshold property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ScaleTextChanged">
+            <summary>
+            Occurs when the ScaleText property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.Selected">
+            <summary>
+              Occurs when a selection region has been defined
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.Selecting">
+            <summary>
+              Occurs when the user starts to define a selection region.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.SelectionColorChanged">
+            <summary>
+              Occurs when the SelectionColor property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.SelectionModeChanged">
+            <summary>
+              Occurs when the SelectionMode property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.SelectionRegionChanged">
+            <summary>
+              Occurs when the SelectionRegion property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ShortcutsEnabledChanged">
+            <summary>
+              Occurs when the ShortcutsEnabled property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ShowPixelGridChanged">
+            <summary>
+              Occurs when the ShowPixelGrid property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.SizeModeChanged">
+            <summary>
+            Occurs when the SizeMode property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.SizeToFitChanged">
+            <summary>
+              Occurs when the SizeToFit property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.TextAlignChanged">
+            <summary>
+            Occurs when the TextAlign property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.TextBackColorChanged">
+            <summary>
+            Occurs when the TextBackColor property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.TextDisplayModeChanged">
+            <summary>
+            Occurs when the TextDisplayMode property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.TextPaddingChanged">
+            <summary>
+            Occurs when the TextPadding property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.VirtualDraw">
+            <summary>
+              Occurs when virtual painting should occur
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.VirtualModeChanged">
+            <summary>
+              Occurs when the VirtualMode property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.VirtualSizeChanged">
+            <summary>
+              Occurs when the VirtualSize property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ZoomChanged">
+            <summary>
+              Occurs when the Zoom property is changed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.Zoomed">
+            <summary>
+            Occurs when then a zoom action is performed.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ImageBox.ZoomLevelsChanged">
+            <summary>
+              Occurs when the ZoomLevels property is changed
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CreateCheckerBoxTile(System.Int32,System.Drawing.Color,System.Drawing.Color)">
+            <summary>
+              Creates a bitmap image containing a 2x2 grid using the specified cell size and colors.
+            </summary>
+            <param name="cellSize">Size of the cell.</param>
+            <param name="cellColor">Cell color.</param>
+            <param name="alternateCellColor">Alternate cell color.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CreateCheckerBoxTile">
+            <summary>
+              Creates a checked tile texture using default values.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AllowClickZoom">
+            <summary>
+              Gets or sets a value indicating whether clicking the control with the mouse will automatically zoom in or out.
+            </summary>
+            <value>
+              <c>true</c> if clicking the control allows zooming; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AllowDoubleClick">
+            <summary>
+            Gets or sets a value indicating whether the DoubleClick event can be raised.
+            </summary>
+            <value><c>true</c> if the DoubleClick event can be raised; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AllowFreePan">
+            <summary>
+            Gets or sets a value indicating whether free panning can be used
+            </summary>
+            <value>
+            <c>true</c> if free panning can be used, otherwise <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AllowUnfocusedMouseWheel">
+            <summary>
+            Gets or sets a value indicating whether the mouse wheel is processed event if the <see cref="T:Cyotek.Windows.Forms.ImageBox"/> doesn't have focus.
+            </summary>
+            <value>
+            <c>true</c> if the mouse wheel is processed regardless of focus, otherwise <c>false</c> to only process the mouse wheel when the control has focus.
+            </value>
+            <remarks>Setting this problem to <c>true</c> could cause conflicting behavior with other controls that also make use of the mouse wheel.</remarks>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AllowZoom">
+            <summary>
+              Gets or sets a value indicating whether the user can change the zoom level.
+            </summary>
+            <value>
+              <c>true</c> if the zoom level can be changed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AutoCenter">
+            <summary>
+              Gets or sets a value indicating whether the image is centered where possible.
+            </summary>
+            <value>
+              <c>true</c> if the image should be centered where possible; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AutoPan">
+            <summary>
+              Gets or sets if the mouse can be used to pan the control.
+            </summary>
+            <value>
+              <c>true</c> if the control can be auto panned; otherwise, <c>false</c>.
+            </value>
+            <remarks>If this property is set, the SizeToFit property cannot be used.</remarks>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AutoScroll">
+            <summary>
+              Gets or sets a value indicating whether the container enables the user to scroll to any content placed outside of its visible boundaries.
+            </summary>
+            <value>
+              <c>true</c> if the container enables auto-scrolling; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AutoScrollMinSize">
+            <summary>
+              Gets or sets the minimum size of the auto-scroll.
+            </summary>
+            <value></value>
+            <returns>
+              A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AutoSize">
+            <summary>
+              Specifies if the control should auto size to fit the image contents.
+            </summary>
+            <value></value>
+            <returns>
+              <c>true</c> if enabled; otherwise, <c>false</c>
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.BackColor">
+            <summary>
+              Gets or sets the background color for the control.
+            </summary>
+            <value></value>
+            <returns>
+              A <see cref="T:System.Drawing.Color" /> that represents the background color of the control. The default is the value of the
+              <see
+                cref="P:System.Windows.Forms.Control.DefaultBackColor" />
+              property.
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.BackgroundImage">
+            <summary>
+              Gets or sets the background image displayed in the control.
+            </summary>
+            <value></value>
+            <returns>
+              An <see cref="T:System.Drawing.Image" /> that represents the image to display in the background of the control.
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.BackgroundImageLayout">
+            <summary>
+              Gets or sets the background image layout as defined in the <see cref="T:System.Windows.Forms.ImageLayout" /> enumeration.
+            </summary>
+            <value>The background image layout.</value>
+            <returns>
+              One of the values of <see cref="T:System.Windows.Forms.ImageLayout" /> (
+              <see
+                cref="F:System.Windows.Forms.ImageLayout.Center" />
+              , <see cref="F:System.Windows.Forms.ImageLayout.None" />,
+              <see
+                cref="F:System.Windows.Forms.ImageLayout.Stretch" />
+              , <see cref="F:System.Windows.Forms.ImageLayout.Tile" />, or
+              <see
+                cref="F:System.Windows.Forms.ImageLayout.Zoom" />
+              ). <see cref="F:System.Windows.Forms.ImageLayout.Tile" /> is the default value.
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.CenterPoint">
+            <summary>
+            Gets the point at the center of the currently displayed image viewport.
+            </summary>
+            <value>The point at the center of the current image viewport.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.Cursor">
+            <summary>
+            Gets or sets the cursor that is displayed when the mouse pointer is over the control.
+            </summary>
+            <value>
+            A <see cref="T:System.Windows.Forms.Cursor" /> that represents the cursor to display when the
+            mouse pointer is over the control.
+            </value>
+            <seealso cref="P:System.Windows.Forms.Control.Cursor"/>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.DropShadowSize">
+            <summary>
+              Gets or sets the size of the drop shadow.
+            </summary>
+            <value>The size of the drop shadow.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.GridCellSize">
+            <summary>
+              Gets or sets the size of the grid cells.
+            </summary>
+            <value>The size of the grid cells.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.GridColor">
+            <summary>
+              Gets or sets the color of primary cells in the grid.
+            </summary>
+            <value>The color of primary cells in the grid.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.GridColorAlternate">
+            <summary>
+              Gets or sets the color of alternate cells in the grid.
+            </summary>
+            <value>The color of alternate cells in the grid.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.GridDisplayMode">
+            <summary>
+              Gets or sets the grid display mode.
+            </summary>
+            <value>The grid display mode.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.GridScale">
+            <summary>
+              Gets or sets the grid scale.
+            </summary>
+            <value>The grid scale.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.Image">
+            <summary>
+              Gets or sets the image.
+            </summary>
+            <value>The image.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ImageBorderColor">
+            <summary>
+              Gets or sets the color of the image border.
+            </summary>
+            <value>The color of the image border.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ImageBorderStyle">
+            <summary>
+              Gets or sets the image border style.
+            </summary>
+            <value>The image border style.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.InterpolationMode">
+            <summary>
+              Gets or sets the interpolation mode.
+            </summary>
+            <value>The interpolation mode.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.InvertMouse">
+            <summary>
+              Gets or sets a value indicating whether the mouse should be inverted when panning the control.
+            </summary>
+            <value>
+              <c>true</c> if the mouse should be inverted when panning the control; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.IsActualSize">
+            <summary>
+            Gets a value indicating whether the image is currently being displayed at 100% zoom
+            </summary>
+            <value><c>true</c> if the image is currently being displayed at 100% zoom; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.IsPanning">
+            <summary>
+              Gets a value indicating whether this control is panning.
+            </summary>
+            <value>
+              <c>true</c> if this control is panning; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.IsSelecting">
+            <summary>
+              Gets or sets a value indicating whether this a selection region is currently being drawn.
+            </summary>
+            <value>
+              <c>true</c> if a selection region is currently being drawn; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.LimitSelectionToImage">
+            <summary>
+              Gets or sets a value indicating whether selection regions should be limited to the image boundaries.
+            </summary>
+            <value>
+              <c>true</c> if selection regions should be limited to image boundaries; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.PanMode">
+            <summary>
+            Gets or sets the how panning is initiated using the mouse
+            </summary>
+            <value>
+            The pan mode.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.PixelGridColor">
+            <summary>
+            Gets or sets the color of the pixel grid.
+            </summary>
+            <value>The color of the pixel grid.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.PixelGridThreshold">
+            <summary>
+            Gets or sets the minimum size of zoomed pixel's before the pixel grid will be drawn
+            </summary>
+            <value>The pixel grid threshold.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ScaleText">
+            <summary>
+            Gets or sets a value indicating whether the font size of text is scaled according to the current zoom level.
+            </summary>
+            <value><c>true</c> if the size of text is scaled according to the current zoom level; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.SelectionColor">
+            <summary>
+              Gets or sets the color of selection regions.
+            </summary>
+            <value>
+              The color of selection regions.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.SelectionMode">
+            <summary>
+              Gets or sets the selection mode.
+            </summary>
+            <value>
+              The selection mode.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.SelectionRegion">
+            <summary>
+              Gets or sets the selection region.
+            </summary>
+            <value>
+              The selection region.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ShortcutsEnabled">
+            <summary>
+              Gets or sets a value indicating whether the defined shortcuts are enabled.
+            </summary>
+            <value>
+              <c>true</c> to enable the shortcuts; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ShowPixelGrid">
+            <summary>
+            Gets or sets a value indicating whether a pixel grid is displayed when the control is zoomed.
+            </summary>
+            <value><c>true</c> if a pixel grid is displayed when the control is zoomed; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.SizeMode">
+            <summary>
+            Gets or sets the size mode of images hosted in the control.
+            </summary>
+            <value>The size mode.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.SizeToFit">
+            <summary>
+              Gets or sets a value indicating whether the control should automatically size to fit the image contents.
+            </summary>
+            <value>
+              <c>true</c> if the control should size to fit the image contents; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.TextAlign">
+            <summary>
+            Gets or sets the alignment of the text on the control.
+            </summary>
+            <value>One of the <see cref="T:System.Drawing.ContentAlignment"/> values. The default is <c>MiddleCenter</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.TextBackColor">
+            <summary>
+            Gets or sets the color of the text background.
+            </summary>
+            <value>The color of the text background.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.TextDisplayMode">
+            <summary>
+            Gets or sets the text display mode.
+            </summary>
+            <value>The text display mode.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.TextPadding">
+            <summary>
+            Gets or sets the text padding.
+            </summary>
+            <value>
+            The text padding.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.VirtualMode">
+            <summary>
+              Gets or sets a value indicating whether the control acts as a virtual image box.
+            </summary>
+            <value>
+              <c>true</c> if the control acts as a virtual image box; otherwise, <c>false</c>.
+            </value>
+            <remarks>
+              When this property is set to <c>true</c>, the Image property is ignored in favor of the VirtualSize property. In addition, the VirtualDraw event is raised to allow custom painting of the image area.
+            </remarks>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.VirtualSize">
+            <summary>
+              Gets or sets the size of the virtual image.
+            </summary>
+            <value>The size of the virtual image.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.Zoom">
+            <summary>
+              Gets or sets the zoom.
+            </summary>
+            <value>The zoom.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ZoomFactor">
+            <summary>
+              Gets the zoom factor.
+            </summary>
+            <value>The zoom factor.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ZoomLevels">
+            <summary>
+              Gets or sets the zoom levels.
+            </summary>
+            <value>The zoom levels.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.AllowPainting">
+            <summary>
+              Gets a value indicating whether painting of the control is allowed.
+            </summary>
+            <value>
+              <c>true</c> if painting of the control is allowed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.IsAnimating">
+            <summary>
+            Gets or sets a value indicating whether the current image is animated.
+            </summary>
+            <value><c>true</c> if the current image is animated; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ScaledImageHeight">
+            <summary>
+              Gets the height of the scaled image.
+            </summary>
+            <value>The height of the scaled image.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ScaledImageWidth">
+            <summary>
+              Gets the width of the scaled image.
+            </summary>
+            <value>The width of the scaled image.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.ViewSize">
+            <summary>
+            Gets the size of the view.
+            </summary>
+            <value>The size of the view.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBox.WasDragCancelled">
+            <summary>
+            Gets or sets a value indicating whether a drag operation was cancelled.
+            </summary>
+            <value><c>true</c> if the drag operation was cancelled; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ActualSize">
+            <summary>
+              Resets the zoom to 100%.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.BeginUpdate">
+            <summary>
+              Disables any redrawing of the image box
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CenterAt(System.Drawing.Point)">
+            <summary>
+              Centers the given point in the image in the center of the control
+            </summary>
+            <param name="imageLocation">The point of the image to attempt to center.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CenterAt(System.Int32,System.Int32)">
+            <summary>
+              Centers the given point in the image in the center of the control
+            </summary>
+            <param name="x">The X co-ordinate of the point to center.</param>
+            <param name="y">The Y co-ordinate of the point to center.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CenterAt(System.Single,System.Single)">
+            <summary>
+              Centers the given point in the image in the center of the control
+            </summary>
+            <param name="x">The X co-ordinate of the point to center.</param>
+            <param name="y">The Y co-ordinate of the point to center.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CenterToImage">
+            <summary>
+            Resets the viewport to show the center of the image.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.EndUpdate">
+            <summary>
+              Enables the redrawing of the image box
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.FitRectangle(System.Drawing.Rectangle)">
+            <summary>
+              Fits a given <see cref="T:System.Drawing.Rectangle" /> to match image boundaries
+            </summary>
+            <param name="rectangle">The rectangle.</param>
+            <returns>
+              A <see cref="T:System.Drawing.Rectangle" /> structure remapped to fit the image boundaries
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.FitRectangle(System.Drawing.RectangleF)">
+            <summary>
+              Fits a given <see cref="T:System.Drawing.RectangleF" /> to match image boundaries
+            </summary>
+            <param name="rectangle">The rectangle.</param>
+            <returns>
+              A <see cref="T:System.Drawing.RectangleF" /> structure remapped to fit the image boundaries
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetImageViewPort">
+            <summary>
+              Gets the image view port.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetInsideViewPort">
+            <summary>
+              Gets the inside view port, excluding any padding.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetInsideViewPort(System.Boolean)">
+            <summary>
+              Gets the inside view port.
+            </summary>
+            <param name="includePadding">
+              if set to <c>true</c> [include padding].
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetPoint(System.Drawing.Point)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Point" /> repositioned to include the current image offset and scaled by the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.Point"/> to offset.</param>
+            <returns>A <see cref="T:System.Drawing.Point"/> which has been repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetPoint(System.Int32,System.Int32)">
+            <summary>
+              Returns the source co-ordinates repositioned to include the current image offset and scaled by the current zoom level
+            </summary>
+            <param name="x">The source X co-ordinate.</param>
+            <param name="y">The source Y co-ordinate.</param>
+            <returns>A <see cref="T:System.Drawing.Point"/> which has been repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetPoint(System.Single,System.Single)">
+            <summary>
+              Returns the source co-ordinates repositioned to include the current image offset and scaled by the current zoom level
+            </summary>
+            <param name="x">The source X co-ordinate.</param>
+            <param name="y">The source Y co-ordinate.</param>
+            <returns>A <see cref="T:System.Drawing.Point"/> which has been repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetPoint(System.Drawing.PointF)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.PointF" /> repositioned to include the current image offset and scaled by the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.PointF"/> to offset.</param>
+            <returns>A <see cref="T:System.Drawing.PointF"/> which has been repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetRectangle(System.Drawing.RectangleF)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.RectangleF" /> scaled according to the current zoom level and repositioned to include the current image offset
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.RectangleF"/> to offset.</param>
+            <returns>A <see cref="T:System.Drawing.RectangleF"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetRectangle(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+              Returns the source rectangle scaled according to the current zoom level and repositioned to include the current image offset
+            </summary>
+            <param name="x">The X co-ordinate of the source rectangle.</param>
+            <param name="y">The Y co-ordinate of the source rectangle.</param>
+            <param name="width">The width of the rectangle.</param>
+            <param name="height">The height of the rectangle.</param>
+            <returns>A <see cref="T:System.Drawing.Rectangle"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetRectangle(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+              Returns the source rectangle scaled according to the current zoom level and repositioned to include the current image offset
+            </summary>
+            <param name="x">The X co-ordinate of the source rectangle.</param>
+            <param name="y">The Y co-ordinate of the source rectangle.</param>
+            <param name="width">The width of the rectangle.</param>
+            <param name="height">The height of the rectangle.</param>
+            <returns>A <see cref="T:System.Drawing.RectangleF"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetOffsetRectangle(System.Drawing.Rectangle)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Rectangle" /> scaled according to the current zoom level and repositioned to include the current image offset
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.Rectangle"/> to offset.</param>
+            <returns>A <see cref="T:System.Drawing.Rectangle"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetPreferredSize(System.Drawing.Size)">
+            <summary>
+              Retrieves the size of a rectangular area into which a control can be fitted.
+            </summary>
+            <param name="proposedSize">The custom-sized area for a control.</param>
+            <returns>
+              An ordered pair of type <see cref="T:System.Drawing.Size" /> representing the width and height of a rectangle.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledPoint(System.Int32,System.Int32)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Point" /> scaled according to the current zoom level
+            </summary>
+            <param name="x">The X co-ordinate of the point to scale.</param>
+            <param name="y">The Y co-ordinate of the point to scale.</param>
+            <returns>A <see cref="T:System.Drawing.Point"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledPoint(System.Single,System.Single)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Point" /> scaled according to the current zoom level
+            </summary>
+            <param name="x">The X co-ordinate of the point to scale.</param>
+            <param name="y">The Y co-ordinate of the point to scale.</param>
+            <returns>A <see cref="T:System.Drawing.Point"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledPoint(System.Drawing.Point)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Point" /> scaled according to the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.Point"/> to scale.</param>
+            <returns>A <see cref="T:System.Drawing.Point"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledPoint(System.Drawing.PointF)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.PointF" /> scaled according to the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.PointF"/> to scale.</param>
+            <returns>A <see cref="T:System.Drawing.PointF"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledRectangle(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+              Returns the source rectangle scaled according to the current zoom level
+            </summary>
+            <param name="x">The X co-ordinate of the source rectangle.</param>
+            <param name="y">The Y co-ordinate of the source rectangle.</param>
+            <param name="width">The width of the rectangle.</param>
+            <param name="height">The height of the rectangle.</param>
+            <returns>A <see cref="T:System.Drawing.Rectangle"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledRectangle(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+              Returns the source rectangle scaled according to the current zoom level
+            </summary>
+            <param name="x">The X co-ordinate of the source rectangle.</param>
+            <param name="y">The Y co-ordinate of the source rectangle.</param>
+            <param name="width">The width of the rectangle.</param>
+            <param name="height">The height of the rectangle.</param>
+            <returns>A <see cref="T:System.Drawing.RectangleF"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledRectangle(System.Drawing.Point,System.Drawing.Size)">
+            <summary>
+              Returns the source rectangle scaled according to the current zoom level
+            </summary>
+            <param name="location">The location of the source rectangle.</param>
+            <param name="size">The size of the source rectangle.</param>
+            <returns>A <see cref="T:System.Drawing.Rectangle"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledRectangle(System.Drawing.PointF,System.Drawing.SizeF)">
+            <summary>
+              Returns the source rectangle scaled according to the current zoom level
+            </summary>
+            <param name="location">The location of the source rectangle.</param>
+            <param name="size">The size of the source rectangle.</param>
+            <returns>A <see cref="T:System.Drawing.Rectangle"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledRectangle(System.Drawing.Rectangle)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Rectangle" /> scaled according to the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.Rectangle"/> to scale.</param>
+            <returns>A <see cref="T:System.Drawing.Rectangle"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledRectangle(System.Drawing.RectangleF)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.RectangleF" /> scaled according to the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.RectangleF"/> to scale.</param>
+            <returns>A <see cref="T:System.Drawing.RectangleF"/> which has been scaled to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledSize(System.Single,System.Single)">
+            <summary>
+              Returns the source size scaled according to the current zoom level
+            </summary>
+            <param name="width">The width of the size to scale.</param>
+            <param name="height">The height of the size to scale.</param>
+            <returns>A <see cref="T:System.Drawing.SizeF"/> which has been resized to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledSize(System.Int32,System.Int32)">
+            <summary>
+              Returns the source size scaled according to the current zoom level
+            </summary>
+            <param name="width">The width of the size to scale.</param>
+            <param name="height">The height of the size to scale.</param>
+            <returns>A <see cref="T:System.Drawing.Size"/> which has been resized to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledSize(System.Drawing.SizeF)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.SizeF" /> scaled according to the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.SizeF"/> to scale.</param>
+            <returns>A <see cref="T:System.Drawing.SizeF"/> which has been resized to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetScaledSize(System.Drawing.Size)">
+            <summary>
+              Returns the source <see cref="T:System.Drawing.Size" /> scaled according to the current zoom level
+            </summary>
+            <param name="source">The source <see cref="T:System.Drawing.Size"/> to scale.</param>
+            <returns>A <see cref="T:System.Drawing.Size"/> which has been resized to match the current zoom level</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetSelectedImage">
+            <summary>
+              Creates an image based on the current selection region
+            </summary>
+            <returns>An image containing the selection contents if a selection if present, otherwise null</returns>
+            <remarks>The caller is responsible for disposing of the returned image</remarks>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetSourceImageRegion">
+            <summary>
+              Gets the source image region.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.IsPointInImage(System.Drawing.Point)">
+            <summary>
+              Determines whether the specified point is located within the image view port
+            </summary>
+            <param name="point">The point.</param>
+            <returns>
+              <c>true</c> if the specified point is located within the image view port; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.IsPointInImage(System.Int32,System.Int32)">
+            <summary>
+              Determines whether the specified point is located within the image view port
+            </summary>
+            <param name="x">The X co-ordinate of the point to check.</param>
+            <param name="y">The Y co-ordinate of the point to check.</param>
+            <returns>
+              <c>true</c> if the specified point is located within the image view port; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.IsPointInImage(System.Single,System.Single)">
+            <summary>
+              Determines whether the specified point is located within the image view port
+            </summary>
+            <param name="x">The X co-ordinate of the point to check.</param>
+            <param name="y">The Y co-ordinate of the point to check.</param>
+            <returns>
+              <c>true</c> if the specified point is located within the image view port; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PointToImage(System.Drawing.Point)">
+            <summary>
+              Converts the given client size point to represent a coordinate on the source image.
+            </summary>
+            <param name="point">The source point.</param>
+            <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PointToImage(System.Single,System.Single)">
+            <summary>
+              Converts the given client size point to represent a coordinate on the source image.
+            </summary>
+            <param name="x">The X co-ordinate of the point to convert.</param>
+            <param name="y">The Y co-ordinate of the point to convert.</param>
+            <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PointToImage(System.Single,System.Single,System.Boolean)">
+            <summary>
+              Converts the given client size point to represent a coordinate on the source image.
+            </summary>
+            <param name="x">The X co-ordinate of the point to convert.</param>
+            <param name="y">The Y co-ordinate of the point to convert.</param>
+            <param name="fitToBounds">
+              if set to <c>true</c> and the point is outside the bounds of the source image, it will be mapped to the nearest edge.
+            </param>
+            <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PointToImage(System.Int32,System.Int32)">
+            <summary>
+              Converts the given client size point to represent a coordinate on the source image.
+            </summary>
+            <param name="x">The X co-ordinate of the point to convert.</param>
+            <param name="y">The Y co-ordinate of the point to convert.</param>
+            <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PointToImage(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+              Converts the given client size point to represent a coordinate on the source image.
+            </summary>
+            <param name="x">The X co-ordinate of the point to convert.</param>
+            <param name="y">The Y co-ordinate of the point to convert.</param>
+            <param name="fitToBounds">
+              if set to <c>true</c> and the point is outside the bounds of the source image, it will be mapped to the nearest edge.
+            </param>
+            <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PointToImage(System.Drawing.Point,System.Boolean)">
+            <summary>
+              Converts the given client size point to represent a coordinate on the source image.
+            </summary>
+            <param name="point">The source point.</param>
+            <param name="fitToBounds">
+              if set to <c>true</c> and the point is outside the bounds of the source image, it will be mapped to the nearest edge.
+            </param>
+            <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ScrollTo(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+              Scrolls the control to the given point in the image, offset at the specified display point
+            </summary>
+            <param name="x">The X co-ordinate of the point to scroll to.</param>
+            <param name="y">The Y co-ordinate of the point to scroll to.</param>
+            <param name="relativeX">The X co-ordinate relative to the <c>x</c> parameter.</param>
+            <param name="relativeY">The Y co-ordinate relative to the <c>y</c> parameter.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ScrollTo(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+              Scrolls the control to the given point in the image, offset at the specified display point
+            </summary>
+            <param name="x">The X co-ordinate of the point to scroll to.</param>
+            <param name="y">The Y co-ordinate of the point to scroll to.</param>
+            <param name="relativeX">The X co-ordinate relative to the <c>x</c> parameter.</param>
+            <param name="relativeY">The Y co-ordinate relative to the <c>y</c> parameter.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ScrollTo(System.Drawing.Point,System.Drawing.Point)">
+            <summary>
+              Scrolls the control to the given point in the image, offset at the specified display point
+            </summary>
+            <param name="imageLocation">The point of the image to attempt to scroll to.</param>
+            <param name="relativeDisplayPoint">The relative display point to offset scrolling by.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.SelectAll">
+            <summary>
+              Creates a selection region which encompasses the entire image
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if no image is currently set</exception>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.SelectNone">
+            <summary>
+              Clears any existing selection region
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomIn">
+            <summary>
+              Zooms into the image
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomIn(System.Boolean)">
+            <summary>
+              Zooms into the image
+            </summary>
+            <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomOut">
+            <summary>
+              Zooms out of the image
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomOut(System.Boolean)">
+            <summary>
+              Zooms out of the image
+            </summary>
+            <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomToFit">
+            <summary>
+              Zooms to the maximum size for displaying the entire image within the bounds of the control.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomToRegion(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+              Adjusts the view port to fit the given region
+            </summary>
+            <param name="x">The X co-ordinate of the selection region.</param>
+            <param name="y">The Y co-ordinate of the selection region.</param>
+            <param name="width">The width of the selection region.</param>
+            <param name="height">The height of the selection region.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomToRegion(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+              Adjusts the view port to fit the given region
+            </summary>
+            <param name="x">The X co-ordinate of the selection region.</param>
+            <param name="y">The Y co-ordinate of the selection region.</param>
+            <param name="width">The width of the selection region.</param>
+            <param name="height">The height of the selection region.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ZoomToRegion(System.Drawing.RectangleF)">
+            <summary>
+              Adjusts the view port to fit the given region
+            </summary>
+            <param name="rectangle">The rectangle to fit the view port to.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.AdjustLayout">
+            <summary>
+              Adjusts the layout.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.AdjustScroll(System.Int32,System.Int32)">
+            <summary>
+              Adjusts the scroll.
+            </summary>
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.AdjustSize">
+            <summary>
+              Adjusts the size.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.AdjustViewPort">
+            <summary>
+              Adjusts the view port.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.CreateGridTileImage(System.Int32,System.Drawing.Color,System.Drawing.Color)">
+            <summary>
+              Creates the grid tile image.
+            </summary>
+            <param name="cellSize">Size of the cell.</param>
+            <param name="firstColor">The first color.</param>
+            <param name="secondColor">Color of the second.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.Dispose(System.Boolean)">
+            <summary>
+              Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawBackground(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Draws the background of the control.
+            </summary>
+            <param name="e">The <see cref="T:System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawDropShadow(System.Drawing.Graphics,System.Drawing.Rectangle)">
+            <summary>
+              Draws a drop shadow.
+            </summary>
+            <param name="g">The graphics. </param>
+            <param name="viewPort"> The view port. </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawGlowShadow(System.Drawing.Graphics,System.Drawing.Rectangle)">
+            <summary>
+              Draws a glow shadow.
+            </summary>
+            <param name="g">The graphics.</param>
+            <param name="viewPort">The view port.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawImage(System.Drawing.Graphics)">
+            <summary>
+              Draws the image.
+            </summary>
+            <param name="g">The g.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawImageBorder(System.Drawing.Graphics)">
+            <summary>
+              Draws a border around the image.
+            </summary>
+            <param name="graphics"> The graphics. </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Rectangle)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Rectangle)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context and font.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The <see cref="T:System.Drawing.Font"/> to apply to the drawn text.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Color,System.Drawing.Rectangle)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context, font, and color.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The <see cref="T:System.Drawing.Font"/> to apply to the drawn text.</param>
+            <param name="foreColor">The <see cref="T:System.Drawing.Color"/> to apply to the text.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Color,System.Drawing.Color,System.Drawing.Rectangle)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context, font, color, and back color.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The <see cref="T:System.Drawing.Font"/> to apply to the drawn text.</param>
+            <param name="foreColor">The <see cref="T:System.Drawing.Color"/> to apply to the text.</param>
+            <param name="backColor">The <see cref="T:System.Drawing.Color"/> to apply to the area represented by <c>bounds</c>.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Color,System.Drawing.Color,System.Drawing.ContentAlignment,System.Drawing.Rectangle)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context, font, color, back color, and formatting instructions.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The <see cref="T:System.Drawing.Font"/> to apply to the drawn text.</param>
+            <param name="foreColor">The <see cref="T:System.Drawing.Color"/> to apply to the text.</param>
+            <param name="backColor">The <see cref="T:System.Drawing.Color"/> to apply to the area represented by <c>bounds</c>.</param>
+            <param name="textAlign">The <see cref="T:System.Drawing.ContentAlignment"/> to apply to the text.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Color,System.Drawing.Color,System.Drawing.ContentAlignment,System.Drawing.Rectangle,System.Boolean)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context, font, color, back color, and formatting instructions.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The <see cref="T:System.Drawing.Font"/> to apply to the drawn text.</param>
+            <param name="foreColor">The <see cref="T:System.Drawing.Color"/> to apply to the text.</param>
+            <param name="backColor">The <see cref="T:System.Drawing.Color"/> to apply to the area represented by <c>bounds</c>.</param>
+            <param name="textAlign">The <see cref="T:System.Drawing.ContentAlignment"/> to apply to the text.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+            <param name="scaleText">If set to <c>true</c> the font size is scaled according to the current zoom level.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Color,System.Drawing.Color,System.Drawing.ContentAlignment,System.Drawing.Rectangle,System.Boolean,System.Windows.Forms.Padding)">
+            <summary>
+            Draws the specified text within the specified bounds using the specified device context, font, color, back color, and formatting instructions.
+            </summary>
+            <param name="graphics">The device context in which to draw the text.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The <see cref="T:System.Drawing.Font"/> to apply to the drawn text.</param>
+            <param name="foreColor">The <see cref="T:System.Drawing.Color"/> to apply to the text.</param>
+            <param name="backColor">The <see cref="T:System.Drawing.Color"/> to apply to the area represented by <c>bounds</c>.</param>
+            <param name="textAlign">The <see cref="T:System.Drawing.ContentAlignment"/> to apply to the text.</param>
+            <param name="bounds">The <see cref="T:System.Drawing.Rectangle"/> that represents the bounds of the text.</param>
+            <param name="scaleText">If set to <c>true</c> the font size is scaled according to the current zoom level.</param>
+            <param name="padding">Padding to apply around the text</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawPixelGrid(System.Drawing.Graphics)">
+            <summary>
+              Draws a pixel grid.
+            </summary>
+            <param name="g">The graphics to draw the grid to.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawSelection(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+              Draws the selection region.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.PaintEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.DrawText(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Draws the text.
+            </summary>
+            <param name="e">The <see cref="T:System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.EndDrag">
+            <summary>
+            Completes an ongoing selection or drag operation.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetCursor(System.Drawing.Point)">
+            <summary>
+            Gets a cursor suitable for the current state of the control
+            </summary>
+            <param name="location">The mouse cursor position in client co-ordinates.</param>
+            <returns>
+            A <see cref="P:Cyotek.Windows.Forms.ImageBox.Cursor"/> object suitable for the current state of the control
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetImageBorderOffset">
+            <summary>
+              Gets an offset based on the current image border style.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetInterpolationMode">
+            <summary>
+            Gets the interpolation mode used to render the image.
+            </summary>
+            <returns>
+            The interpolation mode.
+            </returns>
+            <remarks>Returns the value of the <see cref="P:Cyotek.Windows.Forms.ImageBox.InterpolationMode"/> property, unless this is set to <code>InterpolationMode.Default</code>, in which case it will use <code>InterpolationMode.HighQualityBicubic</code> for zoomed images otherwise <code>InterpolationMode.NearestNeighbor</code>.</remarks>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.IsInputKey(System.Windows.Forms.Keys)">
+            <summary>
+              Determines whether the specified key is a regular input key or a special key that requires preprocessing.
+            </summary>
+            <param name="keyData">
+              One of the <see cref="T:System.Windows.Forms.Keys" /> values.
+            </param>
+            <returns>
+              true if the specified key is a regular input key; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAllowClickZoomChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AllowClickZoomChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAllowDoubleClickChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AllowDoubleClickChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAllowFreePanChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AllowFreePanChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAllowUnfocusedMouseWheelChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AllowUnfocusedMouseWheelChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAllowZoomChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AllowZoomChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAutoCenterChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AutoCenterChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnAutoPanChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.AutoPanChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnBackColorChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.BackColorChanged" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnBorderStyleChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.BorderStyleChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnDockChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.DockChanged" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnDropShadowSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.DropShadowSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnFontChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.FontChanged" /> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnForeColorChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.ForeColorChanged" /> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnGridCellSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.GridCellSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnGridColorAlternateChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.GridColorAlternateChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnGridColorChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.GridColorChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnGridDisplayModeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.GridDisplayModeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnGridScaleChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.GridScaleChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnImageBorderColorChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ImageBorderColorChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnImageBorderStyleChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ImageBorderStyleChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnImageChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ImageChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnInterpolationModeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.InterpolationModeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnInvertMouseChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.InvertMouseChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnKeyDown(System.Windows.Forms.KeyEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.KeyDown" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.KeyEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnLimitSelectionToImageChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.LimitSelectionToImageChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnMouseDown(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.MouseDown" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnMouseMove(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.MouseMove" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnMouseUp(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.MouseUp" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnMouseWheel(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.MouseWheel" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPaddingChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.PaddingChanged" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.Paint" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.PaintEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPanEnd(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.PanEnd" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPanModeChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.PanModeChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPanStart(System.ComponentModel.CancelEventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.PanStart" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.ComponentModel.CancelEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnParentChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.ParentChanged" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPixelGridColorChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.PixelGridColorChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnPixelGridThresholdChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.PixelGridThresholdChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnResize(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.Resize" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnScaleTextChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ScaleTextChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnScroll(System.Windows.Forms.ScrollEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.ScrollableControl.Scroll" /> event.
+            </summary>
+            <param name="se">
+              A <see cref="T:System.Windows.Forms.ScrollEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSelected(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.Selected" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSelecting(Cyotek.Windows.Forms.ImageBoxCancelEventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.Selecting" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSelectionColorChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.SelectionColorChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSelectionModeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.SelectionModeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSelectionRegionChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.SelectionRegionChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnShortcutsEnabledChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ShortcutsEnabledChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnShowPixelGridChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ShowPixelGridChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSizeModeChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.SizeModeChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnSizeToFitChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.SizeToFitChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnTextAlignChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.TextAlignChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnTextBackColorChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.TextBackColorChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnTextChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Windows.Forms.Control.TextChanged" /> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnTextDisplayModeChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.TextDisplayModeChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnTextPaddingChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.TextPaddingChanged" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnVirtualDraw(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.VirtualDraw" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.PaintEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnVirtualModeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.VirtualModeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnVirtualSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.VirtualSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnZoomChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ZoomChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnZoomed(Cyotek.Windows.Forms.ImageBoxZoomEventArgs)">
+            <summary>
+            Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.Zoomed" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs" /> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnZoomLevelsChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ImageBox.ZoomLevelsChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ProcessImageShortcuts(System.Windows.Forms.KeyEventArgs)">
+            <summary>
+              Processes shortcut keys for zooming and selection
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.KeyEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ProcessMouseZoom(System.Boolean,System.Drawing.Point)">
+            <summary>
+              Processes zooming with the mouse. Attempts to keep the pre-zoom image pixel under the mouse after the zoom has completed.
+            </summary>
+            <param name="isZoomIn">
+              if set to <c>true</c> zoom in, otherwise zoom out.
+            </param>
+            <param name="cursorPosition">The cursor position.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ProcessPanning(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Performs mouse based panning
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.MouseEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ProcessScrollingShortcuts(System.Windows.Forms.KeyEventArgs)">
+            <summary>
+              Processes shortcut keys for scrolling
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.KeyEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ProcessSelection(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Performs mouse based region selection
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.MouseEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.RestoreSizeMode">
+            <summary>
+            Resets the <see cref="P:Cyotek.Windows.Forms.ImageBox.SizeMode"/> property whilsts retaining the original <see cref="P:Cyotek.Windows.Forms.ImageBox.Zoom"/>.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.StartDrag(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Initializes a selection or drag operation.
+            </summary>
+            <param name="e">The <see cref="T:System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.UpdateScrollPosition(System.Drawing.Point)">
+            <summary>
+              Updates the scroll position.
+            </summary>
+            <param name="position">The position.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetDistance(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets the distance between two points.
+            </summary>
+            <param name="x1">The first x value.</param>
+            <param name="y1">The first y value.</param>
+            <param name="x2">The second x value.</param>
+            <param name="y2">The second y value.</param>
+            <returns>
+            The distance.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetDistance(System.Int32,System.Int32)">
+            <summary>
+            Gets the distance between two values.
+            </summary>
+            <param name="x1">The first value.</param>
+            <param name="x2">The second value.</param>
+            <returns>
+            The distance.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetImageSize">
+            <summary>
+            Gets the size of the image.
+            </summary>
+            <remarks>If an error occurs, for example due to the image being disposed, an empty size is returned</remarks>
+            <returns>Size.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.GetZoomLevel(Cyotek.Windows.Forms.ImageBoxZoomActions)">
+            <summary>
+            Returns an appropriate zoom level based on the specified action, relative to the current zoom level.
+            </summary>
+            <param name="action">The action to determine the zoom level.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if an unsupported action is specified.</exception>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.InitializeGridTile">
+            <summary>
+              Initializes the grid tile.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.OnFrameChangedHandler(System.Object,System.EventArgs)">
+            <summary>
+            Called when the animation frame changes.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="eventArgs">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PerformActualSize(Cyotek.Windows.Forms.ImageBoxActionSources)">
+            <summary>
+            Resets the zoom to 100%.
+            </summary>
+            <param name="source">The source that initiated the action.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PerformZoom(Cyotek.Windows.Forms.ImageBoxZoomActions,Cyotek.Windows.Forms.ImageBoxActionSources,System.Boolean)">
+            <summary>
+            Performs a zoom action.
+            </summary>
+            <param name="action">The action to perform.</param>
+            <param name="source">The source that initiated the action.</param>
+            <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PerformZoom(Cyotek.Windows.Forms.ImageBoxZoomActions,Cyotek.Windows.Forms.ImageBoxActionSources,System.Boolean,System.Drawing.Point)">
+            <summary>
+            Performs a zoom action.
+            </summary>
+            <param name="action">The action to perform.</param>
+            <param name="source">The source that initiated the action.</param>
+            <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+            <param name="relativePoint">A <see cref="T:System.Drawing.Point"/> describing the current center of the control.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PerformZoomIn(Cyotek.Windows.Forms.ImageBoxActionSources,System.Boolean)">
+            <summary>
+            Zooms into the image
+            </summary>
+            <param name="source">The source that initiated the action.</param>
+            <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.PerformZoomOut(Cyotek.Windows.Forms.ImageBoxActionSources,System.Boolean)">
+            <summary>
+            Zooms out of the image
+            </summary>
+            <param name="source">The source that initiated the action.</param>
+            <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.ProcessPanEvents(Cyotek.Windows.Forms.ImageBoxPanStyle)">
+            <summary>
+            Raises either the PanStart or PanEnd events
+            </summary>
+            <param name="panStyle">The new pan style.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.SetCursor(System.Drawing.Point)">
+            <summary>
+            Sets the mouse cursor based on the current control state
+            </summary>
+            <param name="location">The location of the mouse in client co-ordinates.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBox.SetZoom(System.Int32,Cyotek.Windows.Forms.ImageBoxZoomActions,Cyotek.Windows.Forms.ImageBoxActionSources)">
+            <summary>
+            Updates the current zoom.
+            </summary>
+            <param name="value">The new zoom value.</param>
+            <param name="actions">The zoom actions that caused the value to be updated.</param>
+            <param name="source">The source of the zoom operation.</param>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxMouseWheelMessageFilter">
+            <summary>
+            A message filter for WM_MOUSEWHEEL and WM_MOUSEHWHEEL. This class cannot be inherited.
+            </summary>
+            <seealso cref="T:System.Windows.Forms.IMessageFilter"/>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBoxMouseWheelMessageFilter.#ctor">
+            <summary>
+            Constructor that prevents a default instance of this class from being created.
+            </summary>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBoxMouseWheelMessageFilter.Active">
+            <summary>
+            Gets or sets a value indicating whether the filter is active
+            </summary>
+            <value>
+            <c>true</c> if the message filter is active, <c>false</c> if not.
+            </value>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBoxMouseWheelMessageFilter.System#Windows#Forms#IMessageFilter#PreFilterMessage(System.Windows.Forms.Message@)">
+            <summary>
+            Filters out a message before it is dispatched.
+            </summary>
+            <param name="m">  [in,out] The message to be dispatched. You cannot modify this message. </param>
+            <returns>
+            <c>true</c> to filter the message and stop it from being dispatched; <c>false</c> to allow the message to
+            continue to the next filter or control.
+            </returns>
+            <seealso cref="M:System.Windows.Forms.IMessageFilter.PreFilterMessage(Message@)"/>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxPanMode">
+            <summary>
+            Specifies constants that define which mouse buttons can be used to pan an <see cref="T:Cyotek.Windows.Forms.ImageBox"/> control.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxPanMode.None">
+            <summary>
+            No mouse buttons can be used to pan the control.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxPanMode.Left">
+            <summary>
+            The left mouse button can be used to pan the control.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxPanMode.Middle">
+            <summary>
+            The middle mouse button can be used to pan the control.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxPanMode.Both">
+            <summary>
+            Both the left and left mouse buttons can be used to pan the control.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxZoomActions">
+            <summary>
+            Describes the zoom action occuring
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxZoomActions.None">
+            <summary>
+            No action.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxZoomActions.ZoomIn">
+            <summary>
+            The control is increasing the zoom.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxZoomActions.ZoomOut">
+            <summary>
+            The control is decreasing the zoom.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxZoomActions.ActualSize">
+            <summary>
+            The control zoom was reset.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxActionSources">
+            <summary>
+            Specifies the source of an action being performed.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxActionSources.Unknown">
+            <summary>
+            Unknown source.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxActionSources.User">
+            <summary>
+            A user initialized the action.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxBorderStyle">
+            <summary>
+              Specifies the border styles of an image
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxBorderStyle.None">
+            <summary>
+              No border.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingle">
+            <summary>
+              A fixed, single-line border.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingleDropShadow">
+            <summary>
+              A fixed, single-line border with a solid drop shadow.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingleGlowShadow">
+            <summary>
+              A fixed, single-line border with a soft outer glow.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxCancelEventArgs">
+            <summary>
+            Provides data for a cancelable event.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBoxCancelEventArgs.#ctor(System.Drawing.Point)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ImageBoxCancelEventArgs"/> class.
+            </summary>
+            <param name="location">The location of the action being performed.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBoxCancelEventArgs.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ImageBoxCancelEventArgs"/> class.
+            </summary>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBoxCancelEventArgs.Location">
+            <summary>
+            Gets or sets the location of the action being performed.
+            </summary>
+            <value>The location of the action being performed.</value>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxZoomEventArgs">
+            <summary>
+            Contains event data for the <see cref="E:Cyotek.Windows.Forms.ImageBox.ZoomChanged"/> event.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBoxZoomEventArgs.#ctor(Cyotek.Windows.Forms.ImageBoxZoomActions,Cyotek.Windows.Forms.ImageBoxActionSources,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ImageBoxZoomEventArgs"/> class.
+            </summary>
+            <param name="actions">The zoom operation being performed.</param>
+            <param name="source">The source of the operation.</param>
+            <param name="oldZoom">The old zoom level.</param>
+            <param name="newZoom">The new zoom level.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ImageBoxZoomEventArgs.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ImageBoxZoomEventArgs"/> class.
+            </summary>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBoxZoomEventArgs.Actions">
+            <summary>
+            Gets or sets the actions that occured.
+            </summary>
+            <value>The zoom operation.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBoxZoomEventArgs.NewZoom">
+            <summary>
+            Gets or sets the new zoom level.
+            </summary>
+            <value>The new zoom level.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBoxZoomEventArgs.OldZoom">
+            <summary>
+            Gets or sets the old zoom level.
+            </summary>
+            <value>The old zoom level.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ImageBoxZoomEventArgs.Source">
+            <summary>
+            Gets or sets the source of the operation..
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxGridDisplayMode">
+            <summary>
+              Specifies the display styles for the background texture grid
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None">
+            <summary>
+              No background.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Client">
+            <summary>
+              Background is displayed in the control's client area.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Image">
+            <summary>
+              Background is displayed only in the image region.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxGridScale">
+            <summary>
+              Specifies the size of the background texture grid.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridScale.None">
+            <summary>
+              Displays a solid color
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridScale.Tiny">
+            <summary>
+              Half of the default size.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridScale.Small">
+            <summary>
+              Default size.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridScale.Medium">
+            <summary>
+              50% increase of default size.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxGridScale.Large">
+            <summary>
+              100% increase of default size.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxSelectionMode">
+            <summary>
+              Specifies the selection mode.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxSelectionMode.None">
+            <summary>
+              No selection.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle">
+            <summary>
+              Rectangle selection.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxSelectionMode.Zoom">
+            <summary>
+              Zoom selection.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ImageBoxSizeMode">
+            <summary>
+            Determines the sizing mode of an image hosted in an <see cref="T:Cyotek.Windows.Forms.ImageBox" /> control.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxSizeMode.Normal">
+            <summary>
+            The image is disiplayed according to current zoom and scroll properties.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxSizeMode.Stretch">
+            <summary>
+            The image is stretched to fill the client area of the control.
+            </summary>
+        </member>
+        <member name="F:Cyotek.Windows.Forms.ImageBoxSizeMode.Fit">
+            <summary>
+            The image is stretched to fill as much of the client area of the control as possible, whilst retaining the same aspect ratio for the width and height.
+            </summary>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ScrollControl">
+            <summary>
+            Defines a base class for controls that support scrolling behavior.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.#ctor">
+            <summary>
+              Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ScrollControl" /> class.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ScrollControl.BorderStyleChanged">
+            <summary>
+              Occurs when the BorderStyle property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ScrollControl.MouseWheel">
+            <summary>
+            Occurs when the mouse wheel moves while the control has focus.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ScrollControl.PageSizeChanged">
+            <summary>
+              Occurs when the PageSize property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ScrollControl.Scroll">
+            <summary>
+              Occurs when the user or code scrolls through the client area.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ScrollControl.ScrollSizeChanged">
+            <summary>
+              Occurs when the ScrollSize property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.ScrollControl.StepSizeChanged">
+            <summary>
+              Occurs when the StepSize property value changes
+            </summary>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.CreateParams">
+            <summary>
+              Gets the required creation parameters when the control handle is created.
+            </summary>
+            <value>The create params.</value>
+            <returns>
+              A <see cref="T:System.Windows.Forms.CreateParams" /> that contains the required creation parameters when the handle to the control is created.
+            </returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnEnabledChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.EnabledChanged" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnMouseDown(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.MouseDown" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnMouseWheel(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.MouseWheel" /> event.
+            </summary>
+            <param name="e">
+              A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.WndProc(System.Windows.Forms.Message@)">
+            <summary>
+              Processes Windows messages.
+            </summary>
+            <param name="msg">
+              The Windows <see cref="T:System.Windows.Forms.Message" /> to process.
+            </param>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.AlwaysShowHScroll">
+            <summary>
+              Gets or sets a value indicating whether the horizontal scrollbar should always be displayed, even when not required.
+            </summary>
+            <value>
+              <c>true</c> if the horizontal scrollbar should always be displayed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.AlwaysShowVScroll">
+            <summary>
+              Gets or sets a value indicating whether the vertical scrollbar should always be displayed, even when not required.
+            </summary>
+            <value>
+              <c>true</c> if the vertical scrollbar should always be displayed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.BorderStyle">
+            <summary>
+            Gets or sets the border style.
+            </summary>
+            <value>The border style.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.HorizontalScroll">
+            <summary>
+              Gets the horizontal scrollbar properties.
+            </summary>
+            <value>The horizontal scrollbar properties.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.PageSize">
+            <summary>
+              Gets or sets the size of the scroll pages.
+            </summary>
+            <value>The size of the page.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollSize">
+            <summary>
+              Gets or sets the size of the scroll area.
+            </summary>
+            <value>The size of the scroll.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.StepSize">
+            <summary>
+              Gets or sets the size of scrollbar stepping.
+            </summary>
+            <value>The size of the step.</value>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.VerticalScroll">
+            <summary>
+              Gets the vertical scrollbar properties.
+            </summary>
+            <value>The vertical scrollbar properties.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.HScroll">
+            <summary>
+              Gets or sets a value indicating whether the horizontal scrollbar is displayed
+            </summary>
+            <value>
+              <c>true</c> if the horizontal scrollbar is displayed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.VScroll">
+            <summary>
+              Gets or sets a value indicating whether the vertical scrollbar is displayed
+            </summary>
+            <value>
+              <c>true</c> if the vertical scrollbar is displayed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.WheelScrollsControl">
+            <summary>
+              Gets or sets a value indicating whether the control is scrolled when the mouse wheel is spun
+            </summary>
+            <value>
+              <c>true</c> if the mouse wheel scrolls the control; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.ScrollTo(System.Int32,System.Int32)">
+            <summary>
+              Scrolls both scrollbars to the given values
+            </summary>
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.GetEventType(System.IntPtr)">
+            <summary>
+              Gets the type of scrollbar event.
+            </summary>
+            <param name="wParam">The wparam value from a window proc.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnBorderStyleChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.BorderStyleChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnPageSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.PageSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnScroll(System.Windows.Forms.ScrollEventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.Scroll" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.ScrollEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnScrollSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.ScrollSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.OnStepSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.StepSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.ScrollTo(System.Windows.Forms.ScrollOrientation,System.Int32)">
+            <summary>
+              Set the given scrollbar's tracking position to the specified value
+            </summary>
+            <param name="scrollbar">The scrollbar.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.UpdateHorizontalScroll">
+            <summary>
+              Updates the properties of the horizontal scrollbar.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.UpdateHorizontalScrollbar">
+            <summary>
+            Updates the horizontal scrollbar.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.UpdateScrollbars">
+            <summary>
+              Updates the scrollbars.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.UpdateVerticalScroll">
+            <summary>
+              Updates the properties of the vertical scrollbar.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.UpdateVerticalScrollbar">
+            <summary>
+            Updates the vertical scrollbar.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.WmScroll(System.Windows.Forms.Message@)">
+            <summary>
+              Processes the WM_HSCROLL and WM_VSCROLL Windows messages.
+            </summary>
+            <param name="msg">
+              The Windows <see cref="T:System.Windows.Forms.Message" /> to process.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.GetScrollInfo(System.Windows.Forms.ScrollOrientation)">
+            <summary>
+              Gets scrollbar properties
+            </summary>
+            <param name="scrollbar">The bar.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.SetScrollInfo(System.Windows.Forms.ScrollOrientation,Cyotek.Windows.Forms.NativeMethods.SCROLLINFO,System.Boolean)">
+            <summary>
+              Sets scrollbar properties.
+            </summary>
+            <param name="scrollbar">The scrollbar.</param>
+            <param name="scrollInfo">The scrollbar properties.</param>
+            <param name="refresh">
+              if set to <c>true</c> the scrollbar will be repainted.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ScrollControl.HScrollProperties">
+            <summary>
+            Provides basic properties for the horizontal scroll bar in a <see cref="T:Cyotek.Windows.Forms.ScrollControl"/>.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.HScrollProperties.#ctor(Cyotek.Windows.Forms.ScrollControl)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ScrollControl.ScrollProperties" /> class.
+            </summary>
+            <param name="container">The <see cref="T:Cyotek.Windows.Forms.ScrollControl" /> whose scrolling properties this object describes.</param>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ScrollControl.ScrollProperties">
+            <summary>
+            Encapsulates properties related to scrolling.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.#ctor(Cyotek.Windows.Forms.ScrollControl)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ScrollControl.ScrollProperties"/> class.
+            </summary>
+            <param name="container">The <see cref="T:Cyotek.Windows.Forms.ScrollControl"/> whose scrolling properties this object describes.</param>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.Enabled">
+            <summary>
+            Gets or sets whether the scroll bar can be used on the container.
+            </summary>
+            <value><c>true</c> if the scroll bar can be used; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.LargeChange">
+            <summary>
+            Gets or sets the distance to move a scroll bar in response to a large scroll command.
+            </summary>
+            <value>An <see cref="T:System.Int32"/> describing how far, in pixels, to move the scroll bar in response to a large change.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.Maximum">
+            <summary>
+            Gets or sets the upper limit of the scrollable range.
+            </summary>
+            <value>An <see cref="T:System.Int32"/> representing the maximum range of the scroll bar.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.Minimum">
+            <summary>
+            Gets or sets the lower limit of the scrollable range.
+            </summary>
+            <value>An <see cref="T:System.Int32"/> representing the lower range of the scroll bar.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.ParentControl">
+            <summary>
+            Gets the control to which this scroll information applies.
+            </summary>
+            <value>A <see cref="T:Cyotek.Windows.Forms.ScrollControl"/>.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.SmallChange">
+            <summary>
+            Gets or sets the distance to move a scroll bar in response to a small scroll command.
+            </summary>
+            <value>An <see cref="T:System.Int32"/> representing how far, in pixels, to move the scroll bar.</value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.Value">
+            <summary>
+            Gets or sets a numeric value that represents the current position of the scroll bar box.
+            </summary>
+            <value>An <see cref="T:System.Int32"/> representing the position of the scroll bar box, in pixels. </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ScrollControl.ScrollProperties.Visible">
+            <summary>
+            Gets or sets whether the scroll bar can be seen by the user.
+            </summary>
+            <value><c>true</c> if it can be seen; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ScrollControl.VScrollProperties">
+            <summary>
+            Provides basic properties for the vertical scroll bar in a <see cref="T:Cyotek.Windows.Forms.ScrollControl"/>.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ScrollControl.VScrollProperties.#ctor(Cyotek.Windows.Forms.ScrollControl)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ScrollControl.ScrollProperties" /> class.
+            </summary>
+            <param name="container">The <see cref="T:Cyotek.Windows.Forms.ScrollControl" /> whose scrolling properties this object describes.</param>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.VirtualScrollableControl">
+            <summary>
+            Defines a base class for controls that support auto-scrolling behavior.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.#ctor">
+            <summary>
+              Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.VirtualScrollableControl" /> class.
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollChanged">
+            <summary>
+              Occurs when the AutoScroll property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollMarginChanged">
+            <summary>
+              Occurs when the AutoScrollMargin property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollMinSizeChanged">
+            <summary>
+              Occurs when the AutoScrollMinSize property value changes
+            </summary>
+        </member>
+        <member name="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollPositionChanged">
+            <summary>
+              Occurs when the AutoScrollPosition property value changes
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnResize(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.Resize" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnScroll(System.Windows.Forms.ScrollEventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.ScrollControl.Scroll" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.Windows.Forms.ScrollEventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnVisibleChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:System.Windows.Forms.Control.VisibleChanged" /> event.
+            </summary>
+            <param name="e">
+              An <see cref="T:System.EventArgs" /> that contains the event data.
+            </param>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScroll">
+            <summary>
+              Gets or sets a value indicating whether the container enables the user to scroll to any controls placed outside of its visible boundaries.
+            </summary>
+            <value>
+              <c>true</c> if the container enables auto-scrolling; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollMargin">
+            <summary>
+              Gets or sets the size of the auto-scroll margin.
+            </summary>
+            <value>
+              A <see cref="T:System.Drawing.Size" /> that represents the height and width of the auto-scroll margin in pixels.
+            </value>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollMinSize">
+            <summary>
+              Gets or sets the minimum size of the auto-scroll.
+            </summary>
+            <value>
+              A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollPosition">
+            <summary>
+              Gets or sets the location of the auto-scroll position.
+            </summary>
+            <value>
+              A <see cref="T:System.Drawing.Point" /> that represents the auto-scroll position in pixels.
+            </value>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.VirtualScrollableControl.ScrollArea">
+            <summary>
+              Total area of all visible controls which are scrolled with this container
+            </summary>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.VirtualScrollableControl.ViewPortRectangle">
+            <summary>
+              Gets the view port rectangle.
+            </summary>
+            <value>The view port rectangle.</value>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.ScrollControlIntoView(System.Windows.Forms.Control)">
+            <summary>
+              Scrolls the specified child control into view on an auto-scroll enabled control.
+            </summary>
+            <param name="activeControl">The child control to scroll into view.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.AdjustPositionToSize(System.Drawing.Point)">
+            <summary>
+              Adjusts the given Point according to the scroll size
+            </summary>
+            <param name="position">The position.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnAutoScrollChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnAutoScrollMarginChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollMarginChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnAutoScrollMinSizeChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollMinSizeChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.OnAutoScrollPositionChanged(System.EventArgs)">
+            <summary>
+              Raises the <see cref="E:Cyotek.Windows.Forms.VirtualScrollableControl.AutoScrollPositionChanged" /> event.
+            </summary>
+            <param name="e">
+              The <see cref="T:System.EventArgs" /> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.AdjustScrollbars">
+            <summary>
+              Adjusts the scrollbars.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.VirtualScrollableControl.ScrollByOffset(System.Drawing.Size)">
+            <summary>
+              Scrolls child controls by the given offset
+            </summary>
+            <param name="offset">The offset.</param>
+        </member>
+        <member name="T:Cyotek.Windows.Forms.ZoomLevelCollection">
+            <summary>
+            Represents available levels of zoom in an <see cref="T:Cyotek.Windows.Forms.ImageBox"/> control
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection"/> class.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.#ctor(System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection"/> class.
+            </summary>
+            <param name="collection">The default values to populate the collection with.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <c>collection</c> parameter is null</exception>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ZoomLevelCollection.Default">
+            <summary>
+            Returns the default zoom levels
+            </summary>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ZoomLevelCollection.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection" />.
+            </summary>
+            <returns>
+            The number of elements contained in the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection" />.
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ZoomLevelCollection.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
+            </summary>
+            <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
+            <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only; otherwise, false.
+            </returns>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ZoomLevelCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the zoom level at the specified index.
+            </summary>
+            <param name="index">The index.</param>
+        </member>
+        <member name="P:Cyotek.Windows.Forms.ZoomLevelCollection.List">
+            <summary>
+            Gets or sets the backing list.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.Add(System.Int32)">
+            <summary>
+            Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1" />.
+            </summary>
+            <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.AddRange(System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Adds a range of items to the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection"/>.
+            </summary>
+            <param name="collection">The items to add to the collection.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <c>collection</c> parameter is null.</exception>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.Clear">
+            <summary>
+            Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1" />.
+            </summary>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.Contains(System.Int32)">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.Generic.ICollection`1" /> contains a specific value.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+            <returns>true if <paramref name="item" /> is found in the <see cref="T:System.Collections.Generic.ICollection`1" />; otherwise, false.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.CopyTo(System.Int32[],System.Int32)">
+            <summary>
+            Copies a range of elements this collection into a destination <see cref="T:System.Array"/>.
+            </summary>
+            <param name="array">The <see cref="T:System.Array"/> that receives the data.</param>
+            <param name="arrayIndex">A 64-bit integer that represents the index in the <see cref="T:System.Array"/> at which storing begins.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.FindNearest(System.Int32)">
+            <summary>
+            Finds the index of a zoom level matching or nearest to the specified value.
+            </summary>
+            <param name="zoomLevel">The zoom level.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.IndexOf(System.Int32)">
+            <summary>
+            Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1" />.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.IList`1" />.</param>
+            <returns>The index of <paramref name="item" /> if found in the list; otherwise, -1.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.Insert(System.Int32,System.Int32)">
+            <summary>
+            Not implemented.
+            </summary>
+            <param name="index">The index.</param>
+            <param name="item">The item.</param>
+            <exception cref="T:System.NotImplementedException">Not implemented</exception>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.NextZoom(System.Int32)">
+            <summary>
+            Returns the next increased zoom level for the given current zoom.
+            </summary>
+            <param name="zoomLevel">The current zoom level.</param>
+            <returns>The next matching increased zoom level for the given current zoom if applicable, otherwise the nearest zoom.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.PreviousZoom(System.Int32)">
+            <summary>
+            Returns the next decreased zoom level for the given current zoom.
+            </summary>
+            <param name="zoomLevel">The current zoom level.</param>
+            <returns>The next matching decreased zoom level for the given current zoom if applicable, otherwise the nearest zoom.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.Remove(System.Int32)">
+            <summary>
+            Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1" />.
+            </summary>
+            <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+            <returns>true if <paramref name="item" /> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1" />; otherwise, false. This method also returns false if <paramref name="item" /> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1" />.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.RemoveAt(System.Int32)">
+            <summary>
+            Removes the element at the specified index of the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection"/>.
+            </summary>
+            <param name="index">The zero-based index of the element to remove.</param>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.ToArray">
+            <summary>
+            Copies the elements of the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection"/> to a new array.
+            </summary>
+            <returns>An array containing copies of the elements of the <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection"/>.</returns>
+        </member>
+        <member name="M:Cyotek.Windows.Forms.ZoomLevelCollection.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:Cyotek.Windows.Forms.ZoomLevelCollection" /> object that can be used to iterate through the collection.</returns>
+        </member>
+    </members>
+</doc>
