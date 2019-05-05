@@ -1027,7 +1027,10 @@ namespace Bfres.Structs
                     if (trans.Determinant != 0)
                         trans = bone.invert;
                     else
+                    {
                         STConsole.WriteLine($"Determinant for bone transform is 0 to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
+                        return position;
+                    }
                 }
                 else
                 {
@@ -1036,7 +1039,10 @@ namespace Bfres.Structs
                     if (trans.Determinant != 0)
                         trans = bone.invert;
                     else
+                    {
                         STConsole.WriteLine($"Determinant for bone transform is 0 to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
+                        return position;
+                    }
                 }
 
                 if (IsPos)
