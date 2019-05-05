@@ -115,12 +115,9 @@ namespace Switch_Toolbox.Library
                 STConsole.WriteLine($"Scale {worldTK.ExtractScale()}");
             }
 
-            int Index = 0;
-            foreach (Mesh msh in scene.Meshes)
-            {
-                objects.Add(CreateGenericObject(msh, Index, worldTK));
-                Index++;
-            }
+            foreach (int index in parent.MeshIndices)
+                objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
+            
 
             foreach (Node child in parent.Children)
                 BuildNode(child, ref world);
