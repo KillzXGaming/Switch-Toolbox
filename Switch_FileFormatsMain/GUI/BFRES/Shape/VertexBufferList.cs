@@ -129,7 +129,7 @@ namespace FirstPlugin.Forms
                     }
                 }
 
-                activeShape.SaveVertexBuffer();
+                activeShape.SaveVertexBuffer(activeShape.GetResFileU() != null);
                 activeShape.UpdateVertexData();
             }
         }
@@ -241,7 +241,7 @@ namespace FirstPlugin.Forms
                     {
                         CurrentAttribute.Name = encodeEditor.activeAttribute.Name;
                         CurrentAttribute.Format = encodeEditor.activeAttribute.Format;
-                        activeShape.SaveVertexBuffer();
+                        activeShape.SaveVertexBuffer(activeShape.GetResFileU() != null);
                         activeShape.UpdateVertexData();
                         UpdateList();
                     }

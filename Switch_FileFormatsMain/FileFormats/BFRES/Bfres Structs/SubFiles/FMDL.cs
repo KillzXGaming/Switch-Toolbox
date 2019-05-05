@@ -164,12 +164,12 @@ namespace Bfres.Structs
                     {
                         Cursor.Current = Cursors.WaitCursor;
                         shape.CopyUVChannel(dialog.SourceIndex, dialog.DestIndex);
-                        shape.SaveVertexBuffer();
+                        shape.SaveVertexBuffer(GetResFileU() != null);
                         Cursor.Current = Cursors.Default;
                     }
 
                     shape.CopyUVChannel(dialog.SourceIndex, dialog.DestIndex);
-                    shape.SaveVertexBuffer();
+                    shape.SaveVertexBuffer(GetResFileU() != null);
                 }
             }
 
@@ -187,7 +187,7 @@ namespace Bfres.Structs
                 }
 
                 shape.FlipUvsVertical();
-                shape.SaveVertexBuffer();
+                shape.SaveVertexBuffer(GetResFileU() != null);
             }
  
             UpdateVertexData();
@@ -202,7 +202,7 @@ namespace Bfres.Structs
                     return;
                 }
                 shape.FlipUvsHorizontal();
-                shape.SaveVertexBuffer();
+                shape.SaveVertexBuffer(GetResFileU() != null);
             }
 
             UpdateVertexData();
@@ -232,7 +232,7 @@ namespace Bfres.Structs
                         dlg.Color.B / 255.0f,
                         dlg.Color.A / 255.0f));
 
-                    shp.SaveVertexBuffer();
+                    shp.SaveVertexBuffer(GetResFileU() != null);
                 }
             }
             UpdateVertexData();
@@ -243,7 +243,7 @@ namespace Bfres.Structs
             {
                 shp.CheckVertexColors();
                 shp.SetVertexColor(new OpenTK.Vector4(1, 1, 1, 1));
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(GetResFileU() != null);
             }
             UpdateVertexData();
         }
@@ -256,7 +256,7 @@ namespace Bfres.Structs
                 if (HasNormals)
                     shp.SmoothNormals();
 
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(GetResFileU() != null);
             }
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
@@ -270,7 +270,7 @@ namespace Bfres.Structs
                 if (HasNormals)
                     shp.CalculateNormals();
 
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(GetResFileU() != null);
             }
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
@@ -341,7 +341,7 @@ namespace Bfres.Structs
                 }
 
                 shp.CalculateTangentBitangent(UseUVLayer2);
-                shp.SaveVertexBuffer();
+                shp.SaveVertexBuffer(GetResFileU() != null);
             }
 
             UpdateVertexData();
@@ -423,7 +423,7 @@ namespace Bfres.Structs
             else
             {
                 foreach (var shape in shapes) {
-                    shape.SaveVertexBuffer();
+                    shape.SaveVertexBuffer(GetResFileU() != null);
                 }
                 UpdateVertexData();
             }
@@ -635,7 +635,7 @@ namespace Bfres.Structs
 
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
-                            shape.SaveVertexBuffer();
+                            shape.SaveVertexBuffer(IsWiiU);
 
                             if (IsWiiU)
                             {
@@ -969,7 +969,7 @@ namespace Bfres.Structs
                             progressBar.Task = $"Saving vertex buffer. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            shape.SaveVertexBuffer();
+                            shape.SaveVertexBuffer(IsWiiU);
 
                             if (IsWiiU)
                             {

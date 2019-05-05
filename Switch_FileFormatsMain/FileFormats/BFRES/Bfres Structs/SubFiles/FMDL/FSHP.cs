@@ -186,7 +186,7 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             SmoothNormals();
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -236,7 +236,7 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             CalculateNormals();
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -244,7 +244,7 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             FillBitangentSpace(1);
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -252,7 +252,7 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             FillTangentSpace(1);
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -281,7 +281,7 @@ namespace Bfres.Structs
                 {
                     Cursor.Current = Cursors.WaitCursor;
                     CopyUVChannel(dialog.SourceIndex, dialog.DestIndex);
-                    SaveVertexBuffer();
+                    SaveVertexBuffer(GetResFileU() != null);
                     UpdateVertexData();
                     Cursor.Current = Cursors.Default;
                 }
@@ -335,7 +335,7 @@ namespace Bfres.Structs
                     dlg.Color.A / 255.0f));
 
 
-                SaveVertexBuffer();
+                SaveVertexBuffer(GetResFileU() != null);
                 UpdateVertexData();
             }
         }
@@ -348,7 +348,7 @@ namespace Bfres.Structs
 
             SetVertexColor(new Vector4(1,1,1,1));
 
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
         }
         private void Remove(object sender, EventArgs args)
@@ -551,7 +551,7 @@ namespace Bfres.Structs
             }
 
             CalculateTangentBitangent(UseUVLayer2);
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
@@ -576,7 +576,7 @@ namespace Bfres.Structs
             }
 
             FlipUvsVertical();
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
         }
         public void FlipUvsHorizontal(object sender, EventArgs args)
@@ -588,7 +588,7 @@ namespace Bfres.Structs
             }
 
             FlipUvsHorizontal();
-            SaveVertexBuffer();
+            SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
         }
         public void ExportMaterials(object sender, EventArgs args)
@@ -718,7 +718,7 @@ namespace Bfres.Structs
                                 CreateNewBoundingBoxes();
 
                                 SaveShape(IsWiiU);
-                                SaveVertexBuffer();
+                                SaveVertexBuffer(IsWiiU);
 
                                 Cursor.Current = Cursors.Default;
                             }
@@ -1062,13 +1062,11 @@ namespace Bfres.Structs
             output.Z = input.X * matrix.M13 + input.Y * matrix.M23 + input.Z * matrix.M33 + matrix.M43;
             return output;      
         }
-        public void SaveVertexBuffer()
+        public void SaveVertexBuffer(bool IsWiiU)
         {
             if (IsWiiU)
             {
-                Console.WriteLine("Saving Buffer");
                 BfresWiiU.SaveVertexBuffer(this);
-                Console.WriteLine("Reading Buffer");
                 BfresWiiU.ReadShapesVertices(this, ShapeU, VertexBufferU, GetParentModel());
                 return;
             }
@@ -1077,7 +1075,6 @@ namespace Bfres.Structs
             List<VertexBufferHelperAttrib> atrib = new List<VertexBufferHelperAttrib>();
 
             UpdateVertices();
-
 
             foreach (VertexAttribute att in vertexAttributes)
             {

@@ -108,7 +108,7 @@ namespace FirstPlugin
                         if (att.Name == SelectedText)
                         {
                             shape.vertexAttributes.Remove(att);
-                            shape.SaveVertexBuffer();
+                            shape.SaveVertexBuffer(shape.IsWiiU);
                             if (shape.IsWiiU)
                                 BfresWiiU.ReadShapesVertices(shape, shape.ShapeU, shape.VertexBufferU, ActiveFMDL);
                             else

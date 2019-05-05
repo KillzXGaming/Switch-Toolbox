@@ -954,6 +954,9 @@ namespace FirstPlugin
                 }
             }
 
+            fskl.update();
+            fskl.reset();
+
             fskl.Node_Array = new int[fskl.node.SkeletonU.MatrixToBoneList.Count];
             int nodes = 0;
             foreach (ushort node in fskl.node.SkeletonU.MatrixToBoneList)
@@ -967,10 +970,9 @@ namespace FirstPlugin
             VertexBuffer buffer = new VertexBuffer();
             buffer.Attributes = new ResDict<VertexAttrib>();
 
-            Console.WriteLine("Updating Buffer");
-
             VertexBufferHelper helper = new VertexBufferHelper(buffer, Syroot.BinaryData.ByteOrder.BigEndian);
             List<VertexBufferHelperAttrib> atrib = new List<VertexBufferHelperAttrib>();
+
             fshp.UpdateVertices();
 
             Console.WriteLine("Creating Buffer");

@@ -599,8 +599,8 @@ namespace FirstPlugin
             foreach (BfresBone wrapper in fskl.bones)
             {
                 //Check duplicated names
-             //   List<string> names = fskl.bones.Select(o => o.Text).ToList();
-             //   wrapper.Text = Utils.RenameDuplicateString(names, wrapper.Text);
+                List<string> names = fskl.bones.Select(o => o.Text).ToList();
+                wrapper.Text = Utils.RenameDuplicateString(names, wrapper.Text);
 
                 wrapper.Bone.Name = wrapper.Text;
                 fskl.node.Skeleton.Bones.Add(wrapper.Bone);
