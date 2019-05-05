@@ -178,6 +178,7 @@ namespace Switch_Toolbox.Library.Forms
 
             imageBGComboBox.SelectedItem = Runtime.pictureBoxStyle;
             UpdateBackgroundImage();
+            SetZoomSetting();
 
             SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
 
@@ -1127,8 +1128,13 @@ namespace Switch_Toolbox.Library.Forms
                 enableZoomToolStripMenuItem.Checked = true;
 
             Runtime.ImageEditor.EnableImageZoom = enableZoomToolStripMenuItem.Checked;
+            SetZoomSetting();
+            SaveSettings();
+        }
 
-            if (enableZoomToolStripMenuItem.Checked)
+        private void SetZoomSetting()
+        {
+            if (Runtime.ImageEditor.EnableImageZoom)
             {
                 pictureBoxCustom1.AllowZoom = true;
                 pictureBoxCustom1.AllowClickZoom = true;
@@ -1140,7 +1146,6 @@ namespace Switch_Toolbox.Library.Forms
                 pictureBoxCustom1.AllowClickZoom = false;
                 pictureBoxCustom1.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Fit;
             }
-            SaveSettings();
         }
 
         private void SaveSettings()
