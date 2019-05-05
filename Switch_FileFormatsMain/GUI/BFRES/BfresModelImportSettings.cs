@@ -190,6 +190,7 @@ namespace FirstPlugin
         {
             return comboBox.GetItemText(comboBox.SelectedItem);
         }
+
         private void DisableAttribute(CheckBox checkBox, ComboBox comboBox)
         {
 

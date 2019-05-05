@@ -633,6 +633,7 @@ namespace Bfres.Structs
                             }
                             Console.WriteLine($"VertexSkinCount {shape.VertexSkinCount}");
 
+                            shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer();
 
@@ -958,6 +959,7 @@ namespace Bfres.Structs
 
                             Console.WriteLine($"VertexSkinCount 1 {shape.VertexSkinCount}");
 
+                            shape.OptmizeAttributeFormats();
 
                             progressBar.Task = $"Saving shape. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
