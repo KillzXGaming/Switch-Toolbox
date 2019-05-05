@@ -1023,10 +1023,9 @@ namespace Bfres.Structs
                     }
 
                     var bone = skel.bones[skel.Node_Array[BoneIndex]];
+                    trans = bone.invert;
 
-                    if (trans.Determinant != 0)
-                        trans = bone.invert;
-                    else
+                    if (trans.Determinant == 0)
                     {
                         STConsole.WriteLine($"Determinant for bone transform is 0 to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
                         return position;
@@ -1035,10 +1034,9 @@ namespace Bfres.Structs
                 else
                 {
                     var bone = skel.bones[BoneIndex];
+                    trans = bone.invert;
 
-                    if (trans.Determinant != 0)
-                        trans = bone.invert;
-                    else
+                    if (trans.Determinant == 0)
                     {
                         STConsole.WriteLine($"Determinant for bone transform is 0 to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);
                         return position;
