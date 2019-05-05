@@ -15,6 +15,8 @@ namespace Switch_Toolbox.Library.Animations
             {
                 anim.NextFrame(skeleton);
 
+                //Add frames to the playing animation
+                anim.Frame++;
                 //Reset it when it reaches the total frame count
                 if (anim.Frame >= anim.FrameCount)
                     anim.Frame = 0;
@@ -29,13 +31,10 @@ namespace Switch_Toolbox.Library.Animations
                     Quaternion rotation = bone.GetRotation();
                     Vector3 scale = bone.GetScale();
 
-                    seAnim.AddTranslationKey(boneAnim.Text, frame, position.X, position.Y, position.Z);
-                    seAnim.AddRotationKey(boneAnim.Text, frame, rotation.X, rotation.Y, rotation.Z, rotation.W);
-                    seAnim.AddScaleKey(boneAnim.Text, frame, scale.X, scale.Y, scale.Z);
+                    seAnim.AddTranslationKey(boneAnim.Text, frame, bone.pos.X, bone.pos.Y, bone.pos.Z);
+                    seAnim.AddRotationKey(boneAnim.Text, frame, bone.rot.X, bone.rot.Y, bone.rot.Z, bone.rot.W);
+                  //seAnim.AddScaleKey(boneAnim.Text, frame, scale.X, scale.Y, scale.Z);
                 }
-
-                //Add frames to the playing animation
-                anim.Frame += 1f;
             }
 
             seAnim.Write(FileName);

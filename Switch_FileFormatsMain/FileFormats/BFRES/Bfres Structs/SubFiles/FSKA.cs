@@ -162,7 +162,7 @@ namespace Bfres.Structs
             }
             else
             {
-                foreach (var model in ((BFRES)Parent.Parent.Parent.Parent).BFRESRender.models)
+                foreach (var model in ((BFRES)Parent.Parent.Parent).BFRESRender.models)
                 {
                     foreach (var bone in Bones)
                     {

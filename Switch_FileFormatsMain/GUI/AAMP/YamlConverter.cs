@@ -73,7 +73,7 @@ namespace FirstPlugin
             writer.WriteLine($"{paramObj.HashString} : !obj".Indent(IndentAmount));
             foreach (var entry in paramObj.paramEntries)
             {
-                writer.Write($"{WriteParamData(entry)}\n".Indent(IndentAmount + 2));
+                writer.WriteLine($"{WriteParamData(entry)}".Indent(IndentAmount + 2));
             }
         }
 

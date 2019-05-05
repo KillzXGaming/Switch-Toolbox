@@ -78,6 +78,9 @@ namespace Switch_Toolbox.Library
                 currentFrameUpDown.Maximum = frameCount;
                 animationTrackBar.FrameCount = frameCount;
                 currentFrameUpDown.Value = 0;
+
+                SetAnimationsToFrame(0);
+                UpdateViewport();
             }
         }
 

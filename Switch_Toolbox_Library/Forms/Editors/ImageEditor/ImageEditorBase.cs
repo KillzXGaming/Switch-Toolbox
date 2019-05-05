@@ -375,7 +375,7 @@ namespace Switch_Toolbox.Library.Forms
                     //Loading components would not be necessary as it is default to RGBA
                     if (UseRGBA())
                     {
-                        if (Runtime.ImageEditor.DisplayAlpha)
+                        if (!Runtime.ImageEditor.DisplayAlpha)
                             BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, AlphaDisplay);
                     }
                     else

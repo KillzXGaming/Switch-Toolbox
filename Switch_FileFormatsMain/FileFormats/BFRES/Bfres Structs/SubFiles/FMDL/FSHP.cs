@@ -923,12 +923,49 @@ namespace Bfres.Structs
         public List<VertexAttribute> vertexAttributes = new List<VertexAttribute>();
         public class VertexAttribute
         {
+            public enum AttributeType
+            {
+                Unknown,
+                Position,
+                Normal,
+                UV,
+                Color,
+                Tangent,
+                Bitangent,
+                Weight,
+                Index,
+            }
+
             public string Name;
             public ResGFX.AttribFormat Format;
 
             public override string ToString()
             {
                 return Name;
+            }
+
+            public AttributeType GetAttributeType()
+            {
+                var index = string.Concat(Name.ToArray().Reverse().TakeWhile(char.IsNumber).Reverse());
+
+                if (Name == $"_p{index}")
+                    return AttributeType.Position;
+                if (Name == $"_n{index}")
+                    return AttributeType.Normal;
+                if (Name == $"_u{index}")
+                    return AttributeType.UV;
+                if (Name == $"_c{index}")
+                    return AttributeType.Color;
+                if (Name == $"_t{index}")
+                    return AttributeType.Tangent;
+                if (Name == $"_b{index}")
+                    return AttributeType.Bitangent;
+                if (Name == $"_w{index}")
+                    return AttributeType.Weight;
+                if (Name == $"_i{index}")
+                    return AttributeType.Index;
+
+                return AttributeType.Unknown;
             }
 
             public ResGFX.AttribFormat GetTypeWiiU(ResUGX2.GX2AttribFormat type)
@@ -1156,8 +1193,11 @@ namespace Bfres.Structs
         {
             foreach (var attribute in vertexAttributes)
             {
-                if (attribute.Name == "_w0" || attribute.Name == "_i0")
+                if (attribute.GetAttributeType() == VertexAttribute.AttributeType.Weight ||
+                    attribute.GetAttributeType() == VertexAttribute.AttributeType.Index)
+                {
                     OptmizeIndicesWeights(attribute);
+                }
             }
         }
 
@@ -1182,6 +1222,42 @@ namespace Bfres.Structs
                     case ResGFX.AttribFormat.Format_32_32_UInt:
                         attribute.Format = ResGFX.AttribFormat.Format_32_UInt;
                         break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_Single:
+                    case ResGFX.AttribFormat.Format_16_16_Single:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_Single;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_SInt:
+                    case ResGFX.AttribFormat.Format_16_16_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_UInt:
+                    case ResGFX.AttribFormat.Format_16_16_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UInt:
+                    case ResGFX.AttribFormat.Format_8_8_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SInt:
+                    case ResGFX.AttribFormat.Format_8_8_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SNorm:
+                    case ResGFX.AttribFormat.Format_8_8_SNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_SNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UNorm:
+                    case ResGFX.AttribFormat.Format_8_8_UNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_UNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_8_SIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_SIntToSingle;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_8_UIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_UIntToSingle;
+                        break;
                 }
             }
             if (VertexSkinCount == 2)
@@ -1199,6 +1275,33 @@ namespace Bfres.Structs
                     case ResGFX.AttribFormat.Format_32_32_32_32_UInt:
                     case ResGFX.AttribFormat.Format_32_32_32_UInt:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_Single:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_16_Single;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_16_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_16_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_SNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_UNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_SIntToSingle;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_UIntToSingle;
                         break;
                 }
             }

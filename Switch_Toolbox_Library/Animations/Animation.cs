@@ -497,17 +497,6 @@ namespace Switch_Toolbox.Library.Animations
             return FrameCount;
         }
 
-        private void ToSeanim()
-        {
-            foreach (var bone in Bones)
-            {
-                for (int Frame = 0; Frame < FrameCount; Frame++)
-                {
-
-                }
-            }
-        }
-
         public void NextFrame(STSkeleton skeleton, bool isChild = false)
         {
             if (Frame >= FrameCount) return;

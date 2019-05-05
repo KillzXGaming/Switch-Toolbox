@@ -274,6 +274,9 @@ namespace Switch_Toolbox.Library.Animations
                 for (int i = 0; i <= anim.FrameCount; i++)
                 {
                     anim.NextFrame(Skeleton);
+                    anim.Frame++;
+                    if (anim.Frame >= anim.FrameCount)
+                        anim.Frame = 0;
 
                     file.WriteLine("time " + i);
 
