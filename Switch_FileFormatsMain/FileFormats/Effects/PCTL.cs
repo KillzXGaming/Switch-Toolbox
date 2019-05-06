@@ -943,8 +943,6 @@ namespace FirstPlugin
             {
                 uint Position = (uint)reader.Position; 
 
-                reader.Seek(880, SeekOrigin.Current);
-
                 Color0Array = new ColorData[8];
                 Color1Array = new ColorData[8];
 

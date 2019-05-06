@@ -130,12 +130,15 @@ namespace Switch_Toolbox.Library
 
             processNode();
 
-            Console.WriteLine("Scene object coun " + objects.Count);
+            if (scene.RootNode != null)
+            {
+                var idenity = Matrix4x4.Identity;
+                BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref idenity);
 
-            var idenity = Matrix4x4.Identity;
-            BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref idenity);
-            skeleton.update();
-            skeleton.reset();
+                skeleton.update();
+                skeleton.reset();
+            }
+
 
             if (scene.HasMaterials)
             {
@@ -266,12 +269,13 @@ namespace Switch_Toolbox.Library
             Matrix4x4 world = trafo * rootTransform;
             Matrix4 worldTK = AssimpHelper.TKMatrix(world);
 
-            bool IsBone = boneNames.Contains(node.Name) && !boneNames.Contains(node.Parent.Name) ||
-                          node.Name.Contains("Skl_Root") || node.Name.Contains("nw4f_root");
-
             string ParentArmatureName = "";
             if (node.Parent != null)
                 ParentArmatureName = node.Parent.Name;
+
+            bool IsBone = boneNames.Contains(node.Name) && !boneNames.Contains(ParentArmatureName) ||
+                          node.Name.Contains("Skl_Root") || node.Name.Contains("nw4f_root");
+
 
             short SmoothIndex = 0;
             short RigidIndex = -1;
@@ -279,16 +283,21 @@ namespace Switch_Toolbox.Library
             //Loop through all the bones. If the parent is not in the bone list, then it's Parent is the root
             if (IsBone)
             {
-                Console.WriteLine("ParentArmatureName " + ParentArmatureName);
-
                 var idenity = Matrix4x4.Identity;
-                var Root = node.Parent;
+
+                var Root = node;
+                if (node.Parent != null)
+                    Root = node.Parent;
+
                 CreateByNode(node, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
             }
             else
             {
-                foreach (Node child in node.Children)
-                    BuildSkeletonNodes(child,boneNames, skeleton, ref world);
+                if (node.HasChildren)
+                {
+                    foreach (Node child in node.Children)
+                        BuildSkeletonNodes(child, boneNames, skeleton, ref world);
+                }
             }
         }
 

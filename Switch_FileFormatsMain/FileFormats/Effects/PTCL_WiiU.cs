@@ -256,7 +256,7 @@ namespace FirstPlugin
                     }
                 }
                 if (header.IsSPBD)
-                    reader.Seek(pos + 1072, SeekOrigin.Begin);
+                    reader.Seek(pos + 1358, SeekOrigin.Begin);
                 else
                     reader.Seek(pos + 1616, SeekOrigin.Begin);
                 ColorPosition = reader.Position;

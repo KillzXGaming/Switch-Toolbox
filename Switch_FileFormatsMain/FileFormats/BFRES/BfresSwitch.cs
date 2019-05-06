@@ -581,6 +581,7 @@ namespace FirstPlugin
 
                 //Clone a generic bone with the generic data
                 BfresBone bn = new BfresBone(fskl);
+                bn.Text = genericBone.Text;
                 bn.CloneBaseInstance(genericBone);
 
                 //Set the bfres bone data

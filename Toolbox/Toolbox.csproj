@@ -402,6 +402,9 @@
     <Content Include="LZ4.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Presets\UserData.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Projects\Recent\DUMMY.txt" />
     <Content Include="Lib\x64\DirectXTexNetImpl.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -418,6 +421,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Presets\Materials\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
