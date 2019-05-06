@@ -538,7 +538,7 @@ namespace FirstPlugin
 
                 ArrayCount = 1;
 
-                if (Width != 0 && Height != 0 && SurfFormat != 0)
+                if (Width != 0 && Height != 0)
                 {
                     using (reader.TemporarySeek(header.TextureBlockTableOffset + DataPos, SeekOrigin.Begin))
                     {
