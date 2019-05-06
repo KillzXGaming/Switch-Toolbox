@@ -933,26 +933,23 @@ namespace FirstPlugin
                 if (bn.SmoothMatrixIndex != short.MaxValue)
                     fskl.node.SkeletonU.MatrixToBoneList.Add(SmoothIndex++);
 
-                fskl.node.SkeletonU.InverseModelMatrices.Add(Syroot.Maths.Matrix3x4.Zero);
-
-                fskl.bones.Add(bn);
-            }
-
-            foreach (BfresBone wrapper in fskl.bones)
-            {
                 //Check duplicated names
                 List<string> names = fskl.bones.Select(o => o.Text).ToList();
-                wrapper.Text = Utils.RenameDuplicateString(names, wrapper.Text);
+                bn.Text = Utils.RenameDuplicateString(names, bn.Text);
 
-                wrapper.BoneU.Name = wrapper.Text;
-                fskl.node.SkeletonU.Bones.Add(wrapper.Text, wrapper.BoneU);
+                fskl.node.SkeletonU.InverseModelMatrices.Add(Syroot.Maths.Matrix3x4.Zero);
+                fskl.bones.Add(bn);
+
+                bn.BoneU.Name = bn.Text;
+                fskl.node.SkeletonU.Bones.Add(bn.Text, bn.BoneU);
 
                 //Add bones to tree
-                if (wrapper.Parent == null)
+                if (bn.Parent == null)
                 {
-                    fskl.node.Nodes.Add(wrapper);
+                    fskl.node.Nodes.Add(bn);
                 }
             }
+
 
             fskl.update();
             fskl.reset();

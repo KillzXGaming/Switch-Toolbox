@@ -898,6 +898,9 @@ namespace Bfres.Structs
 
 
                             FSHP shape = new FSHP();
+                            List<string> keyList = shapes.Select(o => o.Text).ToList();
+                            shape.Text = Utils.RenameDuplicateString(keyList, obj.Text);
+
                             Nodes["FshpFolder"].Nodes.Add(shape);
                             shapes.Add(shape);
 
@@ -986,17 +989,6 @@ namespace Bfres.Structs
                                     SubMeshCount = 1,
                                 });
                             }
-                        }
-
-                        progressBar.Task = $"Checking name duplicates.";
-                        progressBar.Value = 99;
-                        progressBar.Refresh();
-
-                        //now rename dupes
-                        foreach (var shape in shapes)
-                        {
-                            List<string> keyList = shapes.Select(o => o.Text).ToList();
-                            shape.Text = Utils.RenameDuplicateString(keyList, shape.Text);
                         }
 
                         progressBar.Value = 100;

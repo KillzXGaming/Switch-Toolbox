@@ -577,12 +577,10 @@ namespace FirstPlugin
             {
                 genericBone.BillboardIndex = -1;
 
-                STConsole.WriteLine($"Applying bone " + genericBone.Text);
-
                 //Clone a generic bone with the generic data
                 BfresBone bn = new BfresBone(fskl);
-                bn.Text = genericBone.Text;
                 bn.CloneBaseInstance(genericBone);
+                bn.Text = genericBone.Text;
 
                 //Set the bfres bone data
                 if (bn.Bone == null)
@@ -594,22 +592,18 @@ namespace FirstPlugin
 
                 fskl.node.Skeleton.InverseModelMatrices.Add(Syroot.Maths.Matrix3x4.Zero);
 
-                fskl.bones.Add(bn);
-            }
-
-            foreach (BfresBone wrapper in fskl.bones)
-            {
                 //Check duplicated names
                 List<string> names = fskl.bones.Select(o => o.Text).ToList();
-                wrapper.Text = Utils.RenameDuplicateString(names, wrapper.Text);
+                bn.Text = Utils.RenameDuplicateString(names, bn.Text);
+                bn.Bone.Name = bn.Text;
 
-                wrapper.Bone.Name = wrapper.Text;
-                fskl.node.Skeleton.Bones.Add(wrapper.Bone);
+                fskl.bones.Add(bn);
+                fskl.node.Skeleton.Bones.Add(bn.Bone);
 
                 //Add bones to tree
-                if (wrapper.Parent == null)
+                if (bn.Parent == null)
                 {
-                    fskl.node.Nodes.Add(wrapper);
+                    fskl.node.Nodes.Add(bn);
                 }
             }
 
