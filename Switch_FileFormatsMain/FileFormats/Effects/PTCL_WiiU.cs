@@ -235,8 +235,11 @@ namespace FirstPlugin
                     }
                 }
 
+                uint TextureAmount = 3;
+                if (header.IsSPBD)
+                    TextureAmount = 2;
 
-                for (int i = 0; i < 3; i++) //Max of 3 textures. Seems to fill in texture info even if unused
+                for (int i = 0; i < TextureAmount; i++) //Max of 3 or 2 textures depending on version. Seems to fill in texture info even if unused
                 {
                     TextureInfo textureInfo = new TextureInfo();
                     textureInfo.Read(reader, header, Text);
@@ -252,7 +255,10 @@ namespace FirstPlugin
                         }
                     }
                 }
-                reader.Seek(pos + 1616, SeekOrigin.Begin);
+                if (header.IsSPBD)
+                    reader.Seek(pos + 1072, SeekOrigin.Begin);
+                else
+                    reader.Seek(pos + 1616, SeekOrigin.Begin);
                 ColorPosition = reader.Position;
                 for (int i = 0; i < 8; i++)
                 {
@@ -437,7 +443,7 @@ namespace FirstPlugin
             public uint TileMode;
             public uint Swizzle;
             public byte WrapMode;
-            public uint CompSel;
+            public byte[] CompSel;
             public uint ImageSize;
             public uint ImageOffset;
             public SurfaceFormat SurfFormat;
@@ -472,7 +478,7 @@ namespace FirstPlugin
                     byte unk2 = reader.ReadByte();
                     byte unk3 = reader.ReadByte();
                     uint mipCount = reader.ReadUInt32();
-                    CompSel = reader.ReadUInt32();
+                    CompSel = reader.ReadBytes(4);
                     uint[] MipOffsets = reader.ReadUInt32s(13);
                     uint enableMipLevel = reader.ReadUInt32();
                     uint mipBias = reader.ReadUInt32();
@@ -493,7 +499,7 @@ namespace FirstPlugin
                     if (mipCount < 14)
                         MipCount = mipCount;
 
-                    CompSel = reader.ReadUInt32();
+                    CompSel = reader.ReadBytes(4);
                     uint enableMipLevel = reader.ReadUInt32();
                     uint mipBias = reader.ReadUInt32();
                     uint originalDataFormat = reader.ReadUInt32();
@@ -503,6 +509,12 @@ namespace FirstPlugin
                     ImageSize = reader.ReadUInt32();
                     DataPos = reader.ReadUInt32();
                 }
+
+                RedChannel = SetChannel(CompSel[0]);
+                GreenChannel = SetChannel(CompSel[1]);
+                BlueChannel = SetChannel(CompSel[2]);
+                AlphaChannel = SetChannel(CompSel[3]);
+
                 ArrayCount = 1;
                 Depth = 1;
 
@@ -520,6 +532,16 @@ namespace FirstPlugin
                 }
 
                 reader.Seek(164, SeekOrigin.Current);
+            }
+
+            private STChannelType SetChannel(int comp)
+            {
+                if (comp == 0) return STChannelType.Red;
+                else if (comp == 1) return STChannelType.Green;
+                else if (comp == 2) return STChannelType.Blue;
+                else if (comp == 3) return STChannelType.Alpha;
+                else if (comp == 4) return STChannelType.Zero;
+                else return STChannelType.One;
             }
 
             public void Write(FileWriter writer, Header header)

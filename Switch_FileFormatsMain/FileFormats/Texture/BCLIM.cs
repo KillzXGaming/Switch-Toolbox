@@ -254,6 +254,8 @@ namespace FirstPlugin
                 Width = image.Width;
                 Height = image.Height;
 
+                LoadComponents(Format);
+
                 reader.Position = 0;
                 ImageData = reader.ReadBytes((int)image.ImageSize);
 
@@ -261,6 +263,26 @@ namespace FirstPlugin
             }
         }
 
+        private void LoadComponents(TEX_FORMAT Format)
+        {
+            switch (Format)
+            {
+                case TEX_FORMAT.BC5_SNORM:
+                case TEX_FORMAT.BC5_UNORM:
+                    RedChannel = STChannelType.Red;
+                    GreenChannel = STChannelType.Red;
+                    BlueChannel = STChannelType.Red;
+                    AlphaChannel = STChannelType.Green;
+                    break;
+                case TEX_FORMAT.BC4_SNORM:
+                case TEX_FORMAT.BC4_UNORM:
+                    RedChannel = STChannelType.Red;
+                    GreenChannel = STChannelType.Red;
+                    BlueChannel = STChannelType.Red;
+                    AlphaChannel = STChannelType.Red;
+                    break;
+            }
+        }
 
         private TEX_FORMAT GetFormat(BCLIMFormat format)
         {

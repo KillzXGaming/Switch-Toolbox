@@ -252,7 +252,7 @@ namespace FirstPlugin
                         }
                     }
                 }
-                reader.Seek(pos + 1616, SeekOrigin.Begin);
+                reader.Seek(pos + 1072, SeekOrigin.Begin);
                 ColorPosition = reader.Position;
                 for (int i = 0; i < 8; i++)
                 {

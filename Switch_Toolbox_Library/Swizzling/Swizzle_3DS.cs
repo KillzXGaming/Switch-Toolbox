@@ -32,6 +32,8 @@ namespace Switch_Toolbox.Library
         {
             switch (GenericFormat)
             {
+                
+                case TEX_FORMAT.B5G6R5_UNORM: return PICASurfaceFormat.RGB565;
                 case TEX_FORMAT.R8G8_UNORM: return PICASurfaceFormat.RGB8;
                 case TEX_FORMAT.B5G5R5A1_UNORM: return PICASurfaceFormat.RGBA5551;
                 case TEX_FORMAT.B4G4R4A4_UNORM: return PICASurfaceFormat.RGBA4;
@@ -47,6 +49,8 @@ namespace Switch_Toolbox.Library
                     throw new NotImplementedException("Unsupported format! " + GenericFormat);
             }
         }
+
+        private static int[] FmtBPP = new int[] { 32, 24, 16, 16, 16, 16, 16, 8, 8, 8, 4, 4, 4, 8 };
 
         public static int[] SwizzleLUT =
 {
@@ -67,7 +71,10 @@ namespace Switch_Toolbox.Library
 
             byte[] Output = new byte[Width * Height * 4];
 
-            int Increment = (int)STGenericTexture.GetBytesPerPixel(Format);
+            int Increment = FmtBPP[(int)ConvertToPICAFormat(Format)] / 8;
+            if (Increment == 0) Increment = 1;
+
+           // int Increment = (int)STGenericTexture.GetBytesPerPixel(Format);
 
             int IOffset = 0;
 
