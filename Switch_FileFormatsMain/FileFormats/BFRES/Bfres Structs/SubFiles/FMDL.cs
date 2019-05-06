@@ -899,7 +899,7 @@ namespace Bfres.Structs
 
                             FSHP shape = new FSHP();
                             List<string> keyList = shapes.Select(o => o.Text).ToList();
-                            shape.Text = Utils.RenameDuplicateString(keyList, obj.Text);
+                            shape.Text = Utils.RenameDuplicateString(keyList, obj.ObjectName);
 
                             Nodes["FshpFolder"].Nodes.Add(shape);
                             shapes.Add(shape);
@@ -921,7 +921,6 @@ namespace Bfres.Structs
                             if (shape.MaterialIndex >= materials.Count)
                                 shape.MaterialIndex = 0;
 
-                            shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
 
                             progressBar.Task = $"Creating Bounding Boxes. Mesh: {obj.ObjectName}";
