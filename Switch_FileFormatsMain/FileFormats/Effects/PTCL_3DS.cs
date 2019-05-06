@@ -28,6 +28,8 @@ namespace FirstPlugin
             public uint ShaderGtxTableOffset;
             public uint ShaderGtxTableSize;
 
+            public uint Version;
+
             public void Read(FileReader reader, PTCL pctl)
             {
                 uint Position = (uint)reader.Position; //Offsets are relative to this
@@ -38,30 +40,34 @@ namespace FirstPlugin
                 if (Signature == "SPBD")
                     IsSPBD = true;
 
-                uint Version = reader.ReadUInt32();
+                Version = reader.ReadUInt32();
                 uint EmitterCount = reader.ReadUInt32();
                 uint Padding = reader.ReadUInt32();
                 EffectNameTableOffset = reader.ReadUInt32();
                 TextureBlockTableOffset = reader.ReadUInt32();
                 TextureBlockTableSize = reader.ReadUInt32();
-                ShaderGtxTableOffset = reader.ReadUInt32();
-                ShaderGtxTableSize = reader.ReadUInt32();
-                uint KeyAnimationTableOffset = reader.ReadUInt32();
-                uint KeyAnimationTableSize = reader.ReadUInt32();
-                uint PrimativeTableOffset = reader.ReadUInt32();
-                uint PrimativeTableSize = reader.ReadUInt32();
-                uint ShaderParamTableOffset = reader.ReadUInt32();
-                uint ShaderParamTableSize = reader.ReadUInt32();
-                uint TotalTextureTableSize = reader.ReadUInt32();
-                uint Unknown1 = reader.ReadUInt32();
-                uint Unknown2 = reader.ReadUInt32();
+
+                if (Version > 11)
+                {
+                    ShaderGtxTableOffset = reader.ReadUInt32();
+                    ShaderGtxTableSize = reader.ReadUInt32();
+                    uint KeyAnimationTableOffset = reader.ReadUInt32();
+                    uint KeyAnimationTableSize = reader.ReadUInt32();
+                    uint PrimativeTableOffset = reader.ReadUInt32();
+                    uint PrimativeTableSize = reader.ReadUInt32();
+                    uint ShaderParamTableOffset = reader.ReadUInt32();
+                    uint ShaderParamTableSize = reader.ReadUInt32();
+                    uint TotalTextureTableSize = reader.ReadUInt32();
+                    uint Unknown1 = reader.ReadUInt32();
+                    uint Unknown2 = reader.ReadUInt32();
+                }
+
 
                 var groupEmitterSets = new TreeNode("Emitter Sets");
                 var textureFolder = new TreeNode("Textures");
                 pctl.Nodes.Add(textureFolder);
                 pctl.Nodes.Add(groupEmitterSets);
 
-                reader.Seek(72, SeekOrigin.Begin);
                 for (int i = 0; i < EmitterCount; i++)
                 {
                     EmitterSet emitterSet = new EmitterSet();
@@ -162,6 +168,7 @@ namespace FirstPlugin
                     table.Read(reader, header);
                     Nodes.Add(table.emitter);
                 }
+
                 reader.Seek(pos, SeekOrigin.Begin);
             }
             public void Write(FileWriter writer)
@@ -223,7 +230,15 @@ namespace FirstPlugin
             {
                 long pos = reader.Position;
 
-                reader.Seek(56);
+                if (header.Version <= 11)
+                {
+                    reader.Seek(12);
+                }
+                else
+                {
+                    reader.Seek(56);
+                }
+
                 uint NameOffset = reader.ReadUInt32();
                 uint padding = reader.ReadUInt32();
 
@@ -235,8 +250,11 @@ namespace FirstPlugin
                     }
                 }
 
+                int TextureCount = 2;
+                if (header.Version <= 11)
+                    TextureCount = 1;
 
-                for (int i = 0; i < 2; i++) //Max of 2 textures. Any more and it'll overlap some data
+                for (int i = 0; i < TextureCount; i++) //Max of 2 textures. Any more and it'll overlap some data
                 {
                     TextureInfo textureInfo = new TextureInfo();
                     textureInfo.Read(reader, header, Text);
@@ -460,6 +478,8 @@ namespace FirstPlugin
             public uint ImageSize;
             public uint ImageOffset;
             public SurfaceFormat SurfFormat;
+            public CTR_3DS.PICASurfaceFormat SurfFormatOld;
+
             public byte[] data;
             public uint DataPos;
 
@@ -477,27 +497,45 @@ namespace FirstPlugin
                 CanRename = false;
                 PlatformSwizzle = PlatformSwizzle.Platform_3DS;
 
-                Width = reader.ReadUInt16();
-                Height = reader.ReadUInt16();
-                Swizzle = reader.ReadUInt32();
-                uint Alignment = reader.ReadUInt32();
-                uint Pitch = reader.ReadUInt32();
-                WrapMode = reader.ReadByte(); //11 = repeat, 22 = mirror
-                byte unk = reader.ReadByte();
-                byte unk2 = reader.ReadByte();
-                byte unk3 = reader.ReadByte();
-                uint mipCount = reader.ReadUInt32();
-                CompSel = reader.ReadUInt32();
-                uint[] MipOffsets = reader.ReadUInt32s(13);
-                uint[] unk4 = reader.ReadUInt32s(4);
+                if (header.Version <= 11)
+                {
+                    Width = reader.ReadUInt16();
+                    Height = reader.ReadUInt16();
+                    ushort Format = reader.ReadUInt16();
+                    ushort unk4 = reader.ReadUInt16();
+                    SurfFormatOld = (CTR_3DS.PICASurfaceFormat)Format;
+                    uint unk = reader.ReadUInt32();
+                    ImageSize = reader.ReadUInt32();
+                    DataPos = reader.ReadUInt32();
+                    uint unk2 = reader.ReadUInt32();
+                    uint unk3 = reader.ReadUInt32();
+                }
+                else
+                {
+                    Width = reader.ReadUInt16();
+                    Height = reader.ReadUInt16();
+                    Swizzle = reader.ReadUInt32();
+                    uint Alignment = reader.ReadUInt32();
+                    uint Pitch = reader.ReadUInt32();
+                    WrapMode = reader.ReadByte(); //11 = repeat, 22 = mirror
+                    byte unk = reader.ReadByte();
+                    byte unk2 = reader.ReadByte();
+                    byte unk3 = reader.ReadByte();
+                    uint mipCount = reader.ReadUInt32();
+                    CompSel = reader.ReadUInt32();
+                    uint[] MipOffsets = reader.ReadUInt32s(13);
+                    uint[] unk4 = reader.ReadUInt32s(4);
 
-                uint originalDataFormat = reader.ReadUInt32();
-                uint originalDataPos = reader.ReadUInt32();
-                uint originalDataSize = reader.ReadUInt32();
-                SurfFormat = reader.ReadEnum<SurfaceFormat>(false);
-                ImageSize = reader.ReadUInt32();
-                DataPos = reader.ReadUInt32();
-                uint handle = reader.ReadUInt32();
+                    uint originalDataFormat = reader.ReadUInt32();
+                    uint originalDataPos = reader.ReadUInt32();
+                    uint originalDataSize = reader.ReadUInt32();
+                    SurfFormat = reader.ReadEnum<SurfaceFormat>(false);
+                    ImageSize = reader.ReadUInt32();
+                    DataPos = reader.ReadUInt32();
+                    uint handle = reader.ReadUInt32();
+                }
+
+
                 ArrayCount = 1;
 
                 if (Width != 0 && Height != 0 && SurfFormat != 0)
@@ -510,7 +548,7 @@ namespace FirstPlugin
 
                 if (data != null && data.Length > 0)
                 {
-                    ConvertFormat();
+                    ConvertFormat(header.Version);
                 }
             }
 
@@ -532,87 +570,101 @@ namespace FirstPlugin
 
             uint GX2Format = 0;
 
-            private void ConvertFormat()
+            private void ConvertFormat(uint Version)
             {
-                switch (SurfFormat)
+                if (Version <= 11)
                 {
-                    case SurfaceFormat.T_BC1_UNORM:
-                        Format = TEX_FORMAT.BC1_UNORM;
-                        break;
-                    case SurfaceFormat.T_BC1_SRGB:
-                        Format = TEX_FORMAT.BC1_UNORM_SRGB;
-                        break;
-                    case SurfaceFormat.T_BC2_UNORM:
-                        Format = TEX_FORMAT.BC2_UNORM;
-                        break;
-                    case SurfaceFormat.T_BC2_SRGB:
-                        Format = TEX_FORMAT.BC2_UNORM_SRGB;
-                        break;
-                    case SurfaceFormat.T_BC3_UNORM:
-                        Format = TEX_FORMAT.BC3_UNORM;
-                        break;
-                    case SurfaceFormat.T_BC3_SRGB:
-                        Format = TEX_FORMAT.BC3_UNORM_SRGB;
-                        break;
-                    case SurfaceFormat.T_BC4_UNORM:
-                        Format = TEX_FORMAT.BC4_UNORM;
-                        break;
-                    case SurfaceFormat.T_BC4_SNORM:
-                        Format = TEX_FORMAT.BC4_SNORM;
-                        break;
-                    case SurfaceFormat.T_BC5_UNORM:
-                        Format = TEX_FORMAT.BC5_UNORM;
-                        break;
-                    case SurfaceFormat.T_BC5_SNORM:
-                        Format = TEX_FORMAT.BC5_SNORM;
-                        break;
-                    case SurfaceFormat.TC_R8_G8_UNORM:
-                        Format = TEX_FORMAT.R8G8_UNORM;
-                        break;
-                    case SurfaceFormat.TC_R8_G8_B8_A8_SRGB:
-                        Format = TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
-                        break;
-                    case SurfaceFormat.TCS_R8_G8_B8_A8:
-                        Format = TEX_FORMAT.R8G8B8A8_UNORM;
-                        break;
-                    case SurfaceFormat.TC_R8_UNORM:
-                        Format = TEX_FORMAT.R8_UNORM;
-                        break;
-                    case SurfaceFormat.TCS_R5_G6_B5_UNORM:
-                        Format = TEX_FORMAT.B5G6R5_UNORM;
-                        break;
-                    case SurfaceFormat.ETC1:
-                        Format = TEX_FORMAT.ETC1;
-                        break;
-                    case SurfaceFormat.ETC1_A4:
-                        Format = TEX_FORMAT.ETC1_A4;
-                        break;
-                    case SurfaceFormat.L4:
-                        Format = TEX_FORMAT.L4;
-                        break;
-                    case SurfaceFormat.L8:
-                        Format = TEX_FORMAT.L8;
-                        break;
-                    case SurfaceFormat.LA4:
-                        Format = TEX_FORMAT.LA4;
-                        break;
-                    case SurfaceFormat.LA8:
-                        Format = TEX_FORMAT.LA8;
-                        break;
-                    case SurfaceFormat.HIL08:
-                        Format = TEX_FORMAT.HIL08;
-                        break;
-                    case SurfaceFormat.TC_R8_G8_B8_A8_UNORM:
-                          Format = TEX_FORMAT.R8G8B8A8_UNORM;
-                        break;
-                    case SurfaceFormat.TC_R4_G4_B4_UNORM:
-                        Format = TEX_FORMAT.B4G4R4A4_UNORM;
-                        break;
-                    case SurfaceFormat.TC_R8_G8_B8_UNORM:
-                        Format = TEX_FORMAT.R8G8B8A8_UNORM;
-                        break;
-                    default:
-                        throw new Exception("Format unsupported! " + SurfFormat);
+                    Format = CTR_3DS.ConvertPICAToGenericFormat(SurfFormatOld);
+                }
+                else
+                {
+
+                    switch (SurfFormat)
+                    {
+                        case SurfaceFormat.T_BC1_UNORM:
+                            Format = TEX_FORMAT.BC1_UNORM;
+                            break;
+                        case SurfaceFormat.T_BC1_SRGB:
+                            Format = TEX_FORMAT.BC1_UNORM_SRGB;
+                            break;
+                        case SurfaceFormat.T_BC2_UNORM:
+                            Format = TEX_FORMAT.BC2_UNORM;
+                            break;
+                        case SurfaceFormat.T_BC2_SRGB:
+                            Format = TEX_FORMAT.BC2_UNORM_SRGB;
+                            break;
+                        case SurfaceFormat.T_BC3_UNORM:
+                            Format = TEX_FORMAT.BC3_UNORM;
+                            break;
+                        case SurfaceFormat.T_BC3_SRGB:
+                            Format = TEX_FORMAT.BC3_UNORM_SRGB;
+                            break;
+                        case SurfaceFormat.T_BC4_UNORM:
+                            Format = TEX_FORMAT.BC4_UNORM;
+                            break;
+                        case SurfaceFormat.T_BC4_SNORM:
+                            Format = TEX_FORMAT.BC4_SNORM;
+                            break;
+                        case SurfaceFormat.T_BC5_UNORM:
+                            Format = TEX_FORMAT.BC5_UNORM;
+                            break;
+                        case SurfaceFormat.T_BC5_SNORM:
+                            Format = TEX_FORMAT.BC5_SNORM;
+                            break;
+                        case SurfaceFormat.TC_R8_G8_UNORM:
+                            Format = TEX_FORMAT.R8G8_UNORM;
+                            break;
+                        case SurfaceFormat.TC_R8_G8_B8_A8_SRGB:
+                            Format = TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
+                            break;
+                        case SurfaceFormat.TCS_R8_G8_B8_A8:
+                            Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                            break;
+                        case SurfaceFormat.TC_R8_UNORM:
+                            Format = TEX_FORMAT.R8_UNORM;
+                            break;
+                        case SurfaceFormat.TCS_R5_G6_B5_UNORM:
+                            Format = TEX_FORMAT.B5G6R5_UNORM;
+                            break;
+                        case SurfaceFormat.ETC1:
+                            Format = TEX_FORMAT.ETC1;
+                            break;
+                        case SurfaceFormat.ETC1_A4:
+                            Format = TEX_FORMAT.ETC1_A4;
+                            break;
+                        case SurfaceFormat.L4:
+                            Format = TEX_FORMAT.L4;
+                            break;
+                        case SurfaceFormat.L8:
+                            Format = TEX_FORMAT.L8;
+                            break;
+                        case SurfaceFormat.LA4:
+                            Format = TEX_FORMAT.LA4;
+                            break;
+                        case SurfaceFormat.LA8:
+                            Format = TEX_FORMAT.LA8;
+                            break;
+                        case SurfaceFormat.HIL08:
+                            Format = TEX_FORMAT.HIL08;
+                            break;
+                        case SurfaceFormat.TC_R8_G8_B8_A8_UNORM:
+                            Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                            break;
+                        case SurfaceFormat.TC_R4_G4_B4_UNORM:
+                            Format = TEX_FORMAT.B4G4R4A4_UNORM;
+                            break;
+                        case SurfaceFormat.TC_R8_G8_B8_UNORM:
+                            Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                            break;
+                        case SurfaceFormat.TC_R4_R4_SNORM:
+                            Format = TEX_FORMAT.R4G4_UNORM;
+                            break;
+                        case SurfaceFormat.A4:
+                            Format = TEX_FORMAT.A4;
+                            break;
+                        default:
+                            throw new Exception("Format unsupported! " + SurfFormat);
+                    }
                 }
             }
 

@@ -28,11 +28,31 @@ namespace Switch_Toolbox.Library
             ETC1A4
         }
 
+        public static TEX_FORMAT ConvertPICAToGenericFormat(PICASurfaceFormat format)
+        {
+             switch (format)
+            {
+                case PICASurfaceFormat.RGB565: return TEX_FORMAT.B5G6R5_UNORM;
+                case PICASurfaceFormat.RGB8: return TEX_FORMAT.R8G8_UNORM;
+                case PICASurfaceFormat.RGBA5551: return TEX_FORMAT.B5G5R5A1_UNORM;
+                case PICASurfaceFormat.RGBA4: return TEX_FORMAT.B4G4R4A4_UNORM;
+                case PICASurfaceFormat.LA8: return TEX_FORMAT.LA8;
+                case PICASurfaceFormat.HiLo8: return TEX_FORMAT.HIL08;
+                case PICASurfaceFormat.L8: return TEX_FORMAT.L8;
+                case PICASurfaceFormat.A8: return TEX_FORMAT.A8_UNORM;
+                case PICASurfaceFormat.LA4: return TEX_FORMAT.LA4;
+                case PICASurfaceFormat.A4: return TEX_FORMAT.A4;
+                case PICASurfaceFormat.ETC1: return TEX_FORMAT.ETC1;
+                case PICASurfaceFormat.ETC1A4: return TEX_FORMAT.ETC1_A4;
+                default:
+                    throw new NotImplementedException("Unsupported format! " + format);
+            }
+        }
+
         public static PICASurfaceFormat ConvertToPICAFormat(TEX_FORMAT GenericFormat)
         {
             switch (GenericFormat)
             {
-                
                 case TEX_FORMAT.B5G6R5_UNORM: return PICASurfaceFormat.RGB565;
                 case TEX_FORMAT.R8G8_UNORM: return PICASurfaceFormat.RGB8;
                 case TEX_FORMAT.B5G5R5A1_UNORM: return PICASurfaceFormat.RGBA5551;
