@@ -47,6 +47,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
@@ -56,6 +57,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.activeEditorChkBox);
             this.stPanel1.Controls.Add(this.treeViewCustom1);
             this.stPanel1.Controls.Add(this.stPanel3);
             this.stPanel1.Controls.Add(this.stContextMenuStrip1);
@@ -227,6 +229,16 @@
             this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
             this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
             // 
+            // activeEditorChkBox
+            // 
+            this.activeEditorChkBox.AutoSize = true;
+            this.activeEditorChkBox.Location = new System.Drawing.Point(140, 4);
+            this.activeEditorChkBox.Name = "activeEditorChkBox";
+            this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
+            this.activeEditorChkBox.TabIndex = 4;
+            this.activeEditorChkBox.Text = "Add Files to Active Editor";
+            this.activeEditorChkBox.UseVisualStyleBackColor = true;
+            // 
             // ObjectEditorList
             // 
             this.Controls.Add(this.splitter1);
@@ -266,5 +278,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
+        private STCheckBox activeEditorChkBox;
     }
 }

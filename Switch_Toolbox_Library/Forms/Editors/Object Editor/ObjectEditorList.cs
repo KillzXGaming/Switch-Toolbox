@@ -81,6 +81,8 @@ namespace Switch_Toolbox.Library.Forms
         {
             InitializeComponent();
 
+            listViewCustom1.SmallImageList = TreeViewCustom.imgList;
+
             _fieldsTreeCache = new TreeView();
 
             if (Runtime.ObjectEditor.ListPanelWidth > 0)
@@ -175,6 +177,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void LoadFiles()
         {
+            var group = new ListViewGroup("Image", HorizontalAlignment.Center);
+            listViewCustom1.Groups.Add(group);
+
             listViewCustom1.BeginUpdate();
             listViewCustom1.Items.Clear();
             if (treeViewCustom1.SelectedNode?.Tag is IEnumerable<ArchiveFileInfo> files)
@@ -182,6 +187,8 @@ namespace Switch_Toolbox.Library.Forms
                 foreach (var file in files)
                 {
                     ListViewItem item = new ListViewItem(System.IO.Path.GetFileName(file.FileName));
+                    item.ImageKey = "texture";
+                    item.Group = listViewCustom1.Groups[0];
                     item.SubItems.Add(file.GetSize());
                     item.SubItems.Add("");
                     item.SubItems.Add(file.State.ToString());

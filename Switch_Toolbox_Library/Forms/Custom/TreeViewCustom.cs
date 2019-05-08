@@ -75,7 +75,7 @@ namespace Switch_Toolbox.Library
             ForeColor = FormThemes.BaseTheme.FormForeColor;
         }
 
-        ImageList imgList = new ImageList();
+        public static ImageList imgList = new ImageList();
 
         public void AddImage(Image image)
         {
