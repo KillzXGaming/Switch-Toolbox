@@ -114,7 +114,7 @@ namespace Switch_Toolbox.Library
 
             if (Runtime.MainForm.ActiveMdiChild is ObjectEditor)
             {
-                foreach (var ctrl in ((ObjectEditor)Runtime.MainForm.ActiveMdiChild).stPanel2.Controls)
+                foreach (var ctrl in ((ObjectEditor)Runtime.MainForm.ActiveMdiChild).GetEditors())
                 {
                     if (type == null) {
                         return (UserControl)ctrl;
@@ -157,10 +157,6 @@ namespace Switch_Toolbox.Library
         public void LoadViewport(Viewport viewport)
         {
  
-        }
-        public bool IsContentActive(UserControl control)
-        {
-            return ObjectEditor.Instance.Controls.Contains(control);
         }
     }
 }

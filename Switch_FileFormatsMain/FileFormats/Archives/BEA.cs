@@ -13,7 +13,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class BEA : TreeNodeFile, IArchiveFile
+    public class BEA : TreeNodeFile, IFileFormat
     {
         public bool CanAddFiles { get; set; } = false;
         public bool CanRenameFiles { get; set; } = false;

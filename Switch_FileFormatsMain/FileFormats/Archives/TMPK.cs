@@ -11,7 +11,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class TMPK : TreeNodeFile, IArchiveFile
+    public class TMPK : IFileFormat, IArchiveFile
     {
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "TMPK" };
@@ -37,14 +37,15 @@ namespace FirstPlugin
             }
         }
 
-        public IEnumerable<ArchiveFileInfo> Files { get; }
-
-        public bool CanAddFiles { get; set; } = true;
-        public bool CanRenameFiles { get; set; } = true;
-        public bool CanReplaceFiles { get; set; } = true;
-        public bool CanDeleteFiles { get; set; } = true;
-
         public List<FileInfo> files = new List<FileInfo>();
+
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public bool CanAddFiles { get; set; }
+        public bool CanRenameFiles { get; set; }
+        public bool CanReplaceFiles { get; set; }
+        public bool CanDeleteFiles { get; set; }
+
         public Dictionary<long, byte[]> SavedDataEntries = new Dictionary<long, byte[]>();
         public Dictionary<long, string> SavedStringEntries = new Dictionary<long, string>();
         public Dictionary<string, uint> ArchiveSizes = new Dictionary<string, uint>();
@@ -54,8 +55,6 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            Text = FileName;
-
             CanSave = true;
 
             using (var reader = new FileReader(stream))
@@ -69,13 +68,9 @@ namespace FirstPlugin
                 for (int i = 0; i < FileCount; i++)
                 {
                     var info = new FileInfo(reader);
-                    Nodes.Add(info);
                     files.Add(info);
                 }
             }
-
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.E));
         }
 
         private void SatisfyFileSizeTable()
@@ -121,21 +116,21 @@ namespace FirstPlugin
                 files[i]._posHeader = writer.Position;
                 writer.Write(uint.MaxValue);
                 writer.Write(uint.MaxValue);
-                writer.Write(files[i].Data.Length); //Padding
+                writer.Write(files[i].FileData.Length); //Padding
                 writer.Write(0); //Padding
 
-                ArchiveSizes.Add(files[i].Text, (uint)files[i].Data.Length);
+                ArchiveSizes.Add(files[i].FileName, (uint)files[i].FileData.Length);
             }
             for (int i = 0; i < files.Count; i++)
             {
                 writer.WriteUint32Offset(files[i]._posHeader);
-                writer.Write(files[i].Text, Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                writer.Write(files[i].FileName, Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
             }
             for (int i = 0; i < files.Count; i++)
             {
-                SetAlignment(writer, files[i].Text);
+                SetAlignment(writer, files[i].FileName);
                 writer.WriteUint32Offset(files[i]._posHeader + 4);
-                writer.Write(files[i].Data);
+                writer.Write(files[i].FileData.ToArray());
             }
             writer.Close();
             writer.Dispose();
@@ -151,43 +146,26 @@ namespace FirstPlugin
                 writer.Write(DefaultAlignment);
         }
 
-        public class FileInfo : TreeNodeCustom
+        public class FileInfo : ArchiveFileInfo
         {
             internal long _posHeader;
 
-            public byte[] Data;
-
             public FileInfo()
             {
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export Raw Data");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
+
             }
 
             private void Export(object sender, EventArgs args)
             {
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
-                sfd.DefaultExt = Path.GetExtension(Text);
+                sfd.FileName = FileName;
+                sfd.DefaultExt = Path.GetExtension(FileName);
                 sfd.Filter = "Raw Data (*.*)|*.*";
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, Data);
+                    File.WriteAllBytes(sfd.FileName, FileData.ToArray());
                 }
-            }
-
-            public override void OnDoubleMouseClick(TreeView treeView)
-            {
-                if (Data.Length <= 0)
-                    return;
-
-                IFileFormat file = STFileLoader.OpenFileFormat(Text, Data, false, true, this);
-                if (file == null) //File returns null if no supported format is found
-                    return;
-
-                ReplaceNode(this.Parent, this, (TreeNode)file);
             }
 
             public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
@@ -200,19 +178,6 @@ namespace FirstPlugin
                 node.Nodes.Insert(index, NewNode);
             }
 
-            public override void OnClick(TreeView treeview)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(Data);
-            }
-
             public FileInfo(FileReader reader)
             {
                 long pos = reader.Position;
@@ -223,17 +188,13 @@ namespace FirstPlugin
                 uint padding = reader.ReadUInt32();
 
                 reader.Seek(NameOffset, System.IO.SeekOrigin.Begin);
-                Text = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
 
                 reader.Seek(FileOffset, System.IO.SeekOrigin.Begin);
-                Data = reader.ReadBytes((int)FileSize);
+                FileData = new MemoryStream(reader.ReadBytes((int)FileSize));
+                State = ArchiveFileState.Archived;
 
                 reader.Seek(pos + 16, System.IO.SeekOrigin.Begin);
-
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export Raw Data");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
             }
         }    
 

@@ -81,11 +81,11 @@ namespace Switch_Toolbox.Library
 
             RotationType = STBone.BoneRotationType.Quaternion;
 
+            ApplyTransforms();
+
             //Update matrices
             skeletonParent.reset();
             skeletonParent.update();
-
-            ApplyTransforms();
         }
 
         public void ConvertToEular()
@@ -95,11 +95,11 @@ namespace Switch_Toolbox.Library
 
             RotationType = STBone.BoneRotationType.Euler;
 
+            ApplyTransforms();
+
             //Update matrices
             skeletonParent.reset();
             skeletonParent.update();
-
-            ApplyTransforms();
         }
 
         public override void OnClick(TreeView treeView)

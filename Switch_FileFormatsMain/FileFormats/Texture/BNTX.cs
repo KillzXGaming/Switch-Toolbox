@@ -81,9 +81,8 @@ namespace FirstPlugin
                 bntx.FileName = "textures";
                 bntx.Load(new MemoryStream(CreateNewBNTX("textures")));
 
-                ObjectEditor editor = new ObjectEditor();
+                ObjectEditor editor = new ObjectEditor(bntx);
                 editor.Text = "Untitled-" + 0;
-                editor.AddNode(bntx);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
             private void Export(object sender, EventArgs args)

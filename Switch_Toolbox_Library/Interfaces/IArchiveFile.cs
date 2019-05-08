@@ -7,7 +7,17 @@ using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library
 {
-    public interface IArchiveFile : IFileFormat
+    public enum ArchiveFileState
+    {
+        Empty = 0,
+        Archived = 1,
+        Added = 2,
+        Replaced = 4,
+        Renamed = 8,
+        Deleted = 16
+    }
+
+    public interface IArchiveFile
     {
         bool CanAddFiles { get; } 
         bool CanRenameFiles { get; } 
@@ -15,69 +25,49 @@ namespace Switch_Toolbox.Library
         bool CanDeleteFiles { get; }
 
         IEnumerable<ArchiveFileInfo> Files { get; }
+
         bool AddFile(ArchiveFileInfo archiveFileInfo);
         bool DeleteFile(ArchiveFileInfo archiveFileInfo);
     }
-
-    //This abstract class can be more advanced than the interface
-    public abstract class ArchiveFile : TreeNodeCustom
+    public class ArchiveFileInfo
     {
-        public bool CanAddFiles { get; }
-        public bool CanRenameFiles { get; }
-        public bool CanReplaceFiles { get; }
-        public bool CanDeleteFiles { get; }
+        public FileType FileDataType = FileType.Default;
 
-        List<ArchiveFileInfo> Files { get; }
-
-        public virtual void FillTreeNodes()
+        //Will be used for list categories
+        public enum FileType
         {
-
+            Default,
+            Images,
+            Archives,
+            Graphics,
+            Models,
+            Shaders,
+            Collision,
+            Byaml,
+            Parameters,
         }
 
-    /*    private void ExportAll(string Folder, STProgressBar progressBar)
+        public string GetSize()
         {
-            int Curfile = 0;
-            foreach (ArchiveFileInfo file in Files)
+            return STMath.GetFileSize(FileData.Length, 4);
+        }
+
+        IFileFormat FileFormat = null; //Format attached for saving
+
+        protected Stream _fileData = null;
+
+        public string FileName { get; set; } = string.Empty;  //Full File Name
+        public string Name { get; set; } = string.Empty; //File Name (No Path)
+        public virtual Stream FileData
+        {
+            get
             {
-                int value = (Curfile * 100) / Files.Count;
-                progressBar.Value = value;
-                progressBar.Refresh();
-
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{Folder}/{file.FullPath}")))
-                    {
-                        if (!File.Exists(file.FullPath))
-                        {
-                            if (!Directory.Exists($"{Folder}/{file.FullPath}"))
-                            {
-                                Directory.CreateDirectory(Path.GetDirectoryName($"{Folder}/{file.FullPath}"));
-                            }
-                        }
-                    }
-                    File.WriteAllBytes($"{Folder}/{file.FullPath}", file.FileData);
-                }
-                catch
-                {
-
-                }
-
-                Curfile++;
-                if (value == 99)
-                    value = 100;
-                progressBar.Value = value;
-                progressBar.Refresh();
+                _fileData.Position = 0;
+                return _fileData;
             }
-        }*/
-
-        public bool AddFile(ArchiveFileInfo archiveFileInfo)
-        {
-            return false;
+            set { _fileData = value; }
         }
 
-        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
-        {
-            return false;
-        }
+        public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
     }
 }

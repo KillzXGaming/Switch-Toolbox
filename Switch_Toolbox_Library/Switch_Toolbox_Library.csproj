@@ -384,6 +384,18 @@
     <Compile Include="Forms\Editors\ImageEditor\ImageResizeDialog.Designer.cs">
       <DependentUpon>ImageResizeDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\Object Editor\ObjectEditorList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\Object Editor\ObjectEditorList.Designer.cs">
+      <DependentUpon>ObjectEditorList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Editors\Object Editor\ObjectEditorTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\Object Editor\ObjectEditorTree.Designer.cs">
+      <DependentUpon>ObjectEditorTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\TextEditor\TextEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -397,10 +409,10 @@
       <DependentUpon>TimeLine.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Extensions\MDICustom.cs" />
-    <Compile Include="Forms\Editors\ObjectEditor.cs">
+    <Compile Include="Forms\Editors\Object Editor\ObjectEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Editors\ObjectEditor.Designer.cs">
+    <Compile Include="Forms\Editors\Object Editor\ObjectEditor.Designer.cs">
       <DependentUpon>ObjectEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Custom\STButton.cs">
@@ -470,7 +482,6 @@
     <Compile Include="Forms\Wpf\WpfTimeline.xaml.cs">
       <DependentUpon>WpfTimeline.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Generics\GenericArchive.cs" />
     <Compile Include="Generics\GenericMaterial.cs" />
     <Compile Include="Generics\GenericMatTexture.cs" />
     <Compile Include="Generics\GenericModel.cs" />
@@ -493,7 +504,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\Editors\Assimp Settings.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Editors\Assimp Settings.Designer.cs">
       <DependentUpon>Assimp Settings.cs</DependentUpon>
@@ -533,6 +544,7 @@
     <Compile Include="IO\STFileSaver.cs" />
     <Compile Include="IO\StringExtension.cs" />
     <Compile Include="IO\STStream.cs" />
+    <Compile Include="Maths\Math.cs" />
     <Compile Include="Plugin\GenericPluginLoader.cs" />
     <Compile Include="Forms\Editors\Animation\AnimationPanel.cs">
       <SubType>UserControl</SubType>
@@ -713,8 +725,14 @@
     <EmbeddedResource Include="Forms\Editors\ImageEditor\ImageResizeDialog.resx">
       <DependentUpon>ImageResizeDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\ObjectEditor.resx">
+    <EmbeddedResource Include="Forms\Editors\Object Editor\ObjectEditorList.resx">
+      <DependentUpon>ObjectEditorList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\Object Editor\ObjectEditor.resx">
       <DependentUpon>ObjectEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\Object Editor\ObjectEditorTree.resx">
+      <DependentUpon>ObjectEditorTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\ObjectList.resx">
       <DependentUpon>ObjectList.cs</DependentUpon>

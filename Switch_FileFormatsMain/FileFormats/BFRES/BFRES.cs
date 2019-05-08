@@ -110,9 +110,8 @@ namespace FirstPlugin
 
                 bfres.Load(new MemoryStream(BfresWiiU.CreateNewBFRES("Untitled.bfres")));
 
-                ObjectEditor editor = new ObjectEditor();
+                ObjectEditor editor = new ObjectEditor(bfres);
                 editor.Text = "Untitled-" + 0;
-                editor.AddNode(bfres);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
             private void NewSwitchBfres(object sender, EventArgs args)
@@ -123,9 +122,8 @@ namespace FirstPlugin
 
                 bfres.Load(new MemoryStream(CreateNewBFRESSwitch("Untitled.bfres")));
 
-                ObjectEditor editor = new ObjectEditor();
+                ObjectEditor editor = new ObjectEditor(bfres);
                 editor.Text = "Untitled-" + 0;
-                editor.AddNode(bfres);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
             private void DebugInfo(object sender, EventArgs args)

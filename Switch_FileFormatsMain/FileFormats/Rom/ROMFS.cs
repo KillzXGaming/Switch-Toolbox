@@ -124,10 +124,9 @@ namespace FirstPlugin
                 }
 
                 //ObjectEditor is for treenode types. Editors will be on the right side, treenodes on the left
-                ObjectEditor editor = new ObjectEditor();
+                ObjectEditor editor = new ObjectEditor((IFileFormat)fileFormat);
                 editor.Text = text;
                 LibraryGUI.Instance.CreateMdiWindow(editor, true);
-                editor.AddNode((TreeNode)fileFormat);
             }
         }
 

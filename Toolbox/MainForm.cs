@@ -256,19 +256,16 @@ namespace Toolbox
             }
 
             bool IsTreeNode = file is TreeNode;
+            bool IsArchiveFile = file is IArchiveFile;
 
-
-            if (!IsTreeNode || HasEditorActive)
+            if (!IsTreeNode && !IsArchiveFile || HasEditorActive)
             {
                 SetFormatSettings(GetActiveIFileFormat());
                 return;
             }
 
-
-            var node = (TreeNode)file;
-
-            //ObjectEditor is for treenode types. Editors will be on the right side, treenodes on the left
-            SetFormatSettings((IFileFormat)node);
+            //ObjectEditor is for treenode or archive file types. Editors will be on the right side, treenodes on the left
+            SetFormatSettings((IFileFormat)file);
 
             //Check for active object editors
             Form editor = (Form)LibraryGUI.Instance.GetActiveForm();
@@ -286,23 +283,22 @@ namespace Toolbox
 
             bool IsEditorActive = editor != null;
 
-            //Create one if none are active
-            if (!IsEditorActive)
-            {
-                editor = new ObjectEditor();
-            }
-
             if (!useActiveEditor || !IsEditorActive)
             {
-                editor = new ObjectEditor();
-                AddObjectEditorFile(node, (ObjectEditor)editor, true);
+                editor = new ObjectEditor(((IFileFormat)file));
 
-                editor.Text = CheckTabDupes(node.Text);
+                editor.MdiParent = this;
+                editor.Text = CheckTabDupes(((IFileFormat)file).FileName);
                 editor.Show();
+
+                if (file is TreeNodeFile)
+                {
+                    ((TreeNodeFile)file).OnAfterAdded();
+                }
             }
             else
             {
-                AddObjectEditorFile(node, (ObjectEditor)editor, false);
+                AddObjectEditorFile(((TreeNode)file), (ObjectEditor)editor, false);
             }
 
             SetFormatSettings(GetActiveIFileFormat());

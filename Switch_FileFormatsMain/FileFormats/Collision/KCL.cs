@@ -129,9 +129,8 @@ namespace FirstPlugin
                 kcl.Renderer = new KCLRendering();
                 kcl.Read(f.Write(ByteOrder));
 
-                ObjectEditor editor = new ObjectEditor();
+                ObjectEditor editor = new ObjectEditor(kcl);
                 editor.Text = name;
-                editor.AddNode(kcl);
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
         }

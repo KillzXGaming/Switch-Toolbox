@@ -70,6 +70,7 @@ namespace Switch_Toolbox.Library.IO
             string Magic = fileReader.ReadMagic(0, 4);
 
             fileReader.Position = 0;
+            ushort MagicHex2 = fileReader.ReadUInt16();
 
             if (Magic == "Yaz0")
             {
@@ -105,7 +106,7 @@ namespace Switch_Toolbox.Library.IO
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Zlib, DecompressedFileSize, CompressedFileSize);
             }
-            if (MagicHex == 0x1f8b0808 && CompType == CompressionType.None)
+            if (MagicHex == 0x1f8b0808 || MagicHex2 == 0x1f8b && CompType == CompressionType.None)
             {
                 if (data == null)
                     data = File.ReadAllBytes(FileName);

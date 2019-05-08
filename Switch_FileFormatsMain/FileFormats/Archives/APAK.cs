@@ -16,7 +16,7 @@ namespace FirstPlugin
 
     }
 
-    public class APAK : TreeNodeFile, IArchiveFile
+    public class APAK : TreeNodeFile
     {
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "APAK" };
