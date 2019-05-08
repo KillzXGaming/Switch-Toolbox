@@ -81,7 +81,6 @@ namespace FirstPlugin
             }
         }
 
-
         public Type[] Types
         {
             get

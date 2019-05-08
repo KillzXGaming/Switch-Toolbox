@@ -270,7 +270,16 @@ namespace FirstPlugin
                         }
                     }
                 }
-                reader.Seek(pos + 1072, SeekOrigin.Begin);
+
+                if (header.Version <= 11)
+                {
+                    reader.Seek(pos + 120, SeekOrigin.Begin); //This is a guess
+                }
+                else
+                {
+                    reader.Seek(pos + 1072, SeekOrigin.Begin);
+                }
+
                 ColorPosition = reader.Position;
                 for (int i = 0; i < 8; i++)
                 {

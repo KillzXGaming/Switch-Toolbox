@@ -222,12 +222,12 @@ namespace FirstPlugin
                         botwTex.Add((TEXR)((SectionBase)node).BinaryData);
                 }
 
+                TreeNode textureFolder = new TreeNode("Textures");
+                ptcl.Nodes.Add(textureFolder);
+
                 int index = 0;
                 if (botwTex.Count > 0)
                 {
-                    TreeNode textureFolder = new TreeNode("Textures");
-                    ptcl.Nodes.Add(textureFolder);
-
                     List<TEXR> TextureList = new List<TEXR>();
 
                     foreach (var emitter in emitters)
