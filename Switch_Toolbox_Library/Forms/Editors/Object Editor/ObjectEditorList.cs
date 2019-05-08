@@ -182,7 +182,7 @@ namespace Switch_Toolbox.Library.Forms
 
             listViewCustom1.BeginUpdate();
             listViewCustom1.Items.Clear();
-            if (treeViewCustom1.SelectedNode?.Tag is IEnumerable<ArchiveFileInfo> files)
+            if (treeViewCustom1.SelectedNode.Tag is IEnumerable<ArchiveFileInfo> files)
             {
                 foreach (var file in files)
                 {
