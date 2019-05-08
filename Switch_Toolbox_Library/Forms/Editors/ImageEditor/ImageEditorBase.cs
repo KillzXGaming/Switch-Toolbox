@@ -686,7 +686,7 @@ namespace Switch_Toolbox.Library.Forms
                 ArrayLevel = CurArrayDisplayLevel
             };
 
-            pictureBoxCustom1.Image = image;
+            pictureBoxCustom1.Image = new Bitmap(image);
 
             TotalMipCount = ActiveTexture.MipCount - 1;
             TotalArrayCount = ActiveTexture.ArrayCount - 1;
