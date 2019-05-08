@@ -21,6 +21,8 @@ namespace FirstPlugin
 {
     public class BFRES : BFRESWrapper, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Resource;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "BFRES" };
         public string[] Extension { get; set; } = new string[] {

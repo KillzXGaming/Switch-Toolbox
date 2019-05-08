@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class MSBT : IEditor<MSBTEditor>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Message;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Message Binary Text" };
         public string[] Extension { get; set; } = new string[] { "*.msbt" };

@@ -16,6 +16,8 @@ namespace FirstPlugin
 {
     public class MP3 : IEditor<AudioPlayer>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "MPEG-1 Audio Layer-3" };
         public string[] Extension { get; set; } = new string[] { "*.mp3" };

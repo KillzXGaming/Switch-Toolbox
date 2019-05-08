@@ -16,6 +16,8 @@ namespace FirstPlugin
 {
     public class OGG : IEditor<AudioPlayer>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Ogg-vorbis" };
         public string[] Extension { get; set; } = new string[] { "*.ogg" };

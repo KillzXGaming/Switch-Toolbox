@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class SARC : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Archive;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "SARC", "SARC", "SARC", "SARC", "SARC", "SARC" };
         public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sblarc", "*.sbactorpack", ".arc" };

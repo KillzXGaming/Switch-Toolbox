@@ -14,6 +14,8 @@ namespace FirstPlugin
 {
     public class BRWAV : VGAdudioFile, IEditor<AudioPlayer>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Revolution Wave" };
         public string[] Extension { get; set; } = new string[] { "*.brwav" };

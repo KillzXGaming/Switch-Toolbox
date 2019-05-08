@@ -33,20 +33,6 @@ namespace Switch_Toolbox.Library
     {
         public FileType FileDataType = FileType.Default;
 
-        //Will be used for list categories
-        public enum FileType
-        {
-            Default,
-            Images,
-            Archives,
-            Graphics,
-            Models,
-            Shaders,
-            Collision,
-            Byaml,
-            Parameters,
-        }
-
         public string GetSize()
         {
             return STMath.GetFileSize(FileData.Length, 4);

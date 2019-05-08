@@ -20,6 +20,8 @@ namespace Switch_Toolbox.Library
     //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
     public class DDS : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Image;
+
         public override TEX_FORMAT[] SupportedFormats
         {
             get

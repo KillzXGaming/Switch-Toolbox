@@ -10,6 +10,8 @@ namespace FirstPlugin
 {
     public class EFF : TreeNodeFile,IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Effect;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Namco Effect" };
         public string[] Extension { get; set; } = new string[] { "*.eff" };

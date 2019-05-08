@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class BFFNT : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Font;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Cafe Font" };
         public string[] Extension { get; set; } = new string[] { "*.bffnt" };

@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class TMPK : IFileFormat, IArchiveFile
     {
+        public FileType FileType { get; set; } = FileType.Archive;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "TMPK" };
         public string[] Extension { get; set; } = new string[] { "*.pack" };

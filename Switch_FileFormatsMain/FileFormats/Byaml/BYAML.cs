@@ -14,6 +14,8 @@ namespace FirstPlugin
 {
     public class BYAML : IEditor<ByamlEditor>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Parameter;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "BYAML" };
         public string[] Extension { get; set; } = new string[] { "*.byaml", "*.byml", "*.bprm", "*.sbyml" };

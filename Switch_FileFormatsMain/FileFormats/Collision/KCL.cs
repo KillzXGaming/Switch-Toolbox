@@ -19,6 +19,8 @@ namespace FirstPlugin
 {
     public class KCL : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Collision;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "KCL" };
         public string[] Extension { get; set; } = new string[] { "*.kcl" };

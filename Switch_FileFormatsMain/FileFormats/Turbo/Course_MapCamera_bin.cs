@@ -12,6 +12,8 @@ namespace FirstPlugin.Turbo
 {
     public class Course_MapCamera_bin : IEditor<MK8MapCameraEditor>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Default;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Course Map Camera" };
         public string[] Extension { get; set; } = new string[] { "*.bin" };

@@ -16,6 +16,8 @@ namespace FirstPlugin
 {
     public class NUTEXB : STGenericTexture, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Image;
+
         public override TEX_FORMAT[] SupportedFormats
         {
             get

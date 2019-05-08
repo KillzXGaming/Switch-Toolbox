@@ -17,6 +17,8 @@ namespace FirstPlugin
 
     public class NSP : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Rom;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "NSP" };
         public string[] Extension { get; set; } = new string[] { "*.nsp" };

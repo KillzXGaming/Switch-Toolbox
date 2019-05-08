@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class BNSH : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Shader;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Binary Shader" };
         public string[] Extension { get; set; } = new string[] { "*.bnsh" };

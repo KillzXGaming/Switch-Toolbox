@@ -12,6 +12,8 @@ namespace FirstPlugin
 {
     public class SDF : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Archive;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Snow Engine Data Table Of Contents" };
         public string[] Extension { get; set; } = new string[] { "*.sdftoc" };

@@ -14,6 +14,8 @@ namespace FirstPlugin
 {
     public class SHARC : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Shader;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Shader Archive" };
         public string[] Extension { get; set; } = new string[] { "*.sharc" };

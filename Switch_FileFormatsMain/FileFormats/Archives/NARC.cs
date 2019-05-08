@@ -12,6 +12,8 @@ namespace FirstPlugin
 {
     class NARC : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Archive;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Nitro Archive (NARC)" };
         public string[] Extension { get; set; } = new string[] { "*.narc" };

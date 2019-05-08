@@ -14,6 +14,8 @@ namespace FirstPlugin
 {
     public class IDSP : VGAdudioFile, IEditor<AudioPlayer>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "IDSP" };
         public string[] Extension { get; set; } = new string[] { "*.idsp" };

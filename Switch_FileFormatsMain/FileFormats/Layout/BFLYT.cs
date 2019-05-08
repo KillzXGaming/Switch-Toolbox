@@ -11,6 +11,8 @@ namespace FirstPlugin
 {
     public class BFLYT : IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Layout;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Cafe Layout (GUI)" };
         public string[] Extension { get; set; } = new string[] { "*.bflyt" };

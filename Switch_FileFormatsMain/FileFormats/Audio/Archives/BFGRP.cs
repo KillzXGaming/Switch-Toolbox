@@ -9,6 +9,8 @@ namespace FirstPlugin
 {
     public class BFGRP : IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Audio Group" };
         public string[] Extension { get; set; } = new string[] { "*.bfgrp" };

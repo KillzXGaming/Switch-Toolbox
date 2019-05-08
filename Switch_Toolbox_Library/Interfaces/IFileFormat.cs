@@ -8,8 +8,30 @@ using Switch_Toolbox.Library.IO;
 
 namespace Switch_Toolbox.Library
 {
+    public enum FileType
+    {
+        Default,
+        Image,
+        Archive,
+        Layout,
+        Model,
+        Effect,
+        Font,
+        Audio,
+        Message,
+        Resource,
+        Shader,
+        Collision,
+        Parameter,
+        Graphic,
+        Rom,
+        Spreadsheet,
+    }
+
     public interface IFileFormat
     {
+        FileType FileType { get; set; }
+
         bool CanSave { get; set; }
 
         string[] Description { get; set; }

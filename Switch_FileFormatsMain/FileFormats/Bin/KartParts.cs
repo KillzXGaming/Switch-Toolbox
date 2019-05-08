@@ -15,6 +15,8 @@ namespace FirstPlugin.Turbo
 {
     public class PartsBIN : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Parameter;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Mario Kart 8 Kart Parts" };
         public string[] Extension { get; set; } = new string[] { "*.bin" };

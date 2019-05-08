@@ -14,6 +14,8 @@ namespace FirstPlugin
 {
     public class GFPAK : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Archive;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Graphic Package" };
         public string[] Extension { get; set; } = new string[] { "*.gfpak" };

@@ -14,6 +14,8 @@ namespace FirstPlugin
 {
     public class BCLIM : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Image;
+
         public override TEX_FORMAT[] SupportedFormats
         {
             get

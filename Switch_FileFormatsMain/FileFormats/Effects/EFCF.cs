@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class EFCF : IFileFormat, IEditor<EffectTableEditor>
     {
+        public FileType FileType { get; set; } = FileType.Effect;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Effect Table" };
         public string[] Extension { get; set; } = new string[] { "*.efc" };

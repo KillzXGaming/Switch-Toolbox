@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class AAMP : IEditor<AampEditorBase>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Parameter;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "AAMP" };
         public string[] Extension { get; set; } = new string[] { "*.aamp" };

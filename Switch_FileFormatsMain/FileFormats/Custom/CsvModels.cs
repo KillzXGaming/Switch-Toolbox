@@ -12,6 +12,8 @@ namespace FirstPlugin
 {
     public class CsvModel : IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Spreadsheet;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "CSV Model" };
         public string[] Extension { get; set; } = new string[] { "*.csv" };

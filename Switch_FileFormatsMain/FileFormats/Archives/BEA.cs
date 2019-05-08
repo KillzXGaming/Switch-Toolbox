@@ -15,6 +15,8 @@ namespace FirstPlugin
 {
     public class BEA : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Archive;
+
         public bool CanAddFiles { get; set; } = false;
         public bool CanRenameFiles { get; set; } = false;
         public bool CanDeleteFiles { get; set; } = false;

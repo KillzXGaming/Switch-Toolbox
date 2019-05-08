@@ -12,6 +12,8 @@ namespace FirstPlugin
 {
     public class BARSLIST : IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Audio Archive List" };
         public string[] Extension { get; set; } = new string[] { "*.barslist" };

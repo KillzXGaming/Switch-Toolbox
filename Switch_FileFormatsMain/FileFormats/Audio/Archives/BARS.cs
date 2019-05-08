@@ -17,6 +17,8 @@ namespace FirstPlugin
 {
     public class BARS : TreeNodeFile, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Audio;
+
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Sound Archive" };
         public string[] Extension { get; set; } = new string[] { "*.bars" };
