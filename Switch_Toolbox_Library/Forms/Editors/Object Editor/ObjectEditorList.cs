@@ -182,9 +182,9 @@ namespace Switch_Toolbox.Library.Forms
 
             listViewCustom1.BeginUpdate();
             listViewCustom1.Items.Clear();
-            if (treeViewCustom1.SelectedNode.Tag is IEnumerable<ArchiveFileInfo> files)
+            if (treeViewCustom1.SelectedNode.Tag is IEnumerable<ArchiveFileInfo>)
             {
-                foreach (var file in files)
+                foreach (var file in (IEnumerable<ArchiveFileInfo>)treeViewCustom1.SelectedNode.Tag)
                 {
                     ListViewItem item = new ListViewItem(System.IO.Path.GetFileName(file.FileName));
                     item.ImageKey = "texture";
