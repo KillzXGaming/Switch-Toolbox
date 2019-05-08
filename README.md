@@ -35,7 +35,8 @@ Can Edit Formats
 - GFPAK
 - BEA
 - AAMP (Wii U and Switch)
-- PTCL (Wii U and Switch)
+- BYAML/BYML (Wii U, 3DS, and Switch)
+- PTCL (Wii U, 3DS, and Switch)
 - TMPK
 
 Can Preview
