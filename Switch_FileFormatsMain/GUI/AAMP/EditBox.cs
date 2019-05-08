@@ -171,7 +171,7 @@ namespace FirstPlugin.Forms
                     case ParamType.String32:
                     case ParamType.String256:
                     case ParamType.StringRef:
-                        paramEntry.Value = dataTB.Text;
+                        paramEntry.Value = new AampCommon.StringEntry(dataTB.Text);
                         break;
                 }
             }
@@ -254,7 +254,7 @@ namespace FirstPlugin.Forms
                     case AampV2Library.ParamType.String32:
                     case AampV2Library.ParamType.String256:
                     case AampV2Library.ParamType.StringRef:
-                        paramEntryV2.Value = dataTB.Text;
+                        paramEntryV2.Value = new AampCommon.StringEntry(dataTB.Text);
                         break;
                 }
             }    

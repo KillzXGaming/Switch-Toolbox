@@ -112,7 +112,7 @@ namespace FirstPlugin.Forms
                 case ParamType.String32:
                 case ParamType.String256:
                 case ParamType.StringRef:
-                    ValueText = $"{(string)entry.Value}";
+                    ValueText = $"{((AampCommon.StringEntry)entry.Value).ToString()}";
                     break;
                 case ParamType.Vector2F:
                     var vec2 = (Vector2F)entry.Value;
