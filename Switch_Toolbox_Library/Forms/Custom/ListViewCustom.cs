@@ -63,7 +63,14 @@ namespace Switch_Toolbox.Library.Forms
             }
             using (SolidBrush foreBrush = new SolidBrush(FormThemes.BaseTheme.TextForeColor))
             {
-                e.Graphics.DrawString(e.Header.Text, e.Font, foreBrush, e.Bounds);
+                e.Graphics.DrawString(e.Header.Text, e.Font, foreBrush,
+                    new RectangleF()
+                    {
+                        X = e.Bounds.X,
+                        Y = e.Bounds.Y + 5,
+                        Height = e.Bounds.Height,
+                        Width = e.Bounds.Width,
+                    });
             }
         }
 
