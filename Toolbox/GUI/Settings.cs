@@ -74,6 +74,7 @@ namespace Toolbox
             SMOPathTB.Text = Runtime.SmoGamePath;
             botwGamePathTB.Text = Runtime.BotwGamePath;
             tpGamePathTB.Text = Runtime.TpGamePath;
+            modelLoadArchive.Checked = Runtime.ObjectEditor.OpenModelsOnOpen;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
@@ -430,9 +431,12 @@ namespace Toolbox
             }
         }
 
-        private void displayBoundingBoxeChk_CheckedChanged(object sender, EventArgs e)
-        {
+        private void displayBoundingBoxeChk_CheckedChanged(object sender, EventArgs e) {
             Runtime.renderBoundingBoxes = displayBoundingBoxeChk.Checked;
+        }
+
+        private void modelLoadArchive_CheckedChanged(object sender, EventArgs e) {
+            Runtime.ObjectEditor.OpenModelsOnOpen = modelLoadArchive.Checked;
         }
     }
 }

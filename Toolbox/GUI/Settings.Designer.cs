@@ -76,6 +76,7 @@
             this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.modelLoadArchive = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.gridCellCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
             this.stLabel7 = new Switch_Toolbox.Library.Forms.STLabel();
             this.gridColorPB = new System.Windows.Forms.PictureBox();
@@ -89,16 +90,16 @@
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.preferredTexFormatCB = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.stLabel13 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.botwGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel14 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.tpGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel12 = new Switch_Toolbox.Library.Forms.STLabel();
             this.SMOPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel11 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8DPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel13 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.botwGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel14 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.tpGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -769,6 +770,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.modelLoadArchive);
             this.tabPage2.Controls.Add(this.gridCellCountUD);
             this.tabPage2.Controls.Add(this.stLabel7);
             this.tabPage2.Controls.Add(this.gridColorPB);
@@ -788,6 +790,18 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Editor";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // modelLoadArchive
+            // 
+            this.modelLoadArchive.AutoSize = true;
+            this.modelLoadArchive.Location = new System.Drawing.Point(12, 210);
+            this.modelLoadArchive.Name = "modelLoadArchive";
+            this.modelLoadArchive.Size = new System.Drawing.Size(205, 17);
+            this.modelLoadArchive.TabIndex = 17;
+            this.modelLoadArchive.Text = "Load models when an archive is open";
+            this.modelLoadArchive.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.modelLoadArchive.UseVisualStyleBackColor = true;
+            this.modelLoadArchive.CheckedChanged += new System.EventHandler(this.modelLoadArchive_CheckedChanged);
             // 
             // gridCellCountUD
             // 
@@ -942,6 +956,42 @@
             this.tabPage3.Text = "Paths";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // stLabel13
+            // 
+            this.stLabel13.AutoSize = true;
+            this.stLabel13.Location = new System.Drawing.Point(6, 122);
+            this.stLabel13.Name = "stLabel13";
+            this.stLabel13.Size = new System.Drawing.Size(98, 13);
+            this.stLabel13.TabIndex = 9;
+            this.stLabel13.Text = "Breath Of The Wild";
+            // 
+            // botwGamePathTB
+            // 
+            this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.botwGamePathTB.Location = new System.Drawing.Point(112, 120);
+            this.botwGamePathTB.Name = "botwGamePathTB";
+            this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
+            this.botwGamePathTB.TabIndex = 8;
+            this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
+            // 
+            // stLabel14
+            // 
+            this.stLabel14.AutoSize = true;
+            this.stLabel14.Location = new System.Drawing.Point(6, 96);
+            this.stLabel14.Name = "stLabel14";
+            this.stLabel14.Size = new System.Drawing.Size(105, 13);
+            this.stLabel14.TabIndex = 7;
+            this.stLabel14.Text = "Twilight Princess HD";
+            // 
+            // tpGamePathTB
+            // 
+            this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tpGamePathTB.Location = new System.Drawing.Point(112, 94);
+            this.tpGamePathTB.Name = "tpGamePathTB";
+            this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
+            this.tpGamePathTB.TabIndex = 6;
+            this.tpGamePathTB.Click += new System.EventHandler(this.tpGamePathTB_Click);
+            // 
             // stLabel12
             // 
             this.stLabel12.AutoSize = true;
@@ -995,42 +1045,6 @@
             this.mk8PathTB.Size = new System.Drawing.Size(258, 20);
             this.mk8PathTB.TabIndex = 0;
             this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
-            // 
-            // stLabel13
-            // 
-            this.stLabel13.AutoSize = true;
-            this.stLabel13.Location = new System.Drawing.Point(6, 122);
-            this.stLabel13.Name = "stLabel13";
-            this.stLabel13.Size = new System.Drawing.Size(98, 13);
-            this.stLabel13.TabIndex = 9;
-            this.stLabel13.Text = "Breath Of The Wild";
-            // 
-            // botwGamePathTB
-            // 
-            this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.botwGamePathTB.Location = new System.Drawing.Point(112, 120);
-            this.botwGamePathTB.Name = "botwGamePathTB";
-            this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
-            this.botwGamePathTB.TabIndex = 8;
-            this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
-            // 
-            // stLabel14
-            // 
-            this.stLabel14.AutoSize = true;
-            this.stLabel14.Location = new System.Drawing.Point(6, 96);
-            this.stLabel14.Name = "stLabel14";
-            this.stLabel14.Size = new System.Drawing.Size(105, 13);
-            this.stLabel14.TabIndex = 7;
-            this.stLabel14.Text = "Twilight Princess HD";
-            // 
-            // tpGamePathTB
-            // 
-            this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tpGamePathTB.Location = new System.Drawing.Point(112, 94);
-            this.tpGamePathTB.Name = "tpGamePathTB";
-            this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
-            this.tpGamePathTB.TabIndex = 6;
-            this.tpGamePathTB.Click += new System.EventHandler(this.tpGamePathTB_Click);
             // 
             // Settings
             // 
@@ -1143,5 +1157,6 @@
         private Switch_Toolbox.Library.Forms.STTextBox botwGamePathTB;
         private Switch_Toolbox.Library.Forms.STLabel stLabel14;
         private Switch_Toolbox.Library.Forms.STTextBox tpGamePathTB;
+        private Switch_Toolbox.Library.Forms.STCheckBox modelLoadArchive;
     }
 }

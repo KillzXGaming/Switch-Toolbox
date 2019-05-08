@@ -196,6 +196,9 @@ namespace Switch_Toolbox.Library
                     case "EnablePixelGrid":
                         bool.TryParse(node.InnerText, out Runtime.ImageEditor.EnablePixelGrid);
                         break;
+                    case "OpenModelsOnOpen":
+                        bool.TryParse(node.InnerText, out Runtime.ObjectEditor.OpenModelsOnOpen);
+                        break;
                 }
             }
         }
@@ -354,6 +357,7 @@ namespace Switch_Toolbox.Library
             objlistSettingsNode.AppendChild(createNode(doc, "thumbnailSize", Runtime.thumbnailSize.ToString()));
             objlistSettingsNode.AppendChild(createNode(doc, "ListPanelWidth", Runtime.ObjectEditor.ListPanelWidth.ToString()));
             objlistSettingsNode.AppendChild(createNode(doc, "AddFilesToActiveObjectEditor", Runtime.AddFilesToActiveObjectEditor.ToString()));
+            objlistSettingsNode.AppendChild(createNode(doc, "OpenModelsOnOpen", Runtime.ObjectEditor.OpenModelsOnOpen.ToString()));
         }
         private static void AppendRenderSettings(XmlDocument doc, XmlNode parentNode)
         {

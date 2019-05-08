@@ -35,6 +35,8 @@ namespace Switch_Toolbox.Library
         }
         public class ObjectEditor
         {
+            public static bool OpenModelsOnOpen = false;
+
             public static Point Location = new Point(364, 0);
 
             public static int ListPanelWidth;
