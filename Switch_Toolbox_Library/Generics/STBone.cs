@@ -52,6 +52,20 @@ namespace Switch_Toolbox.Library
             return sca;
         }
 
+        private void ApplyTransforms()
+        {
+            position = new float[] { pos.X, pos .Y, pos .Z};
+            if (RotationType == BoneRotationType.Quaternion)
+                rotation = new float[] { rot.X, rot.Y, rot.Z, rot.W };
+            else
+            {
+                var eul = Switch_Toolbox.Library.Animations.ANIM.quattoeul(rot);
+                rotation = new float[] { eul.X, eul.Y, eul.Z, 1 };
+            }
+
+            scale = new float[] { sca.X, sca.Y, sca.Z };
+        }
+
         public int GetIndex()
         {
             if (skeletonParent != null)
@@ -65,6 +79,13 @@ namespace Switch_Toolbox.Library
             if (RotationType == BoneRotationType.Quaternion)
                 return;
 
+            RotationType = STBone.BoneRotationType.Quaternion;
+
+            //Update matrices
+            skeletonParent.reset();
+            skeletonParent.update();
+
+            ApplyTransforms();
         }
 
         public void ConvertToEular()
@@ -72,7 +93,13 @@ namespace Switch_Toolbox.Library
             if (RotationType == BoneRotationType.Euler)
                 return;
 
+            RotationType = STBone.BoneRotationType.Euler;
 
+            //Update matrices
+            skeletonParent.reset();
+            skeletonParent.update();
+
+            ApplyTransforms();
         }
 
         public override void OnClick(TreeView treeView)

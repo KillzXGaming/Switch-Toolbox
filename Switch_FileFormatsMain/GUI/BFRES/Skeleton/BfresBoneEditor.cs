@@ -197,17 +197,17 @@ namespace FirstPlugin
 
             if ((BoneFlagsRotation)rotModeCB.SelectedItem == BoneFlagsRotation.Quaternion)
             {
-                activeBone.RotationType = STBone.BoneRotationType.Quaternion;
                 activeBone.ConvertToQuaternion();
                 SetBoneTransform(activeBone);
             }
             else
             {
-                activeBone.RotationType = STBone.BoneRotationType.Euler;
                 activeBone.ConvertToEular();
                 SetBoneTransform(activeBone);
             }
-            activeBone.skeletonParent.reset();
+
+            GetBoneTransform(activeBone);
+            LibraryGUI.Instance.UpdateViewport();
         }
 
         private void boneInfoPanel1_Load(object sender, EventArgs e)
