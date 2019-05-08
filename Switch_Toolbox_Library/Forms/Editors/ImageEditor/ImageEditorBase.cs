@@ -686,7 +686,7 @@ namespace Switch_Toolbox.Library.Forms
                 ArrayLevel = CurArrayDisplayLevel
             };
 
-            pictureBoxCustom1.Image = new Bitmap(image);
+            pictureBoxCustom1.Image = image;
 
             TotalMipCount = ActiveTexture.MipCount - 1;
             TotalArrayCount = ActiveTexture.ArrayCount - 1;
@@ -893,6 +893,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void editBtn_Click(object sender, EventArgs e)
         {
+            if (!IsFinished)
+                return;
+
             EditInExternalProgram();
         }
 
@@ -1029,11 +1032,17 @@ namespace Switch_Toolbox.Library.Forms
 
         private void copyImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!IsFinished)
+                return;
+
             Clipboard.SetImage(pictureBoxCustom1.Image);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!IsFinished)
+                return;
+
             Clipboard.SetImage(pictureBoxCustom1.Image);
         }
 
@@ -1137,6 +1146,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void SetZoomSetting()
         {
+            if (!IsFinished)
+                return;
+
             if (Runtime.ImageEditor.EnableImageZoom)
             {
                 pictureBoxCustom1.AllowZoom = true;
@@ -1163,6 +1175,9 @@ namespace Switch_Toolbox.Library.Forms
 
         private void SetBottomBar()
         {
+            if (!IsFinished)
+                return;
+
             if (pictureBoxCustom1.Image != null)
             {
                 if (Runtime.ImageEditor.EnableImageZoom)

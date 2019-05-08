@@ -182,7 +182,7 @@ namespace Switch_Toolbox.Library.Forms
 
             listViewCustom1.BeginUpdate();
             listViewCustom1.Items.Clear();
-          /*  if (treeViewCustom1.SelectedNode.Tag is IEnumerable<ArchiveFileInfo>)
+            if (treeViewCustom1.SelectedNode.Tag is IEnumerable<ArchiveFileInfo>)
             {
                 foreach (var file in (IEnumerable<ArchiveFileInfo>)treeViewCustom1.SelectedNode.Tag)
                 {
@@ -194,7 +194,7 @@ namespace Switch_Toolbox.Library.Forms
                     item.SubItems.Add(file.State.ToString());
                     listViewCustom1.Items.Add(item);
                 }
-            }*/
+            }
            listViewCustom1.EndUpdate();
         }
 
