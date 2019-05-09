@@ -43,6 +43,7 @@ namespace FirstPlugin
             {
                 var matWrapper = new MTOBWrapper();
                 matWrapper.Load(material);
+                matWrapper.BcresParent = BcresParent;
                 MaterialFolder.Nodes.Add(matWrapper);
             }
         }
