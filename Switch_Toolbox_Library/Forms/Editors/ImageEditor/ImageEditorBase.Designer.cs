@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
@@ -36,6 +37,8 @@
             this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
             this.bottomLabel = new Switch_Toolbox.Library.Forms.STLabel();
             this.pictureBoxCustom1 = new Cyotek.Windows.Forms.ImageBox();
+            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.alphaBtn = new Switch_Toolbox.Library.Forms.STButton();
             this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
@@ -74,17 +77,15 @@
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel4.SuspendLayout();
             this.stPanel5.SuspendLayout();
+            this.stContextMenuStrip2.SuspendLayout();
             this.stPanel3.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
-            this.stContextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -170,6 +171,20 @@
             this.pictureBoxCustom1.TabIndex = 0;
             this.pictureBoxCustom1.ZoomChanged += new System.EventHandler(this.pictureBoxCustom1_ZoomChanged);
             // 
+            // stContextMenuStrip2
+            // 
+            this.stContextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyImageToolStripMenuItem});
+            this.stContextMenuStrip2.Name = "stContextMenuStrip2";
+            this.stContextMenuStrip2.Size = new System.Drawing.Size(139, 26);
+            // 
+            // copyImageToolStripMenuItem
+            // 
+            this.copyImageToolStripMenuItem.Name = "copyImageToolStripMenuItem";
+            this.copyImageToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.copyImageToolStripMenuItem.Text = "Copy Image";
+            this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
+            // 
             // stPanel3
             // 
             this.stPanel3.Controls.Add(this.alphaBtn);
@@ -189,7 +204,7 @@
             // alphaBtn
             // 
             this.alphaBtn.BackColor = System.Drawing.Color.Transparent;
-            this.alphaBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.AlphaIcon;
+            this.alphaBtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("alphaBtn.BackgroundImage")));
             this.alphaBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.alphaBtn.FlatAppearance.BorderSize = 0;
             this.alphaBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -204,7 +219,7 @@
             // editBtn
             // 
             this.editBtn.BackColor = System.Drawing.Color.Transparent;
-            this.editBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.Edit;
+            this.editBtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("editBtn.BackgroundImage")));
             this.editBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.editBtn.Enabled = false;
             this.editBtn.FlatAppearance.BorderSize = 0;
@@ -220,7 +235,7 @@
             // saveBtn
             // 
             this.saveBtn.BackColor = System.Drawing.Color.Transparent;
-            this.saveBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.Save;
+            this.saveBtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("saveBtn.BackgroundImage")));
             this.saveBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.saveBtn.FlatAppearance.BorderSize = 0;
             this.saveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -245,9 +260,9 @@
             // 
             this.BtmMipsLeft.Enabled = false;
             this.BtmMipsLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtmMipsLeft.Location = new System.Drawing.Point(355, 26);
+            this.BtmMipsLeft.Location = new System.Drawing.Point(262, 25);
             this.BtmMipsLeft.Name = "BtmMipsLeft";
-            this.BtmMipsLeft.Size = new System.Drawing.Size(57, 21);
+            this.BtmMipsLeft.Size = new System.Drawing.Size(21, 21);
             this.BtmMipsLeft.TabIndex = 8;
             this.BtmMipsLeft.Text = "<";
             this.BtmMipsLeft.UseVisualStyleBackColor = true;
@@ -256,7 +271,7 @@
             // mipLevelCounterLabel
             // 
             this.mipLevelCounterLabel.AutoSize = true;
-            this.mipLevelCounterLabel.Location = new System.Drawing.Point(248, 30);
+            this.mipLevelCounterLabel.Location = new System.Drawing.Point(168, 29);
             this.mipLevelCounterLabel.Name = "mipLevelCounterLabel";
             this.mipLevelCounterLabel.Size = new System.Drawing.Size(94, 13);
             this.mipLevelCounterLabel.TabIndex = 10;
@@ -265,9 +280,9 @@
             // btnRightArray
             // 
             this.btnRightArray.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRightArray.Location = new System.Drawing.Point(190, 26);
+            this.btnRightArray.Location = new System.Drawing.Point(141, 25);
             this.btnRightArray.Name = "btnRightArray";
-            this.btnRightArray.Size = new System.Drawing.Size(57, 21);
+            this.btnRightArray.Size = new System.Drawing.Size(21, 21);
             this.btnRightArray.TabIndex = 12;
             this.btnRightArray.Text = ">";
             this.btnRightArray.UseVisualStyleBackColor = true;
@@ -276,9 +291,9 @@
             // BtnMipsRight
             // 
             this.BtnMipsRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnMipsRight.Location = new System.Drawing.Point(418, 26);
+            this.BtnMipsRight.Location = new System.Drawing.Point(289, 25);
             this.BtnMipsRight.Name = "BtnMipsRight";
-            this.BtnMipsRight.Size = new System.Drawing.Size(57, 21);
+            this.BtnMipsRight.Size = new System.Drawing.Size(21, 21);
             this.BtnMipsRight.TabIndex = 9;
             this.BtnMipsRight.Text = ">";
             this.BtnMipsRight.UseVisualStyleBackColor = true;
@@ -288,9 +303,9 @@
             // 
             this.btnLeftArray.Enabled = false;
             this.btnLeftArray.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLeftArray.Location = new System.Drawing.Point(127, 26);
+            this.btnLeftArray.Location = new System.Drawing.Point(114, 25);
             this.btnLeftArray.Name = "btnLeftArray";
-            this.btnLeftArray.Size = new System.Drawing.Size(57, 21);
+            this.btnLeftArray.Size = new System.Drawing.Size(21, 21);
             this.btnLeftArray.TabIndex = 11;
             this.btnLeftArray.Text = "<";
             this.btnLeftArray.UseVisualStyleBackColor = true;
@@ -524,20 +539,6 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
-            // stContextMenuStrip2
-            // 
-            this.stContextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyImageToolStripMenuItem});
-            this.stContextMenuStrip2.Name = "stContextMenuStrip2";
-            this.stContextMenuStrip2.Size = new System.Drawing.Size(139, 26);
-            // 
-            // copyImageToolStripMenuItem
-            // 
-            this.copyImageToolStripMenuItem.Name = "copyImageToolStripMenuItem";
-            this.copyImageToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
-            this.copyImageToolStripMenuItem.Text = "Copy Image";
-            this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
-            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -553,11 +554,11 @@
             this.stPanel4.ResumeLayout(false);
             this.stPanel5.ResumeLayout(false);
             this.stPanel5.PerformLayout();
+            this.stContextMenuStrip2.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();
-            this.stContextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
