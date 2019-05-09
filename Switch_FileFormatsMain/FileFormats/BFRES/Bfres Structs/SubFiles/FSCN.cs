@@ -217,9 +217,9 @@ namespace Bfres.Structs
                 Position = Utils.ToVec3(anim.BaseData.Position);
                 Rotation = Utils.ToVec3(anim.BaseData.Rotation);
                 Twist = anim.BaseData.Twist;
-                if (anim.Flags.HasFlag(CameraAnimFlags.EulerZXY))
+                if (anim.Flags.HasFlag(ResU.CameraAnimFlags.EulerZXY))
                     settings |= Settings.EulerZXY;
-                if (anim.Flags.HasFlag(CameraAnimFlags.Perspective))
+                if (anim.Flags.HasFlag(ResU.CameraAnimFlags.Perspective))
                     settings |= Settings.Perspective;
 
                 for (int curve = 0; curve < anim.Curves.Count; curve++)
