@@ -1,0 +1,996 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BcresLibrary</name>
+    </assembly>
+    <members>
+        <member name="M:BcresLibrary.BcresFile.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BcresLibrary.BcresFile.Save(System.String)">
+            <summary>
+            Saves the contents in the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to save the contents into.</param>
+        </member>
+        <member name="P:BcresLibrary.BcresFile.VersioFull">
+            <summary>
+            Gets or sets the full revision of the BCRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.BcresFile.VersionMajor">
+            <summary>
+            Gets or sets the major revision of the BCRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.BcresFile.VersionMajor2">
+            <summary>
+            Gets or sets the second major revision of the BCRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.BcresFile.VersionMinor">
+            <summary>
+            Gets or sets the minor revision of the BCRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.BcresFile.VersionMinor2">
+            <summary>
+            Gets or sets the second minor revision of the BCRES structure formats.
+            </summary>
+        </member>
+        <member name="T:BcresLibrary.ResDict">
+            <summary>
+            Represents the non-generic base of a dictionary which can quickly look up <see cref="!:IResData"/> instances via
+            key or index.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.ResDict.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BcresLibrary.ResDict"/> class.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Count">
+            <summary>
+            Gets the number of instances stored.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Keys">
+            <summary>
+            Gets all keys under which instances are stored.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Values">
+            <summary>
+            Gets all stored instances.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Nodes">
+            <summary>
+            Returns only the publically visible nodes, excluding the root node.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="!:IResData"/> instance stored at the specified <paramref name="index"/>.
+            </summary>
+            <param name="index">The 0-based index of the <see cref="!:IResData"/> instance to get or set.</param>
+            <returns>The <see cref="!:IResData"/> at the specified <paramref name="index"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The index is smaller than 0 or bigger or equal to
+            <see cref="P:BcresLibrary.ResDict.Count"/>.</exception>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Item(System.String)">
+            <summary>
+            Gets or sets the <see cref="!:IResData"/> instance stored under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key of the <see cref="!:IResData"/> instance to get or set.</param>
+            <returns>The <see cref="!:IResData"/> with the specified <paramref name="key"/>.</returns>
+            <exception cref="T:System.ArgumentException">An <see cref="!:IResData"/> instance with the same <paramref name="key"/>
+            already exists.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">An <see cref="!:IResData"/> instance with the given
+            <paramref name="key"/> does not exist.</exception>
+        </member>
+        <member name="P:BcresLibrary.ResDict.Item(BcresLibrary.Core.IFileData)">
+            <summary>
+            Gets or sets the key under which the specified <paramref name="instance"/> is stored.
+            </summary>
+            <param name="instance">The <see cref="!:IResData"/> instance of the key to get or set.</param>
+            <returns>The key of the specified <paramref name="instance"/>.</returns>
+            <exception cref="T:System.ArgumentException">An <see cref="!:IResData"/> instance with the same key already exists.
+            </exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">A key for the given <paramref name="instance"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:BcresLibrary.ResDict.Clear">
+            <summary>
+            Removes all elements from the dictionary.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.ResDict.ContainsKey(System.String)">
+            <summary>
+            Determines whether an instance is saved under the given <paramref name="key"/> in the dictionary.
+            </summary>
+            <param name="key">The textual key to locate in the dictionary. The value can be <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="key"/> was found in the dictionary; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.IndexOf(System.String)">
+            <summary>
+            Searches for the specified <paramref name="key"/> and returns the zero-based index of the first occurrence
+            within the entire dictionary.
+            </summary>
+            <param name="key">The textual key to locate in the dictionary. The value can be <c>null</c>.</param>
+            <returns>The zero-based index of the first occurence of <paramref name="key"/> within the entire dictionary
+            if found; otherwise <c>-1</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.Rename(System.String,System.String)">
+            <summary>
+            Changes the key of the instance currently saved under the given <paramref name="key"/> to the
+            <paramref name="newKey"/>.
+            </summary>
+            <param name="key">The current textual key to rename.</param>
+            <param name="newKey">The new textual key to use.</param>
+            <exception cref="T:System.ArgumentException">An <see cref="!:IResData"/> instance with the same
+            <paramref name="newKey"/> already exists.
+            </exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The given <paramref name="key"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:BcresLibrary.ResDict.Remove(System.String)">
+            <summary>
+            Removes the first occurrence of the instance with the specific <paramref name="key"/> from the dictionary.
+            </summary>
+            <param name="key">The textual key of the <see cref="!:IResData"/> instance which will be removed.</param>
+            <returns><c>true</c> if the instance under <paramref name="key"/> was successfully removed; otherwise
+            <c>false</c>. This method also returns <c>false</c> if <paramref name="key"/> was not found in the
+            dictionary.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.RemoveAt(System.Int32)">
+            <summary>
+            Removes the instance at the specified <paramref name="index"/> of the dictionary.
+            </summary>
+            <param name="index">The zero-based index of the instance to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than 0 or equal to or greater
+            than <see cref="P:BcresLibrary.ResDict.Count"/>.</exception>
+        </member>
+        <member name="M:BcresLibrary.ResDict.TryGetValue(System.String,BcresLibrary.Core.IFileData@)">
+            <summary>
+            Returns <c>true</c> if an <see cref="!:IResData"/> instance was stored under the given <paramref name="key"/>
+            and has been assigned to <paramref name="value"/>, or <c>false</c> if no instance is stored under the
+            given <paramref name="key"/> and <c>null</c> was assigned to <paramref name="value"/>.
+            </summary>
+            <param name="key">The textual key of the <see cref="!:IResData"/> instance to get or set.</param>
+            <param name="value">The variable receiving the found <see cref="!:IResData"/> or <c>null</c>.</param>
+            <returns><c>true</c> if an instance was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.Add(System.String,BcresLibrary.Core.IFileData)">
+            <summary>
+            Adds the given <paramref name="value"/> under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key under which the <see cref="!:IResData"/> instance will be stored.</param>
+            <param name="value">The <see cref="!:IResData"/> to add.</param>
+            <exception cref="T:System.ArgumentException">An <see cref="!:IResData"/> instance with the same <paramref name="key"/>
+            already exists.</exception>
+        </member>
+        <member name="M:BcresLibrary.ResDict.ContainsValue(BcresLibrary.Core.IFileData)">
+            <summary>
+            Determines whether the given <paramref name="value"/> is in the dictionary.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was found in the dictionary; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.IndexOf(BcresLibrary.Core.IFileData)">
+            <summary>
+            Searches for the specified <paramref name="value"/> and returns the zero-based index of the first occurrence
+            within the entire dictionary.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns>The zero-based index of the first occurence of <paramref name="value"/> within the entire
+            dictionary if found; otherwise <c>-1</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.Remove(BcresLibrary.Core.IFileData)">
+            <summary>
+            Removes the first occurrence of a specific <paramref name="value"/> from the dictionary.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> instance to remove from the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was successfully removed; otherwise <c>false</c>. This
+            method also returns <c>false</c> if <paramref name="value"/> was not found in the dictionary.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.ToArray">
+            <summary>
+            Copies the elements of the dictionary as <see cref="T:System.Collections.Generic.KeyValuePair`2"/> instances to a new
+            array and returns it.
+            </summary>
+            <returns>An array containing copies of the elements.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.TryGetKey(BcresLibrary.Core.IFileData,System.String@)">
+            <summary>
+            Returns <c>true</c> if a key was found for the given <paramref name="value"/> and has been assigned to
+            <paramref name="key"/>, or <c>false</c> if no key was found for the value and <c>null</c> was assigned to
+            <paramref name="key"/>.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> to look up a key for.</param>
+            <param name="key">The variable receiving the found key or <c>null</c>.</param>
+            <returns><c>true</c> if a key was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,BcresLibrary#Core#IFileData}}#GetEnumerator">
+            <summary>
+            Returns a generic <see cref="T:System.Collections.IEnumerator"/> which can be used to iterate over the items in the dictionary.
+            </summary>
+            <returns>An enumerator to iterate over the items in the dictionary.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an <see cref="T:System.Collections.IEnumerator"/> which can be used to iterate over the items in the dictionary.
+            </summary>
+            <returns>An enumerator to iterate over the items in the dictionary.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.Traverse(System.String)">
+            <summary>
+            Returns the <see cref="!:IResData"/> instance of the node with the given <paramref name="name"/> using the
+            Patricia trie logic.
+            </summary>
+            <remarks>Nodes are looked up linearly by iterating over the node list internally, this method has been
+            implemented for test and validation purposes only.</remarks>
+            <param name="name">The name of the node to look up.</param>
+            <returns>The <see cref="!:IResData"/> instance referenced by the found node.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict.LoadNodeValue(BcresLibrary.Core.FileReader)">
+            <summary>
+            Loads an <see cref="!:IResData"/> instance from the given <paramref name="loader"/>.
+            </summary>
+            <param name="loader">The <see cref="!:ResFileLoader"/> to load the instance with.</param>
+            <returns>The loaded <see cref="!:IResData"/> instance.</returns>
+        </member>
+        <member name="T:BcresLibrary.ResDict.Node">
+            <summary>
+            Represents a node forming the Patricia trie of the dictionary.
+            </summary>
+        </member>
+        <member name="T:BcresLibrary.ResDict`1">
+            <summary>
+            Represents a dictionary which can quickly look up <see cref="!:IResData"/> instances of type
+            <typeparamref name="T"/> via key or index.
+            </summary>
+            <typeparam name="T">The specialized type of the <see cref="!:IResData"/> instances.</typeparam>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BcresLibrary.ResDict`1"/> class.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict`1.Values">
+            <summary>
+            Gets all stored instances.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResDict`1.Item(System.Int32)">
+            <summary>
+            Gets or sets the value stored at the specified <paramref name="index"/>.
+            </summary>
+            <param name="index">The 0-based index of the instance to get or set.</param>
+            <returns>The instance at the specified <paramref name="index"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The index is smaller than 0 or bigger or equal to
+            <see cref="P:BcresLibrary.ResDict.Count"/>.</exception>
+        </member>
+        <member name="P:BcresLibrary.ResDict`1.Item(System.String)">
+            <summary>
+            Gets or sets the value stored under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key of the instance to get or set.</param>
+            <returns>The instance with the specified <paramref name="key"/>.</returns>
+            <exception cref="T:System.ArgumentException">An instance with the same <paramref name="key"/> already exists.
+            </exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">An instance with the given <paramref name="key"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.Add(System.String,`0)">
+            <summary>
+            Adds the given <paramref name="value"/> under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key under which the <see cref="!:IResData"/> instance will be stored.</param>
+            <param name="value">The <see cref="!:IResData"/> to add.</param>
+            <exception cref="T:System.ArgumentException">An <see cref="!:IResData"/> instance with the same <paramref name="key"/>
+            already exists.</exception>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.ContainsValue(`0)">
+            <summary>
+            Determines whether the given <paramref name="value"/> is in the dictionary.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was found in the dictionary; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.GetEnumerator">
+            <summary>
+            Returns a generic <see cref="T:System.Collections.IEnumerator"/> which can be used to iterate over the items in the dictionary.
+            </summary>
+            <returns>An enumerator to iterate over the items in the dictionary.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.IndexOf(`0)">
+            <summary>
+            Searches for the specified <paramref name="value"/> and returns the zero-based index of the first occurrence
+            within the entire dictionary.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns>The zero-based index of the first occurence of <paramref name="value"/> within the entire
+            dictionary if found; otherwise <c>-1</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.Remove(`0)">
+            <summary>
+            Removes the first occurrence of a specific <paramref name="value"/> from the dictionary.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> instance to remove from the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was successfully removed; otherwise <c>false</c>. This
+            method also returns <c>false</c> if <paramref name="value"/> was not found in the dictionary.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.ToArray">
+            <summary>
+            Copies the elements of the dictionary as <see cref="T:System.Collections.Generic.KeyValuePair`2"/> instances to a new
+            array and returns it.
+            </summary>
+            <returns>An array containing copies of the elements.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.TryGetKey(`0,System.String@)">
+            <summary>
+            Returns <c>true</c> if a key was found for the given <paramref name="value"/> and has been assigned to
+            <paramref name="key"/>, or <c>false</c> if no key was found for the value and <c>null</c> was assigned to
+            <paramref name="key"/>.
+            </summary>
+            <param name="value">The <see cref="!:IResData"/> to look up a key for.</param>
+            <param name="key">The variable receiving the found key or <c>null</c>.</param>
+            <returns><c>true</c> if a key was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.TryGetValue(System.String,`0@)">
+            <summary>
+            Returns <c>true</c> if an instance was stored under the given <paramref name="key"/> and has been assigned
+            to <paramref name="value"/>, or <c>false</c> if no instance is stored under the given <paramref name="key"/>
+            and <c>null</c> was assigned to <paramref name="value"/>.
+            </summary>
+            <param name="key">The textual key of the instance to get or set.</param>
+            <param name="value">The variable receiving the found instance or <c>null</c>.</param>
+            <returns><c>true</c> if an instance was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.ResDict`1.LoadNodeValue(BcresLibrary.Core.FileReader)">
+            <summary>
+            Loads an <see cref="!:IResData"/> instance from the given <paramref name="loader"/>.
+            </summary>
+            <param name="loader">The <see cref="!:ResFileLoader"/> to load the instance with.</param>
+            <returns>The loaded <see cref="!:IResData"/> instance.</returns>
+        </member>
+        <member name="T:BcresLibrary.ResString">
+            <summary>
+            Represents a <see cref="P:BcresLibrary.ResString.String"/> which is stored in a <see cref="!:ResFile"/>.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResString.String">
+            <summary>
+            The textual <see cref="P:BcresLibrary.ResString.String"/> represented by this instance.
+            </summary>
+        </member>
+        <member name="P:BcresLibrary.ResString.Encoding">
+            <summary>
+            The <see cref="P:BcresLibrary.ResString.Encoding"/> with which this string was read or will be written.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.ResString.op_Implicit(System.String)~BcresLibrary.ResString">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.ResString"/> instance.
+            </summary>
+            <param name="value">The <see cref="P:BcresLibrary.ResString.String"/> value to represent in the new <see cref="T:BcresLibrary.ResString"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.ResString.op_Implicit(BcresLibrary.ResString)~System.String">
+            <summary>
+            Converts the given <paramref name="value"/> value to an <see cref="P:BcresLibrary.ResString.String"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.ResString"/> value to represent in the new <see cref="P:BcresLibrary.ResString.String"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.ResString.ToString">
+            <summary>
+            Returns the value of the <see cref="P:BcresLibrary.ResString.String"/> property.
+            </summary>
+            <returns>The value of the <see cref="P:BcresLibrary.ResString.String"/> property.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadHalf(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:BcresLibrary.Core.Half"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <returns>The <see cref="T:BcresLibrary.Core.Half"/> instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadHalfs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:BcresLibrary.Core.Half"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:BcresLibrary.Core.Half"/> instances.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadMatrix3x4(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Matrix3x4"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Matrix3x4"/> instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadMatrix3x4s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Matrix3x4"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Matrix3x4"/> instances.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector3F(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Vector3F"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector3F"/> instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector2(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Vector2"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector2"/> instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector2s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Vector2"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector2"/> instances.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector2F(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Vector2F"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector2F"/> instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector2Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Vector2F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector2F"/> instances.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector3Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Vector3F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector3F"/> instances.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector4F(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:Syroot.Maths.Vector4F"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector4F"/> instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataReadExtensions.ReadVector4Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:Syroot.Maths.Vector4F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:Syroot.Maths.Vector4F"/> instances.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Matrix3x4)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Matrix3x4"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Matrix3x4"/> instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Matrix3x4})">
+            <summary>
+            Writes <see cref="T:Syroot.Maths.Matrix3x4"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="T:Syroot.Maths.Matrix3x4"/> instances.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,BcresLibrary.Core.Half)">
+            <summary>
+            Writes a <see cref="T:BcresLibrary.Core.Half"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="value">The <see cref="T:BcresLibrary.Core.Half"/> instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{BcresLibrary.Core.Half})">
+            <summary>
+            Writes <see cref="T:BcresLibrary.Core.Half"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="values">The <see cref="T:BcresLibrary.Core.Half"/> instances.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3F)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Vector3F"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Vector3F"/> instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector2F)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Vector2F"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Vector2F"/> instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector2F})">
+            <summary>
+            Writes <see cref="T:Syroot.Maths.Vector2F"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="values">The <see cref="T:Syroot.Maths.Vector2F"/> instances.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector4)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Vector4"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Vector4"/> instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector4})">
+            <summary>
+            Writes <see cref="T:Syroot.Maths.Vector4"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="values">The <see cref="T:Syroot.Maths.Vector4"/> instances.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector4F)">
+            <summary>
+            Writes a <see cref="T:Syroot.Maths.Vector4F"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="value">The <see cref="T:Syroot.Maths.Vector4F"/> instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector4F})">
+            <summary>
+            Writes <see cref="T:Syroot.Maths.Vector4F"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="!:BinaryStream"/>.</param>
+            <param name="values">The <see cref="T:Syroot.Maths.Vector4F"/> instances.</param>
+        </member>
+        <member name="T:BcresLibrary.Core.DWord">
+            <summary>
+            Represents a 4-byte value which can hold differently typed data.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.DWord.Int32">
+            <summary>
+            The data as an <see cref="F:BcresLibrary.Core.DWord.Int32"/>.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.DWord.Single">
+            <summary>
+            The data as a <see cref="F:BcresLibrary.Core.DWord.Single"/>.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.DWord.UInt32">
+            <summary>
+            The data as an <see cref="F:BcresLibrary.Core.DWord.UInt32"/>.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.op_Implicit(System.Int32)~BcresLibrary.Core.DWord">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.Core.DWord"/> instance.
+            </summary>
+            <param name="value">The <see cref="F:BcresLibrary.Core.DWord.Int32"/> value to represent in the new <see cref="T:BcresLibrary.Core.DWord"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.op_Implicit(System.Single)~BcresLibrary.Core.DWord">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.Core.DWord"/> instance.
+            </summary>
+            <param name="value">The <see cref="F:BcresLibrary.Core.DWord.Single"/> value to represent in the new <see cref="T:BcresLibrary.Core.DWord"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.op_Implicit(System.UInt32)~BcresLibrary.Core.DWord">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.Core.DWord"/> instance.
+            </summary>
+            <param name="value">The <see cref="F:BcresLibrary.Core.DWord.UInt32"/> value to represent in the new <see cref="T:BcresLibrary.Core.DWord"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.op_Implicit(BcresLibrary.Core.DWord)~System.Int32">
+            <summary>
+            Converts the given <paramref name="value"/> value to an <see cref="F:BcresLibrary.Core.DWord.Int32"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.Core.DWord"/> value to represent in the new <see cref="F:BcresLibrary.Core.DWord.Int32"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.op_Implicit(BcresLibrary.Core.DWord)~System.Single">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="F:BcresLibrary.Core.DWord.Single"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.Core.DWord"/> value to represent in the new <see cref="F:BcresLibrary.Core.DWord.Single"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.op_Implicit(BcresLibrary.Core.DWord)~System.UInt32">
+            <summary>
+            Converts the given <paramref name="value"/> value to an <see cref="F:BcresLibrary.Core.DWord.UInt32"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.Core.DWord"/> value to represent in the new <see cref="F:BcresLibrary.Core.DWord.UInt32"/> instance.
+            </param>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.GetTypeCode">
+            <summary>
+            Returns the <see cref="T:System.TypeCode"/> for this instance.
+            </summary>
+            <returns>The enumerated constant that is the <see cref="T:System.TypeCode"/> of the class or value type that
+            implements this interface.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToBoolean(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToByte(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToChar(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToDateTime(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToDecimal(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToDouble(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent double-precision floating-point number using the
+            specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A double-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToInt16(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToInt32(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 32-bit signed integer using the specified
+            culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 32-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToInt64(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 64-bit signed integer using the specified
+            culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 64-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToSByte(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToSingle(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent single-precision floating-point number using the
+            specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A single-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToString(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToType(System.Type,System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an <see cref="T:System.Object"/> of the specified <see cref="T:System.Type"/> that has
+            an equivalent value, using the specified culture-specific formatting information.
+            </summary>
+            <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted.
+            </param>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An <see cref="T:System.Object"/> instance of type conversionType whose value is equivalent to the value of
+            this instance.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToUInt16(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToUInt32(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.DWord.ToUInt64(System.IFormatProvider)">
+            <summary>
+            This operation is not supported.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.FileWriter.AlignmentSmall">
+            <summary>
+            Gets or sets a data block alignment/>.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.FileWriter.SaveDict``1(BcresLibrary.ResDict{``0})">
+            <summary>
+            Reserves space for an offset to the <paramref name="dict"/> written later.
+            </summary>
+            <typeparam name="T">The type of the <see cref="!:IResData"/> element values.</typeparam>
+            <param name="dict">The <see cref="T:BcresLibrary.ResDict`1"/> to save.</param>
+        </member>
+        <member name="T:BcresLibrary.Core.Half">
+            <summary>
+            Represents a 16-bit half-precision floating point value according to the IEEE 754 standard.
+            </summary>
+            <remarks>
+            Examples:
+              SEEEEEFF_FFFFFFFF
+            0b00000000_00000000 = 0
+            1b00000000_00000000 = -0
+            0b00111100_00000000 = 1
+            0b11000000_00000000 = -2
+            0b11111011_11111111 = 65504 (MaxValue)
+            0b01111100_00000000 = PositiveInfinity
+            0b11111100_00000000 = NegativeInfinity
+            </remarks>
+        </member>
+        <member name="F:BcresLibrary.Core.Half.Epsilon">
+            <summary>
+            Represents the smallest positive <see cref="T:BcresLibrary.Core.Half"/> value greater than zero.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.Half.MaxValue">
+            <summary>
+            Represents the largest possible value of <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.Half.MinValue">
+            <summary>
+            Represents the smallest possible value of <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.Half.NaN">
+            <summary>
+            Represents not a number (NaN).
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.Half.NegativeInfinity">
+            <summary>
+            Represents negative infinity.
+            </summary>
+        </member>
+        <member name="F:BcresLibrary.Core.Half.PositiveInfinity">
+            <summary>
+            Represents positive infinity.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.#ctor(System.UInt16)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BcresLibrary.Core.Half"/> struct from the given <paramref name="raw"/>
+            representation.
+            </summary>
+            <param name="raw">The raw representation of the internally stored bits.</param>
+        </member>
+        <member name="P:BcresLibrary.Core.Half.Raw">
+            <summary>
+            Gets the internally stored value to represent the instance.
+            </summary>
+            <remarks>Signed to get arithmetic rather than logical shifts.</remarks>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_UnaryPlus(BcresLibrary.Core.Half)">
+            <summary>
+            Returns the given <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <param name="a">The <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Addition(BcresLibrary.Core.Half,BcresLibrary.Core.Half)">
+            <summary>
+            Adds the first <see cref="T:BcresLibrary.Core.Half"/> to the second one.
+            </summary>
+            <param name="a">The first <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <param name="b">The second <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>The addition result.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_UnaryNegation(BcresLibrary.Core.Half)">
+            <summary>
+            Negates the given <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <param name="a">The <see cref="T:BcresLibrary.Core.Half"/> to negate.</param>
+            <returns>The negated result.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Subtraction(BcresLibrary.Core.Half,BcresLibrary.Core.Half)">
+            <summary>
+            Subtracts the first <see cref="T:BcresLibrary.Core.Half"/> from the second one.
+            </summary>
+            <param name="a">The first <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <param name="b">The second <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>The subtraction result.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Multiply(BcresLibrary.Core.Half,BcresLibrary.Core.Half)">
+            <summary>
+            Multiplicates the first <see cref="T:BcresLibrary.Core.Half"/> by the second one.
+            </summary>
+            <param name="a">The first <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <param name="b">The second <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>The multiplication result.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Division(BcresLibrary.Core.Half,BcresLibrary.Core.Half)">
+            <summary>
+            Divides the first <see cref="T:BcresLibrary.Core.Half"/> through the second one.
+            </summary>
+            <param name="a">The first <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <param name="b">The second <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>The division result.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Equality(BcresLibrary.Core.Half,BcresLibrary.Core.Half)">
+            <summary>
+            Gets a value indicating whether the first specified <see cref="T:BcresLibrary.Core.Half"/> is the same as the second
+            specified <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <param name="a">The first <see cref="T:BcresLibrary.Core.Half"/> to compare.</param>
+            <param name="b">The second <see cref="T:BcresLibrary.Core.Half"/> to compare.</param>
+            <returns>true, if both <see cref="T:BcresLibrary.Core.Half"/> are the same.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Inequality(BcresLibrary.Core.Half,BcresLibrary.Core.Half)">
+            <summary>
+            Gets a value indicating whether the first specified <see cref="T:BcresLibrary.Core.Half"/> is not the same as the second
+            specified <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <param name="a">The first <see cref="T:BcresLibrary.Core.Half"/> to compare.</param>
+            <param name="b">The second <see cref="T:BcresLibrary.Core.Half"/> to compare.</param>
+            <returns>true, if both <see cref="T:BcresLibrary.Core.Half"/> are not the same.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Explicit(System.Int32)~BcresLibrary.Core.Half">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.Core.Half"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:System.Int32"/> value to represent in the new <see cref="T:BcresLibrary.Core.Half"/>
+            instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Explicit(System.Double)~BcresLibrary.Core.Half">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.Core.Half"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:System.Double"/> value to represent in the new <see cref="T:BcresLibrary.Core.Half"/>
+            instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Explicit(System.Single)~BcresLibrary.Core.Half">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:BcresLibrary.Core.Half"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:System.Single"/> value to represent in the new <see cref="T:BcresLibrary.Core.Half"/>
+            instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Implicit(BcresLibrary.Core.Half)~System.Double">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:System.Double"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.Core.Half"/> value to represent in the new <see cref="T:System.Double"/>
+            instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Explicit(BcresLibrary.Core.Half)~System.Int32">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:System.Int32"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.Core.Half"/> value to represent in the new <see cref="T:System.Int32"/>
+            instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.op_Implicit(BcresLibrary.Core.Half)~System.Single">
+            <summary>
+            Converts the given <paramref name="value"/> value to a <see cref="T:System.Single"/> instance.
+            </summary>
+            <param name="value">The <see cref="T:BcresLibrary.Core.Half"/> value to represent in the new <see cref="T:System.Single"/>
+            instance.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.Equals(System.Object)">
+            <summary>
+            Gets a value indicating whether this <see cref="T:BcresLibrary.Core.Half"/> is the same as the second specified
+            <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <param name="obj">The object to compare, if it is a <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>true, if both <see cref="T:BcresLibrary.Core.Half"/> are the same.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.GetHashCode">
+            <summary>
+            Gets a hash code as an indication for object equality.
+            </summary>
+            <returns>The hash code.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.ToString">
+            <summary>
+            Gets a string describing this <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <returns>A string describing this <see cref="T:BcresLibrary.Core.Half"/>.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.Equals(BcresLibrary.Core.Half)">
+            <summary>
+            Indicates whether the current <see cref="T:BcresLibrary.Core.Half"/> is equal to another <see cref="T:BcresLibrary.Core.Half"/>.
+            </summary>
+            <param name="other">A <see cref="T:BcresLibrary.Core.Half"/> to compare with this <see cref="T:BcresLibrary.Core.Half"/>.</param>
+            <returns>true if the current <see cref="T:BcresLibrary.Core.Half"/> is equal to the other parameter; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.IsNaN(BcresLibrary.Core.Half)">
+            <summary>
+            Returns a value indicating whether the specified number evaluates to not a number (<see cref="F:BcresLibrary.Core.Half.NaN"/>).
+            </summary>
+            <param name="half">A half-precision floating-point number.</param>
+            <returns><c>true</c> if value evaluates to not a number (<see cref="F:BcresLibrary.Core.Half.NaN"/>); otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.IsInfinity(BcresLibrary.Core.Half)">
+            <summary>
+            Returns a value indicating whether the specified number evaluates to negative or positive infinity.
+            </summary>
+            <param name="half">A half-precision floating-point number.</param>
+            <returns><c>true</c> if half evaluates to <see cref="F:BcresLibrary.Core.Half.PositiveInfinity"/> or <see cref="F:BcresLibrary.Core.Half.NegativeInfinity"/>;
+            otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.IsNegativeInfinity(BcresLibrary.Core.Half)">
+            <summary>
+            Returns a value indicating whether the specified number evaluates to negative infinity.
+            </summary>
+            <param name="half">A half-precision floating-point number.</param>
+            <returns><c>true</c> if half evaluates to <see cref="F:BcresLibrary.Core.Half.NegativeInfinity"/>; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BcresLibrary.Core.Half.IsPositiveInfinity(BcresLibrary.Core.Half)">
+            <summary>
+            Returns a value indicating whether the specified number evaluates to positive infinity.
+            </summary>
+            <param name="half">A half-precision floating-point number.</param>
+            <returns><c>true</c> if half evaluates to <see cref="F:BcresLibrary.Core.Half.PositiveInfinity"/>; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="T:BcresLibrary.Core.IFileData">
+            <summary>
+            Represents the common interface for <see cref="!:ResFile"/> data instances.
+            </summary>
+        </member>
+        <member name="M:BcresLibrary.Core.IFileData.Load(BcresLibrary.Core.FileReader)">
+            <summary>
+            Loads raw data from the <paramref name="loader"/> data stream into instances.
+            </summary>
+            <param name="loader">The <see cref="!:ResFileLoader"/> to load data with.</param>
+        </member>
+        <member name="M:BcresLibrary.Core.IFileData.Save(BcresLibrary.Core.FileWriter)">
+            <summary>
+            Saves header data of the instance and queues referenced data in the given <paramref name="saver"/>.
+            </summary>
+            <param name="saver">The <see cref="!:ResFileSaver"/> to save headers and queue data with.</param>
+        </member>
+    </members>
+</doc>
