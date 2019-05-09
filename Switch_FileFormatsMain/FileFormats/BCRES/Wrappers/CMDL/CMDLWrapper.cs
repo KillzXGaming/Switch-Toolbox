@@ -20,8 +20,12 @@ namespace FirstPlugin
             ImageKey = "Model";
             SelectedImageKey = "Model";
         }
-        public CMDLWrapper(Model model) : base() { LoadModel(model); }
 
+        public CMDLWrapper(Model model, BCRES bcres) : base()
+        {
+            BcresParent = bcres;
+            LoadModel(model, bcres);
+        }
 
         public override void OnClick(TreeView treeview) {
             BcresParent.LoadEditors(this, OnPropertyChanged);
@@ -32,18 +36,19 @@ namespace FirstPlugin
 
         }
 
-        public void LoadModel(Model model)
+        public void LoadModel(Model model, BCRES bcres)
         {
+            BcresParent = bcres;
+
             Model = model;
             Text = model.Name;
 
-            var MaterialFolder = new TreeNode();
+            var MaterialFolder = new TreeNode("Materials");
             Nodes.Add(MaterialFolder);
             foreach (var material in model.Materials.Values)
             {
-                var matWrapper = new MTOBWrapper();
+                var matWrapper = new MTOBWrapper() { BcresParent = bcres };
                 matWrapper.Load(material);
-                matWrapper.BcresParent = BcresParent;
                 MaterialFolder.Nodes.Add(matWrapper);
             }
         }

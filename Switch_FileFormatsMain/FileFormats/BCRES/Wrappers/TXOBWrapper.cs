@@ -21,7 +21,11 @@ namespace FirstPlugin
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
         }
-        public TXOBWrapper(Texture texture) : base() { LoadTexture(texture); }
+        public TXOBWrapper(Texture texture, BCRES bcres) : base()
+        {
+            BcresParent = bcres;
+            LoadTexture(texture);
+        }
 
 
         public override TEX_FORMAT[] SupportedFormats

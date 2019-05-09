@@ -75,10 +75,10 @@ namespace FirstPlugin
                 switch (Folder.Type)
                 {
                     case BCRESGroupType.Models:
-                        Folder.AddNode(new CMDLWrapper((Model)section) { BcresParent = this } );
+                        Folder.AddNode(new CMDLWrapper((Model)section, this));
                         break;
                     case BCRESGroupType.Textures:
-                        Folder.AddNode(new TXOBWrapper((Texture)section) { BcresParent = this });
+                        Folder.AddNode(new TXOBWrapper((Texture)section, this));
                         break;
                 }
             }
