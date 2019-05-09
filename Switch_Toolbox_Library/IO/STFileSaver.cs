@@ -18,6 +18,10 @@ namespace Switch_Toolbox.Library.IO
         /// <returns></returns>
         public static void SaveFileFormat(IFileFormat FileFormat, string FileName, bool EnableDialog = true)
         {
+            //These always get created on loading a file,however not on creating a new file
+            if (FileFormat.IFileInfo == null)
+                throw new System.Exception("Make sure to impliment a IFileInfo instance if a format is being created!");
+
             Cursor.Current = Cursors.WaitCursor;
             FileFormat.FilePath = FileName;
 

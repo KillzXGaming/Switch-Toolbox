@@ -340,7 +340,7 @@ namespace Switch_Toolbox.Library.Forms
 
             DecodeProcessFinished = false;
 
-            PushImage(Properties.Resources.LoadingImage);
+           // PushImage(Properties.Resources.LoadingImage);
 
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
 
@@ -1146,13 +1146,24 @@ namespace Switch_Toolbox.Library.Forms
 
         private void SetZoomSetting()
         {
-            if (!IsFinished)
-                return;
+            if (pictureBoxCustom1.InvokeRequired)
+            {
+                pictureBoxCustom1.Invoke(new MethodInvoker(
+                delegate ()
+                {
+                    ApplyZoom();
+                }));
+            }
+            else
+                ApplyZoom();
+        }
 
+        private void ApplyZoom()
+        {
             if (Runtime.ImageEditor.EnableImageZoom)
             {
                 pictureBoxCustom1.AllowZoom = true;
-                pictureBoxCustom1.AllowClickZoom = true;
+                pictureBoxCustom1.AllowClickZoom = false;
                 pictureBoxCustom1.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Normal;
             }
             else

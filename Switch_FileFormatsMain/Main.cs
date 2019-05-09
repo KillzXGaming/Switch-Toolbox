@@ -111,6 +111,7 @@ namespace FirstPlugin
             List<Type> Formats = new List<Type>();
             Formats.Add(typeof(SARC));
             Formats.Add(typeof(BFRES));
+            Formats.Add(typeof(BCRES));
             Formats.Add(typeof(BNTX));
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));

@@ -30,10 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.bottomLabel = new Switch_Toolbox.Library.Forms.STLabel();
             this.pictureBoxCustom1 = new Cyotek.Windows.Forms.ImageBox();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.alphaBtn = new Switch_Toolbox.Library.Forms.STButton();
@@ -72,19 +73,18 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bottomLabel = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stPanel4.SuspendLayout();
+            this.stPanel5.SuspendLayout();
             this.stPanel3.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.stContextMenuStrip2.SuspendLayout();
-            this.stPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -141,11 +141,29 @@
             this.stPanel4.Size = new System.Drawing.Size(514, 425);
             this.stPanel4.TabIndex = 8;
             // 
+            // stPanel5
+            // 
+            this.stPanel5.Controls.Add(this.bottomLabel);
+            this.stPanel5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.stPanel5.Location = new System.Drawing.Point(0, 405);
+            this.stPanel5.Name = "stPanel5";
+            this.stPanel5.Size = new System.Drawing.Size(514, 20);
+            this.stPanel5.TabIndex = 1;
+            // 
+            // bottomLabel
+            // 
+            this.bottomLabel.AutoSize = true;
+            this.bottomLabel.Location = new System.Drawing.Point(-1, 4);
+            this.bottomLabel.Name = "bottomLabel";
+            this.bottomLabel.Size = new System.Drawing.Size(0, 13);
+            this.bottomLabel.TabIndex = 18;
+            // 
             // pictureBoxCustom1
             // 
             this.pictureBoxCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxCustom1.ContextMenuStrip = this.stContextMenuStrip2;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
             this.pictureBoxCustom1.Size = new System.Drawing.Size(514, 406);
@@ -520,23 +538,6 @@
             this.copyImageToolStripMenuItem.Text = "Copy Image";
             this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
             // 
-            // bottomLabel
-            // 
-            this.bottomLabel.AutoSize = true;
-            this.bottomLabel.Location = new System.Drawing.Point(-1, 4);
-            this.bottomLabel.Name = "bottomLabel";
-            this.bottomLabel.Size = new System.Drawing.Size(0, 13);
-            this.bottomLabel.TabIndex = 18;
-            // 
-            // stPanel5
-            // 
-            this.stPanel5.Controls.Add(this.bottomLabel);
-            this.stPanel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.stPanel5.Location = new System.Drawing.Point(0, 405);
-            this.stPanel5.Name = "stPanel5";
-            this.stPanel5.Size = new System.Drawing.Size(514, 20);
-            this.stPanel5.TabIndex = 1;
-            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -550,13 +551,13 @@
             this.stPanel1.ResumeLayout(false);
             this.stPanel1.PerformLayout();
             this.stPanel4.ResumeLayout(false);
+            this.stPanel5.ResumeLayout(false);
+            this.stPanel5.PerformLayout();
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();
             this.stContextMenuStrip2.ResumeLayout(false);
-            this.stPanel5.ResumeLayout(false);
-            this.stPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }

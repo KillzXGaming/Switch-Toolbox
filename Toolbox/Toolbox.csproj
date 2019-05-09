@@ -82,6 +82,12 @@
     <Compile Include="GUI\GithubIssueDialog.Designer.cs">
       <DependentUpon>GithubIssueDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\GithubUpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\GithubUpdateDialog.Designer.cs">
+      <DependentUpon>GithubUpdateDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\NodeWrappers.cs" />
     <Compile Include="GUI\PluginManager.cs">
       <SubType>Form</SubType>
@@ -119,6 +125,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GithubIssueDialog.resx">
       <DependentUpon>GithubIssueDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GithubUpdateDialog.resx">
+      <DependentUpon>GithubUpdateDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PluginManager.resx">
       <DependentUpon>PluginManager.cs</DependentUpon>
@@ -251,6 +260,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\BarsLibrary.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BcresLibrary.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\Be.Windows.Forms.HexBox.dll">

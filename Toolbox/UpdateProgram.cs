@@ -15,6 +15,7 @@ namespace Toolbox
         static Release[] releases;
         public static bool CanUpdate = false;
         public static Release LatestRelease;
+        public static List<GitHubCommit> CommitList = new List<GitHubCommit>();
 
         public static void CheckLatest()
         {
@@ -22,6 +23,7 @@ namespace Toolbox
             {
                 var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
                 GetReleases(client).Wait();
+                GetCommits(client).Wait();
 
                 foreach (Release latest in releases)
                 {
@@ -45,6 +47,20 @@ namespace Toolbox
                 Console.WriteLine($"Failed to get latest update\n{ex.ToString()}");
             }
         }
+        static async Task GetCommits(GitHubClient client)
+        {
+            var options = new ApiOptions
+            {
+                PageSize = 5,
+                PageCount = 1
+            };
+
+            foreach (GitHubCommit c in await client.Repository.Commit.GetAll("KillzXGaming", "Switch-Toolbox",  options))
+            {
+                CommitList.Add(c);
+            }
+        }
+
         static async Task GetReleases(GitHubClient client)
         {
             List<Release> Releases = new List<Release>();

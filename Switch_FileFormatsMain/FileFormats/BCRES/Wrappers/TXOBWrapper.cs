@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Switch_Toolbox.Library;
+using BcresLibrary;
+using Switch_Toolbox.Library.Forms;
+
+namespace FirstPlugin
+{
+    public class TXOBWrapper : STGenericTexture
+    {
+        public TXOBWrapper()
+        {
+            ImageKey = "Texture";
+            SelectedImageKey = "Texture";
+        }
+        public TXOBWrapper(Texture texture) : base() { LoadTexture(texture); }
+
+        internal Texture Texture;
+
+        public override TEX_FORMAT[] SupportedFormats
+        {
+            get
+            {
+                return new TEX_FORMAT[]
+                {
+                      
+                };
+            }
+        }
+
+        public override void OnClick(TreeView treeview)
+        {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
+            {
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+
+            Properties prop = new Properties();
+            prop.Width = Width;
+            prop.Height = Height;
+            prop.Depth = Depth;
+            prop.MipCount = MipCount;
+            prop.ArrayCount = ArrayCount;
+            prop.ImageSize = (uint)Texture.Images[0].ImageData.Length;
+            prop.Format = Format;
+
+            editor.Text = Text;
+            editor.LoadProperties(prop);
+            editor.LoadImage(this);
+        }
+
+        public void LoadTexture(Texture texture)
+        {
+            ImageKey = "Texture";
+            SelectedImageKey = "Texture";
+
+            Texture = texture;
+
+            Text = texture.Name;
+
+            //Cube maps will use multiple images
+            //Break at the end as we only need the first part for generic things
+            foreach (var image in texture.Images)
+            {
+                Width = image.Width;
+                Height = image.Height;
+                MipCount = image.MipCount;
+                Format = CTR_3DS.ConvertPICAToGenericFormat(
+                    (CTR_3DS.PICASurfaceFormat)image.ImageFormat);
+
+                break;
+            }
+        }
+
+        public override bool CanEdit { get; set; } = false;
+
+        public override void SetImageData(Bitmap bitmap, int ArrayLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        {
+            PlatformSwizzle = PlatformSwizzle.Platform_3DS;
+
+            return Texture.Images[ArrayLevel].ImageData;
+        }
+    }
+}

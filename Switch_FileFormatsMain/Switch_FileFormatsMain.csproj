@@ -55,6 +55,9 @@
       <HintPath>..\Toolbox\Lib\BarsLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BcresLibrary">
+      <HintPath>..\Toolbox\Lib\BcresLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="BezelEngineArchive_Lib">
       <HintPath>..\Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
       <Private>False</Private>
@@ -201,6 +204,10 @@
     <Compile Include="FileFormats\Audio\MP3.cs" />
     <Compile Include="FileFormats\Audio\Ogg.cs" />
     <Compile Include="FileFormats\Audio\WAV.cs" />
+    <Compile Include="FileFormats\BCRES\BCRES.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\BCRESGroupNode.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\CMDLWrapper.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\TXOBWrapper.cs" />
     <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
@@ -1180,5 +1187,6 @@
   <ItemGroup>
     <None Include="Resources\ViewportIconDisable.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

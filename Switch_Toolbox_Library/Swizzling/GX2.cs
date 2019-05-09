@@ -488,6 +488,7 @@ namespace Switch_Toolbox.Library
             var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, Depth, SurfaceDim, TileMode, AAMode, 0);
             Console.WriteLine("Imported surfSize" + surfOut.surfSize);
             Console.WriteLine("Imported data block" + imageData.Length);
+            Console.WriteLine("GX2SurfaceFormat " + (GX2SurfaceFormat)Format);
 
             uint imageSize = (uint)surfOut.surfSize;
             uint alignment = surfOut.baseAlign;
@@ -520,11 +521,19 @@ namespace Switch_Toolbox.Library
             if (TileMode == 0)
                 TileMode = GX2.getDefaultGX2TileMode((uint)SurfaceDim, Width, Height, 1, (uint)Format, 0, 1);
 
+            uint tilingDepth = surfOut.depth;
+
+            if (TileMode == 3)
+                tilingDepth /= 4;
+
             int tiling1dLevel = 0;
             bool tiling1dLevelSet = false;
 
             List<uint> mipOffsets = new List<uint>();
             List<byte[]> Swizzled = new List<byte[]>();
+
+            if (MipCount == 0)
+                MipCount = 1;
 
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
