@@ -87,11 +87,11 @@ namespace FirstPlugin
         public void LoadEditors(TreeNode Wrapper, Action OnPropertyChanged)
         {
             if (Wrapper is MTOBWrapper) {
-                LoadPropertyGrid(Wrapper, OnPropertyChanged);
+                LoadPropertyGrid(((MTOBWrapper)Wrapper).Material, OnPropertyChanged);
             }
 
             if (Wrapper is CMDLWrapper) {
-                LoadPropertyGrid(Wrapper, OnPropertyChanged);
+                LoadPropertyGrid(((CMDLWrapper)Wrapper).Model, OnPropertyChanged);
             }
         }
 

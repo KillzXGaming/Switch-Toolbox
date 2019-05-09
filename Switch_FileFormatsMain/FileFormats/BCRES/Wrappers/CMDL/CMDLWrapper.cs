@@ -36,6 +36,15 @@ namespace FirstPlugin
         {
             Model = model;
             Text = model.Name;
+
+            var MaterialFolder = new TreeNode();
+            Nodes.Add(MaterialFolder);
+            foreach (var material in model.Materials.Values)
+            {
+                var matWrapper = new MTOBWrapper();
+                matWrapper.Load(material);
+                MaterialFolder.Nodes.Add(matWrapper);
+            }
         }
     }
 }
