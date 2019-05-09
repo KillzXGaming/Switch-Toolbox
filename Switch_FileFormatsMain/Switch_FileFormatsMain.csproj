@@ -208,7 +208,8 @@
     <Compile Include="FileFormats\Audio\WAV.cs" />
     <Compile Include="FileFormats\BCRES\BCRES.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\BCRESGroupNode.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDLWrapper.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CMDLWrapper.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\MTOBWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\TXOBWrapper.cs" />
     <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />

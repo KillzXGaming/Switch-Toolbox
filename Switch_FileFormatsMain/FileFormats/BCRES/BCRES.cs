@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Switch_Toolbox;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Forms;
 using BcresLibrary;
 
 namespace FirstPlugin
@@ -74,13 +75,36 @@ namespace FirstPlugin
                 switch (Folder.Type)
                 {
                     case BCRESGroupType.Models:
-                        Folder.AddNode(new CMDLWrapper((Model)section));
+                        Folder.AddNode(new CMDLWrapper((Model)section) { BcresParent = this } );
                         break;
                     case BCRESGroupType.Textures:
-                        Folder.AddNode(new TXOBWrapper((Texture)section));
+                        Folder.AddNode(new TXOBWrapper((Texture)section) { BcresParent = this });
                         break;
                 }
             }
+        }
+
+        public void LoadEditors(TreeNode Wrapper, Action OnPropertyChanged)
+        {
+            if (Wrapper is MTOBWrapper) {
+                LoadPropertyGrid(Wrapper, OnPropertyChanged);
+            }
+
+            if (Wrapper is CMDLWrapper) {
+                LoadPropertyGrid(Wrapper, OnPropertyChanged);
+            }
+        }
+
+        private void LoadPropertyGrid(object property, Action OnPropertyChanged)
+        {
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+            editor.LoadProperty(property, OnPropertyChanged);
         }
 
         public void Unload()

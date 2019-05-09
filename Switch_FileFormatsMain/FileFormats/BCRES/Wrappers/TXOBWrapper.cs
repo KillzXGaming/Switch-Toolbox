@@ -13,6 +13,9 @@ namespace FirstPlugin
 {
     public class TXOBWrapper : STGenericTexture
     {
+        internal BCRES BcresParent;
+        internal Texture Texture;
+
         public TXOBWrapper()
         {
             ImageKey = "Texture";
@@ -20,7 +23,6 @@ namespace FirstPlugin
         }
         public TXOBWrapper(Texture texture) : base() { LoadTexture(texture); }
 
-        internal Texture Texture;
 
         public override TEX_FORMAT[] SupportedFormats
         {
@@ -33,8 +35,7 @@ namespace FirstPlugin
             }
         }
 
-        public override void OnClick(TreeView treeview)
-        {
+        public override void OnClick(TreeView treeview) {
             UpdateEditor();
         }
 
