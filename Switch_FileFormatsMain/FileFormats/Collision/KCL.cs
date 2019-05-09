@@ -51,12 +51,6 @@ namespace FirstPlugin
 
         STToolStripItem EndiannessToolstrip;
 
-        STToolStripItem OdysseyPresetToolstrip;
-        STToolStripItem Mk8PresetToolstrip;
-        STToolStripItem Splatoon2PresetToolstrip;
-        STToolStripItem SplatoonPresetToolstrip;
-        STToolStripItem OtherPresetToolstrip;
-
         public KCL()
         {
             ContextMenuStrip = new STContextMenuStrip();

@@ -21,7 +21,7 @@ namespace FirstPlugin
         public uint arrayLength = 1;
         public List<byte[]> DataBlockOutput = new List<byte[]>();
         public List<byte[]> DecompressedData = new List<byte[]>();
-        public GX2.GX2SurfaceFormat Format;
+        public GX2.GX2SurfaceFormat Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
         public bool GenerateMipmaps;
         public bool IsSRGB;
         public uint tileMode = 4;
@@ -64,8 +64,6 @@ namespace FirstPlugin
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
 
-            Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
-
             GenerateMipmaps = true;
             LoadImage(new Bitmap(Image));
         }
@@ -76,7 +74,6 @@ namespace FirstPlugin
 
             TexName = Path.GetFileNameWithoutExtension(FileName);
 
-            Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
             GenerateMipmaps = true;
 
             //If a texture is .tga, we need to convert it

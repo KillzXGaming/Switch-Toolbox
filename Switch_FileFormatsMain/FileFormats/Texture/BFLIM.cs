@@ -38,7 +38,7 @@ namespace FirstPlugin
             }
         }
 
-        public BFLIMFormat ConvertFormatGenericToBflim(TEX_FORMAT Format)
+        public static BFLIMFormat ConvertFormatGenericToBflim(TEX_FORMAT Format)
         {
             switch (Format)
             {
@@ -86,6 +86,7 @@ namespace FirstPlugin
             get
             {
                 List<Type> types = new List<Type>();
+                types.Add(typeof(MenuExt));
                 return types.ToArray();
             }
         }
@@ -137,17 +138,63 @@ namespace FirstPlugin
             }
         }
 
+        class MenuExt : IFileMenuExtension
+        {
+            public STToolStripItem[] NewFileMenuExtensions => null;
+            public STToolStripItem[] NewFromFileMenuExtensions => newFileExt;
+            public STToolStripItem[] ToolsMenuExtensions => null;
+            public STToolStripItem[] TitleBarExtensions => null;
+            public STToolStripItem[] CompressionMenuExtensions => null;
+            public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
+
+            STToolStripItem[] newFileExt = new STToolStripItem[1];
+
+            public MenuExt()
+            {
+                newFileExt[0] = new STToolStripItem("BFLIM From Image", CreateNew);
+            }
+
+            public void CreateNew(object sender, EventArgs args)
+            {
+                BFLIM bflim = new BFLIM();
+                bflim.CanSave = true;
+                bflim.IFileInfo = new IFileInfo();
+                bflim.header = new Header();
+
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Multiselect = false;
+                ofd.Filter = FileFilters.GTX;
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                FTEX ftex = new FTEX();
+                ftex.ReplaceTexture(ofd.FileName, 1, bflim.SupportedFormats, true, true, false, TEX_FORMAT.BC3_UNORM_SRGB);
+                if (ftex.texture != null)
+                {
+                    bflim.Text = ftex.texture.Name;
+                    bflim.image = new Image();
+                    bflim.image.Swizzle = (byte)ftex.texture.Swizzle;
+                    bflim.image.BflimFormat = BFLIM.ConvertFormatGenericToBflim(ftex.Format);
+                    bflim.image.Height = (ushort)ftex.texture.Height;
+                    bflim.image.Width = (ushort)ftex.texture.Width;
+
+                    bflim.Format = BFLIM.GetFormat(bflim.image.BflimFormat);
+                    bflim.Width = bflim.image.Width;
+                    bflim.Height = bflim.image.Height;
+
+                    bflim.ImageData = ftex.texture.Data;
+                    LibraryGUI.Instance.CreateMdiWindow(bflim.OpenForm());
+
+                    bflim.UpdateForm();
+                }
+            }
+        }
+
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                         "Microsoft DDS |*.dds|" +
-                         "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";
-
+            ofd.Filter = FileFilters.GTX;
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -301,7 +348,7 @@ namespace FirstPlugin
             }
         }
 
-        private TEX_FORMAT GetFormat(BFLIMFormat format)
+        public static TEX_FORMAT GetFormat(BFLIMFormat format)
         {
             switch (format)
             {
@@ -483,6 +530,14 @@ namespace FirstPlugin
             public ushort blockount;
             public ushort padding;
 
+            public Header()
+            {
+                ByteOrderMark = 65279;
+                HeaderSize = 20;
+                blockount = 1;
+                Version = 33685504;
+            }
+
             public void Read(FileReader reader)
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -516,6 +571,14 @@ namespace FirstPlugin
             public ushort Alignment;
             public BFLIMFormat BflimFormat;
             public byte Flags;
+
+
+            public Image()
+            {
+                Alignment = 8192;
+                Flags = 0xC4;
+                Size = 16;
+            }
 
             public GX2.GX2TileMode TileMode
             {

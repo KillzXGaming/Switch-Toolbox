@@ -189,7 +189,10 @@ namespace FirstPlugin
             {
                 var result = MessageBox.Show("Warning! Only change the tile mode unless you know what you are doing!", "Texture Importer", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Cancel)
+                {
                     tileModeCB.SelectedIndex = 0;
+                    SelectedTexSettings.tileMode = 0;
+                }
             }
         }
 

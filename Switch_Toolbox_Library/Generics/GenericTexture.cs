@@ -344,8 +344,10 @@ namespace Switch_Toolbox.Library
                     throw new Exception("Data is null!");
 
                 if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format)) {
-                    return BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
+                    var Image =  BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
                       (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    Image.RotateFlip(RotateFlipType.RotateNoneFlipY); //It's upside down for some reason so flip it
+                    return Image;
                 }
 
                 switch (Format)
