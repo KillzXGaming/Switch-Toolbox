@@ -109,7 +109,7 @@ namespace Bfres.Structs
             return importer;
         }
 
-        public static GTXImporterSettings SetImporterSettings(string name)
+        public static GTXImporterSettings SetImporterSettings(string name, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN)
         {
             var importer = new GTXImporterSettings();
             string ext = System.IO.Path.GetExtension(name);
@@ -123,6 +123,10 @@ namespace Bfres.Structs
                     break;
                 default:
                     importer.LoadBitMap(name);
+
+                    //Override the format setting. This only will do this for images not as dds or astc
+                    if (DefaultFormat != TEX_FORMAT.UNKNOWN)
+                        importer.Format = (GX2.GX2SurfaceFormat)ConvertToGx2Format(DefaultFormat);
                     break;
             }
 
@@ -199,7 +203,7 @@ namespace Bfres.Structs
                 return;
             }
 
-            GTXImporterSettings setting = SetImporterSettings(FileName);
+            GTXImporterSettings setting = SetImporterSettings(FileName, DefaultFormat);
             setting.MipSwizzle = Tex2Swizzle;
 
             GTXTextureImporter importer = new GTXTextureImporter();
@@ -220,9 +224,6 @@ namespace Bfres.Structs
                 importer.LoadSupportedFormats(SupportedFormats);
 
             importer.LoadSetting(setting);
-
-            if (DefaultFormat != TEX_FORMAT.UNKNOWN)
-                setting.Format = (GX2.GX2SurfaceFormat)ConvertToGx2Format(DefaultFormat);
 
             if (ext == ".dds")
             {
@@ -581,7 +582,7 @@ namespace Bfres.Structs
                 case GX2SurfaceFormat.T_BC2_UNorm: return TEX_FORMAT.BC2_UNORM;
                 case GX2SurfaceFormat.T_BC2_SRGB: return TEX_FORMAT.BC2_UNORM_SRGB;
                 case GX2SurfaceFormat.T_BC3_UNorm: return TEX_FORMAT.BC3_UNORM;
-                case GX2SurfaceFormat.T_BC3_SRGB: return TEX_FORMAT.BC3_UNORM;
+                case GX2SurfaceFormat.T_BC3_SRGB: return TEX_FORMAT.BC3_UNORM_SRGB;
                 case GX2SurfaceFormat.T_BC4_UNorm: return TEX_FORMAT.BC4_UNORM;
                 case GX2SurfaceFormat.T_BC4_SNorm: return TEX_FORMAT.BC4_SNORM;
                 case GX2SurfaceFormat.T_BC5_UNorm: return TEX_FORMAT.BC5_UNORM;
