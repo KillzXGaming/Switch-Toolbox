@@ -55,8 +55,10 @@
       <HintPath>..\Toolbox\Lib\BarsLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BcresLibrary">
+    <Reference Include="BcresLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\BcresLibrary.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BezelEngineArchive_Lib">
       <HintPath>..\Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
