@@ -98,20 +98,20 @@ namespace FirstPlugin
 
             uint Offset = 0;
 
-            uint MipWidth = Width, MipHeight = Height;
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
+                uint _width = Math.Max(1, Width >> mipLevel);
+                uint _height = Math.Max(1, Height >> mipLevel);
+
                 uint Increment = Texture.Images[ArrayLevel].BitsPerPixel / 8;
                 if (Increment == 0) Increment = 1;
 
-                uint size = (MipWidth * MipHeight) * Increment;
+                uint size = (_width * _height) * Increment;
 
                 if (mipLevel == MipLevel)
                     return Utils.SubArray(Texture.Images[ArrayLevel].ImageData, Offset, size);
 
                 Offset += size;
-                MipWidth /= 2;
-                MipHeight /= 2;
             }
 
             return Texture.Images[ArrayLevel].ImageData;
