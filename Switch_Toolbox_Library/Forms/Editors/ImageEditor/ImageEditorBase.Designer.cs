@@ -105,8 +105,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer1.Size = new System.Drawing.Size(715, 502);
-            this.splitContainer1.SplitterDistance = 520;
+            this.splitContainer1.Size = new System.Drawing.Size(535, 502);
+            this.splitContainer1.SplitterDistance = 389;
             this.splitContainer1.TabIndex = 5;
             // 
             // stPanel2
@@ -115,7 +115,7 @@
             this.stPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.stPanel2.Location = new System.Drawing.Point(0, 501);
             this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(520, 1);
+            this.stPanel2.Size = new System.Drawing.Size(389, 1);
             this.stPanel2.TabIndex = 1;
             // 
             // stPanel1
@@ -127,7 +127,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(520, 502);
+            this.stPanel1.Size = new System.Drawing.Size(389, 502);
             this.stPanel1.TabIndex = 2;
             // 
             // stPanel4
@@ -139,7 +139,7 @@
             this.stPanel4.Controls.Add(this.pictureBoxCustom1);
             this.stPanel4.Location = new System.Drawing.Point(3, 74);
             this.stPanel4.Name = "stPanel4";
-            this.stPanel4.Size = new System.Drawing.Size(514, 425);
+            this.stPanel4.Size = new System.Drawing.Size(383, 425);
             this.stPanel4.TabIndex = 8;
             // 
             // stPanel5
@@ -148,7 +148,7 @@
             this.stPanel5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.stPanel5.Location = new System.Drawing.Point(0, 405);
             this.stPanel5.Name = "stPanel5";
-            this.stPanel5.Size = new System.Drawing.Size(514, 20);
+            this.stPanel5.Size = new System.Drawing.Size(383, 20);
             this.stPanel5.TabIndex = 1;
             // 
             // bottomLabel
@@ -167,7 +167,7 @@
             this.pictureBoxCustom1.ContextMenuStrip = this.stContextMenuStrip2;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
-            this.pictureBoxCustom1.Size = new System.Drawing.Size(514, 406);
+            this.pictureBoxCustom1.Size = new System.Drawing.Size(383, 406);
             this.pictureBoxCustom1.TabIndex = 0;
             this.pictureBoxCustom1.ZoomChanged += new System.EventHandler(this.pictureBoxCustom1_ZoomChanged);
             // 
@@ -334,7 +334,7 @@
             this.adjustmentsToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(520, 24);
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(389, 24);
             this.stContextMenuStrip1.TabIndex = 0;
             this.stContextMenuStrip1.Text = "stContextMenuStrip1";
             // 
@@ -545,7 +545,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "ImageEditorBase";
-            this.Size = new System.Drawing.Size(715, 502);
+            this.Size = new System.Drawing.Size(535, 502);
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);

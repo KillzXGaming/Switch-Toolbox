@@ -96,6 +96,24 @@ namespace FirstPlugin
         {
             PlatformSwizzle = PlatformSwizzle.Platform_3DS;
 
+            uint Offset = 0;
+
+            uint MipWidth = Width, MipHeight = Height;
+            for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+            {
+                uint Increment = Texture.Images[ArrayLevel].BitsPerPixel / 8;
+                if (Increment == 0) Increment = 1;
+
+                uint size = (MipWidth * MipHeight) * Increment;
+
+                if (mipLevel == MipLevel)
+                    return Utils.SubArray(Texture.Images[ArrayLevel].ImageData, Offset, size);
+
+                Offset += size;
+                MipWidth /= 2;
+                MipHeight /= 2;
+            }
+
             return Texture.Images[ArrayLevel].ImageData;
         }
     }
