@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using System.IO;
 using Switch_Toolbox.Library.IO;
+using Switch_Toolbox.Library.Forms;
+using System.Drawing;
 
 namespace FirstPlugin
 {
@@ -46,13 +48,32 @@ namespace FirstPlugin
             FFNT bffnt = new FFNT();
             bffnt.Read(new FileReader(stream));
 
-            TGLP tglp = bffnt.finf.tglp;
+            TGLP tglp = bffnt.GetFontSection().tglp;
+
+            var textureFolder = new TreeNode("Textures");
+            Nodes.Add(textureFolder);
+            if (tglp.SheetDataList.Count > 0)
+            {
+                var bntx = STFileLoader.OpenFileFormat("Sheet_0", tglp.SheetDataList[0]);
+                if (bntx != null)
+                {
+                    textureFolder.Nodes.Add((BNTX)bntx);
+                }
+                else
+                {
+                    var surface = new Gx2ImageBlock();
+                    surface.Text = "Sheet_0";
+                    surface.Load(bffnt.GetFontSection());
+                    textureFolder.Nodes.Add(surface);
+                }
+            }
+
 
             int i = 0;
             foreach (byte[] texture in tglp.SheetDataList)
             {
-                BNTX file = (BNTX)STFileLoader.OpenFileFormat("Sheet" + i++, texture);
-                Nodes.Add(file);
+             //   BNTX file = (BNTX)STFileLoader.OpenFileFormat("Sheet" + i++, texture);
+             //  Nodes.Add(file);
             }
         }
         public void Unload()
@@ -105,30 +126,204 @@ namespace FirstPlugin
     public class FFNT
     {
         public ushort BOM;
+        public ushort HeaderSize;
         public uint Version;
-        public FINF finf;
+
+        public FINF GetFontSection()
+        {
+            foreach (var block in Blocks)
+            {
+                if (block.GetType() == typeof(FINF))
+                    return (FINF)block;
+            }
+            return null;
+        }
+
+        public List<BFFNT_Block> Blocks = new List<BFFNT_Block>();
 
         public void Read(FileReader reader)
         {
+            reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
             string Signature = reader.ReadString(4, Encoding.ASCII);
             if (Signature != "FFNT")
                 throw new Exception($"Invalid signature {Signature}! Expected FFNT.");
 
-            char[] Magic = reader.ReadChars(4);
             BOM = reader.ReadUInt16();
+            reader.CheckByteOrderMark(BOM);
+            HeaderSize = reader.ReadUInt16();
             Version = reader.ReadUInt32();
             uint FileSize = reader.ReadUInt16();
-            uint BlockCount = reader.ReadUInt16();
-            uint unk = reader.ReadUInt16();
+            ushort BlockCount = reader.ReadUInt16();
+            ushort Padding = reader.ReadUInt16();
 
-            finf = new FINF();
-            finf.Read(reader);
+            reader.Seek(HeaderSize, SeekOrigin.Begin);
+            string SignatureCheck = CheckSignature(reader);
+            switch (SignatureCheck)
+            {
+                case "FINF":
+                    FINF finf = new FINF();
+                    finf.Read(reader);
+                    Blocks.Add(finf);
+                    break;
+                default:
+                    throw new NotImplementedException("Unsupported block found! " + SignatureCheck);
+            }
 
             reader.Close();
             reader.Dispose();
         }
+
+        private string CheckSignature(FileReader reader)
+        {
+            string Signature = reader.ReadString(4, Encoding.ASCII);
+            reader.Seek(-4, SeekOrigin.Current);
+            return Signature;
+        }
     }
-    public class FINF
+
+    public enum Gx2ImageFormats
+    {
+        RGBA8_UNORM,
+        RGB8_UNORM,
+        RGB5A1_UNORM,
+        RGB565_UNORM,
+        RGBA4_UNORM,
+        LA8_UNORM,
+        LA4_UNORM,
+        A4_UNORM,
+        A8_UNORM,
+        BC1_UNORM,
+        BC2_UNORM,
+        BC3_UNORM,
+        BC4_UNORM,
+        BC5_UNORM,
+        RGBA8_SRGB,
+        BC1_SRGB,
+        BC2_SRGB,
+        BC3_SRGB,
+    }
+
+    public class Gx2ImageBlock : STGenericTexture
+    {
+        public FINF TextureFINF;
+
+        public void Load(FINF texture)
+        {
+            TextureFINF = texture;
+            Height = TextureFINF.Height;
+            Width = TextureFINF.Width;
+            var BFNTFormat = (Gx2ImageFormats)TextureFINF.tglp.Format;
+            Format = ConvertToGeneric(BFNTFormat);
+
+            ImageKey = "Texture";
+            SelectedImageKey = "Texture";
+        }
+
+        public override bool CanEdit { get; set; } = false;
+
+        public override TEX_FORMAT[] SupportedFormats
+        {
+            get
+            {
+                return new TEX_FORMAT[] {
+                };
+            }
+        }
+
+        public TEX_FORMAT ConvertToGeneric(Gx2ImageFormats Format)
+        {
+            switch (Format)
+            {
+                case Gx2ImageFormats.A8_UNORM: return TEX_FORMAT.R8_UNORM;
+                case Gx2ImageFormats.BC1_SRGB: return TEX_FORMAT.BC1_UNORM_SRGB;
+                case Gx2ImageFormats.BC1_UNORM: return TEX_FORMAT.BC1_UNORM;
+                case Gx2ImageFormats.BC2_UNORM: return TEX_FORMAT.BC2_UNORM;
+                case Gx2ImageFormats.BC2_SRGB: return TEX_FORMAT.BC2_UNORM_SRGB;
+                case Gx2ImageFormats.BC3_UNORM: return TEX_FORMAT.BC3_UNORM;
+                case Gx2ImageFormats.BC4_UNORM: return TEX_FORMAT.BC4_UNORM;
+                case Gx2ImageFormats.BC5_UNORM: return TEX_FORMAT.BC5_UNORM;
+                case Gx2ImageFormats.LA4_UNORM: return TEX_FORMAT.R4G4_UNORM;
+                case Gx2ImageFormats.LA8_UNORM: return TEX_FORMAT.R8G8_UNORM;
+                case Gx2ImageFormats.RGB565_UNORM: return TEX_FORMAT.B5G6R5_UNORM;
+                case Gx2ImageFormats.RGB5A1_UNORM: return TEX_FORMAT.B5G5R5A1_UNORM;
+                case Gx2ImageFormats.RGB8_UNORM: return TEX_FORMAT.R8G8_UNORM;
+                case Gx2ImageFormats.RGBA8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
+                case Gx2ImageFormats.RGBA8_UNORM: return TEX_FORMAT.R8G8B8A8_UNORM;
+                default:
+                    throw new NotImplementedException("Unsupported format " + Format);
+            }
+        }
+
+        public override void SetImageData(Bitmap bitmap, int ArrayLevel)
+        {
+            throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+        }
+
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        {
+            uint bpp = GetBytesPerPixel(Format);
+
+            GX2.GX2Surface surf = new GX2.GX2Surface();
+            surf.bpp = bpp;
+            surf.height = Height;
+            surf.width = Width;
+            surf.aa = (uint)GX2.GX2AAMode.GX2_AA_MODE_1X;
+            surf.alignment = 0;
+            surf.depth = 1;
+            surf.dim = (uint)GX2.GX2SurfaceDimension.DIM_2D;
+            surf.format = (uint)Bfres.Structs.FTEX.ConvertToGx2Format(Format);
+            surf.use = (uint)GX2.GX2SurfaceUse.USE_COLOR_BUFFER;
+            surf.pitch = 0;
+            surf.data = TextureFINF.tglp.SheetDataList[ArrayLevel];
+            surf.numMips = 1;
+            surf.mipOffset = new uint[0];
+            surf.mipData = null;
+            surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
+            surf.swizzle = 0;
+            surf.numArray = 1;
+
+            var surfaces = GX2.Decode(surf);
+
+            return surfaces[ArrayLevel][MipLevel];
+        }
+
+        public override void OnClick(TreeView treeview)
+        {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
+            {
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+
+            Properties prop = new Properties();
+            prop.Width = Width;
+            prop.Height = Height;
+            prop.Depth = Depth;
+            prop.MipCount = MipCount;
+            prop.ArrayCount = ArrayCount;
+            prop.ImageSize = (uint)TextureFINF.tglp.SheetDataList[0].Length;
+            prop.Format = Format;
+
+            editor.Text = Text;
+            editor.LoadProperties(prop);
+            editor.LoadImage(this);
+        }
+    }
+
+    public class BFFNT_Block
+    {
+
+    }
+
+    public class FINF : BFFNT_Block
     {
         public uint Size;
         public uint Type;
@@ -208,6 +403,7 @@ namespace FirstPlugin
             {
                 for (int i = 0; i < SheetCount; i++)
                 {
+
                 }
                 SheetDataList.Add(reader.ReadBytes((int)SheetSize * SheetCount));
             }

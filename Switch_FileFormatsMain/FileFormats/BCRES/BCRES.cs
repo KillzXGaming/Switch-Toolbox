@@ -97,6 +97,14 @@ namespace FirstPlugin
             if (Wrapper is CMDLWrapper) {
                 LoadPropertyGrid(((CMDLWrapper)Wrapper).Model, OnPropertyChanged);
             }
+
+            if (Wrapper is CRESBoneWrapper) {
+                LoadPropertyGrid(((CRESBoneWrapper)Wrapper).Bone, OnPropertyChanged);
+            }
+
+            if (Wrapper is CRESSkeletonWrapper) {
+                LoadPropertyGrid(((CRESSkeletonWrapper)Wrapper).Skeleton, OnPropertyChanged);
+            }
         }
 
         private void LoadPropertyGrid(object property, Action OnPropertyChanged)

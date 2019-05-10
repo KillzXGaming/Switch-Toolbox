@@ -47,9 +47,11 @@ namespace FirstPlugin
 
             var MaterialFolder = new TreeNode("Materials");
             var MeshFolder = new TreeNode("Meshes");
+            var SkeletonWrapper = new CRESSkeletonWrapper();
 
             Nodes.Add(MeshFolder);
             Nodes.Add(MaterialFolder);
+            Nodes.Add(SkeletonWrapper);
 
             foreach (var material in model.Materials.Values)
             {
@@ -63,8 +65,10 @@ namespace FirstPlugin
                 meshWrapper.Load(mesh);
                 MeshFolder.Nodes.Add(meshWrapper);
                 Shapes.Add(meshWrapper);
-
-
+            }
+            if (model.HasSkeleton)
+            {
+                SkeletonWrapper.Load(model.Skeleton, bcres);
             }
         }
     }
