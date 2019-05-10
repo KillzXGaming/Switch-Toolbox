@@ -681,6 +681,8 @@ namespace FirstPlugin
                     shaderParam.Name = param.Name;
                     shaderParam.HasPadding = param.UsePadding;
                     shaderParam.PaddingLength = param.PaddingLength;
+                    shaderParam.DependedIndex = param.DependedIndex;
+                    shaderParam.DependIndex = param.DependIndex;
 
                     reader.Seek(param.DataOffset, System.IO.SeekOrigin.Begin);
                     shaderParam.ReadValue(reader, (int)param.DataSize);
@@ -710,8 +712,8 @@ namespace FirstPlugin
                     param.callbackPointer = 0;
                     param.PaddingLength = shaderParam.PaddingLength;
 
-                    param.DependedIndex = (ushort)index;
-                    param.DependIndex = (ushort)index;
+                    param.DependedIndex = shaderParam.DependedIndex;
+                    param.DependIndex = shaderParam.DependIndex;
 
                     writer.Seek(param.DataOffset, System.IO.SeekOrigin.Begin);
                     shaderParam.WriteValue(writer);
@@ -751,7 +753,6 @@ namespace FirstPlugin
             int index = 0;
             foreach (MatTexture textu in m.TextureMaps)
             {
-
                 TextureRef texref = new TextureRef();
                 texref.Name = textu.Name;
 

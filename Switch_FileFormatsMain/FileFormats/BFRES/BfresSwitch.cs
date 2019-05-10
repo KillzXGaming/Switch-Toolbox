@@ -881,6 +881,8 @@ namespace FirstPlugin
                     BfresShaderParam shaderParam = new BfresShaderParam();
                     shaderParam.Type = param.Type;
                     shaderParam.Name = param.Name;
+                    shaderParam.DependedIndex = param.DependedIndex;
+                    shaderParam.DependIndex = param.DependIndex;
 
                     reader.Seek(param.DataOffset, System.IO.SeekOrigin.Begin);
                     shaderParam.ReadValue(reader, (int)param.DataSize);
@@ -909,6 +911,8 @@ namespace FirstPlugin
                     param.DataOffset = (ushort)Offset;
                     param.DependedIndex = (ushort)index;
                     param.DependIndex = (ushort)index;
+                    param.DependedIndex = shaderParam.DependedIndex;
+                    param.DependIndex = shaderParam.DependIndex;
 
                     writer.Seek(param.DataOffset, System.IO.SeekOrigin.Begin);
                     shaderParam.WriteValue(writer);

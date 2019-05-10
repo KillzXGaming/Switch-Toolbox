@@ -210,6 +210,7 @@
     <Compile Include="FileFormats\BCRES\Wrappers\BCRESGroupNode.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CMDLWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\MTOBWrapper.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\SOBJWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\TXOBWrapper.cs" />
     <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="FileFormats\BFRES\BFRES.cs" />
     <Compile Include="FileFormats\Texture\NUT.cs" />
     <Compile Include="FileFormats\XLINK\XLINK.cs" />
+    <Compile Include="GL\BCRES_Render.cs" />
     <Compile Include="GL\Helpers\DepthGLControl.cs" />
     <Compile Include="GL\ShaderData\AglShaderOdyssey.cs" />
     <Compile Include="GL\ShaderData\AglShaderTurbo.cs" />

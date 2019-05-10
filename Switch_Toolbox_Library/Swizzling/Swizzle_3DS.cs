@@ -94,8 +94,6 @@ namespace Switch_Toolbox.Library
             int Increment = FmtBPP[(int)ConvertToPICAFormat(Format)] / 8;
             if (Increment == 0) Increment = 1;
 
-           // int Increment = (int)STGenericTexture.GetBytesPerPixel(Format);
-
             int IOffset = 0;
 
             for (int TY = 0; TY < Height; TY += 8)

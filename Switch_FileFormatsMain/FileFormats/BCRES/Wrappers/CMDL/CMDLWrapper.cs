@@ -15,6 +15,8 @@ namespace FirstPlugin
         internal BCRES BcresParent;
         internal Model Model;
 
+        public List<SOBJWrapper> Shapes = new List<SOBJWrapper>();
+
         public CMDLWrapper()
         {
             ImageKey = "Model";
@@ -44,12 +46,25 @@ namespace FirstPlugin
             Text = model.Name;
 
             var MaterialFolder = new TreeNode("Materials");
+            var MeshFolder = new TreeNode("Meshes");
+
+            Nodes.Add(MeshFolder);
             Nodes.Add(MaterialFolder);
+
             foreach (var material in model.Materials.Values)
             {
                 var matWrapper = new MTOBWrapper() { BcresParent = bcres };
                 matWrapper.Load(material);
                 MaterialFolder.Nodes.Add(matWrapper);
+            }
+            foreach (var mesh in model.Meshes)
+            {
+                var meshWrapper = new SOBJWrapper() { BcresParent = bcres };
+                meshWrapper.Load(mesh);
+                MeshFolder.Nodes.Add(meshWrapper);
+                Shapes.Add(meshWrapper);
+
+
             }
         }
     }

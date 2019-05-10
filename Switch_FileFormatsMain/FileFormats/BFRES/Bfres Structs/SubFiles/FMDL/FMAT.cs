@@ -388,6 +388,9 @@ namespace Bfres.Structs
     }
     public class BfresShaderParam
     {
+        public ushort DependedIndex;
+        public ushort DependIndex;
+
         public ShaderParamType Type;
         public string Name { get; set; }
 

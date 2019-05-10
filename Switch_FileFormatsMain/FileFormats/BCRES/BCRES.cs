@@ -40,11 +40,13 @@ namespace FirstPlugin
         }
 
         public BcresFile BcresFile;
+        public BCRES_Render RenderedBcres;
 
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
             BcresFile = new BcresFile(stream);
+            RenderedBcres = new BCRES_Render();
 
             AddNodeGroup(BcresFile.Data.Models, new BCRESGroupNode(BCRESGroupType.Models));
             AddNodeGroup(BcresFile.Data.Textures, new BCRESGroupNode(BCRESGroupType.Textures));
@@ -75,7 +77,9 @@ namespace FirstPlugin
                 switch (Folder.Type)
                 {
                     case BCRESGroupType.Models:
-                        Folder.AddNode(new CMDLWrapper((Model)section, this));
+                        var CMDLWrapper = new CMDLWrapper((Model)section, this);
+                        Folder.AddNode(CMDLWrapper);
+                        RenderedBcres.Models.Add(CMDLWrapper);
                         break;
                     case BCRESGroupType.Textures:
                         Folder.AddNode(new TXOBWrapper((Texture)section, this));
