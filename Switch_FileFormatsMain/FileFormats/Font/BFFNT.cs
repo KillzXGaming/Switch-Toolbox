@@ -54,7 +54,7 @@ namespace FirstPlugin
             Nodes.Add(textureFolder);
             if (tglp.SheetDataList.Count > 0)
             {
-                var bntx = STFileLoader.OpenFileFormat("Sheet_0", tglp.SheetDataList[0]);
+                var bntx = STFileLoader.OpenFileFormat("Sheet_0", Utils.CombineByteArray(tglp.SheetDataList.ToArray()));
                 if (bntx != null)
                 {
                     textureFolder.Nodes.Add((BNTX)bntx);
@@ -409,9 +409,8 @@ namespace FirstPlugin
             {
                 for (int i = 0; i < SheetCount; i++)
                 {
-
+                    SheetDataList.Add(reader.ReadBytes((int)SheetSize));
                 }
-                SheetDataList.Add(reader.ReadBytes((int)SheetSize * SheetCount));
             }
         }
     }
