@@ -63,7 +63,7 @@ namespace FirstPlugin
                 {
                     var surface = new Gx2ImageBlock();
                     surface.Text = "Sheet_0";
-                    surface.Load(bffnt.GetFontSection());
+                    surface.Load(tglp);
                     textureFolder.Nodes.Add(surface);
                 }
             }
@@ -206,14 +206,14 @@ namespace FirstPlugin
 
     public class Gx2ImageBlock : STGenericTexture
     {
-        public FINF TextureFINF;
+        public TGLP TextureTGLP;
 
-        public void Load(FINF texture)
+        public void Load(TGLP texture)
         {
-            TextureFINF = texture;
-            Height = TextureFINF.Height;
-            Width = TextureFINF.Width;
-            var BFNTFormat = (Gx2ImageFormats)TextureFINF.tglp.Format;
+            TextureTGLP = texture;
+            Height = TextureTGLP.SheetHeight;
+            Width = TextureTGLP.SheetWidth;
+            var BFNTFormat = (Gx2ImageFormats)TextureTGLP.Format;
             Format = ConvertToGeneric(BFNTFormat);
 
             ImageKey = "Texture";
@@ -275,7 +275,7 @@ namespace FirstPlugin
             surf.format = (uint)Bfres.Structs.FTEX.ConvertToGx2Format(Format);
             surf.use = (uint)GX2.GX2SurfaceUse.USE_COLOR_BUFFER;
             surf.pitch = 0;
-            surf.data = TextureFINF.tglp.SheetDataList[ArrayLevel];
+            surf.data = TextureTGLP.SheetDataList[ArrayLevel];
             surf.numMips = 1;
             surf.mipOffset = new uint[0];
             surf.mipData = null;
@@ -309,7 +309,7 @@ namespace FirstPlugin
             prop.Depth = Depth;
             prop.MipCount = MipCount;
             prop.ArrayCount = ArrayCount;
-            prop.ImageSize = (uint)TextureFINF.tglp.SheetDataList[0].Length;
+            prop.ImageSize = (uint)TextureTGLP.SheetDataList[0].Length;
             prop.Format = Format;
 
             editor.Text = Text;
