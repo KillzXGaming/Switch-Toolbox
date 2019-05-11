@@ -500,8 +500,7 @@ namespace Bfres.Structs
             int pitch = (int)texture.Pitch;
             uint bpp = GX2.surfaceGetBitsPerPixel((uint)format) >> 3;
 
-            LoadTex2Bfres();
-            LoadTex2MipMaps();
+            UpdateMipMaps();
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.bpp = bpp;
@@ -515,7 +514,7 @@ namespace Bfres.Structs
             surf.use = (uint)texture.Use;
             surf.pitch = texture.Pitch;
             surf.data = texture.Data;
-            surf.numMips = texture.MipCount;
+            surf.numMips = MipCount;
             surf.mipOffset = texture.MipOffsets;
             surf.mipData = texture.MipData;
             surf.tileMode = (uint)texture.TileMode;
@@ -528,12 +527,12 @@ namespace Bfres.Structs
             if (surf.mipData == null)
                 surf.numMips = 1;
 
-            MipCount = surf.numMips;
-
             var surfaces = GX2.Decode(surf);
 
             if (ArrayLevel >= surfaces.Count)
                 throw new Exception("Invalid amount of surfaces decoded!");
+            if (surfaces.Count == 0)
+                throw new Exception("Surfaces came out empty!");
 
             return surfaces[ArrayLevel][MipLevel];
         }

@@ -31,10 +31,20 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chkboxVisible = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.btnViotileFlags = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnSamplerInputEditor = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnAttributeInputEditor = new Switch_Toolbox.Library.Forms.STButton();
+            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
             this.label3 = new Switch_Toolbox.Library.Forms.STLabel();
             this.textBoxShaderModel = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.chkboxVisible = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.textBoxShaderArchive = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.textBoxMaterialName = new Switch_Toolbox.Library.Forms.STTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.samplerEditor1 = new Forms.SamplerEditor();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -46,19 +56,7 @@
             this.shaderOptionsEditor1 = new Forms.ShaderOptionsEditor();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.userDataEditor = new UserDataEditor();
-            this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.textBoxShaderArchive = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.textBoxMaterialName = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnViotileFlags = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnSamplerInputEditor = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnAttributeInputEditor = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stTabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -80,18 +78,74 @@
             this.columnHeader9.Text = "Format";
             this.columnHeader9.Width = 44;
             // 
-            // chkboxVisible
+            // btnViotileFlags
             // 
-            this.chkboxVisible.AutoSize = true;
-            this.chkboxVisible.Checked = true;
-            this.chkboxVisible.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkboxVisible.Location = new System.Drawing.Point(361, 8);
-            this.chkboxVisible.Name = "chkboxVisible";
-            this.chkboxVisible.Size = new System.Drawing.Size(56, 17);
-            this.chkboxVisible.TabIndex = 43;
-            this.chkboxVisible.Text = "Visible";
-            this.chkboxVisible.UseVisualStyleBackColor = true;
-            this.chkboxVisible.CheckedChanged += new System.EventHandler(this.chkboxVisible_CheckedChanged);
+            this.btnViotileFlags.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnViotileFlags.Location = new System.Drawing.Point(439, 32);
+            this.btnViotileFlags.Name = "btnViotileFlags";
+            this.btnViotileFlags.Size = new System.Drawing.Size(75, 23);
+            this.btnViotileFlags.TabIndex = 45;
+            this.btnViotileFlags.UseVisualStyleBackColor = false;
+            this.btnViotileFlags.Click += new System.EventHandler(this.btnViotileFlags_Click);
+            // 
+            // btnSamplerInputEditor
+            // 
+            this.btnSamplerInputEditor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSamplerInputEditor.Location = new System.Drawing.Point(85, 79);
+            this.btnSamplerInputEditor.Name = "btnSamplerInputEditor";
+            this.btnSamplerInputEditor.Size = new System.Drawing.Size(75, 23);
+            this.btnSamplerInputEditor.TabIndex = 47;
+            this.btnSamplerInputEditor.UseVisualStyleBackColor = false;
+            this.btnSamplerInputEditor.Click += new System.EventHandler(this.btnSamplerInputEditor_Click);
+            // 
+            // btnAttributeInputEditor
+            // 
+            this.btnAttributeInputEditor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAttributeInputEditor.Location = new System.Drawing.Point(267, 79);
+            this.btnAttributeInputEditor.Name = "btnAttributeInputEditor";
+            this.btnAttributeInputEditor.Size = new System.Drawing.Size(75, 23);
+            this.btnAttributeInputEditor.TabIndex = 49;
+            this.btnAttributeInputEditor.UseVisualStyleBackColor = false;
+            this.btnAttributeInputEditor.Click += new System.EventHandler(this.btnAttributeInputEditor_Click);
+            // 
+            // stTabControl1
+            // 
+            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stTabControl1.Location = new System.Drawing.Point(0, 105);
+            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
+            this.stTabControl1.Name = "stTabControl1";
+            this.stTabControl1.SelectedIndex = 0;
+            this.stTabControl1.Size = new System.Drawing.Size(538, 539);
+            this.stTabControl1.TabIndex = 2;
+            // 
+            // stLabel3
+            // 
+            this.stLabel3.AutoSize = true;
+            this.stLabel3.Location = new System.Drawing.Point(186, 84);
+            this.stLabel3.Name = "stLabel3";
+            this.stLabel3.Size = new System.Drawing.Size(81, 13);
+            this.stLabel3.TabIndex = 48;
+            this.stLabel3.Text = "Attribute Inputs:";
+            // 
+            // stLabel2
+            // 
+            this.stLabel2.AutoSize = true;
+            this.stLabel2.Location = new System.Drawing.Point(4, 84);
+            this.stLabel2.Name = "stLabel2";
+            this.stLabel2.Size = new System.Drawing.Size(80, 13);
+            this.stLabel2.TabIndex = 46;
+            this.stLabel2.Text = "Sampler Inputs:";
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(366, 35);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(67, 13);
+            this.stLabel1.TabIndex = 44;
+            this.stLabel1.Text = "Violate Flags";
             // 
             // label3
             // 
@@ -111,23 +165,54 @@
             this.textBoxShaderModel.TabIndex = 41;
             this.textBoxShaderModel.TextChanged += new System.EventHandler(this.textBoxShaderModel_TextChanged);
             // 
-            // stTabControl1
+            // chkboxVisible
             // 
-            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stTabControl1.Controls.Add(this.tabPage2);
-            this.stTabControl1.Controls.Add(this.tabPage1);
-            this.stTabControl1.Controls.Add(this.tabPage3);
-            this.stTabControl1.Controls.Add(this.tabPage4);
-            this.stTabControl1.Controls.Add(this.tabPage5);
-            this.stTabControl1.Controls.Add(this.tabPage6);
-            this.stTabControl1.Location = new System.Drawing.Point(0, 105);
-            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
-            this.stTabControl1.Name = "stTabControl1";
-            this.stTabControl1.SelectedIndex = 0;
-            this.stTabControl1.Size = new System.Drawing.Size(538, 539);
-            this.stTabControl1.TabIndex = 2;
+            this.chkboxVisible.AutoSize = true;
+            this.chkboxVisible.Checked = true;
+            this.chkboxVisible.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkboxVisible.Location = new System.Drawing.Point(361, 8);
+            this.chkboxVisible.Name = "chkboxVisible";
+            this.chkboxVisible.Size = new System.Drawing.Size(56, 17);
+            this.chkboxVisible.TabIndex = 43;
+            this.chkboxVisible.Text = "Visible";
+            this.chkboxVisible.UseVisualStyleBackColor = true;
+            this.chkboxVisible.CheckedChanged += new System.EventHandler(this.chkboxVisible_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 32);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 13);
+            this.label2.TabIndex = 40;
+            this.label2.Text = "Shader Archive";
+            // 
+            // textBoxShaderArchive
+            // 
+            this.textBoxShaderArchive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxShaderArchive.Location = new System.Drawing.Point(85, 29);
+            this.textBoxShaderArchive.Name = "textBoxShaderArchive";
+            this.textBoxShaderArchive.Size = new System.Drawing.Size(257, 20);
+            this.textBoxShaderArchive.TabIndex = 39;
+            this.textBoxShaderArchive.TextChanged += new System.EventHandler(this.textBoxShaderArchive_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 38;
+            this.label1.Text = "Name";
+            // 
+            // textBoxMaterialName
+            // 
+            this.textBoxMaterialName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxMaterialName.Location = new System.Drawing.Point(85, 5);
+            this.textBoxMaterialName.Name = "textBoxMaterialName";
+            this.textBoxMaterialName.Size = new System.Drawing.Size(257, 20);
+            this.textBoxMaterialName.TabIndex = 37;
+            this.textBoxMaterialName.TextChanged += new System.EventHandler(this.textBoxMaterialName_TextChanged);
             // 
             // tabPage2
             // 
@@ -234,99 +319,6 @@
             this.userDataEditor.Size = new System.Drawing.Size(524, 504);
             this.userDataEditor.TabIndex = 0;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 32);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 13);
-            this.label2.TabIndex = 40;
-            this.label2.Text = "Shader Archive";
-            // 
-            // textBoxShaderArchive
-            // 
-            this.textBoxShaderArchive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxShaderArchive.Location = new System.Drawing.Point(85, 29);
-            this.textBoxShaderArchive.Name = "textBoxShaderArchive";
-            this.textBoxShaderArchive.Size = new System.Drawing.Size(257, 20);
-            this.textBoxShaderArchive.TabIndex = 39;
-            this.textBoxShaderArchive.TextChanged += new System.EventHandler(this.textBoxShaderArchive_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 38;
-            this.label1.Text = "Name";
-            // 
-            // textBoxMaterialName
-            // 
-            this.textBoxMaterialName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxMaterialName.Location = new System.Drawing.Point(85, 5);
-            this.textBoxMaterialName.Name = "textBoxMaterialName";
-            this.textBoxMaterialName.Size = new System.Drawing.Size(257, 20);
-            this.textBoxMaterialName.TabIndex = 37;
-            this.textBoxMaterialName.TextChanged += new System.EventHandler(this.textBoxMaterialName_TextChanged);
-            // 
-            // stLabel1
-            // 
-            this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(366, 35);
-            this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(67, 13);
-            this.stLabel1.TabIndex = 44;
-            this.stLabel1.Text = "Violate Flags";
-            // 
-            // btnViotileFlags
-            // 
-            this.btnViotileFlags.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnViotileFlags.Location = new System.Drawing.Point(439, 32);
-            this.btnViotileFlags.Name = "btnViotileFlags";
-            this.btnViotileFlags.Size = new System.Drawing.Size(75, 23);
-            this.btnViotileFlags.TabIndex = 45;
-            this.btnViotileFlags.UseVisualStyleBackColor = false;
-            this.btnViotileFlags.Click += new System.EventHandler(this.btnViotileFlags_Click);
-            // 
-            // btnSamplerInputEditor
-            // 
-            this.btnSamplerInputEditor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSamplerInputEditor.Location = new System.Drawing.Point(85, 79);
-            this.btnSamplerInputEditor.Name = "btnSamplerInputEditor";
-            this.btnSamplerInputEditor.Size = new System.Drawing.Size(75, 23);
-            this.btnSamplerInputEditor.TabIndex = 47;
-            this.btnSamplerInputEditor.UseVisualStyleBackColor = false;
-            this.btnSamplerInputEditor.Click += new System.EventHandler(this.btnSamplerInputEditor_Click);
-            // 
-            // stLabel2
-            // 
-            this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(4, 84);
-            this.stLabel2.Name = "stLabel2";
-            this.stLabel2.Size = new System.Drawing.Size(80, 13);
-            this.stLabel2.TabIndex = 46;
-            this.stLabel2.Text = "Sampler Inputs:";
-            // 
-            // btnAttributeInputEditor
-            // 
-            this.btnAttributeInputEditor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAttributeInputEditor.Location = new System.Drawing.Point(267, 79);
-            this.btnAttributeInputEditor.Name = "btnAttributeInputEditor";
-            this.btnAttributeInputEditor.Size = new System.Drawing.Size(75, 23);
-            this.btnAttributeInputEditor.TabIndex = 49;
-            this.btnAttributeInputEditor.UseVisualStyleBackColor = false;
-            this.btnAttributeInputEditor.Click += new System.EventHandler(this.btnAttributeInputEditor_Click);
-            // 
-            // stLabel3
-            // 
-            this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(186, 84);
-            this.stLabel3.Name = "stLabel3";
-            this.stLabel3.Size = new System.Drawing.Size(81, 13);
-            this.stLabel3.TabIndex = 48;
-            this.stLabel3.Text = "Attribute Inputs:";
-            // 
             // FMATEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -347,9 +339,7 @@
             this.Controls.Add(this.textBoxMaterialName);
             this.Name = "FMATEditor";
             this.Size = new System.Drawing.Size(538, 644);
-            this.stTabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
