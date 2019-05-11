@@ -433,7 +433,7 @@ namespace Switch_Toolbox.Library
 
             if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
             {
-                return ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format));
+                return CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
             }
 
             if (Format == TEX_FORMAT.R32G8X24_FLOAT)
