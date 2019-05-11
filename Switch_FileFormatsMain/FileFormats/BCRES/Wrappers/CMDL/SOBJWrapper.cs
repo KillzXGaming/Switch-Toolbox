@@ -29,6 +29,12 @@ namespace FirstPlugin
             set { Mesh.ShapeIndex = (uint)value; }
         }
 
+        public int MaterialIndex
+        {
+            get { return (int)Mesh.MaterialIndex; }
+            set { Mesh.MaterialIndex = (uint)value; }
+        }
+
         public Shape Shape
         {
             get { return ParentModelWrapper.Model.Shapes[ShapeIndex]; }
@@ -37,8 +43,8 @@ namespace FirstPlugin
 
         public MTOBWrapper MaterialWrapper
         {
-            get { return ParentModelWrapper.Materials[ShapeIndex]; }
-            set { ParentModelWrapper.Materials[ShapeIndex] = value; }
+            get { return ParentModelWrapper.Materials[MaterialIndex]; }
+            set { ParentModelWrapper.Materials[MaterialIndex] = value; }
         }
 
         public SOBJWrapper()
