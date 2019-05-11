@@ -162,6 +162,13 @@ namespace Toolbox
 
         private void UpdateNotifcationClick()
         {
+            var dialog = new GithubUpdateDialog();
+            dialog.LoadCommits(UpdateProgram.CommitList);
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+
             //Prompt once for the user to update the tool. 
             DialogResult result;
             using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
