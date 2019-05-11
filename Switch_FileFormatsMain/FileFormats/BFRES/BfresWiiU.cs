@@ -47,59 +47,7 @@ namespace FirstPlugin
             model.Skeleton = fmdl.Skeleton.node.SkeletonU;
             model.UserData = fmdl.ModelU.UserData;
 
-            if (model.Skeleton.InverseModelMatrices == null)
-                model.Skeleton.InverseModelMatrices = new List<Syroot.Maths.Matrix3x4>();
-            if (model.Skeleton.MatrixToBoneList == null)
-                model.Skeleton.MatrixToBoneList = new List<ushort>();
-
-            //Generate index list
-            List<ushort> SmoothIndices = new List<ushort>();
-            List<Syroot.Maths.Matrix3x4> SmoothMatrices = new List<Syroot.Maths.Matrix3x4>();
-            List<ushort> RigidIndices = new List<ushort>();
-
-            ushort SmoothIndex = 0;
-            ushort BoneIndex = 0;
-
-            foreach (BfresBone bn in fmdl.Skeleton.bones)
-            {
-                if (model.Skeleton.Bones.ContainsKey(bn.Text))
-                {
-                    var Bone = model.Skeleton.Bones[bn.Text];
-                    if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex != -1)
-                    {
-                        bn.SmoothMatrixIndex = (short)SmoothIndex++;
-                        Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
-                        SmoothIndices.Add(BoneIndex);
-
-                        var mat = MatrixExenstion.GetMatrixInverted(bn);
-                        SmoothMatrices.Add(mat);
-                    }
-                    BoneIndex++;
-                }
-            }
-
-            BoneIndex = 0;
-
-            //Rigid Indices come after smooth indices. Start from the last smooth index
-            ushort RigidIndex = (ushort)(SmoothIndices.Count);
-            foreach (BfresBone bn in fmdl.Skeleton.bones)
-            {
-                var Bone = model.Skeleton.Bones[bn.Text];
-                if (bn.UseRigidMatrix || bn.RigidMatrixIndex != -1)
-                {
-                    bn.RigidMatrixIndex = (short)RigidIndex++;
-                    Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
-                    RigidIndices.Add(BoneIndex);
-                }
-
-                BoneIndex++;
-            }
-
-            //Rigid indices at the end
-            var AllIndices = SmoothIndices.Concat(RigidIndices).ToList();
-            model.Skeleton.MatrixToBoneList = AllIndices.ToArray();
-            model.Skeleton.InverseModelMatrices = SmoothMatrices;
-
+            fmdl.Skeleton.CalculateIndices();
 
             int i = 0;
             var duplicates = fmdl.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);

@@ -42,26 +42,7 @@ namespace FirstPlugin
             if (model.Skeleton.MatrixToBoneList == null)
                 model.Skeleton.MatrixToBoneList = new List<ushort>();
 
-            foreach (var bone in fmdl.Skeleton.bones)
-            {
-                if (model.Skeleton.InverseModelMatrices.Count <= 0)
-                    break;
-
-                int inde = 0;
-                foreach (var bn in model.Skeleton.Bones)
-                {
-                    if (bone.Text == bn.Name)
-                    {
-                        var mat = MatrixExenstion.GetMatrixInverted(bone);
-
-                        bn.ParentIndex = (short)bone.parentIndex;
-
-                        if (bn.SmoothMatrixIndex > -1)
-                            model.Skeleton.InverseModelMatrices[bn.SmoothMatrixIndex] = mat;
-                    }
-                    inde++;
-                }
-            }
+            fmdl.Skeleton.CalculateIndices();
 
             int i = 0;
             var duplicates = fmdl.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
