@@ -78,6 +78,8 @@ namespace FirstPlugin
                 }
             }
 
+            BoneIndex = 0;
+
             //Rigid Indices come after smooth indices. Start from the last smooth index
             ushort RigidIndex = (ushort)(SmoothIndices.Count);
             foreach (BfresBone bn in fmdl.Skeleton.bones)
@@ -89,10 +91,12 @@ namespace FirstPlugin
                     Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
                     RigidIndices.Add(BoneIndex);
                 }
+
+                BoneIndex++;
             }
 
-                //Rigid indices at the end
-                var AllIndices = SmoothIndices.Concat(RigidIndices).ToList();
+            //Rigid indices at the end
+            var AllIndices = SmoothIndices.Concat(RigidIndices).ToList();
             model.Skeleton.MatrixToBoneList = AllIndices.ToArray();
             model.Skeleton.InverseModelMatrices = SmoothMatrices;
 
