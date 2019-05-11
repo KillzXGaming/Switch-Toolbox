@@ -55,6 +55,9 @@ namespace FirstPlugin
             foreach (var item in Enum.GetValues(typeof(BoneFlagsRotation)))
                 rotModeCB.Items.Add(item);
 
+            rigidSkinningChkBox.Bind(bn, "UseRigidMatrix");
+            smoothSkinningChkBox.Bind(bn, "UseSmoothMatrix");
+
             if (bn.BoneU != null)
             {
                 var bone = bn.BoneU;
@@ -102,6 +105,7 @@ namespace FirstPlugin
                 smoothIndexUD.Bind(bone, "SmoothMatrixIndex");
                 rigidIndexUD.Bind(bone, "RigidMatrixIndex");
 
+          
                 chkTransformIdentity.Bind(bone, "TransformIdentity");
                 chkTransformRotateTranslateZero.Bind(bone, "TransformRotateTranslateZero");
                 chkTransformRotateZero.Bind(bone, "TransformRotateZero");
@@ -227,6 +231,16 @@ namespace FirstPlugin
             {
                 activeBone.Bone.FlagsBillboard = (BoneFlagsBillboard)billboardModeCB.SelectedItem;
             }
+        }
+
+        private void chkTransformIdentity_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rigidSkinningChkBox_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

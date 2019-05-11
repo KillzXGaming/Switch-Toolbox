@@ -543,6 +543,9 @@ namespace FirstPlugin
             bone.Text = bn.Name;
             bone.RigidMatrixIndex = bn.RigidMatrixIndex;
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
+            bone.UseRigidMatrix = bn.RigidMatrixIndex != -1;
+            bone.UseSmoothMatrix = bn.SmoothMatrixIndex != -1;
+
             bone.BillboardIndex = bn.BillboardIndex;
             if (SetParent)
                 bone.parentIndex = bn.ParentIndex;

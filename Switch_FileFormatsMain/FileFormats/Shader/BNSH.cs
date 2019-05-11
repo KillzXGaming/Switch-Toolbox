@@ -413,6 +413,7 @@ namespace FirstPlugin
                 if (!File.Exists($"{Runtime.ExecutableDir}/ShaderTools/Ryujinx.ShaderTools.exe"))
                 {
                     MessageBox.Show("No shader decompiler found in ShaderTools. If you want to decompile a shader, you can use Ryujinx's ShaderTools.exe and put in the ShaderTools folder of the toolbox.");
+                    return "";
                 }
 
                 ProcessStartInfo start = new ProcessStartInfo();

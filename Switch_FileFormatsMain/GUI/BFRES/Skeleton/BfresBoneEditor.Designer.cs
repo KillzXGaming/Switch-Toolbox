@@ -32,7 +32,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.stFlowLayoutPanel1 = new Switch_Toolbox.Library.Forms.STFlowLayoutPanel();
             this.stDropDownPanel1 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
-            this.boneInfoPanel1 = new BoneInfoPanel();
             this.stDropDownPanel2 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stLabel5 = new Switch_Toolbox.Library.Forms.STLabel();
@@ -91,7 +90,10 @@
             this.chkTransformCuRotateZero = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkTransformCuRotateTrnaslateZero = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.boneInfoPanel1 = new BoneInfoPanel();
             this.userDataEditor1 = new UserDataEditor();
+            this.rigidSkinningChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.smoothSkinningChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.stFlowLayoutPanel1.SuspendLayout();
@@ -181,14 +183,6 @@
             this.stDropDownPanel1.SetIconColor = System.Drawing.Color.Transparent;
             this.stDropDownPanel1.Size = new System.Drawing.Size(633, 113);
             this.stDropDownPanel1.TabIndex = 0;
-            // 
-            // boneInfoPanel1
-            // 
-            this.boneInfoPanel1.Location = new System.Drawing.Point(6, 23);
-            this.boneInfoPanel1.Name = "boneInfoPanel1";
-            this.boneInfoPanel1.Size = new System.Drawing.Size(604, 87);
-            this.boneInfoPanel1.TabIndex = 1;
-            this.boneInfoPanel1.Load += new System.EventHandler(this.boneInfoPanel1_Load);
             // 
             // stDropDownPanel2
             // 
@@ -714,6 +708,8 @@
             // 
             // stPanel3
             // 
+            this.stPanel3.Controls.Add(this.smoothSkinningChkBox);
+            this.stPanel3.Controls.Add(this.rigidSkinningChkBox);
             this.stPanel3.Controls.Add(this.rigidIndexUD);
             this.stPanel3.Controls.Add(this.stLabel4);
             this.stPanel3.Controls.Add(this.smoothIndexUD);
@@ -730,7 +726,7 @@
             0,
             0,
             0});
-            this.rigidIndexUD.Location = new System.Drawing.Point(162, 40);
+            this.rigidIndexUD.Location = new System.Drawing.Point(307, 40);
             this.rigidIndexUD.Maximum = new decimal(new int[] {
             2147483647,
             0,
@@ -749,7 +745,7 @@
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(13, 42);
+            this.stLabel4.Location = new System.Drawing.Point(158, 42);
             this.stLabel4.Name = "stLabel4";
             this.stLabel4.Size = new System.Drawing.Size(131, 13);
             this.stLabel4.TabIndex = 6;
@@ -762,7 +758,7 @@
             0,
             0,
             0});
-            this.smoothIndexUD.Location = new System.Drawing.Point(162, 14);
+            this.smoothIndexUD.Location = new System.Drawing.Point(307, 14);
             this.smoothIndexUD.Maximum = new decimal(new int[] {
             2147483647,
             0,
@@ -781,7 +777,7 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(13, 16);
+            this.stLabel3.Location = new System.Drawing.Point(158, 16);
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(143, 13);
             this.stLabel3.TabIndex = 4;
@@ -827,6 +823,7 @@
             this.chkTransformIdentity.TabIndex = 7;
             this.chkTransformIdentity.Text = "Identity";
             this.chkTransformIdentity.UseVisualStyleBackColor = true;
+            this.chkTransformIdentity.CheckedChanged += new System.EventHandler(this.chkTransformIdentity_CheckedChanged);
             // 
             // chkTransformTranslateZero
             // 
@@ -1000,6 +997,14 @@
             this.tabPage2.Text = "User Data";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // boneInfoPanel1
+            // 
+            this.boneInfoPanel1.Location = new System.Drawing.Point(6, 23);
+            this.boneInfoPanel1.Name = "boneInfoPanel1";
+            this.boneInfoPanel1.Size = new System.Drawing.Size(604, 87);
+            this.boneInfoPanel1.TabIndex = 1;
+            this.boneInfoPanel1.Load += new System.EventHandler(this.boneInfoPanel1_Load);
+            // 
             // userDataEditor1
             // 
             this.userDataEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1007,6 +1012,27 @@
             this.userDataEditor1.Name = "userDataEditor1";
             this.userDataEditor1.Size = new System.Drawing.Size(633, 796);
             this.userDataEditor1.TabIndex = 0;
+            // 
+            // rigidSkinningChkBox
+            // 
+            this.rigidSkinningChkBox.AutoSize = true;
+            this.rigidSkinningChkBox.Location = new System.Drawing.Point(14, 15);
+            this.rigidSkinningChkBox.Name = "rigidSkinningChkBox";
+            this.rigidSkinningChkBox.Size = new System.Drawing.Size(116, 17);
+            this.rigidSkinningChkBox.TabIndex = 8;
+            this.rigidSkinningChkBox.Text = "Use Rigid Skinning";
+            this.rigidSkinningChkBox.UseVisualStyleBackColor = true;
+            this.rigidSkinningChkBox.CheckedChanged += new System.EventHandler(this.rigidSkinningChkBox_CheckedChanged);
+            // 
+            // smoothSkinningChkBox
+            // 
+            this.smoothSkinningChkBox.AutoSize = true;
+            this.smoothSkinningChkBox.Location = new System.Drawing.Point(14, 38);
+            this.smoothSkinningChkBox.Name = "smoothSkinningChkBox";
+            this.smoothSkinningChkBox.Size = new System.Drawing.Size(128, 17);
+            this.smoothSkinningChkBox.TabIndex = 9;
+            this.smoothSkinningChkBox.Text = "Use Smooth Skinning";
+            this.smoothSkinningChkBox.UseVisualStyleBackColor = true;
             // 
             // BfresBoneEditor
             // 
@@ -1124,5 +1150,7 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkTransformCuRotateTrnaslateZero;
         private Switch_Toolbox.Library.Forms.STCheckBox chkTransformCuIdenity;
         private Switch_Toolbox.Library.Forms.STCheckBox chkTransformIdentity;
+        private Switch_Toolbox.Library.Forms.STCheckBox smoothSkinningChkBox;
+        private Switch_Toolbox.Library.Forms.STCheckBox rigidSkinningChkBox;
     }
 }

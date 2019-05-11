@@ -52,24 +52,44 @@ namespace FirstPlugin
             if (model.Skeleton.MatrixToBoneList == null)
                 model.Skeleton.MatrixToBoneList = new List<ushort>();
 
-            foreach (var bone in fmdl.Skeleton.bones) {
+            //Generate index list
+            List<ushort> SmoothIndices = new List<ushort>();
+            List<Syroot.Maths.Matrix3x4> SmoothMatrices = new List<Syroot.Maths.Matrix3x4>();
+            List<ushort> RigidIndices = new List<ushort>();
 
-                if (model.Skeleton.InverseModelMatrices.Count <= 0)
-                    break;
+            ushort SmoothIndex = 0;
+            ushort RigidIndex = 0;
+            ushort BoneIndex = 0;
 
-                int inde = 0;
-                foreach (var bn in model.Skeleton.Bones.Values)
+            foreach (BfresBone bn in fmdl.Skeleton.bones)
+            {
+                if (model.Skeleton.Bones.ContainsKey(bn.Text))
                 {
-                    if (bone.Text == bn.Name)
+                    var Bone = model.Skeleton.Bones[bn.Text];
+                    if (bn.UseRigidMatrix || bn.RigidMatrixIndex != -1)
                     {
-                        var mat = MatrixExenstion.GetMatrixInverted(bone);
-
-                        if (bn.SmoothMatrixIndex > -1)
-                            model.Skeleton.InverseModelMatrices[bn.SmoothMatrixIndex] = mat;
+                        bn.RigidMatrixIndex = (short)RigidIndex++;
+                        Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
+                        RigidIndices.Add(BoneIndex);
                     }
-                    inde++;
+                    if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex != -1)
+                    {
+                        bn.SmoothMatrixIndex = (short)SmoothIndex++;
+                        Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
+                        SmoothIndices.Add(BoneIndex);
+
+                        var mat = MatrixExenstion.GetMatrixInverted(bn);
+                        SmoothMatrices.Add(mat);
+                    }
+                    BoneIndex++;
                 }
             }
+
+            //Rigid indices at the end
+            var AllIndices = SmoothIndices.Concat(RigidIndices).ToList();
+            model.Skeleton.MatrixToBoneList = AllIndices.ToArray();
+            model.Skeleton.InverseModelMatrices = SmoothMatrices;
+
 
             int i = 0;
             var duplicates = fmdl.shapes.GroupBy(c => c.Text).Where(g => g.Skip(1).Any()).SelectMany(c => c);
@@ -363,6 +383,8 @@ namespace FirstPlugin
             bone.RigidMatrixIndex = bn.RigidMatrixIndex;
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
             bone.BillboardIndex = bn.BillboardIndex;
+            bone.UseRigidMatrix = bn.RigidMatrixIndex != -1;
+            bone.UseSmoothMatrix = bn.SmoothMatrixIndex != -1;
 
             if (SetParent)
                 bone.parentIndex = bn.ParentIndex;
