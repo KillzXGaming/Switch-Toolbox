@@ -124,6 +124,16 @@ namespace FirstPlugin
             control.CurrentShader = shader;
             control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
 
+            Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
+
+            Matrix4 invertedCamera = Matrix4.Identity;
+            if (invertedCamera.Determinant != 0)
+                invertedCamera = camMat.Inverted();
+
+            Vector3 lightDirection = new Vector3(0f, 0f, -1f);
+
+            shader.SetVector3("difLightDirection", Vector3.TransformNormal(lightDirection, invertedCamera).Normalized());
+
             SetRenderSettings(shader);
 
             DrawModels(shader, control);
