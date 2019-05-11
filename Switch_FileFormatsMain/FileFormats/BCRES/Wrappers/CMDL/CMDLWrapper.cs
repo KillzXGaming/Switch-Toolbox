@@ -68,16 +68,17 @@ namespace FirstPlugin
                 var matWrapper = new MTOBWrapper() { BcresParent = bcres };
                 matWrapper.Load(material);
                 if (matWrapper.Text == string.Empty)
-                    matWrapper.Text = $"Material {Index}";
+                    matWrapper.Text = $"Material {Index++}";
                 MaterialFolder.Nodes.Add(matWrapper);
             }
 
+            Index = 0;
             foreach (var mesh in model.Meshes)
             {
                 var meshWrapper = new SOBJWrapper(this, mesh) { BcresParent = bcres };
                 MeshFolder.Nodes.Add(meshWrapper);
-                if (MeshFolder.Text == string.Empty)
-                    MeshFolder.Text = $"Mesh {Index}";
+                if (meshWrapper.Text == string.Empty)
+                    meshWrapper.Text = $"Mesh {Index++}";
                 Shapes.Add(meshWrapper);
             }
         }
