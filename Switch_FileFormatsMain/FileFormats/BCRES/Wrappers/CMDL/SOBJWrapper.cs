@@ -35,6 +35,12 @@ namespace FirstPlugin
             set { ParentModelWrapper.Model.Shapes[ShapeIndex] = value; }
         }
 
+        public MTOBWrapper MaterialWrapper
+        {
+            get { return ParentModelWrapper.Materials[ShapeIndex]; }
+            set { ParentModelWrapper.Materials[ShapeIndex] = value; }
+        }
+
         public SOBJWrapper()
         {
             ImageKey = "Material";
@@ -80,7 +86,7 @@ namespace FirstPlugin
 
                 displayVertList.Add(displayVert);
 
-                Console.WriteLine($"---------------------------------------------------------------------------------------");
+         /*      Console.WriteLine($"---------------------------------------------------------------------------------------");
                 Console.WriteLine($"Position   {displayVert.pos.X} {displayVert.pos.Y} {displayVert.pos.Z}");
                 Console.WriteLine($"Normal     {displayVert.nrm.X} {displayVert.nrm.Y} {displayVert.nrm.Z}");
                 Console.WriteLine($"Tanget     {displayVert.tan.X} {displayVert.tan.Y} {displayVert.tan.Z}");
@@ -90,7 +96,7 @@ namespace FirstPlugin
                 Console.WriteLine($"UV Layer 3 {displayVert.uv3.X} {displayVert.uv3.Y}");
                 Console.WriteLine($"Bone Index {displayVert.node.X} {displayVert.node.Y} {displayVert.node.Z} {displayVert.node.W}");
                 Console.WriteLine($"Weights    {displayVert.weight.X} {displayVert.weight.Y} {displayVert.weight.Z} {displayVert.weight.W}");
-                Console.WriteLine($"---------------------------------------------------------------------------------------");
+                Console.WriteLine($"---------------------------------------------------------------------------------------");*/
             }
 
             return displayVertList;
@@ -131,11 +137,12 @@ namespace FirstPlugin
             lodMeshes = new List<LOD_Mesh>();
             foreach (var group in Shape.FaceGroups)
             {
+                LOD_Mesh msh = new LOD_Mesh();
+
                 foreach (var faceDescriptors in group.FaceDescriptors)
                 {
                     foreach (var buffer in faceDescriptors.Buffers)
                     {
-                        LOD_Mesh msh = new LOD_Mesh();
                         msh.PrimitiveType = STPolygonType.Triangle;
                         msh.FirstVertex = 0;
 
@@ -144,10 +151,10 @@ namespace FirstPlugin
                         {
                             msh.faces.Add((int)indicesArray[face] + (int)msh.FirstVertex);
                         }
-
-                        lodMeshes.Add(msh);
                     }
                 }
+
+                lodMeshes.Add(msh);
             }
 
             for (int vtxGrp = 0; vtxGrp < Shape.VertexGroups.Count; vtxGrp++)

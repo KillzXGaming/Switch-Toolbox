@@ -30,6 +30,7 @@ namespace FirstPlugin
             GL.GenBuffers(1, out ibo_elements);
 
             UpdateVertexData();
+            UpdateTextureMaps();
         }
 
         public void Destroy()
@@ -77,6 +78,23 @@ namespace FirstPlugin
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
+
+            LibraryGUI.Instance.UpdateViewport();
+        }
+
+        public void UpdateTextureMaps()
+        {
+            if (!Runtime.OpenTKInitialized)
+                return;
+
+            foreach (BCRESGroupNode bcresTexGroup in PluginRuntime.bcresTexContainers)
+            {
+                foreach (var tex in bcresTexGroup.ResourceNodes)
+                {
+                    if (!((TXOBWrapper)tex.Value).RenderableTex.GLInitialized)
+                        ((TXOBWrapper)tex.Value).LoadOpenGLTexture();
+                }
+            }
 
             LibraryGUI.Instance.UpdateViewport();
         }
@@ -139,6 +157,69 @@ namespace FirstPlugin
             DrawModels(shader, control);
         }
 
+        private static void SetTextureUniforms(MTOBWrapper mat, SOBJWrapper m, ShaderProgram shader)
+        {
+            SetDefaultTextureAttributes(mat, shader);
+
+            GL.ActiveTexture(TextureUnit.Texture0 + 1);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+
+            foreach (STGenericMatTexture matex in mat.TextureMaps)
+            {
+                if (matex.Type == STGenericMatTexture.TextureType.Diffuse)
+                    TextureUniform(shader, mat, true, "DiffuseMap", matex);
+            }
+        }
+
+        private static void TextureUniform(ShaderProgram shader, MTOBWrapper mat, bool hasTex, string name, STGenericMatTexture mattex)
+        {
+            if (mattex.textureState == STGenericMatTexture.TextureState.Binded)
+                return;
+
+            // Bind the texture and create the uniform if the material has the right textures. 
+            if (hasTex)
+            {
+                GL.Uniform1(shader[name], BindTexture(mattex));
+            }
+        }
+
+        public static int BindTexture(STGenericMatTexture tex)
+        {
+            GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+
+            string activeTex = tex.Name;
+
+            foreach (var bcresTexContainer in PluginRuntime.bcresTexContainers)
+            {
+
+                if (bcresTexContainer.ResourceNodes.ContainsKey(activeTex))
+                {
+                    TXOBWrapper txob = (TXOBWrapper)bcresTexContainer.ResourceNodes[activeTex];
+
+                    if (txob.RenderableTex == null || !txob.RenderableTex.GLInitialized)
+                        txob.LoadOpenGLTexture();
+
+                    BindGLTexture(tex, txob.RenderableTex.TexID);
+                }
+            }
+            return tex.textureUnit + 1;
+        }
+        private static void BindGLTexture(STGenericMatTexture tex, int texid)
+        {
+            //     GL.ActiveTexture(TextureUnit.Texture0 + texid);
+            GL.BindTexture(TextureTarget.Texture2D, texid);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)STGenericMatTexture.wrapmode[tex.wrapModeS]);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)STGenericMatTexture.wrapmode[tex.wrapModeT]);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)STGenericMatTexture.minfilter[tex.minFilter]);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)STGenericMatTexture.magfilter[tex.magFilter]);
+            GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 0.0f);
+        }
+
+        private static void SetDefaultTextureAttributes(MTOBWrapper mat, ShaderProgram shader)
+        {
+        }
+
         private void SetRenderSettings(ShaderProgram shader)
         {
             shader.SetInt("renderType", (int)Runtime.viewportShading);
@@ -183,6 +264,7 @@ namespace FirstPlugin
                 return;
 
             SetVertexAttributes(m, shader);
+            SetTextureUniforms(m.MaterialWrapper, m, shader);
 
             if ((m.IsSelected))
             {

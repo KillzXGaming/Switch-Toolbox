@@ -23,6 +23,7 @@ namespace FirstPlugin
         public static Dictionary<string, BFLIM> bflimTextures = new Dictionary<string, BFLIM>();
         public static List<BNTX> bntxContainers = new List<BNTX>();
         public static List<BFRESGroupNode> ftexContainers = new List<BFRESGroupNode>();
+        public static List<BCRESGroupNode> bcresTexContainers = new List<BCRESGroupNode>();
         public static string ExternalFMATPath = "";
         public static string OdysseyGamePath = "";
         public static string Mk8GamePath = "";

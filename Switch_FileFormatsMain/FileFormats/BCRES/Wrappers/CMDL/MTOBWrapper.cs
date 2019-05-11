@@ -35,7 +35,20 @@ namespace FirstPlugin
         {
             Material = material;
 
-            Text = material.Name;
+            Text = material.Name; 
+
+            int textureUnit = 1;
+            if (material.TextureMapInfo1 != null)
+            {
+                STGenericMatTexture tex1 = new STGenericMatTexture();
+                var TexRef = material.TextureMapInfo1.TextureRef;
+                var Sampler = material.TextureMapInfo1.Sampler;
+
+                tex1.textureUnit = textureUnit++;
+                tex1.Name = TexRef.Reference.Name;
+                tex1.Type = STGenericMatTexture.TextureType.Diffuse;
+                TextureMaps.Add(tex1);
+            }
         }
     }
 }

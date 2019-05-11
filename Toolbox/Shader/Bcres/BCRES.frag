@@ -3,6 +3,12 @@ in vec3 normal;
 in vec4 color;
 in vec3 position;
 
+
+in vec2 f_texcoord0;
+in vec2 f_texcoord1;
+in vec2 f_texcoord2;
+in vec2 f_texcoord3;
+
 uniform vec3 difLightDirection;
 uniform vec3 difLightColor;
 uniform vec3 ambLightColor;
@@ -12,6 +18,10 @@ uniform int colorOverride;
 uniform int renderType;
 uniform int renderVertColor;
 uniform mat4 modelview;
+
+uniform int HasDiffuse;
+
+uniform sampler2D DiffuseMap;
 
 out vec4 FragColor;
 
@@ -36,7 +46,7 @@ void main()
    // Diffuse lighting.
     float halfLambert = dot(difLightDirection, normal) * 0.5 + 0.5;
 
-	vec4 diffuseMapColor = vec4(0.6);
+	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgb, 1);
     diffuseMapColor *= halfLambert;
 
      FragColor = vec4(0);

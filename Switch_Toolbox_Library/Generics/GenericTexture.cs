@@ -405,23 +405,8 @@ namespace Switch_Toolbox.Library
 
                 return null;
             }
-
-
-
-            /*       try
-                   {
-                       Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format),
-                           (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-                       return bitmap;
-                   }
-                   catch (Exception ex)
-                   {
-                      MessageBox.Show($"Failed to texture {Text} \n{DebugInfo()}\n {ex.ToString()}");
-                       return null;
-                   }*/
-
         }
+
         public static Bitmap DecodeBlockGetBitmap(byte[] data, uint Width, uint Height, TEX_FORMAT Format)
         {
             Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format),
@@ -438,7 +423,7 @@ namespace Switch_Toolbox.Library
         /// <param name="Height">The height of the image in pixels.</param>
         /// <param name=" DDS.DXGI_FORMAT">The image format.</param>
         /// <returns>Returns a byte array of decoded data. </returns>
-        public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format)
+        public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format, PlatformSwizzle PlatformSwizzle = PlatformSwizzle.None)
         {
             if (data == null)     throw new Exception($"Data is null!");
             if (Format <= 0)      throw new Exception($"Invalid Format!");
@@ -446,9 +431,13 @@ namespace Switch_Toolbox.Library
             if (Width <= 0)       throw new Exception($"Invalid width size {Width}!");
             if (Height <= 0)      throw new Exception($"Invalid height size {Height}!");
 
+            if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
+            {
+                return ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format));
+            }
+
             if (Format == TEX_FORMAT.R32G8X24_FLOAT)
                 return ConvertBgraToRgba(DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32G8X24_TYPELESS));
-
 
             if (Format == TEX_FORMAT.BC5_SNORM)
                 return ConvertBgraToRgba(DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true, true));

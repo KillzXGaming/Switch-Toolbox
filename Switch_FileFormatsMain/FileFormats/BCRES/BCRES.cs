@@ -85,6 +85,7 @@ namespace FirstPlugin
                         break;
                     case BCRESGroupType.Textures:
                         Folder.AddNode(new TXOBWrapper((Texture)section, this));
+                        PluginRuntime.bcresTexContainers.Add(Folder);
                         break;
                 }
             }

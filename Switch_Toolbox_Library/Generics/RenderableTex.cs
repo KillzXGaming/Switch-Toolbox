@@ -99,6 +99,16 @@ namespace Switch_Toolbox.Library.Rendering
                     pixelInternalFormat = PixelInternalFormat.Rgba;
                     pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
+                default:
+                    data = STGenericTexture.DecodeBlock(data,
+                        GenericTexture.Width, 
+                        GenericTexture.Height, 
+                        GenericTexture.Format,
+                        GenericTexture.PlatformSwizzle);
+
+                    pixelInternalFormat = PixelInternalFormat.Rgba;
+                    pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    break;
             }
             GLInitialized = true;
 

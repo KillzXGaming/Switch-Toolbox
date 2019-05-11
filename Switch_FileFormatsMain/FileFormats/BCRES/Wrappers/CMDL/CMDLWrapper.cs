@@ -18,6 +18,7 @@ namespace FirstPlugin
         public CRESSkeletonWrapper Skeleton;
 
         public List<SOBJWrapper> Shapes = new List<SOBJWrapper>();
+        public List<MTOBWrapper> Materials = new List<MTOBWrapper>();
 
         public CMDLWrapper()
         {
@@ -70,6 +71,7 @@ namespace FirstPlugin
                 if (matWrapper.Text == string.Empty)
                     matWrapper.Text = $"Material {Index++}";
                 MaterialFolder.Nodes.Add(matWrapper);
+                Materials.Add(matWrapper);
             }
 
             Index = 0;
