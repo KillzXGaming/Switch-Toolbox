@@ -50,26 +50,35 @@ namespace FirstPlugin
             var MaterialFolder = new TreeNode("Materials");
             var MeshFolder = new TreeNode("Meshes");
             Skeleton = new CRESSkeletonWrapper();
+            Skeleton.Text = "Skeleton";
+            Checked = true;
 
             Nodes.Add(MeshFolder);
             Nodes.Add(MaterialFolder);
             Nodes.Add(Skeleton);
 
+            if (model.HasSkeleton)
+            {
+                Skeleton.Load(model.Skeleton, bcres);
+            }
+
+            int Index = 0;
             foreach (var material in model.Materials.Values)
             {
                 var matWrapper = new MTOBWrapper() { BcresParent = bcres };
                 matWrapper.Load(material);
+                if (matWrapper.Text == string.Empty)
+                    matWrapper.Text = $"Material {Index}";
                 MaterialFolder.Nodes.Add(matWrapper);
             }
+
             foreach (var mesh in model.Meshes)
             {
-                var meshWrapper = new SOBJWrapper(model, mesh) { BcresParent = bcres };
+                var meshWrapper = new SOBJWrapper(this, mesh) { BcresParent = bcres };
                 MeshFolder.Nodes.Add(meshWrapper);
+                if (MeshFolder.Text == string.Empty)
+                    MeshFolder.Text = $"Mesh {Index}";
                 Shapes.Add(meshWrapper);
-            }
-            if (model.HasSkeleton)
-            {
-                Skeleton.Load(model.Skeleton, bcres);
             }
         }
     }

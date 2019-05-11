@@ -16,6 +16,8 @@ namespace FirstPlugin
 {
     public class BCRES_Render : AbstractGlDrawable
     {
+        public Matrix4 ModelTransform = Matrix4.Identity;
+
         public List<CMDLWrapper> Models = new List<CMDLWrapper>();
 
         // gl buffer objects
@@ -118,6 +120,75 @@ namespace FirstPlugin
             if (!buffersWereInitialized)
                 GenerateBuffers();
 
+            ShaderProgram shader = defaultShaderProgram;
+            control.CurrentShader = shader;
+            control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
+
+            SetRenderSettings(shader);
+
+            DrawModels(shader, control);
+        }
+
+        private void SetRenderSettings(ShaderProgram shader)
+        {
+            shader.SetInt("renderType", (int)Runtime.viewportShading);
+        }
+
+        private void DrawModels(ShaderProgram shader, GL_ControlModern control)
+        {
+            shader.EnableVertexAttributes();
+            foreach (CMDLWrapper mdl in Models)
+            {
+                if (mdl.Checked)
+                {
+                    foreach (SOBJWrapper shp in mdl.Shapes)
+                    {
+                        DrawModel(shp, mdl, shader, mdl.IsSelected);
+                    }
+                }
+            }
+            shader.DisableVertexAttributes();
+        }
+
+        private void SetVertexAttributes(SOBJWrapper m, ShaderProgram shader)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
+            GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 0);
+            GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 12);
+            GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 24);
+            GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 36);
+            GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 48);
+            GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, SOBJWrapper.DisplayVertex.Size, new IntPtr(56));
+            GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 72);
+            GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 88);
+            GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 104);
+            GL.VertexAttribPointer(shader.GetAttribute("vPosition2"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 112);
+            GL.VertexAttribPointer(shader.GetAttribute("vPosition3"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 124);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
+        }
+
+        private void DrawModel(SOBJWrapper m, CMDLWrapper mdl, ShaderProgram shader, bool drawSelection)
+        {
+            if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
+                return;
+
+            SetVertexAttributes(m, shader);
+
+            if ((m.IsSelected))
+            {
+                DrawModelSelection(m, shader);
+            }
+            else
+            {
+                if (Runtime.RenderModels)
+                {
+                    GL.DrawElements(PrimitiveType.Triangles, m.lodMeshes[m.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, m.Offset);
+                }
+            }
+        }
+
+        private static void DrawModelSelection(STGenericObject p, ShaderProgram shader)
+        {
 
         }
     }

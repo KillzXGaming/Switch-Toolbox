@@ -109,7 +109,10 @@ namespace FirstPlugin
                 drawables.Add(RenderedBcres);
 
                 for (int m = 0; m < RenderedBcres.Models.Count; m++)
-                    drawables.Add(RenderedBcres.Models[m].Skeleton.Renderable);
+                {
+                    if (RenderedBcres.Models[m].Skeleton.Renderable != null)
+                        drawables.Add(RenderedBcres.Models[m].Skeleton.Renderable);
+                }
             }
 
             if (Runtime.UseOpenGL)

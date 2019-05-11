@@ -39,6 +39,7 @@ namespace FirstPlugin
         public void Load(Bone bone, BCRES bcres)
         {
             BcresParent = bcres;
+            Checked = true;
 
             Bone = bone;
             Text = bone.Name;

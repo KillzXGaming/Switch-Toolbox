@@ -29,7 +29,8 @@ namespace FirstPlugin
         }
 
         public override void OnClick(TreeView treeview) {
-            BcresParent.LoadEditors(this, OnPropertyChanged);
+            if (BcresParent != null)
+                BcresParent.LoadEditors(this, OnPropertyChanged);
         }
 
         private void OnPropertyChanged()
@@ -45,15 +46,27 @@ namespace FirstPlugin
 
             Skeleton = skeleton;
             Text = "Skeleton";
+            Checked = true;
 
             foreach (var bone in skeleton.Bones.Values)
             {
                 var boneWrapper = new CRESBoneWrapper();
                 boneWrapper.skeletonParent = Renderable;
                 boneWrapper.Load(bone, bcres);
-                Nodes.Add(boneWrapper);
                 Renderable.bones.Add(boneWrapper);
             }
+
+            Nodes.Clear();
+            foreach (var bone in Renderable.bones)
+            {
+                if (bone.Parent == null)
+                {
+                    Nodes.Add(bone);
+                }
+            }
+
+            Renderable.update();
+            Renderable.reset();
         }
     }
 }
