@@ -191,10 +191,10 @@ namespace FirstPlugin
                 case Aampv2.ParamType.Uint: return $"{entry.HashString}: {(uint)entry.Value}";
                 case Aampv2.ParamType.Int: return $"{entry.HashString}: {(int)entry.Value}";
                 case Aampv2.ParamType.Float: return $"{entry.HashString}: {(float)entry.Value}";
-                case Aampv2.ParamType.String256: return $"{entry.HashString}: !str256 {(string)entry.Value}";
-                case Aampv2.ParamType.String32: return $"{entry.HashString}: !str32 {(string)entry.Value}";
-                case Aampv2.ParamType.String64: return $"{entry.HashString}: !str64 {(string)entry.Value}";
-                case Aampv2.ParamType.StringRef: return $"{entry.HashString}: !strRef {(string)entry.Value}";
+                case Aampv2.ParamType.String256: return $"{entry.HashString}: !str256 {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv2.ParamType.String32: return $"{entry.HashString}: !str32 {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv2.ParamType.String64: return $"{entry.HashString}: !str64 {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv2.ParamType.StringRef: return $"{entry.HashString}: !strRef {((AampCommon.StringEntry)entry.Value).ToString()}";
                 case Aampv2.ParamType.Curve1: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 1)}";
                 case Aampv2.ParamType.Curve2: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 2)}";
                 case Aampv2.ParamType.Curve3: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 3)}";
