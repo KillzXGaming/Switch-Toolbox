@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.Forms;
 using BcresLibrary;
+using FirstPlugin.Forms;
+using GL_EditorFramework.Interfaces;
 
 namespace FirstPlugin
 {
@@ -88,33 +90,58 @@ namespace FirstPlugin
             }
         }
 
+        List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
+
         public void LoadEditors(TreeNode Wrapper, Action OnPropertyChanged)
         {
+            BcresEditor bcresEditor = (BcresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BcresEditor));
+            bool HasModels = RenderedBcres.Models.Count > 0;
+            if (bcresEditor == null)
+            {
+                bcresEditor = new BcresEditor(HasModels);
+                bcresEditor.Dock = DockStyle.Fill;
+                LibraryGUI.Instance.LoadEditor(bcresEditor);
+            }
+
+            if (drawables.Count <= 0)
+            {
+                //Add drawables
+                drawables.Add(RenderedBcres);
+
+                for (int m = 0; m < RenderedBcres.Models.Count; m++)
+                    drawables.Add(RenderedBcres.Models[m].Skeleton.Renderable);
+            }
+
+            if (Runtime.UseOpenGL)
+                bcresEditor.LoadViewport(drawables);
+
+
+
             if (Wrapper is MTOBWrapper) {
-                LoadPropertyGrid(((MTOBWrapper)Wrapper).Material, OnPropertyChanged);
+                LoadPropertyGrid(((MTOBWrapper)Wrapper).Material, bcresEditor, OnPropertyChanged);
             }
 
             if (Wrapper is CMDLWrapper) {
-                LoadPropertyGrid(((CMDLWrapper)Wrapper).Model, OnPropertyChanged);
+                LoadPropertyGrid(((CMDLWrapper)Wrapper).Model, bcresEditor, OnPropertyChanged);
             }
 
             if (Wrapper is CRESBoneWrapper) {
-                LoadPropertyGrid(((CRESBoneWrapper)Wrapper).Bone, OnPropertyChanged);
+                LoadPropertyGrid(((CRESBoneWrapper)Wrapper).Bone, bcresEditor, OnPropertyChanged);
             }
 
             if (Wrapper is CRESSkeletonWrapper) {
-                LoadPropertyGrid(((CRESSkeletonWrapper)Wrapper).Skeleton, OnPropertyChanged);
+                LoadPropertyGrid(((CRESSkeletonWrapper)Wrapper).Skeleton, bcresEditor, OnPropertyChanged);
             }
         }
 
-        private void LoadPropertyGrid(object property, Action OnPropertyChanged)
+        private void LoadPropertyGrid(object property, BcresEditor bcresEditor, Action OnPropertyChanged)
         {
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            STPropertyGrid editor = (STPropertyGrid)bcresEditor.GetActiveEditor(typeof(STPropertyGrid));
             if (editor == null)
             {
                 editor = new STPropertyGrid();
                 editor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(editor);
+                bcresEditor.LoadEditor(editor);
             }
             editor.LoadProperty(property, OnPropertyChanged);
         }

@@ -15,6 +15,8 @@ namespace FirstPlugin
         internal BCRES BcresParent;
         internal Model Model;
 
+        public CRESSkeletonWrapper Skeleton;
+
         public List<SOBJWrapper> Shapes = new List<SOBJWrapper>();
 
         public CMDLWrapper()
@@ -47,11 +49,11 @@ namespace FirstPlugin
 
             var MaterialFolder = new TreeNode("Materials");
             var MeshFolder = new TreeNode("Meshes");
-            var SkeletonWrapper = new CRESSkeletonWrapper();
+            Skeleton = new CRESSkeletonWrapper();
 
             Nodes.Add(MeshFolder);
             Nodes.Add(MaterialFolder);
-            Nodes.Add(SkeletonWrapper);
+            Nodes.Add(Skeleton);
 
             foreach (var material in model.Materials.Values)
             {
@@ -61,14 +63,13 @@ namespace FirstPlugin
             }
             foreach (var mesh in model.Meshes)
             {
-                var meshWrapper = new SOBJWrapper() { BcresParent = bcres };
-                meshWrapper.Load(mesh);
+                var meshWrapper = new SOBJWrapper(model, mesh) { BcresParent = bcres };
                 MeshFolder.Nodes.Add(meshWrapper);
                 Shapes.Add(meshWrapper);
             }
             if (model.HasSkeleton)
             {
-                SkeletonWrapper.Load(model.Skeleton, bcres);
+                Skeleton.Load(model.Skeleton, bcres);
             }
         }
     }

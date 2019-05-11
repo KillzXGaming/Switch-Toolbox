@@ -94,6 +94,26 @@ namespace FirstPlugin
             Mesh = mesh;
 
             Text = mesh.Name;
+
+            lodMeshes = new List<LOD_Mesh>();
+            foreach (var group in Shape.FaceGroups)
+            {
+                foreach (var faceDescriptors in group.FaceDescriptors)
+                {
+                    foreach (var buffer in faceDescriptors.Buffers)
+                    {
+                        LOD_Mesh msh = new LOD_Mesh();
+                        msh.PrimitiveType = STPolygonType.Triangle;
+                        msh.FirstVertex = 0;
+
+                        uint[] indicesArray = buffer.GetIndices().ToArray();
+                        for (int face = 0; face < indicesArray.Length; face++)
+                            msh.faces.Add((int)indicesArray[face] + (int)msh.FirstVertex);
+
+                        lodMeshes.Add(msh);
+                    }
+                }
+            }
         }
     }
 }

@@ -261,6 +261,12 @@
       <DependentUpon>AampEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\AAMP\YamlConverter.cs" />
+    <Compile Include="GUI\BCRES\BfresEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCRES\BfresEditor.Designer.cs">
+      <DependentUpon>BfresEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -875,6 +881,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCRES\BfresEditor.resx">
+      <DependentUpon>BfresEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresEditor.resx">
       <DependentUpon>BfresEditor.cs</DependentUpon>
