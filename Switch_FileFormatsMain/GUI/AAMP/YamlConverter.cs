@@ -184,6 +184,7 @@ namespace FirstPlugin
                 case Aampv2.ParamType.BufferFloat: return $"{entry.HashString}: !BufferFloat [ {WriteFloats((float[])entry.Value)} ]";
                 case Aampv2.ParamType.BufferInt: return $"{entry.HashString}: !BufferInt [ {WriteInts((int[])entry.Value)} ]";
                 case Aampv2.ParamType.BufferUint: return $"{entry.HashString}: !BufferUint [ {WriteUints((uint[])entry.Value)} ]";
+                case Aampv2.ParamType.Quat: return $"{entry.HashString}: !BufferUint [ {WriteFloats((float[])entry.Value)} ]";
                 case Aampv2.ParamType.Color4F: return $"{entry.HashString}: {WriteColor4F((Vector4F)entry.Value)}";
                 case Aampv2.ParamType.Vector2F: return $"{entry.HashString}: {WriteVec2F((Vector2F)entry.Value)}";
                 case Aampv2.ParamType.Vector3F: return $"{entry.HashString}: {WriteVec3F((Vector3F)entry.Value)}";

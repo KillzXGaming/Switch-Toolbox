@@ -550,7 +550,29 @@ namespace Bfres.Structs
             RenameDialog dialog = new RenameDialog();
             dialog.SetString(Text);
 
-            if (dialog.ShowDialog() == DialogResult.OK) { BoneName = dialog.textBox1.Text; }
+            if (dialog.ShowDialog() == DialogResult.OK) { RenameBone(dialog.textBox1.Text); }
+        }
+
+        //Method to readjust the dictionaries for the skeleton
+        public void RenameBone(string Name)
+        {
+            if (((FSKL)skeletonParent).node.SkeletonU != null)
+            {
+                BoneU.Name = Name;
+                Text = Name;
+                BoneName = Name;
+
+                //Adjust dictionaries
+                var Skeleton = ((FSKL)skeletonParent).node.SkeletonU;
+                Skeleton.Bones.Remove(BoneU);
+                Skeleton.Bones.Add(Name, BoneU);
+            }
+            else
+            {
+                Bone.Name = Name;
+                Text = Name;
+                BoneName = Name;
+            }
         }
 
         public void CloneBaseInstance(STBone genericBone)
