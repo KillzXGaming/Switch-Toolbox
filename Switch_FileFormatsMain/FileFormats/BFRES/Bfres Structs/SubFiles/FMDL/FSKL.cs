@@ -123,8 +123,8 @@ namespace Bfres.Structs
                                 var mat = MatrixExenstion.GetMatrixInverted(bn);
                                 SmoothMatrices.Add(mat);
                             }
-                            BoneIndex++;
                         }
+                        BoneIndex++;
                     }
                 }
 
@@ -144,9 +144,8 @@ namespace Bfres.Structs
                                 Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
                                 RigidIndices.Add(BoneIndex);
                             }
-
-                            BoneIndex++;
                         }
+                        BoneIndex++;
                     }
                 }
 
