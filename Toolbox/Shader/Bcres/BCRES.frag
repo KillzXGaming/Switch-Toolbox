@@ -33,7 +33,17 @@ void main()
         return;
     }
 
-     FragColor = vec4(1);
+   // Diffuse lighting.
+    float halfLambert = dot(difLightDirection, normal) * 0.5 + 0.5;
+
+	vec4 diffuseMapColor = vec4(0.6);
+    diffuseMapColor *= halfLambert;
+
+     FragColor = vec4(0);
+     FragColor.rgb += diffuseMapColor.rgb;
+
+    if (renderVertColor == 1)
+        FragColor *= min(color, vec4(1));
 
     vec3 displayNormal = (normal.xyz * 0.5) + 0.5;
     if (renderType == 1) // normals color
