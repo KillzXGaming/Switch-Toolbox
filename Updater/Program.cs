@@ -76,10 +76,10 @@ namespace Updater
                 if (file.Contains("Updater.exe") || file.Contains("Updater.exe.config")
                     || file.Contains("Updater.pdb") || file.Contains("Octokit.dll"))
                     continue;
-           
+
+                File.SetAttributes(file, FileAttributes.Normal);
                 if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
                 {
-                    File.SetAttributes(file, FileAttributes.Normal);
                     File.Delete(Path.Combine(folderDir, Path.GetFileName(file)));
                 }
                 File.Move(file, Path.Combine(folderDir, Path.GetFileName(file)));

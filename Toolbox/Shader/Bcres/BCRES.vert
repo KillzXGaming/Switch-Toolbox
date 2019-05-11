@@ -65,6 +65,8 @@ void main()
     color = vColor;
 	position = objPos;
 	f_texcoord0 = vUV0;
+	f_texcoord1 = vUV1;
+	f_texcoord2 = vUV2;
 
     gl_Position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
 
