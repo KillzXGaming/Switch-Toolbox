@@ -862,6 +862,25 @@ namespace Bfres.Structs
                             }
                         }
 
+
+                        //Genericate indices
+                        //Check for rigged bones
+                        for (int ob = 0; ob < assimp.objects.Count; ob++)
+                        {
+                            foreach (string NewBone in assimp.objects[ob].boneList)
+                            {
+                                foreach (var bones in Skeleton.bones)
+                                {
+                                    if (bones.Text == NewBone)
+                                    {
+                                        bones.SmoothMatrixIndex += 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        Skeleton.CalculateIndices();
+
                         if (materials.Count <= 0)
                         {
                             //Force material creation if there is none present

@@ -49,41 +49,45 @@ namespace Bfres.Structs
                 List<ushort> RigidIndices = new List<ushort>();
 
                 ushort SmoothIndex = 0;
-                ushort BoneIndex = 0;
-
                 foreach (BfresBone bn in bones)
                 {
-                    if (Skeleton.Bones.ContainsKey(bn.Text))
+                    ushort BoneIndex = 0;
+                    foreach (var Bone in Skeleton.Bones.Values)
                     {
-                        var Bone = Skeleton.Bones[bn.Text];
-                        if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex != -1)
+                        if (bn.Text == Bone.Name)
                         {
-                            bn.SmoothMatrixIndex = (short)SmoothIndex++;
-                            Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
-                            SmoothIndices.Add(BoneIndex);
+                            if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex != -1)
+                            {
+                                bn.SmoothMatrixIndex = (short)SmoothIndex++;
+                                Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
+                                SmoothIndices.Add(BoneIndex);
 
-                            var mat = MatrixExenstion.GetMatrixInverted(bn);
-                            SmoothMatrices.Add(mat);
+                                var mat = MatrixExenstion.GetMatrixInverted(bn);
+                                SmoothMatrices.Add(mat);
+                            }
                         }
                         BoneIndex++;
                     }
                 }
 
-                BoneIndex = 0;
-
                 //Rigid Indices come after smooth indices. Start from the last smooth index
                 ushort RigidIndex = (ushort)(SmoothIndices.Count);
                 foreach (BfresBone bn in bones)
                 {
-                    var Bone = Skeleton.Bones[bn.Text];
-                    if (bn.UseRigidMatrix || bn.RigidMatrixIndex != -1)
+                    ushort BoneIndex = 0;
+                    foreach (var Bone in Skeleton.Bones.Values)
                     {
-                        bn.RigidMatrixIndex = (short)RigidIndex++;
-                        Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
-                        RigidIndices.Add(BoneIndex);
+                        if (bn.Text == Bone.Name)
+                        {
+                            if (bn.UseRigidMatrix || bn.RigidMatrixIndex != -1)
+                            {
+                                bn.RigidMatrixIndex = (short)RigidIndex++;
+                                Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
+                                RigidIndices.Add(BoneIndex);
+                            }
+                        }
+                        BoneIndex++;
                     }
-
-                    BoneIndex++;
                 }
 
                 //Rigid indices at the end
