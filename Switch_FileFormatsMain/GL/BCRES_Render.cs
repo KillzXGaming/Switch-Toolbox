@@ -244,17 +244,15 @@ namespace FirstPlugin
         private void SetVertexAttributes(SOBJWrapper m, ShaderProgram shader)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 0);
-            GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 12);
-            GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 24);
-            GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 36);
-            GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 48);
-            GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, SOBJWrapper.DisplayVertex.Size, new IntPtr(56));
-            GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 72);
-            GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 88);
-            GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 104);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition2"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 112);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition3"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 124);
+            GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 0); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 12); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 24); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 36); //+8
+            GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 44); //+16
+            GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, SOBJWrapper.DisplayVertex.Size, new IntPtr(60)); //+16
+            GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 76);//+16
+            GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 92);//+8
+            GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, SOBJWrapper.DisplayVertex.Size, 100);//+8
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
         }
 
