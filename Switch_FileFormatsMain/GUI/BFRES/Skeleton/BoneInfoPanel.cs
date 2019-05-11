@@ -30,7 +30,7 @@ namespace FirstPlugin
 
             nameIndexUD.Value = bn.GetIndex();
 
-            nameTB.Bind(bn, "BoneName");
+            nameTB.Text = bn.BoneName;
             parentIndexUD.Bind(bn, "parentIndex");
             visibleChk.Bind(bn, "Visible");
 
@@ -39,7 +39,8 @@ namespace FirstPlugin
 
         private void nameTB_TextChanged(object sender, EventArgs e)
         {
-
+            if (Loaded)
+                activeBone.RenameBone(nameTB.Text);
         }
 
         private void visibleChk_CheckedChanged(object sender, EventArgs e) {

@@ -558,12 +558,23 @@ namespace Bfres.Structs
         {
             if (((FSKL)skeletonParent).node.SkeletonU != null)
             {
+                var Skeleton = ((FSKL)skeletonParent).node.SkeletonU;
+                Skeleton.Bones.Remove(BoneU);
+
+                if (Skeleton.Bones.ContainsKey(Name))
+                {
+                    MessageBox.Show("A bone with the same name exits! Make sure to use a unique name!", 
+                        "Bone Rename", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    Skeleton.Bones.Add(BoneName, BoneU);
+                    return;
+                }
+
                 BoneU.Name = Name;
                 Text = Name;
                 BoneName = Name;
 
                 //Adjust dictionaries
-                var Skeleton = ((FSKL)skeletonParent).node.SkeletonU;
                 Skeleton.Bones.Remove(BoneU);
                 Skeleton.Bones.Add(Name, BoneU);
             }
