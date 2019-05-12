@@ -276,6 +276,20 @@ namespace FirstPlugin
             get
             {
                 return new TEX_FORMAT[] {
+                        TEX_FORMAT.R8_UNORM,
+                        TEX_FORMAT.BC1_UNORM_SRGB,
+                        TEX_FORMAT.BC1_UNORM,
+                        TEX_FORMAT.BC2_UNORM,
+                        TEX_FORMAT.BC2_UNORM_SRGB,
+                        TEX_FORMAT.BC3_UNORM,
+                        TEX_FORMAT.BC3_UNORM_SRGB,
+                        TEX_FORMAT.BC4_UNORM,
+                        TEX_FORMAT.BC5_UNORM,
+                        TEX_FORMAT.R8G8_UNORM,
+                        TEX_FORMAT.B5G6R5_UNORM,
+                        TEX_FORMAT.B5G5R5A1_UNORM,
+                        TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
+                        TEX_FORMAT.R8G8B8A8_UNORM,
                 };
             }
         }
@@ -290,6 +304,7 @@ namespace FirstPlugin
                 case Gx2ImageFormats.BC2_UNORM: return TEX_FORMAT.BC2_UNORM;
                 case Gx2ImageFormats.BC2_SRGB: return TEX_FORMAT.BC2_UNORM_SRGB;
                 case Gx2ImageFormats.BC3_UNORM: return TEX_FORMAT.BC3_UNORM;
+                case Gx2ImageFormats.BC3_SRGB: return TEX_FORMAT.BC3_UNORM_SRGB;
                 case Gx2ImageFormats.BC4_UNORM: return TEX_FORMAT.BC4_UNORM;
                 case Gx2ImageFormats.BC5_UNORM: return TEX_FORMAT.BC5_UNORM;
                 case Gx2ImageFormats.LA4_UNORM: return TEX_FORMAT.R4G4_UNORM;
