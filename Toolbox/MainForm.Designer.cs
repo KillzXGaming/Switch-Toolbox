@@ -53,6 +53,11 @@
             this.mainSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileAssociationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.consoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.requestFeatureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportBugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.requestFeatureToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.tabForms = new Switch_Toolbox.Library.Forms.STTabControl();
             this.tabControlContextMenuStrip = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
@@ -64,11 +69,6 @@
             this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.updateToolstrip = new System.Windows.Forms.ToolStripButton();
-            this.requestFeatureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportBugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.requestFeatureToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.tabControlContextMenuStrip.SuspendLayout();
@@ -247,7 +247,7 @@
             // mainSettingsToolStripMenuItem
             // 
             this.mainSettingsToolStripMenuItem.Name = "mainSettingsToolStripMenuItem";
-            this.mainSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mainSettingsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.mainSettingsToolStripMenuItem.Text = "Main Settings";
             this.mainSettingsToolStripMenuItem.Click += new System.EventHandler(this.mainSettingsToolStripMenuItem_Click);
             // 
@@ -255,7 +255,7 @@
             // 
             this.fileAssociationsToolStripMenuItem.Enabled = false;
             this.fileAssociationsToolStripMenuItem.Name = "fileAssociationsToolStripMenuItem";
-            this.fileAssociationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileAssociationsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.fileAssociationsToolStripMenuItem.Text = "File Associations";
             this.fileAssociationsToolStripMenuItem.Click += new System.EventHandler(this.fileAssociationsToolStripMenuItem_Click);
             // 
@@ -265,6 +265,45 @@
             this.consoleToolStripMenuItem.Size = new System.Drawing.Size(62, 21);
             this.consoleToolStripMenuItem.Text = "Console";
             this.consoleToolStripMenuItem.Click += new System.EventHandler(this.consoleToolStripMenuItem_Click);
+            // 
+            // requestFeatureToolStripMenuItem
+            // 
+            this.requestFeatureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem1,
+            this.reportBugToolStripMenuItem,
+            this.requestFeatureToolStripMenuItem1,
+            this.githubToolStripMenuItem});
+            this.requestFeatureToolStripMenuItem.Name = "requestFeatureToolStripMenuItem";
+            this.requestFeatureToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.requestFeatureToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
+            // reportBugToolStripMenuItem
+            // 
+            this.reportBugToolStripMenuItem.Name = "reportBugToolStripMenuItem";
+            this.reportBugToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reportBugToolStripMenuItem.Text = "Report Bug";
+            this.reportBugToolStripMenuItem.Click += new System.EventHandler(this.reportBugToolStripMenuItem_Click);
+            // 
+            // requestFeatureToolStripMenuItem1
+            // 
+            this.requestFeatureToolStripMenuItem1.Name = "requestFeatureToolStripMenuItem1";
+            this.requestFeatureToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.requestFeatureToolStripMenuItem1.Text = "Request Feature";
+            this.requestFeatureToolStripMenuItem1.Click += new System.EventHandler(this.requestFeatureToolStripMenuItem1_Click);
+            // 
+            // githubToolStripMenuItem
+            // 
+            this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
+            this.githubToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.githubToolStripMenuItem.Text = "Github";
+            this.githubToolStripMenuItem.Click += new System.EventHandler(this.githubToolStripMenuItem_Click);
             // 
             // stPanel1
             // 
@@ -394,44 +433,6 @@
             this.updateToolstrip.Text = "toolStripButton1";
             this.updateToolstrip.ToolTipText = "Update Tool";
             this.updateToolstrip.Click += new System.EventHandler(this.updateToolstrip_Click);
-            // 
-            // requestFeatureToolStripMenuItem
-            // 
-            this.requestFeatureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem1,
-            this.reportBugToolStripMenuItem,
-            this.requestFeatureToolStripMenuItem1,
-            this.githubToolStripMenuItem});
-            this.requestFeatureToolStripMenuItem.Name = "requestFeatureToolStripMenuItem";
-            this.requestFeatureToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.requestFeatureToolStripMenuItem.Text = "Help";
-            // 
-            // reportBugToolStripMenuItem
-            // 
-            this.reportBugToolStripMenuItem.Name = "reportBugToolStripMenuItem";
-            this.reportBugToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.reportBugToolStripMenuItem.Text = "Report Bug";
-            this.reportBugToolStripMenuItem.Click += new System.EventHandler(this.reportBugToolStripMenuItem_Click);
-            // 
-            // requestFeatureToolStripMenuItem1
-            // 
-            this.requestFeatureToolStripMenuItem1.Name = "requestFeatureToolStripMenuItem1";
-            this.requestFeatureToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.requestFeatureToolStripMenuItem1.Text = "Request Feature";
-            // 
-            // githubToolStripMenuItem
-            // 
-            this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
-            this.githubToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.githubToolStripMenuItem.Text = "Github";
-            this.githubToolStripMenuItem.Click += new System.EventHandler(this.githubToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem1
-            // 
-            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.aboutToolStripMenuItem1.Text = "About";
-            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // MainForm
             // 

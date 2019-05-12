@@ -1160,13 +1160,12 @@ namespace Toolbox
             System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox");
         }
 
-        private void reportBugToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var dialog = new GithubIssueDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                dialog.CreateIssue();
-            }
+        private void reportBugToolStripMenuItem_Click(object sender, EventArgs e) {
+            System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox/issues");
+        }
+
+        private void requestFeatureToolStripMenuItem1_Click(object sender, EventArgs e) {
+            System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox/issues");
         }
     }
 }

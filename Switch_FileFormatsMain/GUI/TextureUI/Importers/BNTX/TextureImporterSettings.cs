@@ -115,7 +115,7 @@ namespace FirstPlugin
         {
             DecompressedData.Clear();
 
-            TexName = Path.GetFileNameWithoutExtension(FileName);
+            TexName = STGenericTexture.SetNameFromPath(FileName);
             Format = TextureData.GenericToBntxSurfaceFormat(Runtime.PreferredTexFormat);
 
             GenerateMipmaps = true;

@@ -92,6 +92,11 @@ namespace Bfres.Structs
                 ContextMenuStrip.Items.Add(new STToolStripSeparator());
                 ContextMenuStrip.Items.Add(new STToolStipMenuItem("Batch Generate Mipmaps", null, BatchGenerateMipmapsAction, Keys.Control | Keys.M));
             }
+            if (Type == BRESGroupType.Models)
+            {
+                ContextMenuStrip.Items.Add(new STToolStripSeparator());
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Hide All Models", null, HideAllModelsAction, Keys.Control | Keys.H));
+            }
         }
 
         public override string ExportFilter { get { return GetSubfileExtensions(); } }
@@ -100,12 +105,22 @@ namespace Bfres.Structs
         protected void NewAction(object sender, EventArgs e) { NewSubFile(); }
         protected void BatchGenerateMipmapsAction(object sender, EventArgs e) { BatchGenerateMipmaps(); }
 
+        protected void HideAllModelsAction(object sender, EventArgs e) { HideAllModels(); }
+
         public void BatchGenerateMipmaps()
         {
             foreach (FTEX texture in Nodes)
             {
                 texture.SetImageData(texture.GetBitmap(), 0);
                 
+            }
+        }
+
+        public void HideAllModels()
+        {
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                Nodes[i].Checked = false;
             }
         }
 
