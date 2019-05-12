@@ -93,6 +93,19 @@ namespace Switch_Toolbox.Library
                 ReplaceNode(this.Parent, this, node);
         }
 
+        public override void OnClick(TreeView treeView)
+        {
+            HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+            if (editor == null)
+            {
+                editor = new HexEditor();
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadData(ArchiveFileInfo.FileData);
+        }
+
         public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
         {
             if (NewNode == null)
