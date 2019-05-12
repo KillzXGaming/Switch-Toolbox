@@ -66,8 +66,8 @@ namespace FirstPlugin
             int Index = 0;
             foreach (var material in model.Materials.Values)
             {
-                var matWrapper = new MTOBWrapper() { BcresParent = bcres };
-                matWrapper.Load(material);
+                var matWrapper = new MTOBWrapper();
+                matWrapper.Load(bcres, material);
                 if (matWrapper.Text == string.Empty)
                     matWrapper.Text = $"Material {Index++}";
                 MaterialFolder.Nodes.Add(matWrapper);

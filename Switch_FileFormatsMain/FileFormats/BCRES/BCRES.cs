@@ -119,21 +119,27 @@ namespace FirstPlugin
             if (Runtime.UseOpenGL)
                 bcresEditor.LoadViewport(drawables);
 
-
-
-            if (Wrapper is MTOBWrapper) {
+            if (Wrapper is BcresTextureMapWrapper)
+            {
+                BcresSamplerEditorSimple editor = (BcresSamplerEditorSimple)bcresEditor.GetActiveEditor(typeof(BcresSamplerEditorSimple));
+                if (editor == null)
+                {
+                    editor = new BcresSamplerEditorSimple();
+                    editor.Dock = DockStyle.Fill;
+                    bcresEditor.LoadEditor(editor);
+                }
+                editor.LoadTexture(((BcresTextureMapWrapper)Wrapper));
+            }
+            else if (Wrapper is MTOBWrapper) {
                 LoadPropertyGrid(((MTOBWrapper)Wrapper).Material, bcresEditor, OnPropertyChanged);
             }
-
-            if (Wrapper is CMDLWrapper) {
+            else if (Wrapper is CMDLWrapper) {
                 LoadPropertyGrid(((CMDLWrapper)Wrapper).Model, bcresEditor, OnPropertyChanged);
             }
-
-            if (Wrapper is CRESBoneWrapper) {
+            else if (Wrapper is CRESBoneWrapper) {
                 LoadPropertyGrid(((CRESBoneWrapper)Wrapper).Bone, bcresEditor, OnPropertyChanged);
             }
-
-            if (Wrapper is CRESSkeletonWrapper) {
+            else if (Wrapper is CRESSkeletonWrapper) {
                 LoadPropertyGrid(((CRESSkeletonWrapper)Wrapper).Skeleton, bcresEditor, OnPropertyChanged);
             }
         }

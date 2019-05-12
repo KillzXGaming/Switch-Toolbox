@@ -207,6 +207,7 @@
     <Compile Include="FileFormats\Audio\WAV.cs" />
     <Compile Include="FileFormats\BCRES\BCRES.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\BCRESGroupNode.cs" />
+    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\BcresMatTexture.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CMDLWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CRESBoneWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CRESSkeletonWrapper.cs" />
@@ -266,6 +267,12 @@
     </Compile>
     <Compile Include="GUI\BCRES\BfresEditor.Designer.cs">
       <DependentUpon>BfresEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCRES\Material\SamplerEditorSimple.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCRES\Material\SamplerEditorSimple.Designer.cs">
+      <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
       <SubType>UserControl</SubType>
@@ -884,6 +891,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BCRES\BfresEditor.resx">
       <DependentUpon>BfresEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCRES\Material\SamplerEditorSimple.resx">
+      <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresEditor.resx">
       <DependentUpon>BfresEditor.cs</DependentUpon>
