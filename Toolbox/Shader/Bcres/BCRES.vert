@@ -18,8 +18,9 @@ out vec2 f_texcoord2;
 out vec2 f_texcoord3;
 
 out vec3 normal;
-out vec4 color;
+out vec4 vertexColor;
 out vec3 position;
+out vec3 tangent;
 
 out vec3 boneWeightsColored;
 
@@ -112,11 +113,12 @@ void main()
 	vec4 position = mtxCam  * mtxMdl *  vec4(objPos.xyz, 1.0);
 
     normal = vNormal;
-    color = vColor;
+    vertexColor = vColor;
 	position = objPos;
 	f_texcoord0 = vUV0;
 	f_texcoord1 = vUV1;
 	f_texcoord2 = vUV2;
+	tangent = vTangent;
 
     gl_Position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
 
