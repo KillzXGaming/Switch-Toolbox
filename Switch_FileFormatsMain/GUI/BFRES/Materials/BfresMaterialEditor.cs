@@ -36,9 +36,6 @@ namespace FirstPlugin.Forms
         {
 
         }
-
-        UVEditor uvEditor1 = null;
-
         public void LoadMaterial(FMAT mat)
         {
             if (mat.MaterialU != null)
@@ -70,21 +67,6 @@ namespace FirstPlugin.Forms
             chkboxVisible.Bind(material, "Enabled");
 
             FillForm();
-
-            if (Runtime.UseOpenGL)
-            {
-                LoadUVEditor();
-            }
-        }
-
-        private void LoadUVEditor()
-        {
-            uvEditor1 = new UVEditor();
-
-            this.uvEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uvEditor1.Load += new System.EventHandler(this.uvEditor1_Load);
-            this.uvEditor1.Click += new System.EventHandler(this.uvEditor1_Click);
-            this.tabPage1.Controls.Add(this.uvEditor1);
 
             uvEditor1.ActiveObjects.Clear();
             uvEditor1.Textures.Clear();
@@ -123,7 +105,6 @@ namespace FirstPlugin.Forms
             uvEditor1.ActiveMaterial = material;
             uvEditor1.Refresh();
         }
-
         private UVEditor.ActiveTexture LoadTextureUvMap(STGenericMatTexture texmap, STGenericTexture genericTexture)
         {
             Vector2 scale = new Vector2(1);
@@ -178,7 +159,7 @@ namespace FirstPlugin.Forms
         }
         public void FillForm()
         {
-           InitializeUserDataList(material);
+            InitializeUserDataList(material);
 
             samplerEditor1.InitializeTextureListView(material);
             shaderOptionsEditor1.InitializeShaderOptionList(material);
@@ -190,7 +171,7 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private void InitializeUserDataList( FMAT material)
+        private void InitializeUserDataList(FMAT material)
         {
             if (material.MaterialU != null)
             {
@@ -201,14 +182,14 @@ namespace FirstPlugin.Forms
                 userDataEditor.LoadUserData(material.Material.UserDatas.ToList());
             }
         }
-     
+
 
         private void smallToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          /*Font normalfont = new Font("Microsoft Sans Serif", 10f);
-            foreach (ListViewItem lvi in listView1.Items) lvi.Font = normalfont;
-            foreach (ListViewItem lvi in listView1.Items) lvi.SubItems[0].Font = normalfont;
-            SetHeight(listView1, 11);*/
+            /*Font normalfont = new Font("Microsoft Sans Serif", 10f);
+              foreach (ListViewItem lvi in listView1.Items) lvi.Font = normalfont;
+              foreach (ListViewItem lvi in listView1.Items) lvi.SubItems[0].Font = normalfont;
+              SetHeight(listView1, 11);*/
         }
 
         private void SetHeight(ListView listView, int height)
@@ -254,7 +235,8 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private void chkboxVisible_CheckedChanged(object sender, EventArgs e) {
+        private void chkboxVisible_CheckedChanged(object sender, EventArgs e)
+        {
             LibraryGUI.Instance.UpdateViewport();
         }
 
@@ -265,12 +247,12 @@ namespace FirstPlugin.Forms
 
         private void uvEditor1_Load(object sender, EventArgs e)
         {
-     
+
         }
 
         private void uvEditor1_Click(object sender, EventArgs e)
         {
-      
+
         }
 
         private void btnViotileFlags_Click(object sender, EventArgs e)
@@ -286,8 +268,8 @@ namespace FirstPlugin.Forms
                     return;
 
                 for (int i = 0; i < flags.Length; i++)
-                    ViotileFlags.Add(flags[i] == 1 ? true : false );
-                
+                    ViotileFlags.Add(flags[i] == 1 ? true : false);
+
             }
             else
             {
@@ -306,7 +288,8 @@ namespace FirstPlugin.Forms
             SamplerInputListEdit editor = new SamplerInputListEdit();
             editor.LoadSamplers(material.shaderassign.samplers);
 
-            if (editor.ShowDialog() == DialogResult.OK) {
+            if (editor.ShowDialog() == DialogResult.OK)
+            {
                 material.shaderassign.attributes = editor.GetNewInputs();
             }
         }
@@ -316,20 +299,24 @@ namespace FirstPlugin.Forms
             VertexAttributeInputListEdit editor = new VertexAttributeInputListEdit();
             editor.LoadAtributes(material.shaderassign.attributes);
 
-            if (editor.ShowDialog() == DialogResult.OK) {
+            if (editor.ShowDialog() == DialogResult.OK)
+            {
                 material.shaderassign.attributes = editor.GetNewInputs();
             }
         }
 
-        private void textBoxMaterialName_TextChanged(object sender, EventArgs e){
+        private void textBoxMaterialName_TextChanged(object sender, EventArgs e)
+        {
             material.Text = textBoxMaterialName.Text;
         }
 
-        private void textBoxShaderArchive_TextChanged(object sender, EventArgs e) {
+        private void textBoxShaderArchive_TextChanged(object sender, EventArgs e)
+        {
             material.shaderassign.ShaderArchive = textBoxShaderArchive.Text;
         }
 
-        private void textBoxShaderModel_TextChanged(object sender, EventArgs e) {
+        private void textBoxShaderModel_TextChanged(object sender, EventArgs e)
+        {
             material.shaderassign.ShaderModel = textBoxShaderModel.Text;
         }
     }
