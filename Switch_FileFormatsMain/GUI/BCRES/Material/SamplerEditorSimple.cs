@@ -21,7 +21,7 @@ namespace FirstPlugin.Forms
             InitializeComponent();
 
             SetEditorOrientation(true);
-            DisplayHorizontal();
+            DisplayVertical();
         }
 
         public void LoadTexture(BcresTextureMapWrapper wrapper)
