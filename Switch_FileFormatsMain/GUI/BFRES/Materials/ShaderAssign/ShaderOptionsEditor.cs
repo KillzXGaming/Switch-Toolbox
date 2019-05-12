@@ -78,7 +78,7 @@ namespace FirstPlugin.Forms
 
                     material.shaderassign.options[option.Name] = option.Value;
 
-                    shaderOptionsListView.Refresh();
+                    shaderOptionsListView.RefreshObject(option);
                 }
             }
         }
