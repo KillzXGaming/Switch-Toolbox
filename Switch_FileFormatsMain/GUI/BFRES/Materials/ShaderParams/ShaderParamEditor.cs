@@ -97,9 +97,14 @@ namespace FirstPlugin.Forms
                     break;
             }
 
-            bool IsColor = prm.Name.Contains("Color") || prm.Name.Contains("color");
+            bool IsColor = prm.Name.Contains("Color") ||
+                             prm.Name.Contains("color") ||
+                             prm.Name.Contains("konst0") ||
+                             prm.Name.Contains("konst1") ||
+                             prm.Name.Contains("konst2") ||
+                             prm.Name.Contains("konst3");
 
-            Color SetColor = Color.FromArgb(40, 40, 40);
+            Color SetColor = FormThemes.BaseTheme.FormBackColor;
 
             if (IsColor)
             {
