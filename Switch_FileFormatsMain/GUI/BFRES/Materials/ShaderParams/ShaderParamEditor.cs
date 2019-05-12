@@ -104,7 +104,7 @@ namespace FirstPlugin.Forms
                              prm.Name.Contains("konst2") ||
                              prm.Name.Contains("konst3");
 
-            Color SetColor = FormThemes.BaseTheme.FormBackColor;
+            Color SetColor = FormThemes.BaseTheme.ListViewBackColor;
 
             if (IsColor)
             {
