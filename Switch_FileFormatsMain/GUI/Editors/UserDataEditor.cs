@@ -257,6 +257,7 @@ namespace FirstPlugin
                     if (parser.Type == "WString")
                         SelectedDataU.SetValue(parser.GetStringUnicode(), true);
 
+                    LoadUserData(userData);
                     return true;
                 }
             }
@@ -301,6 +302,7 @@ namespace FirstPlugin
                     if (parser.Type == "WString")
                         SelectedDataNX.SetValue(parser.GetStringUnicode());
 
+                    LoadUserData(userDataNX);
                     return true;
                 }
             }

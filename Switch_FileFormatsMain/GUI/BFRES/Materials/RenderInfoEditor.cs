@@ -118,6 +118,7 @@ namespace FirstPlugin.Forms
                     activeRenderInfo.Type = RenderInfoType.String;
                     activeRenderInfo.ValueString = editor.GetStrings();
                 }
+                InitializeRenderInfoList(material);
 
                 return true;
             }
