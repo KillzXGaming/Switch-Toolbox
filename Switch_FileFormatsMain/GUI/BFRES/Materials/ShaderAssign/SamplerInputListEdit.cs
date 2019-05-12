@@ -35,7 +35,7 @@ namespace FirstPlugin.Forms
             var inputs = new Dictionary<string, string>();
             foreach (SamplerInput item in SamplerInputs)
             {
-                inputs.Add(item.ResourceInput, item.ShaderVariable);
+                inputs.Add(item.ShaderVariable, item.ResourceInput);
             }
             return inputs;
         }
@@ -48,8 +48,8 @@ namespace FirstPlugin.Forms
                 listViewCustom1.Items.Add($"{item.Key} : {item.Value}");
                 SamplerInputs.Add(new SamplerInput()
                 {
-                    ResourceInput = item.Key,
-                    ShaderVariable = item.Value,
+                    ShaderVariable = item.Key,
+                    ResourceInput = item.Value,
                 });
             }
         }
@@ -104,8 +104,7 @@ namespace FirstPlugin.Forms
             if (listViewCustom1.SelectedIndices.Count > 0)
             {
                 int index = listViewCustom1.SelectedIndices[0];
-                var item = listViewCustom1.Items[index];
-                item.Text = $"{SamplerInputs[index].ResourceInput} : {SamplerInputs[index].ShaderVariable}";
+                listViewCustom1.Items[index].Text = $"{SamplerInputs[index].ShaderVariable} : {SamplerInputs[index].ResourceInput}";
             }
         }
 
@@ -142,11 +141,11 @@ namespace FirstPlugin.Forms
             List<string> KeyCheck = new List<string>();
             foreach (SamplerInput item in SamplerInputs)
             {
-                if (!KeyCheck.Contains(item.ResourceInput))
-                    KeyCheck.Add(item.ResourceInput);
+                if (!KeyCheck.Contains(item.ShaderVariable))
+                    KeyCheck.Add(item.ShaderVariable);
                 else
                 {
-                    STErrorDialog.Show($"A Resource Input with the same name already exists! {item.ResourceInput}",
+                    STErrorDialog.Show($"A Shader Variable Input with the same name already exists! {item.ShaderVariable}",
                         this.Text, "");
                     DialogResult = DialogResult.None;
                 }
