@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres;
 using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library;
 using OpenTK;
 
 namespace FirstPlugin.Forms
@@ -102,21 +103,12 @@ namespace FirstPlugin.Forms
 
             if (IsColor)
             {
-                int someIntX = (int)Math.Ceiling(col.X * 255);
-                int someIntY = (int)Math.Ceiling(col.Y * 255);
-                int someIntZ = (int)Math.Ceiling(col.Z * 255);
-                int someIntW = (int)Math.Ceiling(col.W * 255);
-                if (someIntX <= 255 && someIntY <= 255 && someIntZ <= 255 && someIntW <= 255)
-                {
-                    Console.WriteLine($"{prm.Name} R {someIntX} G {someIntY} B {someIntZ}");
-
-                    SetColor = Color.FromArgb(
+                SetColor = Color.FromArgb(
                 255,
-                someIntX,
-                someIntY,
-                someIntZ
+                Utils.FloatToIntClamp(col.X),
+                Utils.FloatToIntClamp(col.Y),
+                Utils.FloatToIntClamp(col.Z)
                 );
-                }
             }
 
             return SetColor;
