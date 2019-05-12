@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
@@ -76,7 +77,6 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -320,7 +320,7 @@
             this.imageBGComboBox.Location = new System.Drawing.Point(262, 2);
             this.imageBGComboBox.Name = "imageBGComboBox";
             this.imageBGComboBox.ReadOnly = true;
-            this.imageBGComboBox.Size = new System.Drawing.Size(115, 21);
+            this.imageBGComboBox.Size = new System.Drawing.Size(95, 21);
             this.imageBGComboBox.TabIndex = 2;
             this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
             // 

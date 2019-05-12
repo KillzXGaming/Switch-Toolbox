@@ -538,7 +538,7 @@ namespace Switch_Toolbox.Library
         }
         public void LoadDDS(string path)
         {
-            SetNameFromPath(path);
+            Text = SetNameFromPath(path);
 
             DDS dds = new DDS();
             LoadDDS(path);
@@ -551,12 +551,12 @@ namespace Switch_Toolbox.Library
         }
         public void LoadTGA(string path)
         {
-            SetNameFromPath(path);
+            Text = SetNameFromPath(path);
             Bitmap tga = Paloma.TargaImage.LoadTargaImage(path);
         }
         public void LoadBitmap(string path)
         {
-            SetNameFromPath(path);
+            Text = SetNameFromPath(path);
 
         }
         public void LoadASTC(string path)
@@ -729,27 +729,11 @@ namespace Switch_Toolbox.Library
         }
 
    
-        private void SetNameFromPath(string path)
+        public static string SetNameFromPath(string path)
         {
-            //Replace extensions manually. This is because using the
-            //GetFileNameWithoutExtension function can remove .0, .1, texture names.
-            var name = Path.GetFileName(path);
-            name.Replace(".tga",  string.Empty);
-            name.Replace(".png",  string.Empty);
-            name.Replace(".jpg",  string.Empty);
-            name.Replace(".dds",  string.Empty);
-            name.Replace(".jpeg", string.Empty);
-            name.Replace(".tiff", string.Empty);
-            name.Replace(".gif",  string.Empty);
-            name.Replace(".dds2", string.Empty);
-            name.Replace(".jpe",  string.Empty);
-            name.Replace(".jfif", string.Empty);
-            name.Replace(".bmp",  string.Empty);
-            name.Replace(".pdn",  string.Empty);
-            name.Replace(".psd",  string.Empty);
-            name.Replace(".hdr",  string.Empty);
-
-            Text = name;
+            string FileName = Path.GetFileName(path);
+            string extension = System.IO.Path.GetExtension(FileName);
+            return FileName.Substring(0, FileName.Length - extension.Length);
         }
         private static byte[] ConvertBgraToRgba(byte[] bytes)
         {

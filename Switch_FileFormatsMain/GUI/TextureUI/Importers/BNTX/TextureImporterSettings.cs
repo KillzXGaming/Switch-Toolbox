@@ -57,9 +57,7 @@ namespace FirstPlugin
 
         public void LoadDDS(string FileName, byte[] FileData = null, TextureData tree = null)
         {
-            TexName = Path.GetFileNameWithoutExtension(FileName);
-
-            Console.WriteLine(TexName);
+            TexName = STGenericTexture.SetNameFromPath(FileName);
 
             DDS dds = new DDS();
 
@@ -87,7 +85,7 @@ namespace FirstPlugin
         public void LoadASTC(string FileName)
         {
             DecompressedData.Clear();
-            TexName = Path.GetFileNameWithoutExtension(FileName);
+            TexName = STGenericTexture.SetNameFromPath(FileName);
 
             ASTC astc = new ASTC();
             astc.Load(new FileStream(FileName, FileMode.Open));
@@ -106,7 +104,7 @@ namespace FirstPlugin
         {
             DecompressedData.Clear();
 
-            TexName = Path.GetFileNameWithoutExtension(Name);
+            TexName = STGenericTexture.SetNameFromPath(Name);
             Format = TextureData.GenericToBntxSurfaceFormat(Runtime.PreferredTexFormat);
 
             GenerateMipmaps = true;

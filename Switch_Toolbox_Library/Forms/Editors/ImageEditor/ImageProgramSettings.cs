@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.IO;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -60,6 +61,23 @@ namespace Switch_Toolbox.Library.Forms
         public string GetSubstringByString(string a, string b, string c)
         {
             return c.Substring((c.IndexOf(a) + a.Length), (c.IndexOf(b) - c.IndexOf(a) - a.Length));
+        }
+
+        private void stButton2_Click(object sender, EventArgs e)
+        {
+            string UseExtension = GetSelectedExtension();
+
+            string TemporaryName = Path.GetTempFileName();
+            TemporaryName = Path.ChangeExtension(TemporaryName, UseExtension);
+
+            ShowOpenWithDialog(TemporaryName);
+        }
+
+        public static Process ShowOpenWithDialog(string path)
+        {
+            var args = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "shell32.dll");
+            args += ",OpenAs_RunDLL " + path;
+            return Process.Start("rundll32.exe", args);
         }
     }
 }

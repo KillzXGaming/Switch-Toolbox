@@ -186,7 +186,7 @@ namespace Bfres.Structs
         }
 
         public void ReplaceTexture(string FileName, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null,
-            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN)
+            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint SwizzlePattern = 0)
         {
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -205,6 +205,7 @@ namespace Bfres.Structs
 
             GTXImporterSettings setting = SetImporterSettings(FileName, DefaultFormat);
             setting.MipSwizzle = Tex2Swizzle;
+            setting.SwizzlePattern = SwizzlePattern;
 
             GTXTextureImporter importer = new GTXTextureImporter();
 

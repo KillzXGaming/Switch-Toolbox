@@ -1235,7 +1235,6 @@ namespace Switch_Toolbox.Library.NEW
                 sliceIn >>= 2;
 
             bankPipe ^= 2 * sampleSlice * 3 ^ (swizzle_ + sliceIn * rotation);
-            bankPipe ^= 2 * sampleSlice * 3 ^ (swizzle_ + sliceIn * rotation);
             bankPipe %= 8;
 
             pipe = bankPipe % 2;

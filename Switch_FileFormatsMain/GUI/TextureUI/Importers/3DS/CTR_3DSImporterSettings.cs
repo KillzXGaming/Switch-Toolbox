@@ -34,7 +34,7 @@ namespace FirstPlugin
 
         public void LoadDDS(string FileName, byte[] FileData = null)
         {
-            TexName = Path.GetFileNameWithoutExtension(FileName);
+            TexName = STGenericTexture.SetNameFromPath(FileName);
 
             DDS dds = new DDS();
 
@@ -59,7 +59,7 @@ namespace FirstPlugin
         {
             DecompressedData.Clear();
 
-            TexName = Path.GetFileNameWithoutExtension(FileName);
+            TexName = STGenericTexture.SetNameFromPath(FileName);
 
             Format = CTR_3DS.ConvertToPICAFormat(Runtime.PreferredTexFormat);
 
@@ -71,7 +71,7 @@ namespace FirstPlugin
         {
             DecompressedData.Clear();
 
-            TexName = Path.GetFileNameWithoutExtension(FileName);
+            TexName = STGenericTexture.SetNameFromPath(FileName);
 
             Format = CTR_3DS.ConvertToPICAFormat(Runtime.PreferredTexFormat);
             GenerateMipmaps = true;

@@ -258,7 +258,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true, false, Format);
+                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true, false, Format, (uint)(SheetIndex * 2));
                 if (ftex.texture != null)
                 {
                     TextureTGLP.Format = (ushort)ConvertToGx2(Format);
@@ -368,7 +368,7 @@ namespace FirstPlugin
                  (uint)Height,
                  (uint)1,
                  (uint)Gx2Format,
-                 (uint)0,
+                 (uint)Swizzle,
                  (uint)1,
                  (uint)MipCount
                  );
@@ -387,7 +387,7 @@ namespace FirstPlugin
             }
         }
 
-        private const uint SwizzleBase = 0x000D0000;
+        private const uint SwizzleBase = 0x00000000;
 
         private uint swizzle;
         private uint Swizzle
@@ -397,6 +397,14 @@ namespace FirstPlugin
                 swizzle = SwizzleBase;
                 swizzle |= (uint)(SheetIndex * 2) << 8;
                 return swizzle;
+            }
+        }
+
+        private uint SwizzlePattern
+        {
+            get
+            {
+                return (uint)(SheetIndex * 2);
             }
         }
 
