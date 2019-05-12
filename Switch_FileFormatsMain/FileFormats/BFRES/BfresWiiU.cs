@@ -738,9 +738,6 @@ namespace FirstPlugin
 
                 Sampler sampler = new Sampler();
                 sampler.TexSampler = textu.wiiUSampler;
-                sampler.TexSampler.MinLod = textu.MinLod;
-                sampler.TexSampler.MaxLod = textu.MaxLod;
-                sampler.TexSampler.LodBias = textu.BiasLod;
                 sampler.Name = textu.SamplerName;
                 mat.Samplers.Add(textu.SamplerName, sampler);
 

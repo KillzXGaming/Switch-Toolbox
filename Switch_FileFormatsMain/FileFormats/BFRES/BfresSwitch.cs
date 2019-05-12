@@ -931,10 +931,16 @@ namespace FirstPlugin
         {
             mat.TextureRefs = new List<string>();
             mat.TextureRefs.Clear();
+            mat.Samplers.Clear();
+            mat.SamplerDict.Clear();
 
-            foreach (var textu in m.TextureMaps)
+            foreach (MatTexture textu in m.TextureMaps)
+            {
+                mat.SamplerDict.Add(textu.SamplerName);
+                mat.Samplers.Add(textu.switchSampler);
                 mat.TextureRefs.Add(textu.Name);
-            
+            }
+
         }
         public static void WriteRenderInfo(this FMAT m, Material mat)
         {

@@ -837,6 +837,12 @@ namespace Switch_Toolbox.Library
             [Description("The image size in bytes.")]
             [Category("Image Info")]
             public uint ImageSize { get; set; }
+
+            [Browsable(true)]
+            [ReadOnly(true)]
+            [Description("The swizzle value.")]
+            [Category("Image Info")]
+            public uint Swizzle { get; set; }
         }
     }
 }

@@ -55,7 +55,7 @@ namespace FirstPlugin
             if (tglp.SheetDataList.Count > 0)
             {
                 var bntx = STFileLoader.OpenFileFormat("Sheet_0", Utils.CombineByteArray(tglp.SheetDataList.ToArray()));
-                if (bntx != null)
+                if (bntx != null) 
                 {
                     textureFolder.Nodes.Add((BNTX)bntx);
                 }
@@ -286,7 +286,8 @@ namespace FirstPlugin
             surf.mipOffset = new uint[0];
             surf.mipData = null;
             surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
-            surf.swizzle = 0;
+            surf.swizzle = (uint)(SheetIndex);
+            surf.swizzle *= 2;
             surf.numArray = 1;
 
             var surfaces = GX2.Decode(surf);
@@ -317,6 +318,7 @@ namespace FirstPlugin
             prop.ArrayCount = ArrayCount;
             prop.ImageSize = (uint)TextureTGLP.SheetDataList[SheetIndex].Length;
             prop.Format = Format;
+            prop.Swizzle =  (uint)(SheetIndex * 2);
 
             editor.Text = Text;
             editor.LoadProperties(prop);
