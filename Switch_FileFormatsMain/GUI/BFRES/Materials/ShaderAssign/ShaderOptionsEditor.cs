@@ -76,6 +76,9 @@ namespace FirstPlugin.Forms
                     option.Name = edtior.textBoxName.Text;
                     option.Value = edtior.textBoxValue.Text;
 
+                    material.shaderassign.options[option.Name] = option.Value;
+
+                    shaderOptionsListView.Refresh();
                 }
             }
         }

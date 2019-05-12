@@ -266,6 +266,16 @@ namespace FirstPlugin
             throw new NotImplementedException("Cannot set image data! Operation not implemented!");
         }
 
+        private const uint SwizzleBase = 0x000D0000;
+
+        private uint Swizzle
+        {
+            get
+            {
+                return SwizzleBase | (byte)(SheetIndex * 2);
+            }
+        }
+
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             uint bpp = GetBytesPerPixel(Format);
@@ -286,7 +296,7 @@ namespace FirstPlugin
             surf.mipOffset = new uint[0];
             surf.mipData = null;
             surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
-            surf.swizzle = (uint)(SheetIndex);
+            surf.swizzle = Swizzle;
             surf.swizzle *= 2;
             surf.numArray = 1;
 
@@ -318,7 +328,8 @@ namespace FirstPlugin
             prop.ArrayCount = ArrayCount;
             prop.ImageSize = (uint)TextureTGLP.SheetDataList[SheetIndex].Length;
             prop.Format = Format;
-            prop.Swizzle =   (uint)(SheetIndex * 2);
+            prop.Swizzle = Swizzle;
+
 
             editor.Text = Text;
             editor.LoadProperties(prop);
