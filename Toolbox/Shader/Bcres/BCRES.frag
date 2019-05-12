@@ -9,6 +9,8 @@ in vec2 f_texcoord1;
 in vec2 f_texcoord2;
 in vec2 f_texcoord3;
 
+in vec3 boneWeightsColored;
+
 uniform vec3 difLightDirection;
 uniform vec3 difLightColor;
 uniform vec3 ambLightColor;
@@ -55,7 +57,10 @@ void main()
     if (renderVertColor == 1)
         FragColor *= min(color, vec4(1));
 
+    FragColor.rgb *= min(boneWeightsColored, vec3(1));
+
     vec3 displayNormal = (normal.xyz * 0.5) + 0.5;
     if (renderType == 1) // normals color
         FragColor = vec4(displayNormal.rgb,1);
+
 }

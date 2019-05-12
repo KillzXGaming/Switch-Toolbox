@@ -72,7 +72,7 @@ namespace FirstPlugin
                     var info = new FileInfo(reader);
 
                     APAKFileInfo archive = new APAKFileInfo();
-                    archive.FileData = new System.IO.MemoryStream(info.Data);
+                    archive.FileData = info.Data;
                     archive.Name = info.Text;
 
                     Nodes.Add(info);

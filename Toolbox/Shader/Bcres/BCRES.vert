@@ -21,12 +21,24 @@ out vec3 normal;
 out vec4 color;
 out vec3 position;
 
+out vec3 boneWeightsColored;
+
 // Skinning uniforms
 uniform mat4 bones[190];
 
 uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
 uniform mat4 previewScale;
+
+// Bone Weight Display
+uniform sampler2D weightRamp1;
+uniform sampler2D weightRamp2;
+uniform int selectedBoneIndex;
+uniform int debugOption;
+
+uniform int NoSkinning;
+uniform int RigidSkinning;
+uniform int SingleBoneIndex;
 
 vec4 skin(vec3 pos, ivec4 index)
 {
@@ -53,11 +65,47 @@ vec3 skinNRM(vec3 nr, ivec4 index)
     return newNormal;
 }
 
+vec3 BoneWeightColor(float weights)
+{
+	float rampInputLuminance = weights;
+	rampInputLuminance = clamp((rampInputLuminance), 0.001, 0.999);
+    if (debugOption == 1) // Greyscale
+        return vec3(weights);
+    else if (debugOption == 2) // Color 1
+	   return texture(weightRamp1, vec2(1 - rampInputLuminance, 0.50)).rgb;
+    else // Color 2
+        return texture(weightRamp2, vec2(1 - rampInputLuminance, 0.50)).rgb;
+}
+
+float BoneWeightDisplay(ivec4 index)
+{
+    float weight = 0;
+    if (selectedBoneIndex == index.x)
+        weight += vWeight.x;
+    if (selectedBoneIndex == index.y)
+        weight += vWeight.y;
+    if (selectedBoneIndex == index.z)
+        weight += vWeight.z;
+    if (selectedBoneIndex == index.w)
+        weight += vWeight.w;
+
+    if (selectedBoneIndex == index.x && RigidSkinning == 1)
+        weight = 1;
+   if (selectedBoneIndex == SingleBoneIndex && NoSkinning == 1)
+        weight = 1;
+
+    return weight;
+}
+
 void main()
 {
     ivec4 index = ivec4(vBone);
 
     vec4 objPos = vec4(vPosition.xyz, 1.0);
+	if (vBone.x != -1.0)
+		objPos = skin(vPosition, index);
+	if(vBone.x != -1.0)
+		normal = normalize((skinNRM(vNormal.xyz, index)).xyz);
 
 	vec4 position = mtxCam  * mtxMdl *  vec4(objPos.xyz, 1.0);
 
@@ -70,6 +118,7 @@ void main()
 
     gl_Position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
 
-    vec3 distance = (vPosition.xyz + vec3(5, 5, 5))/2;
+	float totalWeight = BoneWeightDisplay(index);
+    boneWeightsColored = BoneWeightColor(totalWeight).rgb;
 
 }

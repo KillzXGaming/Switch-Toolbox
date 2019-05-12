@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library.IO;
 
 namespace Switch_Toolbox.Library
 {
@@ -31,7 +33,12 @@ namespace Switch_Toolbox.Library
     }
     public class ArchiveFileInfo
     {
+        public virtual STToolStripItem[] Menus { get; set; }
+
         public FileType FileDataType = FileType.Default;
+
+        public virtual void Replace() { }
+        public virtual void Export() { }
 
         public string GetSize()
         {
@@ -40,20 +47,60 @@ namespace Switch_Toolbox.Library
 
         IFileFormat FileFormat = null; //Format attached for saving
 
-        protected Stream _fileData = null;
+        protected byte[] _fileData = null;
 
         public string FileName { get; set; } = string.Empty;  //Full File Name
         public string Name { get; set; } = string.Empty; //File Name (No Path)
-        public virtual Stream FileData
+        public virtual byte[] FileData
         {
             get
             {
-                _fileData.Position = 0;
                 return _fileData;
             }
             set { _fileData = value; }
         }
 
         public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
+    }
+
+    public class ArchiveNodeWrapper : TreeNodeCustom
+    {
+        public ArchiveNodeWrapper(string text)
+        {
+            Text = text;
+
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStripItem("Extract", ExtractAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Replace", ReplaceAction));
+        }
+
+        public virtual ArchiveFileInfo ArchiveFileInfo { get; set; }
+
+        private void ExtractAction(object sender, EventArgs args)
+        {
+            ArchiveFileInfo.Export();
+        }
+
+        private void ReplaceAction(object sender, EventArgs args)
+        {
+            ArchiveFileInfo.Replace();
+        }
+
+        public override void OnDoubleMouseClick(TreeView treeview)
+        {
+            TreeNode node = STFileLoader.GetNodeFileFormat(Text, ArchiveFileInfo.FileData, true, this);
+            if (node != null)
+                ReplaceNode(this.Parent, this, node);
+        }
+
+        public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
+        {
+            if (NewNode == null)
+                return;
+
+            int index = node.Nodes.IndexOf(replaceNode);
+            node.Nodes.RemoveAt(index);
+            node.Nodes.Insert(index, NewNode);
+        }
     }
 }

@@ -75,10 +75,24 @@ namespace Switch_Toolbox.Library.Forms
 
             if (UseListView && FileFormat is IArchiveFile)
             {
-                ObjectList = new ObjectEditorList();
-                ObjectList.Dock = DockStyle.Fill;
-                stPanel1.Controls.Add(ObjectList);
-                ObjectList.FillList((IArchiveFile)FileFormat);
+                /* ObjectList = new ObjectEditorList();
+                 ObjectList.Dock = DockStyle.Fill;
+                 stPanel1.Controls.Add(ObjectList);
+                 ObjectList.FillList((IArchiveFile)FileFormat);*/
+
+                ObjectTree = new ObjectEditorTree();
+                ObjectTree.Dock = DockStyle.Fill;
+                stPanel1.Controls.Add(ObjectTree);
+
+                TreeNode FileRoot = new TreeNode(FileFormat.FileName);
+                foreach (var archive in ((IArchiveFile)FileFormat).Files)
+                {
+                    ArchiveNodeWrapper node = new ArchiveNodeWrapper(archive.FileName);
+                    node.ArchiveFileInfo = archive;
+                    FileRoot.Nodes.Add(node);
+                }
+
+                AddNode(FileRoot);
             }
             else
             {
@@ -89,6 +103,7 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+   
         public Viewport GetViewport() => viewport;
 
         //Attatch a viewport instance here if created.

@@ -132,7 +132,7 @@ namespace FirstPlugin
             {
                 SetAlignment(writer, files[i].FileName);
                 writer.WriteUint32Offset(files[i]._posHeader + 4);
-                writer.Write(files[i].FileData.ToArray());
+                writer.Write(files[i].FileData);
             }
             writer.Close();
             writer.Dispose();
@@ -157,7 +157,7 @@ namespace FirstPlugin
 
             }
 
-            private void Export(object sender, EventArgs args)
+            public override void Export()
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.FileName = FileName;
@@ -166,7 +166,20 @@ namespace FirstPlugin
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, FileData.ToArray());
+                    File.WriteAllBytes(sfd.FileName, FileData);
+                }
+            }
+
+            public override void Replace()
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.FileName = FileName;
+                ofd.DefaultExt = Path.GetExtension(FileName);
+                ofd.Filter = "Raw Data (*.*)|*.*";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    FileData = File.ReadAllBytes(ofd.FileName);
                 }
             }
 
@@ -193,7 +206,7 @@ namespace FirstPlugin
                 FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
 
                 reader.Seek(FileOffset, System.IO.SeekOrigin.Begin);
-                FileData = new MemoryStream(reader.ReadBytes((int)FileSize));
+                FileData = reader.ReadBytes((int)FileSize);
                 State = ArchiveFileState.Archived;
 
                 reader.Seek(pos + 16, System.IO.SeekOrigin.Begin);

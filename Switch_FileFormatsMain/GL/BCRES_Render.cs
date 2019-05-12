@@ -131,7 +131,7 @@ namespace FirstPlugin
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
@@ -152,9 +152,34 @@ namespace FirstPlugin
 
             shader.SetVector3("difLightDirection", Vector3.TransformNormal(lightDirection, invertedCamera).Normalized());
 
+          // GL.Enable(EnableCap.AlphaTest);
+          // GL.AlphaFunc(AlphaFunction.Gequal, 0.1f);
+
             SetRenderSettings(shader);
 
             DrawModels(shader, control);
+
+
+            GL.UseProgram(0);
+            GL.Disable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+        }
+
+        private static void SetBoneUniforms(ShaderProgram shader, CMDLWrapper fmdl, SOBJWrapper fshp)
+        {
+            for (int i = 0; i < fmdl.Skeleton.Renderable.bones.Count; i++)
+            {
+                GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), i);
+
+                Matrix4 transform = fmdl.Skeleton.Renderable.bones[i].invert * fmdl.Skeleton.Renderable.bones[i].Transform;
+                GL.UniformMatrix4(GL.GetUniformLocation(shader.program, String.Format("bones[{0}]", i)), false, ref transform);
+            }
+        }
+
+        private static void SetUniforms(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)
+        {
+
         }
 
         private static void SetTextureUniforms(MTOBWrapper mat, SOBJWrapper m, ShaderProgram shader)
@@ -163,6 +188,21 @@ namespace FirstPlugin
 
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+
+            GL.Uniform1(shader["debugOption"], 2);
+
+            GL.ActiveTexture(TextureUnit.Texture11);
+            GL.Uniform1(shader["weightRamp1"], 11);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.BoneWeightGradient.Id);
+
+            GL.ActiveTexture(TextureUnit.Texture12);
+            GL.Uniform1(shader["weightRamp2"], 12);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.BoneWeightGradient2.Id);
+
+
+            GL.ActiveTexture(TextureUnit.Texture10);
+            GL.Uniform1(shader["UVTestPattern"], 10);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.Id);
 
             foreach (STGenericMatTexture matex in mat.TextureMaps)
             {
@@ -223,6 +263,7 @@ namespace FirstPlugin
         private void SetRenderSettings(ShaderProgram shader)
         {
             shader.SetInt("renderType", (int)Runtime.viewportShading);
+            shader.SetInt("selectedBoneIndex", Runtime.SelectedBoneIndex);
         }
 
         private void DrawModels(ShaderProgram shader, GL_ControlModern control)
@@ -261,8 +302,10 @@ namespace FirstPlugin
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
+            SetBoneUniforms(shader, mdl, m);
             SetVertexAttributes(m, shader);
             SetTextureUniforms(m.MaterialWrapper, m, shader);
+            SetUniforms(m.MaterialWrapper, shader,m, m.DisplayId);
 
             if ((m.IsSelected))
             {
