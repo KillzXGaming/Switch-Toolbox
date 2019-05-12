@@ -40,6 +40,8 @@ Can Edit Formats
 - TMPK
 
 Can Preview
+- BCRES
+   - Models, materials, and textures.
 - BFSHA
    - Can view options, samplers, attributes, and uniform blocks.
 - BNSH
@@ -66,14 +68,14 @@ To build make sure you have Visual Studio installed (I use 2017, older versions 
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
 
-- Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff, GTX c# implementation, and some rendering.
+- Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff and some rendering.
 - Assimp devs for their massive asset library!
 - Wexos (helped figure out a few things, ie format list to assign each attribute)
 - JuPaHe64 for the base 3D renderer.
 - Every File Explorer devs (Gericom) for Yaz0 stuff
 - Exelix for Byaml, Sarc and KCL library
 - Syroot for helpful IO extensions and libraries
-- GDK Chan for some DDS decode methods
+- GDKChan for PICA shaders stuff used with bcres, structs for bcres, and some DDS decode methods
 - AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, and documentation for GTX, XTX, and BNTX
 - MelonSpeedruns for logo.
 
