@@ -340,7 +340,7 @@ namespace Switch_Toolbox.Library.Forms
 
             DecodeProcessFinished = false;
 
-           // PushImage(Properties.Resources.LoadingImage);
+            PushImage(Properties.Resources.LoadingImage);
 
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
 
