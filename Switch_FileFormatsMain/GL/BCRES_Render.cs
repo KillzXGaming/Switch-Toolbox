@@ -170,6 +170,9 @@ namespace FirstPlugin
         {
             foreach (var FaceGroup in fshp.Shape.FaceGroups)
             {
+                if (FaceGroup.BoneIndexList == null)
+                    continue;
+
                 for (int i = 0; i < FaceGroup.BoneIndexList.Length; i++)
                 {
                     GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), FaceGroup.BoneIndexList[i]);
@@ -184,7 +187,6 @@ namespace FirstPlugin
         {
             shader.SetBoolToInt("RigidSkinning", m.Shape.FaceGroups[0].SkinnningMode == BcresLibrary.Enums.SkinnningMode.Rigid);
             shader.SetBoolToInt("NoSkinning", m.Shape.FaceGroups[0].SkinnningMode == BcresLibrary.Enums.SkinnningMode.None);
-
         }
 
         private static void SetTextureUniforms(MTOBWrapper mat, SOBJWrapper m, ShaderProgram shader)
@@ -307,10 +309,10 @@ namespace FirstPlugin
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
+            SetUniforms(m.MaterialWrapper, shader, m, m.DisplayId);
             SetBoneUniforms(shader, mdl, m);
             SetVertexAttributes(m, shader);
             SetTextureUniforms(m.MaterialWrapper, m, shader);
-            SetUniforms(m.MaterialWrapper, shader,m, m.DisplayId);
 
             if ((m.IsSelected))
             {
