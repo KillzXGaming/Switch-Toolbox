@@ -271,6 +271,7 @@ namespace FirstPlugin
         {
             shader.SetInt("renderType", (int)Runtime.viewportShading);
             shader.SetInt("selectedBoneIndex", Runtime.SelectedBoneIndex);
+            shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
         }
 
         private void DrawModels(ShaderProgram shader, GL_ControlModern control)
