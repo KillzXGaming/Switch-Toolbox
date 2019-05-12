@@ -327,7 +327,15 @@ namespace FirstPlugin
 
         private static void DrawModelSelection(STGenericObject p, ShaderProgram shader)
         {
+            GL.Uniform1(shader["colorOverride"], 1);
+            GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+            GL.Enable(EnableCap.LineSmooth);
+            GL.LineWidth(1.3f);
+            GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.Uniform1(shader["colorOverride"], 0);
 
+            GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
     }
 }
