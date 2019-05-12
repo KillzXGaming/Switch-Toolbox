@@ -99,7 +99,15 @@ namespace FirstPlugin.Forms
             }
         }
 
-        public void OnPropertyChanged() { }
+        public void OnPropertyChanged()
+        {
+            if (listViewCustom1.SelectedIndices.Count > 0)
+            {
+                int index = listViewCustom1.SelectedIndices[0];
+                var item = listViewCustom1.Items[index];
+                item.Text = $"{SamplerInputs[index].ResourceInput} : {SamplerInputs[index].ShaderVariable}";
+            }
+        }
 
         private void btnScrollDown_Click(object sender, EventArgs e)
         {
@@ -144,6 +152,11 @@ namespace FirstPlugin.Forms
                 }
             }
             KeyCheck.Clear();
+        }
+
+        private void stPropertyGrid1_Load(object sender, EventArgs e)
+        {
+        
         }
     }
 }

@@ -290,7 +290,7 @@ namespace FirstPlugin.Forms
 
             if (editor.ShowDialog() == DialogResult.OK)
             {
-                material.shaderassign.attributes = editor.GetNewInputs();
+                material.shaderassign.samplers = editor.GetNewInputs();
             }
         }
 
