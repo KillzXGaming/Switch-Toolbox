@@ -172,7 +172,7 @@ namespace FirstPlugin
             {
                 for (int i = 0; i < FaceGroup.BoneIndexList.Length; i++)
                 {
-                    GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), i);
+                    GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), FaceGroup.BoneIndexList[i]);
 
                     Matrix4 transform = fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].invert * fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].Transform;
                     GL.UniformMatrix4(GL.GetUniformLocation(shader.program, String.Format("bones[{0}]", i)), false, ref transform);
@@ -182,6 +182,8 @@ namespace FirstPlugin
 
         private static void SetUniforms(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)
         {
+            shader.SetBoolToInt("RigidSkinning", m.Shape.FaceGroups[0].SkinnningMode == BcresLibrary.Enums.SkinnningMode.Rigid);
+            shader.SetBoolToInt("NoSkinning", m.Shape.FaceGroups[0].SkinnningMode == BcresLibrary.Enums.SkinnningMode.None);
 
         }
 
