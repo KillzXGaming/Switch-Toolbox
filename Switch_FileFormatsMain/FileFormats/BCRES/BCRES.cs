@@ -66,6 +66,10 @@ namespace FirstPlugin
             AddNodeGroup(BcresFile.Data.Particles, new BCRESGroupNode(BCRESGroupType.Particles));
         }
 
+        public override void OnClick(TreeView treeview) {
+            LoadEditors(this, null);
+        }
+
         private void AddNodeGroup<T>(ResDict<T> SubSections, BCRESGroupNode Folder)
             where T : CtrObject, new()
         {
@@ -129,6 +133,9 @@ namespace FirstPlugin
                     bcresEditor.LoadEditor(editor);
                 }
                 editor.LoadTexture(((BcresTextureMapWrapper)Wrapper));
+            }
+            else if (Wrapper is BCRES) {
+                LoadPropertyGrid(((BCRES)Wrapper).BcresFile, bcresEditor, OnPropertyChanged);
             }
             else if (Wrapper is MTOBWrapper) {
                 LoadPropertyGrid(((MTOBWrapper)Wrapper).Material, bcresEditor, OnPropertyChanged);
