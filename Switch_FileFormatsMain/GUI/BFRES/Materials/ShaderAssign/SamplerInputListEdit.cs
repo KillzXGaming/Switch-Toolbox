@@ -61,7 +61,7 @@ namespace FirstPlugin.Forms
                 var result = MessageBox.Show($"Are you sure you want to remove {listViewCustom1.SelectedItems[0].Text}? This could potentially break things!",
                 "Shader Option Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
-                if (result == DialogResult.OK)
+                if (result == DialogResult.Yes)
                 {
                     int index = listViewCustom1.SelectedIndices[0];
                     listViewCustom1.Items.RemoveAt(index);

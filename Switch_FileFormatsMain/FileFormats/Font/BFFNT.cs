@@ -318,7 +318,7 @@ namespace FirstPlugin
             prop.ArrayCount = ArrayCount;
             prop.ImageSize = (uint)TextureTGLP.SheetDataList[SheetIndex].Length;
             prop.Format = Format;
-            prop.Swizzle =  (uint)(SheetIndex * 2);
+            prop.Swizzle =   (uint)(SheetIndex * 2);
 
             editor.Text = Text;
             editor.LoadProperties(prop);
