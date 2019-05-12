@@ -6,6 +6,14 @@ namespace Switch_Toolbox.Library.IO
 {
     public class FileWriter : BinaryDataWriter
     {
+        public void CheckByteOrderMark(uint ByteOrderMark)
+        {
+            if (ByteOrderMark == 0xFEFF)
+                ByteOrder = ByteOrder.BigEndian;
+            else
+                ByteOrder = ByteOrder.LittleEndian;
+        }
+
         public FileWriter(Stream stream, bool leaveOpen = false)
             : base(stream, Encoding.ASCII, leaveOpen)
         {

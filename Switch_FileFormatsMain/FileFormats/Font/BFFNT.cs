@@ -41,11 +41,12 @@ namespace FirstPlugin
             }
         }
 
+        FFNT bffnt;
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
 
-            FFNT bffnt = new FFNT();
+            bffnt = new FFNT();
             bffnt.Read(new FileReader(stream));
 
             TGLP tglp = bffnt.GetFontSection().tglp;
@@ -85,7 +86,9 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            return null;
+            MemoryStream mem = new MemoryStream();
+            bffnt.Write(new FileWriter(mem));
+            return mem.ToArray();
         }
 
 
@@ -177,6 +180,21 @@ namespace FirstPlugin
             reader.Dispose();
         }
 
+        public void Write(FileWriter writer)
+        {
+            writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
+            writer.WriteSignature("FFNT");
+            writer.Write(BOM);
+            writer.CheckByteOrderMark(BOM);
+            writer.Write(HeaderSize);
+            writer.Write(Version);
+            long _ofsFileSize = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Write((ushort)Blocks.Count);
+            writer.Write((ushort)0);
+        }
+
         private string CheckSignature(FileReader reader)
         {
             string Signature = reader.ReadString(4, Encoding.ASCII);
@@ -215,6 +233,8 @@ namespace FirstPlugin
 
         public void Load(TGLP texture, int Index)
         {
+            CanReplace = true;
+
             SheetIndex = Index;
             TextureTGLP = texture;
             Height = TextureTGLP.SheetHeight;
@@ -226,7 +246,30 @@ namespace FirstPlugin
             SelectedImageKey = "Texture";
         }
 
-        public override bool CanEdit { get; set; } = false;
+        public override bool CanEdit { get; set; } = true;
+        public override string ExportFilter => FileFilters.GTX;
+        public override string ReplaceFilter => FileFilters.GTX;
+
+        public override void Replace(string FileName)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilters.GTX;
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
+                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true, false, Format);
+                if (ftex.texture != null)
+                {
+                    TextureTGLP.Format = (ushort)ConvertToGx2(Format);
+                    TextureTGLP.SheetHeight = (ushort)ftex.texture.Height;
+                    TextureTGLP.SheetWidth = (ushort)ftex.texture.Width;
+                    TextureTGLP.SheetDataList[SheetIndex] = ftex.texture.Data;
+
+                    UpdateEditor();
+                }
+            }
+        }
 
         public override TEX_FORMAT[] SupportedFormats
         {
@@ -261,9 +304,72 @@ namespace FirstPlugin
             }
         }
 
+        public Gx2ImageFormats ConvertToGx2(TEX_FORMAT Format)
+        {
+            switch (Format)
+            {
+                case TEX_FORMAT.R8_UNORM: return Gx2ImageFormats.A8_UNORM;
+                case TEX_FORMAT.BC1_UNORM_SRGB: return Gx2ImageFormats.BC1_SRGB;
+                case TEX_FORMAT.BC1_UNORM: return Gx2ImageFormats.BC1_UNORM;
+                case TEX_FORMAT.BC2_UNORM_SRGB: return Gx2ImageFormats.BC2_SRGB;
+                case TEX_FORMAT.BC2_UNORM: return Gx2ImageFormats.BC2_UNORM;
+                case TEX_FORMAT.BC3_UNORM_SRGB: return Gx2ImageFormats.BC3_SRGB;
+                case TEX_FORMAT.BC3_UNORM: return Gx2ImageFormats.BC3_UNORM;
+                case TEX_FORMAT.BC4_UNORM: return Gx2ImageFormats.BC4_UNORM;
+                case TEX_FORMAT.BC5_UNORM: return Gx2ImageFormats.BC5_UNORM;
+                case TEX_FORMAT.R4G4_UNORM: return Gx2ImageFormats.LA4_UNORM;
+                case TEX_FORMAT.R8G8_UNORM: return Gx2ImageFormats.RGB8_UNORM;
+                case TEX_FORMAT.B5G6R5_UNORM: return Gx2ImageFormats.RGB565_UNORM;
+                case TEX_FORMAT.B5G5R5A1_UNORM: return Gx2ImageFormats.RGB5A1_UNORM;
+                case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return Gx2ImageFormats.RGBA8_SRGB;
+                case TEX_FORMAT.R8G8B8A8_UNORM: return Gx2ImageFormats.RGBA8_UNORM;
+                default:
+                    throw new NotImplementedException("Unsupported format " + Format);
+            }
+        }
+
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+            if (bitmap == null)
+                return; //Image is likely disposed and not needed to be applied
+
+            uint Gx2Format = (uint)Bfres.Structs.FTEX.ConvertToGx2Format(Format);
+            Width = (uint)bitmap.Width;
+            Height = (uint)bitmap.Height;
+
+            MipCount = 1;
+            uint[] MipOffsets = new uint[MipCount];
+
+            try
+            {
+                //Create image block from bitmap first
+                var data = GenerateMipsAndCompress(bitmap, Format);
+
+                //Swizzle and create surface
+                var surface = GX2.CreateGx2Texture(data, Text,
+                 (uint)2,
+                 (uint)0,
+                 (uint)Width,
+                 (uint)Height,
+                 (uint)1,
+                 (uint)Gx2Format,
+                 (uint)0,
+                 (uint)1,
+                 (uint)MipCount
+                 );
+
+                TextureTGLP.Format = (ushort)ConvertToGx2(Format);
+                TextureTGLP.SheetHeight = (ushort)surface.height;
+                TextureTGLP.SheetWidth = (ushort)surface.width;
+                TextureTGLP.SheetDataList[SheetIndex] = surface.data;
+
+                IsEdited = true;
+                UpdateEditor();
+            }
+            catch (Exception ex)
+            {
+                STErrorDialog.Show("Failed to swizzle and compress image " + Text, "Error", ex.ToString());
+            }
         }
 
         private const uint SwizzleBase = 0x000D0000;
@@ -347,16 +453,16 @@ namespace FirstPlugin
     public class FINF : BFFNT_Block
     {
         public uint Size;
-        public uint Type;
-        public uint Width;
-        public uint Height;
-        public uint Ascend;
-        public uint LineFeed;
-        public uint AlterCharIndex;
-        public uint DefaultLeftWidth;
-        public uint DefaultGlyphWidth;
-        public uint DefaultCharWidth;
-        public uint CharEncoding;
+        public byte Type;
+        public byte Width;
+        public byte Height;
+        public byte Ascend;
+        public ushort LineFeed;
+        public ushort AlterCharIndex;
+        public byte DefaultLeftWidth;
+        public byte DefaultGlyphWidth;
+        public byte DefaultCharWidth;
+        public byte CharEncoding;
         public TGLP tglp;
 
         public void Read(FileReader reader)
@@ -385,20 +491,43 @@ namespace FirstPlugin
                 tglp.Read(reader);
             }
         }
+
+        public void Write(FileWriter writer)
+        {
+            writer.WriteSignature("FINF");
+            writer.Write(uint.MaxValue);
+            writer.Write(Type);
+            writer.Write(Height);
+            writer.Write(Width);
+            writer.Write(Ascend);
+            writer.Write(LineFeed);
+            writer.Write(AlterCharIndex);
+            writer.Write(DefaultLeftWidth);
+            writer.Write(DefaultGlyphWidth);
+            writer.Write(DefaultCharWidth);
+            writer.Write(CharEncoding);
+
+            long _ofsTGLP = writer.Position;
+            writer.Write(uint.MaxValue);
+            long _ofsCWDH = writer.Position;
+            writer.Write(uint.MaxValue);
+            long _ofsCMAP = writer.Position;
+            writer.Write(uint.MaxValue);
+        }
     }
     public class TGLP
     {
         public uint Size;
-        public uint CellWidth;
-        public uint CellHeight;
-        public uint MaxCharWidth;
+        public byte CellWidth;
+        public byte CellHeight;
+        public byte MaxCharWidth;
         public uint SheetSize;
-        public uint BaseLinePos;
-        public uint Format;
-        public uint ColumnCount;
-        public uint RowCount;
-        public uint SheetWidth;
-        public uint SheetHeight;
+        public ushort BaseLinePos;
+        public ushort Format;
+        public ushort ColumnCount;
+        public ushort RowCount;
+        public ushort SheetWidth;
+        public ushort SheetHeight;
         public List<byte[]> SheetDataList = new List<byte[]>();
 
         public void Read(FileReader reader)
@@ -426,6 +555,47 @@ namespace FirstPlugin
                 {
                     SheetDataList.Add(reader.ReadBytes((int)SheetSize));
                 }
+            }
+        }
+
+        public void Write(FileWriter writer)
+        {
+            writer.WriteSignature("TGLP");
+            long _ofsSectionSize = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Write(CellWidth);
+            writer.Write(CellHeight);
+            writer.Write((byte)SheetDataList.Count);
+            writer.Write(MaxCharWidth);
+            writer.Write(SheetDataList[0].Length);
+            writer.Write(BaseLinePos);
+            writer.Write(Format);
+            writer.Write(ColumnCount);
+            writer.Write(RowCount);
+            writer.Write(SheetWidth);
+            writer.Write(SheetHeight);
+            long _ofsSheetBlocks = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Align(8192);
+
+            long DataPosition = writer.Position;
+            using (writer.TemporarySeek(_ofsSheetBlocks, SeekOrigin.Begin))
+            {
+                writer.Write((uint)DataPosition);
+            }
+
+            for (int i = 0; i < SheetDataList.Count; i++)
+            {
+                writer.Write(SheetDataList[i]);
+            }
+
+            long SectionEndPosition = writer.Position;
+
+            //End of section. Set the size
+
+            using (writer.TemporarySeek(_ofsSectionSize, SeekOrigin.Begin))
+            {
+                writer.Write((uint)(SectionEndPosition - _ofsSectionSize - 4));
             }
         }
     }
