@@ -241,7 +241,7 @@ namespace FirstPlugin
 
                         if (FaceGroup.SkinnningMode == SkinnningMode.Rigid)
                         {
-                            Matrix4 sb = skeleton.bones[v.boneIds[0]].Transform;
+                            Matrix4 sb = skeleton.bones[(int)FaceGroup.BoneIndexList[v.boneIds[0]]].Transform;
                             v.pos = Vector3.TransformPosition(v.pos, sb);
                             v.nrm = Vector3.TransformNormal(v.nrm, sb);
                         }

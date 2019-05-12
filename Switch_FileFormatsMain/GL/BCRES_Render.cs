@@ -168,12 +168,15 @@ namespace FirstPlugin
 
         private static void SetBoneUniforms(ShaderProgram shader, CMDLWrapper fmdl, SOBJWrapper fshp)
         {
-            for (int i = 0; i < fmdl.Skeleton.Renderable.bones.Count; i++)
+            foreach (var FaceGroup in fshp.Shape.FaceGroups)
             {
-                GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), i);
+                for (int i = 0; i < FaceGroup.BoneIndexList.Length; i++)
+                {
+                    GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), i);
 
-                Matrix4 transform = fmdl.Skeleton.Renderable.bones[i].invert * fmdl.Skeleton.Renderable.bones[i].Transform;
-                GL.UniformMatrix4(GL.GetUniformLocation(shader.program, String.Format("bones[{0}]", i)), false, ref transform);
+                    Matrix4 transform = fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].invert * fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].Transform;
+                    GL.UniformMatrix4(GL.GetUniformLocation(shader.program, String.Format("bones[{0}]", i)), false, ref transform);
+                }
             }
         }
 

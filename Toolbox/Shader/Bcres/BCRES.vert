@@ -23,6 +23,8 @@ out vec3 position;
 
 out vec3 boneWeightsColored;
 
+uniform int boneIds[190];
+
 // Skinning uniforms
 uniform mat4 bones[190];
 
@@ -80,16 +82,16 @@ vec3 BoneWeightColor(float weights)
 float BoneWeightDisplay(ivec4 index)
 {
     float weight = 0;
-    if (selectedBoneIndex == index.x)
+    if (selectedBoneIndex == boneIds[index.x])
         weight += vWeight.x;
-    if (selectedBoneIndex == index.y)
+    if (selectedBoneIndex == boneIds[index.y])
         weight += vWeight.y;
-    if (selectedBoneIndex == index.z)
+    if (selectedBoneIndex == boneIds[index.z])
         weight += vWeight.z;
-    if (selectedBoneIndex == index.w)
+    if (selectedBoneIndex == boneIds[index.w])
         weight += vWeight.w;
 
-    if (selectedBoneIndex == index.x && RigidSkinning == 1)
+    if (selectedBoneIndex == boneIds[index.x] && RigidSkinning == 1)
         weight = 1;
    if (selectedBoneIndex == SingleBoneIndex && NoSkinning == 1)
         weight = 1;
