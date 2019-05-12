@@ -268,11 +268,14 @@ namespace FirstPlugin
 
         private const uint SwizzleBase = 0x000D0000;
 
+        private uint swizzle;
         private uint Swizzle
         {
             get
             {
-                return SwizzleBase | (byte)(SheetIndex * 2);
+                swizzle = SwizzleBase;
+                swizzle |= (uint)(SheetIndex * 2) << 8;
+                return swizzle;
             }
         }
 
@@ -297,7 +300,6 @@ namespace FirstPlugin
             surf.mipData = null;
             surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
             surf.swizzle = Swizzle;
-            surf.swizzle *= 2;
             surf.numArray = 1;
 
             var surfaces = GX2.Decode(surf);
