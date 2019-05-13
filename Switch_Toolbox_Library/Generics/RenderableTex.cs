@@ -124,6 +124,7 @@ namespace Switch_Toolbox.Library.Rendering
 
             TexID = loadImage(this);
         }
+
         public static int loadImage(RenderableTex t)
         {
             if (!t.GLInitialized)
@@ -149,6 +150,12 @@ namespace Switch_Toolbox.Library.Rendering
 
             return texID;
         }
+
+        public void Bind()
+        {
+            GL.BindTexture(TextureTarget.Texture2D, TexID);
+        }
+
         private static int getImageSize(RenderableTex t)
         {
             switch (t.pixelInternalFormat)

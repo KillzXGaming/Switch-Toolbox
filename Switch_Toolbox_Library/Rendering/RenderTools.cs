@@ -23,18 +23,18 @@ namespace Switch_Toolbox.Library
                        brdfpbr != null);
             }
         }
-    
-        private static Texture2D defaulttex;
-        public static Texture2D defaultTex
+
+        public static STGenericTexture defaulttex;
+        public static STGenericTexture defaultTex
         {
             get
             {
                 if (defaulttex == null)
                 {
-                    defaulttex = new Texture2D();
-                    defaultTex.LoadImageData(Properties.Resources.DefaultTexture);
+                    defaulttex = new GenericBitmapTexture(Properties.Resources.DefaultTexture);
+                    defaulttex.LoadOpenGLTexture();
+                    defaulttex.RenderableTex.Bind();
                 }
-
                 return defaulttex;
             }
             set
@@ -77,18 +77,16 @@ namespace Switch_Toolbox.Library
                 specularpbr = value;
             }
         }
-        public static Texture2D uvtestPattern;
-        public static Texture2D uvTestPattern
+        public static STGenericTexture uvtestPattern;
+        public static STGenericTexture uvTestPattern
         {
             get
             {
                 if (uvtestPattern == null)
                 {
-                    uvtestPattern = new Texture2D();
-                    uvtestPattern.LoadImageData(Properties.Resources.UVPattern);
-                    uvtestPattern.TextureWrapR = TextureWrapMode.Repeat;
-                    uvtestPattern.TextureWrapS = TextureWrapMode.Repeat;
-                    uvtestPattern.TextureWrapT = TextureWrapMode.Repeat;
+                    uvTestPattern = new GenericBitmapTexture(Properties.Resources.UVPattern);
+                    uvTestPattern.LoadOpenGLTexture();
+                    uvTestPattern.RenderableTex.Bind();
                 }
                 return uvtestPattern;
             }

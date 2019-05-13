@@ -194,7 +194,7 @@ namespace FirstPlugin
             SetDefaultTextureAttributes(mat, shader);
 
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
-            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
             GL.Uniform1(shader["debugOption"], 2);
 
@@ -209,7 +209,7 @@ namespace FirstPlugin
 
             GL.ActiveTexture(TextureUnit.Texture10);
             GL.Uniform1(shader["UVTestPattern"], 10);
-            GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
             foreach (STGenericMatTexture matex in mat.TextureMaps)
             {
@@ -233,13 +233,12 @@ namespace FirstPlugin
         public static int BindTexture(STGenericMatTexture tex)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
-            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
             string activeTex = tex.Name;
 
             foreach (var bcresTexContainer in PluginRuntime.bcresTexContainers)
             {
-
                 if (bcresTexContainer.ResourceNodes.ContainsKey(activeTex))
                 {
                     TXOBWrapper txob = (TXOBWrapper)bcresTexContainer.ResourceNodes[activeTex];
@@ -248,6 +247,7 @@ namespace FirstPlugin
                         txob.LoadOpenGLTexture();
 
                     BindGLTexture(tex, txob.RenderableTex.TexID);
+                    break;
                 }
             }
             return tex.textureUnit + 1;

@@ -67,7 +67,7 @@ namespace Switch_Toolbox.Library.Forms.test
             comboBox2.Items.Clear();
 
             if (RenderTools.defaultTex != null)
-                texid = RenderTools.defaultTex.Id;
+                texid = RenderTools.defaultTex.RenderableTex.TexID;
 
             foreach (var item in Textures)
                 comboBox2.Items.Add(item.texture.Text);

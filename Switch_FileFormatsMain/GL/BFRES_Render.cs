@@ -238,6 +238,33 @@ namespace FirstPlugin
 
         public void CenterCamera(GL_ControlModern control)
         {
+            Vector3 minVector = new Vector3(0);
+            Vector3 maxVector = new Vector3(0);
+            if (models.Count != 0)
+            {
+                minVector = models[0].MinPosition;
+                maxVector = models[0].MaxPosition;
+            }
+
+            Vector3 translation = control.CameraPosition;
+
+            float minSize = Math.Min(Math.Min(minVector.X, minVector.Y), minVector.Z);
+            float maxSize = Math.Max(Math.Max(maxVector.X, maxVector.Y), maxVector.Z);
+            float scale = (10f / (maxSize - minSize)); //Try to adjust to screen
+            if (maxSize - minSize == 0) scale = 1;
+
+            Matrix4 centerMatrix = Matrix4.CreateTranslation(
+                -(minVector.X + maxVector.X) / 2,
+                -(minVector.Y + maxVector.Y) / 2,
+                -(minVector.Z + maxVector.Z) / 2);
+            Matrix4 translationMatrix = Matrix4.CreateTranslation(
+                (-translation.X / 50) / scale,
+                (translation.Y / 50) / scale,
+                control.CameraDistance / scale);
+
+
+
+            control.CameraPosition = centerMatrix.ExtractTranslation();
         }
 
         public static Vector4 GenerateBoundingSphere(IEnumerable<Vector4> boundingSpheres)
@@ -463,7 +490,7 @@ namespace FirstPlugin
             SetDefaultTextureAttributes(mat, shader);
 
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
-            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
             GL.ActiveTexture(TextureUnit.Texture11);
             GL.Uniform1(shader["weightRamp1"], 11);
@@ -478,7 +505,7 @@ namespace FirstPlugin
             
             GL.ActiveTexture(TextureUnit.Texture10);
             GL.Uniform1(shader["UVTestPattern"], 10);
-            GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
             GL.Uniform1(shader["normalMap"], 0);
             GL.Uniform1(shader["BakeShadowMap"], 0);
@@ -550,7 +577,7 @@ namespace FirstPlugin
         public static int BindTexture(MatTexture tex, bool IsWiiU)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
-            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.Id);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
             string activeTex = tex.Name;
             if (tex.animatedTexName != "")
