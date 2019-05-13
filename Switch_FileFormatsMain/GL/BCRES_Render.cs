@@ -24,10 +24,14 @@ namespace FirstPlugin
         int vbo_position;
         int ibo_elements;
 
+        //Uniform block buffers
+        int TexCoord1Buffer;
+
         private void GenerateBuffers()
         {
             GL.GenBuffers(1, out vbo_position);
             GL.GenBuffers(1, out ibo_elements);
+            GL.GenBuffers(1, out TexCoord1Buffer);
 
             UpdateVertexData();
             UpdateTextureMaps();
@@ -183,12 +187,28 @@ namespace FirstPlugin
             }
         }
 
+        private void SetUniformBlocks(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)
+        {
+            int UniformBlock = GL.GetUniformBlockIndex(shader.program, "TexCoord1");
+            GL.UniformBlockBinding(shader.program, UniformBlock, 0);
+
+
+            GL.BindBuffer(BufferTarget.UniformBuffer, TexCoord1Buffer);
+            GL.BufferData(BufferTarget.UniformBuffer,
+            (IntPtr)MTOBWrapper.TexCoord1.Size,
+            ref mat.TexCoord1Buffer,
+            BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+            GL.BindBufferRange(BufferRangeTarget.UniformBuffer, 0, TexCoord1Buffer, (IntPtr)0,
+                MTOBWrapper.TexCoord1.Size);
+        }
+
         private static void SetUniforms(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)
         {
             shader.SetBoolToInt("RigidSkinning", m.Shape.FaceGroups[0].SkinnningMode == BcresLibrary.Enums.SkinnningMode.Rigid);
             shader.SetBoolToInt("NoSkinning", m.Shape.FaceGroups[0].SkinnningMode == BcresLibrary.Enums.SkinnningMode.None);
         }
-
+ 
         private static void SetTextureUniforms(MTOBWrapper mat, SOBJWrapper m, ShaderProgram shader)
         {
             SetDefaultTextureAttributes(mat, shader);
@@ -311,6 +331,7 @@ namespace FirstPlugin
                 return;
 
             SetUniforms(m.MaterialWrapper, shader, m, m.DisplayId);
+            SetUniformBlocks(m.MaterialWrapper, shader, m, m.DisplayId);
             SetBoneUniforms(shader, mdl, m);
             SetVertexAttributes(m, shader);
             SetTextureUniforms(m.MaterialWrapper, m, shader);

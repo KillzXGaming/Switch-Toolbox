@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using BcresLibrary;
 using BcresLibrary.Enums;
+using OpenTK;
 
 namespace FirstPlugin
 {
@@ -32,12 +33,35 @@ namespace FirstPlugin
 
         }
 
+        public TexCoord1 TexCoord1Buffer;
+        public struct TexCoord1
+        {
+            public Vector2 Translate;
+            public float Rotate;
+            public Vector2 Scale;
+
+            public static readonly int Size =
+            BlittableValueType<TexCoord1>.Stride;
+        }
+
         public void Load(BCRES bcres, Material material)
         {
             Material = material;
             BcresParent = bcres;
 
-            Text = material.Name; 
+            Text = material.Name;
+
+            if (material.TexCoordSources.Count > 0)
+            {
+                TexCoord1Buffer = new TexCoord1()
+                {
+                    Translate = Utils.ToVec2(material.TexCoordSources[0].Translate),
+                    Rotate = material.TexCoordSources[0].Rotate,
+                    Scale = Utils.ToVec2(material.TexCoordSources[0].Scale),
+                };
+
+
+            }
 
             int textureUnit = 1;
             if (material.TextureMapInfo1 != null)
