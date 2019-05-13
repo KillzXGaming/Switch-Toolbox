@@ -1381,7 +1381,7 @@ namespace Bfres.Structs
             }
         }
 
-        public List<DisplayVertex> CreateDisplayVertices()
+        public List<DisplayVertex> CreateDisplayVertices(FMDL model)
         {
             // rearrange faces
             display = lodMeshes[DisplayLODIndex].getDisplayFace().ToArray();
@@ -1393,6 +1393,9 @@ namespace Bfres.Structs
 
             foreach (Vertex v in vertices)
             {
+                model.MaxPosition = OpenGLUtils.GetMax(model.MaxPosition, v.pos);
+                model.MinPosition = OpenGLUtils.GetMin(model.MinPosition, v.pos);
+
                 DisplayVertex displayVert = new DisplayVertex()
                 {
                     pos = v.pos,

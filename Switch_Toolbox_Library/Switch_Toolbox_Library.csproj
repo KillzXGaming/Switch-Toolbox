@@ -642,6 +642,7 @@
     <Compile Include="ThemeConfig.cs" />
     <Compile Include="UpdateProgram.cs" />
     <Compile Include="Util\ColorUtility.cs" />
+    <Compile Include="Util\OpenGLUtils.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="XML\XmlDoc.cs" />
   </ItemGroup>

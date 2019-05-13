@@ -12,11 +12,16 @@ using ResUGX2 = Syroot.NintenTools.Bfres.GX2;
 using ResGFX = Syroot.NintenTools.NSW.Bfres.GFX;
 using FirstPlugin;
 using FirstPlugin.Forms;
+using OpenTK;
 
 namespace Bfres.Structs
 {
     public class FMDL : STGenericModel
     {
+        //These get updated on UpdateVertexData()
+        public Vector3 MaxPosition = new Vector3(0);
+        public Vector3 MinPosition = new Vector3(0);
+
         public bool IsEdited { get; set; }
 
         public List<FSHP> shapes = new List<FSHP>();

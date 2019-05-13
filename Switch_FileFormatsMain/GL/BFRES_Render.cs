@@ -235,6 +235,11 @@ namespace FirstPlugin
             //Depth sort meshes
             DepthSortMeshes(control.CameraTarget);
         }
+
+        public void CenterCamera(GL_ControlModern control)
+        {
+        }
+
         public static Vector4 GenerateBoundingSphere(IEnumerable<Vector4> boundingSpheres)
         {
             // The initial max/min should be the first point.
@@ -286,6 +291,9 @@ namespace FirstPlugin
 
             if (models.Count > 0)
             {
+                if (models[0].Parent.Parent.IsSelected)
+                    CenterCamera(control);
+
                 if (models[0].shapes.Count > 0)
                 {
                     if (models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
@@ -714,6 +722,10 @@ namespace FirstPlugin
 
             foreach (FMDL mdl in models)
             {
+                //Reset min/max
+                mdl.MaxPosition = new Vector3(0);
+                mdl.MinPosition = new Vector3(0);
+
                 foreach (FSHP m in mdl.shapes)
                 {
                     progressBar.Task = "Updating Shape... " + m.Text;
@@ -722,7 +734,7 @@ namespace FirstPlugin
                     progressBar.Refresh();
 
                     m.Offset = poffset * 4;
-                    List<DisplayVertex> pv = m.CreateDisplayVertices();
+                    List<DisplayVertex> pv = m.CreateDisplayVertices(mdl);
                     Vs.AddRange(pv);
 
                     for (int i = 0; i < m.lodMeshes[m.DisplayLODIndex].displayFaceSize; i++)
