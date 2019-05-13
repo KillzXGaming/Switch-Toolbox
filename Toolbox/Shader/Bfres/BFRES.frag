@@ -76,6 +76,7 @@ uniform float bake_calc_type;
 uniform float enable_fresnel;
 uniform float enable_emission;
 uniform float cSpecularType;
+uniform float cIsEnableNormalMap;
 
 // Texture Map Toggles
 uniform int HasDiffuse;
@@ -165,7 +166,7 @@ void main()
 
 	int NormalMapUVIndex = 0;
 
-	if (uking_texture2_texcoord == 1)
+	if (uking_texture2_texcoord == 1 || cIsEnableNormalMap == 1)
 		NormalMapUVIndex = 1;
 
     vec3 N = normal;

@@ -153,7 +153,7 @@ namespace Bfres.Structs
         {
             return ((FMDL)Parent.Parent).GetResFileU();
         }
-        public void UpdateVertexData()
+        public override void UpdateVertexData()
         {
             ((FMDL)Parent.Parent).UpdateVertexData();
         }
@@ -444,11 +444,9 @@ namespace Bfres.Structs
                 {
                     bool UseUVLayer2 = false;
 
-                    //for BOTW if it uses UV layer 2 for normal maps use second UV map
-                    if (Parent != null && GetMaterial().shaderassign.options.ContainsKey("uking_texture2_texcoord"))
-                    {
-                        float value = float.Parse(GetMaterial().shaderassign.options["uking_texture2_texcoord"]);
-                        UseUVLayer2 = (value == 1);
+                    //check second UV layer
+                    if (Parent != null) {
+                        UseUVLayer2 = GetMaterial().IsNormalMapTexCoord2();
                     }
 
                     CalculateTangentBitangent(UseUVLayer2);

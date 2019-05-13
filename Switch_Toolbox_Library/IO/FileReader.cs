@@ -44,6 +44,11 @@ namespace Switch_Toolbox.Library.IO
             return signature == Identifier;
         }
 
+        public string ReadZeroTerminatedString()
+        {
+            return ReadString(BinaryStringFormat.ZeroTerminated);
+        }
+
         /// <summary>
         /// Checks the byte order mark to determine the endianness of the reader.
         /// </summary>

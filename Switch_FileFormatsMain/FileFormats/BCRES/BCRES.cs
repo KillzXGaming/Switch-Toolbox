@@ -55,6 +55,7 @@ namespace FirstPlugin
             AddNodeGroup(BcresFile.Data.Lookups, new BCRESGroupNode(BCRESGroupType.Lookups));
             AddNodeGroup(BcresFile.Data.Shaders, new BCRESGroupNode(BCRESGroupType.Shaders));
             AddNodeGroup(BcresFile.Data.Cameras, new BCRESGroupNode(BCRESGroupType.Cameras));
+            AddNodeGroup(BcresFile.Data.Lights, new BCRESGroupNode(BCRESGroupType.Lights));
             AddNodeGroup(BcresFile.Data.Fogs, new BCRESGroupNode(BCRESGroupType.Fogs));
             AddNodeGroup(BcresFile.Data.Scenes, new BCRESGroupNode(BCRESGroupType.Scenes));
             AddNodeGroup(BcresFile.Data.SkeletalAnims, new BCRESGroupNode(BCRESGroupType.SkeletalAnim));

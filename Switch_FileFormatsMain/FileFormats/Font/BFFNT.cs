@@ -622,4 +622,46 @@ namespace FirstPlugin
             }
         }
     }
+
+    public class CMAP
+    {
+        public uint CharacterCodeBegin { get; set; }
+        public uint CharacterCodeEnd { get; set; }
+
+        public Mapping MappingMethod { get; set; }
+
+        private ushort Padding;
+
+        public enum Mapping : ushort
+        {
+            Direct,
+            Table,
+            Scan,
+        }
+
+        public void Read(FileReader reader, FFNT header)
+        {
+            reader.ReadSignature(4, "CMAP ");
+            uint SectionSize = reader.ReadUInt32();
+            if (header.Version > 0x3000000)
+            {
+                CharacterCodeBegin = reader.ReadUInt32();
+                CharacterCodeEnd = reader.ReadUInt32();
+                MappingMethod = reader.ReadEnum<Mapping>(true);
+                Padding = reader.ReadUInt16();
+            }
+            else
+            {
+                CharacterCodeBegin = reader.ReadUInt16();
+                CharacterCodeEnd = reader.ReadUInt16();
+                MappingMethod = reader.ReadEnum<Mapping>(true);
+                Padding = reader.ReadUInt16();
+            }
+            uint NextMapOffset = reader.ReadUInt32();
+            if (NextMapOffset != 0)
+            {
+                reader.Seek(NextMapOffset - 8, SeekOrigin.Current);
+            }
+        }
+    }
 }

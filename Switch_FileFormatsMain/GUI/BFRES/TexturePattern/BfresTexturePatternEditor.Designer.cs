@@ -45,6 +45,7 @@
             this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.stPanel7 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.btnEditSamplers = new Switch_Toolbox.Library.Forms.STButton();
             this.btnEditMaterial = new Switch_Toolbox.Library.Forms.STButton();
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
@@ -65,7 +66,6 @@
             this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
             this.splitter4 = new System.Windows.Forms.Splitter();
             this.splitter2 = new System.Windows.Forms.Splitter();
-            this.btnEditSamplers = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel3.SuspendLayout();
             this.stPanel5.SuspendLayout();
             this.stPanel6.SuspendLayout();
@@ -249,6 +249,17 @@
             this.stPanel7.Size = new System.Drawing.Size(480, 834);
             this.stPanel7.TabIndex = 14;
             // 
+            // btnEditSamplers
+            // 
+            this.btnEditSamplers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEditSamplers.Location = new System.Drawing.Point(299, 41);
+            this.btnEditSamplers.Name = "btnEditSamplers";
+            this.btnEditSamplers.Size = new System.Drawing.Size(47, 23);
+            this.btnEditSamplers.TabIndex = 15;
+            this.btnEditSamplers.Text = "Edit";
+            this.btnEditSamplers.UseVisualStyleBackColor = false;
+            this.btnEditSamplers.Click += new System.EventHandler(this.stButton1_Click);
+            // 
             // btnEditMaterial
             // 
             this.btnEditMaterial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -274,11 +285,10 @@
             this.pictureBoxCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Empty;
             this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
             this.pictureBoxCustom1.Location = new System.Drawing.Point(6, 102);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
-            this.pictureBoxCustom1.Size = new System.Drawing.Size(467, 506);
+            this.pictureBoxCustom1.Size = new System.Drawing.Size(467, 658);
             this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxCustom1.TabIndex = 0;
             this.pictureBoxCustom1.TabStop = false;
@@ -317,18 +327,18 @@
             this.stPanel1.Controls.Add(this.currentFrameCounterUD);
             this.stPanel1.Controls.Add(this.stPanel4);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.stPanel1.Location = new System.Drawing.Point(0, 614);
+            this.stPanel1.Location = new System.Drawing.Point(0, 766);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(480, 220);
+            this.stPanel1.Size = new System.Drawing.Size(480, 68);
             this.stPanel1.TabIndex = 1;
             // 
             // loopChkBox
             // 
-            this.loopChkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.loopChkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.loopChkBox.AutoSize = true;
             this.loopChkBox.Checked = true;
             this.loopChkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.loopChkBox.Location = new System.Drawing.Point(367, 10);
+            this.loopChkBox.Location = new System.Drawing.Point(355, 11);
             this.loopChkBox.Name = "loopChkBox";
             this.loopChkBox.Size = new System.Drawing.Size(50, 17);
             this.loopChkBox.TabIndex = 17;
@@ -337,9 +347,8 @@
             // 
             // animationTrackBar
             // 
-            this.animationTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.animationTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.animationTrackBar.BackColor = System.Drawing.Color.Empty;
             this.animationTrackBar.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.animationTrackBar.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.animationTrackBar.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -350,7 +359,7 @@
             this.animationTrackBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
             this.animationTrackBar.ForeColor = System.Drawing.Color.White;
             this.animationTrackBar.LargeChange = ((uint)(5u));
-            this.animationTrackBar.Location = new System.Drawing.Point(16, 65);
+            this.animationTrackBar.Location = new System.Drawing.Point(6, 46);
             this.animationTrackBar.Maximum = 1000;
             this.animationTrackBar.MouseEffects = false;
             this.animationTrackBar.Name = "animationTrackBar";
@@ -358,7 +367,7 @@
             this.animationTrackBar.ScaleSubDivisions = 5;
             this.animationTrackBar.ShowDivisionsText = true;
             this.animationTrackBar.ShowSmallScale = false;
-            this.animationTrackBar.Size = new System.Drawing.Size(459, 37);
+            this.animationTrackBar.Size = new System.Drawing.Size(456, 19);
             this.animationTrackBar.SmallChange = ((uint)(1u));
             this.animationTrackBar.TabIndex = 16;
             this.animationTrackBar.Text = "colorSlider1";
@@ -375,8 +384,8 @@
             // 
             // maxFrameCounterUD
             // 
-            this.maxFrameCounterUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.maxFrameCounterUD.Location = new System.Drawing.Point(364, 33);
+            this.maxFrameCounterUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.maxFrameCounterUD.Location = new System.Drawing.Point(353, 28);
             this.maxFrameCounterUD.Name = "maxFrameCounterUD";
             this.maxFrameCounterUD.Size = new System.Drawing.Size(109, 20);
             this.maxFrameCounterUD.TabIndex = 15;
@@ -384,7 +393,8 @@
             // 
             // currentFrameCounterUD
             // 
-            this.currentFrameCounterUD.Location = new System.Drawing.Point(16, 33);
+            this.currentFrameCounterUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.currentFrameCounterUD.Location = new System.Drawing.Point(9, 28);
             this.currentFrameCounterUD.Name = "currentFrameCounterUD";
             this.currentFrameCounterUD.Size = new System.Drawing.Size(109, 20);
             this.currentFrameCounterUD.TabIndex = 14;
@@ -392,16 +402,16 @@
             // 
             // stPanel4
             // 
-            this.stPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.stPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stPanel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.stPanel4.Controls.Add(this.btnStop);
             this.stPanel4.Controls.Add(this.btnForward1);
             this.stPanel4.Controls.Add(this.btnPlay);
             this.stPanel4.Controls.Add(this.btnBackward1);
-            this.stPanel4.Location = new System.Drawing.Point(135, 16);
+            this.stPanel4.Location = new System.Drawing.Point(123, 11);
             this.stPanel4.Name = "stPanel4";
-            this.stPanel4.Size = new System.Drawing.Size(225, 45);
+            this.stPanel4.Size = new System.Drawing.Size(225, 37);
             this.stPanel4.TabIndex = 13;
             // 
             // btnStop
@@ -411,9 +421,9 @@
             this.btnStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnStop.FlatAppearance.BorderSize = 0;
             this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStop.Location = new System.Drawing.Point(160, 7);
+            this.btnStop.Location = new System.Drawing.Point(159, 6);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(35, 35);
+            this.btnStop.Size = new System.Drawing.Size(35, 27);
             this.btnStop.TabIndex = 3;
             this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
@@ -425,7 +435,7 @@
             this.btnForward1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnForward1.FlatAppearance.BorderSize = 0;
             this.btnForward1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnForward1.Location = new System.Drawing.Point(117, 15);
+            this.btnForward1.Location = new System.Drawing.Point(116, 10);
             this.btnForward1.Name = "btnForward1";
             this.btnForward1.Size = new System.Drawing.Size(23, 20);
             this.btnForward1.TabIndex = 2;
@@ -439,9 +449,9 @@
             this.btnPlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPlay.FlatAppearance.BorderSize = 0;
             this.btnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPlay.Location = new System.Drawing.Point(65, 8);
+            this.btnPlay.Location = new System.Drawing.Point(64, 6);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(35, 35);
+            this.btnPlay.Size = new System.Drawing.Size(35, 28);
             this.btnPlay.TabIndex = 0;
             this.btnPlay.UseVisualStyleBackColor = false;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
@@ -453,7 +463,7 @@
             this.btnBackward1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnBackward1.FlatAppearance.BorderSize = 0;
             this.btnBackward1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBackward1.Location = new System.Drawing.Point(26, 15);
+            this.btnBackward1.Location = new System.Drawing.Point(25, 10);
             this.btnBackward1.Name = "btnBackward1";
             this.btnBackward1.Size = new System.Drawing.Size(20, 20);
             this.btnBackward1.TabIndex = 1;
@@ -504,17 +514,6 @@
             this.splitter2.Size = new System.Drawing.Size(729, 3);
             this.splitter2.TabIndex = 8;
             this.splitter2.TabStop = false;
-            // 
-            // btnEditSamplers
-            // 
-            this.btnEditSamplers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEditSamplers.Location = new System.Drawing.Point(299, 41);
-            this.btnEditSamplers.Name = "btnEditSamplers";
-            this.btnEditSamplers.Size = new System.Drawing.Size(47, 23);
-            this.btnEditSamplers.TabIndex = 15;
-            this.btnEditSamplers.Text = "Edit";
-            this.btnEditSamplers.UseVisualStyleBackColor = false;
-            this.btnEditSamplers.Click += new System.EventHandler(this.stButton1_Click);
             // 
             // BfresTexturePatternEditor
             // 

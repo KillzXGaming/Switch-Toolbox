@@ -235,6 +235,7 @@
     <Compile Include="FileFormats\BFRES\Bfres Structs\CurveHelper.cs" />
     <Compile Include="FileFormats\BFRES\BFRES.cs" />
     <Compile Include="FileFormats\Texture\NUT.cs" />
+    <Compile Include="FileFormats\Texture\TEX3DS.cs" />
     <Compile Include="FileFormats\XLINK\XLINK.cs" />
     <Compile Include="GL\BCRES_Render.cs" />
     <Compile Include="GL\Helpers\DepthGLControl.cs" />

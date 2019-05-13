@@ -206,7 +206,10 @@ namespace FirstPlugin
                 if (ForceMipCount)
                     MipmapNum.Maximum = SelectedTexSettings.MipCount;
                 else
-                    MipmapNum.Maximum = SelectedTexSettings.GetTotalMipCount() + 1;
+                {
+                    MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
+                    SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
+                }
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
             }

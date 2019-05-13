@@ -235,7 +235,7 @@ namespace FirstPlugin
             comboBoxFormatWeights.Items.Add(AttribFormat.Format_16_16_UNorm);
             comboBoxFormatWeights.Items.Add(AttribFormat.Format_8_8_UNorm);
             comboBoxFormatWeights.Items.Add(AttribFormat.Format_8_UNorm);
-            comboBoxFormatWeights.SelectedIndex = 2;
+            comboBoxFormatWeights.SelectedIndex = 0;
 
             comboBoxFormatTangents.Items.Add(AttribFormat.Format_32_32_32_32_Single);
             comboBoxFormatTangents.Items.Add(AttribFormat.Format_16_16_16_16_Single);

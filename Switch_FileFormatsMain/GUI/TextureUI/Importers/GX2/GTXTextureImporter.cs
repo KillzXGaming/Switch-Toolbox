@@ -216,7 +216,8 @@ namespace FirstPlugin
 
                 SetupSettings();
 
-                MipmapNum.Maximum = SelectedTexSettings.GetTotalMipCount() + 1;
+                MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
+                    SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
 
                 //Force the mip counter to be the selected mip counter
                 //Some textures like bflim (used for UI) only have 1

@@ -23,7 +23,7 @@ namespace Switch_Toolbox.Library.Forms
             comboBox1.Items.Add(2);
 
             comboBox1.SelectedIndex = 0;
-            barSlider1.Value = 0;
+            barSlider1.Value = 50;
         }
 
         public class ActiveTexture
@@ -55,7 +55,7 @@ namespace Switch_Toolbox.Library.Forms
         bool IsSRTLoaded = false;
         public void Reset()
         {
-            barSlider1.Value = brightness;
+            barSlider1.Value = (int)(brightness * 100);
 
             scaleXUD.Value = 1;
             scaleYUD.Value = 1;
@@ -87,7 +87,7 @@ namespace Switch_Toolbox.Library.Forms
                 Color uvColor = Color.LightGreen;
                 Color gridColor = Color.Black;
 
-           
+
 
                 List<int> f = genericObject.lodMeshes[0].getDisplayFace();
 
@@ -101,7 +101,8 @@ namespace Switch_Toolbox.Library.Forms
                     Vector2 v2 = new Vector2(0);
                     Vector2 v3 = new Vector2(0);
 
-                    if (UvChannelIndex == 0) {
+                    if (UvChannelIndex == 0)
+                    {
                         v1 = genericObject.vertices[f[v]].uv0;
                         v2 = genericObject.vertices[f[v + 1]].uv0;
                         v3 = genericObject.vertices[f[v + 2]].uv0;
@@ -142,8 +143,8 @@ namespace Switch_Toolbox.Library.Forms
 
             // Draw Grid
             GL.Color3(gridColor);
-          //  DrawHorizontalGrid(divisions, bounds, scaleUv);
-           // DrawVerticalGrid(divisions, bounds, scaleUv);
+            //  DrawHorizontalGrid(divisions, bounds, scaleUv);
+            // DrawVerticalGrid(divisions, bounds, scaleUv);
         }
 
         private static void DrawUvTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color uvColor, Vector2 scaleUv, Vector2 transUv)
@@ -162,7 +163,7 @@ namespace Switch_Toolbox.Library.Forms
             GL.End();
 
             GL.Begin(PrimitiveType.Lines);
-            GL.LineWidth(3);    
+            GL.LineWidth(3);
             GL.Vertex2(v3 * scaleUv + transUv);
             GL.Vertex2(v1 * scaleUv + transUv);
             GL.End();
@@ -171,12 +172,12 @@ namespace Switch_Toolbox.Library.Forms
         private void SetupRendering(float lineWidth)
         {
             // Go to 2D
-            GL.Viewport(0,0, gL_ControlLegacy2D1.Width, gL_ControlLegacy2D1.Height);
+            GL.Viewport(0, 0, gL_ControlLegacy2D1.Width, gL_ControlLegacy2D1.Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.PushMatrix();
             GL.LoadIdentity();
             float aspect = (float)gL_ControlLegacy2D1.Width / (float)gL_ControlLegacy2D1.Height;
-            GL.Ortho(-aspect, aspect, -1, 1, -1 , 1);
+            GL.Ortho(-aspect, aspect, -1, 1, -1, 1);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
             GL.LoadIdentity();
@@ -215,7 +216,7 @@ namespace Switch_Toolbox.Library.Forms
         float PosX;
         float PosY;
         float ZoomValue = 1;
-        
+
         Point MouseDownPos;
 
         private float FindHCF(float m, float n)
@@ -352,7 +353,9 @@ namespace Switch_Toolbox.Library.Forms
         private void OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Delta > 0 && ZoomValue > 0) ZoomValue += 0.1f;
-            if (e.Delta < 0 && ZoomValue < 30 && ZoomValue > 0.1) ZoomValue -= 0.1f;
+            if (e.Delta < 0 && ZoomValue < 30 && ZoomValue > 0.2) ZoomValue -= 0.1f;
+
+            Console.WriteLine("ZoomValue " + ZoomValue);
 
             gL_ControlLegacy2D1.Invalidate();
         }
@@ -417,12 +420,6 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        private void stTrackBar1_Scroll(object sender, EventArgs e)
-        {
-            brightness = barSlider1.Value;
-            gL_ControlLegacy2D1.Invalidate();
-        }
-
         private void OnNumbicValueSRT_ValueChanged(object sender, EventArgs e)
         {
         }
@@ -431,10 +428,11 @@ namespace Switch_Toolbox.Library.Forms
         {
             foreach (var shape in ActiveObjects)
             {
-                Vector2 Scale = new Vector2( (float)scaleXUD.Value, (float)scaleYUD.Value);
+                Vector2 Scale = new Vector2((float)scaleXUD.Value, (float)scaleYUD.Value);
                 Vector2 Translate = new Vector2((float)transXUD.Value, (float)transYUD.Value);
 
                 shape.TransformUVs(Translate, Scale, UvChannelIndex);
+                shape.UpdateVertexData();
             }
 
             scaleXUD.Value = 1;
@@ -447,6 +445,17 @@ namespace Switch_Toolbox.Library.Forms
 
         private void gL_ControlLegacy2D1_Resize(object sender, EventArgs e)
         {
+            gL_ControlLegacy2D1.Invalidate();
+        }
+
+        private void barSlider1_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void barSlider1_ValueChanged(object sender, EventArgs e)
+        {
+            brightness = (float)barSlider1.Value / 100;
             gL_ControlLegacy2D1.Invalidate();
         }
     }

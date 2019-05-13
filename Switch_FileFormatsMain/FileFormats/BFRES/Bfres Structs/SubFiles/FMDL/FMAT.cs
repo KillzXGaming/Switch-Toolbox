@@ -196,6 +196,25 @@ namespace Bfres.Structs
            return ((BFRES)Parent.Parent.Parent.Parent).BFRESRender;
         }
 
+        public bool IsNormalMapTexCoord2()
+        {
+            //for BOTW if it uses UV layer 2 for normal maps use second UV map
+            if (shaderassign.options.ContainsKey("uking_texture2_texcoord"))
+            {
+                float value = float.Parse(shaderassign.options["uking_texture2_texcoord"]);
+                return (value == 1);
+            }
+
+            //For 3D world
+            if (shaderassign.options.ContainsKey("cIsEnableNormalMap"))
+            {
+                float value = float.Parse(shaderassign.options["cIsEnableNormalMap"]);
+                return (value == 1);
+            }
+
+            return false;
+        }
+
         public void SetActiveGame()
         {
             Runtime.activeGame = Runtime.ActiveGame.KSA;

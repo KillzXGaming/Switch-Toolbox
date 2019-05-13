@@ -120,8 +120,8 @@ namespace FirstPlugin
             Formats.Add(typeof(BFFNT));
             Formats.Add(typeof(MSBT));
             Formats.Add(typeof(XLINK));
-            
-       //     Formats.Add(typeof(BFSAR));
+
+            //     Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BARS));
       //      Formats.Add(typeof(BFLAN));
        //     Formats.Add(typeof(BFLYT));
@@ -158,11 +158,11 @@ namespace FirstPlugin
             Formats.Add(typeof(NARC));
         //    Formats.Add(typeof(SDF));
             Formats.Add(typeof(TMPK));
+            Formats.Add(typeof(TEX3DS));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
-
-
+            
             return Formats.ToArray();
         }
         #endregion

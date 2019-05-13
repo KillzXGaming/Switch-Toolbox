@@ -265,7 +265,7 @@ namespace FirstPlugin
                             {
                                 if (anim is FMAA)
                                 {
-                                    foreach (FMAA.MaterialAnimEntry mat in ((FSKA)anim).Nodes)
+                                    foreach (FMAA.MaterialAnimEntry mat in ((FMAA)anim).Nodes)
                                     {
 
                                     }

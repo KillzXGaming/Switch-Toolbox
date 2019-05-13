@@ -63,10 +63,20 @@ namespace Switch_Toolbox.Library.Rendering
                     pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
                 case TEX_FORMAT.BC4_UNORM:
-                    pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
-                    break;
                 case TEX_FORMAT.BC4_SNORM:
-                    pixelInternalFormat = PixelInternalFormat.CompressedSignedRedRgtc1;
+                    //Convert to rgb to prevent red output
+                    //While shaders could prevent this, converting is easier and works fine across all editors
+                    data = STGenericTexture.DecodeBlock(data,
+                        GenericTexture.Width,
+                        GenericTexture.Height,
+                        GenericTexture.Format,
+                        GenericTexture.PlatformSwizzle);
+
+                    pixelInternalFormat = PixelInternalFormat.Rgba;
+                    pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+
+                   // pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
+                    //     pixelInternalFormat = PixelInternalFormat.CompressedSignedRedRgtc1;
                     break;
                 case TEX_FORMAT.BC5_SNORM:
                     pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;

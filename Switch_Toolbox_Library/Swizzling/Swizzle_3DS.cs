@@ -41,6 +41,7 @@ namespace Switch_Toolbox.Library
                 case PICASurfaceFormat.L8: return TEX_FORMAT.L8;
                 case PICASurfaceFormat.A8: return TEX_FORMAT.A8_UNORM;
                 case PICASurfaceFormat.LA4: return TEX_FORMAT.LA4;
+                case PICASurfaceFormat.L4: return TEX_FORMAT.L4;
                 case PICASurfaceFormat.A4: return TEX_FORMAT.A4;
                 case PICASurfaceFormat.ETC1: return TEX_FORMAT.ETC1;
                 case PICASurfaceFormat.ETC1A4: return TEX_FORMAT.ETC1_A4;

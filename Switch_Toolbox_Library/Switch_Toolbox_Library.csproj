@@ -408,6 +408,12 @@
     <Compile Include="Forms\Editors\Animation\TimeLine.Designer.cs">
       <DependentUpon>TimeLine.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\UV\UVEditor2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\UV\UVEditor2.Designer.cs">
+      <DependentUpon>UVEditor2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Extensions\MDICustom.cs" />
     <Compile Include="Forms\Editors\Object Editor\ObjectEditor.cs">
       <SubType>Form</SubType>
@@ -488,6 +494,7 @@
     <Compile Include="Forms\Wpf\WpfTimeline.xaml.cs">
       <DependentUpon>WpfTimeline.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generics\GenericBitmapTexture.cs" />
     <Compile Include="Generics\GenericMaterial.cs" />
     <Compile Include="Generics\GenericMatTexture.cs" />
     <Compile Include="Generics\GenericModel.cs" />
@@ -769,6 +776,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditor.resx">
       <DependentUpon>UVEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\UV\UVEditor2.resx">
+      <DependentUpon>UVEditor2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GL\GLControl2D.resx">
       <DependentUpon>GLControl2D.cs</DependentUpon>

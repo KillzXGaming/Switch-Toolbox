@@ -96,7 +96,7 @@ namespace FirstPlugin
 
             TexWidth = (uint)Image.Width;
             TexHeight = (uint)Image.Height;
-            MipCount = (uint)GetTotalMipCount();
+            MipCount = (uint)STGenericTexture.GenerateTotalMipCount(TexWidth, TexHeight);
 
             DecompressedData.Add(BitmapExtension.ImageToByte(Image));
 
@@ -106,32 +106,7 @@ namespace FirstPlugin
                 throw new Exception("Failed to load " + Format);
             }
         }
-
-        public int GetTotalMipCount()
-        {
-            int MipmapNum = 0;
-            uint num = Math.Max(TexHeight, TexWidth);
-
-            int width = (int)TexWidth;
-            int height = (int)TexHeight;
-
-            while (true)
-            {
-                num >>= 1;
-
-                width = width / 2;
-                height = height / 2;
-                if (width <= 0 || height <= 0)
-                    break;
-
-                if (num > 0)
-                    ++MipmapNum;
-                else
-                    break;
-            }
-
-            return MipmapNum;
-        }
+        
         public byte[] GenerateMips(int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);

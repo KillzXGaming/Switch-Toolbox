@@ -18,6 +18,12 @@ namespace Switch_Toolbox.Library
 
         }
 
+        //To update buffer data for opengl
+        public virtual void UpdateVertexData()
+        {
+
+        }
+
         public bool HasPos;
         public bool HasNrm;
         public bool HasUv0;

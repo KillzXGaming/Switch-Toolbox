@@ -728,7 +728,32 @@ namespace Switch_Toolbox.Library
             return channels;
         }
 
-   
+        public static int GenerateTotalMipCount(uint Width, uint Height)
+        {
+            int MipmapNum = 0;
+            uint num = Math.Max(Width, Height);
+
+            int width = (int)Width;
+            int height = (int)Height;
+
+            while (true)
+            {
+                num >>= 1;
+
+                width = width / 2;
+                height = height / 2;
+                if (width <= 0 || height <= 0)
+                    break;
+
+                if (num > 0)
+                    ++MipmapNum;
+                else
+                    break;
+            }
+
+            return MipmapNum;
+        }
+
         public static string SetNameFromPath(string path)
         {
             string FileName = Path.GetFileName(path);

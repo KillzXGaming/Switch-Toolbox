@@ -868,6 +868,8 @@ namespace FirstPlugin
             //This uniform sets various maps for BOTW to use second UV channel
             SetUniformData(mat, shader, "uking_texture2_texcoord");
 
+            SetUniformData(mat, shader, "cIsEnableNormalMap");
+
             SetUniformData(mat, shader, "tex_mtx0");
 
             //Sets shadow type
