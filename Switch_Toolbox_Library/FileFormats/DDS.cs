@@ -652,6 +652,7 @@ namespace Switch_Toolbox.Library
             throw new NotImplementedException("Cannot set image data! Operation not implemented!");
         }
 
+        //Todo create actual cube map conversion with Renderable Texture from generic one
         public static TextureCubeMap CreateGLCubeMap(DDS dds)
         {
             TextureCubeMap texture = new TextureCubeMap();
@@ -659,10 +660,30 @@ namespace Switch_Toolbox.Library
 
             bool Compressed = dds.IsCompressed();
 
+           
             if (Compressed)
             {
+                PixelInternalFormat pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
+                switch (dds.Format)
+                {
+                    case TEX_FORMAT.BC1_UNORM:
+                    case TEX_FORMAT.BC1_UNORM_SRGB:
+                        pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
+                        break;
+                    case TEX_FORMAT.BC2_UNORM:
+                    case TEX_FORMAT.BC2_UNORM_SRGB:
+                        pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
+                        break;
+                    case TEX_FORMAT.BC3_UNORM:
+                    case TEX_FORMAT.BC3_UNORM_SRGB:
+                        pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
+                        break;
+                    default:
+                        throw new Exception("Unsupported format! " + dds.Format);
+                }
+
                 texture.LoadImageData((int)dds.header.width,
-                    (InternalFormat)PixelInternalFormat.CompressedRgbaS3tcDxt1Ext,
+                    (InternalFormat)pixelInternalFormat,
                     cubemap[0].mipmaps,
                     cubemap[1].mipmaps,
                     cubemap[2].mipmaps,
