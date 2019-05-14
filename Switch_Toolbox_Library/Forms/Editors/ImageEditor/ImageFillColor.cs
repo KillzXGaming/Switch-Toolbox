@@ -21,7 +21,7 @@ namespace Switch_Toolbox.Library.Forms
 
             CanResize = true;
 
-            stCheckBox1.BackColor = FillColor;
+            stButton1.BackColor = FillColor;
         }
 
         private void stButton1_Click(object sender, EventArgs e)
@@ -29,7 +29,7 @@ namespace Switch_Toolbox.Library.Forms
             ColorDialog colorDialog = new ColorDialog();
             if (colorDialog.ShowDialog() == DialogResult.OK) {
                 FillColor = colorDialog.Color;
-                stCheckBox1.BackColor = FillColor;
+                stButton1.BackColor = FillColor;
             }
         }
 
