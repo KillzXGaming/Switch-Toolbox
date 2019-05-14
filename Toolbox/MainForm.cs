@@ -71,6 +71,7 @@ namespace Toolbox
         //Use for files opened with program
         public List<string> openedFiles = new List<string>();
 
+        private VersionCheck VersionCheck;
         private void Form1_Load(object sender, EventArgs e)
         {
             VersionCheck version = new VersionCheck();
@@ -154,7 +155,8 @@ namespace Toolbox
         bool UsePrompt = true;
         private void Application_Idle(object sender, EventArgs e)
         {
-            if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck && UsePrompt)
+            if (UpdateProgram.CanUpdate && Runtime.EnableVersionCheck && UsePrompt &&
+                UpdateProgram.CommitList.Count > 0)
             {
                 updateToolstrip.Enabled = true;
             }
@@ -162,21 +164,12 @@ namespace Toolbox
 
         private void UpdateNotifcationClick()
         {
-        /*    var dialog = new GithubUpdateDialog();
+            if (UpdateProgram.CommitList.Count <= 0)
+                return;
+
+            var dialog = new GithubUpdateDialog();
             dialog.LoadCommits(UpdateProgram.CommitList);
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-
-            }*/
-
-            //Prompt once for the user to update the tool. 
-            DialogResult result;
-            using (DialogCenteringService centeringService = new DialogCenteringService(this)) // center message box
-            {
-                result = MessageBox.Show($"A new update is available {UpdateProgram.LatestRelease.TagName} \n\n{UpdateProgram.LatestRelease.Body}!" +
-               $" Would you like to install it?", "Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-            }
-            if (result == DialogResult.Yes)
+            if (dialog.ShowDialog() == DialogResult.Yes)
             {
                 UpdateApplication();
             }

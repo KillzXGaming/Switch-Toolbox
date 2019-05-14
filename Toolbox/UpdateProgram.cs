@@ -51,13 +51,16 @@ namespace Toolbox
         {
             var options = new ApiOptions
             {
-                PageSize = 5,
+                PageSize = 20,
                 PageCount = 1
             };
 
             foreach (GitHubCommit c in await client.Repository.Commit.GetAll("KillzXGaming", "Switch-Toolbox",  options))
             {
-                CommitList.Add(c);
+                if (!Runtime.CompileDate.Contains(c.Commit.Author.Date.DateTime.ToString()))
+                    CommitList.Add(c);
+                else
+                    break;
             }
         }
 
