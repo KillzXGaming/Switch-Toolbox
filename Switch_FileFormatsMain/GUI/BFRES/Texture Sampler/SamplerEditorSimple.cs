@@ -18,6 +18,8 @@ namespace FirstPlugin.Forms
         public SamplerEditorSimple()
         {
             InitializeComponent();
+            SetEditorOrientation(true);
+            DisplayVertical();
         }
 
         public void LoadTexture(MatTexture texture)

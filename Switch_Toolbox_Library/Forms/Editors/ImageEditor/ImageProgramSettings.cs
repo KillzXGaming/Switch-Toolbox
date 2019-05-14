@@ -13,6 +13,8 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ImageProgramSettings : STForm
     {
+        public bool OpenDefaultProgramSelection = false;
+
         public ImageProgramSettings()
         {
             InitializeComponent();
@@ -65,19 +67,8 @@ namespace Switch_Toolbox.Library.Forms
 
         private void stButton2_Click(object sender, EventArgs e)
         {
-            string UseExtension = GetSelectedExtension();
-
-            string TemporaryName = Path.GetTempFileName();
-            TemporaryName = Path.ChangeExtension(TemporaryName, UseExtension);
-
-            ShowOpenWithDialog(TemporaryName);
-        }
-
-        public static Process ShowOpenWithDialog(string path)
-        {
-            var args = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "shell32.dll");
-            args += ",OpenAs_RunDLL " + path;
-            return Process.Start("rundll32.exe", args);
+            OpenDefaultProgramSelection = true;
+            DialogResult = DialogResult.OK;
         }
     }
 }

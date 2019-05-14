@@ -189,18 +189,21 @@ namespace FirstPlugin
 
         private void SetUniformBlocks(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)
         {
-            int UniformBlock = GL.GetUniformBlockIndex(shader.program, "TexCoord1");
-            GL.UniformBlockBinding(shader.program, UniformBlock, 0);
+            shader.UniformBlockBinding("TexCoord1", 3);
+            GL.GetActiveUniformBlock(shader.program,
+                            shader.GetUniformBlockIndex("TexCoord1"),
+                            ActiveUniformBlockParameter.UniformBlockBinding, out int binding);
 
-
-            GL.BindBuffer(BufferTarget.UniformBuffer, TexCoord1Buffer);
-            GL.BufferData(BufferTarget.UniformBuffer,
-            (IntPtr)MTOBWrapper.TexCoord1.Size,
-            ref mat.TexCoord1Buffer,
-            BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
-            GL.BindBufferRange(BufferRangeTarget.UniformBuffer, 0, TexCoord1Buffer, (IntPtr)0,
-                MTOBWrapper.TexCoord1.Size);
+            /*      GL.BindBuffer(BufferTarget.UniformBuffer, TexCoord1Buffer);
+                  GL.BufferData(BufferTarget.UniformBuffer,
+                  (IntPtr)MTOBWrapper.TexCoord1.Size,
+                  ref mat.TexCoord1Buffer,
+                  BufferUsageHint.StaticDraw);
+                  GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+                  GL.BindBufferRange(BufferRangeTarget.UniformBuffer, 0, TexCoord1Buffer, (IntPtr)0,
+                      MTOBWrapper.TexCoord1.Size);
+                  GL.BindBuffer(BufferTarget.UniformBuffer, TexCoord1Buffer);
+                  GL.BINDBUFFER*/
         }
 
         private static void SetUniforms(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)

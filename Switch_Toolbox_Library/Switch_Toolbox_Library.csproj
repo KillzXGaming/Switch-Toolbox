@@ -342,6 +342,12 @@
     <Compile Include="Forms\Editors\HexEditor\SearchHex.Designer.cs">
       <DependentUpon>SearchHex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\ImageEditor\ImageFillColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\ImageEditor\ImageFillColor.Designer.cs">
+      <DependentUpon>ImageFillColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\ImageEditor\ImageProgramSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -484,15 +490,6 @@
     </Compile>
     <Compile Include="Forms\ViewportDivider.Designer.cs">
       <DependentUpon>ViewportDivider.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Wpf\STTimeLineControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Wpf\STTimeLineControl.Designer.cs">
-      <DependentUpon>STTimeLineControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Wpf\WpfTimeline.xaml.cs">
-      <DependentUpon>WpfTimeline.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generics\GenericBitmapTexture.cs" />
     <Compile Include="Generics\GenericMaterial.cs" />
@@ -718,6 +715,9 @@
     <EmbeddedResource Include="Forms\Editors\HexEditor\SearchHex.resx">
       <DependentUpon>SearchHex.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\ImageEditor\ImageFillColor.resx">
+      <DependentUpon>ImageFillColor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\ImageEditor\ImageProgramSettings.resx">
       <DependentUpon>ImageProgramSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -795,9 +795,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ViewportDivider.resx">
       <DependentUpon>ViewportDivider.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Wpf\STTimeLineControl.resx">
-      <DependentUpon>STTimeLineControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\ListViewCustom.resx">
       <DependentUpon>ListViewCustom.cs</DependentUpon>
@@ -931,12 +928,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Save.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Forms\Wpf\WpfTimeline.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\brsf.dds" />

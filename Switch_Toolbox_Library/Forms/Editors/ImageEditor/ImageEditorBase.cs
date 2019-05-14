@@ -909,6 +909,8 @@ namespace Switch_Toolbox.Library.Forms
             settings.LoadImage(ActiveTexture);
             if (settings.ShowDialog() == DialogResult.OK)
             {
+                UseDefaultEditor = !settings.OpenDefaultProgramSelection;
+
                 string UseExtension = settings.GetSelectedExtension();
                 FormatToChange = settings.GetSelectedImageFormat();
 
@@ -1195,6 +1197,28 @@ namespace Switch_Toolbox.Library.Forms
                     bottomLabel.Text = $"Zoom: {pictureBoxCustom1.Zoom}% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height}";
                 else
                     bottomLabel.Text = $"Zoom: 100% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height}";
+            }
+        }
+
+        private void fillColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Image Image = pictureBoxCustom1.Image;
+            if (Image == null)
+                return;
+
+            ImageFillColor dialog = new ImageFillColor();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (dialog.ResizeSmall)
+                {
+                    Width = 1;
+                    Height = 1;
+                }
+                Bitmap newImage = BitmapExtension.FillColor(Width, Height, dialog.FillColor);
+
+                HasBeenEdited = true;
+                UpdateEditCached(newImage);
+                ApplyEdit(newImage);
             }
         }
     }

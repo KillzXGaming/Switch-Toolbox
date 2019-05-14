@@ -76,7 +76,7 @@
             this.loopChkBox.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.loopChkBox.Checked = true;
             this.loopChkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.loopChkBox.Location = new System.Drawing.Point(318, 10);
+            this.loopChkBox.Location = new System.Drawing.Point(452, 8);
             this.loopChkBox.Name = "loopChkBox";
             this.loopChkBox.Size = new System.Drawing.Size(50, 17);
             this.loopChkBox.TabIndex = 5;
@@ -89,9 +89,9 @@
             this.totalFrame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.totalFrame.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.totalFrame.ForeColor = System.Drawing.Color.White;
-            this.totalFrame.Location = new System.Drawing.Point(508, 12);
+            this.totalFrame.Location = new System.Drawing.Point(571, 10);
             this.totalFrame.Name = "totalFrame";
-            this.totalFrame.Size = new System.Drawing.Size(98, 16);
+            this.totalFrame.Size = new System.Drawing.Size(57, 16);
             this.totalFrame.TabIndex = 4;
             // 
             // currentFrameUpDown
@@ -100,9 +100,9 @@
             this.currentFrameUpDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.currentFrameUpDown.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.currentFrameUpDown.ForeColor = System.Drawing.Color.White;
-            this.currentFrameUpDown.Location = new System.Drawing.Point(390, 12);
+            this.currentFrameUpDown.Location = new System.Drawing.Point(508, 10);
             this.currentFrameUpDown.Name = "currentFrameUpDown";
-            this.currentFrameUpDown.Size = new System.Drawing.Size(98, 16);
+            this.currentFrameUpDown.Size = new System.Drawing.Size(57, 16);
             this.currentFrameUpDown.TabIndex = 3;
             this.currentFrameUpDown.ValueChanged += new System.EventHandler(this.currentFrameUpDown_ValueChanged);
             // 
@@ -122,7 +122,7 @@
             // 
             // stPanel1
             // 
-            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
@@ -131,8 +131,8 @@
             // 
             // animationTrackBar
             // 
-            this.animationTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.animationTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.animationTrackBar.CurrentFrame = 0;
             this.animationTrackBar.FrameCount = 1000;

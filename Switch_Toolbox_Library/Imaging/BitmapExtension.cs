@@ -17,6 +17,18 @@ namespace Switch_Toolbox.Library
         {
 
         }
+
+        public static Bitmap FillColor(int Width, int Height, Color color)
+        {
+            Bitmap Bmp = new Bitmap(Width, Height);
+            using (Graphics gfx = Graphics.FromImage(Bmp))
+            using (SolidBrush brush = new SolidBrush(color))
+            {
+                gfx.FillRectangle(brush, 0, 0, Width, Height);
+            }
+            return Bmp;
+        }
+
         public static List<byte[]> GenerateMipMaps(Bitmap bitmap)
         {
             List<byte[]> datas = new List<byte[]>();

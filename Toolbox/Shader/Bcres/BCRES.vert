@@ -43,26 +43,14 @@ uniform int NoSkinning;
 uniform int RigidSkinning;
 uniform int SingleBoneIndex;
 
-struct TexCoord1
+vec2 ST0_Translate;
+float ST0_Rotate;
+vec2 ST0_Scale;
+
+uniform TexCoord1
 {
-	vec2 Translate;
-	float Rotate;
-	vec2 Scale;
+	float values[10];
 } texCoord1;
-
-struct TexCoord2
-{
-	vec2 Translate;
-	float Rotate;
-	vec2 Scale;
-};
-
-layout (std140) uniform TexCoord3
-{
-	vec2 Translate;
-	float Rotate;
-	vec2 Scale;
-};
 
 vec4 skin(vec3 pos, ivec4 index)
 {
@@ -141,7 +129,7 @@ void main()
 	f_texcoord2 = vUV2;
 	tangent = vTangent;
 
- //   f_texcoord0 = vec2((f_texcoord0 * texCoord1.Scale) + texCoord1.Translate);
+   // f_texcoord0 = vec2((f_texcoord0 * ST0_Scale) + ST0_Translate);
 
     gl_Position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
 
