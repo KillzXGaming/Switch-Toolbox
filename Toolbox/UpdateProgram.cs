@@ -16,6 +16,7 @@ namespace Toolbox
         public static bool CanUpdate = false;
         public static Release LatestRelease;
         public static List<GitHubCommit> CommitList = new List<GitHubCommit>();
+        public static DateTime LatestReleaseTime;
 
         public static void CheckLatest()
         {
@@ -36,6 +37,7 @@ namespace Toolbox
 
                     if (Runtime.CompileDate != latest.Assets[0].UpdatedAt.ToString())
                     {
+                        LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
                         CanUpdate = true;
                         LatestRelease = latest;
                     }
@@ -55,12 +57,23 @@ namespace Toolbox
                 PageCount = 1
             };
 
+            DateTimeOffset CurrentRelease;
+            bool IsValidTime = DateTimeOffset.TryParse(Runtime.CompileDate, out CurrentRelease);
+
             foreach (GitHubCommit c in await client.Repository.Commit.GetAll("KillzXGaming", "Switch-Toolbox",  options))
             {
-                if (!Runtime.CompileDate.Contains(c.Commit.Author.Date.DateTime.ToString()))
-                    CommitList.Add(c);
+                if (IsValidTime)
+                {
+                    if (CurrentRelease.DateTime < c.Commit.Author.Date.DateTime)
+                        CommitList.Add(c);
+                    else
+                        break;
+                }
                 else
-                    break;
+                {
+                    //Just add extra commits. This shouldn't happen unless the user actually edits the file
+                    CommitList.Add(c);
+                }
             }
         }
 
