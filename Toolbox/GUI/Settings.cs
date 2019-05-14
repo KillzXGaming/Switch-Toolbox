@@ -78,6 +78,8 @@ namespace Toolbox
             specularCubemapPathTB.Text = System.IO.Path.GetFileName(Runtime.PBR.SpecularCubeMapPath);
             diffuseCubemapPathTB.Text = System.IO.Path.GetFileName(Runtime.PBR.DiffuseCubeMapPath);
             chkUseSkyobx.Checked = Runtime.PBR.UseSkybox;
+            chkDiffyseSkybox.Checked = Runtime.PBR.UseDiffuseSkyTexture;
+            chkDiffyseSkybox.Enabled = chkUseSkyobx.Checked;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
@@ -462,6 +464,11 @@ namespace Toolbox
 
         private void chkUseSkyobx_CheckedChanged(object sender, EventArgs e) {
             Runtime.PBR.UseSkybox = chkUseSkyobx.Checked;
+            chkDiffyseSkybox.Enabled = chkUseSkyobx.Checked; 
+        }
+
+        private void chkDiffyseSkybox_CheckedChanged(object sender, EventArgs e) {
+            Runtime.PBR.UseDiffuseSkyTexture = chkDiffyseSkybox.Checked;
         }
     }
 }

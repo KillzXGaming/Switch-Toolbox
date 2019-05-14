@@ -62,15 +62,23 @@ namespace Switch_Toolbox.Library.Rendering
             GL.UniformMatrix4(defaultShaderProgram["projection"], false, ref proj);
             GL.UniformMatrix4(defaultShaderProgram["rotView"], false, ref rot);
 
-            //Load Cubemap
-            if (RenderTools.diffusePbr != null)
+            if (Runtime.PBR.UseDiffuseSkyTexture)
             {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                RenderTools.diffusePbr.Bind();
+                //Load Cubemap
+                if (RenderTools.diffusePbr != null)
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    RenderTools.diffusePbr.Bind();
+                }
             }
             else
             {
-
+                //Load Cubemap
+                if (RenderTools.specularPbr != null)
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    RenderTools.specularPbr.Bind();
+                }
             }
 
             int cubeVBO = 0;

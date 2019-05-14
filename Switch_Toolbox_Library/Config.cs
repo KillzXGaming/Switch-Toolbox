@@ -208,6 +208,9 @@ namespace Switch_Toolbox.Library
                     case "UseSkybox":
                         bool.TryParse(node.InnerText, out Runtime.PBR.UseSkybox);
                         break;
+                    case "UseDiffuseSkyTexture":
+                        bool.TryParse(node.InnerText, out Runtime.PBR.UseDiffuseSkyTexture);
+                        break;
                 }
             }
         }
@@ -355,6 +358,7 @@ namespace Switch_Toolbox.Library
             parentNode.AppendChild(SettingsNode);
             SettingsNode.AppendChild(createNode(doc, "UseSkybox", Runtime.PBR.UseSkybox.ToString()));
             SettingsNode.AppendChild(createNode(doc, "EnablePBR", Runtime.EnablePBR.ToString()));
+            SettingsNode.AppendChild(createNode(doc, "UseDiffuseSkyTexture", Runtime.PBR.UseDiffuseSkyTexture.ToString()));     
         }
         private static void AppendEditorSettings(XmlDocument doc, XmlNode parentNode)
         {
