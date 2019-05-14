@@ -324,7 +324,12 @@ namespace FirstPlugin
                 if (models[0].shapes.Count > 0)
                 {
                     if (models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
+                    {
                         shader = BotwShaderProgram;
+
+                        //Botw uses small models so lower the bone size
+                        Runtime.bonePointSize = 0.040f;
+                    }
                 }
             }
 

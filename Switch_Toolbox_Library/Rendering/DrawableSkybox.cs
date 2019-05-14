@@ -46,14 +46,11 @@ namespace Switch_Toolbox.Library.Rendering
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
-            /*    GL.Enable(EnableCap.CullFace);
-                GL.CullFace(CullFaceMode.Front);
+            GL.Enable(EnableCap.LineSmooth);
 
-                GL.Enable(EnableCap.LineSmooth);
+            GL.Enable(EnableCap.StencilTest);
+            GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
 
-                GL.Enable(EnableCap.StencilTest);
-                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
-                */
 
             control.CurrentShader = defaultShaderProgram;
             // enable seamless cubemap sampling for lower mip levels in the pre-filter map.
