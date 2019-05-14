@@ -26,7 +26,13 @@ namespace Switch_Toolbox.Library.Forms
 
         private void stButton1_Click(object sender, EventArgs e)
         {
+            Color NormalColor = Color.FromArgb(254, 124, 133); //A blank normal map color
+
+            int[] ColorPresets = new int[1];
+            ColorPresets[0] = NormalColor.ToArgb() & 0x00FFFFFF;
+
             ColorDialog colorDialog = new ColorDialog();
+            colorDialog.CustomColors = ColorPresets;
             if (colorDialog.ShowDialog() == DialogResult.OK) {
                 FillColor = colorDialog.Color;
                 stButton1.BackColor = FillColor;
