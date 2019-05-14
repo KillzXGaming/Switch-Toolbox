@@ -14,6 +14,7 @@ namespace Bfres.Structs
 {
     public enum BRESGroupType
     {
+        None,
         Models,
         Textures,
         SkeletalAnim,

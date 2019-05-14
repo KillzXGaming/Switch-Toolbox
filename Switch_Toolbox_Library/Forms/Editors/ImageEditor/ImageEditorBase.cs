@@ -182,9 +182,8 @@ namespace Switch_Toolbox.Library.Forms
 
             SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
 
-            //If it's horizontal we need to update it manually 
             if (!Runtime.ImageEditor.DisplayVertical)
-                SetOrientation();
+                DisplayHorizontal();
 
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
 
