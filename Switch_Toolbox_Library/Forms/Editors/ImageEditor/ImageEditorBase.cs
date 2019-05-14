@@ -694,7 +694,6 @@ namespace Switch_Toolbox.Library.Forms
             arrayLevelCounterLabel.Text = $"Array Level: {CurArrayDisplayLevel} / {TotalArrayCount}";
             mipLevelCounterLabel.Text = $"Mip Level: {CurMipDisplayLevel} / {TotalMipCount}";
 
-
             propertiesEditor.UpdateProperties();
 
             HasBeenEdited = true;
@@ -1211,10 +1210,10 @@ namespace Switch_Toolbox.Library.Forms
             {
                 if (dialog.ResizeSmall)
                 {
-                    Width = 1;
-                    Height = 1;
+                    ActiveTexture.Width = 1;
+                    ActiveTexture.Height = 1;
                 }
-                Bitmap newImage = BitmapExtension.FillColor(Width, Height, dialog.FillColor);
+                Bitmap newImage = BitmapExtension.FillColor((int)ActiveTexture.Width, (int)ActiveTexture.Height, dialog.FillColor);
 
                 HasBeenEdited = true;
                 UpdateEditCached(newImage);
