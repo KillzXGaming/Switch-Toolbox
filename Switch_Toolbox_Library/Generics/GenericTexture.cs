@@ -192,7 +192,10 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.R8G8B8A8_UNORM,       new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R8G8B8A8_UNORM_SRGB,  new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R32G8X24_FLOAT,       new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
-            
+            { TEX_FORMAT.R8G8_B8G8_UNORM,      new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.B8G8R8X8_UNORM,       new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.B5G5R5A1_UNORM,       new FormatInfo(2, 1,  1, 1,  TargetBuffer.Color) },
+
             { TEX_FORMAT.R10G10B10A2_UINT,      new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R10G10B10A2_UNORM,     new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R32_SINT,              new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
@@ -615,9 +618,54 @@ namespace Switch_Toolbox.Library
         }
         public void SaveBitMap(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {
+            STProgressBar progressBar = new STProgressBar();
+            progressBar.Task = "Exporting Image Data...";
+            progressBar.Value = 0;
+            progressBar.StartPosition = FormStartPosition.CenterScreen;
+            progressBar.Show();
+            progressBar.Refresh();
+
+            if (ArrayCount > 1)
+            {
+                progressBar.Task = "Select dialog option... ";
+
+                var result = MessageBox.Show("Multiple image surfaces found! Would you like to export them all?", "Image Exporter", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.Yes)
+                {
+                    string ext = Path.GetExtension(FileName);
+
+                    int index = FileName.LastIndexOf('.');
+                    string name = index == -1 ? FileName : FileName.Substring(0, index);
+
+                    for (int i = 0; i < ArrayCount; i++)
+                    {
+                        progressBar.Task = $"Decoding Surface [{i}] for image {Text}... ";
+                        progressBar.Value = (i * 100) / (int)ArrayCount;
+                        progressBar.Refresh();
+
+                        Bitmap arrayBitMap = GetBitmap(i, 0);
+                        arrayBitMap.Save($"{name}_Slice_{i}_{ext}");
+                        arrayBitMap.Dispose();
+                    }
+
+                    progressBar.Value = 100;
+                    progressBar.Close();
+
+                    return;
+                }
+           }
+
+            progressBar.Task = $"Decoding image {Text}... ";
+            progressBar.Value = 20;
+            progressBar.Refresh();
+
             Bitmap bitMap = GetBitmap(SurfaceLevel, MipLevel);
             bitMap.Save(FileName);
             bitMap.Dispose();
+
+            progressBar.Value = 100;
+            progressBar.Close();
         }
         public void SaveDDS(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {
@@ -634,8 +682,8 @@ namespace Switch_Toolbox.Library
             dds.header.mipmapCount = (uint)MipCount;
             dds.header.pitchOrLinearSize = (uint)surfaces[0].mipmaps[0].Length;
 
-            if (surfaces.Count > 0)
-                dds.SetFlags((DDS.DXGI_FORMAT)Format);
+            if (surfaces.Count > 0) //Use DX10 format for array surfaces as it can do custom amounts
+                dds.SetFlags((DDS.DXGI_FORMAT)Format, true);
             else
                 dds.SetFlags((DDS.DXGI_FORMAT)Format);
 

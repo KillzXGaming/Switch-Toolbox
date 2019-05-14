@@ -333,6 +333,8 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
+        public Image BaseImage;
+
         private void UpdatePictureBox(int ChannelIndex = 0)
         {
             if (ActiveTexture == null)
@@ -343,6 +345,9 @@ namespace Switch_Toolbox.Library.Forms
             PushImage(Properties.Resources.LoadingImage);
 
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
+
+            //Keep base image for channel viewer updating/editing
+            BaseImage = new Bitmap(image);
 
             if (propertiesEditor.InvokeRequired)
             {
@@ -695,6 +700,7 @@ namespace Switch_Toolbox.Library.Forms
             mipLevelCounterLabel.Text = $"Mip Level: {CurMipDisplayLevel} / {TotalMipCount}";
 
             propertiesEditor.UpdateProperties();
+            propertiesEditor.LoadImage(new Bitmap(image), this);
 
             HasBeenEdited = true;
         }
@@ -757,6 +763,8 @@ namespace Switch_Toolbox.Library.Forms
                 UpdateEditCached(encodingEditor.newImage);
             }
         }
+
+        public Image GetActiveImage() => pictureBoxCustom1.Image;
 
         private void hueToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -990,7 +998,7 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        private void SaveAndApplyImage(Bitmap image, bool DecodeBack)
+        public void SaveAndApplyImage(Bitmap image, bool DecodeBack)
         {
             if (saveBtn.InvokeRequired)
             {
@@ -1219,6 +1227,22 @@ namespace Switch_Toolbox.Library.Forms
                 UpdateEditCached(newImage);
                 ApplyEdit(newImage);
             }
+        }
+
+        private void replacRedToolStripMenuItem_Click(object sender, EventArgs e) {
+            propertiesEditor.EditChannel(STChannelType.Red);
+        }
+
+        private void replaceGreenToolStripMenuItem_Click(object sender, EventArgs e) {
+            propertiesEditor.EditChannel(STChannelType.Green);
+        }
+
+        private void replaceBlueToolStripMenuItem_Click(object sender, EventArgs e) {
+            propertiesEditor.EditChannel(STChannelType.Blue);
+        }
+
+        private void replaceAlphaToolStripMenuItem_Click(object sender, EventArgs e) {
+            propertiesEditor.EditChannel(STChannelType.Alpha);
         }
     }
 }

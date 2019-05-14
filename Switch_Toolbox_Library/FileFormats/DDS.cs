@@ -490,6 +490,13 @@ namespace Switch_Toolbox.Library
             header.caps4 = reader.ReadUInt32();
             header.reserved2 = reader.ReadUInt32();
 
+            ArrayCount = 1;
+
+            if (header.caps2 == (uint)DDS.DDSCAPS2.CUBEMAP_ALLFACES)
+            {
+                ArrayCount = 6;
+            }
+
             int DX10HeaderSize = 0;
             if (header.ddspf.fourCC == FOURCC_DX10)
             {
@@ -537,7 +544,6 @@ namespace Switch_Toolbox.Library
             reader.Close();
 
 
-            ArrayCount = 1;
             MipCount = header.mipmapCount;
             Width = header.width;
             Height = header.height;
@@ -587,7 +593,7 @@ namespace Switch_Toolbox.Library
                 {
                     if (RedMask == R8G8B8_MASKS[0] && GreenMask == R8G8B8_MASKS[1] && BlueMask == R8G8B8_MASKS[2] && AlphaMask == R8G8B8_MASKS[3])
                     {
-                        return TEX_FORMAT.R8G8_B8G8_UNORM;
+                        return TEX_FORMAT.R8G8B8A8_UNORM;
                     }
                     else
                     {
@@ -602,7 +608,7 @@ namespace Switch_Toolbox.Library
                     }
                     else if (RedMask == X8B8G8R8_MASKS[0] && GreenMask == X8B8G8R8_MASKS[1] && BlueMask == X8B8G8R8_MASKS[2] && AlphaMask == X8B8G8R8_MASKS[3])
                     {
-                        return TEX_FORMAT.R8G8_B8G8_UNORM;
+                        return TEX_FORMAT.B8G8R8X8_UNORM;
                     }
                     else if (RedMask == A8R8G8B8_MASKS[0] && GreenMask == A8R8G8B8_MASKS[1] && BlueMask == A8R8G8B8_MASKS[2] && AlphaMask == A8R8G8B8_MASKS[3])
                     {
@@ -610,7 +616,7 @@ namespace Switch_Toolbox.Library
                     }
                     else if (RedMask == X8R8G8B8_MASKS[0] && GreenMask == X8R8G8B8_MASKS[1] && BlueMask == X8R8G8B8_MASKS[2] && AlphaMask == X8R8G8B8_MASKS[3])
                     {
-                        return TEX_FORMAT.R8G8_B8G8_UNORM;
+                        return TEX_FORMAT.B8G8R8X8_UNORM;
                     }
                     else
                     {
@@ -628,6 +634,8 @@ namespace Switch_Toolbox.Library
             DX10header.miscFlag = reader.ReadUInt32();
             DX10header.arrayFlag = reader.ReadUInt32();
             DX10header.miscFlags2 = reader.ReadUInt32();
+
+            ArrayCount = DX10header.arrayFlag;
         }
 
         public bool Swizzle = false;
@@ -636,7 +644,7 @@ namespace Switch_Toolbox.Library
             if (Swizzle)
                 return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel);
 
-            return GetArrayFaces(this, 1)[ArrayLevel].mipmaps[MipLevel];
+            return GetArrayFaces(this, ArrayCount)[ArrayLevel].mipmaps[MipLevel];
         }
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
@@ -818,12 +826,24 @@ namespace Switch_Toolbox.Library
                     return TEX_FORMAT.R8G8B8A8_UNORM;
             }
         }
-        public void SetFlags(DXGI_FORMAT Format)
+        public void SetFlags(DXGI_FORMAT Format, bool UseDX10 = false)
         {
             header.flags = (uint)(DDSD.CAPS | DDSD.HEIGHT | DDSD.WIDTH | DDSD.PIXELFORMAT | DDSD.MIPMAPCOUNT | DDSD.LINEARSIZE);
             header.caps = (uint)DDSCAPS.TEXTURE;
             if (header.mipmapCount > 1)
                 header.caps |= (uint)(DDSCAPS.COMPLEX | DDSCAPS.MIPMAP);
+
+            if (UseDX10)
+            {
+                header.ddspf.flags = (uint)DDPF.FOURCC;
+                header.ddspf.fourCC = FOURCC_DX10;
+                if (DX10header == null)
+                    DX10header = new DX10Header();
+
+                IsDX10 = true;
+                DX10header.DXGI_Format = Format;
+                return;
+            }
 
             switch (Format)
             {

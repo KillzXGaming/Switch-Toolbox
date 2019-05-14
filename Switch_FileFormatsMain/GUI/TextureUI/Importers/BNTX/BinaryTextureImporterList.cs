@@ -88,6 +88,8 @@ namespace FirstPlugin
             ImgDimComb.SelectedIndex = 1;
             tileModeCB.SelectedIndex = 0;
             formatComboBox.SelectedItem = SurfaceFormat.BC1_SRGB;
+
+            button1.Select();
         }
         TextureImporterSettings SelectedTexSettings;
 
@@ -225,6 +227,19 @@ namespace FirstPlugin
                 SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
             else
                 SelectedTexSettings.MipCount = 1;
+        }
+
+        private void BinaryTextureImporterList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (button1.Enabled)
+                {
+                    DialogResult = DialogResult.OK;
+                }
+            }
+
+
         }
     }
 }

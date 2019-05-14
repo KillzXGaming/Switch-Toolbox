@@ -48,6 +48,85 @@ namespace Switch_Toolbox.Library
             //  return new Bitmap(original, new Size(width, height));
         }
 
+        public static Bitmap ReplaceChannel(Image OriginalImage, Image ChannelImage, STChannelType ChannelType)
+        {
+            Bitmap b = new Bitmap(OriginalImage);
+            Bitmap c = new Bitmap(ChannelImage, new Size(b.Width, b.Height)); //Force to be same size
+            c = GrayScale(c); //Convert to grayscale 
+
+            BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
+    ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int stride = bmData.Stride;
+            System.IntPtr Scan0 = bmData.Scan0;
+
+
+
+            BitmapData cmData = c.LockBits(new Rectangle(0, 0, c.Width, c.Height),
+    ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int cstride = cmData.Stride;
+            System.IntPtr cScan0 = cmData.Scan0;
+
+            unsafe
+            {
+                byte* p = (byte*)(void*)Scan0;
+                byte* channelPointer = (byte*)(void*)cScan0;
+
+                int nOffset = stride - b.Width * 4;
+
+                byte red, green, blue, alpha;
+
+                for (int y = 0; y < b.Height; ++y)
+                {
+                    for (int x = 0; x < b.Width; ++x)
+                    {
+                        blue = p[0];
+                        green = p[1];
+                        red = p[2];
+                        alpha = p[3];
+
+                        if (ChannelType == STChannelType.Red)
+                        {
+                            p[2] = channelPointer[2];
+                            p[1] = green;
+                            p[0] = blue;
+                            p[3] = alpha;
+                        }
+                        else if (ChannelType == STChannelType.Green)
+                        {
+                            p[2] = red;
+                            p[1] = channelPointer[2];
+                            p[0] = blue;
+                            p[3] = alpha;
+                        }
+                        else if (ChannelType == STChannelType.Blue)
+                        {
+                            p[2] = red;
+                            p[1] = green;
+                            p[0] = channelPointer[2];
+                            p[3] = alpha;
+                        }
+                        else if (ChannelType == STChannelType.Alpha)
+                        {
+                            p[2] = red;
+                            p[1] = green;
+                            p[0] = blue;
+                            p[3] = channelPointer[2];
+                        }
+
+                        p += 4;
+                        channelPointer += 4;
+                    }
+                    p += nOffset;
+                    channelPointer += nOffset;
+                }
+            }
+
+            b.UnlockBits(bmData);
+            c.UnlockBits(cmData);
+
+            return b;
+        }
+
         public static Bitmap SwapBlueRedChannels(Image image)
         {
             Bitmap b = new Bitmap(image);

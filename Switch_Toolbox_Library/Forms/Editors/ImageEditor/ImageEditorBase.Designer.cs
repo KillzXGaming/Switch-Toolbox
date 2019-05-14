@@ -58,6 +58,11 @@
             this.fillColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.channelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replacRedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replaceGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replaceBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replaceAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editInExternalProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -360,6 +365,7 @@
             this.fillColorToolStripMenuItem,
             this.undoToolStripMenuItem,
             this.redoToolStripMenuItem,
+            this.channelsToolStripMenuItem,
             this.editInExternalProgramToolStripMenuItem,
             this.copyToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
@@ -386,6 +392,45 @@
             this.redoToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            // 
+            // channelsToolStripMenuItem
+            // 
+            this.channelsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.replacRedToolStripMenuItem,
+            this.replaceGreenToolStripMenuItem,
+            this.replaceBlueToolStripMenuItem,
+            this.replaceAlphaToolStripMenuItem});
+            this.channelsToolStripMenuItem.Name = "channelsToolStripMenuItem";
+            this.channelsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.channelsToolStripMenuItem.Text = "Channels";
+            // 
+            // replacRedToolStripMenuItem
+            // 
+            this.replacRedToolStripMenuItem.Name = "replacRedToolStripMenuItem";
+            this.replacRedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replacRedToolStripMenuItem.Text = "Replace Red";
+            this.replacRedToolStripMenuItem.Click += new System.EventHandler(this.replacRedToolStripMenuItem_Click);
+            // 
+            // replaceGreenToolStripMenuItem
+            // 
+            this.replaceGreenToolStripMenuItem.Name = "replaceGreenToolStripMenuItem";
+            this.replaceGreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceGreenToolStripMenuItem.Text = "Replace Green";
+            this.replaceGreenToolStripMenuItem.Click += new System.EventHandler(this.replaceGreenToolStripMenuItem_Click);
+            // 
+            // replaceBlueToolStripMenuItem
+            // 
+            this.replaceBlueToolStripMenuItem.Name = "replaceBlueToolStripMenuItem";
+            this.replaceBlueToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceBlueToolStripMenuItem.Text = "Replace Blue";
+            this.replaceBlueToolStripMenuItem.Click += new System.EventHandler(this.replaceBlueToolStripMenuItem_Click);
+            // 
+            // replaceAlphaToolStripMenuItem
+            // 
+            this.replaceAlphaToolStripMenuItem.Name = "replaceAlphaToolStripMenuItem";
+            this.replaceAlphaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceAlphaToolStripMenuItem.Text = "Replace Alpha";
+            this.replaceAlphaToolStripMenuItem.Click += new System.EventHandler(this.replaceAlphaToolStripMenuItem_Click);
             // 
             // editInExternalProgramToolStripMenuItem
             // 
@@ -621,5 +666,10 @@
         private STPanel stPanel5;
         private STLabel bottomLabel;
         private System.Windows.Forms.ToolStripMenuItem fillColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem channelsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem replacRedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem replaceGreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem replaceBlueToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem replaceAlphaToolStripMenuItem;
     }
 }

@@ -210,6 +210,7 @@ namespace Switch_Toolbox.Library.IO
                 }
             }
         }
+
         public class Type_LZ4F
         {
             public static byte[] Decompress(byte[] data)

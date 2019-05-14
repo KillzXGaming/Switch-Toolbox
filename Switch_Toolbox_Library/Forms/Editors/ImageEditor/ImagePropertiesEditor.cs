@@ -222,6 +222,21 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
+        public void EditChannel(STChannelType ChannelType)
+        {
+            var Image = imageEditor.BaseImage;
+            if (Image != null)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap ChannelDest = new Bitmap(ofd.FileName);
+                    Bitmap newImage = BitmapExtension.ReplaceChannel(Image, ChannelDest, ChannelType);
+                    imageEditor.SaveAndApplyImage(newImage, true);
+                }
+            }
+        }
+
         private void tabPage2_Click(object sender, EventArgs e)
         {
 
@@ -232,6 +247,43 @@ namespace Switch_Toolbox.Library.Forms
             if (channelListView.SelectedItems.Count > 0)
             {
                 imageEditor.UpdateMipDisplay();
+            }
+        }
+
+        private void channelListView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (channelListView.SelectedItems.Count <= 0)
+                return;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Right:
+                    {
+                        Point p = new Point(e.X, e.Y);
+                        stChannelToolstripMenu.Show(channelListView, p);
+                    }
+                    break;
+            }
+        }
+
+        private void replaceChannelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Note first index (0) is RGBA display
+            int ChannelIndex = channelListView.SelectedIndices[0];
+            switch (ChannelIndex)
+            {
+                case 1:
+                    EditChannel(STChannelType.Red);
+                    break;
+                case 2:
+                    EditChannel(STChannelType.Green);
+                    break;
+                case 3:
+                    EditChannel(STChannelType.Blue);
+                    break;
+                case 4:
+                    EditChannel(STChannelType.Alpha);
+                    break;
             }
         }
     }

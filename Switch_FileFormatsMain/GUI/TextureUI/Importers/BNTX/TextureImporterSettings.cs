@@ -23,7 +23,6 @@ namespace FirstPlugin
         }
 
         public string TexName;
-        public uint arrayLength = 1;
         public uint AccessFlags = 0x20;
         public uint MipCount;
         public uint Depth = 1;
@@ -68,16 +67,11 @@ namespace FirstPlugin
             MipCount = dds.header.mipmapCount;
             TexWidth = dds.header.width;
             TexHeight = dds.header.height;
-            arrayLength = 1;
-            if (dds.header.caps2 == (uint)DDS.DDSCAPS2.CUBEMAP_ALLFACES)
-            {
-                arrayLength = 6;
-            }
 
-            foreach (var array in DDS.GetArrayFacesBytes(dds.bdata, (int)arrayLength))
-            {
-                DataBlockOutput.Add(array);
-            }
+            var surfaces = DDS.GetArrayFaces(dds, dds.bdata,  dds.ArrayCount);
+
+            foreach (var surface in surfaces)
+                DataBlockOutput.Add(Utils.CombineByteArray(surface.mipmaps.ToArray()));
 
             Format = TextureData.GenericToBntxSurfaceFormat(dds.Format);
         }
@@ -234,7 +228,6 @@ namespace FirstPlugin
             tex.sparseBinding = settings.sparseBinding;
             tex.sparseResidency = settings.sparseResidency;
             tex.AccessFlags = settings.AccessFlags;
-            tex.ArrayLength = settings.arrayLength;
             tex.MipCount = settings.MipCount;
             tex.Depth = settings.Depth;
             tex.Dim = settings.Dim;

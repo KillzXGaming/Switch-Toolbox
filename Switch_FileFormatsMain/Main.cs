@@ -136,7 +136,7 @@ namespace FirstPlugin
             
         //    Formats.Add(typeof(NCA));
         //    Formats.Add(typeof(XCI));
-        //   Formats.Add(typeof(NSP));
+            Formats.Add(typeof(NSP));
             Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));

@@ -10,6 +10,17 @@ namespace Switch_Toolbox.Library
 {
    public class Utils
     {
+        public static byte[] CreateMD5Hash(string filename)
+        {
+            using (var md5 = System.Security.Cryptography.MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    return md5.ComputeHash(stream);
+                }
+            }
+        }
+
         public static bool HasInterface(Type objectType, Type interfaceType)
         {
             foreach (var inter in objectType.GetInterfaces())

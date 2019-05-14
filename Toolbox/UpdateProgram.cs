@@ -14,9 +14,11 @@ namespace Toolbox
     {
         static Release[] releases;
         public static bool CanUpdate = false;
+        public static bool Downloaded = false;
         public static Release LatestRelease;
         public static List<GitHubCommit> CommitList = new List<GitHubCommit>();
         public static DateTime LatestReleaseTime;
+
 
         public static void CheckLatest()
         {
@@ -37,9 +39,16 @@ namespace Toolbox
 
                     if (Runtime.CompileDate != latest.Assets[0].UpdatedAt.ToString())
                     {
-                        LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
-                        CanUpdate = true;
-                        LatestRelease = latest;
+                        DownloadRelease();
+                        if (CanUpdate)
+                        {
+                            LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
+                            LatestRelease = latest;
+                        }
+                        else
+                        {
+                            
+                        }
                     }
                     break;
                 }
@@ -49,6 +58,31 @@ namespace Toolbox
                 Console.WriteLine($"Failed to get latest update\n{ex.ToString()}");
             }
         }
+
+        static void DownloadRelease()
+        {
+            ProcessStartInfo p = new ProcessStartInfo();
+            p.WindowStyle = ProcessWindowStyle.Hidden;
+            p.CreateNoWindow = true;
+            p.FileName = Path.Combine(Runtime.ExecutableDir, "Updater.exe");
+            p.WorkingDirectory = Path.Combine(Runtime.ExecutableDir, "updater/");
+            Console.WriteLine($"Updater: {p.FileName}");
+            p.Arguments = "-d";
+
+            Process process = new Process();
+            process.StartInfo = p;
+            Console.WriteLine("Downloading...");
+            process.Start();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+                throw new TimeoutException();
+            Console.WriteLine("Finished downloading");
+            string updateExe = Path.Combine(Runtime.ExecutableDir, "master\\Toolbox.exe"),
+                  currentExe = System.Reflection.Assembly.GetEntryAssembly().Location;
+            if (!Utils.CreateMD5Hash(currentExe).SequenceEqual(Utils.CreateMD5Hash(updateExe)))
+                CanUpdate = true;
+        }
+
         static async Task GetCommits(GitHubClient client)
         {
             var options = new ApiOptions
