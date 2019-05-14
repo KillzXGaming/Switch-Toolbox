@@ -50,8 +50,16 @@ namespace Switch_Toolbox.Library
             {
                 if (diffusepbr == null)
                 {
-                    DDS diffuseSdr = new DDS(Properties.Resources.diffuseSDR);
-                    diffusepbr = DDS.CreateGLCubeMap(diffuseSdr);
+                    if (System.IO.File.Exists(Runtime.PBR.SpecularCubeMapPath))
+                    {
+                        DDS diffuseSdr = new DDS(Runtime.PBR.DiffuseCubeMapPath);
+                        diffusepbr = DDS.CreateGLCubeMap(diffuseSdr);
+                    }
+                    else
+                    {
+                        DDS diffuseSdr = new DDS(Properties.Resources.diffuseSDR);
+                        diffusepbr = DDS.CreateGLCubeMap(diffuseSdr);
+                    }
                 }
                 return diffusepbr;
             }
@@ -67,8 +75,16 @@ namespace Switch_Toolbox.Library
             {
                 if (specularpbr == null)
                 {
-                    DDS specularSdr = new DDS(Properties.Resources.specularSDR);
-                    specularpbr = DDS.CreateGLCubeMap(specularSdr);
+                    if (System.IO.File.Exists(Runtime.PBR.SpecularCubeMapPath))
+                    {
+                        DDS specularSdr = new DDS(Runtime.PBR.SpecularCubeMapPath);
+                        specularpbr = DDS.CreateGLCubeMap(specularSdr);
+                    }
+                    else
+                    {
+                        DDS specularSdr = new DDS(Properties.Resources.specularSDR);
+                        specularpbr = DDS.CreateGLCubeMap(specularSdr);
+                    }
                 }
                 return specularpbr;
             }

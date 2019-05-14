@@ -101,9 +101,11 @@
             this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.cubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
             this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.specularCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel16 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.diffuseCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -1054,9 +1056,11 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.stLabel16);
+            this.tabPage4.Controls.Add(this.diffuseCubemapPathTB);
             this.tabPage4.Controls.Add(this.chkUseSkyobx);
             this.tabPage4.Controls.Add(this.stLabel15);
-            this.tabPage4.Controls.Add(this.cubemapPathTB);
+            this.tabPage4.Controls.Add(this.specularCubemapPathTB);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -1064,24 +1068,6 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "PBR";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // cubemapPathTB
-            // 
-            this.cubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.cubemapPathTB.Location = new System.Drawing.Point(115, 41);
-            this.cubemapPathTB.Name = "cubemapPathTB";
-            this.cubemapPathTB.Size = new System.Drawing.Size(166, 20);
-            this.cubemapPathTB.TabIndex = 0;
-            this.cubemapPathTB.TextChanged += new System.EventHandler(this.cubemapPathTB_TextChanged);
-            // 
-            // stLabel15
-            // 
-            this.stLabel15.AutoSize = true;
-            this.stLabel15.Location = new System.Drawing.Point(16, 43);
-            this.stLabel15.Name = "stLabel15";
-            this.stLabel15.Size = new System.Drawing.Size(93, 13);
-            this.stLabel15.TabIndex = 1;
-            this.stLabel15.Text = "Custom Cubemap:";
             // 
             // chkUseSkyobx
             // 
@@ -1093,6 +1079,42 @@
             this.chkUseSkyobx.Text = "Use Skybox";
             this.chkUseSkyobx.UseVisualStyleBackColor = true;
             this.chkUseSkyobx.CheckedChanged += new System.EventHandler(this.chkUseSkyobx_CheckedChanged);
+            // 
+            // stLabel15
+            // 
+            this.stLabel15.AutoSize = true;
+            this.stLabel15.Location = new System.Drawing.Point(16, 43);
+            this.stLabel15.Name = "stLabel15";
+            this.stLabel15.Size = new System.Drawing.Size(138, 13);
+            this.stLabel15.TabIndex = 1;
+            this.stLabel15.Text = "Custom Specular Cubemap:";
+            // 
+            // specularCubemapPathTB
+            // 
+            this.specularCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.specularCubemapPathTB.Location = new System.Drawing.Point(160, 41);
+            this.specularCubemapPathTB.Name = "specularCubemapPathTB";
+            this.specularCubemapPathTB.Size = new System.Drawing.Size(197, 20);
+            this.specularCubemapPathTB.TabIndex = 0;
+            this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.cubemapPathTB_TextChanged);
+            // 
+            // stLabel16
+            // 
+            this.stLabel16.AutoSize = true;
+            this.stLabel16.Location = new System.Drawing.Point(16, 69);
+            this.stLabel16.Name = "stLabel16";
+            this.stLabel16.Size = new System.Drawing.Size(129, 13);
+            this.stLabel16.TabIndex = 4;
+            this.stLabel16.Text = "Custom Diffuse Cubemap:";
+            // 
+            // diffuseCubemapPathTB
+            // 
+            this.diffuseCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.diffuseCubemapPathTB.Location = new System.Drawing.Point(160, 67);
+            this.diffuseCubemapPathTB.Name = "diffuseCubemapPathTB";
+            this.diffuseCubemapPathTB.Size = new System.Drawing.Size(197, 20);
+            this.diffuseCubemapPathTB.TabIndex = 3;
+            this.diffuseCubemapPathTB.TextChanged += new System.EventHandler(this.diffuseCubemapPathTB_TextChanged);
             // 
             // Settings
             // 
@@ -1211,6 +1233,8 @@
         private System.Windows.Forms.TabPage tabPage4;
         private Switch_Toolbox.Library.Forms.STCheckBox chkUseSkyobx;
         private Switch_Toolbox.Library.Forms.STLabel stLabel15;
-        private Switch_Toolbox.Library.Forms.STTextBox cubemapPathTB;
+        private Switch_Toolbox.Library.Forms.STTextBox specularCubemapPathTB;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel16;
+        private Switch_Toolbox.Library.Forms.STTextBox diffuseCubemapPathTB;
     }
 }

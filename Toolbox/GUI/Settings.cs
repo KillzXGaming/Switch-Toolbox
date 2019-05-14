@@ -75,7 +75,8 @@ namespace Toolbox
             botwGamePathTB.Text = Runtime.BotwGamePath;
             tpGamePathTB.Text = Runtime.TpGamePath;
             modelLoadArchive.Checked = Runtime.ObjectEditor.OpenModelsOnOpen;
-            cubemapPathTB.Text = Runtime.PBR.CubeMapPath;
+            specularCubemapPathTB.Text = Runtime.PBR.SpecularCubeMapPath;
+            diffuseCubemapPathTB.Text = Runtime.PBR.DiffuseCubeMapPath;
             chkUseSkyobx.Checked = Runtime.PBR.UseSkybox;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
@@ -445,13 +446,22 @@ namespace Toolbox
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                cubemapPathTB.Text = sfd.SelectedPath;
-                Runtime.PBR.CubeMapPath = cubemapPathTB.Text;
+                specularCubemapPathTB.Text = sfd.SelectedPath;
+                Runtime.PBR.SpecularCubeMapPath = specularCubemapPathTB.Text;
             }
         }
 
         private void chkUseSkyobx_CheckedChanged(object sender, EventArgs e) {
             Runtime.PBR.UseSkybox = chkUseSkyobx.Checked;
+        }
+
+        private void diffuseCubemapPathTB_TextChanged(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                specularCubemapPathTB.Text = sfd.SelectedPath;
+                Runtime.PBR.DiffuseCubeMapPath = diffuseCubemapPathTB.Text;
+            }
         }
     }
 }

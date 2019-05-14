@@ -91,7 +91,9 @@ namespace Switch_Toolbox.Library
         public class PBR
         {
             public static bool UseSkybox = false;
-            public static string CubeMapPath = "";
+            public static string DiffuseCubeMapPath = "";
+            public static string SpecularCubeMapPath = "";
+            public static string BRSFMapPath = "";
         }
 
         public static GridSettings gridSettings = new GridSettings();

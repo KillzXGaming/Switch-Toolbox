@@ -169,8 +169,11 @@ namespace Switch_Toolbox.Library
                     case "BotwGamePath":
                         Runtime.BotwGamePath = node.InnerText;
                         break;
-                    case "CubeMapPath":
-                        Runtime.PBR.CubeMapPath = node.InnerText;
+                    case "SpecularCubeMapPath":
+                        Runtime.PBR.SpecularCubeMapPath = node.InnerText;
+                        break;
+                    case "DiffuseCubeMapPath":
+                        Runtime.PBR.DiffuseCubeMapPath = node.InnerText;
                         break;
                     case "renderBoundingBoxes":
                         bool.TryParse(node.InnerText, out Runtime.renderBoundingBoxes);
@@ -343,7 +346,8 @@ namespace Switch_Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "Mk8dGamePath", Runtime.Mk8dGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "TpGamePath", Runtime.TpGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "BotwGamePath", Runtime.BotwGamePath.ToString()));
-            PathsNode.AppendChild(createNode(doc, "CubeMapPath", Runtime.PBR.CubeMapPath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "SpecularCubeMapPath", Runtime.PBR.SpecularCubeMapPath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "DiffuseCubeMapPath", Runtime.PBR.DiffuseCubeMapPath.ToString()));
         }
         private static void AppenPBRSettings(XmlDocument doc, XmlNode parentNode)
         {
