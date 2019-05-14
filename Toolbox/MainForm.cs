@@ -76,7 +76,6 @@ namespace Toolbox
             bool HasVersionFile = true;
             VersionCheck version = new VersionCheck(HasVersionFile);
 
-            MessageBox.Show(HasVersionFile.ToString());
             if (HasVersionFile)
             {
                 Runtime.ProgramVersion = version.ProgramVersion;
