@@ -169,6 +169,9 @@ namespace Switch_Toolbox.Library
                     case "BotwGamePath":
                         Runtime.BotwGamePath = node.InnerText;
                         break;
+                    case "CubeMapPath":
+                        Runtime.PBR.CubeMapPath = node.InnerText;
+                        break;
                     case "renderBoundingBoxes":
                         bool.TryParse(node.InnerText, out Runtime.renderBoundingBoxes);
                         break;
@@ -198,6 +201,9 @@ namespace Switch_Toolbox.Library
                         break;
                     case "OpenModelsOnOpen":
                         bool.TryParse(node.InnerText, out Runtime.ObjectEditor.OpenModelsOnOpen);
+                        break;
+                    case "UseSkybox":
+                        bool.TryParse(node.InnerText, out Runtime.PBR.UseSkybox);
                         break;
                 }
             }
@@ -300,6 +306,7 @@ namespace Switch_Toolbox.Library
             AppendEditorSettings(doc, mainNode);
             AppendBackgroundSettings(doc, mainNode);
             AppendGridSettings(doc, mainNode);
+            AppenPBRSettings(doc, mainNode);
 
             return doc;
         }
@@ -308,8 +315,7 @@ namespace Switch_Toolbox.Library
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
 
-            
-            mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
+                        mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseOpenGL", Runtime.UseOpenGL.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
@@ -337,6 +343,14 @@ namespace Switch_Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "Mk8dGamePath", Runtime.Mk8dGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "TpGamePath", Runtime.TpGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "BotwGamePath", Runtime.BotwGamePath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "CubeMapPath", Runtime.PBR.CubeMapPath.ToString()));
+        }
+        private static void AppenPBRSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode SettingsNode = doc.CreateElement("PBR");
+            parentNode.AppendChild(SettingsNode);
+            SettingsNode.AppendChild(createNode(doc, "UseSkybox", Runtime.PBR.UseSkybox.ToString()));
+            SettingsNode.AppendChild(createNode(doc, "EnablePBR", Runtime.EnablePBR.ToString()));
         }
         private static void AppendEditorSettings(XmlDocument doc, XmlNode parentNode)
         {
@@ -368,7 +382,6 @@ namespace Switch_Toolbox.Library
             renderSettingsNode.AppendChild(createNode(doc, "CameraFar", Runtime.CameraFar.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "CameraNear", Runtime.CameraNear.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "PreviewScale", Runtime.previewScale.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "EnablePBR", Runtime.EnablePBR.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "renderVertColor", Runtime.renderVertColor.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "renderReflection", Runtime.renderReflection.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "renderSpecular", Runtime.renderSpecular.ToString()));

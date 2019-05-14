@@ -13,9 +13,15 @@ namespace Toolbox
         public string CompileDate;
         public string CommitInfo;
 
-        public VersionCheck()
+        public VersionCheck(bool HasVersionTxt)
         {
             string path = System.IO.Path.Combine(Runtime.ExecutableDir, "Version.txt");
+            if (!File.Exists(path))
+            {
+                HasVersionTxt = false;
+                return;
+            }
+
             using (StreamReader reader = new StreamReader(path))
             {
                 ProgramVersion = reader.ReadLine();

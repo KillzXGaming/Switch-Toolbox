@@ -88,6 +88,12 @@ namespace Switch_Toolbox.Library
 
         public static bool AddFilesToActiveObjectEditor = true;
 
+        public class PBR
+        {
+            public static bool UseSkybox = false;
+            public static string CubeMapPath = "";
+        }
+
         public static GridSettings gridSettings = new GridSettings();
         public class GridSettings
         {

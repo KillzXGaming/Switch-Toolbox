@@ -71,13 +71,18 @@ namespace Toolbox
         //Use for files opened with program
         public List<string> openedFiles = new List<string>();
 
-        private VersionCheck VersionCheck;
         private void Form1_Load(object sender, EventArgs e)
         {
-            VersionCheck version = new VersionCheck();
-            Runtime.ProgramVersion = version.ProgramVersion;
-            Runtime.CommitInfo = version.CommitInfo;
-            Runtime.CompileDate = version.CompileDate;
+            bool HasVersionFile = true;
+            VersionCheck version = new VersionCheck(HasVersionFile);
+
+            MessageBox.Show(HasVersionFile.ToString());
+            if (HasVersionFile)
+            {
+                Runtime.ProgramVersion = version.ProgramVersion;
+                Runtime.CommitInfo = version.CommitInfo;
+                Runtime.CompileDate = version.CompileDate;
+            }
 
             ThreadStart t = new ThreadStart(UpdateProgram.CheckLatest);
             Thread thread = new Thread(t);
@@ -102,7 +107,7 @@ namespace Toolbox
             }
 
             LoadPLugins();
-            UpdateToolbar();
+            UpdateToolbar(HasVersionFile);
             Reload();
             LoadMDITheme();
             LoadRecentList();
@@ -128,8 +133,6 @@ namespace Toolbox
             Exception e = (Exception)args.ExceptionObject;
             MessageBox.Show("MyHandler caught : " + e.Message);
             MessageBox.Show("Runtime terminating: {0}", args.IsTerminating.ToString());
-
-           
         }
 
         private void ParseGLVersion()
@@ -530,11 +533,14 @@ namespace Toolbox
             }
         }
 
-        private void UpdateToolbar()
+        private void UpdateToolbar(bool DisplayVersion)
         {
             string commit = $"Commit: {Runtime.CommitInfo}";
 
-            Text = $"Switch Toolbox | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate}";
+            if (DisplayVersion)
+                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate}";
+            else
+                Text = $"{Application.ProductName}";
         }
 
         private void LoadPLugins()

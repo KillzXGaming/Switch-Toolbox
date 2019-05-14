@@ -100,6 +100,10 @@
             this.mk8DPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.cubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -120,6 +124,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -748,6 +753,7 @@
             this.stTabControl1.Controls.Add(this.tabPage1);
             this.stTabControl1.Controls.Add(this.tabPage2);
             this.stTabControl1.Controls.Add(this.tabPage3);
+            this.stTabControl1.Controls.Add(this.tabPage4);
             this.stTabControl1.Location = new System.Drawing.Point(0, 25);
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
             this.stTabControl1.Name = "stTabControl1";
@@ -1046,6 +1052,48 @@
             this.mk8PathTB.TabIndex = 0;
             this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.chkUseSkyobx);
+            this.tabPage4.Controls.Add(this.stLabel15);
+            this.tabPage4.Controls.Add(this.cubemapPathTB);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(541, 395);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "PBR";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // cubemapPathTB
+            // 
+            this.cubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cubemapPathTB.Location = new System.Drawing.Point(115, 41);
+            this.cubemapPathTB.Name = "cubemapPathTB";
+            this.cubemapPathTB.Size = new System.Drawing.Size(166, 20);
+            this.cubemapPathTB.TabIndex = 0;
+            this.cubemapPathTB.TextChanged += new System.EventHandler(this.cubemapPathTB_TextChanged);
+            // 
+            // stLabel15
+            // 
+            this.stLabel15.AutoSize = true;
+            this.stLabel15.Location = new System.Drawing.Point(16, 43);
+            this.stLabel15.Name = "stLabel15";
+            this.stLabel15.Size = new System.Drawing.Size(93, 13);
+            this.stLabel15.TabIndex = 1;
+            this.stLabel15.Text = "Custom Cubemap:";
+            // 
+            // chkUseSkyobx
+            // 
+            this.chkUseSkyobx.AutoSize = true;
+            this.chkUseSkyobx.Location = new System.Drawing.Point(19, 16);
+            this.chkUseSkyobx.Name = "chkUseSkyobx";
+            this.chkUseSkyobx.Size = new System.Drawing.Size(83, 17);
+            this.chkUseSkyobx.TabIndex = 2;
+            this.chkUseSkyobx.Text = "Use Skybox";
+            this.chkUseSkyobx.UseVisualStyleBackColor = true;
+            this.chkUseSkyobx.CheckedChanged += new System.EventHandler(this.chkUseSkyobx_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1080,6 +1128,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1113,7 +1163,6 @@
         private Switch_Toolbox.Library.Forms.NumericUpDownInt yazoCompressionLevelUD;
         private Switch_Toolbox.Library.Forms.STPanel panel3;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxEnablePBR;
-        private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxMdiMaximized;
         private System.Windows.Forms.ComboBox formThemeCB;
@@ -1158,5 +1207,10 @@
         private Switch_Toolbox.Library.Forms.STLabel stLabel14;
         private Switch_Toolbox.Library.Forms.STTextBox tpGamePathTB;
         private Switch_Toolbox.Library.Forms.STCheckBox modelLoadArchive;
+        private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkUseSkyobx;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel15;
+        private Switch_Toolbox.Library.Forms.STTextBox cubemapPathTB;
     }
 }
