@@ -75,8 +75,8 @@ namespace Toolbox
             botwGamePathTB.Text = Runtime.BotwGamePath;
             tpGamePathTB.Text = Runtime.TpGamePath;
             modelLoadArchive.Checked = Runtime.ObjectEditor.OpenModelsOnOpen;
-            specularCubemapPathTB.Text = Runtime.PBR.SpecularCubeMapPath;
-            diffuseCubemapPathTB.Text = Runtime.PBR.DiffuseCubeMapPath;
+            specularCubemapPathTB.Text = System.IO.Path.GetFileName(Runtime.PBR.SpecularCubeMapPath);
+            diffuseCubemapPathTB.Text = System.IO.Path.GetFileName(Runtime.PBR.DiffuseCubeMapPath);
             chkUseSkyobx.Checked = Runtime.PBR.UseSkybox;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
@@ -446,8 +446,8 @@ namespace Toolbox
             OpenFileDialog sfd = new OpenFileDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                specularCubemapPathTB.Text = sfd.FileName;
-                Runtime.PBR.SpecularCubeMapPath = specularCubemapPathTB.Text;
+                specularCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
+                Runtime.PBR.SpecularCubeMapPath = sfd.FileName;
             }
         }
 
@@ -455,8 +455,8 @@ namespace Toolbox
             OpenFileDialog sfd = new OpenFileDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                diffuseCubemapPathTB.Text = sfd.FileName;
-                Runtime.PBR.DiffuseCubeMapPath = diffuseCubemapPathTB.Text;
+                diffuseCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
+                Runtime.PBR.DiffuseCubeMapPath = sfd.FileName;
             }
         }
 
