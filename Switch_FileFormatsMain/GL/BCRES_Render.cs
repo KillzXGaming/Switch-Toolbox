@@ -189,10 +189,10 @@ namespace FirstPlugin
 
         private void SetUniformBlocks(MTOBWrapper mat, ShaderProgram shader, SOBJWrapper m, int id)
         {
-            shader.UniformBlockBinding("TexCoord1", 3);
+       /*     shader.UniformBlockBinding("TexCoord1", 3);
             GL.GetActiveUniformBlock(shader.program,
                             shader.GetUniformBlockIndex("TexCoord1"),
-                            ActiveUniformBlockParameter.UniformBlockBinding, out int binding);
+                            ActiveUniformBlockParameter.UniformBlockBinding, out int binding);*/
 
             /*      GL.BindBuffer(BufferTarget.UniformBuffer, TexCoord1Buffer);
                   GL.BufferData(BufferTarget.UniformBuffer,
