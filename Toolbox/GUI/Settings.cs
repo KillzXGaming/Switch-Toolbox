@@ -442,7 +442,7 @@ namespace Toolbox
             Runtime.ObjectEditor.OpenModelsOnOpen = modelLoadArchive.Checked;
         }
 
-        private void cubemapPathTB_TextChanged(object sender, EventArgs e) {
+        private void cubemapPathTB_Click(object sender, EventArgs e) {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -451,17 +451,17 @@ namespace Toolbox
             }
         }
 
-        private void chkUseSkyobx_CheckedChanged(object sender, EventArgs e) {
-            Runtime.PBR.UseSkybox = chkUseSkyobx.Checked;
-        }
-
-        private void diffuseCubemapPathTB_TextChanged(object sender, EventArgs e) {
+        private void diffuseCubemapPathTBB_Click(object sender, EventArgs e) {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 specularCubemapPathTB.Text = sfd.SelectedPath;
                 Runtime.PBR.DiffuseCubeMapPath = diffuseCubemapPathTB.Text;
             }
+        }
+
+        private void chkUseSkyobx_CheckedChanged(object sender, EventArgs e) {
+            Runtime.PBR.UseSkybox = chkUseSkyobx.Checked;
         }
     }
 }

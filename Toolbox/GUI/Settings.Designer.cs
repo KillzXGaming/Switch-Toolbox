@@ -1096,7 +1096,7 @@
             this.specularCubemapPathTB.Name = "specularCubemapPathTB";
             this.specularCubemapPathTB.Size = new System.Drawing.Size(197, 20);
             this.specularCubemapPathTB.TabIndex = 0;
-            this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.cubemapPathTB_TextChanged);
+            this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
             // 
             // stLabel16
             // 
@@ -1114,7 +1114,7 @@
             this.diffuseCubemapPathTB.Name = "diffuseCubemapPathTB";
             this.diffuseCubemapPathTB.Size = new System.Drawing.Size(197, 20);
             this.diffuseCubemapPathTB.TabIndex = 3;
-            this.diffuseCubemapPathTB.TextChanged += new System.EventHandler(this.diffuseCubemapPathTB_TextChanged);
+            this.diffuseCubemapPathTB.Click += new System.EventHandler(this.diffuseCubemapPathTBB_Click);
             // 
             // Settings
             // 
