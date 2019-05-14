@@ -443,19 +443,19 @@ namespace Toolbox
         }
 
         private void cubemapPathTB_Click(object sender, EventArgs e) {
-            FolderSelectDialog sfd = new FolderSelectDialog();
+            OpenFileDialog sfd = new OpenFileDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                specularCubemapPathTB.Text = sfd.SelectedPath;
+                specularCubemapPathTB.Text = sfd.FileName;
                 Runtime.PBR.SpecularCubeMapPath = specularCubemapPathTB.Text;
             }
         }
 
         private void diffuseCubemapPathTBB_Click(object sender, EventArgs e) {
-            FolderSelectDialog sfd = new FolderSelectDialog();
+            OpenFileDialog sfd = new OpenFileDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                specularCubemapPathTB.Text = sfd.SelectedPath;
+                diffuseCubemapPathTB.Text = sfd.FileName;
                 Runtime.PBR.DiffuseCubeMapPath = diffuseCubemapPathTB.Text;
             }
         }
