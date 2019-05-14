@@ -1158,7 +1158,6 @@ namespace Switch_Toolbox.Library.Forms
             else
                 ApplyZoom();
         }
-
         private void ApplyZoom()
         {
             if (Runtime.ImageEditor.EnableImageZoom)
@@ -1175,6 +1174,7 @@ namespace Switch_Toolbox.Library.Forms
             }
             SetBottomBar();
         }
+
 
         private void SaveSettings()
         {

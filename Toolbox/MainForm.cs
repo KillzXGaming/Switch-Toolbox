@@ -192,7 +192,7 @@ namespace Toolbox
             proc.StartInfo.Arguments = "-d -i -b";
             proc.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             proc.Start();
-            Application.Exit();
+            Environment.Exit(0);
         }
         #endregion
 
