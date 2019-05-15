@@ -576,13 +576,19 @@ namespace FirstPlugin
             // Bind the texture and create the uniform if the material has the right textures. 
             if (hasTex)
             {
-                GL.Uniform1(shader[name], BindTexture(mattex, mat.GetResFileU() != null));
+                GL.Uniform1(shader[name], BindTexture(shader, mattex, mat.GetResFileU() != null));
             }
         }
-        public static int BindTexture(MatTexture tex, bool IsWiiU)
+        public static int BindTexture(ShaderProgram shader, MatTexture tex, bool IsWiiU)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
+
+            GL.Uniform1(shader["RedChannel"],   0);
+            GL.Uniform1(shader["GreenChannel"], 1);
+            GL.Uniform1(shader["BlueChannel"],  2);
+            GL.Uniform1(shader["AlphaChannel"], 3);
+
 
             string activeTex = tex.Name;
             if (tex.animatedTexName != "")
@@ -600,6 +606,9 @@ namespace FirstPlugin
                         if (ftex.RenderableTex == null || !ftex.RenderableTex.GLInitialized)
                             ftex.LoadOpenGLTexture();
 
+                        if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
+                            SetTextureComponents(shader, ftex);
+
                         BindGLTexture(tex, ftex.RenderableTex.TexID);
                     }
                 }
@@ -616,12 +625,24 @@ namespace FirstPlugin
                             bntx.Textures[activeTex].LoadOpenGLTexture();
                         }
 
+                        if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
+                            SetTextureComponents(shader, bntx.Textures[activeTex]);
+
                         BindGLTexture(tex, bntx.Textures[activeTex].RenderableTex.TexID);
                     }
                 }
             }
             return tex.textureUnit + 1;
         }
+
+        private static void SetTextureComponents(ShaderProgram shader, STGenericTexture Texture)
+        {
+            GL.Uniform1(shader["RedChannel"], (int)Texture.RedChannel);
+            GL.Uniform1(shader["GreenChannel"], (int)Texture.GreenChannel);
+            GL.Uniform1(shader["BlueChannel"], (int)Texture.BlueChannel);
+            GL.Uniform1(shader["AlphaChannel"], (int)Texture.AlphaChannel);
+        }
+
         private static void BindGLTexture(MatTexture tex, int texid)
         {
        //     GL.ActiveTexture(TextureUnit.Texture0 + texid);

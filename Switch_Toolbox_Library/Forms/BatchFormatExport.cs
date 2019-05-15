@@ -32,6 +32,7 @@ namespace Switch_Toolbox.Library
 
             string output = GetSubstringByString("(",")", SelectedExt);
             output = output.Replace('*', ' ');
+            output.Replace("  ", string.Empty);
 
             if (output == ".")
                 output = ".raw";

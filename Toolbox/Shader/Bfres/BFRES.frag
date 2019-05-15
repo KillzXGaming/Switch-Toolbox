@@ -93,6 +93,12 @@ uniform int HasRoughnessMap;
 uniform int HasMRA;
 uniform int HasSubSurfaceScatteringMap;
 
+// Diffuse Channel Toggles
+uniform int RedChannel;
+uniform int GreenChannel;
+uniform int BlueChannel;
+uniform int AlphaChannel;
+
 // Channel Toggles
 uniform int renderR;
 uniform int renderG;
@@ -134,6 +140,20 @@ float AmbientOcclusionBlend(sampler2D BakeShadowMap, VertexAttributes vert, floa
 vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color);
 vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap, vec3 specular_color, VertexAttributes vert, float texCoordIndex);
 vec3 ReflectionPass(vec3 N, vec3 I, vec4 diffuseMap, float SpecularAmount, float aoBlend, vec3 tintColor, VertexAttributes vert);
+
+float ParseComponent(int Type, vec4 Texture)
+{
+	 switch (Type)
+	 {
+	     case 0: return Texture.r; 
+	     case 1: return Texture.g; 
+	     case 2: return Texture.b; 
+	     case 3: return Texture.a; 
+	     case 4: return 1; 
+	     case 5: return 0; 
+		 default: return 1;
+	 }
+}
 
 void main()
 {
@@ -198,7 +218,14 @@ void main()
     }
 
 	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgb, 1);
-    diffuseMapColor *= halfLambert;
+	//vec4 diffuseMapColor = vec4(1);
+
+	//diffuseMapColor.r = ParseComponent(RedChannel, diffuseMapTex);
+	//diffuseMapColor.g = ParseComponent(BlueChannel, diffuseMapTex);
+//	diffuseMapColor.b = ParseComponent(GreenChannel, diffuseMapTex);
+//	diffuseMapColor.a = ParseComponent(AlphaChannel, diffuseMapTex);
+
+	diffuseMapColor *= halfLambert;
 
 	vec3 LightingDiffuse = vec3(0);
 	if (HasLightMap == 1)
