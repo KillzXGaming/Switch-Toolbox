@@ -25,7 +25,8 @@ namespace Toolbox
             ActiveCommitList = Commits;
             foreach (var commit in Commits)
             {
-                listViewCustom1.Items.Add(commit.Commit.Message).SubItems.Add(commit.Commit.Author.Date.DateTime.ToString());
+
+                listViewCustom1.Items.Add(commit.Commit.Message).SubItems.Add(commit.Commit.Author.Date.LocalDateTime.ToString());
             }
         }
 

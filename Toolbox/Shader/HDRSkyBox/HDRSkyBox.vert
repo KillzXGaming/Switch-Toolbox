@@ -9,7 +9,7 @@ out vec3 TexCoords;
 void main()
 {
     TexCoords = aPos;
-    vec4 clipPos = rotView * projection * vec4(aPos, 1.0);
+    vec4 clipPos = projection * rotView * vec4(aPos, 1.0);
 
     gl_Position = clipPos.xyww;
 }
