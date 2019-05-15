@@ -9,6 +9,82 @@ namespace Switch_Toolbox.Library.IO
 {
     public static class MatrixExenstion
     {
+        public static float Deg2Rad = (float)(System.Math.PI * 2) / 360;
+        public static float Rad2Deg = (float)(360 / (System.Math.PI * 2));
+
+        public static OpenTK.Vector3 QuaternionToEuler(OpenTK.Quaternion q1)
+        {
+            float sqw = q1.W * q1.W;
+            float sqx = q1.X * q1.X;
+            float sqy = q1.Y * q1.Y;
+            float sqz = q1.Z * q1.Z;
+            float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+            float test = q1.X * q1.W - q1.Y * q1.Z;
+            OpenTK.Vector3 v;
+
+           
+
+            if (test > 0.4995f * unit)
+            { // singularity at north pole
+                v.Y = 2f * (float)System.Math.Atan2(q1.X, q1.Y);
+                v.X = (float)System.Math.PI / 2;
+                v.Z = 0;
+                return NormalizeAngles(v * Rad2Deg);
+            }
+            if (test < -0.4995f * unit)
+            { // singularity at south pole
+                v.Y = -2f * (float)System.Math.Atan2(q1.Y, q1.X);
+                v.X = (float)-System.Math.PI / 2;
+                v.Z = 0;
+                return NormalizeAngles(v * Rad2Deg);
+            }
+            Quaternion q = new Quaternion(q1.W, q1.Z, q1.X, q1.Y);
+            v.Y = (float)Math.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));     // Yaw
+            v.X = (float)Math.Asin(2f * (q.X * q.Z - q.W * q.Y));                             // Pitch
+            v.Z = (float)Math.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));      // Roll
+            return NormalizeAngles(v * Rad2Deg);
+        }
+
+        static OpenTK.Vector3 NormalizeAngles(OpenTK.Vector3 angles)
+        {
+            angles.X = NormalizeAngle(angles.X);
+            angles.Y = NormalizeAngle(angles.Y);
+            angles.Z = NormalizeAngle(angles.Z);
+            return angles;
+        }
+
+        static float NormalizeAngle(float angle)
+        {
+            while (angle > 360)
+                angle -= 360;
+            while (angle < 0)
+                angle += 360;
+            return angle;
+        }
+
+        public static OpenTK.Quaternion EulerToQuaternion(float yaw, float pitch, float roll)
+        {
+            yaw *= Deg2Rad;
+            pitch *= Deg2Rad;
+            roll *= Deg2Rad;
+            float rollOver2 = roll * 0.5f;
+            float sinRollOver2 = (float)Math.Sin((double)rollOver2);
+            float cosRollOver2 = (float)Math.Cos((double)rollOver2);
+            float pitchOver2 = pitch * 0.5f;
+            float sinPitchOver2 = (float)Math.Sin((double)pitchOver2);
+            float cosPitchOver2 = (float)Math.Cos((double)pitchOver2);
+            float yawOver2 = yaw * 0.5f;
+            float sinYawOver2 = (float)Math.Sin((double)yawOver2);
+            float cosYawOver2 = (float)Math.Cos((double)yawOver2);
+            OpenTK.Quaternion result = OpenTK.Quaternion.Identity;
+            result.W = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2;
+            result.X = cosYawOver2 * sinPitchOver2 * cosRollOver2 + sinYawOver2 * cosPitchOver2 * sinRollOver2;
+            result.Y = sinYawOver2 * cosPitchOver2 * cosRollOver2 - cosYawOver2 * sinPitchOver2 * sinRollOver2;
+            result.Z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2;
+
+            return result;
+        }
+
         public static OpenTK.Matrix4 CreateRotation(OpenTK.Vector3 Normal, OpenTK.Vector3 Tangent)
         {
             var mat4 = OpenTK.Matrix4.Identity;

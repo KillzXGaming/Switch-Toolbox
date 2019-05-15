@@ -119,7 +119,6 @@ namespace FirstPlugin
             private void OpenCostumeDialog(string GamePath)
             {
                 var costumSelector = new OdysseyCostumeSelector(GamePath);
-
                 if (costumSelector.ShowDialog() == DialogResult.OK)
                 {
                     LoadCostumes(costumSelector.SelectedCostumeName);

@@ -28,15 +28,15 @@ namespace FirstPlugin.Forms
 
             foreach (string dir in Directory.GetFiles($"{GamePath}\\ObjectData", "Mario*"))
             {
-
                 string filename = Path.GetFileNameWithoutExtension(dir);
 
+                listViewCustom1.BeginUpdate();
                 bool Exluded = ExcludeFileList.Any(filename.Contains);
-
                 if (Exluded == false)
                 {
                     listViewCustom1.Items.Add(new ListViewItem(filename) { Tag = dir });
                 }
+                listViewCustom1.EndUpdate();
             }
         }
 

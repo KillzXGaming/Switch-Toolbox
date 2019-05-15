@@ -13,13 +13,7 @@ namespace Switch_Toolbox.Library.Animations
             anim.SetFrame(0);
             for (int frame = 0; frame < anim.FrameCount; frame++)
             {
-                anim.NextFrame(skeleton);
-
-                //Add frames to the playing animation
-                anim.Frame++;
-                //Reset it when it reaches the total frame count
-                if (anim.Frame >= anim.FrameCount)
-                    anim.Frame = 0;
+                anim.NextFrame(skeleton, false, true);
 
                 foreach (Animation.KeyNode boneAnim in anim.Bones)
                 {

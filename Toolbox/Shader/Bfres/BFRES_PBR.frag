@@ -306,17 +306,15 @@ void main()
     // Diffuse pass
     vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
     vec3 diffuseTerm = diffuseIblColor * albedo;
-    diffuseTerm *= kD;
+   // diffuseTerm *= kD;
     diffuseTerm *= cavity;
     diffuseTerm *= ao;
     diffuseTerm *= shadow;
     diffuseTerm += LightingDiffuse;
 
     // Adjust for metalness.
-  //  diffuseTerm *= clamp(1 - metallic, 0, 1);
-
-
-  //  diffuseTerm *= vec3(1) - kS.xxx;
+    diffuseTerm *= clamp(1 - metallic, 0, 1);
+    diffuseTerm *= vec3(1) - kS.xxx;
 
     // Specular pass.
     int maxSpecularLod = 8;
@@ -348,7 +346,6 @@ void main()
     // Alpha calculations.
     float alpha = texture(DiffuseMap, f_texcoord0).a;
     fragColor.a = alpha;
-
 
 	 // Toggles rendering of individual color channels for all render modes.
     fragColor.rgb *= vec3(renderR, renderG, renderB);

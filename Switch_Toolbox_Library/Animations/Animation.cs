@@ -497,7 +497,7 @@ namespace Switch_Toolbox.Library.Animations
             return FrameCount;
         }
 
-        public void NextFrame(STSkeleton skeleton, bool isChild = false)
+        public void NextFrame(STSkeleton skeleton, bool isChild = false, bool AdancedNextFrame = false) 
         {
             if (Frame >= FrameCount) return;
 
@@ -573,6 +573,13 @@ namespace Switch_Toolbox.Library.Animations
                     }
                 }
 
+            }
+
+            if (AdancedNextFrame)
+            {
+                Frame++;
+                if (Frame >= FrameCount)
+                    Frame = 0;
             }
 
             if (!isChild && Updated)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace Switch_Toolbox.Library.Forms
 {
@@ -55,8 +56,43 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
+        [System.Runtime.InteropServices.DllImport("user32")]
+        private static extern IntPtr GetDC(IntPtr hwnd);
+        [System.Runtime.InteropServices.DllImport("user32")]
+        private static extern IntPtr ReleaseDC(IntPtr hwnd, IntPtr hdc);
+
+        public static IntPtr GetHeaderControl(ListView list)
+        {
+            const int LVM_GETHEADER = 0x1000 + 31;
+            return SendMessage(list.Handle, LVM_GETHEADER, 0, 0);
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+
+
         private void ListViewCustom_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
+            /* if (e.ColumnIndex == 3) //last column index
+             {
+                 ListView lv = e.Header.ListView;
+                 IntPtr headerControl = NativeMethods.GetHeaderControl(lv);
+                 IntPtr hdc = GetDC(headerControl);
+                 Graphics g = Graphics.FromHdc(hdc);
+
+                 // Do your extra drawing here
+                 Rectangle rc = new Rectangle(e.Bounds.Right, //Right instead of Left - offsets the rectangle
+                           e.Bounds.Top,
+                           e.Bounds.Width,
+                           e.Bounds.Height);
+
+                 e.Graphics.FillRectangle(Brushes.Red, rc);
+
+                 g.Dispose();
+                 ReleaseDC(headerControl, hdc);
+             }*/
+
             using (SolidBrush brush = new SolidBrush(FormThemes.BaseTheme.FormBackColor))
             {
                 e.Graphics.FillRectangle(brush, e.Bounds);
@@ -81,8 +117,12 @@ namespace Switch_Toolbox.Library.Forms
 
         private void ListViewCustom_Resize(object sender, EventArgs e)
         {
-            if (View == View.Details && CanResizeList)
+            if (View == View.Details && HeaderStyle != ColumnHeaderStyle.None && CanResizeList)
+            {
+                ((ListView)sender).BeginUpdate();
                 SizeLastColumn((ListView)sender);
+                ((ListView)sender).EndUpdate();
+            }
         }
         private void SizeLastColumn(ListView lv)
         {

@@ -136,18 +136,13 @@ namespace Switch_Toolbox.Library
             var xyzLnes = new DrawableXyzLines();
             scene.staticObjects.Add(xyzLnes);
 
-            if (Runtime.PBR.UseSkybox)
-            {
-                var skybox = new DrawableSkybox();
-                scene.staticObjects.Add(skybox);
-            }
-            else if (Runtime.renderBackGround)
-            {
-                var background = new DrawableBackground();
-                scene.staticObjects.Add(background);
-            }
+            var skybox = new DrawableSkybox();
+            scene.staticObjects.Add(skybox);
 
-        //    scene.objects.Add(new SingleObject(new Vector3(0, 0, 0)));
+            var background = new DrawableBackground();
+            scene.staticObjects.Add(background);
+
+            //    scene.objects.Add(new SingleObject(new Vector3(0, 0, 0)));
 
             // LoadFog();
 

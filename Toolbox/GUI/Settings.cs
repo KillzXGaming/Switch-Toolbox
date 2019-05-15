@@ -422,8 +422,8 @@ namespace Toolbox
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                SMOPathTB.Text = sfd.SelectedPath;
-                Runtime.TpGamePath = SMOPathTB.Text;
+                tpGamePathTB.Text = sfd.SelectedPath;
+                Runtime.TpGamePath = tpGamePathTB.Text;
             }
         }
 
@@ -446,29 +446,111 @@ namespace Toolbox
 
         private void cubemapPathTB_Click(object sender, EventArgs e) {
             OpenFileDialog sfd = new OpenFileDialog();
+            sfd.Filter = "DDS |*.dds;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                specularCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
-                Runtime.PBR.SpecularCubeMapPath = sfd.FileName;
+                if (IsValidCubeMap(sfd.FileName))
+                {
+                    specularCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
+                    Runtime.PBR.SpecularCubeMapPath = sfd.FileName;
+                }
+                else
+                    MessageBox.Show("Invalid cube map file. Make sure it is a DDS with a cube map.");
             }
         }
 
         private void diffuseCubemapPathTBB_Click(object sender, EventArgs e) {
             OpenFileDialog sfd = new OpenFileDialog();
+            sfd.Filter = "DDS |*.dds;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                diffuseCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
-                Runtime.PBR.DiffuseCubeMapPath = sfd.FileName;
+                if (IsValidCubeMap(sfd.FileName))
+                {
+                    diffuseCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
+                    Runtime.PBR.DiffuseCubeMapPath = sfd.FileName;
+                }
+                else
+                    MessageBox.Show("Invalid cube map file. Make sure it is a DDS with a cube map.");
+            }
+        }
+
+        private bool IsValidCubeMap(string FilePath)
+        {
+            try
+            {
+                DDS dds = new DDS(FilePath);
+                if (dds.ArrayCount == 6)
+                    return true;
+
+                return false;
+            }
+            catch
+            {
+                return false;
             }
         }
 
         private void chkUseSkyobx_CheckedChanged(object sender, EventArgs e) {
             Runtime.PBR.UseSkybox = chkUseSkyobx.Checked;
-            chkDiffyseSkybox.Enabled = chkUseSkyobx.Checked; 
+            chkDiffyseSkybox.Enabled = chkUseSkyobx.Checked;
+            UpdateViewportSettings();
         }
 
         private void chkDiffyseSkybox_CheckedChanged(object sender, EventArgs e) {
             Runtime.PBR.UseDiffuseSkyTexture = chkDiffyseSkybox.Checked;
+            UpdateViewportSettings();
+        }
+
+        private void clearSettingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                ContextMenuStrip owner = menuItem.Owner as ContextMenuStrip;
+                if (owner != null)
+                {
+                    // Get the control that is displaying this context menu
+                    Control sourceControl = owner.SourceControl;
+                    switch (sourceControl.Name)
+                    {
+                        case "diffuseCubemapPathTB":
+                            diffuseCubemapPathTB.Text = "";
+                            Runtime.PBR.DiffuseCubeMapPath = "";
+                            break;
+                        case "specularCubemapPathTB":
+                            specularCubemapPathTB.Text = "";
+                            Runtime.PBR.SpecularCubeMapPath = "";
+                            break;
+                        case "mk8DPathTB":
+                            mk8DPathTB.Text = "";
+                            Runtime.Mk8dGamePath = "";
+                            break;
+                        case "mk8PathTB":
+                            mk8PathTB.Text = "";
+                            Runtime.Mk8GamePath = "";
+                            break;
+                        case "SMOPathTB":
+                            SMOPathTB.Text = "";
+                            Runtime.SmoGamePath = "";
+                            break;
+                        case "tpGamePathTB":
+                            tpGamePathTB.Text = "";
+                            Runtime.TpGamePath = "";
+                            break;
+                        case "botwGamePathTB":
+                            botwGamePathTB.Text = "";
+                            Runtime.BotwGamePath = "";
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void specularCubemapPathTB_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

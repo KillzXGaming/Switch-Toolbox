@@ -230,13 +230,17 @@ namespace FirstPlugin
                     {
                         current.Text += $" : <Dictionary> {dictionaryIndex++}";
                         current.Tag = node[k];
-                        current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
+
+                        if (HasDynamicListChildren(current))
+                            current.Nodes.Add("✯✯dummy✯✯"); //a text that can't be in a byml
                     }
                     else if (node[k] is IList<dynamic>)
                     {
                         current.Text += $" : <Array> {arrayIndex++}";
                         current.Tag = ((IList<dynamic>)node[k]);
-                        current.Nodes.Add("✯✯dummy✯✯");
+
+                        if (HasDynamicListChildren(current))
+                            current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (node[k] is IList<ByamlPathPoint>)
                     {
@@ -277,7 +281,9 @@ namespace FirstPlugin
                     {
                         TreeNode current = addto.Add($"<Dictionary> {dictionaryIndex++}");
                         current.Tag = ((IDictionary<string, dynamic>)k);
-                        current.Nodes.Add("✯✯dummy✯✯");
+
+                        if (HasDynamicListChildren(current))
+                            current.Nodes.Add("✯✯dummy✯✯");
                     }
                     else if (k is IList<dynamic>)
                     {
@@ -294,6 +300,49 @@ namespace FirstPlugin
 
                 index++;
             }
+        }
+
+        //Search through the properties of a dictionary or list and see if it contains a list/dictionary
+        //Then use this information to add tree nodes.
+        //This is so nodes can be added on click but visually have children
+        private bool HasDynamicListChildren(TreeNode Node)
+        {
+            if (Node.Tag != null)
+            {
+                if (((dynamic)Node.Tag).Count > 0)
+                {
+                    if (Node.Tag is IList<dynamic>)
+                        return ListHasListChild((IList<dynamic>)Node.Tag);
+                    if (Node.Tag is IDictionary<string, dynamic>)
+                        return DictionaryHasListChild((IDictionary<string, dynamic>)Node.Tag);
+                }
+            }
+
+            return false;
+        }
+
+        private bool ListHasListChild(IList<dynamic> list)
+        {
+            foreach (dynamic k in list)
+            {
+                if (k is IDictionary<string, dynamic>)
+                    return true;
+                else if (k is IList<dynamic>)
+                    return true;
+            }
+            return false;
+        }
+
+        private bool DictionaryHasListChild(IDictionary<string, dynamic> node)
+        {
+            foreach (string k in node.Keys)
+            {
+                if (node[k] is IDictionary<string, dynamic>)
+                    return true;
+                else if (node[k] is IList<dynamic>)
+                    return true;
+            }
+            return false;
         }
 
         private void BeforeExpand(object sender, TreeViewCancelEventArgs e)

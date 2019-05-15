@@ -687,7 +687,7 @@ namespace Switch_Toolbox.Library
                     cubemap[0].mipmaps,
                     cubemap[1].mipmaps,
                     cubemap[2].mipmaps,
-                    cubemap[3].mipmaps,
+                    cubemap[3].mipmaps, 
                     cubemap[4].mipmaps,
                     cubemap[5].mipmaps);
             }

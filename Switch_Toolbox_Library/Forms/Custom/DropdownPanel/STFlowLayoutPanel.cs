@@ -27,7 +27,6 @@ namespace Switch_Toolbox.Library.Forms
                     FillHeight(ctrl);
             }
 
-
             base.OnSizeChanged(e);
         }
 

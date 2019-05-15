@@ -50,7 +50,7 @@ namespace Switch_Toolbox.Library
             {
                 if (diffusepbr == null)
                 {
-                    if (System.IO.File.Exists(Runtime.PBR.SpecularCubeMapPath))
+                    if (System.IO.File.Exists(Runtime.PBR.DiffuseCubeMapPath))
                     {
                         DDS diffuseSdr = new DDS(Runtime.PBR.DiffuseCubeMapPath);
                         diffusepbr = DDS.CreateGLCubeMap(diffuseSdr);

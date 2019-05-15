@@ -1075,7 +1075,8 @@ namespace FirstPlugin
                 default:
                     setting.LoadBitMap(FileName);
                     importer.LoadSetting(setting);
-                    setting.Format = GenericToBntxSurfaceFormat(DefaultFormat);
+                    if (!IsAtscFormat(DefaultFormat))
+                        setting.Format = GenericToBntxSurfaceFormat(DefaultFormat);
 
                     if (MaxMipLevel != 0)
                     {

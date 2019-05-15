@@ -40,7 +40,7 @@ namespace Switch_Toolbox.Library.Rendering
         SFGraphics.GLObjects.Textures.TextureCubeMap specularPbr;
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
+            if (!Runtime.OpenTKInitialized || !Runtime.PBR.UseSkybox || pass == Pass.TRANSPARENT)
                 return;
 
             GL.Enable(EnableCap.DepthTest);
@@ -50,7 +50,7 @@ namespace Switch_Toolbox.Library.Rendering
 
             GL.Enable(EnableCap.StencilTest);
             GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
-
+                
 
             control.CurrentShader = defaultShaderProgram;
             // enable seamless cubemap sampling for lower mip levels in the pre-filter map.

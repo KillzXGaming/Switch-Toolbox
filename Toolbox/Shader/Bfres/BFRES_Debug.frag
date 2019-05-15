@@ -172,6 +172,38 @@ void main()
 	if (HasNormalMap == 1 && useNormalMap == 1)
 		N = CalcBumpedNormal(normal, NormalMap, vert, uking_texture2_texcoord);
 
+	float metallic = 0;
+	float roughness = 1;
+	float specIntensity = 1;
+	float ao = 1;
+
+	if (HasMRA == 1) //Kirby Star Allies PBR map
+	{
+	    //Note KSA has no way to tell if one gets unused or not because shaders :(
+		//Usually it's just metalness with roughness and works fine
+		metallic = texture(MRA, f_texcoord0).r;
+		roughness = texture(MRA, f_texcoord0).g;
+		specIntensity = texture(MRA, f_texcoord0).b;
+		ao = texture(MRA, f_texcoord0).a;
+	}
+	else if (HasShadowMap == 1)
+    {
+		ao = texture(BakeShadowMap, f_texcoord1).r;
+    }
+
+	if (HasMetalnessMap == 1)
+    {
+		 metallic = texture(MetalnessMap, displayTexCoord).r;
+    }
+	if (HasRoughnessMap == 1)
+    {
+	    roughness = texture(RoughnessMap, displayTexCoord).r;
+    }
+	if (HasSpecularMap == 1)
+    {
+		specIntensity = texture(SpecularMap, f_texcoord0).r;
+    }
+
     if (renderType == 1) // normals vertexColor
     {
         vec3 displayNormal = (N * 0.5) + 0.5;
@@ -195,15 +227,7 @@ void main()
         fragColor = vertexColor;
 	else if (renderType == 6) //Display Ambient Occlusion
 	{
-	    if (HasShadowMap == 1)
-        {
-		    float Shadow = texture(BakeShadowMap, f_texcoord1).r;
-            fragColor = vec4(vec3(Shadow), 1);
-        }
-		else
-        {
-            fragColor = vec4(1);
-        }
+        fragColor = vec4(vec3(ao), 1);
 	}
     else if (renderType == 7) // uv coords
         fragColor = vec4(displayTexCoord.x, displayTexCoord.y, 1, 1);
@@ -246,15 +270,7 @@ void main()
     }
 	else if (renderType == 13) //Specular
 	{
-	    if (HasSpecularMap == 1)
-		{
-		    vec3 Specular = texture(SpecularMap, f_texcoord0).rrr;
-            fragColor = vec4(Specular, 1);
-		}
-		else
-		{
-		   fragColor = vec4(1);
-		}
+        fragColor = vec4(vec3(specIntensity), 1);
 	}
 	else if (renderType == 14) //Shadow
 	{
@@ -270,27 +286,11 @@ void main()
 	}
 	else if (renderType == 15) //MetalnessMap
     {
-	    if (HasMetalnessMap == 1)
-        {
-		    float mtl = texture(MetalnessMap, displayTexCoord).r;
-            fragColor = vec4(vec3(mtl), 1);
-        }
-		else
-        {
-            fragColor = vec4(1);
-        }
+        fragColor = vec4(vec3(metallic), 1);
     }
 	else if (renderType == 16) //RoughnessMap
     {
-	    if (HasRoughnessMap == 1)
-        {
-		    float rgh = texture(RoughnessMap, displayTexCoord).r;
-            fragColor = vec4(vec3(rgh), 1);
-        }
-		else
-        {
-            fragColor = vec4(1);
-        }
+        fragColor = vec4(vec3(roughness), 1);
     }
 	else if (renderType == 17) //SubSurfaceScatteringMap
     {

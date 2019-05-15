@@ -238,8 +238,6 @@ namespace FirstPlugin
                     DialogResult = DialogResult.OK;
                 }
             }
-
-
         }
     }
 }

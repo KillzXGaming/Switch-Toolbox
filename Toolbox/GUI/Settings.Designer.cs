@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
             this.chkBoxSpecular = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxNormalMap = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -101,12 +102,14 @@
             this.stLabel10 = new Switch_Toolbox.Library.Forms.STLabel();
             this.mk8PathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.chkDiffyseSkybox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel16 = new Switch_Toolbox.Library.Forms.STLabel();
             this.diffuseCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.clearSettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
             this.specularCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.chkDiffyseSkybox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -128,6 +131,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -977,6 +981,7 @@
             // botwGamePathTB
             // 
             this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.botwGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.botwGamePathTB.Location = new System.Drawing.Point(112, 120);
             this.botwGamePathTB.Name = "botwGamePathTB";
             this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
@@ -995,6 +1000,7 @@
             // tpGamePathTB
             // 
             this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tpGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.tpGamePathTB.Location = new System.Drawing.Point(112, 94);
             this.tpGamePathTB.Name = "tpGamePathTB";
             this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
@@ -1013,6 +1019,7 @@
             // SMOPathTB
             // 
             this.SMOPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SMOPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.SMOPathTB.Location = new System.Drawing.Point(112, 68);
             this.SMOPathTB.Name = "SMOPathTB";
             this.SMOPathTB.Size = new System.Drawing.Size(258, 20);
@@ -1031,6 +1038,7 @@
             // mk8DPathTB
             // 
             this.mk8DPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mk8DPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.mk8DPathTB.Location = new System.Drawing.Point(112, 42);
             this.mk8DPathTB.Name = "mk8DPathTB";
             this.mk8DPathTB.Size = new System.Drawing.Size(258, 20);
@@ -1049,6 +1057,8 @@
             // mk8PathTB
             // 
             this.mk8PathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mk8PathTB.ContextMenuStrip = this.stContextMenuStrip1;
+            this.mk8PathTB.Cursor = System.Windows.Forms.Cursors.Default;
             this.mk8PathTB.Location = new System.Drawing.Point(112, 16);
             this.mk8PathTB.Name = "mk8PathTB";
             this.mk8PathTB.Size = new System.Drawing.Size(258, 20);
@@ -1071,6 +1081,18 @@
             this.tabPage4.Text = "PBR";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // chkDiffyseSkybox
+            // 
+            this.chkDiffyseSkybox.AutoSize = true;
+            this.chkDiffyseSkybox.Enabled = false;
+            this.chkDiffyseSkybox.Location = new System.Drawing.Point(108, 16);
+            this.chkDiffyseSkybox.Name = "chkDiffyseSkybox";
+            this.chkDiffyseSkybox.Size = new System.Drawing.Size(173, 17);
+            this.chkDiffyseSkybox.TabIndex = 5;
+            this.chkDiffyseSkybox.Text = "Display Diffuse Map on Skybox";
+            this.chkDiffyseSkybox.UseVisualStyleBackColor = true;
+            this.chkDiffyseSkybox.CheckedChanged += new System.EventHandler(this.chkDiffyseSkybox_CheckedChanged);
+            // 
             // stLabel16
             // 
             this.stLabel16.AutoSize = true;
@@ -1083,11 +1105,26 @@
             // diffuseCubemapPathTB
             // 
             this.diffuseCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.diffuseCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.diffuseCubemapPathTB.Location = new System.Drawing.Point(160, 71);
             this.diffuseCubemapPathTB.Name = "diffuseCubemapPathTB";
             this.diffuseCubemapPathTB.Size = new System.Drawing.Size(197, 20);
             this.diffuseCubemapPathTB.TabIndex = 3;
             this.diffuseCubemapPathTB.Click += new System.EventHandler(this.diffuseCubemapPathTBB_Click);
+            // 
+            // stContextMenuStrip1
+            // 
+            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearSettingToolStripMenuItem});
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(142, 26);
+            // 
+            // clearSettingToolStripMenuItem
+            // 
+            this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
+            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.clearSettingToolStripMenuItem.Text = "Clear Setting";
+            this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
             // 
             // chkUseSkyobx
             // 
@@ -1112,23 +1149,13 @@
             // specularCubemapPathTB
             // 
             this.specularCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.specularCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.specularCubemapPathTB.Location = new System.Drawing.Point(160, 45);
             this.specularCubemapPathTB.Name = "specularCubemapPathTB";
             this.specularCubemapPathTB.Size = new System.Drawing.Size(197, 20);
             this.specularCubemapPathTB.TabIndex = 0;
             this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
-            // 
-            // chkDiffyseSkybox
-            // 
-            this.chkDiffyseSkybox.AutoSize = true;
-            this.chkDiffyseSkybox.Enabled = false;
-            this.chkDiffyseSkybox.Location = new System.Drawing.Point(108, 16);
-            this.chkDiffyseSkybox.Name = "chkDiffyseSkybox";
-            this.chkDiffyseSkybox.Size = new System.Drawing.Size(173, 17);
-            this.chkDiffyseSkybox.TabIndex = 5;
-            this.chkDiffyseSkybox.Text = "Display Diffuse Map on Skybox";
-            this.chkDiffyseSkybox.UseVisualStyleBackColor = true;
-            this.chkDiffyseSkybox.CheckedChanged += new System.EventHandler(this.chkDiffyseSkybox_CheckedChanged);
+            this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.specularCubemapPathTB_TextChanged);
             // 
             // Settings
             // 
@@ -1139,6 +1166,7 @@
             this.Name = "Settings";
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.Settings_Load);
+            this.Controls.SetChildIndex(this.contentContainer, 0);
             this.contentContainer.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -1166,6 +1194,7 @@
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1251,5 +1280,7 @@
         private Switch_Toolbox.Library.Forms.STLabel stLabel16;
         private Switch_Toolbox.Library.Forms.STTextBox diffuseCubemapPathTB;
         private Switch_Toolbox.Library.Forms.STCheckBox chkDiffyseSkybox;
+        private Switch_Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem clearSettingToolStripMenuItem;
     }
 }
