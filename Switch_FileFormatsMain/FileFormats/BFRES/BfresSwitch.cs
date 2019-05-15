@@ -680,6 +680,15 @@ namespace FirstPlugin
                 texture.wrapModeW = (int)mat.Samplers[id].WrapModeW;
                 texture.SamplerName = mat.SamplerDict.GetKey(id);
 
+                if (mat.Samplers[id].ShrinkXY == Sampler.ShrinkFilterModes.Points)
+                    texture.minFilter = 1;
+                else
+                    texture.minFilter = 0;
+                if (mat.Samplers[id].ExpandXY == Sampler.ExpandFilterModes.Points)
+                    texture.magFilter = 1;
+                else
+                    texture.magFilter = 0;
+
                 string useSampler = texture.SamplerName;
 
                 //Use the fragment sampler in the shader assign section. It's usually more accurate this way
