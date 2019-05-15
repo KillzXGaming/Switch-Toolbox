@@ -39,11 +39,11 @@ namespace Toolbox
 
                     if (Runtime.CompileDate != latest.Assets[0].UpdatedAt.ToString())
                     {
-                      //  LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
-                      //  LatestRelease = latest;
-                      //  CanUpdate = true;
+                        LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
+                        LatestRelease = latest;
+                        CanUpdate = true;
 
-                        DownloadRelease();
+                      /*  DownloadRelease();
                         if (CanUpdate)
                         {
                             LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
@@ -52,7 +52,7 @@ namespace Toolbox
                         else
                         {
                             
-                        }
+                        }*/
                     }
                     break;
                 }
