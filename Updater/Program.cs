@@ -26,10 +26,22 @@ namespace Updater
             var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
             GetReleases(client).Wait();
 
-            string[] versionInfo = File.ReadLines(Path.Combine(execDirectory, "Version.txt")).ToArray();
-            string ProgramVersion = versionInfo[0];
-            string CompileDate = versionInfo[1];
-            string CommitInfo = versionInfo[2];
+            string versionTxt = Path.Combine(execDirectory, "Version.txt");
+            if (!File.Exists(versionTxt))
+                File.Create(versionTxt);
+
+            string[] versionInfo = File.ReadLines(versionTxt).ToArray();
+
+            string ProgramVersion = "";
+            string CompileDate = "";
+
+            string CommitInfo = "";
+            if (versionInfo.Length >= 3)
+            {
+                ProgramVersion = versionInfo[0];
+                CompileDate = versionInfo[1];
+                CommitInfo = versionInfo[2];
+            }
 
             foreach (string arg in args)
             {

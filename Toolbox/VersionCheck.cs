@@ -9,9 +9,9 @@ namespace Toolbox
 {
     public class VersionCheck
     {
-        public string ProgramVersion;
-        public string CompileDate;
-        public string CommitInfo;
+        public string ProgramVersion = "";
+        public string CompileDate = "";
+        public string CommitInfo = "";
 
         public VersionCheck(bool HasVersionTxt)
         {
@@ -32,6 +32,9 @@ namespace Toolbox
         public void SaveVersionInfo()
         {
             string path = Runtime.ExecutableDir + "Version.txt";
+            if (!File.Exists(path))
+                File.Create(path);
+
             using (StreamWriter writer = new StreamWriter(path))
             {
                 writer.WriteLine($"{ProgramVersion}");
