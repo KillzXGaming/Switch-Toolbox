@@ -438,7 +438,9 @@
     </Content>
     <Content Include="Tool.ico" />
     <None Include="Resources\Logo.png" />
-    <Content Include="Version.txt" />
+    <Content Include="Version.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Presets\Materials\" />
