@@ -1169,5 +1169,9 @@ namespace Toolbox
         private void requestFeatureToolStripMenuItem1_Click(object sender, EventArgs e) {
             System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox/issues");
         }
+
+        private void tutorialToolStripMenuItem_Click(object sender, EventArgs e) {
+            System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox/wiki/Tutorial-Home-Page");
+        }
     }
 }
