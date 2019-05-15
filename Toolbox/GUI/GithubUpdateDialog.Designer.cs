@@ -56,6 +56,7 @@
             // 
             // stButton1
             // 
+            this.stButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.stButton1.DialogResult = System.Windows.Forms.DialogResult.No;
             this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stButton1.Location = new System.Drawing.Point(459, 361);
@@ -67,6 +68,7 @@
             // 
             // stButton2
             // 
+            this.stButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.stButton2.DialogResult = System.Windows.Forms.DialogResult.Yes;
             this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stButton2.Location = new System.Drawing.Point(378, 361);
@@ -78,6 +80,9 @@
             // 
             // listViewCustom1
             // 
+            this.listViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -104,6 +109,8 @@
             // 
             // stTextBox1
             // 
+            this.stTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.stTextBox1.Location = new System.Drawing.Point(5, 280);
             this.stTextBox1.Multiline = true;
@@ -122,6 +129,7 @@
             // 
             // stLabel2
             // 
+            this.stLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.stLabel2.AutoSize = true;
             this.stLabel2.Location = new System.Drawing.Point(6, 262);
             this.stLabel2.Name = "stLabel2";
