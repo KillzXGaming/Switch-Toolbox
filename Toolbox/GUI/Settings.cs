@@ -453,6 +453,8 @@ namespace Toolbox
                 {
                     specularCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
                     Runtime.PBR.SpecularCubeMapPath = sfd.FileName;
+                    RenderTools.ResetSpecularCubeMap();
+                    UpdateViewportSettings();
                 }
                 else
                     MessageBox.Show("Invalid cube map file. Make sure it is a DDS with a cube map.");
@@ -468,6 +470,8 @@ namespace Toolbox
                 {
                     diffuseCubemapPathTB.Text = System.IO.Path.GetFileName(sfd.FileName);
                     Runtime.PBR.DiffuseCubeMapPath = sfd.FileName;
+                    RenderTools.ResetDiffuseCubeMap();
+                    UpdateViewportSettings();
                 }
                 else
                     MessageBox.Show("Invalid cube map file. Make sure it is a DDS with a cube map.");

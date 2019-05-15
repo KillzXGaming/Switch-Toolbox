@@ -14,6 +14,16 @@ namespace Switch_Toolbox.Library
 {
     public class RenderTools
     {
+        public static void ResetSpecularCubeMap()
+        {
+            specularpbr = null;
+        }
+
+        public static void ResetDiffuseCubeMap()
+        {
+            diffusepbr = null;
+        }
+
         public static bool PbrSamplersLoaded
         {
             get
