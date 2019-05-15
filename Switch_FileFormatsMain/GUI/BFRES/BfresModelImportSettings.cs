@@ -51,6 +51,8 @@ namespace FirstPlugin
         public bool SetDefaultParamData;
         public int SkinCountLimit;
 
+        public bool GeneratePlaceholderTextures = true;
+
         public void DisableMaterialEdits()
         {
             textBoxMaterialPath.Visible = false;
@@ -200,6 +202,8 @@ namespace FirstPlugin
         //Thanks Wexos!
         private void BfresModelImportSettings_Load(object sender, EventArgs e)
         {
+            chkPlaceHolderTextures.Checked = GeneratePlaceholderTextures;
+
             comboBoxFormatPositions.Items.Add(AttribFormat.Format_32_32_32_Single);
             comboBoxFormatPositions.Items.Add(AttribFormat.Format_16_16_16_16_Single);
             comboBoxFormatPositions.Items.Add(AttribFormat.Format_16_16_16_16_SNorm);
@@ -329,6 +333,11 @@ namespace FirstPlugin
                 DisableMaterialEdits();
             else
                 EnableMaterialEdits();
+        }
+
+        private void chkPlaceHolderTextures_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePlaceholderTextures = chkPlaceHolderTextures.Checked;
         }
     }
 }

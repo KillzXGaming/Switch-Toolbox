@@ -727,92 +727,98 @@ namespace Bfres.Structs
                                 }
 
                                 fmat.Text = mat.Text;
-                                //Setup placeholder textures
-                                //Note we can't add/remove samplers so we must fill these slots
-                                foreach (var t in fmat.TextureMaps)
-                                {
-                                    t.wrapModeS = 0;
-                                    t.wrapModeT = 0;
 
-                                    switch (t.Type)
-                                    {
-                                        case STGenericMatTexture.TextureType.Diffuse:
-                                            t.Name = "Basic_Alb";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Emission:
-                                            t.Name = "Basic_Emm";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Normal:
-                                            t.Name = "Basic_Nrm";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Specular:
-                                            t.Name = "Basic_Spm";
-                                            break;
-                                        case STGenericMatTexture.TextureType.SphereMap:
-                                            t.Name = "Basic_Sphere";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Metalness:
-                                            t.Name = "Basic_Mtl";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Roughness:
-                                            t.Name = "Basic_Rgh";
-                                            break;
-                                        case STGenericMatTexture.TextureType.MRA:
-                                            t.Name = "Basic_MRA";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Shadow:
-                                            t.Name = "Basic_Bake_st0";
-                                            break;
-                                        case STGenericMatTexture.TextureType.Light:
-                                            t.Name = "Basic_Bake_st1";
-                                            break;
-                                    }
-                                }
-
-                                if (PluginRuntime.bntxContainers.Count > 0 && Parent != null)
+                                if (settings.GeneratePlaceholderTextures)
                                 {
-                                    foreach (var node in Parent.Parent.Nodes)
+
+                                    //Setup placeholder textures
+                                    //Note we can't add/remove samplers so we must fill these slots
+                                    foreach (var t in fmat.TextureMaps)
                                     {
-                                        if (node is BNTX)
+                                        t.wrapModeS = 0;
+                                        t.wrapModeT = 0;
+
+                                        switch (t.Type)
                                         {
-                                            var bntx = (BNTX)node;
-
-                                            bntx.ImportBasicTextures("Basic_Alb");
-                                            bntx.ImportBasicTextures("Basic_Nrm");
-                                            bntx.ImportBasicTextures("Basic_Spm");
-                                            bntx.ImportBasicTextures("Basic_Sphere");
-                                            bntx.ImportBasicTextures("Basic_Mtl");
-                                            bntx.ImportBasicTextures("Basic_Rgh");
-                                            bntx.ImportBasicTextures("Basic_MRA");
-                                            bntx.ImportBasicTextures("Basic_Bake_st0");
-                                            bntx.ImportBasicTextures("Basic_Bake_st1");
-                                            bntx.ImportBasicTextures("Basic_Emm");
+                                            case STGenericMatTexture.TextureType.Diffuse:
+                                                t.Name = "Basic_Alb";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Emission:
+                                                t.Name = "Basic_Emm";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Normal:
+                                                t.Name = "Basic_Nrm";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Specular:
+                                                t.Name = "Basic_Spm";
+                                                break;
+                                            case STGenericMatTexture.TextureType.SphereMap:
+                                                t.Name = "Basic_Sphere";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Metalness:
+                                                t.Name = "Basic_Mtl";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Roughness:
+                                                t.Name = "Basic_Rgh";
+                                                break;
+                                            case STGenericMatTexture.TextureType.MRA:
+                                                t.Name = "Basic_MRA";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Shadow:
+                                                t.Name = "Basic_Bake_st0";
+                                                break;
+                                            case STGenericMatTexture.TextureType.Light:
+                                                t.Name = "Basic_Bake_st1";
+                                                break;
                                         }
                                     }
-                                }
-                                if (PluginRuntime.ftexContainers.Count > 0 && Parent != null)
-                                {
-                                    foreach (var node in Parent.Parent.Nodes)
-                                    {
-                                        if (node is BFRESGroupNode)
-                                        {
-                                            if (((BFRESGroupNode)node).Type == BRESGroupType.Textures)
-                                            {
-                                                var ftexCont = (BFRESGroupNode)node;
 
-                                                ftexCont.ImportBasicTextures("Basic_Alb");
-                                                ftexCont.ImportBasicTextures("Basic_Nrm");
-                                                ftexCont.ImportBasicTextures("Basic_Spm");
-                                                ftexCont.ImportBasicTextures("Basic_Sphere");
-                                                ftexCont.ImportBasicTextures("Basic_Mtl");
-                                                ftexCont.ImportBasicTextures("Basic_Rgh");
-                                                ftexCont.ImportBasicTextures("Basic_MRA");
-                                                ftexCont.ImportBasicTextures("Basic_Bake_st0");
-                                                ftexCont.ImportBasicTextures("Basic_Bake_st1");
-                                                ftexCont.ImportBasicTextures("Basic_Emm");
+                                    if (PluginRuntime.bntxContainers.Count > 0 && Parent != null)
+                                    {
+                                        foreach (var node in Parent.Parent.Nodes)
+                                        {
+                                            if (node is BNTX)
+                                            {
+                                                var bntx = (BNTX)node;
+
+                                                bntx.ImportBasicTextures("Basic_Alb");
+                                                bntx.ImportBasicTextures("Basic_Nrm");
+                                                bntx.ImportBasicTextures("Basic_Spm");
+                                                bntx.ImportBasicTextures("Basic_Sphere");
+                                                bntx.ImportBasicTextures("Basic_Mtl");
+                                                bntx.ImportBasicTextures("Basic_Rgh");
+                                                bntx.ImportBasicTextures("Basic_MRA");
+                                                bntx.ImportBasicTextures("Basic_Bake_st0");
+                                                bntx.ImportBasicTextures("Basic_Bake_st1");
+                                                bntx.ImportBasicTextures("Basic_Emm");
                                             }
                                         }
                                     }
+                                    if (PluginRuntime.ftexContainers.Count > 0 && Parent != null)
+                                    {
+                                        foreach (var node in Parent.Parent.Nodes)
+                                        {
+                                            if (node is BFRESGroupNode)
+                                            {
+                                                if (((BFRESGroupNode)node).Type == BRESGroupType.Textures)
+                                                {
+                                                    var ftexCont = (BFRESGroupNode)node;
+
+                                                    ftexCont.ImportBasicTextures("Basic_Alb");
+                                                    ftexCont.ImportBasicTextures("Basic_Nrm");
+                                                    ftexCont.ImportBasicTextures("Basic_Spm");
+                                                    ftexCont.ImportBasicTextures("Basic_Sphere");
+                                                    ftexCont.ImportBasicTextures("Basic_Mtl");
+                                                    ftexCont.ImportBasicTextures("Basic_Rgh");
+                                                    ftexCont.ImportBasicTextures("Basic_MRA");
+                                                    ftexCont.ImportBasicTextures("Basic_Bake_st0");
+                                                    ftexCont.ImportBasicTextures("Basic_Bake_st1");
+                                                    ftexCont.ImportBasicTextures("Basic_Emm");
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
 
                                 foreach (var tex in mat.TextureMaps)

@@ -61,6 +61,7 @@
             this.chkBoxFlipUvsY = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportBones = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.panel8 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.chkPlaceHolderTextures = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportMat = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxParamDefaults = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxRotNegative90Y = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -439,6 +440,7 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.chkPlaceHolderTextures);
             this.panel8.Controls.Add(this.chkBoxImportMat);
             this.panel8.Controls.Add(this.chkBoxParamDefaults);
             this.panel8.Controls.Add(this.chkBoxRotNegative90Y);
@@ -464,12 +466,24 @@
             this.panel8.Size = new System.Drawing.Size(524, 327);
             this.panel8.TabIndex = 11;
             // 
+            // chkPlaceHolderTextures
+            // 
+            this.chkPlaceHolderTextures.AutoSize = true;
+            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(3, 204);
+            this.chkPlaceHolderTextures.Name = "chkPlaceHolderTextures";
+            this.chkPlaceHolderTextures.Size = new System.Drawing.Size(160, 17);
+            this.chkPlaceHolderTextures.TabIndex = 32;
+            this.chkPlaceHolderTextures.Text = "Create Placeholder Textures";
+            this.chkPlaceHolderTextures.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.chkPlaceHolderTextures.UseVisualStyleBackColor = true;
+            this.chkPlaceHolderTextures.CheckedChanged += new System.EventHandler(this.chkPlaceHolderTextures_CheckedChanged);
+            // 
             // chkBoxImportMat
             // 
             this.chkBoxImportMat.AutoSize = true;
             this.chkBoxImportMat.Checked = true;
             this.chkBoxImportMat.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxImportMat.Location = new System.Drawing.Point(3, 218);
+            this.chkBoxImportMat.Location = new System.Drawing.Point(3, 240);
             this.chkBoxImportMat.Name = "chkBoxImportMat";
             this.chkBoxImportMat.Size = new System.Drawing.Size(88, 17);
             this.chkBoxImportMat.TabIndex = 31;
@@ -503,7 +517,7 @@
             // textBoxMaterialPath
             // 
             this.textBoxMaterialPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxMaterialPath.Location = new System.Drawing.Point(3, 241);
+            this.textBoxMaterialPath.Location = new System.Drawing.Point(3, 263);
             this.textBoxMaterialPath.Name = "textBoxMaterialPath";
             this.textBoxMaterialPath.ReadOnly = true;
             this.textBoxMaterialPath.Size = new System.Drawing.Size(162, 20);
@@ -730,7 +744,7 @@
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 333);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(192, 71);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
@@ -747,7 +761,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(3, 3);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(524, 327);
+            this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
             // BfresModelImportSettings
@@ -844,5 +858,6 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxParamDefaults;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportMat;
         private Switch_Toolbox.Library.Forms.STPanel stPanel1;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkPlaceHolderTextures;
     }
 }

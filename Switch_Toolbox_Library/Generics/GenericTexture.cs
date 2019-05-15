@@ -15,12 +15,12 @@ namespace Switch_Toolbox.Library
 {
     public enum STChannelType
     {
-        Red,
-        Green,
-        Blue,
-        Alpha,
-        One,
-        Zero
+        Red = 0,
+        Green = 1,
+        Blue = 2,
+        Alpha = 3,
+        One = 4,
+        Zero = 5,
     }
 
     public enum PlatformSwizzle
