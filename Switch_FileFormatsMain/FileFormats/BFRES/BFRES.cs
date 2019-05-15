@@ -761,6 +761,26 @@ namespace FirstPlugin
             LoadEditors(this);
         }
 
+        public bool HasTextures
+        {
+            get
+            {
+                foreach (TreeNode folder in Nodes)
+                {
+                    if (folder is BFRESGroupNode)
+                    {
+                        return (((BFRESGroupNode)folder).Type == BRESGroupType.Textures &&
+                                folder.Nodes.Count > 0);
+                    }
+                    if (folder is BNTX)
+                    {
+                        return ((BNTX)folder).Textures.Count > 0;
+                    }
+                }
+                return false;
+            }
+        }
+
         public void LoadFile(ResU.ResFile res)
         {
             CanDelete = true;

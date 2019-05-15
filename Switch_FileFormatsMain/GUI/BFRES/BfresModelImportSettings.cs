@@ -198,6 +198,12 @@ namespace FirstPlugin
 
         }
 
+        public void UpdateTexturePlaceholderSetting(bool UsePlaceholder)
+        {
+            GeneratePlaceholderTextures = UsePlaceholder;
+            chkPlaceHolderTextures.Checked = GeneratePlaceholderTextures;
+        }
+
         //Based on Wexos Toolbox since I'm not sure what formats to use for each attribute
         //Thanks Wexos!
         private void BfresModelImportSettings_Load(object sender, EventArgs e)

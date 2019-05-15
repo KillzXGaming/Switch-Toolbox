@@ -675,7 +675,16 @@ namespace Bfres.Structs
                         MessageBox.Show("No models found!");
                         return;
                     }
+
                     BfresModelImportSettings settings = new BfresModelImportSettings();
+
+                    if (Parent != null)
+                    {
+                        bool HasTextures = ((BFRES)Parent.Parent).HasTextures;
+                        settings.UpdateTexturePlaceholderSetting(HasTextures);
+                    }
+
+
                     settings.SetModelAttributes(assimp.objects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)
                     {
