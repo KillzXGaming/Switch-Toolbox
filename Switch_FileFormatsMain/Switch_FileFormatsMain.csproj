@@ -444,11 +444,17 @@
     <Compile Include="GUI\Message\MSBTEditor.Designer.cs">
       <DependentUpon>MSBTEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\SMO\OdysseyCostumeLoader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\SMO\OdysseyCostumeLoader.Designer.cs">
+      <DependentUpon>OdysseyCostumeLoader.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\TextureUI\Importers\3DS\CTR_3DSImporterSettings.cs" />
     <Compile Include="GUI\TextureUI\Importers\3DS\CTR_3DSTextureImporter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MarioCostumeEditor.cs" />
+    <Compile Include="GUI\SMO\MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1124,6 +1130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\Texture Selector.resx">
       <DependentUpon>Texture Selector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\SMO\OdysseyCostumeLoader.resx">
+      <DependentUpon>OdysseyCostumeLoader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\TextureLoader.resx">
       <DependentUpon>TextureLoader.cs</DependentUpon>

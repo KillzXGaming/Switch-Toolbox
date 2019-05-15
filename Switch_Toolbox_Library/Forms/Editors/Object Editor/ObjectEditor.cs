@@ -69,6 +69,15 @@ namespace Switch_Toolbox.Library.Forms
 
         public bool UseListView = true;
 
+        public ObjectEditor()
+        {
+            InitializeComponent();
+
+            ObjectTree = new ObjectEditorTree();
+            ObjectTree.Dock = DockStyle.Fill;
+            stPanel1.Controls.Add(ObjectTree);
+        }
+
         public ObjectEditor(IFileFormat FileFormat)
         {
             InitializeComponent();

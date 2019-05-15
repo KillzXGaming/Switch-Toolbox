@@ -40,6 +40,7 @@ namespace FirstPlugin
         }
 
         public Dictionary<string, byte[]> OpenedFiles = new Dictionary<string, byte[]>();
+        public Dictionary<string, byte[]> Files = new Dictionary<string, byte[]>();
 
         public SarcData sarcData;
         public string SarcHash;
@@ -562,7 +563,7 @@ namespace FirstPlugin
             sarcEntry.sarc = this;
             sarcEntry.Data = data;
 
-            Console.WriteLine(name);
+            Files.Add(name, data);
 
             string ext = Path.GetExtension(name);
             string SarcEx = SARCExt.SARC.GuessFileExtension(data);
