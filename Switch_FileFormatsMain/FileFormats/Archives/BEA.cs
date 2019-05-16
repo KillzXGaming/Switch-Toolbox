@@ -294,6 +294,11 @@ namespace FirstPlugin
         }
         private void PrintRecursive(TreeNode treeNode)
         {
+            if (treeNode is FileEntry)
+            {
+                ((FileEntry)treeNode).OnDoubleMouseClick(treeNode.TreeView);
+            }
+
             // Print each node recursively.  
             foreach (TreeNode tn in treeNode.Nodes)
             {
@@ -376,6 +381,19 @@ namespace FirstPlugin
                 {
                      SetASST(this, File.ReadAllBytes(ofd.FileName));
                 }
+            }
+
+            public override void OnClick(TreeView treeView)
+            {
+                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                if (editor == null)
+                {
+                    editor = new HexEditor();
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadData(GetASSTData(this));
             }
 
             public override void OnDoubleMouseClick(TreeView treeview)
@@ -499,7 +517,7 @@ namespace FirstPlugin
             fileEntry.unk1 = asset.unk;
             fileEntry.unk2 = asset.unk2;
             fileEntry.IsCompressed = IsCompressed;
-           // fileEntry.data = asset.FileData;
+            fileEntry.data = asset.FileData;
 
             //Now check magic
             //Todo clean this part up

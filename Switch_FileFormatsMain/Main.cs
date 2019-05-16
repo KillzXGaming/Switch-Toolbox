@@ -110,6 +110,7 @@ namespace FirstPlugin
                         if (ofd.ShowDialog() == DialogResult.OK)
                         {
                             Runtime.SmoGamePath = ofd.SelectedPath;
+                            Config.Save();
                             OpenCostumeDialog(Runtime.SmoGamePath);
                         }
                     }

@@ -18,12 +18,14 @@ deploy:
   prerelease: true
   force_update: true
   
+  
+  
 after_build:
-  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Version.txt"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.exe.config"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.pdb"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.exe"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Lib"
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Version.txt"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.exe"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.pdb"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.exe.config"
@@ -36,5 +38,6 @@ after_build:
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Buffers.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Memory.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Octokit.dll"
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Numerics.Vectors.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"
   - appveyor PushArtifact "Switch-Toolbox-Latest.zip"
