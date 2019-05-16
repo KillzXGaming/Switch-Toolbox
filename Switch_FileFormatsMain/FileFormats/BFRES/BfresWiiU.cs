@@ -492,32 +492,37 @@ namespace FirstPlugin
                             texture.Type = MatTexture.TextureType.Diffuse;
                         }
                     }
-                    if (useSampler == "_n0")
+                    else if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-                    if (useSampler == "_e0")
+                    else if (useSampler == "_e0")
                     {
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
-                    if (useSampler == "_s0")
+                    else if (useSampler == "_s0")
                     {
                         m.HasSpecularMap = true;
                         texture.Type = MatTexture.TextureType.Specular;
                     }
-                    if (useSampler == "_x0")
+                    else if (useSampler == "_x0")
                     {
                         m.HasSphereMap = true;
                         texture.Type = MatTexture.TextureType.SphereMap;
                     }
-                    if (useSampler == "_b0")
+                    else if (useSampler == "_b0")
                     {
                         m.HasShadowMap = true;
                         texture.Type = MatTexture.TextureType.Shadow;
                     }
-                    if (useSampler == "_b1")
+                    else if (texture.SamplerName == "bake0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                    else if (useSampler == "_b1")
                     {
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
@@ -539,17 +544,17 @@ namespace FirstPlugin
                             texture.Type = MatTexture.TextureType.Diffuse;
                         }
                     }
-                    if (useSampler == "_n0")
+                    else if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-                    if (useSampler == "_e0")
+                    else if (useSampler == "_e0")
                     {
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
-                    if (TextureName.Contains("mtl"))
+                    else if (TextureName.Contains("mtl"))
                     {
                         m.HasMetalnessMap = true;
                         texture.Type = MatTexture.TextureType.Metalness;
@@ -595,6 +600,11 @@ namespace FirstPlugin
                         texture.Type = MatTexture.TextureType.Specular;
                     }
                     else if (TextureName.Contains("b00"))
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                    else if (texture.SamplerName == "bake0")
                     {
                         m.HasShadowMap = true;
                         texture.Type = MatTexture.TextureType.Shadow;

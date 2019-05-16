@@ -110,6 +110,8 @@
             this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
             this.specularCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -184,6 +186,8 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.radioButton2);
+            this.panel2.Controls.Add(this.radioButton1);
             this.panel2.Controls.Add(this.displayBoundingBoxeChk);
             this.panel2.Controls.Add(this.boneXRayChk);
             this.panel2.Controls.Add(this.stLabel9);
@@ -1157,6 +1161,28 @@
             this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
             this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.specularCubemapPathTB_TextChanged);
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(381, 54);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(85, 17);
+            this.radioButton1.TabIndex = 32;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "radioButton1";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(381, 77);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(85, 17);
+            this.radioButton2.TabIndex = 33;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "radioButton2";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1282,5 +1308,7 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkDiffyseSkybox;
         private Switch_Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clearSettingToolStripMenuItem;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }

@@ -739,6 +739,55 @@ namespace FirstPlugin
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
                     }
+                    if (texture.SamplerName == "bake0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                }
+                else if (Runtime.activeGame == Runtime.ActiveGame.Splatoon2)
+                {
+                    bool IsAlbedo0 = useSampler == "_a0";
+                    bool IsNormal = useSampler == "_n0";
+                    bool IsTeamColor = useSampler == "_cp0";
+                    bool IsRoughness = useSampler == "_r0";
+                    bool IsMetalness = useSampler == "_m0";
+                    bool IsEmissive = useSampler == "_e0";
+                    bool IsBake0 = useSampler == "_b0";
+                    bool IsBake1 = useSampler == "_b1";
+
+                    if (IsAlbedo) {
+                        m.HasDiffuseMap = true;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    if (IsNormal) {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    if (IsTeamColor) {
+                        m.HasTeamColorMap = true;
+                        texture.Type = MatTexture.TextureType.TeamColor;
+                    }
+                    if (IsRoughness) {
+                        m.HasRoughnessMap = true;
+                        texture.Type = MatTexture.TextureType.Roughness;
+                    }
+                    if (IsMetalness) {
+                        m.HasMetalnessMap = true;
+                        texture.Type = MatTexture.TextureType.Metalness;
+                    }
+                    if (IsMetalness) {
+                        m.HasEmissionMap = true;
+                        texture.Type = MatTexture.TextureType.Emission;
+                    }
+                    if (IsBake0) {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                    if (IsBake1) {
+                        m.HasLightMap = true;
+                        texture.Type = MatTexture.TextureType.Light;
+                    }
                 }
                 else if (Runtime.activeGame == Runtime.ActiveGame.SMO)
                 {
@@ -827,6 +876,11 @@ namespace FirstPlugin
                     {
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
+                    }
+                    else if (texture.SamplerName == "bake0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
                     }
                     else if (TextureName.Contains("MRA")) //Metalness, Roughness, and Cavity Map in one
                     {
