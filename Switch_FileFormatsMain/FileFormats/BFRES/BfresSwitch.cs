@@ -776,7 +776,7 @@ namespace FirstPlugin
                         m.HasMetalnessMap = true;
                         texture.Type = MatTexture.TextureType.Metalness;
                     }
-                    if (IsMetalness) {
+                    if (IsEmissive) {
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
