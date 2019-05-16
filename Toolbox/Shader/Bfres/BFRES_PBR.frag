@@ -265,7 +265,7 @@ void main()
         lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
     }
 
-	float specIntensity = 0;
+	float specIntensity = 1;
 
 	if (HasMRA == 1) //Kirby Star Allies PBR map
 	{
@@ -273,8 +273,8 @@ void main()
 		//Usually it's just metalness with roughness and works fine
 		metallic = texture(MRA, f_texcoord0).r;
 		roughness = texture(MRA, f_texcoord0).g;
-		specIntensity = texture(MRA, f_texcoord0).b;
-		ao = texture(MRA, f_texcoord0).a;
+		ao = texture(MRA, f_texcoord0).b;
+		specIntensity = texture(MRA, f_texcoord0).a;
 	}
 
     // Calculate shading vectors.
@@ -324,7 +324,7 @@ void main()
 
     vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
-    vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) + specIntensity;
+    vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) * specIntensity;
 
 
     // Add render passes.
@@ -340,7 +340,7 @@ void main()
 
     fragColor.rgb *= min(boneWeightsColored, vec3(1));
 
-	    // HDR tonemapping
+    // HDR tonemapping
     fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
 
     // Convert back to sRGB.
