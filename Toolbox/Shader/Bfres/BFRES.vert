@@ -134,33 +134,35 @@ void main()
     ivec4 index = ivec4(vBone);
 
     vec4 objPos = vec4(vPosition.xyz, 1.0);
-    objectPosition = vPosition.xyz;
-	if (vBone.x != -1.0)
-		objPos = skin(vPosition, index);
+	objPos = mtxMdl * vec4(objPos.xyz, 1.0);
 
-	vec4 position = mtxCam * (mtxMdl * vec4(objPos.xyz, 1.0));
+	if (vBone.x != -1.0)
+		objPos = skin(objPos.xyz, index);
+
+	vec4 position = mtxCam * objPos;
 
     normal = vNormal;
-
-    viewNormal = mat3(sphereMatrix) * normal.xyz;
+	normal = mat3(mtxMdl) * normal.xyz;
 
 	if(vBone.x != -1.0)
 		normal = normalize((skinNRM(vNormal.xyz, index)).xyz);
 		
     if (RigidSkinning == 1)
     {
-	     position = mtxCam  * mtxMdl *  (bones[index.x] * vec4(vPosition, 1.0));
+	     position = mtxCam *  (bones[index.x] * objPos);
 		 normal = mat3(bones[index.x]) * vNormal.xyz * 1;
 	}
 	if (NoSkinning == 1)
     {
-	    position = mtxCam  * mtxMdl *  (SingleBoneBindTransform * vec4(vPosition, 1.0));
+	    position = mtxCam  *  (SingleBoneBindTransform * objPos);
 		normal = mat3(SingleBoneBindTransform) * vNormal.xyz * 1;
 	}
 
-	normal = mat3(mtxMdl) * normal.xyz;
 
-	 gl_Position =position;
+	 gl_Position = position;
+
+	objectPosition = position.xyz;
+    viewNormal = mat3(sphereMatrix) * normal.xyz;
 
     f_texcoord0 = vUV0;
 

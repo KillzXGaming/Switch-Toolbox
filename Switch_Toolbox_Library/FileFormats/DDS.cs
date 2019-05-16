@@ -709,6 +709,10 @@ namespace Switch_Toolbox.Library
                         pixelInternalFormat = PixelInternalFormat.Rgba32f;
                         pixelType = PixelType.Float;
                         break;
+                    case TEX_FORMAT.R8G8B8A8_UNORM:
+                    case TEX_FORMAT.R8G8B8A8_UNORM_SRGB:
+                        pixelInternalFormat = PixelInternalFormat.Rgba;
+                        break;
                     default:
                         throw new Exception("Unsupported format! " + dds.Format);
                 }
