@@ -51,6 +51,7 @@ namespace Switch_Toolbox.Library
                 uniform mat4 bone;
                 uniform mat4 parent;
                 uniform mat4 rotation;
+                uniform mat4 ModelMatrix;
                 uniform int hasParent;
                 uniform float scale;
 
@@ -63,7 +64,7 @@ namespace Switch_Toolbox.Library
                         else
                             position = bone * rotation * vec4((point.xyz - vec3(0, 1, 0)) * scale, 1);
                     }
-					gl_Position =  mtxCam  * mtxMdl * vec4(position.xyz, 1);
+					gl_Position =  mtxCam  * ModelMatrix * mtxMdl * vec4(position.xyz, 1);
 
 				}");
 
@@ -236,7 +237,9 @@ namespace Switch_Toolbox.Library
 
                 solidColorShaderProgram.SetVector4("boneColor", ColorUtility.ToVector4(boneColor));
                 solidColorShaderProgram.SetFloat("scale", Runtime.bonePointSize);
+                solidColorShaderProgram.SetMatrix4x4("ModelMatrix", ref bn.ModelMatrix);
 
+                
                 Matrix4 transform = bn.Transform;
 
                 solidColorShaderProgram.SetMatrix4x4("bone", ref transform);

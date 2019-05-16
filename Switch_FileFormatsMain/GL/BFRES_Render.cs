@@ -67,6 +67,8 @@ namespace FirstPlugin
             GL.GenBuffers(1, out vbo_position);
             GL.GenBuffers(1, out ibo_elements);
 
+            TransformBones();
+
             UpdateVertexData();
             UpdateTextureMaps();
         }
@@ -80,6 +82,17 @@ namespace FirstPlugin
 
             GL.DeleteBuffer(vbo_position);
             GL.DeleteBuffer(ibo_elements);
+        }
+
+        private void TransformBones()
+        {
+            foreach (var model in models)
+            {
+                foreach (var bone in model.Skeleton.bones)
+                {
+                    bone.ModelMatrix = ModelTransform;
+                }
+            }
         }
 
         #region Rendering

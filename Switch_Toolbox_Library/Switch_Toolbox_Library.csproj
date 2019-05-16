@@ -497,6 +497,7 @@
     <Compile Include="Generics\GenericModel.cs" />
     <Compile Include="Generics\GenericObject.cs" />
     <Compile Include="Generics\GenericTexture.cs" />
+    <Compile Include="Generics\OpenGLTexture.cs" />
     <Compile Include="Generics\RenderableTex.cs" />
     <Compile Include="Generics\STBone.cs" />
     <Compile Include="Generics\STGenericWrapper.cs" />
@@ -622,6 +623,7 @@
     <Compile Include="Rendering\DrawableSkybox.cs" />
     <Compile Include="Rendering\DrawableFloor.cs" />
     <Compile Include="Rendering\DrawableXyzLines.cs" />
+    <Compile Include="Rendering\PBRMapGenerator.cs" />
     <Compile Include="Rendering\ProbeLighting.cs" />
     <Compile Include="Rendering\RenderTools.cs" />
     <Compile Include="Rendering\ScreenTriangle.cs" />

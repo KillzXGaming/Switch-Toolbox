@@ -492,11 +492,6 @@ namespace Switch_Toolbox.Library
 
             ArrayCount = 1;
 
-            if (header.caps2 == (uint)DDS.DDSCAPS2.CUBEMAP_ALLFACES)
-            {
-                ArrayCount = 6;
-            }
-
             int DX10HeaderSize = 0;
             if (header.ddspf.fourCC == FOURCC_DX10)
             {
@@ -504,6 +499,11 @@ namespace Switch_Toolbox.Library
 
                 DX10HeaderSize = 20;
                 ReadDX10Header(reader);
+            }
+
+            if (header.caps2 == (uint)DDS.DDSCAPS2.CUBEMAP_ALLFACES)
+            {
+                ArrayCount = 6;
             }
 
             bool IsCompressed = false;
@@ -678,6 +678,12 @@ namespace Switch_Toolbox.Library
                     case TEX_FORMAT.BC3_UNORM_SRGB:
                         pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                         break;
+                    case TEX_FORMAT.BC6H_UF16:
+                        pixelInternalFormat = PixelInternalFormat.CompressedRgbBptcUnsignedFloat;
+                        break;
+                    case TEX_FORMAT.BC6H_SF16:
+                        pixelInternalFormat = PixelInternalFormat.CompressedRgbBptcUnsignedFloat;
+                        break;
                     default:
                         throw new Exception("Unsupported format! " + dds.Format);
                 }
@@ -693,8 +699,22 @@ namespace Switch_Toolbox.Library
             }
             else
             {
-                texture.LoadImageData((int)dds.header.width, new SFGraphics.GLObjects.Textures.TextureFormats.TextureFormatUncompressed(PixelInternalFormat.Rgba,
-                OpenTK.Graphics.OpenGL.PixelFormat.Rgba, OpenTK.Graphics.OpenGL.PixelType.UnsignedByte),
+                PixelInternalFormat pixelInternalFormat = PixelInternalFormat.Rgba;
+                PixelType pixelType = PixelType.UnsignedByte;
+                PixelFormat pixelFormat = PixelFormat.Rgba;
+
+                switch (dds.Format)
+                {
+                    case TEX_FORMAT.R32G32B32A32_FLOAT:
+                        pixelInternalFormat = PixelInternalFormat.Rgba32f;
+                        pixelType = PixelType.Float;
+                        break;
+                    default:
+                        throw new Exception("Unsupported format! " + dds.Format);
+                }
+
+                texture.LoadImageData((int)dds.header.width, new SFGraphics.GLObjects.Textures.TextureFormats.TextureFormatUncompressed(pixelInternalFormat,
+                pixelFormat, pixelType),
                 cubemap[0].mipmaps[0],
                 cubemap[1].mipmaps[0],
                 cubemap[2].mipmaps[0],

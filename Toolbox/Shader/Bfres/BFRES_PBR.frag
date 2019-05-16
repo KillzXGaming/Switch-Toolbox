@@ -286,10 +286,11 @@ void main()
     vec3 V = normalize(I); // view
 	vec3 L = normalize(specLightDirection); // Light
 	vec3 H = normalize(specLightDirection + I); // half angle
-    vec3 R = reflect(I, N); // reflection
+    vec3 R = reflect(-I, N); // reflection
 
     vec3 f0 = mix(vec3(0.04), albedo, metallic); // dialectric
     vec3 kS = FresnelSchlickRoughness(max(dot(N, V), 0.0), f0, roughness);
+    
 
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;
@@ -306,7 +307,7 @@ void main()
     // Diffuse pass
     vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
     vec3 diffuseTerm = diffuseIblColor * albedo;
-   // diffuseTerm *= kD;
+    diffuseTerm *= kD;
     diffuseTerm *= cavity;
     diffuseTerm *= ao;
     diffuseTerm *= shadow;
@@ -323,7 +324,7 @@ void main()
 
     vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
-    vec3 specularTerm = specularIblColor * brdfTerm * specIntensity * 0.7f;
+    vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) * specIntensity;
 
 
     // Add render passes.
@@ -339,6 +340,8 @@ void main()
 
     fragColor.rgb *= min(boneWeightsColored, vec3(1));
 
+	    // HDR tonemapping
+    fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
 
     // Convert back to sRGB.
     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));

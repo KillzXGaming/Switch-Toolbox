@@ -37,6 +37,9 @@ namespace Switch_Toolbox.Library
         public Quaternion rot = Quaternion.FromMatrix(Matrix3.Zero);
         public Matrix4 Transform, invert;
 
+        //Used for shifting models with the bones in the shader
+        public Matrix4 ModelMatrix = Matrix4.Identity;
+
         public Vector3 GetPosition()
         {
             return pos;

@@ -43,6 +43,8 @@ namespace Switch_Toolbox.Library.Rendering
             if (!Runtime.OpenTKInitialized || !Runtime.PBR.UseSkybox || pass == Pass.TRANSPARENT)
                 return;
 
+            GL.Disable(EnableCap.CullFace);
+
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -56,11 +58,12 @@ namespace Switch_Toolbox.Library.Rendering
             // enable seamless cubemap sampling for lower mip levels in the pre-filter map.
             GL.Enable(EnableCap.TextureCubeMapSeamless);
 
-            Matrix4 proj = Matrix4.Identity;
-            Matrix4 rot = Matrix4.CreateFromQuaternion(control.ModelMatrix.ExtractRotation());
+            Matrix4 proj = control.ProjectionMatrix;
+          //  Matrix4 rot = Matrix4.CreateFromQuaternion(control.ModelMatrix.ExtractRotation());
+            Matrix4 rot = new Matrix4(new Matrix3(control.CameraMatrix));
 
-            GL.UniformMatrix4(defaultShaderProgram["projection"], false, ref proj);
-            GL.UniformMatrix4(defaultShaderProgram["rotView"], false, ref rot);
+            defaultShaderProgram.SetMatrix4x4("projection", ref proj);
+            defaultShaderProgram.SetMatrix4x4("rotView", ref rot);
 
             if (Runtime.PBR.UseDiffuseSkyTexture)
             {

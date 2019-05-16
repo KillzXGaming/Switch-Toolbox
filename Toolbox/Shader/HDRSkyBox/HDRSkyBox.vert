@@ -3,6 +3,7 @@ layout (location = 0) in vec3 aPos;
 
 uniform mat4 projection;
 uniform mat4 rotView;
+uniform mat4 mtxCam;
 
 out vec3 TexCoords;
 

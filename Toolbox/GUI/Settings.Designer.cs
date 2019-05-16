@@ -93,6 +93,8 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.stLabel13 = new Switch_Toolbox.Library.Forms.STLabel();
             this.botwGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.clearSettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stLabel14 = new Switch_Toolbox.Library.Forms.STLabel();
             this.tpGamePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
             this.stLabel12 = new Switch_Toolbox.Library.Forms.STLabel();
@@ -105,8 +107,6 @@
             this.chkDiffyseSkybox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel16 = new Switch_Toolbox.Library.Forms.STLabel();
             this.diffuseCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.clearSettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
             this.specularCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
@@ -130,8 +130,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).BeginInit();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -988,6 +988,20 @@
             this.botwGamePathTB.TabIndex = 8;
             this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
             // 
+            // stContextMenuStrip1
+            // 
+            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearSettingToolStripMenuItem});
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(142, 26);
+            // 
+            // clearSettingToolStripMenuItem
+            // 
+            this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
+            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.clearSettingToolStripMenuItem.Text = "Clear Setting";
+            this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
+            // 
             // stLabel14
             // 
             this.stLabel14.AutoSize = true;
@@ -1098,33 +1112,19 @@
             this.stLabel16.AutoSize = true;
             this.stLabel16.Location = new System.Drawing.Point(16, 73);
             this.stLabel16.Name = "stLabel16";
-            this.stLabel16.Size = new System.Drawing.Size(129, 13);
+            this.stLabel16.Size = new System.Drawing.Size(150, 13);
             this.stLabel16.TabIndex = 4;
-            this.stLabel16.Text = "Custom Diffuse Cubemap:";
+            this.stLabel16.Text = "Diffuse Cubemap (Irradiance) :";
             // 
             // diffuseCubemapPathTB
             // 
             this.diffuseCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.diffuseCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.diffuseCubemapPathTB.Location = new System.Drawing.Point(160, 71);
+            this.diffuseCubemapPathTB.Location = new System.Drawing.Point(181, 73);
             this.diffuseCubemapPathTB.Name = "diffuseCubemapPathTB";
             this.diffuseCubemapPathTB.Size = new System.Drawing.Size(197, 20);
             this.diffuseCubemapPathTB.TabIndex = 3;
             this.diffuseCubemapPathTB.Click += new System.EventHandler(this.diffuseCubemapPathTBB_Click);
-            // 
-            // stContextMenuStrip1
-            // 
-            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearSettingToolStripMenuItem});
-            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(142, 26);
-            // 
-            // clearSettingToolStripMenuItem
-            // 
-            this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
-            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.clearSettingToolStripMenuItem.Text = "Clear Setting";
-            this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
             // 
             // chkUseSkyobx
             // 
@@ -1142,15 +1142,15 @@
             this.stLabel15.AutoSize = true;
             this.stLabel15.Location = new System.Drawing.Point(16, 47);
             this.stLabel15.Name = "stLabel15";
-            this.stLabel15.Size = new System.Drawing.Size(138, 13);
+            this.stLabel15.Size = new System.Drawing.Size(159, 13);
             this.stLabel15.TabIndex = 1;
-            this.stLabel15.Text = "Custom Specular Cubemap:";
+            this.stLabel15.Text = "Specular Cubemap {Radiance) :";
             // 
             // specularCubemapPathTB
             // 
             this.specularCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.specularCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.specularCubemapPathTB.Location = new System.Drawing.Point(160, 45);
+            this.specularCubemapPathTB.Location = new System.Drawing.Point(181, 45);
             this.specularCubemapPathTB.Name = "specularCubemapPathTB";
             this.specularCubemapPathTB.Size = new System.Drawing.Size(197, 20);
             this.specularCubemapPathTB.TabIndex = 0;
@@ -1192,9 +1192,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.bgGradientTop)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.stContextMenuStrip1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
