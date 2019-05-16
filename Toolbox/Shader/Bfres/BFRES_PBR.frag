@@ -265,7 +265,7 @@ void main()
         lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
     }
 
-	float specIntensity = 1;
+	float specIntensity = 0;
 
 	if (HasMRA == 1) //Kirby Star Allies PBR map
 	{
@@ -324,7 +324,7 @@ void main()
 
     vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
-    vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) * specIntensity;
+    vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) + specIntensity;
 
 
     // Add render passes.

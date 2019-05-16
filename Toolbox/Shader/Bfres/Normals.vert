@@ -74,6 +74,7 @@ void main()
 		 normal = mat3(bones[index.x]) * vNormal.xyz * 1;
 	}
 
+	normal = normalize(mat3(mtxMdl) * normal.xyz);
 
     gl_Position = mtxCam * mtxMdl * vec4(objPos.xyz, 1.0); 
     mat3 normalMatrix = mat3(transpose(inverse(camMtx * mtxMdl)));

@@ -158,7 +158,7 @@ void main()
 		normal = mat3(SingleBoneBindTransform) * vNormal.xyz * 1;
 	}
 
-	normal = normalize(mat3(mtxMdl) * normal.xyz);
+	normal = mat3(mtxMdl) * normal.xyz;
 
 	 gl_Position =position;
 
