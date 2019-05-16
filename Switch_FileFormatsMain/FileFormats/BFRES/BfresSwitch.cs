@@ -749,12 +749,18 @@ namespace FirstPlugin
                 {
                     bool IsAlbedo0 = useSampler == "_a0";
                     bool IsNormal = useSampler == "_n0";
-                    bool IsTeamColor = useSampler == "_cp0";
+                    bool IsTeamColor = useSampler == "_cp0" || useSampler == "_su0";
                     bool IsRoughness = useSampler == "_r0";
                     bool IsMetalness = useSampler == "_m0";
                     bool IsEmissive = useSampler == "_e0";
                     bool IsBake0 = useSampler == "_b0";
                     bool IsBake1 = useSampler == "_b1";
+                    bool IsTransmissionMap = useSampler == "_t0";
+                    bool IsThicnessMap = useSampler == "_th0";
+                    bool IsHitMap = useSampler == "_h0";
+                    bool IsAOMap = useSampler == "_ao0";
+                    bool IsMetalnessA = useSampler == "_mt0";
+                    bool IsFXM = useSampler == "_fm0";
 
                     if (IsAlbedo) {
                         m.HasDiffuseMap = true;

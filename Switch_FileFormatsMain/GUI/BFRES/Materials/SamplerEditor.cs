@@ -77,8 +77,6 @@ namespace FirstPlugin.Forms
                 textureRefListView.Items.Add(item);
             }
 
-            textureImageList.Images.Clear();
-
             int CurTex = 0;
             if (PluginRuntime.bntxContainers.Count == 0 &&
                 PluginRuntime.ftexContainers.Count == 0)
@@ -88,58 +86,64 @@ namespace FirstPlugin.Forms
                     AddBlankTexture(item, item.Text, CurTex++);
                 }
             }
-            return;
+            //Still somewhat slower 
+         //   ReloadImageList();
+        }
 
+        private void ReloadImageList()
+        {
+            textureImageList.Images.Clear();
 
-            bool FoundTexture = false;
-            foreach (ListViewItem item in textureRefListView.Items)
+            Thread Thread = new Thread((ThreadStart)(() =>
             {
-                foreach (BNTX bntx in PluginRuntime.bntxContainers)
+                int listIndex = 0;
+                int imageIndex = 0;
+                foreach (var matTexture in material.TextureMaps)
                 {
-                    if (bntx.Textures.ContainsKey(item.Text))
+                    bool IsFound = false;
+                    foreach (BNTX bntx in PluginRuntime.bntxContainers)
                     {
-                        FoundTexture = true;
-
-                        Thread Thread = new Thread((ThreadStart)(() =>
+                        if (bntx.Textures.ContainsKey(matTexture.Name))
                         {
-                            Bitmap temp = bntx.Textures[item.Text].GetBitmap();
+                            Bitmap temp = bntx.Textures[matTexture.Name].RenderableTex.ToBitmap();
 
-                            textureRefListView.Invoke(new Action(() =>
+                            if (textureRefListView.InvokeRequired)
                             {
-                                textureImageList.Images.Add(item.Text, temp);
-                            }));
-
+                                textureRefListView.Invoke((MethodInvoker)delegate {
+                                    ListViewItem item = textureRefListView.Items[listIndex++];
+                                    item.ImageIndex = imageIndex++;
+                                    // Running on the UI thread
+                                    textureImageList.Images.Add(temp);
+                                    var dummy = textureImageList.Handle;
+                                    IsFound = true;
+                                });
+                            }
                             temp.Dispose();
-                        }));
-                        Thread.Start();
-
-                        item.ImageIndex = CurTex++;
+                        }
                     }
-                }
-                foreach (BFRESGroupNode ftexCont in PluginRuntime.ftexContainers)
-                {
-                    if (ftexCont.ResourceNodes.ContainsKey(item.Text))
+
+                    if (!IsFound)
                     {
-                        FoundTexture = true;
+                        Bitmap temp = new Bitmap(Properties.Resources.TextureError);
 
-                        FTEX tex = (FTEX)ftexCont.ResourceNodes[item.Text];
-                        var renderedTex = tex.RenderableTex;
-                        Bitmap temp = tex.GetBitmap();
+                        if (textureRefListView.InvokeRequired)
+                        {
+                            textureRefListView.Invoke((MethodInvoker)delegate {
+                                ListViewItem item = textureRefListView.Items[listIndex++];
+                                // Running on the UI thread
+                                textureImageList.Images.Add(Name, temp);
+                                item.ImageIndex = imageIndex++;
+                                var dummy = textureImageList.Handle;
+                            });
+                        }
 
-                        textureImageList.Images.Add(tex.Text, temp);
-
-                        item.ImageIndex = CurTex++;
-
-                        var dummy = textureImageList.Handle;
                         temp.Dispose();
                     }
                 }
-                if (FoundTexture == false)
-                {
-                    AddBlankTexture(item, item.Text, CurTex++);
-                }
-            }
+            }));
+            Thread.Start();
         }
+
         private void AddBlankTexture(ListViewItem item, string Name, int ImageIndex)
         {
             Bitmap temp = new Bitmap(Properties.Resources.TextureError);

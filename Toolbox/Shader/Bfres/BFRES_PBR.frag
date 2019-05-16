@@ -316,7 +316,7 @@ void main()
     // Adjust for metalness.
     diffuseTerm *= clamp(1 - metallic, 0, 1);
     diffuseTerm *= vec3(1) - kS.xxx;
-
+//
     // Specular pass.
     int maxSpecularLod = 8;
     vec3 specularIblColor = textureLod(specularIbl, R, roughness * maxSpecularLod).rgb;
@@ -324,7 +324,8 @@ void main()
 
     vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
-    vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) * specIntensity;
+   // vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) * specIntensity;
+    vec3 specularTerm = specularIblColor * brdfTerm * specIntensity;
 
 
     // Add render passes.

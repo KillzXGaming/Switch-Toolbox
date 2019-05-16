@@ -175,53 +175,6 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
-        public Bitmap getThumb(Bitmap image)
-        {
-
-            int tw, th, tx, ty;
-
-            int w = image.Width;
-
-            int h = image.Height;
-
-            double whRatio = (double)w / h;
-
-            if (image.Width >= image.Height)
-            {
-
-                tw = 100;
-
-                th = (int)(tw / whRatio);
-            }
-            else
-            {
-                th = 100;
-
-                tw = (int)(th * whRatio);
-            }
-
-            tx = (100 - tw) / 2;
-            ty = (100 - th) / 2;
-
-            Bitmap thumb = new Bitmap(100, 100, PixelFormat.Format24bppRgb);
-
-            Graphics g = Graphics.FromImage(thumb);
-
-            g.Clear(Color.White);
-
-            g.InterpolationMode = InterpolationMode.NearestNeighbor;
-
-            g.DrawImage(image,
-
-            new Rectangle(tx, ty, tw, th),
-            new Rectangle(0, 0, w, h),
-
-            GraphicsUnit.Pixel);
-
-            return thumb;
-
-        }
-
         public void EditChannel(STChannelType ChannelType)
         {
             var Image = imageEditor.BaseImage;
