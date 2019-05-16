@@ -134,10 +134,11 @@ void main()
     ivec4 index = ivec4(vBone);
 
     vec4 objPos = vec4(vPosition.xyz, 1.0);
-	objPos = mtxMdl * vec4(objPos.xyz, 1.0);
 
 	if (vBone.x != -1.0)
 		objPos = skin(objPos.xyz, index);
+
+	objPos = mtxMdl * vec4(objPos.xyz, 1.0);
 
 	vec4 position = mtxCam * objPos;
 
@@ -145,16 +146,16 @@ void main()
 	normal = mat3(mtxMdl) * normal.xyz;
 
 	if(vBone.x != -1.0)
-		normal = normalize((skinNRM(vNormal.xyz, index)).xyz);
+		normal = normalize((skinNRM(normal.xyz, index)).xyz);
 		
     if (RigidSkinning == 1)
     {
-	     position = mtxCam *  (bones[index.x] * objPos);
+	     position = mtxCam *  (bones[index.x] * vec4(vPosition.xyz, 1.0));
 		 normal = mat3(bones[index.x]) * vNormal.xyz * 1;
 	}
 	if (NoSkinning == 1)
     {
-	    position = mtxCam  *  (SingleBoneBindTransform * objPos);
+	    position = mtxCam  *  (SingleBoneBindTransform * vec4(vPosition.xyz, 1.0));
 		normal = mat3(SingleBoneBindTransform) * vNormal.xyz * 1;
 	}
 
