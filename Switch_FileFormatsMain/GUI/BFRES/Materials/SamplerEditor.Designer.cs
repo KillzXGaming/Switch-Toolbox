@@ -116,6 +116,7 @@
             this.textureRefListView.Dock = System.Windows.Forms.DockStyle.Top;
             this.textureRefListView.Location = new System.Drawing.Point(0, 0);
             this.textureRefListView.Name = "textureRefListView";
+            this.textureRefListView.OwnerDraw = true;
             this.textureRefListView.Size = new System.Drawing.Size(510, 150);
             this.textureRefListView.TabIndex = 35;
             this.textureRefListView.UseCompatibleStateImageBehavior = false;
@@ -228,12 +229,11 @@
             // 
             // stPropertyGrid1
             // 
-            this.stPropertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.stPropertyGrid1.AutoScroll = true;
-            this.stPropertyGrid1.ShowHintDisplay = true;
+            this.stPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Right;
             this.stPropertyGrid1.Location = new System.Drawing.Point(300, 153);
             this.stPropertyGrid1.Name = "stPropertyGrid1";
+            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Size = new System.Drawing.Size(210, 522);
             this.stPropertyGrid1.TabIndex = 56;
             // 
