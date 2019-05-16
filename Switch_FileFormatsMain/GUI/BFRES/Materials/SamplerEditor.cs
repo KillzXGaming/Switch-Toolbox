@@ -196,6 +196,8 @@ namespace FirstPlugin.Forms
 
                 MatTexture matTex = (MatTexture)material.TextureMaps[index];
 
+                samplerHintTB.Text = matTex.Type.ToString();
+
                 string name = matTex.Name;
                 textureNameTB.Text = name;
 
@@ -373,7 +375,7 @@ namespace FirstPlugin.Forms
 
             var index = textureRefListView.SelectedIndices[0];
 
-            samplerHintTB.Text = GetHint(samplerHintTB.Text);
+         //   samplerHintTB.Text = GetHint(samplerHintTB.Text);
 
             bool IsDuped = false;
 
