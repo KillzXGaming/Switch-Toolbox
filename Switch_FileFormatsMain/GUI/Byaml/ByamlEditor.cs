@@ -124,11 +124,27 @@ namespace FirstPlugin
         //get a reference to the value to change
         class EditableNode
         {
-            public Type type { get { return Node[Index].GetType(); } }
             dynamic Node;
-            dynamic Index;
+            dynamic Index = -1;
 
-            public dynamic Get() { return Node[Index]; }
+            public Type type
+            {
+                get
+                {
+                    if (Index != -1)
+                        return Node[Index].GetType();
+                    else
+                        return Node.GetType();
+                }
+            }
+
+            public dynamic Get()
+            {
+                if (Index != -1)
+                    return Node[Index];
+                else
+                    return Node;
+            }
             public void Set(dynamic value) { Node[Index] = value; }
 
             public string GetTreeViewString()
@@ -207,7 +223,7 @@ namespace FirstPlugin
                 ListViewItem item = new ListViewItem(ValueText);
                 item.SubItems.Add(ValueTypeString);
                 item.SubItems.Add(ValueText);
-                if (k != null) item.Tag = new EditableNode(k, k);
+                if (k != null) item.Tag = new EditableNode(k, -1);
 
                 listViewCustom1.Items.Add(item);
             }
