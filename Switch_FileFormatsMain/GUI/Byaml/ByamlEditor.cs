@@ -125,40 +125,32 @@ namespace FirstPlugin
         class EditableNode
         {
             dynamic Node;
-            dynamic Index = -1;
 
             public Type type
             {
                 get
                 {
-                    if (Index != -1)
-                        return Node[Index].GetType();
-                    else
-                        return Node.GetType();
+                    return Node.GetType();
                 }
             }
 
             public dynamic Get()
             {
-                if (Index != -1)
-                    return Node[Index];
-                else
-                    return Node;
+                return Node;
             }
-            public void Set(dynamic value) { Node[Index] = value; }
+            public void Set(dynamic value)
+            {
+                Node = value;
+            }
 
             public string GetTreeViewString()
             {
-                if (Index is int)
-                    return Node[Index].ToString();
-                else
-                    return Index + " : " + Node[Index].ToString();
+                return Node.ToString();
             }
 
-            public EditableNode(dynamic _node, dynamic _index)
+            public EditableNode(dynamic _node)
             {
                 Node = _node;
-                Index = _index;
             }
         }
 
@@ -188,7 +180,7 @@ namespace FirstPlugin
                 ListViewItem item = new ListViewItem(NameText);
                 item.SubItems.Add(TypeString);
                 item.SubItems.Add(ValueText);
-                if (node[k] != null) item.Tag = new EditableNode(node, k);
+                if (node[k] != null) item.Tag = new EditableNode(node);
 
                 listViewCustom1.Items.Add(item);
             }
@@ -223,7 +215,7 @@ namespace FirstPlugin
                 ListViewItem item = new ListViewItem(ValueText);
                 item.SubItems.Add(ValueTypeString);
                 item.SubItems.Add(ValueText);
-                if (k != null) item.Tag = new EditableNode(k, -1);
+                if (k != null) item.Tag = new EditableNode(k);
 
                 listViewCustom1.Items.Add(item);
             }
@@ -276,7 +268,7 @@ namespace FirstPlugin
             {
                 index++;
                 var n = addto.Add(k == null ? "<NULL>" : k.ToString());
-                if (k != null) n.Tag = new EditableNode(list, index);
+                if (k != null) n.Tag = new EditableNode(list);
             }
         }
 
