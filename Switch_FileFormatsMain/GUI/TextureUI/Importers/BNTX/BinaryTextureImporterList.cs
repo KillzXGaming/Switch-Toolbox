@@ -80,6 +80,15 @@ namespace FirstPlugin
             formatComboBox.Items.Add(SurfaceFormat.BC7_UNORM);
             formatComboBox.Items.Add(SurfaceFormat.BC7_SRGB);
 
+            compressionModeCB.Items.Add("Fast (Lower Qaulity)");
+            compressionModeCB.Items.Add("Normal (Good Qaulity)");
+
+
+
+            compressionModeCB.SelectedIndex = 1;
+
+            compressionModeCB.Enabled = false;
+
             foreach (SurfaceDim dim in (SurfaceDim[])Enum.GetValues(typeof(SurfaceDim)))
             {
                 ImgDimComb.Items.Add(dim);
@@ -132,15 +141,29 @@ namespace FirstPlugin
 
                 listViewCustom1.Items[SelectedIndex].SubItems[1].Text = SelectedTexSettings.Format.ToString();
             }
+
+            if (SelectedTexSettings.Format == SurfaceFormat.BC7_UNORM ||
+                SelectedTexSettings.Format == SurfaceFormat.BC7_SRGB)
+            {
+                compressionModeCB.Enabled = true;
+            }
+            else
+            {
+                compressionModeCB.Enabled = false;
+            }
+
             Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
 
+            STCompressionMode CompressionMode = STCompressionMode.Normal;
+            if (compressionModeCB.SelectedIndex == 0)
+                CompressionMode = STCompressionMode.Fast;
 
             Thread = new Thread((ThreadStart)(() =>
             {
                 ToggleOkButton(false);
 
                 pictureBox1.Image = bitmap;
-                SelectedTexSettings.Compress();
+                SelectedTexSettings.Compress(CompressionMode);
 
                 ToggleOkButton(true);
 
@@ -237,6 +260,14 @@ namespace FirstPlugin
                 {
                     DialogResult = DialogResult.OK;
                 }
+            }
+        }
+
+        private void compressionModeCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
+            {
+                SetupSettings();
             }
         }
     }

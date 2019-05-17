@@ -436,7 +436,7 @@ namespace Switch_Toolbox.Library
             }
             return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
         }
-        public static unsafe byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float AlphaRef = 0.5f)
+        public static unsafe byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float AlphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
         {
             long inputRowPitch = width * 4;
             long inputSlicePitch = width * height * 4;
@@ -464,7 +464,8 @@ namespace Switch_Toolbox.Library
                     format == DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB ||
                     format == DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_TYPELESS)
                 {
-                    compFlags |= TEX_COMPRESS_FLAGS.BC7_QUICK;
+                    if (CompressionMode == STCompressionMode.Fast)
+                        compFlags |= TEX_COMPRESS_FLAGS.BC7_QUICK;
                 }
 
                 if (format == DDS.DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB ||

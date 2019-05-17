@@ -13,6 +13,13 @@ using Switch_Toolbox.Library.NodeWrappers;
 
 namespace Switch_Toolbox.Library
 {
+    public enum STCompressionMode
+    {
+        Slow,
+        Normal,
+        Fast
+    }
+
     public enum STChannelType
     {
         Red = 0,
@@ -505,7 +512,7 @@ namespace Switch_Toolbox.Library
             return MipmapNum;
         }
 
-        public byte[] GenerateMipsAndCompress(Bitmap bitmap, TEX_FORMAT Format, float alphaRef = 0.5f)
+        public byte[] GenerateMipsAndCompress(Bitmap bitmap, TEX_FORMAT Format, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
         {
             byte[] DecompressedData = BitmapExtension.ImageToByte(bitmap);
             DecompressedData = ConvertBgraToRgba(DecompressedData);
@@ -522,7 +529,7 @@ namespace Switch_Toolbox.Library
                 {
                     Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
                     mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                        Image.Width, Image.Height, Format, alphaRef));
+                        Image.Width, Image.Height, Format, alphaRef, CompressionMode));
                 }
             }
             Image.Dispose();
@@ -530,10 +537,10 @@ namespace Switch_Toolbox.Library
             return Utils.CombineByteArray(mipmaps.ToArray());
         }
 
-        public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef)
+        public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef, STCompressionMode CompressionMode = STCompressionMode.Normal)
         {
             if (IsCompressed(format))
-                return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, alphaRef);
+                return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, alphaRef, CompressionMode);
             else if (IsAtscFormat(format))
                 return null;
             else

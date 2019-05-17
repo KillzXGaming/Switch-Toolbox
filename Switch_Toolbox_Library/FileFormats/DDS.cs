@@ -624,6 +624,10 @@ namespace Switch_Toolbox.Library
                     }
                 }
             }
+            else
+            {
+                throw new Exception("Unknown type!");
+            }
             return TEX_FORMAT.UNKNOWN;
         }
         private void ReadDX10Header(BinaryDataReader reader)
@@ -775,11 +779,14 @@ namespace Switch_Toolbox.Library
                     uint MipWidth = tex.Width, MipHeight = tex.Height;
                     for (int j = 0; j < tex.MipCount; ++j)
                     {
+                        MipWidth = (uint)Math.Max(1, tex.Width >> j);
+                        MipHeight = (uint)Math.Max(1, tex.Height >> j);
+
                         uint size = (MipWidth * MipHeight); //Total pixels
                         if (IsCompressed(tex.Format))
                         {
-                            size = (uint)(size * ((float)formatSize / 0x10)); //Bytes per 16 pixels
-                            if (size < formatSize) //Make sure it's at least one block
+                            size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                            if (size < formatSize)
                                 size = formatSize;
                         }
                         else
@@ -787,8 +794,6 @@ namespace Switch_Toolbox.Library
                             size = (uint)(size * GetBytesPerPixel(tex.Format)); //Bytes per pixel
                         }
 
-                        MipWidth /= 2;
-                        MipHeight /= 2;
                         Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
                         Offset += size;
                     }
@@ -818,11 +823,14 @@ namespace Switch_Toolbox.Library
                     uint MipWidth = dds.header.width, MipHeight = dds.header.height;
                     for (int j = 0; j < dds.header.mipmapCount; ++j)
                     {
+                        MipWidth = (uint)Math.Max(1, dds.header.width >> j);
+                        MipHeight = (uint)Math.Max(1, dds.header.height >> j);
+
                         uint size = (MipWidth * MipHeight); //Total pixels
                         if (isBlock)
                         {
-                            size = (uint)(size * ((float)formatSize / 0x10)); //Bytes per 16 pixels
-                            if (size < formatSize) //Make sure it's at least one block
+                            size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                            if (size < formatSize)
                                 size = formatSize;
                         }
                         else
@@ -830,8 +838,6 @@ namespace Switch_Toolbox.Library
                             size = (uint)(size * (GetBytesPerPixel(dds.Format))); //Bytes per pixel
                         }
 
-                        MipWidth /= 2;
-                        MipHeight /= 2;
                         Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
                         Offset += size;
                     }

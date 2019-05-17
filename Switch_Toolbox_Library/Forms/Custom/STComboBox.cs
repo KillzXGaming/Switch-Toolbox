@@ -18,7 +18,16 @@ namespace Switch_Toolbox.Library.Forms
         private Brush ArrowBrush = new SolidBrush(SystemColors.ControlText);
         private Brush DropButtonBrush = new SolidBrush(SystemColors.Control);
 
-        private Color _borderColor = Color.Black;
+        private Color _borderColor
+        {
+            get
+            {
+                if (Enabled)
+                    return  FormThemes.BaseTheme.ComboBoxBorderColor; 
+                else
+                    return  FormThemes.BaseTheme.DisabledBorderColor;
+            }
+        }
         private ButtonBorderStyle _borderStyle = ButtonBorderStyle.Solid;
         private static int WM_PAINT = 0x000F;
 
@@ -40,7 +49,6 @@ namespace Switch_Toolbox.Library.Forms
             ButtonColor = FormThemes.BaseTheme.ComboBoxBackColor;
             ForeColor = FormThemes.BaseTheme.FormForeColor;
             BackColor = FormThemes.BaseTheme.ComboBoxBackColor;
-            BorderColor = FormThemes.BaseTheme.ComboBoxBorderColor;
             DropDownStyle = ComboBoxStyle.DropDown;
 
             if (FormThemes.ActivePreset == FormThemes.Preset.White)
@@ -50,13 +58,13 @@ namespace Switch_Toolbox.Library.Forms
 
             ReadOnly = true;
 
-            Resize += (s, e) =>
+           /* Resize += (s, e) =>
             {
                 if (!IsHandleCreated)
                     return;
 
                 SelectionLength = 0;
-            };
+            };*/
 
             InitializeComponent();
         }
@@ -131,7 +139,6 @@ namespace Switch_Toolbox.Library.Forms
             get { return _borderColor; }
             set
             {
-                _borderColor = value;
                 Invalidate(); // causes control to be redrawn
             }
         }
@@ -145,6 +152,19 @@ namespace Switch_Toolbox.Library.Forms
                 _borderStyle = value;
                 Invalidate();
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            var backBrush = new SolidBrush(BorderColor);
+            var foreBrush = new SolidBrush(ForeColor);
+
+            e.Graphics.FillRectangle(backBrush, this.ClientRectangle);
+
+            e.Graphics.DrawString(this.Text, this.Font, foreBrush, this.Location);
+
         }
 
         protected override void OnLostFocus(System.EventArgs e)
@@ -174,8 +194,17 @@ namespace Switch_Toolbox.Library.Forms
             this.DropDownStyleChanged += new System.EventHandler(this.STComboBox_DropDownStyleChanged);
             this.DropDownClosed += new System.EventHandler(this.STComboBox_DropDownClosed);
             this.TextChanged += new System.EventHandler(this.STComboBox_TextChanged);
+            this.EnabledChanged += new EventHandler(EnableDisplayCombo_EnabledChanged);
             this.ResumeLayout(false);
 
+        }
+
+        void EnableDisplayCombo_EnabledChanged(object sender, EventArgs e)
+        {
+            if (this.Enabled)
+                this.DropDownStyle = ComboBoxStyle.DropDown;
+            else
+                this.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void STComboBox_TextChanged(object sender, EventArgs e)

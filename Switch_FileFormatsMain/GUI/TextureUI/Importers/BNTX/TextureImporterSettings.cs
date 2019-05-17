@@ -173,13 +173,13 @@ namespace FirstPlugin
 
             return Utils.CombineByteArray(mipmaps.ToArray());
         }
-        public void Compress()
+        public void Compress(STCompressionMode CompressionMode)
         {
             DataBlockOutput.Clear();
             foreach (var surface in DecompressedData)
             {
                 DataBlockOutput.Add(STGenericTexture.CompressBlock(surface,
-                    (int)TexWidth, (int)TexHeight, TextureData.ConvertFormat(Format), alphaRef));
+                    (int)TexWidth, (int)TexHeight, TextureData.ConvertFormat(Format), alphaRef, CompressionMode));
             }
         }
         public static uint DIV_ROUND_UP(uint value1, uint value2)
