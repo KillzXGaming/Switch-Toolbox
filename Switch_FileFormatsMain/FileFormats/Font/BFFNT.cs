@@ -258,7 +258,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true, false, Format, (uint)(SheetIndex * 2));
+                ftex.ReplaceTexture(ofd.FileName, Format, 1, SupportedFormats, true, true, false, (uint)(SheetIndex * 2));
                 if (ftex.texture != null)
                 {
                     TextureTGLP.Format = (ushort)ConvertToGx2(Format);

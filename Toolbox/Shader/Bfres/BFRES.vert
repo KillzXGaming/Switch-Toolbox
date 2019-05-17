@@ -150,12 +150,12 @@ void main()
 		
     if (RigidSkinning == 1)
     {
-	     position = mtxCam *  (bones[index.x] * vec4(vPosition.xyz, 1.0));
+	     position = mtxCam *  mtxMdl * (bones[index.x] * vec4(vPosition.xyz, 1.0));
 		 normal = mat3(bones[index.x]) * vNormal.xyz * 1;
 	}
 	if (NoSkinning == 1)
     {
-	    position = mtxCam  *  (SingleBoneBindTransform * vec4(vPosition.xyz, 1.0));
+	    position = mtxCam *  mtxMdl *  (SingleBoneBindTransform * vec4(vPosition.xyz, 1.0));
 		normal = mat3(SingleBoneBindTransform) * vNormal.xyz * 1;
 	}
 

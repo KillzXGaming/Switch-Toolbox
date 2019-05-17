@@ -169,7 +169,7 @@ namespace FirstPlugin
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, bflim.SupportedFormats, true, true, false, TEX_FORMAT.BC3_UNORM_SRGB);
+                ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, bflim.SupportedFormats, true, true, false);
                 if (ftex.texture != null)
                 {
                     bflim.Text = ftex.texture.Name;
@@ -199,7 +199,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, 1, SupportedFormats, true, true, false, Format);
+                ftex.ReplaceTexture(ofd.FileName, Format, 1, SupportedFormats, true, true, false);
                 if (ftex.texture != null)
                 {
                     image.Swizzle = (byte)ftex.texture.Swizzle;

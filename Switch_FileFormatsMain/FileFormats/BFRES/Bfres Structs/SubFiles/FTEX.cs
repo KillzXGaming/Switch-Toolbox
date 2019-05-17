@@ -182,11 +182,11 @@ namespace Bfres.Structs
         }
 
         public override void Replace(string FileName) {
-            ReplaceTexture(FileName);
+            ReplaceTexture(FileName, Format);
         }
 
-        public void ReplaceTexture(string FileName, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null,
-            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint SwizzlePattern = 0)
+        public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null,
+            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false, uint SwizzlePattern = 0)
         {
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();

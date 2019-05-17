@@ -528,7 +528,7 @@ namespace FirstPlugin
             public override void Replace(string FileName)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(FileName, 1, SupportedFormats, true, true);
+                ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true);
                 if (ftex.texture != null)
                 {
                     surface.swizzle = ftex.texture.Swizzle;
