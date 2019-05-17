@@ -579,7 +579,7 @@ namespace Switch_Toolbox.Library
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = Text;
-            sfd.DefaultExt = "bftex";
+            sfd.DefaultExt = "dds";
             sfd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
                          "Microsoft DDS |*.dds|" +
                          "Portable Network Graphics |*.png|" +

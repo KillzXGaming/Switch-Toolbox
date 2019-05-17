@@ -181,10 +181,34 @@ namespace Switch_Toolbox.Library.Forms
             if (Image != null)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
+                ofd.FileName = Text;
+                ofd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                             "Microsoft DDS |*.dds|" +
+                             "Portable Network Graphics |*.png|" +
+                             "Joint Photographic Experts Group |*.jpg|" +
+                             "Bitmap Image |*.bmp|" +
+                             "Tagged Image File Format |*.tiff|" +
+                             "All files(*.*)|*.*";
+
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    Bitmap ChannelDest = new Bitmap(ofd.FileName);
-                    Bitmap newImage = BitmapExtension.ReplaceChannel(Image, ChannelDest, ChannelType);
+                    Bitmap ImportedImage = null;
+                    string ext = Utils.GetExtension(ofd.FileName);
+                    if (ext == ".dds")
+                    {
+                        DDS dds = new DDS(ofd.FileName);
+                        ImportedImage = dds.GetBitmap();
+                    }
+                    else if (ext == ".tga")
+                    {
+                        ImportedImage = Paloma.TargaImage.LoadTargaImage(ofd.FileName);
+                    }
+                    else
+                    {
+                        ImportedImage = new Bitmap(ofd.FileName);
+                    }
+
+                    Bitmap newImage = BitmapExtension.ReplaceChannel(Image, ImportedImage, ChannelType);
                     imageEditor.SaveAndApplyImage(newImage, true);
                 }
             }
