@@ -522,10 +522,12 @@ namespace Toolbox
                         case "diffuseCubemapPathTB":
                             diffuseCubemapPathTB.Text = "";
                             Runtime.PBR.DiffuseCubeMapPath = "";
+                            RenderTools.ResetDiffuseCubeMap();
                             break;
                         case "specularCubemapPathTB":
                             specularCubemapPathTB.Text = "";
                             Runtime.PBR.SpecularCubeMapPath = "";
+                            RenderTools.ResetDiffuseCubeMap();
                             break;
                         case "mk8DPathTB":
                             mk8DPathTB.Text = "";

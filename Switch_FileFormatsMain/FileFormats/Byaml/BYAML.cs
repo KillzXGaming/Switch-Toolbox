@@ -74,9 +74,11 @@ namespace FirstPlugin
         bool IsDialog = false;
         BymlFileData data;
 
+        private bool SupportPaths = false;
+
         public ByamlEditor OpenForm()
         {
-            ByamlEditor editor = new ByamlEditor(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, this);
+            ByamlEditor editor = new ByamlEditor(data.RootNode, SupportPaths, data.Version, data.byteOrder, IsDialog, this);
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
@@ -103,7 +105,7 @@ namespace FirstPlugin
             {
                 Version = data.Version,
                 byteOrder = data.byteOrder,
-                SupportPaths = data.SupportPaths,
+                SupportPaths = SupportPaths,
                 RootNode = data.RootNode
             });
 
