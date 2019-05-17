@@ -40,6 +40,7 @@ namespace FirstPlugin
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
         {
             InitializeComponent();
+            CenterToScreen();
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
@@ -615,6 +616,18 @@ namespace FirstPlugin
                 Point pt = listViewCustom1.PointToScreen(e.Location);
                 stContextMenuStrip1.Show(pt);
             }
+        }
+
+        private void stButton2_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void stButton1_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

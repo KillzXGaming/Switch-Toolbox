@@ -205,5 +205,17 @@ namespace FirstPlugin.Forms
         {
 
         }
+
+        private void stButton2_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void stButton1_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
     }
 }

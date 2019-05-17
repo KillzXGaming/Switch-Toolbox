@@ -50,10 +50,10 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.addItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contentContainer.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -214,6 +214,7 @@
             this.stButton1.TabIndex = 12;
             this.stButton1.Text = "Cancel";
             this.stButton1.UseVisualStyleBackColor = false;
+            this.stButton1.Click += new System.EventHandler(this.stButton1_Click);
             // 
             // stButton2
             // 
@@ -226,6 +227,7 @@
             this.stButton2.TabIndex = 13;
             this.stButton2.Text = "Save";
             this.stButton2.UseVisualStyleBackColor = false;
+            this.stButton2.Click += new System.EventHandler(this.stButton2_Click);
             // 
             // splitContainer1
             // 
@@ -263,35 +265,35 @@
             this.renameToolStripMenuItem,
             this.deleteToolStripMenuItem});
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(181, 114);
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(124, 92);
+            // 
+            // addItemToolStripMenuItem
+            // 
+            this.addItemToolStripMenuItem.Name = "addItemToolStripMenuItem";
+            this.addItemToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.addItemToolStripMenuItem.Text = "Add Item";
+            this.addItemToolStripMenuItem.Click += new System.EventHandler(this.addNodeToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editValueNodeMenuItem_Click);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
-            // addItemToolStripMenuItem
-            // 
-            this.addItemToolStripMenuItem.Name = "addItemToolStripMenuItem";
-            this.addItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.addItemToolStripMenuItem.Text = "Add Item";
-            this.addItemToolStripMenuItem.Click += new System.EventHandler(this.addNodeToolStripMenuItem_Click);
             // 
             // ByamlEditor
             // 

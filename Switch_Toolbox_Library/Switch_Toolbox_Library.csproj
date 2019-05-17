@@ -470,6 +470,7 @@
     <Compile Include="Forms\HintHelpDialog.Designer.cs">
       <DependentUpon>HintHelpDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NonBlickingDialog.cs" />
     <Compile Include="Forms\PropertyBinding.cs" />
     <Compile Include="Forms\STConsole.cs">
       <SubType>Component</SubType>
