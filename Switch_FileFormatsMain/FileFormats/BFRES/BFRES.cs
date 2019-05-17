@@ -312,6 +312,8 @@ namespace FirstPlugin
                 LibraryGUI.Instance.LoadEditor(bfresEditor);
             }
 
+            bool ViewportToggled = bfresEditor.DisplayViewport;
+
             if (SelectedSection is FTEX)
             {
                 ImageEditorBase editorFtex = (ImageEditorBase)bfresEditor.GetActiveEditor(typeof(ImageEditorBase));
@@ -325,7 +327,7 @@ namespace FirstPlugin
                 editorFtex.Text = Text;
                 editorFtex.LoadProperties(((FTEX)SelectedSection).texture);
                 editorFtex.LoadImage((FTEX)SelectedSection);
-                if (Runtime.DisplayViewport)
+                if (Runtime.DisplayViewport && ViewportToggled)
                     editorFtex.SetEditorOrientation(true);
 
                 if (((FTEX)SelectedSection).texture.UserData != null)
@@ -364,7 +366,7 @@ namespace FirstPlugin
                 }
 
                 editor.Text = Text;
-                if (Runtime.DisplayViewport)
+                if (Runtime.DisplayViewport && ViewportToggled)
                     editor.SetEditorOrientation(true);
 
                 editor.LoadProperties(((TextureData)SelectedSection).Texture);

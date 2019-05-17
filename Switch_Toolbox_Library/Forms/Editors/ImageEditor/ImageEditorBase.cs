@@ -182,8 +182,6 @@ namespace Switch_Toolbox.Library.Forms
 
             SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
 
-            if (!Runtime.ImageEditor.DisplayVertical)
-                DisplayHorizontal();
 
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
 
@@ -213,6 +211,7 @@ namespace Switch_Toolbox.Library.Forms
         public void SetEditorOrientation(bool ToVertical)
         {
             displayVerticalToolStripMenuItem.Checked = ToVertical;
+            SetOrientation();
         }
 
         private void UpdateBackgroundImage()
@@ -792,12 +791,6 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
-        private void displayVerticalToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            SetOrientation();
-            SaveSettings();
-        }
-
         private void SetOrientation()
         {
             if (displayVerticalToolStripMenuItem.Checked)
@@ -808,8 +801,6 @@ namespace Switch_Toolbox.Library.Forms
             {
                 DisplayHorizontal();
             }
-
-            Runtime.ImageEditor.DisplayVertical = displayVerticalToolStripMenuItem.Checked;
         }
 
         private void displayVerticalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -822,6 +813,11 @@ namespace Switch_Toolbox.Library.Forms
             {
                 displayVerticalToolStripMenuItem.Checked = true;
             }
+
+            Runtime.ImageEditor.DisplayVertical = displayVerticalToolStripMenuItem.Checked;
+
+            SetOrientation();
+            SaveSettings();
         }
 
         private void HidePropertyGrid(bool Hide)

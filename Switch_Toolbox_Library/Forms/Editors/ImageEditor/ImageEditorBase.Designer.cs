@@ -481,7 +481,6 @@
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
             this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
-            this.displayVerticalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.displayVerticalToolStripMenuItem_CheckedChanged);
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
             // 
             // displayAlphaToolStripMenuItem
