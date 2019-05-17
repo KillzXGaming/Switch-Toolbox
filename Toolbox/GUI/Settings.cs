@@ -42,6 +42,11 @@ namespace Toolbox
                 preferredTexFormatCB.Items.Add(format);
             }
 
+            uvChannelRB.Checked = true;
+            uvChannelRB.Visible = false;
+            uvChannelRB2.Visible = false;
+            uvChannelRB3.Visible = false;
+
             normalsLineUD.Value = (decimal)Runtime.normalsLineLength;
             normalPointsCB.Checked = Runtime.renderNormalsPoints;
             vtxColorCB.Checked = Runtime.renderVertColor;
@@ -99,6 +104,20 @@ namespace Toolbox
         private void shadingComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Runtime.viewportShading = (Runtime.ViewportShading)shadingComboBox.SelectedIndex;
+            if (Runtime.viewportShading == Runtime.ViewportShading.UVCoords ||
+                Runtime.viewportShading == Runtime.ViewportShading.UVTestPattern)
+            {
+                uvChannelRB.Visible = true;
+                uvChannelRB2.Visible = true;
+                uvChannelRB3.Visible = true;
+            }
+            else
+            {
+                uvChannelRB.Visible = false;
+                uvChannelRB2.Visible = false;
+                uvChannelRB3.Visible = false;
+            }
+
             UpdateViewportSettings();
         }
 
@@ -557,6 +576,21 @@ namespace Toolbox
         private void specularCubemapPathTB_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void uvChannelRB_CheckedChanged(object sender, EventArgs e) {
+            Runtime.uvChannel = Runtime.UVChannel.Channel1;
+            UpdateViewportSettings();
+        }
+
+        private void uvChannelRB2_CheckedChanged(object sender, EventArgs e) {
+            Runtime.uvChannel = Runtime.UVChannel.Channel2;
+            UpdateViewportSettings();
+        }
+
+        private void uvChannelRB3_CheckedChanged(object sender, EventArgs e)  {
+            Runtime.uvChannel = Runtime.UVChannel.Channel3;
+            UpdateViewportSettings();
         }
     }
 }

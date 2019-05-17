@@ -143,6 +143,13 @@ vec2 displayTexCoord =  f_texcoord0;
 
 void main()
 {
+	if (uvChannel == 1)
+		displayTexCoord =  f_texcoord0;
+	if (uvChannel == 2)
+		displayTexCoord =  f_texcoord2;
+	if (uvChannel == 3)
+		displayTexCoord =  f_texcoord3;
+
     fragColor = vec4(vec3(0), 1);
 
     // Create a struct for passing all the vertex attributes to other functions.

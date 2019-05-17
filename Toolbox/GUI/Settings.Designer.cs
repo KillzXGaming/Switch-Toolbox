@@ -34,6 +34,8 @@
             this.chkBoxNormalMap = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.shadingComboBox = new System.Windows.Forms.ComboBox();
             this.panel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.uvChannelRB2 = new System.Windows.Forms.RadioButton();
+            this.uvChannelRB = new System.Windows.Forms.RadioButton();
             this.displayBoundingBoxeChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.boneXRayChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel9 = new Switch_Toolbox.Library.Forms.STLabel();
@@ -110,8 +112,7 @@
             this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
             this.specularCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.uvChannelRB3 = new System.Windows.Forms.RadioButton();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -186,8 +187,9 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.radioButton2);
-            this.panel2.Controls.Add(this.radioButton1);
+            this.panel2.Controls.Add(this.uvChannelRB3);
+            this.panel2.Controls.Add(this.uvChannelRB2);
+            this.panel2.Controls.Add(this.uvChannelRB);
             this.panel2.Controls.Add(this.displayBoundingBoxeChk);
             this.panel2.Controls.Add(this.boneXRayChk);
             this.panel2.Controls.Add(this.stLabel9);
@@ -225,6 +227,30 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(534, 293);
             this.panel2.TabIndex = 4;
+            // 
+            // uvChannelRB2
+            // 
+            this.uvChannelRB2.AutoSize = true;
+            this.uvChannelRB2.Location = new System.Drawing.Point(425, 54);
+            this.uvChannelRB2.Name = "uvChannelRB2";
+            this.uvChannelRB2.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB2.TabIndex = 33;
+            this.uvChannelRB2.TabStop = true;
+            this.uvChannelRB2.Text = "UV 2";
+            this.uvChannelRB2.UseVisualStyleBackColor = true;
+            this.uvChannelRB2.CheckedChanged += new System.EventHandler(this.uvChannelRB2_CheckedChanged);
+            // 
+            // uvChannelRB
+            // 
+            this.uvChannelRB.AutoSize = true;
+            this.uvChannelRB.Location = new System.Drawing.Point(372, 54);
+            this.uvChannelRB.Name = "uvChannelRB";
+            this.uvChannelRB.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB.TabIndex = 32;
+            this.uvChannelRB.TabStop = true;
+            this.uvChannelRB.Text = "UV 1";
+            this.uvChannelRB.UseVisualStyleBackColor = true;
+            this.uvChannelRB.CheckedChanged += new System.EventHandler(this.uvChannelRB_CheckedChanged);
             // 
             // displayBoundingBoxeChk
             // 
@@ -1161,27 +1187,17 @@
             this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
             this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.specularCubemapPathTB_TextChanged);
             // 
-            // radioButton1
+            // uvChannelRB3
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(381, 54);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(85, 17);
-            this.radioButton1.TabIndex = 32;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "radioButton1";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(381, 77);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(85, 17);
-            this.radioButton2.TabIndex = 33;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "radioButton2";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.uvChannelRB3.AutoSize = true;
+            this.uvChannelRB3.Location = new System.Drawing.Point(477, 54);
+            this.uvChannelRB3.Name = "uvChannelRB3";
+            this.uvChannelRB3.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB3.TabIndex = 34;
+            this.uvChannelRB3.TabStop = true;
+            this.uvChannelRB3.Text = "UV 3";
+            this.uvChannelRB3.UseVisualStyleBackColor = true;
+            this.uvChannelRB3.CheckedChanged += new System.EventHandler(this.uvChannelRB3_CheckedChanged);
             // 
             // Settings
             // 
@@ -1308,7 +1324,8 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkDiffyseSkybox;
         private Switch_Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clearSettingToolStripMenuItem;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton uvChannelRB2;
+        private System.Windows.Forms.RadioButton uvChannelRB;
+        private System.Windows.Forms.RadioButton uvChannelRB3;
     }
 }
