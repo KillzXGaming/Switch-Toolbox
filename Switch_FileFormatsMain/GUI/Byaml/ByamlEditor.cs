@@ -180,7 +180,7 @@ namespace FirstPlugin
                 ListViewItem item = new ListViewItem(NameText);
                 item.SubItems.Add(TypeString);
                 item.SubItems.Add(ValueText);
-                if (node[k] != null) item.Tag = new EditableNode(node);
+                if (node[k] != null) item.Tag = new EditableNode(node[k]);
 
                 listViewCustom1.Items.Add(item);
             }
