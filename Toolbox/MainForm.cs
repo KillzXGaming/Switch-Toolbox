@@ -420,7 +420,6 @@ namespace Toolbox
                     }
                     Cursor.Current = Cursors.WaitCursor;
 
-
                     if (format is STGenericWrapper)
                     {
                         ((STGenericWrapper)format).Export(FileName);
@@ -428,7 +427,6 @@ namespace Toolbox
                     }
 
                     STFileSaver.SaveFileFormat(((IFileFormat)node), FileName, UseCompressDialog);
-
                     Cursor.Current = Cursors.Default;
                 }
             }

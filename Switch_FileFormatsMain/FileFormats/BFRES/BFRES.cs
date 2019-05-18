@@ -1114,7 +1114,7 @@ namespace FirstPlugin
                 byte[] Tex2 = GenerateTex2();
 
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = FileName.Replace("Tex1", "Tex2");
+                sfd.FileName = Path.GetFileName(FileName.Replace("Tex1", "Tex2"));
                 sfd.DefaultExt = ".sbfres";
 
                 List<IFileFormat> formats = new List<IFileFormat>();
