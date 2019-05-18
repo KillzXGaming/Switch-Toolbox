@@ -18,20 +18,6 @@ namespace Bfres.Structs
         public int[] Node_Array;
         public fsklNode node;
 
-        public List<Matrix4> GetInverseMatrices()
-        {
-            List<Matrix4> matrices = new List<Matrix4>();
-
-            foreach (var bn in bones)
-            {
-                Console.WriteLine(bn.Text);
-                Console.WriteLine(bn.CalculateSmoothMatrix());
-                matrices.Add(bn.CalculateSmoothMatrix());
-            }
-
-            return matrices;
-        }
-
         public void CalculateIndices()
         {
             if (node.SkeletonU != null)

@@ -23,6 +23,8 @@ namespace Switch_Toolbox.Library.Animations
 
     public class Animation : STGenericWrapper
     {
+        public bool CanLoop { get; set; }
+
         //Use to load data when clicked on. Can potentially speed up load times
         public virtual void OpenAnimationData() { }
 
@@ -142,6 +144,15 @@ namespace Switch_Toolbox.Library.Animations
                 if (ZPOS.HasAnimation()) pos.Z = ZPOS.GetValue(frame);
 
                 return pos;
+            }
+
+            public Matrix4 Transform(float Frame)
+            {
+                Matrix4 Translaton = Matrix4.CreateTranslation(GetPosition(Frame));
+                Matrix4 Rotation = Matrix4.CreateFromQuaternion(GetRotation(Frame));
+                Matrix4 Scale = Matrix4.CreateScale(GetScale(Frame));
+
+                return (Scale * Rotation * Translaton);
             }
 
             public Quaternion GetRotation(float frame)
@@ -504,7 +515,6 @@ namespace Switch_Toolbox.Library.Animations
             if (Frame == 0 && !isChild)
                 skeleton.reset();
 
-
             foreach (object child in Children)
             {
                 if (child is Animation)
@@ -517,7 +527,6 @@ namespace Switch_Toolbox.Library.Animations
             bool Updated = false; // no need to update skeleton of animations that didn't change
             foreach (KeyNode node in Bones)
             {
-
                 // Get Skeleton Node
                 STBone b = null;
                 b = skeleton.GetBone(node.Text);

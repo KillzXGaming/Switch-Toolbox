@@ -92,7 +92,7 @@ namespace Switch_Toolbox.Library
 
             foreach (STBone bn in bones)
             {
-                bn.Render();
+                bn.RenderLegacy();
             }
         }
 
@@ -103,7 +103,7 @@ namespace Switch_Toolbox.Library
 
             foreach (STBone bn in bones)
             {
-                bn.Render();
+                bn.RenderLegacy();
             }
         }
 

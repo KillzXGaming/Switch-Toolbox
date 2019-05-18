@@ -221,6 +221,8 @@ namespace Bfres.Structs
             Nodes.Clear();
             Bones.Clear();
 
+            CanLoop = ska.FlagsAnimSettings.HasFlag(SkeletalAnimFlags.Looping);
+
             for (int i = 0; i < ska.BoneAnims.Count; i++)
             {
                 var bn = ska.BoneAnims[i];
@@ -282,6 +284,8 @@ namespace Bfres.Structs
         {
             Nodes.Clear();
             Bones.Clear();
+
+            CanLoop = ska.FlagsAnimSettings.HasFlag(ResU.SkeletalAnimFlags.Looping);
 
             foreach (ResU.BoneAnim bn in ska.BoneAnims)
             {

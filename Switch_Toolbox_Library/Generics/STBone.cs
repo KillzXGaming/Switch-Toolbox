@@ -161,21 +161,7 @@ namespace Switch_Toolbox.Library
             SelectedImageKey = "bone";
         }
 
-        public Matrix4 CalculateSmoothMatrix()
-        {
-            Matrix4 mat4 = new Matrix4();
-
-            return Transform * invert;
-        }
-        public Matrix4 CalculateRigidMatrix()
-        {
-            Matrix4 mat4 = new Matrix4();
-
-
-            return mat4;
-        }
-
-        public void Render()
+        public void RenderLegacy()
         {
             if (!Runtime.OpenTKInitialized || !Runtime.renderBones)
                 return;
