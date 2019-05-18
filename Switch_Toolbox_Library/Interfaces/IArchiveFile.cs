@@ -46,7 +46,7 @@ namespace Switch_Toolbox.Library
             return STMath.GetFileSize(FileData.Length, 4);
         }
 
-        IFileFormat FileFormat = null; //Format attached for saving
+        public IFileFormat FileFormat = null; //Format attached for saving
 
         protected byte[] _fileData = null;
 
@@ -56,7 +56,10 @@ namespace Switch_Toolbox.Library
         {
             get
             {
-                return _fileData;
+                if (FileFormat != null && FileFormat.CanSave)
+                    return FileFormat.Save();
+                else
+                    return _fileData;
             }
             set { _fileData = value; }
         }
@@ -265,6 +268,7 @@ namespace Switch_Toolbox.Library
         public override void OnDoubleMouseClick(TreeView treeview)
         {
             TreeNode node = STFileLoader.GetNodeFileFormat(Text, ArchiveFileInfo.FileData, true, this);
+            ArchiveFileInfo.FileFormat = (IFileFormat)node;
             if (node != null)
                 ReplaceNode(this.Parent, this, node);
         }

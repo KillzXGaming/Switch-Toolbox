@@ -78,7 +78,7 @@ namespace FirstPlugin
 
         public bool TrySetSize(string Path, uint DecompSize, uint CompSize, Dictionary<string, uint> ArchiveFiles = null)
         {
-            string RelativePath = Path.Replace(Runtime.TpGamePath, "");
+            string RelativePath = Path.Replace(Runtime.TpGamePath, string.Empty);
 
             if (FileSizes.ContainsKey(RelativePath))
             {
@@ -86,6 +86,8 @@ namespace FirstPlugin
                     FileSizes[RelativePath] = CompSize;
                 else
                     FileSizes[RelativePath] = DecompSize;
+
+                return true;
             }
 
             return false;
