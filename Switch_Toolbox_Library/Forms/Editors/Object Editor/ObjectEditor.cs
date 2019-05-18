@@ -82,7 +82,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             InitializeComponent();
 
-            if (UseListView && FileFormat is IArchiveFile)
+            if (FileFormat is IArchiveFile)
             {
                 /* ObjectList = new ObjectEditorList();
                  ObjectList.Dock = DockStyle.Fill;
@@ -94,13 +94,7 @@ namespace Switch_Toolbox.Library.Forms
                 stPanel1.Controls.Add(ObjectTree);
 
                 TreeNode FileRoot = new TreeNode(FileFormat.FileName);
-                foreach (var archive in ((IArchiveFile)FileFormat).Files)
-                {
-                    ArchiveNodeWrapper node = new ArchiveNodeWrapper(archive.FileName);
-                    node.ArchiveFileInfo = archive;
-                    FileRoot.Nodes.Add(node);
-                }
-
+                FillTreeNodes(FileRoot, ((IArchiveFile)FileFormat).Files);
                 AddNode(FileRoot);
             }
             else
@@ -112,7 +106,61 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-   
+        void FillTreeNodes(TreeNode root, IEnumerable<ArchiveFileInfo> files)
+        {
+            var rootText = root.Text;
+            var rootTextLength = rootText.Length;
+            var nodeStrings = files;
+            foreach (var node in nodeStrings)
+            {
+                string nodeString = node.FileName;
+
+                var roots = nodeString.Split(new char[] { '/' },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                // The initial parent is the root node
+                var parentNode = root;
+                var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
+                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
+                {
+                    // Build the node name
+                    var parentName = roots[rootIndex];
+                    sb.Append("/");
+                    sb.Append(parentName);
+                    var nodeName = sb.ToString();
+
+                    // Search for the node
+                    var index = parentNode.Nodes.IndexOfKey(nodeName);
+                    if (index == -1)
+                    {
+                        // Node was not found, add it
+
+                        var folder = new ArchiveFolderNodeWrapper(parentName);
+                        if (rootIndex == roots.Length - 1)
+                        {
+                            ArchiveNodeWrapper wrapperFile = new ArchiveNodeWrapper(parentName);
+                            wrapperFile.ArchiveFileInfo = node;
+                            wrapperFile.Name = nodeName;
+                            parentNode.Nodes.Add(wrapperFile);
+                            parentNode = wrapperFile;
+                        }
+                        else
+                        {
+                            folder.Name = nodeName;
+                            parentNode.Nodes.Add(folder);
+                            parentNode = folder;
+                        }
+                    }
+                    else
+                    {
+                        // Node was found, set that as parent and continue
+                        parentNode = parentNode.Nodes[index];
+                    }
+                }
+            }
+        }
+
+
         public Viewport GetViewport() => viewport;
 
         //Attatch a viewport instance here if created.

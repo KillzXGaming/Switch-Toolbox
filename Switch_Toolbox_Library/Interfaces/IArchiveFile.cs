@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library.IO;
+using System.Text.RegularExpressions;
 
 namespace Switch_Toolbox.Library
 {
@@ -61,6 +62,86 @@ namespace Switch_Toolbox.Library
         }
 
         public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
+    }
+
+    public class ArchiveFolderNodeWrapper : TreeNodeCustom
+    {
+        public ArchiveFolderNodeWrapper(string text)
+        {
+            Text = text;
+
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStripItem("Extract Folder", ExtractAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Replace Folder", ReplaceAction));
+        }
+
+        private void ExtractAction(object sender, EventArgs args)
+        {
+            TreeNode node = this;
+            var ParentPath = string.Empty;
+
+            if (node.Parent != null)
+            {
+                ParentPath = node.Parent.FullPath;
+            }
+
+
+            FolderSelectDialog folderDialog = new FolderSelectDialog();
+            if (folderDialog.ShowDialog() == DialogResult.OK)
+            {
+                STProgressBar progressBar = new STProgressBar();
+                progressBar.Task = "Extracing Files...";
+                progressBar.Refresh();
+                progressBar.Value = 0;
+                progressBar.StartPosition = FormStartPosition.CenterScreen;
+                progressBar.Show();
+
+                var Collection = TreeViewExtensions.Collect(Nodes);
+
+                int Curfile = 0;
+                foreach (TreeNode file in Collection)
+                {
+                    string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
+                    FilePath = FilePath.Replace(ParentPath, string.Empty);
+
+                    Console.WriteLine($"FilePath " + FilePath);
+                    var path = Path.Combine(folderDialog.SelectedPath, FilePath);
+
+                    progressBar.Value = (Curfile++ * 100) / Collection.Count();
+                    progressBar.Refresh();
+                    CreateDirectoryIfExists($"{path}");
+
+                    if (file is ArchiveNodeWrapper)
+                    {
+                        File.WriteAllBytes($"{path}",
+                            ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileData);
+                    }
+                }
+
+                progressBar.Value = 100;
+                progressBar.Refresh();
+                progressBar.Close();
+            }
+        }
+
+        private void ReplaceAction(object sender, EventArgs args)
+        {
+        }
+
+        private void CreateDirectoryIfExists(string Dir)
+        {
+            if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName(Dir)))
+            {
+                //Make sure no file names use the same name to prevent errors
+                if (!File.Exists(Dir))
+                {
+                    if (!Directory.Exists(Dir))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(Dir));
+                    }
+                }
+            }
+        }
     }
 
     public class ArchiveNodeWrapper : TreeNodeCustom
