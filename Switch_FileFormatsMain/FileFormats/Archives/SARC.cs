@@ -576,7 +576,7 @@ namespace FirstPlugin
             sarcEntry.sarc = this;
             sarcEntry.Data = data;
 
-            Files.Add(name, data);
+            Files.Add(fullName, data);
 
             string ext = Path.GetExtension(name);
             string SarcEx = SARCExt.SARC.GuessFileExtension(data);

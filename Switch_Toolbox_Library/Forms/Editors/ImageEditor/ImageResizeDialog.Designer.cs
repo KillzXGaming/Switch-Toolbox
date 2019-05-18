@@ -130,13 +130,18 @@
             this.chkKeepAspectRatio.TabIndex = 15;
             this.chkKeepAspectRatio.Text = "Keep aspect ratio";
             this.chkKeepAspectRatio.UseVisualStyleBackColor = true;
+            this.chkKeepAspectRatio.CheckedChanged += new System.EventHandler(this.chkKeepAspectRatio_CheckedChanged);
             // 
             // resampleCB
             // 
             this.resampleCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.resampleCB.BorderColor = System.Drawing.Color.Empty;
+            this.resampleCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.resampleCB.ButtonColor = System.Drawing.Color.Empty;
             this.resampleCB.FormattingEnabled = true;
             this.resampleCB.Location = new System.Drawing.Point(564, 52);
             this.resampleCB.Name = "resampleCB";
+            this.resampleCB.ReadOnly = true;
             this.resampleCB.Size = new System.Drawing.Size(149, 21);
             this.resampleCB.TabIndex = 16;
             this.resampleCB.SelectedIndexChanged += new System.EventHandler(this.resampleCB_SelectedIndexChanged);
