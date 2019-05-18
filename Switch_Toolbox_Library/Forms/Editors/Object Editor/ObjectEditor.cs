@@ -93,7 +93,7 @@ namespace Switch_Toolbox.Library.Forms
                 ObjectTree.Dock = DockStyle.Fill;
                 stPanel1.Controls.Add(ObjectTree);
 
-                TreeNode FileRoot = new TreeNode(FileFormat.FileName);
+                TreeNode FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
                 FillTreeNodes(FileRoot, (IArchiveFile)FileFormat);
                 AddNode(FileRoot);
             }

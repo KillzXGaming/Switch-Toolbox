@@ -743,6 +743,9 @@ namespace Switch_Toolbox.Library.Forms
             if (resizeEditor.ShowDialog() == DialogResult.OK)
             {
                 UpdateEditCached(resizeEditor.newImage);
+                ApplyEdit(resizeEditor.newImage);
+
+                UpdateImage(ActiveTexture);
             }
         }
 

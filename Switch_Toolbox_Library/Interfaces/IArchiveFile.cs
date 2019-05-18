@@ -64,6 +64,44 @@ namespace Switch_Toolbox.Library
         public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
     }
 
+    //Wrapper for the archive file itself
+    public class ArchiveRootNodeWrapper : TreeNodeCustom
+    {
+        IArchiveFile ArchiveFile;
+
+        public ArchiveRootNodeWrapper(string text, IArchiveFile archiveFile)
+        {
+            Text = text;
+            ArchiveFile = archiveFile;
+
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStripItem("Save", SaveAction));
+            if (!((IFileFormat)archiveFile).CanSave)
+                ContextMenuStrip.Items[0].Enabled = false;
+        }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            //Archive files are IFIleFormats
+            var FileFormat = ((IFileFormat)ArchiveFile);
+
+            Cursor.Current = Cursors.WaitCursor;
+            List<IFileFormat> formats = new List<IFileFormat>();
+            formats.Add(FileFormat);
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(formats);
+            sfd.FileName = FileFormat.FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(FileFormat, sfd.FileName);
+            }
+            GC.Collect();
+        }
+    }
+
+    //Wrapper for folders
     public class ArchiveFolderNodeWrapper : TreeNodeCustom
     {
         public bool CanReplace
@@ -173,6 +211,7 @@ namespace Switch_Toolbox.Library
         }
     }
 
+    //Wrapper for files
     public class ArchiveNodeWrapper : TreeNodeCustom
     {
         public bool CanReplace
