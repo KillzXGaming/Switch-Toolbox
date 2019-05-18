@@ -1,0 +1,1178 @@
+set DEBUGLEVEL 0
+#--------
+# GENERAL
+# keep import path and filename
+# unused
+# set KeepImportName True
+#--------
+# force output DX10 FOURCC DDS file
+# doesn't work with LA88, as there is no analog in DXGI
+# warns and falls back to regular DDS file
+set DX10DDS False
+#--------
+# GCM/GNM
+# "RAW" - outputs only data without headers
+# adds info to the filename
+# for manual processing with id-daemon's "Raw texture previewer/converter" GUI
+# https://zenhax.com/viewtopic.php?f=7&t=7099
+# will add automatic batch file creation
+# if id-daemon adds swizzle options to his/her CLI version of the tool
+# "GNF" - outputs a GNF file
+# "DDS" - outputs a DDS file
+set GCMOutputMode "DDS" # "RAW" or "DDS"
+set GNMOutputMode "DDS" # "RAW", "GNF" or "DDS"
+# Data offset for GNF files
+# 0x30 - for compability with Noesis
+# 0x100 - with Scarlet: https://github.com/xdanieldzd/Scarlet
+set GNFDataOffset 0x30
+#-------------------------------------------------------------------------------
+endian big
+idstring 0 "PHYR"
+endian save FileEndian
+goto 0 0
+set i 0
+for FileOffset = 0 != ""
+    if FileEndian == 0
+        findloc FileOffset string "RYHP" 0 ""
+    elif FileEndian == 1
+        findloc FileOffset string "PHYR" 0 ""
+    endif
+    if FileOffset == ""
+        print "[i] Total PhyreEngine asset markers found: %i%."
+    else
+        math i += 1
+        putarray 40 i FileOffset
+        goto FileOffset 0
+        goto 1 0 SEEK_CUR
+    endif
+next
+for j = 1 <= i
+    getarray FileOffset 40 j
+    if j < i
+        xmath TMP "j+1"
+        getarray FileOffset_next 40 TMP
+    else
+        get FileOffset_next asize
+    endif
+    xmath ScanSize "FileOffset_next-FileOffset"
+    print "[i] PhyreEngine asset marker #%j%. Data start: %FileOffset|h%; data to scan: %ScanSize% B."
+    log MEMORY_FILE5 FileOffset ScanSize 0
+    CallFunction MainProcess 0 -5
+next j
+#-------------------------------------------------------------------------------
+StartFunction MainProcess
+# MainProcess_ARG1 - file number
+
+endian big
+idstring MainProcess_ARG1 "PHYR"
+
+get PClusterHeaderBase_m_size long MainProcess_ARG1 # PClusterHeaderBase.m_size
+get m_packedNamespaceSize long MainProcess_ARG1
+get m_platformID long MainProcess_ARG1
+
+if m_platformID == 0x44583131
+    set m_platformID "DX11"
+elif m_platformID == 0x47434D00
+    set m_platformID "GCM"
+elif m_platformID == 0x47584D01
+    set m_platformID "GXM"
+elif m_platformID == 0x474E4D02
+    set m_platformID "GNM"
+else
+    print "[x] Unsupported platform: %m_platformID|h%!"
+    cleanexit
+endif
+print "[i] Platform: %m_platformID%"
+
+get DUMMY long MainProcess_ARG1 # m_instanceListCount
+get DUMMY long MainProcess_ARG1 # m_arrayFixupSize
+get m_arrayFixupCount long MainProcess_ARG1
+print "[i] # of textures: %m_arrayFixupCount%"
+# --- PClusterHeaderBase end
+
+goto PClusterHeaderBase_m_size MainProcess_ARG1
+get MAGIC2 long MainProcess_ARG1
+if MAGIC2 != 0x01020304
+    print "[x] Wrong magic #2: %MAGIC|h%"
+    cleanexit
+endif
+
+get m_packedNamespaceSize long MainProcess_ARG1
+get SKIPTHESE long MainProcess_ARG1
+get ROOTDESCRIPTORS long MainProcess_ARG1
+get SUBDESCRIPTORS long MainProcess_ARG1
+get STRING_TABLE_SIZE long MainProcess_ARG1
+
+math SKIPTHESE += 2
+for i = 0 < SKIPTHESE
+    get DUMMY long MainProcess_ARG1
+next i
+
+if DEBUGLEVEL >= 2
+    print "#-#|  DUMMY0  |  FLAGS1  |  DUMMY1  |DESC_STR_O|SUB|F|L|  DUMMY2  |  DUMMY3  |  DUMMY4  |  DUMMY5  |  DUMMY6  |NAME"
+    print "---+----------+----------+----------+----------+---+-+-+----------+----------+----------+----------+----------+----"
+endif
+
+set j_min 0
+set j_max 0
+for i = 1 <= ROOTDESCRIPTORS
+    get DUMMY0 long MainProcess_ARG1
+    get DUMMY1 short MainProcess_ARG1
+    get DUMMY2 short MainProcess_ARG1
+    get DESC_STRING_OFFSET long MainProcess_ARG1
+    get SUBRECORDS long MainProcess_ARG1
+    get DUMMY3 long MainProcess_ARG1
+    get DUMMY4 long MainProcess_ARG1
+    get DUMMY5 long MainProcess_ARG1
+    get DUMMY6 long MainProcess_ARG1
+    get DUMMY7 long MainProcess_ARG1
+
+    if SUBRECORDS > 0
+        math FirstSubrecord = j_max
+        math FirstSubrecord += 1
+        math j_max += SUBRECORDS
+        math LastSubrecord = j_max
+    else
+        math FirstSubrecord = 0
+        math LastSubrecord = 0
+    endif
+
+    savepos CurrentOffset MainProcess_ARG1
+    xmath NAME_OFF "PClusterHeaderBase_m_size+m_packedNamespaceSize-STRING_TABLE_SIZE+DESC_STRING_OFFSET"
+    goto NAME_OFF MainProcess_ARG1
+    get NAME string MainProcess_ARG1
+    goto CurrentOffset MainProcess_ARG1
+
+    putarray 0 i SUBRECORDS
+    putarray 1 i FirstSubrecord
+    putarray 2 i LastSubrecord
+    putarray 3 i NAME
+
+    if DEBUGLEVEL >= 2
+        print "%i%-0|%DUMMY0|h%|%DUMMY1|h%|%DUMMY2|h%|%DESC_STRING_OFFSET|h%|%SUBRECORDS%|%FirstSubrecord%|%LastSubrecord%|%DUMMY3|h%|%DUMMY4|h%|%DUMMY5|h%|%DUMMY6|h%|%DUMMY7|h%|%NAME%"
+    endif
+next i
+if DEBUGLEVEL >= 2
+    print "----+----------+----------+----------+----------+---+-+-+----------+----------+----------+----------+----------+----"
+endif
+
+if DEBUGLEVEL >= 2
+    print "#|DESC_STR_O|  DUMMY1  |  OFFSET  | DATASIZE |  DUMMY4  |  DUMMY5  |NAME"
+    print "-+----------+----------+----------+----------+----------+----------+----"
+    #      0|0x00000163|0x0000000e|0x00000018|0x00000004|0x00000010|0x00000000|m_id
+endif
+for i = 1 <= SUBDESCRIPTORS
+    get DESC_STRING_OFFSET long MainProcess_ARG1
+    get DUMMY1 long MainProcess_ARG1
+    get OFFSET long MainProcess_ARG1
+    get SIZE long MainProcess_ARG1
+    get DUMMY4 long MainProcess_ARG1
+    get DUMMY5 long MainProcess_ARG1
+
+    savepos CurrentOffset MainProcess_ARG1
+    xmath NAME_OFF "PClusterHeaderBase_m_size+m_packedNamespaceSize-STRING_TABLE_SIZE+DESC_STRING_OFFSET"
+    goto NAME_OFF MainProcess_ARG1
+    get NAME string MainProcess_ARG1
+    # --- safeguard #2; against models and shaders
+    if NAME == "PEffect"
+        print "[x] Not a texture!"
+        cleanexit
+    endif
+    # --- safeguard end
+    goto CurrentOffset MainProcess_ARG1
+
+    putarray 4 i OFFSET
+    putarray 5 i SIZE
+    putarray 6 i NAME
+
+    if DEBUGLEVEL >= 2
+        print "%i%|%DESC_STRING_OFFSET|h%|%DUMMY1|h%|%OFFSET|h%|%SIZE|h%|%DUMMY4|h%|%DUMMY5|h%|%NAME%"
+    endif
+next i
+if DEBUGLEVEL >= 2
+    print "--+----------+----------+----------+----------+----------+----------+----"
+endif
+
+set PInstanceListHeader_SIZE 0x24 # size of one PInstanceListHeader structure
+for i = 1 <= ROOTDESCRIPTORS
+    getarray SUBRECORDS 0 i
+    getarray FirstSubrecord 1 i
+    getarray LastSubrecord 2 i
+    getarray ROOTNAME 3 i
+
+    if DEBUGLEVEL >= 2
+        print "%i%-0|%ROOTNAME%"
+    endif
+
+    if SUBRECORDS > 0
+        for j = FirstSubrecord <= LastSubrecord
+            getarray OFFSET 4 j
+            getarray SIZE 5 j
+            getarray NAME 6 j
+
+            if i >= 2 && i <= 6
+                math BaseOffset = OFFSET
+
+                goto BaseOffset MainProcess_ARG1
+                get TMP long MainProcess_ARG1
+                goto BaseOffset MainProcess_ARG1
+                getdstring TMP2 4 MainProcess_ARG1
+
+                if NAME == "m_maxTextureBufferSize" # DX11 (PC)
+                    math DataSize = TMP
+                elif NAME == "m_vramBufferSize" # GCM (PS3)
+                    math DataSize = TMP
+                elif NAME == "m_cdramTextureBufferSize" # GXM (PSVita)
+                    math DataSize = TMP
+                elif NAME == "m_sharedVideoMemoryBufferSize" # GNM (PS4)
+                    math DataSize = TMP
+                elif NAME == "m_instanceListCount" # how many PInstanceListHeader structs are there
+                    math m_instanceListCount_ = TMP
+                elif NAME == "m_totalDataSize"
+                    math m_totalDataSize_ = TMP
+                elif NAME == "m_userFixupCount"
+                    math m_userFixupCount_ = TMP
+                elif NAME == "m_userFixupDataSize"
+                    math m_userFixupDataSize_ = TMP
+                elif NAME == "m_arrayFixupSize"
+                    math m_arrayFixupSize_ = TMP
+                elif NAME == "m_pointerFixupSize"
+                    math m_pointerFixupSize_ = TMP
+                endif
+
+                if DEBUGLEVEL >= 2
+                    print "%i%-%j%|%OFFSET|h%|%SIZE|h%|%NAME% = %TMP|h%|%TMP%|%TMP2% @ %BaseOffset|h%"
+                endif
+            elif ROOTNAME == "PInstanceListHeader"
+                for k = 1 <= m_instanceListCount_
+                    xmath BaseOffset "OFFSET+PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*(k-1)"
+
+                    goto BaseOffset MainProcess_ARG1
+                    get TMP long MainProcess_ARG1
+
+                    if NAME == "m_size"
+                        putarray 7 k TMP
+                    elif NAME == "m_objectsSize"
+                        putarray 8 k TMP
+                    elif NAME == "m_arraysSize"
+                        putarray 9 k TMP
+                    endif
+
+                    if DEBUGLEVEL >= 2
+                        print "%i%-%j%|%OFFSET|h%|%SIZE|h%|%NAME%[%k%] = %TMP|h%|%TMP% @ %BaseOffset|h%"
+                    endif
+                next k
+            elif ROOTNAME == "PString"
+                xmath BaseOffset "PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*m_instanceListCount_"
+                getarray TMP 8 1
+                math BaseOffset += TMP
+                goto BaseOffset MainProcess_ARG1
+                getarray TMP 9 1
+                log MEMORY_FILE4 BaseOffset TMP MainProcess_ARG1
+                if DEBUGLEVEL >= 2
+                    print "%i%-%j%|%OFFSET|h%|%SIZE|h%|%NAME% = %TMP% @ %BaseOffset|h%"
+                endif
+            elif ROOTNAME == "PTexture2DBase" && m_platformID != "GCM"
+                xmath BaseOffset "OFFSET+PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*m_instanceListCount_"
+                getarray TMP 7 1
+                math BaseOffset += TMP
+
+                goto BaseOffset MainProcess_ARG1
+                get TMP long MainProcess_ARG1
+
+                if NAME == "m_width"
+                    math m_width_ = TMP
+                elif NAME == "m_height"
+                    math m_height_ = TMP
+                endif
+
+                if DEBUGLEVEL >= 2
+                    print "%i%-%j%|%OFFSET|h%|%SIZE|h%|%NAME% = %TMP|h%|%TMP% @ %BaseOffset|h%"
+                endif
+            elif ROOTNAME == "PTexture2DGCM"
+                for k = 1 <= m_arrayFixupCount
+                    for l = 1 <= SUBDESCRIPTORS
+                        getarray NAME 6 l
+                        if NAME == "m_samplerState"
+                            math m_samplerState_PROPNO = l
+                        elif NAME == "m_width"
+                            math m_width_PROPNO = l
+                        elif NAME == "m_height"
+                            math m_height_PROPNO = l
+                        elif NAME == "m_buffers"
+                            math m_buffers_PROPNO = l
+                        elif NAME == "m_u"
+                            math m_u_PROPNO = l
+                        elif NAME == "m_gcmTextureBlock"
+                            math m_gcmTextureBlock_PROPNO = l
+                        elif NAME == "m_offsetInAllocatedBuffer"
+                            math m_offsetInAllocatedBuffer_PROPNO = l
+                        endif
+                    next l
+
+                    getarray TMP 4 m_samplerState_PROPNO
+                    getarray TMP2 5 m_samplerState_PROPNO
+                    xmath PTextureSamplerStateGCM_SIZE "TMP+TMP2"
+                    xmath BaseOffset "PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*m_instanceListCount_+PTextureSamplerStateGCM_SIZE*(k-1)"
+                    getarray TMP 7 1
+                    math BaseOffset += TMP
+
+                    getarray TMP 4 m_width_PROPNO
+                    xmath TempOffset "BaseOffset+TMP"
+                    goto TempOffset MainProcess_ARG1
+                    get m_width_ long MainProcess_ARG1
+                    putarray 11 k m_width_
+
+                    getarray TMP 4 m_height_PROPNO
+                    xmath TempOffset "BaseOffset+TMP"
+                    goto TempOffset MainProcess_ARG1
+                    get m_height_ long MainProcess_ARG1
+                    putarray 12 k m_height_
+
+                    getarray TMP 4 m_samplerState_PROPNO
+                    math BaseOffset += TMP
+                    getarray TMP 4 m_buffers_PROPNO
+                    math BaseOffset += TMP
+                    getarray TMP 4 m_u_PROPNO
+                    math BaseOffset += TMP
+                    
+                    getarray TMP 4 m_gcmTextureBlock_PROPNO
+                    xmath TempOffset "BaseOffset+TMP"
+                    goto TempOffset MainProcess_ARG1
+                    get format byte MainProcess_ARG1
+                    putarray 13 k format
+
+                    getarray TMP 4 m_offsetInAllocatedBuffer_PROPNO
+                    xmath TempOffset "BaseOffset+TMP"
+                    goto TempOffset MainProcess_ARG1
+                    get m_offsetInAllocatedBuffer_ long MainProcess_ARG1
+                    putarray 14 k m_offsetInAllocatedBuffer_
+                next k
+            else
+                if DEBUGLEVEL >= 2
+                    print "%i%-%j%|%OFFSET|h%|%SIZE|h%|%NAME%"
+                endif
+            endif
+        next j
+    endif
+next i
+
+xmath BaseOffset "PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*m_instanceListCount_+m_totalDataSize_"
+goto BaseOffset MainProcess_ARG1
+
+for i = 1 <= m_userFixupCount_
+    getct TMP string 0x00 MainProcess_ARG1
+    putarray 15 i TMP
+next i
+
+xmath DataOffset "BaseOffset+m_userFixupDataSize_+(m_userFixupCount_*12)+m_arrayFixupSize_+m_pointerFixupSize_"
+# --- safeguard #3; against anything else but supported stuff
+getarray TMP 15 1
+if TMP == "PTexture2D"
+    print "[i] PTexture2D"
+elif TMP == "PFsBin"
+    print "[i] PFsBin"
+    print "[i] Do nothing."
+else
+    print "[x] %TMP% is not supported!"
+    cleanexit
+endif
+# --- safeguard end
+
+if TMP == "PTexture2D" # !!!!! UNINDENTED BLOCK
+
+# --- asset name array processing start
+xmath BaseOffset "PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*m_instanceListCount_+m_totalDataSize_+m_userFixupDataSize_+(m_userFixupCount_*12)+m_pointerFixupSize_"
+goto BaseOffset MainProcess_ARG1
+
+math m_arrayFixupCount_TEMP = m_arrayFixupCount
+math m_arrayFixupCount_TEMP += 2
+for i = 1 <= m_arrayFixupCount_TEMP
+    get TMP byte MainProcess_ARG1
+    set threshold 0x80
+    for TMP = TMP >= threshold
+        get TMP2 byte MainProcess_ARG1
+        xmath TMP "TMP+(TMP2-1)*threshold"
+        math threshold *= 0x80
+    next
+    putarray 50 i TMP
+next i
+
+savepos CurrentOffset MainProcess_ARG1
+math TMP = CurrentOffset
+math TMP -= BaseOffset
+if TMP != m_arrayFixupSize_
+    print "[!] m_arrayFixupSize (%m_arrayFixupSize_%) mismatch with length of read data (%TMP%)!"
+endif
+
+getarray TMP 50 1
+getarray TMP2 50 2
+if TMP == 8 && TMP2 & 1
+    for i = 1 <= m_arrayFixupCount
+        math j = i
+        math j += 2
+        getarray TMP 50 j
+        putarray 50 i TMP
+    next i
+else
+    print "[!] List_AssetNameArrayOffset: unexpected value!"
+endif
+
+for i = 1 <= m_arrayFixupCount
+    getarray TMP 50 i
+    goto TMP MEMORY_FILE4
+    getct TMP string 0x00 MEMORY_FILE4
+    putarray 10 i TMP
+next i
+# --- asset name array processing end
+
+getarray FORMAT_TYPE 15 2
+
+if m_platformID != "GCM"
+    getarray TMP 10 1
+    print "[i] Asset import name: %TMP%"
+    print "[i] Format: %FORMAT_TYPE%; WxH: %m_width_%x%m_height_%; data start: %DataOffset|h%; data size: %DataSize% B."
+endif
+#-------------------------------------------------------------------------------
+if m_platformID == "DX11"
+    CallFunction GetFormatParameters 1
+    CallFunction IgnoreMipMaps 1
+    CallFunction CreateDDSHeader
+    append
+    log MEMORY_FILE DataOffset DataSize MainProcess_ARG1
+    append
+    getarray NAME 10 1
+    CallFunction RemoveExtensionFromAssetImportName 1
+    string NAME += ".dds"
+#    get PREALLOC asize MEMORY_FILE
+    log NAME 0 PREALLOC MEMORY_FILE
+#-------------------------------------------------------------------------------
+elif m_platformID == "GCM"
+    for i = 1 <= m_arrayFixupCount
+        math GCMDataOffset = DataOffset
+        getarray TMP 14 i
+        math GCMDataOffset += TMP
+
+        if i < m_arrayFixupCount
+            getarray TMP 14 i
+            math DUMMY = i
+            math DUMMY += 1
+            getarray TMP2 14 DUMMY
+            xmath GCMDataSize "TMP2-TMP"
+        else
+            getarray TMP 14 i
+            xmath GCMDataSize "DataSize-TMP"
+        endif
+
+        getarray NAME 10 i
+        print "[i] Texture #%i%. Asset import name: %NAME%"
+        getarray m_width_ 11 i
+        getarray m_height_ 12 i
+
+        # --- consolidated texture decoding parameters start
+        set IsSwizzled True
+        getarray format 13 i
+        if format && 0x80
+            math format_L = format
+            math format_L &= 0xF
+            if format_L == 1
+                set FORMAT_TYPE "L8"
+            elif format_L == 2
+                set FORMAT_TYPE "ARGB1555"
+            elif format_L == 3
+                set FORMAT_TYPE "ARGB4444"
+            elif format_L == 5 # possible race condition resolves to "RGBA8"
+                for j = 2 <= m_userFixupCount_
+                    getarray m_userFixupData 15 j
+                    if m_userFixupData == "RGBA8"
+                        set FORMAT_TYPE "RGBA8"
+                    elif m_userFixupData == "ARGB8"
+                        set FORMAT_TYPE "ARGB8"
+                    endif
+                next j
+            elif format_L == 6
+                set FORMAT_TYPE "DXT1"
+            elif format_L == 7
+                set FORMAT_TYPE "DXT3"
+            elif format_L == 8
+                set FORMAT_TYPE "DXT5"
+            elif format_L == 11
+                set FORMAT_TYPE "LA88"
+            else
+                print "[x] Texture #%i%. Unhandled format: %format|h% = %FORMAT_TYPE%; swizzled: %IsSwizzled%; WxH: %m_width_%x%m_height_%; data start: %GCMDataOffset|h%; data size: %GCMDataSize% B."
+                cleanexit
+            endif
+
+            CallFunction GetFormatParameters 1
+
+            if IsBlockCompressed == 1
+                set IsSwizzled False
+            endif
+            if format && 0x20
+                set IsSwizzled False
+            endif
+        else
+            print "[x] format && 0x80 hasn't pass!"
+            cleanexit
+        endif
+        # --- consolidated texture decoding parameters end
+        print "[i] Texture #%i%. Format: %format|h% = %FORMAT_TYPE%; swizzled: %IsSwizzled%; WxH: %m_width_%x%m_height_%; data start: %GCMDataOffset|h%; data size: %GCMDataSize% B."
+
+        CallFunction IgnoreMipMaps 1
+        if GCMOutputMode == "RAW"
+            CallFunction GetFormatParameters 1
+
+            if FORMAT_TYPE == "ARGB1555" || FORMAT_TYPE == "ARGB4444"
+                log MEMORY_FILE GCMDataOffset GCMDataSize MainProcess_ARG1
+                set CurrentOffset 0
+                goto CurrentOffset MEMORY_FILE
+                for CurrentOffset = CurrentOffset < GCMDataSize
+                    getvarchr TMP MEMORY_FILE CurrentOffset short
+                    math TMP s= BytesPerBlock # 2
+                    putvarchr MEMORY_FILE CurrentOffset TMP short
+                next CurrentOffset += BytesPerBlock # 2
+            endif
+
+            getarray NAME 10 1
+            CallFunction RemoveExtensionFromAssetImportName 1
+            string TMP P= "-PS3_%DXGI%_(%TextDXGI%)_0_%m_width_%_%m_height_%"
+            string NAME += TMP
+            if FORMAT_TYPE == "ARGB1555" || FORMAT_TYPE == "ARGB4444"
+                log NAME 0 GCMDataSize MEMORY_FILE
+            else
+                log NAME GCMDataOffset GCMDataSize MainProcess_ARG1
+            endif
+        elif GCMOutputMode == "DDS"
+            CallFunction CreateDDSHeader
+
+            append
+            log MEMORY_FILE GCMDataOffset GCMDataSize MainProcess_ARG1
+            append
+
+            # Morton order unswizzling start
+            if IsSwizzled == True
+                log MEMORY_FILE2 GCMDataOffset GCMDataSize MainProcess_ARG1
+
+                xmath WidthInBlocks m_width_
+                xmath HeightInBlocks m_height_
+
+                xmath RowSize "BytesPerBlock*WidthInBlocks"
+                xmath BlocksSwizzled "WidthInBlocks*HeightInBlocks"
+
+                if WidthInBlocks < HeightInBlocks
+                    math min = WidthInBlocks
+                else
+                    math min = HeightInBlocks
+                endif
+
+                # finding log(min, 2)
+                math min_log2 = 31
+                set min2 long min
+                set check 0
+                for check = check != 0x80000000
+                    math min2 <<= 1
+                    math min_log2 -= 1
+                    math check = min2
+                    math check &= 0x80000000
+                next
+                math min_mask = min
+                math min_mask -= 1
+
+                for Z = 0 < BlocksSwizzled
+                    math X = Z
+                    math X &= 0x55555555
+                    xmath X "(X ^ (X >> 1)) & 0x33333333"
+                    xmath X "(X ^ (X >> 2)) & 0x0f0f0f0f"
+                    xmath X "(X ^ (X >> 4)) & 0x00ff00ff"
+                    xmath X "(X ^ (X >> 8)) & 0x0000ffff"
+
+                    math Y = Z
+                    math Y >>= 1
+                    math Y &= 0x55555555
+                    xmath Y "(Y ^ (Y >> 1)) & 0x33333333"
+                    xmath Y "(Y ^ (Y >> 2)) & 0x0f0f0f0f"
+                    xmath Y "(Y ^ (Y >> 4)) & 0x00ff00ff"
+                    xmath Y "(Y ^ (Y >> 8)) & 0x0000ffff"
+
+                    # adapted from https://github.com/xdanieldzd/GXTConvert/blob/master/GXTConvert/Conversion/PostProcessing.cs
+                    if HeightInBlocks < WidthInBlocks
+                        math TMP = Z
+                        math TMP >>= min_log2
+                        math TMP >>= min_log2
+                        math TMP <<= min_log2
+                        math TMP <<= min_log2
+                        math TMP2 = X
+                        math TMP2 &= min_mask
+                        math TMP2 <<= min_log2
+                        math TMP |= TMP2
+                        math TMP2 = Y
+                        math TMP2 &= min_mask
+                        math TMP |= TMP2
+                        math X = TMP
+                        math X /= HeightInBlocks
+                        math Y = TMP
+                        math Y %= HeightInBlocks
+                    elif WidthInBlocks < HeightInBlocks
+                        math TMP = Z
+                        math TMP >>= min_log2
+                        math TMP >>= min_log2
+                        math TMP <<= min_log2
+                        math TMP <<= min_log2
+                        math TMP2 = Y
+                        math TMP2 &= min_mask
+                        math TMP2 <<= min_log2
+                        math TMP |= TMP2
+                        math TMP2 = X
+                        math TMP2 &= min_mask
+                        math TMP |= TMP2
+                        math X = TMP
+                        math X %= WidthInBlocks
+                        math Y = TMP
+                        math Y /= WidthInBlocks
+                    endif
+                    # adaptation end
+
+                    math PixelOffset_In = Z
+                    math PixelOffset_In *= BytesPerBlock
+#                    math PixelOffset_In += 0
+
+                    math PixelOffset_Out = DDSHeaderSize
+                    math TMP = X
+                    math TMP *= BytesPerBlock
+                    math PixelOffset_Out += TMP
+                    math TMP = Y
+                    math TMP *= RowSize
+                    math PixelOffset_Out += TMP
+
+                    goto PixelOffset_In MEMORY_FILE2
+                    goto PixelOffset_Out MEMORY_FILE
+                    for o = 0 < BytesPerBlock
+                        get TMP byte MEMORY_FILE2
+                        put TMP byte MEMORY_FILE
+                    next o
+                next Z
+            endif
+            # Morton order unswizzling end
+
+            get PREALLOC asize MEMORY_FILE
+            if FORMAT_TYPE == "ARGB1555" || FORMAT_TYPE == "ARGB4444"
+                set CurrentOffset DDSHeaderSize
+                goto CurrentOffset MEMORY_FILE
+                for CurrentOffset = CurrentOffset < PREALLOC
+                    getvarchr TMP MEMORY_FILE CurrentOffset short
+                    math TMP s= BytesPerBlock # 2
+                    putvarchr MEMORY_FILE CurrentOffset TMP short
+                next CurrentOffset += BytesPerBlock # 2
+            endif
+
+            getarray NAME 10 i
+            CallFunction RemoveExtensionFromAssetImportName 1
+            string NAME += ".dds"
+            log NAME 0 PREALLOC MEMORY_FILE
+        else
+            print "[x] Please specify correct GCMOutputMode (currently %GCMOutputMode%)!"
+            cleanexit
+        endif
+    next i
+#-------------------------------------------------------------------------------
+elif m_platformID == "GXM"
+    getarray NAME 10 1
+    CallFunction RemoveExtensionFromAssetImportName 1
+    string NAME += ".gxt"
+    log NAME DataOffset DataSize 0
+#-------------------------------------------------------------------------------
+elif m_platformID == "GNM"
+    if GNMOutputMode = "RAW"
+        CallFunction GetFormatParameters 1
+        getarray NAME 10 1
+        CallFunction RemoveExtensionFromAssetImportName 1
+        string TMP P= "-PS4_%DXGI%_(%TextDXGI%)_0_%m_width_%_%m_height_%"
+        string NAME += TMP
+        log NAME DataOffset DataSize MainProcess_ARG1
+    elif GNMOutputMode = "GNF"
+        for i = 1 <= SUBDESCRIPTORS
+            getarray NAME 6 i
+            if NAME == "m_texState"
+                math m_texState_PROPNO = i
+            elif NAME == "m_buffers"
+                math m_buffers_PROPNO = i
+            elif NAME == "m_u"
+                math m_u_PROPNO = i
+            elif NAME == "m_gnmTexture"
+                math m_gnmTexture_PROPNO = i
+            endif
+        next i
+
+        xmath BaseOffset "PClusterHeaderBase_m_size+m_packedNamespaceSize+PInstanceListHeader_SIZE*m_instanceListCount_"
+        getarray TMP 7 1
+        math BaseOffset += TMP
+        getarray TMP 4 m_texState_PROPNO
+        math BaseOffset += TMP
+        getarray TMP 4 m_buffers_PROPNO
+        math BaseOffset += TMP
+        getarray TMP 4 m_u_PROPNO
+        math BaseOffset += TMP
+        getarray TMP 4 m_gnmTexture_PROPNO
+        math BaseOffset += TMP
+
+        set MEMORY_FILE binary "\x47\x4E\x46\x20\x28\x00\x00\x00\x02\x01\x00\x00\x00\x00\x00\x00"
+        getarray TMP 5 m_gnmTexture_PROPNO
+
+        append
+        log MEMORY_FILE BaseOffset TMP MainProcess_ARG1
+        append
+
+        math GNFSize = DataSize
+        math GNFSize += GNFDataOffset
+        math TMP = GNFDataOffset
+        math TMP -= 1
+        putvarchr MEMORY_FILE TMP 0
+        putvarchr MEMORY_FILE 0xC GNFSize long
+        putvarchr MEMORY_FILE 0x2C DataSize long
+
+        # adaptation of https://github.com/xdanieldzd/Scarlet/blob/master/Scarlet.IO.ImageFormats/GNF.cs
+        getvarchr TMP MEMORY_FILE 0x14 long
+        math SH1 = 25
+        math SH2 = 20
+        xmath dataFormat "TMP < (31-SH1) > (31-SH1+SH2)"
+        math SH1 = 29
+        math SH2 = 26
+        xmath numFormat "TMP < (31-SH1) > (31-SH1+SH2)"
+        getvarchr TMP MEMORY_FILE 0x18 long
+        math SH1 = 13
+        math SH2 = 0
+        xmath width "TMP < (31-SH1) > (31-SH1+SH2) + 1"
+        math SH1 = 27
+        math SH2 = 14
+        xmath height "TMP < (31-SH1) > (31-SH1+SH2) + 1"
+        getvarchr TMP MEMORY_FILE 0x20 long
+        math SH1 = 12
+        math SH2 = 0
+        xmath depth "TMP < (31-SH1) > (31-SH1+SH2)"
+        math SH1 = 26
+        math SH2 = 13
+        xmath pitch "TMP < (31-SH1) > (31-SH1+SH2) + 1"
+        getvarchr TMP MEMORY_FILE 0x1C long
+        math SH1 = 2
+        math SH2 = 0
+        xmath destX "TMP < (31-SH1) > (31-SH1+SH2)"
+        math SH1 = 5
+        math SH2 = 3
+        xmath destY "TMP < (31-SH1) > (31-SH1+SH2)"
+        math SH1 = 8
+        math SH2 = 6
+        xmath destZ "TMP < (31-SH1) > (31-SH1+SH2)"
+        math SH1 = 11
+        math SH2 = 9
+        xmath destW "TMP < (31-SH1) > (31-SH1+SH2)"
+        if DEBUGLEVEL >= 3
+            print "[i] GNF parameters:"
+            print "[i] dataFormat: %dataFormat|h%"
+            print "[i] numFormat: %numFormat|h%"
+            print "[i] width: %width%"
+            print "[i] height: %height%"
+            print "[i] depth: %depth%"
+            print "[i] pitch: %pitch%"
+            print "[i] destX: %destX%"
+            print "[i] destY: %destY%"
+            print "[i] destZ: %destZ%"
+            print "[i] destW: %destW%"
+            print "[i] End of GNF parameters."
+        endif
+
+        append
+        log MEMORY_FILE DataOffset DataSize MainProcess_ARG1
+        append
+        getarray NAME 10 1
+        CallFunction RemoveExtensionFromAssetImportName 1
+        string NAME += ".gnf"
+        log NAME 0 GNFSize MEMORY_FILE
+    elif GNMOutputMode = "DDS"
+        # Peano curve(?) unswizzling start
+        CallFunction GetFormatParameters 1
+
+        log MEMORY_FILE2 DataOffset DataSize MainProcess_ARG1
+        putvarchr MEMORY_FILE PREALLOC 0
+
+        # adaptation of https://github.com/xdanieldzd/Scarlet/blob/8c56632eb2968e64b6d6fad14af3758e606a127d/Scarlet/Drawing/ImageBinary.cs#L1256
+        set MEMORY_FILE4 binary "\x00\x01\x08\x09\x02\x03\x0A\x0B\x10\x11\x18\x19\x12\x13\x1A\x1B\x04\x05\x0C\x0D\x06\x07\x0E\x0F\x14\x15\x1C\x1D\x16\x17\x1E\x1F\x20\x21\x28\x29\x22\x23\x2A\x2B\x30\x31\x38\x39\x32\x33\x3A\x3B\x24\x25\x2C\x2D\x26\x27\x2E\x2F\x34\x35\x3C\x3D\x36\x37\x3E\x3F"
+
+        math tileWidth = 8
+        math tileHeight = 8
+        xmath tileSize "tileWidth * tileHeight"
+
+        math WidthInBlocks = m_width_
+        math HeightInBlocks = m_height_
+        if IsBlockCompressed == 1
+            math WidthInBlocks u>>= 2
+            math HeightInBlocks u>>= 2
+        endif
+/*
+        # requires reading pitch from GNF parameters
+        if WidthInBlocks % tileWidth
+            print "[!] Physical width doesn't match with virtual!"
+            math m_width_ = pitch
+            print "[!] Physical width: %m_width_%"
+        endif
+*/
+        if WidthInBlocks % tileWidth || HeightInBlocks % tileHeight
+            print "[!] Physical dimensions don't match with virtual!"
+            math WidthVirtual = m_width_
+            math HeightVirtual = m_height_
+            xmath WidthPhysical "((WidthInBlocks + (tileWidth-1)) / tileWidth) * tileWidth"
+            xmath HeightPhysical "((HeightInBlocks + (tileHeight-1)) / tileHeight) * tileHeight"
+            if IsBlockCompressed == 1
+                math WidthPhysical u<<= 2
+                math HeightPhysical u<<= 2
+            endif
+            print "[!] Physical dimensions: %WidthPhysical%x%HeightPhysical%"
+            math m_width_ = WidthPhysical
+            math m_height_ = HeightPhysical
+        else
+            math WidthVirtual = m_width_
+            math HeightVirtual = m_height_
+            math WidthPhysical = m_width_
+            math HeightPhysical = m_height_
+        endif
+
+        CallFunction IgnoreMipMaps 1
+        CallFunction GetFormatParameters 1
+        CallFunction CreateDDSHeader
+
+        math WidthInBlocks = m_width_
+        math HeightInBlocks = m_height_
+        if IsBlockCompressed == 1
+            math WidthInBlocks u>>= 2
+            math HeightInBlocks u>>= 2
+        endif
+
+        xmath RowSize "BytesPerBlock*WidthInBlocks"
+
+        for InY = 0 < HeightInBlocks
+            for InX = 0 < WidthInBlocks
+                math Z = InY
+                math Z *= WidthInBlocks
+                math Z += InX
+
+                xmath globalX "(Z / tileSize) * tileWidth"
+                xmath globalY "(globalX / WidthInBlocks) * tileHeight"
+                math globalX %= WidthInBlocks
+
+                xmath inTileX "Z % tileWidth"
+                xmath inTileY "(Z / tileWidth) % tileHeight"
+                xmath inTilePixel "(inTileY * tileHeight) + inTileX"
+
+                getvarchr inTilePixel MEMORY_FILE4 inTilePixel byte
+                xmath inTileX "inTilePixel % tileWidth"
+                xmath inTileY "inTilePixel / tileHeight"
+
+                xmath OutX "globalX + inTileX"
+                xmath OutY "globalY + inTileY"
+
+                math PixelOffset_In = 0
+                math TMP = InX
+                math TMP *= BytesPerBlock
+                math PixelOffset_In += TMP
+                math TMP = InY
+                math TMP *= RowSize
+                math PixelOffset_In += TMP
+
+                math PixelOffset_Out = DDSHeaderSize
+                math TMP = OutX
+                math TMP *= BytesPerBlock
+                math PixelOffset_Out += TMP
+                math TMP = OutY
+                math TMP *= RowSize
+                math PixelOffset_Out += TMP
+
+                for o = 0 < BytesPerBlock
+                    getvarchr TMP MEMORY_FILE2 PixelOffset_In byte
+                    math PixelOffset_In += 1
+                    putvarchr MEMORY_FILE PixelOffset_Out TMP byte
+                    math PixelOffset_Out += 1
+                next o
+            next InX
+        next InY
+        # Peano curve(?) unswizzling end
+
+        if WidthVirtual != WidthPhysical || HeightVirtual != HeightPhysical
+            print "[!] Cropping %WidthPhysical%x%HeightPhysical% -> %WidthVirtual%x%HeightVirtual%"
+            log MEMORY_FILE2 DDSHeaderSize DataSize MEMORY_FILE
+            math m_width_ = WidthVirtual
+            math m_height_ = HeightVirtual
+            CallFunction GetFormatParameters 1
+            CallFunction IgnoreMipMaps 1
+            CallFunction GetFormatParameters 1
+            CallFunction CreateDDSHeader
+
+            math WidthVirtualInBlocks = WidthVirtual
+            math WidthPhysicalInBlocks = WidthPhysical
+            math HeightVirtualInBlocks = HeightVirtual
+            math HeightPhysicalInBlocks = HeightPhysical
+            if IsBlockCompressed == 1
+                math WidthVirtualInBlocks u>>= 2
+                math WidthPhysicalInBlocks u>>= 2
+                math HeightVirtualInBlocks u>>= 2
+                math HeightPhysicalInBlocks u>>= 2
+            endif
+
+            goto DDSHeaderSize MEMORY_FILE
+            xmath ReadInOneRow "BytesPerBlock*WidthVirtualInBlocks"
+            xmath SkipInOneRow "RowSize - ReadInOneRow"
+            for Y = 0 < HeightVirtualInBlocks
+                xmath Offset_IN "Y * RowSize"
+                goto Offset_IN MEMORY_FILE2
+                append
+                log MEMORY_FILE Offset_IN ReadInOneRow MEMORY_FILE2
+                append
+                goto SkipInOneRow MEMORY_FILE2 SEEK_CUR
+            next Y
+        endif
+
+        getarray NAME 10 1
+        CallFunction RemoveExtensionFromAssetImportName 1
+        string NAME += ".dds"
+        log NAME 0 PREALLOC MEMORY_FILE
+    else
+        print "[x] Please specify correct GNMOutputMode (currently %GNMOutputMode%)!"
+        cleanexit
+    endif
+endif
+endif # !!!!!
+EndFunction # !!!!!
+#-------------------------------------------------------------------------------
+StartFunction CreateDDSHeader
+CallFunction GetFormatParameters 1
+
+    set DXT 0
+    if FORMAT_TYPE == "RGBA8"
+        set dwFlags 0x41 # set DDPF_RGB (0x40), DDPF_ALPHAPIXELS (0x1)
+        set dwRGBBitCount 32
+        set dwRBitMask 0x000000ff
+        set dwGBitMask 0x0000ff00
+        set dwBBitMask 0x00ff0000
+        set dwABitMask 0xff000000
+    elif FORMAT_TYPE == "ARGB8"
+        set dwFlags 0x41 # set DDPF_RGB (0x40), DDPF_ALPHAPIXELS (0x1)
+        set dwRGBBitCount 32
+        if m_platformID == "DX11"
+            set dwRBitMask 0x0000ff00
+            set dwGBitMask 0x00ff0000
+            set dwBBitMask 0xff000000
+            set dwABitMask 0x000000ff
+        else
+            set dwRBitMask 0x00ff0000
+            set dwGBitMask 0x0000ff00
+            set dwBBitMask 0x000000ff
+            set dwABitMask 0xff000000
+        endif
+    elif FORMAT_TYPE == "ARGB8_SRGB"
+        set DXGI 90 # 90 = "b8g8r8a8_unorm_srgb"
+    elif FORMAT_TYPE == "RGBA16F"
+        set DXGI 10 # 10 = "r16g16b16a16_float"
+    elif FORMAT_TYPE == "ARGB1555"
+        set dwFlags 0x41 # set DDPF_RGB (0x40), DDPF_ALPHAPIXELS (0x1)
+        set dwRGBBitCount 16
+        set dwRBitMask 0x7c00
+        set dwGBitMask 0x03e0
+        set dwBBitMask 0x001f
+        set dwABitMask 0x8000
+    elif FORMAT_TYPE == "ARGB4444"
+        set dwFlags 0x41 # set DDPF_RGB (0x40), DDPF_ALPHAPIXELS (0x1)
+        set dwRGBBitCount 16
+        set dwRBitMask 0x0f00
+        set dwGBitMask 0x00f0
+        set dwBBitMask 0x000f
+        set dwABitMask 0xf000
+    elif FORMAT_TYPE == "LA88"
+        set dwFlags 0x20001 # set DDPF_LUMINANCE (0x20000), DDPF_ALPHAPIXELS (0x1)
+        set dwRGBBitCount 16
+        set dwRBitMask 0x00ff
+        set dwGBitMask 0
+        set dwBBitMask 0
+        set dwABitMask 0xff00
+    elif FORMAT_TYPE == "L8"
+        set dwFlags 0x20000 # set DDPF_LUMINANCE (0x20000)
+        set dwRGBBitCount 8
+        set dwRBitMask 0xff
+        set dwGBitMask 0
+        set dwBBitMask 0
+        set dwABitMask 0
+    elif FORMAT_TYPE == "A8"
+        set dwFlags 1 # set DDPF_ALPHAPIXELS (0x1)
+        set dwRGBBitCount 8
+        set dwRBitMask 0
+        set dwGBitMask 0
+        set dwBBitMask 0
+        set dwABitMask 0xff
+    elif FORMAT_TYPE == "DXT1"
+        set DXT 0x31545844
+    elif FORMAT_TYPE == "DXT3"
+        set DXT 0x33545844
+    elif FORMAT_TYPE == "DXT5"
+        set DXT 0x35545844
+    elif FORMAT_TYPE == "BC5"
+        set DXT 0x32495441 # "ATI2"
+    elif FORMAT_TYPE == "BC7"
+        set DXGI 98 # 98 = "bc7_unorm"
+    endif
+
+    if DX10DDS == True
+        if DXGI == 0
+            print "[!] %FORMAT_TYPE% can't be output as DX10 DDS!"
+        else
+            set DXT 0x30315844 # "DX10"
+            print "[i] Forcing DX10 DDS output."
+        endif
+    endif
+
+    putvarchr MEMORY_FILE PREALLOC 0
+    log MEMORY_FILE 0 0
+
+    set MEMORY_FILE binary "\x44\x44\x53\x20\x7C\x00\x00\x00\x07\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+
+    endian little
+    # DDS Header (DDS_HEADER)
+    putvarchr MEMORY_FILE 0x0C m_height_ long # dwHeight
+    putvarchr MEMORY_FILE 0x10 m_width_ long # dwWidth
+    putvarchr MEMORY_FILE 0x14 DataSize long # dwPitchOrLinearSize
+    # Pixel format struct (ddspf)
+    if DXT == 0
+        putvarchr MEMORY_FILE 0x50 dwFlags long # dwFlags
+        putvarchr MEMORY_FILE 0x54 DXT long # dwFourCC
+        putvarchr MEMORY_FILE 0x58 dwRGBBitCount long # dwRGBBitCount
+        putvarchr MEMORY_FILE 0x5C dwRBitMask long # dwRBitMask
+        putvarchr MEMORY_FILE 0x60 dwGBitMask long # dwGBitMask
+        putvarchr MEMORY_FILE 0x64 dwBBitMask long # dwBBitMask
+        putvarchr MEMORY_FILE 0x68 dwABitMask long # dwABitMask
+    else
+        putvarchr MEMORY_FILE 0x50 4 long # dwFlags, set DDPF_FOURCC (0x4)
+        putvarchr MEMORY_FILE 0x54 DXT long # dwFourCC
+    endif
+    # DDS Header cont. (DDS_HEADER2) - empty
+    # DDS_HEADER_DXT10
+    if DXT == 0x30315844
+        putvarchr MEMORY_FILE 0x80 DXGI long # dxgiFormat
+        putvarchr MEMORY_FILE 0x84 3 long MEMORY_FILE # resourceDimension, set DDS_DIMENSION_TEXTURE2D (3)
+        putvarchr MEMORY_FILE 0x88 0 long MEMORY_FILE # miscFlag
+        putvarchr MEMORY_FILE 0x8C 1 long MEMORY_FILE # arraySize
+        putvarchr MEMORY_FILE 0x90 0 long MEMORY_FILE # miscFlags2
+    endif
+EndFunction
+#-------------------------------------------------------------------------------
+StartFunction IgnoreMipMaps
+CallFunction GetFormatParameters 1
+
+    if m_platformID == "GCM"
+        math DataSizeWithoutMipMaps_prev = GCMDataSize
+    else
+        math DataSizeWithoutMipMaps_prev = DataSize
+    endif
+    if IsBlockCompressed == 0
+       xmath DataSizeWithoutMipMaps "m_width_ * m_height_ * BytesPerBlock"
+    else
+       xmath DataSizeWithoutMipMaps "(m_width_ >> 2) * (m_height_ >> 2) * BytesPerBlock"
+    endif
+    if DataSizeWithoutMipMaps != DataSizeWithoutMipMaps_prev
+        print "[i] Ignoring mipmaps. New data size: %DataSizeWithoutMipMaps% B."
+        if m_platformID == "GCM"
+            math GCMDataSize = DataSizeWithoutMipMaps
+        else
+            math DataSize = DataSizeWithoutMipMaps
+        endif
+    endif
+EndFunction
+#-------------------------------------------------------------------------------
+StartFunction GetFormatParameters
+    set DXGI 0
+    set TextDXGI "unknown"
+    set IsBlockCompressed 0
+    set DDSHeaderSize 128
+
+    if FORMAT_TYPE == "RGBA8"
+        set DXGI 28
+        set TextDXGI "r8g8b8a8_unorm"
+        set BytesPerBlock 4
+    elif FORMAT_TYPE == "ARGB8"
+        set DXGI 87
+        set TextDXGI "b8g8r8a8_unorm"
+        set BytesPerBlock 4
+    elif FORMAT_TYPE == "ARGB8_SRGB"
+        set DX10DDS True
+        set DXGI 90
+        set TextDXGI "b8g8r8a8_unorm_srgb"
+        set BytesPerBlock 4
+    elif FORMAT_TYPE == "RGBA16F"
+        set DX10DDS True
+        set DXGI 10
+        set TextDXGI "r16g16b16a16_float"
+        set BytesPerBlock 8
+    elif FORMAT_TYPE == "ARGB1555"
+        set DXGI 86
+        set TextDXGI "b5g5r5a1_unorm"
+        set BytesPerBlock 2
+    elif FORMAT_TYPE == "ARGB4444"
+        set DXGI 115
+        set TextDXGI "b4g4r4a4_unorm"
+        set BytesPerBlock 2
+    elif FORMAT_TYPE == "LA88"
+        set DXGI 0
+        set TextDXGI "unknown"
+        set BytesPerBlock 2
+    elif FORMAT_TYPE == "L8"
+        set DXGI 61
+        set TextDXGI "r8_unorm"
+        set BytesPerBlock 1
+    elif FORMAT_TYPE == "A8"
+        set DXGI 65
+        set TextDXGI "a8_unorm"
+        set BytesPerBlock 1
+    elif FORMAT_TYPE == "DXT1"
+        set IsBlockCompressed 1
+        set DXGI 71
+        set TextDXGI "bc1_unorm"
+        set BytesPerBlock 8
+    elif FORMAT_TYPE == "DXT3"
+        set IsBlockCompressed 1
+        set DXGI 74
+        set TextDXGI "bc2_unorm"
+        set BytesPerBlock 16
+    elif FORMAT_TYPE == "DXT5"
+        set IsBlockCompressed 1
+        set DXGI 77
+        set TextDXGI "bc3_unorm"
+        set BytesPerBlock 16
+    elif FORMAT_TYPE == "BC5"
+        set IsBlockCompressed 1
+        set DXGI 83
+        set TextDXGI "bc5_unorm"
+        set BytesPerBlock 16
+    elif FORMAT_TYPE == "BC7"
+        set IsBlockCompressed 1
+        set DX10DDS True
+        set DXGI 98
+        set TextDXGI "bc7_unorm"
+        set BytesPerBlock 16
+    else
+        print "[x] Unsupported format: %FORMAT_TYPE%!"
+        cleanexit
+    endif
+
+    if DX10DDS == True && DXGI != 0
+        set DDSHeaderSize 148
+    endif
+
+    if m_platformID == "GCM"
+        xmath PREALLOC "GCMDataSize + DDSHeaderSize"
+    else
+        xmath PREALLOC "DataSize + DDSHeaderSize"
+    endif
+EndFunction
+#-------------------------------------------------------------------------------
+StartFunction RemoveExtensionFromAssetImportName    
+    string NAME % ".dds"
+    string NAME % ".png"
+    string NAME % ".tga"
+    string NAME % ".bmp"
+EndFunction
+#-------------------------------------------------------------------------------

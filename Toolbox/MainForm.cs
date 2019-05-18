@@ -15,6 +15,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using OpenTK.Graphics.OpenGL;
+using Switch_Toolbox.Library.NodeWrappers;
 
 namespace Toolbox
 {
@@ -385,9 +386,7 @@ namespace Toolbox
                         }
                     }
                     Cursor.Current = Cursors.WaitCursor;
-
                     STFileSaver.SaveFileFormat(format, FileName, UseCompressDialog);
-
                     Cursor.Current = Cursors.Default;
                 }
             }
@@ -420,6 +419,13 @@ namespace Toolbox
                         FileName = sfd.FileName;
                     }
                     Cursor.Current = Cursors.WaitCursor;
+
+
+                    if (format is STGenericWrapper)
+                    {
+                        ((STGenericWrapper)format).Export(FileName);
+                        return;
+                    }
 
                     STFileSaver.SaveFileFormat(((IFileFormat)node), FileName, UseCompressDialog);
 
