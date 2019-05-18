@@ -9,7 +9,7 @@ namespace Switch_Toolbox.Library.Animations
         {
             SEAnim seAnim = new SEAnim();
             seAnim.Looping = anim.CanLoop;
-
+            seAnim.AnimType = AnimationType.Absolute;
             //Reset active animation to 0
             anim.SetFrame(0);
             for (int frame = 0; frame < anim.FrameCount; frame++)

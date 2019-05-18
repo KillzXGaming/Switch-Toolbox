@@ -293,6 +293,7 @@ namespace FirstPlugin
         //    Formats.Add(typeof(SDF));
             Formats.Add(typeof(TMPK));
             Formats.Add(typeof(TEX3DS));
+            Formats.Add(typeof(NXARC));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));

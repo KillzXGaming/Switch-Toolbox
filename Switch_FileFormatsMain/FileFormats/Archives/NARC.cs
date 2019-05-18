@@ -132,9 +132,9 @@ namespace FirstPlugin
                 {
                     uint decompSize = reader.ReadUInt32();
                     uint compSize = (uint)reader.BaseStream.Length;
-                    compSize -= 16;
+                    compSize -= 10;
 
-                    byte[] filedata = reader.getSection(16, (int)compSize);
+                    byte[] filedata = reader.getSection(10, (int)compSize);
                     reader.Close();
                     reader.Dispose();
 

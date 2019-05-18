@@ -70,13 +70,13 @@ namespace Switch_Toolbox.Library.IO
         {
             public static byte[] Decompress(byte[] b)
             {
-                var output = new MemoryStream();
-                using (var compressedStream = new MemoryStream(b)) {
-                    using (var zipStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
-                    {
-                        zipStream.CopyTo(output);
-                        return output.ToArray();
-                    }
+                using (var br = new FileReader(new MemoryStream(b), true))
+                {
+                    var ms = new System.IO.MemoryStream();
+                    br.BaseStream.Position = 2;
+                    using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 6)), CompressionMode.Decompress))
+                        ds.CopyTo(ms);
+                    return ms.ToArray();
                 }
             }
 
