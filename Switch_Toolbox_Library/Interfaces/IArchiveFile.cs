@@ -66,6 +66,28 @@ namespace Switch_Toolbox.Library
 
     public class ArchiveFolderNodeWrapper : TreeNodeCustom
     {
+        public bool CanReplace
+        {
+            set
+            {
+                if (value)
+                    ContextMenuStrip.Items[1].Enabled = true;
+                else
+                    ContextMenuStrip.Items[1].Enabled = false;
+            }
+        }
+        public bool CanRename = false;
+        public bool CanDelete
+        {
+            set
+            {
+                if (value)
+                    ContextMenuStrip.Items[2].Enabled = true;
+                else
+                    ContextMenuStrip.Items[2].Enabled = false;
+            }
+        }
+
         public ArchiveFolderNodeWrapper(string text)
         {
             Text = text;
@@ -73,6 +95,7 @@ namespace Switch_Toolbox.Library
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStripItem("Extract Folder", ExtractAction));
             ContextMenuStrip.Items.Add(new STToolStripItem("Replace Folder", ReplaceAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Delete Folder", DeleteAction));
         }
 
         private void ExtractAction(object sender, EventArgs args)
@@ -126,6 +149,12 @@ namespace Switch_Toolbox.Library
 
         private void ReplaceAction(object sender, EventArgs args)
         {
+
+        }
+
+        private void DeleteAction(object sender, EventArgs args)
+        {
+
         }
 
         private void CreateDirectoryIfExists(string Dir)
@@ -146,6 +175,28 @@ namespace Switch_Toolbox.Library
 
     public class ArchiveNodeWrapper : TreeNodeCustom
     {
+        public bool CanReplace
+        {
+            set
+            {
+                if (value)
+                    ContextMenuStrip.Items[1].Enabled = true;
+                else
+                    ContextMenuStrip.Items[1].Enabled = false;
+            }
+        }
+        public bool CanRename = false;
+        public bool CanDelete
+        {
+            set
+            {
+                if (value)
+                    ContextMenuStrip.Items[2].Enabled = true;
+                else
+                    ContextMenuStrip.Items[2].Enabled = false;
+            }
+        }
+
         public ArchiveNodeWrapper(string text)
         {
             Text = text;
@@ -153,6 +204,7 @@ namespace Switch_Toolbox.Library
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStripItem("Extract", ExtractAction));
             ContextMenuStrip.Items.Add(new STToolStripItem("Replace", ReplaceAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Delete", DeleteAction));
         }
 
         public virtual ArchiveFileInfo ArchiveFileInfo { get; set; }
@@ -160,6 +212,10 @@ namespace Switch_Toolbox.Library
         private void ExtractAction(object sender, EventArgs args)
         {
             ArchiveFileInfo.Export();
+        }
+
+        private void DeleteAction(object sender, EventArgs args)
+        {
         }
 
         private void ReplaceAction(object sender, EventArgs args)

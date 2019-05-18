@@ -94,7 +94,7 @@ namespace Switch_Toolbox.Library.Forms
                 stPanel1.Controls.Add(ObjectTree);
 
                 TreeNode FileRoot = new TreeNode(FileFormat.FileName);
-                FillTreeNodes(FileRoot, ((IArchiveFile)FileFormat).Files);
+                FillTreeNodes(FileRoot, (IArchiveFile)FileFormat);
                 AddNode(FileRoot);
             }
             else
@@ -106,11 +106,11 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        void FillTreeNodes(TreeNode root, IEnumerable<ArchiveFileInfo> files)
+        void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
         {
             var rootText = root.Text;
             var rootTextLength = rootText.Length;
-            var nodeStrings = files;
+            var nodeStrings = archiveFile.Files;
             foreach (var node in nodeStrings)
             {
                 string nodeString = node.FileName;
@@ -136,9 +136,17 @@ namespace Switch_Toolbox.Library.Forms
                         // Node was not found, add it
 
                         var folder = new ArchiveFolderNodeWrapper(parentName);
+                        folder.CanReplace = archiveFile.CanReplaceFiles;
+                        folder.CanDelete = archiveFile.CanDeleteFiles;
+                        folder.CanRename = archiveFile.CanRenameFiles;
+
                         if (rootIndex == roots.Length - 1)
                         {
                             ArchiveNodeWrapper wrapperFile = new ArchiveNodeWrapper(parentName);
+                            wrapperFile.CanReplace = archiveFile.CanReplaceFiles;
+                            wrapperFile.CanDelete = archiveFile.CanDeleteFiles;
+                            wrapperFile.CanRename = archiveFile.CanRenameFiles;
+
                             wrapperFile.ArchiveFileInfo = node;
                             wrapperFile.Name = nodeName;
                             parentNode.Nodes.Add(wrapperFile);
