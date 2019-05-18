@@ -40,7 +40,6 @@ namespace FirstPlugin
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
         {
             InitializeComponent();
-            CenterToScreen();
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
@@ -124,33 +123,25 @@ namespace FirstPlugin
         //get a reference to the value to change
         class EditableNode
         {
+            public Type type { get { return Node[Index].GetType(); } }
             dynamic Node;
+            dynamic Index;
 
-            public Type type
-            {
-                get
-                {
-                    return Node.GetType();
-                }
-            }
-
-            public dynamic Get()
-            {
-                return Node;
-            }
-            public void Set(dynamic value)
-            {
-                Node = value;
-            }
+            public dynamic Get() { return Node[Index]; }
+            public void Set(dynamic value) { Node[Index] = value; }
 
             public string GetTreeViewString()
             {
-                return Node.ToString();
+                if (Index is int)
+                    return Node[Index].ToString();
+                else
+                    return Index + " : " + Node[Index].ToString();
             }
 
-            public EditableNode(dynamic _node)
+            public EditableNode(dynamic _node, dynamic _index)
             {
                 Node = _node;
+                Index = _index;
             }
         }
 
@@ -180,7 +171,7 @@ namespace FirstPlugin
                 ListViewItem item = new ListViewItem(NameText);
                 item.SubItems.Add(TypeString);
                 item.SubItems.Add(ValueText);
-                if (node[k] != null) item.Tag = new EditableNode(node[k]);
+                if (node[k] != null) item.Tag = new EditableNode(node, k);
 
                 listViewCustom1.Items.Add(item);
             }
@@ -189,10 +180,9 @@ namespace FirstPlugin
 
         void parseArrayNode(IList<dynamic> list)
         {
+            int index = 0;
             foreach (dynamic k in list)
             {
-                Console.WriteLine("array item " + k.ToString());
-
                 if ((k is Dictionary<string, dynamic>) ||
                 (k is List<dynamic>) ||
                 (k is List<ByamlPathPoint>))
@@ -215,9 +205,11 @@ namespace FirstPlugin
                 ListViewItem item = new ListViewItem(ValueText);
                 item.SubItems.Add(ValueTypeString);
                 item.SubItems.Add(ValueText);
-                if (k != null) item.Tag = new EditableNode(k);
+                if (k != null) item.Tag = new EditableNode(list, index);
 
                 listViewCustom1.Items.Add(item);
+
+                index++;
             }
         }
 
@@ -268,7 +260,7 @@ namespace FirstPlugin
             {
                 index++;
                 var n = addto.Add(k == null ? "<NULL>" : k.ToString());
-                if (k != null) n.Tag = new EditableNode(list);
+                if (k != null) n.Tag = new EditableNode(list, index);
             }
         }
 
@@ -414,15 +406,18 @@ namespace FirstPlugin
             return MessageBox.Show("Does this game support paths ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes;
         }
 
-        public static void OpenByml(string Filename, BYAML byaml) {
+        public static void OpenByml(string Filename, BYAML byaml)
+        {
             OpenByml(new FileStream(Filename, FileMode.Open), byaml, Filename);
         }
 
-        public static void OpenByml(Stream file, BYAML byaml, string FileName = "") {
+        public static void OpenByml(Stream file, BYAML byaml, string FileName = "")
+        {
             OpenByml(file, byaml, FileName, SupportPaths());
         }
 
-        public static void OpenByml(Stream file, BYAML byaml, string FileName, bool paths) {
+        public static void OpenByml(Stream file, BYAML byaml, string FileName, bool paths)
+        {
             OpenByml(file, byaml, FileName, paths, null, false);
         }
 
@@ -548,7 +543,7 @@ namespace FirstPlugin
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listViewCustom1.SelectedItems.Count <= 0) 
+            if (listViewCustom1.SelectedItems.Count <= 0)
                 return;
 
             dynamic target = listViewCustom1.SelectedItems[0].Tag;

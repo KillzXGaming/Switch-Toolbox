@@ -12,14 +12,15 @@ namespace Switch_Toolbox.Library.Forms
 {
     public static class NoneBlockingDialog
     {
+        private static DispatcherFrame frame;
+        private static void closeHandler(object sender, EventArgs args)
+        {
+            frame.Continue = false;
+        }
+
         public static DialogResult ShowDialogNonBlocking(this Form window, Form ownder)
         {
-            var frame = new DispatcherFrame();
-
-            void closeHandler(object sender, EventArgs args)
-            {
-                frame.Continue = false;
-            }
+            frame = new DispatcherFrame();
 
             try
             {
