@@ -546,7 +546,7 @@ namespace Toolbox
                         case "specularCubemapPathTB":
                             specularCubemapPathTB.Text = "";
                             Runtime.PBR.SpecularCubeMapPath = "";
-                            RenderTools.ResetDiffuseCubeMap();
+                            RenderTools.ResetSpecularCubeMap();
                             break;
                         case "mk8DPathTB":
                             mk8DPathTB.Text = "";
