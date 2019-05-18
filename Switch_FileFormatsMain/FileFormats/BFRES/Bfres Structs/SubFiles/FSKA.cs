@@ -533,17 +533,23 @@ namespace Bfres.Structs
             public BoneAnim BoneAnim;
             public ResU.BoneAnim BoneAnimU;
 
-            public ResU.BoneAnim SaveDataU()
+            public ResU.BoneAnim SaveDataU(bool IsEdited)
             {
                 BoneAnimU.Name = Text;
+                if (IsEdited)
+                {
 
+                }
                 return BoneAnimU;
             }
 
-            public BoneAnim SaveData()
+            public BoneAnim SaveData(bool IsEdited)
             {
                 BoneAnim.Name = Text;
+                if (IsEdited)
+                {
 
+                }
                 return BoneAnim;
             }
 

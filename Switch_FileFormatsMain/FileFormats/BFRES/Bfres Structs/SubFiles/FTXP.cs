@@ -116,9 +116,13 @@ namespace Bfres.Structs
                 TexPatternMatAnim = data;
             }
 
-            public TexPatternMatAnim SaveData()
+            public TexPatternMatAnim SaveData(bool IsEdited)
             {
                 TexPatternMatAnim.Name = Text;
+                if (IsEdited)
+                {
+
+                }
                 return TexPatternMatAnim;
             }
         }

@@ -83,9 +83,13 @@ namespace Bfres.Structs
 
             }
 
-            public MaterialAnimData SaveData()
+            public MaterialAnimData SaveData(bool IsEdited)
             {
                 MaterialAnimData.Name = Text;
+                if (IsEdited)
+                {
+
+                }
                 return MaterialAnimData;
             }
         }
@@ -476,7 +480,7 @@ namespace Bfres.Structs
                 return MatAnimWrapper.Textures[(int)val];
             }
 
-            public void AddKeyFrame(string TextureName, int Frame, bool IsConstant = false)
+            public void AddKeyFrame(string TextureName, float Frame = -1, bool IsConstant = false)
             {
                 group.Constant = IsConstant;
 
@@ -490,6 +494,11 @@ namespace Bfres.Structs
 
                 //Set our index
                 int index = MatAnimWrapper.Textures.IndexOf(TextureName);
+
+                if (Frame == -1)
+                {
+                    Frame = group.EndFrame + 1; //Add to the end of the list by default
+                }
 
                 //For non constants we load a curve
                 if (!group.Constant)

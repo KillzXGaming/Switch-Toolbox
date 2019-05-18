@@ -148,9 +148,13 @@ namespace Bfres.Structs
                 materialAnimData = data;
             }
 
-            public ShaderParamMatAnim SaveData()
+            public ShaderParamMatAnim SaveData(bool IsEdited)
             {
                 materialAnimData.Name = Text;
+                if (IsEdited)
+                {
+
+                }
                 return materialAnimData;
             }
         }

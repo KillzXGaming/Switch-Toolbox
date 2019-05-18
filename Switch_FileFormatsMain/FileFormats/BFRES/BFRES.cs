@@ -1281,10 +1281,9 @@ namespace FirstPlugin
                 case BRESGroupType.SkeletalAnim:
                     foreach (FSKA ska in group.Nodes)
                     {
-                      //  ska.SkeletalAnim.BoneAnims.Clear();
-
-                      //  foreach (FSKA.BoneAnimNode bone in ska.Bones)
-                          //  ska.SkeletalAnim.BoneAnims.Add(bone.SaveData());
+                        ska.SkeletalAnim.BoneAnims.Clear();
+                        foreach (FSKA.BoneAnimNode bone in ska.Bones)
+                            ska.SkeletalAnim.BoneAnims.Add(bone.SaveData(ska.IsEdited));
 
                         ska.SkeletalAnim.Name = ska.Text;
                         resFile.SkeletalAnims.Add(ska.SkeletalAnim);
@@ -1299,7 +1298,7 @@ namespace FirstPlugin
                     {
                         fmaa.MaterialAnim.MaterialAnimDataList.Clear();
                         foreach (FMAA.MaterialAnimEntry mat in fmaa.Materials)
-                            fmaa.MaterialAnim.MaterialAnimDataList.Add(mat.SaveData());
+                            fmaa.MaterialAnim.MaterialAnimDataList.Add(mat.SaveData(fmaa.IsEdited));
 
                         fmaa.SetName();
                         fmaa.SaveAnimData();
@@ -1415,7 +1414,7 @@ namespace FirstPlugin
                     {
                         ska.SkeletalAnimU.BoneAnims.Clear();
                         foreach (FSKA.BoneAnimNode bone in ska.Bones)
-                            ska.SkeletalAnimU.BoneAnims.Add(bone.SaveDataU());
+                            ska.SkeletalAnimU.BoneAnims.Add(bone.SaveDataU(ska.IsEdited));
 
                         ska.SkeletalAnimU.Name = ska.Text;
                         resFileU.SkeletalAnims.Add(ska.Text, ska.SkeletalAnimU);
@@ -1426,7 +1425,7 @@ namespace FirstPlugin
                     {
                         anim.ShaderParamAnim.ShaderParamMatAnims.Clear();
                         foreach (FSHU.MaterialAnimEntry bone in anim.Materials)
-                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(bone.SaveData());
+                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(bone.SaveData(anim.IsEdited));
 
 
                         anim.ShaderParamAnim.Name = anim.Text;
@@ -1437,8 +1436,8 @@ namespace FirstPlugin
                     foreach (FSHU anim in group.Nodes)
                     {
                         anim.ShaderParamAnim.ShaderParamMatAnims.Clear();
-                        foreach (FSHU.MaterialAnimEntry bone in anim.Materials)
-                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(bone.SaveData());
+                        foreach (FSHU.MaterialAnimEntry mat in anim.Materials)
+                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(mat.SaveData(anim.IsEdited));
 
                         anim.ShaderParamAnim.Name = anim.Text;
                         resFileU.ColorAnims.Add(anim.Text, anim.ShaderParamAnim);
@@ -1448,8 +1447,8 @@ namespace FirstPlugin
                     foreach (FSHU anim in group.Nodes)
                     {
                         anim.ShaderParamAnim.ShaderParamMatAnims.Clear();
-                        foreach (FSHU.MaterialAnimEntry bone in anim.Materials)
-                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(bone.SaveData());
+                        foreach (FSHU.MaterialAnimEntry mat in anim.Materials)
+                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(mat.SaveData(anim.IsEdited));
 
                         anim.ShaderParamAnim.Name = anim.Text;
                         resFileU.TexSrtAnims.Add(anim.Text, anim.ShaderParamAnim);
@@ -1458,6 +1457,10 @@ namespace FirstPlugin
                 case BRESGroupType.TexPatAnim:
                     foreach (FTXP anim in group.Nodes)
                     {
+                        anim.TexPatternAnim.TexPatternMatAnims.Clear();
+                        foreach (FTXP.MaterialAnimEntry mat in anim.Materials)
+                            anim.TexPatternAnim.TexPatternMatAnims.Add(mat.SaveData(anim.IsEdited));
+
                         anim.TexPatternAnim.Name = anim.Text;
                         resFileU.TexPatternAnims.Add(anim.Text, anim.TexPatternAnim);
                     }

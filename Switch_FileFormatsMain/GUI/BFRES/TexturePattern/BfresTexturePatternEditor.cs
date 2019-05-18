@@ -464,8 +464,19 @@ namespace FirstPlugin.Forms
             {
                 string NewTex = editor.GetSelectedTexture();
 
+                if (ActiveMaterialAnim.Textures == null)
+                    ActiveMaterialAnim.Textures = new List<string>();
+
                 if (!ActiveMaterialAnim.Textures.Contains(NewTex))
                     ActiveMaterialAnim.Textures.Add(NewTex);
+
+                if (activeSampler != null)
+                {
+                    activeSampler.AddKeyFrame(NewTex);
+                }
+                else
+                {
+                }
             }
         }
 
