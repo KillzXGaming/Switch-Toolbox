@@ -512,7 +512,7 @@ namespace Switch_Toolbox.Library
             return MipmapNum;
         }
 
-        public byte[] GenerateMipsAndCompress(Bitmap bitmap, TEX_FORMAT Format, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
+        public static byte[] GenerateMipsAndCompress(Bitmap bitmap, uint MipCount, TEX_FORMAT Format, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
         {
             byte[] DecompressedData = BitmapExtension.ImageToByte(bitmap);
             DecompressedData = ConvertBgraToRgba(DecompressedData);
@@ -520,17 +520,14 @@ namespace Switch_Toolbox.Library
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData, bitmap.Width, bitmap.Height);
 
             List<byte[]> mipmaps = new List<byte[]>();
-            mipmaps.Add(STGenericTexture.CompressBlock(DecompressedData,
-                 bitmap.Width, bitmap.Height, Format, alphaRef));
-
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
-                if (Image.Width / 2 > 0 && Image.Height / 2 > 0)
-                {
-                    Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
-                    mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                        Image.Width, Image.Height, Format, alphaRef, CompressionMode));
-                }
+                int width = Math.Max(1, bitmap.Width >> mipLevel);
+                int height = Math.Max(1, bitmap.Height >> mipLevel);
+
+                Image = BitmapExtension.Resize(Image, width, height);
+                mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
+                    Image.Width, Image.Height, Format, alphaRef, CompressionMode));
             }
             Image.Dispose();
 

@@ -347,11 +347,13 @@ namespace FirstPlugin
             Cursor.Current = Cursors.WaitCursor;
             foreach (var setting in settings)
             {
-                if (setting.GenerateMipmaps)
+                if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                 {
                     setting.DataBlockOutput.Clear();
                     setting.DataBlockOutput.Add(setting.GenerateMips());
                 }
+                if (setting.DataBlockOutput.Count <= 0)
+                    throw new Exception("Data block is empty! Failed to compress!");
 
                 if (setting.DataBlockOutput != null)
                 {
@@ -1096,7 +1098,7 @@ namespace FirstPlugin
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (setting.GenerateMipmaps)
+            if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
             {
                 setting.DataBlockOutput.Clear();
                 setting.DataBlockOutput.Add(setting.GenerateMips());
@@ -1193,7 +1195,7 @@ namespace FirstPlugin
                 Texture.TextureData[ArrayLevel].Clear(); //Clear previous mip maps
 
                 var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(Texture,
-                      GenerateMipsAndCompress(bitmap, Format), MipCount);
+                      GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
                 Texture.TextureData[ArrayLevel] = mipmaps;
 

@@ -51,7 +51,7 @@ namespace Switch_Toolbox.Library
             Height = (uint)Image.Height;
             MipCount = 1;
 
-            ImageData = GenerateMipsAndCompress(Image, Format);
+            ImageData = GenerateMipsAndCompress(Image, MipCount, Format);
 
             if (ImageData == null || ImageData.Length <= 0)
                 throw new Exception("Image failed to encode!");

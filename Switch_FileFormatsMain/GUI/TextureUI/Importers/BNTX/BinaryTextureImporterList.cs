@@ -160,12 +160,14 @@ namespace FirstPlugin
 
             Thread = new Thread((ThreadStart)(() =>
             {
+                SelectedTexSettings.IsFinishedCompressing = false;
                 ToggleOkButton(false);
 
                 pictureBox1.Image = bitmap;
                 SelectedTexSettings.Compress(CompressionMode);
 
                 ToggleOkButton(true);
+            //    SelectedTexSettings.IsFinishedCompressing = true;
 
                 if (SelectedTexSettings.DataBlockOutput.Count > 0) {
                     if (SelectedTexSettings.Format == SurfaceFormat.BC5_SNORM)

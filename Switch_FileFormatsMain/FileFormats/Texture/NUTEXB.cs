@@ -540,7 +540,7 @@ namespace FirstPlugin
             if (!IsSwizzled)
             {
                 MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
-                ImageData = GenerateMipsAndCompress(bitmap, Format);
+                ImageData = GenerateMipsAndCompress(bitmap, MipCount, Format);
 
                 return;
             }
@@ -577,7 +577,7 @@ namespace FirstPlugin
             tex.MipOffsets = new long[tex.MipCount];
 
             var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(tex,
-                GenerateMipsAndCompress(bitmap, Format), MipCount);
+                GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
             ImageData = Utils.CombineByteArray(mipmaps.ToArray());
         }

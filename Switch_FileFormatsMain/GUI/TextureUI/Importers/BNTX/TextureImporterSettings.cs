@@ -51,8 +51,10 @@ namespace FirstPlugin
         public int sparseResidency = 0; //false
         public int sparseBinding = 0; //false
         public bool IsSRGB = true;
-        public bool GenerateMipmaps = false; //If bitmap and count more that 1 then geenrate
+        public bool GenerateMipmaps = false; //If bitmap and count more that 1 then generate
         public float alphaRef = 0.5f;
+
+        public bool IsFinishedCompressing = false;
 
         public void LoadDDS(string FileName, byte[] FileData = null, TextureData tree = null)
         {

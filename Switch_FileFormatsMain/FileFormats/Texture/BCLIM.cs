@@ -377,7 +377,7 @@ namespace FirstPlugin
             try
             {
                 //Create image block from bitmap first
-                var data = GenerateMipsAndCompress(bitmap, Format);
+                var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
 
                 //Swizzle and create surface
             /*    var surface = GX2.CreateGx2Texture(data, Text,

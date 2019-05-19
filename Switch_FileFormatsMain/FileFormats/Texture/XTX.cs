@@ -568,7 +568,7 @@ namespace FirstPlugin
                 tex.MipOffsets = new long[tex.MipCount];
 
                 var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(tex,
-                    GenerateMipsAndCompress(bitmap, Format), MipCount);
+                    GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
                 ImageData = Utils.CombineByteArray(mipmaps.ToArray());
             }
