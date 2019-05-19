@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Switch_Toolbox;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library.IO;
 using ByamlExt.Byaml;
 using ByamlExt;
 using FirstPlugin.Turbo;
@@ -43,9 +45,74 @@ namespace FirstPlugin
             get
             {
                 List<Type> types = new List<Type>();
+                types.Add(typeof(MenuExt));
                 return types.ToArray();
             }
         }
+
+        class MenuExt : IFileMenuExtension
+        {
+            public STToolStripItem[] NewFileMenuExtensions => null;
+            public STToolStripItem[] NewFromFileMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => toolFileExt;
+            public STToolStripItem[] TitleBarExtensions => null;
+            public STToolStripItem[] CompressionMenuExtensions => null;
+            public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
+
+            STToolStripItem[] toolFileExt = new STToolStripItem[2];
+
+            public MenuExt()
+            {
+                toolFileExt[0] = new STToolStripItem("BYAML to Big Endian", ConvertLEtoBE);
+                toolFileExt[1] = new STToolStripItem("BYAML to Little Endian", ConvertBEtoLE);
+            }
+
+            public void ConvertLEtoBE(object sender, EventArgs args)
+            {
+                var byamlF = new BYAML();
+                byamlF.IFileInfo = new IFileInfo();
+
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = Utils.GetAllFilters(byamlF);
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    byamlF.Load(new FileStream(ofd.FileName, FileMode.Open));
+                    byamlF.data.byteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = Utils.GetAllFilters(byamlF);
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        STFileSaver.SaveFileFormat(byamlF, sfd.FileName);
+                    }
+                }
+            }
+
+
+            public void ConvertBEtoLE(object sender, EventArgs args)
+            {
+                var byamlF = new BYAML();
+                byamlF.IFileInfo = new IFileInfo();
+
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = Utils.GetAllFilters(byamlF);
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    byamlF.Load(new FileStream(ofd.FileName, FileMode.Open));
+                    byamlF.data.byteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = Utils.GetAllFilters(byamlF);
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        STFileSaver.SaveFileFormat(byamlF, sfd.FileName);
+                    }
+                }
+            }
+        }
+
 
         class EditableNode
         {
@@ -82,6 +149,9 @@ namespace FirstPlugin
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
+
+            SupportPaths = data.SupportPaths;
+
             return editor;
         }
 
