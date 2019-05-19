@@ -149,9 +149,6 @@ namespace FirstPlugin
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
-
-            SupportPaths = data.SupportPaths;
-
             return editor;
         }
 
@@ -162,6 +159,7 @@ namespace FirstPlugin
             IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
             data = ByamlFile.LoadN(stream, true);
+            SupportPaths = data.SupportPaths;
         }
         public void Unload()
         {
