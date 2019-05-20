@@ -148,26 +148,41 @@ namespace FirstPlugin
 
         }
 
+
+        public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, int SurfaceLevel = 0)
+        {
+            Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
+
+            List<byte[]> mipmaps = new List<byte[]>();
+            for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+            {
+                int MipWidth = Math.Max(1, (int)TexWidth >> mipLevel);
+                int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
+
+                if (mipLevel != 0)
+                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
+
+                mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
+                    Image.Width, Image.Height, TextureData.ConvertFormat(Format), alphaRef, CompressionMode));
+            }
+            Image.Dispose();
+
+            return mipmaps;
+        }
+
         public byte[] GenerateMips(STCompressionMode CompressionMode, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
             List<byte[]> mipmaps = new List<byte[]>();
-            mipmaps.Add(STGenericTexture.CompressBlock(DecompressedData[SurfaceLevel],
-                (int)TexWidth, (int)TexHeight, TextureData.ConvertFormat(Format), alphaRef, CompressionMode));
-
-            //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
-            //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
-                int width = Image.Width / 2;
-                int height = Image.Height / 2;
-                if (width <= 0)
-                    width = 1;
-                if (height <= 0)
-                    height = 1;
+                int MipWidth = Math.Max(1, (int)TexWidth >> mipLevel);
+                int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
 
-                Image = BitmapExtension.Resize(Image, width, height);
+                if (mipLevel != 0)
+                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
+
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
                     Image.Width, Image.Height, TextureData.ConvertFormat(Format), alphaRef, CompressionMode));
             }

@@ -19,7 +19,6 @@ namespace FirstPlugin
         public STCompressionMode CompressionMode = STCompressionMode.Normal;
 
         public int SelectedIndex = -1;
-
         public bool ForceMipCount = false;
 
         public uint SelectedMipCount
@@ -34,6 +33,8 @@ namespace FirstPlugin
                 return (uint)MipmapNum.Value;
             }
         }
+
+        private bool IsLoaded = false;
 
         public BinaryTextureImporterList()
         {
@@ -96,6 +97,8 @@ namespace FirstPlugin
             ImgDimComb.SelectedIndex = 1;
             tileModeCB.SelectedIndex = 0;
             formatComboBox.SelectedItem = SurfaceFormat.BC1_SRGB;
+
+                        IsLoaded = true;
 
             button1.Select();
         }
@@ -162,23 +165,28 @@ namespace FirstPlugin
                 ToggleOkButton(false);
 
                 pictureBox1.Image = bitmap;
-                SelectedTexSettings.Compress(CompressionMode);
+
+                var mips = SelectedTexSettings.GenerateMipList(CompressionMode);
+                SelectedTexSettings.DataBlockOutput.Clear();
+                SelectedTexSettings.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 
                 ToggleOkButton(true);
-                //    SelectedTexSettings.IsFinishedCompressing = true;
+                SelectedTexSettings.IsFinishedCompressing = true;
 
                 if (SelectedTexSettings.DataBlockOutput.Count > 0) {
                     if (SelectedTexSettings.Format == SurfaceFormat.BC5_SNORM)
                     {
-                        bitmap = DDSCompressor.DecompressBC5(SelectedTexSettings.DataBlockOutput[0],
+                        bitmap = DDSCompressor.DecompressBC5(mips[0],
                     (int)SelectedTexSettings.TexWidth, (int)SelectedTexSettings.TexHeight, true);
                     }
                     else
                     {
-                        bitmap = STGenericTexture.DecodeBlockGetBitmap(SelectedTexSettings.DataBlockOutput[0],
+                        bitmap = STGenericTexture.DecodeBlockGetBitmap(mips[0],
                         SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight, TextureData.ConvertFormat(SelectedTexSettings.Format));
                     }
                 }
+
+                mips.Clear();
 
                 if (pictureBox1.InvokeRequired)
                 {
@@ -246,10 +254,15 @@ namespace FirstPlugin
 
         private void MipmapNum_ValueChanged(object sender, EventArgs e)
         {
+            if (!IsLoaded)
+                return;
+
             if (MipmapNum.Value > 0)
                 SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
             else
                 SelectedTexSettings.MipCount = 1;
+
+            SetupSettings();
         }
 
         private void BinaryTextureImporterList_KeyDown(object sender, KeyEventArgs e)
