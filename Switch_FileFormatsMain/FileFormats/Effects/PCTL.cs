@@ -704,7 +704,7 @@ namespace FirstPlugin
                         TEX_FORMAT.B5G6R5_UNORM,
                         TEX_FORMAT.B8G8R8A8_UNORM_SRGB,
                         TEX_FORMAT.B8G8R8A8_UNORM,
-                        TEX_FORMAT.B5_G5_R5_A1_UNORM,
+                        TEX_FORMAT.B5G5R5A1_UNORM,
                         TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
                         TEX_FORMAT.R8G8B8A8_UNORM,
                         TEX_FORMAT.R8_UNORM,

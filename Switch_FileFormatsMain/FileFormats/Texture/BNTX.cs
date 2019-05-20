@@ -311,7 +311,7 @@ namespace FirstPlugin
             importer.LoadSettings(settings);
             if (importer.ShowDialog() == DialogResult.OK)
             {
-                ImportTexture(settings);
+                ImportTexture(settings, importer.CompressionMode);
             }
             settings.Clear();
             GC.Collect();
@@ -335,14 +335,14 @@ namespace FirstPlugin
             importer.LoadSettings(settings);
             if (importer.ShowDialog() == DialogResult.OK)
             {
-                ImportTexture(settings);
+                ImportTexture(settings, importer.CompressionMode);
             }
             settings.Clear();
             GC.Collect();
             Cursor.Current = Cursors.Default;
         }
 
-        private void ImportTexture(List<TextureImporterSettings> settings)
+        private void ImportTexture(List<TextureImporterSettings> settings, STCompressionMode CompressionMode)
         {
             Cursor.Current = Cursors.WaitCursor;
             foreach (var setting in settings)
@@ -350,7 +350,7 @@ namespace FirstPlugin
                 if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                 {
                     setting.DataBlockOutput.Clear();
-                    setting.DataBlockOutput.Add(setting.GenerateMips());
+                    setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode));
                 }
                 if (setting.DataBlockOutput.Count <= 0)
                     throw new Exception("Data block is empty! Failed to compress!");
@@ -734,7 +734,6 @@ namespace FirstPlugin
                     TEX_FORMAT.R10G10B10A2_UNORM,
                     TEX_FORMAT.R16_UNORM,
                     TEX_FORMAT.B4G4R4A4_UNORM,
-                    TEX_FORMAT.B5_G5_R5_A1_UNORM,
                     TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
                     TEX_FORMAT.R8G8B8A8_UNORM,
                     TEX_FORMAT.R8_UNORM,
@@ -847,7 +846,6 @@ namespace FirstPlugin
                 case TEX_FORMAT.R10G10B10A2_UNORM: return SurfaceFormat.R10_G10_B10_A2_UNORM;
                 case TEX_FORMAT.R16_UNORM: return SurfaceFormat.R16_UNORM; 
                 case TEX_FORMAT.B4G4R4A4_UNORM: return SurfaceFormat.R4_G4_B4_A4_UNORM;
-                case TEX_FORMAT.B5_G5_R5_A1_UNORM: return SurfaceFormat.R5_G5_B5_A1_UNORM; 
                 case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return SurfaceFormat.R8_G8_B8_A8_SRGB; 
                 case TEX_FORMAT.R8G8B8A8_UNORM: return SurfaceFormat.R8_G8_B8_A8_UNORM;
                 case TEX_FORMAT.R8_UNORM: return SurfaceFormat.R8_UNORM;
@@ -1068,11 +1066,11 @@ namespace FirstPlugin
                     break;
                 case ".dds":
                     setting.LoadDDS(FileName, null, this);
-                    ApplyImportSettings(setting);
+                    ApplyImportSettings(setting, STCompressionMode.Normal);
                     break;
                 case ".astc":
                     setting.LoadASTC(FileName);
-                    ApplyImportSettings(setting);
+                    ApplyImportSettings(setting, STCompressionMode.Normal);
                     break;
                 default:
                     setting.LoadBitMap(FileName);
@@ -1089,19 +1087,19 @@ namespace FirstPlugin
 
                     if (importer.ShowDialog() == DialogResult.OK)
                     {
-                        ApplyImportSettings(setting);
+                        ApplyImportSettings(setting, importer.CompressionMode);
                     }
                     break;
             }
         }
-        private void ApplyImportSettings(TextureImporterSettings setting)
+        private void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
         {
             Cursor.Current = Cursors.WaitCursor;
 
             if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
             {
                 setting.DataBlockOutput.Clear();
-                setting.DataBlockOutput.Add(setting.GenerateMips());
+                setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode));
             }
 
             Texture = setting.FromBitMap(setting.DataBlockOutput, setting);

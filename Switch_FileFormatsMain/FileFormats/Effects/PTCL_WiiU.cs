@@ -408,7 +408,6 @@ namespace FirstPlugin
                             TEX_FORMAT.R10G10B10A2_UNORM,
                             TEX_FORMAT.R16_UNORM,
                             TEX_FORMAT.B4G4R4A4_UNORM,
-                            TEX_FORMAT.B5_G5_R5_A1_UNORM,
                             TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
                             TEX_FORMAT.R8G8B8A8_UNORM,
                             TEX_FORMAT.R8_UNORM,

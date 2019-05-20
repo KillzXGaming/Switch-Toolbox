@@ -16,6 +16,8 @@ namespace FirstPlugin
 {
     public partial class BinaryTextureImporterList : STForm
     {
+        public STCompressionMode CompressionMode = STCompressionMode.Normal;
+
         public int SelectedIndex = -1;
 
         public bool ForceMipCount = false;
@@ -83,10 +85,7 @@ namespace FirstPlugin
             compressionModeCB.Items.Add("Fast (Lower Qaulity)");
             compressionModeCB.Items.Add("Normal (Good Qaulity)");
 
-
-
             compressionModeCB.SelectedIndex = 0;
-
             compressionModeCB.Enabled = false;
 
             foreach (SurfaceDim dim in (SurfaceDim[])Enum.GetValues(typeof(SurfaceDim)))
@@ -154,7 +153,6 @@ namespace FirstPlugin
 
             Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
 
-            STCompressionMode CompressionMode = STCompressionMode.Normal;
             if (compressionModeCB.SelectedIndex == 0)
                 CompressionMode = STCompressionMode.Fast;
 
@@ -167,7 +165,7 @@ namespace FirstPlugin
                 SelectedTexSettings.Compress(CompressionMode);
 
                 ToggleOkButton(true);
-            //    SelectedTexSettings.IsFinishedCompressing = true;
+                //    SelectedTexSettings.IsFinishedCompressing = true;
 
                 if (SelectedTexSettings.DataBlockOutput.Count > 0) {
                     if (SelectedTexSettings.Format == SurfaceFormat.BC5_SNORM)

@@ -148,13 +148,13 @@ namespace FirstPlugin
 
         }
 
-        public byte[] GenerateMips(int SurfaceLevel = 0)
+        public byte[] GenerateMips(STCompressionMode CompressionMode, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
             List<byte[]> mipmaps = new List<byte[]>();
             mipmaps.Add(STGenericTexture.CompressBlock(DecompressedData[SurfaceLevel],
-                (int)TexWidth, (int)TexHeight, TextureData.ConvertFormat(Format), alphaRef));
+                (int)TexWidth, (int)TexHeight, TextureData.ConvertFormat(Format), alphaRef, CompressionMode));
 
             //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
             //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
@@ -169,7 +169,7 @@ namespace FirstPlugin
 
                 Image = BitmapExtension.Resize(Image, width, height);
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                    Image.Width, Image.Height, TextureData.ConvertFormat(Format), alphaRef));
+                    Image.Width, Image.Height, TextureData.ConvertFormat(Format), alphaRef, CompressionMode));
             }
             Image.Dispose();
 
