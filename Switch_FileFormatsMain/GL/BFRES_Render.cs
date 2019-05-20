@@ -625,7 +625,7 @@ namespace FirstPlugin
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)MatTexture.magfilter[tex.magFilter]);
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 0.0f);
         }
-        private void DrawModel(FSHP m, FMDL mdl, SF.Shader shader, bool drawSelection)
+        private void DrawModel(FSHP m, FMDL mdl, SF.Shader shader, bool ModelSelected)
         {
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
@@ -654,7 +654,7 @@ namespace FirstPlugin
                     shader.SetVector3("materialSelectColor", ColorUtility.ToVector3(Color.FromArgb(0,163,204)));
                     DrawModelSelection(m, shader);
                 }
-                else if ((m.IsSelected))
+                else if (m.IsSelected || ModelSelected)
                 {
                     DrawModelSelection(m, shader);
                 }
