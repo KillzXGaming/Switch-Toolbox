@@ -85,7 +85,7 @@ namespace FirstPlugin
 
 
 
-            compressionModeCB.SelectedIndex = 1;
+            compressionModeCB.SelectedIndex = 0;
 
             compressionModeCB.Enabled = false;
 

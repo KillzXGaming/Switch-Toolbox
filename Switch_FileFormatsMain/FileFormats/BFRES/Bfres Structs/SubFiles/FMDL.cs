@@ -611,6 +611,9 @@ namespace Bfres.Structs
 
                         Cursor.Current = Cursors.WaitCursor;
 
+                        bool ForceSkinInfluence = false;
+                        int ForceSkinInfluenceMax = 4;
+
                         foreach (STGenericObject obj in csvModel.objects)
                         {
                             FSHP shape = new FSHP();
@@ -625,7 +628,7 @@ namespace Bfres.Structs
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
                             shape.CreateNewBoundingBoxes();
-                            shape.CreateBoneList(obj, this);
+                            shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
@@ -925,6 +928,10 @@ namespace Bfres.Structs
 
                         Console.WriteLine("Processing Data. Object count " + assimp.objects.Count);
 
+                        bool ForceSkinInfluence = true;
+                        int ForceSkinInfluenceMax = 4;
+
+
                         int curShp = 0;
                         foreach (STGenericObject obj in assimp.objects)
                         {
@@ -970,7 +977,7 @@ namespace Bfres.Structs
                             progressBar.Task = $"Creating Bone list. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            shape.CreateBoneList(obj, this);
+                            shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
 
                             progressBar.Task = $"Creating Index list. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();

@@ -707,7 +707,7 @@ namespace Bfres.Structs
                                 Cursor.Current = Cursors.WaitCursor;
                                 VertexBufferIndex = obj.VertexBufferIndex;
                                 vertices = obj.vertices;
-                                CreateBoneList(obj, (FMDL)Parent.Parent);
+                                CreateBoneList(obj, (FMDL)Parent.Parent, false);
                                 CreateIndexList(obj, (FMDL)Parent.Parent);
                                 VertexSkinCount = obj.GetMaxSkinInfluenceCount();
                                 vertexAttributes = settings.CreateNewAttributes();
@@ -756,7 +756,7 @@ namespace Bfres.Structs
                 }
             }
         }
-        public void CreateBoneList(STGenericObject ob, FMDL mdl)
+        public void CreateBoneList(STGenericObject ob, FMDL mdl, bool ForceSkinCount, int ForcedSkinAmount = 4)
         {
             if (mdl.Skeleton.Node_Array == null)
                 mdl.Skeleton.Node_Array = new int[0];
@@ -773,6 +773,19 @@ namespace Bfres.Structs
             }
 
             List<string> BonesNotMatched = new List<string>();
+
+            if (ForceSkinCount && !ob.HasIndices)
+            {
+                var attributeIndex = new FSHP.VertexAttribute();
+                attributeIndex.Format = ResGFX.AttribFormat.Format_8_8_8_8_UInt;
+                attributeIndex.Name = "_i0";
+                vertexAttributes.Add(attributeIndex);
+
+                var attributeWeight = new FSHP.VertexAttribute();
+                attributeWeight.Format = ResGFX.AttribFormat.Format_32_32_32_32_Single;
+                attributeWeight.Name = "_w0";
+                vertexAttributes.Add(attributeWeight);
+            }
 
             int vtxIndex = 0;
             foreach (Vertex v in ob.vertices)
@@ -819,6 +832,18 @@ namespace Bfres.Structs
                     {
                         if (v.boneIds.Count < 4)
                             v.boneIds.Add(id);
+                    }
+                }
+
+                if (ForceSkinCount)
+                {
+                    for (int i = 0; i < ForcedSkinAmount; i++)
+                    {
+                        if (v.boneIds.Count < ForcedSkinAmount)
+                        {
+                            v.boneIds.Add(0);
+                            v.boneWeights.Add(1);
+                        }
                     }
                 }
 
