@@ -15,8 +15,7 @@ using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
 using ResU = Syroot.NintenTools.Bfres;
 using Bfres.Structs;
-using GL_EditorFramework.EditorDrawables;
-using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
+using SF = SFGraphics.GLObjects.Shaders;
 
 namespace FirstPlugin
 {
@@ -32,7 +31,6 @@ namespace FirstPlugin
         public bool Hovered = false;
 
         public bool IsSelected() => Selected;
-     //  public override bool IsSelected(int partIndex) => Selected;
 
         // gl buffer objects
         int vbo_position;
@@ -98,16 +96,16 @@ namespace FirstPlugin
         #region Rendering
 
 
-        public ShaderProgram BotwShaderProgram;
-        public ShaderProgram normalsShaderProgram;
-        public ShaderProgram debugShaderProgram;
-        public ShaderProgram pbrShaderProgram;
-        public ShaderProgram defaultShaderProgram;
-        public ShaderProgram solidColorShaderProgram;
+    //    public ShaderProgram BotwShaderProgram;
+    //    public ShaderProgram normalsShaderProgram;
+    //    public ShaderProgram debugShaderProgram;
+     //   public ShaderProgram pbrShaderProgram;
+      //  public ShaderProgram defaultShaderProgram;
+     //   public ShaderProgram solidColorShaderProgram;
 
         public override void Prepare(GL_ControlModern control)
         {
-            string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.frag";
+    /*        string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.frag";
             string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.vert";
 
 
@@ -180,42 +178,13 @@ namespace FirstPlugin
             normalsShaderProgram = new ShaderProgram(new Shader[] { normalsFrag, normalsVert, normalsGeom });
             debugShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, debugFrag, defaultVert, utiltyFrag, shadowMapAGL });
             pbrShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, PbrFrag, defaultVert, shadowMapAGL });
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);*/
         }
 
         public override void Prepare(GL_ControlLegacy control)
         {
 
         }
-
-      /*  private void DrawBoundingBoxes()
-        {
-            var boundings = GetSelectionBox();
-
-            DrawableBoundingBox.DrawBoundingBox(
-                new Vector3(boundings.minX, boundings.minY, boundings.minZ),
-                new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ),
-                new Vector3(0)
-                );
-
-            return;
-
-            foreach (FMDL mdl in models)
-            {
-                foreach (FSHP m in mdl.shapes)
-                {
-                    if (m.IsSelected)
-                        GL.Color4(Color.GhostWhite);
-                    else
-                        GL.Color4(Color.OrangeRed);
-
-                    foreach (FSHP.BoundingBox box in m.boundingBoxes)
-                    {
-                        RenderTools.DrawRectangularPrism(box.Center, box.Extend.X, box.Extend.Y, box.Extend.Z, true);
-                    }
-                }
-            }
-        }*/
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
@@ -324,10 +293,12 @@ namespace FirstPlugin
             if (Hovered == true)
                 throw new Exception("model selected");
 
-            ShaderProgram shader = defaultShaderProgram;
+            //Temporarily revert to using this shader system as it is easy to port back
+            //This is much quicker. Will change after shaders are handled faster
+            SF.Shader shader = OpenTKSharedResources.shaders["BFRES"];
 
             if (Runtime.EnablePBR)
-                shader = pbrShaderProgram;
+                shader = OpenTKSharedResources.shaders["BFRES_PBR"];
 
             if (models.Count > 0)
             {
@@ -338,7 +309,7 @@ namespace FirstPlugin
                 {
                     if (models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
                     {
-                        shader = BotwShaderProgram;
+                        shader = OpenTKSharedResources.shaders["BFRES_Botw"];
 
                         //Botw uses small models so lower the bone size
                         Runtime.bonePointSize = 0.040f;
@@ -347,22 +318,30 @@ namespace FirstPlugin
             }
 
             if (Runtime.viewportShading != Runtime.ViewportShading.Default)
-                shader = debugShaderProgram;
+                shader = OpenTKSharedResources.shaders["BFRES_Debug"];
 
+            if (Runtime.viewportShading == Runtime.ViewportShading.Lighting && Runtime.EnablePBR)
+                shader = OpenTKSharedResources.shaders["BFRES_PBR"];
 
-            control.CurrentShader = shader;
-
+            shader.UseProgram();
             control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
 
-            Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
+            Matrix4 camMat = control.CameraMatrix;
+            Matrix4 mdlMat = control.ModelMatrix;
+            Matrix4 projMat = control.ProjectionMatrix;
+            Matrix4 computedCamMtx = camMat * projMat;
+            Matrix4 mvpMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
 
-            Matrix4 sphereMatrix = camMat;
+            Matrix4 sphereMatrix = mvpMat;
 
             if (sphereMatrix.Determinant != 0)
                 sphereMatrix.Invert();
 
             sphereMatrix.Transpose();
             shader.SetMatrix4x4("sphereMatrix", ref sphereMatrix);
+
+            shader.SetMatrix4x4("mtxCam", ref computedCamMtx);
+            shader.SetMatrix4x4("mtxMdl", ref mdlMat);
 
             SetRenderSettings(shader);
 
@@ -373,7 +352,7 @@ namespace FirstPlugin
 
             Matrix4 invertedCamera = Matrix4.Identity;
             if (invertedCamera.Determinant != 0)
-                invertedCamera = camMat.Inverted();
+                invertedCamera = mvpMat.Inverted();
 
             Vector3 lightDirection = new Vector3(0f, 0f, -1f);
 
@@ -389,17 +368,17 @@ namespace FirstPlugin
 
             if (Runtime.renderNormalsPoints)
             {
-                control.CurrentShader = normalsShaderProgram;
+                shader = OpenTKSharedResources.shaders["BFRES_Normals"];
+                shader.UseProgram();
 
                 Matrix4 projection = control.ProjectionMatrix;
                 Matrix4 camMtx = control.CameraMatrix;
 
-                normalsShaderProgram.SetMatrix4x4("mtxProj", ref projection);
-                normalsShaderProgram.SetMatrix4x4("camMtx", ref camMtx);
+                shader.SetMatrix4x4("mtxProj", ref projection);
+                shader.SetMatrix4x4("camMtx", ref camMtx);
+                shader.SetFloat("normalsLength", Runtime.normalsLineLength);
 
-                normalsShaderProgram.SetFloat("normalsLength", Runtime.normalsLineLength);
-
-                DrawModels(normalsShaderProgram, control);
+                DrawModels(shader, control);
             }
 
             GL.UseProgram(0);
@@ -408,7 +387,7 @@ namespace FirstPlugin
             GL.Enable(EnableCap.CullFace);
         }
 
-        private void DrawModels(ShaderProgram shader, GL_ControlModern control)
+        private void DrawModels(SF.Shader shader, GL_ControlModern control)
         {
             shader.EnableVertexAttributes();
             foreach (FMDL mdl in models)
@@ -456,7 +435,7 @@ namespace FirstPlugin
             // Positive values are usually closer to camera. Negative values are usually farther away. 
         }
 
-        private void SetRenderSettings(ShaderProgram shader)
+        private void SetRenderSettings(SF.Shader shader)
         {
             shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
             shader.SetBoolToInt("useNormalMap", Runtime.useNormalMap);
@@ -474,7 +453,7 @@ namespace FirstPlugin
             shader.SetBoolToInt("renderSpecular", Runtime.renderSpecular);
             shader.SetBoolToInt("renderFresnel", Runtime.renderFresnel);
         }
-        private static void SetDefaultTextureAttributes(FMAT mat, ShaderProgram shader)
+        private static void SetDefaultTextureAttributes(FMAT mat, SF.Shader shader)
         {
             shader.SetBoolToInt("HasDiffuse", mat.HasDiffuseMap);
             shader.SetBoolToInt("HasDiffuseLayer", mat.HasDiffuseLayer);
@@ -492,18 +471,18 @@ namespace FirstPlugin
             shader.SetBoolToInt("HasRoughnessMap", mat.HasRoughnessMap);
             shader.SetBoolToInt("HasMRA", mat.HasMRA);
         }
-        private static void SetBoneUniforms(ShaderProgram shader, FMDL fmdl, FSHP fshp)
+        private static void SetBoneUniforms(SF.Shader shader, FMDL fmdl, FSHP fshp)
         {
             for (int i = 0; i < fmdl.Skeleton.Node_Array.Length; i++)
             {
-                GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), fmdl.Skeleton.Node_Array[i]);
+                GL.Uniform1(GL.GetUniformLocation(shader.Id, String.Format("boneIds[{0}]", i)), fmdl.Skeleton.Node_Array[i]);
 
                 Matrix4 transform = fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].invert * fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].Transform;
-                GL.UniformMatrix4(GL.GetUniformLocation(shader.program, String.Format("bones[{0}]", i)), false, ref transform);
+                GL.UniformMatrix4(GL.GetUniformLocation(shader.Id, String.Format("bones[{0}]", i)), false, ref transform);
             }
         }
 
-        private static void SetTextureUniforms(FMAT mat, FSHP m, ShaderProgram shader)
+        private static void SetTextureUniforms(FMAT mat, FSHP m, SF.Shader shader)
         {
             SetDefaultTextureAttributes(mat, shader);
 
@@ -511,22 +490,22 @@ namespace FirstPlugin
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
             GL.ActiveTexture(TextureUnit.Texture11);
-            GL.Uniform1(shader["weightRamp1"], 11);
+            GL.Uniform1(shader.GetUniformLocation("weightRamp1"), 11);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.BoneWeightGradient.Id);
 
             GL.ActiveTexture(TextureUnit.Texture12);
-            GL.Uniform1(shader["weightRamp2"], 12);
+            GL.Uniform1(shader.GetUniformLocation("weightRamp2"), 12);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.BoneWeightGradient2.Id);
 
-            GL.Uniform1(shader["debugOption"], 2);
+            GL.Uniform1(shader.GetUniformLocation("debugOption"), 2);
 
-            
+
             GL.ActiveTexture(TextureUnit.Texture10);
-            GL.Uniform1(shader["UVTestPattern"], 10);
+            GL.Uniform1(shader.GetUniformLocation("UVTestPattern"), 10);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
-            GL.Uniform1(shader["normalMap"], 0);
-            GL.Uniform1(shader["BakeShadowMap"], 0);
+            GL.Uniform1(shader.GetUniformLocation("normalMap"), 0);
+            GL.Uniform1(shader.GetUniformLocation("BakeShadowMap"), 0);
 
             LoadPBRMaps(shader);
 
@@ -563,25 +542,25 @@ namespace FirstPlugin
             }
         }
 
-        private static void LoadPBRMaps(ShaderProgram shader)
+        private static void LoadPBRMaps(SF.Shader shader)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + 26);
             RenderTools.specularPbr.Bind();
-            GL.Uniform1(shader["specularIbl"], 26);
-        //    GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
+            GL.Uniform1(shader.GetUniformLocation("specularIbl"), 26);
+
+            //    GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
 
             // PBR IBL
             GL.ActiveTexture(TextureUnit.Texture0 + 25);
             RenderTools.diffusePbr.Bind();
-            GL.Uniform1(shader["irradianceMap"], 25);
+            GL.Uniform1(shader.GetUniformLocation("irradianceMap"), 25);
 
             GL.ActiveTexture(TextureUnit.Texture0 + 27);
             RenderTools.brdfPbr.Bind();
-            GL.Uniform1(shader["brdfLUT"], 27);
-
+            GL.Uniform1(shader.GetUniformLocation("brdfLUT"), 27);
         }
 
-        private static void TextureUniform(ShaderProgram shader, FMAT mat, bool hasTex, string name, MatTexture mattex)
+        private static void TextureUniform(SF.Shader shader, FMAT mat, bool hasTex, string name, MatTexture mattex)
         {
             if (mattex.textureState == STGenericMatTexture.TextureState.Binded)
                 return;
@@ -589,19 +568,13 @@ namespace FirstPlugin
             // Bind the texture and create the uniform if the material has the right textures. 
             if (hasTex)
             {
-                GL.Uniform1(shader[name], BindTexture(shader, mattex, mat.GetResFileU() != null));
+                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(shader, mattex, mat.GetResFileU() != null));
             }
         }
-        public static int BindTexture(ShaderProgram shader, MatTexture tex, bool IsWiiU)
+        public static int BindTexture(SF.Shader shader, MatTexture tex, bool IsWiiU)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
-
-            GL.Uniform1(shader["RedChannel"],   0);
-            GL.Uniform1(shader["GreenChannel"], 1);
-            GL.Uniform1(shader["BlueChannel"],  2);
-            GL.Uniform1(shader["AlphaChannel"], 3);
-
 
             string activeTex = tex.Name;
             if (tex.animatedTexName != "")
@@ -619,9 +592,6 @@ namespace FirstPlugin
                         if (ftex.RenderableTex == null || !ftex.RenderableTex.GLInitialized)
                             ftex.LoadOpenGLTexture();
 
-                        if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
-                            SetTextureComponents(shader, ftex);
-
                         BindGLTexture(tex, ftex.RenderableTex.TexID);
                     }
                 }
@@ -638,22 +608,11 @@ namespace FirstPlugin
                             bntx.Textures[activeTex].LoadOpenGLTexture();
                         }
 
-                        if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
-                            SetTextureComponents(shader, bntx.Textures[activeTex]);
-
                         BindGLTexture(tex, bntx.Textures[activeTex].RenderableTex.TexID);
                     }
                 }
             }
             return tex.textureUnit + 1;
-        }
-
-        private static void SetTextureComponents(ShaderProgram shader, STGenericTexture Texture)
-        {
-            GL.Uniform1(shader["RedChannel"], (int)Texture.RedChannel);
-            GL.Uniform1(shader["GreenChannel"], (int)Texture.GreenChannel);
-            GL.Uniform1(shader["BlueChannel"], (int)Texture.BlueChannel);
-            GL.Uniform1(shader["AlphaChannel"], (int)Texture.AlphaChannel);
         }
 
         private static void BindGLTexture(MatTexture tex, int texid)
@@ -666,14 +625,14 @@ namespace FirstPlugin
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)MatTexture.magfilter[tex.magFilter]);
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 0.0f);
         }
-        private void DrawModel(FSHP m, FMDL mdl, ShaderProgram shader, bool drawSelection)
+        private void DrawModel(FSHP m, FMDL mdl, SF.Shader shader, bool drawSelection)
         {
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
             var mat = m.GetMaterial();
 
-            if (shader != normalsShaderProgram)
+            if (shader != OpenTKSharedResources.shaders["BFRES_Normals"])
             {
                 SetRenderPass(mat, shader, m, m.DisplayId);
                 SetUniforms(mat, shader, m, m.DisplayId);
@@ -732,7 +691,7 @@ namespace FirstPlugin
                 }
             }
         }
-        private static void ApplyTransformFix(FMDL fmdl, FSHP m, ShaderProgram shader)
+        private static void ApplyTransformFix(FMDL fmdl, FSHP m, SF.Shader shader)
         {
             Matrix4 idenity = Matrix4.Identity;
             shader.SetInt("NoSkinning", 0);
@@ -879,7 +838,7 @@ namespace FirstPlugin
             LibraryGUI.Instance.UpdateViewport();
         }
 
-        private static void SetRenderPass(FMAT mat, ShaderProgram shader, FSHP m, int id)
+        private static void SetRenderPass(FMAT mat, SF.Shader shader, FSHP m, int id)
         {
             if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
             {
@@ -888,15 +847,17 @@ namespace FirstPlugin
                 foreach (var renderInfo in mat.renderinfo)
                     aglShader.LoadRenderInfo(renderInfo);
 
-                aglShader.LoadRenderPass(mat, shader);
+               // aglShader.LoadRenderPass(mat, shader);
             }
         }
 
-        private static void SetUniforms(FMAT mat, ShaderProgram shader, FSHP m, int id)
+        private static void SetUniforms(FMAT mat, SF.Shader shader, FSHP m, int id)
         {
-            shader.SetBoolToInt("isTransparent", mat.isTransparent);
+             shader.SetBoolToInt("isTransparent", mat.isTransparent);
 
             shader.SetFloat("ao_density", 1);
+            shader.SetFloat("shadow_density", 1);
+            
             shader.SetFloat("normal_map_weight", 1);
 
             //Bake map UV coordinate ST
@@ -934,6 +895,7 @@ namespace FirstPlugin
             SetUniformData(mat, shader, "gsys_bake_st1");
 
             SetUniformData(mat, shader, "ao_density");
+            SetUniformData(mat, shader, "shadow_density");
             SetUniformData(mat, shader, "normal_map_weight");
 
             SetUniformData(mat, shader, "const_color0");
@@ -963,7 +925,7 @@ namespace FirstPlugin
 
             SetUniformData(mat, shader, "bake_calc_type");
         }
-        private static void SetUniformData(FMAT mat, ShaderProgram shader, string propertyName)
+        private static void SetUniformData(FMAT mat, SF.Shader shader, string propertyName)
         {
             if (mat.shaderassign.options.ContainsKey(propertyName))
             {
@@ -1084,36 +1046,36 @@ namespace FirstPlugin
                 }
             }
         }
-        private void SetVertexAttributes(FSHP m, ShaderProgram shader)
+        private void SetVertexAttributes(FSHP m, SF.Shader shader)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 0);
-            GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 12);
-            GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 24);
-            GL.VertexAttribPointer(shader.GetAttribute("vBitangent"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 36);
-            GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 48);
-            GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, DisplayVertex.Size, 56);
-            GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, DisplayVertex.Size, new IntPtr(72));
-            GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, DisplayVertex.Size, 88);
-            GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 104);
-            GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 112);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition2"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 124);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition3"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 136);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vPosition"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 0);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vNormal"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 12);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vTangent"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 24);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vBitangent"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 36);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vUV0"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 48);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vColor"), 4, VertexAttribPointerType.Float, false, DisplayVertex.Size, 56);
+            GL.VertexAttribIPointer(shader.GetAttribLocation("vBone"), 4, VertexAttribIntegerType.Int, DisplayVertex.Size, new IntPtr(72));
+            GL.VertexAttribPointer(shader.GetAttribLocation("vWeight"), 4, VertexAttribPointerType.Float, false, DisplayVertex.Size, 88);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vUV1"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 104);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vUV2"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 112);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vPosition2"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 124);
+            GL.VertexAttribPointer(shader.GetAttribLocation("vPosition3"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 136);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
         }
 
-        private static void DrawMdoelHoverSelection(STGenericObject p, ShaderProgram shader,
+        private static void DrawMdoelHoverSelection(STGenericObject p, SF.Shader shader,
             bool IsSelected, bool IsHovered)
         {
             if (IsHovered && IsSelected)
-                GL.Uniform4(shader["pickingColor"], hoverColor);
+                shader.SetVector4("pickingColor", hoverColor);
             else if (IsHovered || IsSelected)
-                GL.Uniform4(shader["pickingColor"], selectColor);
+                shader.SetVector4("pickingColor", selectColor);
             else
-                GL.Uniform4(shader["pickingColor"], new Vector4(1));
+                shader.SetVector4("pickingColor", new Vector4(1));
         }
 
-        private static void DrawModelWireframe(STGenericObject p, ShaderProgram shader)
+        private static void DrawModelWireframe(STGenericObject p, SF.Shader shader)
         {
             // use vertex color for wireframe color
             shader.SetInt("colorOverride", 1);
@@ -1124,7 +1086,7 @@ namespace FirstPlugin
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             shader.SetInt("colorOverride", 0);
         }
-        private static void DrawModelSelection(STGenericObject p, ShaderProgram shader)
+        private static void DrawModelSelection(STGenericObject p, SF.Shader shader)
         {
             //This part needs to be reworked for proper outline. Currently would make model disappear
             /*     GL.Enable(EnableCap.DepthTest);
@@ -1156,13 +1118,13 @@ namespace FirstPlugin
 
             // Override the model color with white in the shader.
 
-            GL.Uniform1(shader["colorOverride"], 1);
+            shader.SetInt("colorOverride", 1);
             GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
             GL.Enable(EnableCap.LineSmooth);
             GL.LineWidth(1.3f);
             GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-            GL.Uniform1(shader["colorOverride"], 0);
+            shader.SetInt("colorOverride", 0);
 
             GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }

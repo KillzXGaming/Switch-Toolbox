@@ -190,6 +190,11 @@ namespace Switch_Toolbox.Library
             }
         }
 
+        public static void LoadTextures()
+        {
+
+        }
+
         public static void DisposeTextures()
         {
             defaultTex = null;

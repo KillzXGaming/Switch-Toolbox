@@ -11,6 +11,7 @@ using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
 using Switch_Toolbox.Library.Rendering;
+using SF = SFGraphics.GLObjects.Shaders;
 
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
@@ -31,7 +32,7 @@ namespace Switch_Toolbox.Library
         public ShaderProgram solidColorShaderProgram;
         public override void Prepare(GL_ControlModern control)
         {
-            var solidColorFrag = new FragmentShader(
+          /*  var solidColorFrag = new FragmentShader(
                       @"#version 330
 				uniform vec4 boneColor;
 
@@ -68,7 +69,7 @@ namespace Switch_Toolbox.Library
 
 				}");
 
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);*/
         }
         public override void Prepare(GL_ControlLegacy control)
         {

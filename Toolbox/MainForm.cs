@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using OpenTK.Graphics.OpenGL;
 using Switch_Toolbox.Library.NodeWrappers;
+using Switch_Toolbox.Library.Rendering;
 
 namespace Toolbox
 {
@@ -99,8 +100,11 @@ namespace Toolbox
                 //Create an instance of this to help load open gl data easier and quicker after boot
                 var viewport = new Viewport(false);
 
+                ShaderTools.executableDir = Runtime.ExecutableDir;
                 if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
                 {
+                    OpenTKSharedResources.InitializeSharedResources();
+
                     Runtime.OpenTKInitialized = true;
 
                     Runtime.renderer = GL.GetString(StringName.Renderer);
@@ -1176,6 +1180,12 @@ namespace Toolbox
 
         private void tutorialToolStripMenuItem_Click(object sender, EventArgs e) {
             System.Diagnostics.Process.Start("https://github.com/KillzXGaming/Switch-Toolbox/wiki/Tutorial-Home-Page");
+        }
+
+        private void checkShaderErrorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShaderTools.SaveErrorLogs();
+
         }
     }
 }

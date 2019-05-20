@@ -230,7 +230,9 @@ namespace Switch_Toolbox.Library.IO
                 using (var writer = new FileWriter(stream))
                 {
                     writer.Write(data.Length);
-                    byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data), LZ4.Frame.LZ4MaxBlockSize.Auto, true, true, false, true, false);
+                    byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data), 
+                        LZ4.Frame.LZ4MaxBlockSize.MB1, true, true, false, true, false);
+
                     writer.Write(buffer, 0, buffer.Length);
                 }
                 return stream.ToArray();

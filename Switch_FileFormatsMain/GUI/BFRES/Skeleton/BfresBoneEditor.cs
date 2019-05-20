@@ -185,6 +185,7 @@ namespace FirstPlugin
 
             SetBoneTransform(activeBone);
             activeBone.skeletonParent.reset();
+            activeBone.skeletonParent.update(true);
 
             LibraryGUI.Instance.UpdateViewport();
         }

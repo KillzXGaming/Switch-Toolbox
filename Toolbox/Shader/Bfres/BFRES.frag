@@ -57,6 +57,7 @@ uniform vec3 materialSelectColor;
 // Shader Params
 uniform float normal_map_weight;
 uniform float ao_density;
+uniform float shadow_density;
 uniform float emission_intensity;
 uniform vec4 fresnelParams;
 uniform vec4 base_color_mul_color;
@@ -219,12 +220,6 @@ void main()
 
 	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgb, 1);
 	//vec4 diffuseMapColor = vec4(1);
-
-	//diffuseMapColor.r = ParseComponent(RedChannel, diffuseMapTex);
-	//diffuseMapColor.g = ParseComponent(BlueChannel, diffuseMapTex);
-//	diffuseMapColor.b = ParseComponent(GreenChannel, diffuseMapTex);
-//	diffuseMapColor.a = ParseComponent(AlphaChannel, diffuseMapTex);
-
 	diffuseMapColor *= halfLambert;
 
 	vec3 LightingDiffuse = vec3(0);
@@ -233,34 +228,34 @@ void main()
 	    vec3 LightIntensity = vec3(0.1);
 		LightingDiffuse += ShadowBake.indirectLighting.rgb * LightIntensity;
 	}
+
+    float ShadowPass = 1;
+    float AoPass = 1;
+
+	if (HasShadowMap == 1)
+	{
+		float aoBlend = 0;
+		aoBlend += 1.0 - ShadowBake.aoIntensity;
+		float shadowBlend = 0;
+		shadowBlend += 1.0 - ShadowBake.shadowIntensity;
+
+		 ShadowPass *= 1.0 - shadowBlend * shadow_density * 0.5;
+		 AoPass *= 1.0 - aoBlend * ao_density * 0.6;
+	}
+
 	diffuseMapColor.rgb += LightingDiffuse;
 
     vec3 LightDiffuse = vec3(0.03);
 	//diffuseMapColor.rgb += mix(LightingDiffuse, diffuseMapColor.rgb, vec3(ShadowBake.shadowIntensity) );
 
     fragColor.rgb += diffuseMapColor.rgb;
+    fragColor.rgb *= ShadowPass;
+    fragColor.rgb *= AoPass;
 
     vec3 color = vec3(1);
     vec3 normal = texture(NormalMap, f_texcoord0).rgb;
     vec3 specular = texture(SpecularMap, f_texcoord0).rgb;
 
-	float aoBlend = 1;
-	if (HasShadowMap == 1)
-	{
-	     if (bake_shadow_type == 0)
-		 {
-		       aoBlend = texture(BakeShadowMap, f_texcoord1).r;
-		       fragColor.rgb *= aoBlend;
-		 }
-		 if (bake_shadow_type == 2)
-		 {
-		       aoBlend = texture(BakeShadowMap, f_texcoord1).r;
-		       // fragColor *= aoBlend;
-
-			   //For this it will need a frame buffer to be used
-			   vec4 ShadowTex = vec4(texture(BakeShadowMap, f_texcoord1).ggg, 1);
-		 }
-	}
 
 	float SpecularAmount = 0;
 
@@ -275,7 +270,7 @@ void main()
     if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
 		fragColor.rgb += EmissionPass(EmissionMap, emission_intensity, vert, 0, emission_color);
     fragColor.rgb += SpecularPass(I, N, HasSpecularMap, SpecularMap, specular_color, vert, 0);
-    fragColor.rgb += ReflectionPass(N, I, diffuseMapColor,SpecularAmount, aoBlend, tintColor, vert);
+    fragColor.rgb += ReflectionPass(N, I, diffuseMapColor,SpecularAmount, AoPass, tintColor, vert);
 
 	fragColor.rgb *= pickingColor.rgb;
 

@@ -209,6 +209,8 @@ vec3 saturation(vec3 rgb, float adjustment)
 
 void main()
 {
+    bool RenderAsLighting = renderType == 2;
+
     fragColor = vec4(1);
 
     // Create a struct for passing all the vertex attributes to other functions.
@@ -265,6 +267,12 @@ void main()
         lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
     }
 
+	if (RenderAsLighting)
+	{
+	     metallic = 0;
+		 roughness = 1;
+	}
+
 	float specIntensity = 1;
 
 	if (HasMRA == 1) //Kirby Star Allies PBR map
@@ -304,6 +312,9 @@ void main()
 		LightingDiffuse += ShadowBake.indirectLighting.rgb * LightIntensity;
 	}
 
+//	shadow *= ShadowBake.shadowIntensity;
+//	ao *= ShadowBake.aoIntensity;
+
     // Diffuse pass
     vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
     vec3 diffuseTerm = diffuseIblColor * albedo;
@@ -337,7 +348,7 @@ void main()
     // Global brightness adjustment.
     fragColor.rgb *= 2.5;
 
-   fragColor *= min(pickingColor, vec4(1));
+    fragColor *= min(pickingColor, vec4(1));
 
     fragColor.rgb *= min(boneWeightsColored, vec3(1));
 
@@ -350,6 +361,15 @@ void main()
     // Alpha calculations.
     float alpha = texture(DiffuseMap, f_texcoord0).a;
     fragColor.a = alpha;
+
+	if (RenderAsLighting)
+	{
+	    fragColor.rgb = specularTerm;
+	    fragColor.rgb += emissionTerm;
+		fragColor.rgb *= 2.5;
+		fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
+		fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
+	}
 
 	 // Toggles rendering of individual color channels for all render modes.
     fragColor.rgb *= vec3(renderR, renderG, renderB);

@@ -31,8 +31,10 @@ BakedData ShadowMapBaked(sampler2D ShadowMap, sampler2D LightMap, vec2 texCoordB
     BakedData bake0;
 
     bake0.indirectLighting = vec3(0);
+    bake0.aoIntensity = 1;
+    bake0.shadowIntensity = 1;
 
-	if (CalcType != -1)
+	if (CalcType == 222)
 	{
          vec4 bakeTex0 = texture(ShadowMap, texCoordBake0);
 
