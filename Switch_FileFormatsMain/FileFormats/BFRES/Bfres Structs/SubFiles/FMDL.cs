@@ -928,7 +928,7 @@ namespace Bfres.Structs
 
                         Console.WriteLine("Processing Data. Object count " + assimp.objects.Count);
 
-                        bool ForceSkinInfluence = true;
+                        bool ForceSkinInfluence = false;
                         int ForceSkinInfluenceMax = 4;
 
 
