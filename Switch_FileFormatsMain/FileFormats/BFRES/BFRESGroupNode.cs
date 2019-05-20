@@ -96,6 +96,7 @@ namespace Bfres.Structs
             if (Type == BRESGroupType.Models)
             {
                 ContextMenuStrip.Items.Add(new STToolStripSeparator());
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Show All Models", null, ShowAllModelsAction, Keys.Control | Keys.A));
                 ContextMenuStrip.Items.Add(new STToolStipMenuItem("Hide All Models", null, HideAllModelsAction, Keys.Control | Keys.H));
             }
         }
@@ -107,6 +108,7 @@ namespace Bfres.Structs
         protected void BatchGenerateMipmapsAction(object sender, EventArgs e) { BatchGenerateMipmaps(); }
 
         protected void HideAllModelsAction(object sender, EventArgs e) { HideAllModels(); }
+        protected void ShowAllModelsAction(object sender, EventArgs e) { ShowAllModels(); }
 
         public void BatchGenerateMipmaps()
         {
@@ -114,6 +116,14 @@ namespace Bfres.Structs
             {
                 texture.SetImageData(texture.GetBitmap(), 0);
                 
+            }
+        }
+
+        public void ShowAllModels()
+        {
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                Nodes[i].Checked = true;
             }
         }
 
