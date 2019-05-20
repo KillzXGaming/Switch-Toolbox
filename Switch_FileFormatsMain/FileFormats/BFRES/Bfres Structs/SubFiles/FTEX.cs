@@ -154,7 +154,7 @@ namespace Bfres.Structs
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                if (setting.GenerateMipmaps)
+                if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                 {
                     setting.DataBlockOutput.Clear();
                     setting.DataBlockOutput.Add(setting.GenerateMips());
@@ -245,7 +245,7 @@ namespace Bfres.Structs
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    if (setting.GenerateMipmaps)
+                    if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                     {
                         setting.DataBlockOutput.Clear();
                         setting.DataBlockOutput.Add(setting.GenerateMips());

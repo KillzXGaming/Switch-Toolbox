@@ -167,10 +167,19 @@ namespace FirstPlugin
 
             Thread = new Thread((ThreadStart)(() =>
             {
+                SelectedTexSettings.IsFinishedCompressing = false;
+                ToggleOkButton(false);
+
+                var mips = SelectedTexSettings.GenerateMipList();
+                SelectedTexSettings.DataBlockOutput.Clear();
+                SelectedTexSettings.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
+
+                ToggleOkButton(true);
+
                 pictureBox1.Image = bitmap;
                 SelectedTexSettings.Compress();
 
-                bitmap = FTEX.DecodeBlockGetBitmap(SelectedTexSettings.DataBlockOutput[0], SelectedTexSettings.
+                bitmap = FTEX.DecodeBlockGetBitmap(mips[0], SelectedTexSettings.
                 TexWidth, SelectedTexSettings.TexHeight, FTEX.ConvertFromGx2Format(
                     (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)SelectedTexSettings.Format));
 
@@ -178,6 +187,18 @@ namespace FirstPlugin
 
             }));
             Thread.Start();
+        }
+
+        private void ToggleOkButton(bool Enable)
+        {
+            if (button1.InvokeRequired)
+            {
+                button1.Invoke((MethodInvoker)delegate {
+                    button1.Enabled = Enable;
+                });
+            }
+            else
+                button1.Enabled = Enable;
         }
 
         private void tileModeCB_SelectedIndexChanged(object sender, EventArgs e)
@@ -549,12 +570,17 @@ namespace FirstPlugin
         private Switch_Toolbox.Library.Forms.STButton button1;
 
         private void MipmapNum_ValueChanged(object sender, EventArgs e) {
+            if (!IsLoaded)
+                return;
+
             if (SelectedTexSettings != null)
             {
                 if (MipmapNum.Value > 0)
                     SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
                 else
                     SelectedTexSettings.MipCount = 1;
+
+                SetupSettings();
             }
         }
     }

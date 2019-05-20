@@ -35,6 +35,8 @@ namespace FirstPlugin
         public GX2AAMode AAMode = GX2AAMode.Mode1X;
         public float alphaRef = 0.5f;
 
+        public bool IsFinishedCompressing = false;
+
         public void LoadDDS(string FileName, byte[] FileData = null)
         {
             TexName = STGenericTexture.SetNameFromPath(FileName);
@@ -106,27 +108,49 @@ namespace FirstPlugin
                 throw new Exception("Failed to load " + Format);
             }
         }
-        
+
+        public List<byte[]> GenerateMipList(int SurfaceLevel = 0)
+        {
+            Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
+
+            List<byte[]> mipmaps = new List<byte[]>();
+            for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+            {
+                int MipWidth = Math.Max(1, (int)TexWidth >> mipLevel);
+                int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
+
+                if (mipLevel != 0)
+                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
+
+                mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
+                   Image.Width, Image.Height, FTEX.ConvertFromGx2Format((GX2SurfaceFormat)Format), alphaRef));
+            }
+            Image.Dispose();
+
+            return mipmaps;
+        }
+
         public byte[] GenerateMips(int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
             List<byte[]> mipmaps = new List<byte[]>();
-            mipmaps.Add(STGenericTexture.CompressBlock(DecompressedData[SurfaceLevel],
-                (int)TexWidth, (int)TexHeight, FTEX.ConvertFromGx2Format((GX2SurfaceFormat)Format), alphaRef));
-
-            //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
-            //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
-                Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
+                int MipWidth = Math.Max(1, (int)TexWidth >> mipLevel);
+                int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
+
+                if (mipLevel != 0)
+                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
+
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                    Image.Width, Image.Height, FTEX.ConvertFromGx2Format((GX2SurfaceFormat)Format), alphaRef));
+                       Image.Width, Image.Height, FTEX.ConvertFromGx2Format((GX2SurfaceFormat)Format), alphaRef));
             }
             Image.Dispose();
 
             return Utils.CombineByteArray(mipmaps.ToArray());
         }
+
         public void Compress()
         {
             DataBlockOutput.Clear();
