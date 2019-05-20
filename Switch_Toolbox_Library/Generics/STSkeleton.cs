@@ -29,47 +29,9 @@ namespace Switch_Toolbox.Library
 
         public bool IsHovered() => Selected;
 
-        public ShaderProgram solidColorShaderProgram;
         public override void Prepare(GL_ControlModern control)
         {
-          /*  var solidColorFrag = new FragmentShader(
-                      @"#version 330
-				uniform vec4 boneColor;
-
-                out vec4 FragColor;
-
-				void main(){
-	                FragColor = boneColor;
-				}");
-            var solidColorVert = new VertexShader(
-              @"#version 330
-
-				in vec4 point;
-
-                uniform mat4 mtxCam;
-                uniform mat4 mtxMdl;
-
-                uniform mat4 bone;
-                uniform mat4 parent;
-                uniform mat4 rotation;
-                uniform mat4 ModelMatrix;
-                uniform int hasParent;
-                uniform float scale;
-
-				void main(){
-                    vec4 position = bone * rotation * vec4(point.xyz * scale, 1);
-                    if (hasParent == 1)
-                    {
-                        if (point.w == 0)
-                            position = parent * rotation * vec4(point.xyz * scale, 1);
-                        else
-                            position = bone * rotation * vec4((point.xyz - vec3(0, 1, 0)) * scale, 1);
-                    }
-					gl_Position =  mtxCam  * ModelMatrix * mtxMdl * vec4(position.xyz, 1);
-
-				}");
-
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);*/
+      
         }
         public override void Prepare(GL_ControlLegacy control)
         {
@@ -212,7 +174,9 @@ namespace Switch_Toolbox.Library
             if (!Runtime.OpenTKInitialized || !Runtime.renderBones)
                 return;
 
-            GL.UseProgram(0);
+            SF.Shader shader = OpenTKSharedResources.shaders["BONE"];
+            shader.UseProgram();
+
             GL.Disable(EnableCap.CullFace);
 
             if (Runtime.boneXrayDisplay)
@@ -221,59 +185,65 @@ namespace Switch_Toolbox.Library
             if (Runtime.renderBoundingBoxes)
                 DrawBoundingBoxes();
 
-            control.CurrentShader = solidColorShaderProgram;
-
             control.UpdateModelMatrix(
             Matrix4.CreateScale(Runtime.previewScale) *
             Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
 
 
-            solidColorShaderProgram.EnableVertexAttributes();
-            solidColorShaderProgram.SetMatrix4x4("rotation", ref prismRotation);
+            shader.EnableVertexAttributes();
+            shader.SetMatrix4x4("rotation", ref prismRotation);
+
+            Matrix4 camMat = control.CameraMatrix;
+            Matrix4 mdlMat = control.ModelMatrix;
+            Matrix4 projMat = control.ProjectionMatrix;
+            Matrix4 computedCamMtx = camMat * projMat;
+
+            shader.SetMatrix4x4("mtxCam", ref computedCamMtx);
+            shader.SetMatrix4x4("mtxMdl", ref mdlMat);
 
             foreach (STBone bn in bones)
             {
                 if (!bn.Checked)
                     continue;
 
-                solidColorShaderProgram.SetVector4("boneColor", ColorUtility.ToVector4(boneColor));
-                solidColorShaderProgram.SetFloat("scale", Runtime.bonePointSize);
-                solidColorShaderProgram.SetMatrix4x4("ModelMatrix", ref bn.ModelMatrix);
+                shader.SetVector4("boneColor", ColorUtility.ToVector4(boneColor));
+                shader.SetFloat("scale", Runtime.bonePointSize);
+                shader.SetMatrix4x4("ModelMatrix", ref bn.ModelMatrix);
 
                 
                 Matrix4 transform = bn.Transform;
 
-                solidColorShaderProgram.SetMatrix4x4("bone", ref transform);
-                solidColorShaderProgram.SetInt("hasParent", bn.parentIndex != -1 ? 1 : 0);
+                shader.SetMatrix4x4("bone", ref transform);
+                shader.SetInt("hasParent", bn.parentIndex != -1 ? 1 : 0);
 
                 if (bn.parentIndex != -1)
                 {
                     var transformParent = ((STBone)bn.Parent).Transform;
-                    solidColorShaderProgram.SetMatrix4x4("parent", ref transformParent);
+                    shader.SetMatrix4x4("parent", ref transformParent);
                 }
 
-                Draw(solidColorShaderProgram);
+                Draw(shader);
 
                 if (Runtime.SelectedBoneIndex == bn.GetIndex())
-                    solidColorShaderProgram.SetVector4("boneColor", ColorUtility.ToVector4(selectedBoneColor));
+                    shader.SetVector4("boneColor", ColorUtility.ToVector4(selectedBoneColor));
 
-                solidColorShaderProgram.SetInt("hasParent", 0);
-                Draw(solidColorShaderProgram);
+                shader.SetInt("hasParent", 0);
+                Draw(shader);
             }
 
-            solidColorShaderProgram.DisableVertexAttributes();
+            shader.DisableVertexAttributes();
 
             GL.UseProgram(0);
             GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
         }
 
-        private void Attributes(ShaderProgram shader)
+        private void Attributes(SF.Shader shader)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-            GL.VertexAttribPointer(shader.GetAttribute("point"), 4, VertexAttribPointerType.Float, false, 16, 0);
+            GL.VertexAttribPointer(shader.GetAttribLocation("point"), 4, VertexAttribPointerType.Float, false, 16, 0);
         }
-        private void Draw(ShaderProgram shader)
+        private void Draw(SF.Shader shader)
         {
             Attributes(shader);
 

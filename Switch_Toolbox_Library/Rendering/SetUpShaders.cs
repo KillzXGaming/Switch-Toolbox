@@ -31,7 +31,10 @@ namespace Switch_Toolbox.Library.Rendering
             if (Switch_Toolbox.Library.Runtime.UseLegacyGL)
                 SetUpLegacyBfresShaders();
             else
+            {
                 SetUpBfresShaders();
+                SetUBoneShaders();
+            }
         }
         private static void SetUpLegacyBfresShaders()
         {
@@ -45,6 +48,18 @@ namespace Switch_Toolbox.Library.Rendering
             CreateAndAddShader("BFRES_Debug", bfresSharedShaders.ToArray());
 
         }
+
+        private static void SetUBoneShaders()
+        {
+            List<string> boneSharedShaders = new List<string>
+            {
+                "Bone.vert",
+                "Bone.frag",
+            };
+
+            CreateAndAddShader("BONE", boneSharedShaders.ToArray());
+        }
+
         private static void SetUpBfresShaders()
         {
             List<string> bfresSharedShaders = new List<string>
