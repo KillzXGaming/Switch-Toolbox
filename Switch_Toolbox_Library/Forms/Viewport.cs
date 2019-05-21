@@ -35,6 +35,8 @@ namespace Switch_Toolbox.Library
             editor = new Runtime.ViewportEditor();
             Runtime.viewportEditors.Add(editor);
 
+            perspectiveToolStripMenuItem.Checked = Runtime.ViewportCameraMode == Runtime.CameraMode.Perspective;
+
             foreach (var type in Enum.GetValues(typeof(Runtime.ViewportShading)).Cast<Runtime.ViewportShading>())
             {
                 if (type == Runtime.viewportShading)
@@ -283,18 +285,12 @@ namespace Switch_Toolbox.Library
         {
             if (GL_ControlLegacy != null)
             {
-                GL_ControlLegacy.CamRotX = 0;
-                GL_ControlLegacy.CamRotY = 0;
-                GL_ControlLegacy.CameraTarget = new OpenTK.Vector3(0);
-                GL_ControlLegacy.CameraDistance = 10f;
+                GL_ControlLegacy.ResetCamera();
                 GL_ControlLegacy.Refresh();
             }
             else
             {
-                GL_ControlModern.CamRotX = 0;
-                GL_ControlModern.CamRotY = 0;
-                GL_ControlModern.CameraTarget = new OpenTK.Vector3(0);
-                GL_ControlModern.CameraDistance = 10f;
+                GL_ControlModern.ResetCamera();
                 GL_ControlModern.Refresh();
             }
         }
@@ -319,6 +315,98 @@ namespace Switch_Toolbox.Library
                 if (animationPanel1.CurrentAnimation != null)
                     animationPanel1.ResetModels();
             }
+        }
+
+        private void perspectiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (perspectiveToolStripMenuItem.Checked)
+            {
+                perspectiveToolStripMenuItem.Checked = false;
+                orthographicToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                orthographicToolStripMenuItem.Checked = false;
+                perspectiveToolStripMenuItem.Checked = true;
+            }
+
+            bool IsOrtho = orthographicToolStripMenuItem.Checked;
+
+            if (GL_ControlModern != null)
+                GL_ControlModern.UseOrthographicView = IsOrtho;
+            else
+                GL_ControlLegacy.UseOrthographicView = IsOrtho;
+
+            UpdateViewport();
+        }
+
+        private void orthographicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (orthographicToolStripMenuItem.Checked)
+            {
+                orthographicToolStripMenuItem.Checked = false;
+                perspectiveToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                perspectiveToolStripMenuItem.Checked = false;
+                orthographicToolStripMenuItem.Checked = true;
+            }
+
+            bool IsOrtho = orthographicToolStripMenuItem.Checked;
+
+            if (GL_ControlModern != null)
+                GL_ControlModern.UseOrthographicView = IsOrtho;
+            else
+                GL_ControlLegacy.UseOrthographicView = IsOrtho;
+
+            UpdateViewport();
+        }
+
+        private enum CameraPickBuffer
+        {
+            Top = 1,
+            Bottom = 2,
+            Front = 3,
+            Back = 4,
+            Left = 5,
+            Right = 6,
+        }
+
+        private void frontToolStripMenuItem_Click(object sender, EventArgs e) {
+            ApplyCameraOrientation(CameraPickBuffer.Front);
+        }
+
+        private void backToolStripMenuItem_Click(object sender, EventArgs e) {
+            ApplyCameraOrientation(CameraPickBuffer.Back);
+        }
+
+        private void topToolStripMenuItem_Click(object sender, EventArgs e) {
+            ApplyCameraOrientation(CameraPickBuffer.Top);
+        }
+
+        private void bottomToolStripMenuItem_Click(object sender, EventArgs e) {
+            ApplyCameraOrientation(CameraPickBuffer.Bottom);
+        }
+
+        private void rightToolStripMenuItem_Click(object sender, EventArgs e) {
+            ApplyCameraOrientation(CameraPickBuffer.Right);
+        }
+
+        private void leftToolStripMenuItem_Click(object sender, EventArgs e) {
+            ApplyCameraOrientation(CameraPickBuffer.Left);
+        }
+
+        private void ApplyCameraOrientation(CameraPickBuffer CameraPick)
+        {
+            int pickingBuffer = (int)CameraPick;
+
+            if (GL_ControlModern != null)
+                GL_ControlModern.ApplyCameraOrientation(pickingBuffer);
+            else
+                GL_ControlModern.ApplyCameraOrientation(pickingBuffer);
+
+            UpdateViewport();
         }
     }
 }

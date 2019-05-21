@@ -190,8 +190,8 @@ void main()
 		//Usually it's just metalness with roughness and works fine
 		metallic = texture(MRA, f_texcoord0).r;
 		roughness = texture(MRA, f_texcoord0).g;
-		specIntensity = texture(MRA, f_texcoord0).b;
-		ao = texture(MRA, f_texcoord0).a;
+		ao = texture(MRA, f_texcoord0).b;
+		specIntensity = texture(MRA, f_texcoord0).a;
 	}
 	else if (HasShadowMap == 1)
     {

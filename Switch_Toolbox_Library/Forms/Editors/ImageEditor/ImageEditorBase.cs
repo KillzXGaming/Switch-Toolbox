@@ -180,7 +180,7 @@ namespace Switch_Toolbox.Library.Forms
             UpdateBackgroundImage();
             SetZoomSetting();
 
-            SetEditorOrientation(Runtime.ImageEditor.DisplayVertical);
+            SetEditorOrientation(Runtime.ImageEditor.DisplayVertical, true);
 
 
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
@@ -208,10 +208,14 @@ namespace Switch_Toolbox.Library.Forms
             FileWatcher.Filter = "";
         }
 
-        public void SetEditorOrientation(bool ToVertical)
+        public void SetEditorOrientation(bool ToVertical, bool IsStartup = false)
         {
-            displayVerticalToolStripMenuItem.Checked = ToVertical;
-            SetOrientation();
+            //Check if it's already set the setting and is not from creating a new instance. It's not necessary to reset if it is.
+            if (displayVerticalToolStripMenuItem.Checked != ToVertical || IsStartup)
+            {
+                displayVerticalToolStripMenuItem.Checked = ToVertical;
+                SetOrientation();
+            }
         }
 
         private void UpdateBackgroundImage()

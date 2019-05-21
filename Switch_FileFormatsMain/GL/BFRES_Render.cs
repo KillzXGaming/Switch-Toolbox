@@ -197,56 +197,19 @@ namespace FirstPlugin
 
         }
 
-        public void FrameSelection(GL_ControlModern control)
+        public void CenterCamera(GL_ControlModern control)
         {
             var spheres = new List<Vector4>();
-            foreach (var model in models)
+            foreach (var mdl in models)
             {
-                foreach (var shape in model.shapes)
+                foreach (FSHP shp in mdl.shapes)
                 {
-                    List<Vector3> vertexPositions = new List<Vector3>();
-                    foreach (var vertex in shape.vertices)
-                    {
-                        vertexPositions.Add(vertex.pos);
-                    }
-                    spheres.Add(SFGraphics.Utils.BoundingSphereGenerator.GenerateBoundingSphere(vertexPositions));
+                    var vertexPositions = shp.vertices.Select(x => x.pos).Distinct();
+                    spheres.Add(control.GenerateBoundingSphere(vertexPositions));
                 }
             }
 
-
-            //Depth sort meshes
-            DepthSortMeshes(control.CameraTarget);
-        }
-
-        public void CenterCamera(GL_ControlModern control)
-        {
-            Vector3 minVector = new Vector3(0);
-            Vector3 maxVector = new Vector3(0);
-            if (models.Count != 0)
-            {
-                minVector = models[0].MinPosition;
-                maxVector = models[0].MaxPosition;
-            }
-
-            Vector3 translation = control.CameraPosition;
-
-            float minSize = Math.Min(Math.Min(minVector.X, minVector.Y), minVector.Z);
-            float maxSize = Math.Max(Math.Max(maxVector.X, maxVector.Y), maxVector.Z);
-            float scale = (10f / (maxSize - minSize)); //Try to adjust to screen
-            if (maxSize - minSize == 0) scale = 1;
-
-            Matrix4 centerMatrix = Matrix4.CreateTranslation(
-                -(minVector.X + maxVector.X) / 2,
-                -(minVector.Y + maxVector.Y) / 2,
-                -(minVector.Z + maxVector.Z) / 2);
-            Matrix4 translationMatrix = Matrix4.CreateTranslation(
-                (-translation.X / 50) / scale,
-                (translation.Y / 50) / scale,
-                control.CameraDistance / scale);
-
-
-
-            control.CameraPosition = centerMatrix.ExtractTranslation();
+            control.FrameSelect(spheres);
         }
 
         public static Vector4 GenerateBoundingSphere(IEnumerable<Vector4> boundingSpheres)
@@ -302,8 +265,8 @@ namespace FirstPlugin
 
             if (models.Count > 0)
             {
-                if (models[0].Parent.Parent.IsSelected)
-                    CenterCamera(control);
+          //      if (models[0].Parent.Parent.IsSelected)
+                  //  CenterCamera(control);
 
                 if (models[0].shapes.Count > 0)
                 {

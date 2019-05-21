@@ -421,6 +421,9 @@ namespace FirstPlugin
 
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 
+            if (SelectedSection is BFRES)
+                bfresEditor.FrameCamera(BFRESRender);
+
             if (IsSimpleEditor)
             {
                 if (SelectedSection is MatTextureWrapper)

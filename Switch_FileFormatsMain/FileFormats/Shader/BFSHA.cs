@@ -8,6 +8,7 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
 using BfshaLibrary;
 using System.Windows.Forms;
+using ResNX = Syroot.NintenTools.NSW.Bfres;
 
 namespace FirstPlugin
 {
@@ -40,6 +41,8 @@ namespace FirstPlugin
             }
         }
 
+        BfshaFile bfshaFile;
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
@@ -51,7 +54,7 @@ namespace FirstPlugin
             }
             else
             {
-                BfshaFile bfshaFile = new BfshaFile(stream);
+                bfshaFile = new BfshaFile(stream);
 
                 foreach (var model in bfshaFile.ShaderModels)
                 {
@@ -61,6 +64,29 @@ namespace FirstPlugin
                 }
             }
         }
+
+        public int GetStaticKey(ResNX.ShaderAssign ShaderAssign)
+        {
+            if (bfshaFile.ShaderModelDict.ContainsKey(ShaderAssign.ShadingModelName))
+            {
+                int ModelIndex = bfshaFile.ShaderModelDict.IndexOf(ShaderAssign.ShadingModelName);
+
+                for (int option = 0; option < ShaderAssign.ShaderOptions.Count; option++)
+                {
+                    int OptionIndex = bfshaFile.ShaderModels[ModelIndex].StaticOptionDict.IndexOf(ShaderAssign.ShaderOptions[option]);
+                    var OptionStatic = bfshaFile.ShaderModels[ModelIndex].StaticOptions[OptionIndex];
+
+                    int ChoiceIndex = OptionStatic.ChoiceDict.IndexOf(ShaderAssign.ShaderOptions[option]);
+
+                    return bfshaFile.ShaderModels[ModelIndex].GetStaticKey(OptionIndex, ChoiceIndex);
+                }
+            }
+            else
+                throw new Exception("Model not found in bfsha!");
+
+            return -1;
+        }
+
         public void Unload()
         {
 

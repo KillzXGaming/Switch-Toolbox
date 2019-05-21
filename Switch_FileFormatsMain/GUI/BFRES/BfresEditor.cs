@@ -123,6 +123,18 @@ namespace FirstPlugin.Forms
             return null;
         }
 
+        public void FrameCamera(BFRESRender Renderer)
+        {
+            if (!Runtime.UseOpenGL || !DisplayViewport)
+                return;
+
+            if (viewport.GL_ControlModern != null)
+            {
+                Renderer.CenterCamera(viewport.GL_ControlModern);
+                viewport.UpdateViewport();
+            }
+        }
+
         public void LoadEditor(UserControl Control)
         {
             Control.Dock = DockStyle.Fill;

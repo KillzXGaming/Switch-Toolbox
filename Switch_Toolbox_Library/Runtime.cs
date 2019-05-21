@@ -108,6 +108,13 @@ namespace Switch_Toolbox.Library
 
         public static float MaxCameraSpeed = 0.1f;
 
+        public static CameraMode ViewportCameraMode = CameraMode.Perspective;
+        public enum CameraMode
+        {
+            Perspective,
+            Orthographic,
+        }
+
         public static int Yaz0CompressionLevel = 3;
         public static bool RenderModels = true;
         public static bool RenderModelSelection = true;

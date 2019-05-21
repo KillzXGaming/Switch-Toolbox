@@ -211,6 +211,11 @@ namespace Switch_Toolbox.Library
                     case "UseDiffuseSkyTexture":
                         bool.TryParse(node.InnerText, out Runtime.PBR.UseDiffuseSkyTexture);
                         break;
+                    case "ViewportCameraMode":
+                        Runtime.CameraMode cameraMode;
+                        Enum.TryParse(node.InnerText, out cameraMode);
+                        Runtime.ViewportCameraMode = cameraMode;
+                        break;
                 }
             }
         }
@@ -385,6 +390,7 @@ namespace Switch_Toolbox.Library
         {
             XmlNode renderSettingsNode = doc.CreateElement("RENDERSETTINGS");
             parentNode.AppendChild(renderSettingsNode);
+            renderSettingsNode.AppendChild(createNode(doc, "ViewportCameraMode", Runtime.ViewportCameraMode.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "viewportShading", Runtime.viewportShading.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "stereoscopy", Runtime.stereoscopy.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "CameraFar", Runtime.CameraFar.ToString()));

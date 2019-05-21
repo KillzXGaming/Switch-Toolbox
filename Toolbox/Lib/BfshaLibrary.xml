@@ -938,6 +938,16 @@
             Returns the key given <paramref name="index"/> is within range of the dictionary.
             </summary>
         </member>
+        <member name="M:BfshaLibrary.ResDict.IndexOf(System.String)">
+            <summary>
+            Searches for the specified <paramref name="value"/> and returns the zero-based index of the first occurrence
+            within the entire dictionary.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns>The zero-based index of the first occurence of <paramref name="value"/> within the entire
+            dictionary if found; otherwise <c>-1</c>.</returns>
+        </member>
         <member name="M:BfshaLibrary.ResDict.Clear">
             <summary>
             Removes all elements from the dictionary.
