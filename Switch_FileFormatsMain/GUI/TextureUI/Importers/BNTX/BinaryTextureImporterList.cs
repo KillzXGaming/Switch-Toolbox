@@ -16,7 +16,7 @@ namespace FirstPlugin
 {
     public partial class BinaryTextureImporterList : STForm
     {
-        public STCompressionMode CompressionMode = STCompressionMode.Normal;
+        public STCompressionMode CompressionMode = STCompressionMode.Fast;
 
         public int SelectedIndex = -1;
         public bool ForceMipCount = false;
@@ -158,6 +158,8 @@ namespace FirstPlugin
 
             if (compressionModeCB.SelectedIndex == 0)
                 CompressionMode = STCompressionMode.Fast;
+            else
+                CompressionMode = STCompressionMode.Normal;
 
             Thread = new Thread((ThreadStart)(() =>
             {
