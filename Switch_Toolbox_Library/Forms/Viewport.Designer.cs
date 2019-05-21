@@ -48,6 +48,8 @@
             this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toOriginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toActiveModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,7 +99,7 @@
             this.modeToolStripMenuItem,
             this.orientationToolStripMenuItem});
             this.cameraToolStripMenuItem.Name = "cameraToolStripMenuItem";
-            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.cameraToolStripMenuItem.Text = "Camera";
             // 
             // modeToolStripMenuItem
@@ -106,7 +108,7 @@
             this.perspectiveToolStripMenuItem,
             this.orthographicToolStripMenuItem});
             this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
-            this.modeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.modeToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.modeToolStripMenuItem.Text = "Mode";
             // 
             // perspectiveToolStripMenuItem
@@ -133,48 +135,48 @@
             this.rightToolStripMenuItem,
             this.leftToolStripMenuItem});
             this.orientationToolStripMenuItem.Name = "orientationToolStripMenuItem";
-            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.orientationToolStripMenuItem.Text = "Orientation";
             // 
             // frontToolStripMenuItem
             // 
             this.frontToolStripMenuItem.Name = "frontToolStripMenuItem";
-            this.frontToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.frontToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.frontToolStripMenuItem.Text = "Front";
             this.frontToolStripMenuItem.Click += new System.EventHandler(this.frontToolStripMenuItem_Click);
             // 
             // backToolStripMenuItem
             // 
             this.backToolStripMenuItem.Name = "backToolStripMenuItem";
-            this.backToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.backToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.backToolStripMenuItem.Text = "Back";
             this.backToolStripMenuItem.Click += new System.EventHandler(this.backToolStripMenuItem_Click);
             // 
             // topToolStripMenuItem
             // 
             this.topToolStripMenuItem.Name = "topToolStripMenuItem";
-            this.topToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.topToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.topToolStripMenuItem.Text = "Top";
             this.topToolStripMenuItem.Click += new System.EventHandler(this.topToolStripMenuItem_Click);
             // 
             // bottomToolStripMenuItem
             // 
             this.bottomToolStripMenuItem.Name = "bottomToolStripMenuItem";
-            this.bottomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bottomToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.bottomToolStripMenuItem.Text = "Bottom";
             this.bottomToolStripMenuItem.Click += new System.EventHandler(this.bottomToolStripMenuItem_Click);
             // 
             // rightToolStripMenuItem
             // 
             this.rightToolStripMenuItem.Name = "rightToolStripMenuItem";
-            this.rightToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rightToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.rightToolStripMenuItem.Text = "Right";
             this.rightToolStripMenuItem.Click += new System.EventHandler(this.rightToolStripMenuItem_Click);
             // 
             // leftToolStripMenuItem
             // 
             this.leftToolStripMenuItem.Name = "leftToolStripMenuItem";
-            this.leftToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.leftToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.leftToolStripMenuItem.Text = "Left";
             this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
             // 
@@ -187,10 +189,12 @@
             // 
             // resetCameraToolStripMenuItem
             // 
+            this.resetCameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toOriginToolStripMenuItem,
+            this.toActiveModelToolStripMenuItem});
             this.resetCameraToolStripMenuItem.Name = "resetCameraToolStripMenuItem";
             this.resetCameraToolStripMenuItem.Size = new System.Drawing.Size(91, 20);
             this.resetCameraToolStripMenuItem.Text = "Reset Camera";
-            this.resetCameraToolStripMenuItem.Click += new System.EventHandler(this.resetCameraToolStripMenuItem_Click);
             // 
             // resetPoseToolStripMenuItem
             // 
@@ -213,6 +217,20 @@
             this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.reloadShadersToolStripMenuItem.Text = "Reload Shaders";
             this.reloadShadersToolStripMenuItem.Click += new System.EventHandler(this.reloadShadersToolStripMenuItem_Click);
+            // 
+            // toOriginToolStripMenuItem
+            // 
+            this.toOriginToolStripMenuItem.Name = "toOriginToolStripMenuItem";
+            this.toOriginToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toOriginToolStripMenuItem.Text = "To Origin";
+            this.toOriginToolStripMenuItem.Click += new System.EventHandler(this.toOriginToolStripMenuItem_Click);
+            // 
+            // toActiveModelToolStripMenuItem
+            // 
+            this.toActiveModelToolStripMenuItem.Name = "toActiveModelToolStripMenuItem";
+            this.toActiveModelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toActiveModelToolStripMenuItem.Text = "To Active Model";
+            this.toActiveModelToolStripMenuItem.Click += new System.EventHandler(this.toActiveModelToolStripMenuItem_Click);
             // 
             // Viewport
             // 
@@ -251,5 +269,7 @@
         private System.Windows.Forms.ToolStripMenuItem bottomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem leftToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toOriginToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toActiveModelToolStripMenuItem;
     }
 }

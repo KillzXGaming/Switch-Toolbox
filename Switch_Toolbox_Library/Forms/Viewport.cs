@@ -281,20 +281,6 @@ namespace Switch_Toolbox.Library
         {
         }
 
-        private void resetCameraToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (GL_ControlLegacy != null)
-            {
-                GL_ControlLegacy.ResetCamera();
-                GL_ControlLegacy.Refresh();
-            }
-            else
-            {
-                GL_ControlModern.ResetCamera();
-                GL_ControlModern.Refresh();
-            }
-        }
-
         private void animationLoaderToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -407,6 +393,34 @@ namespace Switch_Toolbox.Library
                 GL_ControlModern.ApplyCameraOrientation(pickingBuffer);
 
             UpdateViewport();
+        }
+
+        private void toOriginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GL_ControlLegacy != null)
+            {
+                GL_ControlLegacy.ResetCamera(false);
+                GL_ControlLegacy.Refresh();
+            }
+            else
+            {
+                GL_ControlModern.ResetCamera(false);
+                GL_ControlModern.Refresh();
+            }
+        }
+
+        private void toActiveModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GL_ControlLegacy != null)
+            {
+                GL_ControlLegacy.ResetCamera(true);
+                GL_ControlLegacy.Refresh();
+            }
+            else
+            {
+                GL_ControlModern.ResetCamera(true);
+                GL_ControlModern.Refresh();
+            }
         }
     }
 }
