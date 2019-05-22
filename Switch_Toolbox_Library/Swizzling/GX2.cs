@@ -43,7 +43,7 @@ namespace Switch_Toolbox.Library
 
 
             public uint[] mipOffset;
-            public byte[] compSel;
+            public byte[] compSel = new byte[4] { 0,1,2,3};
             public uint[] texRegs;
         };
 

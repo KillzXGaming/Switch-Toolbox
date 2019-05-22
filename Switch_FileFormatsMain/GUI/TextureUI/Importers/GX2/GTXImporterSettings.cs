@@ -30,7 +30,11 @@ namespace FirstPlugin
         public uint Swizzle = 0;
         public uint MipSwizzle = 0;
 
-        public GX2CompSel[] compSel = new GX2CompSel[4];
+        public STChannelType RedComp = STChannelType.Red;
+        public STChannelType GreenComp = STChannelType.Green;
+        public STChannelType BlueComp = STChannelType.Blue;
+        public STChannelType AlphaComp = STChannelType.Alpha;
+
         public GX2SurfaceDim SurfaceDim = GX2SurfaceDim.Dim2D;
         public GX2AAMode AAMode = GX2AAMode.Mode1X;
         public float alphaRef = 0.5f;
@@ -56,6 +60,11 @@ namespace FirstPlugin
                 arrayLength = 6;
             }
             DataBlockOutput.Add(dds.bdata);
+
+            RedComp = dds.RedChannel;
+            GreenComp = dds.GreenChannel;
+            BlueComp = dds.BlueChannel;
+            AlphaComp = dds.AlphaChannel;
 
             Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(dds.Format);;
         }

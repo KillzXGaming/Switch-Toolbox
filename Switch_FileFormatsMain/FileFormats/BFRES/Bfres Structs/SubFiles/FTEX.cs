@@ -163,6 +163,12 @@ namespace Bfres.Structs
                 if (setting.DataBlockOutput != null)
                 {
                     var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
+                    surface.compSel = new byte[4];
+                    surface.compSel[0] = (byte)setting.RedComp;
+                    surface.compSel[1] = (byte)setting.GreenComp;
+                    surface.compSel[2] = (byte)setting.BlueComp;
+                    surface.compSel[3] = (byte)setting.alphaRef;
+
                     var tex = FromGx2Surface(surface, setting.TexName);
                     UpdateTex(tex);
 
@@ -182,7 +188,12 @@ namespace Bfres.Structs
         }
 
         public override void Replace(string FileName) {
-            ReplaceTexture(FileName, Format);
+
+            //If the mipcount is originally 1 it's probably important so set it as default
+            if (texture != null && texture.MipCount == 1)
+                ReplaceTexture(FileName, Format, texture.MipCount);
+            else
+                ReplaceTexture(FileName, Format);
         }
 
         public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null,
@@ -336,13 +347,20 @@ namespace Bfres.Structs
             }
             tex.Height = surf.height;
             tex.Width = surf.width;
-            tex.Regs = new uint[5];
             tex.ArrayLength = 1;
-            var channels = SetChannelsByFormat((GX2SurfaceFormat)surf.format);
-            tex.CompSelR = channels[0];
-            tex.CompSelG = channels[1];
-            tex.CompSelB = channels[2];
-            tex.CompSelA = channels[3];
+
+            tex.Regs = new uint[5];
+
+            if (surf.compSel.Length != 4)
+                surf.compSel = new byte[] { 0, 1, 2, 3 };
+
+            //Set channels for settings and format
+            tex.CompSelR = (GX2CompSel)surf.compSel[0];
+            tex.CompSelG = (GX2CompSel)surf.compSel[1];
+            tex.CompSelB = (GX2CompSel)surf.compSel[2];
+            tex.CompSelA = (GX2CompSel)surf.compSel[3];
+            SetChannelsByFormat((GX2SurfaceFormat)surf.format, tex);
+
             tex.UserData = new ResDict<UserData>();
             return tex;
         }
@@ -590,7 +608,7 @@ namespace Bfres.Structs
                 case GX2SurfaceFormat.TC_A1_B5_G5_R5_UNorm: return TEX_FORMAT.B5G5R5A1_UNORM;
                 case GX2SurfaceFormat.TC_R4_G4_B4_A4_UNorm: return TEX_FORMAT.B4G4R4A4_UNORM;
                 case GX2SurfaceFormat.TCS_R5_G6_B5_UNorm: return TEX_FORMAT.B5G6R5_UNORM;
-                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM;
+                case GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
                 case GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm: return TEX_FORMAT.R8G8B8A8_UNORM;
                 case GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNorm: return TEX_FORMAT.R10G10B10A2_UNORM;
                 case GX2SurfaceFormat.TC_R11_G11_B10_Float: return TEX_FORMAT.R11G11B10_FLOAT;
@@ -605,34 +623,25 @@ namespace Bfres.Structs
                     throw new Exception($"Cannot convert format {GX2Format}");
             }
         }
-        public static GX2CompSel[] SetChannelsByFormat(GX2SurfaceFormat Format)
+        public static void SetChannelsByFormat(GX2SurfaceFormat Format, Texture tex)
         {
-            GX2CompSel[] channels = new GX2CompSel[4];
-
             switch (Format)
             {
                 case GX2SurfaceFormat.T_BC5_UNorm:
                 case GX2SurfaceFormat.T_BC5_SNorm:
-                    channels[0] = GX2CompSel.ChannelR;
-                    channels[1] = GX2CompSel.ChannelG;
-                    channels[2] = GX2CompSel.Always0;
-                    channels[3] = GX2CompSel.Always1;
+                    tex.CompSelR = GX2CompSel.ChannelR;
+                    tex.CompSelG = GX2CompSel.ChannelG;
+                    tex.CompSelB = GX2CompSel.Always0;
+                    tex.CompSelA = GX2CompSel.Always1;
                     break;
                 case GX2SurfaceFormat.T_BC4_SNorm:
                 case GX2SurfaceFormat.T_BC4_UNorm:
-                    channels[0] = GX2CompSel.ChannelR;
-                    channels[1] = GX2CompSel.ChannelR;
-                    channels[2] = GX2CompSel.ChannelR;
-                    channels[3] = GX2CompSel.ChannelR;
-                    break;
-                default:
-                    channels[0] = GX2CompSel.ChannelR;
-                    channels[1] = GX2CompSel.ChannelG;
-                    channels[2] = GX2CompSel.ChannelB;
-                    channels[3] = GX2CompSel.ChannelA;
+                    tex.CompSelR = GX2CompSel.ChannelR;
+                    tex.CompSelG = GX2CompSel.ChannelR;
+                    tex.CompSelB = GX2CompSel.ChannelR;
+                    tex.CompSelA = GX2CompSel.ChannelR;
                     break;
             }
-            return channels;
         }
 
         public void Export(string FileName, bool ExportSurfaceLevel = false,

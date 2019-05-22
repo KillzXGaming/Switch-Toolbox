@@ -202,6 +202,8 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.R8G8_B8G8_UNORM,      new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.B8G8R8X8_UNORM,       new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.B5G5R5A1_UNORM,       new FormatInfo(2, 1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.B8G8R8A8_UNORM,       new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.B8G8R8A8_UNORM_SRGB,  new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
 
             { TEX_FORMAT.R10G10B10A2_UINT,      new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R10G10B10A2_UNORM,     new FormatInfo(4,  1,  1, 1,  TargetBuffer.Color) },
@@ -457,8 +459,8 @@ namespace Switch_Toolbox.Library
             else
             {
                 //If blue channel becomes first, do not swap them!
-                if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
-                    return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
+          //      if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
+             //       return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
                 if (IsAtscFormat(Format))
                     return ConvertBgraToRgba(ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1));
                 else
@@ -812,6 +814,7 @@ namespace Switch_Toolbox.Library
             string extension = System.IO.Path.GetExtension(FileName);
             return FileName.Substring(0, FileName.Length - extension.Length);
         }
+
         private static byte[] ConvertBgraToRgba(byte[] bytes)
         {
             if (bytes == null)
@@ -824,6 +827,71 @@ namespace Switch_Toolbox.Library
                 bytes[i + 2] = temp;
             }
             return bytes;
+        }
+
+
+        private static byte[] ConvertBgraToRgba(byte[] bytes, string Format, int bpp, int width, int height, byte[] compSel)
+        {
+            if (bytes == null)
+                throw new Exception("Data block returned null. Make sure the parameters and image properties are correct!");
+
+            int size = width * height * 4;
+            byte[] NewImageData = new byte[size];
+
+            byte[] comp = new byte[6] { 0, 0xFF, 0, 0, 0, 0xFF };
+
+            for (int y = 0; y < height; y += 1)
+            {
+                for (int x = 0; x < width; x += 1)
+                {
+                    var pos = (y * width + x) * bpp;
+                    var pos_ = (y * width + x) * 4;
+
+                    int pixel = 0;
+                    for (int i = 0; i < bpp; i += 1)
+                        pixel |= bytes[pos + i] << (8 * i);
+                    
+                    comp = GetComponentsFromPixel(Format, pixel, comp);
+
+                    NewImageData[pos_ + 3] = comp[compSel[3]];
+                    NewImageData[pos_ + 2] = comp[compSel[2]];
+                    NewImageData[pos_ + 1] = comp[compSel[1]];
+                    NewImageData[pos_ + 0] = comp[compSel[0]];
+                }
+            }
+            return NewImageData;
+        }
+
+        private static byte[] GetComponentsFromPixel(string Format, int pixel, byte[] comp)
+        {
+            switch (Format)
+            {
+                case "RGBX8":
+                    comp[2] = (byte)(pixel & 0xFF);
+                    comp[3] = (byte)((pixel & 0xFF00) >> 8);
+                    comp[4] = (byte)((pixel & 0xFF0000) >> 16);
+                    comp[5] = (byte)((pixel & 0xFF000000) >> 24);
+                    break;
+                case "RGBA8":
+                    comp[2] = (byte)(pixel & 0xFF);
+                    comp[3] = (byte)((pixel & 0xFF00) >> 8);
+                    comp[4] = (byte)((pixel & 0xFF0000) >> 16);
+                    comp[5] = (byte)((pixel & 0xFF000000) >> 24);
+                    break;
+                case "RGBA4":
+                    comp[2] = (byte)((pixel & 0xF) * 17);
+                    comp[3] = (byte)(((pixel & 0xF0) >> 4) * 17);
+                    comp[4] = (byte)(((pixel & 0xF00) >> 8) * 17);
+                    comp[5] = (byte)(((pixel & 0xF000) >> 12) * 17);
+                    break;
+                case "RGBA5":
+                    comp[2] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
+                    comp[3] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
+                    comp[4] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
+                    break;
+            }
+
+            return comp;
         }
 
         public override void Delete()

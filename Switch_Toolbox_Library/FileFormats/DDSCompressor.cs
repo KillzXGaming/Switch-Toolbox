@@ -725,14 +725,5 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
-
-        public static byte[] DecodeBC7(int X, int Y, int block)
-        {
-            byte[] result = null;
-
-            //Alright so BC7 decompression as multple modes
-
-            return result;
-        }
     }
 }

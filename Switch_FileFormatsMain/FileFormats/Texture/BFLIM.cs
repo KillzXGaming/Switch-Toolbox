@@ -34,6 +34,11 @@ namespace FirstPlugin
                         TEX_FORMAT.BC5_SNORM,
                         TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
                         TEX_FORMAT.R8G8B8A8_UNORM,
+                        TEX_FORMAT.A8_UNORM,
+                        TEX_FORMAT.R8G8_UNORM,
+                        TEX_FORMAT.B5G6R5_UNORM,
+                        TEX_FORMAT.R10G10B10A2_UNORM,
+                        TEX_FORMAT.B4G4R4A4_UNORM,
                 };
             }
         }
@@ -45,6 +50,7 @@ namespace FirstPlugin
                 case TEX_FORMAT.A8_UNORM: return BFLIMFormat.L8_UNORM;
                 case TEX_FORMAT.R8G8_UNORM: return BFLIMFormat.LA8;
                 case TEX_FORMAT.B5G6R5_UNORM: return BFLIMFormat.RGB565;
+                case TEX_FORMAT.B5G5R5A1_UNORM: return BFLIMFormat.RGB5A1;
                 case TEX_FORMAT.R8G8B8A8_UNORM: return BFLIMFormat.RGBA8;
                 case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return BFLIMFormat.RGBA8_SRGB;
                 case TEX_FORMAT.R10G10B10A2_UNORM: return BFLIMFormat.RGB10A2_UNORM;

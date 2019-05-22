@@ -38,10 +38,10 @@ namespace FirstPlugin
         public SurfaceDim SurfaceDim = SurfaceDim.Dim2D;
         public TileMode TileMode = TileMode.Default;
         public Dim Dim = Dim.Dim2D;
-        public ChannelType RedComp = ChannelType.Red;
-        public ChannelType GreenComp = ChannelType.Green;
-        public ChannelType BlueComp = ChannelType.Blue;
-        public ChannelType AlphaComp = ChannelType.Alpha;
+        public STChannelType RedComp = STChannelType.Red;
+        public STChannelType GreenComp = STChannelType.Green;
+        public STChannelType BlueComp = STChannelType.Blue;
+        public STChannelType AlphaComp = STChannelType.Alpha;
         public TextureData textureData;
         public uint TextureLayout;
         public uint TextureLayout2 = 0x010007;
@@ -70,7 +70,12 @@ namespace FirstPlugin
             TexWidth = dds.header.width;
             TexHeight = dds.header.height;
 
-            var surfaces = DDS.GetArrayFaces(dds, dds.bdata,  dds.ArrayCount);
+            var surfaces = DDS.GetArrayFaces(dds, dds.ArrayCount);
+
+            RedComp = dds.RedChannel;
+            GreenComp = dds.GreenChannel;
+            BlueComp = dds.BlueChannel;
+            AlphaComp = dds.AlphaChannel;
 
             foreach (var surface in surfaces)
                 DataBlockOutput.Add(Utils.CombineByteArray(surface.mipmaps.ToArray()));

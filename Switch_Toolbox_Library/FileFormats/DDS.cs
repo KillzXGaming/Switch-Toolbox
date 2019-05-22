@@ -531,24 +531,32 @@ namespace Switch_Toolbox.Library
                 HasAlpha = true;
             }
 
-            Format = GetFormat();
-
-            if (!IsDX10 && !IsCompressed) {
-                Format = GetUncompressedType(IsRGB, HasAlpha, HasLuminance, header.ddspf);
-            }
-
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
             bdata = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position));
+
+            Format = GetFormat();
+            Width = header.width;
+            Height = header.height;
+            MipCount = header.mipmapCount;
+
+            byte[] Components = new byte[4] { 0, 1, 2, 3 };
+
+            if (!IsDX10 && !IsCompressed) {
+                Format = GetUncompressedType(this, Components, IsRGB, HasAlpha, HasLuminance, header.ddspf);
+            }
+
+            RedChannel = (STChannelType)Components[0];
+            GreenChannel = (STChannelType)Components[1];
+            BlueChannel = (STChannelType)Components[2];
+            AlphaChannel = (STChannelType)Components[3];
 
             reader.Dispose();
             reader.Close();
 
 
-            MipCount = header.mipmapCount;
-            Width = header.width;
-            Height = header.height;
+
         }
-        private TEX_FORMAT GetUncompressedType(bool IsRGB, bool HasAlpha, bool HasLuminance, Header.DDS_PixelFormat header)
+        private TEX_FORMAT GetUncompressedType(DDS dds, byte[] Components, bool IsRGB, bool HasAlpha, bool HasLuminance, Header.DDS_PixelFormat header)
         {
             uint bpp = header.RGBBitCount;
             uint RedMask = header.RBitMask;
@@ -593,6 +601,7 @@ namespace Switch_Toolbox.Library
                 {
                     if (RedMask == R8G8B8_MASKS[0] && GreenMask == R8G8B8_MASKS[1] && BlueMask == R8G8B8_MASKS[2] && AlphaMask == R8G8B8_MASKS[3])
                     {
+                        dds.bdata = ConvertToRgba(this, "RGB8", 3,  new byte[4] { 2, 1, 0, 3 });
                         return TEX_FORMAT.R8G8B8A8_UNORM;
                     }
                     else
@@ -608,14 +617,17 @@ namespace Switch_Toolbox.Library
                     }
                     else if (RedMask == X8B8G8R8_MASKS[0] && GreenMask == X8B8G8R8_MASKS[1] && BlueMask == X8B8G8R8_MASKS[2] && AlphaMask == X8B8G8R8_MASKS[3])
                     {
+                        dds.bdata = ConvertToRgba(this, "RGB8X", 4, new byte[4] { 2, 1, 0, 3 });
                         return TEX_FORMAT.B8G8R8X8_UNORM;
                     }
                     else if (RedMask == A8R8G8B8_MASKS[0] && GreenMask == A8R8G8B8_MASKS[1] && BlueMask == A8R8G8B8_MASKS[2] && AlphaMask == A8R8G8B8_MASKS[3])
                     {
+                        dds.bdata = ConvertBgraToRgba(dds.bdata);
                         return TEX_FORMAT.R8G8B8A8_UNORM;
                     }
                     else if (RedMask == X8R8G8B8_MASKS[0] && GreenMask == X8R8G8B8_MASKS[1] && BlueMask == X8R8G8B8_MASKS[2] && AlphaMask == X8R8G8B8_MASKS[3])
                     {
+                        dds.bdata = ConvertToRgba(this, "RGB8X", 4, new byte[4] { 0, 1, 2, 3 });
                         return TEX_FORMAT.B8G8R8X8_UNORM;
                     }
                     else
@@ -630,6 +642,118 @@ namespace Switch_Toolbox.Library
             }
             return TEX_FORMAT.UNKNOWN;
         }
+
+        private static byte[] ConvertRgb8ToRgbx8(byte[] bytes)
+        {
+            int size = bytes.Length / 3;
+            byte[] NewData = new byte[size];
+
+            for (int i = 0; i < size; i ++)
+            {
+                NewData[4 * i + 0] = bytes[3 * i + 0];
+                NewData[4 * i + 1] = bytes[3 * i + 1];
+                NewData[4 * i + 2] = bytes[3 * i + 2];
+                NewData[4 * i + 3] = 0xFF;
+            }
+            return NewData;
+        }
+
+        //Thanks abood. Based on https://github.com/aboood40091/BNTX-Editor/blob/master/formConv.py
+        private static byte[] ConvertToRgba(DDS dds, string Format, int bpp, byte[] compSel)
+        {
+            byte[] bytes = dds.bdata;
+
+            if (bytes == null)
+                throw new Exception("Data block returned null. Make sure the parameters and image properties are correct!");
+
+            List<byte[]> mipmaps = new List<byte[]>();
+
+            uint Offset = 0;
+
+            for (byte a = 0; a < dds.ArrayCount; ++a)
+            {
+                for (byte m = 0; m < dds.MipCount; ++m)
+                {
+                    uint MipWidth = Math.Max(1, dds.Width >> m);
+                    uint MipHeight = Math.Max(1, dds.Height >> m);
+
+                    uint NewSize = (MipWidth * MipHeight) * 4;
+                    uint OldSize = (MipWidth * MipHeight) * (uint)bpp;
+
+                    byte[] NewImageData = new byte[NewSize];
+                    mipmaps.Add(NewImageData);
+
+                    byte[] comp = new byte[4] { 0, 0, 0, 0xFF };
+
+                    for (int j = 0; j < MipHeight * MipWidth; j++)
+                    {
+                        var pos = Offset + (j * bpp);
+                        var pos_ = (j * 4);
+
+                       int pixel = 0;
+                       for (int i = 0; i < bpp; i += 1)
+                            pixel |= bytes[pos + i] << (8 * i);
+
+                        comp = GetComponentsFromPixel(Format, pixel, comp);
+                        NewImageData[pos_ + 3] = comp[compSel[3]];
+                        NewImageData[pos_ + 2] = comp[compSel[2]];
+                        NewImageData[pos_ + 1] = comp[compSel[1]];
+                        NewImageData[pos_ + 0] = comp[compSel[0]];
+                    }
+
+                    Offset += OldSize;
+                }
+            }
+
+            return Utils.CombineByteArray(mipmaps.ToArray());
+        }
+
+        private static byte[] GetComponentsFromPixel(string Format, int pixel, byte[] comp)
+        {
+            switch (Format)
+            {
+                case "RGB8X":
+                comp[0] = (byte)(pixel & 0xFF);
+                comp[1] = (byte)((pixel & 0xFF00) >> 8);
+                comp[2] = (byte)((pixel & 0xFF0000) >> 16);
+                comp[3] = (byte)(0xFF);
+                    break;
+                case "RGB8":
+                comp[0] = (byte)(pixel & 0xFF);
+                comp[1] = (byte)((pixel & 0xFF00) >> 8);
+                comp[2] = (byte)((pixel & 0xFF0000) >> 16);
+                comp[3] = (byte)(0xFF);
+                    break;
+                case "RGBA4":
+                comp[0] = (byte)((pixel & 0xF) * 17);
+                comp[1] = (byte)(((pixel & 0xF0) >> 4) * 17);
+                comp[2] = (byte)(((pixel & 0xF00) >> 8) * 17);
+                comp[3] = (byte)(((pixel & 0xF000) >> 12) * 17);
+                    break;
+                case "RGBA5":
+                comp[0] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
+                comp[1] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
+                comp[2] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
+                    break;
+            }
+
+            return comp;
+        }
+
+        private static byte[] ConvertBgraToRgba(byte[] bytes)
+        {
+            if (bytes == null)
+                throw new Exception("Data block returned null. Make sure the parameters and image properties are correct!");
+
+            for (int i = 0; i < bytes.Length; i += 4)
+            {
+                var temp = bytes[i];
+                bytes[i] = bytes[i + 2];
+                bytes[i + 2] = temp;
+            }
+            return bytes;
+        }
+
         private void ReadDX10Header(BinaryDataReader reader)
         {
             DX10header = new DX10Header();
@@ -811,6 +935,7 @@ namespace Switch_Toolbox.Library
                 var Surfaces = new List<STGenericTexture.Surface>();
               
                 uint formatSize = GetBytesPerPixel(dds.Format);
+
                 bool isBlock = dds.IsCompressed();
                 if (dds.header.mipmapCount == 0)
                     dds.header.mipmapCount = 1;
