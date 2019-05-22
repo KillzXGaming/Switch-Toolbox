@@ -76,7 +76,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - Exelix for Byaml, Sarc and KCL library
 - Syroot for helpful IO extensions and libraries
 - GDKChan for PICA shaders stuff used with bcres, structs for bcres, and some DDS decode methods
-- AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, and documentation for GTX, XTX, and BNTX
+- AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, reading/converting cunompressed types for DDS, and documentation for GTX, XTX, and BNTX
 - MelonSpeedruns for logo.
 
 Resources
