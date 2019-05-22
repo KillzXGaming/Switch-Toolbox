@@ -114,6 +114,9 @@ namespace Bfres.Structs
                             AnimDataOffset = matAnim.Constants[constant].AnimDataOffset,
                             Keys = keyGroup.Keys,
                         });
+
+                        if (paramInfo.Text.Contains("Color") || paramInfo.Text.Contains("color"))
+                            paramInfo.Type = AnimationType.Color;
                     }
 
                     for (int curve = 0; curve < param.FloatCurveCount + param.IntCurveCount; curve++)

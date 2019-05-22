@@ -381,7 +381,7 @@ namespace Bfres.Structs
                     paramInfo.Type = AnimationType.ShaderParam;
 
                     //There is no better way to determine if the param is a color type afaik
-                    if (anim.Name.Contains(ColorAnimType) || param.Name.Contains("color"))
+                    if (anim.Name.Contains(ColorAnimType) || param.Name.Contains("Color") || param.Name.Contains("color") || param.Name == "multi_tex_reg2")
                         paramInfo.Type = AnimationType.Color;
                     else if (anim.Name.Contains(TextureSrtAnimType))
                         paramInfo.Type = AnimationType.TexturePattern;

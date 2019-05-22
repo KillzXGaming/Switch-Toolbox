@@ -138,7 +138,7 @@ namespace FirstPlugin.Forms
         {
 
             ColumnHeader colorHeader = new ColumnHeader() { Text = "Color" };
-            ColumnHeader alphaHeader = new ColumnHeader() { Text = "Color" };
+            ColumnHeader alphaHeader = new ColumnHeader() { Text = "Alpha" };
             ColumnHeader RHeader = new ColumnHeader() { Text = "R" };
             ColumnHeader GHeader = new ColumnHeader() { Text = "G" };
             ColumnHeader BHeader = new ColumnHeader() { Text = "B" };
