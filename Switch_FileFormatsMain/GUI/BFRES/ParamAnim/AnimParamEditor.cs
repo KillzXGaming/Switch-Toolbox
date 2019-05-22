@@ -151,9 +151,8 @@ namespace FirstPlugin.Forms
             listViewCustom1.Columns.Add(BHeader);
             listViewCustom1.Columns.Add(AHeader);
 
-            for (int Frame = 0; Frame < anim.FrameCount; Frame++)
+            for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
             {
-
                 var item1 = new ListViewItem($"{Frame}");
                 item1.SubItems.Add("Color");
                 item1.SubItems.Add("Alpha");

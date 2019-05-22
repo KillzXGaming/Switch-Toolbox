@@ -189,7 +189,7 @@ namespace FirstPlugin.Forms
                         group.Scale = 0;
                         group.Delta = 0;
 
-                        for (int frame = 0; frame < activeFVIS.FrameCount; frame++)
+                        for (int frame = 0; frame <= activeFVIS.FrameCount; frame++)
                         {
                             group.Keys.Add(new BooleanKeyFrame() { Frame = frame, InterType = InterpolationType.STEPBOOL, Visible = false });
                         }

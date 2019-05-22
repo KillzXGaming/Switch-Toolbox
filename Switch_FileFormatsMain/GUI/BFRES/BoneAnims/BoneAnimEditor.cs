@@ -41,7 +41,7 @@ namespace FirstPlugin.Forms
 
             return;
 
-            for (int frame = 0; frame < fska.FrameCount; frame++)
+            for (int frame = 0; frame <= fska.FrameCount; frame++)
             {
                 bool IsKeyed = (boneAnim.XPOS.HasAnimation() && boneAnim.XPOS.GetKeyFrame(frame).IsKeyed ||
                     boneAnim.YPOS.HasAnimation() && boneAnim.YPOS.GetKeyFrame(frame).IsKeyed ||

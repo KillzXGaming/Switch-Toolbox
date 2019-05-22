@@ -197,7 +197,7 @@ namespace FirstPlugin.Forms
             {
                 IsLoading = true;
 
-                for (int Frame = 0; Frame < anim.FrameCount; Frame++)
+                for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
                 {
                     //Constants always show so break after first frame
                     if (activeSampler.group.Constant && Frame != 0) 
