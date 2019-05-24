@@ -345,6 +345,9 @@ namespace BrawlboxHelper
                     switch (curve.AnimDataOffset)
                     {
                         case 0x10:
+                            if (TranslateX.Count > 0 && frame == 0)
+                                TranslateX.Remove(0);
+
                             TranslateX.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -355,6 +358,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x14:
+                            if (TranslateY.Count > 0 && frame == 0)
+                                TranslateY.Remove(0);
+
                             TranslateY.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -365,6 +371,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x18:
+                            if (TranslateZ.Count > 0 && frame == 0)
+                                TranslateZ.Remove(0);
+
                             TranslateZ.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -375,6 +384,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x20:
+                            if (RotateX.Count > 0 && frame == 0)
+                                RotateX.Remove(0);
+
                             RotateX.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -385,6 +397,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x24:
+                            if (RotateY.Count > 0 && frame == 0)
+                                RotateY.Remove(0);
+
                             RotateY.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -395,6 +410,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x28:
+                            if (RotateZ.Count > 0 && frame == 0)
+                                RotateZ.Remove(0);
+
                             RotateZ.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -405,6 +423,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x04:
+                            if (ScaleX.Count > 0 && frame == 0)
+                                ScaleX.Remove(0);
+
                             ScaleX.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -415,6 +436,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x08:
+                            if (ScaleY.Count > 0 && frame == 0)
+                                ScaleY.Remove(0);
+
                             ScaleY.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
@@ -425,6 +449,9 @@ namespace BrawlboxHelper
                             });
                             break;
                         case 0x0C:
+                            if (ScaleZ.Count > 0 && frame == 0)
+                                ScaleZ.Remove(0);
+
                             ScaleZ.Add(time, new FSKAKeyNode()
                             {
                                 Value = value,
