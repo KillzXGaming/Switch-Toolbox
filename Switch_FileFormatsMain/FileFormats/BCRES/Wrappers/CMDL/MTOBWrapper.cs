@@ -65,61 +65,68 @@ namespace FirstPlugin
 
             int textureUnit = 1;
             if (material.TextureMapInfo1 != null)
+                Nodes.Add(CreateGenericMatTexture(textureUnit, bcres, material.TextureMapInfo1));
+            if (material.TextureMapInfo2 != null)
+                Nodes.Add(CreateGenericMatTexture(textureUnit, bcres, material.TextureMapInfo2));
+            if (material.TextureMapInfo3 != null)
+                Nodes.Add(CreateGenericMatTexture(textureUnit, bcres, material.TextureMapInfo3));
+        }
+
+        private BcresTextureMapWrapper CreateGenericMatTexture(int textureUnit, BCRES bcres, TextureMapInfo TextureMapInfo)
+        {
+            STGenericMatTexture tex1 = new STGenericMatTexture();
+            var TexRef = TextureMapInfo.TextureRef;
+            var Sampler = TextureMapInfo.Sampler;
+
+            tex1.textureUnit = textureUnit++;
+            tex1.Name = TexRef.Reference.Name;
+            tex1.Type = STGenericMatTexture.TextureType.Diffuse;
+            TextureMaps.Add(tex1);
+
+            switch (TextureMapInfo.WrapU)
             {
-                STGenericMatTexture tex1 = new STGenericMatTexture();
-                var TexRef = material.TextureMapInfo1.TextureRef;
-                var Sampler = material.TextureMapInfo1.Sampler;
-
-                tex1.textureUnit = textureUnit++;
-                tex1.Name = TexRef.Reference.Name;
-                tex1.Type = STGenericMatTexture.TextureType.Diffuse;
-                TextureMaps.Add(tex1);
-
-                switch (material.TextureMapInfo1.WrapU)
-                {
-                    case PICATextureWrap.Repeat: tex1.wrapModeS = 0; break;
-                    case PICATextureWrap.Mirror: tex1.wrapModeS = 1; break;
-                    case PICATextureWrap.ClampToEdge: tex1.wrapModeS = 2; break;
-                    case PICATextureWrap.ClampToBorder: tex1.wrapModeS = 2; break;
-                }
-                switch (material.TextureMapInfo1.WrapV)
-                {
-                    case PICATextureWrap.Repeat: tex1.wrapModeT = 0; break;
-                    case PICATextureWrap.Mirror: tex1.wrapModeT = 1; break;
-                    case PICATextureWrap.ClampToEdge: tex1.wrapModeT = 2; break;
-                    case PICATextureWrap.ClampToBorder: tex1.wrapModeT = 2; break;
-                }
-
-                switch (material.TextureMapInfo1.MagFilter)
-                {
-                    case PICATextureFilter.Linear: tex1.magFilter = 0; break;
-                    case PICATextureFilter.Nearest: tex1.magFilter = 1; break;
-                }
-
-                switch (material.TextureMapInfo1.MinFilter)
-                {
-                    case PICATextureFilter.Linear: tex1.minFilter = 0; break;
-                    case PICATextureFilter.Nearest: tex1.minFilter = 1; break;
-                }
-
-                switch (material.TextureMapInfo1.MipFilter)
-                {
-                    case PICATextureFilter.Linear: tex1.mipDetail = 0; break;
-                    case PICATextureFilter.Nearest: tex1.mipDetail = 1; break;
-                }
-
-                switch (material.TextureMapInfo1.WrapV)
-                {
-                    case PICATextureWrap.Repeat: tex1.wrapModeT = 0; break;
-                    case PICATextureWrap.Mirror: tex1.wrapModeT = 1; break;
-                    case PICATextureWrap.ClampToEdge: tex1.wrapModeT = 2; break;
-                    case PICATextureWrap.ClampToBorder: tex1.wrapModeT = 2; break;
-                }
-
-
-                var wrapperTexMap = new BcresTextureMapWrapper(bcres, material.TextureMapInfo1, tex1);
-                Nodes.Add(wrapperTexMap);
+                case PICATextureWrap.Repeat: tex1.wrapModeS = 0; break;
+                case PICATextureWrap.Mirror: tex1.wrapModeS = 1; break;
+                case PICATextureWrap.ClampToEdge: tex1.wrapModeS = 2; break;
+                case PICATextureWrap.ClampToBorder: tex1.wrapModeS = 2; break;
             }
+            switch (TextureMapInfo.WrapV)
+            {
+                case PICATextureWrap.Repeat: tex1.wrapModeT = 0; break;
+                case PICATextureWrap.Mirror: tex1.wrapModeT = 1; break;
+                case PICATextureWrap.ClampToEdge: tex1.wrapModeT = 2; break;
+                case PICATextureWrap.ClampToBorder: tex1.wrapModeT = 2; break;
+            }
+
+            switch (TextureMapInfo.MagFilter)
+            {
+                case PICATextureFilter.Linear: tex1.magFilter = 0; break;
+                case PICATextureFilter.Nearest: tex1.magFilter = 1; break;
+            }
+
+            switch (TextureMapInfo.MinFilter)
+            {
+                case PICATextureFilter.Linear: tex1.minFilter = 0; break;
+                case PICATextureFilter.Nearest: tex1.minFilter = 1; break;
+            }
+
+            switch (TextureMapInfo.MipFilter)
+            {
+                case PICATextureFilter.Linear: tex1.mipDetail = 0; break;
+                case PICATextureFilter.Nearest: tex1.mipDetail = 1; break;
+            }
+
+            switch (TextureMapInfo.WrapV)
+            {
+                case PICATextureWrap.Repeat: tex1.wrapModeT = 0; break;
+                case PICATextureWrap.Mirror: tex1.wrapModeT = 1; break;
+                case PICATextureWrap.ClampToEdge: tex1.wrapModeT = 2; break;
+                case PICATextureWrap.ClampToBorder: tex1.wrapModeT = 2; break;
+            }
+
+
+            var wrapperTexMap = new BcresTextureMapWrapper(bcres, TextureMapInfo, tex1);
+            return wrapperTexMap;
         }
     }
 }

@@ -104,6 +104,9 @@ namespace Bfres.Structs
         public void ImportSkeletalAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilters.FSKA_REPLACE;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -115,9 +118,14 @@ namespace Bfres.Structs
         public void ImportShaderParamAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            if (IsWiiU)
+                ofd.Filter = FileFilters.FSHU_REPLACE;
+            else
+                ofd.Filter = FileFilters.FMAA;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
-
 
             BFRESGroupNode group = null;
             if (IsWiiU)
@@ -132,6 +140,12 @@ namespace Bfres.Structs
         public void ImportColorAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            if (IsWiiU)
+                ofd.Filter = FileFilters.FSHU_REPLACE;
+            else
+                ofd.Filter = FileFilters.FMAA;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -148,6 +162,12 @@ namespace Bfres.Structs
         public void ImportTexSrtAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            if (IsWiiU)
+                ofd.Filter = FileFilters.FSHU_REPLACE;
+            else
+                ofd.Filter = FileFilters.FMAA;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -164,6 +184,12 @@ namespace Bfres.Structs
         public void ImportTexPatAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            if (IsWiiU)
+                ofd.Filter = FileFilters.FTXP;
+            else
+                ofd.Filter = FileFilters.FMAA;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -180,6 +206,9 @@ namespace Bfres.Structs
         public void ImportBoneVisAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilters.FBNV;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -191,6 +220,9 @@ namespace Bfres.Structs
         public void ImportMatVisAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilters.FBNV;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -207,6 +239,9 @@ namespace Bfres.Structs
         public void ImportSceneAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilters.FSCN;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -218,6 +253,9 @@ namespace Bfres.Structs
         public void ImportShapeAnim()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilters.FSHA;
+            ofd.Multiselect = true;
+
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -393,7 +431,7 @@ namespace Bfres.Structs
 
         public BFRESGroupNode GetOrCreateFolder<T>(object CheckAnimEffect = null) where T : STGenericWrapper
         {
-            BFRESGroupNode group = new BFRESGroupNode();
+            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
 
             if (typeof(T) == typeof(FSKA)) { group.Type = BRESGroupType.SkeletalAnim; }
             if (typeof(T) == typeof(FMAA)) { group.Type = BRESGroupType.MaterialAnim; }

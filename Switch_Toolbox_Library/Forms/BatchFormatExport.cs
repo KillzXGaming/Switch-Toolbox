@@ -31,8 +31,8 @@ namespace Switch_Toolbox.Library
             string SelectedExt = comboBox1.GetSelectedText();
 
             string output = GetSubstringByString("(",")", SelectedExt);
-            output = output.Replace('*', ' ');
-            output.Replace("  ", string.Empty);
+            output = output.Remove(0, 1);
+            output.Replace(" ", string.Empty);
 
             if (output == ".")
                 output = ".raw";

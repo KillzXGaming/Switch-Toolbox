@@ -11,17 +11,42 @@ namespace Switch_Toolbox.Library
 {
     public class AssimpSaver
     {
+        private List<string> ExtractedTextures = new List<string>();
+
         public List<string> BoneNames = new List<string>();
+
+        STProgressBar progressBar;
 
         public void SaveFromModel(STGenericModel model, string FileName, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
         {
+            ExtractedTextures.Clear();
+
             Scene scene = new Scene();
             scene.RootNode = new Node("RootNode");
 
+            progressBar = new STProgressBar();
+            progressBar.Task = "Exorting Skeleton...";
+            progressBar.Value = 0;
+            progressBar.StartPosition = FormStartPosition.CenterScreen;
+            progressBar.Show();
+            progressBar.Refresh();
+
             SaveSkeleton(skeleton, scene.RootNode);
             SaveMaterials(scene, model, FileName, Textures);
+
+            progressBar.Task = "Exorting Meshes...";
+            progressBar.Value = 50;
+
             SaveMeshes(scene, model, skeleton, FileName, NodeArray);
+
+            progressBar.Task = "Saving File...";
+            progressBar.Value = 80;
+
             SaveScene(FileName, scene);
+
+            progressBar.Value = 100;
+            progressBar.Close();
+            progressBar.Dispose();
         }
 
         private void SaveScene(string FileName, Scene scene)
@@ -150,15 +175,24 @@ namespace Switch_Toolbox.Library
             string TextureExtension = ".png";
             string TexturePath = System.IO.Path.GetDirectoryName(FileName);
 
-            foreach (var tex in Textures)
+            for (int i = 0; i < Textures.Count; i++)
             {
-                string path = System.IO.Path.Combine(TexturePath, tex.Text + TextureExtension);
+                string path = System.IO.Path.Combine(TexturePath, Textures[i].Text + TextureExtension);
 
-                var bitmap = tex.GetBitmap();
-                bitmap.Save(path);
-                bitmap.Dispose();
+                if (!ExtractedTextures.Contains(path))
+                {
+                    ExtractedTextures.Add(path);
 
-                GC.Collect();
+                    progressBar.Task = $"Exorting Texture {Textures[i].Text}";
+                    progressBar.Value = ((i * 100) / Textures.Count);
+                    progressBar.Refresh();
+
+                    var bitmap = Textures[i].GetBitmap();
+                    bitmap.Save(path);
+                    bitmap.Dispose();
+
+                    GC.Collect();
+                }
             }
 
             foreach (var mat in model.Nodes[1].Nodes)

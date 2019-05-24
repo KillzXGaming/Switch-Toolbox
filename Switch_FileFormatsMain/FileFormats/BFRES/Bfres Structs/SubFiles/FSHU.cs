@@ -32,6 +32,9 @@ namespace Bfres.Structs
             Materials.Add(mat);
         }
 
+        public override string ExportFilter => FileFilters.FSHU_EXPORT;
+        public override string ReplaceFilter => FileFilters.FSHU_REPLACE;
+
         public override void OnClick(TreeView treeView) => UpdateEditor();
 
         public void UpdateEditor(){
@@ -65,6 +68,11 @@ namespace Bfres.Structs
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.TextureSRT);
                 LoadAnim(ShaderParamAnim, AnimationType.TexturePattern);
+            }
+            if (ext == ".clr0")
+            {
+                ShaderParamAnim = BrawlboxHelper.FSHUConverter.Clr02Fshu(FileName);
+                LoadAnim(ShaderParamAnim, AnimationType.Color);
             }
 
             ShaderParamAnim.Name = Text;

@@ -186,6 +186,7 @@ namespace Switch_Toolbox.Library.NodeWrappers
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     string extension = form.GetSelectedExtension();
+                    extension.Replace(" ", string.Empty);
 
                     foreach (TreeNode node in Nodes)
                     {

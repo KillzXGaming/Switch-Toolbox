@@ -45,7 +45,7 @@ namespace FirstPlugin.NodeWrappers
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            BFRESGroupNode group = new BFRESGroupNode();
+            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
             group.Import(ofd.FileNames);
         }
 
@@ -55,13 +55,13 @@ namespace FirstPlugin.NodeWrappers
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            BFRESGroupNode group = new BFRESGroupNode();
+            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
             group.Import(ofd.FileNames);
         }
 
         public void NewModel()
         {
-            BFRESGroupNode group = new BFRESGroupNode();
+            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
             FMDL anim = new FMDL();
 
             if (IsWiiU)
@@ -80,7 +80,7 @@ namespace FirstPlugin.NodeWrappers
 
         public void NewEmbeddedFile()
         {
-            BFRESGroupNode group = new BFRESGroupNode();
+            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
             ExternalFileData fshu = new ExternalFileData("NewFile", new byte[0]);
             group.AddNode(fshu, "NewFile");
             SetupAddedNode(group, fshu);

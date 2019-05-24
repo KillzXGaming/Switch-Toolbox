@@ -38,18 +38,7 @@ namespace Bfres.Structs
             get { return ContextMenuStrip.Items[0].Visible; }
         }
 
-        public bool IsWiiU
-        {
-            get
-            {
-                if (Parent is BFRES)
-                   return ((BFRES)Parent).IsWiiU;
-                else if (Parent.Parent is BFRES)
-                    return ((BFRES)Parent.Parent).IsWiiU;
-                else
-                    return ((BFRES)Parent.Parent.Parent).IsWiiU;
-            }
-        }
+        public bool IsWiiU;
 
         public override void OnClick(TreeView treeview)
         {
@@ -62,10 +51,11 @@ namespace Bfres.Structs
             }
         }
 
-        public BFRESGroupNode() : base()
+        public BFRESGroupNode(bool isWiiU) : base()
         {
             ImageKey = "folder";
 
+            IsWiiU = isWiiU;
             LoadContextMenus();
         }
 

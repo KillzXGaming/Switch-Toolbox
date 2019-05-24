@@ -21,9 +21,12 @@ namespace FirstPlugin
         public static string BONE = GetFilter(".bfbon");
         public static string FMAT = GetFilter(".bfmat");
 
-        public static string FSKA = GetFilter(".bfska", ".seanim", ".smd");
+        public static string FSKA_EXPORT = GetFilter(".bfska", ".seanim", ".smd");
+        public static string FSKA_REPLACE = GetFilter(".bfska", ".chr0");
+
         public static string FMAA = GetFilter(".bfmaa", ".gif");
-        public static string FSHU = GetFilter(".bfshu");
+        public static string FSHU_REPLACE = GetFilter(".bfshu", "clr0");
+        public static string FSHU_EXPORT = GetFilter(".bfshu");
 
         public static string FCLH = GetFilter(".bfcsh");
         public static string FSTH = GetFilter(".bfsth");
@@ -45,7 +48,8 @@ namespace FirstPlugin
             else if (type == typeof(FMAT)) return FMAT;
             else if (type == typeof(FSKL)) return FSKL;
             else if (type == typeof(BfresBone)) return BONE;
-            else if (type == typeof(FSKA)) return FSKA;
+            else if (type == typeof(FMAA) && IsExporting) return FSKA_EXPORT;
+            else if (type == typeof(FSKA)) return FSKA_REPLACE;
             else if (type == typeof(FMAA)) return FMAA;
             else if (type == typeof(FTXP)) return FTXP;
             else if (type == typeof(FSHA)) return FSHA;
@@ -67,7 +71,11 @@ namespace FirstPlugin
                     if (animType == VisibiltyAnimType.Material) return FMTV;
                     else return FBNV;
                 }
-                return FSHU;
+
+                if (IsExporting)
+                    return FSHU_EXPORT;
+                else
+                    return FSHU_REPLACE;
             }
             else if (type == typeof(FVIS))
             {

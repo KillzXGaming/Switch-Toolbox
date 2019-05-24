@@ -465,7 +465,14 @@ namespace Bfres.Structs
                     break;
                 default:
                     AssimpSaver assimp = new AssimpSaver();
-                    assimp.SaveFromModel(this, FileName, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
+                    ExportModelSettings settings = new ExportModelSettings();
+                    if (settings.ShowDialog() == DialogResult.OK)
+                    {
+                        if (settings.ExportTextures)
+                            assimp.SaveFromModel(this, FileName, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
+                        else
+                            assimp.SaveFromModel(this, FileName, new List<STGenericTexture>(), Skeleton, Skeleton.Node_Array.ToList());
+                    }
                     break;
             }
         }

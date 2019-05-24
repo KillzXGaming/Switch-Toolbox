@@ -220,6 +220,12 @@
     <Compile Include="Forms\BatchFormatExport.Designer.cs">
       <DependentUpon>BatchFormatExport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Dialogs\ExportModelSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ExportModelSettings.Designer.cs">
+      <DependentUpon>ExportModelSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\Animation\BoneAnimTimeline.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -689,6 +695,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\STTextBox.resx">
       <DependentUpon>STTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\ExportModelSettings.resx">
+      <DependentUpon>ExportModelSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\STOptionsDialog.resx">
       <DependentUpon>STOptionsDialog.cs</DependentUpon>

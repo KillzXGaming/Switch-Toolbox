@@ -576,7 +576,9 @@ namespace FirstPlugin
                     LibraryGUI.Instance.LoadEditor(editor);
                 }
                 editor.Text = Text;
-                editor.LoadProperties(FTEX.FromGx2Surface(surface, Text));
+                var tex = FTEX.FromGx2Surface(surface, Text);
+                tex.MipCount = MipCount;
+                editor.LoadProperties(tex);
                 editor.LoadImage(this);
             }
         }

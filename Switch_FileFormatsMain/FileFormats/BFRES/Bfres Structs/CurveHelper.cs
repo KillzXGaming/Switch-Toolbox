@@ -55,9 +55,9 @@ namespace Bfres.Structs
                             InterType = InterpolationType.HERMITE,
                             Frame = (int)animCurve.Frames[i],
                             Value = animCurve.Offset + (animCurve.Keys[i, 0] * animCurve.Scale),
-                            Value2 = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
-                            Value3 = animCurve.Offset + (animCurve.Keys[i, 2] * animCurve.Scale),
-                            Value4 = animCurve.Offset + (animCurve.Keys[i, 3] * animCurve.Scale),
+                            Slope1 = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
+                            Slope2 = animCurve.Offset + (animCurve.Keys[i, 2] * animCurve.Scale),
+                            Delta = animCurve.Offset + (animCurve.Keys[i, 3] * animCurve.Scale),
                         });
                         break;
                     case ResU.AnimCurveType.Linear: //2 elements are stored for linear
@@ -68,7 +68,7 @@ namespace Bfres.Structs
                             InterType = InterpolationType.LINEAR,
                             Frame = (int)animCurve.Frames[i],
                             Value = animCurve.Offset + (animCurve.Keys[i, 0] * animCurve.Scale),
-                            Value2 = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
+                            Delta = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
                         });
                         break;
                     case ResU.AnimCurveType.StepInt: //1 element are stored for step
@@ -182,9 +182,9 @@ namespace Bfres.Structs
                             Value = animCurve.Offset + (animCurve.Keys[i, 0] * animCurve.Scale),
 
                             Value1 = animCurve.Offset + (animCurve.Keys[i, 0] * animCurve.Scale),
-                            Value2 = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
-                            Value3 = animCurve.Offset + (animCurve.Keys[i, 2] * animCurve.Scale),
-                            Value4 = animCurve.Offset + (animCurve.Keys[i, 3] * animCurve.Scale),
+                            Slope1 = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
+                            Slope2 = animCurve.Offset + (animCurve.Keys[i, 2] * animCurve.Scale),
+                            Delta = animCurve.Offset + (animCurve.Keys[i, 3] * animCurve.Scale),
                         });
                         break;
                     case AnimCurveType.Linear: //2 elements are stored for linear
@@ -197,7 +197,7 @@ namespace Bfres.Structs
                             Value = animCurve.Offset + (animCurve.Keys[i, 0] * animCurve.Scale),
 
                             Value1 = animCurve.Offset + (animCurve.Keys[i, 0] * animCurve.Scale),
-                            Value2 = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
+                            Delta = animCurve.Offset + (animCurve.Keys[i, 1] * animCurve.Scale),
                         });
                         break;
                     case AnimCurveType.StepInt: //1 element are stored for step

@@ -47,9 +47,9 @@ namespace FirstPlugin.Forms
 
                 stLabel1.Text = $"key Frame {keyFrame.Frame}";
                 numericUpDownFloat1.Value = (decimal)keyFrame.Value1;
-                numericUpDownFloat2.Value = (decimal)keyFrame.Value2;
-                numericUpDownFloat3.Value = (decimal)keyFrame.Value3;
-                numericUpDownFloat4.Value = (decimal)keyFrame.Value4;
+                numericUpDownFloat2.Value = (decimal)keyFrame.Slope1;
+                numericUpDownFloat3.Value = (decimal)keyFrame.Slope2;
+                numericUpDownFloat4.Value = (decimal)keyFrame.Delta;
             }
             else
             {

@@ -453,7 +453,10 @@ namespace Switch_Toolbox.Library.Animations
         {
             public bool IsKeyed = false;
 
-            public float Value1, Value2, Value3, Value4;
+            public float Value1, Delta;
+
+            public float Slope1;
+            public float Slope2;
 
             public float Value
             {
@@ -468,7 +471,11 @@ namespace Switch_Toolbox.Library.Animations
             }
             public String Text;
             public float _frame;
-            public float In = 0, Out = -1;
+
+            public float In = 0;
+            public float Out = -1;
+
+            //     public float In = 0, Out = -1;
             public bool Weighted = false;
             public bool Degrees = false; // Use Degrees
             public InterpolationType InterType = InterpolationType.LINEAR;
