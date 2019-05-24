@@ -281,19 +281,19 @@ namespace BrawlboxHelper
                     float delta = 0;
                     if (curve.CurveType == AnimCurveType.Cubic)
                     {
-                        value = curve.Keys[frame, 0];
-                        slope = curve.Keys[frame, 1];
-                        slope2 = curve.Keys[frame, 2];
-                        delta = curve.Keys[frame, 3];
+                        value = curve.AnimDataOffset + curve.Keys[frame, 0] * curve.Scale;
+                        slope = curve.AnimDataOffset + curve.Keys[frame, 1] * curve.Scale;
+                        slope2 = curve.AnimDataOffset + curve.Keys[frame, 2] * curve.Scale;
+                        delta = curve.AnimDataOffset + curve.Keys[frame, 3] * curve.Scale;
                     }
                     if (curve.CurveType == AnimCurveType.Linear)
                     {
-                        value = curve.Keys[frame, 0];
-                        delta = curve.Keys[frame, 1];
+                        value = curve.AnimDataOffset + curve.Keys[frame, 0] * curve.Scale;
+                        delta = curve.AnimDataOffset + curve.Keys[frame, 1] * curve.Scale;
                     }
                     if (curve.CurveType == AnimCurveType.Linear)
                     {
-                        value = curve.Keys[frame, 0];
+                        value = curve.AnimDataOffset + curve.Keys[frame, 0] * curve.Scale;
                     }
 
                     switch (curve.AnimDataOffset)
