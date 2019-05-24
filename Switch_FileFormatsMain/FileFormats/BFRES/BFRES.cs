@@ -85,7 +85,8 @@ namespace FirstPlugin
                 ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
                 if (editor != null)
                 {
-                    file = (BFRES)editor.GetActiveFile();                }
+                    file = (BFRES)editor.GetActiveFile();
+                }
 
                 if (editExt[0].Checked)
                 {
@@ -1133,6 +1134,13 @@ namespace FirstPlugin
 
         private byte[] GenerateTex2()
         {
+            STProgressBar progressBar = new STProgressBar();
+            progressBar.Task = "Generating Tex2...";
+            progressBar.Value = 0;
+            progressBar.StartPosition = FormStartPosition.CenterScreen;
+            progressBar.Show();
+            progressBar.Refresh();
+
             var mem = new MemoryStream();
 
             var resFileU = BFRESRender.ResFileNode.resFileU;
@@ -1147,6 +1155,7 @@ namespace FirstPlugin
             resFileTex2.VersionMinor2 = resFileU.VersionMinor2;
             resFileTex2.Textures = resFileU.Textures;
 
+            int curTex = 0;
             foreach (var group in Nodes)
             {
                 if (group is BFRESGroupNode)
@@ -1158,16 +1167,36 @@ namespace FirstPlugin
                     {
                         if (resFileTex2.Textures.ContainsKey(tex.Text))
                         {
-                            resFileTex2.Textures[tex.Text].MipData = tex.texture.MipData;
-                            resFileTex2.Textures[tex.Text].MipOffsets = tex.texture.MipOffsets;
-                            resFileTex2.Textures[tex.Text].MipCount = tex.texture.MipCount;
-                            resFileTex2.Textures[tex.Text].Swizzle = tex.Tex2Swizzle;
+                            if (tex.texture.MipData == null || tex.texture.MipData.Length <= 0)
+                            {
+                                progressBar.Task = $"Generating Mipmaps for {tex.Text}";
+                                progressBar.Value = ((curTex * 100) / resFileTex2.Textures.Count);
+                                progressBar.Refresh();
+
+                                FTEX.GenerateMipmaps(tex.texture.MipCount, tex.Format, tex.GetBitmap(), resFileTex2.Textures[tex.Text]);
+                            }
+                            else
+                            {
+                                resFileTex2.Textures[tex.Text].MipData = tex.texture.MipData;
+                                resFileTex2.Textures[tex.Text].MipOffsets = tex.texture.MipOffsets;
+                                resFileTex2.Textures[tex.Text].MipCount = tex.texture.MipCount;
+                                resFileTex2.Textures[tex.Text].Swizzle = tex.Tex2Swizzle;
+                            }
+
+                            curTex++;
                         }
                     }
                 }
             }
 
+            progressBar.Task = $"Saving File";
+            progressBar.Value = 90;
+
             resFileTex2.Save(mem);
+
+            progressBar.Value = 100;
+            progressBar.Close();
+            progressBar.Dispose();
 
             return mem.ToArray();
         }

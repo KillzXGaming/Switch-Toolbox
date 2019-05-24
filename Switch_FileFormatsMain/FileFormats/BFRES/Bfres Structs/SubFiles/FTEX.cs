@@ -415,6 +415,46 @@ namespace Bfres.Structs
                 MipCount = texture.MipCount;
         }
 
+        //For tex2
+        public static void GenerateMipmaps(uint MipCount, TEX_FORMAT Format, Bitmap bitmap, Texture texture)
+        {
+            if (bitmap == null)
+                return; //Image is likely disposed and not needed to be applied
+
+            texture.MipCount = MipCount;
+            texture.MipOffsets = new uint[MipCount];
+
+            try
+            {
+                //Create image block from bitmap first
+                var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
+
+                bitmap.Dispose();
+
+                //Swizzle and create surface
+                var surface = GX2.CreateGx2Texture(data, texture.Name,
+                    (uint)texture.TileMode,
+                    (uint)texture.AAMode,
+                    (uint)texture.Width,
+                    (uint)texture.Height,
+                    (uint)texture.Depth,
+                    (uint)texture.Format,
+                    (uint)texture.Swizzle,
+                    (uint)texture.Dim,
+                    (uint)texture.MipCount
+                    );
+
+                var tex = FromGx2Surface(surface, texture.Name);
+                texture.MipData = tex.MipData;
+                texture.MipOffsets = tex.MipOffsets;
+                texture.MipCount = tex.MipCount;
+            }
+            catch (Exception ex)
+            {
+                STErrorDialog.Show("Failed to swizzle and compress image " + texture.Name, "Error", ex.ToString());
+            }
+        }
+
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
             if (bitmap == null)
@@ -438,6 +478,8 @@ namespace Bfres.Structs
             {
                 //Create image block from bitmap first
                 var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
+
+                bitmap.Dispose();
 
                 //Swizzle and create surface
                 var surface = GX2.CreateGx2Texture(data, Text,
