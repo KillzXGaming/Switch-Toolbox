@@ -234,9 +234,10 @@ namespace BrawlboxHelper
             chr0.OriginalPath = fska.Path;
             chr0.UserEntries = new UserDataCollection();
             chr0.Loop = fska.Loop;
+            chr0.CreateEntry();
 
             foreach (var entry in fska.BoneAnims)
-                chr0.Children.Add(BoneAnim2Chr0Entry(entry, fska.FrameCount));
+                chr0.Children.Add(BoneAnim2Chr0Entry(entry, chr0));
 
             chr0.Export(FileName);
         }
@@ -250,10 +251,9 @@ namespace BrawlboxHelper
             public float Frame;
         }
 
-        public static CHR0EntryNode BoneAnim2Chr0Entry(BoneAnim boneAnim, int FrameCount)
+        public static CHR0EntryNode BoneAnim2Chr0Entry(BoneAnim boneAnim, CHR0Node chr0)
         {
-            CHR0EntryNode chr0Entry = new CHR0EntryNode();
-            chr0Entry.Name = boneAnim.Name;
+            CHR0EntryNode chr0Entry = chr0.CreateEntry(boneAnim.Name);
             chr0Entry.UseModelRotate = false;
             chr0Entry.UseModelScale = false;
             chr0Entry.UseModelTranslate = false;
@@ -392,7 +392,7 @@ namespace BrawlboxHelper
                 }
             }
 
-            for (int frame = 0; frame < FrameCount; frame++)
+            for (int frame = 0; frame < chr0.FrameCount; frame++)
             {
                 if (TranslateX.ContainsKey(frame))
                 {
