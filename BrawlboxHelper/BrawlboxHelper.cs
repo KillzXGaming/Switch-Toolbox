@@ -244,11 +244,11 @@ namespace BrawlboxHelper
 
         public class FSKAKeyNode
         {
-            public float Value;
-            public float Slope;
-            public float Slope2;
-            public float Delta;
-            public float Frame;
+            public float Value = 0;
+            public float Slope = 0;
+            public float Slope2 = 0;
+            public float Delta = 0;
+            public float Frame = 0;
         }
 
         public static CHR0EntryNode BoneAnim2Chr0Entry(BoneAnim boneAnim, CHR0Node chr0)
@@ -269,6 +269,52 @@ namespace BrawlboxHelper
             Dictionary<float, FSKAKeyNode> ScaleX = new Dictionary<float, FSKAKeyNode>();
             Dictionary<float, FSKAKeyNode> ScaleY = new Dictionary<float, FSKAKeyNode>();
             Dictionary<float, FSKAKeyNode> ScaleZ = new Dictionary<float, FSKAKeyNode>();
+
+            if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Translate))
+            {
+                TranslateX.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Translate.X,
+                });
+                TranslateY.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Translate.Y,
+                });
+                TranslateZ.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Translate.Z,
+                });
+            }
+            if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Rotate))
+            {
+                RotateX.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Rotate.X,
+                });
+                RotateY.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Rotate.Y,
+                });
+                RotateZ.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Rotate.Z,
+                });
+            }
+            if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Scale))
+            {
+                ScaleX.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Scale.X,
+                });
+                ScaleY.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Scale.Y,
+                });
+                ScaleZ.Add(0, new FSKAKeyNode()
+                {
+                    Value = boneAnim.BaseData.Scale.Z,
+                });
+            }
 
             foreach (var curve in boneAnim.Curves)
             {
