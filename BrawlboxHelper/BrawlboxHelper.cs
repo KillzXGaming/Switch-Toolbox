@@ -6,6 +6,7 @@ using ResU = Syroot.NintenTools.Bfres;
 using System.Windows;
 using Syroot.Maths;
 using BrawlLib.SSBB.ResourceNodes;
+using BrawlLib.Wii.Animations;
 
 namespace BrawlboxHelper
 {
@@ -223,6 +224,246 @@ namespace BrawlboxHelper
     public class FSKAConverter
     {
         static float Deg2Rad = (float)(Math.PI / 180f);
+
+        public static void Fska2Chr0(SkeletalAnim fska, string FileName)
+        {
+      
+            CHR0Node chr0 = new CHR0Node();
+            chr0.FrameCount = fska.FrameCount;
+            chr0.Name = fska.Name;
+            chr0.OriginalPath = fska.Path;
+            chr0.UserEntries = new UserDataCollection();
+            chr0.Loop = fska.Loop;
+
+            foreach (var entry in fska.BoneAnims)
+                chr0.Children.Add(BoneAnim2Chr0Entry(entry, fska.FrameCount));
+
+            chr0.Export(FileName);
+        }
+
+        public class FSKAKeyNode
+        {
+            public float Value;
+            public float Slope;
+            public float Slope2;
+            public float Delta;
+            public float Frame;
+        }
+
+        public static CHR0EntryNode BoneAnim2Chr0Entry(BoneAnim boneAnim, int FrameCount)
+        {
+            CHR0EntryNode chr0Entry = new CHR0EntryNode();
+            chr0Entry.Name = boneAnim.Name;
+            chr0Entry.UseModelRotate = false;
+            chr0Entry.UseModelScale = false;
+            chr0Entry.UseModelTranslate = false;
+
+
+            //Float for time/frame
+            Dictionary<float, FSKAKeyNode> TranslateX = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> TranslateY = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> TranslateZ = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> RotateX = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> RotateY = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> RotateZ = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> ScaleX = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> ScaleY = new Dictionary<float, FSKAKeyNode>();
+            Dictionary<float, FSKAKeyNode> ScaleZ = new Dictionary<float, FSKAKeyNode>();
+
+            foreach (var curve in boneAnim.Curves)
+            {
+                for (int frame = 0; frame < curve.Frames.Length; frame++)
+                {
+                    float time = curve.Frames[frame];
+                    float value = 0;
+                    float slope = 0;
+                    float slope2 = 0;
+                    float delta = 0;
+                    if (curve.CurveType == AnimCurveType.Cubic)
+                    {
+                        value = curve.Keys[frame, 0];
+                        slope = curve.Keys[frame, 1];
+                        slope2 = curve.Keys[frame, 2];
+                        delta = curve.Keys[frame, 3];
+                    }
+                    if (curve.CurveType == AnimCurveType.Linear)
+                    {
+                        value = curve.Keys[frame, 0];
+                        delta = curve.Keys[frame, 1];
+                    }
+                    if (curve.CurveType == AnimCurveType.Linear)
+                    {
+                        value = curve.Keys[frame, 0];
+                    }
+
+                    switch (curve.AnimDataOffset)
+                    {
+                        case 0x10:
+                            TranslateX.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x14:
+                            TranslateY.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x18:
+                            TranslateZ.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x20:
+                            RotateX.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x24:
+                            RotateY.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x28:
+                            RotateZ.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x04:
+                            ScaleX.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x08:
+                            ScaleY.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                        case 0x0C:
+                            ScaleZ.Add(time, new FSKAKeyNode()
+                            {
+                                Value = value,
+                                Slope = slope,
+                                Slope2 = slope2,
+                                Delta = delta,
+                                Frame = time,
+                            });
+                            break;
+                    }
+                }
+            }
+
+            for (int frame = 0; frame < FrameCount; frame++)
+            {
+                if (TranslateX.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasTx = true;
+                    keyFrame.Translation._x = TranslateX[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+                if (TranslateY.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasTy = true;
+                    keyFrame.Translation._y = TranslateY[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+                if (TranslateZ.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasTz = true;
+                    keyFrame.Translation._z = TranslateZ[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+
+                if (RotateX.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasRx = true;
+                    keyFrame.Rotation._x = RotateX[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+                if (RotateY.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasRy = true;
+                    keyFrame.Rotation._y = RotateY[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+                if (RotateZ.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasSz = true;
+                    keyFrame.Rotation._z = RotateZ[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+
+                if (ScaleX.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasSx = true;
+                    keyFrame.Scale._x = ScaleX[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+                if (ScaleY.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasSy = true;
+                    keyFrame.Scale._y = ScaleY[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+                if (ScaleZ.ContainsKey(frame))
+                {
+                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
+                    keyFrame.hasSz = true;
+                    keyFrame.Scale._z = ScaleZ[frame].Value;
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+                }
+            }
+
+
+            return chr0Entry;
+        }
 
         public static SkeletalAnim Chr02Fska(string FileName)
         {

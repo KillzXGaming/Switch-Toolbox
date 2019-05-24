@@ -121,6 +121,17 @@ namespace Bfres.Structs
                     SkeletalAnim.Export(FileName, GetResFile());
                 }
             }
+            else if (ext == ".chr0")
+            {
+                if (GetResFileU() != null)
+                {
+                    BrawlboxHelper.FSKAConverter.Fska2Chr0(ConvertWiiUToSwitch(SkeletalAnimU), FileName);
+                }
+                else
+                {
+                    BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
+                }
+            }
             else if (ext == ".smd")
             {
                 STSkeleton skeleton = GetActiveSkeleton();

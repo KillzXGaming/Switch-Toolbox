@@ -11,6 +11,12 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
+
+    //Some code based on https://github.com/zeldamods/tmpk/blob/master/tmpk/tmpk.py
+    // Copyright 2018 leoetlino <leo@leolam.fr>
+    // Licensed under GPLv2+
+    // Copy of license can be found under Lib/Licenses
+
     public class TMPK : IFileFormat, IArchiveFile
     {
         public FileType FileType { get; set; } = FileType.Archive;
