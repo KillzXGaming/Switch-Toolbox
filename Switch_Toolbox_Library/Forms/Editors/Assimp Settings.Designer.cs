@@ -41,14 +41,17 @@
             this.useNodeTransform = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.rotateBonesY90 = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.rotateBones = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.rotateBonesUD = new System.Windows.Forms.NumericUpDown();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rotateBonesUD)).BeginInit();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
-            this.contentContainer.Controls.Add(this.rotateBonesY90);
+            this.contentContainer.Controls.Add(this.rotateBonesUD);
+            this.contentContainer.Controls.Add(this.rotateBones);
             this.contentContainer.Controls.Add(this.stButton2);
             this.contentContainer.Controls.Add(this.stButton1);
             this.contentContainer.Controls.Add(this.useNodeTransform);
@@ -76,7 +79,8 @@
             this.contentContainer.Controls.SetChildIndex(this.useNodeTransform, 0);
             this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
             this.contentContainer.Controls.SetChildIndex(this.stButton2, 0);
-            this.contentContainer.Controls.SetChildIndex(this.rotateBonesY90, 0);
+            this.contentContainer.Controls.SetChildIndex(this.rotateBones, 0);
+            this.contentContainer.Controls.SetChildIndex(this.rotateBonesUD, 0);
             // 
             // generateNormalsChk
             // 
@@ -246,17 +250,39 @@
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
-            // rotateBonesY90
+            // rotateBones
             // 
-            this.rotateBonesY90.AutoSize = true;
-            this.rotateBonesY90.ForeColor = System.Drawing.Color.White;
-            this.rotateBonesY90.Location = new System.Drawing.Point(9, 31);
-            this.rotateBonesY90.Name = "rotateBonesY90";
-            this.rotateBonesY90.Size = new System.Drawing.Size(116, 17);
-            this.rotateBonesY90.TabIndex = 14;
-            this.rotateBonesY90.Text = "Rotate Bones 90 Y";
-            this.rotateBonesY90.UseVisualStyleBackColor = true;
-            this.rotateBonesY90.CheckedChanged += new System.EventHandler(this.rotateBonesY90_CheckedChanged);
+            this.rotateBones.AutoSize = true;
+            this.rotateBones.ForeColor = System.Drawing.Color.White;
+            this.rotateBones.Location = new System.Drawing.Point(9, 31);
+            this.rotateBones.Name = "rotateBones";
+            this.rotateBones.Size = new System.Drawing.Size(105, 17);
+            this.rotateBones.TabIndex = 14;
+            this.rotateBones.Text = "Rotate Bones by";
+            this.rotateBones.UseVisualStyleBackColor = true;
+            this.rotateBones.CheckedChanged += new System.EventHandler(this.rotateBonesY90_CheckedChanged);
+            // 
+            // rotateBonesUD
+            // 
+            this.rotateBonesUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.rotateBonesUD.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rotateBonesUD.Enabled = false;
+            this.rotateBonesUD.ForeColor = System.Drawing.Color.White;
+            this.rotateBonesUD.Location = new System.Drawing.Point(120, 33);
+            this.rotateBonesUD.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.rotateBonesUD.Name = "rotateBonesUD";
+            this.rotateBonesUD.Size = new System.Drawing.Size(120, 16);
+            this.rotateBonesUD.TabIndex = 15;
+            this.rotateBonesUD.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.rotateBonesUD.ValueChanged += new System.EventHandler(this.rotateBonesUD_ValueChanged);
             // 
             // Assimp_Settings
             // 
@@ -269,6 +295,7 @@
             this.contentContainer.ResumeLayout(false);
             this.contentContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rotateBonesUD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -288,6 +315,7 @@
         private STCheckBox useNodeTransform;
         private STButton stButton2;
         private STButton stButton1;
-        private STCheckBox rotateBonesY90;
+        private STCheckBox rotateBones;
+        private System.Windows.Forms.NumericUpDown rotateBonesUD;
     }
 }

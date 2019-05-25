@@ -15,7 +15,8 @@ namespace Switch_Toolbox.Library
     public class AssimpData
     {
         public bool UseTransformMatrix = true;
-        public bool RotateSkeleton90Y = false;
+        public bool RotateSkeleton = false;
+        public float RotateSkeletonAmount = 90;
 
         public Scene scene;
 
@@ -42,7 +43,8 @@ namespace Switch_Toolbox.Library
                 if (settings.ShowDialog() == DialogResult.OK)
                 {
                     UseTransformMatrix = settings.UseNodeTransform;
-                    RotateSkeleton90Y = settings.RotateSkeleton90Y;
+                    RotateSkeleton = settings.RotateSkeleton;
+                    RotateSkeletonAmount = settings.RotateSkeletonAmount;
 
                     AssimpContext Importer = new AssimpContext();
 
@@ -262,9 +264,6 @@ namespace Switch_Toolbox.Library
         }
         private void BuildSkeletonNodes(Node node, List<string> boneNames, STSkeleton skeleton, ref Matrix4x4 rootTransform)
         {
-            if (RotateSkeleton90Y)
-                BoneRotation = 90;
-
             Matrix4x4 trafo = node.Transform;
             Matrix4x4 world = trafo * rootTransform;
             Matrix4 worldTK = AssimpHelper.TKMatrix(world);
@@ -300,8 +299,6 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
-
-        public int BoneRotation = 0;
 
         private List<Node> tempBoneNodes = new List<Node>();
         private void CreateByNode(Node node, STSkeleton skeleton, string ParentArmatureName, 
@@ -341,7 +338,11 @@ namespace Switch_Toolbox.Library
                 if (IsRoot)
                 {
                     bone.parentIndex = -1;
-                    transformMat = AssimpHelper.TKMatrix(world * Matrix4x4.FromRotationX(MathHelper.DegreesToRadians(BoneRotation)));
+
+                    if (RotateSkeleton)
+                        transformMat = AssimpHelper.TKMatrix(world * Matrix4x4.FromRotationX(MathHelper.DegreesToRadians(RotateSkeletonAmount)));
+                    else
+                        transformMat = AssimpHelper.TKMatrix(world);
                 }
                 else
                 {

@@ -15,7 +15,8 @@ namespace Switch_Toolbox.Library.Forms
     {
         public uint SkinLimitMax = 4;
         public bool UseNodeTransform = true;
-        public bool RotateSkeleton90Y = false;
+        public bool RotateSkeleton = false;
+        public float RotateSkeletonAmount = 90;
 
         public Assimp_Settings()
         {
@@ -24,7 +25,8 @@ namespace Switch_Toolbox.Library.Forms
 
         public PostProcessSteps GetFlags()
         {
-            RotateSkeleton90Y = rotateBonesY90.Checked;
+            RotateSkeleton = rotateBones.Checked;
+            RotateSkeletonAmount = (float)rotateBonesUD.Value;
 
             UseNodeTransform = useNodeTransform.Checked;
 
@@ -60,7 +62,12 @@ namespace Switch_Toolbox.Library.Forms
 
         private void rotateBonesY90_CheckedChanged(object sender, EventArgs e)
         {
-            RotateSkeleton90Y = rotateBonesY90.Checked;
+            RotateSkeleton = rotateBones.Checked;
+        }
+
+        private void rotateBonesUD_ValueChanged(object sender, EventArgs e)
+        {
+            RotateSkeletonAmount = (float)rotateBonesUD.Value;
         }
     }
 }
