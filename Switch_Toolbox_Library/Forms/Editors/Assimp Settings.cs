@@ -63,6 +63,7 @@ namespace Switch_Toolbox.Library.Forms
         private void rotateBonesY90_CheckedChanged(object sender, EventArgs e)
         {
             RotateSkeleton = rotateBones.Checked;
+            rotateBonesUD.Enabled = RotateSkeleton;
         }
 
         private void rotateBonesUD_ValueChanged(object sender, EventArgs e)
