@@ -135,6 +135,20 @@ namespace Switch_Toolbox.Library.Animations
                 if (dialog.ShowDialog() == DialogResult.OK) { Text = dialog.textBox1.Text; }
             }
 
+            public bool HasKeyedFrames(float frame)
+            {
+                return (XPOS.HasAnimation() && XPOS.GetKeyFrame(frame).IsKeyed ||
+                        YPOS.HasAnimation() && YPOS.GetKeyFrame(frame).IsKeyed ||
+                        ZPOS.HasAnimation() && ZPOS.GetKeyFrame(frame).IsKeyed ||
+                        XROT.HasAnimation() && XROT.GetKeyFrame(frame).IsKeyed ||
+                        YROT.HasAnimation() && YROT.GetKeyFrame(frame).IsKeyed ||
+                        ZROT.HasAnimation() && ZROT.GetKeyFrame(frame).IsKeyed ||
+                        WROT.HasAnimation() && WROT.GetKeyFrame(frame).IsKeyed ||
+                        XSCA.HasAnimation() && XSCA.GetKeyFrame(frame).IsKeyed ||
+                        YSCA.HasAnimation() && YSCA.GetKeyFrame(frame).IsKeyed ||
+                        ZSCA.HasAnimation() && ZSCA.GetKeyFrame(frame).IsKeyed);
+            }
+
             public Vector3 GetPosition(float frame)
             {
                 Vector3 pos = new Vector3(0);

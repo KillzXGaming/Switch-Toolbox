@@ -131,7 +131,7 @@ namespace BrawlboxHelper
                 //Max of 4 values.  Cubic using 4, linear using 2, and step using 1
                 float[] KeyValues = new float[4];
 
-               switch (AnimOffset)
+                switch (AnimOffset)
                 {
                     case 0: //Red
                         Keys.Add((float)entry.Colors[c].R / 255f);
@@ -224,20 +224,20 @@ namespace BrawlboxHelper
     public class FSKAConverter
     {
         static float Deg2Rad = (float)(Math.PI / 180f);
+        static float Rad2Deg = (float)(180f / Math.PI);
 
         public static void Fska2Chr0(SkeletalAnim fska, string FileName)
         {
-      
+
             CHR0Node chr0 = new CHR0Node();
             chr0.FrameCount = fska.FrameCount;
             chr0.Name = fska.Name;
             chr0.OriginalPath = fska.Path;
             chr0.UserEntries = new UserDataCollection();
             chr0.Loop = fska.Loop;
-            chr0.CreateEntry();
 
             foreach (var entry in fska.BoneAnims)
-                chr0.Children.Add(BoneAnim2Chr0Entry(entry, chr0));
+                BoneAnim2Chr0Entry(entry, chr0);
 
             chr0.Export(FileName);
         }
@@ -251,13 +251,13 @@ namespace BrawlboxHelper
             public float Frame = 0;
         }
 
-        public static CHR0EntryNode BoneAnim2Chr0Entry(BoneAnim boneAnim, CHR0Node chr0)
+        public static void BoneAnim2Chr0Entry(BoneAnim boneAnim, CHR0Node chr0)
         {
             CHR0EntryNode chr0Entry = chr0.CreateEntry(boneAnim.Name);
             chr0Entry.UseModelRotate = false;
             chr0Entry.UseModelScale = false;
             chr0Entry.UseModelTranslate = false;
-
+            chr0Entry.ScaleCompensateApply = boneAnim.ApplySegmentScaleCompensate;
 
             //Float for time/frame
             Dictionary<float, FSKAKeyNode> TranslateX = new Dictionary<float, FSKAKeyNode>();
@@ -300,6 +300,7 @@ namespace BrawlboxHelper
                     Value = boneAnim.BaseData.Rotate.Z,
                 });
             }
+
             if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Scale))
             {
                 ScaleX.Add(0, new FSKAKeyNode()
@@ -315,32 +316,48 @@ namespace BrawlboxHelper
                     Value = boneAnim.BaseData.Scale.Z,
                 });
             }
+            else
+            {
+                ScaleX.Add(0, new FSKAKeyNode() { Value = 1 });
+                ScaleY.Add(0, new FSKAKeyNode() { Value = 1 });
+                ScaleZ.Add(0, new FSKAKeyNode() { Value = 1 });
+            }
+
+            Console.WriteLine($"Curves { boneAnim.Curves.Count}");
 
             foreach (var curve in boneAnim.Curves)
             {
                 for (int frame = 0; frame < curve.Frames.Length; frame++)
                 {
+                    Console.WriteLine($"frame {frame} AnimDataOffset {curve.AnimDataOffset}");
+
                     float time = curve.Frames[frame];
                     float value = 0;
                     float slope = 0;
                     float slope2 = 0;
                     float delta = 0;
+
+                    float scale = curve.Scale;
+                    if (scale <= 0)
+                        scale = 1;
+
                     if (curve.CurveType == AnimCurveType.Cubic)
                     {
-                        value = curve.AnimDataOffset + curve.Keys[frame, 0] * curve.Scale;
-                        slope = curve.AnimDataOffset + curve.Keys[frame, 1] * curve.Scale;
-                        slope2 = curve.AnimDataOffset + curve.Keys[frame, 2] * curve.Scale;
-                        delta = curve.AnimDataOffset + curve.Keys[frame, 3] * curve.Scale;
+                        value = curve.Offset + curve.Keys[frame, 0] * scale;
+                        slope = curve.Offset + curve.Keys[frame, 1] * scale;
+                        slope2 = curve.Offset + curve.Keys[frame, 2] * scale;
+                        delta = curve.Offset + curve.Keys[frame, 3] * scale;
                     }
                     if (curve.CurveType == AnimCurveType.Linear)
                     {
-                        value = curve.AnimDataOffset + curve.Keys[frame, 0] * curve.Scale;
-                        delta = curve.AnimDataOffset + curve.Keys[frame, 1] * curve.Scale;
+                        value = curve.Offset + curve.Keys[frame, 0] * scale;
+                        delta = curve.Offset + curve.Keys[frame, 1] * scale;
                     }
-                    if (curve.CurveType == AnimCurveType.Linear)
+                    if (curve.CurveType == AnimCurveType.StepInt)
                     {
-                        value = curve.AnimDataOffset + curve.Keys[frame, 0] * curve.Scale;
+                        value = curve.Offset + curve.Keys[frame, 0] * scale;
                     }
+
 
                     switch (curve.AnimDataOffset)
                     {
@@ -467,75 +484,83 @@ namespace BrawlboxHelper
 
             for (int frame = 0; frame < chr0.FrameCount; frame++)
             {
+                CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                 if (TranslateX.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasTx = true;
                     keyFrame.Translation._x = TranslateX[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
                 }
                 if (TranslateY.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasTy = true;
                     keyFrame.Translation._y = TranslateY[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
                 }
                 if (TranslateZ.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasTz = true;
                     keyFrame.Translation._z = TranslateZ[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
                 }
 
                 if (RotateX.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasRx = true;
-                    keyFrame.Rotation._x = RotateX[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
+                    keyFrame.Rotation._x = RotateX[frame].Value * Rad2Deg;
                 }
                 if (RotateY.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasRy = true;
-                    keyFrame.Rotation._y = RotateY[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
+                    keyFrame.Rotation._y = RotateY[frame].Value * Rad2Deg;
                 }
                 if (RotateZ.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
-                    keyFrame.hasSz = true;
-                    keyFrame.Rotation._z = RotateZ[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
+                    keyFrame.hasRz = true;
+                    keyFrame.Rotation._z = RotateZ[frame].Value * Rad2Deg;
                 }
 
                 if (ScaleX.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasSx = true;
                     keyFrame.Scale._x = ScaleX[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
                 }
                 if (ScaleY.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasSy = true;
                     keyFrame.Scale._y = ScaleY[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
                 }
                 if (ScaleZ.ContainsKey(frame))
                 {
-                    CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                     keyFrame.hasSz = true;
                     keyFrame.Scale._z = ScaleZ[frame].Value;
-                    chr0Entry.SetKeyframe(frame, keyFrame);
                 }
+
+
+                if (keyFrame.HasKeys)
+                    chr0Entry.SetKeyframe(frame, keyFrame);
+
+                Console.WriteLine(keyFrame);
+
+                /*   var curretnFrame = chr0Entry.GetAnimFrame(0);
+                   if (!curretnFrame.hasRx)
+                       curretnFrame.Rotation._x = RotateX[0].Value;
+                   if (!curretnFrame.hasRy)
+                       curretnFrame.Rotation._y = RotateY[0].Value;
+                   if (!curretnFrame.hasRz)
+                       curretnFrame.Rotation._z = RotateZ[0].Value;
+
+                   if (!curretnFrame.hasTx)
+                       curretnFrame.Translation._x = TranslateX[0].Value;
+                   if (!curretnFrame.hasTy)
+                       curretnFrame.Translation._y = TranslateY[0].Value;
+                   if (!curretnFrame.hasTz)
+                       curretnFrame.Translation._z = TranslateZ[0].Value;
+
+                   if (!curretnFrame.hasSx)
+                       curretnFrame.Scale._x = ScaleX[0].Value;
+                   if (!curretnFrame.hasSy)
+                       curretnFrame.Scale._y = ScaleY[0].Value;
+                   if (!curretnFrame.hasSz)
+                       curretnFrame.Scale._z = ScaleZ[0].Value;*/
             }
-
-
-            return chr0Entry;
         }
 
         public static SkeletalAnim Chr02Fska(string FileName)
@@ -725,7 +750,7 @@ namespace BrawlboxHelper
             curve.CurveType = AnimCurveType.Cubic;
 
             List<float> Frames = new List<float>();
-            List<float[]> Keys = new List<float[]>();
+            List<float> Keys = new List<float>();
 
             for (int frame = 0; frame < entry.FrameCount; frame++)
             {
@@ -737,59 +762,47 @@ namespace BrawlboxHelper
                 if (AnimFrame.hasTx && AnimOffset == 0x10)
                 {
                     Frames.Add(frame);
-                    KeyValues[0] = AnimFrame.Translation._x;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Translation._x);
                 }
                 if (AnimFrame.hasTy && AnimOffset == 0x14)
                 {
                     Frames.Add(frame);
-                    KeyValues[0] = AnimFrame.Translation._y;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Translation._y);
                 }
                 if (AnimFrame.hasTz && AnimOffset == 0x18)
                 {
                     Frames.Add(frame);
-                    KeyValues[0] = AnimFrame.Translation._z;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Translation._z);
                 }
                 if (AnimFrame.hasRx && AnimOffset == 0x20)
                 {
                     Frames.Add(frame);
-                    float xRadian = AnimFrame.Rotation._x * Deg2Rad;
-                    KeyValues[0] = xRadian;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Rotation._x * Deg2Rad);
                 }
                 if (AnimFrame.hasRy && AnimOffset == 0x24)
                 {
                     Frames.Add(frame);
-                    float yRadian = AnimFrame.Rotation._y * Deg2Rad;
-                    KeyValues[0] = yRadian;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Rotation._y * Deg2Rad);
                 }
                 if (AnimFrame.hasRz && AnimOffset == 0x28)
                 {
                     Frames.Add(frame);
-                    float zRadian = AnimFrame.Rotation._z * Deg2Rad;
-                    KeyValues[0] = zRadian;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Rotation._z * Deg2Rad);
                 }
                 if (AnimFrame.hasSx && AnimOffset == 0x04)
                 {
                     Frames.Add(frame);
-                    KeyValues[0] = AnimFrame.Scale._x;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Scale._x);
                 }
                 if (AnimFrame.hasSy && AnimOffset == 0x08)
                 {
                     Frames.Add(frame);
-                    KeyValues[0] = AnimFrame.Scale._y;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Scale._y);
                 }
                 if (AnimFrame.hasSz && AnimOffset == 0x0C)
                 {
                     Frames.Add(frame);
-                    KeyValues[0] = AnimFrame.Scale._z;
-                    Keys.Add(KeyValues);
+                    Keys.Add(AnimFrame.Scale._z);
                 }
             }
 
@@ -810,11 +823,11 @@ namespace BrawlboxHelper
                         float Delta = 0;
 
                         if (frame < Keys.Count - 1)
-                            Delta = Keys[frame + 1][0] - Keys[frame][0];
+                            Delta = Keys[frame + 1] - Keys[frame];
 
-                        float value = Keys[frame][0];
-                        float Slope = Keys[frame][1];
-                        float Slope2 = Keys[frame][2];
+                        float value = Keys[frame];
+                        float Slope = 0;
+                        float Slope2 = 0;
 
                         curve.Keys[frame, 0] = value;
                         curve.Keys[frame, 1] = Slope;
@@ -827,7 +840,7 @@ namespace BrawlboxHelper
                     curve.Keys = new float[Keys.Count, 1];
                     for (int frame = 0; frame < Keys.Count; frame++)
                     {
-                        curve.Keys[frame, 0] = Keys[frame][0];
+                        curve.Keys[frame, 0] = Keys[frame];
                     }
                     break;
                 case AnimCurveType.Linear:
@@ -839,9 +852,9 @@ namespace BrawlboxHelper
                         float Delta = 0;
 
                         if (frame < Keys.Count - 1)
-                            Delta = Keys[frame + 1][0] - Keys[frame][0];
+                            Delta = Keys[frame + 1] - Keys[frame];
 
-                        curve.Keys[frame, 0] = Keys[frame][0];
+                        curve.Keys[frame, 0] = Keys[frame];
                         curve.Keys[frame, 1] = Delta;
                     }
                     break;

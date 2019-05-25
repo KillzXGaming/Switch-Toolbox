@@ -123,14 +123,14 @@ namespace Bfres.Structs
             }
             else if (ext == ".chr0")
             {
+                STSkeleton skeleton = GetActiveSkeleton();
+
                 if (GetResFileU() != null)
-                {
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(ConvertWiiUToSwitch(SkeletalAnimU), FileName);
-                }
                 else
-                {
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
-                }
+
+                //  BrawlboxHelper.FSKAConverter.Fska2Chr0(this, skeleton, FileName);
             }
             else if (ext == ".smd")
             {

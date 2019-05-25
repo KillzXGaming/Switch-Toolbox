@@ -46,17 +46,7 @@ namespace FirstPlugin.Forms
 
             for (int frame = 0; frame < fska.FrameCount; frame++)
             {
-                bool IsKeyed = (boneAnim.XPOS.HasAnimation() && boneAnim.XPOS.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.YPOS.HasAnimation() && boneAnim.YPOS.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.ZPOS.HasAnimation() && boneAnim.ZPOS.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.XROT.HasAnimation() && boneAnim.XROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.YROT.HasAnimation() && boneAnim.YROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.ZROT.HasAnimation() && boneAnim.ZROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.WROT.HasAnimation() && boneAnim.WROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.XSCA.HasAnimation() && boneAnim.XSCA.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.YSCA.HasAnimation() && boneAnim.YSCA.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.ZSCA.HasAnimation() && boneAnim.ZSCA.GetKeyFrame(frame).IsKeyed);
-
+                bool IsKeyed = boneAnim.HasKeyedFrames(frame);
                 if (IsKeyed)
                 {
                     KeyFrame key = new KeyFrame();
@@ -67,7 +57,7 @@ namespace FirstPlugin.Forms
                     var rot = boneAnim.GetRotation(frame);
                     Vector3 sca = boneAnim.GetScale(frame);
 
-                  /*  key.PosX = pos.X;
+                    key.PosX = pos.X;
                     key.PosY = pos.Y;
                     key.PosZ = pos.Z;
 
@@ -78,22 +68,22 @@ namespace FirstPlugin.Forms
 
                     key.ScaX = sca.X;
                     key.ScaY = sca.Y;
-                    key.ScaZ = sca.Z;*/
+                    key.ScaZ = sca.Z;
 
-              /*      listViewCustom2.Items.Add(key.Frame.ToString()).SubItems.AddRange(
+                    listViewCustom2.Items.Add(key.Frame.ToString()).SubItems.AddRange(
                         new ListViewItem.ListViewSubItem[]
                         {
-                             new ListViewItem.ListViewSubItem() { Text = key.PosX.ToString() },
-                             new ListViewItem.ListViewSubItem() { Text = key.PosY.ToString() },
-                             new ListViewItem.ListViewSubItem() { Text = key.PosZ.ToString() },
+                             new ListViewItem.ListViewSubItem() { Text = key.ScaX.ToString() },
+                             new ListViewItem.ListViewSubItem() { Text = key.ScaY.ToString() },
+                             new ListViewItem.ListViewSubItem() { Text = key.ScaZ.ToString() },
                              new ListViewItem.ListViewSubItem() { Text = key.RotX.ToString() },
                              new ListViewItem.ListViewSubItem() { Text = key.RotY.ToString() },
                              new ListViewItem.ListViewSubItem() { Text = key.RotZ.ToString() },
                              new ListViewItem.ListViewSubItem() { Text = key.RotW.ToString() },
-                             new ListViewItem.ListViewSubItem() { Text = key.ScaX.ToString() },
-                             new ListViewItem.ListViewSubItem() { Text = key.ScaY.ToString() },
-                             new ListViewItem.ListViewSubItem() { Text = key.ScaZ.ToString() },
-                        });*/
+                             new ListViewItem.ListViewSubItem() { Text = key.PosX.ToString() },
+                             new ListViewItem.ListViewSubItem() { Text = key.PosY.ToString() },
+                             new ListViewItem.ListViewSubItem() { Text = key.PosZ.ToString() },
+                        });
                 }
             }
             listViewCustom2.EndUpdate();

@@ -36,6 +36,14 @@
       <HintPath>..\Toolbox\Lib\BrawlLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Gl_EditorFramework">
+      <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
       <Private>False</Private>
@@ -54,6 +62,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,8 +71,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrawlboxHelper.cs" />
+    <Compile Include="BrawlHelperTest2.cs" />
+    <Compile Include="BrawlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
+      <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
+      <Name>Switch_Toolbox_Library</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

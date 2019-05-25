@@ -31,6 +31,19 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
@@ -57,21 +70,10 @@
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
-            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stPanel2.SuspendLayout();
             this.stPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.stPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentFrameUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat11)).BeginInit();
@@ -85,7 +87,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat9)).BeginInit();
             this.stPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
             // splitter1
@@ -120,6 +121,107 @@
             this.stPanel4.Size = new System.Drawing.Size(800, 242);
             this.stPanel4.TabIndex = 27;
             // 
+            // objectListView1
+            // 
+            this.objectListView1.AllColumns.Add(this.olvColumn1);
+            this.objectListView1.AllColumns.Add(this.olvColumn2);
+            this.objectListView1.AllColumns.Add(this.olvColumn3);
+            this.objectListView1.AllColumns.Add(this.olvColumn4);
+            this.objectListView1.AllColumns.Add(this.olvColumn5);
+            this.objectListView1.AllColumns.Add(this.olvColumn6);
+            this.objectListView1.AllColumns.Add(this.olvColumn7);
+            this.objectListView1.AllColumns.Add(this.olvColumn8);
+            this.objectListView1.AllColumns.Add(this.olvColumn9);
+            this.objectListView1.AllColumns.Add(this.olvColumn10);
+            this.objectListView1.AllColumns.Add(this.olvColumn11);
+            this.objectListView1.CellEditUseWholeCell = false;
+            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1,
+            this.olvColumn2,
+            this.olvColumn3,
+            this.olvColumn4,
+            this.olvColumn5,
+            this.olvColumn6,
+            this.olvColumn7,
+            this.olvColumn8,
+            this.olvColumn9,
+            this.olvColumn10,
+            this.olvColumn11});
+            this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.objectListView1.Location = new System.Drawing.Point(0, 0);
+            this.objectListView1.Name = "objectListView1";
+            this.objectListView1.Size = new System.Drawing.Size(800, 242);
+            this.objectListView1.TabIndex = 1;
+            this.objectListView1.UseCompatibleStateImageBehavior = false;
+            this.objectListView1.View = System.Windows.Forms.View.Details;
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "Frame";
+            this.olvColumn1.Text = "Frame";
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "PosX";
+            this.olvColumn2.Text = "Pos X";
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "PosY";
+            this.olvColumn3.Text = "Pos Y";
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.AspectName = "PosZ";
+            this.olvColumn4.Text = "Pos Z";
+            // 
+            // olvColumn5
+            // 
+            this.olvColumn5.AspectName = "RotX";
+            this.olvColumn5.Text = "Rot X";
+            // 
+            // olvColumn6
+            // 
+            this.olvColumn6.AspectName = "RotY";
+            this.olvColumn6.Text = "Rot Y";
+            // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "RotZ";
+            this.olvColumn7.Text = "Rot Z";
+            // 
+            // olvColumn8
+            // 
+            this.olvColumn8.AspectName = "RotW";
+            this.olvColumn8.Text = "Rot W";
+            // 
+            // olvColumn9
+            // 
+            this.olvColumn9.AspectName = "ScaX";
+            this.olvColumn9.Text = "Sca X";
+            // 
+            // olvColumn10
+            // 
+            this.olvColumn10.AspectName = "ScaY";
+            this.olvColumn10.Text = "Sca Y";
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "ScaZ";
+            this.olvColumn11.Text = "Sca Z";
+            // 
+            // listViewCustom1
+            // 
+            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
+            this.listViewCustom1.Name = "listViewCustom1";
+            this.listViewCustom1.OwnerDraw = true;
+            this.listViewCustom1.Size = new System.Drawing.Size(800, 242);
+            this.listViewCustom1.TabIndex = 0;
+            this.listViewCustom1.UseCompatibleStateImageBehavior = false;
+            // 
             // splitter2
             // 
             this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -131,6 +233,7 @@
             // 
             // stPanel3
             // 
+            this.stPanel3.Controls.Add(this.stButton1);
             this.stPanel3.Controls.Add(this.btnRemove);
             this.stPanel3.Controls.Add(this.frameCountLbl);
             this.stPanel3.Controls.Add(this.btnInsert);
@@ -514,125 +617,36 @@
             // stPropertyGrid1
             // 
             this.stPropertyGrid1.AutoScroll = true;
-            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPropertyGrid1.Location = new System.Drawing.Point(0, 0);
             this.stPropertyGrid1.Name = "stPropertyGrid1";
+            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Size = new System.Drawing.Size(802, 234);
             this.stPropertyGrid1.TabIndex = 0;
             // 
-            // listViewCustom1
+            // stButton1
             // 
-            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
-            this.listViewCustom1.Name = "listViewCustom1";
-            this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(800, 242);
-            this.listViewCustom1.TabIndex = 0;
-            this.listViewCustom1.UseCompatibleStateImageBehavior = false;
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(436, 6);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(75, 23);
+            this.stButton1.TabIndex = 25;
+            this.stButton1.Text = "stButton1";
+            this.stButton1.UseVisualStyleBackColor = false;
+            this.stButton1.Click += new System.EventHandler(this.stButton1_Click);
             // 
-            // objectListView1
-            // 
-            this.objectListView1.AllColumns.Add(this.olvColumn1);
-            this.objectListView1.AllColumns.Add(this.olvColumn2);
-            this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.AllColumns.Add(this.olvColumn4);
-            this.objectListView1.AllColumns.Add(this.olvColumn5);
-            this.objectListView1.AllColumns.Add(this.olvColumn6);
-            this.objectListView1.AllColumns.Add(this.olvColumn7);
-            this.objectListView1.AllColumns.Add(this.olvColumn8);
-            this.objectListView1.AllColumns.Add(this.olvColumn9);
-            this.objectListView1.AllColumns.Add(this.olvColumn10);
-            this.objectListView1.AllColumns.Add(this.olvColumn11);
-            this.objectListView1.CellEditUseWholeCell = false;
-            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn1,
-            this.olvColumn2,
-            this.olvColumn3,
-            this.olvColumn4,
-            this.olvColumn5,
-            this.olvColumn6,
-            this.olvColumn7,
-            this.olvColumn8,
-            this.olvColumn9,
-            this.olvColumn10,
-            this.olvColumn11});
-            this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.objectListView1.Location = new System.Drawing.Point(0, 0);
-            this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(800, 242);
-            this.objectListView1.TabIndex = 1;
-            this.objectListView1.UseCompatibleStateImageBehavior = false;
-            this.objectListView1.View = System.Windows.Forms.View.Details;
-            // 
-            // olvColumn1
-            // 
-            this.olvColumn1.AspectName = "Frame";
-            this.olvColumn1.Text = "Frame";
-            // 
-            // olvColumn2
-            // 
-            this.olvColumn2.AspectName = "PosX";
-            this.olvColumn2.Text = "Pos X";
-            // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "PosY";
-            this.olvColumn3.Text = "Pos Y";
-            // 
-            // olvColumn4
-            // 
-            this.olvColumn4.AspectName = "PosZ";
-            this.olvColumn4.Text = "Pos Z";
-            // 
-            // olvColumn5
-            // 
-            this.olvColumn5.AspectName = "RotX";
-            this.olvColumn5.Text = "Rot X";
-            // 
-            // olvColumn6
-            // 
-            this.olvColumn6.AspectName = "RotY";
-            this.olvColumn6.Text = "Rot Y";
-            // 
-            // olvColumn7
-            // 
-            this.olvColumn7.AspectName = "RotZ";
-            this.olvColumn7.Text = "Rot Z";
-            // 
-            // olvColumn8
-            // 
-            this.olvColumn8.AspectName = "RotW";
-            this.olvColumn8.Text = "Rot W";
-            // 
-            // olvColumn9
-            // 
-            this.olvColumn9.AspectName = "ScaX";
-            this.olvColumn9.Text = "Sca X";
-            // 
-            // olvColumn10
-            // 
-            this.olvColumn10.AspectName = "ScaY";
-            this.olvColumn10.Text = "Sca Y";
-            // 
-            // olvColumn11
-            // 
-            this.olvColumn11.AspectName = "ScaZ";
-            this.olvColumn11.Text = "Sca Z";
-            // 
-            // BoneAnimEditor
+            // BoneAnimEditor2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.stPanel2);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.stPanel1);
-            this.Name = "BoneAnimEditor";
+            this.Name = "BoneAnimEditor2";
             this.Size = new System.Drawing.Size(802, 640);
             this.stPanel2.ResumeLayout(false);
             this.stPanel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentFrameUD)).EndInit();
@@ -647,7 +661,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat9)).EndInit();
             this.stPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -696,5 +709,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn9;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
+        private Switch_Toolbox.Library.Forms.STButton stButton1;
     }
 }

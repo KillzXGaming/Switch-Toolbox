@@ -23,8 +23,12 @@ namespace FirstPlugin.Forms
             objectListView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
         }
 
+        private FSKA.BoneAnimNode ActiveBoneAnim;
+
         public void LoadBoneAnim(FSKA.BoneAnimNode boneAnim)
         {
+            ActiveBoneAnim = boneAnim;
+
             objectListView1.BeginUpdate();
             objectListView1.ClearObjects();
             objectListView1.ShowGroups = false;
@@ -39,21 +43,9 @@ namespace FirstPlugin.Forms
             frameCountLbl.Text = $" / {fska.FrameCount}";
             currentFrameUD.Maximum = fska.FrameCount;
 
-            return;
-
             for (int frame = 0; frame <= fska.FrameCount; frame++)
             {
-                bool IsKeyed = (boneAnim.XPOS.HasAnimation() && boneAnim.XPOS.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.YPOS.HasAnimation() && boneAnim.YPOS.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.ZPOS.HasAnimation() && boneAnim.ZPOS.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.XROT.HasAnimation() && boneAnim.XROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.YROT.HasAnimation() && boneAnim.YROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.ZROT.HasAnimation() && boneAnim.ZROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.WROT.HasAnimation() && boneAnim.WROT.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.XSCA.HasAnimation() && boneAnim.XSCA.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.YSCA.HasAnimation() && boneAnim.YSCA.GetKeyFrame(frame).IsKeyed ||
-                    boneAnim.ZSCA.HasAnimation() && boneAnim.ZSCA.GetKeyFrame(frame).IsKeyed);
-
+                bool IsKeyed = boneAnim.HasKeyedFrames(frame);
                 if (IsKeyed)
                 {
                     KeyFrame key = new KeyFrame();
@@ -135,6 +127,13 @@ namespace FirstPlugin.Forms
         private void stPanel2_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void stButton1_Click(object sender, EventArgs e)
+        {
+            AnimKeyViewer viewer = new AnimKeyViewer();
+            viewer.LoadKeyData(ActiveBoneAnim.XPOS);
+            viewer.Show();
         }
     }
 }
