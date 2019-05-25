@@ -32,8 +32,8 @@ namespace Bfres.Structs
             Materials.Add(mat);
         }
 
-        public override string ExportFilter => FileFilters.FSHU_EXPORT;
-        public override string ReplaceFilter => FileFilters.FSHU_REPLACE;
+        public override string ExportFilter => FileFilters.GetFilter(typeof(FSHU), AnimType, true);
+        public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSHU), AnimType);
 
         public override void OnClick(TreeView treeView) => UpdateEditor();
 
@@ -64,7 +64,7 @@ namespace Bfres.Structs
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.Color);
                 LoadAnim(ShaderParamAnim, AnimationType.Color);
             }
-            if (ext == ".bftxp")
+            if (ext == ".bftsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.TextureSRT);
                 LoadAnim(ShaderParamAnim, AnimationType.TexturePattern);
@@ -76,6 +76,26 @@ namespace Bfres.Structs
             }
 
             ShaderParamAnim.Name = Text;
+        }
+
+        public override void Export(string FileName)
+        {
+            string ext = Utils.GetExtension(FileName);
+            if (ext == ".bfshu")
+            {
+                ShaderParamAnim.Export(FileName, GetResFile(), ShaderParamAnimType.ShaderParameter);
+            }
+            if (ext == ".bfcsh")
+            {
+                ShaderParamAnim.Export(FileName, GetResFile(), ShaderParamAnimType.Color);
+            }
+            if (ext == ".bftsh")
+            {
+                ShaderParamAnim.Export(FileName, GetResFile(), ShaderParamAnimType.TextureSRT);
+            }
+            if (ext == ".clr0")
+            {
+            }
         }
 
         public FSHU(ShaderParamAnim anim, AnimationType type) {

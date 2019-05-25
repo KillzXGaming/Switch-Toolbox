@@ -53,7 +53,7 @@ namespace FirstPlugin.Forms
             materialCB.Items.Clear();
 
             foreach (var material in anim.Materials) {
-                materialCB.Items.Add(anim.Text);
+                materialCB.Items.Add(material.Text);
             }
 
             if (materialCB.Items.Count > 0)

@@ -25,8 +25,13 @@ namespace FirstPlugin
         public static string FSKA_REPLACE = GetFilter(".bfska", ".chr0");
 
         public static string FMAA = GetFilter(".bfmaa", ".gif");
-        public static string FSHU_REPLACE = GetFilter(".bfshu", "clr0");
-        public static string FSHU_EXPORT = GetFilter(".bfshu");
+
+        public static string FSHU_REPLACE_PARAM = GetFilter(".bfshu");
+        public static string FSHU_REPLACE_SRT = GetFilter(".bftsh");
+        public static string FSHU_REPLACE_COLOR = GetFilter(".bfcsh", ".clr0");
+        public static string FSHU_EXPORT_PARAM = GetFilter(".bfshu");
+        public static string FSHU_EXPORT_SRT = GetFilter(".bftsh");
+        public static string FSHU_EXPORT_COLOR = GetFilter(".bfcsh");
 
         public static string FCLH = GetFilter(".bfcsh");
         public static string FSTH = GetFilter(".bfsth");
@@ -56,26 +61,31 @@ namespace FirstPlugin
             else if (type == typeof(FTEX)) return FTEX;
             else if (type == typeof(FSHU))
             {
-                if (CheckAnimEffect is FSHU.AnimationType)
+                if (IsExporting)
                 {
-                    var animType = (MaterialAnimation.AnimationType)CheckAnimEffect;
-
-                    if (animType == MaterialAnimation.AnimationType.Color) return FCLH;
-                    if (animType == MaterialAnimation.AnimationType.TextureSrt) return FSTH;
-                    else return FSHA;
+                    if (CheckAnimEffect is FSHU.AnimationType)
+                    {
+                        var animType = (MaterialAnimation.AnimationType)CheckAnimEffect;
+                        if (animType == MaterialAnimation.AnimationType.Color) return FSHU_EXPORT_COLOR;
+                        if (animType == MaterialAnimation.AnimationType.TextureSrt) return FSHU_EXPORT_SRT;
+                        else return FSHU_EXPORT_PARAM;
+                    }
                 }
-                if (CheckAnimEffect is VisibiltyAnimType)
+                else
                 {
-                    var animType = (VisibiltyAnimType)CheckAnimEffect;
-
-                    if (animType == VisibiltyAnimType.Material) return FMTV;
-                    else return FBNV;
+                    if (CheckAnimEffect is FSHU.AnimationType)
+                    {
+                        var animType = (MaterialAnimation.AnimationType)CheckAnimEffect;
+                        if (animType == MaterialAnimation.AnimationType.Color) return FSHU_REPLACE_COLOR;
+                        if (animType == MaterialAnimation.AnimationType.TextureSrt) return FSHU_REPLACE_SRT;
+                        else return FSHU_REPLACE_PARAM;
+                    }
                 }
 
                 if (IsExporting)
-                    return FSHU_EXPORT;
+                    return FSHU_EXPORT_PARAM;
                 else
-                    return FSHU_REPLACE;
+                    return FSHU_REPLACE_PARAM;
             }
             else if (type == typeof(FVIS))
             {

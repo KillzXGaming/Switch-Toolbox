@@ -119,7 +119,7 @@ namespace Bfres.Structs
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (IsWiiU)
-                ofd.Filter = FileFilters.FSHU_REPLACE;
+                ofd.Filter = FileFilters.GetFilter(typeof(FSHU), MaterialAnimation.AnimationType.ShaderParam);
             else
                 ofd.Filter = FileFilters.FMAA;
             ofd.Multiselect = true;
@@ -141,7 +141,7 @@ namespace Bfres.Structs
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (IsWiiU)
-                ofd.Filter = FileFilters.FSHU_REPLACE;
+                ofd.Filter = FileFilters.GetFilter(typeof(FSHU), MaterialAnimation.AnimationType.Color);
             else
                 ofd.Filter = FileFilters.FMAA;
             ofd.Multiselect = true;
@@ -163,7 +163,7 @@ namespace Bfres.Structs
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (IsWiiU)
-                ofd.Filter = FileFilters.FSHU_REPLACE;
+                ofd.Filter = FileFilters.GetFilter(typeof(FSHU), MaterialAnimation.AnimationType.TextureSrt);
             else
                 ofd.Filter = FileFilters.FMAA;
             ofd.Multiselect = true;
@@ -173,9 +173,9 @@ namespace Bfres.Structs
 
             BFRESGroupNode group = null;
             if (IsWiiU)
-                group = GetOrCreateFolder<FSHU>(MaterialAnimation.AnimationType.ShaderParam);
+                group = GetOrCreateFolder<FSHU>(MaterialAnimation.AnimationType.TextureSrt);
             else
-                group = GetOrCreateFolder<FMAA>(MaterialAnimation.AnimationType.ShaderParam);
+                group = GetOrCreateFolder<FMAA>(MaterialAnimation.AnimationType.TextureSrt);
 
             group.Import(ofd.FileNames, GetResFile(), GetResFileU());
             AddFolder(group);
