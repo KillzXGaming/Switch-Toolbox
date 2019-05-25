@@ -466,7 +466,7 @@ namespace BrawlboxHelper
                 if (RotateZ.ContainsKey(frame))
                     chr0Entry.SetKeyframe(5, frame, RotateZ[frame].Value * Rad2Deg);
                 if (ScaleX.ContainsKey(frame))
-                    chr0Entry.SetKeyframe(1, frame, ScaleX[frame].Value);
+                    chr0Entry.SetKeyframe(0, frame, ScaleX[frame].Value);
                 if (ScaleY.ContainsKey(frame))
                     chr0Entry.SetKeyframe(1, frame, ScaleY[frame].Value);
                 if (ScaleZ.ContainsKey(frame))
