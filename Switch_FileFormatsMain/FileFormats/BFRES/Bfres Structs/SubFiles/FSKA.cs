@@ -298,12 +298,7 @@ namespace Bfres.Structs
                     curve.FrameType = (AnimCurveFrameType)curveU.FrameType;
                     curve.StartFrame = curveU.StartFrame;
                     curve.Scale = curveU.Scale;
-                    if (curve.Offset.GetType() == typeof(float))
-                        curve.Offset = (float)curveU.Offset;
-                    if (curve.Offset.GetType() == typeof(uint))
-                        curve.Offset = (uint)curveU.Offset;
-                    if (curve.Offset.GetType() == typeof(int))
-                        curve.Offset = (int)curveU.Offset;
+                    curve.Offset = (float)curveU.Offset;
 
                     boneAnim.Curves.Add(curve);
                 }
@@ -364,12 +359,7 @@ namespace Bfres.Structs
                     curve.FrameType = (ResU.AnimCurveFrameType)curveNX.FrameType;
                     curve.StartFrame = curveNX.StartFrame;
                     curve.Scale = curveNX.Scale;
-                    if (curve.Offset.GetType() == typeof(float))
-                        curve.Offset = (float)curveNX.Offset;
-                    if (curve.Offset.GetType() == typeof(uint))
-                        curve.Offset = (uint)curveNX.Offset;
-                    if (curve.Offset.GetType() == typeof(int))
-                        curve.Offset = (int)curveNX.Offset;
+                    curve.Offset = (float)curveNX.Offset;
 
                     boneAnimU.Curves.Add(curve);
                 }
