@@ -198,7 +198,6 @@ namespace Bfres.Structs
             if (ext == ".bfska")
             {
                 bool IsSwitch = BfresUtilies.IsSubSectionSwitch(FileName);
-                MessageBox.Show(IsSwitch.ToString());
 
                 if (resFileU != null)
                 {

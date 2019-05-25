@@ -494,7 +494,7 @@ namespace BrawlboxHelper
                 if (ScaleY.ContainsKey(frame))
                 {
                     keyFrame.hasSy = true;
-                    keyFrame.Scale._y = ScaleY[frame].Value;
+                     keyFrame.Scale._y = ScaleY[frame].Value;
                 }
                 if (ScaleZ.ContainsKey(frame))
                 {
@@ -505,8 +505,6 @@ namespace BrawlboxHelper
 
                 if (keyFrame.HasKeys)
                     chr0Entry.SetKeyframe(frame, keyFrame);
-
-                Console.WriteLine(keyFrame);
             }
         }
 
