@@ -104,7 +104,7 @@ namespace Bfres.Structs
             ((BFRES)Parent.Parent.Parent).LoadEditors(this);
         }
 
-        public override string ExportFilter => FileFilters.GetFilter(typeof(FSKA), true);
+        public override string ExportFilter => FileFilters.GetFilter(typeof(FSKA),null, true);
         public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSKA));
 
         public override void Export(string FileName)
