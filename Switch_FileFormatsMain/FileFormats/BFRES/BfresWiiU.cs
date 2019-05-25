@@ -368,6 +368,8 @@ namespace FirstPlugin
         {
             shp.Name = s.Text;
             shp.MaterialIndex = (ushort)s.MaterialIndex;
+            shp.BoneIndex = (ushort)s.BoneIndex;
+
             if (shp.SubMeshBoundingNodes == null)
                 shp.SubMeshBoundingNodes = new List<BoundingNode>();
             if (shp.SubMeshBoundingIndices == null)
