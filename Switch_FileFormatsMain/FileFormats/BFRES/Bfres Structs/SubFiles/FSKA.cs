@@ -141,6 +141,16 @@ namespace Bfres.Structs
                 else
                     throw new Exception("No skeleton found to assign!");
             }
+            else if (ext == ".anim")
+            {
+                STSkeleton skeleton = GetActiveSkeleton();
+
+                if (skeleton != null)
+                    ANIM.CreateANIM(FileName, this, skeleton);
+                else
+                    throw new Exception("No skeleton found to assign!");
+
+            }
             else if (ext == ".seanim")
             {
                 STSkeleton skeleton = GetActiveSkeleton();

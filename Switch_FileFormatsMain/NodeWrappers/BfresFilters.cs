@@ -21,7 +21,7 @@ namespace FirstPlugin
         public static string BONE = GetFilter(".bfbon");
         public static string FMAT = GetFilter(".bfmat");
 
-        public static string FSKA_EXPORT = GetFilter(".bfska", ".seanim", ".smd", ".chr0");
+        public static string FSKA_EXPORT = GetFilter(".bfska", ".anim", ".seanim", ".smd", ".chr0");
         public static string FSKA_REPLACE = GetFilter(".bfska", ".chr0");
 
         public static string FMAA = GetFilter(".bfmaa", ".gif");
@@ -48,7 +48,7 @@ namespace FirstPlugin
             else if (type == typeof(FMAT)) return FMAT;
             else if (type == typeof(FSKL)) return FSKL;
             else if (type == typeof(BfresBone)) return BONE;
-            else if (type == typeof(FMAA) && IsExporting) return FSKA_EXPORT;
+            else if (type == typeof(FSKA) && IsExporting) return FSKA_EXPORT;
             else if (type == typeof(FSKA)) return FSKA_REPLACE;
             else if (type == typeof(FMAA)) return FMAA;
             else if (type == typeof(FTXP)) return FTXP;
@@ -122,6 +122,7 @@ namespace FirstPlugin
                     case ".bftex": filters.Add(ext, "Binary Texture"); break;
                     case ".astc": filters.Add(ext, "Adaptable Scalable Texture Compression"); break;
                     case ".chr0": filters.Add(ext, "CHR0 Animation"); break;
+                    case ".anim": filters.Add(ext, "Maya Animation"); break;
                     default:
                         filters.Add(ext, ""); break;
                 }

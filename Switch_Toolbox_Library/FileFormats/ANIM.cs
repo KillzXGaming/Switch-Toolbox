@@ -6,9 +6,11 @@ using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library.Animations
 {
+    //Todo rewrite this
+    //Currently from forge
+    //https://github.com/jam1garner/Smash-Forge/blob/3a5b770a96b2ba7e67ff3912ca23941851f6d9eb/Smash%20Forge/Filetypes/Animation/ANIM.cs
     public class ANIM
 	{
-
 		private class AnimKey{
 			public float input, output;
 			public string intan, outtan;
