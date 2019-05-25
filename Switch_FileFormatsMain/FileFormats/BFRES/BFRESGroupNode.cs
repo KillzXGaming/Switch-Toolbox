@@ -91,8 +91,8 @@ namespace Bfres.Structs
             }
         }
 
-        public override string ExportFilter { get { return GetSubfileExtensions(); } }
-        public override string ImportFilter { get { return GetSubfileExtensions(); } }
+        public override string ExportFilter { get { return GetSubfileExtensions(true); } }
+        public override string ImportFilter { get { return GetSubfileExtensions(false); } }
 
         protected void NewAction(object sender, EventArgs e) { NewSubFile(); }
         protected void BatchGenerateMipmapsAction(object sender, EventArgs e) { BatchGenerateMipmaps(); }
@@ -234,23 +234,23 @@ namespace Bfres.Structs
         }
 
 
-        private string GetSubfileExtensions()
+        private string GetSubfileExtensions(bool IsExporting)
         {
             switch (Type)
             {
-                case BRESGroupType.Models: return FileFilters.GetFilter(typeof(FMDL));
-                case BRESGroupType.Textures: return FileFilters.GetFilter(typeof(FTEX));
-                case BRESGroupType.SkeletalAnim: return FileFilters.GetFilter(typeof(FSKA));
-                case BRESGroupType.MaterialAnim: return FileFilters.GetFilter(typeof(FMAA));
-                case BRESGroupType.ShaderParamAnim: return FileFilters.GetFilter(typeof(FSHU));
-                case BRESGroupType.ColorAnim: return FileFilters.GetFilter(typeof(FSHU));
-                case BRESGroupType.TexSrtAnim: return FileFilters.GetFilter(typeof(FSHU));
-                case BRESGroupType.TexPatAnim: return FileFilters.GetFilter(typeof(FTXP));
-                case BRESGroupType.BoneVisAnim: return FileFilters.GetFilter(typeof(FVIS));
-                case BRESGroupType.MatVisAnim: return FileFilters.GetFilter(typeof(FVIS));
-                case BRESGroupType.ShapeAnim: return FileFilters.GetFilter(typeof(FSHA));
-                case BRESGroupType.SceneAnim: return FileFilters.GetFilter(typeof(FSCN));
-                case BRESGroupType.Embedded: return FileFilters.GetFilter(typeof(ExternalFileData));
+                case BRESGroupType.Models: return FileFilters.GetFilter(typeof(FMDL), null, IsExporting);
+                case BRESGroupType.Textures: return FileFilters.GetFilter(typeof(FTEX), null, IsExporting);
+                case BRESGroupType.SkeletalAnim: return FileFilters.GetFilter(typeof(FSKA), null, IsExporting);
+                case BRESGroupType.MaterialAnim: return FileFilters.GetFilter(typeof(FMAA), null, IsExporting);
+                case BRESGroupType.ShaderParamAnim: return FileFilters.GetFilter(typeof(FSHU), null, IsExporting);
+                case BRESGroupType.ColorAnim: return FileFilters.GetFilter(typeof(FSHU), MaterialAnimation.AnimationType.Color, IsExporting);
+                case BRESGroupType.TexSrtAnim: return FileFilters.GetFilter(typeof(FSHU), MaterialAnimation.AnimationType.TextureSrt, IsExporting);
+                case BRESGroupType.TexPatAnim: return FileFilters.GetFilter(typeof(FTXP), MaterialAnimation.AnimationType.ShaderParam, IsExporting);
+                case BRESGroupType.BoneVisAnim: return FileFilters.GetFilter(typeof(FVIS), null, IsExporting);
+                case BRESGroupType.MatVisAnim: return FileFilters.GetFilter(typeof(FVIS), null, IsExporting);
+                case BRESGroupType.ShapeAnim: return FileFilters.GetFilter(typeof(FSHA), null, IsExporting);
+                case BRESGroupType.SceneAnim: return FileFilters.GetFilter(typeof(FSCN), null, IsExporting);
+                case BRESGroupType.Embedded: return FileFilters.GetFilter(typeof(ExternalFileData), null, IsExporting);
                 default: return "All files(*.*)|*.*";
             }
         }
