@@ -57,25 +57,27 @@ namespace Bfres.Structs
             if (ext == ".bfshu")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.ShaderParameter);
+                ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
             }
             if (ext == ".bfcsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.Color);
+                ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.Color);
             }
             if (ext == ".bftsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.TextureSRT);
+                ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.TexturePattern);
             }
             if (ext == ".clr0")
             {
                 ShaderParamAnim = BrawlboxHelper.FSHUConverter.Clr02Fshu(FileName);
+                ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.Color);
             }
-
-            ShaderParamAnim.Name = Text;
         }
 
         public override void Export(string FileName)
