@@ -662,27 +662,6 @@ namespace BrawlboxHelper
             return value.X == value.Y && value.X == value.Z;
         }
 
-        private static bool HasKeyFrames(CHR0EntryNode entry)
-        {
-            for (int frame = 0; frame < entry.FrameCount; frame++)
-            {
-                var AnimFrame = entry.GetAnimFrame(frame);
-                if (frame > 0)
-                {
-                    if (AnimFrame.hasTx) return true;
-                    if (AnimFrame.hasTy) return true;
-                    if (AnimFrame.hasTz) return true;
-                    if (AnimFrame.hasRx) return true;
-                    if (AnimFrame.hasRy) return true;
-                    if (AnimFrame.hasRz) return true;
-                    if (AnimFrame.hasSx) return true;
-                    if (AnimFrame.hasSy) return true;
-                    if (AnimFrame.hasSz) return true;
-                }
-            }
-            return false;
-        }
-
         private static AnimCurve GenerateCurve(uint AnimOffset, CHR0EntryNode entry)
         {
             AnimCurve curve = new AnimCurve();
@@ -750,6 +729,8 @@ namespace BrawlboxHelper
                     Keys.Add(AnimFrame.Scale._z);
                 }
             }
+
+            Console.WriteLine($"AnimOffset {AnimOffset} Keys {Keys.Count}");
 
             //Max value in frames is our end frame
             curve.EndFrame = Frames.Max();

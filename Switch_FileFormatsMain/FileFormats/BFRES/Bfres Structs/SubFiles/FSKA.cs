@@ -350,21 +350,27 @@ namespace Bfres.Structs
                 boneAnimU.FlagsCurve = (ResU.BoneAnimFlagsCurve)boneAnimNX.FlagsCurve;
                 boneAnimU.FlagsTransform = (ResU.BoneAnimFlagsTransform)boneAnimNX.FlagsTransform;
 
-                foreach (var curveNX in boneAnimU.Curves)
+                foreach (var curveNX in boneAnimNX.Curves)
                 {
                     ResU.AnimCurve curve = new ResU.AnimCurve();
                     curve.AnimDataOffset = curveNX.AnimDataOffset;
-                    curve.CurveType = curveNX.CurveType;
+                    curve.CurveType = (ResU.AnimCurveType)curveNX.CurveType;
                     curve.Delta = curveNX.Delta;
                     curve.EndFrame = curveNX.EndFrame;
                     curve.Frames = curveNX.Frames;
                     curve.Keys = curveNX.Keys;
                     curve.KeyStepBoolData = curveNX.KeyStepBoolData;
-                    curve.KeyType = curveNX.KeyType;
-                    curve.FrameType = curveNX.FrameType;
+                    curve.KeyType = (ResU.AnimCurveKeyType)curveNX.KeyType;
+                    curve.FrameType = (ResU.AnimCurveFrameType)curveNX.FrameType;
                     curve.StartFrame = curveNX.StartFrame;
                     curve.Scale = curveNX.Scale;
-                    curve.Offset = curveNX.Offset;
+                    if (curve.Offset.GetType() == typeof(float))
+                        curve.Offset = (float)curveNX.Offset;
+                    if (curve.Offset.GetType() == typeof(uint))
+                        curve.Offset = (uint)curveNX.Offset;
+                    if (curve.Offset.GetType() == typeof(int))
+                        curve.Offset = (int)curveNX.Offset;
+
                     boneAnimU.Curves.Add(curve);
                 }
             }
