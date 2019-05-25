@@ -272,49 +272,22 @@ namespace BrawlboxHelper
 
             if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Translate))
             {
-                TranslateX.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Translate.X,
-                });
-                TranslateY.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Translate.Y,
-                });
-                TranslateZ.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Translate.Z,
-                });
+                TranslateX.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Translate.X, });
+                TranslateY.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Translate.Y, });
+                TranslateZ.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Translate.Z, });
             }
             if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Rotate))
             {
-                RotateX.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Rotate.X,
-                });
-                RotateY.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Rotate.Y,
-                });
-                RotateZ.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Rotate.Z,
-                });
+                RotateX.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Rotate.X, });
+                RotateY.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Rotate.Y, });
+                RotateZ.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Rotate.Z, });
             }
 
             if (boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Scale))
             {
-                ScaleX.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Scale.X,
-                });
-                ScaleY.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Scale.Y,
-                });
-                ScaleZ.Add(0, new FSKAKeyNode()
-                {
-                    Value = boneAnim.BaseData.Scale.Z,
-                });
+                ScaleX.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Scale.X, });
+                ScaleY.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Scale.Y, });
+                ScaleZ.Add(0, new FSKAKeyNode() { Value = boneAnim.BaseData.Scale.Z, });
             }
             else
             {
@@ -323,14 +296,10 @@ namespace BrawlboxHelper
                 ScaleZ.Add(0, new FSKAKeyNode() { Value = 1 });
             }
 
-            Console.WriteLine($"Curves { boneAnim.Curves.Count}");
-
             foreach (var curve in boneAnim.Curves)
             {
                 for (int frame = 0; frame < curve.Frames.Length; frame++)
                 {
-                    Console.WriteLine($"frame {frame} AnimDataOffset {curve.AnimDataOffset}");
-
                     float time = curve.Frames[frame];
                     float value = 0;
                     float slope = 0;
@@ -538,28 +507,6 @@ namespace BrawlboxHelper
                     chr0Entry.SetKeyframe(frame, keyFrame);
 
                 Console.WriteLine(keyFrame);
-
-                /*   var curretnFrame = chr0Entry.GetAnimFrame(0);
-                   if (!curretnFrame.hasRx)
-                       curretnFrame.Rotation._x = RotateX[0].Value;
-                   if (!curretnFrame.hasRy)
-                       curretnFrame.Rotation._y = RotateY[0].Value;
-                   if (!curretnFrame.hasRz)
-                       curretnFrame.Rotation._z = RotateZ[0].Value;
-
-                   if (!curretnFrame.hasTx)
-                       curretnFrame.Translation._x = TranslateX[0].Value;
-                   if (!curretnFrame.hasTy)
-                       curretnFrame.Translation._y = TranslateY[0].Value;
-                   if (!curretnFrame.hasTz)
-                       curretnFrame.Translation._z = TranslateZ[0].Value;
-
-                   if (!curretnFrame.hasSx)
-                       curretnFrame.Scale._x = ScaleX[0].Value;
-                   if (!curretnFrame.hasSy)
-                       curretnFrame.Scale._y = ScaleY[0].Value;
-                   if (!curretnFrame.hasSz)
-                       curretnFrame.Scale._z = ScaleZ[0].Value;*/
             }
         }
 
