@@ -453,58 +453,24 @@ namespace BrawlboxHelper
 
             for (int frame = 0; frame < chr0.FrameCount; frame++)
             {
-                CHRAnimationFrame keyFrame = new CHRAnimationFrame();
                 if (TranslateX.ContainsKey(frame))
-                {
-                    keyFrame.hasTx = true;
-                    keyFrame.Translation._x = TranslateX[frame].Value;
-                }
+                    chr0Entry.SetKeyframe(6, frame, TranslateX[frame].Value);
                 if (TranslateY.ContainsKey(frame))
-                {
-                    keyFrame.hasTy = true;
-                    keyFrame.Translation._y = TranslateY[frame].Value;
-                }
+                    chr0Entry.SetKeyframe(7, frame, TranslateY[frame].Value);
                 if (TranslateZ.ContainsKey(frame))
-                {
-                    keyFrame.hasTz = true;
-                    keyFrame.Translation._z = TranslateZ[frame].Value;
-                }
-
+                    chr0Entry.SetKeyframe(8, frame, TranslateZ[frame].Value);
                 if (RotateX.ContainsKey(frame))
-                {
-                    keyFrame.hasRx = true;
-                    keyFrame.Rotation._x = RotateX[frame].Value * Rad2Deg;
-                }
+                    chr0Entry.SetKeyframe(3, frame, RotateX[frame].Value * Rad2Deg);
                 if (RotateY.ContainsKey(frame))
-                {
-                    keyFrame.hasRy = true;
-                    keyFrame.Rotation._y = RotateY[frame].Value * Rad2Deg;
-                }
+                    chr0Entry.SetKeyframe(4, frame, RotateY[frame].Value * Rad2Deg);
                 if (RotateZ.ContainsKey(frame))
-                {
-                    keyFrame.hasRz = true;
-                    keyFrame.Rotation._z = RotateZ[frame].Value * Rad2Deg;
-                }
-
+                    chr0Entry.SetKeyframe(5, frame, RotateZ[frame].Value * Rad2Deg);
                 if (ScaleX.ContainsKey(frame))
-                {
-                    keyFrame.hasSx = true;
-                    keyFrame.Scale._x = ScaleX[frame].Value;
-                }
+                    chr0Entry.SetKeyframe(1, frame, ScaleX[frame].Value);
                 if (ScaleY.ContainsKey(frame))
-                {
-                    keyFrame.hasSy = true;
-                     keyFrame.Scale._y = ScaleY[frame].Value;
-                }
+                    chr0Entry.SetKeyframe(1, frame, ScaleY[frame].Value);
                 if (ScaleZ.ContainsKey(frame))
-                {
-                    keyFrame.hasSz = true;
-                    keyFrame.Scale._z = ScaleZ[frame].Value;
-                }
-
-
-                if (keyFrame.HasKeys)
-                    chr0Entry.SetKeyframe(frame, keyFrame);
+                    chr0Entry.SetKeyframe(2, frame, ScaleZ[frame].Value);
             }
         }
 
