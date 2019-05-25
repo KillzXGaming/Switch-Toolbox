@@ -900,6 +900,9 @@ namespace FirstPlugin
         }
         public static void SaveSkeleton(FSKL fskl, List<STBone> Bones)
         {
+            if (fskl.node.SkeletonU == null)
+                fskl.node.SkeletonU = new Skeleton();
+
             fskl.node.SkeletonU.Bones.Clear();
             fskl.node.SkeletonU.MatrixToBoneList = new List<ushort>();
             fskl.node.SkeletonU.InverseModelMatrices = new List<Syroot.Maths.Matrix3x4>();

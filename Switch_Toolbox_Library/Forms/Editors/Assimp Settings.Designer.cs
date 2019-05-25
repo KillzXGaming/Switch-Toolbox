@@ -274,6 +274,11 @@
             0,
             0,
             0});
+            this.rotateBonesUD.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
             this.rotateBonesUD.Name = "rotateBonesUD";
             this.rotateBonesUD.Size = new System.Drawing.Size(120, 16);
             this.rotateBonesUD.TabIndex = 15;
