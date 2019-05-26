@@ -1422,7 +1422,7 @@ namespace FirstPlugin
                 case BRESGroupType.Models:
                     for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        ((FMDL)group.Nodes[i]).Model.Name = group.Nodes[i].Text;
+                        ((FMDL)group.Nodes[i]).ModelU.Name = group.Nodes[i].Text;
                         resFileU.Models.Add(group.Nodes[i].Text, BfresWiiU.SetModel((FMDL)group.Nodes[i]));
                     }
                     break;
