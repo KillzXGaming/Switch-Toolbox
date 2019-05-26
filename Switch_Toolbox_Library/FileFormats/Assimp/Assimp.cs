@@ -274,6 +274,7 @@ namespace Switch_Toolbox.Library
 
             bool IsBone = boneNames.Contains(node.Name) && !boneNames.Contains(ParentArmatureName) ||
                           node.Name.Contains("Skl_Root") || node.Name.Contains("nw4f_root") ||
+                          node.Name.Contains("skl_root") || node.Name.Contains("_root") ||
                           node.Name.Contains("skeleton_root");
 
             short SmoothIndex = 0;

@@ -271,7 +271,7 @@ namespace Bfres.Structs
             }
             else if (ext == ".chr0")
             {
-                FromChr0(FileName);
+                FromChr0(FileName, resFileU != null);
             }
         }
 
@@ -879,9 +879,9 @@ namespace Bfres.Structs
             }
         }
 
-        public void FromChr0(string FileName)
+        public void FromChr0(string FileName, bool IsWiiU)
         {
-            if (SkeletalAnimU != null)
+            if (IsWiiU)
             {
                 var SkeletalAnimNX = BrawlboxHelper.FSKAConverter.Chr02Fska(FileName);
                 SkeletalAnimU = ConvertSwitchToWiiU(SkeletalAnimNX);
@@ -895,6 +895,8 @@ namespace Bfres.Structs
                 LoadAnim(SkeletalAnim);
             }
         }
+
+
 
         private void CreateCurveData(AnimCurve curve, List<SEAnimFrame> keys)
         {

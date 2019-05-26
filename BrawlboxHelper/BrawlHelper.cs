@@ -511,10 +511,35 @@ namespace BrawlboxHelper
             return fska;
         }
 
+        private static string NameConverterMkWii2Mk8(string name)
+        {
+            switch (name)
+            {
+                case "skl_root": return "Skl_Root";
+                case "leg_l1": return "LegL";
+                case "leg_l2": return "KneeL";
+                case "ankle_l1": return "FootL";
+                case "leg_r1": return "LegR";
+                case "leg_r2": return "KneeR";
+                case "ankle_r1": return "FootR";
+                case "spin": return "Spine1";
+                case "arm_l1": return "ShoulderL";
+                case "arm_l2": return "ArmL";
+                case "wrist_l1": return "HandL";
+                case "arm_r1": return "ShoulderR";
+                case "arm_r2": return "ArmR";
+                case "wrist_r1": return "HandR";
+                case "face_1": return "Head";
+            }
+
+            return name;
+        }
+
         private static BoneAnim Chr0Entry2BoneAnim(CHR0EntryNode entry)
         {
             BoneAnim boneAnim = new BoneAnim();
             boneAnim.Name = entry.Name;
+         //   boneAnim.Name = NameConverterMkWii2Mk8(boneAnim.Name);
 
             if (entry.UseModelTranslate)
                 boneAnim.FlagsBase |= BoneAnimFlagsBase.Translate;
