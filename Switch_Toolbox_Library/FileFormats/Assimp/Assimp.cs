@@ -258,10 +258,6 @@ namespace Switch_Toolbox.Library
                     return 0;
             }
         }
-        private void BuildSkeleton(Node root)
-        {
-
-        }
         private void BuildSkeletonNodes(Node node, List<string> boneNames, STSkeleton skeleton, ref Matrix4x4 rootTransform)
         {
             Matrix4x4 trafo = node.Transform;
