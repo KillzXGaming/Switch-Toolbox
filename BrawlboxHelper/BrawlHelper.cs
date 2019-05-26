@@ -655,6 +655,7 @@ namespace BrawlboxHelper
             float MaxFrame = 0;
             float MaxValues = 0;
 
+            List<bool> IntegerValues = new List<bool>();
             for (int frame = 0; frame < curve.Frames.Length; frame++)
             {
                 MaxFrame = Math.Max(MaxFrame, curve.Frames[frame]);
@@ -663,6 +664,9 @@ namespace BrawlboxHelper
                 {
                     MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
                     MaxValues = Math.Max(MaxValues, curve.Keys[frame, 1]);
+
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 0]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 1]));
                 }
                 else if (curve.CurveType == AnimCurveType.Cubic)
                 {
@@ -670,11 +674,21 @@ namespace BrawlboxHelper
                     MaxValues = Math.Max(MaxValues, curve.Keys[frame, 1]);
                     MaxValues = Math.Max(MaxValues, curve.Keys[frame, 2]);
                     MaxValues = Math.Max(MaxValues, curve.Keys[frame, 3]);
+
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 0]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 1]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 2]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 3]));
                 }
                 else
                 {
                     MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
+
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 0]));
                 }
+
+                int ConvertedInt = Convert.ToInt32(MaxValues);
+
             }
 
             if (MaxFrame < Byte.MaxValue)
@@ -684,13 +698,23 @@ namespace BrawlboxHelper
             else
                 curve.FrameType = AnimCurveFrameType.Single;
 
-            if (MaxValues < Byte.MaxValue)
-                curve.KeyType = AnimCurveKeyType.SByte;
-            else if (MaxFrame < Int16.MaxValue)
-                curve.KeyType = AnimCurveKeyType.Int16;
-            else
+
+            if (IntegerValues.Any(x => x == false))
+            {
                 curve.KeyType = AnimCurveKeyType.Single;
+            }
+            else
+            {
+                if (MaxValues < Byte.MaxValue)
+                    curve.KeyType = AnimCurveKeyType.SByte;
+                else if (MaxFrame < Int16.MaxValue)
+                    curve.KeyType = AnimCurveKeyType.Int16;
+                else
+                    curve.KeyType = AnimCurveKeyType.Single;
+            }
         }
+
+        private static bool IsInt(float value) => value == Math.Truncate(value);
 
         private static AnimCurve GenerateCurve(uint AnimOffset, CHR0EntryNode entry)
         {
