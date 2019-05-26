@@ -725,7 +725,7 @@ namespace BrawlboxHelper
             curve.Scale = 1;
             curve.FrameType = AnimCurveFrameType.Single;
             curve.KeyType = AnimCurveKeyType.Single;
-            curve.CurveType = AnimCurveType.Cubic;
+            curve.CurveType = AnimCurveType.Linear;
 
             List<float> Frames = new List<float>();
             List<float> Keys = new List<float>();
