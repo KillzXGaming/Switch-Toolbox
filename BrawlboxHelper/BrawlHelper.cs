@@ -650,6 +650,41 @@ namespace BrawlboxHelper
             return value.X == value.Y && value.X == value.Z;
         }
 
+        private static void QuantizeCurveData(AnimCurve curve)
+        {
+            float MaxFrame = 0;
+            for (int frame = 0; frame < curve.Frames.Length; frame++)
+                MaxFrame = Math.Max(MaxFrame, curve.Frames[frame]);
+
+            float MaxValues = 0;
+            for (int key = 0; key < curve.Keys.Length; key++)
+            {
+                MaxValues = Math.Max(MaxValues, curve.Keys[key, 0]);
+                if (curve.CurveType == AnimCurveType.Linear)
+                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 1]);
+                if (curve.CurveType == AnimCurveType.Cubic)
+                {
+                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 1]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 2]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 3]);
+                }
+            }
+
+            if (MaxFrame < Byte.MaxValue)
+                curve.FrameType = AnimCurveFrameType.Byte;
+            else if (MaxFrame < Int16.MaxValue)
+                curve.FrameType = AnimCurveFrameType.Decimal10x5;
+            else
+                curve.FrameType = AnimCurveFrameType.Single;
+
+            if (MaxValues < Byte.MaxValue)
+                curve.KeyType = AnimCurveKeyType.SByte;
+            else if (MaxFrame < Int16.MaxValue)
+                curve.KeyType = AnimCurveKeyType.Int16;
+            else
+                curve.KeyType = AnimCurveKeyType.Single;
+        }
+
         private static AnimCurve GenerateCurve(uint AnimOffset, CHR0EntryNode entry)
         {
             AnimCurve curve = new AnimCurve();
@@ -675,8 +710,6 @@ namespace BrawlboxHelper
                 {
                     aout = entry.GetAnimFrame(frame, true);
                     FillKeyList(aout, frame, curve.AnimDataOffset, Frames, Keys);
-
-                    Console.WriteLine(aout);
 
                     if (!ain.Equals(aout))
                     {
@@ -743,6 +776,8 @@ namespace BrawlboxHelper
                     }
                     break;
             }
+
+            QuantizeCurveData(curve);
 
             return curve;
         }
