@@ -22,7 +22,7 @@ namespace FirstPlugin
         public static string FMAT = GetFilter(".bfmat");
 
         public static string FSKA_EXPORT = GetFilter(".bfska", ".anim", ".seanim", ".smd", ".chr0");
-        public static string FSKA_REPLACE = GetFilter(".bfska",".anim", ".smd", ".chr0");
+        public static string FSKA_REPLACE = GetFilter(".bfska",".anim", ".seanim", ".smd", ".chr0");
 
         public static string FMAA = GetFilter(".bfmaa", ".gif");
 

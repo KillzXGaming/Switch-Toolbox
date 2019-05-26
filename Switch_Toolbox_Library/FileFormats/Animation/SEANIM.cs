@@ -134,6 +134,7 @@ namespace Switch_Toolbox.Library.Animations
                 if (anim.HasBone(b.Text))
                 {
                     Animation.KeyNode n = anim.GetBone(b.Text);
+                    
 
                     if (n.XPOS.HasAnimation())
                         WriteKey(n.XPOS);
@@ -167,16 +168,33 @@ namespace Switch_Toolbox.Library.Animations
 
                 foreach (Animation.KeyNode boneAnim in anim.Bones)
                 {
-                    STBone bone = skeleton.GetBone(boneAnim.Text);
-                    if (bone == null) continue;
+                    if (boneAnim.HasKeyedFrames(frame))
+                    {
+                        STBone bone = skeleton.GetBone(boneAnim.Text);
+                        if (bone == null) continue;
 
-                    Vector3 position = bone.GetPosition();
-                    Quaternion rotation = bone.GetRotation();
-                    Vector3 scale = bone.GetScale();
+                        Vector3 position = bone.GetPosition();
+                        Quaternion rotation = bone.GetRotation();
+                        Vector3 scale = bone.GetScale();
 
-                    seAnim.AddTranslationKey(boneAnim.Text, frame, position.X, position.Y, position.Z);
-                    seAnim.AddRotationKey(boneAnim.Text, frame, rotation.X, rotation.Y, rotation.Z, rotation.W);
-                    seAnim.AddScaleKey(boneAnim.Text, frame, scale.X, scale.Y, scale.Z);
+                        //Exporting at specific keys doesn't work atm
+                        //Todo
+                        bool IsTranlationKeyed = (boneAnim.XPOS.GetKeyFrame(frame).IsKeyed ||
+                                                 boneAnim.YPOS.GetKeyFrame(frame).IsKeyed ||
+                                                 boneAnim.ZPOS.GetKeyFrame(frame).IsKeyed);
+
+                        bool IsRotationKeyed = (boneAnim.XROT.GetKeyFrame(frame).IsKeyed ||
+                                                  boneAnim.YROT.GetKeyFrame(frame).IsKeyed ||
+                                                  boneAnim.ZROT.GetKeyFrame(frame).IsKeyed);
+
+                        bool IsScaleKeyed = (boneAnim.XSCA.GetKeyFrame(frame).IsKeyed ||
+                                             boneAnim.YSCA.GetKeyFrame(frame).IsKeyed ||
+                                             boneAnim.ZSCA.GetKeyFrame(frame).IsKeyed);
+
+                        seAnim.AddTranslationKey(boneAnim.Text, frame, position.X, position.Y, position.Z);
+                        seAnim.AddRotationKey(boneAnim.Text, frame, rotation.X, rotation.Y, rotation.Z, rotation.W);
+                        seAnim.AddScaleKey(boneAnim.Text, frame, scale.X, scale.Y, scale.Z);
+                    }
                 }
             }
 
