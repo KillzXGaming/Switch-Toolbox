@@ -1296,6 +1296,7 @@ namespace FirstPlugin
             }
 
             ErrorCheck();
+
             resFile.Save(mem);
         }
 
@@ -1304,21 +1305,22 @@ namespace FirstPlugin
             switch (group.Type)
             {
                 case BRESGroupType.Models:
-                    foreach (FMDL model in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        model.Model.Name = model.Text;
-                        resFile.Models.Add(BfresSwitch.SetModel(model));
+                        ((FMDL)group.Nodes[i]).Model.Name = ((FMDL)group.Nodes[i]).Text;
+                        resFile.Models.Add(BfresSwitch.SetModel((FMDL)group.Nodes[i]));
                     }
                     break;
                 case BRESGroupType.SkeletalAnim:
-                    foreach (FSKA ska in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        ska.SkeletalAnim.BoneAnims.Clear();
-                        foreach (FSKA.BoneAnimNode bone in ska.Bones)
-                            ska.SkeletalAnim.BoneAnims.Add(bone.SaveData(ska.IsEdited));
+                        ((FSKA)group.Nodes[i]).SkeletalAnim.BoneAnims.Clear();
+                        ((FSKA)group.Nodes[i]).SkeletalAnim.Name = ((FSKA)group.Nodes[i]).Text;
+                        for (int b = 0; b < ((FSKA)group.Nodes[i]).Bones.Count; b++)
+                            ((FSKA)group.Nodes[i]).SkeletalAnim.BoneAnims.Add(
+                                ((FSKA.BoneAnimNode)((FSKA)group.Nodes[i]).Bones[b]).SaveData(((FSKA)group.Nodes[i]).IsEdited));
 
-                        ska.SkeletalAnim.Name = ska.Text;
-                        resFile.SkeletalAnims.Add(ska.SkeletalAnim);
+                        resFile.SkeletalAnims.Add(((FSKA)group.Nodes[i]).SkeletalAnim);
                     }
                     break;
                 case BRESGroupType.TexPatAnim:
@@ -1326,41 +1328,31 @@ namespace FirstPlugin
                 case BRESGroupType.ColorAnim:
                 case BRESGroupType.TexSrtAnim:
                 case BRESGroupType.MatVisAnim:
-                    foreach (FMAA fmaa in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        fmaa.MaterialAnim.MaterialAnimDataList.Clear();
-                        foreach (FMAA.MaterialAnimEntry mat in fmaa.Materials)
-                            fmaa.MaterialAnim.MaterialAnimDataList.Add(mat.SaveData(fmaa.IsEdited));
-
-                        fmaa.SetName();
-                        fmaa.SaveAnimData();
-                        resFile.MaterialAnims.Add(fmaa.MaterialAnim);
+                        ((FMAA)group.Nodes[i]).SaveAnimData();
+                        resFile.MaterialAnims.Add(((FMAA)group.Nodes[i]).MaterialAnim);
                     }
                     break;
                 case BRESGroupType.BoneVisAnim:
-                    foreach (FVIS fbnv in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        fbnv.SaveData();
-                        fbnv.VisibilityAnim.Name = fbnv.Text;
-                        resFile.BoneVisibilityAnims.Add(fbnv.VisibilityAnim);
+                        ((FVIS)group.Nodes[i]).SaveAnimData();
+                        resFile.BoneVisibilityAnims.Add(((FVIS)group.Nodes[i]).VisibilityAnim);
                     }
                     break;
                 case BRESGroupType.ShapeAnim:
-                    foreach (FSHA fsha in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        fsha.ShapeAnim.VertexShapeAnims.Clear();
-                        foreach (FSHA.ShapeAnimEntry shp in fsha.Nodes)
-                            fsha.ShapeAnim.VertexShapeAnims.Add(shp.SaveData());
-
-                        fsha.ShapeAnim.Name = fsha.Text;
-                        resFile.ShapeAnims.Add(fsha.ShapeAnim);
+                        ((FSHA)group.Nodes[i]).SaveAnimData();
+                        resFile.ShapeAnims.Add(((FSHA)group.Nodes[i]).ShapeAnim);
                     }
                     break;
                 case BRESGroupType.SceneAnim:
-                    foreach (FSCN fscn in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        fscn.SceneAnim.Name = fscn.Text;
-                        resFile.SceneAnims.Add(fscn.SceneAnim);
+                        ((FSCN)group.Nodes[i]).SaveAnimData();
+                        resFile.SceneAnims.Add(((FSCN)group.Nodes[i]).SceneAnim);
                     }
                     break;
                 case BRESGroupType.Embedded:
@@ -1428,28 +1420,29 @@ namespace FirstPlugin
             switch (group.Type)
             {
                 case BRESGroupType.Models:
-                    foreach (FMDL model in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        model.ModelU.Name = model.Text;
-                        resFileU.Models.Add(model.Text, BfresWiiU.SetModel(model));
+                        ((FMDL)group.Nodes[i]).Model.Name = group.Nodes[i].Text;
+                        resFileU.Models.Add(group.Nodes[i].Text, BfresWiiU.SetModel((FMDL)group.Nodes[i]));
                     }
                     break;
                 case BRESGroupType.Textures:
-                    foreach (FTEX tex in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        tex.texture.Name = tex.Text;
-                        resFileU.Textures.Add(tex.Text, tex.texture);
+                        ((FTEX)group.Nodes[i]).texture.Name = group.Nodes[i].Text;
+                        resFileU.Textures.Add(group.Nodes[i].Text, ((FTEX)group.Nodes[i]).texture);
                     }
                     break;
                 case BRESGroupType.SkeletalAnim:
-                    foreach (FSKA ska in group.Nodes)
+                for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        ska.SkeletalAnimU.BoneAnims.Clear();
-                        foreach (FSKA.BoneAnimNode bone in ska.Bones)
-                            ska.SkeletalAnimU.BoneAnims.Add(bone.SaveDataU(ska.IsEdited));
+                        ((FSKA)group.Nodes[i]).SkeletalAnim.BoneAnims.Clear();
+                        ((FSKA)group.Nodes[i]).SkeletalAnim.Name = ((FSKA)group.Nodes[i]).Text;
+                        for (int b = 0; b < ((FSKA)group.Nodes[i]).Bones.Count; b++)
+                            ((FSKA)group.Nodes[i]).SkeletalAnim.BoneAnims.Add(
+                                ((FSKA.BoneAnimNode)((FSKA)group.Nodes[i]).Bones[b]).SaveData(((FSKA)group.Nodes[i]).IsEdited));
 
-                        ska.SkeletalAnimU.Name = ska.Text;
-                        resFileU.SkeletalAnims.Add(ska.Text, ska.SkeletalAnimU);
+                        resFileU.SkeletalAnims.Add(group.Nodes[i].Text, ((FSKA)group.Nodes[i]).SkeletalAnimU);
                     }
                     break;
                 case BRESGroupType.ShaderParamAnim:

@@ -53,6 +53,18 @@ namespace Bfres.Structs
             }
         }
 
+        public void SaveAnimData()
+        {
+            if (ShapeAnimU != null)
+            {
+                ShapeAnimU.Name = Text;
+            }
+            else
+            {
+                ShapeAnim.Name = Text;
+            }
+        }
+
         public ResFile GetResFile() {
             return ((BFRESGroupNode)Parent).GetResFile();
         }

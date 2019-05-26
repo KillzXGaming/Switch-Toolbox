@@ -71,6 +71,20 @@ namespace Bfres.Structs
             }
         }
 
+        public void SaveAnimData()
+        {
+            if (VisibilityAnimU != null)
+            {
+                VisibilityAnimU.Name = Text;
+            }
+            else
+            {
+                VisibilityAnim.Name = Text;
+            }
+
+            SaveData();
+        }
+
         public void SaveData()
         {
             if (!IsEdited) //Use original data instead of generic data from editors
@@ -78,14 +92,12 @@ namespace Bfres.Structs
 
             if (VisibilityAnimU != null)
             {
-                VisibilityAnimU.Name = Text;
                 VisibilityAnimU.Names = BoneNames;
                 VisibilityAnimU.Path = "";
 
             }
             else
             {
-                VisibilityAnim.Name = Text;
                 VisibilityAnim.Names = BoneNames;
                 VisibilityAnim.Path = "";
                 VisibilityAnim.FrameCount = FrameCount;

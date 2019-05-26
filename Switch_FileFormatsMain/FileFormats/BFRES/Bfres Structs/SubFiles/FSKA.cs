@@ -163,6 +163,9 @@ namespace Bfres.Structs
 
         private STSkeleton GetActiveSkeleton()
         {
+            if (Parent == null)
+                return null;
+
             var viewport = LibraryGUI.Instance.GetActiveViewport();
             if (viewport != null)
             {

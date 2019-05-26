@@ -99,6 +99,18 @@ namespace Bfres.Structs
             }
         }
 
+        public void SaveAnimData()
+        {
+            if (SceneAnimU != null)
+            {
+                SceneAnimU.Name = Text;
+            }
+            else
+            {
+                SceneAnim.Name = Text;
+            }
+        }
+
         public FSCN(ResU.SceneAnim scn) { Initialize(); LoadAnim(scn); }
         public FSCN(SceneAnim scn) { Initialize(); LoadAnim(scn); }
 
