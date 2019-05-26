@@ -44,19 +44,22 @@ namespace Switch_Toolbox.Library.Animations
                     var rotationnKeys = seanim.AnimationRotationKeys[bone];
                     foreach (SEAnimFrame animFrame in rotationnKeys)
                     {
+                        var quat = ((SELib.Utilities.Quaternion)animFrame.Data);
+                        var euler = STMath.ToEulerAngles(quat.X, quat.Y, quat.Z, quat.W);
+
                         boneAnim.XROT.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).X,
+                            Value = euler.X,
                             Frame = animFrame.Frame,
                         });
                         boneAnim.YROT.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Y,
+                            Value = euler.Y,
                             Frame = animFrame.Frame,
                         });
                         boneAnim.ZROT.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Z,
+                            Value = euler.Z,
                             Frame = animFrame.Frame,
                         });
                     }
@@ -66,25 +69,40 @@ namespace Switch_Toolbox.Library.Animations
                     var scaleKeys = seanim.AnimationRotationKeys[bone];
                     foreach (SEAnimFrame animFrame in scaleKeys)
                     {
-                        var quat = ((SELib.Utilities.Quaternion)animFrame.Data);
-                        var euler = STMath.ToEulerAngles(quat.X, quat.Y, quat.Z, quat.W);
-
                         boneAnim.XSCA.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = euler.X,
+                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).X,
                             Frame = animFrame.Frame,
                         });
                         boneAnim.YSCA.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = euler.Y,
+                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Y,
                             Frame = animFrame.Frame,
                         });
                         boneAnim.ZSCA.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = euler.Z,
+                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Z,
                             Frame = animFrame.Frame,
                         });
                     }
+                }
+                else
+                {
+                    boneAnim.XSCA.Keys.Add(new Animation.KeyFrame()
+                    {
+                        Value = 1,
+                        Frame = 0,
+                    });
+                    boneAnim.YSCA.Keys.Add(new Animation.KeyFrame()
+                    {
+                        Value = 1,
+                        Frame = 0,
+                    });
+                    boneAnim.ZSCA.Keys.Add(new Animation.KeyFrame()
+                    {
+                        Value = 1,
+                        Frame = 0,
+                    });
                 }
             }
 
