@@ -40,6 +40,14 @@ namespace Switch_Toolbox.Library
 
         //From https://github.com/Ploaj/SSBHLib/blob/e37b0d83cd088090f7802be19b1d05ec998f2b6a/CrossMod/Tools/CrossMath.cs#L42
         //Seems to give good results
+        public static Vector3 ToEulerAngles(double X, double Y, double Z, double W) {
+            return ToEulerAngles(new Quaternion((float)X, (float)Y, (float)Z, (float)W));
+        }
+
+        public static Vector3 ToEulerAngles(float X, float Y, float Z, float W) {
+            return ToEulerAngles(new Quaternion(X, Y, Z, W));
+        }
+
         public static Vector3 ToEulerAngles(Quaternion q)
         {
             Matrix4 mat = Matrix4.CreateFromQuaternion(q);
