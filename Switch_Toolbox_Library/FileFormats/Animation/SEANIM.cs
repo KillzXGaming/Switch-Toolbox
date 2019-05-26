@@ -11,10 +11,13 @@ namespace Switch_Toolbox.Library.Animations
             var seanim = SEAnim.Read(FileName);
             anim.FrameCount = seanim.FrameCount;
             anim.CanLoop = seanim.Looping;
+          
 
             foreach (var bone in seanim.Bones)
             {
                 var boneAnim = new Animation.KeyNode(bone);
+                boneAnim.RotType = Animation.RotationType.EULER;
+                boneAnim.UseSegmentScaleCompensate = false;
                 anim.Bones.Add(boneAnim);
 
                 if (seanim.AnimationPositionKeys.ContainsKey(bone))
@@ -66,7 +69,7 @@ namespace Switch_Toolbox.Library.Animations
                 }
                 if (seanim.AnimationScaleKeys.ContainsKey(bone))
                 {
-                    var scaleKeys = seanim.AnimationRotationKeys[bone];
+                    var scaleKeys = seanim.AnimationScaleKeys[bone];
                     foreach (SEAnimFrame animFrame in scaleKeys)
                     {
                         boneAnim.XSCA.Keys.Add(new Animation.KeyFrame()

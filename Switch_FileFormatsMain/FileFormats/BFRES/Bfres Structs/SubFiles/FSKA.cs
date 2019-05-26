@@ -125,7 +125,7 @@ namespace Bfres.Structs
             {
                 STSkeleton skeleton = GetActiveSkeleton();
 
-                if (GetResFileU() != null)
+                if (SkeletalAnimU != null)
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(ConvertWiiUToSwitch(SkeletalAnimU), FileName);
                 else
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
@@ -278,7 +278,7 @@ namespace Bfres.Structs
         {
             ska.Name = Text;
 
-            if (GetResFileU() != null)
+            if (SkeletalAnimU != null)
             {
                 SkeletalAnimU = ConvertSwitchToWiiU(ska);
                 LoadAnim(SkeletalAnimU);
