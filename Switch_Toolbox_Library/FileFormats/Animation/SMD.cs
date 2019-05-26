@@ -297,14 +297,17 @@ namespace Switch_Toolbox.Library.Animations
                 {
                     anim.NextFrame(Skeleton, false, true);
 
-                    file.WriteLine("time " + i);
+                    file.WriteLine($"time {i}");
 
                     foreach (Animation.KeyNode sb in anim.Bones)
                     {
                         STBone b = Skeleton.GetBone(sb.Text);
                         if (b == null) continue;
                         Vector3 eul = STMath.ToEulerAngles(b.rot);
-                        file.WriteLine(Skeleton.bones.IndexOf(b) + " " + b.pos.X + " " + b.pos.Y + " " + b.pos.Z + " " + eul.X + " " + eul.Y + " " + eul.Z);
+                        Vector3 scale = b.GetScale();
+                        Vector3 translate = b.GetPosition();
+
+                        file.WriteLine($"{ Skeleton.bones.IndexOf(b)} {translate.X} {translate.Y} {translate.Z} {eul.X} {eul.Y} {eul.Z}");
                     }
 
                 }
