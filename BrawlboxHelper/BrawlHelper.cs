@@ -226,6 +226,12 @@ namespace BrawlboxHelper
         static float Deg2Rad = (float)(Math.PI / 180f);
         static float Rad2Deg = (float)(180f / Math.PI);
 
+        public static SkeletalAnim Anim2Fska(string FileName)
+        {
+            CHR0Node chr0 = AnimFormat.Read(FileName);
+            return Chr02Fska(chr0);
+        }
+
         public static void Fska2Chr0(SkeletalAnim fska, string FileName)
         {
 
@@ -477,7 +483,11 @@ namespace BrawlboxHelper
         public static SkeletalAnim Chr02Fska(string FileName)
         {
             CHR0Node chr0 = CHR0Node.FromFile(FileName);
+            return Chr02Fska(chr0);
+        }
 
+        private static SkeletalAnim Chr02Fska(CHR0Node chr0)
+        {
             SkeletalAnim fska = new SkeletalAnim();
             fska.FrameCount = chr0.FrameCount;
             fska.Name = chr0.Name;

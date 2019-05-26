@@ -149,7 +149,6 @@ namespace Bfres.Structs
                     ANIM.CreateANIM(FileName, this, skeleton);
                 else
                     throw new Exception("No skeleton found to assign!");
-
             }
             else if (ext == ".seanim")
             {
@@ -246,6 +245,26 @@ namespace Bfres.Structs
                     }
                 }
             }
+            else if (ext == ".anim")
+            {
+                FromAnim(FileName);
+
+       /*         STSkeleton skeleton = GetActiveSkeleton();
+
+                var anim = ANIM.read(FileName, skeleton);
+                var ska = FromGeneric(anim);
+
+                if (GetResFileU() != null)
+                {
+                    SkeletalAnimU = ConvertSwitchToWiiU(ska);
+                    LoadAnim(SkeletalAnimU);
+                }
+                else
+                {
+                    SkeletalAnim = ska;
+                    LoadAnim(SkeletalAnim);
+                }*/
+            }
             else if (ext == ".seanim")
             {
                 FromSeanim(FileName);
@@ -254,6 +273,218 @@ namespace Bfres.Structs
             {
                 FromChr0(FileName);
             }
+        }
+
+        public SkeletalAnim FromGeneric(Animation anim)
+        {
+            SkeletalAnim ska = new SkeletalAnim();
+            ska.FrameCount = anim.FrameCount;
+            ska.Name = anim.Text;
+            ska.Path = "";
+            ska.FlagsScale = SkeletalAnimFlagsScale.Maya;
+            ska.FlagsRotate = SkeletalAnimFlagsRotate.EulerXYZ;
+            ska.Loop = anim.CanLoop;
+            ska.Baked = false;
+
+            for (int b = 0; b < anim.Bones.Count; b++)
+                ska.BoneAnims.Add(GenericBoneAnimToBfresBoneAnim(anim.Bones[b]));
+            
+            ska.BakedSize = CalculateBakeSize(ska);
+            ska.BindIndices = GenerateIndices(ska.BoneAnims.Count);
+            return ska;
+        }
+
+        private BoneAnim GenericBoneAnimToBfresBoneAnim(Animation.KeyNode boneNode)
+        {
+            BoneAnim boneAnim = new BoneAnim();
+            boneAnim.Name = boneNode.Text;
+            var posx = boneNode.XPOS.GetValue(0);
+            var posy = boneNode.YPOS.GetValue(0);
+            var posz = boneNode.ZPOS.GetValue(0);
+            var scax = boneNode.XSCA.GetValue(0);
+            var scay = boneNode.YSCA.GetValue(0);
+            var scaz = boneNode.ZSCA.GetValue(0);
+            var rotx = boneNode.XROT.GetValue(0);
+            var roty = boneNode.YROT.GetValue(0);
+            var rotz = boneNode.ZROT.GetValue(0);
+            var rotw = boneNode.WROT.GetValue(0);
+
+            BoneAnimData boneBaseData = new BoneAnimData();
+            boneBaseData.Translate = new Syroot.Maths.Vector3F(posx, posy, posz);
+            boneBaseData.Scale = new Syroot.Maths.Vector3F(scax, scay, scaz);
+            boneBaseData.Rotate = new Syroot.Maths.Vector4F(rotx, roty, rotz, rotw);
+            boneAnim.BaseData = boneBaseData;
+            boneAnim.BeginBaseTranslate = 0;
+            boneAnim.BeginRotate = 0;
+            boneAnim.BeginTranslate = 0;
+            boneAnim.Curves = new List<AnimCurve>();
+            boneAnim.FlagsBase = BoneAnimFlagsBase.Translate | BoneAnimFlagsBase.Scale | BoneAnimFlagsBase.Rotate;
+            boneAnim.FlagsTransform = BoneAnimFlagsTransform.Identity;
+
+            if (boneNode.XPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateX;
+                var curve = SetAnimationCurve(boneNode.XPOS, (uint)FSKA.TrackType.XPOS);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.YPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateY;
+                var curve = SetAnimationCurve(boneNode.YPOS, (uint)FSKA.TrackType.YPOS);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.ZPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateZ;
+                var curve = SetAnimationCurve(boneNode.ZPOS, (uint)FSKA.TrackType.ZPOS);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.XSCA.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleX;
+                var curve = SetAnimationCurve(boneNode.XSCA, (uint)FSKA.TrackType.XSCA);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.YSCA.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleY;
+                var curve = SetAnimationCurve(boneNode.YSCA, (uint)FSKA.TrackType.YSCA);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.ZSCA.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleZ;
+                var curve = SetAnimationCurve(boneNode.ZSCA, (uint)FSKA.TrackType.ZSCA);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.XROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateX;
+                var curve = SetAnimationCurve(boneNode.XROT, (uint)FSKA.TrackType.XROT);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.YROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateY;
+                var curve = SetAnimationCurve(boneNode.YROT, (uint)FSKA.TrackType.YROT);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.ZROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateZ;
+                var curve = SetAnimationCurve(boneNode.ZROT, (uint)FSKA.TrackType.ZROT);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.WROT.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateW;
+                var curve = SetAnimationCurve(boneNode.WROT, (uint)FSKA.TrackType.WROT);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+
+            return boneAnim;
+        }
+
+        private static AnimCurve SetAnimationCurve(Animation.KeyGroup keyGroup, uint DataOffset)
+        {
+            if (keyGroup.Keys.Count <= 1)
+                return null;
+
+             AnimCurve curve = new AnimCurve();
+            curve.Frames = new float[(int)keyGroup.Keys.Count];
+            curve.FrameType = AnimCurveFrameType.Single;
+            curve.KeyType = AnimCurveKeyType.Single;
+            curve.EndFrame = keyGroup.FrameCount;
+            curve.AnimDataOffset = DataOffset;
+            curve.Scale = 1;
+            curve.StartFrame = 0;
+            curve.Offset = 0;
+
+            var keyFrame = keyGroup.GetKeyFrame(0);
+            if (keyFrame.InterType == InterpolationType.HERMITE)
+            {
+                curve.CurveType = AnimCurveType.Cubic;
+                curve.Keys = new float[keyGroup.Keys.Count, 4];
+                curve.Frames = new float[keyGroup.Keys.Count];
+
+                for (int k = 0; k < keyGroup.Keys.Count; k++)
+                {
+                    float Delta = 0;
+                    float frame = keyGroup.Keys[k].Frame;
+
+                    if (k < keyGroup.Keys.Count - 1)
+                        Delta = keyGroup.GetValue(k + 1) - keyGroup.GetValue(k);
+
+                    float value = keyGroup.GetValue(frame);
+                    curve.Keys[k, 0] = value;
+                    curve.Keys[k, 1] = 0;
+                    curve.Keys[k, 2] = 0;
+                    curve.Keys[k, 3] = Delta;
+
+                    curve.Frames[k] = keyGroup.Keys[k].Frame;
+                }
+            }
+            else if (keyFrame.InterType == InterpolationType.LINEAR)
+            {
+                curve.CurveType = AnimCurveType.Linear;
+                curve.Keys = new float[keyGroup.Keys.Count, 2];
+                curve.Frames = new float[keyGroup.Keys.Count];
+
+                for (int k = 0; k < keyGroup.Keys.Count; k++)
+                {
+                    float frame = keyGroup.Keys[k].Frame;
+
+                    float Delta = 0;
+
+                    if (k < keyGroup.Keys.Count - 1)
+                        Delta = keyGroup.GetValue(k + 1) - keyGroup.GetValue(k);
+
+                    curve.Keys[k, 0] = keyGroup.GetValue(frame);
+                    curve.Keys[k, 1] = Delta;
+                    curve.Frames[k] = keyGroup.Keys[k].Frame;
+                }
+            }
+            else if (keyFrame.InterType == InterpolationType.STEPBOOL)
+            {
+                curve.CurveType = AnimCurveType.StepBool;
+                curve.Keys = new float[keyGroup.Keys.Count, 1];
+            }
+            else
+            {
+                curve.CurveType = AnimCurveType.StepInt;
+                curve.Keys = new float[keyGroup.Keys.Count, 1];
+            }
+
+            //Difference of last and first key value
+            if (curve.Keys.Length > 0)
+                curve.Delta = curve.Keys[curve.Keys.Length - 1, 0] - curve.Keys[0, 0];
+
+            return curve;
+        }
+
+        private ushort[] GenerateIndices(int count)
+        {
+            var indices = new ushort[count];
+            for (int i = 0; i < count; i++)
+                indices[i] = ushort.MaxValue;
+
+            return indices;
+        }
+
+        //This hasn't been necessary so far but i do need todo this
+        public uint CalculateBakeSize(SkeletalAnim ska)
+        {
+            return 0;
         }
 
         public static SkeletalAnim ConvertWiiUToSwitch(ResU.SkeletalAnim skeletalAnimU)
@@ -535,6 +766,23 @@ namespace Bfres.Structs
             SkeletalAnim = ska;
 
             Initialize();
+        }
+
+        public void FromAnim(string FileName)
+        {
+            if (SkeletalAnimU != null)
+            {
+                var SkeletalAnimNX = BrawlboxHelper.FSKAConverter.Anim2Fska(FileName);
+                SkeletalAnimU = ConvertSwitchToWiiU(SkeletalAnimNX);
+                SkeletalAnimU.Name = Text;
+                LoadAnim(SkeletalAnimU);
+            }
+            else
+            {
+                SkeletalAnim = BrawlboxHelper.FSKAConverter.Anim2Fska(FileName);
+                SkeletalAnim.Name = Text;
+                LoadAnim(SkeletalAnim);
+            }
         }
 
         public void FromChr0(string FileName)

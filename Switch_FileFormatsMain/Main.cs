@@ -290,7 +290,7 @@ namespace FirstPlugin
             Formats.Add(typeof(SHARC));
             Formats.Add(typeof(SHARCFB));
             Formats.Add(typeof(NARC));
-        //    Formats.Add(typeof(SDF));
+            Formats.Add(typeof(SDF));
             Formats.Add(typeof(TMPK));
             Formats.Add(typeof(TEX3DS));
             Formats.Add(typeof(NXARC));
