@@ -247,8 +247,6 @@ namespace Bfres.Structs
             }
             else if (ext == ".anim")
             {
-                STSkeleton skeleton = GetActiveSkeleton();
-
                  FromAnim(FileName);
             }
             else if (ext == ".seanim")
