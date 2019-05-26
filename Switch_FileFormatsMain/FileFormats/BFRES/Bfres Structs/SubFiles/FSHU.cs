@@ -80,6 +80,18 @@ namespace Bfres.Structs
             }
         }
 
+        public void SaveAnimData()
+        {
+            bool IsEdited = false;
+
+            ShaderParamAnim.Name = Text;
+            ShaderParamAnim.ShaderParamMatAnims.Clear();
+            for (int i = 0; i < Materials.Count; i++)
+            {
+                ShaderParamAnim.ShaderParamMatAnims.Add(((MaterialAnimEntry)Materials[i]).SaveData(IsEdited));
+            }
+        }
+            
         public override void Export(string FileName)
         {
             string ext = Utils.GetExtension(FileName);

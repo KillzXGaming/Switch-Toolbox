@@ -103,6 +103,19 @@ namespace Bfres.Structs
             }
         }
 
+        public void SaveAnimData()
+        {
+            TexPatternAnim.Name = Text;
+            TexPatternAnim.TexPatternMatAnims.Clear();
+
+            bool IsEdited = false;
+
+            for (int i = 0; i < Materials.Count; i++)
+            {
+                TexPatternAnim.TexPatternMatAnims.Add(((MaterialAnimEntry)Materials[i]).SaveData(IsEdited));
+            }
+        }
+
         public class MaterialAnimEntry : Material
         {
             public TexPatternMatAnim TexPatternMatAnim;

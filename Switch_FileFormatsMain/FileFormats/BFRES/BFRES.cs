@@ -1446,82 +1446,59 @@ namespace FirstPlugin
                     }
                     break;
                 case BRESGroupType.ShaderParamAnim:
-                    foreach (FSHU anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.ShaderParamAnim.ShaderParamMatAnims.Clear();
-                        foreach (FSHU.MaterialAnimEntry bone in anim.Materials)
-                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(bone.SaveData(anim.IsEdited));
-
-
-                        anim.ShaderParamAnim.Name = anim.Text;
-                        resFileU.ShaderParamAnims.Add(anim.Text, anim.ShaderParamAnim);
+                        ((FSHU)group.Nodes[i]).SaveAnimData();
+                        resFileU.ShaderParamAnims.Add(group.Nodes[i].Text, ((FSHU)group.Nodes[i]).ShaderParamAnim);
                     }
                     break;
                 case BRESGroupType.ColorAnim:
-                    foreach (FSHU anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.ShaderParamAnim.ShaderParamMatAnims.Clear();
-                        foreach (FSHU.MaterialAnimEntry mat in anim.Materials)
-                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(mat.SaveData(anim.IsEdited));
-
-                        anim.ShaderParamAnim.Name = anim.Text;
-                        resFileU.ColorAnims.Add(anim.Text, anim.ShaderParamAnim);
+                        ((FSHU)group.Nodes[i]).SaveAnimData();
+                        resFileU.ColorAnims.Add(group.Nodes[i].Text, ((FSHU)group.Nodes[i]).ShaderParamAnim);
                     }
                     break;
                 case BRESGroupType.TexSrtAnim:
-                    foreach (FSHU anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.ShaderParamAnim.ShaderParamMatAnims.Clear();
-                        foreach (FSHU.MaterialAnimEntry mat in anim.Materials)
-                            anim.ShaderParamAnim.ShaderParamMatAnims.Add(mat.SaveData(anim.IsEdited));
-
-                        anim.ShaderParamAnim.Name = anim.Text;
-                        resFileU.TexSrtAnims.Add(anim.Text, anim.ShaderParamAnim);
+                        ((FSHU)group.Nodes[i]).SaveAnimData();
+                        resFileU.TexSrtAnims.Add(group.Nodes[i].Text, ((FSHU)group.Nodes[i]).ShaderParamAnim);
                     }
                     break;
                 case BRESGroupType.TexPatAnim:
-                    foreach (FTXP anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.TexPatternAnim.TexPatternMatAnims.Clear();
-                        foreach (FTXP.MaterialAnimEntry mat in anim.Materials)
-                            anim.TexPatternAnim.TexPatternMatAnims.Add(mat.SaveData(anim.IsEdited));
-
-                        anim.TexPatternAnim.Name = anim.Text;
-                        resFileU.TexPatternAnims.Add(anim.Text, anim.TexPatternAnim);
+                        ((FTXP)group.Nodes[i]).SaveAnimData();
+                        resFileU.TexPatternAnims.Add(group.Nodes[i].Text, ((FTXP)group.Nodes[i]).TexPatternAnim);
                     }
                     break;
                 case BRESGroupType.MatVisAnim:
-                    foreach (FVIS anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.SaveData();
-                        anim.VisibilityAnimU.Name = anim.Text;
-                        resFileU.MatVisibilityAnims.Add(anim.Text, anim.VisibilityAnimU);
+                        ((FVIS)group.Nodes[i]).SaveAnimData();
+                        resFileU.MatVisibilityAnims.Add(group.Nodes[i].Text, ((FVIS)group.Nodes[i]).VisibilityAnimU);
                     }
                     break;
                 case BRESGroupType.BoneVisAnim:
-                    foreach (FVIS anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.SaveData();
-                        anim.VisibilityAnimU.Name = anim.Text;
-                        resFileU.BoneVisibilityAnims.Add(anim.Text, anim.VisibilityAnimU);
+                        ((FVIS)group.Nodes[i]).SaveAnimData();
+                        resFileU.BoneVisibilityAnims.Add(group.Nodes[i].Text, ((FVIS)group.Nodes[i]).VisibilityAnimU);
                     }
                     break;
                 case BRESGroupType.ShapeAnim:
-                    foreach (FSHA anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.ShapeAnimU.VertexShapeAnims.Clear();
-                        foreach (FSHA.ShapeAnimEntry shp in anim.Nodes)
-                            anim.ShapeAnimU.VertexShapeAnims.Add(shp.SaveDataU());
-
-                        anim.ShapeAnimU.Name = anim.Text;
-                        resFileU.ShapeAnims.Add(anim.Text, anim.ShapeAnimU);
+                        ((FSHA)group.Nodes[i]).SaveAnimData();
+                        resFileU.ShapeAnims.Add(group.Nodes[i].Text, ((FSHA)group.Nodes[i]).ShapeAnimU);
                     }
                     break;
                 case BRESGroupType.SceneAnim:
-                    foreach (FSCN anim in group.Nodes)
+                    for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        anim.SceneAnimU.Name = anim.Text;
-                        resFileU.SceneAnims.Add(anim.Text, anim.SceneAnimU);
+                        ((FSCN)group.Nodes[i]).SaveAnimData();
+                        resFileU.SceneAnims.Add(group.Nodes[i].Text, ((FSCN)group.Nodes[i]).SceneAnimU);
                     }
                     break;
                 case BRESGroupType.Embedded:
