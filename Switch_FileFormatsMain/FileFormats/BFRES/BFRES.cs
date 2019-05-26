@@ -1436,11 +1436,11 @@ namespace FirstPlugin
                 case BRESGroupType.SkeletalAnim:
                 for (int i = 0; i < group.Nodes.Count; i++)
                     {
-                        ((FSKA)group.Nodes[i]).SkeletalAnim.BoneAnims.Clear();
-                        ((FSKA)group.Nodes[i]).SkeletalAnim.Name = ((FSKA)group.Nodes[i]).Text;
+                        ((FSKA)group.Nodes[i]).SkeletalAnimU.BoneAnims.Clear();
+                        ((FSKA)group.Nodes[i]).SkeletalAnimU.Name = ((FSKA)group.Nodes[i]).Text;
                         for (int b = 0; b < ((FSKA)group.Nodes[i]).Bones.Count; b++)
-                            ((FSKA)group.Nodes[i]).SkeletalAnim.BoneAnims.Add(
-                                ((FSKA.BoneAnimNode)((FSKA)group.Nodes[i]).Bones[b]).SaveData(((FSKA)group.Nodes[i]).IsEdited));
+                            ((FSKA)group.Nodes[i]).SkeletalAnimU.BoneAnims.Add(
+                                ((FSKA.BoneAnimNode)((FSKA)group.Nodes[i]).Bones[b]).SaveDataU(((FSKA)group.Nodes[i]).IsEdited));
 
                         resFileU.SkeletalAnims.Add(group.Nodes[i].Text, ((FSKA)group.Nodes[i]).SkeletalAnimU);
                     }
