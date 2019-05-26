@@ -653,20 +653,27 @@ namespace BrawlboxHelper
         private static void QuantizeCurveData(AnimCurve curve)
         {
             float MaxFrame = 0;
+            float MaxValues = 0;
+
             for (int frame = 0; frame < curve.Frames.Length; frame++)
+            {
                 MaxFrame = Math.Max(MaxFrame, curve.Frames[frame]);
 
-            float MaxValues = 0;
-            for (int key = 0; key < curve.Keys.Length; key++)
-            {
-                MaxValues = Math.Max(MaxValues, curve.Keys[key, 0]);
                 if (curve.CurveType == AnimCurveType.Linear)
-                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 1]);
-                if (curve.CurveType == AnimCurveType.Cubic)
                 {
-                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 1]);
-                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 2]);
-                    MaxValues = Math.Max(MaxValues, curve.Keys[key, 3]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 1]);
+                }
+                else if (curve.CurveType == AnimCurveType.Cubic)
+                {
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 1]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 2]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 3]);
+                }
+                else
+                {
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
                 }
             }
 
