@@ -247,31 +247,46 @@ namespace Bfres.Structs
             }
             else if (ext == ".anim")
             {
-                FromAnim(FileName);
+                STSkeleton skeleton = GetActiveSkeleton();
 
-       /*         STSkeleton skeleton = GetActiveSkeleton();
-
-                var anim = ANIM.read(FileName, skeleton);
-                var ska = FromGeneric(anim);
-
-                if (GetResFileU() != null)
-                {
-                    SkeletalAnimU = ConvertSwitchToWiiU(ska);
-                    LoadAnim(SkeletalAnimU);
-                }
-                else
-                {
-                    SkeletalAnim = ska;
-                    LoadAnim(SkeletalAnim);
-                }*/
+                 FromAnim(FileName);
             }
             else if (ext == ".seanim")
             {
-                FromSeanim(FileName);
+                var ska = FromGeneric(SEANIM.Read(FileName));
+                UpdateAnimation(ska);
+            }
+            else if (ext == ".smd")
+            {
+                STSkeleton skeleton = GetActiveSkeleton();
+
+                if (skeleton != null)
+                {
+                    var ska = FromGeneric(SMD.Read(FileName, skeleton));
+                    UpdateAnimation(ska);
+                }
+                else
+                    throw new Exception("No skeleton found to assign!");
             }
             else if (ext == ".chr0")
             {
                 FromChr0(FileName);
+            }
+        }
+
+        private void UpdateAnimation(SkeletalAnim ska)
+        {
+            ska.Name = Text;
+
+            if (GetResFileU() != null)
+            {
+                SkeletalAnimU = ConvertSwitchToWiiU(ska);
+                LoadAnim(SkeletalAnimU);
+            }
+            else
+            {
+                SkeletalAnim = ska;
+                LoadAnim(SkeletalAnim);
             }
         }
 
@@ -315,8 +330,8 @@ namespace Bfres.Structs
             boneBaseData.Rotate = new Syroot.Maths.Vector4F(rotx, roty, rotz, rotw);
             boneAnim.BaseData = boneBaseData;
             boneAnim.BeginBaseTranslate = 0;
-            boneAnim.BeginRotate = 0;
-            boneAnim.BeginTranslate = 0;
+            boneAnim.BeginTranslate = 6;
+            boneAnim.BeginRotate = 3;
             boneAnim.Curves = new List<AnimCurve>();
             boneAnim.FlagsBase = BoneAnimFlagsBase.Translate | BoneAnimFlagsBase.Scale | BoneAnimFlagsBase.Rotate;
             boneAnim.FlagsTransform = BoneAnimFlagsTransform.Identity;
@@ -395,22 +410,87 @@ namespace Bfres.Structs
             return boneAnim;
         }
 
+        private static bool IsInt(float value) => value == Math.Truncate(value);
+        private static void QuantizeCurveData(AnimCurve curve)
+        {
+            float MaxFrame = 0;
+            float MaxValues = 0;
+
+            List<bool> IntegerValues = new List<bool>();
+            for (int frame = 0; frame < curve.Frames.Length; frame++)
+            {
+                MaxFrame = Math.Max(MaxFrame, curve.Frames[frame]);
+
+                if (curve.CurveType == AnimCurveType.Linear)
+                {
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 1]);
+
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 0]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 1]));
+                }
+                else if (curve.CurveType == AnimCurveType.Cubic)
+                {
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 1]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 2]);
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 3]);
+
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 0]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 1]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 2]));
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 3]));
+                }
+                else
+                {
+                    MaxValues = Math.Max(MaxValues, curve.Keys[frame, 0]);
+
+                    IntegerValues.Add(IsInt(curve.Keys[frame, 0]));
+                }
+
+                int ConvertedInt = Convert.ToInt32(MaxValues);
+
+            }
+
+            if (MaxFrame < Byte.MaxValue)
+                curve.FrameType = AnimCurveFrameType.Byte;
+            else if (MaxFrame < Int16.MaxValue)
+                curve.FrameType = AnimCurveFrameType.Decimal10x5;
+            else
+                curve.FrameType = AnimCurveFrameType.Single;
+
+
+            if (IntegerValues.Any(x => x == false))
+            {
+                curve.KeyType = AnimCurveKeyType.Single;
+            }
+            else
+            {
+                if (MaxValues < Byte.MaxValue)
+                    curve.KeyType = AnimCurveKeyType.SByte;
+                else if (MaxFrame < Int16.MaxValue)
+                    curve.KeyType = AnimCurveKeyType.Int16;
+                else
+                    curve.KeyType = AnimCurveKeyType.Single;
+            }
+        }
+
         private static AnimCurve SetAnimationCurve(Animation.KeyGroup keyGroup, uint DataOffset)
         {
             if (keyGroup.Keys.Count <= 1)
                 return null;
 
-             AnimCurve curve = new AnimCurve();
+            AnimCurve curve = new AnimCurve();
             curve.Frames = new float[(int)keyGroup.Keys.Count];
             curve.FrameType = AnimCurveFrameType.Single;
             curve.KeyType = AnimCurveKeyType.Single;
-            curve.EndFrame = keyGroup.FrameCount;
             curve.AnimDataOffset = DataOffset;
             curve.Scale = 1;
             curve.StartFrame = 0;
             curve.Offset = 0;
 
             var keyFrame = keyGroup.GetKeyFrame(0);
+
             if (keyFrame.InterType == InterpolationType.HERMITE)
             {
                 curve.CurveType = AnimCurveType.Cubic;
@@ -451,7 +531,7 @@ namespace Bfres.Structs
 
                     curve.Keys[k, 0] = keyGroup.GetValue(frame);
                     curve.Keys[k, 1] = Delta;
-                    curve.Frames[k] = keyGroup.Keys[k].Frame;
+                    curve.Frames[k] = frame;
                 }
             }
             else if (keyFrame.InterType == InterpolationType.STEPBOOL)
@@ -459,16 +539,29 @@ namespace Bfres.Structs
                 curve.CurveType = AnimCurveType.StepBool;
                 curve.Keys = new float[keyGroup.Keys.Count, 1];
             }
+
             else
             {
                 curve.CurveType = AnimCurveType.StepInt;
                 curve.Keys = new float[keyGroup.Keys.Count, 1];
+                curve.Frames = new float[keyGroup.Keys.Count];
+
+                for (int k = 0; k < keyGroup.Keys.Count; k++)
+                {
+                    float frame = keyGroup.Keys[k].Frame;
+
+                    curve.Keys[k, 0] = keyGroup.GetValue(frame);
+                    curve.Frames[k] = frame;
+                }
             }
 
             //Difference of last and first key value
-            if (curve.Keys.Length > 0)
-                curve.Delta = curve.Keys[curve.Keys.Length - 1, 0] - curve.Keys[0, 0];
+          //  if (curve.Keys.Length > 0)
+           //     curve.Delta = curve.Keys[curve.Keys.Length - 1, 0] - curve.Keys[0, 0];
 
+            curve.EndFrame = curve.Frames.Max();
+
+            QuantizeCurveData(curve);
             return curve;
         }
 
@@ -799,156 +892,6 @@ namespace Bfres.Structs
                 SkeletalAnim = BrawlboxHelper.FSKAConverter.Chr02Fska(FileName);
                 SkeletalAnim.Name = Text;
                 LoadAnim(SkeletalAnim);
-            }
-        }
-
-        public void FromSeanim(string FileName)
-        {
-            SEAnim anim = SEAnim.Read(FileName);
-
-            if (GetResFileU() != null)
-            {
-                SkeletalAnimU = new ResU.SkeletalAnim();
-                SkeletalAnimU.FrameCount = anim.FrameCount;
-                SkeletalAnimU.FlagsScale = ResU.SkeletalAnimFlagsScale.Maya;
-                SkeletalAnimU.FlagsRotate = ResU.SkeletalAnimFlagsRotate.EulerXYZ;
-                SkeletalAnimU.Loop = anim.Looping;
-                SkeletalAnimU.Name = System.IO.Path.GetFileNameWithoutExtension(FileName);
-                SkeletalAnimU.Path = "";
-            }
-            else
-            {
-                SkeletalAnim = new SkeletalAnim();
-                SkeletalAnim.FrameCount = anim.FrameCount;
-                SkeletalAnim.FlagsScale = SkeletalAnimFlagsScale.Maya;
-                SkeletalAnim.FlagsRotate = SkeletalAnimFlagsRotate.EulerXYZ;
-                SkeletalAnim.Loop = anim.Looping;
-                SkeletalAnim.Name = System.IO.Path.GetFileNameWithoutExtension(FileName);
-                SkeletalAnim.Path = "";
-            }
-
-            for (int i = 0; i < anim.Bones.Count; i++)
-            {
-                if (GetResFileU() != null)
-                {
-                   var BoneAnimU = new ResU.BoneAnim();
-                    BoneAnimU.Name = anim.Bones[i];
-                    SkeletalAnimU.BoneAnims.Add(BoneAnimU);
-                    SkeletalAnimU.BindIndices[i] = ushort.MaxValue;
-                    bool IsRoot = false;
-
-                    if (!IsRoot)
-                    {
-                        BoneAnimU.ApplyIdentity = false;
-                        BoneAnimU.ApplyRotateTranslateZero = false;
-                        BoneAnimU.ApplyRotateZero = false;
-                        BoneAnimU.ApplyScaleOne = true;
-                        BoneAnimU.ApplyScaleVolumeOne = true;
-                        BoneAnimU.ApplyScaleUniform = true;
-                        BoneAnimU.ApplySegmentScaleCompensate = true;
-                        BoneAnimU.ApplyTranslateZero = false;
-                    }
-                    else
-                    {
-                        BoneAnimU.ApplyIdentity = true;
-                        BoneAnimU.ApplyRotateTranslateZero = true;
-                        BoneAnimU.ApplyRotateZero = true;
-                        BoneAnimU.ApplyScaleOne = true;
-                        BoneAnimU.ApplyScaleVolumeOne = true;
-                        BoneAnimU.ApplyScaleUniform = true;
-                        BoneAnimU.ApplySegmentScaleCompensate = false;
-                        BoneAnimU.ApplyTranslateZero = true;
-                    }
-                }
-                else
-                {
-                    var BoneAnim = new BoneAnim();
-                    BoneAnim.Name = anim.Bones[i];
-                    SkeletalAnim.BoneAnims.Add(BoneAnim);
-                    SkeletalAnim.BindIndices[i] = ushort.MaxValue;
-
-                    //Set base data and curves
-                    var baseData = new BoneAnimData();
-                    if (anim.AnimationPositionKeys.ContainsKey(anim.Bones[i]) &&
-                        anim.AnimationPositionKeys[anim.Bones[i]].Count > 0)
-                    {
-                        BoneAnim.FlagsBase |= BoneAnimFlagsBase.Translate;
-                        var keys = anim.AnimationPositionKeys[anim.Bones[i]];
-                        var data = (SELib.Utilities.Vector3)keys[0].Data;
-
-                        baseData.Translate = new Syroot.Maths.Vector3F((float)data.X, (float)data.Y, (float)data.Z);
-
-                        if (keys.Count > 1)
-                        {
-                            AnimCurve curve = new AnimCurve();
-                            BoneAnim.Curves.Add(curve);
-                            CreateCurveData(curve, keys);
-                        }
-                    }
-                    if (anim.AnimationRotationKeys.ContainsKey(anim.Bones[i]) &&
-                        anim.AnimationRotationKeys[anim.Bones[i]].Count > 0)
-                    {
-                        BoneAnim.FlagsBase |= BoneAnimFlagsBase.Rotate;
-                        var keys = anim.AnimationPositionKeys[anim.Bones[i]];
-                        var data = (SELib.Utilities.Quaternion)keys[0].Data;
-
-                        baseData.Rotate = new Syroot.Maths.Vector4F((float)data.X, (float)data.Y, (float)data.Z, (float)data.W);
-
-                        if (keys.Count > 1)
-                        {
-                            AnimCurve curve = new AnimCurve();
-                            BoneAnim.Curves.Add(curve);
-                            CreateCurveData(curve, keys);
-                        }
-                    }
-                    if (anim.AnimationScaleKeys.ContainsKey(anim.Bones[i]) &&
-                        anim.AnimationScaleKeys[anim.Bones[i]].Count > 0)
-                    {
-                        BoneAnim.FlagsBase |= BoneAnimFlagsBase.Scale;
-                        var keys = anim.AnimationPositionKeys[anim.Bones[i]];
-                        var data = (SELib.Utilities.Vector3)keys[0].Data;
-
-                        baseData.Scale = new Syroot.Maths.Vector3F((float)data.X, (float)data.Y, (float)data.Z);
-
-                        if (keys.Count > 1)
-                        {
-                            AnimCurve curve = new AnimCurve();
-                            BoneAnim.Curves.Add(curve);
-                            CreateCurveData(curve, keys);
-                        }
-                    }
-
-
-                    //Set transforms
-                    bool IsRoot = false;
-                    if (!IsRoot)
-                    {
-                        BoneAnim.ApplyIdentity = false;
-                        BoneAnim.ApplyRotateTranslateZero = false;
-                        BoneAnim.ApplyRotateZero = false;
-                        BoneAnim.ApplyScaleOne = true;
-                        BoneAnim.ApplyScaleVolumeOne = true;
-                        BoneAnim.ApplyScaleUniform = true;
-                        BoneAnim.ApplySegmentScaleCompensate = true;
-                        BoneAnim.ApplyTranslateZero = false;
-                    }
-                    else
-                    {
-                        BoneAnim.ApplyIdentity = true;
-                        BoneAnim.ApplyRotateTranslateZero = true;
-                        BoneAnim.ApplyRotateZero = true;
-                        BoneAnim.ApplyScaleOne = true;
-                        BoneAnim.ApplyScaleVolumeOne = true;
-                        BoneAnim.ApplyScaleUniform = true;
-                        BoneAnim.ApplySegmentScaleCompensate = false;
-                        BoneAnim.ApplyTranslateZero = true;
-                    }
-                }
-            }
-
-            for (int frame = 0; frame < anim.FrameCount; frame++)
-            {
-
             }
         }
 

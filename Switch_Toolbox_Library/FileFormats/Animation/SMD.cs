@@ -121,8 +121,10 @@ namespace Switch_Toolbox.Library.Animations
             File.WriteAllText(FileName, o.ToString());
         }
 
-        public static void read(string fname, Animation a, STSkeleton v)
+        public static Animation Read(string fname,STSkeleton v)
         {
+            Animation a = new Animation();
+
             StreamReader reader = File.OpenText(fname);
             string line;
 
@@ -249,11 +251,31 @@ namespace Switch_Toolbox.Library.Animations
                         n.Frame = frame;
                         bone.ZSCA.Keys.Add(n);
                     }
+                    else
+                    {
+                        bone.XSCA.Keys.Add(new Animation.KeyFrame()
+                        {
+                            Value = 1.0f,
+                            Frame = frame,
+                        });
+                        bone.YSCA.Keys.Add(new Animation.KeyFrame()
+                        {
+                            Value = 1.0f,
+                            Frame = frame,
+                        });
+                        bone.ZSCA.Keys.Add(new Animation.KeyFrame()
+                        {
+                            Value = 1.0f,
+                            Frame = frame,
+                        });
+                    }
                 }
             }
 
             a.FrameCount = frame;
             vbn.update();
+
+            return a;
         }
 
         public static void Save(Animation anim, STSkeleton Skeleton, String Fname)
@@ -281,7 +303,7 @@ namespace Switch_Toolbox.Library.Animations
                     {
                         STBone b = Skeleton.GetBone(sb.Text);
                         if (b == null) continue;
-                        Vector3 eul = ANIM.quattoeul(b.rot);
+                        Vector3 eul = STMath.ToEulerAngles(b.rot);
                         file.WriteLine(Skeleton.bones.IndexOf(b) + " " + b.pos.X + " " + b.pos.Y + " " + b.pos.Z + " " + eul.X + " " + eul.Y + " " + eul.Z);
                     }
 
