@@ -382,7 +382,7 @@ namespace Bfres.Structs
                     Nodes.Add(bone);
                     fskl.bones.Add(bone);
 
-                    bone.Bone.ParentIndex = (short)bone.parentIndex;
+                    bone.BoneU.ParentIndex = (short)bone.parentIndex;
                     fskl.AddBone(bone.BoneU);
                 }
                 else
@@ -435,7 +435,7 @@ namespace Bfres.Structs
                             Nodes.Add(bn);
                             fskl.bones.Add(bn);
 
-                            bone.ParentIndex = (short)bn.parentIndex;
+                            bn.BoneU.ParentIndex = (short)bn.parentIndex;
                             fskl.AddBone(bn.Bone);
                         }
                         else
