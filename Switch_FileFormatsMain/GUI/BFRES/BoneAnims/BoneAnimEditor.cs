@@ -43,6 +43,8 @@ namespace FirstPlugin.Forms
             frameCountLbl.Text = $" / {fska.FrameCount}";
             currentFrameUD.Maximum = fska.FrameCount;
 
+            return;
+
             for (int frame = 0; frame <= fska.FrameCount; frame++)
             {
                 bool IsKeyed = boneAnim.HasKeyedFrames(frame);

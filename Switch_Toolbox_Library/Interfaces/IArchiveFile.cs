@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library.IO;
@@ -70,6 +70,8 @@ namespace Switch_Toolbox.Library
     //Wrapper for the archive file itself
     public class ArchiveRootNodeWrapper : TreeNodeCustom
     {
+        public virtual object PropertyDisplay { get; set; }
+
         IArchiveFile ArchiveFile;
 
         public ArchiveRootNodeWrapper(string text, IArchiveFile archiveFile)
@@ -81,6 +83,8 @@ namespace Switch_Toolbox.Library
             ContextMenuStrip.Items.Add(new STToolStripItem("Save", SaveAction));
             if (!((IFileFormat)archiveFile).CanSave)
                 ContextMenuStrip.Items[0].Enabled = false;
+
+            PropertyDisplay = new GenericArchiveProperties(archiveFile, text);
         }
 
         private void SaveAction(object sender, EventArgs args)
@@ -102,11 +106,51 @@ namespace Switch_Toolbox.Library
             }
             GC.Collect();
         }
+
+        public override void OnClick(TreeView treeView)
+        {
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadProperty(PropertyDisplay, OnPropertyChanged);
+        }
+
+        public virtual void OnPropertyChanged() {
+            Text = Name;
+        }
+
+
+        public class GenericArchiveProperties
+        {
+            private IArchiveFile ArchiveFile;
+
+            [Category("Archive Properties")]
+            public string Name { get; set; }
+
+            [Category("Archive Properties")]
+            [DisplayName("File Count")]
+            public int FileCount
+            {
+                get { return ArchiveFile.Files.ToList().Count; }
+            }
+
+            public GenericArchiveProperties(IArchiveFile archiveFile, string text) {
+                ArchiveFile = archiveFile;
+                Name = text;
+            }
+        }
     }
 
     //Wrapper for folders
     public class ArchiveFolderNodeWrapper : TreeNodeCustom
     {
+        public virtual object PropertyDisplay { get; set; }
+
         public bool CanReplace
         {
             set
@@ -132,11 +176,41 @@ namespace Switch_Toolbox.Library
         public ArchiveFolderNodeWrapper(string text)
         {
             Text = text;
+            PropertyDisplay = new GenericFolderProperties();
+            ((GenericFolderProperties)PropertyDisplay).Name = Text;
 
+            ReloadMenus();
+        }
+
+        private void ReloadMenus()
+        {
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStripItem("Extract Folder", ExtractAction));
             ContextMenuStrip.Items.Add(new STToolStripItem("Replace Folder", ReplaceAction));
             ContextMenuStrip.Items.Add(new STToolStripItem("Delete Folder", DeleteAction));
+        }
+
+        public override void OnClick(TreeView treeView)
+        {
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadProperty(PropertyDisplay, OnPropertyChanged);
+        }
+
+        public class GenericFolderProperties
+        {
+            [Category("Folder Properties")]
+            public string Name { get; set; }
+        }
+
+        public virtual void OnPropertyChanged() {
+            Text = Name;
         }
 
         private void ExtractAction(object sender, EventArgs args)
@@ -165,20 +239,23 @@ namespace Switch_Toolbox.Library
                 int Curfile = 0;
                 foreach (TreeNode file in Collection)
                 {
-                    string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
-                    FilePath = FilePath.Replace(ParentPath, string.Empty);
-
-                    Console.WriteLine($"FilePath " + FilePath);
-                    var path = Path.Combine(folderDialog.SelectedPath, FilePath);
-
-                    progressBar.Value = (Curfile++ * 100) / Collection.Count();
-                    progressBar.Refresh();
-                    CreateDirectoryIfExists($"{path}");
-
                     if (file is ArchiveNodeWrapper)
                     {
-                        File.WriteAllBytes($"{path}",
-                            ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileData);
+                        string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
+                        FilePath = FilePath.Replace(ParentPath, string.Empty);
+
+                        Console.WriteLine($"FilePath " + FilePath);
+                        var path = Path.Combine(folderDialog.SelectedPath, FilePath);
+
+                        progressBar.Value = (Curfile++ * 100) / Collection.Count();
+                        progressBar.Refresh();
+                        CreateDirectoryIfExists($"{path}");
+
+                        if (file is ArchiveNodeWrapper)
+                        {
+                            File.WriteAllBytes($"{path}",
+                                ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileData);
+                        }
                     }
                 }
 
@@ -242,7 +319,20 @@ namespace Switch_Toolbox.Library
         public ArchiveNodeWrapper(string text)
         {
             Text = text;
+            ReloadMenus();
+        }
 
+        public static ArchiveNodeWrapper FromPath(string FilePath)
+        {
+            var wrapper = new ArchiveNodeWrapper(Path.GetFileName(FilePath));
+            wrapper.ArchiveFileInfo = new ArchiveFileInfo();
+            wrapper.ArchiveFileInfo.FileName = FilePath;
+            wrapper.ArchiveFileInfo.FileData = File.ReadAllBytes(FilePath);
+            return wrapper;
+        }
+
+        private void ReloadMenus()
+        {
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStripItem("Extract", ExtractAction));
             ContextMenuStrip.Items.Add(new STToolStripItem("Replace", ReplaceAction));

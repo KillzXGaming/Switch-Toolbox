@@ -339,7 +339,12 @@ namespace Switch_Toolbox.Library.Forms
             Runtime.ObjectEditor.ListPanelWidth = stPanel1.Width;
         }
 
-        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
+        private void treeViewCustom1_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void treeViewCustom1_DragOver(object sender, DragEventArgs e)
         {
 
         }

@@ -253,8 +253,15 @@ namespace Bfres.Structs
             }
             else if (ext == ".seanim")
             {
-                var ska = FromGeneric(SEANIM.Read(FileName));
-                UpdateAnimation(ska);
+                STSkeleton skeleton = GetActiveSkeleton();
+
+                if (skeleton != null)
+                {
+                    var ska = FromGeneric(SEANIM.Read(FileName, skeleton));
+                    UpdateAnimation(ska);
+                }
+                else
+                    STErrorDialog.Show("No matching skeleton bones found to assign!", "Skeleton Importer", "");
             }
             else if (ext == ".smd")
             {
@@ -556,8 +563,8 @@ namespace Bfres.Structs
             }
 
             //Difference of last and first key value
-          //  if (curve.Keys.Length > 0)
-           //     curve.Delta = curve.Keys[curve.Keys.Length - 1, 0] - curve.Keys[0, 0];
+            if (curve.Keys.Length > 0)
+                curve.Delta = curve.Keys[keyGroup.Keys.Count - 1, 0] - curve.Keys[0, 0];
 
             curve.EndFrame = curve.Frames.Max();
 

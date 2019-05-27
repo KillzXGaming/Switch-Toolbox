@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.searchLbl = new Switch_Toolbox.Library.Forms.STLabel();
@@ -47,7 +48,6 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
@@ -68,6 +68,16 @@
             this.stPanel1.TabIndex = 11;
             this.stPanel1.Resize += new System.EventHandler(this.stPanel1_Resize);
             // 
+            // activeEditorChkBox
+            // 
+            this.activeEditorChkBox.AutoSize = true;
+            this.activeEditorChkBox.Location = new System.Drawing.Point(140, 4);
+            this.activeEditorChkBox.Name = "activeEditorChkBox";
+            this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
+            this.activeEditorChkBox.TabIndex = 4;
+            this.activeEditorChkBox.Text = "Add Files to Active Editor";
+            this.activeEditorChkBox.UseVisualStyleBackColor = true;
+            // 
             // treeViewCustom1
             // 
             this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -84,7 +94,8 @@
             this.treeViewCustom1.Size = new System.Drawing.Size(319, 488);
             this.treeViewCustom1.TabIndex = 0;
             this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
-            this.treeViewCustom1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewCustom1_DoubleClick);
+            this.treeViewCustom1.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragDrop);
+            this.treeViewCustom1.DragOver += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragOver);
             // 
             // stPanel3
             // 
@@ -228,16 +239,6 @@
             this.splitter1.TabStop = false;
             this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
             this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
-            // 
-            // activeEditorChkBox
-            // 
-            this.activeEditorChkBox.AutoSize = true;
-            this.activeEditorChkBox.Location = new System.Drawing.Point(140, 4);
-            this.activeEditorChkBox.Name = "activeEditorChkBox";
-            this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
-            this.activeEditorChkBox.TabIndex = 4;
-            this.activeEditorChkBox.Text = "Add Files to Active Editor";
-            this.activeEditorChkBox.UseVisualStyleBackColor = true;
             // 
             // ObjectEditorList
             // 

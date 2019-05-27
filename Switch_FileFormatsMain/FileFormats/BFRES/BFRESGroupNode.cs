@@ -125,8 +125,8 @@ namespace Bfres.Structs
             }
         }
 
-        public BFRESGroupNode(string name) : base() { Text = name; }
-        public BFRESGroupNode(BRESGroupType type) : base() { Type = type; SetNameByType(); }
+        public BFRESGroupNode(string name, bool isWiiU = false) : base() { Text = name; IsWiiU = isWiiU; }
+        public BFRESGroupNode(BRESGroupType type, bool isWiiU = false) : base() { Type = type; SetNameByType(); IsWiiU = isWiiU; }
 
         public BRESGroupType Type { get; set; }
 

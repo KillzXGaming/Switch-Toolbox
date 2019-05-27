@@ -795,10 +795,10 @@ namespace FirstPlugin
 
             Text = resFileU.Name;
 
-            var modelFolder = new BFRESGroupNode(BRESGroupType.Models);
-            var texturesFolder = new BFRESGroupNode(BRESGroupType.Textures);
+            var modelFolder = new BFRESGroupNode(BRESGroupType.Models, true);
+            var texturesFolder = new BFRESGroupNode(BRESGroupType.Textures, true);
             var animFolder = new BFRESAnimFolder();
-            var externalFilesFolder = new BFRESGroupNode(BRESGroupType.Embedded);
+            var externalFilesFolder = new BFRESGroupNode(BRESGroupType.Embedded, true);
 
             //Reload context menus to load specific context menus
             modelFolder.LoadContextMenus();
@@ -834,7 +834,7 @@ namespace FirstPlugin
             }
             if (resFileU.SkeletalAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.SkeletalAnim);
+                var group = new BFRESGroupNode(BRESGroupType.SkeletalAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.SkeletalAnims.Count; i++)
@@ -842,7 +842,7 @@ namespace FirstPlugin
             }
             if (resFileU.ShaderParamAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.ShaderParamAnim);
+                var group = new BFRESGroupNode(BRESGroupType.ShaderParamAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.ShaderParamAnims.Count; i++)
@@ -850,7 +850,7 @@ namespace FirstPlugin
             }
             if (resFileU.ColorAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.ColorAnim);
+                var group = new BFRESGroupNode(BRESGroupType.ColorAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.ColorAnims.Count; i++)
@@ -858,7 +858,7 @@ namespace FirstPlugin
             }
             if (resFileU.TexSrtAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.TexSrtAnim);
+                var group = new BFRESGroupNode(BRESGroupType.TexSrtAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.TexSrtAnims.Count; i++)
@@ -866,7 +866,7 @@ namespace FirstPlugin
             }
             if (resFileU.TexPatternAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.TexPatAnim);
+                var group = new BFRESGroupNode(BRESGroupType.TexPatAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.TexPatternAnims.Count; i++)
@@ -874,7 +874,7 @@ namespace FirstPlugin
             }
             if (resFileU.ShapeAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.ShapeAnim);
+                var group = new BFRESGroupNode(BRESGroupType.ShapeAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.ShapeAnims.Count; i++)
@@ -882,7 +882,7 @@ namespace FirstPlugin
             }
             if (resFileU.BoneVisibilityAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.BoneVisAnim);
+                var group = new BFRESGroupNode(BRESGroupType.BoneVisAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.BoneVisibilityAnims.Count; i++)
@@ -890,7 +890,7 @@ namespace FirstPlugin
             }
             if (resFileU.MatVisibilityAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.MatVisAnim);
+                var group = new BFRESGroupNode(BRESGroupType.MatVisAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.MatVisibilityAnims.Count; i++)
@@ -898,7 +898,7 @@ namespace FirstPlugin
             }
             if (resFileU.SceneAnims.Count > 0)
             {
-                var group = new BFRESGroupNode(BRESGroupType.SceneAnim);
+                var group = new BFRESGroupNode(BRESGroupType.SceneAnim, true);
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.SceneAnims.Count; i++)

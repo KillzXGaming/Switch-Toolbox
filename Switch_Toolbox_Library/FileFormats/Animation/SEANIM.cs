@@ -5,107 +5,151 @@ namespace Switch_Toolbox.Library.Animations
 {
     public class SEANIM
     {
-        public static Animation Read(string FileName)
+        public static Animation Read(string FileName, STSkeleton skeleton)
         {
             Animation anim = new Animation();
             var seanim = SEAnim.Read(FileName);
             anim.FrameCount = seanim.FrameCount;
             anim.CanLoop = seanim.Looping;
-          
 
             foreach (var bone in seanim.Bones)
             {
-                var boneAnim = new Animation.KeyNode(bone);
-                boneAnim.RotType = Animation.RotationType.EULER;
-                boneAnim.UseSegmentScaleCompensate = false;
-                anim.Bones.Add(boneAnim);
+                STBone genericBone = skeleton.GetBone(bone);
+                if (genericBone != null)
+                {
+                    var boneAnim = new Animation.KeyNode(bone);
+                    boneAnim.RotType = Animation.RotationType.EULER;
+                    boneAnim.UseSegmentScaleCompensate = false;
+                    anim.Bones.Add(boneAnim);
 
-                if (seanim.AnimationPositionKeys.ContainsKey(bone))
-                {
-                    var translationKeys = seanim.AnimationPositionKeys[bone];
-                    foreach (SEAnimFrame animFrame in translationKeys)
-                    {
-                        boneAnim.XPOS.Keys.Add(new Animation.KeyFrame()
-                        {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).X,
-                            Frame = animFrame.Frame,
-                        });
-                        boneAnim.YPOS.Keys.Add(new Animation.KeyFrame()
-                        {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Y,
-                            Frame = animFrame.Frame,
-                        });
-                        boneAnim.ZPOS.Keys.Add(new Animation.KeyFrame()
-                        {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Z,
-                            Frame = animFrame.Frame,
-                        });
-                    }
-                }
-                if (seanim.AnimationRotationKeys.ContainsKey(bone))
-                {
-                    var rotationnKeys = seanim.AnimationRotationKeys[bone];
-                    foreach (SEAnimFrame animFrame in rotationnKeys)
-                    {
-                        var quat = ((SELib.Utilities.Quaternion)animFrame.Data);
-                        var euler = STMath.ToEulerAngles(quat.X, quat.Y, quat.Z, quat.W);
+                    float PositionX = 0;
+                    float PositionY = 0;
+                    float PositionZ = 0;
 
-                        boneAnim.XROT.Keys.Add(new Animation.KeyFrame()
-                        {
-                            Value = euler.X,
-                            Frame = animFrame.Frame,
-                        });
-                        boneAnim.YROT.Keys.Add(new Animation.KeyFrame()
-                        {
-                            Value = euler.Y,
-                            Frame = animFrame.Frame,
-                        });
-                        boneAnim.ZROT.Keys.Add(new Animation.KeyFrame()
-                        {
-                            Value = euler.Z,
-                            Frame = animFrame.Frame,
-                        });
+                    float RotationX = 0;
+                    float RotationY = 0;
+                    float RotationZ = 0;
+
+                    float ScaleX = 0;
+                    float ScaleY = 0;
+                    float ScaleZ = 0;
+
+                    if (seanim.AnimType == AnimationType.Relative)
+                    {
+                        PositionX = genericBone.position[0];
+                        PositionY = genericBone.position[1];
+                        PositionZ = genericBone.position[2];
+
+                        RotationX = genericBone.rotation[0];
+                        RotationY = genericBone.rotation[1];
+                        RotationZ = genericBone.rotation[2];
+
+                        ScaleX = genericBone.scale[0];
+                        ScaleY = genericBone.scale[1];
+                        ScaleZ = genericBone.scale[2];
                     }
-                }
-                if (seanim.AnimationScaleKeys.ContainsKey(bone))
-                {
-                    var scaleKeys = seanim.AnimationScaleKeys[bone];
-                    foreach (SEAnimFrame animFrame in scaleKeys)
+
+                    System.Console.WriteLine(bone);
+
+                    if (seanim.AnimationPositionKeys.ContainsKey(bone))
+                    {
+                        var translationKeys = seanim.AnimationPositionKeys[bone];
+                        foreach (SEAnimFrame animFrame in translationKeys)
+                        {
+                            System.Console.WriteLine(animFrame.Frame + " T " + ((SELib.Utilities.Vector3)animFrame.Data).X);
+                            System.Console.WriteLine(animFrame.Frame + " T " + ((SELib.Utilities.Vector3)animFrame.Data).Y);
+                            System.Console.WriteLine(animFrame.Frame + " T " + ((SELib.Utilities.Vector3)animFrame.Data).Z);
+
+                            boneAnim.XPOS.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = (float)((SELib.Utilities.Vector3)animFrame.Data).X + PositionX,
+                                Frame = animFrame.Frame,
+                            });
+                            boneAnim.YPOS.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Y + PositionY,
+                                Frame = animFrame.Frame,
+                            });
+                            boneAnim.ZPOS.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Z + PositionZ,
+                                Frame = animFrame.Frame,
+                            });
+                        }
+                    }
+                    if (seanim.AnimationRotationKeys.ContainsKey(bone))
+                    {
+                        var rotationnKeys = seanim.AnimationRotationKeys[bone];
+                        foreach (SEAnimFrame animFrame in rotationnKeys)
+                        {
+                            var quat = ((SELib.Utilities.Quaternion)animFrame.Data);
+                            var euler = STMath.ToEulerAngles(quat.X, quat.Y, quat.Z, quat.W);
+
+                            System.Console.WriteLine(animFrame.Frame + " R " + euler.X);
+                            System.Console.WriteLine(animFrame.Frame + " R " + euler.Y);
+                            System.Console.WriteLine(animFrame.Frame + " R " + euler.Z);
+
+                            boneAnim.XROT.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = euler.X + RotationX,
+                                Frame = animFrame.Frame,
+                            });
+                            boneAnim.YROT.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = euler.Y + RotationY,
+                                Frame = animFrame.Frame,
+                            });
+                            boneAnim.ZROT.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = euler.Z + RotationZ,
+                                Frame = animFrame.Frame,
+                            });
+                        }
+                    }
+                    if (seanim.AnimationScaleKeys.ContainsKey(bone))
+                    {
+                        var scaleKeys = seanim.AnimationScaleKeys[bone];
+                        foreach (SEAnimFrame animFrame in scaleKeys)
+                        {
+                            System.Console.WriteLine(animFrame.Frame + " S " + ((SELib.Utilities.Vector3)animFrame.Data).X);
+                            System.Console.WriteLine(animFrame.Frame + " S " + ((SELib.Utilities.Vector3)animFrame.Data).Y);
+                            System.Console.WriteLine(animFrame.Frame + " S " + ((SELib.Utilities.Vector3)animFrame.Data).Z);
+
+                            boneAnim.XSCA.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = (float)((SELib.Utilities.Vector3)animFrame.Data).X + ScaleX,
+                                Frame = animFrame.Frame,
+                            });
+                            boneAnim.YSCA.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Y + ScaleY,
+                                Frame = animFrame.Frame,
+                            });
+                            boneAnim.ZSCA.Keys.Add(new Animation.KeyFrame()
+                            {
+                                Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Z + ScaleZ,
+                                Frame = animFrame.Frame,
+                            });
+                        }
+                    }
+                    else
                     {
                         boneAnim.XSCA.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).X,
-                            Frame = animFrame.Frame,
+                            Value = 1,
+                            Frame = 0,
                         });
                         boneAnim.YSCA.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Y,
-                            Frame = animFrame.Frame,
+                            Value = 1,
+                            Frame = 0,
                         });
                         boneAnim.ZSCA.Keys.Add(new Animation.KeyFrame()
                         {
-                            Value = (float)((SELib.Utilities.Vector3)animFrame.Data).Z,
-                            Frame = animFrame.Frame,
+                            Value = 1,
+                            Frame = 0,
                         });
                     }
-                }
-                else
-                {
-                    boneAnim.XSCA.Keys.Add(new Animation.KeyFrame()
-                    {
-                        Value = 1,
-                        Frame = 0,
-                    });
-                    boneAnim.YSCA.Keys.Add(new Animation.KeyFrame()
-                    {
-                        Value = 1,
-                        Frame = 0,
-                    });
-                    boneAnim.ZSCA.Keys.Add(new Animation.KeyFrame()
-                    {
-                        Value = 1,
-                        Frame = 0,
-                    });
                 }
             }
 

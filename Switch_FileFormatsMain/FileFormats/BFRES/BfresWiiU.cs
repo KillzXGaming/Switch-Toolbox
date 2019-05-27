@@ -427,6 +427,8 @@ namespace FirstPlugin
         }
         public static void ReadMaterial(this FMAT m, Material mat)
         {
+            m.MaterialU = mat;
+
             if (mat.Flags == MaterialFlags.Visible)
                 m.Enabled = true;
             else
@@ -436,7 +438,6 @@ namespace FirstPlugin
             m.ReadShaderAssign(mat);
             m.SetActiveGame();
             m.ReadShaderParams(mat);
-            m.MaterialU = mat;
             m.ReadTextureRefs(mat);
             m.ReadRenderState(mat.RenderState);
         }

@@ -277,7 +277,7 @@
     <Compile Include="Audio\NaudioExampleData\LineSpectrum.cs" />
     <Compile Include="Audio\NaudioExampleData\ScalingStrategy.cs" />
     <Compile Include="Audio\NaudioExampleData\SpectrumBase.cs" />
-    <Compile Include="FileFormats\ANIM.cs" />
+    <Compile Include="FileFormats\Animation\ANIM.cs" />
     <Compile Include="FileFormats\Assimp\Assimp.cs" />
     <Compile Include="FileFormats\Assimp\AssimpHelper.cs" />
     <Compile Include="FileFormats\ASTC.cs" />

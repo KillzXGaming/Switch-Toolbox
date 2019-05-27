@@ -22,8 +22,8 @@ namespace FirstPlugin.NodeWrappers
         public bool IsWiiU { get; set; }
       
 
-        public void LoadMenus(bool isWiiUBfres)
-        {
+        public void LoadMenus(bool isWiiUBfres) {
+            IsWiiU = isWiiUBfres;
         }
 
         public override void Delete()

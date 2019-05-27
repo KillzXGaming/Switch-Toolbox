@@ -221,6 +221,24 @@ namespace BrawlboxHelper
         }
     }
 
+    public class FTXPConverter
+    {
+        public static void Pat02Ftxp(MaterialAnim matAnim, string FileName)
+        {
+            PAT0Node pat0 = new PAT0Node();
+            matAnim.FrameCount = pat0.FrameCount;
+            matAnim.Name = pat0.Name;
+            matAnim.Path = pat0.OriginalPath;
+            matAnim.Loop = pat0.Loop;
+
+            foreach (var entry in pat0.Children)
+            {
+                var Material = (PAT0EntryNode)entry;
+             
+            }
+        }
+    }
+
     public class FSKAConverter
     {
         static float Deg2Rad = (float)(Math.PI / 180f);

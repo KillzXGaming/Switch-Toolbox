@@ -73,7 +73,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             InitializeComponent();
 
-            ObjectTree = new ObjectEditorTree();
+            ObjectTree = new ObjectEditorTree(this);
             ObjectTree.Dock = DockStyle.Fill;
             stPanel1.Controls.Add(ObjectTree);
         }
@@ -89,7 +89,7 @@ namespace Switch_Toolbox.Library.Forms
                  stPanel1.Controls.Add(ObjectList);
                  ObjectList.FillList((IArchiveFile)FileFormat);*/
 
-                ObjectTree = new ObjectEditorTree();
+                ObjectTree = new ObjectEditorTree(this);
                 ObjectTree.Dock = DockStyle.Fill;
                 stPanel1.Controls.Add(ObjectTree);
 
@@ -99,7 +99,7 @@ namespace Switch_Toolbox.Library.Forms
             }
             else
             {
-                ObjectTree = new ObjectEditorTree();
+                ObjectTree = new ObjectEditorTree(this);
                 ObjectTree.Dock = DockStyle.Fill;
                 stPanel1.Controls.Add(ObjectTree);
                 AddNode((TreeNode)FileFormat);

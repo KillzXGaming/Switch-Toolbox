@@ -29,25 +29,43 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.searchLbl = new Switch_Toolbox.Library.Forms.STLabel();
-            this.searchImgPB = new System.Windows.Forms.PictureBox();
+            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
             this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.searchImgPB = new System.Windows.Forms.PictureBox();
+            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(314, 0);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 542);
+            this.splitter1.TabIndex = 13;
+            this.splitter1.TabStop = false;
+            this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
+            this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
+            // 
+            // stPanel2
+            // 
+            this.stPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel2.Location = new System.Drawing.Point(314, 0);
+            this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Size = new System.Drawing.Size(593, 542);
+            this.stPanel2.TabIndex = 12;
             // 
             // stPanel1
             // 
@@ -62,19 +80,19 @@
             this.stPanel1.TabIndex = 11;
             this.stPanel1.Resize += new System.EventHandler(this.stPanel1_Resize);
             // 
-            // activeEditorChkBox
+            // searchLbl
             // 
-            this.activeEditorChkBox.AutoSize = true;
-            this.activeEditorChkBox.Location = new System.Drawing.Point(137, 6);
-            this.activeEditorChkBox.Name = "activeEditorChkBox";
-            this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
-            this.activeEditorChkBox.TabIndex = 3;
-            this.activeEditorChkBox.Text = "Add Files to Active Editor";
-            this.activeEditorChkBox.UseVisualStyleBackColor = true;
-            this.activeEditorChkBox.CheckedChanged += new System.EventHandler(this.activeEditorChkBox_CheckedChanged);
+            this.searchLbl.AutoSize = true;
+            this.searchLbl.ForeColor = System.Drawing.Color.Silver;
+            this.searchLbl.Location = new System.Drawing.Point(3, 31);
+            this.searchLbl.Name = "searchLbl";
+            this.searchLbl.Size = new System.Drawing.Size(41, 13);
+            this.searchLbl.TabIndex = 2;
+            this.searchLbl.Text = "Search";
             // 
             // treeViewCustom1
             // 
+            this.treeViewCustom1.AllowDrop = true;
             this.treeViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -91,40 +109,9 @@
             this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
             this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
             this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.selectItem);
+            this.treeViewCustom1.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragDrop);
+            this.treeViewCustom1.DragOver += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragOver);
             this.treeViewCustom1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewCustom1_DoubleClick);
-            // 
-            // stPanel3
-            // 
-            this.stPanel3.Controls.Add(this.searchImgPB);
-            this.stPanel3.Controls.Add(this.activeEditorChkBox);
-            this.stPanel3.Controls.Add(this.stContextMenuStrip1);
-            this.stPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.stPanel3.Location = new System.Drawing.Point(0, 0);
-            this.stPanel3.Name = "stPanel3";
-            this.stPanel3.Size = new System.Drawing.Size(314, 26);
-            this.stPanel3.TabIndex = 2;
-            // 
-            // searchLbl
-            // 
-            this.searchLbl.AutoSize = true;
-            this.searchLbl.ForeColor = System.Drawing.Color.Silver;
-            this.searchLbl.Location = new System.Drawing.Point(3, 31);
-            this.searchLbl.Name = "searchLbl";
-            this.searchLbl.Size = new System.Drawing.Size(41, 13);
-            this.searchLbl.TabIndex = 2;
-            this.searchLbl.Text = "Search";
-            // 
-            // searchImgPB
-            // 
-            this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
-            this.searchImgPB.Image = global::Switch_Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
-            this.searchImgPB.Location = new System.Drawing.Point(-654, 5);
-            this.searchImgPB.Name = "searchImgPB";
-            this.searchImgPB.Size = new System.Drawing.Size(22, 17);
-            this.searchImgPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.searchImgPB.TabIndex = 1;
-            this.searchImgPB.TabStop = false;
             // 
             // stTextBox1
             // 
@@ -138,6 +125,40 @@
             this.stTextBox1.Click += new System.EventHandler(this.stTextBox1_Click);
             this.stTextBox1.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
             this.stTextBox1.Leave += new System.EventHandler(this.stTextBox1_Leave);
+            // 
+            // stPanel3
+            // 
+            this.stPanel3.Controls.Add(this.searchImgPB);
+            this.stPanel3.Controls.Add(this.activeEditorChkBox);
+            this.stPanel3.Controls.Add(this.stContextMenuStrip1);
+            this.stPanel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.stPanel3.Location = new System.Drawing.Point(0, 0);
+            this.stPanel3.Name = "stPanel3";
+            this.stPanel3.Size = new System.Drawing.Size(314, 26);
+            this.stPanel3.TabIndex = 2;
+            // 
+            // searchImgPB
+            // 
+            this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
+            this.searchImgPB.Image = global::Switch_Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
+            this.searchImgPB.Location = new System.Drawing.Point(-654, 5);
+            this.searchImgPB.Name = "searchImgPB";
+            this.searchImgPB.Size = new System.Drawing.Size(22, 17);
+            this.searchImgPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.searchImgPB.TabIndex = 1;
+            this.searchImgPB.TabStop = false;
+            // 
+            // activeEditorChkBox
+            // 
+            this.activeEditorChkBox.AutoSize = true;
+            this.activeEditorChkBox.Location = new System.Drawing.Point(137, 6);
+            this.activeEditorChkBox.Name = "activeEditorChkBox";
+            this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
+            this.activeEditorChkBox.TabIndex = 3;
+            this.activeEditorChkBox.Text = "Add Files to Active Editor";
+            this.activeEditorChkBox.UseVisualStyleBackColor = true;
+            this.activeEditorChkBox.CheckedChanged += new System.EventHandler(this.activeEditorChkBox_CheckedChanged);
             // 
             // stContextMenuStrip1
             // 
@@ -162,7 +183,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.openToolStripMenuItem.Text = "Add File";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -177,27 +198,9 @@
             // sortToolStripMenuItem
             // 
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
-            // 
-            // stPanel2
-            // 
-            this.stPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stPanel2.Location = new System.Drawing.Point(314, 0);
-            this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(593, 542);
-            this.stPanel2.TabIndex = 12;
-            // 
-            // splitter1
-            // 
-            this.splitter1.Location = new System.Drawing.Point(314, 0);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 542);
-            this.splitter1.TabIndex = 13;
-            this.splitter1.TabStop = false;
-            this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
-            this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
             // 
             // ObjectEditorTree
             // 
