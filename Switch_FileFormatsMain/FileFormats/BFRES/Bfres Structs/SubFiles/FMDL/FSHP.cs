@@ -1215,75 +1215,75 @@ namespace Bfres.Structs
 
         public void OptmizeAttributeFormats()
         {
-            foreach (var attribute in vertexAttributes)
+            for (int i = 0; i < vertexAttributes.Count; i++)
             {
-                if (attribute.GetAttributeType() == VertexAttribute.AttributeType.Weight ||
-                    attribute.GetAttributeType() == VertexAttribute.AttributeType.Index)
+                if (vertexAttributes[i].GetAttributeType() == VertexAttribute.AttributeType.Weight ||
+                    vertexAttributes[i].GetAttributeType() == VertexAttribute.AttributeType.Index)
                 {
-                    OptmizeIndicesWeights(attribute);
+                    OptmizeIndicesWeights(vertexAttributes[i]);
                 }
             }
         }
 
         private void OptmizeIndicesWeights(VertexAttribute attribute)
         {
-            /*     if (VertexSkinCount == 1)
-                 {
-                     switch (attribute.Format)
-                     {
-                         case ResGFX.AttribFormat.Format_32_32_32_32_Single:
-                         case ResGFX.AttribFormat.Format_32_32_32_Single:
-                         case ResGFX.AttribFormat.Format_32_32_Single:
-                             attribute.Format = ResGFX.AttribFormat.Format_32_Single;
-                             break;
-                         case ResGFX.AttribFormat.Format_32_32_32_32_SInt:
-                         case ResGFX.AttribFormat.Format_32_32_32_SInt:
-                         case ResGFX.AttribFormat.Format_32_32_SInt:
-                             attribute.Format = ResGFX.AttribFormat.Format_32_SInt;
-                             break;
-                         case ResGFX.AttribFormat.Format_32_32_32_32_UInt:
-                         case ResGFX.AttribFormat.Format_32_32_32_UInt:
-                         case ResGFX.AttribFormat.Format_32_32_UInt:
-                             attribute.Format = ResGFX.AttribFormat.Format_32_UInt;
-                             break;
-                         case ResGFX.AttribFormat.Format_16_16_16_16_Single:
-                         case ResGFX.AttribFormat.Format_16_16_Single:
-                             attribute.Format = ResGFX.AttribFormat.Format_16_Single;
-                             break;
-                         case ResGFX.AttribFormat.Format_16_16_16_16_SInt:
-                         case ResGFX.AttribFormat.Format_16_16_SInt:
-                             attribute.Format = ResGFX.AttribFormat.Format_16_SInt;
-                             break;
-                         case ResGFX.AttribFormat.Format_16_16_16_16_UInt:
-                         case ResGFX.AttribFormat.Format_16_16_UInt:
-                             attribute.Format = ResGFX.AttribFormat.Format_16_UInt;
-                             break;
-                         case ResGFX.AttribFormat.Format_8_8_8_8_UInt:
-                         case ResGFX.AttribFormat.Format_8_8_UInt:
-                             attribute.Format = ResGFX.AttribFormat.Format_8_UInt;
-                             break;
-                         case ResGFX.AttribFormat.Format_8_8_8_8_SInt:
-                         case ResGFX.AttribFormat.Format_8_8_SInt:
-                             attribute.Format = ResGFX.AttribFormat.Format_8_SInt;
-                             break;
-                         case ResGFX.AttribFormat.Format_8_8_8_8_SNorm:
-                         case ResGFX.AttribFormat.Format_8_8_SNorm:
-                             attribute.Format = ResGFX.AttribFormat.Format_8_SNorm;
-                             break;
-                         case ResGFX.AttribFormat.Format_8_8_8_8_UNorm:
-                         case ResGFX.AttribFormat.Format_8_8_UNorm:
-                             attribute.Format = ResGFX.AttribFormat.Format_8_UNorm;
-                             break;
-                         case ResGFX.AttribFormat.Format_8_8_8_8_SIntToSingle:
-                         case ResGFX.AttribFormat.Format_8_8_SIntToSingle:
-                             attribute.Format = ResGFX.AttribFormat.Format_8_SIntToSingle;
-                             break;
-                         case ResGFX.AttribFormat.Format_8_8_8_8_UIntToSingle:
-                         case ResGFX.AttribFormat.Format_8_8_UIntToSingle:
-                             attribute.Format = ResGFX.AttribFormat.Format_8_UIntToSingle;
-                             break;
-        }
-        }
+    /*        if (VertexSkinCount == 1)
+            {
+                switch (attribute.Format)
+                {
+                    case ResGFX.AttribFormat.Format_32_32_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_32_Single:
+                        attribute.Format = ResGFX.AttribFormat.Format_32_Single;
+                        break;
+                    case ResGFX.AttribFormat.Format_32_32_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_32_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_32_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_32_32_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_32_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_32_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_Single:
+                    case ResGFX.AttribFormat.Format_16_16_Single:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_Single;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_SInt:
+                    case ResGFX.AttribFormat.Format_16_16_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_16_16_UInt:
+                    case ResGFX.AttribFormat.Format_16_16_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UInt:
+                    case ResGFX.AttribFormat.Format_8_8_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SInt:
+                    case ResGFX.AttribFormat.Format_8_8_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SNorm:
+                    case ResGFX.AttribFormat.Format_8_8_SNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_SNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UNorm:
+                    case ResGFX.AttribFormat.Format_8_8_UNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_UNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_SIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_8_SIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_SIntToSingle;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_8_8_UIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_8_UIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_UIntToSingle;
+                        break;
+                }
+            }
             if (VertexSkinCount == 2)
             {
                 switch (attribute.Format)

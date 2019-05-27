@@ -191,6 +191,7 @@ namespace Bfres.Structs
             public override void LoadContextMenus()
             {
                 ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Bone", null, NewBoneAction, Keys.Control | Keys.N));
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Bone", null, ImportAction, Keys.Control | Keys.I));
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Bones", null, ExportAllAction, Keys.Control | Keys.B));
                 ContextMenuStrip.Items.Add(new ToolStripSeparator());
@@ -201,6 +202,7 @@ namespace Bfres.Structs
                 ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
             }
 
+            protected void NewBoneAction(object sender, EventArgs args) { NewChildBone(); }
             protected void ExportAllAction(object sender, EventArgs args) { ExportAl(); }
             protected void ReplaceMatchingFileAction(object sender, EventArgs args) { ReplaceMatchingFile(); }
             protected void ReplaceMatchingFolderAction(object sender, EventArgs args) { ReplaceMatchingFolder(); }
@@ -365,6 +367,53 @@ namespace Bfres.Structs
                 return ((FMDL)Parent).GetResFileU();
             }
 
+            public void NewChildBone()
+            {
+                BfresBone bone = new BfresBone(fskl);
+                bone.parentIndex = -1;
+
+                if (SkeletonU != null)
+                {
+                    bone.BoneU = new ResU.Bone();
+                    bone.BoneU.Name = CheckDuplicateBoneNames("NewBone");
+
+                    BfresWiiU.ReadBone(bone, bone.BoneU, false);
+
+                    Nodes.Add(bone);
+                    fskl.bones.Add(bone);
+
+                    bone.Bone.ParentIndex = (short)bone.parentIndex;
+                    fskl.AddBone(bone.BoneU);
+                }
+                else
+                {
+                    bone.Bone = new Bone();
+                    bone.Bone.Name = CheckDuplicateBoneNames("NewBone");
+
+                    BfresSwitch.ReadBone(bone, bone.Bone, false);
+
+                    Nodes.Add(bone);
+                    fskl.bones.Add(bone);
+
+                    bone.Bone.ParentIndex = (short)bone.parentIndex;
+                    fskl.AddBone(bone.Bone);
+                }
+            }
+
+            int dupedIndex = 0;
+            private string CheckDuplicateBoneNames(string BoneName)
+            {
+                foreach (var bone in fskl.bones)
+                {
+                    if (bone.Text == BoneName)
+                    {
+                        BoneName = $"{BoneName}{dupedIndex++}";
+                        return CheckDuplicateBoneNames(BoneName);
+                    }
+                }
+                return BoneName;
+            }
+
             public override void Import(string[] FileNames)
             {
                 foreach (var FileName in FileNames)
@@ -382,6 +431,12 @@ namespace Bfres.Structs
                             bone.ParentIndex = -1;
 
                             BfresWiiU.ReadBone(bn, bone, false);
+
+                            Nodes.Add(bn);
+                            fskl.bones.Add(bn);
+
+                            bone.ParentIndex = (short)bn.parentIndex;
+                            fskl.AddBone(bn.Bone);
                         }
                         else
                         {
@@ -390,6 +445,12 @@ namespace Bfres.Structs
                             bone.ParentIndex = -1;
 
                             BfresSwitch.ReadBone(bn, bone, false);
+
+                            Nodes.Add(bn);
+                            fskl.bones.Add(bn);
+
+                            bn.Bone.ParentIndex = (short)bn.parentIndex;
+                            fskl.AddBone(bn.Bone);
                         }
                     }
                 }

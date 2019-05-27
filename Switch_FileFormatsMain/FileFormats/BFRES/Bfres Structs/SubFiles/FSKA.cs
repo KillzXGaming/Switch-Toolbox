@@ -163,9 +163,6 @@ namespace Bfres.Structs
 
         private STSkeleton GetActiveSkeleton()
         {
-            if (Parent == null)
-                return null;
-
             var viewport = LibraryGUI.Instance.GetActiveViewport();
             if (viewport != null)
             {
@@ -183,17 +180,19 @@ namespace Bfres.Structs
                     }
                 }
             }
-            else
-            {
-                foreach (var model in ((BFRES)Parent.Parent.Parent).BFRESRender.models)
-                {
-                    foreach (var bone in Bones)
-                    {
-                        var animBone = model.Skeleton.GetBone(bone.Text);
 
-                        if (animBone != null)
-                            return model.Skeleton;
-                    }
+            var render = ((BFRES)Parent.Parent.Parent).BFRESRender;
+            if (render.models.Count == 1)
+                return render.models[0].Skeleton;
+
+            foreach (var model in render.models)
+            {
+                foreach (var bone in Bones)
+                {
+                    var animBone = model.Skeleton.GetBone(bone.Text);
+
+                    if (animBone != null)
+                        return model.Skeleton;
                 }
             }
 
@@ -267,7 +266,7 @@ namespace Bfres.Structs
                     UpdateAnimation(ska);
                 }
                 else
-                    throw new Exception("No skeleton found to assign!");
+                     STErrorDialog.Show("No matching skeleton bones found to assign!", "Skeleton Importer", "");
             }
             else if (ext == ".chr0")
             {
