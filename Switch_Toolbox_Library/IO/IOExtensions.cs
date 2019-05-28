@@ -17,12 +17,11 @@ namespace Switch_Toolbox.Library.IO
             return ((x & 0xFF00FF00) >> 8) | ((x & 0x00FF00FF) << 8);
         }
 
+        //https://stackoverflow.com/questions/2230826/remove-invalid-disallowed-bad-characters-from-filename-or-directory-folder/12800424#12800424
         public static string RemoveIllegaleCharacters(this string str)
         {
-            string illegal = "\"M\"\\a/ry/ h**ad:>> a\\/:*?\"| li*tt|le|| la\"mb.?";
-            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(str)));
-            illegal = r.Replace(illegal, "");
-            return illegal;
+            return string.Join("_", str.Split(Path.GetInvalidFileNameChars()));
         }
+
     }
 }
