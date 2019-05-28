@@ -557,6 +557,7 @@
     <Compile Include="IO\DWord.cs" />
     <Compile Include="IO\FileReader.cs" />
     <Compile Include="IO\FileWriter.cs" />
+    <Compile Include="IO\IOExtensions.cs" />
     <Compile Include="IO\Matrix4x4.cs" />
     <Compile Include="IO\STFileLoader.cs" />
     <Compile Include="IO\STFileSaver.cs" />

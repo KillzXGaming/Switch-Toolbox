@@ -357,13 +357,61 @@ namespace Switch_Toolbox.Library
 
         public override void OnDoubleMouseClick(TreeView treeview)
         {
-            TreeNode node = STFileLoader.GetNodeFileFormat(Text, ArchiveFileInfo.FileData, true, this);
-            ArchiveFileInfo.FileFormat = (IFileFormat)node;
-            if (node != null)
-                ReplaceNode(this.Parent, this, node);
+            IFileFormat file = STFileLoader.OpenFileFormat(Text, ArchiveFileInfo.FileData, true);
+            if (file == null) //Format not supported so return
+                return;
+
+            ArchiveFileInfo.FileFormat = file;
+
+            if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)))
+            {
+                OpenFormDialog(file);
+            }
+            else if (file != null)
+                ReplaceNode(this.Parent, this, (TreeNode)file);
         }
 
-        public override void OnClick(TreeView treeView)
+        private void OpenFormDialog(IFileFormat fileFormat)
+        {
+            STForm form = GetEditorForm(fileFormat);
+            var parentForm = LibraryGUI.Instance.GetActiveForm();
+
+            form.Text = (((IFileFormat)fileFormat).FileName);
+            form.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
+            form.Show(parentForm);
+        }
+
+        private void FormClosing(object sender, EventArgs args, IFileFormat fileFormat)
+        {
+            if (((Form)sender).DialogResult != DialogResult.OK)
+                return;
+
+            if (fileFormat.CanSave)
+            {
+                ArchiveFileInfo.FileData = fileFormat.Save();
+                UpdateHexView();
+            }
+        }
+
+        private STForm GetEditorForm(IFileFormat fileFormat)
+        {
+            Type objectType = fileFormat.GetType();
+            foreach (var inter in objectType.GetInterfaces())
+            {
+                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
+                {
+                    System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
+                    return (STForm)method.Invoke(fileFormat, new object[0]);
+                }
+            }
+            return null;
+        }
+
+        public override void OnClick(TreeView treeView) {
+            UpdateHexView();
+        }
+
+        private void UpdateHexView()
         {
             HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
             if (editor == null)
