@@ -187,6 +187,7 @@ namespace Switch_Toolbox.Library
             f.Add(format);
             return GetAllFilters(f);
         }
+
         public static string GetAllFilters(IEnumerable<IFileFormat> format)
         {
             var alltypes = format;

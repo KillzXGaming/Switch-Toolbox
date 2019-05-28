@@ -40,9 +40,11 @@ namespace Switch_Toolbox.Library
 
         public virtual void Replace()
         {
+            string fileName = Path.GetFileName(FileName.RemoveIllegaleCharacters());
+
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.FileName = FileName;
-            ofd.DefaultExt = Path.GetExtension(FileName);
+            ofd.FileName = fileName;
+            ofd.DefaultExt = Path.GetExtension(fileName);
             ofd.Filter = "Raw Data (*.*)|*.*";
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -53,7 +55,7 @@ namespace Switch_Toolbox.Library
 
         public virtual void Export()
         {
-            string fileName = Path.GetFileName(FileName);
+            string fileName = Path.GetFileName(FileName.RemoveIllegaleCharacters());
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = fileName;
@@ -249,6 +251,7 @@ namespace Switch_Toolbox.Library
             }
 
 
+
             FolderSelectDialog folderDialog = new FolderSelectDialog();
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
@@ -268,6 +271,7 @@ namespace Switch_Toolbox.Library
                     {
                         string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
                         FilePath = FilePath.Replace(ParentPath, string.Empty);
+                        FilePath = FilePath.RemoveIllegaleCharacters();
 
                         Console.WriteLine($"FilePath " + FilePath);
                         var path = Path.Combine(folderDialog.SelectedPath, FilePath);
