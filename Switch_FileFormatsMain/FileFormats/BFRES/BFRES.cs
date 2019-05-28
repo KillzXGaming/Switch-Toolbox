@@ -751,12 +751,36 @@ namespace FirstPlugin
         {
             MemoryStream mem = new MemoryStream();
 
+            var Models = GetModels();
+            if (Models != null)
+            {
+                foreach (FMDL mdl in Models)
+                {
+                    for (int s = 0; s < mdl.shapes.Count; s++)
+                    {
+                        SetShaderAssignAttributes(mdl.shapes[s]);
+                    }
+                }
+            }
+
+
             if (IsWiiU)
                 SaveWiiU(mem);
             else
                 SaveSwitch(mem);
 
             return mem.ToArray();
+        }
+
+        public TreeNodeCollection GetModels()
+        {
+            foreach (var folder in Nodes)
+            {
+                if (folder is BFRESGroupNode && ((BFRESGroupNode)folder).Type == BRESGroupType.Models)
+                    return ((BFRESGroupNode)folder).Nodes;
+            }
+
+            return null;
         }
 
         public ResFile resFile = null;
@@ -1513,8 +1537,10 @@ namespace FirstPlugin
             }
         }
 
-        public static void SetShaderAssignAttributes(FMAT.ShaderAssign shd, FSHP shape)
+        public static void SetShaderAssignAttributes(FSHP shape)
         {
+            var shd = shape.GetMaterial().shaderassign;
+
             foreach (var att in shape.vertexAttributes)
             {
                 if (!shd.attributes.ContainsValue(att.Name))
