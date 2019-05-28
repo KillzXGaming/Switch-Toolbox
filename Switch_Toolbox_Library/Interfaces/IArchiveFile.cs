@@ -270,12 +270,16 @@ namespace Switch_Toolbox.Library
                     if (file is ArchiveNodeWrapper)
                     {
                         string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
-                        FilePath = FilePath.Replace(ParentPath, string.Empty);
-                        FilePath = FilePath.RemoveIllegaleFolderNameCharacters();
+                        string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
 
-                        Console.WriteLine($"FilePath " + FilePath);
+                        string FileName = file.Text.RemoveIllegaleFileNameCharacters();
+
+                        FilePath = Path.Combine(FolderPath, FileName);
+                        FilePath = FilePath.Replace(ParentPath, string.Empty);
+
                         var path = Path.Combine(folderDialog.SelectedPath, FilePath);
 
+                        progressBar.Task = $"Extracting File {file}";
                         progressBar.Value = (Curfile++ * 100) / Collection.Count();
                         progressBar.Refresh();
                         CreateDirectoryIfExists($"{path}");
