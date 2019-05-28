@@ -506,13 +506,13 @@ namespace Switch_Toolbox.Library
                 ArrayCount = 6;
             }
 
-            bool IsCompressed = false;
+            bool Compressed = false;
             bool HasLuminance = false;
             bool HasAlpha = false;
             bool IsRGB = false;
 
             if (header.ddspf.flags == 4)
-                IsCompressed = true;
+                Compressed = true;
             else if (header.ddspf.flags == (uint)DDPF.LUMINANCE || header.ddspf.flags == 2)
                 HasLuminance = true;
             else if (header.ddspf.flags == 0x20001)
@@ -541,7 +541,7 @@ namespace Switch_Toolbox.Library
 
             byte[] Components = new byte[4] { 0, 1, 2, 3 };
 
-            if (!IsDX10 && !IsCompressed) {
+            if (!IsDX10 && !IsCompressed()) {
                 Format = GetUncompressedType(this, Components, IsRGB, HasAlpha, HasLuminance, header.ddspf);
             }
 

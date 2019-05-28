@@ -656,7 +656,7 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
-                            if (!csvsettings.LimitSkinCount)
+                            if (!ForceSkinInfluence)
                                 shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                             if (shape.VertexSkinCount == 1)
@@ -1043,7 +1043,7 @@ namespace Bfres.Structs
                             progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            if (settings.LimitSkinCount)
+                            if (!ForceSkinInfluence)
                                 shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
