@@ -163,32 +163,6 @@ namespace FirstPlugin
 
             }
 
-            public override void Export()
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = FileName;
-                sfd.DefaultExt = Path.GetExtension(FileName);
-                sfd.Filter = "Raw Data (*.*)|*.*";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllBytes(sfd.FileName, FileData);
-                }
-            }
-
-            public override void Replace()
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.FileName = FileName;
-                ofd.DefaultExt = Path.GetExtension(FileName);
-                ofd.Filter = "Raw Data (*.*)|*.*";
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    FileData = File.ReadAllBytes(ofd.FileName);
-                }
-            }
-
             public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
             {
                 if (NewNode == null)

@@ -53,9 +53,11 @@ namespace Switch_Toolbox.Library
 
         public virtual void Export()
         {
+            string fileName = Path.GetFileName(FileName);
+
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = FileName;
-            sfd.DefaultExt = Path.GetExtension(FileName);
+            sfd.FileName = fileName;
+            sfd.DefaultExt = Path.GetExtension(fileName);
             sfd.Filter = "Raw Data (*.*)|*.*";
 
             if (sfd.ShowDialog() == DialogResult.OK)
