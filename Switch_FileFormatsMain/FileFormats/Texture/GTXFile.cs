@@ -68,6 +68,19 @@ namespace FirstPlugin
 
         public List<GTXDataBlock> blocks = new List<GTXDataBlock>();
 
+        public override void OnClick(TreeView treeview)
+        {
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadProperty(header, null);
+        }
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
@@ -77,6 +90,7 @@ namespace FirstPlugin
 
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
         }
         private void Save(object sender, EventArgs args)
         {
@@ -90,6 +104,46 @@ namespace FirstPlugin
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
         }
+
+        protected void ExportAllAction(object sender, EventArgs e)
+        {
+            if (Nodes.Count <= 0)
+                return;
+
+            string formats = FileFilters.GTX;
+
+            string[] forms = formats.Split('|');
+
+            List<string> Formats = new List<string>();
+
+            for (int i = 0; i < forms.Length; i++)
+            {
+                if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
+                {
+                    if (!forms[i].StartsWith("*"))
+                        Formats.Add(forms[i]);
+                }
+            }
+
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = sfd.SelectedPath;
+
+                BatchFormatExport form = new BatchFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string extension = form.GetSelectedExtension();
+                    extension.Replace(" ", string.Empty);
+
+                    foreach (STGenericTexture node in Nodes)
+                    {
+                        ((STGenericTexture)node).Export($"{folderPath}\\{node.Text}{extension}");
+                    }
+                }
+            }
+        }
+
         public void Unload()
         {
         }

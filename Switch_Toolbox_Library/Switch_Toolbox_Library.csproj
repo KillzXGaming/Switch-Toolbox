@@ -547,6 +547,7 @@
       <DependentUpon>Viewport.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\TextureHelper.cs" />
+    <Compile Include="Helpers\TreeHelper.cs" />
     <Compile Include="Interfaces\IEditor.cs" />
     <Compile Include="Interfaces\IFIleEditor.cs" />
     <Compile Include="Interfaces\IMdiContainer.cs" />

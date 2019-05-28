@@ -106,12 +106,40 @@ namespace Switch_Toolbox.Library
             Text = text;
             ArchiveFile = archiveFile;
 
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new STToolStripItem("Save", SaveAction));
-            if (!((IFileFormat)archiveFile).CanSave)
-                ContextMenuStrip.Items[0].Enabled = false;
+            ReloadMenus();
 
             PropertyDisplay = new GenericArchiveProperties(archiveFile, text);
+
+            if (!((IFileFormat)archiveFile).CanSave) {
+                EnableContextMenu(ContextMenuStrip.Items, "Save", false);
+            }
+            if (!archiveFile.CanReplaceFiles) {
+                EnableContextMenu(ContextMenuStrip.Items, "Repack", false);
+            }
+
+            EnableContextMenu(ContextMenuStrip.Items, "Preview Assets", false);
+        }
+
+        public void ReloadMenus(bool IsNewInstance = true)
+        {
+            if (IsNewInstance)
+                ContextMenuStrip = new STContextMenuStrip();
+
+            ContextMenuStrip.Items.Add(new STToolStripItem("Save", SaveAction));
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStripItem("Repack", RepackAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Extract All", ExtractAllAction));
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStripItem("Preview Assets", PreviewAction));
+        }
+
+        private void EnableContextMenu(ToolStripItemCollection Items, string Key, bool Enabled)
+        {
+            foreach (ToolStripItem item in Items)
+            {
+                if (item.Text == Key)
+                    item.Enabled = Enabled;
+            }
         }
 
         private void SaveAction(object sender, EventArgs args)
@@ -132,6 +160,27 @@ namespace Switch_Toolbox.Library
                 STFileSaver.SaveFileFormat(FileFormat, sfd.FileName);
             }
             GC.Collect();
+        }
+
+        private void ExtractAllAction(object sender, EventArgs args)
+        {
+            TreeNode node = this;
+
+            var ParentPath = string.Empty;
+            if (node.Parent != null) //Archive can be attached to another archive
+                ParentPath = node.Parent.FullPath;
+
+            TreeHelper.ExtractAllFiles(ParentPath, Nodes);
+        }
+
+        private void RepackAction(object sender, EventArgs args)
+        {
+
+        }
+
+        private void PreviewAction(object sender, EventArgs args)
+        {
+
         }
 
         public override void OnClick(TreeView treeView)
@@ -243,59 +292,12 @@ namespace Switch_Toolbox.Library
         private void ExtractAction(object sender, EventArgs args)
         {
             TreeNode node = this;
+
             var ParentPath = string.Empty;
-
             if (node.Parent != null)
-            {
                 ParentPath = node.Parent.FullPath;
-            }
 
-
-
-            FolderSelectDialog folderDialog = new FolderSelectDialog();
-            if (folderDialog.ShowDialog() == DialogResult.OK)
-            {
-                STProgressBar progressBar = new STProgressBar();
-                progressBar.Task = "Extracing Files...";
-                progressBar.Refresh();
-                progressBar.Value = 0;
-                progressBar.StartPosition = FormStartPosition.CenterScreen;
-                progressBar.Show();
-
-                var Collection = TreeViewExtensions.Collect(Nodes);
-
-                int Curfile = 0;
-                foreach (TreeNode file in Collection)
-                {
-                    if (file is ArchiveNodeWrapper)
-                    {
-                        string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
-                        string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
-
-                        string FileName = file.Text.RemoveIllegaleFileNameCharacters();
-
-                        FilePath = Path.Combine(FolderPath, FileName);
-                        FilePath = FilePath.Replace(ParentPath, string.Empty);
-
-                        var path = Path.Combine(folderDialog.SelectedPath, FilePath);
-
-                        progressBar.Task = $"Extracting File {file}";
-                        progressBar.Value = (Curfile++ * 100) / Collection.Count();
-                        progressBar.Refresh();
-                        CreateDirectoryIfExists($"{path}");
-
-                        if (file is ArchiveNodeWrapper)
-                        {
-                            File.WriteAllBytes($"{path}",
-                                ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileData);
-                        }
-                    }
-                }
-
-                progressBar.Value = 100;
-                progressBar.Refresh();
-                progressBar.Close();
-            }
+            TreeHelper.ExtractAllFiles(ParentPath, Nodes);
         }
 
         private void ReplaceAction(object sender, EventArgs args)
@@ -306,21 +308,6 @@ namespace Switch_Toolbox.Library
         private void DeleteAction(object sender, EventArgs args)
         {
 
-        }
-
-        private void CreateDirectoryIfExists(string Dir)
-        {
-            if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName(Dir)))
-            {
-                //Make sure no file names use the same name to prevent errors
-                if (!File.Exists(Dir))
-                {
-                    if (!Directory.Exists(Dir))
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(Dir));
-                    }
-                }
-            }
         }
     }
 

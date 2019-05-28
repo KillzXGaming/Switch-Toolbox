@@ -522,6 +522,11 @@ namespace Switch_Toolbox.Library.Forms
 
         private void treeViewCustom1_DragOver(object sender, DragEventArgs e)
         {
+            var file = ObjectEditor.GetActiveFile();
+
+            if (!(file is IArchiveFile)|| !((IArchiveFile)file).CanReplaceFiles)
+                return;
+
             Point pt = treeViewCustom1.PointToClient(new Point(e.X, e.Y));
             TreeNode node = treeViewCustom1.GetNodeAt(pt.X, pt.Y);
             treeViewCustom1.SelectedNode = node;

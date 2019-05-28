@@ -36,27 +36,34 @@ namespace FirstPlugin.Forms
         {
 
         }
+
+        private RenderStateEditor RenderStateEditor;
+
         public void LoadMaterial(FMAT mat)
         {
             if (mat.MaterialU != null)
             {
                 TabPage tabPage = null;
 
-                foreach (TabPage page in stTabControl1.TabPages)
-                    if (page.Text == "Render State")
-                        tabPage = page;
+                for (int i = 0; i < stTabControl1.TabPages.Count; i++)
+                {
+                    if (stTabControl1.TabPages[i].Text == "Render State")
+                        tabPage = stTabControl1.TabPages[i];
+                }
 
                 if (tabPage == null)
                 {
                     tabPage = new TabPage();
                     tabPage.Text = "Render State";
                     stTabControl1.TabPages.Add(tabPage);
+                    RenderStateEditor = new RenderStateEditor();
+                    RenderStateEditor.Dock = DockStyle.Fill;
+                    tabPage.Controls.Add(RenderStateEditor);
                 }
-
-                RenderStateEditor editor = new RenderStateEditor();
-                editor.Dock = DockStyle.Fill;
-                editor.LoadRenderState(mat.MaterialU.RenderState);
-                tabPage.Controls.Add(editor);
+                else
+                {
+                    RenderStateEditor.LoadRenderState(mat.MaterialU.RenderState);
+                }
             }
 
             material = mat;
