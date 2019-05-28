@@ -50,6 +50,7 @@ namespace FirstPlugin
         public string ExternalMaterialPath;
         public bool SetDefaultParamData;
         public int SkinCountLimit;
+        public bool LimitSkinCount;
 
         public bool GeneratePlaceholderTextures = true;
 
@@ -344,6 +345,11 @@ namespace FirstPlugin
         private void chkPlaceHolderTextures_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePlaceholderTextures = chkPlaceHolderTextures.Checked;
+        }
+
+        private void ogSkinCountChkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            LimitSkinCount = ogSkinCountChkBox.Checked;
         }
     }
 }

@@ -98,6 +98,21 @@ namespace Switch_Toolbox.Library
                 }
             }
         }
+
+        public static Animations.Animation[] ImportAnimations(string FileName)
+        {
+            AssimpContext Importer = new AssimpContext();
+            STConsole.WriteLine($"Loading File {FileName}", Color.FromArgb(0, 255, 0));
+
+            var scene = Importer.ImportFile(FileName);
+
+            List<Animations.Animation> Anims = new List<Animations.Animation>();
+            foreach (var anim in scene.Animations)
+                Anims.Add(CreateGenericAnimation(anim));
+
+            return Anims.ToArray();
+        }
+
         private void BuildNode(Node parent, ref Matrix4x4 rootTransform)
         {
             Matrix4x4 world = rootTransform;
@@ -158,11 +173,14 @@ namespace Switch_Toolbox.Library
             }
 
         }
-        public Animations.Animation CreateGenericAnimation(Assimp.Animation animation)
+        public static Animations.Animation CreateGenericAnimation(Assimp.Animation animation)
         {
             Animations.Animation STanim = new Animations.Animation();
             STanim.Text = animation.Name;
-            STanim.FrameCount = (int)animation.DurationInTicks;
+            float TicksPerSecond =  animation.TicksPerSecond != 0 ? (float)animation.TicksPerSecond : 25.0f;
+            float Duriation = (float)animation.DurationInTicks;
+            STanim.FrameCount = (int)(Duriation * 30);
+
 
             //Load node animations
             if (animation.HasNodeAnimations)
@@ -171,6 +189,95 @@ namespace Switch_Toolbox.Library
                 for (int i = 0; i < _channels.Length; i++)
                 {
                     _channels[i] = new NodeAnimationChannel();
+                    var boneAnim = new Animations.Animation.KeyNode(_channels[i].NodeName);
+                    boneAnim.RotType = Animations.Animation.RotationType.EULER;
+                    STanim.Bones.Add(boneAnim);
+
+                    STConsole.WriteLine($"Creating Bone Anims {boneAnim.Text} ");
+
+                    for (int frame = 0; frame < STanim.FrameCount; i++)
+                    {
+                        if (_channels[i].HasPositionKeys)
+                        {
+                            for (int key = 0; key < _channels[i].PositionKeyCount; key++)
+                            {
+                                if (frame == _channels[i].PositionKeys[key].Time)
+                                {
+                                    boneAnim.XPOS.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = _channels[i].PositionKeys[key].Value.X,
+                                        Frame = frame,
+                                });
+                                    boneAnim.YPOS.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = _channels[i].PositionKeys[key].Value.Y,
+                                        Frame = frame,
+                                    });
+                                    boneAnim.ZPOS.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = _channels[i].PositionKeys[key].Value.Z,
+                                        Frame = frame,
+                                    });
+                                }
+                            }
+                        }
+                        if (_channels[i].HasRotationKeys)
+                        {
+                            for (int key = 0; key < _channels[i].RotationKeyCount; key++)
+                            {
+                                if (frame == _channels[i].RotationKeys[key].Time)
+                                {
+                                    var quat = _channels[i].RotationKeys[key].Value;
+                                    var euler = STMath.ToEulerAngles(quat.X, quat.Y, quat.Z, quat.W);
+
+                                    boneAnim.XROT.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = euler.X,
+                                        Frame = frame,
+                                    });
+                                    boneAnim.YROT.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = euler.Y,
+                                        Frame = frame,
+                                    });
+                                    boneAnim.ZROT.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = euler.Z,
+                                        Frame = frame,
+                                    });
+                                    boneAnim.WROT.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = 1,
+                                        Frame = frame,
+                                    });
+                                }
+                            }
+                        }
+                        if (_channels[i].HasScalingKeys)
+                        {
+                            for (int key = 0; key < _channels[i].ScalingKeyCount; key++)
+                            {
+                                if (frame == _channels[i].ScalingKeys[key].Time)
+                                {
+                                    boneAnim.XSCA.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = _channels[i].ScalingKeys[key].Value.X,
+                                        Frame = frame,
+                                    });
+                                    boneAnim.YSCA.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = _channels[i].ScalingKeys[key].Value.Y,
+                                        Frame = frame,
+                                    });
+                                    boneAnim.ZSCA.Keys.Add(new Animations.Animation.KeyFrame()
+                                    {
+                                        Value = _channels[i].ScalingKeys[key].Value.Z,
+                                        Frame = frame,
+                                    });
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

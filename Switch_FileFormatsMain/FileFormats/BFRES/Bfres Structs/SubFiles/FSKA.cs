@@ -279,6 +279,34 @@ namespace Bfres.Structs
             {
                 FromChr0(FileName, resFileU != null);
             }
+            else if (ext == ".dae")
+            {
+             //   FromAssimp(FileName, resFileU != null);
+            }
+            else if (ext == ".fbx")
+            {
+             //   FromAssimp(FileName, resFileU != null);
+            }
+        }
+
+        private void FromAssimp(string FileName, bool IsWiiU)
+        {
+            var anims = AssimpData.ImportAnimations(FileName);
+            for (int i = 0; i < anims.Length; i++)
+            {
+                if (IsWiiU)
+                {
+                    SkeletalAnimU = ConvertSwitchToWiiU(FromGeneric(anims[i]));
+                    LoadAnim(SkeletalAnimU);
+                }
+                else
+                {
+                    SkeletalAnim = FromGeneric(anims[i]);
+                    LoadAnim(SkeletalAnim);
+                }
+
+                break;
+            }
         }
 
         private void UpdateAnimation(SkeletalAnim ska)

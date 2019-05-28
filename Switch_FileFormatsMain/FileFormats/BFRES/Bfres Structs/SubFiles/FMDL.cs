@@ -511,11 +511,7 @@ namespace Bfres.Structs
         //Function addes shapes, vertices and meshes
         public void AddOjects(string FileName, ResFile resFileNX, ResU.ResFile resFileU,  bool Replace = true)
         {
-            int totalSkinCountLimiter = 0;
-
             bool IsWiiU = (resFileU != null);
-            if (shapes.Count > 0)
-                totalSkinCountLimiter = shapes[0].VertexSkinCount;
 
             int MatStartIndex = materials.Count;
             string ext = System.IO.Path.GetExtension(FileName);
@@ -606,10 +602,24 @@ namespace Bfres.Structs
                     }
                     BfresModelImportSettings csvsettings = new BfresModelImportSettings();
                     csvsettings.DisableMaterialEdits();
-                    csvsettings.SkinCountLimit = totalSkinCountLimiter;
                     csvsettings.SetModelAttributes(csvModel.objects[0]);
                     if (csvsettings.ShowDialog() == DialogResult.OK)
                     {
+                        if (csvsettings.LimitSkinCount) {
+                            for (int i = 0; i < csvModel.objects.Count; i++)
+                            {
+                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Name,
+                                    csvModel.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+
+                                if (Matches != null)
+                                {
+                                    //Match the skin count setting if names match
+                                    //Only one match should be found as shapes can't have duped names
+                                    csvModel.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+                                }
+                            }
+                        }
+
                         if (Replace)
                         {
                             shapes.Clear();
@@ -618,11 +628,12 @@ namespace Bfres.Structs
 
                         Cursor.Current = Cursors.WaitCursor;
 
-                        bool ForceSkinInfluence = false;
-                        int ForceSkinInfluenceMax = 4;
+                        bool ForceSkinInfluence = csvsettings.LimitSkinCount;
 
                         foreach (STGenericObject obj in csvModel.objects)
                         {
+                            int ForceSkinInfluenceMax = obj.VertexSkinCount;
+
                             FSHP shape = new FSHP();
                             Nodes["FshpFolder"].Nodes.Add(shape);
                             shapes.Add(shape);
@@ -640,13 +651,14 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
-                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            if (!csvsettings.LimitSkinCount)
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
                             if (shape.VertexSkinCount == 1)
                             {
                                 int boneIndex = shape.BoneIndices[0];
                                 shape.BoneIndex = boneIndex;
                             }
-                            Console.WriteLine($"VertexSkinCount {shape.VertexSkinCount}");
 
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
@@ -707,6 +719,22 @@ namespace Bfres.Structs
                         progressBar.Refresh();
 
                         bool UseMats = settings.ExternalMaterialPath != string.Empty;
+
+                        if (settings.LimitSkinCount)
+                        {
+                            for (int i = 0; i < assimp.objects.Count; i++)
+                            {
+                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Name,
+                                    assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+
+                                if (Matches != null)
+                                {
+                                    //Match the skin count setting if names match
+                                    //Only one match should be found as shapes can't have duped names
+                                    assimp.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+                                }
+                            }
+                        }
 
                         if (Replace)
                         {
@@ -935,13 +963,14 @@ namespace Bfres.Structs
 
                         Console.WriteLine("Processing Data. Object count " + assimp.objects.Count);
 
-                        bool ForceSkinInfluence = false;
-                        int ForceSkinInfluenceMax = 4;
+                        bool ForceSkinInfluence = settings.LimitSkinCount;
 
 
                         int curShp = 0;
                         foreach (STGenericObject obj in assimp.objects)
                         {
+                            int ForceSkinInfluenceMax = obj.VertexSkinCount;
+
                             if (obj.ObjectName == "")
                                 obj.ObjectName = $"Mesh {curShp}";
 
@@ -1004,7 +1033,8 @@ namespace Bfres.Structs
                             progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            if (settings.LimitSkinCount)
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                             if (shape.VertexSkinCount == 1)
                             {
