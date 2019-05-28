@@ -726,7 +726,7 @@ namespace Bfres.Structs
                 UpdateVertexData();
             }
         }
-        public void CreateIndexList(STGenericObject ob, FMDL mdl = null)
+        public void CreateIndexList(STGenericObject ob, FMDL mdl = null, bool ForceSkinLimt = false, int LimitAmount = 4)
         {
             BoneIndices = new List<ushort>();
 
@@ -742,6 +742,9 @@ namespace Bfres.Structs
                 }
             }
 
+            if (ForceSkinLimt && LimitAmount > 0)
+                BoneIndices.Add((ushort)0);
+
             foreach (STBone bone in mdl.Skeleton.bones)
             {
                 foreach (string bnam in boneNames)
@@ -751,7 +754,8 @@ namespace Bfres.Structs
                         int index = boneNames.IndexOf(bone.Text);
                         STConsole.WriteLine($"Adding bone to shape index list! {bone.Text} {index}");
 
-                        BoneIndices.Add((ushort)index);
+                        if (!BoneIndices.Contains((ushort)index))
+                            BoneIndices.Add((ushort)index);
                     }
                 }
             }
@@ -839,7 +843,7 @@ namespace Bfres.Structs
                 {
                     for (int i = 0; i < ForcedSkinAmount; i++)
                     {
-                        if (v.boneIds.Count < ForcedSkinAmount)
+                        if (v.boneIds.Count < ob.VertexSkinCount)
                         {
                             v.boneIds.Add(0);
                             v.boneWeights.Add(1);

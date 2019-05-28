@@ -611,11 +611,16 @@ namespace Bfres.Structs
                                 List<FSHP> Matches = shapes.Where(p => String.Equals(p.Name,
                                     csvModel.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
-                                if (Matches != null)
+                                if (Matches != null && Matches.Count > 0)
                                 {
                                     //Match the skin count setting if names match
                                     //Only one match should be found as shapes can't have duped names
                                     csvModel.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+                                }
+                                else
+                                {
+                                    //Else just match the first object
+                                    csvModel.objects[i].VertexSkinCount = shapes[0].VertexSkinCount;
                                 }
                             }
                         }
@@ -727,11 +732,16 @@ namespace Bfres.Structs
                                 List<FSHP> Matches = shapes.Where(p => String.Equals(p.Name,
                                     assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
-                                if (Matches != null)
+                                if (Matches != null && Matches.Count > 0)
                                 {
                                     //Match the skin count setting if names match
                                     //Only one match should be found as shapes can't have duped names
                                     assimp.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+                                }
+                                else
+                                {
+                                    //Else just match the first object
+                                    assimp.objects[i].VertexSkinCount = shapes[0].VertexSkinCount;
                                 }
                             }
                         }
@@ -1018,7 +1028,7 @@ namespace Bfres.Structs
                             progressBar.Task = $"Creating Index list. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            shape.CreateIndexList(obj, this);
+                            shape.CreateIndexList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
 
                             progressBar.Task = $"Applying Settings. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
@@ -1036,7 +1046,7 @@ namespace Bfres.Structs
                             if (settings.LimitSkinCount)
                                 shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
-                            if (shape.VertexSkinCount == 1)
+                            if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {
                                 int boneIndex = shape.BoneIndices[0];
                                 shape.BoneIndex = boneIndex;
