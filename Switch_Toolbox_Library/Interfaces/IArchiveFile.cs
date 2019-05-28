@@ -40,7 +40,7 @@ namespace Switch_Toolbox.Library
 
         public virtual void Replace()
         {
-            string fileName = Path.GetFileName(FileName.RemoveIllegaleCharacters());
+            string fileName = Path.GetFileName(FileName.RemoveIllegaleFileNameCharacters());
 
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.FileName = fileName;
@@ -55,7 +55,7 @@ namespace Switch_Toolbox.Library
 
         public virtual void Export()
         {
-            string fileName = Path.GetFileName(FileName.RemoveIllegaleCharacters());
+            string fileName = Path.GetFileName(FileName.RemoveIllegaleFileNameCharacters());
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = fileName;
@@ -271,7 +271,7 @@ namespace Switch_Toolbox.Library
                     {
                         string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
                         FilePath = FilePath.Replace(ParentPath, string.Empty);
-                        FilePath = FilePath.RemoveIllegaleCharacters();
+                        FilePath = FilePath.RemoveIllegaleFolderNameCharacters();
 
                         Console.WriteLine($"FilePath " + FilePath);
                         var path = Path.Combine(folderDialog.SelectedPath, FilePath);

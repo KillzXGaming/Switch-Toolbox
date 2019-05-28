@@ -18,9 +18,14 @@ namespace Switch_Toolbox.Library.IO
         }
 
         //https://stackoverflow.com/questions/2230826/remove-invalid-disallowed-bad-characters-from-filename-or-directory-folder/12800424#12800424
-        public static string RemoveIllegaleCharacters(this string str)
+        public static string RemoveIllegaleFileNameCharacters(this string str)
         {
             return string.Join("_", str.Split(Path.GetInvalidFileNameChars()));
+        }
+
+        public static string RemoveIllegaleFolderNameCharacters(this string str)
+        {
+            return string.Join("_", str.Split(Path.GetInvalidPathChars()));
         }
 
     }
