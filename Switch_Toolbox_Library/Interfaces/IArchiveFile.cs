@@ -38,8 +38,31 @@ namespace Switch_Toolbox.Library
 
         public FileType FileDataType = FileType.Default;
 
-        public virtual void Replace() { }
-        public virtual void Export() { }
+        public virtual void Replace()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.FileName = FileName;
+            ofd.DefaultExt = Path.GetExtension(FileName);
+            ofd.Filter = "Raw Data (*.*)|*.*";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FileData = File.ReadAllBytes(ofd.FileName);
+            }
+        }
+
+        public virtual void Export()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = FileName;
+            sfd.DefaultExt = Path.GetExtension(FileName);
+            sfd.Filter = "Raw Data (*.*)|*.*";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllBytes(sfd.FileName, FileData);
+            }
+        }
 
         public string GetSize()
         {
