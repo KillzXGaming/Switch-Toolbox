@@ -254,6 +254,11 @@ namespace Bfres.Structs
         }
         private void Export()
         {
+            if (MaterialU != null)
+                BfresWiiU.SetMaterial(this, MaterialU, GetResFileU());
+            else 
+                BfresSwitch.SetMaterial(this, Material);
+
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.bfmat;";
 
