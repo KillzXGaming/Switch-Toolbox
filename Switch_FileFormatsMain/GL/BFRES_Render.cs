@@ -45,7 +45,7 @@ namespace FirstPlugin
             }
         }
 
-        private void UpdateModelList()
+        public void UpdateModelList()
         {
             foreach (var node in ResFileNode.Nodes)
             {

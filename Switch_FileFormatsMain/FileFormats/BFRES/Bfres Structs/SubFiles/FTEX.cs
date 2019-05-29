@@ -761,8 +761,6 @@ namespace Bfres.Structs
         {
             Text = texture.Name;
 
-            MessageBox.Show("UPDATE PROB");
-
             RedChannel = SetChannel(texture.CompSelR);
             GreenChannel = SetChannel(texture.CompSelG);
             BlueChannel = SetChannel(texture.CompSelB);

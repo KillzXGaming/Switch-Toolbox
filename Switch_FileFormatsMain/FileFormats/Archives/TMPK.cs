@@ -49,10 +49,10 @@ namespace FirstPlugin
 
         public IEnumerable<ArchiveFileInfo> Files => files;
 
-        public bool CanAddFiles { get; set; }
-        public bool CanRenameFiles { get; set; }
-        public bool CanReplaceFiles { get; set; }
-        public bool CanDeleteFiles { get; set; }
+        public bool CanAddFiles { get; set; } = true;
+        public bool CanRenameFiles { get; set; } = true;
+        public bool CanReplaceFiles { get; set; } = true;
+        public bool CanDeleteFiles { get; set; } = true;
 
         public Dictionary<long, byte[]> SavedDataEntries = new Dictionary<long, byte[]>();
         public Dictionary<long, string> SavedStringEntries = new Dictionary<long, string>();
@@ -207,12 +207,19 @@ namespace FirstPlugin
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+            files.Add(new FileInfo()
+            {
+                FileData = archiveFileInfo.FileData,
+                FileName = archiveFileInfo.FileName,
+            });
+
+            return true;
         }
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+
+            return true;
         }
     }
 }

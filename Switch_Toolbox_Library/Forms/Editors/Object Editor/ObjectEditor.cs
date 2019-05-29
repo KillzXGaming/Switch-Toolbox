@@ -135,18 +135,11 @@ namespace Switch_Toolbox.Library.Forms
                     {
                         // Node was not found, add it
 
-                        var folder = new ArchiveFolderNodeWrapper(parentName);
-                        folder.CanReplace = archiveFile.CanReplaceFiles;
-                        folder.CanDelete = archiveFile.CanDeleteFiles;
-                        folder.CanRename = archiveFile.CanRenameFiles;
+                        var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
 
                         if (rootIndex == roots.Length - 1)
                         {
-                            ArchiveNodeWrapper wrapperFile = new ArchiveNodeWrapper(parentName);
-                            wrapperFile.CanReplace = archiveFile.CanReplaceFiles;
-                            wrapperFile.CanDelete = archiveFile.CanDeleteFiles;
-                            wrapperFile.CanRename = archiveFile.CanRenameFiles;
-
+                            ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, archiveFile);
                             wrapperFile.ArchiveFileInfo = node;
                             wrapperFile.Name = nodeName;
                             parentNode.Nodes.Add(wrapperFile);

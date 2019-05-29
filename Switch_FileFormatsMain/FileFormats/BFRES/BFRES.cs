@@ -304,10 +304,13 @@ namespace FirstPlugin
         public void LoadEditors(object SelectedSection)
         {
             BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
-            bool HasModels = BFRESRender.models.Count > 0;
+            bool HasModels = false;
 
             if (bfresEditor == null)
             {
+                BFRESRender.UpdateModelList();
+                HasModels = BFRESRender.models.Count > 0;
+
                 bfresEditor = new BfresEditor(HasModels);
                 bfresEditor.Dock = DockStyle.Fill;
                 LibraryGUI.Instance.LoadEditor(bfresEditor);
@@ -402,11 +405,6 @@ namespace FirstPlugin
                 return;
             }
 
-            var toolstrips = new List<ToolStripMenuItem>();
-            var menu = new ToolStripMenuItem("Animation Loader", null, AnimLoader);
-
-            toolstrips.Add(menu);
-
             if (drawables.Count <= 0)
             {
                 //Add drawables
@@ -417,7 +415,7 @@ namespace FirstPlugin
             }
 
             if (Runtime.UseOpenGL)
-                bfresEditor.LoadViewport(drawables, toolstrips);
+                bfresEditor.LoadViewport(drawables, new List<ToolStripMenuItem>());
 
 
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;

@@ -94,17 +94,25 @@ namespace Switch_Toolbox.Library
         public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
     }
 
+    public class ArchiveBase : TreeNodeCustom
+    {
+        public IArchiveFile ArchiveFile; //The archive file being edited
+
+        public ArchiveBase(IArchiveFile archiveFile)
+        {
+            ArchiveFile = archiveFile;
+        }
+    }
+
     //Wrapper for the archive file itself
-    public class ArchiveRootNodeWrapper : TreeNodeCustom
+    public class ArchiveRootNodeWrapper : ArchiveBase
     {
         public virtual object PropertyDisplay { get; set; }
 
-        IArchiveFile ArchiveFile;
-
-        public ArchiveRootNodeWrapper(string text, IArchiveFile archiveFile)
+        public ArchiveRootNodeWrapper(string text, IArchiveFile archiveFile) 
+            : base(archiveFile)
         {
             Text = text;
-            ArchiveFile = archiveFile;
 
             ReloadMenus();
 
@@ -223,7 +231,7 @@ namespace Switch_Toolbox.Library
     }
 
     //Wrapper for folders
-    public class ArchiveFolderNodeWrapper : TreeNodeCustom
+    public class ArchiveFolderNodeWrapper : ArchiveBase
     {
         public virtual object PropertyDisplay { get; set; }
 
@@ -249,21 +257,35 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public ArchiveFolderNodeWrapper(string text)
+        public ArchiveFolderNodeWrapper(string text, IArchiveFile archiveFile ) : base(archiveFile)
         {
             Text = text;
             PropertyDisplay = new GenericFolderProperties();
             ((GenericFolderProperties)PropertyDisplay).Name = Text;
 
-            ReloadMenus();
+            ReloadMenus(archiveFile);
         }
 
-        private void ReloadMenus()
+        private void ReloadMenus(IArchiveFile archiveFile)
         {
             ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStripItem("Rename", RenameAction) { Enabled = archiveFile.CanRenameFiles });
             ContextMenuStrip.Items.Add(new STToolStripItem("Extract Folder", ExtractAction));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Replace Folder", ReplaceAction));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Delete Folder", DeleteAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Replace Folder", ReplaceAction) { Enabled = archiveFile.CanReplaceFiles });
+            ContextMenuStrip.Items.Add(new STToolStripItem("Delete Folder", DeleteAction) { Enabled = archiveFile.CanDeleteFiles });
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStripItem("Add File", AddFileAction) { Enabled = archiveFile.CanAddFiles });
+        }
+
+        private void AddFileAction(object sender, EventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Raw Data (*.*)|*.*";
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK) {
+                TreeHelper.AddFiles(this, ArchiveFile, ofd.FileNames);
+            }
         }
 
         public override void OnClick(TreeView treeView)
@@ -300,63 +322,48 @@ namespace Switch_Toolbox.Library
             TreeHelper.ExtractAllFiles(ParentPath, Nodes);
         }
 
-        private void ReplaceAction(object sender, EventArgs args)
+        private void RenameAction(object sender, EventArgs args)
         {
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(Text);
 
+            if (dialog.ShowDialog() == DialogResult.OK) { Text = dialog.textBox1.Text; }
         }
 
-        private void DeleteAction(object sender, EventArgs args)
+        private void ReplaceAction(object sender, EventArgs args)
         {
+        }
 
+        private void DeleteAction(object sender, EventArgs args) {
+            TreeHelper.RemoveFolder(this, ArchiveFile);
         }
     }
 
     //Wrapper for files
-    public class ArchiveNodeWrapper : TreeNodeCustom
+    public class ArchiveFileWrapper : ArchiveBase
     {
-        public bool CanReplace
-        {
-            set
-            {
-                if (value)
-                    ContextMenuStrip.Items[1].Enabled = true;
-                else
-                    ContextMenuStrip.Items[1].Enabled = false;
-            }
-        }
-        public bool CanRename = false;
-        public bool CanDelete
-        {
-            set
-            {
-                if (value)
-                    ContextMenuStrip.Items[2].Enabled = true;
-                else
-                    ContextMenuStrip.Items[2].Enabled = false;
-            }
-        }
-
-        public ArchiveNodeWrapper(string text)
+        public ArchiveFileWrapper(string text, IArchiveFile archiveFile) : base(archiveFile)
         {
             Text = text;
-            ReloadMenus();
+            ReloadMenus(archiveFile);
         }
 
-        public static ArchiveNodeWrapper FromPath(string FilePath)
+        public static ArchiveFileWrapper FromPath(string FilePath, IArchiveFile archiveFile)
         {
-            var wrapper = new ArchiveNodeWrapper(Path.GetFileName(FilePath));
+            var wrapper = new ArchiveFileWrapper(Path.GetFileName(FilePath), archiveFile);
             wrapper.ArchiveFileInfo = new ArchiveFileInfo();
             wrapper.ArchiveFileInfo.FileName = FilePath;
             wrapper.ArchiveFileInfo.FileData = File.ReadAllBytes(FilePath);
             return wrapper;
         }
 
-        private void ReloadMenus()
+        private void ReloadMenus(IArchiveFile archiveFile)
         {
             ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new STToolStripItem("Rename", RenameAction) { Enabled = archiveFile.CanRenameFiles });
             ContextMenuStrip.Items.Add(new STToolStripItem("Extract", ExtractAction));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Replace", ReplaceAction));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Delete", DeleteAction));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Replace", ReplaceAction) { Enabled = archiveFile.CanReplaceFiles });
+            ContextMenuStrip.Items.Add(new STToolStripItem("Delete", DeleteAction) { Enabled = archiveFile.CanDeleteFiles });
         }
 
         public virtual ArchiveFileInfo ArchiveFileInfo { get; set; }
@@ -452,6 +459,14 @@ namespace Switch_Toolbox.Library
             int index = node.Nodes.IndexOf(replaceNode);
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
+        }
+
+        private void RenameAction(object sender, EventArgs args)
+        {
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(Text);
+
+            if (dialog.ShowDialog() == DialogResult.OK) { Text = dialog.textBox1.Text; }
         }
     }
 }

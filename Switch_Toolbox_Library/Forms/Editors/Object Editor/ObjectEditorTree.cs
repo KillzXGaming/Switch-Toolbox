@@ -492,39 +492,26 @@ namespace Switch_Toolbox.Library.Forms
             AddFilesToActiveEditor = activeEditorChkBox.Checked;
         }
 
-        private void AddFiles(TreeNode parentNode, string[] Files)
-        {
-            if (Files == null || Files.Length <= 0) return;
-
-            for (int i = 0; i < Files.Length; i++)
-            {
-                var File = ArchiveNodeWrapper.FromPath(Files[i]);
-                File.ArchiveFileInfo = new ArchiveFileInfo();
-                File.ArchiveFileInfo.FileData = System.IO.File.ReadAllBytes(Files[i]);
-                File.ArchiveFileInfo.FileName = Files[i];
-
-                parentNode.Nodes.Add(File);
-            }
-        }
 
         private void treeViewCustom1_DragDrop(object sender, DragEventArgs e)
         {
             Point pt = treeViewCustom1.PointToClient(new Point(e.X, e.Y));
             treeViewCustom1.SelectedNode = treeViewCustom1.GetNodeAt(pt.X, pt.Y);
-            bool IsFile = treeViewCustom1.SelectedNode is ArchiveNodeWrapper && treeViewCustom1.SelectedNode.Parent != null;
+            bool IsFile = treeViewCustom1.SelectedNode is ArchiveFileWrapper && treeViewCustom1.SelectedNode.Parent != null;
+
+            var archiveFile = GetActiveArchive();
 
             //Use the parent folder for files if it has any
             if (IsFile)
-                AddFiles(treeViewCustom1.SelectedNode.Parent, e.Data.GetData(DataFormats.FileDrop) as string[]);
+                TreeHelper.AddFiles(treeViewCustom1.SelectedNode.Parent, archiveFile, e.Data.GetData(DataFormats.FileDrop) as string[]);
             else
-                AddFiles(treeViewCustom1.SelectedNode, e.Data.GetData(DataFormats.FileDrop) as string[]);
+                TreeHelper.AddFiles(treeViewCustom1.SelectedNode, archiveFile, e.Data.GetData(DataFormats.FileDrop) as string[]);
         }
 
         private void treeViewCustom1_DragOver(object sender, DragEventArgs e)
         {
-            var file = ObjectEditor.GetActiveFile();
-
-            if (!(file is IArchiveFile)|| !((IArchiveFile)file).CanReplaceFiles)
+            var file = GetActiveArchive();
+            if (file == null || !file.CanReplaceFiles)
                 return;
 
             Point pt = treeViewCustom1.PointToClient(new Point(e.X, e.Y));
@@ -532,12 +519,20 @@ namespace Switch_Toolbox.Library.Forms
             treeViewCustom1.SelectedNode = node;
             bool IsRoot = node is ArchiveRootNodeWrapper;
             bool IsFolder = node is ArchiveFolderNodeWrapper;
-            bool IsFile = node is ArchiveNodeWrapper && node.Parent != null;
+            bool IsFile = node is ArchiveFileWrapper && node.Parent != null;
 
             if (IsFolder || IsRoot || IsFile)
                 e.Effect = DragDropEffects.Link;
             else
                 e.Effect = DragDropEffects.None;
+        }
+
+        private IArchiveFile GetActiveArchive()
+        {
+            if (treeViewCustom1.SelectedNode != null && treeViewCustom1.SelectedNode is ArchiveBase)
+                return ((ArchiveBase)treeViewCustom1.SelectedNode).ArchiveFile;
+
+            return null;
         }
     }
 }

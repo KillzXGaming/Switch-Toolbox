@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library
+namespace Switch_Toolbox.Library.OLD
 {
     public class GX2
     {
@@ -768,8 +768,6 @@ namespace Switch_Toolbox.Library
 
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
-
-                break;
             }
 
             return result;

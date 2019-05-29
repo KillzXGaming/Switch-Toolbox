@@ -29,9 +29,9 @@ namespace Switch_Toolbox.Library
                 int Curfile = 0;
                 foreach (TreeNode file in Collection)
                 {
-                    if (file is ArchiveNodeWrapper)
+                    if (file is ArchiveFileWrapper)
                     {
-                        string FilePath = ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileName;
+                        string FilePath = ((ArchiveFileWrapper)file).ArchiveFileInfo.FileName;
                         string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
 
                         string FileName = file.Text.RemoveIllegaleFileNameCharacters();
@@ -48,10 +48,10 @@ namespace Switch_Toolbox.Library
                         progressBar.Refresh();
                         CreateDirectoryIfExists($"{path}");
 
-                        if (file is ArchiveNodeWrapper)
+                        if (file is ArchiveFileWrapper)
                         {
                             File.WriteAllBytes($"{path}",
-                                ((ArchiveNodeWrapper)file).ArchiveFileInfo.FileData);
+                                ((ArchiveFileWrapper)file).ArchiveFileInfo.FileData);
                         }
                     }
                 }
@@ -74,6 +74,57 @@ namespace Switch_Toolbox.Library
                         Directory.CreateDirectory(Path.GetDirectoryName(Dir));
                     }
                 }
+            }
+        }
+
+
+        public static void AddFiles(TreeNode parentNode, IArchiveFile archiveFile, string[] Files)
+        {
+            if (Files == null || Files.Length <= 0 || !archiveFile.CanAddFiles) return;
+
+            for (int i = 0; i < Files.Length; i++)
+            {
+                var File = ArchiveFileWrapper.FromPath(Files[i], archiveFile);
+                File.ArchiveFileInfo = new ArchiveFileInfo();
+                File.ArchiveFileInfo.FileData = System.IO.File.ReadAllBytes(Files[i]);
+                string FileName = Path.GetFileName(Files[i]);
+
+                //Don't add the root file name
+                if (parentNode.FullPath != string.Empty || !(parentNode is ArchiveRootNodeWrapper))
+                    File.ArchiveFileInfo.FileName = Path.Combine(parentNode.FullPath, FileName);
+                else
+                    File.ArchiveFileInfo.FileName = FileName;
+
+                bool HasAddedFile = archiveFile.AddFile(File.ArchiveFileInfo);
+
+                if (HasAddedFile)
+                    parentNode.Nodes.Add(File);
+            }
+        }
+
+        public static void RemoveFile(ArchiveFileWrapper fileNode, IArchiveFile archiveFile)
+        {
+            if (!archiveFile.CanDeleteFiles) return;
+
+            var parentNode = fileNode.Parent;
+
+            bool HasRemovedFile = archiveFile.DeleteFile(fileNode.ArchiveFileInfo);
+
+            if (HasRemovedFile)
+                parentNode.Nodes.Remove(fileNode);
+        }
+
+        public static void RemoveFolder(TreeNode folderNode, IArchiveFile archiveFile)
+        {
+            if (!archiveFile.CanDeleteFiles) return;
+
+            foreach (var node in TreeViewExtensions.Collect(folderNode.Nodes))
+            {
+                var parentNode = node.Parent;
+                parentNode.Nodes.Remove(node);
+
+                if (node is ArchiveFileWrapper)
+                    archiveFile.DeleteFile(((ArchiveFileWrapper)node).ArchiveFileInfo);
             }
         }
     }

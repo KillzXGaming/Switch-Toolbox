@@ -93,7 +93,7 @@ namespace Switch_Toolbox.Library.IO
                 if (data == null)
                     data = File.ReadAllBytes(FileName);
 
-                data = STLibraryCompression.ZLIB.Decompress(fileReader.getSection(2, data.Length - 2));
+                data = STLibraryCompression.ZLIB.Decompress(data);
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Zlib, DecompressedFileSize, CompressedFileSize);
             }
