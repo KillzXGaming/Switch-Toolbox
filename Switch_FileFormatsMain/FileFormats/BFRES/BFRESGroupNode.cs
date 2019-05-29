@@ -270,6 +270,8 @@ namespace Bfres.Structs
             foreach (string FileName in FileNames)
             {
                 string ResourceName = Path.GetFileNameWithoutExtension(FileName);
+                string ResourceNameExt = Path.GetFileName(FileName);
+
                 string extension = Path.GetExtension(FileName);
 
                 switch (Type)
@@ -355,7 +357,7 @@ namespace Bfres.Structs
                         Nodes.Add(fscn);
                         break;
                     case BRESGroupType.Embedded:
-                        ExternalFileData ext = new ExternalFileData(ResourceName, File.ReadAllBytes(FileName));
+                        ExternalFileData ext = new ExternalFileData(ResourceNameExt, File.ReadAllBytes(FileName));
                         ext.Replace(FileName);
                         Nodes.Add(ext);
                         break;
