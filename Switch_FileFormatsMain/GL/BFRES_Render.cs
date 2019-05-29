@@ -36,21 +36,25 @@ namespace FirstPlugin
         int vbo_position;
         int ibo_elements;
 
+        private List<FMDL> _models = new List<FMDL>();
         public List<FMDL> models
         {
             get
             {
-                List<FMDL> fmdls = new List<FMDL>();
-                foreach (var node in ResFileNode.Nodes)
+                return _models;
+            }
+        }
+
+        private void UpdateModelList()
+        {
+            foreach (var node in ResFileNode.Nodes)
+            {
+                if (node is BFRESGroupNode &&
+                    ((BFRESGroupNode)node).Type == BRESGroupType.Models)
                 {
-                    if (node is BFRESGroupNode &&
-                        ((BFRESGroupNode)node).Type == BRESGroupType.Models)
-                    {
-                        foreach (FMDL mdl in ((BFRESGroupNode)node).Nodes)
-                            fmdls.Add(mdl);
-                    }
+                    foreach (FMDL mdl in ((BFRESGroupNode)node).Nodes)
+                        _models.Add(mdl);
                 }
-                return fmdls;
             }
         }
 
@@ -84,11 +88,11 @@ namespace FirstPlugin
 
         private void TransformBones()
         {
-            foreach (var model in models)
+            for (int mdl = 0; mdl < models.Count; mdl++)
             {
-                foreach (var bone in model.Skeleton.bones)
+                for (int b = 0; b < models[mdl].Skeleton.bones.Count; b++)
                 {
-                    bone.ModelMatrix = ModelTransform;
+                    models[mdl].Skeleton.bones[b].ModelMatrix = ModelTransform;
                 }
             }
         }
@@ -200,11 +204,11 @@ namespace FirstPlugin
         public void CenterCamera(GL_ControlModern control)
         {
             var spheres = new List<Vector4>();
-            foreach (var mdl in models)
+            for (int mdl = 0; mdl < models.Count; mdl++)
             {
-                foreach (FSHP shp in mdl.shapes)
+                for (int shp = 0; shp < models[mdl].shapes.Count; shp++)
                 {
-                    var vertexPositions = shp.vertices.Select(x => x.pos).Distinct();
+                    var vertexPositions = models[mdl].shapes[shp].vertices.Select(x => x.pos).Distinct();
                     spheres.Add(control.GenerateBoundingSphere(vertexPositions));
                 }
             }
@@ -265,9 +269,6 @@ namespace FirstPlugin
 
             if (models.Count > 0)
             {
-          //      if (models[0].Parent.Parent.IsSelected)
-                  //  CenterCamera(control);
-
                 if (models[0].shapes.Count > 0)
                 {
                     if (models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
@@ -353,28 +354,28 @@ namespace FirstPlugin
         private void DrawModels(SF.Shader shader, GL_ControlModern control)
         {
             shader.EnableVertexAttributes();
-            foreach (FMDL mdl in models)
+            for (int m = 0; m < models.Count; m++)
             {
-                if (mdl.Checked)
+                if (models[m].Checked)
                 {
                     List<FSHP> opaque = new List<FSHP>();
                     List<FSHP> transparent = new List<FSHP>();
 
-                    foreach (FSHP m in mdl.depthSortedMeshes)
+                    for (int shp = 0; shp < models[m].shapes.Count; shp++)
                     {
-                        if (m.GetMaterial().isTransparent)
-                            transparent.Add(m);
+                        if (models[m].shapes[shp].GetMaterial().isTransparent)
+                            transparent.Add(models[m].shapes[shp]);
                         else
-                            opaque.Add(m);
+                            opaque.Add(models[m].shapes[shp]);
                     }
 
-
-                    foreach (FSHP shp in mdl.shapes)
+                    for (int shp = 0; shp < models[m].shapes.Count; shp++)
                     {
-                        DrawModel(shp, mdl, shader, mdl.IsSelected);
+                        DrawModel(models[m].shapes[shp], models[m], shader, models[m].IsSelected);
                     }
                 }
             }
+
             shader.DisableVertexAttributes();
         }
 
@@ -472,8 +473,10 @@ namespace FirstPlugin
 
             LoadPBRMaps(shader);
 
-            foreach (MatTexture matex in mat.TextureMaps)
+            for (int t = 0; t < mat.TextureMaps.Count; t++)
             {
+                MatTexture matex = (MatTexture)mat.TextureMaps[t];
+
                 if (matex.Type == MatTexture.TextureType.Diffuse)
                     TextureUniform(shader, mat, mat.HasDiffuseMap, "DiffuseMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Normal)
@@ -547,7 +550,6 @@ namespace FirstPlugin
             {
                 foreach (var ftexContainer in PluginRuntime.ftexContainers)
                 {
-
                     if (ftexContainer.ResourceNodes.ContainsKey(activeTex))
                     {
                         FTEX ftex = (FTEX)ftexContainer.ResourceNodes[activeTex];
@@ -686,6 +688,8 @@ namespace FirstPlugin
             if (!Runtime.OpenTKInitialized)
                 return;
 
+            UpdateModelList();
+
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Updating Vertex Data...";
             progressBar.Value = 0;
@@ -705,34 +709,31 @@ namespace FirstPlugin
 
             int TotalShapeCount = models.Sum(b => b.shapes.Count);
 
-            int curShape = 0;
             int value = 0;
 
-            foreach (FMDL mdl in models)
+            for (int m = 0; m < models.Count; m++)
             {
                 //Reset min/max
-                mdl.MaxPosition = new Vector3(0);
-                mdl.MinPosition = new Vector3(0);
+                models[m].MaxPosition = new Vector3(0);
+                models[m].MinPosition = new Vector3(0);
 
-                foreach (FSHP m in mdl.shapes)
+                for (int shp = 0; shp < models[m].shapes.Count; shp++)
                 {
-                    progressBar.Task = "Updating Shape... " + m.Text;
-                    value = ((curShape * 100) / TotalShapeCount);
+                    progressBar.Task = "Updating Shape... " + models[m].shapes[shp].Text;
+                    value = ((shp * 100) / TotalShapeCount);
                     progressBar.Value = value;
                     progressBar.Refresh();
 
-                    m.Offset = poffset * 4;
-                    List<DisplayVertex> pv = m.CreateDisplayVertices(mdl);
+                    models[m].shapes[shp].Offset = poffset * 4;
+                    List<DisplayVertex> pv = models[m].shapes[shp].CreateDisplayVertices(models[m]);
                     Vs.AddRange(pv);
 
-                    for (int i = 0; i < m.lodMeshes[m.DisplayLODIndex].displayFaceSize; i++)
+                    for (int i = 0; i < models[m].shapes[shp].lodMeshes[models[m].shapes[shp].DisplayLODIndex].displayFaceSize; i++)
                     {
-                        Ds.Add(m.display[i] + voffset);
+                        Ds.Add(models[m].shapes[shp].display[i] + voffset);
                     }
-                    poffset += m.lodMeshes[m.DisplayLODIndex].displayFaceSize;
+                    poffset += models[m].shapes[shp].lodMeshes[models[m].shapes[shp].DisplayLODIndex].displayFaceSize;
                     voffset += pv.Count;
-
-                    curShape++; 
                 }
             }
 
@@ -807,8 +808,8 @@ namespace FirstPlugin
             {
                 AglShaderTurbo aglShader = new AglShaderTurbo();
 
-                foreach (var renderInfo in mat.renderinfo)
-                    aglShader.LoadRenderInfo(renderInfo);
+                for (int i = 0; i < mat.renderinfo.Count; i++)
+                    aglShader.LoadRenderInfo(mat.renderinfo[i]);
 
                // aglShader.LoadRenderPass(mat, shader);
             }
