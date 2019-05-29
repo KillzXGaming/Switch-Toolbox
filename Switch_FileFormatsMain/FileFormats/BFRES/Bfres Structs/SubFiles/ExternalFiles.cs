@@ -34,9 +34,10 @@ namespace Bfres.Structs
 
         private void UpdateEditor()
         {
-            ((BFRES)Parent.Parent).LoadEditors(this);
+            if (Parent != null)
+                ((BFRES)Parent.Parent).LoadEditors(this);
         }
-        
+
         public override void Replace(string FileName)
         {
             Data = System.IO.File.ReadAllBytes(FileName);

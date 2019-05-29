@@ -351,7 +351,7 @@ namespace Bfres.Structs
 
             tex.Regs = new uint[5];
 
-            if (surf.compSel.Length != 4)
+            if (surf.compSel == null || surf.compSel.Length != 4)
                 surf.compSel = new byte[] { 0, 1, 2, 3 };
 
             //Set channels for settings and format
