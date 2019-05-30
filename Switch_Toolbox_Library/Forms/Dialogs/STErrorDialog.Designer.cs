@@ -79,11 +79,12 @@
             // 
             // lblMessage
             // 
-            this.lblMessage.AutoSize = true;
-            this.lblMessage.Location = new System.Drawing.Point(68, 18);
+            this.lblMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblMessage.Location = new System.Drawing.Point(52, 12);
             this.lblMessage.MaximumSize = new System.Drawing.Size(310, 0);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(35, 13);
+            this.lblMessage.Size = new System.Drawing.Size(288, 37);
             this.lblMessage.TabIndex = 5;
             this.lblMessage.Text = "label1";
             // 
@@ -131,7 +132,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

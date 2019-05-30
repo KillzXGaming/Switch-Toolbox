@@ -57,6 +57,8 @@
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.btnAttributeInputEditor = new Switch_Toolbox.Library.Forms.STButton();
             this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
             this.stTabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -114,8 +116,8 @@
             // 
             // stTabControl1
             // 
-            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stTabControl1.Controls.Add(this.tabPage2);
             this.stTabControl1.Controls.Add(this.tabPage1);
@@ -339,10 +341,31 @@
             this.stLabel3.TabIndex = 48;
             this.stLabel3.Text = "Attribute Inputs:";
             // 
+            // stButton1
+            // 
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(439, 74);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(75, 23);
+            this.stButton1.TabIndex = 51;
+            this.stButton1.UseVisualStyleBackColor = false;
+            this.stButton1.Click += new System.EventHandler(this.stButton1_Click);
+            // 
+            // stLabel4
+            // 
+            this.stLabel4.AutoSize = true;
+            this.stLabel4.Location = new System.Drawing.Point(366, 77);
+            this.stLabel4.Name = "stLabel4";
+            this.stLabel4.Size = new System.Drawing.Size(42, 13);
+            this.stLabel4.TabIndex = 50;
+            this.stLabel4.Text = "Presets";
+            // 
             // FMATEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.stButton1);
+            this.Controls.Add(this.stLabel4);
             this.Controls.Add(this.btnAttributeInputEditor);
             this.Controls.Add(this.stLabel3);
             this.Controls.Add(this.btnSamplerInputEditor);
@@ -401,5 +424,7 @@
         private Switch_Toolbox.Library.Forms.STLabel stLabel2;
         private Switch_Toolbox.Library.Forms.STButton btnAttributeInputEditor;
         private Switch_Toolbox.Library.Forms.STLabel stLabel3;
+        private Switch_Toolbox.Library.Forms.STButton stButton1;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
     }
 }

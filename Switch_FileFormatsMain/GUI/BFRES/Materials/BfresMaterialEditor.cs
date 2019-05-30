@@ -326,5 +326,14 @@ namespace FirstPlugin.Forms
         {
             material.shaderassign.ShaderModel = textBoxShaderModel.Text;
         }
+
+        private void stButton1_Click(object sender, EventArgs e)
+        {
+            MaterialPresetDialog presetDialog = new MaterialPresetDialog();
+            if (presetDialog.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
     }
 }

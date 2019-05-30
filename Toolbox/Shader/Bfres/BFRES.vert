@@ -142,23 +142,25 @@ void main()
 
 	vec4 position = mtxCam * objPos;
 
+
     normal = vNormal;
-	normal = mat3(mtxMdl) * normal.xyz;
 
 	if(vBone.x != -1.0)
 		normal = normalize((skinNRM(normal.xyz, index)).xyz);
 		
     if (RigidSkinning == 1)
     {
-	     position = mtxCam *  mtxMdl * (bones[index.x] * vec4(vPosition.xyz, 1.0));
-		 normal = mat3(bones[index.x]) * vNormal.xyz * 1;
+	     position = mtxCam * mtxMdl * (bones[index.x] * vec4(vPosition.xyz, 1.0));
+		 normal = mat3(bones[index.x]) * normal.xyz * 1;
 	}
 	if (NoSkinning == 1)
     {
-	    position = mtxCam *  mtxMdl *  (SingleBoneBindTransform * vec4(vPosition.xyz, 1.0));
-		normal = mat3(SingleBoneBindTransform) * vNormal.xyz * 1;
+	    position = mtxCam * mtxMdl * (SingleBoneBindTransform * vec4(vPosition.xyz, 1.0));
+		normal = mat3(SingleBoneBindTransform) * normal.xyz * 1;
 	}
 
+    mat3 normalMatrix = transpose(inverse(mat3(mtxMdl)));
+	normal = normalize(normalMatrix * normal.xyz);
 
 	 gl_Position = position;
 

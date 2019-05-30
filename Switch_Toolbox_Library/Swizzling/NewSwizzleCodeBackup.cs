@@ -445,9 +445,6 @@ namespace Switch_Toolbox.Library.NEW
             if (dataSize <= 0)
                 throw new Exception($"Image is empty!!");
 
-            if (surfOut.depth != 1)
-                throw new Exception($"Unsupported Depth {surfOut.depth}!");
-
             uint s = (swizzle << 8);
 
             uint blkWidth, blkHeight;
@@ -464,6 +461,14 @@ namespace Switch_Toolbox.Library.NEW
 
             if (TileMode == 0)
                 TileMode = GX2.getDefaultGX2TileMode((uint)SurfaceDim, Width, Height, 1, (uint)Format, 0, 1);
+
+            uint tilingDepth = surfOut.depth;
+
+            if (TileMode == 3)
+                tilingDepth /= 4;
+
+            if (tilingDepth != 1)
+                throw new Exception($"Unsupported Depth {surfOut.depth}!");
 
             int tiling1dLevel = 0;
             bool tiling1dLevelSet = false;

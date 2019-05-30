@@ -658,6 +658,9 @@ namespace Bfres.Structs
 
                             if (!ForceSkinInfluence)
                                 shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            else
+                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
+
 
                             if (shape.VertexSkinCount == 1)
                             {
@@ -1045,6 +1048,9 @@ namespace Bfres.Structs
 
                             if (!ForceSkinInfluence)
                                 shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            else
+                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
+
 
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {

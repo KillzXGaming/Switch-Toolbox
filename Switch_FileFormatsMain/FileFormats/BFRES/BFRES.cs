@@ -789,6 +789,35 @@ namespace FirstPlugin
             LoadEditors(this);
         }
 
+        public BFRESGroupNode GetFTEXContainer
+        {
+            get
+            {
+                foreach (TreeNode folder in Nodes)
+                {
+                    if (folder is BFRESGroupNode)
+                    {
+                        if (((BFRESGroupNode)folder).Type == BRESGroupType.Textures)
+                            return (BFRESGroupNode)folder;
+                    }
+                }
+                return null;
+            }
+        }
+
+        public BNTX GetBNTX
+        {
+            get
+            {
+                foreach (TreeNode folder in Nodes)
+                {
+                    if (folder is BNTX)
+                        return (BNTX)folder;
+                }
+                return null;
+            }
+        }
+
         public bool HasTextures
         {
             get

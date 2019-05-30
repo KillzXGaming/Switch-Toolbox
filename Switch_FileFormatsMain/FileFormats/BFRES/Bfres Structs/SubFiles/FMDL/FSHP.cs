@@ -27,10 +27,61 @@ namespace Bfres.Structs
 
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Object", null, Import, Keys.Control | Keys.I));
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Empty Object", null, CreateEmpty, Keys.Control | Keys.N));
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Objects", null, ExportAll, Keys.Control | Keys.A));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear All Objects", null, Clear, Keys.Control | Keys.C));
 
         }
+
+        private void CreateEmpty(object sender, EventArgs args)
+        {
+            var fmdl = ((FMDL)Parent);
+            List<string> ShapeKeys = fmdl.shapes.Select(i => i.Text).ToList();
+
+            string NewEmptyName = Utils.RenameDuplicateString(ShapeKeys, "EmptyShape");
+
+            if (fmdl.GetResFileU() != null)
+            {
+                var Shape = new ResU.Shape();
+                Shape.CreateEmptyMesh();
+                Shape.Name = NewEmptyName;
+
+                var VertexBuffer = new ResU.VertexBuffer();
+                VertexBuffer.CreateEmptyVertexBuffer();
+
+                fmdl.ModelU.VertexBuffers.Add(VertexBuffer);
+                fmdl.ModelU.Shapes.Add(Shape.Name, Shape);
+
+                FSHP mesh = new FSHP();
+                BfresWiiU.ReadShapesVertices(mesh, Shape, VertexBuffer, (FMDL)Parent);
+                mesh.MaterialIndex = 0;
+
+                fmdl.Nodes["FshpFolder"].Nodes.Add(mesh);
+                fmdl.shapes.Add(mesh);
+            }
+            else
+            {
+                var Shape = new Shape();
+                Shape.CreateEmptyMesh();
+                Shape.Name = NewEmptyName;
+
+                var VertexBuffer = new VertexBuffer();
+                VertexBuffer.CreateEmptyVertexBuffer();
+
+                fmdl.Model.VertexBuffers.Add(VertexBuffer);
+                fmdl.Model.Shapes.Add(Shape);
+                fmdl.Model.ShapeDict.Add(NewEmptyName);
+
+                FSHP mesh = new FSHP();
+                BfresSwitch.ReadShapesVertices(mesh, Shape, VertexBuffer, (FMDL)Parent);
+                mesh.MaterialIndex = 0;
+
+                fmdl.Nodes["FshpFolder"].Nodes.Add(mesh);
+                fmdl.shapes.Add(mesh);
+            }
+        }
+
         private void Clear(object sender, EventArgs args)
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove all objects? This cannot be undone!", "", MessageBoxButtons.YesNo);
@@ -42,9 +93,11 @@ namespace Bfres.Structs
                 ((FMDL)Parent).UpdateVertexData();
             }
         }
+
         private void ExportAll(object sender, EventArgs args)
         {
         }
+
         private void Import(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();

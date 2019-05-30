@@ -66,9 +66,9 @@ namespace FirstPlugin.Forms
             string yaml = "";
 
             if (AampFile.aampFileV1 != null)
-                yaml = YamlConverter.ToYaml(AampFile.aampFileV1);
+                yaml = AampYamlConverter.ToYaml(AampFile.aampFileV1);
             else
-                yaml = YamlConverter.ToYaml(AampFile.aampFileV2);
+                yaml = AampYamlConverter.ToYaml(AampFile.aampFileV2);
 
             STForm form = new STForm();
             form.Text = "YAML Text Editor";
@@ -95,9 +95,9 @@ namespace FirstPlugin.Forms
                 string yaml = "";
 
                 if (AampFile.aampFileV1 != null)
-                    yaml = YamlConverter.ToYaml(AampFile.aampFileV1);
+                    yaml = AampYamlConverter.ToYaml(AampFile.aampFileV1);
                 else
-                    yaml = YamlConverter.ToYaml(AampFile.aampFileV2);
+                    yaml = AampYamlConverter.ToYaml(AampFile.aampFileV2);
 
                 File.WriteAllText(sfd.FileName, yaml);
             }

@@ -24,16 +24,6 @@ namespace Switch_Toolbox.Library
             diffusepbr = null;
         }
 
-        public static bool PbrSamplersLoaded
-        {
-            get
-            {
-                return (diffusepbr != null &&
-                       specularpbr != null &&
-                       brdfpbr != null);
-            }
-        }
-
         public static STGenericTexture defaulttex;
         public static STGenericTexture defaultTex
         {

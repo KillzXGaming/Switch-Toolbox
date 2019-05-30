@@ -95,7 +95,6 @@ namespace FirstPlugin
             }
             foreach (Shape shp in mdl.Shapes.Values)
             {
-
                 VertexBuffer vertexBuffer = mdl.VertexBuffers[shp.VertexBufferIndex];
                 Material material = mdl.Materials[shp.MaterialIndex];
                 FSHP mesh = new FSHP();

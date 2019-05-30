@@ -534,11 +534,13 @@ namespace FirstPlugin
             // Bind the texture and create the uniform if the material has the right textures. 
             if (hasTex)
             {
-                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(shader, mattex, mat.GetResFileU() != null));
+                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(shader, mattex, mat, mat.GetResFileU() != null));
             }
         }
-        public static int BindTexture(SF.Shader shader, MatTexture tex, bool IsWiiU)
+        public static int BindTexture(SF.Shader shader, MatTexture tex, FMAT material, bool IsWiiU)
         {
+            BFRES bfres = (BFRES)material.Parent.Parent.Parent.Parent;
+
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
@@ -548,38 +550,76 @@ namespace FirstPlugin
 
             if (IsWiiU)
             {
+                if (bfres.HasTextures)
+                {
+                    var ftexCont = bfres.GetFTEXContainer;
+                    if (ftexCont != null)
+                    {
+                        if (ftexCont.ResourceNodes.ContainsKey(activeTex))
+                        {
+                            BindFTEX(ftexCont, tex, activeTex);
+                            return tex.textureUnit + 1;
+                        }
+                    }
+                }
+
                 foreach (var ftexContainer in PluginRuntime.ftexContainers)
                 {
                     if (ftexContainer.ResourceNodes.ContainsKey(activeTex))
                     {
-                        FTEX ftex = (FTEX)ftexContainer.ResourceNodes[activeTex];
-
-                        if (ftex.RenderableTex == null || !ftex.RenderableTex.GLInitialized)
-                            ftex.LoadOpenGLTexture();
-
-                        BindGLTexture(tex, ftex.RenderableTex.TexID);
+                        BindFTEX(ftexContainer, tex, activeTex);
+                        return tex.textureUnit + 1;
                     }
                 }
             }
             else
             {
+                if (bfres.HasTextures)
+                {
+                    var bntx = bfres.GetBNTX;
+                    if (bntx != null)
+                    {
+                        if (bntx.Textures.ContainsKey(activeTex))
+                        {
+                            BindBNTX(bntx, tex, activeTex);
+                            return tex.textureUnit + 1;
+                        }
+                    }
+                }
+
                 foreach (var bntx in PluginRuntime.bntxContainers)
                 {
                     if (bntx.Textures.ContainsKey(activeTex))
                     {
-                        if (bntx.Textures[activeTex].RenderableTex == null ||
-                            !bntx.Textures[activeTex].RenderableTex.GLInitialized)
-                        {
-                            bntx.Textures[activeTex].LoadOpenGLTexture();
-                        }
-
-                        BindGLTexture(tex, bntx.Textures[activeTex].RenderableTex.TexID);
+                        BindBNTX(bntx, tex, activeTex);
+                        return tex.textureUnit + 1;
                     }
                 }
             }
             return tex.textureUnit + 1;
         }
 
+        private static void BindFTEX(BFRESGroupNode ftexContainer, MatTexture tex, string activeTex)
+        {
+            FTEX ftex = (FTEX)ftexContainer.ResourceNodes[activeTex];
+
+            if (ftex.RenderableTex == null || !ftex.RenderableTex.GLInitialized)
+                ftex.LoadOpenGLTexture();
+
+            BindGLTexture(tex, ftex.RenderableTex.TexID);
+        }
+
+        private static void BindBNTX(BNTX bntx, MatTexture tex, string activeTex)
+        {
+            if (bntx.Textures[activeTex].RenderableTex == null ||
+                     !bntx.Textures[activeTex].RenderableTex.GLInitialized)
+            {
+                bntx.Textures[activeTex].LoadOpenGLTexture();
+            }
+
+            BindGLTexture(tex, bntx.Textures[activeTex].RenderableTex.TexID);
+        }
+            
         private static void BindGLTexture(MatTexture tex, int texid)
         {
        //     GL.ActiveTexture(TextureUnit.Texture0 + texid);

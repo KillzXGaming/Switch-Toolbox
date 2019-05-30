@@ -133,6 +133,9 @@
       <HintPath>..\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\Toolbox\Lib\SharpYaml.dll</HintPath>
+    </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
       <Private>False</Private>
@@ -266,7 +269,7 @@
     <Compile Include="GUI\AAMP\AampEditor.Designer.cs">
       <DependentUpon>AampEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\AAMP\YamlConverter.cs" />
+    <Compile Include="YAML\YamlAamp.cs" />
     <Compile Include="GUI\BCRES\BfresEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -296,6 +299,13 @@
     </Compile>
     <Compile Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.Designer.cs">
       <DependentUpon>VisObjectAddDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MaterialDefineConfig.cs" />
+    <Compile Include="GUI\BFRES\Materials\Presets\MaterialPresetDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\Presets\MaterialPresetDialog.Designer.cs">
+      <DependentUpon>MaterialPresetDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\Materials\MaterialReplaceDialog.cs">
       <SubType>Form</SubType>
@@ -870,6 +880,7 @@
     <Compile Include="GUI\TextureUI\Importers\GX2\CreateGx2Texture.cs" />
     <Compile Include="GUI\TextureUI\Importers\BNTX\TextureImporterSettings.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="MaterialPresetConfig.cs" />
     <Compile Include="NodeWrappers\Archives\BFRESWrapper.cs" />
     <Compile Include="NodeWrappers\BfresFilters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -882,6 +893,7 @@
     <Compile Include="XML\BfresMaterial2XML.cs" />
     <Compile Include="XML\Bfsha2Xml.cs" />
     <Compile Include="XML\Sharc2XML.cs" />
+    <Compile Include="YAML\YamlFmat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\InjectTexErrored.dds" />
@@ -923,6 +935,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BoneVisualAnims\VisObjectAddDialog.resx">
       <DependentUpon>VisObjectAddDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\Presets\MaterialPresetDialog.resx">
+      <DependentUpon>MaterialPresetDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\MaterialReplaceDialog.resx">
       <DependentUpon>MaterialReplaceDialog.cs</DependentUpon>
