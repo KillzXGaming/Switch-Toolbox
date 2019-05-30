@@ -168,6 +168,8 @@ namespace FirstPlugin
 
         public byte[] Save()
         {
+            SupportPaths = false;
+
             MemoryStream mem = new MemoryStream();
             ByamlFile.SaveN(mem, new BymlFileData
             {
