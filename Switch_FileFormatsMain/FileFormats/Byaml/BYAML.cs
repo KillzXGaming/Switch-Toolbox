@@ -141,11 +141,9 @@ namespace FirstPlugin
         bool IsDialog = false;
         BymlFileData data;
 
-        private bool SupportPaths = false;
-
         public ByamlEditor OpenForm()
         {
-            ByamlEditor editor = new ByamlEditor(data.RootNode, SupportPaths, data.Version, data.byteOrder, IsDialog, this);
+            ByamlEditor editor = new ByamlEditor(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, this);
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
@@ -158,8 +156,7 @@ namespace FirstPlugin
 
             IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
-            data = ByamlFile.LoadN(stream, true);
-            SupportPaths = data.SupportPaths;
+            data = ByamlFile.LoadN(stream);
         }
         public void Unload()
         {
@@ -168,14 +165,12 @@ namespace FirstPlugin
 
         public byte[] Save()
         {
-            SupportPaths = false;
-
             MemoryStream mem = new MemoryStream();
             ByamlFile.SaveN(mem, new BymlFileData
             {
                 Version = data.Version,
                 byteOrder = data.byteOrder,
-                SupportPaths = SupportPaths,
+                SupportPaths = data.SupportPaths,
                 RootNode = data.RootNode
             });
 
