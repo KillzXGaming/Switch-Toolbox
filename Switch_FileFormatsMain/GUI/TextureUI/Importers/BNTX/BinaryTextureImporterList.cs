@@ -87,7 +87,7 @@ namespace FirstPlugin
             compressionModeCB.Items.Add("Normal (Good Qaulity)");
 
             compressionModeCB.SelectedIndex = 0;
-            compressionModeCB.Enabled = false;
+            compressionModeCB.Visible = false;
 
             foreach (SurfaceDim dim in (SurfaceDim[])Enum.GetValues(typeof(SurfaceDim)))
             {
@@ -147,11 +147,11 @@ namespace FirstPlugin
             if (SelectedTexSettings.Format == SurfaceFormat.BC7_UNORM ||
                 SelectedTexSettings.Format == SurfaceFormat.BC7_SRGB)
             {
-                compressionModeCB.Enabled = true;
+                compressionModeCB.Visible = true;
             }
             else
             {
-                compressionModeCB.Enabled = false;
+                compressionModeCB.Visible = false;
             }
 
             Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();

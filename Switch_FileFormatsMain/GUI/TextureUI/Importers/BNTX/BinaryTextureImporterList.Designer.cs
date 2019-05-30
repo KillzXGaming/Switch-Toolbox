@@ -146,7 +146,7 @@
             // 
             // SwizzleNum
             // 
-            this.SwizzleNum.Location = new System.Drawing.Point(854, 212);
+            this.SwizzleNum.Location = new System.Drawing.Point(853, 239);
             this.SwizzleNum.Name = "SwizzleNum";
             this.SwizzleNum.Size = new System.Drawing.Size(130, 20);
             this.SwizzleNum.TabIndex = 28;
@@ -154,7 +154,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(757, 212);
+            this.label5.Location = new System.Drawing.Point(756, 239);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 27;
@@ -166,7 +166,7 @@
             this.tileModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.tileModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.tileModeCB.FormattingEnabled = true;
-            this.tileModeCB.Location = new System.Drawing.Point(854, 139);
+            this.tileModeCB.Location = new System.Drawing.Point(853, 166);
             this.tileModeCB.Name = "tileModeCB";
             this.tileModeCB.ReadOnly = true;
             this.tileModeCB.Size = new System.Drawing.Size(232, 21);
@@ -175,7 +175,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(757, 142);
+            this.label4.Location = new System.Drawing.Point(756, 169);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 25;
@@ -187,7 +187,7 @@
             this.ImgDimComb.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.ImgDimComb.ButtonColor = System.Drawing.Color.Empty;
             this.ImgDimComb.FormattingEnabled = true;
-            this.ImgDimComb.Location = new System.Drawing.Point(854, 106);
+            this.ImgDimComb.Location = new System.Drawing.Point(853, 133);
             this.ImgDimComb.Name = "ImgDimComb";
             this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(230, 21);
@@ -196,7 +196,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(757, 109);
+            this.label3.Location = new System.Drawing.Point(756, 136);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 13);
             this.label3.TabIndex = 23;
@@ -214,7 +214,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(757, 177);
+            this.label1.Location = new System.Drawing.Point(756, 204);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 13);
             this.label1.TabIndex = 21;
@@ -222,7 +222,7 @@
             // 
             // MipmapNum
             // 
-            this.MipmapNum.Location = new System.Drawing.Point(854, 175);
+            this.MipmapNum.Location = new System.Drawing.Point(853, 202);
             this.MipmapNum.Name = "MipmapNum";
             this.MipmapNum.Size = new System.Drawing.Size(130, 20);
             this.MipmapNum.TabIndex = 20;
@@ -231,7 +231,7 @@
             // WidthLabel
             // 
             this.WidthLabel.AutoSize = true;
-            this.WidthLabel.Location = new System.Drawing.Point(757, 271);
+            this.WidthLabel.Location = new System.Drawing.Point(756, 298);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(35, 13);
             this.WidthLabel.TabIndex = 19;
@@ -240,7 +240,7 @@
             // HeightLabel
             // 
             this.HeightLabel.AutoSize = true;
-            this.HeightLabel.Location = new System.Drawing.Point(757, 240);
+            this.HeightLabel.Location = new System.Drawing.Point(756, 267);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(38, 13);
             this.HeightLabel.TabIndex = 18;
