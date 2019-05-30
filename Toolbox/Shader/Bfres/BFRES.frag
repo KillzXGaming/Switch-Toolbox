@@ -183,7 +183,7 @@ void main()
     }
 
 	    // Calculate shading vectors.
-    vec3 I = vec3(0,0,-1) * mat3(mtxMdl * mtxCam);
+    vec3 I = vec3(0,0,-1) * mat3(mtxCam);
 
 	int NormalMapUVIndex = 0;
 
