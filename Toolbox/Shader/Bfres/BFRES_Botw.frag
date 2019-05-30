@@ -306,7 +306,7 @@ void main()
 	   }
 	}
 
-    vec3 I = vec3(0,0,-1) * mat3(mtxMdl * mtxCam);
+    vec3 I = vec3(0,0,-1) * mat3(mtxCam);
 
     vec3 N = normal;
 	if (HasNormalMap == 1 && useNormalMap == 1)

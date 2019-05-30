@@ -335,11 +335,12 @@ namespace FirstPlugin
                 shader = OpenTKSharedResources.shaders["BFRES_Normals"];
                 shader.UseProgram();
 
-                Matrix4 projection = control.ProjectionMatrix;
-                Matrix4 camMtx = control.CameraMatrix;
+               
+                shader.SetMatrix4x4("camMtx", ref camMat);
+                shader.SetMatrix4x4("mtxProj", ref projMat);
+                shader.SetMatrix4x4("mtxCam", ref computedCamMtx);
+                shader.SetMatrix4x4("mtxMdl", ref mdlMat);
 
-                shader.SetMatrix4x4("mtxProj", ref projection);
-                shader.SetMatrix4x4("camMtx", ref camMtx);
                 shader.SetFloat("normalsLength", Runtime.normalsLineLength);
 
                 DrawModels(shader, control);

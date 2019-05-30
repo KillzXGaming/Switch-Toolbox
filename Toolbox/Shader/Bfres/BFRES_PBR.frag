@@ -366,7 +366,6 @@ void main()
 	{
 	    fragColor.rgb = specularTerm;
 	    fragColor.rgb += emissionTerm;
-		fragColor.rgb *= 2.5;
 		fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
 		fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
 	}
