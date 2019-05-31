@@ -218,16 +218,6 @@ namespace FirstPlugin
                     if (Runtime.RenderModels && model.Checked && shape.Checked)
                     {
                         var mat = shape.GetMaterial();
-                        /*   foreach (var tex in mat.TextureMaps)
-                           {
-                               if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
-                               {
-                                    int texId = BindTexture((MatTexture)tex, mat, mat.GetResFileU() != null);
-                               }
-                           }*/
-
-                        GL.ActiveTexture(TextureUnit.Texture0);
-                        GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
                         List<int> faces = shape.lodMeshes[shape.DisplayLODIndex].getDisplayFace();
 

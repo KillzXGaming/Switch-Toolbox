@@ -173,7 +173,7 @@ namespace Switch_Toolbox.Library
         public static float normalsLineLength = 1;
 
         public static bool stereoscopy = false;
-        public static bool UseLegacyGL = true;
+        public static bool UseLegacyGL = false;
         public static bool OpenTKInitialized = false;
 
         public static bool useNormalMap = true;
