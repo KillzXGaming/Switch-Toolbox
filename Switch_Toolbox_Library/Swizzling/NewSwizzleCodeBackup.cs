@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library
+namespace Switch_Toolbox.Library.NEW
 {
     //Todo fix swizzle issues with this one
     public class GX2
