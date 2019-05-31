@@ -860,25 +860,19 @@ namespace FirstPlugin
                     IsTranslucent = mat.renderinfo[i].ValueString.Contains("translucent");
                     IsTransparentMask = mat.renderinfo[i].ValueString.Contains("mask");
                 }
-            }
 
-            if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
-            {
-                AglShaderTurbo aglShader = new AglShaderTurbo();
-
-                for (int i = 0; i < mat.renderinfo.Count; i++)
+                if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
                 {
+                    AglShaderTurbo aglShader = new AglShaderTurbo();
                     aglShader.LoadRenderInfo(mat.renderinfo[i]);
                 }
             }
-            else
-            {
-                if (mat.shaderassign.options.ContainsKey("enable_translucent"))
-                    IsTranslucent = mat.shaderassign.options["enable_translucent"] == "1";
-                if (mat.shaderassign.options.ContainsKey("enable_translucent"))
-                    IsTransparentMask = mat.shaderassign.options["enable_transparent"] == "1";
-            }
- 
+
+            if (mat.shaderassign.options.ContainsKey("enable_translucent"))
+                IsTranslucent = mat.shaderassign.options["enable_translucent"] == "1";
+            if (mat.shaderassign.options.ContainsKey("enable_translucent"))
+                IsTransparentMask = mat.shaderassign.options["enable_transparent"] == "1";
+
             if (mat.MaterialU != null)
             {
                 IsTranslucent =  mat.MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.Translucent;
