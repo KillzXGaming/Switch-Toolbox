@@ -871,9 +871,15 @@ namespace FirstPlugin
                 if (mat.shaderassign.options.ContainsKey("enable_translucent"))
                     IsTransparentMask = mat.shaderassign.options["enable_transparent"] == "1";
             }
+ 
+            if (mat.MaterialU != null)
+            {
+                IsTranslucent =  mat.MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.Translucent;
+                IsTransparentMask = mat.MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.AlphaMask;
+            }
 
             SetMaterialIcon(mat, IsTranslucent, "MaterialTranslucent");
-             SetMaterialIcon(mat, IsTransparentMask, "MaterialTransparent");
+            SetMaterialIcon(mat, IsTransparentMask, "MaterialTransparent");
         }
 
         private static void SetMaterialIcon(FMAT mat, bool IsEffect, string Key)
