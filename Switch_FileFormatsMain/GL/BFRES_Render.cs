@@ -208,7 +208,7 @@ namespace FirstPlugin
             Vector3 lightDirection = new Vector3(0f, 0f, -1f);
             Vector3  difLightDirection  = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
 
-            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.DepthTest);
 
             foreach (var model in models)
@@ -217,6 +217,18 @@ namespace FirstPlugin
                 {
                     if (Runtime.RenderModels && model.Checked && shape.Checked)
                     {
+                        var mat = shape.GetMaterial();
+                        /*   foreach (var tex in mat.TextureMaps)
+                           {
+                               if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
+                               {
+                                    int texId = BindTexture((MatTexture)tex, mat, mat.GetResFileU() != null);
+                               }
+                           }*/
+
+                        GL.ActiveTexture(TextureUnit.Texture0);
+                        GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
+
                         List<int> faces = shape.lodMeshes[shape.DisplayLODIndex].getDisplayFace();
 
                         GL.Begin(PrimitiveType.Triangles);
@@ -225,6 +237,7 @@ namespace FirstPlugin
                             Vertex vert = shape.vertices[index];
                             float normal = Vector3.Dot(difLightDirection, vert.nrm) * 0.5f + 0.5f;
                             GL.Color3(new Vector3(normal));
+                            GL.TexCoord2(vert.uv0);
                             GL.Vertex3(vert.pos);
                         }
                         GL.End();
@@ -568,10 +581,10 @@ namespace FirstPlugin
             // Bind the texture and create the uniform if the material has the right textures. 
             if (hasTex)
             {
-                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(shader, mattex, mat, mat.GetResFileU() != null));
+                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(mattex, mat, mat.GetResFileU() != null));
             }
         }
-        public static int BindTexture(SF.Shader shader, MatTexture tex, FMAT material, bool IsWiiU)
+        public static int BindTexture(MatTexture tex, FMAT material, bool IsWiiU)
         {
             BFRES bfres = (BFRES)material.Parent.Parent.Parent.Parent;
             if (material.Parent == null || bfres == null) //Bfres disposed

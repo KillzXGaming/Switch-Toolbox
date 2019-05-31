@@ -26,7 +26,7 @@ namespace Switch_Toolbox.Library.Rendering
 
         public void LoadOpenGLTexture(STGenericTexture GenericTexture)
         {
-            if (!Runtime.OpenTKInitialized || GLInitialized)
+            if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
                 return;
 
             if (GenericTexture.ArrayCount <= 0)
