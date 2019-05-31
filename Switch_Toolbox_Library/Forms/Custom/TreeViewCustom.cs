@@ -109,6 +109,9 @@ namespace Switch_Toolbox.Library
             imgList.Images.Add("folder", Properties.Resources.skeleton);
             imgList.Images.Add("TextureMaterialMap", Properties.Resources.TextureMaterialMap);
 
+            imgList.Images.Add("MaterialTranslucent", Properties.Resources.materialSphereTranslucent);
+            imgList.Images.Add("MaterialTransparent", Properties.Resources.materialSphereTransparent);
+
             //Data types
             imgList.Images.Add("bool", Properties.Resources.IconBool);
             imgList.Images.Add("buffer", Properties.Resources.IconBuffer);

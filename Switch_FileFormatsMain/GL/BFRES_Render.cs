@@ -335,7 +335,6 @@ namespace FirstPlugin
                 shader = OpenTKSharedResources.shaders["BFRES_Normals"];
                 shader.UseProgram();
 
-               
                 shader.SetMatrix4x4("camMtx", ref camMat);
                 shader.SetMatrix4x4("mtxProj", ref projMat);
                 shader.SetMatrix4x4("mtxCam", ref computedCamMtx);
@@ -845,14 +844,44 @@ namespace FirstPlugin
 
         private static void SetRenderPass(FMAT mat, SF.Shader shader, FSHP m, int id)
         {
+            bool IsTranslucent = false;
+            bool IsTransparentMask = false;
+
             if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
             {
                 AglShaderTurbo aglShader = new AglShaderTurbo();
 
                 for (int i = 0; i < mat.renderinfo.Count; i++)
-                    aglShader.LoadRenderInfo(mat.renderinfo[i]);
+                {
+                    if (mat.renderinfo[i].Name == "gsys_render_state_mode")
+                    {
+                        IsTranslucent = mat.renderinfo[i].ValueString.Contains("translucent");
+                        IsTransparentMask = mat.renderinfo[i].ValueString.Contains("mask");
+                    }
 
-               // aglShader.LoadRenderPass(mat, shader);
+                    aglShader.LoadRenderInfo(mat.renderinfo[i]);
+                }
+
+                // aglShader.LoadRenderPass(mat, shader);
+            }
+            else
+            {
+                if (mat.shaderassign.options.ContainsKey("enable_translucent"))
+                    IsTranslucent = mat.shaderassign.options["enable_translucent"] == "1";
+                if (mat.shaderassign.options.ContainsKey("enable_translucent"))
+                    IsTransparentMask = mat.shaderassign.options["enable_transparent"] == "1";
+            }
+
+            SetMaterialIcon(mat, IsTranslucent, "MaterialTranslucent");
+             SetMaterialIcon(mat, IsTransparentMask, "MaterialTransparent");
+        }
+
+        private static void SetMaterialIcon(FMAT mat, bool IsEffect, string Key)
+        {
+            if (IsEffect)
+            {
+                mat.ImageKey = Key;
+                mat.SelectedImageKey = Key;
             }
         }
 
