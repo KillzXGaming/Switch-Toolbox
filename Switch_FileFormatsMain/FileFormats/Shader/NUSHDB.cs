@@ -58,13 +58,18 @@ namespace FirstPlugin
                 {
                     ShaderProgram program = new ShaderProgram();
                     program.Text = reader.LoadString(true, typeof(ulong));
-                    uint unk = reader.ReadUInt32();
+                    uint Type = reader.ReadUInt32();
                     uint unk2 = reader.ReadUInt32(); //Usually 2
                     long BinaryOffset = reader.ReadOffset(true, typeof(ulong));
                     ulong BinarySize = reader.ReadUInt64();
                     ulong BinarySize2 = reader.ReadUInt64();
                     ulong padding = reader.ReadUInt64();
                     ulong padding2 = reader.ReadUInt64();
+
+                    if (Type == 0)
+                        program.ShaderType = NSWShaderDecompile.NswShaderType.Vertex;
+                    if (Type == 2)
+                        program.ShaderType = NSWShaderDecompile.NswShaderType.Fragment;
 
                     using (reader.TemporarySeek(BinaryOffset, System.IO.SeekOrigin.Begin))
                     {
@@ -86,7 +91,7 @@ namespace FirstPlugin
 
         public class ShaderProgram : TreeNodeCustom
         {
-            NSWShaderDecompile.NswShaderType ShaderType { get; set; }
+            public NSWShaderDecompile.NswShaderType ShaderType { get; set; }
 
             public byte[] Data { get; set; }
 
