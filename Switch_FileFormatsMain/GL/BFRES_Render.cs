@@ -844,8 +844,23 @@ namespace FirstPlugin
 
         private static void SetRenderPass(FMAT mat, SF.Shader shader, FSHP m, int id)
         {
+            if (mat.ImageKey != "material")
+            {
+                mat.ImageKey = "material";
+                mat.SelectedImageKey = "material";
+            }
+
             bool IsTranslucent = false;
             bool IsTransparentMask = false;
+
+            for (int i = 0; i < mat.renderinfo.Count; i++)
+            {
+                if (mat.renderinfo[i].Name == "gsys_render_state_mode")
+                {
+                    IsTranslucent = mat.renderinfo[i].ValueString.Contains("translucent");
+                    IsTransparentMask = mat.renderinfo[i].ValueString.Contains("mask");
+                }
+            }
 
             if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
             {
@@ -853,16 +868,8 @@ namespace FirstPlugin
 
                 for (int i = 0; i < mat.renderinfo.Count; i++)
                 {
-                    if (mat.renderinfo[i].Name == "gsys_render_state_mode")
-                    {
-                        IsTranslucent = mat.renderinfo[i].ValueString.Contains("translucent");
-                        IsTransparentMask = mat.renderinfo[i].ValueString.Contains("mask");
-                    }
-
                     aglShader.LoadRenderInfo(mat.renderinfo[i]);
                 }
-
-                // aglShader.LoadRenderPass(mat, shader);
             }
             else
             {
