@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library
+namespace Switch_Toolbox.Library.OLD
 {
     public class GX2
     {
@@ -748,6 +748,8 @@ namespace Switch_Toolbox.Library
                         surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
                         data = new byte[surfInfo.surfSize];
 
+                        //In the case of PTCL
+                        //Does not work atm so same parameters currently
                         if (tex.data == tex.mipData)
                             Array.Copy(tex.mipData, (uint)mipOffset, data, 0, surfInfo.surfSize);
                         else

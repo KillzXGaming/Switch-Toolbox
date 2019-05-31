@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library.NEW
+namespace Switch_Toolbox.Library
 {
     //Todo fix swizzle issues with this one
     public class GX2
@@ -705,8 +705,8 @@ namespace Switch_Toolbox.Library.NEW
 
                 result.Add(mips);
 
-                dataOffset += ArrayImageize;
-                mipDataOffset += ArrayMipImageize;
+              //  dataOffset += ArrayImageize;
+              //  mipDataOffset += ArrayMipImageize;
             }
 
             return result;
