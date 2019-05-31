@@ -55,14 +55,6 @@ namespace FirstPlugin
             return null;
         }
 
-        public enum ShaderType
-        {
-            Vertex,
-            Geometry,
-            Fragment,
-            Compute
-        }
-
         public class Header
         {
             public List<ShaderVariation> ShaderVariations = new List<ShaderVariation>();
@@ -200,7 +192,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(VertexShaderOffset, SeekOrigin.Begin);
                         VertexShader = new ShaderSourceData();
-                        VertexShader.shaderType = BNSH.ShaderType.Vertex;
+                        VertexShader.shaderType = NSWShaderDecompile.NswShaderType.Vertex;
                         VertexShader.Format = Format;
                         VertexShader.Read(reader);
                     }
@@ -208,7 +200,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(FragmentShaderOffset, SeekOrigin.Begin);
                         FragmentShader = new ShaderSourceData();
-                        FragmentShader.shaderType = BNSH.ShaderType.Fragment;
+                        FragmentShader.shaderType = NSWShaderDecompile.NswShaderType.Fragment;
                         FragmentShader.Format = Format;
                         FragmentShader.Read(reader);
                     }
@@ -219,7 +211,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(VertexShaderOffset, SeekOrigin.Begin);
                         VertexShader = new ShaderData();
-                        VertexShader.shaderType = BNSH.ShaderType.Vertex;
+                        VertexShader.shaderType = NSWShaderDecompile.NswShaderType.Vertex;
                         VertexShader.Format = Format;
                         VertexShader.Read(reader);
                     }
@@ -239,7 +231,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(GeometryShaderOffset, SeekOrigin.Begin);
                         GeometryShader = new ShaderData();
-                        GeometryShader.shaderType = BNSH.ShaderType.Geometry;
+                        GeometryShader.shaderType = NSWShaderDecompile.NswShaderType.Geometry;
                         GeometryShader.Format = Format;
                         GeometryShader.Read(reader);
                     }
@@ -247,7 +239,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(FragmentShaderOffset, SeekOrigin.Begin);
                         FragmentShader = new ShaderData();
-                        FragmentShader.shaderType = BNSH.ShaderType.Fragment;
+                        FragmentShader.shaderType = NSWShaderDecompile.NswShaderType.Fragment;
                         FragmentShader.Format = Format;
                         FragmentShader.Read(reader);
                     }
@@ -255,7 +247,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(ComputeShaderOffset, SeekOrigin.Begin);
                         ComputeShader = new ShaderData();
-                        ComputeShader.shaderType = BNSH.ShaderType.Compute;
+                        ComputeShader.shaderType = NSWShaderDecompile.NswShaderType.Compute;
                         ComputeShader.Format = Format;
                         ComputeShader.Read(reader);
                     }
@@ -323,7 +315,7 @@ namespace FirstPlugin
 
         public class ShaderData : TreeNodeCustom
         {
-            public ShaderType shaderType;
+            public NSWShaderDecompile.NswShaderType shaderType;
             public List<byte[]> data = new List<byte[]>();
             public int Format;
 
@@ -392,57 +384,7 @@ namespace FirstPlugin
             }
             private string DecompileShader(int ShaderIndex = 1)
             {
-                string TypeArg = "v";
-
-                switch (shaderType)
-                {
-                    case ShaderType.Vertex: TypeArg = "v"; break;
-                    case ShaderType.Fragment: TypeArg = "f"; break;
-                    case ShaderType.Geometry: TypeArg = "g"; break;
-                }
-
-                if (!Directory.Exists("temp"))
-                    Directory.CreateDirectory("temp");
-
-                if (!Directory.Exists("ShaderTools"))
-                    Directory.CreateDirectory("ShaderTools");
-
-                //     File.WriteAllBytes("temp/shader1.bin", Utils.CombineByteArray(data.ToArray()));
-                File.WriteAllBytes("temp/shader1.bin", data[1]);
-
-                if (!File.Exists($"{Runtime.ExecutableDir}/ShaderTools/Ryujinx.ShaderTools.exe"))
-                {
-                    MessageBox.Show("No shader decompiler found in ShaderTools. If you want to decompile a shader, you can use Ryujinx's ShaderTools.exe and put in the ShaderTools folder of the toolbox.");
-                    return "";
-                }
-
-                ProcessStartInfo start = new ProcessStartInfo();
-                start.FileName = "ShaderTools/Ryujinx.ShaderTools.exe";
-                start.WorkingDirectory = Runtime.ExecutableDir;
-                start.CreateNoWindow = false;
-                start.Arguments = $"{TypeArg} {Utils.AddQuotesIfRequired("temp/shader1.bin")}";
-                start.UseShellExecute = false;
-                start.RedirectStandardOutput = true;
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                using (Process process = Process.Start(start))
-                {
-                    using (StreamReader reader = process.StandardOutput)
-                    {
-                        try
-                        {
-                            return reader.ReadToEnd();
-                        }
-                        catch
-                        {
-                            return "";
-                        }
-                    }
-                }
-
-                //    File.WriteAllBytes("temp/shader1.bin", Utils.CombineByteArray(data.ToArray()));
-
-                return "";
+               return NSWShaderDecompile.DecompileShader(shaderType, data[1]);
             }
         }
     }

@@ -71,6 +71,26 @@ namespace Switch_Toolbox.Library.IO
             return RealSignature;
         }
 
+        public long ReadOffset(bool IsRelative, Type OffsetType)
+        {
+            long pos = Position;
+            long offset = 0;
+
+            if (OffsetType == typeof(long))
+                offset = ReadInt64();
+            if (OffsetType == typeof(ulong))
+                offset = (long)ReadUInt64();
+            if (OffsetType == typeof(uint))
+                offset = ReadUInt32();
+            if (OffsetType == typeof(int))
+                offset = ReadInt32();
+
+            if (IsRelative && offset != 0)
+                return pos + offset;
+            else
+                return offset;
+        }
+
         public string LoadString(bool IsRelative, Type OffsetType, Encoding encoding = null, uint ReadStringLength = 0)
         {
             long pos = Position;

@@ -295,6 +295,7 @@ namespace FirstPlugin
             Formats.Add(typeof(TEX3DS));
             Formats.Add(typeof(NXARC));
             Formats.Add(typeof(SP2));
+            Formats.Add(typeof(NUSHDB));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
