@@ -144,15 +144,17 @@ namespace Switch_Toolbox.Library
                                 boneInd = mesh.Bones.IndexOf(bone); //Set the index of the bone for the vertex weight
                             }
 
+                            int MinWeightAmount = 0;
+
                             //Check if the max amount of weights is higher than the current bone id
-                            if (v.boneWeights.Count > j && v.boneWeights[j] > 0)
+                            if (v.boneWeights.Count > j && v.boneWeights[j] > MinWeightAmount)
                             {
                                 if (v.boneWeights[j] <= 1)
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, v.boneWeights[j]));
                                 else
                                     mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                             }
-                            else if (v.boneWeights.Count == 0 || v.boneWeights[j] > 0)
+                            else if (v.boneWeights.Count == 0 || v.boneWeights[j] > MinWeightAmount)
                                 mesh.Bones[boneInd].VertexWeights.Add(new VertexWeight(vertexID, 1));
                         }
                     }

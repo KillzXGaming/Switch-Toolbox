@@ -53,10 +53,16 @@ namespace Switch_Toolbox.Library
             if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
+            if (Runtime.boneXrayDisplay)
+                GL.Disable(EnableCap.DepthTest);
+
+            GL.Disable(EnableCap.Texture2D);
             foreach (STBone bn in bones)
             {
                 bn.RenderLegacy();
             }
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.DepthTest);
         }
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
@@ -64,10 +70,16 @@ namespace Switch_Toolbox.Library
             if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
+            if (Runtime.boneXrayDisplay)
+                GL.Disable(EnableCap.DepthTest);
+
+            GL.Disable(EnableCap.Texture2D);
             foreach (STBone bn in bones)
             {
                 bn.RenderLegacy();
             }
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.DepthTest);
         }
 
         private static List<Vector4> screenPositions = new List<Vector4>()

@@ -127,7 +127,8 @@ namespace Switch_Toolbox.Library.Rendering
             var color = Runtime.gridSettings.color;
 
             GL.UseProgram(0);
-          //  GL.MatrixMode(MatrixMode.Modelview);
+            GL.Disable(EnableCap.Texture2D);
+            //  GL.MatrixMode(MatrixMode.Modelview);
             GL.PushAttrib(AttribMask.AllAttribBits);
 
             var trans = Matrix4.Identity;
@@ -146,6 +147,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.End();
             GL.Color3(Color.Transparent);
             GL.PopAttrib();
+            GL.Enable(EnableCap.Texture2D);
         }
 
         public override void Prepare(GL_ControlModern control)

@@ -98,7 +98,6 @@ namespace Switch_Toolbox.Library.Rendering
 
             GL.UseProgram(0);
             GL.Disable(EnableCap.CullFace);
-
             GL.Disable(EnableCap.DepthTest);
 
             control.CurrentShader = solidColorShaderProgram;
@@ -143,7 +142,7 @@ namespace Switch_Toolbox.Library.Rendering
             var color = Runtime.gridSettings.color;
 
             GL.UseProgram(0);
-            //  GL.MatrixMode(MatrixMode.Modelview);
+            GL.Disable(EnableCap.Texture2D);
             GL.PushAttrib(AttribMask.AllAttribBits);
 
             var trans = Matrix4.Identity;
@@ -162,6 +161,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.End();
             GL.Color3(Color.Transparent);
             GL.PopAttrib();
+            GL.Enable(EnableCap.Texture2D);
         }
 
         public override void Prepare(GL_ControlModern control)

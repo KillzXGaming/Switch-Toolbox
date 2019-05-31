@@ -91,14 +91,13 @@ namespace Switch_Toolbox.Library.Rendering
                 return;
 
             GL.MatrixMode(MatrixMode.Projection);
+            GL.PushMatrix();
             GL.LoadIdentity();
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
             GL.Disable(EnableCap.Texture2D);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
             GL.Begin(PrimitiveType.TriangleStrip);
             GL.Color3(Runtime.backgroundGradientTop);
             GL.Vertex3(1, 1, 0.99998);
@@ -111,6 +110,8 @@ namespace Switch_Toolbox.Library.Rendering
 
             GL.UseProgram(0);
             GL.Enable(EnableCap.CullFace);
+
+            GL.PopMatrix();
         }
 
         public override void Prepare(GL_ControlModern control)

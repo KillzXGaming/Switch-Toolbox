@@ -199,6 +199,40 @@ namespace FirstPlugin
             if (!Runtime.OpenTKInitialized)
                 return;
 
+            Matrix4 mvpMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
+
+            Matrix4 invertedCamera = Matrix4.Identity;
+            if (invertedCamera.Determinant != 0)
+                invertedCamera = mvpMat.Inverted();
+
+            Vector3 lightDirection = new Vector3(0f, 0f, -1f);
+            Vector3  difLightDirection  = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
+
+            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.DepthTest);
+
+            foreach (var model in models)
+            {
+                foreach (var shape in model.shapes)
+                {
+                    if (Runtime.RenderModels && model.Checked && shape.Checked)
+                    {
+                        List<int> faces = shape.lodMeshes[shape.DisplayLODIndex].getDisplayFace();
+
+                        GL.Begin(PrimitiveType.Triangles);
+                        foreach (var index in faces)
+                        {
+                            Vertex vert = shape.vertices[index];
+                            float normal = Vector3.Dot(difLightDirection, vert.nrm) * 0.5f + 0.5f;
+                            GL.Color3(new Vector3(normal));
+                            GL.Vertex3(vert.pos);
+                        }
+                        GL.End();
+                    }
+                }
+            }
+
+            GL.Enable(EnableCap.Texture2D);
         }
 
         public void CenterCamera(GL_ControlModern control)
@@ -540,6 +574,8 @@ namespace FirstPlugin
         public static int BindTexture(SF.Shader shader, MatTexture tex, FMAT material, bool IsWiiU)
         {
             BFRES bfres = (BFRES)material.Parent.Parent.Parent.Parent;
+            if (material.Parent == null || bfres == null) //Bfres disposed
+                return -1;
 
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
