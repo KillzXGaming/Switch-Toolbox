@@ -62,6 +62,19 @@ namespace FirstPlugin
             else return "";
         }
 
+        //For BNTX, BNSH, etc
+        private string GetBinaryHeaderName(byte[] Data)
+        {
+            using (var reader = new FileReader(Data))
+            {
+                reader.Seek(0x10, SeekOrigin.Begin);
+                uint NameOffset = reader.ReadUInt32();
+
+                reader.Seek(NameOffset, SeekOrigin.Begin);
+                return reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+            }
+        }
+
         public bool Identify(System.IO.Stream stream)
         {
             using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
@@ -193,7 +206,7 @@ namespace FirstPlugin
             {
                 FileEntry fileEntry = new FileEntry();
                 fileEntry.Read(reader);
-                fileEntry.Text = hashes[i].ToString() + FindMatch(fileEntry.data);
+                fileEntry.Text = GetString(hashes[i], fileEntry.data);
                 Nodes.Add(fileEntry);
                 files.Add(fileEntry);
             }
@@ -201,6 +214,16 @@ namespace FirstPlugin
             reader.Close();
             reader.Dispose();
         }
+
+        private string GetString(ulong Hash, byte[] Data)
+        {
+            string ext = FindMatch(Data);
+            if (ext == ".bntx" || ext == ".bfres" || ext == ".bnsh" || ext == ".bfsha")
+                return GetBinaryHeaderName(Data) + ext;
+            else
+                return $"{Hash}{ext}";
+        }
+
         public void Write(FileWriter writer)
         {
             writer.WriteSignature("GFLXPACK");
