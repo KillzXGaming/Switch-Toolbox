@@ -23,6 +23,45 @@ namespace FirstPlugin
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
 
+        private string FindMatch(byte[] f)
+        {
+            if (f.Matches("SARC")) return ".szs";
+            else if (f.Matches("Yaz")) return ".szs";
+            else if (f.Matches("YB") || f.Matches("BY")) return ".byaml";
+            else if (f.Matches("FRES")) return ".bfres";
+            else if (f.Matches("Gfx2")) return ".gtx";
+            else if (f.Matches("FLYT")) return ".bflyt";
+            else if (f.Matches("CLAN")) return ".bclan";
+            else if (f.Matches("CLYT")) return ".bclyt";
+            else if (f.Matches("FLIM")) return ".bclim";
+            else if (f.Matches("FLAN")) return ".bflan";
+            else if (f.Matches("FSEQ")) return ".bfseq";
+            else if (f.Matches("VFXB")) return ".pctl";
+            else if (f.Matches("AAHS")) return ".sharc";
+            else if (f.Matches("BAHS")) return ".sharcb";
+            else if (f.Matches("BNTX")) return ".bntx";
+            else if (f.Matches("BNSH")) return ".bnsh";
+            else if (f.Matches("FSHA")) return ".bfsha";
+            else if (f.Matches("FFNT")) return ".bffnt";
+            else if (f.Matches("CFNT")) return ".bcfnt";
+            else if (f.Matches("CSTM")) return ".bcstm";
+            else if (f.Matches("FSTM")) return ".bfstm";
+            else if (f.Matches("STM")) return ".bfsha";
+            else if (f.Matches("CWAV")) return ".bcwav";
+            else if (f.Matches("FWAV")) return ".bfwav";
+            else if (f.Matches("CTPK")) return ".ctpk";
+            else if (f.Matches("CGFX")) return ".bcres";
+            else if (f.Matches("AAMP")) return ".aamp";
+            else if (f.Matches("MsgStdBn")) return ".msbt";
+            else if (f.Matches("MsgPrjBn")) return ".msbp";
+            else if (f.Matches(0x00000004)) return ".gfbanm";
+            else if (f.Matches(0x00000014)) return ".gfbanm";
+            else if (f.Matches(0x00000018)) return ".gfbanmcfg";
+            else if (f.Matches(0x00000002)) return ".gfbmdl";
+            else if (f.Matches(0x00000044)) return ".gfbpokecfg";
+            else return "";
+        }
+
         public bool Identify(System.IO.Stream stream)
         {
             using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
@@ -154,7 +193,7 @@ namespace FirstPlugin
             {
                 FileEntry fileEntry = new FileEntry();
                 fileEntry.Read(reader);
-                fileEntry.Text = hashes[i].ToString();
+                fileEntry.Text = hashes[i].ToString() + FindMatch(fileEntry.data);
                 Nodes.Add(fileEntry);
                 files.Add(fileEntry);
             }

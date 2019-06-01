@@ -9,6 +9,22 @@ namespace Switch_Toolbox.Library.IO
 {
     public static class IOExtensions
     {
+        //https://github.com/exelix11/EditorCore/blob/872d210f85ec0409f8a6ac3a12fc162aaf4cd90c/EditorCoreCommon/CustomClasses.cs#L367
+        public static bool Matches(this byte[] arr, string magic) =>
+                    arr.Matches(0, magic.ToCharArray());
+        public static bool Matches(this byte[] arr, uint startIndex, string magic) =>
+            arr.Matches(startIndex, magic.ToCharArray());
+
+        public static bool Matches(this byte[] arr, uint startIndex, params char[] magic)
+        {
+            if (arr.Length < magic.Length + startIndex) return false;
+            for (uint i = 0; i < magic.Length; i++)
+            {
+                if (arr[i + startIndex] != magic[i]) return false;
+            }
+            return true;
+        }
+
         public static uint Reverse(this uint x)
         {
             // swap adjacent 16-bit blocks
