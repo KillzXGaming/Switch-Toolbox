@@ -78,7 +78,7 @@ namespace Updater
             foreach (string dir in Directory.GetDirectories("master/"))
             {
                 File.SetAttributes(dir, FileAttributes.Directory);
-                File.SetAttributes(folderDir, FileAttributes.Normal);
+                File.SetAttributes(folderDir, FileAttributes.Directory);
 
                 string dirName = new DirectoryInfo(dir).Name;
 
@@ -93,7 +93,7 @@ namespace Updater
                     continue;
 
                 File.SetAttributes(file, FileAttributes.Normal);
-                File.SetAttributes(folderDir, FileAttributes.Normal);
+                File.SetAttributes(folderDir, FileAttributes.Directory);
 
                 if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
                 {
