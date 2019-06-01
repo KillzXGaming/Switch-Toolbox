@@ -49,7 +49,7 @@ namespace FirstPlugin
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "ShaderTools/Ryujinx.ShaderTools.exe";
             start.WorkingDirectory = Runtime.ExecutableDir;
-            start.Arguments = $"{TypeArg}, {Utils.AddQuotesIfRequired("temp/shader1.bin")}";
+            start.Arguments = $"{TypeArg} {Utils.AddQuotesIfRequired("temp/shader1.bin")}";
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             start.CreateNoWindow = true;
