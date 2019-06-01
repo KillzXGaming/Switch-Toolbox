@@ -126,7 +126,7 @@ namespace Bfres.Structs
                 STSkeleton skeleton = GetActiveSkeleton();
 
                 if (SkeletalAnimU != null)
-                    BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.ConvertWiiUToSwitch(SkeletalAnimU), FileName);
+                    BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FileName);
                 else
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
 
@@ -217,7 +217,7 @@ namespace Bfres.Structs
                     {
                         var ska = new SkeletalAnim();
                         ska.Import(FileName);
-                        SkeletalAnimU = BfresPlatformConverter.ConvertSwitchToWiiU(ska);
+                        SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(ska);
                         SkeletalAnimU.Name = Text;
                         LoadAnim(SkeletalAnimU);
                     }
@@ -241,7 +241,7 @@ namespace Bfres.Structs
                         //Create a new wii u skeletal anim and try to convert it instead
                         var ska = new ResU.SkeletalAnim();
                         ska.Import(FileName, new ResU.ResFile());
-                        SkeletalAnim = BfresPlatformConverter.ConvertWiiUToSwitch(ska);
+                        SkeletalAnim = BfresPlatformConverter.FSKAConvertWiiUToSwitch(ska);
                         SkeletalAnim.Name = Text;
                         LoadAnim(SkeletalAnim);
                     }
@@ -296,7 +296,7 @@ namespace Bfres.Structs
             {
                 if (IsWiiU)
                 {
-                    SkeletalAnimU = BfresPlatformConverter.ConvertSwitchToWiiU(FromGeneric(anims[i]));
+                    SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(FromGeneric(anims[i]));
                     LoadAnim(SkeletalAnimU);
                 }
                 else
@@ -315,7 +315,7 @@ namespace Bfres.Structs
 
             if (SkeletalAnimU != null)
             {
-                SkeletalAnimU = BfresPlatformConverter.ConvertSwitchToWiiU(ska);
+                SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(ska);
                 LoadAnim(SkeletalAnimU);
             }
             else
@@ -778,7 +778,7 @@ namespace Bfres.Structs
             if (SkeletalAnimU != null)
             {
                 var SkeletalAnimNX = BrawlboxHelper.FSKAConverter.Anim2Fska(FileName);
-                SkeletalAnimU = BfresPlatformConverter.ConvertSwitchToWiiU(SkeletalAnimNX);
+                SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(SkeletalAnimNX);
                 SkeletalAnimU.Name = Text;
                 LoadAnim(SkeletalAnimU);
             }
@@ -795,7 +795,7 @@ namespace Bfres.Structs
             if (IsWiiU)
             {
                 var SkeletalAnimNX = BrawlboxHelper.FSKAConverter.Chr02Fska(FileName);
-                SkeletalAnimU = BfresPlatformConverter.ConvertSwitchToWiiU(SkeletalAnimNX);
+                SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(SkeletalAnimNX);
                 SkeletalAnimU.Name = Text;
                 LoadAnim(SkeletalAnimU);
             }
