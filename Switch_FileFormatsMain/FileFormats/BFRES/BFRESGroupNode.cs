@@ -294,22 +294,49 @@ namespace Bfres.Structs
                         Nodes.Add(fska);
                         break;
                     case BRESGroupType.ShaderParamAnim:
-                        FSHU fshu = new FSHU(new ResU.ShaderParamAnim(), MaterialAnimation.AnimationType.ShaderParam);
-                        fshu.Text = ResourceName;
-                        fshu.Replace(FileName, resFileU);
-                        Nodes.Add(fshu);
+                        if (IsWiiU)
+                        {
+                            FSHU fshu = new FSHU(new ResU.ShaderParamAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            fshu.Text = ResourceName;
+                            fshu.Replace(FileName, resFileU);
+                            Nodes.Add(fshu);
+                        }
+                        else
+                        {
+                            FMAA fmaaPrm = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            fmaaPrm.Replace(FileName);
+                            Nodes.Add(fmaaPrm);
+                        }
                         break;
                     case BRESGroupType.ColorAnim:
-                        FSHU fclh = new FSHU(new ResU.ShaderParamAnim(), MaterialAnimation.AnimationType.Color);
-                        fclh.Text = ResourceName;
-                        fclh.Replace(FileName, resFileU);
-                        Nodes.Add(fclh);
+                        if (IsWiiU)
+                        {
+                            FSHU fclh = new FSHU(new ResU.ShaderParamAnim(), MaterialAnimation.AnimationType.Color);
+                            fclh.Text = ResourceName;
+                            fclh.Replace(FileName, resFileU);
+                            Nodes.Add(fclh);
+                        }
+                        else
+                        {
+                            FMAA fmaaClr = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            fmaaClr.Replace(FileName);
+                            Nodes.Add(fmaaClr);
+                        }
                         break;
                     case BRESGroupType.TexSrtAnim:
-                        FSHU fsth = new FSHU(new ResU.ShaderParamAnim(), MaterialAnimation.AnimationType.TextureSrt);
-                        fsth.Text = ResourceName;
-                        fsth.Replace(FileName, resFileU);
-                        Nodes.Add(fsth);
+                        if (IsWiiU)
+                        {
+                            FSHU fsth = new FSHU(new ResU.ShaderParamAnim(), MaterialAnimation.AnimationType.TextureSrt);
+                            fsth.Text = ResourceName;
+                            fsth.Replace(FileName, resFileU);
+                            Nodes.Add(fsth);
+                        }
+                        else
+                        {
+                            FMAA fmaaSrt = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            fmaaSrt.Replace(FileName);
+                            Nodes.Add(fmaaSrt);
+                        }
                         break;
                     case BRESGroupType.TexPatAnim:
                         FTXP ftxp = new FTXP(new ResU.TexPatternAnim());
