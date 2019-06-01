@@ -58,8 +58,8 @@ namespace FirstPlugin
                 {
                     ShaderProgram program = new ShaderProgram();
                     program.Text = reader.LoadString(true, typeof(ulong));
+                    uint unk2 = reader.ReadUInt32();
                     uint Type = reader.ReadUInt32();
-                    uint unk2 = reader.ReadUInt32(); //Usually 2
                     long BinaryOffset = reader.ReadOffset(true, typeof(ulong));
                     ulong BinarySize = reader.ReadUInt64();
                     ulong BinarySize2 = reader.ReadUInt64();
@@ -118,7 +118,7 @@ namespace FirstPlugin
                     uint BinaryOffset = reader.ReadUInt32();
 
                     Console.WriteLine("Binary Size " + BinarySize);
-                    Console.WriteLine("Binar yOffset " + BinaryOffset);
+                    Console.WriteLine("Binary Offset " + BinaryOffset);
 
                     reader.Seek((int)BinaryOffset, System.IO.SeekOrigin.Begin);
                     RawBinaryData = reader.ReadBytes((int)BinarySize);
@@ -128,7 +128,7 @@ namespace FirstPlugin
             public bool TryDecompileBinary()
             {
                 ParseBinary();
-                Code = NSWShaderDecompile.DecompileShader(ShaderType, RawBinaryData);
+                Code = NSWShaderDecompile.DecompileShader(ShaderType, Data);
 
                 if (Code.Length > 0) return true;
                 else return false;
