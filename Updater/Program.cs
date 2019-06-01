@@ -7,6 +7,7 @@ using Octokit;
 using System.Net;
 using System.IO.Compression;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace Updater
 {
@@ -77,8 +78,8 @@ namespace Updater
             Console.WriteLine("Installing...");
             foreach (string dir in Directory.GetDirectories("master/"))
             {
-                File.SetAttributes(dir, FileAttributes.Directory);
-                File.SetAttributes(folderDir, FileAttributes.Directory);
+                SetAccessRule(folderDir);
+                SetAccessRule(dir);
 
                 string dirName = new DirectoryInfo(dir).Name;
 
@@ -92,8 +93,8 @@ namespace Updater
                     || file.Contains("Updater.pdb") || file.Contains("Octokit.dll"))
                     continue;
 
-                File.SetAttributes(file, FileAttributes.Normal);
-                File.SetAttributes(folderDir, FileAttributes.Directory);
+                SetAccessRule(file);
+                SetAccessRule(folderDir);
 
                 if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
                 {
@@ -102,6 +103,14 @@ namespace Updater
                 File.Move(file, Path.Combine(folderDir, Path.GetFileName(file)));
             }
         }
+
+        static void SetAccessRule(string directory)
+        {
+            System.Security.AccessControl.DirectorySecurity sec = System.IO.Directory.GetAccessControl(directory);
+            FileSystemAccessRule accRule = new FileSystemAccessRule(Environment.UserDomainName + "\\" + Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow);
+            sec.AddAccessRule(accRule);
+        }
+
         static void Download(string CompileDate)
         {
             foreach (Release latest in releases)
