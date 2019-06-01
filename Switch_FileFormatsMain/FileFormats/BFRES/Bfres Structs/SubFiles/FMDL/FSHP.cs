@@ -176,10 +176,13 @@ namespace Bfres.Structs
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Vertical)", null, FlipUvsVertical));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Horizontal)", null, FlipUvsHorizontal));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Copy Channel", null, CopyUVChannelAction));
+          //  uvMenu.DropDownItems.Add(new ToolStripMenuItem("Unwrap By Position", null, UVUnwrapPosition));
+
             ContextMenuStrip.Items.Add(uvMenu);
 
             ToolStripMenuItem normalsMenu = new ToolStripMenuItem("Normals");
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Smooth", null, SmoothNormals));
+            normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Invert", null, InvertNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Recalculate", null, RecalculateNormals));
             ContextMenuStrip.Items.Add(normalsMenu);
 
@@ -235,10 +238,29 @@ namespace Bfres.Structs
         {
             ((BFRES)Parent.Parent.Parent.Parent).LoadEditors(this);
         }
+
+        private void UVUnwrapPosition(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            UVUnwrapPosition();
+            SaveVertexBuffer(GetResFileU() != null);
+            UpdateVertexData();
+            Cursor.Current = Cursors.Default;
+        }
+
         private void SmoothNormals(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
             SmoothNormals();
+            SaveVertexBuffer(GetResFileU() != null);
+            UpdateVertexData();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void InvertNormals(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            InvertNormals();
             SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;

@@ -373,6 +373,21 @@ namespace Switch_Toolbox.Library
             }
         }
 
+        public void InvertNormals()
+        {
+            foreach (Vertex v in vertices)
+            {
+                v.nrm = new Vector3(-1 * v.nrm.X, -1 * v.nrm.Y, -1 * v.nrm.Z);
+            }
+        }
+
+        public void UVUnwrapPosition()
+        {
+            foreach (Vertex v in vertices)
+            {
+            }
+        }
+
         public void CalculateNormals()
         {
             if (vertices.Count < 3)

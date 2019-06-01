@@ -81,10 +81,10 @@
             // 
             this.lblMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMessage.Location = new System.Drawing.Point(52, 12);
+            this.lblMessage.Location = new System.Drawing.Point(52, 9);
             this.lblMessage.MaximumSize = new System.Drawing.Size(310, 0);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(288, 37);
+            this.lblMessage.Size = new System.Drawing.Size(288, 40);
             this.lblMessage.TabIndex = 5;
             this.lblMessage.Text = "label1";
             // 
