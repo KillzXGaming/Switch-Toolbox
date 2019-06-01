@@ -139,8 +139,7 @@ namespace Switch_Toolbox.Library.Forms
 
                         if (rootIndex == roots.Length - 1)
                         {
-                            ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, archiveFile);
-                            wrapperFile.ArchiveFileInfo = node;
+                            ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
                             wrapperFile.Name = nodeName;
                             parentNode.Nodes.Add(wrapperFile);
                             parentNode = wrapperFile;

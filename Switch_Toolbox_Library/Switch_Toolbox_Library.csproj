@@ -209,11 +209,19 @@
     <Compile Include="FileFormats\APNG\CRC.cs" />
     <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
     <Compile Include="FileFormats\Animation\SEANIM.cs" />
+    <Compile Include="FileFormats\CSharpImageLibrary\DDS_BlockHelpers.cs" />
+    <Compile Include="FileFormats\CSharpImageLibrary\ImageEngine.cs" />
     <Compile Include="FileFormats\DAE\ColladaHelper.cs" />
     <Compile Include="FileFormats\DAE\collada_schema_1_4.cs" />
     <Compile Include="FileFormats\DAE\DAE.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="FileFormats\R4G4.cs" />
+    <Compile Include="Forms\ArchiveListPreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArchiveListPreviewForm.Designer.cs">
+      <DependentUpon>ArchiveListPreviewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BatchFormatExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -287,10 +295,10 @@
     <Compile Include="FileFormats\ASTC\IntegerEncoded.cs" />
     <Compile Include="FileFormats\DDS.cs" />
     <Compile Include="FileFormats\DDSCompressor.cs" />
-    <Compile Include="FileFormats\DDS\BC6.cs" />
-    <Compile Include="FileFormats\DDS\BC7.cs" />
-    <Compile Include="FileFormats\DDS\DX10_Helpers.cs" />
-    <Compile Include="FileFormats\DDS\Dxt.cs" />
+    <Compile Include="FileFormats\CSharpImageLibrary\BC6.cs" />
+    <Compile Include="FileFormats\CSharpImageLibrary\BC7.cs" />
+    <Compile Include="FileFormats\CSharpImageLibrary\DX10_Helpers.cs" />
+    <Compile Include="FileFormats\CSharpImageLibrary\Dxt.cs" />
     <Compile Include="FileFormats\TargaImage.cs" />
     <Compile Include="Forms\Custom\ColorSlider.cs" />
     <Compile Include="Forms\Custom\ColorSlider.Designer.cs" />
@@ -657,6 +665,9 @@
     <Compile Include="XML\XmlDoc.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\ArchiveListPreviewForm.resx">
+      <DependentUpon>ArchiveListPreviewForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchFormatExport.resx">
       <DependentUpon>BatchFormatExport.cs</DependentUpon>
     </EmbeddedResource>

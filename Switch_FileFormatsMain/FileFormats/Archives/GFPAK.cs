@@ -12,7 +12,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class GFPAK : TreeNodeFile, IFileFormat
+    public class GFPAK : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -92,20 +92,19 @@ namespace FirstPlugin
             }
         }
 
+        public List<FileEntry> files = new List<FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public bool CanAddFiles { get; set; } = false;
+        public bool CanRenameFiles { get; set; } = false;
+        public bool CanReplaceFiles { get; set; } = true;
+        public bool CanDeleteFiles { get; set; } = false;
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
 
             Read(new FileReader(stream));
-
-            Text = FileName;
-
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save", null, Save, Keys.Control | Keys.S));
-            ContextMenuStrip.Items.Add(new STToolStripSeparator());
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Preview Window", null, PreviewWindow, Keys.Control | Keys.P));
-
-            CanDelete = true;
         }
         public void Unload()
         {
@@ -132,17 +131,6 @@ namespace FirstPlugin
             }
         }
 
-        private void PreviewWindow(object sender, EventArgs args)
-        {
-            PreviewFormatList previewFormatList = new PreviewFormatList();
-
-            if (previewFormatList.ShowDialog() == DialogResult.OK)
-            {
-                CallRecursive(TreeView);
-                PreviewEditor previewWindow = new PreviewEditor();
-                previewWindow.Show();
-            }
-        }
         private void CallRecursive(TreeView treeView)
         {
             // Print each node recursively.  
@@ -163,7 +151,6 @@ namespace FirstPlugin
 
         public ushort BOM;
         public uint Version;
-        public List<FileEntry> files = new List<FileEntry>();
         public List<Folder> folders = new List<Folder>();
 
         public List<UInt64> hashes = new List<UInt64>();
@@ -206,8 +193,7 @@ namespace FirstPlugin
             {
                 FileEntry fileEntry = new FileEntry();
                 fileEntry.Read(reader);
-                fileEntry.Text = GetString(hashes[i], fileEntry.data);
-                Nodes.Add(fileEntry);
+                fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
                 files.Add(fileEntry);
             }
 
@@ -324,22 +310,10 @@ namespace FirstPlugin
                 writer.Write(unknown);
             }
         }
-        public class FileEntry : TreeNodeCustom
+        public class FileEntry : ArchiveFileInfo
         {
-            public FileEntry()
-            {
-                ImageKey = "fileBlank";
-                SelectedImageKey = "fileBlank";
-
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
-
-            }
             public uint unkown;
             public uint CompressionType;
-            public byte[] data;
             private long DataOffset;
             public IFileFormat FileHandler;
 
@@ -357,30 +331,8 @@ namespace FirstPlugin
 
                 using (reader.TemporarySeek((long)FileOffset, SeekOrigin.Begin))
                 {
-                    data = reader.ReadBytes((int)CompressedFileSize);
-                    data = STLibraryCompression.Type_LZ4.Decompress(data, 0, (int)CompressedFileSize, (int)DecompressedFileSize);
-
-                    string ext = SARCExt.SARC.GuessFileExtension(data);
-
-                    if (ext == ".bntx")
-                    {
-                        ImageKey = "bntx";
-                        SelectedImageKey = "bntx";
-                    }
-                    if (ext == ".byaml")
-                    {
-                        ImageKey = "byaml";
-                        SelectedImageKey = "byaml";
-                    }
-                    if (ext == ".aamp")
-                    {
-                        ImageKey = "aamp";
-                        SelectedImageKey = "aamp";
-                    }
-                    if (ext == ".lua")
-                    {
-
-                    }
+                    FileData = reader.ReadBytes((int)CompressedFileSize);
+                    FileData = STLibraryCompression.Type_LZ4.Decompress(FileData, 0, (int)CompressedFileSize, (int)DecompressedFileSize);
                 }
             }
 
@@ -389,14 +341,14 @@ namespace FirstPlugin
             {
                 if (FileHandler != null && FileHandler.CanSave)
                 {
-                    data = FileHandler.Save();
+                    FileData = FileHandler.Save();
                 }
 
-                CompressedData = Compress(data, CompressionType);
+                CompressedData = Compress(FileData, CompressionType);
 
                 writer.Write((ushort)unkown);
                 writer.Write((ushort)CompressionType);
-                writer.Write(data.Length);
+                writer.Write(FileData.Length);
                 writer.Write(CompressedData.Length);
                 writer.Write(padding);
                 DataOffset = writer.Position;
@@ -417,39 +369,8 @@ namespace FirstPlugin
                 else
                     throw new Exception("Unkown compression type?");
             }
-            public override void OnClick(TreeView treeView)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(data);
-            }
-
-            public override void OnDoubleMouseClick(TreeView treeView)
-            {
-                FileHandler = STFileLoader.OpenFileFormat(Name, data,false, true, this);
-
-
-                if (FileHandler != null && FileHandler is TreeNode)
-                    ReplaceNode(this.Parent, this, (TreeNode)FileHandler);
-            }
-            private void Export(object sender, EventArgs args)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
-                sfd.Filter = "All files(*.*)|*.*";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllBytes(sfd.FileName, data);
-                }
-            }
         }
+
         public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
         {
             if (NewNode == null)
@@ -458,6 +379,17 @@ namespace FirstPlugin
             int index = node.Nodes.IndexOf(replaceNode);
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
+        }
+
+        public bool AddFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
+        {
+
+            return true;
         }
     }
 }
