@@ -700,6 +700,7 @@ namespace Bfres.Structs
         }
 
         public override string ExportFilter => FileFilters.GetFilter(typeof(FMAA));
+        public override string ReplaceFilter => FileFilters.GetFilter(typeof(FMAA));
 
         public override void Export(string FileName)
         {
