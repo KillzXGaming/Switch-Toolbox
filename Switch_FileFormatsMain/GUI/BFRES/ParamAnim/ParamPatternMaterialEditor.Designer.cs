@@ -151,13 +151,13 @@
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
-            // TexPatternMaterialEditor
+            // ParamPatternMaterialEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 234);
-            this.Name = "TexPatternMaterialEditor";
-            this.Text = "TexPatternMaterialEditor";
+            this.Name = "ParamPatternMaterialEditor";
+            this.Text = "Param Material Editor";
             this.contentContainer.ResumeLayout(false);
             this.contentContainer.PerformLayout();
             this.ResumeLayout(false);
