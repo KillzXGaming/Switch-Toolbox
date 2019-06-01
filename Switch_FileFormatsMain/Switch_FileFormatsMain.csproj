@@ -272,6 +272,12 @@
     <Compile Include="GUI\AAMP\AampEditor.Designer.cs">
       <DependentUpon>AampEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFRES\ParamAnim\ParamPatternMaterialEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\ParamAnim\ParamPatternMaterialEditor.Designer.cs">
+      <DependentUpon>ParamPatternMaterialEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="YAML\YamlAamp.cs" />
     <Compile Include="GUI\BCRES\BfresEditor.cs">
       <SubType>UserControl</SubType>
@@ -983,6 +989,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\VolatileFlagEditor.resx">
       <DependentUpon>VolatileFlagEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\ParamAnim\ParamPatternMaterialEditor.resx">
+      <DependentUpon>ParamPatternMaterialEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Shape\CopyUVChannelDialog.resx">
       <DependentUpon>CopyUVChannelDialog.cs</DependentUpon>

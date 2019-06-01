@@ -197,7 +197,13 @@ namespace FirstPlugin.Forms
 
         private void btnEditMaterial_Click(object sender, EventArgs e)
         {
+            ParamPatternMaterialEditor editor = new ParamPatternMaterialEditor();
+            editor.LoadAnim(activeAnimation);
 
+            if (editor.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
 
         private void btnEditSamplers_Click(object sender, EventArgs e)
