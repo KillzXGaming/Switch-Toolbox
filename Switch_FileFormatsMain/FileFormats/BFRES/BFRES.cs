@@ -1338,6 +1338,9 @@ namespace FirstPlugin
                 }
                 if (node is BNTX)
                 {
+                    if (SettingRemoveUnusedTextures)
+                        RemoveUnusedTextures((BNTX)node);
+
                     if (((BNTX)node).Textures.Count > 0)
                     {
                         resFile.ExternalFiles.Add(new ExternalFile() { Data = ((BNTX)node).Save() });
@@ -1349,6 +1352,86 @@ namespace FirstPlugin
             ErrorCheck();
 
             resFile.Save(mem);
+        }
+
+        private void RemoveUnusedTextures(BFRESGroupNode ftexGroup)
+        {
+            var models = GetModels();
+            if (models == null)
+                return;
+
+            List<string> Keys = ftexGroup.ResourceNodes.Select(x => x.Key).ToList();
+
+            var AllTextures = GetAllTextures();
+            for (int i = 0; i < Keys.Count; i++)
+            {
+                //If nowhere in the bfres contains the key, we can remove it
+                if (!AllTextures.Contains(Keys[i]))
+                {
+                    ftexGroup.RemoveChild(ftexGroup.ResourceNodes[Keys[i]]);
+                }
+            }
+        }
+
+        private void RemoveUnusedTextures(BNTX bntx)
+        {
+            var models = GetModels();
+            if (models == null)
+                return;
+
+            List<string> Keys = bntx.Textures.Select(x => x.Key).ToList();
+
+            var AllTextures = GetAllTextures();
+            for (int i = 0; i < Keys.Count; i++)
+            {
+                //If nowhere in the bfres contains the key, we can remove it
+                if (!AllTextures.Contains(Keys[i]))
+                {
+                    bntx.RemoveTexture(bntx.Textures[Keys[i]]);
+                }
+            }
+        }
+
+        private List<string> GetAllTextures()
+        {
+            List<string> AllTextures = new List<string>();
+
+            foreach (TreeNode group in Nodes)
+            {
+                if (group is BFRESGroupNode && ((BFRESGroupNode)group).Type == BRESGroupType.Models)
+                {
+                    for (int i = 0; i < group.Nodes.Count; i++)
+                    {
+                        foreach (var material in ((FMDL)group.Nodes[i]).materials.Values)
+                        {
+                            foreach (var tex in material.TextureMaps)
+                            {
+                                if (!AllTextures.Contains(tex.Name))
+                                    AllTextures.Add(tex.Name);
+                            }
+                        }
+                    }
+                }
+                if (group is BFRESAnimFolder)
+                {
+                    foreach (BFRESGroupNode animGroup in group.Nodes)
+                    {
+                        if (animGroup.Type == BRESGroupType.TexPatAnim)
+                        {
+                            for (int i = 0; i < group.Nodes.Count; i++)
+                            {
+                                foreach (var tex in ((MaterialAnimation)group.Nodes[i]).Textures)
+                                {
+                                    if (!AllTextures.Contains(tex))
+                                        AllTextures.Add(tex);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return AllTextures;
         }
 
         private static void SaveBfresSwitchGroup(BFRESGroupNode group, ResFile resFile)
@@ -1453,12 +1536,12 @@ namespace FirstPlugin
             foreach (TreeNode node in Nodes)
             {
                 if (node is BFRESGroupNode)
-                    SaveBfresWiiUGroup((BFRESGroupNode)node, resFileU);
+                    SaveBfresWiiUGroup(this, (BFRESGroupNode)node, resFileU);
 
                 if (node is BFRESAnimFolder)
                 {
                     foreach (var animGroup in node.Nodes)
-                        SaveBfresWiiUGroup((BFRESGroupNode)animGroup, resFileU);
+                        SaveBfresWiiUGroup(this, (BFRESGroupNode)animGroup, resFileU);
                 }
             }
 
@@ -1466,7 +1549,7 @@ namespace FirstPlugin
             resFileU.Save(mem);
         }
 
-        private static void SaveBfresWiiUGroup(BFRESGroupNode group, ResU.ResFile resFileU)
+        private static void SaveBfresWiiUGroup(BFRES bfres, BFRESGroupNode group, ResU.ResFile resFileU)
         {
             switch (group.Type)
             {
@@ -1478,6 +1561,9 @@ namespace FirstPlugin
                     }
                     break;
                 case BRESGroupType.Textures:
+                    if (bfres.SettingRemoveUnusedTextures)
+                        bfres.RemoveUnusedTextures(group);
+
                     for (int i = 0; i < group.Nodes.Count; i++)
                     {
                         ((FTEX)group.Nodes[i]).texture.Name = group.Nodes[i].Text;

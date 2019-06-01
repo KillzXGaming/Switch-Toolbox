@@ -154,14 +154,14 @@ namespace Bfres.Structs
             foreach (var sampler in mat.Samplers)
             {
                 //If constant, create a constant instance with the first value set
-                if (sampler.group.Constant)
+                if (sampler.Constant)
                 {
                     AnimConstant animConstant = new AnimConstant();
                     animConstant.AnimDataOffset = 0;
-                    animConstant.Value = sampler.group.GetValue(0);
+                    animConstant.Value = sampler.GetValue(0);
                     data.Constants.Add(animConstant);
                 }
-                else if (sampler.group.Keys.Count > 0)
+                else if (sampler.Keys.Count > 0)
                 {
                     //If a sampler is not constant and uses curve data, then we need to set our begin curve index
                     if (!SetBeginCurve)
@@ -183,13 +183,13 @@ namespace Bfres.Structs
                         curve.CurveType = AnimCurveType.StepBool;
                     else
                     {
-                        if (sampler.group.InterpolationType == InterpolationType.HERMITE)
+                        if (sampler.InterpolationType == InterpolationType.HERMITE)
                             curve.CurveType = AnimCurveType.Cubic;
-                        if (sampler.group.InterpolationType == InterpolationType.LINEAR)
+                        if (sampler.InterpolationType == InterpolationType.LINEAR)
                             curve.CurveType = AnimCurveType.Linear;
-                        if (sampler.group.InterpolationType == InterpolationType.STEP)
+                        if (sampler.InterpolationType == InterpolationType.STEP)
                             curve.CurveType = AnimCurveType.StepInt;
-                        if (sampler.group.InterpolationType == InterpolationType.STEPBOOL)
+                        if (sampler.InterpolationType == InterpolationType.STEPBOOL)
                             curve.CurveType = AnimCurveType.StepBool;
                     }
 
@@ -203,12 +203,12 @@ namespace Bfres.Structs
                     List<float> Frames = new List<float>();
                     List<float> Keys = new List<float>();
 
-                    for (int frame = 0; frame < sampler.group.Keys.Count; frame++)
+                    for (int frame = 0; frame < sampler.Keys.Count; frame++)
                     {
-                        float currentIndex = sampler.group.GetValue(frame);
+                        float currentIndex = sampler.GetValue(frame);
                         if (frame > 0)
                         {
-                            float previousIndex = sampler.group.GetValue(frame - 1);
+                            float previousIndex = sampler.GetValue(frame - 1);
                             if (currentIndex != previousIndex)
                             {
                                 //Add key frame if texture not loaded previously
@@ -431,43 +431,35 @@ namespace Bfres.Structs
 
 
                     int textureIndex = 0;
-                    uint animOffset = 0;
 
                     if (SamplerInfo.BeginConstant != 65535)
                     {
-                        animOffset = matanim.Constants[SamplerInfo.BeginConstant].AnimDataOffset;
                         textureIndex = matanim.Constants[SamplerInfo.BeginConstant].Value;
 
-                        var group = new Animation.KeyGroup();
-                        group.AnimDataOffset = animOffset;
-                        group.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = textureIndex });
-                        group.Constant = true;
-
-                        sampler.group =  group;
+                        sampler.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = textureIndex });
+                        sampler.Constant = true;
+                        sampler.AnimDataOffset = matanim.Constants[SamplerInfo.BeginConstant].AnimDataOffset;
                     }
                     if (SamplerInfo.CurveIndex != 65535)
                     {
                         int index = (int)SamplerInfo.CurveIndex;
 
                         Animation.KeyGroup keyGroup = CurveHelper.CreateTrack(matanim.Curves[index]);
-                        keyGroup.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
-                        sampler.group = new KeyGroup()
-                        {
-                            AnimDataOffset = keyGroup.AnimDataOffset,
-                            Keys = keyGroup.Keys,
-                        };
+
+                        sampler.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
+                        sampler.Keys = keyGroup.Keys;
                     }
                 }
             }
         }
 
 
-        public class BfresSamplerAnim : Material.Sampler
+        public class BfresSamplerAnim : SamplerKeyGroup
         {
             FMAA MatAnimWrapper;
             MaterialAnimEntry MatWrapper;
 
-            public BfresSamplerAnim(string Name, FMAA materialAnimation, MaterialAnimEntry material)
+            public BfresSamplerAnim(string Name, FMAA materialAnimation, MaterialAnimEntry material) : base(materialAnimation)
             {
                 MatWrapper = material;
                 MatAnimWrapper = materialAnimation;
@@ -476,13 +468,13 @@ namespace Bfres.Structs
 
             public override string GetActiveTextureName(int frame)
             {
-                uint val = (uint)group.GetValue(frame);
+                uint val = (uint)GetValue(frame);
                 return MatAnimWrapper.Textures[(int)val];
             }
 
             public void AddKeyFrame(string TextureName, float Frame = -1, bool IsConstant = false)
             {
-                group.Constant = IsConstant;
+                Constant = IsConstant;
 
                 var MatAnim = MatAnimWrapper.MaterialAnim;
 
@@ -497,11 +489,11 @@ namespace Bfres.Structs
 
                 if (Frame == -1)
                 {
-                    Frame = group.EndFrame + 1; //Add to the end of the list by default
+                    Frame = EndFrame + 1; //Add to the end of the list by default
                 }
 
                 //For non constants we load a curve
-                if (!group.Constant)
+                if (!Constant)
                 {
                 }
             }
@@ -528,7 +520,7 @@ namespace Bfres.Structs
 
             public override STGenericTexture GetActiveTexture(int frame)
             {
-                uint val = (uint)group.GetValue(frame);
+                uint val = (uint)GetValue(frame);
 
                 foreach (var bntx in PluginRuntime.bntxContainers)
                 {
@@ -692,7 +684,7 @@ namespace Bfres.Structs
             //Loop through sampler list for texture anims
             //These store a list of indices (step curve) to grab a texture name list
             //Then we'll update the active texture
-            foreach (Material.Sampler samplerAnim in matAnim.Samplers)
+            foreach (SamplerKeyGroup samplerAnim in matAnim.Samplers)
             {
                 foreach (MatTexture texture in material.TextureMaps)
                 {
@@ -700,7 +692,7 @@ namespace Bfres.Structs
                     {
                         texture.textureState = STGenericMatTexture.TextureState.Animated;
 
-                        uint index = (uint)samplerAnim.group.GetValue(Frame);
+                        uint index = (uint)samplerAnim.GetValue(Frame);
                         texture.animatedTexName = Textures[(int)index];
                     }
                 }

@@ -178,7 +178,7 @@ namespace FirstPlugin.Forms
         public List<int> KeyFrames = new List<int>(); //Used for getting the frame of the list item
 
         public bool IsLoading = false;
-        private void LoadAniamtion(MaterialAnimation anim, MaterialAnimation.Material.Sampler activeSampler)
+        private void LoadAniamtion(MaterialAnimation anim, MaterialAnimation.SamplerKeyGroup activeSampler)
         {
             if (activeSampler == null || IsLoading)
                 return;
@@ -200,12 +200,12 @@ namespace FirstPlugin.Forms
                 for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
                 {
                     //Constants always show so break after first frame
-                    if (activeSampler.group.Constant && Frame != 0) 
+                    if (activeSampler.Constant && Frame != 0) 
                         break;
 
-                    var keyFrame = activeSampler.group.GetKeyFrame(Frame);
+                    var keyFrame = activeSampler.GetKeyFrame(Frame);
 
-                    if (keyFrame.IsKeyed || activeSampler.group.Constant)
+                    if (keyFrame.IsKeyed || activeSampler.Constant)
                     {
                         var tex = activeSampler.GetActiveTexture(Frame);
 
@@ -500,9 +500,9 @@ namespace FirstPlugin.Forms
 
                     int index = ActiveMaterialAnim.Textures.IndexOf(NewTex);
                     if (activeSampleU != null)
-                        activeSampleU.group.SetValue(SelectedFrame, index);
+                        activeSampleU.SetValue(SelectedFrame, index);
                     else
-                        activeSampler.group.SetValue(SelectedFrame, index);
+                        activeSampler.SetValue(SelectedFrame, index);
 
                     ActiveMaterialAnim.UpdateAnimationData();
                 }
@@ -515,7 +515,7 @@ namespace FirstPlugin.Forms
                 return;
 
             TexPatternInfoEditor editor = new TexPatternInfoEditor();
-            editor.LoadAnim(ActiveMaterialAnim.Materials[materialCB.SelectedIndex]);
+            editor.LoadAnim(ActiveMaterialAnim, ActiveMaterialAnim.Materials[materialCB.SelectedIndex]);
             if (editor.ShowDialog() == DialogResult.OK)
             {
 

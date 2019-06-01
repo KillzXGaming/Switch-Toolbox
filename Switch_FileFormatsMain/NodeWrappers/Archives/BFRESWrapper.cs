@@ -21,9 +21,24 @@ namespace FirstPlugin.NodeWrappers
 
         public bool IsWiiU { get; set; }
       
+        public bool SettingRemoveUnusedTextures
+        {
+            get
+            {
+                return ((ToolStripMenuItem)SettingsToolStrip.DropDownItems[0]).Checked;
+            }
+        }
+
+        private ToolStripMenuItem SettingsToolStrip;
 
         public void LoadMenus(bool isWiiUBfres) {
             IsWiiU = isWiiUBfres;
+
+            LoadFileMenus(true);
+
+            SettingsToolStrip = new ToolStripMenuItem("Settings", null);
+            SettingsToolStrip.DropDownItems.Add(new ToolStripMenuItem("Remove Unused Textures on Save", null, SettingBooleanAction));
+            ContextMenuStrip.Items.Add(SettingsToolStrip);
         }
 
         public override void Delete()
@@ -36,54 +51,16 @@ namespace FirstPlugin.NodeWrappers
             }
         }
 
-        protected void ImportModelAction(object sender, EventArgs e) { ImportModel(); }
-        protected void ImportEmbeddedFileAction(object sender, EventArgs e) { ImportEmbeddedFile(); }
-
-        public void ImportModel()
+        protected void SettingBooleanAction(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != DialogResult.OK)
-                return;
-
-            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
-            group.Import(ofd.FileNames);
+            if (sender is ToolStripMenuItem)
+            {
+                if (((ToolStripMenuItem)sender).Checked)
+                    ((ToolStripMenuItem)sender).Checked = false;
+                else
+                    ((ToolStripMenuItem)sender).Checked = true;
+            }
         }
-
-        public void ImportEmbeddedFile()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != DialogResult.OK)
-                return;
-
-            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
-            group.Import(ofd.FileNames);
-        }
-
-        public void NewModel()
-        {
-            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
-            FMDL anim = new FMDL();
-
-            if (IsWiiU)
-                BfresWiiU.ReadModel(anim, new ResU.Model());
-            else
-                BfresSwitch.ReadModel(anim, new ResNX.Model());
-            
-            group.AddNode(anim, "NewModel");
-        }
-
-        private void SetupAddedNode(BFRESGroupNode group, STGenericWrapper node)
-        {
-            Nodes.Add(group);
-            TreeView.SelectedNode = node;
-        }
-
-        public void NewEmbeddedFile()
-        {
-            BFRESGroupNode group = new BFRESGroupNode(IsWiiU);
-            ExternalFileData fshu = new ExternalFileData("NewFile", new byte[0]);
-            group.AddNode(fshu, "NewFile");
-            SetupAddedNode(group, fshu);
-        }
+    
     }
 }

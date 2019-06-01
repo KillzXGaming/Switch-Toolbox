@@ -76,23 +76,16 @@ namespace Bfres.Structs
                     {
                         textureIndex = SamplerInfo.SubBindIndex;
 
-                        var group = new Animation.KeyGroup();
-                        group.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = textureIndex });
-                        group.Constant = true;
-
-                        sampler.group = group;
+                        sampler.Keys.Add(new Animation.KeyFrame() { Frame = 0, Value = textureIndex });
+                        sampler.Constant = true;
                     }
                     if (SamplerInfo.CurveIndex != -1)
                     {
                         int index = (int)SamplerInfo.CurveIndex;
 
                         Animation.KeyGroup keyGroup = CurveHelper.CreateTrackWiiU(matanim.Curves[index]);
-                        keyGroup.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
-                        sampler.group = new KeyGroup()
-                        {
-                            AnimDataOffset = keyGroup.AnimDataOffset,
-                            Keys = keyGroup.Keys,
-                        };
+                        sampler.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
+                        sampler.Keys = keyGroup.Keys;
 
                         foreach (var ind in keyGroup.Keys)
                         {
@@ -140,11 +133,11 @@ namespace Bfres.Structs
             }
         }
 
-        public class BfresSamplerAnim : Material.Sampler
+        public class BfresSamplerAnim : SamplerKeyGroup
         {
             FTXP AnimWrapper;
 
-            public BfresSamplerAnim(string Name, FTXP ftxp)
+            public BfresSamplerAnim(string Name, FTXP ftxp) : base(ftxp)
             {
                 Text = Name;
                 ImageKey = "texture";
@@ -155,13 +148,13 @@ namespace Bfres.Structs
 
             public override string GetActiveTextureName(int frame)
             {
-                uint val = (uint)group.GetValue(frame);
+                uint val = (uint)GetValue(frame);
                 return AnimWrapper.Textures[(int)val];
             }
 
             public override STGenericTexture GetActiveTexture(int frame)
             {
-                uint val = (uint)group.GetValue(frame);
+                uint val = (uint)GetValue(frame);
 
                 foreach (var ftexFolder in PluginRuntime.ftexContainers)
                 {
@@ -211,7 +204,7 @@ namespace Bfres.Structs
             //Loop through sampler list for texture anims
             //These store a list of indices (step curve) to grab a texture name list
             //Then we'll update the active texture
-            foreach (Material.Sampler samplerAnim in matAnim.Samplers)
+            foreach (SamplerKeyGroup samplerAnim in matAnim.Samplers)
             {
                 foreach (MatTexture texture in material.TextureMaps)
                 {
@@ -219,7 +212,7 @@ namespace Bfres.Structs
                     {
                         texture.textureState = STGenericMatTexture.TextureState.Animated;
 
-                        uint index = (uint)samplerAnim.group.GetValue(Frame);
+                        uint index = (uint)samplerAnim.GetValue(Frame);
                         texture.animatedTexName = Textures[(int)index];
                     }
                 }

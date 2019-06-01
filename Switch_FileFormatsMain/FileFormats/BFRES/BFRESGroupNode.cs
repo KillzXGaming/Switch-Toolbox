@@ -189,7 +189,7 @@ namespace Bfres.Structs
 
                 fmdl.ModelU.VertexBuffers.Add(VertexBuffer);
                 fmdl.ModelU.Shapes.Add("NewShape", shape);
-                fmdl.ModelU.Materials.Add("NewMaterial", new ResU.Material() { Name = "NewMaterial" });
+                fmdl.ModelU.Materials.Add("NewMaterial", new ResU.Material() { Name = "NewMaterial", RenderState = new ResU.RenderState(), });
 
                 BfresWiiU.ReadModel(fmdl, fmdl.ModelU);
                 ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);

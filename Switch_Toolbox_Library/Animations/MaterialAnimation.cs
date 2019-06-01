@@ -31,7 +31,7 @@ namespace Switch_Toolbox.Library.Animations
         public class Material : STGenericWrapper
         {
             public List<ParamKeyGroup> Params = new List<ParamKeyGroup>();
-            public List<Sampler> Samplers = new List<Sampler>();
+            public List<SamplerKeyGroup> Samplers = new List<SamplerKeyGroup>();
 
             public Material()
             {
@@ -44,23 +44,8 @@ namespace Switch_Toolbox.Library.Animations
                 ImageKey = "material";
                 SelectedImageKey = "material";
             }
-
-            public class Sampler : TreeNodeCustom
-            {
-                public Sampler()
-                {
-                    ImageKey = "sampler";
-                    SelectedImageKey = "sampler";
-                }
-
-                public virtual string GetActiveTextureName(int frame) { return ""; }
-
-                public virtual STGenericTexture GetActiveTexture(int Frame) { return null; }
-
-                //Stores texture indices
-                public KeyGroup group = new KeyGroup();
-            }
         }
+
         public class ParamKeyGroup : TreeNodeCustom
         {
             public AnimationType Type;
@@ -68,7 +53,40 @@ namespace Switch_Toolbox.Library.Animations
             public string UniformName;
 
             //Params will have multiple curves for values
-            public List<Animation.KeyGroup> Values = new List<Animation.KeyGroup>();
+            public List<KeyGroup> Values = new List<KeyGroup>();
+        }
+
+        public class SamplerKeyGroup : KeyGroup
+        {
+            MaterialAnimation MaterialAnimation;
+
+            public SamplerKeyGroup(MaterialAnimation materialAnimation)
+            {
+                ImageKey = "sampler";
+                SelectedImageKey = "sampler";
+
+                MaterialAnimation = materialAnimation;
+            }
+
+            public virtual string GetActiveTextureName(int frame)
+            {
+                float index = GetValue(frame);
+                return MaterialAnimation.Textures[(int)index];
+            }
+
+            public virtual void SetActiveTextureName(int Frame, string TextureName)
+            {
+                if (!MaterialAnimation.Textures.Contains(TextureName))
+                    MaterialAnimation.Textures.Add(TextureName);
+
+                int index = MaterialAnimation.Textures.IndexOf(TextureName);
+
+                SetValue(index, Frame);
+            }
+
+
+
+            public virtual STGenericTexture GetActiveTexture(int Frame) { return null; }
         }
     }
 }

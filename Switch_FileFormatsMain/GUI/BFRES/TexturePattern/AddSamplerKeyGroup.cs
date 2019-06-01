@@ -21,11 +21,11 @@ namespace FirstPlugin.Forms
             CanResize = false;
         }
 
-        public MaterialAnimation.Material.Sampler GetSamplerData()
+        public MaterialAnimation.SamplerKeyGroup GetSamplerData(MaterialAnimation materialAnimation)
         {
-            MaterialAnimation.Material.Sampler sampler = new MaterialAnimation.Material.Sampler();
+            MaterialAnimation.SamplerKeyGroup sampler = new MaterialAnimation.SamplerKeyGroup(materialAnimation);
             sampler.Text = samplerNameTB.Text;
-            sampler.group.Constant = constantChkBox.Checked;
+            sampler.Constant = constantChkBox.Checked;
             return sampler;
         }
 

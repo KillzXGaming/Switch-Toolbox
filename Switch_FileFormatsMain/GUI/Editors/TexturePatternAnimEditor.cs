@@ -62,7 +62,7 @@ namespace FirstPlugin.Forms
                 int KeyPosY = KeyHeight;
                 foreach (FMAA.BfresSamplerAnim sampler in material.Nodes)
                 {
-                    var keyFrame = sampler.group.GetKeyFrame(Frame);
+                    var keyFrame = sampler.GetKeyFrame(Frame);
 
                     if (keyFrame.IsKeyed)
                     {

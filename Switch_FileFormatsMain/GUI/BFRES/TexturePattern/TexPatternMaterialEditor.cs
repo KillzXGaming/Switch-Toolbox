@@ -92,7 +92,7 @@ namespace FirstPlugin.Forms
                 int index = listViewCustom1.SelectedIndices[0];
 
                 TexPatternInfoEditor editor = new TexPatternInfoEditor();
-                editor.LoadAnim(activeAnim.Materials[index]);
+                editor.LoadAnim(activeAnim, activeAnim.Materials[index]);
                 if (editor.ShowDialog() == DialogResult.OK)
                 {
 

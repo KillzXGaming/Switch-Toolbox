@@ -24,10 +24,12 @@ namespace FirstPlugin.Forms
         }
 
         MaterialAnimation.Material activeMat;
+        MaterialAnimation ActiveMaterialAnim;
 
-        public void LoadAnim(MaterialAnimation.Material mat)
+        public void LoadAnim(MaterialAnimation materialAnimation, MaterialAnimation.Material mat)
         {
             activeMat = mat;
+            ActiveMaterialAnim = materialAnimation;
 
             foreach (var sampler in mat.Samplers)
             {
@@ -72,7 +74,7 @@ namespace FirstPlugin.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            activeMat.Samplers.Add(new MaterialAnimation.Material.Sampler());
+            activeMat.Samplers.Add(new MaterialAnimation.SamplerKeyGroup(ActiveMaterialAnim));
             listViewCustom1.Items.Add("");
         }
 
@@ -92,7 +94,7 @@ namespace FirstPlugin.Forms
             {
                 int index = listViewCustom1.SelectedIndices[0];
 
-                activeMat.Samplers[index].group.Constant = stCheckBox1.Checked;
+                activeMat.Samplers[index].Constant = stCheckBox1.Checked;
             }
         }
     }

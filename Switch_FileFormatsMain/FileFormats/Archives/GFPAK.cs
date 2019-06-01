@@ -57,7 +57,7 @@ namespace FirstPlugin
             else if (f.Matches(0x00000004)) return ".gfbanm";
             else if (f.Matches(0x00000014)) return ".gfbanm";
             else if (f.Matches(0x00000018)) return ".gfbanmcfg";
-            else if (f.Matches(0x00000002)) return ".gfbmdl";
+            else if (f.Matches(0x00000020)) return ".gfbmdl";
             else if (f.Matches(0x00000044)) return ".gfbpokecfg";
             else return "";
         }
