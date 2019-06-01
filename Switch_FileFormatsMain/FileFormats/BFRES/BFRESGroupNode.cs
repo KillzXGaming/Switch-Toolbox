@@ -318,7 +318,7 @@ namespace Bfres.Structs
                         }
                         else
                         {
-                            FMAA fmaaClr = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            FMAA fmaaClr = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.Color);
                             fmaaClr.Replace(FileName);
                             Nodes.Add(fmaaClr);
                         }
@@ -333,7 +333,7 @@ namespace Bfres.Structs
                         }
                         else
                         {
-                            FMAA fmaaSrt = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            FMAA fmaaSrt = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.TextureSrt);
                             fmaaSrt.Replace(FileName);
                             Nodes.Add(fmaaSrt);
                         }
@@ -356,10 +356,19 @@ namespace Bfres.Structs
                         Nodes.Add(fbnv);
                         break;
                     case BRESGroupType.MatVisAnim:
-                        FVIS fmtv = new FVIS(new ResU.VisibilityAnim() { Type = ResU.VisibilityAnimType.Material });
-                        fmtv.Text = ResourceName;
-                        fmtv.Replace(FileName, resFileNX, resFileU);
-                        Nodes.Add(fmtv);
+                        if (IsWiiU)
+                        {
+                            FVIS fmtv = new FVIS(new ResU.VisibilityAnim() { Type = ResU.VisibilityAnimType.Material });
+                            fmtv.Text = ResourceName;
+                            fmtv.Replace(FileName, resFileNX, resFileU);
+                            Nodes.Add(fmtv);
+                        }
+                        else
+                        {
+                            FMAA fmaaVis = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.Visibilty);
+                            fmaaVis.Replace(FileName);
+                            Nodes.Add(fmaaVis);
+                        }
                         break;
                     case BRESGroupType.ShapeAnim:
                         FSHA fsha = new FSHA();
