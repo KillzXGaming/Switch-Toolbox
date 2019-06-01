@@ -79,6 +79,9 @@ namespace Updater
             {
                 string dirName = new DirectoryInfo(dir).Name;
 
+                File.SetAttributes(dirName, FileAttributes.Normal);
+                File.SetAttributes(folderDir, FileAttributes.Normal);
+
                 if (Directory.Exists(Path.Combine(folderDir, dirName + @"\")))
                     Directory.Delete(Path.Combine(folderDir, dirName + @"\"), true);
                 Directory.Move(dir, Path.Combine(folderDir, dirName + @"\"));
