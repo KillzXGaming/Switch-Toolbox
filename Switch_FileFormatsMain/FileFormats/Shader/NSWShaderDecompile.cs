@@ -30,6 +30,7 @@ namespace FirstPlugin
                 case NswShaderType.Geometry: TypeArg = "g"; break;
             }
 
+
             if (!Directory.Exists("temp"))
                 Directory.CreateDirectory("temp");
 
@@ -48,8 +49,7 @@ namespace FirstPlugin
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "ShaderTools/Ryujinx.ShaderTools.exe";
             start.WorkingDirectory = Runtime.ExecutableDir;
-            start.CreateNoWindow = false;
-            start.Arguments = $"{TypeArg} {Utils.AddQuotesIfRequired("temp/shader1.bin")}";
+            start.Arguments = $"{TypeArg}, {Utils.AddQuotesIfRequired("temp/shader1.bin")}";
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             start.CreateNoWindow = true;
@@ -62,16 +62,13 @@ namespace FirstPlugin
                     {
                         return reader.ReadToEnd();
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Switch_Toolbox.Library.Forms.STErrorDialog.Show("Failed to decompile shader!", "Shader Tools", ex.ToString());
                         return "";
                     }
                 }
             }
-
-            //    File.WriteAllBytes("temp/shader1.bin", Utils.CombineByteArray(data.ToArray()));
-
-            return "";
         }
     }
 }

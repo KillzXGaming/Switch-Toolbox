@@ -91,18 +91,75 @@ namespace FirstPlugin
 
         public class ShaderProgram : TreeNodeCustom
         {
+            public ShaderProgram()
+            {
+                ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Data", null, Export, Keys.Control | Keys.E));
+                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Raw Binary", null, ExportBinary, Keys.Control | Keys.B));
+            }
+
             public NSWShaderDecompile.NswShaderType ShaderType { get; set; }
 
             public byte[] Data { get; set; }
 
+            public byte[] RawBinaryData { get; set; }
+
             public string Code { get; set; }
+
+            public void ParseBinary()
+            {
+                //Get the raw binary data
+                using (var reader = new FileReader(Data))
+                {
+                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+                    reader.Seek(68, System.IO.SeekOrigin.Begin);
+                    uint BinarySize = reader.ReadUInt32();
+                    uint BinaryOffset = reader.ReadUInt32();
+
+                    Console.WriteLine("Binary Size " + BinarySize);
+                    Console.WriteLine("Binar yOffset " + BinaryOffset);
+
+                    reader.Seek((int)BinaryOffset, System.IO.SeekOrigin.Begin);
+                    RawBinaryData = reader.ReadBytes((int)BinarySize);
+                }
+            }
 
             public bool TryDecompileBinary()
             {
-                Code = NSWShaderDecompile.DecompileShader(ShaderType, Data);
+                ParseBinary();
+                Code = NSWShaderDecompile.DecompileShader(ShaderType, RawBinaryData);
 
                 if (Code.Length > 0) return true;
                 else return false;
+            }
+
+            private void Export(object sender, EventArgs args)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.DefaultExt = "bin";
+                sfd.FileName = Text;
+
+                sfd.Filter = "Supported Formats|*.bin;";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    System.IO.File.WriteAllBytes(sfd.FileName, Data);
+                }
+            }
+
+            private void ExportBinary(object sender, EventArgs args)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.DefaultExt = "bin";
+                sfd.FileName = Text;
+
+                sfd.Filter = "Supported Formats|*.bin;";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    System.IO.File.WriteAllBytes(sfd.FileName, RawBinaryData);
+                }
             }
 
             public override void OnClick(TreeView treeview)
