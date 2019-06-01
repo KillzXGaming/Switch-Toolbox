@@ -219,6 +219,7 @@
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\MTOBWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\SOBJWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\TXOBWrapper.cs" />
+    <Compile Include="FileFormats\BFRES\Bfres Structs\BfresPlatformConverter.cs" />
     <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\BfresUtilies.cs" />

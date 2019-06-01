@@ -128,12 +128,10 @@ namespace Switch_Toolbox.Library.Forms
             if (listViewCustom1.SelectedItems.Count > 0 && e.Button == MouseButtons.Right)
             {
                 var item = listViewCustom1.SelectedItems[0];
-                if (item.Tag is TreeNode)
+                if (item.Tag != null && item.Tag is TreeNode)
                 {
-                   // stContextMenuStrip1.Items.AddRange(((TreeNode)item.Tag).ContextMenuStrip.Items);
-
                     Point pt = listViewCustom1.PointToScreen(e.Location);
-                    stContextMenuStrip1.Show(pt);
+                    ((TreeNode)item.Tag).ContextMenuStrip.Show(pt);
                 }
             }
         }
