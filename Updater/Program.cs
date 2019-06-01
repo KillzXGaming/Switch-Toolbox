@@ -77,10 +77,10 @@ namespace Updater
             Console.WriteLine("Installing...");
             foreach (string dir in Directory.GetDirectories("master/"))
             {
-                string dirName = new DirectoryInfo(dir).Name;
-
                 File.SetAttributes(dirName, FileAttributes.Normal);
                 File.SetAttributes(folderDir, FileAttributes.Normal);
+
+                string dirName = new DirectoryInfo(dir).Name;
 
                 if (Directory.Exists(Path.Combine(folderDir, dirName + @"\")))
                     Directory.Delete(Path.Combine(folderDir, dirName + @"\"), true);

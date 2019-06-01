@@ -39,3 +39,8 @@ C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.csp
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.csproj.CopyComplete
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.exe
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.pdb
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Toolbox\bin\Release\Updater.exe.manifest
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Toolbox\bin\Release\Updater.application
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.TrustInfo.xml
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.exe.manifest
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Release\Updater.application
