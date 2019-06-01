@@ -304,6 +304,7 @@ namespace Bfres.Structs
                         else
                         {
                             FMAA fmaaPrm = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.ShaderParam);
+                            fmaaPrm.Text = ResourceName;
                             fmaaPrm.Replace(FileName);
                             Nodes.Add(fmaaPrm);
                         }
@@ -319,6 +320,7 @@ namespace Bfres.Structs
                         else
                         {
                             FMAA fmaaClr = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.Color);
+                            fmaaClr.Text = ResourceName;
                             fmaaClr.Replace(FileName);
                             Nodes.Add(fmaaClr);
                         }
@@ -334,6 +336,7 @@ namespace Bfres.Structs
                         else
                         {
                             FMAA fmaaSrt = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.TextureSrt);
+                            fmaaSrt.Text = ResourceName;
                             fmaaSrt.Replace(FileName);
                             Nodes.Add(fmaaSrt);
                         }
@@ -366,6 +369,7 @@ namespace Bfres.Structs
                         else
                         {
                             FMAA fmaaVis = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.Visibilty);
+                            fmaaVis.Text = ResourceName;
                             fmaaVis.Replace(FileName);
                             Nodes.Add(fmaaVis);
                         }

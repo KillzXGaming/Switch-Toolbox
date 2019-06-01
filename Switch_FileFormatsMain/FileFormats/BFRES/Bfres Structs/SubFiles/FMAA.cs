@@ -710,7 +710,7 @@ namespace Bfres.Structs
         {
             string ext = Utils.GetExtension(FileName);
 
-            if (ext == ".bftxp")
+            if (ext == ".bfmaa")
             {
                 MaterialAnim.Import(FileName);
                 MaterialAnim.Name = Text;
