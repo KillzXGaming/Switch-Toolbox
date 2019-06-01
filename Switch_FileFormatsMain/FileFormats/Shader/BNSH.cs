@@ -231,7 +231,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(GeometryShaderOffset, SeekOrigin.Begin);
                         GeometryShader = new ShaderData();
-                        GeometryShader.shaderType = NSWShaderDecompile.NswShaderType.Geometry;
+                        GeometryShader.shaderType =  NSWShaderDecompile.NswShaderType.Geometry;
                         GeometryShader.Format = Format;
                         GeometryShader.Read(reader);
                     }
@@ -318,6 +318,7 @@ namespace FirstPlugin
             public NSWShaderDecompile.NswShaderType shaderType;
             public List<byte[]> data = new List<byte[]>();
             public int Format;
+            public ulong Address;
 
             public virtual void Read(FileReader reader)
             {
@@ -327,6 +328,8 @@ namespace FirstPlugin
                 int ShaderSize = reader.ReadInt32();
                 int ShaderSize2 = reader.ReadInt32();
                 reader.Seek(0x20);
+
+                Address = (ulong)ShaderSize2;
 
                 using (reader.TemporarySeek(ShaderOffset, SeekOrigin.Begin))
                     data.Add(reader.ReadBytes(ShaderSize2));
@@ -377,14 +380,13 @@ namespace FirstPlugin
                     LibraryGUI.Instance.LoadEditor(editor);
                 }
 
-                int ShaderIndex = 0;
-
                 editor.Text = Text;
-                editor.FillEditor(Utils.CombineByteArray(data.ToArray()), DecompileShader(ShaderIndex));
+                editor.FillEditor(Utils.CombineByteArray(data.ToArray()), DecompileShader());
             }
-            private string DecompileShader(int ShaderIndex = 1)
+            private string DecompileShader()
             {
-               return NSWShaderDecompile.DecompileShader(shaderType, data[1]);
+                //Shader A and B usually need to be combined but atm it has some issues
+               return NSWShaderDecompile.DecompileShader(shaderType, data[1], Address);
             }
         }
     }

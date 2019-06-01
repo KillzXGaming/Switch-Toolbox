@@ -514,7 +514,7 @@ namespace Switch_Toolbox.Library
             return MipmapNum;
         }
 
-        public static byte[] GenerateMipsAndCompress(Bitmap bitmap, uint MipCount, TEX_FORMAT Format, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
+        public static byte[] GenerateMipsAndCompress(Bitmap bitmap, uint MipCount, TEX_FORMAT Format, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Fast)
         {
             byte[] DecompressedData = BitmapExtension.ImageToByte(bitmap);
             DecompressedData = ConvertBgraToRgba(DecompressedData);
@@ -536,7 +536,7 @@ namespace Switch_Toolbox.Library
             return Utils.CombineByteArray(mipmaps.ToArray());
         }
 
-        public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef, STCompressionMode CompressionMode = STCompressionMode.Normal)
+        public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef, STCompressionMode CompressionMode = STCompressionMode.Fast)
         {
             if (IsCompressed(format))
                 return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, alphaRef, CompressionMode);

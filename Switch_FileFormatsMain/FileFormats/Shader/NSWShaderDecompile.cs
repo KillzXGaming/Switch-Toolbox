@@ -19,7 +19,7 @@ namespace FirstPlugin
             Compute
         }
 
-        public static string DecompileShader(NswShaderType shaderType, byte[] Data)
+        public static string DecompileShader(NswShaderType shaderType, byte[] Data, ulong Address = 0)
         {
             string TypeArg = "v";
 
