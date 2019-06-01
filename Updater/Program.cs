@@ -77,7 +77,7 @@ namespace Updater
             Console.WriteLine("Installing...");
             foreach (string dir in Directory.GetDirectories("master/"))
             {
-                File.SetAttributes(dirName, FileAttributes.Normal);
+                File.SetAttributes(dir, FileAttributes.Normal);
                 File.SetAttributes(folderDir, FileAttributes.Normal);
 
                 string dirName = new DirectoryInfo(dir).Name;
