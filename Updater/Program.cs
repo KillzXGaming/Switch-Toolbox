@@ -90,6 +90,8 @@ namespace Updater
                     continue;
 
                 File.SetAttributes(file, FileAttributes.Normal);
+                File.SetAttributes(folderDir, FileAttributes.Normal);
+
                 if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
                 {
                     File.Delete(Path.Combine(folderDir, Path.GetFileName(file)));

@@ -10,6 +10,20 @@ namespace FirstPlugin
 {
     public class BfresPlatformConverter
     {
+        public static ResNX.ResFile BFRESConvertWiiUToSwitch(ResU.ResFile resFileU)
+        {
+            ResNX.ResFile resFile = new ResNX.ResFile();
+
+            return resFile;
+        }
+
+        public static ResU.ResFile BFRESConvertSwitchToWiiU(ResNX.ResFile resFileNX)
+        {
+            ResU.ResFile resFile = new ResU.ResFile();
+
+            return resFile;
+        }
+
         //Todo. Bake sizes are altered in switch somewhat, although mostly all animations should be fine
 
         public static ResNX.MaterialAnim FTXPConvertWiiUToSwitch(ResU.TexPatternAnim texPatternAnim)
