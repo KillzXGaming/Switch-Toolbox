@@ -166,7 +166,7 @@ namespace BarSlider
         {
             TextEditorActive = true;
 
-            Cursor.Show();
+         //   Cursor.Show();
             prevPos = Cursor.Position;
 
             textBox.Location = new Point(30, ClientSize.Height / 2 - 5);
@@ -219,7 +219,7 @@ namespace BarSlider
 
             if (prevPos.X != 0 && prevPos.Y != 0)
                 Cursor.Position = prevPos;
-            Cursor.Show();
+          //  Cursor.Show();
         }
 
 
@@ -1575,7 +1575,7 @@ namespace BarSlider
 
             prevPos = Cursor.Position;
             previousValue = Value;
-            Cursor.Hide();
+        //    Cursor.Hide();
 
             base.OnMouseDown(e);
             if (e.Button == MouseButtons.Left)
@@ -1711,7 +1711,7 @@ namespace BarSlider
 
             if (prevPos.X != 0 && prevPos.Y != 0)
                 Cursor.Position = prevPos;
-            Cursor.Show();
+        //    Cursor.Show();
 
             base.OnKeyUp(e);
             switch (e.KeyCode)
