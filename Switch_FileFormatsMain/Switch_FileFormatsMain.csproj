@@ -219,7 +219,7 @@
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\MTOBWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\CMDL\SOBJWrapper.cs" />
     <Compile Include="FileFormats\BCRES\Wrappers\TXOBWrapper.cs" />
-    <Compile Include="FileFormats\BFRES\Bfres Structs\BfresPlatformConverter.cs" />
+    <Compile Include="FileFormats\BFRES\PlatformConverter\BfresPlatformConverter.cs" />
     <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
     <Compile Include="FileFormats\BFRES\BfresUtilies.cs" />
@@ -232,6 +232,7 @@
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
+    <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />

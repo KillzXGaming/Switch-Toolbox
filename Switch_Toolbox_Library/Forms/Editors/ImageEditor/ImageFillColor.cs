@@ -19,7 +19,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             InitializeComponent();
 
-            CanResize = true;
+            CanResize = false;
 
             stButton1.BackColor = FillColor;
         }
