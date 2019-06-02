@@ -1709,7 +1709,8 @@ namespace BarSlider
             if (TextEditorActive)
                 return;
 
-            Cursor.Position = prevPos;
+            if (prevPos.X != 0 && prevPos.Y != 0)
+                Cursor.Position = prevPos;
             Cursor.Show();
 
             base.OnKeyUp(e);
