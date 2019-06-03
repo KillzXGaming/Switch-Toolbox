@@ -90,6 +90,7 @@ uniform float enable_fresnel;
 uniform float enable_emission;
 uniform float cSpecularType;
 
+uniform int UseSpecularColor;
 
 // Texture Map Toggles
 uniform int HasDiffuse;
@@ -181,7 +182,7 @@ void main()
 
 	float metallic = 0;
 	float roughness = 1;
-	float specIntensity = 1;
+	vec3 specIntensity = vec3(1);
 	float ao = 1;
 
 	if (HasMRA == 1) //Kirby Star Allies PBR map
@@ -191,7 +192,7 @@ void main()
 		metallic = texture(MRA, f_texcoord0).r;
 		roughness = texture(MRA, f_texcoord0).g;
 		ao = texture(MRA, f_texcoord0).b;
-		specIntensity = texture(MRA, f_texcoord0).a;
+		specIntensity = vec3(texture(MRA, f_texcoord0).a);
 	}
 	else if (HasShadowMap == 1)
     {
@@ -208,7 +209,7 @@ void main()
     }
 	if (HasSpecularMap == 1)
     {
-		specIntensity = texture(SpecularMap, f_texcoord0).r;
+		specIntensity = texture(SpecularMap, f_texcoord0).rgb;
     }
 
     if (renderType == 1) // normals vertexColor
@@ -277,7 +278,10 @@ void main()
     }
 	else if (renderType == 13) //Specular
 	{
-        fragColor = vec4(vec3(specIntensity), 1);
+	    if (UseSpecularColor == 1)
+		    fragColor = vec4(specIntensity.rgb, 1);
+		else
+		  fragColor = vec4(vec3(specIntensity.r), 1);
 	}
 	else if (renderType == 14) //Shadow
 	{

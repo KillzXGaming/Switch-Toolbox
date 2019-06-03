@@ -79,6 +79,8 @@ uniform float enable_emission;
 uniform float cSpecularType;
 uniform float cIsEnableNormalMap;
 
+uniform int UseSpecularColor;
+
 // Texture Map Toggles
 uniform int HasDiffuse;
 uniform int HasNormalMap;
@@ -139,7 +141,7 @@ BakedData ShadowMapBaked(sampler2D ShadowMap, sampler2D LightMap, vec2 texCoordB
 vec3 CalcBumpedNormal(vec3 normal, sampler2D normalMap, VertexAttributes vert, float texCoordIndex);
 float AmbientOcclusionBlend(sampler2D BakeShadowMap, VertexAttributes vert, float ao_density);
 vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color);
-vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap, vec3 specular_color, VertexAttributes vert, float texCoordIndex);
+vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap, vec3 specular_color, VertexAttributes vert, float texCoordIndex, int UseSpecularColor);
 vec3 ReflectionPass(vec3 N, vec3 I, vec4 diffuseMap, float SpecularAmount, float aoBlend, vec3 tintColor, VertexAttributes vert);
 
 float ParseComponent(int Type, vec4 Texture)
@@ -269,7 +271,7 @@ void main()
 	   // Render Passes
     if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
 		fragColor.rgb += EmissionPass(EmissionMap, emission_intensity, vert, 0, emission_color);
-    fragColor.rgb += SpecularPass(I, N, HasSpecularMap, SpecularMap, specular_color, vert, 0);
+    fragColor.rgb += SpecularPass(I, N, HasSpecularMap, SpecularMap, specular_color, vert, 0, UseSpecularColor);
     fragColor.rgb += ReflectionPass(N, I, diffuseMapColor,SpecularAmount, AoPass, tintColor, vert);
 
 	fragColor.rgb *= pickingColor.rgb;

@@ -23,7 +23,7 @@ uniform int hasTangents;
 // Defined in Utility.frag.
 float Luminance(vec3 rgb);
 
-vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap, vec3 SpecColor, VertexAttributes vert, float texcoord2)
+vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap, vec3 SpecColor, VertexAttributes vert, float texcoord2, int UseSpecularColor)
 {
     float specBrdf = max(dot(I, normal), 0);
     float exponent = 8;
@@ -36,14 +36,18 @@ vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap
         return 0.1 * SpecColor * pow(specBrdf, exponent);
 	}
 
-    // TODO: Different games use the channels for separate textures.
-	vec3 specularTex = vec3(1);
+	vec2 SpecTexCoord = vert.texCoord;
 	if (texcoord2 == 1)
-	    specularTex = texture(SpecularMap, vert.texCoord2).rrr;
-	else
-	    specularTex = texture(SpecularMap, vert.texCoord).rrr;
+	    SpecTexCoord = vert.texCoord2;
 
-    vec3 result = specularTex * SpecColor * pow(specBrdf, exponent);
+
+	vec3 Specular = texture(SpecularMap, SpecTexCoord).rgb;
+	if (UseSpecularColor == 0)
+	    Specular =  texture(SpecularMap, SpecTexCoord).rrr;
+
+    // TODO: Different games use the channels for separate textures.
+
+    vec3 result = Specular * SpecColor * pow(specBrdf, exponent);
 	result *= SpecColor.rgb;
 
     float intensity = 0.3;

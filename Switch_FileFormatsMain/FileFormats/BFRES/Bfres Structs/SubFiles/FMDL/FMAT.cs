@@ -112,6 +112,15 @@ namespace Bfres.Structs
         protected void RenameAction(object sender, EventArgs args) { Rename(); }
         protected void DeleteAction(object sender, EventArgs args) { Delete(); }
 
+        public int GetOptionValue(string Option)
+        {
+            int value = -1;
+            if (shaderassign.options.ContainsKey(Option))
+                int.TryParse(shaderassign.options[Option], out value);
+            
+            return value;
+        }
+
         public void Delete()
         {
             string MappedNames = "";
