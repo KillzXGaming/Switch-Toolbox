@@ -1122,16 +1122,32 @@ namespace Bfres.Structs
                         materials.Clear();
                         Nodes["FmatFolder"].Nodes.Clear();
                     }
+
                     FMAT mat = new FMAT();
-                    mat.Material = new Material();
-                    mat.Material.Import(FileName);
-                    mat.ReadMaterial(mat.Material);
 
                     List<string> keyList = new List<string>(this.materials.Keys);
-                    mat.Material.Name = Utils.RenameDuplicateString(keyList, mat.Material.Name);
+
+                    if (GetResFileU() != null)
+                    {
+                        mat.MaterialU = new ResU.Material();
+                        mat.MaterialU.Import(FileName, GetResFileU());
+                        mat.MaterialU.Name = Utils.RenameDuplicateString(keyList, mat.MaterialU.Name);
+                        mat.Text = mat.MaterialU.Name;
+
+                        mat.ReadMaterial(mat.MaterialU);
+                    }
+                    else
+                    {
+                        mat.Material = new Material();
+                        mat.Material.Import(FileName);
+                        mat.Material.Name = Utils.RenameDuplicateString(keyList, mat.Material.Name);
+                        mat.Text = mat.Material.Name;
+
+                        mat.ReadMaterial(mat.Material);
+                    }
+
                     keyList.Clear();
 
-                    mat.Text = mat.Material.Name;
 
                     materials.Add(mat.Text, mat);
                     Nodes["FmatFolder"].Nodes.Add(mat);
