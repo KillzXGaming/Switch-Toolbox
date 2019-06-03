@@ -424,7 +424,8 @@ namespace Toolbox
                     }
                     Cursor.Current = Cursors.WaitCursor;
 
-                    if (format is STGenericWrapper)
+                    //Use the export method for particular formats like bfres for special save operations
+                    if (format is STGenericWrapper && !(format is STGenericTexture))
                     {
                         ((STGenericWrapper)format).Export(FileName);
                         return;
