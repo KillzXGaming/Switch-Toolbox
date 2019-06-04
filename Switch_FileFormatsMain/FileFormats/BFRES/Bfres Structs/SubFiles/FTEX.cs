@@ -248,6 +248,7 @@ namespace Bfres.Structs
                     IsReplaced = true;
                     Read(texture);
                     LoadOpenGLTexture();
+                    LibraryGUI.Instance.UpdateViewport();
                 }
             }
             else
@@ -271,6 +272,7 @@ namespace Bfres.Structs
                         IsReplaced = true;
                         Read(texture);
                         LoadOpenGLTexture();
+                        LibraryGUI.Instance.UpdateViewport();
                     }
                     else
                     {
