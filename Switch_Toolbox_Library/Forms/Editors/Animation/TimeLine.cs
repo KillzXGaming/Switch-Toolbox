@@ -86,7 +86,7 @@ namespace Switch_Toolbox.Library.Forms
             get { return lastFrame + 1; }
             set
             {
-                lastFrame = value - 1;
+                lastFrame = value;
 
                 if (value == 1)
                 {
