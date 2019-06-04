@@ -271,6 +271,7 @@ namespace Switch_Toolbox.Library.Forms
             GL.PushMatrix();
             GL.Scale(PlaneScaleY * ZoomValue, -PlaneScaleX * ZoomValue, 1);
             GL.Translate(PosX, PosY, 0);
+            GL.Rotate(180, 1, 0, 0);
 
             if (activeTexture.texture != null)
             {
