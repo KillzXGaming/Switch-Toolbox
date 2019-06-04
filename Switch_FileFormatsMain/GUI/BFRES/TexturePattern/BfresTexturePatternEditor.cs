@@ -204,10 +204,12 @@ namespace FirstPlugin.Forms
                         break;
 
                     var keyFrame = activeSampler.GetKeyFrame(Frame);
-
+            
                     if (keyFrame.IsKeyed || activeSampler.Constant)
                     {
-                        var tex = activeSampler.GetActiveTexture(Frame);
+                        string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)keyFrame.Value);
+
+                        var tex = activeSampler.GetActiveTexture((int)keyFrame.Value);
 
                         if (tex != null)
                         {
@@ -232,11 +234,11 @@ namespace FirstPlugin.Forms
                             if (listViewCustom1.InvokeRequired)
                             {
                                 listViewCustom1.Invoke((MethodInvoker)delegate {
-                                    listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + activeSampler.GetActiveTextureName(Frame), imageIndex++);
+                                    listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + TextureKey, imageIndex++);
                                 });
                             }
                             else
-                                listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + activeSampler.GetActiveTextureName(Frame), imageIndex++);
+                                listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + TextureKey, imageIndex++);
                         }
                     }
                 }

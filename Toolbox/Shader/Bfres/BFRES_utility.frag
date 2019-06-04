@@ -42,7 +42,7 @@ vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap
 
 
 	vec3 Specular = texture(SpecularMap, SpecTexCoord).rgb;
-	if (UseSpecularColor == 0)
+	 if (UseSpecularColor == 0)
 	    Specular =  texture(SpecularMap, SpecTexCoord).rrr;
 
     // TODO: Different games use the channels for separate textures.

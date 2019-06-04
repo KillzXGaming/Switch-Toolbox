@@ -466,12 +466,6 @@ namespace Bfres.Structs
                 Text = Name;
             }
 
-            public override string GetActiveTextureName(int frame)
-            {
-                uint val = (uint)GetValue(frame);
-                return MatAnimWrapper.Textures[(int)val];
-            }
-
             public void AddKeyFrame(string TextureName, float Frame = -1, bool IsConstant = false)
             {
                 Constant = IsConstant;
@@ -518,22 +512,20 @@ namespace Bfres.Structs
                 return curve;
             }
 
-            public override STGenericTexture GetActiveTexture(int frame)
+            public override STGenericTexture GetActiveTexture(int index)
             {
-                uint val = (uint)GetValue(frame);
-
                 foreach (var bntx in PluginRuntime.bntxContainers)
                 {
                     try
                     {
-                        string name = MatAnimWrapper.Textures[(int)val];
+                        string name = MatAnimWrapper.Textures[(int)index];
 
                         if (bntx.Textures.ContainsKey(name))
                             return bntx.Textures[name];
                     }
                     catch
                     {
-                        throw new Exception("Index out of range " + val);
+                        throw new Exception("Index out of range " + index);
                     }
                 }
                 return null;
@@ -542,7 +534,7 @@ namespace Bfres.Structs
 
         public override void NextFrame(Viewport viewport)
         {
-            if (Frame >= FrameCount) return;
+            if (Frame > FrameCount) return;
 
             //Loop through each drawable bfres in the active viewport to display the anim
             foreach (var drawable in viewport.scene.staticObjects)
@@ -692,8 +684,9 @@ namespace Bfres.Structs
                     {
                         texture.textureState = STGenericMatTexture.TextureState.Animated;
 
-                        uint index = (uint)samplerAnim.GetValue(Frame);
-                        texture.animatedTexName = Textures[(int)index];
+                        Console.WriteLine($"Frame " + Frame);
+
+                        texture.animatedTexName = samplerAnim.GetActiveTextureNameByFrame(Frame);
                     }
                 }
             }

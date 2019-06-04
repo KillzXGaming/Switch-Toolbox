@@ -531,7 +531,7 @@ namespace Switch_Toolbox.Library.Animations
 
         public void NextFrame(STSkeleton skeleton, bool isChild = false, bool AdancedNextFrame = false) 
         {
-            if (Frame >= FrameCount) return;
+            if (Frame > FrameCount) return;
 
             if (Frame == 0 && !isChild)
                 skeleton.reset();

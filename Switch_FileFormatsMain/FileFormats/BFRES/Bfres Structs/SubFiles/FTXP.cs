@@ -146,29 +146,14 @@ namespace Bfres.Structs
                 AnimWrapper = ftxp;
             }
 
-            public override string GetActiveTextureName(int frame)
+            public override STGenericTexture GetActiveTexture(int index)
             {
-                uint val = (uint)GetValue(frame);
-                return AnimWrapper.Textures[(int)val];
-            }
-
-            public override STGenericTexture GetActiveTexture(int frame)
-            {
-                uint val = (uint)GetValue(frame);
-
                 foreach (var ftexFolder in PluginRuntime.ftexContainers)
                 {
-                    try
-                    {
-                        string name = GetActiveTextureName(frame);
+                    string name = GetActiveTextureNameByIndex(index);
 
-                        if (ftexFolder.ResourceNodes.ContainsKey(name))
-                            return (STGenericTexture)ftexFolder.ResourceNodes[name];
-                    }
-                    catch
-                    {
-                        throw new Exception("Index out of range " + val);
-                    }
+                    if (ftexFolder.ResourceNodes.ContainsKey(name))
+                        return (STGenericTexture)ftexFolder.ResourceNodes[name];
                 }
                 return null;
             }
@@ -176,6 +161,8 @@ namespace Bfres.Structs
 
         public override void NextFrame(Viewport viewport)
         {
+            if (Frame > FrameCount) return;
+
             //Loop through each drawable bfres in the active viewport to display the anim
             foreach (var drawable in viewport.scene.staticObjects)
             {
@@ -212,8 +199,7 @@ namespace Bfres.Structs
                     {
                         texture.textureState = STGenericMatTexture.TextureState.Animated;
 
-                        uint index = (uint)samplerAnim.GetValue(Frame);
-                        texture.animatedTexName = Textures[(int)index];
+                        texture.animatedTexName = samplerAnim.GetActiveTextureNameByFrame(Frame);
                     }
                 }
             }

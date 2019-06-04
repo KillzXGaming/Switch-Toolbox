@@ -22,7 +22,7 @@ namespace Switch_Toolbox.Library.Animations
 
         public virtual void NextFrame(Viewport viewport)
         {
-            if (Frame >= FrameCount) return;
+            if (Frame > FrameCount) return;
         }
 
         public List<string> Textures = new List<string>();
@@ -68,10 +68,15 @@ namespace Switch_Toolbox.Library.Animations
                 MaterialAnimation = materialAnimation;
             }
 
-            public virtual string GetActiveTextureName(int frame)
+            public virtual string GetActiveTextureNameByIndex(int index)
             {
-                float index = GetValue(frame);
                 return MaterialAnimation.Textures[(int)index];
+            }
+
+            public virtual string GetActiveTextureNameByFrame(float frame)
+            {
+                var KeyFrame = GetKeyFrame(frame);
+                return MaterialAnimation.Textures[(int)KeyFrame.Value];
             }
 
             public virtual void SetActiveTextureName(int Frame, string TextureName)

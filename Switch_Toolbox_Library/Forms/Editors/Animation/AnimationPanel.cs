@@ -285,6 +285,9 @@ namespace Switch_Toolbox.Library
         }
 
         private void animationTrackBar_ValueChanged(object sender, EventArgs e) {
+            if (currentAnimation == null || totalFrame.Value <= 0)
+                return;
+
             currentFrameUpDown.Value = animationTrackBar.CurrentFrame;
         }
 
