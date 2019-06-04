@@ -944,8 +944,10 @@ namespace FirstPlugin
             shader.SetVector4("gsys_bake_st0", new Vector4(1, 1, 0, 0));
             shader.SetVector4("gsys_bake_st1", new Vector4(1, 1, 0, 0));
 
-            shader.SetBoolToInt("UseSpecularColor", mat.GetOptionValue("specular_mask_is_color") == 1);
-
+            shader.SetBoolToInt("UseSpecularColor",
+                 (mat.GetOptionValue("specular_mask_is_color") == 1) ||
+                 mat.GetOptionValue("enable_specular_color") == 1);
+            
             //Colors
             shader.SetVector4("const_color0", new Vector4(1, 1, 1, 1));
             shader.SetVector4("base_color_mul_color", new Vector4(1, 1, 1, 1));

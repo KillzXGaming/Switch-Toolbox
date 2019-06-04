@@ -766,6 +766,9 @@ namespace Switch_Toolbox.Library.Forms
                 ActiveTexture.MipCount = (uint)encodingEditor.MipCount;
 
                 UpdateEditCached(encodingEditor.newImage);
+                ApplyEdit(encodingEditor.newImage);
+
+                UpdateImage(ActiveTexture);
             }
         }
 
