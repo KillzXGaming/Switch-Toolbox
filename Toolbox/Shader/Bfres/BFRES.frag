@@ -258,23 +258,13 @@ void main()
     vec3 normal = texture(NormalMap, f_texcoord0).rgb;
     vec3 specular = texture(SpecularMap, f_texcoord0).rgb;
 
-
-	float SpecularAmount = 0;
-
-	if (HasSpecularMap == 1)
-	{
-	    SpecularAmount = texture(SpecularMap, f_texcoord0).r;
-	}
-
 	vec3 tintColor = vec3(1);
 
 	   // Render Passes
     if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
 		fragColor.rgb += EmissionPass(EmissionMap, emission_intensity, vert, 0, emission_color);
-    vec3 SpecularPassOutput = SpecularPass(I, N, HasSpecularMap, SpecularMap, specular_color, vert, 0, UseSpecularColor);
-
-	fragColor.rgb += SpecularPassOutput;
-    fragColor.rgb += ReflectionPass(N, I, diffuseMapColor,SpecularPassOutput, AoPass, tintColor, vert);
+	fragColor.rgb += SpecularPass(I, N, HasSpecularMap, SpecularMap, specular_color, vert, 0, UseSpecularColor);
+    fragColor.rgb += ReflectionPass(N, I, diffuseMapColor, specular, AoPass, tintColor, vert);
 
 	fragColor.rgb *= pickingColor.rgb;
 
