@@ -183,7 +183,7 @@ namespace Switch_Toolbox.Library
 
         private void AdvanceNextFrame()
         {
-            if (animationTrackBar.CurrentFrame == animationTrackBar.FrameCount)
+            if (animationTrackBar.CurrentFrame == animationTrackBar.FrameCount - 1)
             {
                 if (IsLooping)
                     currentFrameUpDown.Value = 0;
@@ -192,7 +192,8 @@ namespace Switch_Toolbox.Library
             }
             else if (!animationTrackBar.Locked)
             {
-                currentFrameUpDown.Value++;
+                if (currentFrameUpDown.Value < totalFrame.Value)
+                    currentFrameUpDown.Value++;
             }
 
             currentFrameUpDown.Refresh();
@@ -313,7 +314,6 @@ namespace Switch_Toolbox.Library
 
             float animFrameNum = frameNum;
 
-
             if (anim is MaterialAnimation)
             {
                 ((MaterialAnimation)anim).SetFrame(animFrameNum);
@@ -380,8 +380,6 @@ namespace Switch_Toolbox.Library
             isOpen = false;
             Dispose();
         }
-
-
 
         private void AnimationPanel_Load(object sender, EventArgs e)
         {

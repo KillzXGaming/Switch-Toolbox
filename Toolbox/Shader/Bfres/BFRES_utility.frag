@@ -81,16 +81,15 @@ vec3 SphereMapColor(vec3 viewNormal, sampler2D spheremap) {
     return texture(spheremap, sphereTexcoord * 0.5 + 0.5).rgb;
 }
 
-vec3 ReflectionPass(vec3 N, vec3 I, vec4 diffuseMap, float specularAmount, float aoBlend, vec3 tintColor, VertexAttributes vert) {
+vec3 ReflectionPass(vec3 N, vec3 I, vec4 diffuseMap, vec3 Specular, float aoBlend, vec3 tintColor, VertexAttributes vert) {
     vec3 reflectionPass = vec3(0);
 	// cubemap reflection
-	vec3 R = reflect(I, N);
-	R.y *= -1.0;
+	vec3 R = reflect(-I, N);
 
    int maxSpecularLod = 8;
     vec3 cubeColor = textureLod(specularIbl, R, maxSpecularLod).rgb;
 
-    reflectionPass += cubeColor * specularAmount;
+    reflectionPass += cubeColor * Specular;
 
     vec3 viewNormal = mat3(sphereMatrix) * normalize(N.xyz);
     vec3 sphereMapColor = SphereMapColor(vert.viewNormal, SphereMap);
