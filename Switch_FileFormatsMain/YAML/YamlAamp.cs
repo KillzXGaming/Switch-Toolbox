@@ -93,14 +93,14 @@ namespace FirstPlugin
                 case Aampv1.ParamType.Uint: return $"{entry.HashString}: {(uint)entry.Value}";
                 case Aampv1.ParamType.Int: return $"{entry.HashString}: {(int)entry.Value}";
                 case Aampv1.ParamType.Float: return $"{entry.HashString}: {(float)entry.Value}";
-                case Aampv1.ParamType.String256: return $"{entry.HashString}: !str256 {(string)entry.Value}";
-                case Aampv1.ParamType.String32: return $"{entry.HashString}: !str32 {(string)entry.Value}";
-                case Aampv1.ParamType.String64: return $"{entry.HashString}: !str64 {(string)entry.Value}";
-                case Aampv1.ParamType.StringRef: return $"{entry.HashString}: !strRef {(string)entry.Value}";
-                case Aampv1.ParamType.Curve1: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 1)}";
-                case Aampv1.ParamType.Curve2: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 2)}";
-                case Aampv1.ParamType.Curve3: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 3)}";
-                case Aampv1.ParamType.Curve4: return $"{entry.HashString}: {WriteCurve((Aampv2.Curve[])entry.Value, 4)}";
+                case Aampv1.ParamType.String256: return $"{entry.HashString}: !str256 {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv1.ParamType.String32: return $"{entry.HashString}: !str32 {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv1.ParamType.String64: return $"{entry.HashString}: !str64 {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv1.ParamType.StringRef: return $"{entry.HashString}: !strRef {((AampCommon.StringEntry)entry.Value).ToString()}";
+                case Aampv1.ParamType.Curve1: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 1)}";
+                case Aampv1.ParamType.Curve2: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 2)}";
+                case Aampv1.ParamType.Curve3: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 3)}";
+                case Aampv1.ParamType.Curve4: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 4)}";
                 default:
                     throw new Exception("Unsupported type! " + entry.ParamType);
             }

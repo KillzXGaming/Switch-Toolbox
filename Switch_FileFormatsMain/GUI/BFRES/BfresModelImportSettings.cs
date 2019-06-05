@@ -48,7 +48,9 @@ namespace FirstPlugin
         public bool Rotate90DegreesNegativeX;
         public bool RecalculateNormals;
         public string ExternalMaterialPath;
-        public bool SetDefaultParamData;
+        public bool ResetUVParams;
+        public bool ResetColorParams;
+
         public int SkinCountLimit;
         public bool LimitSkinCount;
 
@@ -75,7 +77,7 @@ namespace FirstPlugin
             chkBoxEnableBitans.Checked = obj.HasUv0;
             chkBoxEnableWeightIndices.Checked = obj.HasWeights;
             chkBoxEnableVertColors.Checked = obj.HasVertColors;
-            chkBoxParamDefaults.Checked = true;
+            chkResetUVParams.Checked = true;
             chkBoxTransformMatrix.Checked = true;
 
             if (!obj.HasPos)
@@ -298,7 +300,8 @@ namespace FirstPlugin
             Rotate90DegreesY = chkBoxRot90Y.Checked;
             Rotate90DegreesNegativeY = chkBoxRotNegative90Y.Checked;
             RecalculateNormals = chkBoxRecalcNormals.Checked;
-            SetDefaultParamData = chkBoxParamDefaults.Checked;
+            ResetUVParams = chkResetUVParams.Checked;
+            ResetColorParams = chkResetColorParams.Checked;
             ImportBones = chkBoxImportBones.Checked;
         }
 

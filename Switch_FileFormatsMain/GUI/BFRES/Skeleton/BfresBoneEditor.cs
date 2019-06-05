@@ -187,6 +187,12 @@ namespace FirstPlugin
             activeBone.skeletonParent.reset();
             activeBone.skeletonParent.update(true);
 
+         //   var Model = ((FSKL)activeBone.skeletonParent).GetModelParent();
+
+        //    GetBoneTransform(activeBone);
+        //    for (int s = 0; s < Model.shapes.Count; s++)
+             //   Model.shapes[s].TransformBindedBone(activeBone.Text);
+
             LibraryGUI.Instance.UpdateViewport();
         }
 
@@ -211,7 +217,6 @@ namespace FirstPlugin
                 SetBoneTransform(activeBone);
             }
 
-            GetBoneTransform(activeBone);
             LibraryGUI.Instance.UpdateViewport();
         }
 

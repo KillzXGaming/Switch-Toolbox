@@ -61,9 +61,11 @@
             this.chkBoxFlipUvsY = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportBones = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.panel8 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.chkResetColorParams = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.ogSkinCountChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkPlaceHolderTextures = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportMat = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.chkBoxParamDefaults = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.chkResetUVParams = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxRotNegative90Y = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.textBoxMaterialPath = new Switch_Toolbox.Library.Forms.STTextBox();
             this.chkBoxEnableWeightIndices = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -87,7 +89,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.ogSkinCountChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -419,7 +420,7 @@
             // chkBoxFlipUvsY
             // 
             this.chkBoxFlipUvsY.AutoSize = true;
-            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 62);
+            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 39);
             this.chkBoxFlipUvsY.Name = "chkBoxFlipUvsY";
             this.chkBoxFlipUvsY.Size = new System.Drawing.Size(65, 17);
             this.chkBoxFlipUvsY.TabIndex = 4;
@@ -430,7 +431,7 @@
             // chkBoxImportBones
             // 
             this.chkBoxImportBones.AutoSize = true;
-            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 85);
+            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 62);
             this.chkBoxImportBones.Name = "chkBoxImportBones";
             this.chkBoxImportBones.Size = new System.Drawing.Size(88, 17);
             this.chkBoxImportBones.TabIndex = 10;
@@ -441,10 +442,11 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.chkResetColorParams);
             this.panel8.Controls.Add(this.ogSkinCountChkBox);
             this.panel8.Controls.Add(this.chkPlaceHolderTextures);
             this.panel8.Controls.Add(this.chkBoxImportMat);
-            this.panel8.Controls.Add(this.chkBoxParamDefaults);
+            this.panel8.Controls.Add(this.chkResetUVParams);
             this.panel8.Controls.Add(this.chkBoxRotNegative90Y);
             this.panel8.Controls.Add(this.textBoxMaterialPath);
             this.panel8.Controls.Add(this.chkBoxEnableWeightIndices);
@@ -468,10 +470,32 @@
             this.panel8.Size = new System.Drawing.Size(524, 327);
             this.panel8.TabIndex = 11;
             // 
+            // chkResetColorParams
+            // 
+            this.chkResetColorParams.AutoSize = true;
+            this.chkResetColorParams.Location = new System.Drawing.Point(240, 204);
+            this.chkResetColorParams.Name = "chkResetColorParams";
+            this.chkResetColorParams.Size = new System.Drawing.Size(119, 17);
+            this.chkResetColorParams.TabIndex = 34;
+            this.chkResetColorParams.Text = "Reset Color Params";
+            this.chkResetColorParams.UseVisualStyleBackColor = true;
+            this.chkResetColorParams.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
+            // 
+            // ogSkinCountChkBox
+            // 
+            this.ogSkinCountChkBox.AutoSize = true;
+            this.ogSkinCountChkBox.Location = new System.Drawing.Point(3, 16);
+            this.ogSkinCountChkBox.Name = "ogSkinCountChkBox";
+            this.ogSkinCountChkBox.Size = new System.Drawing.Size(234, 17);
+            this.ogSkinCountChkBox.TabIndex = 33;
+            this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
+            this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
+            this.ogSkinCountChkBox.CheckedChanged += new System.EventHandler(this.ogSkinCountChkBox_CheckedChanged);
+            // 
             // chkPlaceHolderTextures
             // 
             this.chkPlaceHolderTextures.AutoSize = true;
-            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(3, 227);
+            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(3, 204);
             this.chkPlaceHolderTextures.Name = "chkPlaceHolderTextures";
             this.chkPlaceHolderTextures.Size = new System.Drawing.Size(160, 17);
             this.chkPlaceHolderTextures.TabIndex = 32;
@@ -494,21 +518,21 @@
             this.chkBoxImportMat.UseVisualStyleBackColor = true;
             this.chkBoxImportMat.CheckedChanged += new System.EventHandler(this.chkBoxImportMat_CheckedChanged);
             // 
-            // chkBoxParamDefaults
+            // chkResetUVParams
             // 
-            this.chkBoxParamDefaults.AutoSize = true;
-            this.chkBoxParamDefaults.Location = new System.Drawing.Point(3, 39);
-            this.chkBoxParamDefaults.Name = "chkBoxParamDefaults";
-            this.chkBoxParamDefaults.Size = new System.Drawing.Size(117, 17);
-            this.chkBoxParamDefaults.TabIndex = 30;
-            this.chkBoxParamDefaults.Text = "Set Param Defaults";
-            this.chkBoxParamDefaults.UseVisualStyleBackColor = true;
-            this.chkBoxParamDefaults.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
+            this.chkResetUVParams.AutoSize = true;
+            this.chkResetUVParams.Location = new System.Drawing.Point(240, 181);
+            this.chkResetUVParams.Name = "chkResetUVParams";
+            this.chkResetUVParams.Size = new System.Drawing.Size(110, 17);
+            this.chkResetUVParams.TabIndex = 30;
+            this.chkResetUVParams.Text = "Reset UV Params";
+            this.chkResetUVParams.UseVisualStyleBackColor = true;
+            this.chkResetUVParams.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
             // 
             // chkBoxRotNegative90Y
             // 
             this.chkBoxRotNegative90Y.AutoSize = true;
-            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 131);
+            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 108);
             this.chkBoxRotNegative90Y.Name = "chkBoxRotNegative90Y";
             this.chkBoxRotNegative90Y.Size = new System.Drawing.Size(117, 17);
             this.chkBoxRotNegative90Y.TabIndex = 29;
@@ -608,7 +632,7 @@
             // chkBoxRecalcNormals
             // 
             this.chkBoxRecalcNormals.AutoSize = true;
-            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 177);
+            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 154);
             this.chkBoxRecalcNormals.Name = "chkBoxRecalcNormals";
             this.chkBoxRecalcNormals.Size = new System.Drawing.Size(124, 17);
             this.chkBoxRecalcNormals.TabIndex = 18;
@@ -635,7 +659,7 @@
             this.chkBoxTransformMatrix.AutoSize = true;
             this.chkBoxTransformMatrix.Checked = true;
             this.chkBoxTransformMatrix.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 154);
+            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 131);
             this.chkBoxTransformMatrix.Name = "chkBoxTransformMatrix";
             this.chkBoxTransformMatrix.Size = new System.Drawing.Size(104, 17);
             this.chkBoxTransformMatrix.TabIndex = 14;
@@ -647,7 +671,7 @@
             // chkBoxRot90Y
             // 
             this.chkBoxRot90Y.AutoSize = true;
-            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 108);
+            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 85);
             this.chkBoxRot90Y.Name = "chkBoxRot90Y";
             this.chkBoxRot90Y.Size = new System.Drawing.Size(114, 17);
             this.chkBoxRot90Y.TabIndex = 13;
@@ -659,7 +683,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 203);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 180);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(17, 17);
             this.pictureBox1.TabIndex = 12;
@@ -668,7 +692,7 @@
             // checkBox9
             // 
             this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(25, 204);
+            this.checkBox9.Location = new System.Drawing.Point(25, 181);
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.Size = new System.Drawing.Size(130, 17);
             this.checkBox9.TabIndex = 11;
@@ -766,17 +790,6 @@
             this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
-            // ogSkinCountChkBox
-            // 
-            this.ogSkinCountChkBox.AutoSize = true;
-            this.ogSkinCountChkBox.Location = new System.Drawing.Point(3, 16);
-            this.ogSkinCountChkBox.Name = "ogSkinCountChkBox";
-            this.ogSkinCountChkBox.Size = new System.Drawing.Size(234, 17);
-            this.ogSkinCountChkBox.TabIndex = 33;
-            this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
-            this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
-            this.ogSkinCountChkBox.CheckedChanged += new System.EventHandler(this.ogSkinCountChkBox_CheckedChanged);
-            // 
             // BfresModelImportSettings
             // 
             this.ClientSize = new System.Drawing.Size(547, 398);
@@ -868,10 +881,11 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxEnablePositions;
         private Switch_Toolbox.Library.Forms.STTextBox textBoxMaterialPath;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxRotNegative90Y;
-        private Switch_Toolbox.Library.Forms.STCheckBox chkBoxParamDefaults;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkResetUVParams;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportMat;
         private Switch_Toolbox.Library.Forms.STPanel stPanel1;
         private Switch_Toolbox.Library.Forms.STCheckBox chkPlaceHolderTextures;
         private Switch_Toolbox.Library.Forms.STCheckBox ogSkinCountChkBox;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkResetColorParams;
     }
 }

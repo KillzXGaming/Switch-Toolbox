@@ -239,6 +239,54 @@ namespace Bfres.Structs
             ((BFRES)Parent.Parent.Parent.Parent).LoadEditors(this);
         }
 
+        public void TransformBindedBone(string BoneName)
+        {
+            if (Parent == null || VertexSkinCount > 1) return;
+
+            //Check if bone index obtains the right bone
+            if (VertexSkinCount == 0)
+            {
+                if (GetParentModel().Skeleton.bones[BoneIndex].Text != BoneName)
+                    return;
+            }
+
+            TransformBindedBone();
+        }
+
+        //Transforms vertices given the bone
+        //Used when a bone is updated in the editor
+        public void TransformBindedBone()
+        {
+            if (Parent == null || VertexSkinCount > 1) return;
+
+            FMDL model = GetParentModel();
+
+            Matrix4 SingleBind = model.Skeleton.bones[BoneIndex].Transform;
+
+            for (int v = 0; v < vertices.Count; v++)
+            {
+                if (VertexSkinCount == 0)
+                {
+                    vertices[v].pos = Vector3.TransformPosition(vertices[v].pos, SingleBind);
+                    vertices[v].nrm = Vector3.TransformNormal(vertices[v].nrm, SingleBind);
+                }
+                else if (VertexSkinCount == 1)
+                {
+                    int boneIndex = BoneIndex;
+                    if (vertices[v].boneIds.Count > 0)
+                        boneIndex = model.Skeleton.Node_Array[vertices[v].boneIds[0]];
+
+                    Matrix4 SingleBindLocal = model.Skeleton.bones[boneIndex].Transform;
+
+                    vertices[v].pos = Vector3.TransformPosition(vertices[v].pos, SingleBindLocal);
+                    vertices[v].nrm = Vector3.TransformNormal(vertices[v].nrm, SingleBindLocal);
+                }
+            }
+
+            SaveVertexBuffer(GetResFileU() != null);
+            UpdateVertexData();
+        }
+
         private void UVUnwrapPosition(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -307,6 +355,7 @@ namespace Bfres.Structs
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
+
         private void RecalculateNormals(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -315,6 +364,7 @@ namespace Bfres.Structs
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
+
         private void FillBitangentsAction(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -323,6 +373,7 @@ namespace Bfres.Structs
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
+
         private void FillTangentsAction(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -331,6 +382,7 @@ namespace Bfres.Structs
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
+
         private void CopyUVChannelAction(object sender, EventArgs args)
         {
             if (!vertexAttributes.Any(x => x.Name == "_u0"))
@@ -531,7 +583,8 @@ namespace Bfres.Structs
                     STErrorDialog.Show($"Failed to generate tangents for mesh {Text}", "Tangent Calculation", ex.ToString());
                 }
             }
-            if (settings.SetDefaultParamData)
+
+            if (settings.ResetColorParams)
             {
                 foreach (var param in mat.matparam.Values)
                 {
@@ -556,6 +609,20 @@ namespace Bfres.Structs
                         case "displacement_color":
                             param.ValueFloat = new float[] { 1, 1, 1, 1 };
                             break;
+                        case "gsys_bake_st0":
+                        case "gsys_bake_st1":
+                            param.ValueFloat = new float[] { 1, 1, 0, 0 };
+                            break;
+                    }
+                }
+            }
+
+            if (settings.ResetUVParams)
+            {
+                foreach (var param in mat.matparam.Values)
+                {
+                    switch (param.Name)
+                    {
                         case "gsys_bake_st0":
                         case "gsys_bake_st1":
                             param.ValueFloat = new float[] { 1, 1, 0, 0 };

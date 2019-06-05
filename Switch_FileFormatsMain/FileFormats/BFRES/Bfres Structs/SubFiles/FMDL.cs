@@ -1104,10 +1104,12 @@ namespace Bfres.Structs
             if (IsEdited)
                 UpdateVertexData();
         }
+
         public FMAT GetMaterial(int index)
         {
             return materials.Values.ElementAt(index);
         }
+
         public void AddMaterials(string FileName, bool Replace = true)
         {
             string ext = System.IO.Path.GetExtension(FileName);
@@ -1154,10 +1156,12 @@ namespace Bfres.Structs
                     break;
             }
         }
+
         public override void OnClick(TreeView treeView)
         {
             UpdateEditor();
         }
+
         public void UpdateEditor(){
             if (Parent != null)
                 ((BFRES)Parent.Parent).LoadEditors(this);

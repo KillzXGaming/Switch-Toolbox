@@ -510,7 +510,7 @@ namespace FirstPlugin
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
-                    else if (useSampler == "_s0")
+                    else if (texture.SamplerName == "_s0" || useSampler == "_s0")
                     {
                         m.HasSpecularMap = true;
                         texture.Type = MatTexture.TextureType.Specular;
