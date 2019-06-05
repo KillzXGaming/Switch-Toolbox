@@ -259,7 +259,10 @@ void main()
 
     vec3 color = vec3(1);
     vec3 normal = texture(NormalMap, f_texcoord0).rgb;
-    vec3 specular = texture(SpecularMap, f_texcoord0).rgb;
+    vec3 specular = vec3(0);
+	if (HasSpecularMap == 1){
+		specular = texture(SpecularMap, f_texcoord0).rgb;
+	}
 
 	vec3 tintColor = vec3(1);
 
