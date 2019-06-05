@@ -555,7 +555,7 @@ namespace Switch_Toolbox.Library
         }
         public static unsafe byte[] EncodePixelBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float AlphaRef = 0.5f)
         {
-            if (format == DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM)
+            if (format == DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM || format == DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB)
                 return data;
 
             return Convert(data, width, height, DXGI_FORMAT.R8G8B8A8_UNORM, (DXGI_FORMAT)format);
