@@ -608,7 +608,7 @@ namespace Bfres.Structs
                         if (csvsettings.LimitSkinCount) {
                             for (int i = 0; i < csvModel.objects.Count; i++)
                             {
-                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Name,
+                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
                                     csvModel.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
                                 if (Matches != null && Matches.Count > 0)

@@ -988,7 +988,7 @@ namespace Bfres.Structs
                         if (v.boneIds.Count < ob.VertexSkinCount)
                         {
                             v.boneIds.Add(0);
-                            v.boneWeights.Add(1);
+                            v.boneWeights.Add(0);
                         }
                     }
                 }
