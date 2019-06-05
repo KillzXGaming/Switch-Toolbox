@@ -106,6 +106,13 @@ float AmbientOcclusionBlend(sampler2D BakeShadowMap, VertexAttributes vert, floa
     return mix(aoMap, 1, ao_density);
 }
 
+vec3 CalculateTangent()
+{
+    vec3 tangent = vec3(0);
+
+	return tangent;
+}
+
 vec3 CalcBumpedNormal(vec3 inputNormal, sampler2D normalMap, VertexAttributes vert, float texCoordIndex)
 {
     float normalIntensity = 1;
@@ -126,7 +133,8 @@ vec3 CalcBumpedNormal(vec3 inputNormal, sampler2D normalMap, VertexAttributes ve
 
     // TBN Matrix.
     vec3 T = vert.tangent;
-    vec3 B = vert. bitangent;
+    vec3 B = vert.bitangent;
+
     if (Luminance(B) < 0.01)
         B = normalize(cross(T,  vert.normal));
     mat3 tbnMatrix = mat3(T, B,  vert.normal);

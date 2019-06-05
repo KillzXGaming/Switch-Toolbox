@@ -105,6 +105,7 @@ namespace Switch_Toolbox.Library
                 mat4.M31, mat4.M32, mat4.M33, mat4.M34,
                 mat4.M41, mat4.M42, mat4.M43, mat4.M44);
 
+            outMat.Transpose();
             return outMat;
         }
 

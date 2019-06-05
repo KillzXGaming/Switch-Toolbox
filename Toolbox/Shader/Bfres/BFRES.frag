@@ -80,6 +80,7 @@ uniform float cSpecularType;
 uniform float cIsEnableNormalMap;
 
 uniform int UseSpecularColor;
+uniform int UseMultiTexture;
 
 // Texture Map Toggles
 uniform int HasDiffuse;
@@ -196,8 +197,6 @@ void main()
 	if (HasNormalMap == 1 && useNormalMap == 1)
 		N = CalcBumpedNormal(normal, NormalMap, vert, NormalMapUVIndex);
 
-
-
     // Light Map
     vec4 LightMapColor = texture(BakeLightMap, f_texcoord2);
 
@@ -206,9 +205,14 @@ void main()
    // Diffuse lighting.
     float halfLambert = dot(difLightDirection, N) * 0.5 + 0.5;
 
+	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgba);
+
    //Texture Overlay (Like an emblem in mk8)
-    if (HasDiffuseLayer == 1)
-        fragColor += vec4(texture(DiffuseLayer, f_texcoord3).rgb, 1) * vec4(1);
+	if (UseMultiTexture == 1 && HasDiffuseLayer == 1)
+	{
+		vec4 AlbLayer = vec4(texture(DiffuseLayer, f_texcoord3).rgba);
+		diffuseMapColor.rgb = mix(diffuseMapColor.rgb, AlbLayer.rgb, AlbLayer.a);
+	}
 
     // Default Shader
     vec4 alpha = texture2D(DiffuseMap, f_texcoord0).aaaa;
@@ -220,7 +224,6 @@ void main()
         alpha *= 0.5;
     }
 
-	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgb, 1);
 	//vec4 diffuseMapColor = vec4(1);
 	diffuseMapColor *= halfLambert;
 

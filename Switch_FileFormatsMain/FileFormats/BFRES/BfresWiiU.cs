@@ -491,12 +491,14 @@ namespace FirstPlugin
                 {
                     if (useSampler == "_a0")
                     {
-                        if (AlbedoCount == 0)
-                        {
-                            m.HasDiffuseMap = true;
-                            AlbedoCount++;
-                            texture.Type = MatTexture.TextureType.Diffuse;
-                        }
+                        m.HasDiffuseMap = true;
+                        AlbedoCount++;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler == "_a1")
+                    {
+                        m.HasDiffuseLayer = true;
+                        texture.Type = MatTexture.TextureType.DiffuseLayer2;
                     }
                     else if (useSampler == "_n0")
                     {

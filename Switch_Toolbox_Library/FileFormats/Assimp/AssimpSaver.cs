@@ -136,8 +136,7 @@ namespace Switch_Toolbox.Library
                                 //Create a new assimp bone
                                 Bone bone = new Bone();
                                 bone.Name = STbone.Text;
-                                bone.OffsetMatrix = transform;
-
+                                bone.OffsetMatrix = STbone.invert.ToMatrix4x4();
                                 mesh.Bones.Add(bone);
                                 BoneNames.Add(bone.Name);
 

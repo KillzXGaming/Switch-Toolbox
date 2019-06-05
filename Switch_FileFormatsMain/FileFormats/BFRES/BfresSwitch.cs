@@ -705,12 +705,14 @@ namespace FirstPlugin
                 {
                     if (useSampler == "_a0")
                     {
-                        if (AlbedoCount == 0)
-                        {
-                            m.HasDiffuseMap = true;
-                            AlbedoCount++;
-                            texture.Type = MatTexture.TextureType.Diffuse;
-                        }
+                        m.HasDiffuseMap = true;
+                        AlbedoCount++;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    if (useSampler == "_a1")
+                    {
+                        m.HasDiffuseLayer = true;
+                        texture.Type = MatTexture.TextureType.DiffuseLayer2;
                     }
                     if (useSampler == "_n0")
                     {
@@ -846,13 +848,6 @@ namespace FirstPlugin
                             m.HasDiffuseMap = true;
                             AlbedoCount++;
                             texture.Type = MatTexture.TextureType.Diffuse;
-                        }
-                        if (AlbedoCount == 1)
-                        {
-                            //   poly.material.HasDiffuseLayer = true;
-                            //    texture.hash = 19;
-                            //   texture.Type = MatTexture.TextureType.DiffuseLayer2;
-
                         }
                     }
 

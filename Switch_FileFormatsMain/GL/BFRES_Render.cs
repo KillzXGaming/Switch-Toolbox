@@ -947,7 +947,9 @@ namespace FirstPlugin
             shader.SetBoolToInt("UseSpecularColor",
                  (mat.GetOptionValue("specular_mask_is_color") == 1) ||
                  mat.GetOptionValue("enable_specular_color") == 1);
-            
+
+            shader.SetBoolToInt("UseMultiTexture", mat.GetOptionValue("enable_multi_texture") == 1);
+
             //Colors
             shader.SetVector4("const_color0", new Vector4(1, 1, 1, 1));
             shader.SetVector4("base_color_mul_color", new Vector4(1, 1, 1, 1));
