@@ -507,6 +507,7 @@
     <Compile Include="Forms\ViewportDivider.Designer.cs">
       <DependentUpon>ViewportDivider.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generics\BoundingBox.cs" />
     <Compile Include="Generics\GenericBitmapTexture.cs" />
     <Compile Include="Generics\GenericMaterial.cs" />
     <Compile Include="Generics\GenericMatTexture.cs" />

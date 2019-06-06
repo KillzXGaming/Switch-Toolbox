@@ -17,7 +17,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "AAMP" };
-        public string[] Extension { get; set; } = new string[] { "*.aamp" };
+        public string[] Extension { get; set; } = new string[] { "*.aamp", "*.bglpbd" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -52,6 +52,121 @@ namespace FirstPlugin
         }
 
         bool IsSaveDialog = false;
+
+        public static void GenerateProbeBoundings()
+        {
+            OpenFileDialog ofd1 = new OpenFileDialog();
+            ofd1.Filter = Utils.GetAllFilters(typeof(AAMP));
+            if (ofd1.ShowDialog() != DialogResult.OK)
+                return;
+
+            //Load the AAMP
+            var File = STFileLoader.OpenFileFormat(ofd1.FileName);
+            if (File == null || !(File is AAMP))
+                throw new Exception("File not a valid AAMP file!");
+
+            //Load bfres for generating the bounds
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = Utils.GetAllFilters(typeof(BFRES));
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                //Open and check bfres
+                var Bfres = STFileLoader.OpenFileFormat(ofd.FileName);
+                if (Bfres == null || !(Bfres is BFRES))
+                    throw new Exception("File not a valid BFRES file!");
+
+                //Check version instance
+                if (((AAMP)File).aampFileV1 != null)
+                {
+                    foreach (var val in ((AAMP)File).aampFileV1.RootNode.childParams)
+                    {
+                        foreach (var param in val.paramObjects)
+                        {
+                            switch (param.HashString)
+                            {
+                                case "grid":
+                                    GenerateGridData((BFRES)Bfres, param.paramEntries);
+                                    break;
+                            }
+                        }
+                    }
+
+                    foreach (var param in ((AAMP)File).aampFileV1.RootNode.paramObjects)
+                    {
+                        switch (param.HashString)
+                        {
+                            case "root_grid":
+                                GenerateGridData((BFRES)Bfres, param.paramEntries);
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var val in ((AAMP)File).aampFileV2.RootNode.childParams)
+                    {
+                        foreach (var param in val.paramObjects)
+                        {
+                            switch (param.HashString)
+                            {
+                                case "grid":
+                                    GenerateGridData((BFRES)Bfres, param.paramEntries);
+                                    break;
+                            }
+                        }
+                    }
+
+                    foreach (var param in ((AAMP)File).aampFileV2.RootNode.paramObjects)
+                    {
+                        switch (param.HashString)
+                        {
+                            case "root_grid":
+                                GenerateGridData((BFRES)Bfres, param.paramEntries);
+                                break;
+                        }
+                    }
+                }
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = Utils.GetAllFilters(File);
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    //Save the aamp back
+                    STFileSaver.SaveFileFormat(File, sfd.FileName);
+                }
+
+                File.Unload();
+                Bfres.Unload();
+            }
+        }
+
+        private static void GenerateGridData(BFRES bfres, aampv2.ParamEntry[] paramEntries)
+        {
+            //Load the grid min nad max and set them
+            var boundings = bfres.GetBoundingBox();
+
+            foreach (var entry in paramEntries)
+            {
+                if (entry.HashString == "aabb_min_pos")
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.Min.X, boundings.Min.Y, boundings.Min.Z);
+                if (entry.HashString == "aabb_max_pos")
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.Max.X, boundings.Max.Y, boundings.Max.Z);
+            }
+        }
+
+        private static void GenerateGridData(BFRES bfres, aampv1.ParamEntry[] paramEntries)
+        {
+            var boundings = bfres.GetBoundingBox();
+
+            foreach (var entry in paramEntries)
+            {
+                if (entry.HashString == "aabb_min_pos")
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.Min.X, boundings.Min.Y, boundings.Min.Z);
+                if (entry.HashString == "aabb_max_pos")
+                    entry.Value = new Syroot.Maths.Vector3F(boundings.Max.X, boundings.Max.Y, boundings.Max.Z);
+            }
+        }
 
         public AampEditorBase OpenForm()
         {

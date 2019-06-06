@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using OpenTK;
+using System.Reflection;
 
 namespace Switch_Toolbox.Library
 {
@@ -181,6 +182,13 @@ namespace Switch_Toolbox.Library
         {
             return Guid.NewGuid().ToString();
         }
+
+        public static string GetAllFilters(Type type)
+        {
+            Object instance = Activator.CreateInstance(type);
+            return GetAllFilters((IFileFormat)instance);
+        }
+
         public static string GetAllFilters(IFileFormat format)
         {
             List<IFileFormat> f = new List<IFileFormat>();

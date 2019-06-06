@@ -83,6 +83,24 @@ namespace FirstPlugin
             PluginRuntime.bntxContainers.Clear();
         }
 
+        class ProbeBoundingConverter : IMenuExtension
+        {
+            public STToolStripItem[] FileMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => toolsExt;
+            public STToolStripItem[] TitleBarExtensions => null;
+
+            readonly STToolStripItem[] toolsExt = new STToolStripItem[1];
+            public ProbeBoundingConverter()
+            {
+                toolsExt[0] = new STToolStripItem("Mario Kart 8 Probe Light Converter");
+                toolsExt[0].Click += GenerateProbeLightBounds;
+            }
+
+            private void GenerateProbeLightBounds(object sender, EventArgs args) {
+                AAMP.GenerateProbeBoundings();
+            }
+        }
+
         class OdysseyCostumeSelectorMenu : IMenuExtension
         {
             public STToolStripItem[] FileMenuExtensions => null;
@@ -237,6 +255,7 @@ namespace FirstPlugin
         {
             List<Type> MenuItems = new List<Type>();
             MenuItems.Add(typeof(OdysseyCostumeSelectorMenu));
+            MenuItems.Add(typeof(ProbeBoundingConverter));
 
             return MenuItems.ToArray();
         }

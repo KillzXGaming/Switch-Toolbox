@@ -273,6 +273,7 @@ namespace FirstPlugin
 
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Multiselect = true;
+                    ofd.Filter = Utils.GetAllFilters(typeof(NUTEXB));
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
@@ -374,11 +375,8 @@ namespace FirstPlugin
         }
         private void Save(object sender, EventArgs args)
         {
-            List<IFileFormat> formats = new List<IFileFormat>();
-            formats.Add(this);
-
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = Utils.GetAllFilters(formats);
+            sfd.Filter = Utils.GetAllFilters(this);
             sfd.FileName = FileName;
 
             if (sfd.ShowDialog() == DialogResult.OK)

@@ -16,6 +16,7 @@ using Switch_Toolbox.Library.NodeWrappers;
 using GL_EditorFramework.Interfaces;
 using FirstPlugin.Forms;
 using FirstPlugin.NodeWrappers;
+using OpenTK;
 
 namespace FirstPlugin
 {
@@ -159,7 +160,37 @@ namespace FirstPlugin
             return data;
         }
 
+        public BoundingBox GetBoundingBox()
+            {
+            Vector3 Min = new Vector3(0);
+            Vector3 Max = new Vector3(0);
 
+            var Models = GetModels();
+            if (Models == null)
+                return new BoundingBox();
+
+            foreach (FMDL model in Models)
+            {
+                foreach (var shape in model.shapes)
+                {
+                    foreach (var vertex in shape.vertices)
+                    {
+                        Min.X = Math.Min(Min.X, vertex.pos.X);
+                        Min.Y = Math.Min(Min.Y, vertex.pos.Y);
+                        Min.Z = Math.Min(Min.Z, vertex.pos.Z);
+                        Max.X = Math.Max(Max.X, vertex.pos.X);
+                        Max.Y = Math.Max(Max.Y, vertex.pos.Y);
+                        Max.Z = Math.Max(Max.Z, vertex.pos.Z);
+                    }
+                }
+            }
+
+            return new BoundingBox()
+            {
+                Max = Max,
+                Min = Min,
+            };
+        }
 
         public void OnPropertyChanged()
         {
