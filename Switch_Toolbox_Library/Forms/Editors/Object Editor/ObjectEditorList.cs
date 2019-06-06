@@ -107,18 +107,6 @@ namespace Switch_Toolbox.Library.Forms
             IsLoaded = true;
         }
 
-        public List<EditableObject> editableGlDrawables = new List<EditableObject>();
-        public List<AbstractGlDrawable> staticGlDrawables = new List<AbstractGlDrawable>();
-
-        public static void AddObject(EditableObject drawable)
-        {
-            var editor = LibraryGUI.Instance.GetObjectEditor();
-            if (editor == null)
-                return;
-
-            editor.editableGlDrawables.Add(drawable);
-        }
-
         public IFileFormat GetActiveFile()
         {
             if (treeViewCustom1.Nodes.Count == 0)

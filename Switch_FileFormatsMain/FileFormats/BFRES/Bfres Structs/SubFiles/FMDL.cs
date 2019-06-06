@@ -108,7 +108,7 @@ namespace Bfres.Structs
 
             if (dialogResult == DialogResult.Yes)
             {
-                ((BFRES)Parent.Parent).RemoveSkeletonDrawable(Skeleton);
+                ((BFRES)Parent.Parent).DrawableContainer.Drawables.Remove(Skeleton);
 
                 shapes.Clear();
                 materials.Clear();
@@ -469,7 +469,7 @@ namespace Bfres.Structs
         public override void Unload()
         {
             if (Parent != null)
-                ((BFRES)Parent.Parent).RemoveSkeletonDrawable(Skeleton);
+                ((BFRES)Parent.Parent).DrawableContainer.Drawables.Remove(Skeleton);
 
             shapes.Clear();
             materials.Clear();

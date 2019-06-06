@@ -76,6 +76,11 @@ namespace Switch_Toolbox.Library.Forms
             return GetItemText(SelectedItem);
         }
 
+        public void SelectItemByText(string text)
+        {
+            SelectedIndex = FindStringExact(text);
+        }
+
         public void Bind(Type EnumType, object Object, string PropertyName, bool IsReset = true)
         {
             if (IsReset)

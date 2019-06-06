@@ -286,11 +286,11 @@
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </Compile>
     <Compile Include="YAML\YamlAamp.cs" />
-    <Compile Include="GUI\BCRES\BfresEditor.cs">
+    <Compile Include="GUI\BCRES\BcresEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\BCRES\BfresEditor.Designer.cs">
-      <DependentUpon>BfresEditor.cs</DependentUpon>
+    <Compile Include="GUI\BCRES\BcresEditor.Designer.cs">
+      <DependentUpon>BcresEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BCRES\Material\SamplerEditorSimple.cs">
       <SubType>UserControl</SubType>
@@ -928,8 +928,8 @@
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\BCRES\BfresEditor.resx">
-      <DependentUpon>BfresEditor.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\BCRES\BcresEditor.resx">
+      <DependentUpon>BcresEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BCRES\Material\SamplerEditorSimple.resx">
       <DependentUpon>SamplerEditorSimple.cs</DependentUpon>

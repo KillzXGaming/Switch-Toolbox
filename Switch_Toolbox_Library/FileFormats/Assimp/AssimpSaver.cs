@@ -6,6 +6,7 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.Animations;
 using Switch_Toolbox.Library.Rendering;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Switch_Toolbox.Library
 {
@@ -42,14 +43,14 @@ namespace Switch_Toolbox.Library
             progressBar.Task = "Saving File...";
             progressBar.Value = 80;
 
-            SaveScene(FileName, scene);
+            SaveScene(FileName, scene, model);
 
             progressBar.Value = 100;
             progressBar.Close();
             progressBar.Dispose();
         }
 
-        private void SaveScene(string FileName, Scene scene)
+        private void SaveScene(string FileName, Scene scene, STGenericModel model)
         {
             using (var v = new AssimpContext())
             {
@@ -65,11 +66,16 @@ namespace Switch_Toolbox.Library
                 if (ext == ".ply")
                     formatID = "ply";
 
-                if (v.ExportFile(scene, FileName, formatID, PostProcessSteps.FlipUVs))
+                bool ExportSuccessScene = v.ExportFile(scene, FileName, formatID, PostProcessSteps.FlipUVs);
+                if (ExportSuccessScene)
+                {
+                 //   WriteExtraSkinningInfo(FileName, scene, model);
                     MessageBox.Show($"Exported {FileName} Successfuly!");
+                }
                 else
                     MessageBox.Show($"Failed to export {FileName}!");
             }
+
         }
 
         private void SaveMeshes(Scene scene, STGenericModel model, STSkeleton skeleton,  string FileName, List<int> NodeArray)
@@ -169,6 +175,295 @@ namespace Switch_Toolbox.Library
             mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
 
             return mesh;
+        }
+
+        //Extra skin data based on https://github.com/Sage-of-Mirrors/SuperBMD/blob/ce1061e9b5f57de112f1d12f6459b938594664a0/SuperBMDLib/source/Model.cs#L193
+        //Todo this doesn't quite work yet
+        //Need to adjust all mesh name IDs so they are correct
+        private void WriteExtraSkinningInfo(string FileName, Scene outScene, STGenericModel Model)
+        {
+            StreamWriter test = new StreamWriter(FileName + ".tmp");
+            StreamReader dae = File.OpenText(FileName);
+
+            while (!dae.EndOfStream)
+            {
+                string line = dae.ReadLine();
+
+                if (line == "  <library_visual_scenes>")
+                {
+                    AddControllerLibrary(outScene, test);
+                    test.WriteLine(line);
+                    test.Flush();
+                }
+                else if (line.Contains("<node"))
+                {
+                    string[] testLn = line.Split('\"');
+                    string name = testLn[3];
+
+                    string jointLine = line.Replace(">", $" sid=\"{ name }\" type=\"JOINT\">");
+                    test.WriteLine(jointLine);
+                    test.Flush();
+                }
+                if (line.Contains("</visual_scene>"))
+                {
+                    int index = 0;
+                    foreach (Mesh mesh in outScene.Meshes)
+                    {
+                        test.WriteLine($"      <node id=\"{ mesh.Name }\" name=\"{ mesh.Name }\" type=\"NODE\">");
+
+                        test.WriteLine($"       <instance_controller url=\"#{ mesh.Name }-skin\">");
+                        test.WriteLine("        <skeleton>#skeleton_root</skeleton>");
+                        test.WriteLine("        <bind_material>");
+                        test.WriteLine("         <technique_common>");
+                        test.WriteLine($"          <instance_material symbol=\"theresonlyone\" target=\"#m{ mesh.MaterialIndex }mat\" />");
+                        test.WriteLine("         </technique_common>");
+                        test.WriteLine("        </bind_material>");
+                        test.WriteLine("       </instance_controller>");
+
+                        test.WriteLine("      </node>");
+                        test.Flush();
+
+                        index++;
+                    }
+
+                    test.WriteLine(line);
+                    test.Flush();
+                }
+                else if (line.Contains("<matrix"))
+                {
+                    string matLine = line.Replace("<matrix>", "<matrix sid=\"matrix\">");
+                    test.WriteLine(matLine);
+                    test.Flush();
+                }
+                else
+                {
+                    test.WriteLine(line);
+                   test.Flush();
+                }
+            }
+
+            test.Close();
+            dae.Close();
+
+            File.Copy(FileName + ".tmp", FileName, true);
+            File.Delete(FileName + ".tmp");
+        }
+
+        private void AddControllerLibrary(Scene scene, StreamWriter writer)
+        {
+            writer.WriteLine("  <library_controllers>");
+
+            for (int i = 0; i < scene.MeshCount; i++)
+            {
+                Mesh curMesh = scene.Meshes[i];
+                curMesh.Name = curMesh.Name.Replace('_', '-');
+
+                writer.WriteLine($"   <controller id=\"{ curMesh.Name }-skin\" name=\"{ curMesh.Name }Skin\">");
+
+                writer.WriteLine($"    <skin source=\"#meshId{ i }\">");
+
+                WriteBindShapeMatrixToStream(writer);
+                WriteJointNameArrayToStream(curMesh, writer);
+                WriteInverseBindMatricesToStream(curMesh, writer);
+                WriteSkinWeightsToStream(curMesh, writer);
+
+                writer.WriteLine("     <joints>");
+
+                writer.WriteLine($"      <input semantic=\"JOINT\" source=\"#{ curMesh.Name }-skin-joints-array\"></input>");
+                writer.WriteLine($"      <input semantic=\"INV_BIND_MATRIX\" source=\"#{ curMesh.Name }-skin-bind_poses-array\"></input>");
+
+                writer.WriteLine("     </joints>");
+                writer.Flush();
+
+                WriteVertexWeightsToStream(curMesh, writer);
+
+                writer.WriteLine("    </skin>");
+
+                writer.WriteLine("   </controller>");
+                writer.Flush();
+            }
+
+            writer.WriteLine("  </library_controllers>");
+            writer.Flush();
+        }
+
+        private void WriteJointNameArrayToStream(Mesh mesh, StreamWriter writer)
+        {
+            writer.WriteLine($"      <source id =\"{ mesh.Name }-skin-joints-array\">");
+            writer.WriteLine($"      <Name_array id=\"{ mesh.Name }-skin-joints-array\" count=\"{ mesh.Bones.Count }\">");
+
+            writer.Write("       ");
+            foreach (Bone bone in mesh.Bones)
+            {
+                writer.Write($"{ bone.Name }");
+                if (bone != mesh.Bones.Last())
+                    writer.Write(' ');
+                else
+                    writer.Write('\n');
+
+                writer.Flush();
+            }
+
+            writer.WriteLine("      </Name_array>");
+            writer.Flush();
+
+            writer.WriteLine("      <technique_common>");
+            writer.WriteLine($"       <accessor source=\"#{ mesh.Name }-skin-joints-array\" count=\"{ mesh.Bones.Count }\" stride=\"1\">");
+            writer.WriteLine("         <param name=\"JOINT\" type=\"Name\"></param>");
+            writer.WriteLine("       </accessor>");
+            writer.WriteLine("      </technique_common>");
+            writer.WriteLine("      </source>");
+            writer.Flush();
+        }
+
+        private void WriteInverseBindMatricesToStream(Mesh mesh, StreamWriter writer)
+        {
+            writer.WriteLine($"      <source id =\"{ mesh.Name }-skin-bind_poses-array\">");
+            writer.WriteLine($"      <float_array id=\"{ mesh.Name }-skin-bind_poses-array\" count=\"{ mesh.Bones.Count * 16 }\">");
+
+            foreach (Bone bone in mesh.Bones)
+            {
+                Matrix4x4 ibm = bone.OffsetMatrix;
+                ibm.Transpose();
+
+                writer.WriteLine($"       {ibm.A1.ToString("F")} {ibm.A2.ToString("F")} {ibm.A3.ToString("F")} {ibm.A4.ToString("F")}");
+                writer.WriteLine($"       {ibm.B1.ToString("F")} {ibm.B2.ToString("F")} {ibm.B3.ToString("F")} {ibm.B4.ToString("F")}");
+                writer.WriteLine($"       {ibm.C1.ToString("F")} {ibm.C2.ToString("F")} {ibm.C3.ToString("F")} {ibm.C4.ToString("F")}");
+                writer.WriteLine($"       {ibm.D1.ToString("F")} {ibm.D2.ToString("F")} {ibm.D3.ToString("F")} {ibm.D4.ToString("F")}");
+
+                if (bone != mesh.Bones.Last())
+                    writer.WriteLine("");
+            }
+
+            writer.WriteLine("      </float_array>");
+            writer.Flush();
+
+            writer.WriteLine("      <technique_common>");
+            writer.WriteLine($"       <accessor source=\"#{ mesh.Name }-skin-bind_poses-array\" count=\"{ mesh.Bones.Count }\" stride=\"16\">");
+            writer.WriteLine("         <param name=\"TRANSFORM\" type=\"float4x4\"></param>");
+            writer.WriteLine("       </accessor>");
+            writer.WriteLine("      </technique_common>");
+            writer.WriteLine("      </source>");
+            writer.Flush();
+        }
+
+        private void WriteSkinWeightsToStream(Mesh mesh, StreamWriter writer)
+        {
+            int totalWeightCount = 0;
+
+            foreach (Bone bone in mesh.Bones)
+            {
+                totalWeightCount += bone.VertexWeightCount;
+            }
+
+            writer.WriteLine($"      <source id =\"{ mesh.Name }-skin-weights-array\">");
+            writer.WriteLine($"      <float_array id=\"{ mesh.Name }-skin-weights-array\" count=\"{ totalWeightCount }\">");
+            writer.Write("       ");
+
+            foreach (Bone bone in mesh.Bones)
+            {
+                foreach (VertexWeight weight in bone.VertexWeights)
+                {
+                    writer.Write($"{ weight.Weight } ");
+                }
+
+                if (bone == mesh.Bones.Last())
+                    writer.WriteLine();
+            }
+
+            writer.WriteLine("      </float_array>");
+            writer.Flush();
+
+            writer.WriteLine("      <technique_common>");
+            writer.WriteLine($"       <accessor source=\"#{ mesh.Name }-skin-weights-array\" count=\"{ totalWeightCount }\" stride=\"1\">");
+            writer.WriteLine("         <param name=\"WEIGHT\" type=\"float\"></param>");
+            writer.WriteLine("       </accessor>");
+            writer.WriteLine("      </technique_common>");
+            writer.WriteLine("      </source>");
+            writer.Flush();
+        }
+
+        private class RiggedWeight
+        {
+            public List<float> Weights { get; private set; }
+            public List<int> BoneIndices { get; private set; }
+
+            public int WeightCount { get; private set; }
+
+            public RiggedWeight()
+            {
+                Weights = new List<float>();
+                BoneIndices = new List<int>();
+            }
+
+            public void AddWeight(float weight, int boneIndex)
+            {
+                Weights.Add(weight);
+                BoneIndices.Add(boneIndex);
+                WeightCount++;
+            }
+        }
+
+        private void WriteVertexWeightsToStream(Mesh mesh, StreamWriter writer)
+        {
+            List<float> weights = new List<float>();
+            Dictionary<int, RiggedWeight> vertIDWeights = new Dictionary<int, RiggedWeight>();
+
+            foreach (Bone bone in mesh.Bones)
+            {
+                foreach (VertexWeight weight in bone.VertexWeights)
+                {
+                    weights.Add(weight.Weight);
+
+                    if (!vertIDWeights.ContainsKey(weight.VertexID))
+                        vertIDWeights.Add(weight.VertexID, new RiggedWeight());
+
+                    vertIDWeights[weight.VertexID].AddWeight(weight.Weight, mesh.Bones.IndexOf(bone));
+                }
+            }
+
+            writer.WriteLine($"      <vertex_weights count=\"{ vertIDWeights.Count }\">");
+
+            writer.WriteLine($"       <input semantic=\"JOINT\" source=\"#{ mesh.Name }-skin-joints-array\" offset=\"0\"></input>");
+            writer.WriteLine($"       <input semantic=\"WEIGHT\" source=\"#{ mesh.Name }-skin-weights-array\" offset=\"1\"></input>");
+
+            writer.WriteLine("       <vcount>");
+
+            writer.Write("        ");
+            for (int i = 0; i < vertIDWeights.Count; i++)
+                writer.Write($"{ vertIDWeights[i].WeightCount } ");
+
+            writer.WriteLine("\n       </vcount>");
+
+            writer.WriteLine("       <v>");
+            writer.Write("        ");
+
+            for (int i = 0; i < vertIDWeights.Count; i++)
+            {
+                RiggedWeight curWeight = vertIDWeights[i];
+
+                for (int j = 0; j < curWeight.WeightCount; j++)
+                {
+                    writer.Write($"{ curWeight.BoneIndices[j] } { weights.IndexOf(curWeight.Weights[j]) } ");
+                }
+            }
+
+            writer.WriteLine("\n       </v>");
+
+            writer.WriteLine($"      </vertex_weights>");
+        }
+
+        private void WriteBindShapeMatrixToStream(StreamWriter writer)
+        {
+            writer.WriteLine("     <bind_shape_matrix>");
+
+            writer.WriteLine("      1 0 0 0");
+            writer.WriteLine("      0 1 0 0");
+            writer.WriteLine("      0 0 1 0");
+            writer.WriteLine("      0 0 0 1");
+
+            writer.WriteLine("     </bind_shape_matrix>");
+            writer.Flush();
         }
 
         private void SaveMaterials(Scene scene, STGenericModel model, string FileName, List<STGenericTexture> Textures)
@@ -280,7 +575,7 @@ namespace Switch_Toolbox.Library
             material.Name = "NewMaterial";
             scene.Materials.Add(material);
 
-            SaveScene(FileName, scene);
+            SaveScene(FileName, scene, new STGenericModel());
         }
 
         private void SaveSkeleton(STSkeleton skeleton, Node parentNode)

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawContainersCB = new Switch_Toolbox.Library.Forms.STComboBox();
             this.panelViewport = new Switch_Toolbox.Library.Forms.STPanel();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,12 +46,15 @@
             this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toOriginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toActiveModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toOriginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toActiveModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
             this.stContextMenuStrip1.SuspendLayout();
+            this.stPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // normalsShadingToolStripMenuItem
@@ -63,12 +67,28 @@
             this.normalsShadingToolStripMenuItem.Text = "Normals Shading";
             this.normalsShadingToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             // 
+            // drawContainersCB
+            // 
+            this.drawContainersCB.BorderColor = System.Drawing.Color.Empty;
+            this.drawContainersCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.drawContainersCB.ButtonColor = System.Drawing.Color.Empty;
+            this.drawContainersCB.FormattingEnabled = true;
+            this.drawContainersCB.Location = new System.Drawing.Point(93, 0);
+            this.drawContainersCB.Name = "drawContainersCB";
+            this.drawContainersCB.ReadOnly = true;
+            this.drawContainersCB.Size = new System.Drawing.Size(183, 21);
+            this.drawContainersCB.TabIndex = 0;
+            this.drawContainersCB.SelectedIndexChanged += new System.EventHandler(this.drawContainersCB_SelectedIndexChanged);
+            this.drawContainersCB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawContainersCB_MouseDown);
+            // 
             // panelViewport
             // 
-            this.panelViewport.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelViewport.Location = new System.Drawing.Point(0, 24);
+            this.panelViewport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelViewport.Location = new System.Drawing.Point(0, 48);
             this.panelViewport.Name = "panelViewport";
-            this.panelViewport.Size = new System.Drawing.Size(781, 498);
+            this.panelViewport.Size = new System.Drawing.Size(781, 474);
             this.panelViewport.TabIndex = 3;
             // 
             // stContextMenuStrip1
@@ -196,6 +216,20 @@
             this.resetCameraToolStripMenuItem.Size = new System.Drawing.Size(91, 20);
             this.resetCameraToolStripMenuItem.Text = "Reset Camera";
             // 
+            // toOriginToolStripMenuItem
+            // 
+            this.toOriginToolStripMenuItem.Name = "toOriginToolStripMenuItem";
+            this.toOriginToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.toOriginToolStripMenuItem.Text = "To Origin";
+            this.toOriginToolStripMenuItem.Click += new System.EventHandler(this.toOriginToolStripMenuItem_Click);
+            // 
+            // toActiveModelToolStripMenuItem
+            // 
+            this.toActiveModelToolStripMenuItem.Name = "toActiveModelToolStripMenuItem";
+            this.toActiveModelToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.toActiveModelToolStripMenuItem.Text = "To Active Model";
+            this.toActiveModelToolStripMenuItem.Click += new System.EventHandler(this.toActiveModelToolStripMenuItem_Click);
+            // 
             // resetPoseToolStripMenuItem
             // 
             this.resetPoseToolStripMenuItem.Name = "resetPoseToolStripMenuItem";
@@ -218,31 +252,40 @@
             this.reloadShadersToolStripMenuItem.Text = "Reload Shaders";
             this.reloadShadersToolStripMenuItem.Click += new System.EventHandler(this.reloadShadersToolStripMenuItem_Click);
             // 
-            // toOriginToolStripMenuItem
+            // stPanel1
             // 
-            this.toOriginToolStripMenuItem.Name = "toOriginToolStripMenuItem";
-            this.toOriginToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.toOriginToolStripMenuItem.Text = "To Origin";
-            this.toOriginToolStripMenuItem.Click += new System.EventHandler(this.toOriginToolStripMenuItem_Click);
+            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel1.Controls.Add(this.stLabel1);
+            this.stPanel1.Controls.Add(this.drawContainersCB);
+            this.stPanel1.Location = new System.Drawing.Point(0, 26);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(778, 24);
+            this.stPanel1.TabIndex = 5;
             // 
-            // toActiveModelToolStripMenuItem
+            // stLabel1
             // 
-            this.toActiveModelToolStripMenuItem.Name = "toActiveModelToolStripMenuItem";
-            this.toActiveModelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.toActiveModelToolStripMenuItem.Text = "To Active Model";
-            this.toActiveModelToolStripMenuItem.Click += new System.EventHandler(this.toActiveModelToolStripMenuItem_Click);
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(3, 3);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(83, 13);
+            this.stLabel1.TabIndex = 1;
+            this.stLabel1.Text = "Active Model(s):";
             // 
             // Viewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Controls.Add(this.stPanel1);
             this.Controls.Add(this.panelViewport);
             this.Controls.Add(this.stContextMenuStrip1);
             this.Name = "Viewport";
             this.Size = new System.Drawing.Size(781, 522);
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();
+            this.stPanel1.ResumeLayout(false);
+            this.stPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -271,5 +314,8 @@
         private System.Windows.Forms.ToolStripMenuItem leftToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toOriginToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toActiveModelToolStripMenuItem;
+        private Forms.STComboBox drawContainersCB;
+        private Forms.STPanel stPanel1;
+        private Forms.STLabel stLabel1;
     }
 }

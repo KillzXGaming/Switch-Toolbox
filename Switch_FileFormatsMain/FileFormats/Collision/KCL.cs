@@ -75,10 +75,18 @@ namespace FirstPlugin
             }
         }
 
+        public DrawableContainer DrawableContainer = new DrawableContainer();
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
             Renderer = new KCLRendering();
+
+            DrawableContainer = new DrawableContainer()
+            {
+                Name = FileName,
+                Drawables = new List<AbstractGlDrawable>() { Renderer },
+            };
 
             stream.Position = 0;
             data = stream.ToArray();
@@ -123,6 +131,13 @@ namespace FirstPlugin
                 kcl.IFileInfo = new IFileInfo();
                 kcl.FileName = name;
                 kcl.Renderer = new KCLRendering();
+
+                kcl.DrawableContainer = new DrawableContainer()
+                {
+                    Name = kcl.FileName,
+                    Drawables = new List<AbstractGlDrawable>() { kcl.Renderer },
+                };
+
                 kcl.Read(f.Write(ByteOrder));
 
                 ObjectEditor editor = new ObjectEditor(kcl);
@@ -133,7 +148,7 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            ObjectEditor.RemoveContainer(DrawableContainer);
         }
         public byte[] Save()
         {
@@ -294,27 +309,27 @@ namespace FirstPlugin
         }
 
         public KCLRendering Renderer;
-        bool IsLoaded = false;
+        bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
             if (Runtime.UseOpenGL)
             {
                 if (viewport == null)
                 {
-                    viewport = new Viewport();
+                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
                     viewport.Dock = DockStyle.Fill;
                 }
+
+                if (!DrawablesLoaded)
+                {
+                    ObjectEditor.AddContainer(DrawableContainer);
+                    DrawablesLoaded = true;
+                }
+
+                viewport.ReloadDrawables(DrawableContainer);
                 LibraryGUI.Instance.LoadEditor(viewport);
 
                 viewport.Text = Text;
-
-                if (!IsLoaded)
-                {
-                    viewport.AddDrawable(Renderer);
-                    viewport.LoadObjects();
-                }
-
-                IsLoaded = true;
             }
         }
 

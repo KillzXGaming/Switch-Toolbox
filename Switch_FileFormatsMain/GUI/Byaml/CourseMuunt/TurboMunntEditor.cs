@@ -34,7 +34,7 @@ namespace FirstPlugin.Forms
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
-            viewport = new Viewport();
+            viewport = new Viewport(ObjectEditor.GetDrawableContainers());
             viewport.Dock = DockStyle.Fill;
             viewport.scene.SelectionChanged += Scene_SelectionChanged;
             stPanel4.Controls.Add(viewport);

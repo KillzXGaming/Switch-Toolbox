@@ -43,7 +43,7 @@ namespace FirstPlugin.Forms
                     OnLoadedTab();
                 else
                 {
-                    viewport = new Viewport();
+                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
                     viewport.Dock = DockStyle.Fill;
                     OnLoadedTab();
                 }
@@ -89,7 +89,7 @@ namespace FirstPlugin.Forms
             //Always create an instance of the viewport unless opengl is disabled
             if (viewport == null && Runtime.UseOpenGL)
             {
-                viewport = new Viewport();
+                viewport = new Viewport(ObjectEditor.GetDrawableContainers());
                 viewport.Dock = DockStyle.Fill;
             }
 
@@ -156,15 +156,10 @@ namespace FirstPlugin.Forms
 
         public bool IsLoaded = false;
 
-        //All drawables for this particular editor
-        List<AbstractGlDrawable> Drawables;
-
-        //Drawables removed but the viewport is toggled off to update
-        List<AbstractGlDrawable> RemovedDrawables = new List<AbstractGlDrawable>(); 
-
-        public void LoadViewport(List<AbstractGlDrawable> drawables, List<ToolStripMenuItem> customContextMenus = null)
+        private BFRES ActiveBfres;
+        public void LoadViewport(BFRES bfres, DrawableContainer ActiveDrawable, List<ToolStripMenuItem> customContextMenus = null)
         {
-            Drawables = drawables;
+            ActiveBfres = bfres;
 
             if (!Runtime.UseOpenGL || !DisplayViewport)
                 return;
@@ -175,38 +170,9 @@ namespace FirstPlugin.Forms
                     viewport.LoadCustomMenuItem(menu);
             }
 
+            viewport.ReloadDrawables(ActiveDrawable);
+
             OnLoadedTab();
-        }
-
-        public void AddDrawable(AbstractGlDrawable draw)
-        {
-            Drawables.Add(draw);
-
-            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport || viewport == null)
-            {
-                IsLoaded = false;
-                return;
-            }
-
-            if (!viewport.scene.staticObjects.Contains(draw) &&
-                !viewport.scene.objects.Contains(draw))
-            {
-                viewport.AddDrawable(draw);
-            }
-        }
-
-        public void RemoveDrawable(AbstractGlDrawable draw)
-        {
-            Drawables.Remove(draw);
-
-            if (!Runtime.UseOpenGL || !Runtime.DisplayViewport || viewport == null)
-            {
-                IsLoaded = false;
-                RemovedDrawables.Add(draw);
-                return;
-            }
-
-            viewport.RemoveDrawable(draw);
         }
 
         public override void OnControlClosing()
@@ -217,22 +183,8 @@ namespace FirstPlugin.Forms
         private void OnLoadedTab()
         {
             //If a model was loaded we don't need to load the drawables again
-            if (IsLoaded || Drawables == null || !Runtime.UseOpenGL || !Runtime.DisplayViewport)
+            if (IsLoaded ||!Runtime.UseOpenGL || !Runtime.DisplayViewport)
                 return;
-
-            Console.WriteLine("drawables count " + Drawables.Count);
-
-            foreach (var draw in Drawables)
-            {
-                if (!viewport.scene.staticObjects.Contains(draw) &&
-                    !viewport.scene.objects.Contains(draw))
-                {
-                    viewport.AddDrawable(draw);
-                }
-            }
-
-            foreach (var draw in RemovedDrawables)
-                viewport.RemoveDrawable(draw);
 
             viewport.LoadObjects();
 
@@ -279,6 +231,11 @@ namespace FirstPlugin.Forms
 
             DisplayViewport = Runtime.DisplayViewport;
             Config.Save();
+        }
+
+        private void BfresEditor_Enter(object sender, EventArgs e)
+        {
+        
         }
     }
 }

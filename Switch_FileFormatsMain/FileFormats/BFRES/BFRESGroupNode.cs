@@ -192,7 +192,7 @@ namespace Bfres.Structs
                 fmdl.ModelU.Materials.Add("NewMaterial", new ResU.Material() { Name = "NewMaterial", RenderState = new ResU.RenderState(), });
 
                 BfresWiiU.ReadModel(fmdl, fmdl.ModelU);
-                ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
+                ((BFRES)Parent).DrawableContainer.Drawables.Add(fmdl.Skeleton);
             }
             else
             {
@@ -218,7 +218,7 @@ namespace Bfres.Structs
                 fmdl.Model.VertexBuffers.Add(VertexBuffer);
 
                 BfresSwitch.ReadModel(fmdl, fmdl.Model);
-                ((BFRES)Parent).AddSkeletonDrawable(fmdl.Skeleton);
+                ((BFRES)Parent).DrawableContainer.Drawables.Add(fmdl.Skeleton);
             }
 
             if (AddTreeNode)

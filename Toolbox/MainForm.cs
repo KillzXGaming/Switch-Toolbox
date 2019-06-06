@@ -98,7 +98,7 @@ namespace Toolbox
             if (Runtime.UseOpenGL)
             {
                 //Create an instance of this to help load open gl data easier and quicker after boot
-                var viewport = new Viewport(false);
+                var viewport = new Viewport(ObjectEditor.GetDrawableContainers(), false);
 
                 ShaderTools.executableDir = Runtime.ExecutableDir;
                 if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)

@@ -18,14 +18,20 @@ namespace Switch_Toolbox.Library
 {
     public partial class Viewport : UserControl
     {
+        public List<DrawableContainer> DrawableContainers;
+
         public EditorScene scene = new EditorScene();
         public GL_ControlLegacy GL_ControlLegacy;
         public GL_ControlModern GL_ControlModern;
 
         Runtime.ViewportEditor editor;
 
-        public Viewport(bool LoadDrawables = true)
+        public Viewport(List<DrawableContainer> container, bool LoadDrawables = true)
         {
+            DrawableContainers = container;
+            if (DrawableContainers == null)
+                DrawableContainers = new List<DrawableContainer>();
+
             this.DoubleBuffered = true;
 
             InitializeComponent();
@@ -47,8 +53,57 @@ namespace Switch_Toolbox.Library
 
             shadingToolStripMenuItem.Text = $"Shading: [{Runtime.viewportShading.ToString()}]";
 
+
             if (LoadDrawables)
                 LoadBaseDrawables();
+        }
+
+        //Reloads drawable containers without an active object being selected
+        public void ReloadDrawables()
+        {
+            drawContainersCB.Items.Clear();
+            drawContainersCB.Items.Add("All Active Drawables");
+
+            for (int i = 0; i < DrawableContainers.Count; i++)
+            {
+                drawContainersCB.Items.Add(DrawableContainers[i].Name);
+
+                for (int a = 0; a < DrawableContainers[i].Drawables.Count; a++)
+                {
+                    if (!ContainsDrawable(DrawableContainers[i].Drawables[a]))
+                        AddDrawable((DrawableContainers[i].Drawables[a]));
+                }
+            }
+        }
+
+        //Reloads drawable containers with the active container selected
+        public void ReloadDrawables(DrawableContainer ActiveContainer)
+        {
+            drawContainersCB.Items.Clear();
+            drawContainersCB.Items.Add("All Active Drawables");
+
+            for (int i = 0; i < DrawableContainers.Count;i++)
+            {
+                drawContainersCB.Items.Add(DrawableContainers[i].Name);
+
+                for (int a = 0; a < DrawableContainers[i].Drawables.Count; a++)
+                {
+                    if (DrawableContainers[i] != ActiveContainer)
+                        DrawableContainers[i].Drawables[a].Visible = false;
+                    else
+                        DrawableContainers[i].Drawables[a].Visible = true;
+
+                    if (!ContainsDrawable(DrawableContainers[i].Drawables[a]))
+                        AddDrawable((DrawableContainers[i].Drawables[a]));
+                }
+            }
+
+            drawContainersCB.SelectItemByText(ActiveContainer.Name);
+        }
+
+        public bool ContainsDrawable(AbstractGlDrawable Drawable)
+        {
+            return scene.staticObjects.Contains(Drawable) || scene.objects.Contains(Drawable);
         }
 
         private void shadingToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -421,6 +476,45 @@ namespace Switch_Toolbox.Library
                 GL_ControlModern.ResetCamera(true);
                 GL_ControlModern.Refresh();
             }
+        }
+
+        private void drawContainersCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (drawContainersCB.SelectedIndex == 0)
+                DrawAllActive();
+            else if (drawContainersCB.SelectedIndex > 0)
+            {
+                int index = drawContainersCB.SelectedIndex - 1;
+
+                for (int i = 0; i < DrawableContainers.Count; i++)
+                {
+                    for (int a = 0; a < DrawableContainers[i].Drawables.Count; a++)
+                    {
+                        if (i == index)
+                            DrawableContainers[i].Drawables[a].Visible = true;
+                        else
+                            DrawableContainers[i].Drawables[a].Visible = false;
+                    }
+                }
+            }
+
+            UpdateViewport();
+        }
+
+        private void DrawAllActive()
+        {
+            for (int i = 0; i < DrawableContainers.Count; i++)
+            {
+                for (int a = 0; a < DrawableContainers[i].Drawables.Count; a++)
+                {
+                    DrawableContainers[i].Drawables[a].Visible = true;
+                }
+            }
+        }
+
+        private void drawContainersCB_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReloadDrawables();
         }
     }
 }

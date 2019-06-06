@@ -43,12 +43,16 @@ namespace FirstPlugin
 
         public BcresFile BcresFile;
         public BCRES_Render RenderedBcres;
+        public DrawableContainer DrawableContainer = new DrawableContainer();
 
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
             BcresFile = new BcresFile(stream);
             RenderedBcres = new BCRES_Render();
+
+            DrawableContainer.Name = FileName;
+            DrawableContainer.Drawables.Add(RenderedBcres);
 
             AddNodeGroup(BcresFile.Data.Models, new BCRESGroupNode(BCRESGroupType.Models));
             AddNodeGroup(BcresFile.Data.Textures, new BCRESGroupNode(BCRESGroupType.Textures));
@@ -96,8 +100,7 @@ namespace FirstPlugin
             }
         }
 
-        List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
-
+        private bool DrawablesLoaded;
         public void LoadEditors(TreeNode Wrapper, Action OnPropertyChanged)
         {
             BcresEditor bcresEditor = (BcresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BcresEditor));
@@ -109,20 +112,21 @@ namespace FirstPlugin
                 LibraryGUI.Instance.LoadEditor(bcresEditor);
             }
 
-            if (drawables.Count <= 0)
+            if (!DrawablesLoaded)
             {
-                //Add drawables
-                drawables.Add(RenderedBcres);
+                ObjectEditor.AddContainer(DrawableContainer);
 
                 for (int m = 0; m < RenderedBcres.Models.Count; m++)
                 {
                     if (RenderedBcres.Models[m].Skeleton.Renderable != null)
-                        drawables.Add(RenderedBcres.Models[m].Skeleton.Renderable);
+                        DrawableContainer.Drawables.Add(RenderedBcres.Models[m].Skeleton.Renderable);
                 }
+
+                DrawablesLoaded = true;
             }
 
             if (Runtime.UseOpenGL)
-                bcresEditor.LoadViewport(drawables);
+                bcresEditor.LoadViewport(this, DrawableContainer);
 
             if (Wrapper is BcresTextureMapWrapper)
             {
@@ -166,7 +170,7 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            ObjectEditor.RemoveContainer(DrawableContainer);
         }
         public byte[] Save()
         {

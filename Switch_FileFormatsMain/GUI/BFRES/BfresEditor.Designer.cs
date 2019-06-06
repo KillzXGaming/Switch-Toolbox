@@ -182,6 +182,7 @@
             this.Controls.Add(this.stPanel2);
             this.Name = "BfresEditor";
             this.Size = new System.Drawing.Size(712, 543);
+            this.Enter += new System.EventHandler(this.BfresEditor_Enter);
             this.stPanel2.ResumeLayout(false);
             this.stPanel2.PerformLayout();
             this.stToolStrip1.ResumeLayout(false);

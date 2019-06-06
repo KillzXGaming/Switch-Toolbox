@@ -10,7 +10,7 @@ using BcresLibrary;
 
 namespace FirstPlugin
 {
-    public class CRESSkeletonWrapper : STBone
+    public class CRESSkeletonWrapper : TreeNodeCustom
     {
         internal BCRES BcresParent;
         internal Skeleton Skeleton;

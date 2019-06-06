@@ -49,9 +49,10 @@ namespace FirstPlugin
             }
         }
 
-        private Thread Thread;
-
         public override string ExportFilter => Utils.GetAllFilters(new BFRES());
+
+        //Stores the skeleton and models in this
+        public DrawableContainer DrawableContainer = new DrawableContainer();
 
         class MenuExt : IFileMenuExtension
         {
@@ -176,29 +177,6 @@ namespace FirstPlugin
                 editor.Refresh();
         }
 
-        //Used for adding new skeleton drawables
-        public void AddSkeletonDrawable(STSkeleton skeleton)
-        {
-            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
-            if (bfresEditor != null)
-            {
-                bfresEditor.AddDrawable(skeleton);
-            }
-
-            drawables.Add(skeleton);
-        }
-
-        public void RemoveSkeletonDrawable(STSkeleton skeleton)
-        {
-            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
-            if (bfresEditor != null)
-            {
-                bfresEditor.RemoveDrawable(skeleton);
-            }
-
-            drawables.Remove(skeleton);
-        }
-
         public void LoadAdvancedMode()
         {
             foreach (var model in BFRESRender.models)
@@ -300,7 +278,7 @@ namespace FirstPlugin
             return "";
         }
 
-        List<AbstractGlDrawable> drawables = new List<AbstractGlDrawable>();
+        private bool DrawablesLoaded = false;
         public void LoadEditors(object SelectedSection)
         {
             BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
@@ -405,18 +383,14 @@ namespace FirstPlugin
                 return;
             }
 
-            if (drawables.Count <= 0)
+            if (!DrawablesLoaded)
             {
-                //Add drawables
-                drawables.Add(BFRESRender);
-
-                for (int m = 0; m < BFRESRender.models.Count; m++)
-                    drawables.Add(BFRESRender.models[m].Skeleton);
+                ObjectEditor.AddContainer(DrawableContainer);
+                DrawablesLoaded = true;
             }
 
             if (Runtime.UseOpenGL)
-                bfresEditor.LoadViewport(drawables, new List<ToolStripMenuItem>());
-
+                bfresEditor.LoadViewport(this, DrawableContainer);
 
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 
@@ -707,10 +681,14 @@ namespace FirstPlugin
                 reader.Position = 0;
             }
 
+
             LoadMenus(IsWiiU);
 
        
             BFRESRender = new BFRESRender();
+            DrawableContainer.Drawables.Add(BFRESRender);
+            DrawableContainer.Name = FileName;
+
             BFRESRender.ModelTransform = MarioCostumeEditor.SetTransform(FileName);
             BFRESRender.ResFileNode = this;
 
@@ -723,10 +701,19 @@ namespace FirstPlugin
             {
                 LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(stream));
             }
+
+            var Models = GetModels();
+            if (Models != null)
+            {
+                foreach (FMDL mdl in Models)
+                    DrawableContainer.Drawables.Add(mdl.Skeleton);
+            }
         }
         public void Unload()
         {
             BFRESRender.Destroy();
+
+            ObjectEditor.RemoveContainer(DrawableContainer);
 
             foreach (var node in TreeViewExtensions.Collect(BFRESRender.ResFileNode.Nodes))
             {

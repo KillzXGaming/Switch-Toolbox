@@ -175,16 +175,33 @@ namespace Switch_Toolbox.Library.Forms
             IsLoaded = true;
         }
 
-        public List<EditableObject> editableGlDrawables = new List<EditableObject>();
-        public List<AbstractGlDrawable> staticGlDrawables = new List<AbstractGlDrawable>();
+        public List<DrawableContainer> DrawableContainers = new List<DrawableContainer>();
 
-        public static void AddObject(EditableObject drawable)
+        public static List<DrawableContainer> GetDrawableContainers()
+        {
+            var editor = LibraryGUI.Instance.GetObjectEditor();
+            if (editor == null)
+                return new List<DrawableContainer>();
+
+           return editor.DrawableContainers;
+        }
+
+        public static void AddContainer(DrawableContainer drawable)
         {
             var editor = LibraryGUI.Instance.GetObjectEditor();
             if (editor == null)
                 return;
 
-            editor.editableGlDrawables.Add(drawable);
+            editor.DrawableContainers.Add(drawable);
+        }
+
+        public static void RemoveContainer(DrawableContainer drawable)
+        {
+            var editor = LibraryGUI.Instance.GetObjectEditor();
+            if (editor == null)
+                return;
+
+            editor.DrawableContainers.Remove(drawable);
         }
 
         public List<Control> GetEditors()
