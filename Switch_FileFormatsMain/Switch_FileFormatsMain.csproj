@@ -279,6 +279,12 @@
     <Compile Include="GUI\BFRES\ParamAnim\ParamPatternMaterialEditor.Designer.cs">
       <DependentUpon>ParamPatternMaterialEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
+      <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="YAML\YamlAamp.cs" />
     <Compile Include="GUI\BCRES\BfresEditor.cs">
       <SubType>UserControl</SubType>
@@ -1029,6 +1035,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Shape\BfresShapeEditor.resx">
       <DependentUpon>BfresShapeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\SmoothNormalsMultiMeshForm.resx">
+      <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\SubFileEditor.resx">
       <DependentUpon>SubFileEditor.cs</DependentUpon>

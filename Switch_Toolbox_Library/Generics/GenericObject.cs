@@ -327,6 +327,98 @@ namespace Switch_Toolbox.Library
             }
         }
 
+        public static void SmoothNormals(List<STGenericObject> Shapes, int DisplayLODIndex = 0)
+        {
+            if (Shapes.Count == 0)
+                return;
+
+            //List of duplicate vertices from multiple shapes
+            //We will normalize each vertex with the same normal value to prevent seams
+            List<Vertex> DuplicateVerts = new List<Vertex>();
+            List<Vector3> NotDuplicateVerts = new List<Vector3>();
+
+            for (int s = 0; s < Shapes.Count; s++)
+            {
+                if (Shapes[s].vertices.Count < 3)
+                    continue;
+
+                Vector3[] normals = new Vector3[Shapes[s].vertices.Count];
+
+                List<int> f = Shapes[s].lodMeshes[DisplayLODIndex].getDisplayFace();
+
+                for (int v = 0; v < Shapes[s].lodMeshes[DisplayLODIndex].displayFaceSize; v += 3)
+                {
+                    Vertex v1 = Shapes[s].vertices[f[v]];
+                    Vertex v2 = Shapes[s].vertices[f[v + 1]];
+                    Vertex v3 = Shapes[s].vertices[f[v + 2]];
+                    Vector3 nrm = Shapes[s].CalculateNormal(v1, v2, v3);
+
+                    if (NotDuplicateVerts.Contains(v1.pos)) DuplicateVerts.Add(v1); else NotDuplicateVerts.Add(v1.pos);
+                    if (NotDuplicateVerts.Contains(v2.pos)) DuplicateVerts.Add(v2); else NotDuplicateVerts.Add(v2.pos);
+                    if (NotDuplicateVerts.Contains(v3.pos)) DuplicateVerts.Add(v3); else NotDuplicateVerts.Add(v3.pos);
+
+                    normals[f[v + 0]] += nrm;
+                    normals[f[v + 1]] += nrm;
+                    normals[f[v + 2]] += nrm;
+                }
+
+                for (int n = 0; n < normals.Length; n++)
+                {
+                    Shapes[s].vertices[n].nrm = normals[n].Normalized();
+                }
+            }
+
+            //Smooth normals normally
+            for (int s = 0; s < Shapes.Count; s++)
+            {
+                // Compare each vertex with all the remaining vertices. This might skip some.
+                for (int i = 0; i < Shapes[s].vertices.Count; i++)
+                {
+                    Vertex v = Shapes[s].vertices[i];
+
+                    for (int j = i + 1; j < Shapes[s].vertices.Count; j++)
+                    {
+                        Vertex v2 = Shapes[s].vertices[j];
+
+                        if (v == v2)
+                            continue;
+                        float dis = (float)Math.Sqrt(Math.Pow(v.pos.X - v2.pos.X, 2) + Math.Pow(v.pos.Y - v2.pos.Y, 2) + Math.Pow(v.pos.Z - v2.pos.Z, 2));
+                        if (dis <= 0f) // Extra smooth
+                        {
+                            Vector3 nn = ((v2.nrm + v.nrm) / 2).Normalized();
+                            v.nrm = nn;
+                            v2.nrm = nn;
+                        }
+                    }
+                }
+            }
+
+            //Now do the same but for fixing duplicate vertices
+            for (int s = 0; s < Shapes.Count; s++)
+            {
+                //Smooth duplicate normals
+                for (int i = 0; i < Shapes[s].vertices.Count; i++)
+                {
+                    Vertex v = Shapes[s].vertices[i];
+
+                    for (int j = i + 1; j < DuplicateVerts.Count; j++)
+                    {
+                        Vertex v2 = DuplicateVerts[j];
+                        if (v.pos == v2.pos)
+                        {
+                            float dis = (float)Math.Sqrt(Math.Pow(v.pos.X - v2.pos.X, 2) + Math.Pow(v.pos.Y - v2.pos.Y, 2) + Math.Pow(v.pos.Z - v2.pos.Z, 2));
+                            if (dis <= 0f) // Extra smooth
+                            {
+                                Vector3 nn = ((v2.nrm + v.nrm) / 2).Normalized();
+                                v.nrm = nn;
+                                v2.nrm = nn;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void SmoothNormals()
         {
             if (vertices.Count < 3)

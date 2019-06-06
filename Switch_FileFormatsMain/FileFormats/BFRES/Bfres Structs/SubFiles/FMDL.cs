@@ -75,8 +75,9 @@ namespace Bfres.Structs
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Transform", null, TransformToolAction, Keys.Control | Keys.T));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Calculate Tangents/Bitangents", null, CalcTansBitansAllShapesAction, Keys.Control | Keys.C));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Normals", null,
-              new ToolStripMenuItem("Smooth", null, SmoothNormalsAction),
-              new ToolStripMenuItem("Recalculate", null, RecalculateNormalsAction)
+             new ToolStripMenuItem("Smooth (Multiple Meshes)", null, MultiMeshSmoothNormals),
+             new ToolStripMenuItem("Smooth", null, SmoothNormalsAction),
+             new ToolStripMenuItem("Recalculate", null, RecalculateNormalsAction)
             ));
 
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("UVs", null,
@@ -181,6 +182,17 @@ namespace Bfres.Structs
             UpdateVertexData();
         }
 
+        public FSHP GetShape(string Name)
+        {
+            for (int fshp = 0; fshp < shapes.Count; fshp++)
+            {
+                if (shapes[fshp].Text == Name)
+                    return shapes[fshp]; 
+            }
+
+            return null;
+        }
+
         public void FlipUvsVertical()
         {
             foreach (var shape in shapes)
@@ -212,6 +224,26 @@ namespace Bfres.Structs
 
             UpdateVertexData();
         }
+
+        private void MultiMeshSmoothNormals(object sender, EventArgs args)
+        {
+            SmoothNormalsMultiMeshForm form = new SmoothNormalsMultiMeshForm();
+            form.LoadMeshes(GetModelList());
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                var SelectedMeshes = form.GetSelectedMeshes();
+
+                Cursor.Current = Cursors.WaitCursor;
+                STGenericObject.SmoothNormals(SelectedMeshes);
+                Cursor.Current = Cursors.Default;
+
+                foreach (var shp in shapes)
+                    shp.SaveVertexBuffer(GetResFileU() != null);
+
+                UpdateVertexData();
+            }
+        }
+
         private void BatchAttributeEdit()
         {
             AttributeEditor editor = new AttributeEditor();

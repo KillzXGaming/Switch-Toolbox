@@ -181,6 +181,7 @@ namespace Bfres.Structs
             ContextMenuStrip.Items.Add(uvMenu);
 
             ToolStripMenuItem normalsMenu = new ToolStripMenuItem("Normals");
+            normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Smooth (Multiple Meshes)", null, MultiMeshSmoothNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Smooth", null, SmoothNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Invert", null, InvertNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Recalculate", null, RecalculateNormals));
@@ -285,6 +286,23 @@ namespace Bfres.Structs
 
             SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
+        }
+
+        private void MultiMeshSmoothNormals(object sender, EventArgs args)
+        {
+            SmoothNormalsMultiMeshForm form = new SmoothNormalsMultiMeshForm();
+            form.LoadMeshes(GetParentModel().GetModelList());
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                var SelectedMeshes = form.GetSelectedMeshes();
+
+                Cursor.Current = Cursors.WaitCursor;
+                SmoothNormals(SelectedMeshes);
+                Cursor.Current = Cursors.Default;
+
+                SaveVertexBuffer(GetResFileU() != null);
+                UpdateVertexData();
+            }
         }
 
         private void UVUnwrapPosition(object sender, EventArgs args)
