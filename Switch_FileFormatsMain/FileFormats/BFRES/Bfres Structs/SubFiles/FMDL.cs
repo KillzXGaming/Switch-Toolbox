@@ -760,12 +760,28 @@ namespace Bfres.Structs
 
                         bool UseMats = settings.ExternalMaterialPath != string.Empty;
 
+                        if (settings.MapOriginalMaterials)
+                        {
+                            for (int i = 0; i < assimp.objects.Count; i++)
+                            {
+                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
+                                assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+
+                                if (Matches != null && Matches.Count > 0)
+                                {
+                                    //Match the skin count setting if names match
+                                    //Only one match should be found as shapes can't have duped names
+                                    assimp.objects[i].MaterialIndex = ((FSHP)Matches[0]).MaterialIndex;
+                                }
+                            }
+                        }
+
                         if (settings.LimitSkinCount)
                         {
                             for (int i = 0; i < assimp.objects.Count; i++)
                             {
-                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Name,
-                                    assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
+                                assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
                                 if (Matches != null && Matches.Count > 0)
                                 {

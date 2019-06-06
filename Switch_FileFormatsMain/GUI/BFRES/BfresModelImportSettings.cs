@@ -53,6 +53,7 @@ namespace FirstPlugin
 
         public int SkinCountLimit;
         public bool LimitSkinCount;
+        public bool MapOriginalMaterials;
 
         public bool GeneratePlaceholderTextures = true;
 
@@ -60,11 +61,13 @@ namespace FirstPlugin
         {
             textBoxMaterialPath.Visible = false;
             chkBoxImportMat.Checked = false;
+            chkMapOriginalMaterials.Enabled = true;
         }
         public void EnableMaterialEdits()
         {
             textBoxMaterialPath.Visible = true;
             chkBoxImportMat.Checked = true;
+            chkMapOriginalMaterials.Enabled = false;
         }
 
         public void SetModelAttributes(STGenericObject obj)
@@ -79,6 +82,8 @@ namespace FirstPlugin
             chkBoxEnableVertColors.Checked = obj.HasVertColors;
             chkResetUVParams.Checked = true;
             chkBoxTransformMatrix.Checked = true;
+            chkMapOriginalMaterials.Checked = false;
+            chkMapOriginalMaterials.Enabled = false;
 
             if (!obj.HasPos)
                 DisableAttribute(chkBoxEnablePositions, comboBoxFormatPositions);
@@ -353,6 +358,11 @@ namespace FirstPlugin
         private void ogSkinCountChkBox_CheckedChanged(object sender, EventArgs e)
         {
             LimitSkinCount = ogSkinCountChkBox.Checked;
+        }
+
+        private void chkMapOriginalMaterials_CheckedChanged(object sender, EventArgs e)
+        {
+            MapOriginalMaterials = chkMapOriginalMaterials.Checked;
         }
     }
 }

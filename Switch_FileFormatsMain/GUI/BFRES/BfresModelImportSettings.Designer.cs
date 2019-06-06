@@ -89,6 +89,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.chkMapOriginalMaterials = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -442,6 +443,7 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.chkMapOriginalMaterials);
             this.panel8.Controls.Add(this.chkResetColorParams);
             this.panel8.Controls.Add(this.ogSkinCountChkBox);
             this.panel8.Controls.Add(this.chkPlaceHolderTextures);
@@ -790,6 +792,17 @@
             this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
+            // chkMapOriginalMaterials
+            // 
+            this.chkMapOriginalMaterials.AutoSize = true;
+            this.chkMapOriginalMaterials.Location = new System.Drawing.Point(3, 240);
+            this.chkMapOriginalMaterials.Name = "chkMapOriginalMaterials";
+            this.chkMapOriginalMaterials.Size = new System.Drawing.Size(238, 17);
+            this.chkMapOriginalMaterials.TabIndex = 35;
+            this.chkMapOriginalMaterials.Text = "Map Original Materials (if mesh names match)";
+            this.chkMapOriginalMaterials.UseVisualStyleBackColor = true;
+            this.chkMapOriginalMaterials.CheckedChanged += new System.EventHandler(this.chkMapOriginalMaterials_CheckedChanged);
+            // 
             // BfresModelImportSettings
             // 
             this.ClientSize = new System.Drawing.Size(547, 398);
@@ -887,5 +900,6 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkPlaceHolderTextures;
         private Switch_Toolbox.Library.Forms.STCheckBox ogSkinCountChkBox;
         private Switch_Toolbox.Library.Forms.STCheckBox chkResetColorParams;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkMapOriginalMaterials;
     }
 }
