@@ -1056,13 +1056,11 @@ namespace Bfres.Structs
                             shape.vertexAttributes = settings.CreateNewAttributes();
                             shape.BoneIndex = obj.BoneIndex;
 
-                            if (UseMats)
+                            if (obj.MaterialIndex + MatStartIndex < materials.Count)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
                                 shape.MaterialIndex = 0;
 
-                            if (shape.MaterialIndex >= materials.Count)
-                                shape.MaterialIndex = 0;
 
                             shape.lodMeshes = obj.lodMeshes;
 
