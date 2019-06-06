@@ -768,14 +768,6 @@ namespace FirstPlugin
                 return;
 
             UpdateModelList();
-
-            STProgressBar progressBar = new STProgressBar();
-            progressBar.Task = "Updating Vertex Data...";
-            progressBar.Value = 0;
-            progressBar.StartPosition = FormStartPosition.CenterScreen;
-            progressBar.Show();
-            progressBar.Refresh();
-
             Loaded = false;
 
             DisplayVertex[] Vertices;
@@ -798,11 +790,6 @@ namespace FirstPlugin
 
                 for (int shp = 0; shp < models[m].shapes.Count; shp++)
                 {
-                    progressBar.Task = "Updating Shape... " + models[m].shapes[shp].Text;
-                    value = ((shp * 100) / TotalShapeCount);
-                    progressBar.Value = value;
-                    progressBar.Refresh();
-
                     models[m].shapes[shp].Offset = poffset * 4;
                     List<DisplayVertex> pv = models[m].shapes[shp].CreateDisplayVertices(models[m]);
                     Vs.AddRange(pv);
@@ -815,9 +802,6 @@ namespace FirstPlugin
                     voffset += pv.Count;
                 }
             }
-
-            progressBar.Value = 100;
-            progressBar.Close();
 
             // Binds
             Vertices = Vs.ToArray();
