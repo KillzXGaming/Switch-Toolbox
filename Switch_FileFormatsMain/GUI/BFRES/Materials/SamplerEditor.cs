@@ -303,7 +303,7 @@ namespace FirstPlugin.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("NOTE! Texture maps are adjusted by shader options which link by shaders. These are not possible to edit yet, do you want to contiue?", "MateraiL Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+            var result = MessageBox.Show("NOTE! Texture maps are adjusted by shader options which link by shaders. These are not possible to edit yet, do you want to continue?", "Material Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
             if (result == DialogResult.OK)
             {
                 var tex = new MatTexture();
@@ -355,7 +355,7 @@ namespace FirstPlugin.Forms
             {
                 string FirstSelecteItem = textureRefListView.SelectedItems[0].Text;
 
-                var result = MessageBox.Show("NOTE! Texture maps are adjusted by shader options which link by shaders. These are not possible to edit yet, do you want to contiue?", "MateraiL Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+                var result = MessageBox.Show("NOTE! Texture maps are adjusted by shader options which link by shaders. These are not possible to edit yet, do you want to continue?", "Material Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
 
                 if (result == DialogResult.Yes)
                 {
