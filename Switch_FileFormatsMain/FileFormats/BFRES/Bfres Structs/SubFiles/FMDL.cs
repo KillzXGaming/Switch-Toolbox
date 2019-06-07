@@ -1157,6 +1157,8 @@ namespace Bfres.Structs
                             }
                         }
 
+                        AttributeMatcher.Clear();
+
                         progressBar.Value = 100;
                         progressBar.Close();
 
