@@ -732,6 +732,9 @@ namespace Bfres.Structs
                     if (!IsLoaded)
                         return;
 
+                    string[] shapeSortCheck = shapes.Select(o => o.Text).ToArray();
+                    assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
+
                     if (assimp.objects.Count == 0)
                     {
                         MessageBox.Show("No models found!");
@@ -739,6 +742,8 @@ namespace Bfres.Structs
                     }
 
                     BfresModelImportSettings settings = new BfresModelImportSettings();
+                    settings.LoadOriginalMeshData(shapes);
+                    settings.LoadNewMeshData(assimp.objects);
 
                     if (Parent != null)
                     {
@@ -746,6 +751,8 @@ namespace Bfres.Structs
                         settings.UpdateTexturePlaceholderSetting(HasTextures);
                     }
 
+                    //If using original attributes, this to look them up
+                    Dictionary<string, List<FSHP.VertexAttribute>> AttributeMatcher = new Dictionary<string, List<FSHP.VertexAttribute>>();
 
                     settings.SetModelAttributes(assimp.objects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)
@@ -760,20 +767,32 @@ namespace Bfres.Structs
 
                         bool UseMats = settings.ExternalMaterialPath != string.Empty;
 
-                        if (settings.MapOriginalMaterials)
+                        for (int i = 0; i < assimp.objects.Count; i++)
                         {
-                            for (int i = 0; i < assimp.objects.Count; i++)
-                            {
-                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
-                                assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+                            List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
+                            assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
-                                if (Matches != null && Matches.Count > 0)
-                                {
-                                    //Match the skin count setting if names match
-                                    //Only one match should be found as shapes can't have duped names
+                            if (Matches != null && Matches.Count > 0)
+                            {
+                                //Match the skin count setting if names match
+                                //Only one match should be found as shapes can't have duped names
+
+                                if (settings.MapOriginalMaterials)
                                     assimp.objects[i].MaterialIndex = ((FSHP)Matches[0]).MaterialIndex;
+
+                                if (settings.LimitSkinCount)
+                                    assimp.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+
+                                if (settings.UseOriginalAttributes)
+                                {
+                                    AttributeMatcher.Add(assimp.objects[i].ObjectName, Matches[0].vertexAttributes);
                                 }
                             }
+                        }
+
+                        if (settings.MapOriginalMaterials)
+                        {
+                         
                         }
 
                         if (settings.LimitSkinCount)
@@ -1053,14 +1072,17 @@ namespace Bfres.Structs
                             progressBar.Task = $"Creating Attributes. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            shape.vertexAttributes = settings.CreateNewAttributes();
+                            if (AttributeMatcher.ContainsKey(obj.ObjectName))
+                                shape.vertexAttributes = settings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);
+                            else
+                                shape.vertexAttributes = settings.CreateNewAttributes();
+
                             shape.BoneIndex = obj.BoneIndex;
 
                             if (obj.MaterialIndex + MatStartIndex < materials.Count)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
                                 shape.MaterialIndex = 0;
-
 
                             shape.lodMeshes = obj.lodMeshes;
 

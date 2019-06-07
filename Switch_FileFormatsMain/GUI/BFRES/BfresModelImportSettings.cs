@@ -11,6 +11,8 @@ namespace FirstPlugin
 {
     public partial class BfresModelImportSettings : STForm
     {
+        public List<STGenericObject> NewMeshlist = new List<STGenericObject>();
+
         public BfresModelImportSettings()
         {
             InitializeComponent();
@@ -53,7 +55,9 @@ namespace FirstPlugin
 
         public int SkinCountLimit;
         public bool LimitSkinCount;
-        public bool MapOriginalMaterials;
+        public bool MapOriginalMaterials => chkMapOriginalMaterials.Checked;
+        public bool UseOriginalAttributes => chkOriginalAttributesFormats.Checked;
+        public bool UseOriginalAttributeFormats => chkOriginalAttributesFormats.Checked;
 
         public bool GeneratePlaceholderTextures = true;
 
@@ -61,13 +65,29 @@ namespace FirstPlugin
         {
             textBoxMaterialPath.Visible = false;
             chkBoxImportMat.Checked = false;
-            chkMapOriginalMaterials.Enabled = true;
         }
         public void EnableMaterialEdits()
         {
             textBoxMaterialPath.Visible = true;
             chkBoxImportMat.Checked = true;
-            chkMapOriginalMaterials.Enabled = false;
+        }
+
+        public void LoadNewMeshData(List<STGenericObject> Shapes)
+        {
+            NewMeshlist = Shapes;
+
+            assimpMeshListView.BeginUpdate();
+            for (int i = 0; i < NewMeshlist.Count; i++)
+                assimpMeshListView.Items.Add(NewMeshlist[i].ObjectName);
+            assimpMeshListView.EndUpdate();
+        }
+
+        public void LoadOriginalMeshData(List<FSHP> Shapes)
+        {
+            originalMeshListView.BeginUpdate();
+            for (int i = 0; i < Shapes.Count; i++)
+                originalMeshListView.Items.Add(Shapes[i].Text);
+            originalMeshListView.EndUpdate();
         }
 
         public void SetModelAttributes(STGenericObject obj)
@@ -82,8 +102,6 @@ namespace FirstPlugin
             chkBoxEnableVertColors.Checked = obj.HasVertColors;
             chkResetUVParams.Checked = true;
             chkBoxTransformMatrix.Checked = true;
-            chkMapOriginalMaterials.Checked = false;
-            chkMapOriginalMaterials.Enabled = false;
 
             if (!obj.HasPos)
                 DisableAttribute(chkBoxEnablePositions, comboBoxFormatPositions);
@@ -107,6 +125,39 @@ namespace FirstPlugin
             EnableUV1 = obj.HasUv1;
             EnableUV2 = obj.HasUv2;
         }
+
+        public List<FSHP.VertexAttribute> CreateNewAttributes(List<FSHP.VertexAttribute> Attributes)
+        {
+            for (int i = 0; i < Attributes.Count; i++)
+            {
+                if (!UseOriginalAttributeFormats)
+                {
+                    if (Attributes[i].Name == "_p0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatPositions.SelectedItem;
+                    if (Attributes[i].Name == "_n0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatNormals.SelectedItem;
+                    if (Attributes[i].Name == "_u0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatUvs.SelectedItem;
+                    if (Attributes[i].Name == "_u1")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatUvs.SelectedItem;
+                    if (Attributes[i].Name == "_u2")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatUvs.SelectedItem;
+                    if (Attributes[i].Name == "_c0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatVertexColors.SelectedItem;
+                    if (Attributes[i].Name == "_t0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatTangents.SelectedItem;
+                    if (Attributes[i].Name == "_b0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatBitans.SelectedItem;
+                    if (Attributes[i].Name == "_w0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatWeights.SelectedItem;
+                    if (Attributes[i].Name == "_i0")
+                        Attributes[i].Format = (AttribFormat)comboBoxFormatIndices.SelectedItem;
+                }
+            }
+
+            return Attributes;
+        }
+
         public List<FSHP.VertexAttribute> CreateNewAttributes()
         {
             List<FSHP.VertexAttribute> attribute = new List<FSHP.VertexAttribute>();
@@ -360,9 +411,28 @@ namespace FirstPlugin
             LimitSkinCount = ogSkinCountChkBox.Checked;
         }
 
-        private void chkMapOriginalMaterials_CheckedChanged(object sender, EventArgs e)
+        private void assimpMeshListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MapOriginalMaterials = chkMapOriginalMaterials.Checked;
+            if (assimpMeshListView.SelectedIndices.Count == 0)
+                return;
+
+            int assimpIndex = assimpMeshListView.SelectedIndices[0];
+            objectNameTB.Text = NewMeshlist[assimpIndex].ObjectName;
+        }
+
+        private void stTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (assimpMeshListView.SelectedIndices.Count == 0 || objectNameTB.Text == string.Empty)
+                return;
+
+            int assimpIndex = assimpMeshListView.SelectedIndices[0];
+
+            if (objectNameTB.Text == originalMeshListView.Items[assimpIndex].Text)
+                objectNameTB.BackColor = System.Drawing.Color.Green;
+            else
+                objectNameTB.BackColor = System.Drawing.Color.DarkRed;
+
+            NewMeshlist[assimpIndex].ObjectName = objectNameTB.Text;
         }
     }
 }

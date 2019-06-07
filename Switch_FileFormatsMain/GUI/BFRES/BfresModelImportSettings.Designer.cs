@@ -62,7 +62,6 @@
             this.chkBoxImportBones = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.panel8 = new Switch_Toolbox.Library.Forms.STPanel();
             this.chkResetColorParams = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.ogSkinCountChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkPlaceHolderTextures = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportMat = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkResetUVParams = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -89,7 +88,18 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.assimpMeshListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.originalMeshListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.objectNameTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.chkOriginalAttributesFormats = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stCheckBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.chkMapOriginalMaterials = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.ogSkinCountChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -105,6 +115,7 @@
             this.tabPage2.SuspendLayout();
             this.tabPageAdvanced.SuspendLayout();
             this.stPanel1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -421,7 +432,7 @@
             // chkBoxFlipUvsY
             // 
             this.chkBoxFlipUvsY.AutoSize = true;
-            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 39);
+            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 16);
             this.chkBoxFlipUvsY.Name = "chkBoxFlipUvsY";
             this.chkBoxFlipUvsY.Size = new System.Drawing.Size(65, 17);
             this.chkBoxFlipUvsY.TabIndex = 4;
@@ -432,7 +443,7 @@
             // chkBoxImportBones
             // 
             this.chkBoxImportBones.AutoSize = true;
-            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 62);
+            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 39);
             this.chkBoxImportBones.Name = "chkBoxImportBones";
             this.chkBoxImportBones.Size = new System.Drawing.Size(88, 17);
             this.chkBoxImportBones.TabIndex = 10;
@@ -443,9 +454,7 @@
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.chkMapOriginalMaterials);
             this.panel8.Controls.Add(this.chkResetColorParams);
-            this.panel8.Controls.Add(this.ogSkinCountChkBox);
             this.panel8.Controls.Add(this.chkPlaceHolderTextures);
             this.panel8.Controls.Add(this.chkBoxImportMat);
             this.panel8.Controls.Add(this.chkResetUVParams);
@@ -483,21 +492,10 @@
             this.chkResetColorParams.UseVisualStyleBackColor = true;
             this.chkResetColorParams.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
             // 
-            // ogSkinCountChkBox
-            // 
-            this.ogSkinCountChkBox.AutoSize = true;
-            this.ogSkinCountChkBox.Location = new System.Drawing.Point(3, 16);
-            this.ogSkinCountChkBox.Name = "ogSkinCountChkBox";
-            this.ogSkinCountChkBox.Size = new System.Drawing.Size(234, 17);
-            this.ogSkinCountChkBox.TabIndex = 33;
-            this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
-            this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
-            this.ogSkinCountChkBox.CheckedChanged += new System.EventHandler(this.ogSkinCountChkBox_CheckedChanged);
-            // 
             // chkPlaceHolderTextures
             // 
             this.chkPlaceHolderTextures.AutoSize = true;
-            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(3, 204);
+            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(5, 204);
             this.chkPlaceHolderTextures.Name = "chkPlaceHolderTextures";
             this.chkPlaceHolderTextures.Size = new System.Drawing.Size(160, 17);
             this.chkPlaceHolderTextures.TabIndex = 32;
@@ -534,7 +532,7 @@
             // chkBoxRotNegative90Y
             // 
             this.chkBoxRotNegative90Y.AutoSize = true;
-            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 108);
+            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 85);
             this.chkBoxRotNegative90Y.Name = "chkBoxRotNegative90Y";
             this.chkBoxRotNegative90Y.Size = new System.Drawing.Size(117, 17);
             this.chkBoxRotNegative90Y.TabIndex = 29;
@@ -634,7 +632,7 @@
             // chkBoxRecalcNormals
             // 
             this.chkBoxRecalcNormals.AutoSize = true;
-            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 154);
+            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 131);
             this.chkBoxRecalcNormals.Name = "chkBoxRecalcNormals";
             this.chkBoxRecalcNormals.Size = new System.Drawing.Size(124, 17);
             this.chkBoxRecalcNormals.TabIndex = 18;
@@ -661,7 +659,7 @@
             this.chkBoxTransformMatrix.AutoSize = true;
             this.chkBoxTransformMatrix.Checked = true;
             this.chkBoxTransformMatrix.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 131);
+            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 108);
             this.chkBoxTransformMatrix.Name = "chkBoxTransformMatrix";
             this.chkBoxTransformMatrix.Size = new System.Drawing.Size(104, 17);
             this.chkBoxTransformMatrix.TabIndex = 14;
@@ -673,7 +671,7 @@
             // chkBoxRot90Y
             // 
             this.chkBoxRot90Y.AutoSize = true;
-            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 85);
+            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 62);
             this.chkBoxRot90Y.Name = "chkBoxRot90Y";
             this.chkBoxRot90Y.Size = new System.Drawing.Size(114, 17);
             this.chkBoxRot90Y.TabIndex = 13;
@@ -694,7 +692,7 @@
             // checkBox9
             // 
             this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(25, 181);
+            this.checkBox9.Location = new System.Drawing.Point(25, 158);
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.Size = new System.Drawing.Size(130, 17);
             this.checkBox9.TabIndex = 11;
@@ -749,6 +747,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPageAdvanced);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Location = new System.Drawing.Point(0, 31);
             this.tabControl1.myBackColor = System.Drawing.Color.Empty;
             this.tabControl1.Name = "tabControl1";
@@ -792,16 +791,128 @@
             this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.assimpMeshListView);
+            this.tabPage1.Controls.Add(this.originalMeshListView);
+            this.tabPage1.Controls.Add(this.stLabel2);
+            this.tabPage1.Controls.Add(this.stLabel1);
+            this.tabPage1.Controls.Add(this.objectNameTB);
+            this.tabPage1.Controls.Add(this.chkOriginalAttributesFormats);
+            this.tabPage1.Controls.Add(this.stCheckBox1);
+            this.tabPage1.Controls.Add(this.chkMapOriginalMaterials);
+            this.tabPage1.Controls.Add(this.ogSkinCountChkBox);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(530, 333);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Inject Mode";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // assimpMeshListView
+            // 
+            this.assimpMeshListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.assimpMeshListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2});
+            this.assimpMeshListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.assimpMeshListView.Location = new System.Drawing.Point(260, 97);
+            this.assimpMeshListView.Name = "assimpMeshListView";
+            this.assimpMeshListView.OwnerDraw = true;
+            this.assimpMeshListView.Size = new System.Drawing.Size(121, 230);
+            this.assimpMeshListView.TabIndex = 45;
+            this.assimpMeshListView.UseCompatibleStateImageBehavior = false;
+            this.assimpMeshListView.View = System.Windows.Forms.View.Details;
+            this.assimpMeshListView.SelectedIndexChanged += new System.EventHandler(this.assimpMeshListView_SelectedIndexChanged);
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Width = 106;
+            // 
+            // originalMeshListView
+            // 
+            this.originalMeshListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.originalMeshListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.originalMeshListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.originalMeshListView.Location = new System.Drawing.Point(395, 97);
+            this.originalMeshListView.Name = "originalMeshListView";
+            this.originalMeshListView.OwnerDraw = true;
+            this.originalMeshListView.Size = new System.Drawing.Size(121, 230);
+            this.originalMeshListView.TabIndex = 44;
+            this.originalMeshListView.UseCompatibleStateImageBehavior = false;
+            this.originalMeshListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 112;
+            // 
+            // stLabel2
+            // 
+            this.stLabel2.AutoSize = true;
+            this.stLabel2.Location = new System.Drawing.Point(257, 81);
+            this.stLabel2.Name = "stLabel2";
+            this.stLabel2.Size = new System.Drawing.Size(41, 13);
+            this.stLabel2.TabIndex = 43;
+            this.stLabel2.Text = "Current";
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(392, 81);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(42, 13);
+            this.stLabel1.TabIndex = 42;
+            this.stLabel1.Text = "Original";
+            // 
+            // objectNameTB
+            // 
+            this.objectNameTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.objectNameTB.Location = new System.Drawing.Point(260, 52);
+            this.objectNameTB.Name = "objectNameTB";
+            this.objectNameTB.Size = new System.Drawing.Size(210, 20);
+            this.objectNameTB.TabIndex = 39;
+            this.objectNameTB.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
+            // 
+            // chkOriginalAttributesFormats
+            // 
+            this.chkOriginalAttributesFormats.AutoSize = true;
+            this.chkOriginalAttributesFormats.Location = new System.Drawing.Point(19, 75);
+            this.chkOriginalAttributesFormats.Name = "chkOriginalAttributesFormats";
+            this.chkOriginalAttributesFormats.Size = new System.Drawing.Size(165, 17);
+            this.chkOriginalAttributesFormats.TabIndex = 38;
+            this.chkOriginalAttributesFormats.Text = "Use Original Attribute Formats";
+            this.chkOriginalAttributesFormats.UseVisualStyleBackColor = true;
+            // 
+            // stCheckBox1
+            // 
+            this.stCheckBox1.AutoSize = true;
+            this.stCheckBox1.Location = new System.Drawing.Point(19, 52);
+            this.stCheckBox1.Name = "stCheckBox1";
+            this.stCheckBox1.Size = new System.Drawing.Size(130, 17);
+            this.stCheckBox1.TabIndex = 37;
+            this.stCheckBox1.Text = "Use Original Attributes";
+            this.stCheckBox1.UseVisualStyleBackColor = true;
+            // 
             // chkMapOriginalMaterials
             // 
             this.chkMapOriginalMaterials.AutoSize = true;
-            this.chkMapOriginalMaterials.Location = new System.Drawing.Point(3, 240);
+            this.chkMapOriginalMaterials.Location = new System.Drawing.Point(19, 29);
             this.chkMapOriginalMaterials.Name = "chkMapOriginalMaterials";
             this.chkMapOriginalMaterials.Size = new System.Drawing.Size(238, 17);
-            this.chkMapOriginalMaterials.TabIndex = 35;
+            this.chkMapOriginalMaterials.TabIndex = 36;
             this.chkMapOriginalMaterials.Text = "Map Original Materials (if mesh names match)";
             this.chkMapOriginalMaterials.UseVisualStyleBackColor = true;
-            this.chkMapOriginalMaterials.CheckedChanged += new System.EventHandler(this.chkMapOriginalMaterials_CheckedChanged);
+            // 
+            // ogSkinCountChkBox
+            // 
+            this.ogSkinCountChkBox.AutoSize = true;
+            this.ogSkinCountChkBox.Location = new System.Drawing.Point(19, 6);
+            this.ogSkinCountChkBox.Name = "ogSkinCountChkBox";
+            this.ogSkinCountChkBox.Size = new System.Drawing.Size(234, 17);
+            this.ogSkinCountChkBox.TabIndex = 34;
+            this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
+            this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
             // 
             // BfresModelImportSettings
             // 
@@ -833,6 +944,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPageAdvanced.ResumeLayout(false);
             this.stPanel1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -898,8 +1011,18 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkBoxImportMat;
         private Switch_Toolbox.Library.Forms.STPanel stPanel1;
         private Switch_Toolbox.Library.Forms.STCheckBox chkPlaceHolderTextures;
-        private Switch_Toolbox.Library.Forms.STCheckBox ogSkinCountChkBox;
         private Switch_Toolbox.Library.Forms.STCheckBox chkResetColorParams;
+        private System.Windows.Forms.TabPage tabPage1;
         private Switch_Toolbox.Library.Forms.STCheckBox chkMapOriginalMaterials;
+        private Switch_Toolbox.Library.Forms.STCheckBox ogSkinCountChkBox;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkOriginalAttributesFormats;
+        private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox1;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Switch_Toolbox.Library.Forms.STTextBox objectNameTB;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private Switch_Toolbox.Library.Forms.ListViewCustom originalMeshListView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private Switch_Toolbox.Library.Forms.ListViewCustom assimpMeshListView;
     }
 }

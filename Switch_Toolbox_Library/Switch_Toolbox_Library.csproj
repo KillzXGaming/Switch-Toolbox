@@ -202,6 +202,7 @@
     <Compile Include="Animations\SceneAnimation.cs" />
     <Compile Include="Audio\AudioFileRipper.cs" />
     <Compile Include="Audio\VGAudioFile.cs" />
+    <Compile Include="Collections\SortExtensions.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="DrawableContainer.cs" />
     <Compile Include="FileFormats\3DS\ETC1.cs" />
