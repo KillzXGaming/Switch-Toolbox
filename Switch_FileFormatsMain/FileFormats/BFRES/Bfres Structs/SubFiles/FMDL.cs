@@ -733,7 +733,7 @@ namespace Bfres.Structs
                         return;
 
                     string[] shapeSortCheck = shapes.Select(o => o.Text).ToArray();
-                    assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
+                  //  assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
 
                     if (assimp.objects.Count == 0)
                     {
