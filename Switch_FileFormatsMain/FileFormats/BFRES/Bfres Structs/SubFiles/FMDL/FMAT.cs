@@ -159,7 +159,7 @@ namespace Bfres.Structs
             foreach (var shape in model.shapes)
             {
                 //If there are indices higher than this index, shift them
-                if (shape.MaterialIndex >= CurrentIndex)
+                if (shape.MaterialIndex > CurrentIndex)
                 {
                     shape.MaterialIndex -= 1;
                 }

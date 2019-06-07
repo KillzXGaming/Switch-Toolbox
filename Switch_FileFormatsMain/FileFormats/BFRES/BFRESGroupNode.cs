@@ -280,6 +280,7 @@ namespace Bfres.Structs
                         FMDL fmdl = NewModel(false);
                         fmdl.Text = ResourceName;
                         fmdl.Replace(FileName, resFileNX, resFileU);
+                        fmdl.UpdateVertexData();
                         AddNode(fmdl);
                         break;
                     case BRESGroupType.SkeletalAnim:
@@ -448,9 +449,15 @@ namespace Bfres.Structs
                         RemoveChild(((STGenericWrapper)node));
                     }
                 }
-
+   
                 ResourceNodes.Clear();
                 Nodes.Clear();
+
+                if (Type == BRESGroupType.Models)
+                {
+                    ((BFRES)Parent).BFRESRender.UpdateModelList();
+                    LibraryGUI.Instance.UpdateViewport();
+                }
             }
         }
 

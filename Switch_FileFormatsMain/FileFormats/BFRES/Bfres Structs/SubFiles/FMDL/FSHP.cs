@@ -1391,7 +1391,7 @@ namespace Bfres.Structs
 
         private void OptmizeIndicesWeights(VertexAttribute attribute)
         {
-    /*        if (VertexSkinCount == 1)
+            if (VertexSkinCount == 1)
             {
                 switch (attribute.Format)
                 {
@@ -1507,7 +1507,7 @@ namespace Bfres.Structs
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_32_UInt;
                         break;
                 }
-            }*/
+            }
         }
 
         public void UpdateVertices()

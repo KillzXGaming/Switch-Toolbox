@@ -844,8 +844,9 @@ namespace FirstPlugin
                 {
                     if (folder is BFRESGroupNode)
                     {
-                        return (((BFRESGroupNode)folder).Type == BRESGroupType.Textures &&
+                        bool hasTextures = (((BFRESGroupNode)folder).Type == BRESGroupType.Textures &&
                                 folder.Nodes.Count > 0);
+                        if (hasTextures) return true;
                     }
                     if (folder is BNTX)
                     {

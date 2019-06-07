@@ -21,6 +21,8 @@ namespace FirstPlugin
 {
     public class BFRESRender : AbstractGlDrawable
     {
+        private bool Disposing = false;
+
         public Matrix4 ModelTransform = Matrix4.Identity;
         Vector3 position = new Vector3(0);
 
@@ -47,6 +49,7 @@ namespace FirstPlugin
 
         public void UpdateModelList()
         {
+            _models.Clear();
             foreach (var node in ResFileNode.Nodes)
             {
                 if (node is BFRESGroupNode &&
@@ -84,6 +87,8 @@ namespace FirstPlugin
 
             GL.DeleteBuffer(vbo_position);
             GL.DeleteBuffer(ibo_elements);
+
+            Disposing = true;
         }
 
         private void TransformBones()
@@ -192,6 +197,8 @@ namespace FirstPlugin
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
+            if (Disposing) return;
+
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
             if (!buffersWereInitialized)
                 GenerateBuffers();
@@ -287,7 +294,7 @@ namespace FirstPlugin
 
         private void DrawBfres(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT || Disposing)
                 return;
 
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
@@ -577,8 +584,6 @@ namespace FirstPlugin
         public static int BindTexture(MatTexture tex, FMAT material, bool IsWiiU)
         {
             BFRES bfres = (BFRES)material.Parent.Parent.Parent.Parent;
-            if (material.Parent == null || bfres == null) //Bfres disposed
-                return -1;
 
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);

@@ -90,6 +90,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             // Re-anchoring the controls so they stay in their place while the form is resized
             btnClose.Anchor = AnchorStyles.Top;
+            stButton1.Anchor = AnchorStyles.Top;
             btnDetails.Anchor = AnchorStyles.Top;
             tbDetails.Anchor = AnchorStyles.Top;
 

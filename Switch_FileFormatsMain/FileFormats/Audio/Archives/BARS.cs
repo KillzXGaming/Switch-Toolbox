@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
+using Switch_Toolbox.Library.Forms;
 using BarsLib;
 using VGAudio.Formats;
 using VGAudio;
@@ -40,6 +41,32 @@ namespace FirstPlugin
             {
                 List<Type> types = new List<Type>();
                 return types.ToArray();
+            }
+        }
+
+        public override void OnClick(TreeView treeview)
+        {
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+
+            var prop = new BarsProperty(bars);
+
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadProperty(prop, null);
+        }
+
+        public class BarsProperty
+        {
+            public int AudioCount { get; private set; }
+
+            public BarsProperty(BarsLib.BARS bars)
+            {
+                AudioCount = bars.AmtaList.Count;
             }
         }
 
@@ -121,17 +148,73 @@ namespace FirstPlugin
             }
             public void UpdateEditor()
             {
+                switch (Type)
+                {
+                    case AudioType.Bfwav:
+                       // ShowHexView();
+                        ShowBfwavPlayer();
+                        break;
+                    default:
+                        ShowHexView();
+                        break;
+                }
+            }
 
+            private void ShowBfwavPlayer()
+            {
+                var audioFile = new VGAdudioFile();
+                audioFile.LoadAudio(new MemoryStream(Data), new BFWAV());
+
+                AudioPlayerPanel editor = (AudioPlayerPanel)LibraryGUI.Instance.GetActiveContent(typeof(AudioPlayerPanel));
+                if (editor == null)
+                {
+                    editor = new AudioPlayerPanel();
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadFile(audioFile.audioData, new BFWAV(), true);
+            }
+
+            private void ShowHexView()
+            {
+                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                if (editor == null)
+                {
+                    editor = new HexEditor();
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadData(Data);
             }
 
             public override void OnClick(TreeView treeview)
             {
-                if (Type == AudioType.Bfwav)
-                {
-                 //   UpdateEditor();
-                }
-            
+                UpdateEditor();
             }
+        }
+
+        private class MetaDataNodeWrapper : TreeNodeCustom
+        {
+            public MetaDataNodeWrapper(AMTA amta) { MetaFile = amta; }
+
+            public AMTA MetaFile { get; set; }
+
+            public override void OnClick(TreeView treeview)
+            {
+                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+                if (editor == null)
+                {
+                    editor = new STPropertyGrid();
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadProperty(MetaFile.Data, OnPropertyChanged);
+            }
+
+            private void OnPropertyChanged() { }
         }
 
         public BarsLib.BARS bars;
@@ -146,9 +229,12 @@ namespace FirstPlugin
             Nodes.Add("Audio");
             for (int i = 0; i < bars.AmtaList.Count; i++)
             {
+                var amtaWrapper = new MetaDataNodeWrapper(bars.AmtaList[i]);
                 string audioName = bars.AmtaList[i].Name;
 
-                Nodes[0].Nodes.Add(audioName + ".amta");
+                amtaWrapper.Text = $"{audioName}.amta";
+                Nodes[0].Nodes.Add(amtaWrapper);
+
                 BARSAudioFile audio = bars.audioList[i];
 
                 AudioEntry node = new AudioEntry();

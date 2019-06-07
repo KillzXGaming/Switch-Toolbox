@@ -53,8 +53,7 @@ namespace FirstPlugin
         public bool ResetUVParams;
         public bool ResetColorParams;
 
-        public int SkinCountLimit;
-        public bool LimitSkinCount;
+        public bool LimitSkinCount => ogSkinCountChkBox.Checked;
         public bool MapOriginalMaterials => chkMapOriginalMaterials.Checked;
         public bool UseOriginalAttributes => chkOriginalAttributesFormats.Checked;
         public bool UseOriginalAttributeFormats => chkOriginalAttributesFormats.Checked;
@@ -404,11 +403,6 @@ namespace FirstPlugin
         private void chkPlaceHolderTextures_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePlaceholderTextures = chkPlaceHolderTextures.Checked;
-        }
-
-        private void ogSkinCountChkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            LimitSkinCount = ogSkinCountChkBox.Checked;
         }
 
         private void assimpMeshListView_SelectedIndexChanged(object sender, EventArgs e)

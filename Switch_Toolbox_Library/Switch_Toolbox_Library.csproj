@@ -272,6 +272,12 @@
     <Compile Include="Forms\Dialogs\STOptionsDialog.Designer.cs">
       <DependentUpon>STOptionsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\Audio\AudioPlayerPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\Audio\AudioPlayerPanel.Designer.cs">
+      <DependentUpon>AudioPlayerPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\Audio\LoopEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -729,6 +735,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\AssimpMeshSelector.resx">
       <DependentUpon>AssimpMeshSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\Audio\AudioPlayerPanel.resx">
+      <DependentUpon>AudioPlayerPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\Audio\AudioPlayer.resx">
       <DependentUpon>AudioPlayer.cs</DependentUpon>

@@ -53,7 +53,7 @@ namespace FirstPlugin
             AudioPlayer form = new AudioPlayer();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
-            form.LoadFile(waveSource, this, mp3Struct);
+            form.LoadFile(waveSource, this, false, mp3Struct);
 
             return form;
         }

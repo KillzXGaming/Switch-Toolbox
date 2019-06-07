@@ -66,8 +66,11 @@ namespace Switch_Toolbox.Library.Forms
             
         }
 
-        public void LoadFile(IWaveSource source, IFileFormat fileFormat, object AudioStruct = null)
+        public void LoadFile(IWaveSource source, IFileFormat fileFormat, bool ClearPlaylist = false, object AudioStruct = null)
         {
+            if (ClearPlaylist)
+                audioListView.Items.Clear();
+
             AudioFile file = new AudioFile();
             file.Title = fileFormat.FileName;
 
@@ -102,8 +105,11 @@ namespace Switch_Toolbox.Library.Forms
 
         }
 
-        public void LoadFile(AudioData audioData, IFileFormat fileFormat)
+        public void LoadFile(AudioData audioData, IFileFormat fileFormat, bool ClearPlaylist = false)
         {
+            if (ClearPlaylist)
+                audioListView.Items.Clear();
+
             AudioFileFormats.Add(fileFormat);
 
             //Load Channel Info

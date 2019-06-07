@@ -305,6 +305,7 @@ namespace Switch_Toolbox.Library
                 mat.TextureMaps.Add(CreateTextureSlot(tex, TextureType.Normals));
             if (material.GetMaterialTexture(TextureType.Specular, 1, out tex))
                 mat.TextureMaps.Add(CreateTextureSlot(tex, TextureType.Specular));
+
             return mat;
         }
         private STGenericMatTexture CreateTextureSlot(TextureSlot tex, TextureType type)

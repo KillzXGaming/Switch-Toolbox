@@ -733,7 +733,7 @@ namespace Bfres.Structs
                         return;
 
                     string[] shapeSortCheck = shapes.Select(o => o.Text).ToArray();
-                    assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
+                  //  assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
 
                     if (assimp.objects.Count == 0)
                     {
@@ -829,6 +829,11 @@ namespace Bfres.Structs
                             Nodes["FmatFolder"].Nodes.Clear();
                             MatStartIndex = 0;
                         }
+                        else if (UseMats)
+                            MatStartIndex = materials.Count;
+                        else
+                            MatStartIndex = 0;
+
                         if (UseMats)
                         {
                             int curMat = 0;
@@ -1114,11 +1119,10 @@ namespace Bfres.Structs
                             progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
                             progressBar.Refresh();
 
-                            if (!ForceSkinInfluence)
-                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
-                            else
+                            if (ForceSkinInfluence)
                                 shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
-
+                            else
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {
@@ -1163,7 +1167,6 @@ namespace Bfres.Structs
                         progressBar.Close();
 
                         IsEdited = true;
-
                         Cursor.Current = Cursors.Default;
                     }
                     break;

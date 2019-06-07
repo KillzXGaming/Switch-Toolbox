@@ -69,7 +69,7 @@ namespace Switch_Toolbox.Library
                 bool ExportSuccessScene = v.ExportFile(scene, FileName, formatID, PostProcessSteps.FlipUVs);
                 if (ExportSuccessScene)
                 {
-                 //   WriteExtraSkinningInfo(FileName, scene, model);
+                    WriteExtraSkinningInfo(FileName, scene, model);
                     MessageBox.Show($"Exported {FileName} Successfuly!");
                 }
                 else
@@ -83,7 +83,7 @@ namespace Switch_Toolbox.Library
             int MeshIndex = 0;
             foreach (var obj in model.Nodes[0].Nodes)
             {
-                var mesh = SaveMesh((STGenericObject)obj, skeleton, NodeArray);
+                var mesh = SaveMesh((STGenericObject)obj, MeshIndex, skeleton, NodeArray);
                 scene.Meshes.Add(mesh);
                 MeshIndex++;
             }
@@ -96,9 +96,10 @@ namespace Switch_Toolbox.Library
             scene.RootNode.Children.Add(geomNode);
         }
 
-        private Mesh SaveMesh(STGenericObject genericObj, STSkeleton skeleton, List<int> NodeArray)
+        private Mesh SaveMesh(STGenericObject genericObj, int index, STSkeleton skeleton, List<int> NodeArray)
         {
-            Mesh mesh = new Mesh(genericObj.Text, PrimitiveType.Triangle);
+            //Assimp is weird so use mesh_# for the name. We'll change it back after save
+            Mesh mesh = new Mesh($"mesh_{ index }", PrimitiveType.Triangle);
             mesh.MaterialIndex = genericObj.MaterialIndex;
 
             List<Vector3D> textureCoords0 = new List<Vector3D>();
@@ -185,6 +186,7 @@ namespace Switch_Toolbox.Library
             StreamWriter test = new StreamWriter(FileName + ".tmp");
             StreamReader dae = File.OpenText(FileName);
 
+            int geomIndex = 0;
             while (!dae.EndOfStream)
             {
                 string line = dae.ReadLine();
@@ -197,16 +199,18 @@ namespace Switch_Toolbox.Library
                 }
                 else if (line.Contains("<node"))
                 {
-                    string[] testLn = line.Split('\"');
-                    string name = testLn[3];
-
-                    string jointLine = line.Replace(">", $" sid=\"{ name }\" type=\"JOINT\">");
-                    test.WriteLine(jointLine);
+                    test.WriteLine(line);
                     test.Flush();
+
+                    /* string[] testLn = line.Split('\"');
+                      string name = testLn[3];
+
+                      string jointLine = line.Replace(">", $" sid=\"{ name }\" type=\"JOINT\">");
+                      test.WriteLine(jointLine);
+                      test.Flush();*/
                 }
-                if (line.Contains("</visual_scene>"))
+                else if (line.Contains("</visual_scene>"))
                 {
-                    int index = 0;
                     foreach (Mesh mesh in outScene.Meshes)
                     {
                         test.WriteLine($"      <node id=\"{ mesh.Name }\" name=\"{ mesh.Name }\" type=\"NODE\">");
@@ -222,12 +226,18 @@ namespace Switch_Toolbox.Library
 
                         test.WriteLine("      </node>");
                         test.Flush();
-
-                        index++;
                     }
 
                     test.WriteLine(line);
                     test.Flush();
+                }
+                else if (line.Contains("<geometry"))
+                {
+                    string RealMeshName = Model.Nodes[0].Nodes[geomIndex].Text;
+                    test.WriteLine($"    <geometry id=\"meshId{ geomIndex }\" name=\"{ RealMeshName }\" > ");
+                    test.Flush();
+
+                    geomIndex++;
                 }
                 else if (line.Contains("<matrix"))
                 {
@@ -237,7 +247,7 @@ namespace Switch_Toolbox.Library
                 }
                 else
                 {
-                    test.WriteLine(line);
+                   test.WriteLine(line);
                    test.Flush();
                 }
             }
@@ -507,55 +517,65 @@ namespace Switch_Toolbox.Library
                     if (!File.Exists(path))
                         continue;
 
-                    TextureSlot slot = new TextureSlot();
-                    slot.FilePath = path;
-                    slot.UVIndex = 0;
-                    slot.Flags = 0;
-                    slot.TextureIndex = 0;
-                    slot.BlendFactor = 1.0f;
-                    slot.Mapping = TextureMapping.FromUV;
-                    slot.Operation = TextureOperation.Add;
-
                     if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
-                        slot.TextureType = TextureType.Diffuse;
-                    else if (tex.Type == STGenericMatTexture.TextureType.Normal)
-                        slot.TextureType = TextureType.Normals;
-                    else if (tex.Type == STGenericMatTexture.TextureType.Specular)
-                        slot.TextureType = TextureType.Specular;
-                    else if (tex.Type == STGenericMatTexture.TextureType.Emission)
-                        slot.TextureType = TextureType.Emissive;
-                    else if (tex.Type == STGenericMatTexture.TextureType.Light)
                     {
-                        slot.TextureType = TextureType.Lightmap;
-                        slot.UVIndex = 2;
-                    }
-                    else if (tex.Type == STGenericMatTexture.TextureType.Shadow)
-                    {
-                        slot.TextureType = TextureType.Ambient;
-                        slot.UVIndex = 1;
-                    }
-                    else
-                        slot.TextureType = TextureType.Unknown;
+                        TextureSlot slot2 = new TextureSlot(path, Assimp.TextureType.Diffuse, 0,
+                    Assimp.TextureMapping.FromUV, 0, 1.0f, Assimp.TextureOperation.Add,
+                    0, 0, 0);
 
-                    if (tex.wrapModeS == 0)
-                        slot.WrapModeU = TextureWrapMode.Wrap;
-                    else if (tex.wrapModeS == 1)
-                        slot.WrapModeU = TextureWrapMode.Mirror;
-                    else if (tex.wrapModeS == 2)
-                        slot.WrapModeU = TextureWrapMode.Clamp;
-                    else
-                        slot.WrapModeU = TextureWrapMode.Wrap;
-                    
-                    if (tex.wrapModeT == 0)
-                        slot.WrapModeV = TextureWrapMode.Wrap;
-                    else if (tex.wrapModeT == 1)
-                        slot.WrapModeV = TextureWrapMode.Mirror;
-                    else if (tex.wrapModeT == 2)
-                        slot.WrapModeV = TextureWrapMode.Clamp;
-                    else
-                        slot.WrapModeV = TextureWrapMode.Wrap;
-                    
-                    material.AddMaterialTexture(ref slot);
+                        material.AddMaterialTexture(ref slot2);
+                        break;
+
+                        TextureSlot slot = new TextureSlot();
+                        slot.FilePath = path;
+                        slot.UVIndex = 0;
+                        slot.Flags = 0;
+                        slot.TextureIndex = 0;
+                        slot.BlendFactor = 1.0f;
+                        slot.Mapping = TextureMapping.FromUV;
+                        slot.Operation = TextureOperation.Add;
+                        slot.TextureType = TextureType.Diffuse;
+
+
+                        if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
+                            slot.TextureType = TextureType.Diffuse;
+                        else if (tex.Type == STGenericMatTexture.TextureType.Normal)
+                            slot.TextureType = TextureType.Normals;
+                        else if (tex.Type == STGenericMatTexture.TextureType.Specular)
+                            slot.TextureType = TextureType.Specular;
+                        else if (tex.Type == STGenericMatTexture.TextureType.Emission)
+                            slot.TextureType = TextureType.Emissive;
+                        else if (tex.Type == STGenericMatTexture.TextureType.Light)
+                        {
+                            slot.TextureType = TextureType.Lightmap;
+                            slot.UVIndex = 2;
+                        }
+                        else if (tex.Type == STGenericMatTexture.TextureType.Shadow)
+                        {
+                            slot.TextureType = TextureType.Ambient;
+                            slot.UVIndex = 1;
+                        }
+                        else
+                            slot.TextureType = TextureType.Unknown;
+
+                        if (tex.wrapModeS == 0)
+                            slot.WrapModeU = TextureWrapMode.Wrap;
+                        else if (tex.wrapModeS == 1)
+                            slot.WrapModeU = TextureWrapMode.Mirror;
+                        else if (tex.wrapModeS == 2)
+                            slot.WrapModeU = TextureWrapMode.Clamp;
+                        else
+                            slot.WrapModeU = TextureWrapMode.Wrap;
+
+                        if (tex.wrapModeT == 0)
+                            slot.WrapModeV = TextureWrapMode.Wrap;
+                        else if (tex.wrapModeT == 1)
+                            slot.WrapModeV = TextureWrapMode.Mirror;
+                        else if (tex.wrapModeT == 2)
+                            slot.WrapModeV = TextureWrapMode.Clamp;
+                        else
+                            slot.WrapModeV = TextureWrapMode.Wrap;
+                    }
                 }
                 scene.Materials.Add(material);
             }
@@ -567,7 +587,7 @@ namespace Switch_Toolbox.Library
             Scene scene = new Scene();
             scene.RootNode = new Node("Root");
 
-            var mesh = SaveMesh(genericObject, null, null);
+            var mesh = SaveMesh(genericObject,0, null, null);
             mesh.MaterialIndex = 0;
             scene.Meshes.Add(mesh);
 
