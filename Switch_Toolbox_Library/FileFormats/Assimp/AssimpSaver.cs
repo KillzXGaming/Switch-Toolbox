@@ -191,13 +191,13 @@ namespace Switch_Toolbox.Library
             {
                 string line = dae.ReadLine();
 
-                if (line == "  <library_visual_scenes>")
+             /*   if (line == "  <library_visual_scenes>")
                 {
                     AddControllerLibrary(outScene, test);
                     test.WriteLine(line);
                     test.Flush();
-                }
-                else if (line.Contains("<node"))
+                }*/
+                if (line.Contains("<node"))
                 {
                     test.WriteLine(line);
                     test.Flush();
@@ -209,7 +209,7 @@ namespace Switch_Toolbox.Library
                       test.WriteLine(jointLine);
                       test.Flush();*/
                 }
-                else if (line.Contains("</visual_scene>"))
+            /*    else if (line.Contains("</visual_scene>"))
                 {
                     foreach (Mesh mesh in outScene.Meshes)
                     {
@@ -230,7 +230,7 @@ namespace Switch_Toolbox.Library
 
                     test.WriteLine(line);
                     test.Flush();
-                }
+                }*/
                 else if (line.Contains("<geometry"))
                 {
                     string RealMeshName = Model.Nodes[0].Nodes[geomIndex].Text;
