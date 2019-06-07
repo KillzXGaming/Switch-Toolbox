@@ -108,28 +108,36 @@ namespace FirstPlugin.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            var edtior = new ShaderOptionsEditBox();
-            edtior.LoadOption("", "");
-
-            if (edtior.ShowDialog() == DialogResult.OK)
+            var result = MessageBox.Show("NOTE! Shader Options are link by shaders. These are not possible to edit yet, do you want to contiue?", "MateraiL Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+            if (result == DialogResult.OK)
             {
-                shaderOptionsListView.AddObject(new Options()
+                var edtior = new ShaderOptionsEditBox();
+                edtior.LoadOption("", "");
+
+                if (edtior.ShowDialog() == DialogResult.OK)
                 {
-                    Name = edtior.textBoxName.Text,
-                    Value = edtior.textBoxValue.Text,
-                });
-                material.shaderassign.options.Add(edtior.textBoxName.Text, edtior.textBoxValue.Text);
+                    shaderOptionsListView.AddObject(new Options()
+                    {
+                        Name = edtior.textBoxName.Text,
+                        Value = edtior.textBoxValue.Text,
+                    });
+                    material.shaderassign.options.Add(edtior.textBoxName.Text, edtior.textBoxValue.Text);
+                }
             }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (shaderOptionsListView.SelectedObject != null)
+            var result = MessageBox.Show("NOTE! Shader Options are link by shaders. These are not possible to edit yet, do you want to contiue?", "MateraiL Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+            if (result == DialogResult.OK)
             {
-                var option = (Options)shaderOptionsListView.SelectedObject;
+                if (shaderOptionsListView.SelectedObject != null)
+                {
+                    var option = (Options)shaderOptionsListView.SelectedObject;
 
-                material.shaderassign.options.Remove(option.Name);
-                shaderOptionsListView.RemoveObject(option);
+                    material.shaderassign.options.Remove(option.Name);
+                    shaderOptionsListView.RemoveObject(option);
+                }
             }
         }
     }
