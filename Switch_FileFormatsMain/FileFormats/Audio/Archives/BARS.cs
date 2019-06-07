@@ -225,8 +225,13 @@ namespace FirstPlugin
             Text = FileName;
 
             bars = new BarsLib.BARS(stream);
-            Nodes.Add("AMTA");
-            Nodes.Add("Audio");
+
+            if (bars.AmtaList.Count > 0)
+                Nodes.Add("AMTA");
+
+            if (bars.audioList.Count > 0)
+                Nodes.Add("Audio");
+
             for (int i = 0; i < bars.AmtaList.Count; i++)
             {
                 var amtaWrapper = new MetaDataNodeWrapper(bars.AmtaList[i]);
@@ -235,21 +240,24 @@ namespace FirstPlugin
                 amtaWrapper.Text = $"{audioName}.amta";
                 Nodes[0].Nodes.Add(amtaWrapper);
 
-                BARSAudioFile audio = bars.audioList[i];
+                if (bars.audioList.Count > 0)
+                {
+                    BARSAudioFile audio = bars.audioList[i];
 
-                AudioEntry node = new AudioEntry();
-                node.Type = audio.AudioType;
-                node.Data = audio.data;
-                node.SetupMusic();
+                    AudioEntry node = new AudioEntry();
+                    node.Type = audio.AudioType;
+                    node.Data = audio.data;
+                    node.SetupMusic();
 
-                if (audio.AudioType == AudioType.Bfwav)
-                    node.Text = audioName + ".bfwav";
-                else if (audio.AudioType == AudioType.Bfstp)
-                    node.Text = audioName + ".bfstp";
-                else 
-                    node.Text = audioName + ".UNKOWN";
+                    if (audio.AudioType == AudioType.Bfwav)
+                        node.Text = audioName + ".bfwav";
+                    else if (audio.AudioType == AudioType.Bfstp)
+                        node.Text = audioName + ".bfstp";
+                    else
+                        node.Text = audioName + ".UNKOWN";
 
-                Nodes[1].Nodes.Add(node);
+                    Nodes[1].Nodes.Add(node);
+                }
             }
 
             ContextMenu = new ContextMenu();
