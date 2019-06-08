@@ -434,7 +434,7 @@ namespace FirstPlugin
 
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 
-            if (SelectedSection is BFRES)
+            if (SelectedSection is BFRES && HasShapes)
                 bfresEditor.FrameCamera(BFRESRender);
 
             if (IsSimpleEditor)
