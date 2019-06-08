@@ -872,22 +872,26 @@ namespace Bfres.Structs
                                 Cursor.Current = Cursors.WaitCursor;
                                 VertexBufferIndex = obj.VertexBufferIndex;
                                 vertices = obj.vertices;
-                                CreateBoneList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
-                                CreateIndexList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
 
                                 if (settings.UseOriginalAttributeFormats)
-                                   vertexAttributes = originalAttributes;
+                                    vertexAttributes = originalAttributes;
+                                else
+                                    vertexAttributes = settings.CreateNewAttributes();
 
                                 if (settings.LimitSkinCount)
                                     obj.VertexSkinCount = ForceSkinInfluenceMax;
                                 else
                                     VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
-                                vertexAttributes = settings.CreateNewAttributes();
-                                ApplyImportSettings(settings, GetMaterial());
                                 lodMeshes = obj.lodMeshes;
                                 CreateNewBoundingBoxes();
+                                CreateBoneList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
+                                CreateIndexList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
+                                BoneIndices = GetIndices(GetParentModel().Skeleton);
 
+                                ApplyImportSettings(settings, GetMaterial());
+
+                                OptmizeAttributeFormats();
                                 SaveShape(IsWiiU);
                                 SaveVertexBuffer(IsWiiU);
 
@@ -957,12 +961,28 @@ namespace Bfres.Structs
                 attributeIndex.Format = ResGFX.AttribFormat.Format_8_8_8_8_UInt;
                 attributeIndex.Name = "_i0";
                 vertexAttributes.Add(attributeIndex);
-
-                var attributeWeight = new FSHP.VertexAttribute();
-                attributeWeight.Format = ResGFX.AttribFormat.Format_32_32_32_32_Single;
-                attributeWeight.Name = "_w0";
-                vertexAttributes.Add(attributeWeight);
             }
+
+            //Check weights. If they are all 1. If they are then they aren't necessary
+            if (ob.VertexSkinCount == 1 || ForcedSkinAmount == 1)
+            {
+                bool UseWeights = ob.vertices.Any(o => o.boneWeights[0] != 1);
+                if (!UseWeights)
+                {
+                    for (int v = 0; v < ob.vertices.Count; v++)
+                    {
+                        ob.vertices[v].boneWeights.Clear();
+                    }
+
+                    var weightAttribute = vertexAttributes.Where(att => att.Name == "_w0");
+                    if (weightAttribute != null && weightAttribute.ToList().Count > 0)
+                    {
+                        vertexAttributes.Remove(weightAttribute.First());
+                    }
+                }
+            }
+
+            bool UseRigidSkiining = ob.VertexSkinCount == 1;
 
             int vtxIndex = 0;
             foreach (Vertex v in ob.vertices)
@@ -972,6 +992,7 @@ namespace Bfres.Structs
                 {
                     bool HasMatch = false;
 
+                    //Generate a list of smoth matrices from the node array
                     int i = 0;
                     foreach (var defBn in nodeArrStrings.Select((Value, Index) => new { Value, Index }))
                     {
@@ -982,7 +1003,10 @@ namespace Bfres.Structs
                             //Add these after smooth matrices
                             if (nodeRigidIndex[i] != -1)
                             {
-                                RigidIds.Add(defBn.Index);
+                                if (UseRigidSkiining)
+                                    RigidIds.Add(nodeRigidIndex[i]);
+                                else
+                                    RigidIds.Add(defBn.Index);
                             }
                             else
                             {
@@ -1007,8 +1031,16 @@ namespace Bfres.Structs
                 {
                     foreach (int id in RigidIds)
                     {
-                        if (v.boneIds.Count < 4)
+                        if (v.boneIds.Count < ob.VertexSkinCount)
                             v.boneIds.Add(id);
+                    }
+
+
+                    //Use only rigid ids for rigid skinning
+                    if (ob.VertexSkinCount == 1)
+                    {
+                        v.boneIds.Clear();
+                        v.boneIds.Add(RigidIds[0]);
                     }
                 }
 
@@ -1019,7 +1051,9 @@ namespace Bfres.Structs
                         if (v.boneIds.Count < ob.VertexSkinCount)
                         {
                             v.boneIds.Add(0);
-                            v.boneWeights.Add(0);
+
+                            if (v.boneWeights.Count > 0)
+                                v.boneWeights.Add(0);
                         }
                     }
                 }

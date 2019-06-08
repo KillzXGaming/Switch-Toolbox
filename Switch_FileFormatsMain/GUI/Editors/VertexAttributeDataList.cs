@@ -74,7 +74,7 @@ namespace FirstPlugin
             item.SubItems.Add(value.W.ToString());
             listViewCustom1.Items.Add(item);
         }
-        public void AddBoneName(List<string> value, uint VertexID)
+        public void AddBoneName(List<string> value, List<int> index, uint VertexID)
         {
             ListViewItem item = new ListViewItem();
             item.Text = VertexID.ToString();
@@ -85,13 +85,13 @@ namespace FirstPlugin
             columnHeader5.Text = "Bone 4";
 
             if (value.Count > 1)
-                item.SubItems.Add(value[0].ToString());
+                item.SubItems.Add(value[0].ToString() + $"({index[0]})");
             if (value.Count > 2)
-                item.SubItems.Add(value[1].ToString());
+                item.SubItems.Add(value[1].ToString() + $"({index[1]})");
             if (value.Count > 3)
-                item.SubItems.Add(value[2].ToString());
+                item.SubItems.Add(value[2].ToString() + $"({index[2]})");
             if (value.Count > 4)
-                item.SubItems.Add(value[3].ToString());
+                item.SubItems.Add(value[3].ToString() + $"({index[3]})");
 
             listViewCustom1.Items.Add(item);
         }

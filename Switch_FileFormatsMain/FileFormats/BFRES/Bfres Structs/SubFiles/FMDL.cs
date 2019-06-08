@@ -1069,9 +1069,6 @@ namespace Bfres.Structs
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
 
-                            progressBar.Task = $"Creating Attributes. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             if (AttributeMatcher.ContainsKey(obj.ObjectName))
                                 shape.vertexAttributes = settings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);
                             else
@@ -1085,34 +1082,11 @@ namespace Bfres.Structs
                                 shape.MaterialIndex = 0;
 
                             shape.lodMeshes = obj.lodMeshes;
-
-                            progressBar.Task = $"Creating Bounding Boxes. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.CreateNewBoundingBoxes();
-
-                            progressBar.Task = $"Creating Bone list. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
-
-                            progressBar.Task = $"Creating Index list. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.CreateIndexList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
-
-                            progressBar.Task = $"Applying Settings. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
-
-                            progressBar.Task = $"Setting bone indices. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.BoneIndices = shape.GetIndices(Skeleton);
-
-                            progressBar.Task = $"Generating Max Skin Influence. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
 
                             if (ForceSkinInfluence)
                                 shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
@@ -1125,18 +1099,8 @@ namespace Bfres.Structs
                                 shape.BoneIndex = boneIndex;
                             }
 
-                            Console.WriteLine($"VertexSkinCount 1 {shape.VertexSkinCount}");
-
                             shape.OptmizeAttributeFormats();
-
-                            progressBar.Task = $"Saving shape. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.SaveShape(IsWiiU);
-
-                            progressBar.Task = $"Saving vertex buffer. Mesh: {obj.ObjectName}";
-                            progressBar.Refresh();
-
                             shape.SaveVertexBuffer(IsWiiU);
 
                             if (IsWiiU)

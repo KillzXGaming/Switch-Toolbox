@@ -179,7 +179,7 @@ namespace FirstPlugin.Forms
                         List<string> boneNames = new List<string>();
                         foreach (int id in vtx.boneIds)
                             boneNames.Add(activeShape.GetBoneNameFromIndex(activeShape.GetParentModel(), id));
-                        list.AddBoneName(boneNames, VertexID);
+                        list.AddBoneName(boneNames, vtx.boneIds, VertexID);
                         boneNames = null;
                         break;
                     case "_w1":
@@ -189,7 +189,7 @@ namespace FirstPlugin.Forms
                         List<string> boneNames2 = new List<string>();
                         foreach (int id in vtx.boneIds)
                             boneNames2.Add(activeShape.GetBoneNameFromIndex(activeShape.GetParentModel(), id));
-                        list.AddBoneName(boneNames2, VertexID);
+                        list.AddBoneName(boneNames2, vtx.boneIds, VertexID);
                         boneNames2 = null;
                         break;
                 }
