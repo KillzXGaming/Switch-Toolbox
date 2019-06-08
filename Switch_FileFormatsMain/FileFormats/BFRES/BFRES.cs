@@ -314,11 +314,20 @@ namespace FirstPlugin
         {
             BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
             bool HasModels = false;
+            bool HasShapes = false;
 
             if (bfresEditor == null)
             {
                 BFRESRender.UpdateModelList();
                 HasModels = BFRESRender.models.Count > 0;
+                foreach (var model in BFRESRender.models)
+                {
+                    if (model.shapes.Count > 0)
+                    {
+                        HasShapes = true;
+                        break;
+                    }
+                }
 
                 bfresEditor = new BfresEditor(HasModels);
                 bfresEditor.Dock = DockStyle.Fill;
@@ -421,7 +430,7 @@ namespace FirstPlugin
             }
 
             if (Runtime.UseOpenGL)
-                bfresEditor.LoadViewport(this, DrawableContainer);
+                bfresEditor.LoadViewport(this, HasShapes, DrawableContainer);
 
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
 

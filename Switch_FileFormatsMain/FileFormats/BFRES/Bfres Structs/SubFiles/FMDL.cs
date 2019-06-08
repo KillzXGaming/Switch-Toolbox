@@ -790,11 +790,6 @@ namespace Bfres.Structs
                             }
                         }
 
-                        if (settings.MapOriginalMaterials)
-                        {
-                         
-                        }
-
                         if (settings.LimitSkinCount)
                         {
                             for (int i = 0; i < assimp.objects.Count; i++)

@@ -157,7 +157,7 @@ namespace FirstPlugin.Forms
         public bool IsLoaded = false;
 
         private BFRES ActiveBfres;
-        public void LoadViewport(BFRES bfres, DrawableContainer ActiveDrawable, List<ToolStripMenuItem> customContextMenus = null)
+        public void LoadViewport(BFRES bfres, bool HasShapes, DrawableContainer ActiveDrawable, List<ToolStripMenuItem> customContextMenus = null)
         {
             ActiveBfres = bfres;
 
@@ -170,10 +170,12 @@ namespace FirstPlugin.Forms
                     viewport.LoadCustomMenuItem(menu);
             }
 
-            viewport.ReloadDrawables(ActiveDrawable);
+            if (ActiveDrawable.Drawables.Count > 0 && HasShapes)
+                viewport.ReloadDrawables(ActiveDrawable);
 
             OnLoadedTab();
         }
+
 
         public override void OnControlClosing()
         {

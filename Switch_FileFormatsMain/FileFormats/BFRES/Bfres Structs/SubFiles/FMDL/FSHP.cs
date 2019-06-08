@@ -858,6 +858,11 @@ namespace Bfres.Structs
                                 MessageBox.Show("No models found!");
                                 return;
                             }
+
+                            byte ForceSkinInfluenceMax = VertexSkinCount;
+
+                            var originalAttributes = vertexAttributes;
+
                             BfresModelImportSettings settings = new BfresModelImportSettings();
                             settings.SetModelAttributes(assimp.objects[0]);
                             if (settings.ShowDialog() == DialogResult.OK)
@@ -867,9 +872,17 @@ namespace Bfres.Structs
                                 Cursor.Current = Cursors.WaitCursor;
                                 VertexBufferIndex = obj.VertexBufferIndex;
                                 vertices = obj.vertices;
-                                CreateBoneList(obj, (FMDL)Parent.Parent, false);
-                                CreateIndexList(obj, (FMDL)Parent.Parent);
-                                VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                                CreateBoneList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
+                                CreateIndexList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
+
+                                if (settings.UseOriginalAttributeFormats)
+                                   vertexAttributes = originalAttributes;
+
+                                if (settings.LimitSkinCount)
+                                    obj.VertexSkinCount = ForceSkinInfluenceMax;
+                                else
+                                    VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
                                 vertexAttributes = settings.CreateNewAttributes();
                                 ApplyImportSettings(settings, GetMaterial());
                                 lodMeshes = obj.lodMeshes;
