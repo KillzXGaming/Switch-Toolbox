@@ -78,7 +78,7 @@ namespace Switch_Toolbox.Library
 
         }
 
-        private void SaveMeshes(Scene scene, STGenericModel model, STSkeleton skeleton,  string FileName, List<int> NodeArray)
+        private void SaveMeshes(Scene scene, STGenericModel model, STSkeleton skeleton, string FileName, List<int> NodeArray)
         {
             int MeshIndex = 0;
             foreach (var obj in model.Nodes[0].Nodes)
@@ -166,7 +166,7 @@ namespace Switch_Toolbox.Library
                     }
                 }
 
-               
+
                 vertexID++;
             }
             List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
@@ -191,12 +191,12 @@ namespace Switch_Toolbox.Library
             {
                 string line = dae.ReadLine();
 
-             /*   if (line == "  <library_visual_scenes>")
-                {
-                    AddControllerLibrary(outScene, test);
-                    test.WriteLine(line);
-                    test.Flush();
-                }*/
+                /*   if (line == "  <library_visual_scenes>")
+                   {
+                       AddControllerLibrary(outScene, test);
+                       test.WriteLine(line);
+                       test.Flush();
+                   }*/
                 if (line.Contains("<node"))
                 {
                     test.WriteLine(line);
@@ -209,28 +209,28 @@ namespace Switch_Toolbox.Library
                       test.WriteLine(jointLine);
                       test.Flush();*/
                 }
-            /*    else if (line.Contains("</visual_scene>"))
-                {
-                    foreach (Mesh mesh in outScene.Meshes)
+                /*    else if (line.Contains("</visual_scene>"))
                     {
-                        test.WriteLine($"      <node id=\"{ mesh.Name }\" name=\"{ mesh.Name }\" type=\"NODE\">");
+                        foreach (Mesh mesh in outScene.Meshes)
+                        {
+                            test.WriteLine($"      <node id=\"{ mesh.Name }\" name=\"{ mesh.Name }\" type=\"NODE\">");
 
-                        test.WriteLine($"       <instance_controller url=\"#{ mesh.Name }-skin\">");
-                        test.WriteLine("        <skeleton>#skeleton_root</skeleton>");
-                        test.WriteLine("        <bind_material>");
-                        test.WriteLine("         <technique_common>");
-                        test.WriteLine($"          <instance_material symbol=\"theresonlyone\" target=\"#m{ mesh.MaterialIndex }mat\" />");
-                        test.WriteLine("         </technique_common>");
-                        test.WriteLine("        </bind_material>");
-                        test.WriteLine("       </instance_controller>");
+                            test.WriteLine($"       <instance_controller url=\"#{ mesh.Name }-skin\">");
+                            test.WriteLine("        <skeleton>#skeleton_root</skeleton>");
+                            test.WriteLine("        <bind_material>");
+                            test.WriteLine("         <technique_common>");
+                            test.WriteLine($"          <instance_material symbol=\"theresonlyone\" target=\"#m{ mesh.MaterialIndex }mat\" />");
+                            test.WriteLine("         </technique_common>");
+                            test.WriteLine("        </bind_material>");
+                            test.WriteLine("       </instance_controller>");
 
-                        test.WriteLine("      </node>");
+                            test.WriteLine("      </node>");
+                            test.Flush();
+                        }
+
+                        test.WriteLine(line);
                         test.Flush();
-                    }
-
-                    test.WriteLine(line);
-                    test.Flush();
-                }*/
+                    }*/
                 else if (line.Contains("<geometry"))
                 {
                     string RealMeshName = Model.Nodes[0].Nodes[geomIndex].Text;
@@ -247,8 +247,8 @@ namespace Switch_Toolbox.Library
                 }
                 else
                 {
-                   test.WriteLine(line);
-                   test.Flush();
+                    test.WriteLine(line);
+                    test.Flush();
                 }
             }
 
@@ -517,69 +517,41 @@ namespace Switch_Toolbox.Library
                     if (!File.Exists(path))
                         continue;
 
-                    if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
-                    {
-                        TextureSlot slot2 = new TextureSlot(path, Assimp.TextureType.Diffuse, 0,
-                    Assimp.TextureMapping.FromUV, 0, 1.0f, Assimp.TextureOperation.Add,
-                    0, 0, 0);
+                    TextureSlot slot2 = new TextureSlot(path, ConvertToAssimpTextureType(tex.Type), 0, TextureMapping.FromUV,
+                            0, 1.0f, Assimp.TextureOperation.Add, ConvertToAssimpWrapType(tex.wrapModeS), ConvertToAssimpWrapType(tex.wrapModeT), 0);
 
-                        material.AddMaterialTexture(ref slot2);
-                        break;
-
-                        TextureSlot slot = new TextureSlot();
-                        slot.FilePath = path;
-                        slot.UVIndex = 0;
-                        slot.Flags = 0;
-                        slot.TextureIndex = 0;
-                        slot.BlendFactor = 1.0f;
-                        slot.Mapping = TextureMapping.FromUV;
-                        slot.Operation = TextureOperation.Add;
-                        slot.TextureType = TextureType.Diffuse;
-
-
-                        if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
-                            slot.TextureType = TextureType.Diffuse;
-                        else if (tex.Type == STGenericMatTexture.TextureType.Normal)
-                            slot.TextureType = TextureType.Normals;
-                        else if (tex.Type == STGenericMatTexture.TextureType.Specular)
-                            slot.TextureType = TextureType.Specular;
-                        else if (tex.Type == STGenericMatTexture.TextureType.Emission)
-                            slot.TextureType = TextureType.Emissive;
-                        else if (tex.Type == STGenericMatTexture.TextureType.Light)
-                        {
-                            slot.TextureType = TextureType.Lightmap;
-                            slot.UVIndex = 2;
-                        }
-                        else if (tex.Type == STGenericMatTexture.TextureType.Shadow)
-                        {
-                            slot.TextureType = TextureType.Ambient;
-                            slot.UVIndex = 1;
-                        }
-                        else
-                            slot.TextureType = TextureType.Unknown;
-
-                        if (tex.wrapModeS == 0)
-                            slot.WrapModeU = TextureWrapMode.Wrap;
-                        else if (tex.wrapModeS == 1)
-                            slot.WrapModeU = TextureWrapMode.Mirror;
-                        else if (tex.wrapModeS == 2)
-                            slot.WrapModeU = TextureWrapMode.Clamp;
-                        else
-                            slot.WrapModeU = TextureWrapMode.Wrap;
-
-                        if (tex.wrapModeT == 0)
-                            slot.WrapModeV = TextureWrapMode.Wrap;
-                        else if (tex.wrapModeT == 1)
-                            slot.WrapModeV = TextureWrapMode.Mirror;
-                        else if (tex.wrapModeT == 2)
-                            slot.WrapModeV = TextureWrapMode.Clamp;
-                        else
-                            slot.WrapModeV = TextureWrapMode.Wrap;
-                    }
+                    material.AddMaterialTexture(ref slot2);
                 }
                 scene.Materials.Add(material);
             }
 
+        }
+
+        private static Assimp.TextureWrapMode ConvertToAssimpWrapType(int  type)
+        {
+            switch (type)
+            {
+                case 0: return TextureWrapMode.Wrap;
+                case 1: return TextureWrapMode.Mirror;
+                case 2: return TextureWrapMode.Clamp;
+                default:
+                    return TextureWrapMode.Wrap;
+            }
+        }
+
+        private static Assimp.TextureType ConvertToAssimpTextureType(STGenericMatTexture.TextureType type)
+        {
+            switch (type)
+            {
+                case STGenericMatTexture.TextureType.Diffuse: return TextureType.Diffuse;
+                case STGenericMatTexture.TextureType.AO: return TextureType.Ambient;
+                case STGenericMatTexture.TextureType.Normal: return TextureType.Normals;
+                case STGenericMatTexture.TextureType.Light: return TextureType.Lightmap;
+                case STGenericMatTexture.TextureType.Emission: return TextureType.Emissive;
+                case STGenericMatTexture.TextureType.Specular: return TextureType.Specular;
+                default:
+                    return TextureType.Unknown;
+            }
         }
 
         public void SaveFromObject(STGenericObject genericObject, string FileName)
