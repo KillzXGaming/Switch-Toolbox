@@ -83,16 +83,18 @@ namespace FirstPlugin.Forms
                 {
                     if (IsKeyed(paramAnim, Frame))
                     {
-                        var item1 = new ListViewItem($"{Frame}");
+                    /*    var item1 = new ListViewItem($"{Frame}");
                         listViewCustom1.Items.Add(item1);
 
                         foreach (var track in paramAnim.Values)
                         {
+                            var keyFrame = track.GetKeyFrame(Frame);
+
                             if (track.AnimDataOffset == (uint)TexSRT.Mode)
-                                item1.SubItems.Add(((uint)track.GetValue(Frame)).ToString());
+                                item1.SubItems.Add(((uint)keyFrame.Value).ToString());
                             else
-                                item1.SubItems.Add(track.GetValue(Frame).ToString());
-                        }
+                                item1.SubItems.Add(keyFrame.Value.ToString());
+                        }*/
                     }
                 }
             }
@@ -108,16 +110,15 @@ namespace FirstPlugin.Forms
                 {
                     if (IsKeyed(paramAnim, Frame))
                     {
-                        var item1 = new ListViewItem($"{Frame}");
+                     /*   var item1 = new ListViewItem($"{Frame}");
                         listViewCustom1.Items.Add(item1);
 
                         foreach (var track in paramAnim.Values)
                         {
                             var keyFrame = track.GetKeyFrame(Frame);
 
-                            float value = track.GetValue(Frame);
-                            item1.SubItems.Add(value.ToString());
-                        }
+                            item1.SubItems.Add(keyFrame.Value.ToString());
+                        }*/
                     }
                 }
             }

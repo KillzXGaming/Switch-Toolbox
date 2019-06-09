@@ -180,6 +180,131 @@ namespace Bfres.Structs
             }
         }
 
+        public override void NextFrame(Viewport viewport)
+        {
+            if (Frame > FrameCount) return;
+
+            //Loop through each drawable bfres in the active viewport to display the anim
+            foreach (var drawable in viewport.scene.staticObjects)
+            {
+                if (drawable is BFRESRender)
+                    LoadMaterialAnimation(((BFRESRender)drawable).models);
+            }
+        }
+
+        private void LoadMaterialAnimation(List<FMDL> models)
+        {
+            //Loop through each FMDL's materials until it matches the material anim
+            foreach (var model in models)
+            {
+                foreach (Material matAnim in Materials)
+                {
+                    if (model.materials.ContainsKey(matAnim.Text))
+                        EditMaterial(model.materials[matAnim.Text], matAnim);
+                }
+            }
+        }
+
+        private void EditMaterial(FMAT material, Material matAnim)
+        {
+            SetShaderParamAnimation(material, matAnim);
+        }
+
+        private void SetShaderParamAnimation(FMAT material, Material matAnim)
+        {
+            if (matAnim.Params.Count == 0)
+                return;
+
+            Console.WriteLine("Playing anim " + Frame);
+
+            //Loop through param list for shader param anims
+            //These store a list of values with offsets to the value
+            //Then we'll update the active texture
+            foreach (FSHU.BfresParamAnim paramAnim in matAnim.Params)
+            {
+                if (material.matparam.ContainsKey(paramAnim.Text))
+                {
+                    //First we get the active param that we want to alter
+                    BfresShaderParam prm = material.matparam[paramAnim.Text];
+                    BfresShaderParam animatedprm = new BfresShaderParam();
+                    if (!material.animatedMatParams.ContainsKey(prm.Name))
+                        material.animatedMatParams.Add(prm.Name, animatedprm);
+                    animatedprm.Name = prm.Name;
+                    animatedprm.ValueUint = prm.ValueUint;
+                    animatedprm.ValueBool = prm.ValueBool;
+                    animatedprm.ValueFloat = prm.ValueFloat;
+                    animatedprm.ValueSrt2D = prm.ValueSrt2D;
+                    animatedprm.ValueSrt3D = prm.ValueSrt3D;
+                    animatedprm.ValueTexSrt = prm.ValueTexSrt;
+                    animatedprm.ValueTexSrtEx = prm.ValueTexSrtEx;
+
+                    foreach (var group in paramAnim.Values)
+                    {
+                        //The offset determines the value starting from 0.
+                        int index = 0;
+                        if (prm.ValueFloat != null)
+                        {
+                            if (group.AnimDataOffset != 0)
+                                index = (int)group.AnimDataOffset / sizeof(float);
+
+                            animatedprm.ValueFloat[index] = group.GetValue(Frame);
+                        }
+                        if (prm.ValueInt != null)
+                        {
+
+                        }
+                        if (prm.ValueUint != null)
+                        {
+
+                        }
+                        if (prm.ValueBool != null)
+                        {
+
+                        }
+                        if (prm.Type == Syroot.NintenTools.NSW.Bfres.ShaderParamType.Srt3D)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueSrt3D.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueSrt3D.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueSrt3D.Scaling.Z = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueSrt3D.Rotation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueSrt3D.Rotation.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 20) prm.ValueSrt3D.Rotation.Z = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 24) prm.ValueSrt3D.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 28) prm.ValueSrt3D.Translation.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 32) prm.ValueSrt3D.Translation.Z = group.GetValue(Frame);
+                        }
+                        if (prm.Type == Syroot.NintenTools.NSW.Bfres.ShaderParamType.Srt2D)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueSrt2D.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueSrt2D.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueSrt2D.Rotation = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueSrt2D.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueSrt2D.Translation.X = group.GetValue(Frame);
+                        }
+                        if (prm.Type == Syroot.NintenTools.NSW.Bfres.ShaderParamType.TexSrt)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueTexSrt.Mode = (Syroot.NintenTools.NSW.Bfres.TexSrtMode)(uint)group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueTexSrt.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueTexSrt.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueTexSrt.Rotation = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueTexSrt.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 20) prm.ValueTexSrt.Translation.Y = group.GetValue(Frame);
+                        }
+                        if (prm.Type == Syroot.NintenTools.NSW.Bfres.ShaderParamType.TexSrtEx)
+                        {
+                            if (group.AnimDataOffset == 0) prm.ValueTexSrtEx.Mode = (Syroot.NintenTools.NSW.Bfres.TexSrtMode)(uint)group.GetValue(Frame);
+                            if (group.AnimDataOffset == 4) prm.ValueTexSrtEx.Scaling.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 8) prm.ValueTexSrtEx.Scaling.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 12) prm.ValueTexSrtEx.Rotation = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueTexSrtEx.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 20) prm.ValueTexSrtEx.Translation.Y = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 24) prm.ValueTexSrtEx.MatrixPointer = (uint)group.GetValue(Frame);
+                        }
+                    }
+                }
+            }
+        }
+
         public class MaterialAnimEntry : Material
         {
             public ShaderParamMatAnim materialAnimData;

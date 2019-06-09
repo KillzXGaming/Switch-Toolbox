@@ -137,6 +137,8 @@ namespace Switch_Toolbox.Library.Animations
 
             public bool HasKeyedFrames(float frame)
             {
+                return false;
+
                 return (XPOS.HasAnimation() && XPOS.GetKeyFrame(frame).IsKeyed ||
                         YPOS.HasAnimation() && YPOS.GetKeyFrame(frame).IsKeyed ||
                         ZPOS.HasAnimation() && ZPOS.GetKeyFrame(frame).IsKeyed ||
