@@ -523,6 +523,9 @@ namespace Switch_Toolbox.Library
             int index = node.Nodes.IndexOf(replaceNode);
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
+
+            NewNode.ImageKey = replaceNode.ImageKey;
+            NewNode.SelectedImageKey = replaceNode.SelectedImageKey;
         }
 
         private void RenameAction(object sender, EventArgs args)

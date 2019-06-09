@@ -127,6 +127,8 @@ namespace Switch_Toolbox.Library.Forms
 
             if (treeViewCustom1.Nodes[0] is IFileFormat)
                 return (IFileFormat)treeViewCustom1.Nodes[0];
+            if (treeViewCustom1.Nodes[0] is ArchiveBase)
+                return (IFileFormat)((ArchiveBase)treeViewCustom1.Nodes[0]).ArchiveFile;
             return null;
         }
 

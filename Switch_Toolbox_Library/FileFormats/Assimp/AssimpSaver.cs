@@ -191,46 +191,46 @@ namespace Switch_Toolbox.Library
             {
                 string line = dae.ReadLine();
 
-                /*   if (line == "  <library_visual_scenes>")
-                   {
-                       AddControllerLibrary(outScene, test);
-                       test.WriteLine(line);
-                       test.Flush();
-                   }*/
-                if (line.Contains("<node"))
+                if (line == "  <library_visual_scenes>")
                 {
+                    AddControllerLibrary(outScene, test);
                     test.WriteLine(line);
                     test.Flush();
-
-                    /* string[] testLn = line.Split('\"');
-                      string name = testLn[3];
-
-                      string jointLine = line.Replace(">", $" sid=\"{ name }\" type=\"JOINT\">");
-                      test.WriteLine(jointLine);
-                      test.Flush();*/
                 }
-                /*    else if (line.Contains("</visual_scene>"))
+                else if (line.Contains("<node"))
+                {
+                 //   test.WriteLine(line);
+                   // test.Flush();
+
+                    string[] testLn = line.Split('\"');
+                    string name = testLn[3];
+
+                    string jointLine = line.Replace(">", $" sid=\"{ name }\" type=\"JOINT\">");
+                    test.WriteLine(jointLine);
+                    test.Flush();
+                }
+                else if (line.Contains("</visual_scene>"))
+                {
+                    foreach (Mesh mesh in outScene.Meshes)
                     {
-                        foreach (Mesh mesh in outScene.Meshes)
-                        {
-                            test.WriteLine($"      <node id=\"{ mesh.Name }\" name=\"{ mesh.Name }\" type=\"NODE\">");
+                        test.WriteLine($"      <node id=\"{ mesh.Name }\" name=\"{ mesh.Name }\" type=\"NODE\">");
 
-                            test.WriteLine($"       <instance_controller url=\"#{ mesh.Name }-skin\">");
-                            test.WriteLine("        <skeleton>#skeleton_root</skeleton>");
-                            test.WriteLine("        <bind_material>");
-                            test.WriteLine("         <technique_common>");
-                            test.WriteLine($"          <instance_material symbol=\"theresonlyone\" target=\"#m{ mesh.MaterialIndex }mat\" />");
-                            test.WriteLine("         </technique_common>");
-                            test.WriteLine("        </bind_material>");
-                            test.WriteLine("       </instance_controller>");
+                        test.WriteLine($"       <instance_controller url=\"#{ mesh.Name }-skin\">");
+                        test.WriteLine("        <skeleton>#skeleton_root</skeleton>");
+                        test.WriteLine("        <bind_material>");
+                        test.WriteLine("         <technique_common>");
+                        test.WriteLine($"          <instance_material symbol=\"theresonlyone\" target=\"#m{ mesh.MaterialIndex }mat\" />");
+                        test.WriteLine("         </technique_common>");
+                        test.WriteLine("        </bind_material>");
+                        test.WriteLine("       </instance_controller>");
 
-                            test.WriteLine("      </node>");
-                            test.Flush();
-                        }
-
-                        test.WriteLine(line);
+                        test.WriteLine("      </node>");
                         test.Flush();
-                    }*/
+                    }
+
+                    test.WriteLine(line);
+                    test.Flush();
+                }
                 else if (line.Contains("<geometry"))
                 {
                     string RealMeshName = Model.Nodes[0].Nodes[geomIndex].Text;

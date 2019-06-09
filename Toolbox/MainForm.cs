@@ -400,9 +400,17 @@ namespace Toolbox
         {
             foreach (var node in editor.GetNodes())
             {
-                if (node is IFileFormat)
+                IFileFormat format = null;
+                if (node is ArchiveBase)
                 {
-                    var format = ((IFileFormat)node);
+                    format = (IFileFormat)((ArchiveBase)node).ArchiveFile;
+                }
+                else if (node is IFileFormat)
+                {
+                    format = ((IFileFormat)node);
+                }
+                if (format != null)
+                {
 
                     if (!format.CanSave)
                         return;
