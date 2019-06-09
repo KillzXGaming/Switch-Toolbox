@@ -282,43 +282,48 @@ namespace FirstPlugin
         {
             SuppressFormDialog = true;
 
+            List<IFileFormat> Formats = new List<IFileFormat>();
+
             try
             {
-                CallRecursive(TreeView);
+                CallRecursive(TreeView, Formats);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
 
-            PreviewEditor editor = new PreviewEditor();
+            ArchiveListPreviewForm editor = new ArchiveListPreviewForm();
+            editor.LoadArchive(Formats);
             editor.Show();
 
             SuppressFormDialog = false;
         }
 
-        private void CallRecursive(TreeView treeView)
+        private void CallRecursive(TreeView treeView, List<IFileFormat> Formats)
         {
             // Print each node recursively.  
             TreeNodeCollection nodes = treeView.Nodes;
             foreach (TreeNode n in nodes)
             {
-                PrintRecursive(n);
+                GetNodeFileFormat(n, Formats);
             }
         }
-        private void PrintRecursive(TreeNode treeNode)
+        private void GetNodeFileFormat(TreeNode treeNode, List<IFileFormat> Formats)
         {
             // Print the node. 
 
             if (treeNode is SarcEntry)
             {
-                ((SarcEntry)treeNode).OnDoubleMouseClick(treeNode.TreeView);
+                var format = ((SarcEntry)treeNode).OpenFile();
+                if (format != null)
+                    Formats.Add(format);
             }
 
             // Print each node recursively.  
             foreach (TreeNode tn in treeNode.Nodes)
             {
-                PrintRecursive(tn);
+                GetNodeFileFormat(tn, Formats);
             }
         }
 
@@ -361,12 +366,17 @@ namespace FirstPlugin
                 editor.LoadData(Data);
             }
 
+            public IFileFormat OpenFile()
+            {
+                return STFileLoader.OpenFileFormat(FullName, Data, false, true, this);
+            }
+
             public override void OnDoubleMouseClick(TreeView treeView)
             {
                 if (Data.Length <= 0)
                     return;
 
-                IFileFormat file = STFileLoader.OpenFileFormat(FullName, Data,false, true, this);
+                IFileFormat file = OpenFile();
                 if (file == null) //File returns null if no supported format is found
                     return; 
 

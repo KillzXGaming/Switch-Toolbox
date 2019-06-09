@@ -22,6 +22,23 @@ namespace Switch_Toolbox.Library.Forms
 
         private ListViewItem ActiveItem;
 
+        public void LoadArchive(List<IFileFormat> Files)
+        {
+            ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            ImageList.ImageSize = new Size(40, 40);
+            listViewCustom1.LargeImageList = ImageList;
+
+            for (int i = 0; i < Files.Count; i++)
+            {
+                if (Files[i].FileType == FileType.Image)
+                {
+                    Textures.AddRange(GetTextures(Files[i]));
+                }
+            }
+
+            ReloadTextures();
+        }
+
         public void LoadArchive(IArchiveFile ArchiveFile)
         {
             ImageList.ColorDepth = ColorDepth.Depth32Bit;

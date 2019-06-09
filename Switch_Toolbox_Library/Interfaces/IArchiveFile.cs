@@ -427,9 +427,26 @@ namespace Switch_Toolbox.Library
         {
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new STToolStripItem("Rename", RenameAction) { Enabled = archiveFile.CanRenameFiles });
-            ContextMenuStrip.Items.Add(new STToolStripItem("Extract", ExtractAction));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Replace", ReplaceAction) { Enabled = archiveFile.CanReplaceFiles });
+            ContextMenuStrip.Items.Add(new STToolStripItem("Export Raw Data", ExtractAction));
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data to File Location", null, ExportToFileLocAction, Keys.Control | Keys.F));
+            ContextMenuStrip.Items.Add(new STToolStripItem("Replace Raw Data", ReplaceAction) { Enabled = archiveFile.CanReplaceFiles });
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Open With Text Editor", null, OpenTextEditorAction, Keys.Control | Keys.T));
+            ContextMenuStrip.Items.Add(new STToolStripSeparator());
             ContextMenuStrip.Items.Add(new STToolStripItem("Delete", DeleteAction) { Enabled = archiveFile.CanDeleteFiles });
+        }
+
+        private void OpenTextEditorAction(object sender, EventArgs args)
+        {
+            TextEditor editor = (TextEditor)LibraryGUI.Instance.GetActiveContent(typeof(TextEditor));
+            if (editor == null)
+            {
+                editor = new TextEditor();
+                LibraryGUI.Instance.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.FillEditor(ArchiveFileInfo.FileData);
         }
 
         private void ExtractAction(object sender, EventArgs args)
@@ -437,8 +454,21 @@ namespace Switch_Toolbox.Library
             ArchiveFileInfo.Export();
         }
 
+        private void ExportToFileLocAction(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            File.WriteAllBytes($"{Path.GetDirectoryName(((IFileFormat)ArchiveFile).FilePath)}/{Text}", ArchiveFileInfo.FileData);
+            Cursor.Current = Cursors.Default;
+        }
+
         private void DeleteAction(object sender, EventArgs args)
         {
+            DialogResult result = MessageBox.Show($"Are your sure you want to remove {Text}? This cannot be undone!", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                ArchiveFile.DeleteFile(ArchiveFileInfo);
+                Parent.Nodes.Remove(this);
+            }
         }
 
         private void ReplaceAction(object sender, EventArgs args)
@@ -526,6 +556,7 @@ namespace Switch_Toolbox.Library
 
             NewNode.ImageKey = replaceNode.ImageKey;
             NewNode.SelectedImageKey = replaceNode.SelectedImageKey;
+            NewNode.Text = replaceNode.Text;
         }
 
         private void RenameAction(object sender, EventArgs args)
