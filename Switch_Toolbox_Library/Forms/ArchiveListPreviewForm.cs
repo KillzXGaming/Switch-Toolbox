@@ -24,9 +24,9 @@ namespace Switch_Toolbox.Library.Forms
         {
             ImageList.ColorDepth = ColorDepth.Depth32Bit;
             ImageList.ImageSize = new Size(40,40);
+            listViewCustom1.LargeImageList = ImageList;
 
             var Files = OpenFileFormats(ArchiveFile);
-
 
             for (int i = 0; i < Files.Count; i++)
             {
@@ -87,6 +87,37 @@ namespace Switch_Toolbox.Library.Forms
             Thread.Start();
         }
 
+        private void ReloadTexture(STGenericTexture tex, ListViewItem listItem)
+        {
+            Thread Thread = new Thread((ThreadStart)(() =>
+            {
+                Bitmap temp = tex.GetBitmap();
+                if (temp == null)
+                    return;
+                
+                if (listViewCustom1.InvokeRequired)
+                {
+                    listViewCustom1.Invoke((MethodInvoker)delegate {
+                        ImageList.Images[listItem.ImageIndex] = temp;
+                        // Running on the UI thread
+                        var dummy = ImageList.Handle;
+                    });
+                }
+                else
+                {
+                    ListViewItem item = new ListViewItem(tex.Text, ImageList.Images.Count);
+                    item.Tag = tex;
+
+                    listViewCustom1.Items.Add(item);
+                    ImageList.Images.Add(temp);
+                    var dummy = ImageList.Handle;
+                }
+
+                temp.Dispose();
+            }));
+            Thread.Start();
+        }
+
         private List<STGenericTexture> GetTextures(IFileFormat Format)
         {
             var Textures = new List<STGenericTexture>();
@@ -132,45 +163,66 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (listViewCustom1.SelectedItems.Count > 0 && e.Button == MouseButtons.Right)
             {
-                var item = listViewCustom1.SelectedItems[0];
-                if (item.Tag != null && item.Tag is TreeNode)
+                Point pt = listViewCustom1.PointToScreen(e.Location);
+                stContextMenuStrip1.Show(pt);
+            }
+        }
+
+        private void replaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = listViewCustom1.SelectedItems[0];
+            if (item.Tag != null && item.Tag is TreeNode)
+            {
+                foreach (ToolStripItem ctx in ((TreeNode)item.Tag).ContextMenuStrip.Items)
                 {
-                    Point pt = listViewCustom1.PointToScreen(e.Location);
-                    ((TreeNode)item.Tag).ContextMenuStrip.ItemClicked += new ToolStripItemClickedEventHandler(OnContextMenuClick);
-                    ((TreeNode)item.Tag).ContextMenuStrip.Show(pt);
+                    if (ctx.Text == "Replace")
+                    {
+                        ctx.PerformClick();
+                        ReloadTexture(GetActiveTexture(), item);
+                    }
                 }
             }
         }
 
-        private void OnContextMenuClick(object sender, ToolStripItemClickedEventArgs e)
+        private STGenericTexture GetActiveTexture()
         {
-            ToolStripItem item = e.ClickedItem;
-            if (item.Text.Contains("Replace"))
-                ReloadTextures();
+            var item = listViewCustom1.SelectedItems[0];
+            if (item.Tag is STGenericTexture)
+            {
+                return (STGenericTexture)item.Tag;
+            }
+
+            return null;
         }
 
-        ImageEditorForm imageEditorForm;
+        ImageEditorBase imageEditorForm;
         private void LoadImageEditor(STGenericTexture texture, object Properties)
         {
             if (imageEditorForm == null || imageEditorForm.IsDisposed)
             {
-                imageEditorForm = new ImageEditorForm(false);
-                imageEditorForm.Show(this);
+                imageEditorForm = new ImageEditorBase();
+
+                splitContainer1.Panel2.Controls.Clear();
+                splitContainer1.Panel2.Controls.Add(imageEditorForm);
+                imageEditorForm.Dock = DockStyle.Fill;
             }
 
-            imageEditorForm.editorBase.Text = Text;
-            imageEditorForm.editorBase.Dock = DockStyle.Fill;
-            imageEditorForm.editorBase.LoadProperties(Properties);
-            imageEditorForm.editorBase.LoadImage(texture);
-            imageEditorForm.FormClosed += OnEditorClosed;
-        }
-
-        private void OnEditorClosed(object sender, EventArgs e)
-        {
-            ReloadTextures();
+            imageEditorForm.Text = Text;
+            imageEditorForm.LoadProperties(Properties);
+            imageEditorForm.LoadImage(texture);
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void stMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
