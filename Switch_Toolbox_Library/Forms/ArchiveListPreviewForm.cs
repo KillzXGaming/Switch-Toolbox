@@ -203,6 +203,7 @@ namespace Switch_Toolbox.Library.Forms
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = Texture.ExportFilter;
+            sfd.FileName = Texture.Text;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -260,6 +261,9 @@ namespace Switch_Toolbox.Library.Forms
         {
             ReloadTexture(e.ReplacedTexture, ActiveItem);
             listViewCustom1.Refresh();
+
+            if (imageEditorForm != null)
+                imageEditorForm.UpdateMipDisplay();
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)

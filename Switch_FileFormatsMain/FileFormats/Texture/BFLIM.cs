@@ -204,6 +204,8 @@ namespace FirstPlugin
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = ReplaceFilter;
+            ofd.FileName = Text;
+
             ofd.Multiselect = false;
 
             if (ofd.ShowDialog() == DialogResult.OK)
