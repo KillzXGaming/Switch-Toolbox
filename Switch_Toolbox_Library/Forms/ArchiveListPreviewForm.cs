@@ -27,6 +27,7 @@ namespace Switch_Toolbox.Library.Forms
             ImageList.ColorDepth = ColorDepth.Depth32Bit;
             ImageList.ImageSize = new Size(40, 40);
             listViewCustom1.LargeImageList = ImageList;
+            listViewCustom1.Sorting = SortOrder.Ascending;
 
             for (int i = 0; i < Files.Count; i++)
             {
