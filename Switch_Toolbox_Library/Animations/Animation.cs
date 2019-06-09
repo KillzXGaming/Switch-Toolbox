@@ -137,8 +137,6 @@ namespace Switch_Toolbox.Library.Animations
 
             public bool HasKeyedFrames(float frame)
             {
-                return false;
-
                 return (XPOS.HasAnimation() && XPOS.GetKeyFrame(frame).IsKeyed ||
                         YPOS.HasAnimation() && YPOS.GetKeyFrame(frame).IsKeyed ||
                         ZPOS.HasAnimation() && ZPOS.GetKeyFrame(frame).IsKeyed ||
@@ -291,7 +289,7 @@ namespace Switch_Toolbox.Library.Animations
                 }
             }
 
-            public KeyFrame GetKeyFrame(float frame)
+            public KeyFrame GetKeyFrame(float frame, bool InsertNewKey = true)
             {
                 KeyFrame key = null;
                 int i;
@@ -308,7 +306,7 @@ namespace Switch_Toolbox.Library.Animations
                     }
                 }
 
-                if (key == null)
+                if (key == null && InsertNewKey)
                 {
                     key = new KeyFrame();
                     key.Frame = frame;

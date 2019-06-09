@@ -83,18 +83,23 @@ namespace FirstPlugin.Forms
                 {
                     if (IsKeyed(paramAnim, Frame))
                     {
-                    /*    var item1 = new ListViewItem($"{Frame}");
+                        var item1 = new ListViewItem($"{Frame}");
                         listViewCustom1.Items.Add(item1);
 
                         foreach (var track in paramAnim.Values)
                         {
-                            var keyFrame = track.GetKeyFrame(Frame);
+                            var keyFrame = track.GetKeyFrame(Frame, false);
 
-                            if (track.AnimDataOffset == (uint)TexSRT.Mode)
-                                item1.SubItems.Add(((uint)keyFrame.Value).ToString());
+                            if (keyFrame != null)
+                            {
+                                if (track.AnimDataOffset == (uint)TexSRT.Mode)
+                                    item1.SubItems.Add(((uint)keyFrame.Value).ToString());
+                                else
+                                    item1.SubItems.Add(keyFrame.Value.ToString());
+                            }
                             else
-                                item1.SubItems.Add(keyFrame.Value.ToString());
-                        }*/
+                                item1.SubItems.Add("");
+                        }
                     }
                 }
             }
@@ -110,15 +115,19 @@ namespace FirstPlugin.Forms
                 {
                     if (IsKeyed(paramAnim, Frame))
                     {
-                     /*   var item1 = new ListViewItem($"{Frame}");
+                        var item1 = new ListViewItem($"{Frame}");
                         listViewCustom1.Items.Add(item1);
 
                         foreach (var track in paramAnim.Values)
                         {
                             var keyFrame = track.GetKeyFrame(Frame);
 
-                            item1.SubItems.Add(keyFrame.Value.ToString());
-                        }*/
+                            if (keyFrame != null)
+                                item1.SubItems.Add(keyFrame.Value.ToString());
+                            else
+                                item1.SubItems.Add("");
+
+                        }
                     }
                 }
             }
@@ -128,7 +137,7 @@ namespace FirstPlugin.Forms
         {
             foreach (var track in paramKeyGroup.Values)
             {
-                if (track.GetKeyFrame(Frame).IsKeyed == true)
+                if (track.GetKeyFrame(Frame, false) != null && track.GetKeyFrame(Frame).IsKeyed == true)
                     return true;
             }
 
