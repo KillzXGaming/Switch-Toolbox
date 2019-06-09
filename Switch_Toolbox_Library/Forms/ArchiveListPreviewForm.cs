@@ -18,6 +18,8 @@ namespace Switch_Toolbox.Library.Forms
         }
 
         ImageList ImageList = new ImageList();
+        List<STGenericTexture> Textures = new List<STGenericTexture>();
+
         public void LoadArchive(IArchiveFile ArchiveFile)
         {
             ImageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -25,10 +27,7 @@ namespace Switch_Toolbox.Library.Forms
 
             var Files = OpenFileFormats(ArchiveFile);
 
-            List<STGenericTexture> Textures = new List<STGenericTexture>();
 
-            listViewCustom1.LargeImageList = ImageList;
-            listViewCustom1.BeginUpdate();
             for (int i = 0; i < Files.Count; i++)
             {
                 if (Files[i].FileFormat.FileType == FileType.Image)
@@ -36,8 +35,14 @@ namespace Switch_Toolbox.Library.Forms
                     Textures.AddRange(GetTextures(Files[i].FileFormat));
                 }
             }
-            LoadTexturesThread(Textures);
 
+            ReloadTextures();
+        }
+
+        private void ReloadTextures()
+        {
+            listViewCustom1.BeginUpdate();
+            LoadTexturesThread(Textures);
             listViewCustom1.EndUpdate();
         }
 
@@ -131,13 +136,20 @@ namespace Switch_Toolbox.Library.Forms
                 if (item.Tag != null && item.Tag is TreeNode)
                 {
                     Point pt = listViewCustom1.PointToScreen(e.Location);
+                    ((TreeNode)item.Tag).ContextMenuStrip.ItemClicked += new ToolStripItemClickedEventHandler(OnContextMenuClick);
                     ((TreeNode)item.Tag).ContextMenuStrip.Show(pt);
                 }
             }
         }
 
-        ImageEditorForm imageEditorForm;
+        private void OnContextMenuClick(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ToolStripItem item = e.ClickedItem;
+            if (item.Text.Contains("Replace"))
+                ReloadTextures();
+        }
 
+        ImageEditorForm imageEditorForm;
         private void LoadImageEditor(STGenericTexture texture, object Properties)
         {
             if (imageEditorForm == null || imageEditorForm.IsDisposed)
@@ -150,6 +162,12 @@ namespace Switch_Toolbox.Library.Forms
             imageEditorForm.editorBase.Dock = DockStyle.Fill;
             imageEditorForm.editorBase.LoadProperties(Properties);
             imageEditorForm.editorBase.LoadImage(texture);
+            imageEditorForm.FormClosed += OnEditorClosed;
+        }
+
+        private void OnEditorClosed(object sender, EventArgs e)
+        {
+            ReloadTextures();
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
