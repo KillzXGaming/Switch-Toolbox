@@ -103,7 +103,9 @@ namespace Switch_Toolbox.Library.Forms
                 Bitmap temp = tex.GetBitmap();
                 if (temp == null)
                     return;
-                
+
+                temp = BitmapExtension.Resize(temp, ImageList.ImageSize);
+
                 if (listViewCustom1.InvokeRequired)
                 {
                     listViewCustom1.Invoke((MethodInvoker)delegate {
