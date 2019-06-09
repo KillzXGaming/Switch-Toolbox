@@ -581,7 +581,7 @@ namespace FirstPlugin
             public override void Replace(string FileName)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true);
+                ftex.ReplaceTexture(FileName, Format);
                 if (ftex.texture != null)
                 {
                     surface.swizzle = ftex.texture.Swizzle;
@@ -607,6 +607,8 @@ namespace FirstPlugin
                     Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)surface.format);
                     Width = surface.width;
                     Height = surface.height;
+                    MipCount = surface.numMips;
+                    ArrayCount = surface.numArray;
 
                     ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
 
