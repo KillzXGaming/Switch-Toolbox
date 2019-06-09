@@ -79,7 +79,7 @@ namespace FirstPlugin.Forms
                     ColumnHeader valueColumn = new ColumnHeader() { Text = $"{(TexSRT)track.AnimDataOffset}" };
                     listViewCustom1.Columns.Add(valueColumn);
                 }
-                for (int Frame = 0; Frame < anim.FrameCount; Frame++)
+                for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
                 {
                     if (IsKeyed(paramAnim, Frame))
                     {
@@ -104,7 +104,7 @@ namespace FirstPlugin.Forms
                     ColumnHeader valueColumn = new ColumnHeader() { Text = $"Value {col}" };
                     listViewCustom1.Columns.Add(valueColumn);
                 }
-                for (int Frame = 0; Frame < anim.FrameCount; Frame++)
+                for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
                 {
                     if (IsKeyed(paramAnim, Frame))
                     {

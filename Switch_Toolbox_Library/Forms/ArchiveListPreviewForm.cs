@@ -31,7 +31,7 @@ namespace Switch_Toolbox.Library.Forms
 
             for (int i = 0; i < Files.Count; i++)
             {
-                if (Files[i].FileType == FileType.Image)
+                if (Files[i].FileType == FileType.Image || Files[i].FileType == FileType.Archive)
                 {
                     Textures.AddRange(GetTextures(Files[i]));
                 }
@@ -156,8 +156,13 @@ namespace Switch_Toolbox.Library.Forms
 
             if (Format is TreeNodeFile)
             {
-                foreach (var node in ((TreeNodeFile)Format).Nodes)
-                    if (node is STGenericTexture) Textures.Add((STGenericTexture)node);
+                foreach (var node in TreeViewExtensions.Collect(((TreeNodeFile)Format).Nodes))
+                {
+                    if (node is STGenericTexture)
+                        Textures.Add((STGenericTexture)node);
+                    else if (node is IFileFormat)
+                        GetTextures((IFileFormat)node);
+                }
             }
 
             return Textures;
