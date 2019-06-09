@@ -197,32 +197,42 @@ namespace FirstPlugin
             }
         }
 
+        public override string ExportFilter => FileFilters.GTX;
+        public override string ReplaceFilter => FileFilters.GTX;
+
         private void Replace(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = FileFilters.GTX;
+            ofd.Filter = ReplaceFilter;
             ofd.Multiselect = false;
+
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, Format, 1, SupportedFormats, true, true, false);
-                if (ftex.texture != null)
-                {
-                    image.Swizzle = (byte)ftex.texture.Swizzle;
-                    image.BflimFormat = ConvertFormatGenericToBflim(ftex.Format);
-                    image.Height = (ushort)ftex.texture.Height;
-                    image.Width = (ushort)ftex.texture.Width;
-
-                    Format = GetFormat(image.BflimFormat);
-                    Width = image.Width;
-                    Height = image.Height;
-
-                    ImageData = ftex.texture.Data;
-
-                    UpdateForm();
-                }
+                Replace(ofd.FileName);
             }
         }
+
+        public override void Replace(string FileName)
+        {
+            FTEX ftex = new FTEX();
+            ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true, false);
+            if (ftex.texture != null)
+            {
+                image.Swizzle = (byte)ftex.texture.Swizzle;
+                image.BflimFormat = ConvertFormatGenericToBflim(ftex.Format);
+                image.Height = (ushort)ftex.texture.Height;
+                image.Width = (ushort)ftex.texture.Width;
+
+                Format = GetFormat(image.BflimFormat);
+                Width = image.Width;
+                Height = image.Height;
+
+                ImageData = ftex.texture.Data;
+
+                UpdateForm();
+            }
+        }
+
 
         private void Save(object sender, EventArgs args)
         {

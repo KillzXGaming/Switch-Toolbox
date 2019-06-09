@@ -681,6 +681,7 @@ namespace FirstPlugin
                 LoadFile(new MemoryStream(File.ReadAllBytes(ofd.FileName)));
             }
         }
+
         private void Rename(object sender, EventArgs args)
         {
             RenameDialog dialog = new RenameDialog();
@@ -788,6 +789,10 @@ namespace FirstPlugin
         {
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
+            CanExport = true;
+            CanRename = true;
+            CanReplace = true;
+            CanDelete = true;
 
             Texture = tex;
 
@@ -802,13 +807,6 @@ namespace FirstPlugin
             GreenChannel = SetChannel(tex.ChannelGreen);
             BlueChannel = SetChannel(tex.ChannelBlue);
             AlphaChannel = SetChannel(tex.ChannelAlpha);
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, Remove, Keys.Control | Keys.Delete));
         }
 
         private STChannelType SetChannel(ChannelType channelType)
@@ -1010,11 +1008,12 @@ namespace FirstPlugin
             AlphaChannel = SetChannel(Texture.ChannelAlpha);
         }
 
-        private void Remove(object sender, EventArgs args)
+        public override void Delete()
         {
             ((BNTX)Parent).RemoveTexture(this);
         }
-        private void Rename(object sender, EventArgs args)
+
+        public override void Rename()
         {
             RenameDialog dialog = new RenameDialog();
             dialog.SetString(Text);
@@ -1027,25 +1026,16 @@ namespace FirstPlugin
                 ((BNTX)Parent).Textures.Add(Text, this);
             }
         }
-        private void Replace(object sender, EventArgs args)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.bftex;*.dds;*.astc; *.png;*.tga;*.jpg;*.tiff|" +
-                         "Binary Texture |*.bftex|" +
-                         "Microsoft DDS |*.dds|" +
-                          "Adaptable Scalable Texture Compression |*.astc|" +
-                         "TGA |*.tga|" +
-                         "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";
 
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                Replace(ofd.FileName, MipCount, Format);
-            }
+        public override string ExportFilter => FileFilters.BNTX_TEX;
+        public override string ReplaceFilter => FileFilters.BNTX_TEX;
+
+        public override void Replace(string FileName) {
+            Replace(FileName, MipCount, Format);
+        }
+
+        public override void Export(string FileName) {
+            Export(FileName);
         }
 
         //Max mip level will be set automatically unless overwritten
@@ -1128,25 +1118,7 @@ namespace FirstPlugin
                 }
             }
         }
-        private void Export(object sender, EventArgs args)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = Texture.Name;
-            sfd.DefaultExt = "bftex";
-            sfd.Filter = "Supported Formats|*.bftex;*.dds; *.png;*.jpg;*.tiff|" +
-                         "Binary Texture |*.bftex|" +
-                         "Microsoft DDS |*.dds|" +
-                         "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";
 
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                Export(sfd.FileName);
-            }
-        }
         public void Export(string FileName, bool ExportSurfaceLevel = false,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {

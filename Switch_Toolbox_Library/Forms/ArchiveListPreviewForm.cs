@@ -197,19 +197,33 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var Texture = GetActiveTexture();
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Texture.ExportFilter;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Texture.Export(sfd.FileName);
+            }
+        }
+
         private void replaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var item = listViewCustom1.SelectedItems[0];
-            if (item.Tag != null && item.Tag is TreeNode)
+            var Texture = GetActiveTexture();
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = Texture.ReplaceFilter;
+            ofd.Multiselect = false;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
-                foreach (ToolStripItem ctx in ((TreeNode)item.Tag).ContextMenuStrip.Items)
-                {
-                    if (ctx.Text == "Replace")
-                    {
-                        ctx.PerformClick();
-                        ReloadTexture(GetActiveTexture(), item);
-                    }
-                }
+                Texture.Replace(ofd.FileName);
+
+                ReloadTexture(Texture, item);
             }
         }
 
