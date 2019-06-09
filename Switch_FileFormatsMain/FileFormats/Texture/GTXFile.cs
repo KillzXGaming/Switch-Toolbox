@@ -585,6 +585,7 @@ namespace FirstPlugin
                 if (ftex.texture != null)
                 {
                     surface.swizzle = ftex.texture.Swizzle;
+                    surface.tileMode = (uint)ftex.texture.TileMode;
                     surface.format = (uint)ftex.texture.Format;
                     surface.aa = (uint)ftex.texture.AAMode;
                     surface.alignment = (uint)ftex.texture.Alignment;
