@@ -49,7 +49,6 @@ namespace Switch_Toolbox.Library.Forms
         private void LoadTexturesThread(List<STGenericTexture> Textures)
         {
             ImageList.Images.Clear();
-
             Thread Thread = new Thread((ThreadStart)(() =>
             {
                 foreach (var tex in Textures)
@@ -59,6 +58,7 @@ namespace Switch_Toolbox.Library.Forms
                     {
                         continue;
                     }
+
                     if (listViewCustom1.InvokeRequired)
                     {
                         listViewCustom1.Invoke((MethodInvoker)delegate {
@@ -210,6 +210,13 @@ namespace Switch_Toolbox.Library.Forms
             imageEditorForm.Text = Text;
             imageEditorForm.LoadProperties(Properties);
             imageEditorForm.LoadImage(texture);
+            imageEditorForm.OnTextureReplaced += new ImageEditorBase.StatusUpdateHandler(UpdateTextureEdit);
+        }
+
+        private void UpdateTextureEdit(object sender, ImageEditorBase.ProgressEventArgs e)
+        {
+            var item = listViewCustom1.SelectedItems[0];
+            ReloadTexture(GetActiveTexture(), item);
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)

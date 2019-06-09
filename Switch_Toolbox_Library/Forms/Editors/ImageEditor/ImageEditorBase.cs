@@ -15,6 +15,25 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ImageEditorBase : UserControl
     {
+        public class ProgressEventArgs : EventArgs
+        {
+            public ProgressEventArgs()
+            {
+            }
+        }
+
+        public delegate void StatusUpdateHandler(object sender, ProgressEventArgs e);
+        public event StatusUpdateHandler OnTextureReplaced;
+
+        private void UpdateTextureReplace()
+        {
+            // Make sure someone is listening to event
+            if (OnTextureReplaced == null) return;
+
+            ProgressEventArgs args = new ProgressEventArgs();
+            OnTextureReplaced(this, args);
+        }
+
         private int _currentCacheIndex = -1;
 
         private int currentCacheIndex
@@ -732,6 +751,8 @@ namespace Switch_Toolbox.Library.Forms
             }
 
             progressBar.Value = 100;
+
+            UpdateTextureReplace();
         }
 
         private void saveBtn_Click(object sender, EventArgs e)

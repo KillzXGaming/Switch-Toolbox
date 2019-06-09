@@ -37,6 +37,8 @@ namespace Bfres.Structs
 
         public void ExportAll()
         {
+            bool IncludeTextureMaps = false;
+
             FolderSelectDialog sfd = new FolderSelectDialog();
 
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -45,7 +47,7 @@ namespace Bfres.Structs
 
                 foreach (FMAT mat in Nodes)
                 {
-                   mat.Export(folderPath + '\\' + mat.Text + ".bfmat");
+                   mat.Export(folderPath + '\\' + mat.Text + ".bfmat", IncludeTextureMaps);
                 }
             }
         }
@@ -263,6 +265,8 @@ namespace Bfres.Structs
         }
         private void Export()
         {
+            bool IncludeTextureMaps = true;
+
             if (MaterialU != null)
                 BfresWiiU.SetMaterial(this, MaterialU, GetResFileU());
             else 
@@ -276,15 +280,20 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Export(sfd.FileName);
+                Export(sfd.FileName, IncludeTextureMaps);
             }
         }
-        public void Export(string path)
+        public void Export(string path, bool IncludeTextureMaps)
         {
             if (GetResFileU() != null)
                 MaterialU.Export(path, GetResFileU());
             else
                 Material.Export(path, GetResFile());
+
+            if (IncludeTextureMaps)
+            {
+
+            }
         }
         private void Replace()
         {
