@@ -41,11 +41,15 @@ namespace Switch_Toolbox.Library
             }
             return datas;
         }
+
+        public static Bitmap Resize(Image original, Size size)
+        {
+            return ResizeImage(original, size.Width, size.Height);
+        }
+
         public static Bitmap Resize(Image original, int width, int height)
         {
             return ResizeImage(original, width, height);
-
-            //  return new Bitmap(original, new Size(width, height));
         }
 
         public static Bitmap ReplaceChannel(Image OriginalImage, Image ChannelImage, STChannelType ChannelType)

@@ -20,6 +20,8 @@ namespace Switch_Toolbox.Library.Forms
         ImageList ImageList = new ImageList();
         List<STGenericTexture> Textures = new List<STGenericTexture>();
 
+        private ListViewItem ActiveItem;
+
         public void LoadArchive(IArchiveFile ArchiveFile)
         {
             ImageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -85,6 +87,13 @@ namespace Switch_Toolbox.Library.Forms
                 }
             }));
             Thread.Start();
+        }
+
+        private void ReloadTexture(Bitmap Image, ListViewItem listItem)
+        {
+            Image = BitmapExtension.Resize(Image, ImageList.ImageSize);
+            ImageList.Images[listItem.ImageIndex] = Image;
+            Image.Dispose();
         }
 
         private void ReloadTexture(STGenericTexture tex, ListViewItem listItem)
@@ -213,10 +222,10 @@ namespace Switch_Toolbox.Library.Forms
             imageEditorForm.OnTextureReplaced += new ImageEditorBase.StatusUpdateHandler(UpdateTextureEdit);
         }
 
-        private void UpdateTextureEdit(object sender, ImageEditorBase.ProgressEventArgs e)
+        private void UpdateTextureEdit(object sender, ImageEditorBase.ImageReplaceEventArgs e)
         {
-            var item = listViewCustom1.SelectedItems[0];
-            ReloadTexture(GetActiveTexture(), item);
+            ReloadTexture(e.ReplacedTexture, ActiveItem);
+            listViewCustom1.Refresh();
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
@@ -233,10 +242,10 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
-                var item = listViewCustom1.SelectedItems[0];
-                if (item.Tag is STGenericTexture)
+                ActiveItem = listViewCustom1.SelectedItems[0];
+                if (ActiveItem.Tag is STGenericTexture)
                 {
-                    LoadImageEditor((STGenericTexture)item.Tag, ((STGenericTexture)item.Tag).GenericProperties);
+                    LoadImageEditor((STGenericTexture)ActiveItem.Tag, ((STGenericTexture)ActiveItem.Tag).GenericProperties);
                 }
             }
         }

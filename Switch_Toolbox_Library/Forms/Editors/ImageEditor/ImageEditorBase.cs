@@ -15,22 +15,24 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ImageEditorBase : UserControl
     {
-        public class ProgressEventArgs : EventArgs
+        public class ImageReplaceEventArgs : EventArgs
         {
-            public ProgressEventArgs()
-            {
+            public Bitmap ReplacedTexture { get; private set; }
+
+            public ImageReplaceEventArgs(Bitmap texture) {
+                ReplacedTexture = texture;
             }
         }
 
-        public delegate void StatusUpdateHandler(object sender, ProgressEventArgs e);
+        public delegate void StatusUpdateHandler(object sender, ImageReplaceEventArgs e);
         public event StatusUpdateHandler OnTextureReplaced;
 
-        private void UpdateTextureReplace()
+        private void UpdateTextureReplace(Bitmap texture)
         {
             // Make sure someone is listening to event
             if (OnTextureReplaced == null) return;
 
-            ProgressEventArgs args = new ProgressEventArgs();
+            ImageReplaceEventArgs args = new ImageReplaceEventArgs(texture);
             OnTextureReplaced(this, args);
         }
 
@@ -752,7 +754,7 @@ namespace Switch_Toolbox.Library.Forms
 
             progressBar.Value = 100;
 
-            UpdateTextureReplace();
+            UpdateTextureReplace(new Bitmap(Image));
         }
 
         private void saveBtn_Click(object sender, EventArgs e)
