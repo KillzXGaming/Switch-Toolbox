@@ -34,6 +34,7 @@ namespace FirstPlugin
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R4_G4_B4_A4_UNORM);
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R8_UNORM);
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R8_G8_UNORM);
+            formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TC_R8_G8_SNORM);
 
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC1_UNORM);
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.T_BC1_SRGB);
