@@ -55,6 +55,7 @@ namespace Switch_Toolbox.Library.Forms
         private const int WM_NCHITTEST = 0x84;
         protected STPanel contentContainer;
         private const int WM_NCLBUTTONDOWN = 0xa1;
+        private const int WM_NCLBUTTONDBLCLK = 0x00A3; //double click on a title bar a.k.a. non-client area of the form
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -145,6 +146,7 @@ namespace Switch_Toolbox.Library.Forms
             this.LblTitle.Size = new System.Drawing.Size(33, 17);
             this.LblTitle.TabIndex = 5;
             this.LblTitle.Text = "Title";
+            this.LblTitle.DoubleClick += new System.EventHandler(this.TitleBar_DoubleClick);
             this.LblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
             // 
             // PicIcon
@@ -236,7 +238,7 @@ namespace Switch_Toolbox.Library.Forms
         }
         public void Maximize()
         {
-       //     MaximumSize = Screen.FromControl(this).WorkingArea.Size;
+            MaximumSize = Screen.FromControl(this).WorkingArea.Size;
             WindowState = FormWindowState.Maximized;
 
             if (IsMdiChild)
@@ -311,7 +313,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void TitleBar_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && e.Y < 28)
+            if (e.Button == MouseButtons.Left && e.Y < 28 && e.Clicks < 2)
             {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
@@ -422,6 +424,9 @@ namespace Switch_Toolbox.Library.Forms
         protected override void WndProc(ref Message message)
         {
             base.WndProc(ref message);
+
+            if (message.Msg == WM_NCLBUTTONDBLCLK)
+                return;
 
             if (message.Msg == WM_NCHITTEST && CanResize && WindowState == FormWindowState.Normal)
             {
