@@ -402,6 +402,12 @@ namespace FirstPlugin
             {
                 if (models[m].Checked)
                 {
+                    //Check render pass first!
+                    for (int shp = 0; shp < models[m].shapes.Count; shp++)
+                    {
+                        SetRenderPass(models[m].shapes[shp].GetMaterial());
+                    }
+
                     List<FSHP> opaque = new List<FSHP>();
                     List<FSHP> transparent = new List<FSHP>();
 
@@ -413,9 +419,14 @@ namespace FirstPlugin
                             opaque.Add(models[m].shapes[shp]);
                     }
 
-                    for (int shp = 0; shp < models[m].shapes.Count; shp++)
+                    for (int shp = 0; shp < transparent.Count; shp++)
                     {
-                        DrawModel(models[m].shapes[shp], models[m], shader, models[m].IsSelected);
+                        DrawModel(transparent[shp], models[m], shader, models[m].IsSelected);
+                    }
+
+                    for (int shp = 0; shp < opaque.Count; shp++)
+                    {
+                        DrawModel(opaque[shp], models[m], shader, models[m].IsSelected);
                     }
                 }
             }
@@ -683,7 +694,6 @@ namespace FirstPlugin
 
             if (shader != OpenTKSharedResources.shaders["BFRES_Normals"])
             {
-                SetRenderPass(mat, shader, m, m.DisplayId);
                 SetUniforms(mat, shader, m, m.DisplayId);
                 SetTextureUniforms(mat, m, shader);
             }
@@ -870,7 +880,7 @@ namespace FirstPlugin
             LibraryGUI.Instance.UpdateViewport();
         }
 
-        private static void SetRenderPass(FMAT mat, SF.Shader shader, FSHP m, int id)
+        private static void SetRenderPass(FMAT mat)
         {
             if (mat.ImageKey != "material")
             {
@@ -906,6 +916,8 @@ namespace FirstPlugin
                 IsTranslucent =  mat.MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.Translucent;
                 IsTransparentMask = mat.MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.AlphaMask;
             }
+
+            mat.isTransparent = IsTransparentMask || IsTranslucent;
 
             SetMaterialIcon(mat, IsTranslucent, "MaterialTranslucent");
             SetMaterialIcon(mat, IsTransparentMask, "MaterialTransparent");
