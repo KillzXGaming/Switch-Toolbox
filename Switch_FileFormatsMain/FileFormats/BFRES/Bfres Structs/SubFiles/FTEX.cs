@@ -47,6 +47,7 @@ namespace Bfres.Structs
                         TEX_FORMAT.R8G8B8A8_UNORM,
                         TEX_FORMAT.R8_UNORM,
                         TEX_FORMAT.R8G8_UNORM,
+                        TEX_FORMAT.R8G8_SNORM,
                         TEX_FORMAT.R32G8X24_FLOAT,
                 };
             }
