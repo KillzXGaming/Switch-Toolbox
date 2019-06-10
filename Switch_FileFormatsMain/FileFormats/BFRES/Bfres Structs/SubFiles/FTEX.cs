@@ -136,6 +136,7 @@ namespace Bfres.Structs
 
         public override void Unload()
         {
+            texture = null;
             DisposeRenderable();
             Nodes.Clear();
         }

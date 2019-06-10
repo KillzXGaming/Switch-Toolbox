@@ -146,6 +146,13 @@ namespace Bfres.Structs
             }
         }
 
+        public bool IsIndexRigid(int index)
+        {
+            //Get the bone and see if the rigid index matches
+            int BoneIndex = Node_Array[index];
+            return bones[BoneIndex].RigidMatrixIndex == index;
+        }
+
         public void AddBone(Bone bone)
         {
             node.Skeleton.Bones.Add(bone);

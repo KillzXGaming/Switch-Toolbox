@@ -77,7 +77,7 @@ namespace Switch_Toolbox.Library.Forms
             if (File == null)
                 File = ArchiveFileInfo.OpenFile();
 
-            if (File != null &&  IsConvertableText(File.GetType()))
+            if (File != null && IsConvertableText(File.GetType()))
             {
                 editor.FillEditor(((IConvertableTextFormat)File).ConvertToString());
 
@@ -92,7 +92,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             foreach (var inter in type.GetInterfaces())
             {
-                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
+                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IConvertableTextFormat))
                 {
                     return true;
                 }

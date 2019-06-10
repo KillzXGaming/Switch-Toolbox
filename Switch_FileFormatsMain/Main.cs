@@ -279,7 +279,7 @@ namespace FirstPlugin
       //      Formats.Add(typeof(BFLAN));
        //     Formats.Add(typeof(BFLYT));
             Formats.Add(typeof(GFPAK));
-            Formats.Add(typeof(GFBMDL));
+          //  Formats.Add(typeof(GFBMDL));
             Formats.Add(typeof(NUTEXB));
             Formats.Add(typeof(NUT));
             Formats.Add(typeof(GTXFile));
@@ -310,7 +310,7 @@ namespace FirstPlugin
             Formats.Add(typeof(SHARC));
             Formats.Add(typeof(SHARCFB));
             Formats.Add(typeof(NARC));
-            Formats.Add(typeof(SDF));
+      //      Formats.Add(typeof(SDF));
             Formats.Add(typeof(TMPK));
             Formats.Add(typeof(TEX3DS));
             Formats.Add(typeof(NXARC));

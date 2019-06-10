@@ -179,8 +179,12 @@ namespace FirstPlugin
         }
         public void Unload()
         {
-            foreach (var tex in Textures)
-                tex.Value.DisposeRenderable();
+            foreach (var tex in Textures.Values)
+            {
+                tex.Texture.TextureData.Clear();
+                tex.Texture = null;
+                tex.DisposeRenderable();
+            }
 
             Textures.Clear();
             Nodes.Clear();

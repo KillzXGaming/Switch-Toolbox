@@ -275,6 +275,7 @@ namespace Switch_Toolbox.Library.Forms
         private void BtnClose_Click(object sender, System.EventArgs e)
         {
             Close();
+            GC.Collect();
         }
 
         private void BtnClose_MouseEnter(object sender, System.EventArgs e)

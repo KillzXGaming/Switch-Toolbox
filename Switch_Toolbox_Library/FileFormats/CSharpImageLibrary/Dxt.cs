@@ -1,5 +1,6 @@
 ﻿using System;
 
+// https://github.com/KFreon/CSharpImageLibrary
 namespace CSharpImageLibrary.DDS
 {
     public static class Dxt
@@ -236,6 +237,19 @@ namespace CSharpImageLibrary.DDS
                     output[offset + 3] = alpha[alphaIndex];
                 }
             }
+        }
+
+        static byte ExpandTo255(double v)
+        {
+            if (double.IsNaN(v) || v == 0)
+                return 128;
+            else
+                return (byte)(((v + 1d) / 2d) * 255d);
+        }
+
+        internal static int GetDecompressedOffset(int start, int lineLength, int pixelIndex)
+        {
+            return start + (lineLength * (pixelIndex / 4)) + (pixelIndex % 4) * 4;
         }
 
         public static byte[] DecompressBc7(byte[] Data, int Width, int Height)

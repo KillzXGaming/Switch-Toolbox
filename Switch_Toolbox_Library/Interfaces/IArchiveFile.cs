@@ -40,7 +40,8 @@ namespace Switch_Toolbox.Library
 
         public IFileFormat OpenFile()
         {
-            return STFileLoader.OpenFileFormat(FileName, FileData, true);
+            return STFileLoader.OpenFileFormat(
+                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
         }
 
         public virtual void Replace()
@@ -82,7 +83,19 @@ namespace Switch_Toolbox.Library
 
         protected byte[] _fileData = null;
 
-        public string FileName { get; set; } = string.Empty;  //Full File Name
+        //Full File Name
+        private string _fileName = string.Empty;  
+        public string FileName
+        {
+            get
+            {
+                return _fileName;
+            }
+            set
+            {
+                _fileName = value;
+            }
+        }
         public string Name { get; set; } = string.Empty; //File Name (No Path)
         public virtual byte[] FileData
         {

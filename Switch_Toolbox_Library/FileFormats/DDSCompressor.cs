@@ -338,7 +338,6 @@ namespace Switch_Toolbox.Library
             int W = (width + 3) / 4;
             int H = (height + 3) / 4;
 
-
             byte[] Output = new byte[W * H * 64];
 
             for (int Y = 0; Y < H; Y++)

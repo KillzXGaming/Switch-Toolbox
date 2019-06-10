@@ -1247,9 +1247,14 @@ namespace Bfres.Structs
             try
             {
                 var skel = GetParentModel().Skeleton;
+
                 Matrix4 trans = Matrix4.Identity;
                 if (IsSingleBind)
                 {
+                    bool IsRigidIndex = skel.IsIndexRigid(BoneIndex);
+                    if (!IsRigidIndex)
+                        return position;
+
                     if (BoneIndex >= skel.Node_Array.Length || BoneIndex == -1)
                     {
                         STConsole.WriteLine($"Invalid bone index to bind bone to mesh {Text} {BoneIndex} ", System.Drawing.Color.Red);

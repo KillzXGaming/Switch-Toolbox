@@ -97,21 +97,16 @@ namespace Toolbox
 
             if (Runtime.UseOpenGL)
             {
-                //Create an instance of this to help load open gl data easier and quicker after boot
-                var viewport = new Viewport(ObjectEditor.GetDrawableContainers(), false);
-
                 ShaderTools.executableDir = Runtime.ExecutableDir;
-                if (OpenTK.Graphics.GraphicsContext.CurrentContext != null)
-                {
-                    OpenTKSharedResources.InitializeSharedResources();
 
-                    Runtime.OpenTKInitialized = true;
+                OpenTKSharedResources.InitializeSharedResources();
 
-                    Runtime.renderer = GL.GetString(StringName.Renderer);
-                    Runtime.openGLVersion = GL.GetString(StringName.Version);
-                    Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
-                    ParseGLVersion();
-                }
+                Runtime.OpenTKInitialized = true;
+
+          //      Runtime.renderer = GL.GetString(StringName.Renderer);
+           //     Runtime.openGLVersion = GL.GetString(StringName.Version);
+           //     Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
+            //    ParseGLVersion();
             }
 
             LoadPLugins();
@@ -1129,6 +1124,7 @@ namespace Toolbox
                 {
                     OnMdiWindowClosed();
                     child.Close();
+                    GC.Collect();
                     return;
                 }
             }

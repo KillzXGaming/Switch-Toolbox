@@ -282,9 +282,14 @@ namespace FirstPlugin
                     try
                     {
                         if (model.Skeleton.bones.Count > 0) {
-                            Matrix4 NoBindFix = model.Skeleton.bones[fshp.BoneIndex].Transform;
-                            v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
-                            v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
+                            //Check if the bones are a rigid type
+                            //In game it seems to not transform if they are not rigid
+                            if (model.Skeleton.bones[fshp.BoneIndex].RigidMatrixIndex != -1)
+                            {
+                                Matrix4 NoBindFix = model.Skeleton.bones[fshp.BoneIndex].Transform;
+                                v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
+                                v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
+                            }
                         }
                     }
                     catch //Matrix failed. Print the coordinate data of the bone

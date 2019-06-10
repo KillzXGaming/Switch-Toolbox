@@ -318,20 +318,20 @@ namespace FirstPlugin
 
             if (bfresEditor == null)
             {
-                BFRESRender.UpdateModelList();
                 HasModels = BFRESRender.models.Count > 0;
-                foreach (var model in BFRESRender.models)
-                {
-                    if (model.shapes.Count > 0)
-                    {
-                        HasShapes = true;
-                        break;
-                    }
-                }
 
                 bfresEditor = new BfresEditor(HasModels);
                 bfresEditor.Dock = DockStyle.Fill;
                 LibraryGUI.Instance.LoadEditor(bfresEditor);
+            }
+
+            for (int i = 0; i < BFRESRender.models.Count; i++)
+            {
+                if (BFRESRender.models[i].shapes.Count > 0)
+                {
+                    HasShapes = true;
+                    break;
+                }
             }
 
             bool ViewportToggled = bfresEditor.DisplayViewport;
@@ -433,6 +433,7 @@ namespace FirstPlugin
                 bfresEditor.LoadViewport(this, HasShapes, DrawableContainer);
 
             bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
+
 
             if (SelectedSection is BFRES && HasShapes)
                 bfresEditor.FrameCamera(BFRESRender);
@@ -746,12 +747,16 @@ namespace FirstPlugin
             if (Models != null)
             {
                 foreach (FMDL mdl in Models)
+                {
+                    BFRESRender.models.Add(mdl);
                     DrawableContainer.Drawables.Add(mdl.Skeleton);
+                }
             }
         }
         public void Unload()
         {
             BFRESRender.Destroy();
+            DrawableContainer.Drawables.Clear();
 
             ObjectEditor.RemoveContainer(DrawableContainer);
 
@@ -761,9 +766,15 @@ namespace FirstPlugin
                 {
                     if (((BFRESGroupNode)node).Type == BRESGroupType.Textures)
                     {
+                        for (int i = 0; i < ((BFRESGroupNode)node).Nodes.Count; i++)
+                            ((FTEX)((BFRESGroupNode)node).Nodes[i]).Unload();
+                        
                         if (PluginRuntime.ftexContainers.Contains(((BFRESGroupNode)node)))
                             PluginRuntime.ftexContainers.Remove(((BFRESGroupNode)node));
                     }
+
+                    ((BFRESGroupNode)node).ResourceNodes.Clear();
+                    ((BFRESGroupNode)node).Nodes.Clear();
                 }
 
                 if (node is BNTX)
