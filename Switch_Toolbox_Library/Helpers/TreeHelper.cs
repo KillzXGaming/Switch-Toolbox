@@ -85,13 +85,13 @@ namespace Switch_Toolbox.Library
             for (int i = 0; i < Files.Length; i++)
             {
                 var File = ArchiveFileWrapper.FromPath(Files[i], archiveFile);
-                File.ArchiveFileInfo = new ArchiveFileInfo();
-                File.ArchiveFileInfo.FileData = System.IO.File.ReadAllBytes(Files[i]);
                 string FileName = Path.GetFileName(Files[i]);
 
                 //Don't add the root file name
                 if (parentNode.FullPath != string.Empty || !(parentNode is ArchiveRootNodeWrapper))
+                {
                     File.ArchiveFileInfo.FileName = Path.Combine(parentNode.FullPath, FileName);
+                }
                 else
                     File.ArchiveFileInfo.FileName = FileName;
 

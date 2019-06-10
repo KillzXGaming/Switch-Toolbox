@@ -537,11 +537,12 @@ namespace Switch_Toolbox.Library
             ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.Instance.GetActiveContent(typeof(ArchiveFilePanel));
             if (editor == null)
             {
-                editor = new ArchiveFilePanel(ArchiveFileInfo);
+                editor = new ArchiveFilePanel();
                 editor.Dock = DockStyle.Fill;
                 LibraryGUI.Instance.LoadEditor(editor);
             }
 
+            editor.LoadFile(ArchiveFileInfo);
             editor.UpdateEditor();
         }
 

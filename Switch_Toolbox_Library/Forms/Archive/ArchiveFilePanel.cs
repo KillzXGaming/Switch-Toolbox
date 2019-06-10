@@ -18,15 +18,16 @@ namespace Switch_Toolbox.Library.Forms
 
         private bool _IsLoaded = false;
 
-        public ArchiveFilePanel(ArchiveFileInfo archiveFileInfo)
+        public ArchiveFilePanel()
         {
             InitializeComponent();
 
-            ArchiveFileInfo = archiveFileInfo;
-
             ReloadEditors();
-
             _IsLoaded = true;
+        }
+
+        public void LoadFile(ArchiveFileInfo archiveFileInfo) {
+            ArchiveFileInfo = archiveFileInfo;
         }
 
         private void ReloadEditors()
