@@ -114,6 +114,12 @@ uniform int UseCavityMap;
 uniform int UseMetalnessMap;
 uniform int UseRoughnessMap;
 
+// Diffuse Channel Toggles
+uniform int RedChannel;
+uniform int GreenChannel;
+uniform int BlueChannel;
+uniform int AlphaChannel;
+
 int isTransparent;
 
 struct VertexAttributes {
@@ -141,6 +147,8 @@ vec3 CalcBumpedNormal(vec3 normal, sampler2D normalMap, VertexAttributes vert, f
 //vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color);
 
 vec2 displayTexCoord =  f_texcoord0;
+
+float GetComponent(int Type, vec4 Texture);
 
 void main()
 {
@@ -230,7 +238,15 @@ void main()
             fragColor.rgb = texture(NormalMap, displayTexCoord).rgb;
 	}
 	else if (renderType == 3) //DiffuseColor
-	    fragColor = vec4(texture(DiffuseMap, displayTexCoord).rgb, 1);
+	{
+		//Comp Selectors
+		vec4 diffuseMapColor = vec4(texture(DiffuseMap, displayTexCoord).rgb, 1);
+		diffuseMapColor.r = GetComponent(RedChannel, diffuseMapColor);
+		diffuseMapColor.g = GetComponent(GreenChannel, diffuseMapColor);
+		diffuseMapColor.b = GetComponent(BlueChannel, diffuseMapColor);
+
+	    fragColor = vec4(diffuseMapColor.rgb, 1);
+	}
     else if (renderType == 5) // vertexColor
         fragColor = vertexColor;
 	else if (renderType == 6) //Display Ambient Occlusion

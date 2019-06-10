@@ -54,6 +54,20 @@ vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap
     return result * intensity;
 }
 
+float GetComponent(int Type, vec4 Texture)
+{
+	 switch (Type)
+	 {
+	     case 0: return Texture.r; 
+	     case 1: return Texture.g; 
+	     case 2: return Texture.b; 
+	     case 3: return Texture.a; 
+	     case 4: return 1; 
+	     case 5: return 0; 
+		 default: return 1;
+	 }
+}
+
 vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color)
 {
     vec3 result = vec3(0);

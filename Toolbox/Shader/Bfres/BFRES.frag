@@ -145,19 +145,7 @@ vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttribu
 vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap, vec3 specular_color, VertexAttributes vert, float texCoordIndex, int UseSpecularColor);
 vec3 ReflectionPass(vec3 N, vec3 I, vec4 diffuseMap, vec3 Specular, float aoBlend, vec3 tintColor, VertexAttributes vert);
 
-float ParseComponent(int Type, vec4 Texture)
-{
-	 switch (Type)
-	 {
-	     case 0: return Texture.r; 
-	     case 1: return Texture.g; 
-	     case 2: return Texture.b; 
-	     case 3: return Texture.a; 
-	     case 4: return 1; 
-	     case 5: return 0; 
-		 default: return 1;
-	 }
-}
+float GetComponent(int Type, vec4 Texture);
 
 void main()
 {
@@ -206,6 +194,11 @@ void main()
     float halfLambert = dot(difLightDirection, N) * 0.5 + 0.5;
 
 	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgba);
+	//Comp Selectors
+	diffuseMapColor.r = GetComponent(RedChannel, diffuseMapColor);
+	diffuseMapColor.g = GetComponent(GreenChannel, diffuseMapColor);
+	diffuseMapColor.b = GetComponent(BlueChannel, diffuseMapColor);
+	diffuseMapColor.a = GetComponent(AlphaChannel, diffuseMapColor);
 
    //Texture Overlay (Like an emblem in mk8)
 	if (UseMultiTexture == 1 && HasDiffuseLayer == 1)

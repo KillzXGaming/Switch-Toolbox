@@ -120,6 +120,12 @@ uniform int UseRoughnessMap;
 
 int isTransparent;
 
+// Diffuse Channel Toggles
+uniform int RedChannel;
+uniform int GreenChannel;
+uniform int BlueChannel;
+uniform int AlphaChannel;
+
 struct VertexAttributes {
     vec3 objectPosition;
     vec2 texCoord;
@@ -207,6 +213,8 @@ vec3 saturation(vec3 rgb, float adjustment)
     return mix(intensity, rgb, adjustment);
 }
 
+float GetComponent(int Type, vec4 Texture);
+
 void main()
 {
     bool RenderAsLighting = renderType == 2;
@@ -236,6 +244,11 @@ void main()
 	vec3 albedo = vec3(1);
     if (HasDiffuse == 1)
         albedo = pow(texture(DiffuseMap	, f_texcoord0).rgb, vec3(gamma));
+
+	//Comp Selectors
+	albedo.r = GetComponent(RedChannel, texture(DiffuseMap, f_texcoord0));
+	albedo.g = GetComponent(GreenChannel, texture(DiffuseMap, f_texcoord0));
+	albedo.b = GetComponent(BlueChannel, texture(DiffuseMap, f_texcoord0));
 
 	float metallic = 0;
     if (HasMetalnessMap == 1)
@@ -359,7 +372,7 @@ void main()
     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
 
     // Alpha calculations.
-    float alpha = texture(DiffuseMap, f_texcoord0).a;
+	 float alpha = GetComponent(AlphaChannel, texture(DiffuseMap, f_texcoord0));
     fragColor.a = alpha;
 
 	if (RenderAsLighting)
