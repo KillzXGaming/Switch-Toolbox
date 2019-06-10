@@ -278,7 +278,6 @@ namespace Switch_Toolbox.Library
                     int TW = Math.Min(width - X * 4, 4);
                     int TH = Math.Min(height - Y * 4, 4);
 
-
                     if (IsSNORM == true)
                     {
                         for (int TY = 0; TY < TH; TY++)

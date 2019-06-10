@@ -236,11 +236,11 @@ namespace Switch_Toolbox.Library.Forms
         }
         public void Maximize()
         {
-            if (IsMdiChild)
-                MDIMaximized();
-
             MaximumSize = Screen.FromControl(this).WorkingArea.Size;
             WindowState = FormWindowState.Maximized;
+
+            if (IsMdiChild)
+                MDIMaximized();
         }
         private void CheckWindowState()
         {
