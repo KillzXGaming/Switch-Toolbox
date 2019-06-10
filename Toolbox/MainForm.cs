@@ -309,7 +309,10 @@ namespace Toolbox
             }
             else
             {
-                AddObjectEditorFile(((TreeNode)file), (ObjectEditor)editor, false);
+                if (IsArchiveFile)
+                    ((ObjectEditor)editor).AddIArchiveFile((IFileFormat)file);
+                else
+                    AddObjectEditorFile(((TreeNode)file), (ObjectEditor)editor, false);
             }
 
             SetFormatSettings(GetActiveIFileFormat());

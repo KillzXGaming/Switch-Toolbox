@@ -11,7 +11,7 @@ using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
-    public class AAMP : IEditor<AampEditorBase>, IFileFormat
+    public class AAMP : IEditor<AampEditorBase>, IFileFormat, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Parameter;
 
@@ -50,6 +50,27 @@ namespace FirstPlugin
                 return reader.ReadUInt32();
             }
         }
+
+
+        #region Text Converter Interface
+        public TextFileType TextFileType => TextFileType.Yaml;
+        public bool CanConvertBack => false;
+
+        public string ConvertToString()
+        {
+            if (aampFileV1 != null)
+                return AampYamlConverter.ToYaml(aampFileV1);
+            else
+                return AampYamlConverter.ToYaml(aampFileV2);
+        }
+
+        public void ConvertFromString(string text)
+        {
+            if (aampFileV1 != null)
+                AampYamlConverter.ToAamp(aampFileV1);
+        }
+
+        #endregion
 
         bool IsSaveDialog = false;
 

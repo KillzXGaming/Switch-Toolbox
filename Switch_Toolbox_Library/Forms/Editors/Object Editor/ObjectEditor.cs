@@ -92,10 +92,7 @@ namespace Switch_Toolbox.Library.Forms
                 ObjectTree = new ObjectEditorTree(this);
                 ObjectTree.Dock = DockStyle.Fill;
                 stPanel1.Controls.Add(ObjectTree);
-
-                TreeNode FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
-                FillTreeNodes(FileRoot, (IArchiveFile)FileFormat);
-                AddNode(FileRoot);
+                AddIArchiveFile(FileFormat);
             }
             else
             {
@@ -104,6 +101,13 @@ namespace Switch_Toolbox.Library.Forms
                 stPanel1.Controls.Add(ObjectTree);
                 AddNode((TreeNode)FileFormat);
             }
+        }
+
+        public void AddIArchiveFile(IFileFormat FileFormat)
+        {
+            TreeNode FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
+            FillTreeNodes(FileRoot, (IArchiveFile)FileFormat);
+            AddNode(FileRoot);
         }
 
         void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)

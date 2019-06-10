@@ -510,7 +510,7 @@ namespace Switch_Toolbox.Library
             if (fileFormat.CanSave)
             {
                 ArchiveFileInfo.FileData = fileFormat.Save();
-                UpdateHexView();
+                UpdateEditor();
             }
         }
 
@@ -529,20 +529,20 @@ namespace Switch_Toolbox.Library
         }
 
         public override void OnClick(TreeView treeView) {
-            UpdateHexView();
+            UpdateEditor();
         }
 
-        private void UpdateHexView()
+        public void UpdateEditor()
         {
-            HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+            ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.Instance.GetActiveContent(typeof(ArchiveFilePanel));
             if (editor == null)
             {
-                editor = new HexEditor();
+                editor = new ArchiveFilePanel(ArchiveFileInfo);
+                editor.Dock = DockStyle.Fill;
                 LibraryGUI.Instance.LoadEditor(editor);
             }
-            editor.Text = Text;
-            editor.Dock = DockStyle.Fill;
-            editor.LoadData(ArchiveFileInfo.FileData);
+
+            editor.UpdateEditor();
         }
 
         public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)

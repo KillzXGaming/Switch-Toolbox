@@ -219,10 +219,16 @@
     <Compile Include="FileFormats\DAE\DAE.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="FileFormats\R4G4.cs" />
-    <Compile Include="Forms\ArchiveListPreviewForm.cs">
+    <Compile Include="Forms\Archive\ArchiveFilePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Archive\ArchiveFilePanel.Designer.cs">
+      <DependentUpon>ArchiveFilePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Archive\ArchiveListPreviewForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ArchiveListPreviewForm.Designer.cs">
+    <Compile Include="Forms\Archive\ArchiveListPreviewForm.Designer.cs">
       <DependentUpon>ArchiveListPreviewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BatchFormatExport.cs">
@@ -566,6 +572,7 @@
     </Compile>
     <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="Helpers\TreeHelper.cs" />
+    <Compile Include="Interfaces\IConvertableTextFormat.cs" />
     <Compile Include="Interfaces\IEditor.cs" />
     <Compile Include="Interfaces\IFIleEditor.cs" />
     <Compile Include="Interfaces\IMdiContainer.cs" />
@@ -675,7 +682,10 @@
     <Compile Include="XML\XmlDoc.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\ArchiveListPreviewForm.resx">
+    <EmbeddedResource Include="Forms\Archive\ArchiveFilePanel.resx">
+      <DependentUpon>ArchiveFilePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Archive\ArchiveListPreviewForm.resx">
       <DependentUpon>ArchiveListPreviewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchFormatExport.resx">
