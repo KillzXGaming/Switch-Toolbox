@@ -27,7 +27,7 @@ namespace Switch_Toolbox.Library
             var size = new RSTB.SizeCalculator().CalculateFileSize(FilePath, Data, IsWiiU, Force);
             if (size == 0)
             {
-                var result = MessageBox.Show("Error! Could not calculate size for resource entry! Do you want to remove it instead?", "Resource Table", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show("Error! Could not calculate size for resource entry! Do you want to remove it instead?", "Resource Table", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.OK)
                 {
                     DeleteEntry(FilePath);
@@ -40,6 +40,10 @@ namespace Switch_Toolbox.Library
         {
             uint OldSize = GetSize(FileName);
             uint NewSize = (uint)ParseSize(FileName, Data, Force);
+
+            STConsole.WriteLine($"Setting RSTB Entry!");
+            STConsole.WriteLine($"{FileName} OldSize {OldSize}");
+            STConsole.WriteLine($"{FileName} NewSize {NewSize}");
 
             SetSize(FileName, NewSize);
         }

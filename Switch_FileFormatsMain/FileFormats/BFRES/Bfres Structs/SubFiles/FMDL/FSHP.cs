@@ -1043,6 +1043,8 @@ namespace Bfres.Structs
                         v.boneWeights[j] = envelope.Value;
                         j++;
                     }
+
+                    envelopes.Clear();
                 }
 
                 if (RigidIds.Count > 0)
@@ -1078,6 +1080,9 @@ namespace Bfres.Structs
 
                 vtxIndex++;
             }
+
+            nodeArrStrings.Clone();
+            nodeRigidIndex.Clone();
 
             BonesNotMatched.Clear();
         }
@@ -1240,7 +1245,6 @@ namespace Bfres.Structs
         {
             List<ushort> indices = new List<ushort>();
 
-            List<string> BoneNodes = new List<string>();
             foreach (Vertex vtx in vertices)
             {
                 foreach (int index in vtx.boneIds)
@@ -1253,13 +1257,10 @@ namespace Bfres.Structs
                         STConsole.WriteLine($"Saving bone index {bone.Name} {index}");
                         indices.Add(ind);
                     }
-
                 }
             }
 
             indices.Sort();
-
-            STConsole.WriteLine($"Total Indices for {Text}  {indices.Count}");
 
             return indices;
         }

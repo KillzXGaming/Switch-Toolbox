@@ -62,6 +62,8 @@ namespace Switch_Toolbox.Library.IO
             {
                 string newFilePath = FilePath.Replace(Runtime.BotwGamePath, string.Empty).Remove(0, 1);
                 newFilePath = newFilePath.Replace(".s", ".");
+                newFilePath = newFilePath.Replace( @"\", "/");
+
                 string RealExtension = Path.GetExtension(newFilePath).Replace(".s", ".");
 
                 string RstbPath = Path.Combine($"{Runtime.BotwGamePath}",
@@ -73,6 +75,8 @@ namespace Switch_Toolbox.Library.IO
                 //Create a backup first if one doesn't exist
                 if (!File.Exists($"{RstbPath}.backup"))
                 {
+                    STConsole.WriteLine($"RSTB File found. Creating backup...");
+
                     BotwResourceTable.Write(new FileWriter($"{RstbPath}.backup"));
                     File.WriteAllBytes($"{RstbPath}.backup", EveryFileExplorer.YAZ0.Compress($"{RstbPath}.backup"));
                 }
@@ -83,7 +87,9 @@ namespace Switch_Toolbox.Library.IO
                 else
                     FileLog += $"File NOT found in resource table! {newFilePath}";
 
-                BotwResourceTable.SetEntry(FilePath, Data);
+                STConsole.WriteLine(FileLog);
+
+                BotwResourceTable.SetEntry(newFilePath, Data);
                 BotwResourceTable.Write(new FileWriter(RstbPath));
                 File.WriteAllBytes(RstbPath, EveryFileExplorer.YAZ0.Compress(RstbPath));
             }
