@@ -45,7 +45,9 @@ namespace Switch_Toolbox.Library.IO
                   FileFormat.IFileInfo.FileIsCompressed);
 
             File.WriteAllBytes(FileName, FinalData);
-            STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);
+            MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
+
+         //   STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);
             Cursor.Current = Cursors.Default;
         }
 
@@ -103,7 +105,9 @@ namespace Switch_Toolbox.Library.IO
             byte[] FinalData = CompressFileFormat(data, FileIsCompressed, Alignment, CompressionType, FileName, EnableDialog);
             File.WriteAllBytes(FileName, FinalData);
 
-            STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);
+            MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
+
+            //   STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);
             Cursor.Current = Cursors.Default;
         }
 
