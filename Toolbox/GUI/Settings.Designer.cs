@@ -1233,12 +1233,12 @@
             // 
             this.stLabel17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.stLabel17.Location = new System.Drawing.Point(25, 11);
+            this.stLabel17.Location = new System.Drawing.Point(3, 3);
             this.stLabel17.Name = "stLabel17";
-            this.stLabel17.Size = new System.Drawing.Size(457, 47);
+            this.stLabel17.Size = new System.Drawing.Size(495, 55);
             this.stLabel17.TabIndex = 2;
             this.stLabel17.Text = "These options can prevent file size restrictions.  Check these if you want them t" +
-    "o be adjusted when a file gets saved. ";
+                                  "o be adjusted when a file gets saved. ";
             // 
             // chkBotwFileTable
             // 

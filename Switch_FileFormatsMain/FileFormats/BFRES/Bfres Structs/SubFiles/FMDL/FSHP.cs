@@ -1027,6 +1027,24 @@ namespace Bfres.Structs
                     }
                 }
 
+                //Sort smooth bones
+                if (v.boneWeights.Count > 0)
+                {
+                    int j = 0;
+
+                    SortedDictionary<int, float> envelopes = new SortedDictionary<int, float>();
+                    for (j = 0; j < v.boneIds.Count; j++)
+                        envelopes.Add(v.boneIds[j], v.boneWeights[j]);
+
+                    j = 0;
+                    foreach (var envelope in envelopes)
+                    {
+                        v.boneIds[j] = envelope.Key;
+                        v.boneWeights[j] = envelope.Value;
+                        j++;
+                    }
+                }
+
                 if (RigidIds.Count > 0)
                 {
                     foreach (int id in RigidIds)
@@ -1238,6 +1256,9 @@ namespace Bfres.Structs
 
                 }
             }
+
+            indices.Sort();
+
             STConsole.WriteLine($"Total Indices for {Text}  {indices.Count}");
 
             return indices;
