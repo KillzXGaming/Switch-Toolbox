@@ -17,7 +17,7 @@ namespace Switch_Toolbox.Library
     public class RSTB
     {
         public bool IsBigEndian { get; set; } = true;
-        public bool IsWiiU { get; set; } = true;
+        public bool IsWiiU => IsBigEndian;
 
         public Dictionary<string, uint> NameTables { get; set; }
         public Dictionary<uint, uint> Crc32Tables { get; set; }
