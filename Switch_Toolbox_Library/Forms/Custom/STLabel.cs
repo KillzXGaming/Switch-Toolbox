@@ -13,6 +13,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             BackColor = FormThemes.BaseTheme.TextBackColor;
             ForeColor = FormThemes.BaseTheme.TextForeColor;
+            AutoSize = true;
         }
     }
 }

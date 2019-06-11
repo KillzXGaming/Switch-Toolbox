@@ -103,10 +103,10 @@ namespace Toolbox
 
                 Runtime.OpenTKInitialized = true;
 
-          //      Runtime.renderer = GL.GetString(StringName.Renderer);
-           //     Runtime.openGLVersion = GL.GetString(StringName.Version);
-           //     Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
-            //    ParseGLVersion();
+                Runtime.renderer = GL.GetString(StringName.Renderer);
+                Runtime.openGLVersion = GL.GetString(StringName.Version);
+                Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
+                ParseGLVersion();
             }
 
             LoadPLugins();

@@ -43,7 +43,9 @@ namespace Switch_Toolbox.Library.Rendering
             {
                 // Make a permanent context to share resources.
                 GraphicsContext.ShareContexts = true;
-                dummyResourceWindow = CreateGameWindowContext();
+                var control = new OpenTK.GLControl();
+                control.MakeCurrent();
+              //  dummyResourceWindow = CreateGameWindowContext();
 
                 if (Runtime.enableOpenTKDebugOutput)
                     EnableOpenTKDebugOutput();
