@@ -437,7 +437,10 @@ namespace Toolbox
                         return;
                     }
 
-                    STFileSaver.SaveFileFormat(((IFileFormat)node), FileName, UseCompressDialog);
+                    if (node is ArchiveBase)
+                        STFileSaver.SaveFileFormat(((IFileFormat)((ArchiveBase)node).ArchiveFile), FileName, UseCompressDialog);
+                    else
+                        STFileSaver.SaveFileFormat(((IFileFormat)node), FileName, UseCompressDialog);
                     Cursor.Current = Cursors.Default;
                 }
             }

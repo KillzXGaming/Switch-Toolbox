@@ -80,6 +80,9 @@ namespace Switch_Toolbox.Library
                 writer.Write(file.Key, BinaryStringFormat.ZeroTerminated);
                 writer.Write(file.Value.ToString(), BinaryStringFormat.ZeroTerminated);
             }
+
+            writer.Close();
+            writer.Dispose();
         }
 
         public void WriteDecompressedTable(FileWriter writer)
@@ -91,6 +94,9 @@ namespace Switch_Toolbox.Library
                 writer.Write(file.Precentage.ToString(), BinaryStringFormat.ZeroTerminated);
                 writer.Write(file.FilePath.ToString(), BinaryStringFormat.ZeroTerminated);
             }
+
+            writer.Close();
+            writer.Dispose();
         }
     }
 }
