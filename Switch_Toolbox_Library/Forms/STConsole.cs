@@ -25,6 +25,32 @@ namespace Switch_Toolbox.Library
             ReadOnly = true;
         }
 
+        public static void WriteLine(object line, int ColorKeyIndex)
+        {
+            if (console == null)
+                return;
+
+            if (ColorKeyIndex == 0)
+                WriteLine(line.ToString(), Color.Red);
+            else if (ColorKeyIndex == 1)
+                WriteLine(line.ToString(), Color.Green);
+            else
+                WriteLine(line.ToString());
+        }
+
+        public static void WriteLine(string line, int ColorKeyIndex)
+        {
+            if (console == null)
+                return;
+
+            if (ColorKeyIndex == 0)
+                WriteLine(line.ToString(), Color.Red);
+            else if (ColorKeyIndex == 1)
+                WriteLine(line.ToString(), Color.Green);
+            else
+                WriteLine(line.ToString());
+        }
+
         public static void WriteLine(object line, Color? color = null)
         {
             if (console == null)

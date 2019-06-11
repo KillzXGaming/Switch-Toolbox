@@ -39,7 +39,7 @@ namespace Switch_Toolbox.Library.IO
 
             FileFormat.IFileInfo.CompressedSize = (uint)FinalData.Length;
 
-            DetailsLog += "\n" + SatisfyFileTables(FileName, FinalData,
+            DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, FinalData,
                 FileFormat.IFileInfo.DecompressedSize,
                 FileFormat.IFileInfo.CompressedSize,
                   FileFormat.IFileInfo.FileIsCompressed);
@@ -51,7 +51,7 @@ namespace Switch_Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
         }
 
-        private static string SatisfyFileTables(string FilePath, byte[] Data, uint DecompressedSize, uint CompressedSize, bool IsCompressed)
+        private static string SatisfyFileTables(IFileFormat FileFormat, string FilePath, byte[] Data, uint DecompressedSize, uint CompressedSize, bool IsCompressed)
         {
             string FileLog = "";
 
@@ -83,11 +83,17 @@ namespace Switch_Toolbox.Library.IO
 
                 //Now apply the file table then save the table
                 if (BotwResourceTable.IsInTable(newFilePath))
+                {
                     FileLog += $"File found in resource table! {newFilePath}";
+                    STConsole.WriteLine(FileLog, 1);
+                }
                 else
+                {
                     FileLog += $"File NOT found in resource table! {newFilePath}";
+                    STConsole.WriteLine(FileLog, 0);
 
-                STConsole.WriteLine(FileLog);
+                }
+
 
                 BotwResourceTable.SetEntry(newFilePath, Data);
                 BotwResourceTable.Write(new FileWriter(RstbPath));
@@ -96,7 +102,51 @@ namespace Switch_Toolbox.Library.IO
 
             if (Runtime.ResourceTables.TpTable && IsTPHDFile)
             {
+                string newFilePath = FilePath.Replace(Runtime.BotwGamePath, string.Empty).Remove(0, 1);
+                newFilePath = newFilePath.Replace(".s", ".");
+                newFilePath = newFilePath.Replace(@"\", "/");
 
+                //Read the tables and set the new sizes if paths match
+                TPFileSizeTable CompressedFileTbl = new TPFileSizeTable();
+                CompressedFileTbl.ReadCompressedTable(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
+                if (CompressedFileTbl.IsInFileSizeList(newFilePath))
+                {
+                    STConsole.WriteLine("Found matching path in File Size List table! " + newFilePath, 1);
+                    CompressedFileTbl.SetFileSizeEntry(newFilePath, CompressedSize);
+                }
+                else
+                    STConsole.WriteLine("Failed to find path in File Size List table! " + newFilePath, 0);
+
+
+                TPFileSizeTable DecompressedFileTbl = new TPFileSizeTable();
+                DecompressedFileTbl.ReadDecompressedTable(new FileReader($"{Runtime.TpGamePath}/DecompressedSizeList.txt"));
+
+                bool IsArchive = false;
+                foreach (var inter in FileFormat.GetType().GetInterfaces())
+                    if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IArchiveFile))
+                        IsArchive = true;
+
+                if (IsArchive)
+                {
+                    IArchiveFile Archive = (IArchiveFile)FileFormat;
+                    foreach (var file in Archive.Files)
+                    {
+                        uint DecompressedFileSize = (uint)file.FileData.Length;
+                        string ArchiveFilePath = $"/DVDRoot/{file.FileName}";
+
+                        DecompressedFileTbl.ReadCompressedTable(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
+                        if (DecompressedFileTbl.IsInDecompressedFileSizeList(newFilePath))
+                        {
+                            STConsole.WriteLine("Found matching path in File Size List table! " + newFilePath, 1);
+                            DecompressedFileTbl.SetDecompressedFileSizeEntry(newFilePath, DecompressedFileSize);
+                        }
+                        else
+                            STConsole.WriteLine("Failed to find path in File Size List table! " + newFilePath, 0);
+                    }
+                }
+
+                DecompressedFileTbl.WriteCompressedTable(new FileWriter($"{Runtime.TpGamePath}/FileSizeListTEST.txt"));
+                DecompressedFileTbl.WriteDecompressedTable(new FileWriter($"{Runtime.TpGamePath}/DecompressedSizeListTEST.txt"));
             }
 
             return FileLog;

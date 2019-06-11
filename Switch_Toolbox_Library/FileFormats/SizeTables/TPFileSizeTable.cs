@@ -23,21 +23,16 @@ namespace Switch_Toolbox.Library
 
         public Dictionary<string, uint> FileSizes = new Dictionary<string, uint>();
         public Dictionary<string, DecompressedTableEntry> DecompressedFileSizes = new Dictionary<string, DecompressedTableEntry>();
-        
-        public static void SetTables(IFileFormat FileFormat)
-        {
-            //Read the tables
-            TPFileSizeTable CompressedFileTbl = new TPFileSizeTable();
-            CompressedFileTbl.ReadCompressedTable(new FileReader($"{Runtime.TpGamePath}/FileSizeList.txt"));
 
-            TPFileSizeTable DecompressedFileTbl = new TPFileSizeTable();
-            DecompressedFileTbl.ReadDecompressedTable(new FileReader($"{Runtime.TpGamePath}/DecompressedSizeList.txt"));
+        public bool IsInFileSizeList(string FileName) => FileSizes.ContainsKey(FileName);
+        public bool IsInDecompressedFileSizeList(string FileName) => DecompressedFileSizes.ContainsKey(FileName);
 
-            //   var tableSave = new MemoryStream();
-            //   CompressedFileTbl.Write(new FileWriter(tableSave));
-            //  File.WriteAllBytes($"{Runtime.TpGamePath}/FileSizeListTEST.txt", tableSave.ToArray());
-            //       bool IsSuccess = CompressedFileTbl.TrySetSize(FileName, IFileInfo.CompressedSize, IFileInfo.DecompressedSize, ArchiveSizes);
+        public void SetFileSizeEntry(string FileName, uint Size) {
+            FileSizes[FileName] = Size;
+        }
 
+        public void SetDecompressedFileSizeEntry(string FileName, uint Size) {
+            DecompressedFileSizes[FileName].Size = Size;
         }
 
         public void ReadCompressedTable(FileReader reader)
@@ -63,6 +58,8 @@ namespace Switch_Toolbox.Library
                 entry.Precentage = reader.ReadString(BinaryStringFormat.ZeroTerminated);
                 entry.FilePath = reader.ReadString(BinaryStringFormat.ZeroTerminated);
 
+                Console.WriteLine($"Size {Size} Size2 {Size2} {entry.Precentage} {entry.FilePath}");
+
                 uint sizeNum = 0;
                 uint sizeNum2 = 0;
 
@@ -74,23 +71,6 @@ namespace Switch_Toolbox.Library
 
                 DecompressedFileSizes.Add(entry.FilePath, entry);
             }
-        }
-
-        public bool TrySetSize(string Path, uint DecompSize, uint CompSize, Dictionary<string, uint> ArchiveFiles = null)
-        {
-            string RelativePath = Path.Replace(Runtime.TpGamePath, string.Empty);
-
-            if (FileSizes.ContainsKey(RelativePath))
-            {
-                if (UseCompressedSizes)
-                    FileSizes[RelativePath] = CompSize;
-                else
-                    FileSizes[RelativePath] = DecompSize;
-
-                return true;
-            }
-
-            return false;
         }
 
         public void WriteCompressedTable(FileWriter writer)
