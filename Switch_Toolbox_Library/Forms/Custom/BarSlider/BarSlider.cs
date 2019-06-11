@@ -43,6 +43,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
+using System.Globalization;
 
 namespace BarSlider
 {
@@ -177,7 +178,8 @@ namespace BarSlider
             textBox.Width = ClientSize.Width - 50;
             textBox.Height = ClientSize.Height;
             textBox.TextChanged += new EventHandler(OnTextChanged);
-            textBox.KeyDown += new KeyEventHandler(OnKeyPressed);
+            textBox.KeyDown += new KeyEventHandler(OnKeyDown);
+            textBox.KeyPress += new KeyPressEventHandler(OnKeyPressed);
             textBox.ReadOnly = false;
             textBox.ForeColor = this.ForeColor;
             textBox.BackColor = ActiveEditColor;
@@ -187,11 +189,24 @@ namespace BarSlider
             Invalidate();
         }
 
-        private void OnKeyPressed(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 DisableTextEditor();
+            }
+        }
+
+        private void OnKeyPressed(object sender, KeyPressEventArgs e)
+        {
+            NumberFormatInfo numberFormat = CultureInfo.CurrentCulture.NumberFormat;
+            string numberDecimalSeparator = numberFormat.NumberDecimalSeparator;
+            string numberGroupSeparator = numberFormat.NumberGroupSeparator;
+            string negativeSign = numberFormat.NegativeSign;
+            string text = e.KeyChar.ToString();
+            if (!char.IsDigit(e.KeyChar) && !text.Equals(numberDecimalSeparator) && !text.Equals(numberGroupSeparator) && !text.Equals(negativeSign) && e.KeyChar != '\b' && (Control.ModifierKeys & (Keys.Control | Keys.Alt)) == Keys.None)
+            {
+                e.Handled = true;
             }
         }
 
