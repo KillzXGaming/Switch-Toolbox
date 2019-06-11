@@ -205,6 +205,7 @@
     <Compile Include="Audio\VGAudioFile.cs" />
     <Compile Include="Collections\SortExtensions.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Cryptography\crc32.cs" />
     <Compile Include="DrawableContainer.cs" />
     <Compile Include="FileFormats\3DS\ETC1.cs" />
     <Compile Include="FileFormats\Animation\SMD.cs" />

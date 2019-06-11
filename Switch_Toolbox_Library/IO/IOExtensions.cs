@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace Switch_Toolbox.Library.IO
 {
@@ -23,6 +24,16 @@ namespace Switch_Toolbox.Library.IO
                 if (arr[i + startIndex] != magic[i]) return false;
             }
             return true;
+        }
+
+        public static byte[] ToByteArray(this string str, int length)
+        {
+            return Encoding.ASCII.GetBytes(str.PadRight(length, ' '));
+        }
+
+        public static uint EncodeCrc32(this string str)
+        {
+            return Crc32.Compute(str);
         }
 
         public static bool Matches(this byte[] arr, uint startIndex, params char[] magic)
