@@ -1,0 +1,56 @@
+name	size_nx	size_wiiu	alignment	parse_size_nx	parse_size_wiiu	other_extensions	multiplier	constant	subsystem	details
+BASE	0x20	0x14	8	0	0		1	0	General	
+*	0x38	0x20	4	0	0	Tex.bfres, Tex1.bfres, Tex2.bfres, Tex1.1.bfres, Tex1.2.bfres, Tex1.3.bfres, Tex1.4.bfres	1	0	General	
+sarc	0x68	0x3c	0x80	0	0	pack, bactorpack, bmodelsh, beventpack, stera, stats	1	0	General	
+bfres	0x1a8	0x13c	0x1000	complex	complex		2.5	0x400000	General	
+bcamanim	0x50	0x2c	0x2000	complex	complex		1	0x680	General	0x2f8 + graphics resources
+batpl, bnfprl	0x40	0x24	4	0	0		1	0	General	
+bplacement	0x48	0x14	4	0	0		1	0	General	
+hks, lua	0x38	0x14	4	0	0		1	0	General	
+bactcapt	0x538	0x3b4	4	0	0		1	0x1000	ActorCaptureMgr	
+bitemico	0x60	0xd0	0x2000	0	0		1	0	UI	
+jpg	0x80	0x174	0x2000	0	0		1	0	UI	
+bmaptex	0x60	0xd0	0x2000	0	0		1	0	UI	
+bstftex	0x60	0xd0	0x2000	0	0	bmapopen, breviewtex	1	0	UI	
+bgdata	0x140	0xcc	4	0	0		5	0xc0000	GameData	
+bgsvdata	0x38	0x14	4	0	0		1	0x300000	GameData	
+hknm2	0x48	0x28	4	complex	complex		1	0xb28	HavokAI	
+bmscdef	0x2a8	0x1fc	4	complex	complex		1	0	Sound	
+bars	0xb0	0x84	0x80	complex	complex		1	0	Sound	allocates (0x18 + string data on heap) in some cases + 0xa8 and calls sead::ResourceMgr::create with the heap
+bxml	0x778	0x4a8	4	complex	complex		1	0x1000	ActorParam	0 or (4 * n) (depending on contents)
+bgparamlist	0x2c0	0x248	4	complex	complex		1	0xdb18	ActorParam	complex. allocates depending on nodes that are present in the gparamlist
+bmodellist	0x7d0	0x508	4	complex	complex		2	0	ActorParam	
+baslist	0x410	0x2f4	4	complex	complex		0	0x80000	ActorParam	
+baiprog	0x448	0x30c	4	complex	complex		1	0x300000	ActorParam	
+bphysics	0x470	0x324	4	complex	complex		6	0	ActorParam	
+bchemical	0x3c0	0x2cc	4	complex	complex		0	0x2000	ActorParam	
+bas	0x3c8	0x2d0	4	complex	complex		0	0x80000	ActorParam	
+batcllist	0x3f0	0x2e4	4	0	0		1	0x2000	ActorParam	
+batcl	0x428	0x344	4	complex	complex		1	0x2000	ActorParam	
+baischedule	0x2b8	0x244	4	0	0		1	0x800	ActorParam	
+bdmgparam	0x11d0	0x9f0	4	0x790	0x3c0		1	0x20000	ActorParam	
+brgconfiglist	0x3d0	0x2d4	4	complex	complex		1	0x2000	ActorParam	
+brgconfig	0x42d8	0x2acc	4	0	0		1	0x20000	ActorParam	
+brgbw	0x2c0	0x248	4	complex	complex		1	0x20000	ActorParam	
+bawareness	0xb38	0x70c	4	0	0		1	0	ActorParam	
+bdrop	0x320	0x27c	4	complex	complex		1	0x5000	ActorParam	
+bshop	0x320	0x27c	4	complex	complex		1	0x20000	ActorParam	
+brecipe	0x320	0x27c	4	complex	complex		1	0x20000	ActorParam	
+blod	0x3c0	0x2cc	4	0	0		1	0x20000	ActorParam	
+bbonectrl	0x8d0	0x564	4	complex	complex		1	0x40000	ActorParam	
+blifecondition	0x4b0	0x35c	4	complex	complex		1	0x20000	ActorParam	
+bumii	0x2b8	0x244	4	0	0		1	0	ActorParam	
+baniminfo	0x2c8	0x24c	4	complex	complex		1.5	0	ActorParam	
+byaml	0x20	0x14	4	0	0		1	0	ActorParam	
+bassetting	0x260	0x1d8	4	complex	complex		0	0x80000	ActorParam	
+hkrb	0x20	0x14	4	0	0		1	0x400	Physics	
+hkrg	0x20	0x14	4	0	0		1	0x400	Physics	
+bphyssb	0x5b0	0x384	4	complex	complex		1	0x100000	Physics	
+hkcl	0xe8	0xb8	4	complex	complex		2	0x2800	Physics	
+hksc	0x140	0xe8	4	complex	complex		1.3	0x40000	Physics	
+hktmrb	0x48	0x28	4	complex	complex		1	0x800	Physics	
+brgcon	0x48	0x28	4	complex	complex		1	0x4000	Physics	
+esetlist	0x38	0x20	0x4000	0	0		1	0	Effect	
+bdemo	0xb20	0x6cc	4	0	0		1	0xb20	Event	
+bfevfl	0x40	0x24	4	0	0		1	0x40	Event	
+bfevtm	0x40	0x24	4	0	0		1	0x40	Event	

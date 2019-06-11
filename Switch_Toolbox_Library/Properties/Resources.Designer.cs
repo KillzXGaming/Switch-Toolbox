@@ -731,6 +731,16 @@ namespace Switch_Toolbox.Library.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] resource_factory_info {
+            get {
+                object obj = ResourceManager.GetObject("resource_factory_info", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap RewindArrows1L {

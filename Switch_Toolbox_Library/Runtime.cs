@@ -15,6 +15,12 @@ namespace Switch_Toolbox.Library
 
     public class Runtime
     {
+        public static class ResourceTables
+        {
+            public static bool TpTable = false;
+            public static bool BotwTable = false;
+        }
+
         public static string Mk8GamePath = "";
         public static string Mk8dGamePath = "";
         public static string SmoGamePath = "";

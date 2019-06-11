@@ -20,7 +20,7 @@ namespace Switch_Toolbox.Library.IO
         }
 
         public FileWriter(string fileName)
-             : this(new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Write))
+             : this(new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
         {
         }
         public FileWriter(byte[] data)
@@ -60,6 +60,14 @@ namespace Switch_Toolbox.Library.IO
             {
                 Write(pos);
             }
+        }
+
+        public void SetByteOrder(bool IsBigEndian)
+        {
+            if (IsBigEndian)
+                ByteOrder = ByteOrder.BigEndian;
+            else
+                ByteOrder = ByteOrder.LittleEndian;
         }
 
         //

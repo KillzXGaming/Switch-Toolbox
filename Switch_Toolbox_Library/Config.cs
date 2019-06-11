@@ -216,6 +216,12 @@ namespace Switch_Toolbox.Library
                         Enum.TryParse(node.InnerText, out cameraMode);
                         Runtime.ViewportCameraMode = cameraMode;
                         break;
+                    case "BotwTable":
+                        bool.TryParse(node.InnerText, out Runtime.ResourceTables.BotwTable);
+                        break;
+                    case "TpTable":
+                        bool.TryParse(node.InnerText, out Runtime.ResourceTables.TpTable);
+                        break;
                 }
             }
         }
@@ -318,6 +324,7 @@ namespace Switch_Toolbox.Library
             AppendBackgroundSettings(doc, mainNode);
             AppendGridSettings(doc, mainNode);
             AppenPBRSettings(doc, mainNode);
+            AppendResourceTableSettings(doc, mainNode);
 
             return doc;
         }
@@ -406,6 +413,14 @@ namespace Switch_Toolbox.Library
             renderSettingsNode.AppendChild(createNode(doc, "normalsLineLength", Runtime.normalsLineLength.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "bonePointSize", Runtime.bonePointSize.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "MaxCameraSpeed", Runtime.MaxCameraSpeed.ToString()));
+        }
+        
+        private static void AppendResourceTableSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode resourceTableNode = doc.CreateElement("ResourceTables");
+            parentNode.AppendChild(resourceTableNode);
+            resourceTableNode.AppendChild(createNode(doc, "BotwTable", Runtime.ResourceTables.BotwTable.ToString()));
+            resourceTableNode.AppendChild(createNode(doc, "TpTable", Runtime.ResourceTables.TpTable.ToString()));
         }
 
         private static void AppendGridSettings(XmlDocument doc, XmlNode parentNode)

@@ -76,6 +76,10 @@
       <HintPath>..\Toolbox\Lib\CSCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\Toolbox\Lib\CsvHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="EditorCoreCommon">
       <HintPath>..\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
       <Private>False</Private>
@@ -234,12 +238,10 @@
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
-    <Compile Include="FileFormats\SizeTables\RSTB.cs" />
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />
     <Compile Include="FileFormats\Shader\NVNSH.cs" />
     <Compile Include="FileFormats\Shader\SHARCFBNX.cs" />
-    <Compile Include="FileFormats\SizeTables\TPFileSizeTable.cs" />
     <Compile Include="FileFormats\Texture\BCLIM.cs" />
     <Compile Include="FileFormats\Texture\BFLIM.cs" />
     <Compile Include="FileFormats\Layout\BFLAN.cs" />
@@ -1211,6 +1213,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\resource_factory_info.tsv" />
     <None Include="Resources\TextureError.png" />
   </ItemGroup>
   <ItemGroup>

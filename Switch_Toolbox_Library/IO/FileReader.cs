@@ -56,11 +56,17 @@ namespace Switch_Toolbox.Library.IO
         /// <returns></returns>
         public void CheckByteOrderMark(uint ByteOrderMark)
         {
-            if (ByteOrderMark == 0xFEFF)
+            SetByteOrder(ByteOrderMark == 0xFEFF);
+        }
+
+        public void SetByteOrder(bool IsBigEndian)
+        {
+            if (IsBigEndian)
                 ByteOrder = ByteOrder.BigEndian;
             else
                 ByteOrder = ByteOrder.LittleEndian;
         }
+
         public string ReadSignature(int length, string ExpectedSignature)
         {
             string RealSignature = ReadString(length, Encoding.ASCII);
@@ -70,6 +76,7 @@ namespace Switch_Toolbox.Library.IO
 
             return RealSignature;
         }
+
 
         public long ReadOffset(bool IsRelative, Type OffsetType)
         {

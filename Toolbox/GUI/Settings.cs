@@ -85,6 +85,8 @@ namespace Toolbox
             chkUseSkyobx.Checked = Runtime.PBR.UseSkybox;
             chkDiffyseSkybox.Checked = Runtime.PBR.UseDiffuseSkyTexture;
             chkDiffyseSkybox.Enabled = chkUseSkyobx.Checked;
+            chkBotwFileTable.Checked = Runtime.ResourceTables.BotwTable;
+            chkTpFileTable.Checked = Runtime.ResourceTables.TpTable;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
@@ -450,8 +452,11 @@ namespace Toolbox
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                SMOPathTB.Text = sfd.SelectedPath;
-                Runtime.BotwGamePath = SMOPathTB.Text;
+                if (!IsValidBotwDirectory(sfd.SelectedPath))
+                    throw new Exception("Invalid path choosen. Make sure you have atleast an RSTB file in the path! |System/Resource/ResourceSizeTable.product.srsizetable|");
+
+                botwGamePathTB.Text = sfd.SelectedPath;
+                Runtime.BotwGamePath = botwGamePathTB.Text;
             }
         }
 
@@ -591,6 +596,37 @@ namespace Toolbox
         private void uvChannelRB3_CheckedChanged(object sender, EventArgs e)  {
             Runtime.uvChannel = Runtime.UVChannel.Channel3;
             UpdateViewportSettings();
+        }
+
+        private void chkBotwFileTable_CheckedChanged(object sender, EventArgs e) {
+            if (!System.IO.Directory.Exists(Runtime.BotwGamePath) || !IsValidBotwDirectory(Runtime.BotwGamePath))
+            {
+                FolderSelectDialog sfd = new FolderSelectDialog();
+                sfd.Title = "Select Modded Game Path!!!";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (!IsValidBotwDirectory(sfd.SelectedPath))
+                        throw new Exception($"Invalid path choosen. Make sure you have atleast an RSTB file in the path! |{sfd.SelectedPath}/System/Resource/ResourceSizeTable.product.srsizetable|");
+
+                    botwGamePathTB.Text = sfd.SelectedPath;
+                    Runtime.BotwGamePath = botwGamePathTB.Text;
+                }
+            }
+
+            Runtime.ResourceTables.BotwTable = chkBotwFileTable.Checked;
+        }
+
+        private bool IsValidBotwDirectory(string GamePath)
+        {
+            //This is the only file i care about
+            string RstbPath = System.IO.Path.Combine($"{GamePath}",
+                 "System", "Resource", "ResourceSizeTable.product.srsizetable");
+
+            return System.IO.File.Exists(RstbPath);
+        }
+
+        private void chkTpFileTable_CheckedChanged(object sender, EventArgs e) {
+            Runtime.ResourceTables.TpTable = chkTpFileTable.Checked;
         }
     }
 }

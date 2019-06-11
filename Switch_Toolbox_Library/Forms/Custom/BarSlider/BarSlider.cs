@@ -226,7 +226,6 @@ namespace BarSlider
             }
         }
 
-
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (TextEditorActive)

@@ -34,6 +34,7 @@
             this.chkBoxNormalMap = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.shadingComboBox = new System.Windows.Forms.ComboBox();
             this.panel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.uvChannelRB3 = new System.Windows.Forms.RadioButton();
             this.uvChannelRB2 = new System.Windows.Forms.RadioButton();
             this.uvChannelRB = new System.Windows.Forms.RadioButton();
             this.displayBoundingBoxeChk = new Switch_Toolbox.Library.Forms.STCheckBox();
@@ -112,7 +113,10 @@
             this.chkUseSkyobx = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel15 = new Switch_Toolbox.Library.Forms.STLabel();
             this.specularCubemapPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.uvChannelRB3 = new System.Windows.Forms.RadioButton();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.chkTpFileTable = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stLabel17 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.chkBotwFileTable = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -135,6 +139,7 @@
             this.tabPage3.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -227,6 +232,18 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(534, 293);
             this.panel2.TabIndex = 4;
+            // 
+            // uvChannelRB3
+            // 
+            this.uvChannelRB3.AutoSize = true;
+            this.uvChannelRB3.Location = new System.Drawing.Point(477, 54);
+            this.uvChannelRB3.Name = "uvChannelRB3";
+            this.uvChannelRB3.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB3.TabIndex = 34;
+            this.uvChannelRB3.TabStop = true;
+            this.uvChannelRB3.Text = "UV 3";
+            this.uvChannelRB3.UseVisualStyleBackColor = true;
+            this.uvChannelRB3.CheckedChanged += new System.EventHandler(this.uvChannelRB3_CheckedChanged);
             // 
             // uvChannelRB2
             // 
@@ -791,6 +808,7 @@
             this.stTabControl1.Controls.Add(this.tabPage2);
             this.stTabControl1.Controls.Add(this.tabPage3);
             this.stTabControl1.Controls.Add(this.tabPage4);
+            this.stTabControl1.Controls.Add(this.tabPage5);
             this.stTabControl1.Location = new System.Drawing.Point(0, 25);
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
             this.stTabControl1.Name = "stTabControl1";
@@ -1187,17 +1205,50 @@
             this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
             this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.specularCubemapPathTB_TextChanged);
             // 
-            // uvChannelRB3
+            // tabPage5
             // 
-            this.uvChannelRB3.AutoSize = true;
-            this.uvChannelRB3.Location = new System.Drawing.Point(477, 54);
-            this.uvChannelRB3.Name = "uvChannelRB3";
-            this.uvChannelRB3.Size = new System.Drawing.Size(49, 17);
-            this.uvChannelRB3.TabIndex = 34;
-            this.uvChannelRB3.TabStop = true;
-            this.uvChannelRB3.Text = "UV 3";
-            this.uvChannelRB3.UseVisualStyleBackColor = true;
-            this.uvChannelRB3.CheckedChanged += new System.EventHandler(this.uvChannelRB3_CheckedChanged);
+            this.tabPage5.Controls.Add(this.chkTpFileTable);
+            this.tabPage5.Controls.Add(this.stLabel17);
+            this.tabPage5.Controls.Add(this.chkBotwFileTable);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(541, 395);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "File Size Tables";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // chkTpFileTable
+            // 
+            this.chkTpFileTable.AutoSize = true;
+            this.chkTpFileTable.Location = new System.Drawing.Point(17, 84);
+            this.chkTpFileTable.Name = "chkTpFileTable";
+            this.chkTpFileTable.Size = new System.Drawing.Size(178, 17);
+            this.chkTpFileTable.TabIndex = 3;
+            this.chkTpFileTable.Text = "Twilight Princess HD File Tables";
+            this.chkTpFileTable.UseVisualStyleBackColor = true;
+            this.chkTpFileTable.CheckedChanged += new System.EventHandler(this.chkTpFileTable_CheckedChanged);
+            // 
+            // stLabel17
+            // 
+            this.stLabel17.AutoSize = true;
+            this.stLabel17.Location = new System.Drawing.Point(25, 11);
+            this.stLabel17.Name = "stLabel17";
+            this.stLabel17.Size = new System.Drawing.Size(558, 13);
+            this.stLabel17.TabIndex = 2;
+            this.stLabel17.Text = "These options can prevent file size restrictions.  Check these if you want them t" +
+    "o be adjusted when a file gets saved. ";
+            // 
+            // chkBotwFileTable
+            // 
+            this.chkBotwFileTable.AutoSize = true;
+            this.chkBotwFileTable.Location = new System.Drawing.Point(17, 61);
+            this.chkBotwFileTable.Name = "chkBotwFileTable";
+            this.chkBotwFileTable.Size = new System.Drawing.Size(195, 17);
+            this.chkBotwFileTable.TabIndex = 0;
+            this.chkBotwFileTable.Text = "BOTW Resource File Table (RSTB)";
+            this.chkBotwFileTable.UseVisualStyleBackColor = true;
+            this.chkBotwFileTable.CheckedChanged += new System.EventHandler(this.chkBotwFileTable_CheckedChanged);
             // 
             // Settings
             // 
@@ -1237,6 +1288,8 @@
             this.stContextMenuStrip1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1327,5 +1380,9 @@
         private System.Windows.Forms.RadioButton uvChannelRB2;
         private System.Windows.Forms.RadioButton uvChannelRB;
         private System.Windows.Forms.RadioButton uvChannelRB3;
+        private System.Windows.Forms.TabPage tabPage5;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkTpFileTable;
+        private Switch_Toolbox.Library.Forms.STLabel stLabel17;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkBotwFileTable;
     }
 }

@@ -50,6 +50,9 @@
       <HintPath>..\Toolbox\Lib\CSCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\Toolbox\Lib\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Cyotek.Windows.Forms.ImageBox">
       <HintPath>..\Toolbox\Lib\Cyotek.Windows.Forms.ImageBox.dll</HintPath>
     </Reference>
@@ -220,6 +223,8 @@
     <Compile Include="FileFormats\DAE\DAE.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="FileFormats\R4G4.cs" />
+    <Compile Include="FileFormats\SizeTables\RSTB.cs" />
+    <Compile Include="FileFormats\SizeTables\TPFileSizeTable.cs" />
     <Compile Include="Forms\Archive\ArchiveFilePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -243,6 +248,12 @@
     </Compile>
     <Compile Include="Forms\Dialogs\ExportModelSettings.Designer.cs">
       <DependentUpon>ExportModelSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\STSaveLogDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\STSaveLogDialog.Designer.cs">
+      <DependentUpon>STSaveLogDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\Animation\BoneAnimTimeline.cs">
       <SubType>UserControl</SubType>
@@ -733,6 +744,9 @@
     <EmbeddedResource Include="Forms\Dialogs\ExportModelSettings.resx">
       <DependentUpon>ExportModelSettings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\STSaveLogDialog.resx">
+      <DependentUpon>STSaveLogDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\STOptionsDialog.resx">
       <DependentUpon>STOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -896,6 +910,7 @@
     <None Include="Resources\mesh.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\resource_factory_info.tsv" />
     <None Include="Resources\skeletonAnimation.png" />
   </ItemGroup>
   <ItemGroup>
