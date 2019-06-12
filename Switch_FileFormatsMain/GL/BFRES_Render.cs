@@ -906,8 +906,8 @@ namespace FirstPlugin
                 if (mat.renderinfo[i].Name == "display_face")
                 {
                     NoCull = mat.renderinfo[i].ValueString.Contains("both");
-                    CullBack = mat.renderinfo[i].ValueString.Contains("back");
-                    CullFront = mat.renderinfo[i].ValueString.Contains("front");
+                    CullFront = mat.renderinfo[i].ValueString.Contains("back");
+                    CullBack = mat.renderinfo[i].ValueString.Contains("front");
                 }
 
 
