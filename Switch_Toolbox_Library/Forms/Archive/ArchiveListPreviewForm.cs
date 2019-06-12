@@ -230,6 +230,7 @@ namespace Switch_Toolbox.Library.Forms
                 Texture.Replace(ofd.FileName);
 
                 ReloadTexture(Texture, item);
+                LoadImageEditor((STGenericTexture)item.Tag, ((STGenericTexture)item.Tag).GenericProperties);
             }
         }
 
@@ -267,8 +268,7 @@ namespace Switch_Toolbox.Library.Forms
             ReloadTexture(e.ReplacedTexture, ActiveItem);
             listViewCustom1.Refresh();
 
-            if (imageEditorForm != null)
-                imageEditorForm.LoadImage((STGenericTexture)ActiveItem.Tag);
+            LoadImageEditor((STGenericTexture)ActiveItem.Tag, ((STGenericTexture)ActiveItem.Tag).GenericProperties);
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
