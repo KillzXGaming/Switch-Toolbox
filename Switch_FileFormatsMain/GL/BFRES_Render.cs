@@ -405,7 +405,7 @@ namespace FirstPlugin
                     //Check render pass first!
                     for (int shp = 0; shp < models[m].shapes.Count; shp++)
                     {
-                        SetRenderPass(models[m].shapes[shp].GetMaterial());
+                        CheckRenderPass(models[m].shapes[shp].GetMaterial());
                     }
 
                     List<FSHP> opaque = new List<FSHP>();
@@ -708,6 +708,7 @@ namespace FirstPlugin
 
             if (shader != OpenTKSharedResources.shaders["BFRES_Normals"])
             {
+                SetRenderPass(mat);
                 SetUniforms(mat, shader, m, m.DisplayId);
                 SetTextureUniforms(mat, m, shader);
             }
@@ -896,6 +897,45 @@ namespace FirstPlugin
 
         private static void SetRenderPass(FMAT mat)
         {
+            bool NoCull = false;
+            bool CullBack = false;
+            bool CullFront = false;
+
+            for (int i = 0; i < mat.renderinfo.Count; i++)
+            {
+                if (mat.renderinfo[i].Name == "display_face")
+                {
+                    NoCull = mat.renderinfo[i].ValueString.Contains("both");
+                    CullBack = mat.renderinfo[i].ValueString.Contains("back");
+                    CullFront = mat.renderinfo[i].ValueString.Contains("front");
+                }
+
+
+                if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
+                {
+                    AglShaderTurbo aglShader = new AglShaderTurbo();
+                    aglShader.LoadRenderInfo(mat.renderinfo[i]);
+                }
+            }
+
+            if (NoCull)
+            {
+                GL.Disable(EnableCap.CullFace);
+            }
+            else if (CullFront)
+            {
+                GL.Enable(EnableCap.CullFace);
+                GL.CullFace(CullFaceMode.Front);
+            }
+            else if (CullBack)
+            {
+                GL.Enable(EnableCap.CullFace);
+                GL.CullFace(CullFaceMode.Back);
+            }
+        }
+
+        private static void CheckRenderPass(FMAT mat)
+        {
             if (mat.ImageKey != "material")
             {
                 mat.ImageKey = "material";
@@ -905,18 +945,13 @@ namespace FirstPlugin
             bool IsTranslucent = false;
             bool IsTransparentMask = false;
 
+
             for (int i = 0; i < mat.renderinfo.Count; i++)
             {
                 if (mat.renderinfo[i].Name == "gsys_render_state_mode")
                 {
                     IsTranslucent = mat.renderinfo[i].ValueString.Contains("translucent");
                     IsTransparentMask = mat.renderinfo[i].ValueString.Contains("mask");
-                }
-
-                if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
-                {
-                    AglShaderTurbo aglShader = new AglShaderTurbo();
-                    aglShader.LoadRenderInfo(mat.renderinfo[i]);
                 }
             }
 
