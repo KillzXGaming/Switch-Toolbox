@@ -625,7 +625,30 @@ namespace Toolbox
             return System.IO.File.Exists(RstbPath);
         }
 
+        private bool IsValidTPHDDirectory(string GamePath)
+        {
+            //This is the only file i care about
+            string DecompressedSizeList = System.IO.Path.Combine($"{GamePath}", "DecompressedSizeList.txt");
+            string FileSizeList = System.IO.Path.Combine($"{GamePath}", "FileSizeList.txt");
+
+            return System.IO.File.Exists(DecompressedSizeList) && System.IO.File.Exists(FileSizeList);
+        }
+
         private void chkTpFileTable_CheckedChanged(object sender, EventArgs e) {
+            if (!System.IO.Directory.Exists(Runtime.TpGamePath) || !IsValidTPHDDirectory(Runtime.TpGamePath))
+            {
+                FolderSelectDialog sfd = new FolderSelectDialog();
+                sfd.Title = "Select Modded Game Path!!!";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (!IsValidTPHDDirectory(sfd.SelectedPath))
+                        throw new Exception($"Invalid path choosen. Make sure you have atleast a FileSizeList.txt and DecompressedSizeList.txt file in the path!");
+
+                    tpGamePathTB.Text = sfd.SelectedPath;
+                    Runtime.TpGamePath = tpGamePathTB.Text;
+                }
+            }
+
             Runtime.ResourceTables.TpTable = chkTpFileTable.Checked;
         }
     }
