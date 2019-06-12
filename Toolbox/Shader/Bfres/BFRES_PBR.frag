@@ -103,6 +103,7 @@ uniform int HasShadowMap;
 uniform int HasAmbientOcclusionMap;
 uniform int HasLightMap;
 uniform int HasTransparencyMap;
+uniform int HasTransmissionMap;
 uniform int HasEmissionMap;
 uniform int HasDiffuseLayer;
 uniform int HasMetalnessMap;

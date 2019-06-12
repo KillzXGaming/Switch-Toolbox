@@ -811,17 +811,23 @@ namespace FirstPlugin
                             texture.Type = MatTexture.TextureType.Diffuse;
                         }
                     }
-                    if (useSampler == "_n0")
+                    else if (TextureName.Contains("sss"))
+                    {
+
+                        texture.Type = MatTexture.TextureType.SubSurfaceScattering;
+                        m.HasSubSurfaceScatteringMap = true;
+                    }
+                    else if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-                    if (useSampler == "_e0")
+                    else if (useSampler == "_e0")
                     {
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
-                    if (TextureName.Contains("mtl"))
+                    else if (TextureName.Contains("mtl"))
                     {
                         m.HasMetalnessMap = true;
                         texture.Type = MatTexture.TextureType.Metalness;
@@ -830,12 +836,6 @@ namespace FirstPlugin
                     {
                         texture.Type = MatTexture.TextureType.Roughness;
                         m.HasRoughnessMap = true;
-                    }
-                    else if (TextureName.Contains("sss"))
-                    {
-
-                        texture.Type = MatTexture.TextureType.SubSurfaceScattering;
-                        m.HasSubSurfaceScatteringMap = true;
                     }
                 }
                 else
