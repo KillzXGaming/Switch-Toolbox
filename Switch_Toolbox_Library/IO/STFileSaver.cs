@@ -39,12 +39,13 @@ namespace Switch_Toolbox.Library.IO
 
             FileFormat.IFileInfo.CompressedSize = (uint)data.Length;
 
+            File.WriteAllBytes(FileName, data);
+
             DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, data,
                 FileFormat.IFileInfo.DecompressedSize,
                 FileFormat.IFileInfo.CompressedSize,
                 FileFormat.IFileInfo.FileIsCompressed);
 
-            File.WriteAllBytes(FileName, data);
             MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
 
          //   STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);

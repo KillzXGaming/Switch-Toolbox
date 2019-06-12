@@ -268,7 +268,7 @@ namespace Switch_Toolbox.Library.Forms
             listViewCustom1.Refresh();
 
             if (imageEditorForm != null)
-                imageEditorForm.UpdateMipDisplay();
+                imageEditorForm.LoadImage((STGenericTexture)ActiveItem.Tag);
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
