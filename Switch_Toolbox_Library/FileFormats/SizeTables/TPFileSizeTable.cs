@@ -14,8 +14,8 @@ namespace Switch_Toolbox.Library
         public class DecompressedTableEntry
         {
             public string FilePath { get; set; }
-            public uint Size { get; set; }
-            public uint Size2 { get; set; }
+            public uint CompressedSize { get; set; }
+            public uint DecompressedSize { get; set; }
             public string Precentage { get; set; }
         }
 
@@ -31,8 +31,9 @@ namespace Switch_Toolbox.Library
             FileSizes[FileName] = Size;
         }
 
-        public void SetDecompressedFileSizeEntry(string FileName, uint Size) {
-            DecompressedFileSizes[FileName].Size = Size;
+        public void SetDecompressedFileSizeEntry(string FileName, uint CompressedSize, uint DecompressedSize) {
+            DecompressedFileSizes[FileName].CompressedSize = CompressedSize;
+            DecompressedFileSizes[FileName].DecompressedSize = DecompressedSize;
         }
 
         public void ReadCompressedTable(FileReader reader)
@@ -66,8 +67,8 @@ namespace Switch_Toolbox.Library
                 uint.TryParse(Size, out sizeNum);
                 uint.TryParse(Size2, out sizeNum2);
 
-                entry.Size = sizeNum;
-                entry.Size2 = sizeNum2;
+                entry.CompressedSize = sizeNum;
+                entry.DecompressedSize = sizeNum2;
 
                 DecompressedFileSizes.Add(entry.FilePath, entry);
             }
@@ -89,8 +90,8 @@ namespace Switch_Toolbox.Library
         {
             foreach (var file in DecompressedFileSizes.Values)
             {
-                writer.Write(file.Size.ToString(), BinaryStringFormat.ZeroTerminated);
-                writer.Write(file.Size2.ToString(), BinaryStringFormat.ZeroTerminated);
+                writer.Write(file.CompressedSize.ToString(), BinaryStringFormat.ZeroTerminated);
+                writer.Write(file.DecompressedSize.ToString(), BinaryStringFormat.ZeroTerminated);
                 writer.Write(file.Precentage.ToString(), BinaryStringFormat.ZeroTerminated);
                 writer.Write(file.FilePath.ToString(), BinaryStringFormat.ZeroTerminated);
             }
