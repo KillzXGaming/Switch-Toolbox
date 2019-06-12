@@ -30,21 +30,21 @@ namespace Switch_Toolbox.Library.IO
             byte[] data = FileFormat.Save();
             FileFormat.IFileInfo.DecompressedSize = (uint)data.Length;
 
-            byte[] FinalData = CompressFileFormat(data,
+            data = CompressFileFormat(data,
                 FileFormat.IFileInfo.FileIsCompressed,
                 FileFormat.IFileInfo.Alignment, 
                 FileFormat.IFileInfo.CompressionType,
                 FileName,
                 EnableDialog);
 
-            FileFormat.IFileInfo.CompressedSize = (uint)FinalData.Length;
+            FileFormat.IFileInfo.CompressedSize = (uint)data.Length;
 
-            DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, FinalData,
+            DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, data,
                 FileFormat.IFileInfo.DecompressedSize,
                 FileFormat.IFileInfo.CompressedSize,
                 FileFormat.IFileInfo.FileIsCompressed);
 
-            File.WriteAllBytes(FileName, FinalData);
+            File.WriteAllBytes(FileName, data);
             MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
 
          //   STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);
@@ -143,23 +143,23 @@ namespace Switch_Toolbox.Library.IO
                 //Write all the file sizes in the archive if it's an archive type
                 //Note this seems uneeded atm
                 //Todo store both compressed and decompressed sizes in archive info
-                if (IsArchive)
-                {
-                    IArchiveFile Archive = (IArchiveFile)FileFormat;
-                    foreach (var file in Archive.Files)
-                    {
-                        uint DecompressedArchiveFileSize = (uint)file.FileData.Length;
-                        string ArchiveFilePath = $"/DVDRoot/{file.FileName}";
+                /*   if (IsArchive)
+                   {
+                       IArchiveFile Archive = (IArchiveFile)FileFormat;
+                       foreach (var file in Archive.Files)
+                       {
+                           uint DecompressedArchiveFileSize = (uint)file.FileData.Length;
+                           string ArchiveFilePath = $"/DVDRoot/{file.FileName}";
 
-                        if (DecompressedFileTbl.IsInDecompressedFileSizeList(ArchiveFilePath))
-                        {
-                            STConsole.WriteLine("Found matching path in File Size List table! " + ArchiveFilePath, 1);
-                            DecompressedFileTbl.SetDecompressedFileSizeEntry(ArchiveFilePath, DecompressedArchiveFileSize, DecompressedArchiveFileSize);
-                        }
-                        else
-                            STConsole.WriteLine("Failed to find path in File Size List table! " + ArchiveFilePath, 0);
-                    }
-                }
+                           if (DecompressedFileTbl.IsInDecompressedFileSizeList(ArchiveFilePath))
+                           {
+                               STConsole.WriteLine("Found matching path in File Size List table! " + ArchiveFilePath, 1);
+                               DecompressedFileTbl.SetDecompressedFileSizeEntry(ArchiveFilePath, DecompressedArchiveFileSize, DecompressedArchiveFileSize);
+                           }
+                           else
+                               STConsole.WriteLine("Failed to find path in File Size List table! " + ArchiveFilePath, 0);
+                       }
+                   }*/
 
                 CompressedFileTbl.WriteCompressedTable(new FileWriter($"{Runtime.TpGamePath}/FileSizeList.txt"));
                 DecompressedFileTbl.WriteDecompressedTable(new FileWriter($"{Runtime.TpGamePath}/DecompressedSizeList.txt"));
