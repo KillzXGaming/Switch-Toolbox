@@ -162,8 +162,8 @@ namespace Switch_Toolbox.Library.IO
                        }
                    }*/
 
-                CompressedFileTbl.WriteCompressedTable(new FileWriter($"{Runtime.TpGamePath}/FileSizeListTEST.txt"));
-                DecompressedFileTbl.WriteDecompressedTable(new FileWriter($"{Runtime.TpGamePath}/DecompressedSizeListTEST.txt"));
+                CompressedFileTbl.WriteCompressedTable(new FileWriter($"{Runtime.TpGamePath}/FileSizeList.txt"));
+                DecompressedFileTbl.WriteDecompressedTable(new FileWriter($"{Runtime.TpGamePath}/DecompressedSizeList.txt"));
             }
 
             return FileLog;
