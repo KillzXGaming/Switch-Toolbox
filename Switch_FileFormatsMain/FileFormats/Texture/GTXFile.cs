@@ -588,6 +588,7 @@ namespace FirstPlugin
                     surface.tileMode = (uint)ftex.texture.TileMode;
                     surface.format = (uint)ftex.texture.Format;
                     surface.aa = (uint)ftex.texture.AAMode;
+                    surface.use = (uint)ftex.texture.Use;
                     surface.alignment = (uint)ftex.texture.Alignment;
                     surface.dim = (uint)ftex.texture.Dim;
                     surface.width = (uint)ftex.texture.Width;
@@ -599,10 +600,12 @@ namespace FirstPlugin
                     surface.data = ftex.texture.Data;
                     surface.mipData = ftex.texture.MipData;
                     surface.mipOffset = ftex.texture.MipOffsets;
+                    surface.firstMip = ftex.texture.ViewMipFirst;
                     surface.firstSlice = ftex.texture.ViewSliceFirst;
                     surface.numSlices = ftex.texture.ViewSliceCount;
                     surface.imageCount = ftex.texture.ArrayLength;
                     surface.pitch = ftex.texture.Pitch;
+
                     SetChannelComponents();
 
                     Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)surface.format);

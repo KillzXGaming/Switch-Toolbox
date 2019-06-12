@@ -12,6 +12,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Switch_Toolbox.Library.IO;
 using FirstPlugin;
+using FirstPlugin.Forms;
 
 namespace Bfres.Structs
 {
@@ -719,11 +720,17 @@ namespace Bfres.Structs
 
         private bool IsEditorActive()
         {
-            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
-            if (editor == null)
-                return false;
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            if (bfresEditor != null)
+            {
+                var imageEditor = bfresEditor.GetActiveEditor(typeof(ImageEditorBase));
+                return imageEditor != null;
+            }
             else
-                return true;
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                return editor != null;
+            }
         }
 
         public override void OnClick(TreeView treeView)
