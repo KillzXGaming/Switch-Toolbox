@@ -131,10 +131,9 @@ namespace FirstPlugin
                 else if (compType == 0x30)
                 {
                     uint decompSize = reader.ReadUInt32();
-                    uint compSize = (uint)reader.BaseStream.Length;
-                    compSize -= 10;
+                    uint compSize = (uint)reader.BaseStream.Length - 14;
 
-                    byte[] filedata = reader.getSection(10, (int)compSize);
+                    byte[] filedata = reader.getSection(14, (int)compSize);
                     reader.Close();
                     reader.Dispose();
 
