@@ -319,9 +319,18 @@ namespace FirstPlugin
 
                 if (fshp.VertexSkinCount == 1)
                 {
-                    Matrix4 sb = model.Skeleton.bones[model.Skeleton.Node_Array[v.boneIds[0]]].Transform;
-                    v.pos = Vector3.TransformPosition(v.pos, sb);
-                    v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                    int boneIndex = fshp.BoneIndex;
+                    if (v.boneIds.Count > 0)
+                        boneIndex = model.Skeleton.Node_Array[v.boneIds[0]];
+
+                    //Check if the bones are a rigid type
+                    //In game it seems to not transform if they are not rigid
+                    if (model.Skeleton.bones[boneIndex].RigidMatrixIndex != -1)
+                    {
+                        Matrix4 sb = model.Skeleton.bones[boneIndex].Transform;
+                        v.pos = Vector3.TransformPosition(v.pos, sb);
+                        v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                    }
                 }
                 if (fshp.VertexSkinCount == 0)
                 {

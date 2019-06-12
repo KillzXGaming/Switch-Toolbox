@@ -273,23 +273,23 @@ namespace FirstPlugin
                     if (v.boneIds.Count > 0)
                         boneIndex = model.Skeleton.Node_Array[v.boneIds[0]];
 
-                    Matrix4 sb = model.Skeleton.bones[boneIndex].Transform;
-                    v.pos = Vector3.TransformPosition(v.pos, sb);
-                    v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                    //Check if the bones are a rigid type
+                    //In game it seems to not transform if they are not rigid
+                    if (model.Skeleton.bones[boneIndex].RigidMatrixIndex != -1)
+                    {
+                        Matrix4 sb = model.Skeleton.bones[boneIndex].Transform;
+                        v.pos = Vector3.TransformPosition(v.pos, sb);
+                        v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                    }
                 }
                 if (fshp.VertexSkinCount == 0)
                 {
                     try
                     {
                         if (model.Skeleton.bones.Count > 0) {
-                            //Check if the bones are a rigid type
-                            //In game it seems to not transform if they are not rigid
-                            if (model.Skeleton.bones[fshp.BoneIndex].RigidMatrixIndex != -1)
-                            {
-                                Matrix4 NoBindFix = model.Skeleton.bones[fshp.BoneIndex].Transform;
-                                v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
-                                v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
-                            }
+                            Matrix4 NoBindFix = model.Skeleton.bones[fshp.BoneIndex].Transform;
+                            v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
+                            v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
                         }
                     }
                     catch //Matrix failed. Print the coordinate data of the bone
