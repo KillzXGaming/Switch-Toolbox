@@ -26,6 +26,8 @@ namespace Switch_Toolbox.Library
 
         Runtime.ViewportEditor editor;
 
+        public void DisplayAllDDrawables() { drawContainersCB.SelectedIndex = 0; }
+
         public Viewport(List<DrawableContainer> container, bool LoadDrawables = true)
         {
             DrawableContainers = container;

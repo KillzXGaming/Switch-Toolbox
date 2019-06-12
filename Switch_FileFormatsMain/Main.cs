@@ -248,6 +248,7 @@ namespace FirstPlugin
             {
                 BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
                 bfresEditor.IsLoaded = false;
+                bfresEditor.DisplayAllDDrawables();
             }
         }
 

@@ -243,12 +243,14 @@ void main()
 
 	vec3 albedo = vec3(1);
     if (HasDiffuse == 1)
-        albedo = pow(texture(DiffuseMap	, f_texcoord0).rgb, vec3(gamma));
+	{
+		vec4 DiffuseTex =  pow(texture(DiffuseMap, f_texcoord0).rgba, vec4(gamma));
 
-	//Comp Selectors
-	albedo.r = GetComponent(RedChannel, texture(DiffuseMap, f_texcoord0));
-	albedo.g = GetComponent(GreenChannel, texture(DiffuseMap, f_texcoord0));
-	albedo.b = GetComponent(BlueChannel, texture(DiffuseMap, f_texcoord0));
+		//Comp Selectors
+		albedo.r = GetComponent(RedChannel, DiffuseTex);
+		albedo.g = GetComponent(GreenChannel, DiffuseTex);
+		albedo.b = GetComponent(BlueChannel, DiffuseTex);
+	}
 
 	float metallic = 0;
     if (HasMetalnessMap == 1)

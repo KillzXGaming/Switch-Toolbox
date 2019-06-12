@@ -156,6 +156,12 @@ namespace FirstPlugin.Forms
 
         public bool IsLoaded = false;
 
+        public void DisplayAllDDrawables()
+        {
+            if (viewport != null && Runtime.UseOpenGL && Runtime.DisplayViewport)
+                viewport.DisplayAllDDrawables();
+        }
+
         private BFRES ActiveBfres;
         public void LoadViewport(BFRES bfres, bool HasShapes, DrawableContainer ActiveDrawable, List<ToolStripMenuItem> customContextMenus = null)
         {
