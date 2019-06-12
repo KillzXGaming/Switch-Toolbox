@@ -95,6 +95,9 @@ namespace Switch_Toolbox.Library
 
                 NameTables.Add(Name, Size);
             }
+
+            reader.Close();
+            reader.Dispose();
         }
 
         public void Write(FileWriter writer)

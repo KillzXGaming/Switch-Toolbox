@@ -47,6 +47,9 @@ namespace Switch_Toolbox.Library
                 uint.TryParse(Size, out sizeNum);
                 FileSizes.Add(FileName, sizeNum);
             }
+
+            reader.Close();
+            reader.Dispose();
         }
 
         public void ReadDecompressedTable(FileReader reader)
@@ -72,6 +75,9 @@ namespace Switch_Toolbox.Library
 
                 DecompressedFileSizes.Add(entry.FilePath, entry);
             }
+
+            reader.Close();
+            reader.Dispose();
         }
 
         public void WriteCompressedTable(FileWriter writer)
