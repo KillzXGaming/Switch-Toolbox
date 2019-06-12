@@ -126,7 +126,7 @@ namespace Switch_Toolbox.Library.IO
                 if (DecompressedFileTbl.IsInDecompressedFileSizeList(newFilePath))
                 {
                     STConsole.WriteLine("Found matching path in File Size List table! " + newFilePath, 1);
-                    DecompressedFileTbl.SetDecompressedFileSizeEntry(newFilePath, DecompressedSize);
+                    DecompressedFileTbl.SetDecompressedFileSizeEntry(newFilePath, CompressedSize, DecompressedSize);
                 }
                 else
                     STConsole.WriteLine("Failed to find path in File Size List table! " + newFilePath, 0);
@@ -141,6 +141,8 @@ namespace Switch_Toolbox.Library.IO
 
 
                 //Write all the file sizes in the archive if it's an archive type
+                //Note this seems uneeded atm
+                //Todo store both compressed and decompressed sizes in archive info
                 if (IsArchive)
                 {
                     IArchiveFile Archive = (IArchiveFile)FileFormat;
@@ -152,7 +154,7 @@ namespace Switch_Toolbox.Library.IO
                         if (DecompressedFileTbl.IsInDecompressedFileSizeList(ArchiveFilePath))
                         {
                             STConsole.WriteLine("Found matching path in File Size List table! " + ArchiveFilePath, 1);
-                            DecompressedFileTbl.SetDecompressedFileSizeEntry(ArchiveFilePath, DecompressedArchiveFileSize);
+                            DecompressedFileTbl.SetDecompressedFileSizeEntry(ArchiveFilePath, DecompressedArchiveFileSize, DecompressedArchiveFileSize);
                         }
                         else
                             STConsole.WriteLine("Failed to find path in File Size List table! " + ArchiveFilePath, 0);
