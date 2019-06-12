@@ -22,7 +22,7 @@ namespace Switch_Toolbox.Library.IO
         {
             //These always get created on loading a file,however not on creating a new file
             if (FileFormat.IFileInfo == null)
-                throw new System.Exception("Make sure to impliment a IFileInfo instance if a format is being created!");
+                throw new System.NotImplementedException("Make sure to impliment a IFileInfo instance if a format is being created!");
 
             Cursor.Current = Cursors.WaitCursor;
             FileFormat.FilePath = FileName;
@@ -119,7 +119,8 @@ namespace Switch_Toolbox.Library.IO
                 TPFileSizeTable DecompressedFileTbl = new TPFileSizeTable();
                 DecompressedFileTbl.ReadDecompressedTable(new FileReader($"{Runtime.TpGamePath}/DecompressedSizeList.txt"));
 
-                newFilePath = $"/DVDRoot/{newFilePath}";
+                newFilePath = $"./DVDRoot/{newFilePath}";
+                newFilePath = newFilePath.Replace(".gz", string.Empty);
 
                 //Write the decompressed file size
                 if (DecompressedFileTbl.IsInDecompressedFileSizeList(newFilePath))
@@ -133,8 +134,11 @@ namespace Switch_Toolbox.Library.IO
                 //Check if archive type
                 bool IsArchive = false;
                 foreach (var inter in FileFormat.GetType().GetInterfaces())
-                    if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IArchiveFile))
+                {
+                    if (inter == typeof(IArchiveFile))
                         IsArchive = true;
+                }
+
 
                 //Write all the file sizes in the archive if it's an archive type
                 if (IsArchive)
@@ -155,8 +159,8 @@ namespace Switch_Toolbox.Library.IO
                     }
                 }
 
-                CompressedFileTbl.WriteCompressedTable(new FileWriter($"{Runtime.TpGamePath}/FileSizeListTEST.txt"));
-                DecompressedFileTbl.WriteDecompressedTable(new FileWriter($"{Runtime.TpGamePath}/DecompressedSizeListTEST.txt"));
+                CompressedFileTbl.WriteCompressedTable(new FileWriter($"{Runtime.TpGamePath}/FileSizeList.txt"));
+                DecompressedFileTbl.WriteDecompressedTable(new FileWriter($"{Runtime.TpGamePath}/DecompressedSizeList.txt"));
             }
 
             return FileLog;

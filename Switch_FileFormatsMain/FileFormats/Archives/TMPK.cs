@@ -56,7 +56,6 @@ namespace FirstPlugin
 
         public Dictionary<long, byte[]> SavedDataEntries = new Dictionary<long, byte[]>();
         public Dictionary<long, string> SavedStringEntries = new Dictionary<long, string>();
-        public Dictionary<string, uint> ArchiveSizes = new Dictionary<string, uint>();
 
         public uint Alignment;
         public static readonly uint DefaultAlignment = 4;
@@ -81,19 +80,6 @@ namespace FirstPlugin
             }
         }
 
-        private void SatisfyFileSizeTable()
-        {
-            uint TotalDecompressedSize = IFileInfo.DecompressedSize;
-            uint TotalCompressedSize = IFileInfo.CompressedSize;
-
-            if (Runtime.TpGamePath != "" && Directory.Exists(Runtime.TpGamePath))
-            {
-                string TablePath = $"{Runtime.TpGamePath}/FileSizeList.txt";
-
-                TPFileSizeTable.SetTables(this);
-            }
-        }
-
         private void Save(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -104,15 +90,11 @@ namespace FirstPlugin
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
-
-                SatisfyFileSizeTable();
             }
         }
 
         private void SaveFile(FileWriter writer)
         {
-            ArchiveSizes.Clear();
-
             writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
             writer.WriteSignature("TMPK");
@@ -126,8 +108,6 @@ namespace FirstPlugin
                 writer.Write(uint.MaxValue);
                 writer.Write(files[i].FileData.Length); //Padding
                 writer.Write(0); //Padding
-
-                ArchiveSizes.Add(files[i].FileName, (uint)files[i].FileData.Length);
             }
             for (int i = 0; i < files.Count; i++)
             {

@@ -189,7 +189,7 @@ namespace Switch_Toolbox.Library.IO
             {
                 using (MemoryStream mem = new MemoryStream())
                 {
-                    using (GZipStream source = new GZipStream(new MemoryStream(b), CompressionMode.Decompress))
+                    using (GZipStream source = new GZipStream(new MemoryStream(b), CompressionMode.Decompress, false))
                     {
                         source.CopyTo(mem);
                     }
@@ -202,7 +202,7 @@ namespace Switch_Toolbox.Library.IO
                 using (MemoryStream mem = new MemoryStream())
                 {
                     using (GZipStream gzip = new GZipStream(mem,
-                        CompressionMode.Compress, true))
+                        CompressionMode.Compress))
                     {
                         gzip.Write(b, 0, b.Length);
                     }
