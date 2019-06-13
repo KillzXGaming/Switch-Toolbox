@@ -273,14 +273,11 @@ namespace FirstPlugin
             Formats.Add(typeof(KCL));
             Formats.Add(typeof(BFFNT));
             Formats.Add(typeof(MSBT));
-      //      Formats.Add(typeof(XLINK));
 
             //     Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BARS));
-      //      Formats.Add(typeof(BFLAN));
-       //     Formats.Add(typeof(BFLYT));
+
             Formats.Add(typeof(GFPAK));
-          //  Formats.Add(typeof(GFBMDL));
             Formats.Add(typeof(NUTEXB));
             Formats.Add(typeof(NUT));
             Formats.Add(typeof(GTXFile));
@@ -289,8 +286,7 @@ namespace FirstPlugin
             Formats.Add(typeof(EFF));
             Formats.Add(typeof(EFCF));
             
-        //    Formats.Add(typeof(NCA));
-        //    Formats.Add(typeof(XCI));
+
             Formats.Add(typeof(NSP));
             Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BNSH));
@@ -311,16 +307,30 @@ namespace FirstPlugin
             Formats.Add(typeof(SHARC));
             Formats.Add(typeof(SHARCFB));
             Formats.Add(typeof(NARC));
-      //      Formats.Add(typeof(SDF));
             Formats.Add(typeof(TMPK));
             Formats.Add(typeof(TEX3DS));
             Formats.Add(typeof(NXARC));
             Formats.Add(typeof(SP2));
             Formats.Add(typeof(NUSHDB));
+            Formats.Add(typeof(MKGPDX_PAC));
 
+            
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
-            
+
+            //Unfinished wip formats not ready for use
+            if (Runtime.DEVELOPER_DEBUG_MODE)
+            {
+                Formats.Add(typeof(GFBMDL));
+                Formats.Add(typeof(SDF));
+                Formats.Add(typeof(NCA));
+                Formats.Add(typeof(XCI));
+                Formats.Add(typeof(BFLAN));
+                Formats.Add(typeof(BFLYT));
+                Formats.Add(typeof(XLINK));
+            }
+
+
             return Formats.ToArray();
         }
         #endregion

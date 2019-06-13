@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using ColladaHelper;
+using OpenTK;
+using Switch_Toolbox.Library.Rendering;
 
 namespace Switch_Toolbox.Library
 {
@@ -21,7 +23,10 @@ namespace Switch_Toolbox.Library
 
         public bool UseTransformMatrix = true;
 
-        public void LoadFile(string FileName)
+        Dictionary<string, Vertex> VertexSkinSources = new Dictionary<string, Vertex>();
+        Dictionary<string, Matrix4> MatrixSkinSources = new Dictionary<string, Matrix4>();
+
+        public bool LoadFile(string FileName)
         {
             COLLADA collada = COLLADA.Load(FileName);
 
@@ -32,12 +37,15 @@ namespace Switch_Toolbox.Library
                     LoadGeometry((library_geometries)item);
                 }
             }
+
+            return true;
         }
 
         private void SetControllers(COLLADA collada)
         {
            
         }
+
 
         private void LoadGeometry(library_geometries Geometries)
         {
@@ -46,6 +54,8 @@ namespace Switch_Toolbox.Library
                 var mesh = geom.Item as mesh;
                 if (mesh == null)
                     continue;
+
+                Console.WriteLine(geom.name);
 
                 foreach (var source in mesh.source)
                 {
@@ -59,6 +69,29 @@ namespace Switch_Toolbox.Library
                     Console.WriteLine();
                 }
             }
+        }
+
+        private List<STGenericObject> CreateGenericObjects(string Name, library_geometries Geometries)
+        {
+            List<STGenericObject> objects = new List<STGenericObject>();
+            foreach (var geom in Geometries.geometry)
+            {
+                var daeMesh = geom.Item as mesh;
+                if (daeMesh == null)
+                    continue;
+
+                STGenericObject mesh = new STGenericObject();
+                mesh.ObjectName = Name;
+
+                foreach (var source in daeMesh.source)
+                {
+                    var float_array = source.Item as float_array;
+                    if (float_array == null)
+                        continue;
+                }
+                objects.Add(mesh);
+            }
+            return objects;
         }
     }
 }

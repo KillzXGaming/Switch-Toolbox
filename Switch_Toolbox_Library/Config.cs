@@ -222,6 +222,9 @@ namespace Switch_Toolbox.Library
                     case "TpTable":
                         bool.TryParse(node.InnerText, out Runtime.ResourceTables.TpTable);
                         break;
+                    case "DEVELOPER_DEBUG_MODE":
+                        bool.TryParse(node.InnerText, out Runtime.DEVELOPER_DEBUG_MODE);
+                        break;
                 }
             }
         }
@@ -325,15 +328,26 @@ namespace Switch_Toolbox.Library
             AppendGridSettings(doc, mainNode);
             AppenPBRSettings(doc, mainNode);
             AppendResourceTableSettings(doc, mainNode);
+            AppendDeveloperSettings(doc, mainNode);
 
             return doc;
         }
+
+        
+
+        private static void AppendDeveloperSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode mainSettingsNode = doc.CreateElement("DEVELOPER_SETTINGS_DONT_TOUCH");
+            parentNode.AppendChild(mainSettingsNode);
+            mainSettingsNode.AppendChild(createNode(doc, "DEVELOPER_DEBUG_MODE", Runtime.DEVELOPER_DEBUG_MODE.ToString()));
+        }
+
         private static void AppendMainFormSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
 
-                        mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseOpenGL", Runtime.UseOpenGL.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));

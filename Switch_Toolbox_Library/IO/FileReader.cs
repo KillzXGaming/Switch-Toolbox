@@ -44,6 +44,47 @@ namespace Switch_Toolbox.Library.IO
             return signature == Identifier;
         }
 
+        public string ReadNameOffset(bool IsRelative, Type OffsetType, bool UseNameLength = false)
+        {
+            long pos = Position;
+            long offset = 0;
+
+            if (OffsetType == typeof(long))
+                offset = ReadInt64();
+            if (OffsetType == typeof(ulong))
+                offset = (long)ReadUInt64();
+            if (OffsetType == typeof(uint))
+                offset = ReadUInt32();
+            if (OffsetType == typeof(int))
+                offset = ReadInt32();
+
+            if (IsRelative && offset != 0)
+                offset += pos;
+
+            if (offset != 0)
+            {
+                using (TemporarySeek(offset, SeekOrigin.Begin))
+                {
+                    uint NameLength = 0;
+                    if (UseNameLength)
+                        NameLength = ReadUInt32();
+
+                    return ReadString(BinaryStringFormat.ZeroTerminated);
+                }
+            }
+            else
+                return "";
+        }
+
+        public List<string> ReadNameOffsets(uint Count, bool IsRelative, Type OffsetType, bool UseNameLength = false)
+        {
+            List<string> Names = new List<string>();
+            for (int i = 0; i < Count; i++)
+                Names.Add(ReadNameOffset(IsRelative, OffsetType, UseNameLength));
+
+            return Names;
+        }
+
         public string ReadZeroTerminatedString()
         {
             return ReadString(BinaryStringFormat.ZeroTerminated);

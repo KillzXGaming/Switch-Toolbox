@@ -11,10 +11,12 @@ using System.Windows.Forms;
 namespace Switch_Toolbox.Library
 {
     //Thanks to Smash Forge for a few of these!
-   // https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Runtime.cs
+    // https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Runtime.cs
 
     public class Runtime
     {
+        public static bool DEVELOPER_DEBUG_MODE = false;
+
         public static class ResourceTables
         {
             public static bool TpTable = false;

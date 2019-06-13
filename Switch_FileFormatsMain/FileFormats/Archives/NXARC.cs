@@ -12,7 +12,7 @@ namespace FirstPlugin
 {
     public class NXARC : IArchiveFile,  IFileFormat
     {
-        public FileType FileType { get; set; } = FileType.Layout;
+        public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "NX Archive" };

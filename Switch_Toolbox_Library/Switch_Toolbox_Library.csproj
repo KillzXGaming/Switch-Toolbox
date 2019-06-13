@@ -1093,6 +1093,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FileFormats\Compression\" />
+    <Folder Include="FileFormats\DAE\COLLADA\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\boneWeightGradient.png" />

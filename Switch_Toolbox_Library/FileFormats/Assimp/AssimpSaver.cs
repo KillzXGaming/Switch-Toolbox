@@ -91,7 +91,7 @@ namespace Switch_Toolbox.Library
 
             for (int ob = 0; ob < scene.MeshCount; ob++)
             {
-                geomNode.MeshIndices.Add(ob);
+          //      geomNode.MeshIndices.Add(ob);
             }
             scene.RootNode.Children.Add(geomNode);
         }

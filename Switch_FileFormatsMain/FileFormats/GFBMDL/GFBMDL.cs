@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Switch_Toolbox;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
@@ -42,9 +43,12 @@ namespace FirstPlugin
             }
         }
 
+        public Header header;
+
         public void Load(System.IO.Stream stream)
         {
-
+            header = new Header();
+            header.Read(new FileReader(stream));
         }
         public void Unload()
         {
@@ -52,9 +56,64 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            return null;
+            var mem = new System.IO.MemoryStream();
+            header.Write(new FileWriter(mem));
+            return mem.ToArray();
         }
 
+        public class Header
+        {
+            public uint Version { get; set; }
+            public float[] Boundings { get; set; }
+            public List<string> TextureMaps = new List<string>();
+            public List<string> Materials = new List<string>();
 
+            public void Read(FileReader reader)
+            {
+                reader.SetByteOrder(false);
+
+                Version = reader.ReadUInt32();
+                Boundings = reader.ReadSingles(9);
+                long TextureOffset = reader.ReadOffset(true, typeof(uint));
+                long MaterialOffset = reader.ReadOffset(true, typeof(uint));
+                long UnknownOffset = reader.ReadOffset(true, typeof(uint));
+                long Unknown2Offset = reader.ReadOffset(true, typeof(uint));
+                long ShaderOffset = reader.ReadOffset(true, typeof(uint));
+                long VisGroupOffset = reader.ReadOffset(true, typeof(uint));
+                long BoneDataOffset = reader.ReadOffset(true, typeof(uint));
+
+                if (TextureOffset != 0)
+                {
+                    reader.Seek(TextureOffset, SeekOrigin.Begin);
+                    uint Count = reader.ReadUInt32();
+                    TextureMaps = reader.ReadNameOffsets(Count, true, typeof(uint), true);
+                }
+
+                foreach (var tex in TextureMaps)
+                    Console.WriteLine("TEXNAME " + tex);
+
+                if (MaterialOffset != 0)
+                {
+                    reader.Seek(MaterialOffset, SeekOrigin.Begin);
+                    uint Count = reader.ReadUInt32();
+                    Materials = reader.ReadNameOffsets(Count, true, typeof(uint));
+                }
+            }
+
+            public void Write(FileWriter writer)
+            {
+                writer.Write(Version);
+            }
+        }
+
+        public class Bone
+        {
+
+        }
+
+        public class Material
+        {
+
+        }
     }
 }

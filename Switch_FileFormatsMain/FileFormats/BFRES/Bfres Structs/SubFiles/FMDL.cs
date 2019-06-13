@@ -496,15 +496,23 @@ namespace Bfres.Structs
                     OBJ.ExportModel(FileName, this, GetTextures());
                     break;
                 default:
-                    AssimpSaver assimp = new AssimpSaver();
-                    ExportModelSettings settings = new ExportModelSettings();
-                    if (settings.ShowDialog() == DialogResult.OK)
+                    if(Runtime.DEVELOPER_DEBUG_MODE)
                     {
-                        if (settings.ExportTextures)
-                            assimp.SaveFromModel(this, FileName, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
-                        else
-                            assimp.SaveFromModel(this, FileName, new List<STGenericTexture>(), Skeleton, Skeleton.Node_Array.ToList());
+                        
                     }
+                    else
+                    {
+                        AssimpSaver assimp = new AssimpSaver();
+                        ExportModelSettings settings = new ExportModelSettings();
+                        if (settings.ShowDialog() == DialogResult.OK)
+                        {
+                            if (settings.ExportTextures)
+                                assimp.SaveFromModel(this, FileName, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
+                            else
+                                assimp.SaveFromModel(this, FileName, new List<STGenericTexture>(), Skeleton, Skeleton.Node_Array.ToList());
+                        }
+                    }
+
                     break;
             }
         }
@@ -726,16 +734,43 @@ namespace Bfres.Structs
 
                     break;
                 default:
-                    AssimpData assimp = new AssimpData();
-                    bool IsLoaded = assimp.LoadFile(FileName);
+                    List<STGenericObject> ImportedObjects = new List<STGenericObject>();
+                    List<STGenericMaterial> ImportedMaterials = new List<STGenericMaterial>();
+                    List<string> ImportedBoneNames = new List<string>();
+                    STSkeleton ImportedSkeleton = new STSkeleton();
 
-                    if (!IsLoaded)
-                        return;
+                    if (Runtime.DEVELOPER_DEBUG_MODE)
+                    {
+                        DAE daeFile = new DAE();
+                        bool IsLoaded = daeFile.LoadFile(FileName);
+
+                        if (!IsLoaded)
+                            return;
+
+                        ImportedObjects = daeFile.objects;
+                        ImportedMaterials = daeFile.materials;
+                        ImportedSkeleton = daeFile.skeleton;
+                        ImportedBoneNames = daeFile.BoneNames;
+                    }
+                    else
+                    {
+                        AssimpData assimp = new AssimpData();
+                        bool IsLoaded = assimp.LoadFile(FileName);
+
+                        if (!IsLoaded)
+                            return;
+
+                        ImportedObjects = assimp.objects;
+                        ImportedMaterials = assimp.materials;
+                        ImportedSkeleton = assimp.skeleton;
+                        ImportedBoneNames = assimp.BoneNames;
+                    }
+
 
                     string[] shapeSortCheck = shapes.Select(o => o.Text).ToArray();
                   //  assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
 
-                    if (assimp.objects.Count == 0)
+                    if (ImportedObjects.Count == 0)
                     {
                         MessageBox.Show("No models found!");
                         return;
@@ -743,7 +778,7 @@ namespace Bfres.Structs
 
                     BfresModelImportSettings settings = new BfresModelImportSettings();
                     settings.LoadOriginalMeshData(shapes);
-                    settings.LoadNewMeshData(assimp.objects);
+                    settings.LoadNewMeshData(ImportedObjects);
 
                     if (Parent != null)
                     {
@@ -754,7 +789,7 @@ namespace Bfres.Structs
                     //If using original attributes, this to look them up
                     Dictionary<string, List<FSHP.VertexAttribute>> AttributeMatcher = new Dictionary<string, List<FSHP.VertexAttribute>>();
 
-                    settings.SetModelAttributes(assimp.objects[0]);
+                    settings.SetModelAttributes(ImportedObjects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)
                     {
                         STProgressBar progressBar = new STProgressBar();
@@ -767,10 +802,10 @@ namespace Bfres.Structs
 
                         bool UseMats = settings.ExternalMaterialPath != string.Empty;
 
-                        for (int i = 0; i < assimp.objects.Count; i++)
+                        for (int i = 0; i < ImportedObjects.Count; i++)
                         {
                             List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
-                            assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+                            ImportedObjects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
                             if (Matches != null && Matches.Count > 0)
                             {
@@ -778,35 +813,35 @@ namespace Bfres.Structs
                                 //Only one match should be found as shapes can't have duped names
 
                                 if (settings.MapOriginalMaterials)
-                                    assimp.objects[i].MaterialIndex = ((FSHP)Matches[0]).MaterialIndex;
+                                    ImportedObjects[i].MaterialIndex = ((FSHP)Matches[0]).MaterialIndex;
 
                                 if (settings.LimitSkinCount)
-                                    assimp.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+                                    ImportedObjects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
 
                                 if (settings.UseOriginalAttributes)
                                 {
-                                    AttributeMatcher.Add(assimp.objects[i].ObjectName, Matches[0].vertexAttributes);
+                                    AttributeMatcher.Add(ImportedObjects[i].ObjectName, Matches[0].vertexAttributes);
                                 }
                             }
                         }
 
                         if (settings.LimitSkinCount)
                         {
-                            for (int i = 0; i < assimp.objects.Count; i++)
+                            for (int i = 0; i < ImportedObjects.Count; i++)
                             {
                                 List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
-                                assimp.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+                                ImportedObjects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
 
                                 if (Matches != null && Matches.Count > 0)
                                 {
                                     //Match the skin count setting if names match
                                     //Only one match should be found as shapes can't have duped names
-                                    assimp.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+                                    ImportedObjects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
                                 }
                                 else
                                 {
                                     //Else just match the first object
-                                    assimp.objects[i].VertexSkinCount = shapes[0].VertexSkinCount;
+                                    ImportedObjects[i].VertexSkinCount = shapes[0].VertexSkinCount;
                                 }
                             }
                         }
@@ -832,10 +867,10 @@ namespace Bfres.Structs
                         if (UseMats)
                         {
                             int curMat = 0;
-                            foreach (STGenericMaterial mat in assimp.materials)
+                            foreach (STGenericMaterial mat in ImportedMaterials)
                             {
-                                progressBar.Task = $"Generating material { mat.Text } {curMat} / {assimp.materials.Count}";
-                                progressBar.Value = ((curMat++ * 100) / assimp.materials.Count);
+                                progressBar.Task = $"Generating material { mat.Text } {curMat} / {ImportedMaterials.Count}";
+                                progressBar.Value = ((curMat++ * 100) / ImportedMaterials.Count);
                                 progressBar.Refresh();
 
                                 FMAT fmat = new FMAT();
@@ -988,24 +1023,24 @@ namespace Bfres.Structs
 
                         if (settings.ImportBones)
                         {
-                            if (assimp.skeleton.bones.Count > 0)
+                            if (ImportedSkeleton.bones.Count > 0)
                             {
                                 Skeleton.bones.Clear();
                                 Skeleton.node.Nodes.Clear();
 
                                 if (IsWiiU)
-                                    BfresWiiU.SaveSkeleton(Skeleton, assimp.skeleton.bones);
+                                    BfresWiiU.SaveSkeleton(Skeleton, ImportedSkeleton.bones);
                                 else
-                                    BfresSwitch.SaveSkeleton(Skeleton, assimp.skeleton.bones);
+                                    BfresSwitch.SaveSkeleton(Skeleton, ImportedSkeleton.bones);
                             }
                         }
 
 
                         //Genericate indices
                         //Check for rigged bones
-                        for (int ob = 0; ob < assimp.objects.Count; ob++)
+                        for (int ob = 0; ob < ImportedObjects.Count; ob++)
                         {
-                            foreach (string NewBone in assimp.objects[ob].boneList)
+                            foreach (string NewBone in ImportedObjects[ob].boneList)
                             {
                                 foreach (var bones in Skeleton.bones)
                                 {
@@ -1041,21 +1076,21 @@ namespace Bfres.Structs
                             }
                         }
 
-                        Console.WriteLine("Processing Data. Object count " + assimp.objects.Count);
+                        Console.WriteLine("Processing Data. Object count " + ImportedObjects.Count);
 
                         bool ForceSkinInfluence = settings.LimitSkinCount;
 
 
                         int curShp = 0;
-                        foreach (STGenericObject obj in assimp.objects)
+                        foreach (STGenericObject obj in ImportedObjects)
                         {
                             int ForceSkinInfluenceMax = obj.VertexSkinCount;
 
                             if (obj.ObjectName == "")
                                 obj.ObjectName = $"Mesh {curShp}";
 
-                            progressBar.Task = $"Generating shape {obj.ObjectName} { curShp} / { assimp.materials.Count}";
-                            progressBar.Value = ((curShp++ * 100) / assimp.materials.Count);
+                            progressBar.Task = $"Generating shape {obj.ObjectName} { curShp} / { ImportedMaterials.Count}";
+                            progressBar.Value = ((curShp++ * 100) / ImportedMaterials.Count);
                             progressBar.Refresh();
 
 
