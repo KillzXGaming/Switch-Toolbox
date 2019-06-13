@@ -14,7 +14,7 @@ using ByamlExt;
 
 namespace FirstPlugin.Turbo
 {
-    public partial class MK8MapCameraEditor : STForm, IFIleEditor
+    public partial class MK8MapCameraEditor : UserControl, IFIleEditor
     {
         public List<IFileFormat> GetFileFormats()
         {

@@ -12,7 +12,7 @@ using Switch_Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
-    public partial class EffectTableEditor : STForm, IFIleEditor
+    public partial class EffectTableEditor : UserControl, IFIleEditor
     {
         public List<IFileFormat> GetFileFormats()
         {

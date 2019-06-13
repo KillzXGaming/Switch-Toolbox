@@ -12,7 +12,7 @@ using VGAudio.Containers.NintendoWare;
 
 namespace FirstPlugin
 {
-    public class BFSTM : VGAdudioFile, IEditor<AudioPlayer>, IFileFormat
+    public class BFSTM : VGAdudioFile, IEditor<AudioPlayerPanel>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Audio;
 
@@ -40,12 +40,12 @@ namespace FirstPlugin
             }
         }
 
-        public AudioPlayer OpenForm()
+        public AudioPlayerPanel OpenForm()
         {
             if (audioData == null)
                 throw new Exception("Audio data is null!");
 
-            AudioPlayer form = new AudioPlayer();
+            AudioPlayerPanel form = new AudioPlayerPanel();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
 

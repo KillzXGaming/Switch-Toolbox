@@ -12,7 +12,7 @@ using Bfres.Structs;
 
 namespace FirstPlugin
 {
-    public class BCLIM : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
+    public class BCLIM : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -92,8 +92,8 @@ namespace FirstPlugin
             }
         }
 
-        ImageEditorForm form;
-        public ImageEditorForm OpenForm()
+        ImageEditorBase form;
+        public ImageEditorBase OpenForm()
         {
             bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
@@ -106,13 +106,13 @@ namespace FirstPlugin
             prop.ImageSize = (uint)ImageData.Length;
             prop.Format = Format;
 
-            form = new ImageEditorForm(IsDialog);
-            form.editorBase.Text = Text;
-            form.editorBase.Dock = DockStyle.Fill;
-            form.editorBase.AddFileContextEvent("Save", Save);
-            form.editorBase.AddFileContextEvent("Replace", Replace);
-            form.editorBase.LoadProperties(prop);
-            form.editorBase.LoadImage(this);
+            form = new ImageEditorBase();
+            form.Text = Text;
+            form.Dock = DockStyle.Fill;
+            form.AddFileContextEvent("Save", Save);
+            form.AddFileContextEvent("Replace", Replace);
+            form.LoadProperties(prop);
+            form.LoadImage(this);
 
             return form;
         }
@@ -130,8 +130,8 @@ namespace FirstPlugin
                 prop.ImageSize = (uint)ImageData.Length;
                 prop.Format = Format;
 
-                form.editorBase.LoadProperties(prop);
-                form.editorBase.LoadImage(this);
+                form.LoadProperties(prop);
+                form.LoadImage(this);
             }
         }
 

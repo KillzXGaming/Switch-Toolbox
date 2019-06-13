@@ -504,6 +504,12 @@
     <Compile Include="Forms\Editors\UV\UVEditor.Designer.cs">
       <DependentUpon>UVEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GenericEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GenericEditorForm.Designer.cs">
+      <DependentUpon>GenericEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\GL\GLControl2D.cs" />
     <Compile Include="Forms\HintHelpDialog.cs">
       <SubType>Form</SubType>
@@ -845,6 +851,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditor2.resx">
       <DependentUpon>UVEditor2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GenericEditorForm.resx">
+      <DependentUpon>GenericEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GL\GLControl2D.resx">
       <DependentUpon>GLControl2D.cs</DependentUpon>

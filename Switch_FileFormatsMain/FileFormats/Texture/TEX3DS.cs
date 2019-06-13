@@ -11,7 +11,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class TEX3DS : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
+    public class TEX3DS : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -62,7 +62,7 @@ namespace FirstPlugin
 
         public byte[] ImageData;
 
-        public ImageEditorForm OpenForm()
+        public ImageEditorBase OpenForm()
         {
             bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
@@ -75,13 +75,13 @@ namespace FirstPlugin
             prop.ImageSize = (uint)ImageData.Length;
             prop.Format = Format;
 
-            ImageEditorForm form = new ImageEditorForm(IsDialog);
-            form.editorBase.Text = Text;
-            form.editorBase.Dock = DockStyle.Fill;
+            ImageEditorBase form = new ImageEditorBase();
+            form.Text = Text;
+            form.Dock = DockStyle.Fill;
        //    form.editorBase.AddFileContextEvent("Save", Save);
         //    form.editorBase.AddFileContextEvent("Replace", Replace);
-            form.editorBase.LoadProperties(prop);
-            form.editorBase.LoadImage(this);
+            form.LoadProperties(prop);
+            form.LoadImage(this);
 
             return form;
         }

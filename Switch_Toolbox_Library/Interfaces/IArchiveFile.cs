@@ -507,27 +507,30 @@ namespace Switch_Toolbox.Library
 
         private void OpenFormDialog(IFileFormat fileFormat)
         {
-            STForm form = GetEditorForm(fileFormat);
+            UserControl form = GetEditorForm(fileFormat);
+            form.Text = (((IFileFormat)fileFormat).FileName);
+
             var parentForm = LibraryGUI.Instance.GetActiveForm();
 
-            form.Text = (((IFileFormat)fileFormat).FileName);
-            form.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
-            form.Show(parentForm);
+            GenericEditorForm editorForm = new GenericEditorForm(true, form);
+            editorForm.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
+            if (editorForm.ShowDialog() == DialogResult.OK)
+            {
+                if (fileFormat.CanSave)
+                {
+                    ArchiveFileInfo.FileData = fileFormat.Save();
+                    UpdateEditor();
+                }
+            }
         }
 
         private void FormClosing(object sender, EventArgs args, IFileFormat fileFormat)
         {
             if (((Form)sender).DialogResult != DialogResult.OK)
                 return;
-
-            if (fileFormat.CanSave)
-            {
-                ArchiveFileInfo.FileData = fileFormat.Save();
-                UpdateEditor();
-            }
         }
 
-        private STForm GetEditorForm(IFileFormat fileFormat)
+        private UserControl GetEditorForm(IFileFormat fileFormat)
         {
             Type objectType = fileFormat.GetType();
             foreach (var inter in objectType.GetInterfaces())
@@ -535,7 +538,7 @@ namespace Switch_Toolbox.Library
                 if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                 {
                     System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
-                    return (STForm)method.Invoke(fileFormat, new object[0]);
+                    return (UserControl)method.Invoke(fileFormat, new object[0]);
                 }
             }
             return null;

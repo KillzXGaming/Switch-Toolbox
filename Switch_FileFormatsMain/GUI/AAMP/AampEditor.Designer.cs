@@ -37,8 +37,6 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.addItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,7 +44,6 @@
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -55,23 +52,13 @@
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // contentContainer
-            // 
-            this.contentContainer.Controls.Add(this.stPanel1);
-            this.contentContainer.Controls.Add(this.stButton2);
-            this.contentContainer.Controls.Add(this.stButton1);
-            this.contentContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.contentContainer_Paint);
-            this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
-            this.contentContainer.Controls.SetChildIndex(this.stButton2, 0);
-            this.contentContainer.Controls.SetChildIndex(this.stPanel1, 0);
-            // 
             // treeView1
             // 
             this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(179, 334);
+            this.treeView1.Size = new System.Drawing.Size(183, 398);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -104,7 +91,7 @@
             this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(354, 334);
+            this.listViewCustom1.Size = new System.Drawing.Size(362, 398);
             this.listViewCustom1.TabIndex = 0;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
@@ -123,33 +110,7 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Data";
-            this.columnHeader3.Width = 136;
-            // 
-            // stButton1
-            // 
-            this.stButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.stButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(462, 367);
-            this.stButton1.Name = "stButton1";
-            this.stButton1.Size = new System.Drawing.Size(75, 23);
-            this.stButton1.TabIndex = 12;
-            this.stButton1.Text = "Cancel";
-            this.stButton1.UseVisualStyleBackColor = false;
-            this.stButton1.Click += new System.EventHandler(this.stButton1_Click);
-            // 
-            // stButton2
-            // 
-            this.stButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton2.Location = new System.Drawing.Point(366, 367);
-            this.stButton2.Name = "stButton2";
-            this.stButton2.Size = new System.Drawing.Size(75, 23);
-            this.stButton2.TabIndex = 13;
-            this.stButton2.Text = "Save";
-            this.stButton2.UseVisualStyleBackColor = false;
-            this.stButton2.Click += new System.EventHandler(this.stButton2_Click);
+            this.columnHeader3.Width = 155;
             // 
             // splitContainer1
             // 
@@ -164,19 +125,17 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewCustom1);
-            this.splitContainer1.Size = new System.Drawing.Size(537, 334);
-            this.splitContainer1.SplitterDistance = 179;
+            this.splitContainer1.Size = new System.Drawing.Size(549, 398);
+            this.splitContainer1.SplitterDistance = 183;
             this.splitContainer1.TabIndex = 14;
             // 
             // stPanel1
             // 
-            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.stPanel1.Controls.Add(this.splitContainer1);
-            this.stPanel1.Location = new System.Drawing.Point(3, 27);
+            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(537, 334);
+            this.stPanel1.Size = new System.Drawing.Size(549, 398);
             this.stPanel1.TabIndex = 15;
             // 
             // addItemToolStripMenuItem
@@ -222,11 +181,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 398);
+            this.Controls.Add(this.stPanel1);
             this.Name = "AampEditorBase";
-            this.Text = "AampEditor";
-            this.Controls.SetChildIndex(this.contentContainer, 0);
-            this.contentContainer.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(549, 398);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -244,8 +201,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;

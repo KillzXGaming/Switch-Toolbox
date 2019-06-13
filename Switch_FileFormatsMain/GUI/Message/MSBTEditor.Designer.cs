@@ -39,7 +39,6 @@
             this.hexEditor1 = new Switch_Toolbox.Library.Forms.HexEditor();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -53,12 +52,7 @@
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contentContainer
-            // 
-            this.contentContainer.Controls.Add(this.splitContainer1);
-            this.contentContainer.Size = new System.Drawing.Size(916, 520);
-            this.contentContainer.Controls.SetChildIndex(this.splitContainer1, 0);
+            this.Controls.Add(this.splitContainer1);
             // 
             // splitContainer1
             // 
@@ -203,7 +197,6 @@
             this.ClientSize = new System.Drawing.Size(922, 525);
             this.Name = "MSBTEditor";
             this.Text = "MSBTEditor";
-            this.contentContainer.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

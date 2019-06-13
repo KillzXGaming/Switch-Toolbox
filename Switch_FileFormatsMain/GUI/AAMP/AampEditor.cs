@@ -17,7 +17,7 @@ using ByamlExt;
 
 namespace FirstPlugin.Forms
 {
-    public partial class AampEditorBase : STForm, IFIleEditor
+    public partial class AampEditorBase : STUserControl, IFIleEditor
     {
         public AAMP AampFile;
 
@@ -42,13 +42,6 @@ namespace FirstPlugin.Forms
             else
             {
                 Text = $"{AampFile.FileName} Type [{AampFile.aampFileV2.EffectType}]";
-            }
-
-            if (!IsSaveDialog)
-            {
-                stButton1.Visible = false;
-                stButton2.Visible = false;
-                stPanel1.Dock = DockStyle.Fill;
             }
 
             STContextMenuStrip contextMenuStrip1 = new STContextMenuStrip();
@@ -204,18 +197,6 @@ namespace FirstPlugin.Forms
         private void stContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
 
-        }
-
-        private void stButton2_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-
-        private void stButton1_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
         }
     }
 }

@@ -12,7 +12,7 @@ using Switch_Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
-    public partial class MSBTEditor : STForm, IFIleEditor
+    public partial class MSBTEditor : UserControl, IFIleEditor
     {
         public bool ShowPreviewText = true;
 

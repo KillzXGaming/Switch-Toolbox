@@ -18,7 +18,7 @@ using OpenTK.Graphics.OpenGL;
 namespace Switch_Toolbox.Library
 {
     //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
-    public class DDS : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
+    public class DDS : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -420,15 +420,15 @@ namespace Switch_Toolbox.Library
             DXGI_FORMAT_FORCE_UINT = 0xFFFFFFFF
         }
 
-        public ImageEditorForm OpenForm()
+        public ImageEditorBase OpenForm()
         {
             bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
-            ImageEditorForm form = new ImageEditorForm(IsDialog);
-            form.editorBase.Text = Text;
-            form.editorBase.Dock = DockStyle.Fill;
-            form.editorBase.LoadImage(this);
-            form.editorBase.LoadProperties(GenericProperties);
+            ImageEditorBase form = new ImageEditorBase();
+            form.Text = Text;
+            form.Dock = DockStyle.Fill;
+            form.LoadImage(this);
+            form.LoadProperties(GenericProperties);
             return form;
         }
 

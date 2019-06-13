@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace Switch_Toolbox.Library
 {
-    public class ASTC : STGenericTexture, IEditor<ImageEditorForm>, IFileFormat
+    public class ASTC : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -78,15 +78,15 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public ImageEditorForm OpenForm()
+        public ImageEditorBase OpenForm()
         {
             bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
-            ImageEditorForm form = new ImageEditorForm(IsDialog);
-            form.editorBase.Text = Text;
-            form.editorBase.Dock = DockStyle.Fill;
-            form.editorBase.LoadImage(this);
-            form.editorBase.LoadProperties(GenericProperties);
+            ImageEditorBase form = new ImageEditorBase();
+            form.Text = Text;
+            form.Dock = DockStyle.Fill;
+            form.LoadImage(this);
+            form.LoadProperties(GenericProperties);
             return form;
         }
 

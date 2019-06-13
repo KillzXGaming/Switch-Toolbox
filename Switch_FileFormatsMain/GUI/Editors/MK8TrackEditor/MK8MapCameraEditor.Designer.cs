@@ -32,20 +32,11 @@
             this.leBtnRadio = new System.Windows.Forms.RadioButton();
             this.beBtnRadio = new System.Windows.Forms.RadioButton();
             this.glControl2D1 = new Switch_Toolbox.Library.Forms.GLControl2D();
-            this.contentContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contentContainer
-            // 
-            this.contentContainer.Controls.Add(this.glControl2D1);
-            this.contentContainer.Controls.Add(this.beBtnRadio);
-            this.contentContainer.Controls.Add(this.leBtnRadio);
-            this.contentContainer.Controls.Add(this.stPropertyGrid1);
-            this.contentContainer.Size = new System.Drawing.Size(570, 397);
-            this.contentContainer.Controls.SetChildIndex(this.stPropertyGrid1, 0);
-            this.contentContainer.Controls.SetChildIndex(this.leBtnRadio, 0);
-            this.contentContainer.Controls.SetChildIndex(this.beBtnRadio, 0);
-            this.contentContainer.Controls.SetChildIndex(this.glControl2D1, 0);
+            this.Controls.Add(this.glControl2D1);
+            this.Controls.Add(this.beBtnRadio);
+            this.Controls.Add(this.leBtnRadio);
+            this.Controls.Add(this.stPropertyGrid1);
             // 
             // stPropertyGrid1
             // 
@@ -98,8 +89,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 402);
             this.Name = "MK8MapCameraEditor";
-            this.contentContainer.ResumeLayout(false);
-            this.contentContainer.PerformLayout();
             this.ResumeLayout(false);
 
         }

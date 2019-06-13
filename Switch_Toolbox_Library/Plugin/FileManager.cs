@@ -50,9 +50,9 @@ namespace Switch_Toolbox.Library
             return null;
         }
 
-        public static IEditor<Forms.STForm>[] GetEditors()
+        public static IEditor<System.Windows.Forms.UserControl>[] GetEditors()
         {
-            var editors = new List<IEditor<Forms.STForm>>();
+            var editors = new List<IEditor<System.Windows.Forms.UserControl>>();
             foreach (var plugin in GenericPluginLoader._Plugins)
             {
                 foreach (Type type in plugin.Value.Types)
@@ -60,9 +60,9 @@ namespace Switch_Toolbox.Library
                     Type[] interfaces_array = type.GetInterfaces();
                     for (int i = 0; i < interfaces_array.Length; i++)
                     {
-                        if (interfaces_array[i] == typeof(IEditor<Forms.STForm>))
+                        if (interfaces_array[i] == typeof(IEditor<System.Windows.Forms.UserControl>))
                         {
-                            editors.Add((IEditor<Forms.STForm>)Activator.CreateInstance(type));
+                            editors.Add((IEditor<System.Windows.Forms.UserControl>)Activator.CreateInstance(type));
                         }
                     }
                 }

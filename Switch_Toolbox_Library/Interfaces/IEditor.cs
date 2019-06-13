@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library
 {
-    public interface IEditor<T> where T : STForm
+    public interface IEditor<T> where T : UserControl
     {
         T OpenForm();
     }

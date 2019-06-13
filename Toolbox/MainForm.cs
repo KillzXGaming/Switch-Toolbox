@@ -251,7 +251,8 @@ namespace Toolbox
                 if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                 {
                     MethodInfo method = objectType.GetMethod("OpenForm");
-                    var form = (STForm)method.Invoke(file, new object[0]);
+                    var control = (UserControl)method.Invoke(file, new object[0]);
+                    var form = new GenericEditorForm(false, control);
                     TabDupeIndex = 0;
                     form.Text = CheckTabDupes(((IFileFormat)file).FileName);
                     form.MdiParent = this;
@@ -669,7 +670,24 @@ namespace Toolbox
             {
                 return ((ObjectEditor)ActiveMdiChild).GetActiveFile();
             }
-            if (ActiveMdiChild is IFIleEditor)
+            else if (ActiveMdiChild is GenericEditorForm)
+            {
+                var control = ((GenericEditorForm)ActiveMdiChild).GetControl();
+                if (control != null && control is IFIleEditor)
+                {
+                    if (((IFIleEditor)control).GetFileFormats().Count > 0)
+                        return ((IFIleEditor)control).GetFileFormats()[0];
+                }
+                if (control != null && control is ImageEditorBase)
+                {
+                    return (IFileFormat)((ImageEditorBase)control).ActiveTexture;
+                }
+                if (control != null && control is AudioPlayerPanel)
+                {
+                    return ((AudioPlayerPanel)control).AudioFileFormats[0];
+                }
+            }
+            else if (ActiveMdiChild is IFIleEditor)
             {
                 if (((IFIleEditor)ActiveMdiChild).GetFileFormats().Count > 0)
                     return ((IFIleEditor)ActiveMdiChild).GetFileFormats()[0];

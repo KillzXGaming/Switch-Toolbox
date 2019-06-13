@@ -20,7 +20,7 @@ namespace FirstPlugin
 {
     //Editor from https://github.com/exelix11/EditorCore/blob/872d210f85ec0409f8a6ac3a12fc162aaf4cd90c/FileFormatPlugins/ByamlLib/Byaml/ByamlViewer.cs
     //Added as an editor form for saving data back via other plugins
-    public partial class ByamlEditor : STForm, IFIleEditor
+    public partial class ByamlEditor : UserControl, IFIleEditor
     {
         public IFileFormat FileFormat;
 
@@ -43,13 +43,6 @@ namespace FirstPlugin
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
-
-            if (!IsSaveDialog)
-            {
-                stButton1.Visible = false;
-                stButton2.Visible = false;
-                stPanel1.Dock = DockStyle.Fill;
-            }
 
             if (byaml.FileName == "course_muunt_debug.byaml" && useMuunt)
             {
@@ -111,8 +104,6 @@ namespace FirstPlugin
 
             if (!IsSaveDialog)
             {
-                stButton1.Visible = false;
-                stButton2.Visible = false;
                 stPanel1.Dock = DockStyle.Fill;
             }
 
@@ -619,18 +610,6 @@ namespace FirstPlugin
                 Point pt = listViewCustom1.PointToScreen(e.Location);
                 stContextMenuStrip1.Show(pt);
             }
-        }
-
-        private void stButton2_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-
-        private void stButton1_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
         }
     }
 }

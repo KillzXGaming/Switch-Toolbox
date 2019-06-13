@@ -14,7 +14,7 @@ using CSCore.Codecs;
 
 namespace FirstPlugin
 {
-    public class MP3 : IEditor<AudioPlayer>, IFileFormat
+    public class MP3 : IEditor<AudioPlayerPanel>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Audio;
 
@@ -48,9 +48,9 @@ namespace FirstPlugin
             }
         }
 
-        public AudioPlayer OpenForm()
+        public AudioPlayerPanel OpenForm()
         {
-            AudioPlayer form = new AudioPlayer();
+            AudioPlayerPanel form = new AudioPlayerPanel();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
             form.LoadFile(waveSource, this, false, mp3Struct);

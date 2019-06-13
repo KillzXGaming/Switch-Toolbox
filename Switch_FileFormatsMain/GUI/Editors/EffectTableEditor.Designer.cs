@@ -32,16 +32,11 @@
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.addPTCLReferenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.stDataGridView1)).BeginInit();
             this.stPanel1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contentContainer
-            // 
-            this.contentContainer.Controls.Add(this.stPanel1);
-            this.contentContainer.Controls.SetChildIndex(this.stPanel1, 0);
+            this.Controls.Add(this.stPanel1);
             // 
             // stDataGridView1
             // 
@@ -89,10 +84,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 398);
-            this.MainMenuStrip = this.stMenuStrip1;
             this.Name = "EffectTableEditor";
             this.Text = "EffectTableEditor";
-            this.contentContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.stDataGridView1)).EndInit();
             this.stPanel1.ResumeLayout(false);
             this.stPanel1.PerformLayout();

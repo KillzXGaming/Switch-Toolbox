@@ -12,7 +12,7 @@ using VGAudio.Containers.NintendoWare;
 
 namespace FirstPlugin
 {
-    public class WAV : IEditor<AudioPlayer>, IFileFormat
+    public class WAV : IEditor<AudioPlayerPanel>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Audio;
 
@@ -46,9 +46,9 @@ namespace FirstPlugin
             }
         }
 
-        public AudioPlayer OpenForm()
+        public AudioPlayerPanel OpenForm()
         {
-            AudioPlayer form = new AudioPlayer();
+            AudioPlayerPanel form = new AudioPlayerPanel();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
             form.LoadFile(audioData, this);
