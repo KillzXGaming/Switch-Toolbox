@@ -530,7 +530,7 @@ namespace Switch_Toolbox.Library
                 return;
         }
 
-        private UserControl GetEditorForm(IFileFormat fileFormat)
+        public UserControl GetEditorForm(IFileFormat fileFormat)
         {
             Type objectType = fileFormat.GetType();
             foreach (var inter in objectType.GetInterfaces())

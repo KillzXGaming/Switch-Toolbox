@@ -57,9 +57,45 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (GetEditor() == 0)
                 UpdateHexView();
-
+            if (GetEditor() == 1)
+                UpdateFileEditor();
             if (GetEditor() == 2)
                 UpdateTextView();
+        }
+
+        private void UpdateFileEditor()
+        {
+            var File = ArchiveFileInfo.FileFormat;
+            if (File == null)
+                File = ArchiveFileInfo.OpenFile();
+
+            UserControl control = GetEditorForm(File);
+            if (control != null)
+            {
+                AddControl(control);
+
+                // if (CheckActiveType(control.GetType()))
+                //   AddControl(control);
+            }
+        }
+
+        private bool CheckActiveType(Type type)
+        {
+            return stPanel1.Controls.Count > 0 && stPanel1.Controls[0].GetType() != type;
+        }
+
+        public UserControl GetEditorForm(IFileFormat fileFormat)
+        {
+            Type objectType = fileFormat.GetType();
+            foreach (var inter in objectType.GetInterfaces())
+            {
+                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
+                {
+                    System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
+                    return (UserControl)method.Invoke(fileFormat, new object[0]);
+                }
+            }
+            return null;
         }
 
         private void UpdateTextView()
