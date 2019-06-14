@@ -10,6 +10,7 @@ using OpenTK.Graphics.OpenGL;
 using Switch_Toolbox.Library.Forms;
 using Bfres.Structs;
 using System.IO;
+using System.Linq;
 
 namespace FirstPlugin
 {
@@ -149,6 +150,11 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
+            //Get each block type for saving except alignment
+            var TextureInfoBlocks = blocks.Where(i => i.BlockType == BlockType.ImageInfo);
+            var TextureDataBlocks = blocks.Where(i => i.BlockType == BlockType.ImageData);
+            var TextureMipDataBlocks = blocks.Where(i => i.BlockType == BlockType.MipData);
+
             System.IO.MemoryStream mem = new System.IO.MemoryStream();
             using (FileWriter writer = new FileWriter(mem))
             {
@@ -188,15 +194,34 @@ namespace FirstPlugin
                     }
                     else if ((uint)block.BlockType == dataBlockType)
                     {
-                        block.data = textures[imageBlockIndex++].surface.data;
+                        var tex = textures[imageBlockIndex++];
+
+                        var pos = writer.Position;
+                        uint Alignment = tex.surface.alignment;
+                        //Create alignment block first
+                        uint dataAlignment = GetAlignBlockSize((uint)pos + 32, Alignment);
+                        GTXDataBlock dataAlignBlock = new GTXDataBlock(BlockType.AlignData, dataAlignment, 0, 0);
+                        dataAlignBlock.Write(writer);
+
+                        block.data = tex.surface.data;
                         block.Write(writer);
                     }
                     else if ((uint)block.BlockType == mipBlockType)
                     {
-                        block.data = textures[imageMipBlockIndex++].surface.mipData;
+                        var tex = textures[imageMipBlockIndex++];
+
+                        var pos = writer.Position;
+                        uint Alignment = tex.surface.alignment;
+                        //Create alignment block first
+                        uint dataAlignment = GetAlignBlockSize((uint)pos + 32, Alignment);
+                        GTXDataBlock dataAlignBlock = new GTXDataBlock(BlockType.AlignData, dataAlignment, 0, 0);
+                        dataAlignBlock.Write(writer);
+
+
+                        block.data = tex.surface.mipData;
                         block.Write(writer);
                     }
-                    else
+                    else if (block.BlockType != BlockType.AlignData)
                     {
                         block.Write(writer);
                     }
@@ -204,6 +229,21 @@ namespace FirstPlugin
             }
             return mem.ToArray();
         }
+
+        private static uint GetAlignBlockSize(uint DataOffset, uint Alignment)
+        {
+            uint alignSize = RoundUp(DataOffset, Alignment) - DataOffset - 32;
+
+            uint z = 1;
+            while (alignSize < 0)
+                alignSize = RoundUp(DataOffset + (Alignment * z), Alignment) - DataOffset - 32;
+            z += 1;
+
+            return alignSize;
+        }
+
+        private static uint RoundUp(uint X, uint Y) { return((X - 1) | (Y - 1)) + 1; }
+
         private void ReadGx2(FileReader reader)
         {
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -352,9 +392,23 @@ namespace FirstPlugin
             public uint MinorVersion;
             public BlockType BlockType;
             public uint Identifier;
-            public uint index;
+            public uint Index;
             public uint DataSize;
             public byte[] data;
+
+            public GTXDataBlock() { }
+
+            public GTXDataBlock(BlockType blockType, uint dataSize, uint identifier, uint index)
+            {
+                HeaderSize = 32;
+                MajorVersion = 1;
+                MinorVersion = 0;
+                BlockType = blockType;
+                DataSize = dataSize;
+                Identifier = identifier;
+                Index = index;
+                data = new byte[dataSize];
+            }
 
             public void Read(FileReader reader)
             {
@@ -370,7 +424,7 @@ namespace FirstPlugin
                 BlockType = reader.ReadEnum<BlockType>(false);
                 DataSize = reader.ReadUInt32();
                 Identifier = reader.ReadUInt32();
-                index = reader.ReadUInt32();
+                Index = reader.ReadUInt32();
 
                 reader.Seek(blockStart + HeaderSize, System.IO.SeekOrigin.Begin);
                 data = reader.ReadBytes((int)DataSize);
@@ -386,7 +440,7 @@ namespace FirstPlugin
                 writer.Write(BlockType, false);
                 writer.Write(data.Length);
                 writer.Write(Identifier);
-                writer.Write(index);
+                writer.Write(Index);
                 writer.Seek(blockStart + HeaderSize, System.IO.SeekOrigin.Begin);
 
                 writer.Write(data);
@@ -460,13 +514,14 @@ namespace FirstPlugin
                 surface.imageCount = NewSurface.imageCount;
                 surface.imageSize = NewSurface.imageSize;
                 surface.mipData = NewSurface.mipData;
+                surface.mipSize = NewSurface.mipSize;
                 surface.mipOffset = NewSurface.mipOffset;
                 surface.numArray = NewSurface.numArray;
                 surface.numMips = NewSurface.numMips;
                 surface.pitch = NewSurface.pitch;
                 surface.resourceFlags = NewSurface.resourceFlags;
                 surface.swizzle = NewSurface.swizzle;
-                surface.texRegs = NewSurface.texRegs;
+             //   surface.texRegs = NewSurface.texRegs;
                 surface.tileMode = NewSurface.tileMode;
                 surface.use = NewSurface.use;
                 surface.width = NewSurface.width;

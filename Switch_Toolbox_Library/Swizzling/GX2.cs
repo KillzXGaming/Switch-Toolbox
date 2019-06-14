@@ -597,11 +597,12 @@ namespace Switch_Toolbox.Library
             surf.bpp = bpp;
             surf.format = (uint)Format;
             surf.numMips = MipCount;
+            surf.imageCount = MipCount;
+            surf.firstSlice = 0;
+            surf.firstMip = 0;
             surf.aa = AAMode;
             surf.mipOffset = mipOffsets.ToArray();
-            surf.numMips = (uint)Swizzled.Count;
             surf.alignment = alignment;
-            surf.mipSize = mipSize;
             surf.imageSize = imageSize;
             surf.data = Swizzled[0];
 
@@ -613,6 +614,8 @@ namespace Switch_Toolbox.Library
             }
             surf.mipData = Utils.CombineByteArray(mips.ToArray());
             mips.Clear();
+
+            surf.mipSize = surf.mipData != null ? (uint)surf.mipData.Length : 0;
 
 
             Console.WriteLine("");
