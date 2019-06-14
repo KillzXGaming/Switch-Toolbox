@@ -601,9 +601,9 @@ namespace FirstPlugin
                     surface.mipData = ftex.texture.MipData;
                     surface.mipOffset = ftex.texture.MipOffsets;
                     surface.firstMip = ftex.texture.ViewMipFirst;
-                    surface.firstSlice = ftex.texture.ViewSliceFirst;
-                    surface.numSlices = ftex.texture.ViewSliceCount;
-                    surface.imageCount = ftex.texture.ArrayLength;
+                    surface.firstSlice = 0;
+                    surface.numSlices = ftex.texture.ArrayLength;
+                    surface.imageCount = ftex.texture.MipCount;
                     surface.pitch = ftex.texture.Pitch;
 
                     SetChannelComponents();
