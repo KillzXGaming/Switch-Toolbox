@@ -313,8 +313,9 @@ namespace FirstPlugin
             Formats.Add(typeof(SP2));
             Formats.Add(typeof(NUSHDB));
             Formats.Add(typeof(MKGPDX_PAC));
+            Formats.Add(typeof(LZARC));
 
-            
+
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
 

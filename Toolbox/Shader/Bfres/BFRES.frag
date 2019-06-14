@@ -194,17 +194,18 @@ void main()
     float halfLambert = dot(difLightDirection, N) * 0.5 + 0.5;
 
 	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgba);
+	vec4 albedo = vec4(0);
 	//Comp Selectors
-	diffuseMapColor.r = GetComponent(RedChannel, diffuseMapColor);
-	diffuseMapColor.g = GetComponent(GreenChannel, diffuseMapColor);
-	diffuseMapColor.b = GetComponent(BlueChannel, diffuseMapColor);
-	diffuseMapColor.a = GetComponent(AlphaChannel, diffuseMapColor);
+	albedo.r = GetComponent(RedChannel, diffuseMapColor);
+	albedo.g = GetComponent(GreenChannel, diffuseMapColor);
+	albedo.b = GetComponent(BlueChannel, diffuseMapColor);
+	albedo.a = GetComponent(AlphaChannel, diffuseMapColor);
 
    //Texture Overlay (Like an emblem in mk8)
 	if (UseMultiTexture == 1 && HasDiffuseLayer == 1)
 	{
 		vec4 AlbLayer = vec4(texture(DiffuseLayer, f_texcoord3).rgba);
-		diffuseMapColor.rgb = mix(diffuseMapColor.rgb, AlbLayer.rgb, AlbLayer.a);
+		albedo.rgb = mix(albedo.rgb, AlbLayer.rgb, AlbLayer.a);
 	}
 
     // Default Shader
@@ -217,8 +218,7 @@ void main()
         alpha *= 0.5;
     }
 
-	//vec4 diffuseMapColor = vec4(1);
-	diffuseMapColor *= halfLambert;
+	albedo *= halfLambert;
 
 	vec3 LightingDiffuse = vec3(0);
 	if (HasLightMap == 1)
@@ -241,12 +241,11 @@ void main()
 		 AoPass *= 1.0 - aoBlend * ao_density * 0.6;
 	}
 
-	diffuseMapColor.rgb += LightingDiffuse;
+	albedo.rgb += LightingDiffuse;
 
     vec3 LightDiffuse = vec3(0.03);
-	//diffuseMapColor.rgb += mix(LightingDiffuse, diffuseMapColor.rgb, vec3(ShadowBake.shadowIntensity) );
 
-    fragColor.rgb += diffuseMapColor.rgb;
+    fragColor.rgb += albedo.rgb;
     fragColor.rgb *= ShadowPass;
     fragColor.rgb *= AoPass;
 
@@ -263,13 +262,12 @@ void main()
     if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
 		fragColor.rgb += EmissionPass(EmissionMap, emission_intensity, vert, 0, emission_color);
 	fragColor.rgb += SpecularPass(I, N, HasSpecularMap, SpecularMap, specular_color, vert, 0, UseSpecularColor);
-    fragColor.rgb += ReflectionPass(N, I, diffuseMapColor, specular, AoPass, tintColor, vert);
+    fragColor.rgb += ReflectionPass(N, I, albedo, specular, AoPass, tintColor, vert);
 
 	fragColor.rgb *= pickingColor.rgb;
 
 	if (isTransparent == 1)
-		fragColor.a *= texture(DiffuseMap, f_texcoord0).a;
-
+		fragColor.a *= albedo.a;
 
     fragColor.rgb *= min(boneWeightsColored, vec3(1));
 

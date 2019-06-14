@@ -5,6 +5,9 @@ using OpenTK;
 using K4os.Compression.LZ4.Streams;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace Switch_Toolbox.Library.IO
 {
@@ -105,6 +108,46 @@ namespace Switch_Toolbox.Library.IO
                     output.Write(buffer, 0, len);
                 }
                 output.Flush();
+            }
+        }
+
+        public class LZSS
+        {
+            //From https://github.com/IcySon55/Kuriimu/blob/f670c2719affc1eaef8b4c40e40985881247acc7/src/Kontract/Compression/LZSS.cs
+            //Todo does not work with Paper Mario Color Splash
+            public static byte[] Decompress(byte[] data, uint decompressedLength)
+            {
+                using (FileReader reader = new FileReader(new MemoryStream(data), true))
+                {
+                    List<byte> result = new List<byte>();
+
+                    for (int i = 0, flags = 0; ; i++)
+                    {
+                        if (i % 8 == 0) flags = reader.ReadByte();
+                        if ((flags & 0x80) == 0) result.Add(reader.ReadByte());
+                        else
+                        {
+                            int lengthDist = BitConverter.ToUInt16(reader.ReadBytes(2).Reverse().ToArray(), 0);
+                            int offs = lengthDist % 4096 + 1;
+                            int length = lengthDist / 4096 + 3;
+                            while (length > 0)
+                            {
+                                result.Add(result[result.Count - offs]);
+                                length--;
+                            }
+                        }
+
+                        if (result.Count == decompressedLength)
+                        {
+                            return result.ToArray();
+                        }
+                        else if (result.Count > decompressedLength)
+                        {
+                            throw new InvalidDataException("Went past the end of the stream");
+                        }
+                        flags <<= 1;
+                    }
+                }
             }
         }
 

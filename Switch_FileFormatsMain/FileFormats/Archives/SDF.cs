@@ -110,15 +110,15 @@ namespace FirstPlugin
             fileList = FilePaths.ToArray();
 
             // Parse the file list into a TreeNode collection
-       //     TreeNode node = GetNodes(new TreeNode(), fileList);
-        //    Nodes.Add(node); // Add the new nodes
+                TreeNode node = GetNodes(new TreeNode(), fileList);
+                Nodes.Add(node); // Add the new nodes
 
             // Copy the new nodes to an array
-            //    int nodeCount = node.Nodes.Count;
-            //   TreeNode[] nodes = new TreeNode[nodeCount];
-            //  node.Nodes.CopyTo(nodes, 0);
+               int nodeCount = node.Nodes.Count;
+              TreeNode[] nodes = new TreeNode[nodeCount];
+              node.Nodes.CopyTo(nodes, 0);
 
-         //  Nodes.AddRange(nodes); // Add the new nodes
+             Nodes.AddRange(nodes); // Add the new nodes
         }
 
         private TreeNode GetNodes(TreeNode parent, string[] fileList)
@@ -228,7 +228,7 @@ namespace FirstPlugin
 
         public void ParseNames(FileReader reader, string Name = "")
         {
-            if (!Name.Contains("dummy"))
+            if (!Name.Contains("dummy") && FilePaths.Count < 200)
                 FilePaths.Add(Name);
 
             char ch = reader.ReadChar();
@@ -238,7 +238,7 @@ namespace FirstPlugin
 
             if (ch >= 1 && ch <= 0x1f) //string part
             {
-                while (ch-- != 0)
+                while (ch-- > 0)
                 {
                     Name += reader.ReadChar();
                 }
@@ -249,8 +249,9 @@ namespace FirstPlugin
                int var = Convert.ToInt32(ch - 'A');
 
                 ch = Convert.ToChar(var);
-                int count1 = ch >> 7;
+                int count1 = ch & 7;
                 int flag1 = (ch >> 3) & 1;
+             //   int flag1 = ch & 8;
 
                 if (count1 != 0)
                 {
@@ -263,15 +264,25 @@ namespace FirstPlugin
                     for (int chunkIndex = 0; chunkIndex < count1; chunkIndex++)
                     {
                         byte ch3 = reader.ReadByte();
+                        if (ch3 == 0)
+                        {
+                            break;
+                        }
+
                         int compressedSizeByteCount = (ch3 & 3) + 1;
                         int packageOffsetByteCount = (ch3 >> 2) & 7;
-                        int hasCompression = (ch3 >> 5) & 1;
+                        bool hasCompression = ((ch3 >> 5) & 1) != 0;
 
-                        ulong decompressedSize = readVariadicInteger(compressedSizeByteCount, reader);
+                        ulong decompressedSize =0;
                         ulong compressedSize = 0;
                         ulong packageOffset = 0;
+                        long fileId = -1;
 
-                        if (hasCompression != 0)
+                        if (compressedSizeByteCount > 0)
+                        {
+                            decompressedSize = readVariadicInteger(compressedSizeByteCount, reader);
+                        }
+                        if (hasCompression)
                         {
                             compressedSize = readVariadicInteger(compressedSizeByteCount, reader);
                         }
@@ -279,13 +290,21 @@ namespace FirstPlugin
                         {
                             packageOffset = readVariadicInteger(packageOffsetByteCount, reader);
                         }
+
                         ulong packageId = readVariadicInteger(2, reader);
+
+                        if (packageId >= Header.Block1Count)
+                        {
+                            throw new InvalidDataException("SDF Package ID outside of TOC range");
+                        }
+
 
                         List<ulong> compSizeArray = new List<ulong>();
 
-                        if (hasCompression != 0)
+                        if (hasCompression)
                         {
-                            ulong pageCount = (decompressedSize + 0xffff) >> 16;
+                              ulong pageCount = (decompressedSize + 0xffff) >> 16;
+                         //   var pageCount = NextMultiple(decompressedSize, 0x10000) / 0x10000;
                             if (pageCount > 1)
                             {
                                 for (ulong page = 0; page < pageCount; page++)
@@ -296,21 +315,24 @@ namespace FirstPlugin
                             }
                         }
 
-                        ulong fileId = readVariadicInteger(4, reader);
+                        if (Header.Version <= 0x16)
+                        {
+                            fileId = (long)readVariadicInteger(4, reader);
+                        }   
 
-                        if (compSizeArray.Count == 0 && hasCompression != 0)
+                        if (compSizeArray.Count == 0 && hasCompression)
                             compSizeArray.Add(compressedSize);
 
                         DumpFile(Name, packageId, packageOffset, decompressedSize, compSizeArray, DdsType, chunkIndex != 0, byteCount != 0 && chunkIndex == 0);
                     }
                 }
-                if (flag1 != 0)
+                if ((ch & 8) != 0) //flag1
                 {
                     byte ch3 = reader.ReadByte();
-                    while (ch3-- != 0)
+                    while (ch3-- > 0)
                     {
-                        byte ch3_1 = reader.ReadByte();
-                        byte ch3_2 = reader.ReadByte();
+                        reader.ReadByte();
+                        reader.ReadByte();
                     }
                 }
             }
@@ -323,10 +345,31 @@ namespace FirstPlugin
             }
         }
 
+        public static ulong NextMultiple(ulong value, ulong multiple) => NextMultiple((long)value, multiple);
+        public static ulong NextMultiple(long value, ulong multiple)
+        {
+            return (ulong)Math.Ceiling(value / (double)multiple) * multiple;
+        }
+
         public void DumpFile(string Name, ulong packageId, ulong packageOffset, ulong decompresedSize,
       List<ulong> compressedSize, ulong ddsType, bool Append, bool UseDDS)
         {
+            string PathFolder = Path.GetDirectoryName(FileName);
+
             string layer;
+            Console.WriteLine(Name + " " + packageId + " " + packageOffset + " " + decompresedSize + " " + ddsType + " " + UseDDS);
+            if (packageId < 1000)
+            {
+                layer = "A";
+            }
+            else if (packageId < 2000)
+            {
+                layer = "B";
+            }
+            else
+            {
+                layer = "C";
+            }
 
         }
 

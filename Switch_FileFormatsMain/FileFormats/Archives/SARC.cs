@@ -393,21 +393,12 @@ namespace FirstPlugin
 
             private void OpenFormDialog(IFileFormat fileFormat)
             {
-                UserControl form = GetEditorForm(fileFormat);
-                form.Text = (((IFileFormat)fileFormat).FileName);
-
+                STForm form = GetEditorForm(fileFormat);
                 var parentForm = LibraryGUI.Instance.GetActiveForm();
 
-                GenericEditorForm editorForm = new GenericEditorForm(true, form);
-                editorForm.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
-                if (editorForm.ShowDialog() == DialogResult.OK)
-                {
-                    if (fileFormat.CanSave)
-                    {
-                        Data = fileFormat.Save();
-                        UpdateHexView();
-                    }
-                }
+                form.Text = (((IFileFormat)fileFormat).FileName);
+                form.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
+                form.Show(parentForm);
             }
 
             private void FormClosing(object sender, EventArgs args, IFileFormat fileFormat)
@@ -422,7 +413,7 @@ namespace FirstPlugin
                 }
             }
 
-            private UserControl GetEditorForm(IFileFormat fileFormat)
+            private STForm GetEditorForm(IFileFormat fileFormat)
             {
                 Type objectType = fileFormat.GetType();
                 foreach (var inter in objectType.GetInterfaces())
@@ -430,7 +421,7 @@ namespace FirstPlugin
                     if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                     {
                         System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
-                        return (UserControl)method.Invoke(fileFormat, new object[0]);
+                        return (STForm)method.Invoke(fileFormat, new object[0]);
                     }
                 }
                 return null;

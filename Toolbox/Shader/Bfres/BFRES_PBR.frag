@@ -376,7 +376,7 @@ void main()
 
     // Alpha calculations.
 	 float alpha = GetComponent(AlphaChannel, texture(DiffuseMap, f_texcoord0));
-    fragColor.a = alpha;
+     fragColor.a = alpha;
 
 	if (RenderAsLighting)
 	{

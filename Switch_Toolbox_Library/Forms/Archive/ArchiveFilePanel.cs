@@ -86,6 +86,9 @@ namespace Switch_Toolbox.Library.Forms
 
         public UserControl GetEditorForm(IFileFormat fileFormat)
         {
+            if (fileFormat == null)
+                return new STUserControl() { Dock = DockStyle.Fill };
+
             Type objectType = fileFormat.GetType();
             foreach (var inter in objectType.GetInterfaces())
             {

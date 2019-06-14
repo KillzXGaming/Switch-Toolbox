@@ -605,6 +605,7 @@
     <Compile Include="IO\Matrix4x4.cs" />
     <Compile Include="IO\STFileLoader.cs" />
     <Compile Include="IO\STFileSaver.cs" />
+    <Compile Include="IO\StreamReaderExtensions.cs" />
     <Compile Include="IO\StringExtension.cs" />
     <Compile Include="IO\STStream.cs" />
     <Compile Include="Maths\Math.cs" />

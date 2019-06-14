@@ -34,6 +34,8 @@ namespace Switch_Toolbox.Library
     }
     public class ArchiveFileInfo
     {
+        public STContextMenuStrip STContextMenuStrip;
+
         public virtual STToolStripItem[] Menus { get; set; }
 
         public FileType FileDataType = FileType.Default;

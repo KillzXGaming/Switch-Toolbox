@@ -770,6 +770,8 @@ namespace Switch_Toolbox.Library
 
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
+
+                break;
             }
 
             return result;

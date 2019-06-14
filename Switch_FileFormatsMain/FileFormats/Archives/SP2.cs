@@ -13,7 +13,7 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Sonic Team Racing Archive" };
+        public string[] Description { get; set; } = new string[] { "Team Sonic Racing Archive" };
         public string[] Extension { get; set; } = new string[] { "*.sp2" };
         public string FileName { get; set; }
         public string FilePath { get; set; }

@@ -389,7 +389,9 @@ namespace FirstPlugin.Forms
         {
             if (activeSampler != null)
             {
-                var tex = activeSampler.GetActiveTexture(Frame);
+                var keyFrame = activeSampler.GetKeyFrame(Frame);
+
+                var tex = activeSampler.GetActiveTexture((int)keyFrame.Value);
                 if (tex != null)
                 {
                     if (Images.ContainsKey(Frame))
@@ -398,7 +400,9 @@ namespace FirstPlugin.Forms
             }
             if (activeSampleU != null)
             {
-                var tex = activeSampleU.GetActiveTexture(Frame);
+                var keyFrame = activeSampleU.GetKeyFrame(Frame);
+
+                var tex = activeSampleU.GetActiveTexture((int)keyFrame.Value);
                 if (tex != null)
                 {
                     if (Images.ContainsKey(Frame))

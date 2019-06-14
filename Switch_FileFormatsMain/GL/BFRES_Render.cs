@@ -617,6 +617,8 @@ namespace FirstPlugin
                     {
                         if (ftexCont.ResourceNodes.ContainsKey(activeTex))
                         {
+                            Console.WriteLine("BINDING tex.animatedTexName " + activeTex + " " + tex.Type);
+
                             BindFTEX(ftexCont, tex, shader, activeTex);
                             return tex.textureUnit + 1;
                         }
@@ -627,6 +629,8 @@ namespace FirstPlugin
                 {
                     if (ftexContainer.ResourceNodes.ContainsKey(activeTex))
                     {
+                        Console.WriteLine("BINDING tex.animatedTexName " + activeTex + " " + tex.Type);
+
                         BindFTEX(ftexContainer, tex, shader, activeTex);
                         return tex.textureUnit + 1;
                     }
