@@ -132,6 +132,9 @@ namespace Switch_Toolbox.Library.IO
                 else
                     STConsole.WriteLine("Failed to find path in File Size List table! " + newFilePath, 0);
 
+                if (FileFormat == null)
+                    return FileLog;
+
                 //Check if archive type
                 bool IsArchive = false;
                 foreach (var inter in FileFormat.GetType().GetInterfaces())
@@ -174,9 +177,18 @@ namespace Switch_Toolbox.Library.IO
         public static void SaveFileFormat(byte[] data, bool FileIsCompressed, int Alignment,
             CompressionType CompressionType, string FileName, bool EnableDialog = true, string DetailsLog = "")
         {
+            uint DecompressedSize = (uint)data.Length;
+
             Cursor.Current = Cursors.WaitCursor;
             byte[] FinalData = CompressFileFormat(data, FileIsCompressed, Alignment, CompressionType, FileName, EnableDialog);
             File.WriteAllBytes(FileName, FinalData);
+
+            uint CompressedSize = (uint)FinalData.Length;
+
+            DetailsLog += "\n" + SatisfyFileTables(null, FileName, data,
+                         DecompressedSize,
+                         CompressedSize,
+                         FileIsCompressed);
 
             MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
 
