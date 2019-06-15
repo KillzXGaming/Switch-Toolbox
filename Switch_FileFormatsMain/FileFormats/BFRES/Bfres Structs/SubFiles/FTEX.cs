@@ -224,9 +224,6 @@ namespace Bfres.Structs
             importer.ReadOnlyTileMode = IsSwizzleReadOnly;
             importer.ReadOnlyFormat = IsFormatReadOnly;
             
-            if (Tex2Swizzle != 0)
-                setting.Swizzle = Tex2Swizzle;
-
             if (MipMapCount != 0)
             {
                 setting.MipCount = MipMapCount;
