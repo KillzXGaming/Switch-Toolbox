@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
+using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using Assimp;
@@ -35,6 +35,16 @@ namespace Switch_Toolbox.Library
         public AssimpData()
         {
         }
+
+        public DAEHelper DaeHelper = new DAEHelper();
+
+        public class DAEHelper
+        {
+            //Gets the real node name based on ID
+            //Assimp is weird and sometimes uses ID for name so we need to get it manually
+            public Dictionary<string, string> IDMapToName = new Dictionary<string, string>();
+        }
+
         public bool LoadFile(string FileName)
         {
             try
@@ -77,6 +87,29 @@ namespace Switch_Toolbox.Library
                 return false;
             }
         }
+
+        private void GetRealNodeNames(string FileName)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(FileName);
+            XmlNodeList elemList = doc.GetElementsByTagName("node");
+            for (int i = 0; i < elemList.Count; i++)
+            {
+                string ID = "";
+                string Name = "";
+                foreach (XmlAttribute att in elemList[i].Attributes)
+                {
+                    if (att.Name == "id")
+                        ID = att.InnerText;
+                    if (att.Name == "name")
+                        Name = att.InnerText;
+                }
+
+                if (!DaeHelper.IDMapToName.ContainsKey(ID))
+                    DaeHelper.IDMapToName.Add(ID, Name);
+            }
+        }
+
         public void processNode()
         {
             Console.WriteLine($"Mesh Count " + scene.MeshCount);
@@ -372,14 +405,19 @@ namespace Switch_Toolbox.Library
             Matrix4x4 world = trafo * rootTransform;
             Matrix4 worldTK = AssimpHelper.TKMatrix(world);
 
-            string ParentArmatureName = "";
-            if (node.Parent != null)
-                ParentArmatureName = node.Parent.Name;
+            string Name = node.Name;
+            string ParentArmatureName = node.Parent != null ? node.Parent.Name : "";
 
-            bool IsBone = boneNames.Contains(node.Name) && !boneNames.Contains(ParentArmatureName) ||
-                          node.Name.Contains("Skl_Root") || node.Name.Contains("nw4f_root") ||
-                          node.Name.Contains("skl_root") || node.Name.Contains("_root") ||
-                          node.Name.Contains("skeleton_root");
+            if (DaeHelper.IDMapToName.ContainsKey(node.Name))
+                Name = DaeHelper.IDMapToName[node.Name];
+
+            if (ParentArmatureName != string.Empty && DaeHelper.IDMapToName.ContainsKey(ParentArmatureName))
+                ParentArmatureName = DaeHelper.IDMapToName[ParentArmatureName];
+
+            bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
+                          Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
+                          Name.Contains("skl_root") || Name.Contains("_root") ||
+                          Name.Contains("skeleton_root");
 
             short SmoothIndex = 0;
             short RigidIndex = -1;
