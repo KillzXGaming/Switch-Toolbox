@@ -97,6 +97,7 @@
             this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Size = new System.Drawing.Size(219, 508);
             this.stPropertyGrid1.TabIndex = 0;
+            this.stPropertyGrid1.Load += new System.EventHandler(this.stPropertyGrid1_Load);
             // 
             // tabPage1
             // 
@@ -114,12 +115,12 @@
             this.stChannelToolstripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.replaceChannelToolStripMenuItem});
             this.stChannelToolstripMenu.Name = "stChannelToolstripMenu";
-            this.stChannelToolstripMenu.Size = new System.Drawing.Size(181, 48);
+            this.stChannelToolstripMenu.Size = new System.Drawing.Size(163, 26);
             // 
             // replaceChannelToolStripMenuItem
             // 
             this.replaceChannelToolStripMenuItem.Name = "replaceChannelToolStripMenuItem";
-            this.replaceChannelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceChannelToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.replaceChannelToolStripMenuItem.Text = "Replace Channel";
             this.replaceChannelToolStripMenuItem.Click += new System.EventHandler(this.replaceChannelToolStripMenuItem_Click);
             // 

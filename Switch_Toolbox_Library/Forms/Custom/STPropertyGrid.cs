@@ -48,15 +48,20 @@ namespace Switch_Toolbox.Library.Forms
         }
 
         Action OnPropertyChanged;
-        public void LoadProperty(object selectedObject, Action onPropertyChanged)
+        Action OnPropertyChanged2;
+
+        public void LoadProperty(object selectedObject, Action onPropertyChanged = null, Action onPropertyChanged2 = null)
         {
             OnPropertyChanged = onPropertyChanged;
+            OnPropertyChanged2 = onPropertyChanged2;
+
             propertyGrid1.SelectedObject = selectedObject;
         }
 
         private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             OnPropertyChanged();
+            OnPropertyChanged2();
         }
     }
 }

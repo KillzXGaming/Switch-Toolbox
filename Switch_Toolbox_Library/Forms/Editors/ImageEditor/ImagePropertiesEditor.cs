@@ -73,15 +73,20 @@ namespace Switch_Toolbox.Library.Forms
                 stPropertyGrid1.Invoke(new MethodInvoker(
                 delegate ()
                 {
-                    stPropertyGrid1.LoadProperty(prop, OnPropertyChanged);
+                    stPropertyGrid1.LoadProperty(prop, OnPropertyChanged, OnPropertyEditorChanged);
                     stPropertyGrid1.Refresh();
                 }));
             }
             else
             {
-                stPropertyGrid1.LoadProperty(prop, OnPropertyChanged);
+                stPropertyGrid1.LoadProperty(prop, OnPropertyChanged, OnPropertyEditorChanged);
                 stPropertyGrid1.Refresh();
             }
+        }
+
+        private void OnPropertyEditorChanged()
+        {
+            imageEditor.UpdateMipDisplay();
         }
 
         public void UpdateProperties()
@@ -262,6 +267,11 @@ namespace Switch_Toolbox.Library.Forms
                     EditChannel(STChannelType.Alpha);
                     break;
             }
+        }
+
+        private void stPropertyGrid1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
