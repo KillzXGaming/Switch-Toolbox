@@ -52,7 +52,7 @@ namespace Switch_Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
         }
 
-        private static string SatisfyFileTables(IFileFormat FileFormat, string FilePath, byte[] Data, uint DecompressedSize, uint CompressedSize, bool IsCompressed)
+        private static string SatisfyFileTables(IFileFormat FileFormat, string FilePath, byte[] Data, uint DecompressedSize, uint CompressedSize, bool IsYaz0Compressed)
         {
             string FileLog = "";
 
@@ -95,7 +95,7 @@ namespace Switch_Toolbox.Library.IO
 
                 }
 
-                BotwResourceTable.SetEntry(newFilePath, Data);
+                BotwResourceTable.SetEntry(newFilePath, Data, IsYaz0Compressed);
                 BotwResourceTable.Write(new FileWriter(RstbPath));
                 File.WriteAllBytes(RstbPath, EveryFileExplorer.YAZ0.Compress(RstbPath));
             }

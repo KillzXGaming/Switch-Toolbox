@@ -22,9 +22,9 @@ namespace Switch_Toolbox.Library
         public Dictionary<string, uint> NameTables { get; set; }
         public Dictionary<uint, uint> Crc32Tables { get; set; }
 
-        private int ParseSize(string FilePath, byte[] Data = null, bool Force = false)
+        private int ParseSize(string FilePath, byte[] Data = null, bool IsYaz0Compressed = false, bool Force = false)
         {
-            var size = new RSTB.SizeCalculator().CalculateFileSize(FilePath, Data, IsWiiU, Force);
+            var size = new RSTB.SizeCalculator().CalculateFileSize(FilePath, Data, IsWiiU, IsYaz0Compressed, Force);
             if (size == 0)
             {
                 var result = MessageBox.Show("Error! Could not calculate size for resource entry! Do you want to remove it instead?", "Resource Table", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -36,10 +36,10 @@ namespace Switch_Toolbox.Library
             return size;
         }
 
-        public void SetEntry(string FileName, byte[] Data = null, bool Force = false)
+        public void SetEntry(string FileName, byte[] Data = null, bool IsYaz0Compressed = false, bool Force = false)
         {
             uint OldSize = GetSize(FileName);
-            uint NewSize = (uint)ParseSize(FileName, Data, Force);
+            uint NewSize = (uint)ParseSize(FileName, Data, IsYaz0Compressed, Force);
 
             STConsole.WriteLine($"Setting RSTB Entry!");
             STConsole.WriteLine($"{FileName} OldSize {OldSize}");
@@ -265,17 +265,17 @@ namespace Switch_Toolbox.Library
                 float.TryParse(value, out output);
             }
 
-            public int CalculateFileSize(string FileName, byte[] Data, bool IsWiiU, bool Force)
+            public int CalculateFileSize(string FileName, byte[] Data, bool IsWiiU,bool IsYaz0Compressed, bool Force)
             {
-                return CalculateFileSizeByExtension(FileName, Data, IsWiiU, System.IO.Path.GetExtension(FileName), Force);
+                return CalculateFileSizeByExtension(FileName, Data, IsWiiU, System.IO.Path.GetExtension(FileName), IsYaz0Compressed, Force);
             }
 
-            private int CalculateFileSizeByExtension(string FileName, byte[] Data, bool WiiU, string Ext, bool Force = false)
+            private int CalculateFileSizeByExtension(string FileName, byte[] Data, bool WiiU, string Ext, bool IsYaz0Compressed, bool Force = false)
             {
                 int Size = 0;
                 if (System.IO.File.Exists(FileName))
                 {
-                    if (Ext.StartsWith("s"))
+                    if (Ext.StartsWith("s") || IsYaz0Compressed)
                     {
                         using (var reader = new FileReader(FileName))
                         {
