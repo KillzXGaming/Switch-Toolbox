@@ -68,10 +68,10 @@ namespace Switch_Toolbox.Library
 
             Color ForeColor = color ?? FormThemes.BaseTheme.TextForeColor;
 
-            if (console != null || !console.Disposing || !console.Disposed)
+            if (console != null || !console.Disposing || !console.IsDisposed)
                 console.AppendTextData($"{Line}", ForeColor);
 
-            ConsoleText += $"{line}/n";
+            ConsoleText += $"{Line}/n";
         }
 
         private void AppendTextData(string Text, Color color)
