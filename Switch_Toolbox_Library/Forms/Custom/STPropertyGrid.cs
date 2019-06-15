@@ -60,8 +60,8 @@ namespace Switch_Toolbox.Library.Forms
 
         private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            OnPropertyChanged();
-            OnPropertyChanged2();
+            if (OnPropertyChanged != null) OnPropertyChanged();
+            if (OnPropertyChanged2 != null) OnPropertyChanged2();
         }
     }
 }

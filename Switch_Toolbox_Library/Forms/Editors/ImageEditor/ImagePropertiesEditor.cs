@@ -87,6 +87,7 @@ namespace Switch_Toolbox.Library.Forms
         private void OnPropertyEditorChanged()
         {
             imageEditor.UpdateMipDisplay();
+            LibraryGUI.Instance.UpdateViewport();
         }
 
         public void UpdateProperties()
