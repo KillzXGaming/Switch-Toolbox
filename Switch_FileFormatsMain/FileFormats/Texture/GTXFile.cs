@@ -599,6 +599,12 @@ namespace FirstPlugin
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
+                RedChannel = SetChannel(surface.compSel[0]);
+                GreenChannel = SetChannel(surface.compSel[1]);
+                BlueChannel = SetChannel(surface.compSel[2]);
+                AlphaChannel = SetChannel(surface.compSel[3]);
+
+
                 Console.WriteLine("");
                 Console.WriteLine("// ----- GX2Surface Info ----- ");
                 Console.WriteLine("  dim             = " + surface.dim);

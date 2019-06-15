@@ -389,10 +389,10 @@ namespace Bfres.Structs
             ArrayCount = tex.ArrayLength;
             MipCount = tex.MipCount;
 
-            RedChannel = SetChannel(texture.CompSelR);
-            GreenChannel = SetChannel(texture.CompSelG);
-            BlueChannel = SetChannel(texture.CompSelB);
-            AlphaChannel = SetChannel(texture.CompSelA);
+            RedChannel = GX2ChanneToGeneric(texture.CompSelR);
+            GreenChannel = GX2ChanneToGeneric(texture.CompSelG);
+            BlueChannel = GX2ChanneToGeneric(texture.CompSelB);
+            AlphaChannel = GX2ChanneToGeneric(texture.CompSelA);
 
             if (tex.ArrayLength == 0)
                 ArrayCount = tex.Depth; //Some older bfres don't use array length????
@@ -401,7 +401,7 @@ namespace Bfres.Structs
                 MipCount = 1;
         }
 
-        private STChannelType SetChannel(GX2CompSel comp)
+        private STChannelType GX2ChanneToGeneric(GX2CompSel comp)
         {
             if (comp == GX2CompSel.ChannelR) return STChannelType.Red;
             else if (comp == GX2CompSel.ChannelG) return STChannelType.Green;
@@ -566,6 +566,11 @@ namespace Bfres.Structs
             int pitch = (int)texture.Pitch;
             uint bpp = GX2.surfaceGetBitsPerPixel((uint)format) >> 3;
 
+            RedChannel = GX2ChanneToGeneric(texture.CompSelR);
+            GreenChannel = GX2ChanneToGeneric(texture.CompSelG);
+            BlueChannel = GX2ChanneToGeneric(texture.CompSelB);
+            AlphaChannel = GX2ChanneToGeneric(texture.CompSelA);
+
             UpdateMipMaps();
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
@@ -586,6 +591,8 @@ namespace Bfres.Structs
             surf.tileMode = (uint)texture.TileMode;
             surf.swizzle = texture.Swizzle;
             surf.numArray = texture.ArrayLength;
+
+
 
             if (Tex2Swizzle != 0)
                 surf.mip_swizzle = Tex2Swizzle;
@@ -672,6 +679,7 @@ namespace Bfres.Structs
                     throw new Exception($"Cannot convert format {GX2Format}");
             }
         }
+
         public static void SetChannelsByFormat(GX2SurfaceFormat Format, Texture tex)
         {
             switch (Format)
@@ -774,10 +782,10 @@ namespace Bfres.Structs
         {
             Text = texture.Name;
 
-            RedChannel = SetChannel(texture.CompSelR);
-            GreenChannel = SetChannel(texture.CompSelG);
-            BlueChannel = SetChannel(texture.CompSelB);
-            AlphaChannel = SetChannel(texture.CompSelA);
+            RedChannel = GX2ChanneToGeneric(texture.CompSelR);
+            GreenChannel = GX2ChanneToGeneric(texture.CompSelG);
+            BlueChannel = GX2ChanneToGeneric(texture.CompSelB);
+            AlphaChannel = GX2ChanneToGeneric(texture.CompSelA);
 
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
             if (editor != null)
