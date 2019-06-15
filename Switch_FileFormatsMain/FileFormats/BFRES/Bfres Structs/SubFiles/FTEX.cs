@@ -762,7 +762,7 @@ namespace Bfres.Structs
                 LibraryGUI.Instance.LoadEditor(editor);
             }
             editor.Text = Text;
-            editor.LoadProperties(this.texture);
+            editor.LoadProperties(this.texture, OnPropertyChanged);
             editor.LoadImage(this);
 
             if (texture.UserData != null)
@@ -780,18 +780,12 @@ namespace Bfres.Structs
 
         private void OnPropertyChanged()
         {
-            Text = texture.Name;
+            texture.Name = Text;
 
             RedChannel = GX2ChanneToGeneric(texture.CompSelR);
             GreenChannel = GX2ChanneToGeneric(texture.CompSelG);
             BlueChannel = GX2ChanneToGeneric(texture.CompSelB);
             AlphaChannel = GX2ChanneToGeneric(texture.CompSelA);
-
-            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
-            if (editor != null)
-            {
-                editor.UpdateMipDisplay();
-            }
         }
     }
 }

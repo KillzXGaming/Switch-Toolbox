@@ -39,6 +39,7 @@
             this.propertyGrid1.Size = new System.Drawing.Size(613, 532);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.ToolbarVisible = false;
+            this.propertyGrid1.PropertyValueChanged += propertyGrid1_PropertyValueChanged;
             // 
             // STPropertyGrid
             // 
