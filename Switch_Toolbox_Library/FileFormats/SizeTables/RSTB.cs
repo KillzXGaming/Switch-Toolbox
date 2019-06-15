@@ -286,7 +286,7 @@ namespace Switch_Toolbox.Library
                     }
                     else
                     {
-                        Size = (int)new System.IO.FileInfo(FileName).Length;
+                        Size = (int)new System.IO.FileInfo(FileName).Length;    
                     }
                 }
                 else
