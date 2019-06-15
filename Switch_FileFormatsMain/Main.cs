@@ -110,7 +110,7 @@ namespace FirstPlugin
             readonly STToolStripItem[] toolsExt = new STToolStripItem[1];
             public OdysseyCostumeSelectorMenu()
             {
-                toolsExt[0] = new STToolStripItem("Odyssey Costume Selctor");
+                toolsExt[0] = new STToolStripItem("Odyssey Costume Selector");
                 toolsExt[0].Click += OpenSelector;
             }
             private void OpenSelector(object sender, EventArgs args)
