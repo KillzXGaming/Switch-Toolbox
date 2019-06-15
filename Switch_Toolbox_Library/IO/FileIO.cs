@@ -111,6 +111,32 @@ namespace Switch_Toolbox.Library.IO
             }
         }
 
+        //Mario Tennis Aces Custom compression
+        public class MTA_CUSTOM
+        {
+            private static uint Swap(uint X)
+            {
+                return ((X >> 24) & 0xff | (X >> 8) & 0xff00 |
+                         (X << 8) & 0xff0000 | (X << 24) & 0xff000000);
+            }
+
+            public byte[] Decompress(byte[] data, uint decompressedLength)
+            {
+                uint dest = 0;
+                uint source = 0;
+
+                uint pos = 8;
+                byte[] Output = new byte[decompressedLength];
+
+                if (pos > decompressedLength)
+                {
+                    uint flag;
+                }
+
+                return Output;
+            }
+        }
+
         public class LZSS
         {
             //From https://github.com/IcySon55/Kuriimu/blob/f670c2719affc1eaef8b4c40e40985881247acc7/src/Kontract/Compression/LZSS.cs
