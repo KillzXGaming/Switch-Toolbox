@@ -11,7 +11,19 @@ namespace Switch_Toolbox.Library
     public class STConsole : RichTextBox
     {
         private static STConsole console;
-        public static STConsole Instance { get { return console == null || console.IsDisposed ? console = new STConsole() : console; } }
+        public static STConsole Instance
+        {
+            get
+            {
+                if (console == null || console.IsDisposed)
+                {
+                    console = new STConsole();
+                    console.Text = ConsoleText;
+                }
+
+                return console;
+            }
+        }
 
         private static string ConsoleText = "";
 
@@ -68,10 +80,10 @@ namespace Switch_Toolbox.Library
 
             Color ForeColor = color ?? FormThemes.BaseTheme.TextForeColor;
 
-            if (console != null || !console.Disposing || !console.IsDisposed)
-                console.AppendTextData($"{Line}", ForeColor);
+            ConsoleText += $"{Line}\n";
 
-            ConsoleText += $"{Line}/n";
+            if (console != null && !console.Disposing && !console.IsDisposed)
+                console.AppendTextData($"{Line}", ForeColor);
         }
 
         private void AppendTextData(string Text, Color color)
