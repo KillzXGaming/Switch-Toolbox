@@ -13,6 +13,8 @@ namespace Switch_Toolbox.Library
         private static STConsole console;
         public static STConsole Instance { get { return console == null || console.IsDisposed ? console = new STConsole() : console; } }
 
+        private static string ConsoleText = "";
+
         public STConsole()
         {
             BorderStyle = BorderStyle.None;
@@ -66,7 +68,10 @@ namespace Switch_Toolbox.Library
 
             Color ForeColor = color ?? FormThemes.BaseTheme.TextForeColor;
 
-            console.AppendTextData($"{Line}", ForeColor);
+            if (console != null || !console.Disposing || !console.Disposed)
+                console.AppendTextData($"{Line}", ForeColor);
+
+            ConsoleText += $"{line}/n";
         }
 
         private void AppendTextData(string Text, Color color)
