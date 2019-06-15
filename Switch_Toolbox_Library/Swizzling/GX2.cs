@@ -773,8 +773,6 @@ namespace Switch_Toolbox.Library
 
                 dataOffset += ArrayImageize;
                 mipDataOffset += ArrayMipImageize;
-
-                break;
             }
 
             return result;
@@ -1160,7 +1158,6 @@ namespace Switch_Toolbox.Library
         private static ulong computeSurfaceAddrFromCoordMacroTiled(uint x, uint y, uint bpp, uint pitch, uint height,
                                                            AddrTileMode tileMode, uint pipeSwizzle, uint bankSwizzle)
         {
-
             uint sampleSlice, numSamples, samplesPerSlice;
             uint numSampleSplits, bankSwapWidth, swapIndex;
 

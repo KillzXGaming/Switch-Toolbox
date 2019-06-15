@@ -336,10 +336,6 @@ namespace FirstPlugin
                 {
                     int boneIndex = fshp.BoneIndex;
 
-                    //Not often but some models use a bone index list instead
-                    if (fshp.BoneIndices.Count > 0)
-                        boneIndex = fshp.BoneIndices[0];
-
                     Matrix4 NoBindFix = model.Skeleton.bones[boneIndex].Transform;
                     v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
                     v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
