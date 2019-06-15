@@ -404,8 +404,8 @@ namespace FirstPlugin
                 {
                     if (fileFormat.CanSave)
                     {
-                        ArchiveFileInfo.FileData = fileFormat.Save();
-                        UpdateEditor();
+                        Data = fileFormat.Save();
+                        UpdateHexView();
                     }
                 }
             }
