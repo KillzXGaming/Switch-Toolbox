@@ -265,7 +265,7 @@ namespace Switch_Toolbox.Library
                 float.TryParse(value, out output);
             }
 
-            public int CalculateFileSize(string FileName, byte[] Data, bool IsWiiU,bool IsYaz0Compressed, bool Force)
+            public int CalculateFileSize(string FileName, byte[] Data, bool IsWiiU, bool IsYaz0Compressed, bool Force)
             {
                 return CalculateFileSizeByExtension(FileName, Data, IsWiiU, System.IO.Path.GetExtension(FileName), IsYaz0Compressed, Force);
             }
@@ -285,10 +285,26 @@ namespace Switch_Toolbox.Library
                         }
                     }
                     else
+                    {
                         Size = (int)new System.IO.FileInfo(FileName).Length;
+                    }
                 }
                 else
-                    Size = Data.Length;
+                {
+                    if (IsYaz0Compressed)
+                    {
+                        using (var reader = new FileReader(new System.IO.MemoryStream(Data)))
+                        {
+                            reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                            reader.Seek(4, System.IO.SeekOrigin.Begin);
+                            Size = reader.ReadInt32();
+                        }
+                    }
+                    else
+                    {
+                        Size = Data.Length;
+                    }
+                }
 
                 byte[] FileData = Data;
 
