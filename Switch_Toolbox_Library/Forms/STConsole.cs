@@ -25,7 +25,24 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        private static string ConsoleText = "";
+        private static readonly uint MAX_TEXT_LINE = 1000;
+
+        private static string consoleText;
+        private static string ConsoleText
+        {
+            get
+            {
+                return consoleText;
+            }
+            set
+            {
+                //Reset the text depending on max size prevent memory issues
+                if (value.Length > MAX_TEXT_LINE)
+                    consoleText = "";
+                else
+                    consoleText = value;
+            }
+        }
 
         public STConsole()
         {
@@ -41,9 +58,6 @@ namespace Switch_Toolbox.Library
 
         public static void WriteLine(object line, int ColorKeyIndex)
         {
-            if (console == null)
-                return;
-
             if (ColorKeyIndex == 0)
                 WriteLine(line.ToString(), Color.Red);
             else if (ColorKeyIndex == 1)
@@ -54,9 +68,6 @@ namespace Switch_Toolbox.Library
 
         public static void WriteLine(string line, int ColorKeyIndex)
         {
-            if (console == null)
-                return;
-
             if (ColorKeyIndex == 0)
                 WriteLine(line.ToString(), Color.Red);
             else if (ColorKeyIndex == 1)
@@ -67,20 +78,14 @@ namespace Switch_Toolbox.Library
 
         public static void WriteLine(object line, Color? color = null)
         {
-            if (console == null)
-                return;
-
             WriteLine(line.ToString(), color);
         }
 
         public static void WriteLine(string Line, Color? color = null)
         {
-            if (console == null)
-                return;
+            ConsoleText += $"{Line}\n";
 
             Color ForeColor = color ?? FormThemes.BaseTheme.TextForeColor;
-
-            ConsoleText += $"{Line}\n";
 
             if (console != null && !console.Disposing && !console.IsDisposed)
                 console.AppendTextData($"{Line}", ForeColor);
