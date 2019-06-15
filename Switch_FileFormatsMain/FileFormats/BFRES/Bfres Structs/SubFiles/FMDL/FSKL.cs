@@ -150,7 +150,7 @@ namespace Bfres.Structs
         {
             //Get the bone and see if the rigid index matches
             int BoneIndex = Node_Array[index];
-            return bones[BoneIndex].RigidMatrixIndex == index;
+            return bones[BoneIndex].RigidMatrixIndex != -1;
         }
 
         public void AddBone(Bone bone)

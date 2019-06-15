@@ -1273,9 +1273,9 @@ namespace Bfres.Structs
                 Matrix4 trans = Matrix4.Identity;
                 if (IsSingleBind)
                 {
-                 //   bool IsRigidIndex = skel.IsIndexRigid(BoneIndex);
-                //    if (!IsRigidIndex)
-                  //      return position;
+                    bool IsRigidIndex = skel.IsIndexRigid(BoneIndex);
+                    if (!IsRigidIndex)
+                        return position;
 
                     if (BoneIndex >= skel.Node_Array.Length || BoneIndex == -1)
                     {
