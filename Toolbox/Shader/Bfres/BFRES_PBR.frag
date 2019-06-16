@@ -375,8 +375,11 @@ void main()
     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
 
     // Alpha calculations.
-	 float alpha = GetComponent(AlphaChannel, texture(DiffuseMap, f_texcoord0));
-     fragColor.a = alpha;
+	if (isTransparent == 1)
+	{
+		 float alpha = GetComponent(AlphaChannel, texture(DiffuseMap, f_texcoord0));
+		 fragColor.a = alpha;
+	 }
 
 	if (RenderAsLighting)
 	{
