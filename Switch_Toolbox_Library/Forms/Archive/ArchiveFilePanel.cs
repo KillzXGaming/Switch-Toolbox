@@ -52,7 +52,6 @@ namespace Switch_Toolbox.Library.Forms
             return null;
         }
 
-
         public void UpdateEditor()
         {
             if (GetEditor() == 0)
@@ -65,18 +64,25 @@ namespace Switch_Toolbox.Library.Forms
 
         private void UpdateFileEditor()
         {
+            if (!ArchiveFileInfo.IsSupportedFileFormat())
+            {
+                AddControl(new STUserControl());
+                return;
+            }
+
             var File = ArchiveFileInfo.FileFormat;
-            if (File == null)
+            if (File == null) //If the file is not open yet, try temporarily for a preview
                 File = ArchiveFileInfo.OpenFile();
 
             UserControl control = GetEditorForm(File);
             if (control != null)
             {
                 AddControl(control);
-
-                // if (CheckActiveType(control.GetType()))
-                //   AddControl(control);
             }
+
+            //If the format isn't active we can just dispose it
+            if (ArchiveFileInfo.FileFormat == null)
+                File.Unload();
         }
 
         private bool CheckActiveType(Type type)
@@ -89,13 +95,30 @@ namespace Switch_Toolbox.Library.Forms
             if (fileFormat == null)
                 return new STUserControl() { Dock = DockStyle.Fill };
 
+            if (fileFormat is TreeNodeFile)
+            {
+                var Editor = ((TreeNodeFile)fileFormat).GetEditor();
+                var ActiveEditor = GetActiveEditor(Editor.GetType());
+                if (ActiveEditor != null)
+                    Editor = ActiveEditor;
+
+                ((TreeNodeFile)fileFormat).FillEditor(Editor);
+
+                return Editor;
+            }
+
             Type objectType = fileFormat.GetType();
             foreach (var inter in objectType.GetInterfaces())
             {
                 if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                 {
                     System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
-                    return (UserControl)method.Invoke(fileFormat, new object[0]);
+                    var Editor = (UserControl)method.Invoke(fileFormat, new object[0]);
+                    var ActiveEditor = GetActiveEditor(Editor.GetType());
+                    if (ActiveEditor != null)
+                        Editor = ActiveEditor;
+
+                    return Editor;
                 }
             }
             return null;

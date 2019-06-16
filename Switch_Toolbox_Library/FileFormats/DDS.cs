@@ -766,10 +766,10 @@ namespace Switch_Toolbox.Library
             ArrayCount = DX10header.arrayFlag;
         }
 
-        public bool Swizzle = false;
+        public bool SwitchSwizzle = false;
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
-            if (Swizzle)
+            if (SwitchSwizzle)
                 return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel);
 
             return GetArrayFaces(this, ArrayCount)[ArrayLevel].mipmaps[MipLevel];

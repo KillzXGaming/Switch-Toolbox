@@ -22,6 +22,7 @@ namespace Switch_Toolbox.Library
         {
         }
     }
+
     public class TreeNodeFile : TreeNodeCustom
     {
         public bool CanDelete
@@ -36,6 +37,23 @@ namespace Switch_Toolbox.Library
                     ContextMenuStrip.Items.Add(new STToolStipMenuItem("Delete", null, Delete, Keys.Control | Keys.Delete));
                 }
             }
+        }
+
+        public virtual UserControl GetEditor() { return new STUserControl(); }
+        public virtual void FillEditor(UserControl control) { }
+
+        public override void OnClick(TreeView treeview)
+        {
+            var Editor = GetEditor();
+            Editor.Dock = DockStyle.Fill;
+
+            var ActiveEditor = LibraryGUI.Instance.GetActiveContent(Editor.GetType());
+            if (ActiveEditor != null)
+                Editor = ActiveEditor;
+            else
+                LibraryGUI.Instance.LoadEditor(Editor);
+
+            FillEditor(Editor);
         }
 
         public TreeNodeFile()

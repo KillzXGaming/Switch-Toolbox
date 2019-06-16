@@ -40,11 +40,31 @@ namespace Switch_Toolbox.Library
 
         public FileType FileDataType = FileType.Default;
 
-        public IFileFormat OpenFile()
+        public virtual IFileFormat OpenFile()
         {
             return STFileLoader.OpenFileFormat(
                 IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
         }
+
+        public bool IsSupportedFileFormat()
+        {
+            if (FileData == null || FileData.Length <= 4)
+                return false;
+
+            using (var stream = new MemoryStream(FileData))
+            {
+                foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
+                {
+                    fileFormat.FileName = FileName;
+                    if (fileFormat.Identify(stream))
+                        return true;
+                }
+
+
+                return false;
+            }
+        }
+
 
         public virtual void Replace()
         {

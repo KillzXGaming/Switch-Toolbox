@@ -413,15 +413,16 @@ namespace FirstPlugin
 
             if (SelectedSection is ExternalFileData)
             {
-                HexEditor editor = (HexEditor)bfresEditor.GetActiveEditor(typeof(HexEditor));
+                ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.Instance.GetActiveContent(typeof(ArchiveFilePanel));
                 if (editor == null)
                 {
-                    editor = new HexEditor();
+                    editor = new ArchiveFilePanel();
                     editor.Dock = DockStyle.Fill;
-                    bfresEditor.LoadEditor(editor);
+                    LibraryGUI.Instance.LoadEditor(editor);
                 }
-                editor.Text = Text;
-                editor.LoadData(((ExternalFileData)SelectedSection).Data);
+
+                editor.LoadFile(((ExternalFileData)SelectedSection).ArchiveFileInfo);
+                editor.UpdateEditor();
                 return;
             }
 
@@ -781,6 +782,8 @@ namespace FirstPlugin
                     ((BNTX)node).Unload();
             }
             Nodes.Clear();
+
+            GC.SuppressFinalize(this);
         }
 
         public byte[] Save()

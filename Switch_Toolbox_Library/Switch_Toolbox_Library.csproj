@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet">
       <HintPath>..\Toolbox\Lib\AssimpNet.dll</HintPath>
@@ -224,6 +227,7 @@
     <Compile Include="FileFormats\R4G4.cs" />
     <Compile Include="FileFormats\SizeTables\RSTB.cs" />
     <Compile Include="FileFormats\SizeTables\TPFileSizeTable.cs" />
+    <Compile Include="FileFormats\ZIP.cs" />
     <Compile Include="Forms\Archive\ArchiveFilePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -370,6 +374,12 @@
       <DependentUpon>AudioPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\Audio\AudioFile.cs" />
+    <Compile Include="Forms\Editors\HexEditor\HexEditorNew.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\HexEditor\HexEditorNew.Designer.cs">
+      <DependentUpon>HexEditorNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\HexEditor\HexEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -779,6 +789,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\CubeMapFaceCreator.resx">
       <DependentUpon>CubeMapFaceCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\HexEditor\HexEditorNew.resx">
+      <DependentUpon>HexEditorNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\HexEditor\HexEditor.resx">
       <DependentUpon>HexEditor.cs</DependentUpon>

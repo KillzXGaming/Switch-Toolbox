@@ -11,9 +11,37 @@ using Be.Windows.Forms;
 
 namespace Switch_Toolbox.Library.Forms
 {
-    public partial class HexEditor : UserControl
+    public partial class HexEditor : STUserControl
     {
         FindOptions _findOptions = new FindOptions();
+
+        public HexEditor()
+        {
+            InitializeComponent();
+
+            hexBox1.BackColor = FormThemes.BaseTheme.FormBackColor;
+            hexBox1.ForeColor = FormThemes.BaseTheme.FormForeColor;
+            hexBox1.SelectionBackColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
+            hexBox1.SelectionForeColor = FormThemes.BaseTheme.FormForeColor;
+        }
+
+        public override void OnControlClosing()
+        {
+            Cleanup();
+        }
+
+        private void Cleanup()
+        {
+            if (hexBox1.ByteProvider != null)
+            {
+                hexBox1.ByteProvider.DeleteBytes(0, hexBox1.ByteProvider.Length);
+
+                IDisposable byteProvider = hexBox1.ByteProvider as IDisposable;
+                if (byteProvider != null)
+                    byteProvider.Dispose();
+                hexBox1.ByteProvider = null;
+            }
+        }
 
         public bool EnableMenuBar
         {
@@ -30,18 +58,12 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        public HexEditor()
-        {
-            InitializeComponent();
-
-            hexBox1.BackColor = FormThemes.BaseTheme.FormBackColor;
-            hexBox1.ForeColor = FormThemes.BaseTheme.FormForeColor;
-            hexBox1.SelectionBackColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
-            hexBox1.SelectionForeColor = FormThemes.BaseTheme.FormForeColor;
-        }
         public void LoadData(byte[] data)
         {
-            hexBox1.ByteProvider = new DynamicByteProvider(data);
+            Cleanup();
+
+            IByteProvider provider = new DynamicByteProvider(data);
+            hexBox1.ByteProvider = provider;
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)

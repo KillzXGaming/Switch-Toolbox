@@ -77,13 +77,13 @@
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
-            // HexEditor
+            // HexEditor2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.hexBox1);
             this.Controls.Add(this.stContextMenuStrip1);
-            this.Name = "HexEditor";
+            this.Name = "HexEditor2";
             this.Size = new System.Drawing.Size(529, 454);
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();

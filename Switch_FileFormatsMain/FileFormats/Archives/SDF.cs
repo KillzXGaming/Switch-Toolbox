@@ -7,10 +7,11 @@ using Switch_Toolbox;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
+using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class SDF : TreeNodeFile, IFileFormat
+    public class SDF : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -20,6 +21,11 @@ namespace FirstPlugin
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
+
+        public bool CanAddFiles { get; set; } = false;
+        public bool CanRenameFiles { get; set; } = false;
+        public bool CanReplaceFiles { get; set; } = false;
+        public bool CanDeleteFiles { get; set; } = false;
 
         public bool Identify(System.IO.Stream stream)
         {
@@ -38,15 +44,19 @@ namespace FirstPlugin
             }
         }
 
+        public List<FileEntry> files = new List<FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
         SDFTOC_Header Header;
         SDFTOC_ID startId;
         int[] block1;
         SDFTOC_ID[] blockIds;
-        SDFTOC_Block2[] block2Array;
+        public SDFTOC_Block2[] block2Array;
         byte[] DecompressedBlock;
         SDFTOC_ID endId;
 
-        List<string> FilePaths = new List<string>();
+        //Temp but just for now as this is expeirmental. Need to optmize tree loading
+        private readonly int MAX_FILE_DISPLAY = 4000;
 
         //Thanks to https://github.com/GoldFarmer/rouge_sdf/blob/master/main.cpp for docs/structs
         public void Load(System.IO.Stream stream)
@@ -97,28 +107,12 @@ namespace FirstPlugin
                 //Read last id 
                 endId = new SDFTOC_ID(reader);
 
-                Text = FileName;
+                MessageBox.Show("Note! Support for this format is experimental. The tool will only load < 4000 files atm due to slow loading");
 
-                LoadTree();
+                for (int i = 0; i < FileEntries.Count; i++)
+                    if (i < MAX_FILE_DISPLAY)
+                        files.Add(FileEntries[i]);
             }
-        }
-
-        private void LoadTree()
-        {
-            // Get a list of everything under the users' temp folder as an example
-            string[] fileList;
-            fileList = FilePaths.ToArray();
-
-            // Parse the file list into a TreeNode collection
-                TreeNode node = GetNodes(new TreeNode(), fileList);
-                Nodes.Add(node); // Add the new nodes
-
-            // Copy the new nodes to an array
-               int nodeCount = node.Nodes.Count;
-              TreeNode[] nodes = new TreeNode[nodeCount];
-              node.Nodes.CopyTo(nodes, 0);
-
-             Nodes.AddRange(nodes); // Add the new nodes
         }
 
         private TreeNode GetNodes(TreeNode parent, string[] fileList)
@@ -151,53 +145,6 @@ namespace FirstPlugin
             return parent;
         }
 
-        void FillTreeNodes(TreeNode root, List<string> files)
-        {
-            var rootText = root.Text;
-            var rootTextLength = rootText.Length;
-            var nodeStrings = files;
-            foreach (var node in nodeStrings)
-            {
-                string nodeString = node;
-                nodeString = nodeString.Replace(@"\", "/");
-
-                var roots = nodeString.Split(new char[] { '/' },
-                    StringSplitOptions.RemoveEmptyEntries);
-
-                // The initial parent is the root node
-                var parentNode = root;
-                var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
-                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
-                {
-                    // Build the node name
-                    var parentName = roots[rootIndex];
-                    sb.Append("/");
-                    sb.Append(parentName);
-                    var nodeName = sb.ToString();
-
-                    // Search for the node
-                    var index = parentNode.Nodes.IndexOfKey(nodeName);
-                    if (index == -1)
-                    {
-                        // Node was not found, add it
-
-                        var temp = new TreeNode(parentName, 0, 0);
-                        if (rootIndex == roots.Length - 1)
-                            temp = new TreeNode(parentName); //File entry
-
-                        temp.Name = nodeName;
-                        parentNode.Nodes.Add(temp);
-                        parentNode = temp;
-                    }
-                    else
-                    {
-                        // Node was found, set that as parent and continue
-                        parentNode = parentNode.Nodes[index];
-                    }
-                }
-            }
-        }
-
         public void DecompressNameBlock(uint magic, byte[] CompressedBlock, SDFTOC_Header header)
         {
             byte[] decomp = null;
@@ -226,11 +173,108 @@ namespace FirstPlugin
             return result;
         }
 
+        public bool AddFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public class FileEntry : ArchiveFileInfo
+        {
+            public SDF SDFParent;
+            public string FilePath;
+            public string FolderPath;
+            public string FileBlockPath;
+            public ulong PackageID;
+            public ulong Offset;
+            public ulong DecompressedSize;
+            public List<ulong> CompressedSizes;
+            public ulong DdsType;
+            public bool UseDDS;
+            public bool IsCompressed = false;
+
+            public override byte[] FileData
+            {
+                get => GetFileBytes();
+                set => base.FileData = value;
+            }
+
+            public override IFileFormat OpenFile()
+            {
+                var FileFormat = STFileLoader.OpenFileFormat(
+                    IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
+
+                if (FileFormat is DDS)
+                    ((DDS)FileFormat).SwitchSwizzle = true;
+
+                return FileFormat;
+            }
+
+            public byte[] GetFileBytes()
+            {
+                List<byte[]> Data = new List<byte[]>();
+                if (File.Exists(FileBlockPath))
+                {
+                    var block = File.Open(FileBlockPath, FileMode.Open);
+                    using (var stream = new FileReader(block))
+                    {
+                        if (CompressedSizes.Count == 0)
+                        {
+                            //Decompressed File 
+                            string FileNameBlock = Path.Combine(FolderPath, FilePath);
+                            string FolerPath = Path.GetDirectoryName(FileNameBlock);
+                            if (!Directory.Exists(FolerPath))
+                                Directory.CreateDirectory(FolerPath);
+
+                            return stream.getSection((int)Offset, (int)DecompressedSize);
+                        }
+                        else
+                        {
+                            var PageSize = (double)0x10000;
+                            var DecompOffset = 0;
+                            var CompOffset = 0;
+                            IsCompressed = true;
+
+                            if (UseDDS)
+                            {
+                                Data.Add(SDFParent.block2Array[DdsType].Data);
+                            }
+
+                            for (var i = 0; i < CompressedSizes.Count; i++)
+                            {
+                                var decompSize = (int)Math.Min((int)DecompressedSize - DecompOffset, PageSize);
+                                if (CompressedSizes[i] == 0 || decompSize == (int)CompressedSizes[i])
+                                {
+                                    stream.Seek((int)Offset + CompOffset, SeekOrigin.Begin);
+                                    CompressedSizes[i] = (ulong)decompSize;
+                                    Data.Add( stream.ReadBytes(decompSize));
+                                }
+                                else
+                                {
+                                    stream.Seek((int)Offset + CompOffset, SeekOrigin.Begin);
+                                    Data.Add(STLibraryCompression.ZSTD.Decompress(stream.ReadBytes((int)CompressedSizes[i])));
+                                }
+                                DecompOffset += (int)decompSize;
+                                CompOffset += (int)CompressedSizes[i];
+                            }
+                        }
+                    }
+
+                    block.Dispose();
+                }
+
+                return Utils.CombineByteArray(Data.ToArray());
+            }
+        }
+
+        public List<FileEntry> FileEntries = new List<FileEntry>();
+            
         public void ParseNames(FileReader reader, string Name = "")
         {
-            if (!Name.Contains("dummy") && FilePaths.Count < 200)
-                FilePaths.Add(Name);
-
             char ch = reader.ReadChar();
 
             if (ch == 0)
@@ -253,7 +297,7 @@ namespace FirstPlugin
                 int flag1 = (ch >> 3) & 1;
              //   int flag1 = ch & 8;
 
-                if (count1 != 0)
+                if (count1 > 0)
                 {
                     uint strangeId = reader.ReadUInt32();
                     byte chr2 = reader.ReadByte();
@@ -264,10 +308,10 @@ namespace FirstPlugin
                     for (int chunkIndex = 0; chunkIndex < count1; chunkIndex++)
                     {
                         byte ch3 = reader.ReadByte();
-                        if (ch3 == 0)
-                        {
-                            break;
-                        }
+                       // if (ch3 == 0)
+                    //    {
+                    //        break;
+                    //    }
 
                         int compressedSizeByteCount = (ch3 & 3) + 1;
                         int packageOffsetByteCount = (ch3 >> 2) & 7;
@@ -295,7 +339,7 @@ namespace FirstPlugin
 
                         if (packageId >= Header.Block1Count)
                         {
-                            throw new InvalidDataException("SDF Package ID outside of TOC range");
+                       //     throw new InvalidDataException($"SDF Package ID ({packageId})  outside of TOC range ({ Header.Block1Count})");
                         }
 
 
@@ -317,8 +361,8 @@ namespace FirstPlugin
 
                         if (Header.Version <= 0x16)
                         {
-                            fileId = (long)readVariadicInteger(4, reader);
-                        }   
+                             // fileId = (long)readVariadicInteger(4, reader);
+                          }   
 
                         if (compSizeArray.Count == 0 && hasCompression)
                             compSizeArray.Add(compressedSize);
@@ -333,7 +377,7 @@ namespace FirstPlugin
                     {
                         reader.ReadByte();
                         reader.ReadByte();
-                    }
+                    }   
                 }
             }
             else
@@ -345,32 +389,43 @@ namespace FirstPlugin
             }
         }
 
-        public static ulong NextMultiple(ulong value, ulong multiple) => NextMultiple((long)value, multiple);
-        public static ulong NextMultiple(long value, ulong multiple)
-        {
-            return (ulong)Math.Ceiling(value / (double)multiple) * multiple;
-        }
-
         public void DumpFile(string Name, ulong packageId, ulong packageOffset, ulong decompresedSize,
       List<ulong> compressedSize, ulong ddsType, bool Append, bool UseDDS)
         {
-            string PathFolder = Path.GetDirectoryName(FileName);
+            string PathFolder = Path.GetDirectoryName(FilePath);
 
             string layer;
-            Console.WriteLine(Name + " " + packageId + " " + packageOffset + " " + decompresedSize + " " + ddsType + " " + UseDDS);
-            if (packageId < 1000)
+            if (packageId < 1000) layer = "A";
+            else if (packageId < 2000) layer = "B";
+            else if (packageId < 3000) layer = "C";
+            else layer = "D";
+
+            string ID = packageId.ToString("D" + 4);
+
+            string BlockFilePath = Path.Combine(PathFolder, $"sdf-{layer}-{ID}.sdfdata");
+            if (Append)
             {
-                layer = "A";
-            }
-            else if (packageId < 2000)
-            {
-                layer = "B";
-            }
-            else
-            {
-                layer = "C";
+            
             }
 
+            bool IsFile = !Name.Contains("dummy") && decompresedSize > 5;
+            if (IsFile)
+            {
+                FileEntries.Add(new FileEntry()
+                {
+                    SDFParent = this,
+                    FileName = Name,
+                    FileBlockPath = BlockFilePath,
+                    FilePath = Name,
+                    FolderPath = PathFolder,
+                    CompressedSizes = compressedSize,
+                    DdsType = ddsType,
+                    UseDDS = UseDDS,
+                    DecompressedSize = decompresedSize,
+                    PackageID = packageId,
+                    Offset = packageOffset,
+                });
+            }  
         }
 
         public void Unload()

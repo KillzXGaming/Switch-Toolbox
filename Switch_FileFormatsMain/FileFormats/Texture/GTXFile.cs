@@ -69,17 +69,17 @@ namespace FirstPlugin
 
         public List<GTXDataBlock> blocks = new List<GTXDataBlock>();
 
-        public override void OnClick(TreeView treeview)
+        public override UserControl GetEditor()
         {
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
-            if (editor == null)
-            {
-                editor = new STPropertyGrid();
-                LibraryGUI.Instance.LoadEditor(editor);
-            }
+            STPropertyGrid editor = new STPropertyGrid();
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
-            editor.LoadProperty(header, null);
+            return editor;
+        }
+
+        public override void FillEditor(UserControl control)
+        {
+            ((STPropertyGrid)control).LoadProperty(header);
         }
 
         public void Load(System.IO.Stream stream)

@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using OpenTK;
 using System.Reflection;
+using Switch_Toolbox.Library.IO;
 
 namespace Switch_Toolbox.Library
 {
@@ -135,6 +136,16 @@ namespace Switch_Toolbox.Library
             }
             return rv;
         }
+
+        public static byte[] SubArray(Stream data, uint offset, uint length)
+        {
+            using (var reader = new FileReader(data))
+            {
+                reader.Position = offset;
+                return reader.ReadBytes((int)length);
+            }
+        }
+
         public static byte[] SubArray(byte[] data, uint offset, uint length)
         {
             return data.Skip((int)offset).Take((int)length).ToArray();

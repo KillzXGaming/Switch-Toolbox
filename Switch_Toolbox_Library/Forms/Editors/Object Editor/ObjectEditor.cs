@@ -114,51 +114,62 @@ namespace Switch_Toolbox.Library.Forms
         {
             var rootText = root.Text;
             var rootTextLength = rootText.Length;
-            var nodeStrings = archiveFile.Files;
-            foreach (var node in nodeStrings)
+            var nodeFiles = archiveFile.Files;
+            if (nodeFiles.Count() > 400)
             {
-                string nodeString = node.FileName;
-
-                var roots = nodeString.Split(new char[] { '/' },
-                    StringSplitOptions.RemoveEmptyEntries);
-
-                // The initial parent is the root node
-                var parentNode = root;
-                var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
-                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
+                foreach (var node in nodeFiles)
                 {
-                    // Build the node name
-                    var parentName = roots[rootIndex];
-                    sb.Append("/");
-                    sb.Append(parentName);
-                    var nodeName = sb.ToString();
+                    ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(node.FileName, node, archiveFile);
+                    root.Nodes.Add(wrapperFile);
+                }
+            }
+            else
+            {
+                foreach (var node in nodeFiles)
+                {
+                    string nodeString = node.FileName;
 
-                    // Search for the node
-                    var index = parentNode.Nodes.IndexOfKey(nodeName);
-                    if (index == -1)
+                    var roots = nodeString.Split(new char[] { '/' },
+                        StringSplitOptions.RemoveEmptyEntries);
+
+                    // The initial parent is the root node
+                    var parentNode = root;
+                    var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
+                    for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
                     {
-                        // Node was not found, add it
+                        // Build the node name
+                        var parentName = roots[rootIndex];
+                        sb.Append("/");
+                        sb.Append(parentName);
+                        var nodeName = sb.ToString();
 
-                        var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
-
-                        if (rootIndex == roots.Length - 1)
+                        // Search for the node
+                        var index = parentNode.Nodes.IndexOfKey(nodeName);
+                        if (index == -1)
                         {
-                            ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
-                            wrapperFile.Name = nodeName;
-                            parentNode.Nodes.Add(wrapperFile);
-                            parentNode = wrapperFile;
+                            // Node was not found, add it
+
+                            var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
+
+                            if (rootIndex == roots.Length - 1)
+                            {
+                                ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
+                                wrapperFile.Name = nodeName;
+                                parentNode.Nodes.Add(wrapperFile);
+                                parentNode = wrapperFile;
+                            }
+                            else
+                            {
+                                folder.Name = nodeName;
+                                parentNode.Nodes.Add(folder);
+                                parentNode = folder;
+                            }
                         }
                         else
                         {
-                            folder.Name = nodeName;
-                            parentNode.Nodes.Add(folder);
-                            parentNode = folder;
+                            // Node was found, set that as parent and continue
+                            parentNode = parentNode.Nodes[index];
                         }
-                    }
-                    else
-                    {
-                        // Node was found, set that as parent and continue
-                        parentNode = parentNode.Nodes[index];
                     }
                 }
             }

@@ -193,6 +193,8 @@ namespace FirstPlugin
 
             if (PluginRuntime.bntxContainers.Contains(this))
                 PluginRuntime.bntxContainers.Remove(this);
+
+            GC.SuppressFinalize(this);
         }
 
         public static byte[] CreateNewBNTX(string Name)
@@ -225,6 +227,20 @@ namespace FirstPlugin
             Textures.Remove(textureData.Text);
             LibraryGUI.Instance.UpdateViewport();
         }
+
+        public override UserControl GetEditor()
+        {
+            STPropertyGrid editor = new STPropertyGrid();
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            return editor;
+        }
+
+        public override void FillEditor(UserControl control)
+        {
+            ((STPropertyGrid)control).LoadProperty(BinaryTexFile, OnPropertyChanged);
+        }
+
         public override void OnClick(TreeView treeView)
         {
             if (Parent != null && Parent is BFRES)
