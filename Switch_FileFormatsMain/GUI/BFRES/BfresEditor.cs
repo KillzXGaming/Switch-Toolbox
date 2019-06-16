@@ -163,12 +163,18 @@ namespace FirstPlugin.Forms
         }
 
         private BFRES ActiveBfres;
-        public void LoadViewport(BFRES bfres, bool HasShapes, DrawableContainer ActiveDrawable, List<ToolStripMenuItem> customContextMenus = null)
+        private DrawableContainer ActiveDrawable;
+        private bool HasShapes = false;
+        public void LoadViewport(BFRES bfres, bool hasShapes, DrawableContainer activeDrawable, List<ToolStripMenuItem> customContextMenus = null)
         {
             ActiveBfres = bfres;
+            HasShapes = hasShapes;
+            ActiveDrawable = activeDrawable;
 
             if (!Runtime.UseOpenGL || !DisplayViewport)
                 return;
+
+            ReloadDrawableList();
 
             if (customContextMenus != null)
             {
@@ -176,12 +182,16 @@ namespace FirstPlugin.Forms
                     viewport.LoadCustomMenuItem(menu);
             }
 
-            if (ActiveDrawable.Drawables.Count > 0 && HasShapes)
-                viewport.ReloadDrawables(ActiveDrawable);
-
             OnLoadedTab();
         }
 
+        private void ReloadDrawableList()
+        {
+            if (viewport == null || ActiveBfres == null || ActiveDrawable == null) return;
+
+            if (ActiveDrawable.Drawables.Count > 0 && ActiveBfres.HasShapes())
+                viewport.ReloadDrawables(ActiveDrawable);
+        }
 
         public override void OnControlClosing()
         {
@@ -235,6 +245,7 @@ namespace FirstPlugin.Forms
             else
             {
                 Runtime.DisplayViewport = true;
+                ReloadDrawableList();
             }
 
             DisplayViewport = Runtime.DisplayViewport;

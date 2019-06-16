@@ -97,6 +97,15 @@ namespace Switch_Toolbox.Library.IO
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Zlib, DecompressedFileSize, CompressedFileSize);
             }
+            if (Path.GetExtension(FileName) == ".carc" && CompType == CompressionType.None)
+            {
+                if (data == null)
+                    data = File.ReadAllBytes(FileName);
+
+                data = STLibraryCompression.ZLIB.Decompress(fileReader.getSection(0x10, data.Length - 0x10));
+                return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
+                    CompressionType.Zlib, DecompressedFileSize, CompressedFileSize);
+            }
             if (Magic == "ZLIB")
             {
                 if (data == null)

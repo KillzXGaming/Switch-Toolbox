@@ -309,12 +309,23 @@ namespace FirstPlugin
             return "";
         }
 
+        public bool HasShapes()
+        {
+            BFRESRender.UpdateModelList();
+            for (int i = 0; i < BFRESRender.models.Count; i++)
+            {
+                if (BFRESRender.models[i].shapes.Count > 0)
+                    return true;
+            }
+            return false;
+        }
+
         private bool DrawablesLoaded = false;
         public void LoadEditors(object SelectedSection)
         {
             BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
             bool HasModels = false;
-            bool HasShapes = false;
+            bool hasShapes = HasShapes();
 
             if (bfresEditor == null)
             {
@@ -323,15 +334,6 @@ namespace FirstPlugin
                 bfresEditor = new BfresEditor(HasModels);
                 bfresEditor.Dock = DockStyle.Fill;
                 LibraryGUI.Instance.LoadEditor(bfresEditor);
-            }
-
-            for (int i = 0; i < BFRESRender.models.Count; i++)
-            {
-                if (BFRESRender.models[i].shapes.Count > 0)
-                {
-                    HasShapes = true;
-                    break;
-                }
             }
 
             bool ViewportToggled = bfresEditor.DisplayViewport;
@@ -430,14 +432,12 @@ namespace FirstPlugin
             }
 
             if (Runtime.UseOpenGL)
-                bfresEditor.LoadViewport(this, HasShapes, DrawableContainer);
+                bfresEditor.LoadViewport(this, hasShapes, DrawableContainer);
 
-            bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
-
-
-            if (SelectedSection is BFRES && HasShapes)
+            if (SelectedSection is BFRES && hasShapes)
                 bfresEditor.FrameCamera(BFRESRender);
 
+            bool IsSimpleEditor = PluginRuntime.UseSimpleBfresEditor;
             if (IsSimpleEditor)
             {
                 if (SelectedSection is MatTextureWrapper)
