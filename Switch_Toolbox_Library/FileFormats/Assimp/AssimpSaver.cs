@@ -43,14 +43,14 @@ namespace Switch_Toolbox.Library
             progressBar.Task = "Saving File...";
             progressBar.Value = 80;
 
-            SaveScene(FileName, scene, model);
+            SaveScene(FileName, scene, model.GetObjects());
 
             progressBar.Value = 100;
             progressBar.Close();
             progressBar.Dispose();
         }
 
-        private void SaveScene(string FileName, Scene scene, STGenericModel model)
+        private void SaveScene(string FileName, Scene scene, List<STGenericObject> Meshes)
         {
             using (var v = new AssimpContext())
             {
@@ -69,7 +69,7 @@ namespace Switch_Toolbox.Library
                 bool ExportSuccessScene = v.ExportFile(scene, FileName, formatID, PostProcessSteps.FlipUVs);
                 if (ExportSuccessScene)
                 {
-                    WriteExtraSkinningInfo(FileName, scene, model);
+                    WriteExtraSkinningInfo(FileName, scene, Meshes);
                     MessageBox.Show($"Exported {FileName} Successfuly!");
                 }
                 else
@@ -181,7 +181,7 @@ namespace Switch_Toolbox.Library
         //Extra skin data based on https://github.com/Sage-of-Mirrors/SuperBMD/blob/ce1061e9b5f57de112f1d12f6459b938594664a0/SuperBMDLib/source/Model.cs#L193
         //Todo this doesn't quite work yet
         //Need to adjust all mesh name IDs so they are correct
-        private void WriteExtraSkinningInfo(string FileName, Scene outScene, STGenericModel Model)
+        private void WriteExtraSkinningInfo(string FileName, Scene outScene, List<STGenericObject> Meshes)
         {
             StreamWriter test = new StreamWriter(FileName + ".tmp");
             StreamReader dae = File.OpenText(FileName);
@@ -233,7 +233,7 @@ namespace Switch_Toolbox.Library
                  }*/
                 if (line.Contains("<geometry"))
                 {
-                    string RealMeshName = Model.Nodes[0].Nodes[geomIndex].Text;
+                    string RealMeshName = Meshes[geomIndex].Text;
                     test.WriteLine($"    <geometry id=\"meshId{ geomIndex }\" name=\"{ RealMeshName }\" > ");
                     test.Flush();
 
@@ -569,7 +569,7 @@ namespace Switch_Toolbox.Library
             material.Name = "NewMaterial";
             scene.Materials.Add(material);
 
-            SaveScene(FileName, scene, new STGenericModel());
+            SaveScene(FileName, scene, new List<STGenericObject>() { genericObject });
         }
 
         private void SaveSkeleton(STSkeleton skeleton, Node parentNode)
