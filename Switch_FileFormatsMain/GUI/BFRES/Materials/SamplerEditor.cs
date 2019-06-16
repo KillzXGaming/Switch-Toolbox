@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library;
 using Bfres.Structs;
 using ResUGX2 = Syroot.NintenTools.Bfres.GX2;
 using ResGFX = Syroot.NintenTools.NSW.Bfres.GFX;
@@ -176,7 +177,47 @@ namespace FirstPlugin.Forms
             }
         }
 
-        public void OnPropertyChanged() { }
+        public void OnPropertyChanged()
+        {
+            if (textureRefListView.SelectedIndices.Count <= 0)
+                return;
+
+            int index = textureRefListView.SelectedIndices[0];
+            MatTexture ActiveMatTexture = (MatTexture)material.TextureMaps[index];
+
+            if (ActiveMatTexture.wiiUSampler != null)
+            {
+                ActiveMatTexture.wrapModeS = (int)ActiveMatTexture.wiiUSampler.ClampX;
+                ActiveMatTexture.wrapModeT = (int)ActiveMatTexture.wiiUSampler.ClampY;
+                ActiveMatTexture.wrapModeW = (int)ActiveMatTexture.wiiUSampler.ClampZ;
+
+                if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Point)
+                    ActiveMatTexture.minFilter = 1;
+                if (ActiveMatTexture.wiiUSampler.MagFilter == ResUGX2.GX2TexXYFilterType.Point)
+                    ActiveMatTexture.magFilter = 1;
+                if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Bilinear)
+                    ActiveMatTexture.minFilter = 0;
+                if (ActiveMatTexture.wiiUSampler.MagFilter == ResUGX2.GX2TexXYFilterType.Bilinear)
+                    ActiveMatTexture.magFilter = 0;
+            }
+            else
+            {
+                ActiveMatTexture.wrapModeS = (int)ActiveMatTexture.switchSampler.WrapModeU;
+                ActiveMatTexture.wrapModeT = (int)ActiveMatTexture.switchSampler.WrapModeV;
+                ActiveMatTexture.wrapModeW = (int)ActiveMatTexture.switchSampler.WrapModeW;
+
+                if (ActiveMatTexture.switchSampler.ShrinkXY == ResNX.Sampler.ShrinkFilterModes.Points)
+                    ActiveMatTexture.minFilter = 1;
+                if (ActiveMatTexture.switchSampler.ExpandXY == ResNX.Sampler.ExpandFilterModes.Points)
+                    ActiveMatTexture.magFilter = 1;
+                if (ActiveMatTexture.switchSampler.ShrinkXY == ResNX.Sampler.ShrinkFilterModes.Linear)
+                    ActiveMatTexture.minFilter = 0;
+                if (ActiveMatTexture.switchSampler.ExpandXY == ResNX.Sampler.ExpandFilterModes.Linear)
+                    ActiveMatTexture.magFilter = 0;
+            }
+
+            LibraryGUI.Instance.UpdateViewport();
+        }
 
         private void textureRefListView_SelectedIndexChanged(object sender, EventArgs e)
         {
