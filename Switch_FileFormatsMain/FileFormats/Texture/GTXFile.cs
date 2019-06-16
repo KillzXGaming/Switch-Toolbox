@@ -151,9 +151,9 @@ namespace FirstPlugin
         public byte[] Save()
         {
             //Get each block type for saving except alignment
-            var TextureInfoBlocks = blocks.Where(i => i.BlockType == BlockType.ImageInfo);
-            var TextureDataBlocks = blocks.Where(i => i.BlockType == BlockType.ImageData);
-            var TextureMipDataBlocks = blocks.Where(i => i.BlockType == BlockType.MipData);
+      //      var TextureInfoBlocks = blocks.Where(i => i.BlockType == BlockType.ImageInfo);
+      //      var TextureDataBlocks = blocks.Where(i => i.BlockType == BlockType.ImageData);
+      //      var TextureMipDataBlocks = blocks.Where(i => i.BlockType == BlockType.MipData);
 
             System.IO.MemoryStream mem = new System.IO.MemoryStream();
             using (FileWriter writer = new FileWriter(mem))
@@ -180,21 +180,26 @@ namespace FirstPlugin
                 else
                     throw new Exception($"Unsupported GTX version {header.MajorVersion}");
 
-                int imageInfoIndex = 0;
-                int imageBlockIndex = 0;
-                int imageMipBlockIndex = 0;
+                int imageInfoIndex = -1;
+                int imageBlockIndex = -1;
+                int imageMipBlockIndex = -1;
 
                 writer.Seek(header.HeaderSize, System.IO.SeekOrigin.Begin);
                 foreach (var block in blocks)
                 {
                     if ((uint)block.BlockType == surfBlockType)
                     {
-                        block.data = textures[imageInfoIndex++].surface.Write();
+                        imageInfoIndex++;
+                        imageBlockIndex++;
+                        imageMipBlockIndex++;
+
+                        block.data = textures[imageInfoIndex].surface.Write();
                         block.Write(writer);
+
                     }
                     else if ((uint)block.BlockType == dataBlockType)
                     {
-                        var tex = textures[imageBlockIndex++];
+                        var tex = textures[imageBlockIndex];
 
                         var pos = writer.Position;
                         uint Alignment = tex.surface.alignment;
@@ -208,7 +213,7 @@ namespace FirstPlugin
                     }
                     else if ((uint)block.BlockType == mipBlockType)
                     {
-                        var tex = textures[imageMipBlockIndex++];
+                        var tex = textures[imageMipBlockIndex];
 
                         var pos = writer.Position;
                         uint Alignment = tex.surface.alignment;
@@ -217,6 +222,8 @@ namespace FirstPlugin
                         GTXDataBlock dataAlignBlock = new GTXDataBlock(BlockType.AlignData, dataAlignment, 0, 0);
                         dataAlignBlock.Write(writer);
 
+                        if (tex.surface.mipData == null || tex.surface.mipData.Length <= 0)
+                            throw new Exception("Invalid mip data!");
 
                         block.data = tex.surface.mipData;
                         block.Write(writer);
