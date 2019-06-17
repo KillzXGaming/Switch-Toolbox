@@ -766,7 +766,7 @@ namespace Switch_Toolbox.Library
             ArrayCount = DX10header.arrayFlag;
         }
 
-        public bool SwitchSwizzle = false;
+        public bool SwitchSwizzle = true;
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             if (SwitchSwizzle)

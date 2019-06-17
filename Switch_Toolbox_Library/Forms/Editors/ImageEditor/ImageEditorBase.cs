@@ -370,7 +370,10 @@ namespace Switch_Toolbox.Library.Forms
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
 
             //Keep base image for channel viewer updating/editing
-            BaseImage = new Bitmap(image);
+            if (image != null)
+                BaseImage = new Bitmap(image);
+            else
+                BaseImage = null;
 
             if (propertiesEditor.InvokeRequired)
             {

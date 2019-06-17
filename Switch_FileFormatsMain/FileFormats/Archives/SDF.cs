@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Switch_Toolbox;
 using System.Windows.Forms;
@@ -241,7 +241,17 @@ namespace FirstPlugin
 
                             if (UseDDS)
                             {
-                                Data.Add(SDFParent.block2Array[DdsType].Data);
+                                bool IsDX10 = false;
+                                using (var filereader = new FileReader(SDFParent.block2Array[DdsType].Data))
+                                {
+                                    filereader.Position = 84;
+                                    IsDX10 = filereader.ReadString(4) == "DX10";
+
+                                    if (IsDX10)
+                                        Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)0x94).ToArray());
+                                    else
+                                        Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)0x80).ToArray());
+                                }
                             }
 
                             for (var i = 0; i < CompressedSizes.Count; i++)

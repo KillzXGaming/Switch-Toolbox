@@ -33,6 +33,10 @@ namespace Switch_Toolbox.Library
                     {
                         string FilePath = ((ArchiveFileWrapper)file).ArchiveFileInfo.FileName;
                         string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
+                        string FolderPathDir = Path.Combine(folderDialog.SelectedPath, FolderPath);
+
+                        if (!Directory.Exists(FolderPathDir))
+                            Directory.CreateDirectory(FolderPathDir);
 
                         string FileName = file.Text.RemoveIllegaleFileNameCharacters();
 
