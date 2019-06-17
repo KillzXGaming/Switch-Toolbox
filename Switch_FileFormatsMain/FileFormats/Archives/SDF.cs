@@ -199,8 +199,8 @@ namespace FirstPlugin
 
             public override byte[] FileData
             {
-                get => GetFileBytes();
-                set => base.FileData = value;
+                get { return GetFileBytes();}
+                set { base.FileData = value;}
             }
 
             public override IFileFormat OpenFile()
