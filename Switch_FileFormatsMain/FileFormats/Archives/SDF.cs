@@ -226,6 +226,7 @@ namespace FirstPlugin
                             if (!Directory.Exists(FolerPath))
                                 Directory.CreateDirectory(FolerPath);
 
+                            block.Dispose();
                             return stream.getSection((int)Offset, (int)DecompressedSize);
                         }
                         else
