@@ -766,9 +766,11 @@ namespace Switch_Toolbox.Library
             ArrayCount = DX10header.arrayFlag;
         }
 
-        public bool SwitchSwizzle = true;
+        public bool SwitchSwizzle = false;
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
+            if (IsAtscFormat(Format)) SwitchSwizzle = true;
+
             if (SwitchSwizzle)
                 return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel);
 
