@@ -110,12 +110,16 @@ namespace Switch_Toolbox.Library.Forms
                 if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                 {
                     System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
+                    System.Reflection.MethodInfo methodFill = objectType.GetMethod("FillEditor");
+
                     var Editor = (UserControl)method.Invoke(fileFormat, new object[0]);
                     var ActiveEditor = GetActiveEditor(Editor.GetType());
                     if (ActiveEditor == null)
                         AddControl(Editor);
                     else
                         Editor = ActiveEditor;
+
+                    methodFill.Invoke(fileFormat, new object[1] { Editor });
                 }
             }
         }

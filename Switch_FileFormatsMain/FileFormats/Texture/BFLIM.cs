@@ -126,6 +126,11 @@ namespace FirstPlugin
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            UpdateForm();
+        }
+
         private void UpdateForm()
         {
             if (form != null && image != null)

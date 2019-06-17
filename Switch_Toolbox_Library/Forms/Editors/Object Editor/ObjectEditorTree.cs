@@ -24,6 +24,81 @@ namespace Switch_Toolbox.Library.Forms
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
 
+        public void AddIArchiveFile(IFileFormat FileFormat)
+        {
+            TreeNode FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
+            FillTreeNodes(FileRoot, (IArchiveFile)FileFormat);
+            AddNode(FileRoot);
+        }
+
+        //The process takes awhile atm so limit splitting if there's a high amount
+        private readonly int MAX_FILE_PATH_SPLIT = 5000;
+
+        void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
+        {
+            var rootText = root.Text;
+            var rootTextLength = rootText.Length;
+            var nodeFiles = archiveFile.Files;
+            if (nodeFiles.Count() > MAX_FILE_PATH_SPLIT)
+            {
+                foreach (var node in nodeFiles)
+                {
+                    ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(node.FileName, node, archiveFile);
+                    root.Nodes.Add(wrapperFile);
+                }
+            }
+            else
+            {
+                foreach (var node in nodeFiles)
+                {
+                    string nodeString = node.FileName;
+
+                    var roots = nodeString.Split(new char[] { '/' },
+                        StringSplitOptions.RemoveEmptyEntries);
+
+                    // The initial parent is the root node
+                    var parentNode = root;
+                    var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
+                    for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
+                    {
+                        // Build the node name
+                        var parentName = roots[rootIndex];
+                        sb.Append("/");
+                        sb.Append(parentName);
+                        var nodeName = sb.ToString();
+
+                        // Search for the node
+                        var index = parentNode.Nodes.IndexOfKey(nodeName);
+                        if (index == -1)
+                        {
+                            // Node was not found, add it
+
+                            var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
+
+                            if (rootIndex == roots.Length - 1)
+                            {
+                                ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
+                                wrapperFile.Name = nodeName;
+                                parentNode.Nodes.Add(wrapperFile);
+                                parentNode = wrapperFile;
+                            }
+                            else
+                            {
+                                folder.Name = nodeName;
+                                parentNode.Nodes.Add(folder);
+                                parentNode = folder;
+                            }
+                        }
+                        else
+                        {
+                            // Node was found, set that as parent and continue
+                            parentNode = parentNode.Nodes[index];
+                        }
+                    }
+                }
+            }
+        }
+
         public void AddNodeCollection(TreeNodeCollection nodes, bool ClearNodes)
         {
             // Invoke the treeview to add the nodes

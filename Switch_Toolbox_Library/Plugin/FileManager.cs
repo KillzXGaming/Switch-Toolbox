@@ -89,6 +89,7 @@ namespace Switch_Toolbox.Library
             List<IFileFormat> types = new List<IFileFormat>();
             types.Add((IFileFormat)Activator.CreateInstance(typeof(DDS)));
             types.Add((IFileFormat)Activator.CreateInstance(typeof(ASTC)));
+            types.Add((IFileFormat)Activator.CreateInstance(typeof(TGA)));
 
             if (GenericPluginLoader._Plugins == null)
                 GenericPluginLoader.LoadPlugin();

@@ -150,6 +150,10 @@ namespace FirstPlugin
             return editor;
         }
 
+        public void FillEditor(UserControl control)
+        {
+        }
+
         public void Load(Stream stream)
         {
             CanSave = true;

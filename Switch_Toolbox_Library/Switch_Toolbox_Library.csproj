@@ -227,6 +227,7 @@
     <Compile Include="FileFormats\R4G4.cs" />
     <Compile Include="FileFormats\SizeTables\RSTB.cs" />
     <Compile Include="FileFormats\SizeTables\TPFileSizeTable.cs" />
+    <Compile Include="FileFormats\TGA.cs" />
     <Compile Include="FileFormats\ZIP.cs" />
     <Compile Include="Forms\Archive\ArchiveFilePanel.cs">
       <SubType>UserControl</SubType>

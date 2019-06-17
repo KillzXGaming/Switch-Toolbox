@@ -151,7 +151,7 @@ namespace Switch_Toolbox.Library
         /// <summary>
         /// The <see cref="TEX_FORMAT"/> Format of the image. 
         /// </summary>
-        public TEX_FORMAT Format { get; set; }
+        public TEX_FORMAT Format { get; set; } = TEX_FORMAT.R8G8B8A8_UNORM;
 
         public RenderableTex RenderableTex { get; set; }
 
@@ -248,30 +248,31 @@ namespace Switch_Toolbox.Library
 
             { TEX_FORMAT.ASTC_4x4_UNORM,        new FormatInfo(16, 4,  4, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_4x4_SRGB,         new FormatInfo(16, 4,  4, 1,  TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_5x5_UNORM,        new FormatInfo(16, 5,  5, 1,  TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_6x6_SRGB,         new FormatInfo(16, 6,  6, 1,  TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_8x8_UNORM,        new FormatInfo(16, 8,  8, 1,  TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_8x8_SRGB,         new FormatInfo(16, 8,  8, 1,  TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_10x10_UNORM,      new FormatInfo(16, 10, 10, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_10x10_SRGB,       new FormatInfo(16, 10, 10, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_12x12_UNORM,      new FormatInfo(16, 12, 12, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_12x12_SRGB,       new FormatInfo(16, 12, 12, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_5x4_UNORM,        new FormatInfo(16, 5,  4, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_5x4_SRGB,         new FormatInfo(16, 5,  4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_5x5_UNORM,        new FormatInfo(16, 5,  5, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_5x5_SRGB,         new FormatInfo(16, 5,  5, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_6x5_UNORM,        new FormatInfo(16, 6,  5, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_6x5_SRGB,         new FormatInfo(16, 6,  5, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_8x6_UNORM,        new FormatInfo(16, 8,  6, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_8x6_SRGB,         new FormatInfo(16, 8,  6, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_10x8_UNORM,       new FormatInfo(16, 10, 8, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_10x8_SRGB,        new FormatInfo(16, 10, 8, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_12x10_UNORM,      new FormatInfo(16, 12, 10, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ASTC_12x10_SRGB,       new FormatInfo(16, 12, 10, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_6x6_SRGB,         new FormatInfo(16, 6,  6, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_8x5_UNORM,        new FormatInfo(16, 8,  5,  1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_8x5_SRGB,         new FormatInfo(16, 8,  5, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_8x6_UNORM,        new FormatInfo(16, 8,  6, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_8x6_SRGB,         new FormatInfo(16, 8,  6, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_8x8_UNORM,        new FormatInfo(16, 8,  8, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_8x8_SRGB,         new FormatInfo(16, 8,  8, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_10x5_UNORM,       new FormatInfo(16, 10, 5, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_10x5_SRGB,        new FormatInfo(16, 10, 5, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_10x6_UNORM,       new FormatInfo(16, 10, 6, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_10x6_SRGB,        new FormatInfo(16, 10, 6, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_10x8_UNORM,       new FormatInfo(16, 10, 8, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_10x8_SRGB,        new FormatInfo(16, 10, 8, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_10x10_UNORM,      new FormatInfo(16, 10, 10, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_10x10_SRGB,       new FormatInfo(16, 10, 10, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_12x10_UNORM,      new FormatInfo(16, 12, 10, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_12x10_SRGB,       new FormatInfo(16, 12, 10, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_12x12_UNORM,      new FormatInfo(16, 12, 12, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_12x12_SRGB,       new FormatInfo(16, 12, 12, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ETC1,                  new FormatInfo(4, 1, 1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ETC1_A4,               new FormatInfo(8, 1, 1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.HIL08,                 new FormatInfo(16, 1, 1, 1, TargetBuffer.Color) },
@@ -579,13 +580,30 @@ namespace Switch_Toolbox.Library
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = Text;
             sfd.DefaultExt = "dds";
-            sfd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                         "Microsoft DDS |*.dds|" +
-                         "Portable Network Graphics |*.png|" +
-                         "Joint Photographic Experts Group |*.jpg|" +
-                         "Bitmap Image |*.bmp|" +
-                         "Tagged Image File Format |*.tiff|" +
-                         "All files(*.*)|*.*";
+
+            if (IsAtscFormat(Format))
+            {
+                sfd.DefaultExt = "astc";
+                sfd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff;*.astc|" +
+                            "Microsoft DDS |*.dds|" +
+                            "Portable Network Graphics |*.png|" +
+                            "Joint Photographic Experts Group |*.jpg|" +
+                            "Bitmap Image |*.bmp|" +
+                            "Tagged Image File Format |*.tiff|" +
+                            "ASTC |*.astc|" +
+                            "All files(*.*)|*.*";
+            }
+            else
+            {
+                sfd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                             "Microsoft DDS |*.dds|" +
+                             "Portable Network Graphics |*.png|" +
+                             "Joint Photographic Experts Group |*.jpg|" +
+                             "Bitmap Image |*.bmp|" +
+                             "Tagged Image File Format |*.tiff|" +
+                             "All files(*.*)|*.*";
+            }
+
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -614,9 +632,15 @@ namespace Switch_Toolbox.Library
         public void SaveASTC(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {
             ASTC atsc = new ASTC();
-            atsc.BlockDimX = (byte)GetBlockHeight(Format);
-            atsc.BlockDimY = (byte)GetBlockWidth(Format);
-            atsc.BlockDimZ = (byte)1;
+            atsc.Width = Width;
+            atsc.Height = Height;
+            atsc.Depth = Depth;
+            atsc.BlockDimX = (byte)GetBlockWidth(Format);
+            atsc.BlockDimY = (byte)GetBlockHeight(Format);
+            atsc.BlockDimZ = (byte)GetBlockDepth(Format);
+            var surfaces = GetSurfaces();
+            atsc.DataBlock = Utils.CombineByteArray(surfaces[0].mipmaps.ToArray());
+            File.WriteAllBytes(FileName, atsc.Save());
         }
         public void SaveTGA(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
         {

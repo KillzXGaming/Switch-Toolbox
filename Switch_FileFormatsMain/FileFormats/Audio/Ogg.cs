@@ -58,6 +58,11 @@ namespace FirstPlugin
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            ((AudioPlayerPanel)control).LoadFile(waveSource, this);
+        }
+
         IWaveSource waveSource;
 
         public void Load(System.IO.Stream stream)

@@ -57,6 +57,11 @@ namespace FirstPlugin
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            ((EffectTableEditor)control).LoadEffectFile(this);
+        }
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;

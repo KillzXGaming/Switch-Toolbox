@@ -48,6 +48,11 @@ namespace FirstPlugin
             return editor;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            ((MSBTEditor)control).LoadMSBT(this);
+        }
+
         public Header header;
 
         public void Load(System.IO.Stream stream)

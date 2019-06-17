@@ -207,6 +207,10 @@ namespace FirstPlugin
             }
         }
 
+        public void FillEditor(UserControl control)
+        {
+        }
+
 
         public aampv1.AampFile aampFileV1;
         public aampv2.AampFile aampFileV2;

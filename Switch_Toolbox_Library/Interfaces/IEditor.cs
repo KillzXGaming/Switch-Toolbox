@@ -11,5 +11,6 @@ namespace Switch_Toolbox.Library
     public interface IEditor<T> where T : UserControl
     {
         T OpenForm();
+        void FillEditor(UserControl Editor);
     }
 }

@@ -90,6 +90,12 @@ namespace Switch_Toolbox.Library
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            ((ImageEditorBase)control).LoadImage(this);
+            ((ImageEditorBase)control).LoadProperties(GenericProperties);
+        }
+
         //https://github.com/ARM-software/astc-encoder/blob/a47b80f081f10c43d96bd10bcb713c71708041b9/Source/astc_toplevel.cpp
         public byte[] magic;
         public byte BlockDimX;
@@ -133,20 +139,30 @@ namespace Switch_Toolbox.Library
 
                 if (BlockDimX == 4 && BlockDimY == 4)
                     Format = TEX_FORMAT.ASTC_4x4_UNORM;
-                if (BlockDimX == 5 && BlockDimY == 4)
+                else if (BlockDimX == 5 && BlockDimY == 4)
                     Format = TEX_FORMAT.ASTC_5x4_UNORM;
-                if (BlockDimX == 5 && BlockDimY == 5)
+                else if (BlockDimX == 5 && BlockDimY == 5)
                     Format = TEX_FORMAT.ASTC_5x5_UNORM;
-                if (BlockDimX == 6 && BlockDimY == 5)
+                else if (BlockDimX == 6 && BlockDimY == 5)
                     Format = TEX_FORMAT.ASTC_6x5_UNORM;
-                if (BlockDimX == 6 && BlockDimY == 6)
+                else if (BlockDimX == 6 && BlockDimY == 6)
                     Format = TEX_FORMAT.ASTC_6x6_UNORM;
-                if (BlockDimX == 8 && BlockDimY == 5)
+                else if (BlockDimX == 8 && BlockDimY == 5)
                     Format = TEX_FORMAT.ASTC_8x5_UNORM;
-                if (BlockDimX == 8 && BlockDimY == 6)
+                else if (BlockDimX == 8 && BlockDimY == 6)
                     Format = TEX_FORMAT.ASTC_8x6_UNORM;
-                if (BlockDimX == 8 && BlockDimY == 8)
+                else if (BlockDimX == 8 && BlockDimY == 8)
                     Format = TEX_FORMAT.ASTC_8x8_UNORM;
+                else if (BlockDimX == 10 && BlockDimY == 10)
+                    Format = TEX_FORMAT.ASTC_10x10_UNORM;
+                else if (BlockDimX == 10 && BlockDimY == 5)
+                    Format = TEX_FORMAT.ASTC_10x5_UNORM;
+                else if (BlockDimX == 10 && BlockDimY == 6)
+                    Format = TEX_FORMAT.ASTC_10x6_UNORM;
+                else if (BlockDimX == 10 && BlockDimY == 8)
+                    Format = TEX_FORMAT.ASTC_10x8_UNORM;
+                else
+                    throw new Exception($"Unsupported block dims! ({BlockDimX} x {BlockDimY})");
             }
 
             stream.Dispose();
@@ -166,6 +182,11 @@ namespace Switch_Toolbox.Library
                 int sizeZ = (int)Depth;
 
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+                magic = new byte[4];
+                xsize = new byte[3];
+                ysize = new byte[3];
+                zsize = new byte[3];
 
                 magic[0] = MagicFileConstant & 0xFF;
                 magic[1] = (MagicFileConstant >> 8) & 0xFF;

@@ -7,6 +7,7 @@ using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library;
 using FirstPlugin.Forms;
 using OpenTK;
+using System.Windows.Forms;
 
 namespace FirstPlugin.Turbo
 {
@@ -41,6 +42,11 @@ namespace FirstPlugin.Turbo
             form.Text = FileName;
             form.LoadFile(this);
             return form;
+        }
+
+        public void FillEditor(UserControl control)
+        {
+            ((MK8MapCameraEditor)control).LoadFile(this);
         }
 
         public void Load(System.IO.Stream stream)

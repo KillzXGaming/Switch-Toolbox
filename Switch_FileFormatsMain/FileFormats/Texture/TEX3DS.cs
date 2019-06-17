@@ -86,6 +86,21 @@ namespace FirstPlugin
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            Properties prop = new Properties();
+            prop.Width = Width;
+            prop.Height = Height;
+            prop.Depth = Depth;
+            prop.MipCount = MipCount;
+            prop.ArrayCount = ArrayCount;
+            prop.ImageSize = (uint)ImageData.Length;
+            prop.Format = Format;
+
+            ((ImageEditorBase)control).LoadImage(this);
+            ((ImageEditorBase)control).LoadProperties(prop);
+        }
+
         public void Load(System.IO.Stream stream)
         {
             PlatformSwizzle = PlatformSwizzle.Platform_3DS;

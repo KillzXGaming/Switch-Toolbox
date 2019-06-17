@@ -49,6 +49,11 @@ namespace FirstPlugin
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            ((AudioPlayerPanel)control).LoadFile(audioData, this);
+        }
+
         public void Load(System.IO.Stream stream)
         {
             LoadAudio(stream, this);

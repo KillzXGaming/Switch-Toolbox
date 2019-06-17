@@ -432,6 +432,12 @@ namespace Switch_Toolbox.Library
             return form;
         }
 
+        public void FillEditor(UserControl control)
+        {
+            ((ImageEditorBase)control).LoadImage(this);
+            ((ImageEditorBase)control).LoadProperties(GenericProperties);
+        }
+
         public enum DXGI_ASTC_FORMAT
         {
           
@@ -769,7 +775,8 @@ namespace Switch_Toolbox.Library
         public bool SwitchSwizzle = false;
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
-            if (IsAtscFormat(Format)) SwitchSwizzle = true;
+            if (IsAtscFormat(Format))
+                SwitchSwizzle = true;
 
             if (SwitchSwizzle)
                 return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel);

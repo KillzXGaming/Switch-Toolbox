@@ -118,6 +118,9 @@ namespace Switch_Toolbox.Library.IO
             return RealSignature;
         }
 
+        public void SeekBegin(uint Offset) { Seek(Offset, SeekOrigin.Begin); }
+        public void SeekBegin(int Offset)  { Seek(Offset, SeekOrigin.Begin); }
+        public void SeekBegin(long Offset) { Seek(Offset, SeekOrigin.Begin); }
 
         public long ReadOffset(bool IsRelative, Type OffsetType)
         {

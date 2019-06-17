@@ -369,9 +369,9 @@ namespace FirstPlugin
                             }
                         }
 
-                        if (Header.Version <= 0x16)
+                        if (Header.Version <= 0x15)
                         {
-                             // fileId = (long)readVariadicInteger(4, reader);
+                              fileId = (long)readVariadicInteger(4, reader);
                           }   
 
                         if (compSizeArray.Count == 0 && hasCompression)
