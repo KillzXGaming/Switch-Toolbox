@@ -110,12 +110,15 @@ namespace Switch_Toolbox.Library.Forms
             AddNode(FileRoot);
         }
 
+        //The process takes awhile atm so limit splitting if there's a high amount
+        private readonly int MAX_FILE_PATH_SPLIT = 5000;
+
         void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
         {
             var rootText = root.Text;
             var rootTextLength = rootText.Length;
             var nodeFiles = archiveFile.Files;
-            if (nodeFiles.Count() > 400)
+            if (nodeFiles.Count() > MAX_FILE_PATH_SPLIT)
             {
                 foreach (var node in nodeFiles)
                 {

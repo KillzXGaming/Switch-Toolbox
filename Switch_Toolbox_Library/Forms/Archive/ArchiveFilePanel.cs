@@ -95,12 +95,13 @@ namespace Switch_Toolbox.Library.Forms
             {
                 var Editor = ((TreeNodeFile)fileFormat).GetEditor();
                 var ActiveEditor = GetActiveEditor(Editor.GetType());
-                if (ActiveEditor != null)
+                if (ActiveEditor == null)
+                    AddControl(Editor);
+                else
                     Editor = ActiveEditor;
 
                 ((TreeNodeFile)fileFormat).FillEditor(Editor);
 
-                AddControl(Editor);
             }
 
             Type objectType = fileFormat.GetType();
@@ -111,10 +112,10 @@ namespace Switch_Toolbox.Library.Forms
                     System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
                     var Editor = (UserControl)method.Invoke(fileFormat, new object[0]);
                     var ActiveEditor = GetActiveEditor(Editor.GetType());
-                    if (ActiveEditor != null)
+                    if (ActiveEditor == null)
+                        AddControl(Editor);
+                    else
                         Editor = ActiveEditor;
-
-                    AddControl(Editor);
                 }
             }
         }
