@@ -55,9 +55,6 @@ namespace FirstPlugin
         byte[] DecompressedBlock;
         SDFTOC_ID endId;
 
-        //Temp but just for now as this is expeirmental. Need to optmize tree loading
-        private readonly int MAX_FILE_DISPLAY = 4000;
-
         //Thanks to https://github.com/GoldFarmer/rouge_sdf/blob/master/main.cpp for docs/structs
         public void Load(System.IO.Stream stream)
         {
@@ -110,8 +107,7 @@ namespace FirstPlugin
                 MessageBox.Show("Note! Support for this format is experimental. The tool will only load < 4000 files atm due to slow loading");
 
                 for (int i = 0; i < FileEntries.Count; i++)
-                    if (i < MAX_FILE_DISPLAY)
-                        files.Add(FileEntries[i]);
+                     files.Add(FileEntries[i]);
             }
         }
 
