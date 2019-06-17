@@ -74,11 +74,7 @@ namespace Switch_Toolbox.Library.Forms
             if (File == null) //If the file is not open yet, try temporarily for a preview
                 File = ArchiveFileInfo.OpenFile();
 
-            UserControl control = GetEditorForm(File);
-            if (control != null)
-            {
-                AddControl(control);
-            }
+            SetEditorForm(File);
 
             //If the format isn't active we can just dispose it
             if (ArchiveFileInfo.FileFormat == null)
@@ -90,10 +86,10 @@ namespace Switch_Toolbox.Library.Forms
             return stPanel1.Controls.Count > 0 && stPanel1.Controls[0].GetType() != type;
         }
 
-        public UserControl GetEditorForm(IFileFormat fileFormat)
+        public void SetEditorForm(IFileFormat fileFormat)
         {
             if (fileFormat == null)
-                return new STUserControl() { Dock = DockStyle.Fill };
+                AddControl(new STUserControl() { Dock = DockStyle.Fill });
 
             if (fileFormat is TreeNodeFile)
             {
@@ -104,7 +100,7 @@ namespace Switch_Toolbox.Library.Forms
 
                 ((TreeNodeFile)fileFormat).FillEditor(Editor);
 
-                return Editor;
+                AddControl(Editor);
             }
 
             Type objectType = fileFormat.GetType();
@@ -118,10 +114,9 @@ namespace Switch_Toolbox.Library.Forms
                     if (ActiveEditor != null)
                         Editor = ActiveEditor;
 
-                    return Editor;
+                    AddControl(Editor);
                 }
             }
-            return null;
         }
 
         private void UpdateTextView()
@@ -178,6 +173,10 @@ namespace Switch_Toolbox.Library.Forms
 
         public void AddControl(Control control)
         {
+            foreach (var child in stPanel1.Controls)
+                if (child is STUserControl)
+                    ((STUserControl)child).OnControlClosing();
+
             stPanel1.Controls.Clear();
             stPanel1.Controls.Add(control);
         }
