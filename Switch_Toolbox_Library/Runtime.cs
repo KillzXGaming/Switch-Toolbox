@@ -47,6 +47,8 @@ namespace Switch_Toolbox.Library
 
             public static Point Location = new Point(364, 0);
 
+            public static int EditorDiplayIndex = 0;
+
             public static int ListPanelWidth;
         }
 

@@ -33,10 +33,15 @@ namespace Switch_Toolbox.Library.Forms
         private void ReloadEditors()
         {
             stComboBox1.Items.Clear();
+            stComboBox1.Items.Add("Properties");
             stComboBox1.Items.Add("Hex Editor");
             stComboBox1.Items.Add("File Editor");
             stComboBox1.Items.Add("Text Editor");
-            stComboBox1.SelectedIndex = 0;
+
+            if (Runtime.ObjectEditor.EditorDiplayIndex < stComboBox1.Items.Count)
+                stComboBox1.SelectedIndex = Runtime.ObjectEditor.EditorDiplayIndex;
+            else
+                stComboBox1.SelectedIndex = 0;
         }
 
         public void SetEditor(int Index) { stComboBox1.SelectedIndex = Index; }
@@ -55,10 +60,12 @@ namespace Switch_Toolbox.Library.Forms
         public void UpdateEditor()
         {
             if (GetEditor() == 0)
-                UpdateHexView();
+                UpdatePropertiesView();
             if (GetEditor() == 1)
-                UpdateFileEditor();
+                UpdateHexView();
             if (GetEditor() == 2)
+                UpdateFileEditor();
+            if (GetEditor() == 3)
                 UpdateTextView();
         }
 
@@ -162,6 +169,19 @@ namespace Switch_Toolbox.Library.Forms
             return false;
         }
 
+        private void UpdatePropertiesView()
+        {
+            STPropertyGrid editor = (STPropertyGrid)GetActiveEditor(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                editor.Dock = DockStyle.Fill;
+                AddControl(editor);
+            }
+            editor.Text = Text;
+            editor.LoadProperty(ArchiveFileInfo.DisplayProperties);
+        }
+
         private void UpdateHexView()
         {
             HexEditor editor = (HexEditor)GetActiveEditor(typeof(HexEditor));
@@ -172,7 +192,10 @@ namespace Switch_Toolbox.Library.Forms
                 AddControl(editor);
             }
             editor.Text = Text;
-            editor.LoadData(ArchiveFileInfo.FileData);
+            byte[] Data = ArchiveFileInfo.FileData;
+
+            //Only load a certain about of bytes to prevent memory dispose issues
+            editor.LoadData(Utils.SubArray(Data, 0, 3000));
         }
 
 
@@ -188,9 +211,11 @@ namespace Switch_Toolbox.Library.Forms
 
         private void stComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_IsLoaded)
+            if (_IsLoaded && stComboBox1.SelectedIndex != -1)
+            {
+                Runtime.ObjectEditor.EditorDiplayIndex = stComboBox1.SelectedIndex;
                 UpdateEditor();
-            
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library.IO;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace Switch_Toolbox.Library
 {
@@ -34,18 +35,33 @@ namespace Switch_Toolbox.Library
     }
     public class ArchiveFileInfo
     {
+        [Browsable(false)]
         public STContextMenuStrip STContextMenuStrip;
 
+        [Browsable(false)]
         public virtual STToolStripItem[] Menus { get; set; }
 
+        [Browsable(false)]
         public FileType FileDataType = FileType.Default;
 
+        //Wether or not to check the file magic to determine the type
+        //This sets the icons if there's no proper extension, and may add more special operations
+        //This should be disabled on larger archives!
+        [Browsable(false)]
+        public virtual bool CheckFileMagic { get; set; } = false;
+
+        //Properties to show for the archive file when selected
+        [Browsable(false)]
+        public virtual object DisplayProperties { get; set; }
+
+        [Browsable(false)]
         public virtual IFileFormat OpenFile()
         {
             return STFileLoader.OpenFileFormat(
                 IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
         }
 
+        [Browsable(false)]
         public bool IsSupportedFileFormat()
         {
             if (FileData == null || FileData.Length <= 4)
@@ -96,17 +112,18 @@ namespace Switch_Toolbox.Library
             }
         }
 
-        public string GetSize()
-        {
-            return STMath.GetFileSize(FileData.Length, 4);
-        }
+        public virtual string FileSize => STMath.GetFileSize(FileData.Length, 4);
 
+        [Browsable(false)]
         public IFileFormat FileFormat = null; //Format attached for saving
 
+        [Browsable(false)]
         protected byte[] _fileData = null;
 
         //Full File Name
-        private string _fileName = string.Empty;  
+        private string _fileName = string.Empty;
+
+        [Browsable(false)]
         public string FileName
         {
             get
@@ -118,7 +135,11 @@ namespace Switch_Toolbox.Library
                 _fileName = value;
             }
         }
+
+        [Browsable(false)]
         public string Name { get; set; } = string.Empty; //File Name (No Path)
+
+        [Browsable(false)]
         public virtual byte[] FileData
         {
             get
@@ -131,6 +152,7 @@ namespace Switch_Toolbox.Library
             set { _fileData = value; }
         }
 
+        [Browsable(false)]
         public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
     }
 
@@ -391,18 +413,30 @@ namespace Switch_Toolbox.Library
 
             ArchiveFileInfo = archiveFileInfo;
 
-            if (archiveFileInfo.FileData != null)
+            string Extension = "";
+            if (ArchiveFileInfo.CheckFileMagic)
             {
-                string Extension = FindMatch(archiveFileInfo.FileData);
-                switch (Extension)
-                {
-                    case ".bntx": SetImageKey("bntx"); break;
-                    case ".byaml": SetImageKey("byaml"); break;
-                    case ".aamp": SetImageKey("aamp"); break;
-                    case ".bfres": SetImageKey("bfres"); break;
-                    case ".sbfres": SetImageKey("sbfres"); break;
-                    default: SetImageKey("fileBlank"); break;
-                }
+                Extension = FindMatch(archiveFileInfo.FileData);
+            }
+
+            switch (Extension)
+            {
+                case ".bntx": SetImageKey("bntx"); break;
+                case ".byaml": SetImageKey("byaml"); break;
+                case ".aamp": SetImageKey("aamp"); break;
+                case ".bfres": SetImageKey("bfres"); break;
+                case ".sbfres": SetImageKey("sbfres"); break;
+                case ".dds": 
+                case ".tga": 
+                case ".jpg":
+                case ".jpeg":
+                case ".tiff":
+                case ".png":
+                case ".gif":
+                case ".astc":
+                    SetImageKey("texture"); break;
+
+                default: SetImageKey("fileBlank"); break;
             }
         }
 

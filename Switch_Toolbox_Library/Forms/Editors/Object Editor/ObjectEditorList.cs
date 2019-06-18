@@ -177,7 +177,7 @@ namespace Switch_Toolbox.Library.Forms
                     ListViewItem item = new ListViewItem(System.IO.Path.GetFileName(file.FileName));
                     item.ImageKey = "texture";
                     item.Group = listViewCustom1.Groups[0];
-                    item.SubItems.Add(file.GetSize());
+                    item.SubItems.Add(file.FileSize);
                     item.SubItems.Add("");
                     item.SubItems.Add(file.State.ToString());
                     listViewCustom1.Items.Add(item);
