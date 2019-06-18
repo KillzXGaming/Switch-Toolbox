@@ -193,13 +193,13 @@ namespace FirstPlugin
 
             public override byte[] FileData
             {
-                get { return GetFileBytes();}
-                set { base.FileData = value;}
+                get { return GetFileBytes(); }
+                set { base.FileData = value; }
             }
 
-            public override string FileSize => STMath.GetFileSize((long)DecompressedSize, 4);
+            public override string FileSize { get { return STMath.GetFileSize((long)DecompressedSize, 4); } }
 
-            public override object DisplayProperties => this;
+            public override object DisplayProperties { get { return this; } }
 
             public override IFileFormat OpenFile()
             {
