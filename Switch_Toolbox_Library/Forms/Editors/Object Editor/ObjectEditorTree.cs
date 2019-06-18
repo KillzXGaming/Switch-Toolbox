@@ -32,7 +32,7 @@ namespace Switch_Toolbox.Library.Forms
         }
 
         //The process takes awhile atm so limit splitting if there's a high amount
-        private readonly int MAX_FILE_LOAD = 5000;
+        private readonly int MAX_FILE_LOAD = 15000;
 
         void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
         {
