@@ -104,8 +104,6 @@ namespace FirstPlugin
                 //Read last id 
                 endId = new SDFTOC_ID(reader);
 
-                MessageBox.Show("Note! Support for this format is experimental. The tool will only load < 4000 files atm due to slow loading");
-
                 for (int i = 0; i < FileEntries.Count; i++)
                      files.Add(FileEntries[i]);
             }
@@ -199,6 +197,10 @@ namespace FirstPlugin
                 set { base.FileData = value;}
             }
 
+            public override string FileSize => STMath.GetFileSize((long)DecompressedSize, 4);
+
+            public override object DisplayProperties => this;
+
             public override IFileFormat OpenFile()
             {
                 var FileFormat = STFileLoader.OpenFileFormat(
@@ -226,8 +228,7 @@ namespace FirstPlugin
                             if (!Directory.Exists(FolerPath))
                                 Directory.CreateDirectory(FolerPath);
 
-                            block.Dispose();
-                            return stream.getSection((int)Offset, (int)DecompressedSize);
+                            Data.Add(stream.getSection((int)Offset, (int)DecompressedSize));
                         }
                         else
                         {

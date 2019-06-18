@@ -39,6 +39,9 @@ namespace Switch_Toolbox.Library
         {
             using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
             {
+                if (reader.BaseStream.Length < 30)
+                    return false;
+
                 reader.Position = reader.BaseStream.Length - 18;
                 bool IsValidMagic = reader.ReadString(10) == MagicFileConstant;
                 return IsValidMagic || Utils.GetExtension(FileName) == ".tga";
