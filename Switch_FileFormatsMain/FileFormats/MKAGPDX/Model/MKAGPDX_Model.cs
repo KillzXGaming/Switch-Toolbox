@@ -138,7 +138,13 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            DrawableContainer.Drawables.Clear();
+            DrawableContainer = null;
+            header.Materials.Clear();
+            header.TextureMaps.Clear();
+            header.LowerNodes.Clear();
+            header.UpperNodes.Clear();
+            Nodes.Clear();
         }
         public byte[] Save()
         {
