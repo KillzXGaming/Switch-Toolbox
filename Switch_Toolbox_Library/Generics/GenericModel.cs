@@ -20,23 +20,31 @@ namespace Switch_Toolbox.Library
 
         }
 
-        public List<STGenericObject> GetObjects()
+        private IEnumerable<STGenericMaterial> _materials;
+        private IEnumerable<STGenericObject> _objects;
+
+        public virtual IEnumerable<STGenericMaterial> Materials
         {
-            List<STGenericObject> objects = new List<STGenericObject>();
-            foreach (TreeNode node in Nodes)
+            get
             {
-                if (node is STGenericObject)
-                    objects.Add(node as STGenericObject);
-
-                if (node.Nodes.Count > 0)
-                {
-                    foreach (TreeNode childNode in node.Nodes)
-                        if (childNode is STGenericObject)
-                            objects.Add(childNode as STGenericObject);
-                }
+                return _materials;
             }
+            set
+            {
+                _materials = value; 
+            }
+        }
 
-            return objects;
+        public virtual IEnumerable<STGenericObject> Objects
+        {
+            get
+            {
+                return _objects;
+            }
+            set
+            {
+                _objects = value;
+            }
         }
     }
 }

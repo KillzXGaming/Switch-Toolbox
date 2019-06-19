@@ -18,7 +18,11 @@ namespace Switch_Toolbox.Library
 
         STProgressBar progressBar;
 
-        public void SaveFromModel(STGenericModel model, string FileName, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
+        public void SaveFromModel(STGenericModel model, string FileName, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null) {
+            SaveFromModel(model.Objects.ToList(), model.Materials.ToList(), FileName, Textures, skeleton, NodeArray);
+        }
+
+        public void SaveFromModel(List<STGenericObject> Meshes, List<STGenericMaterial> Materials, string FileName, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
         {
             ExtractedTextures.Clear();
 
@@ -33,17 +37,17 @@ namespace Switch_Toolbox.Library
             progressBar.Refresh();
 
             SaveSkeleton(skeleton, scene.RootNode);
-            SaveMaterials(scene, model, FileName, Textures);
+            SaveMaterials(scene, Materials, FileName, Textures);
 
             progressBar.Task = "Exorting Meshes...";
             progressBar.Value = 50;
 
-            SaveMeshes(scene, model, skeleton, FileName, NodeArray);
+            SaveMeshes(scene, Meshes, skeleton, FileName, NodeArray);
 
             progressBar.Task = "Saving File...";
             progressBar.Value = 80;
 
-            SaveScene(FileName, scene, model.GetObjects());
+            SaveScene(FileName, scene, Meshes);
 
             progressBar.Value = 100;
             progressBar.Close();
@@ -78,10 +82,10 @@ namespace Switch_Toolbox.Library
 
         }
 
-        private void SaveMeshes(Scene scene, STGenericModel model, STSkeleton skeleton, string FileName, List<int> NodeArray)
+        private void SaveMeshes(Scene scene, List<STGenericObject> Meshes, STSkeleton skeleton, string FileName, List<int> NodeArray)
         {
             int MeshIndex = 0;
-            foreach (var obj in model.Nodes[0].Nodes)
+            foreach (var obj in Meshes)
             {
                 var mesh = SaveMesh((STGenericObject)obj, MeshIndex, skeleton, NodeArray);
                 scene.Meshes.Add(mesh);
@@ -127,8 +131,14 @@ namespace Switch_Toolbox.Library
                     {
                         if (j < genericObj.VertexSkinCount)
                         {
-                            //Get the bone via the node array and bone index from the vertex
-                            STBone STbone = skeleton.bones[NodeArray[v.boneIds[j]]];
+                            STBone STbone = null;
+                            if (NodeArray != null)
+                            {
+                                //Get the bone via the node array and bone index from the vertex
+                                STbone = skeleton.bones[NodeArray[v.boneIds[j]]];
+                            }
+                            else
+                                STbone = skeleton.bones[v.boneIds[j]];
 
                             //Find the index of a bone. If it doesn't exist then we add it
                             int boneInd = mesh.Bones.FindIndex(x => x.Name == STbone.Text);
@@ -478,7 +488,7 @@ namespace Switch_Toolbox.Library
             writer.Flush();
         }
 
-        private void SaveMaterials(Scene scene, STGenericModel model, string FileName, List<STGenericTexture> Textures)
+        private void SaveMaterials(Scene scene, List<STGenericMaterial> Materials, string FileName, List<STGenericTexture> Textures)
         {
             string TextureExtension = ".png";
             string TexturePath = System.IO.Path.GetDirectoryName(FileName);
@@ -503,7 +513,7 @@ namespace Switch_Toolbox.Library
                 }
             }
 
-            foreach (var mat in model.Nodes[1].Nodes)
+            foreach (var mat in Materials)
             {
                 var genericMat = (STGenericMaterial)mat;
 

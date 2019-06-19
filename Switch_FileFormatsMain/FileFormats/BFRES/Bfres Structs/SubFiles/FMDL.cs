@@ -27,6 +27,9 @@ namespace Bfres.Structs
         public List<FSHP> shapes = new List<FSHP>();
         public List<FSHP> depthSortedMeshes = new List<FSHP>();
 
+        public override IEnumerable<STGenericObject> Objects => shapes;
+        public override IEnumerable<STGenericMaterial> Materials => materials.Values.ToList();
+
         public Dictionary<string, FMAT> materials = new Dictionary<string, FMAT>();
         public Model Model;
         public ResU.Model ModelU;
