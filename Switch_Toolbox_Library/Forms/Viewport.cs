@@ -101,6 +101,7 @@ namespace Switch_Toolbox.Library
             }
 
             drawContainersCB.SelectItemByText(ActiveContainer.Name);
+            UpdateViewport();
         }
 
         public bool ContainsDrawable(AbstractGlDrawable Drawable)
@@ -191,14 +192,13 @@ namespace Switch_Toolbox.Library
         private void LoadBaseDrawables()
         {
             var floor = new DrawableFloor();
-            scene.staticObjects.Add(floor);
             var xyzLnes = new DrawableXyzLines();
-            scene.staticObjects.Add(xyzLnes);
-
             var skybox = new DrawableSkybox();
-            scene.staticObjects.Add(skybox);
-
             var background = new DrawableBackground();
+
+            scene.staticObjects.Add(floor);
+            scene.staticObjects.Add(xyzLnes);
+            scene.staticObjects.Add(skybox);
             scene.staticObjects.Add(background);
 
             //    scene.objects.Add(new SingleObject(new Vector3(0, 0, 0)));
