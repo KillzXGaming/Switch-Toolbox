@@ -62,6 +62,46 @@ namespace FirstPlugin
             {
                 toolExt[0] = new STToolStripItem("Models");
                 toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (MKAGPDX .bin)", BatchExport));
+                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export as Combined (MKAGPDX .bin)", BatchExportCombined));
+            }
+
+            public void BatchExportCombined(object sender, EventArgs args)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Multiselect = true;
+                ofd.Filter = "Supported Formats|*.bin";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Supported Formats|*.dae";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    List<STGenericObject> Objects = new List<STGenericObject>();
+                    STSkeleton Skeleton = new STSkeleton();
+                    List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+
+                    int MatIndex = 0;
+                    foreach (var file in ofd.FileNames)
+                    {
+                        MKAGPDX_Model model = new MKAGPDX_Model();
+                        var stream = File.Open(file, FileMode.Open);
+                        model.Load(stream);
+                        stream.Dispose();
+
+                        foreach (STGenericMaterial mat in model.Nodes[0].Nodes)
+                        {
+                            mat.Text = $"Material {MatIndex++}";
+                            Materials.Add(mat);
+                        }
+
+                        Skeleton.bones.AddRange(((STSkeleton)model.DrawableContainer.Drawables[0]).bones);
+                        Objects.AddRange(((Renderer)model.DrawableContainer.Drawables[1]).Meshes);
+                    }
+
+                    AssimpSaver assimp = new AssimpSaver();
+                    ExportModelSettings settings = new ExportModelSettings();
+                    assimp.SaveFromModel(Objects, Materials, sfd.FileName, new List<STGenericTexture>(), Skeleton);
+                }
             }
 
             public void BatchExport(object sender, EventArgs args)
