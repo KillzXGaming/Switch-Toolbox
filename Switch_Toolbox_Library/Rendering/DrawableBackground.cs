@@ -15,7 +15,7 @@ namespace Switch_Toolbox.Library.Rendering
 {
     public class DrawableBackground : AbstractGlDrawable
     {
-        protected static ShaderProgram solidColorShaderProgram;
+        ShaderProgram defaultShaderProgram;
 
         int vbo_position;
 
@@ -46,7 +46,7 @@ namespace Switch_Toolbox.Library.Rendering
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (pass == Pass.TRANSPARENT || Runtime.PBR.UseSkybox || solidColorShaderProgram == null)
+            if (pass == Pass.TRANSPARENT || Runtime.PBR.UseSkybox)
                 return;
 
             bool buffersWereInitialized = vbo_position != 0;
@@ -59,20 +59,20 @@ namespace Switch_Toolbox.Library.Rendering
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
-            control.CurrentShader = solidColorShaderProgram;
+            control.CurrentShader = defaultShaderProgram;
             control.UpdateModelMatrix(Matrix4.Identity);
 
-            solidColorShaderProgram.EnableVertexAttributes();
+            defaultShaderProgram.EnableVertexAttributes();
 
             Vector3 topColor = ColorUtility.ToVector3(Runtime.backgroundGradientTop);
             Vector3 bottomColor = ColorUtility.ToVector3(Runtime.backgroundGradientBottom);
 
-            solidColorShaderProgram.SetVector4("topColor", new Vector4(topColor, 1.0f));
-            solidColorShaderProgram.SetVector4("bottomColor", new Vector4(bottomColor, 1.0f));
+            defaultShaderProgram.SetVector4("topColor", new Vector4(topColor, 1.0f));
+            defaultShaderProgram.SetVector4("bottomColor", new Vector4(bottomColor, 1.0f));
             
             BindBuffer();
 
-            solidColorShaderProgram.DisableVertexAttributes();
+            defaultShaderProgram.DisableVertexAttributes();
 
             GL.UseProgram(0);
             GL.Enable(EnableCap.CullFace);
@@ -114,8 +114,12 @@ namespace Switch_Toolbox.Library.Rendering
             GL.PopMatrix();
         }
 
+       private bool Initialized = false;
         public override void Prepare(GL_ControlModern control)
         {
+            if (Initialized)
+                return;
+
             var solidColorFrag = new FragmentShader(
                          @"#version 330
 				uniform vec4 bottomColor;
@@ -139,7 +143,8 @@ namespace Switch_Toolbox.Library.Rendering
 					gl_Position = vec4(position, 1);
 				}");
 
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
+            defaultShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
+            Initialized = true;
         }
 
         public override void Prepare(GL_ControlLegacy control)

@@ -191,6 +191,8 @@ namespace Switch_Toolbox.Library
         }
         private void LoadBaseDrawables()
         {
+            Runtime.OpenTKInitialized = true;
+
             var floor = new DrawableFloor();
             var xyzLnes = new DrawableXyzLines();
             var skybox = new DrawableSkybox();
@@ -205,7 +207,6 @@ namespace Switch_Toolbox.Library
 
             // LoadFog();
 
-            Runtime.OpenTKInitialized = true;
         }
 
         public int FogStart = 1;

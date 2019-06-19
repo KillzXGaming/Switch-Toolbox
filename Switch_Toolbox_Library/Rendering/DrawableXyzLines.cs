@@ -14,7 +14,7 @@ namespace Switch_Toolbox.Library.Rendering
 {
     public class DrawableXyzLines : AbstractGlDrawable
     {
-        protected static ShaderProgram solidColorShaderProgram;
+        ShaderProgram defaultShaderProgram;
 
         int vbo_position;
 
@@ -86,28 +86,25 @@ namespace Switch_Toolbox.Library.Rendering
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT || solidColorShaderProgram == null)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
             bool buffersWereInitialized = vbo_position != 0;
             if (!buffersWereInitialized)
                 UpdateVertexData();
 
-            if (!Runtime.OpenTKInitialized)
-                return;
-
             GL.UseProgram(0);
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.DepthTest);
 
-            control.CurrentShader = solidColorShaderProgram;
+            control.CurrentShader = defaultShaderProgram;
             control.UpdateModelMatrix(Matrix4.Identity);
 
             Matrix4 previewScale = Utils.TransformValues(Vector3.Zero, Vector3.Zero, Runtime.previewScale);
 
-            solidColorShaderProgram.EnableVertexAttributes();
-            Draw(solidColorShaderProgram);
-            solidColorShaderProgram.DisableVertexAttributes();
+            defaultShaderProgram.EnableVertexAttributes();
+            Draw(defaultShaderProgram);
+            defaultShaderProgram.DisableVertexAttributes();
 
             GL.UseProgram(0);
             GL.Enable(EnableCap.CullFace);
@@ -164,8 +161,12 @@ namespace Switch_Toolbox.Library.Rendering
             GL.Enable(EnableCap.Texture2D);
         }
 
+        private bool Initialized = false;
         public override void Prepare(GL_ControlModern control)
         {
+            if (Initialized)
+                return;
+
             var solidColorFrag = new FragmentShader(
                          @"#version 330
                 in vec3 color;
@@ -189,7 +190,8 @@ namespace Switch_Toolbox.Library.Rendering
 					gl_Position = mtxCam  * mtxMdl * vec4(vPosition.xyz, 1);
 				}");
 
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
+            defaultShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
+            Initialized = true;
         }
 
         public override void Prepare(GL_ControlLegacy control)
