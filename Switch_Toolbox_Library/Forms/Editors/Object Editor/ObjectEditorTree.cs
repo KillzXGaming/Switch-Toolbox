@@ -24,7 +24,7 @@ namespace Switch_Toolbox.Library.Forms
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
 
-        public readonly int MAX_TREENODE_VALUE = 1;
+        public readonly int MAX_TREENODE_VALUE = 4000;
 
         public void AddIArchiveFile(IFileFormat FileFormat)
         {
