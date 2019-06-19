@@ -82,7 +82,7 @@ namespace FirstPlugin
                         stream.Dispose();
 
                         string Path = System.IO.Path.Combine(folderDlg.SelectedPath,
-                                      System.IO.Path.GetFileName(file));
+                                      System.IO.Path.GetFileNameWithoutExtension(file) + ".dds");
 
                         model.ExportModel(Path);
                         model.Unload();
