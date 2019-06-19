@@ -40,7 +40,53 @@ namespace FirstPlugin
             get
             {
                 List<Type> types = new List<Type>();
+                types.Add(typeof(MenuExt));
                 return types.ToArray();
+            }
+        }
+
+        class MenuExt : IFileMenuExtension
+        {
+            public STToolStripItem[] NewFileMenuExtensions => null;
+            public STToolStripItem[] NewFromFileMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => toolExt;
+            public STToolStripItem[] TitleBarExtensions => null;
+            public STToolStripItem[] CompressionMenuExtensions => null;
+            public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
+
+            STToolStripItem[] toolExt = new STToolStripItem[1];
+
+            public MenuExt()
+            {
+                toolExt[0] = new STToolStripItem("Models");
+                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (MKAGPDX .bin)", BatchExport));
+            }
+
+            public void BatchExport(object sender, EventArgs args)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Supported Formats|*.bin";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                FolderSelectDialog folderDlg = new FolderSelectDialog();
+                if (folderDlg.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (var file in ofd.FileNames)
+                    {
+                        MKAGPDX_Model model = new MKAGPDX_Model();
+                        var stream = File.Open(file, FileMode.Open);
+                        model.Load(stream);
+                        stream.Dispose();
+
+                        string Path = System.IO.Path.Combine(folderDlg.SelectedPath,
+                                      System.IO.Path.GetFileName(file));
+
+                        model.ExportModel(Path);
+                        model.Unload();
+                    }
+                }
             }
         }
 
@@ -57,28 +103,37 @@ namespace FirstPlugin
             header.Read(new FileReader(stream), this);
 
             ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportModel, Keys.Control | Keys.E));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
         }
 
-        private void ExportModel(object sender, EventArgs args)
+        private void ExportModelAction(object sender, EventArgs args) {
+            ExportModel();
+        }
+
+        private void ExportModel()
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                AssimpSaver assimp = new AssimpSaver();
-                ExportModelSettings settings = new ExportModelSettings();
-
-                List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-                foreach (STGenericMaterial mat in Nodes[0].Nodes)
-                    Materials.Add(mat);
-
-                var model = new STGenericModel();
-                model.Materials = Materials;
-                model.Objects = ((Renderer)DrawableContainer.Drawables[1]).Meshes;
-
-                assimp.SaveFromModel(model, sfd.FileName, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
+                ExportModel(sfd.FileName);
             }
+        }
+
+        private void ExportModel(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+            foreach (STGenericMaterial mat in Nodes[0].Nodes)
+                Materials.Add(mat);
+
+            var model = new STGenericModel();
+            model.Materials = Materials;
+            model.Objects = ((Renderer)DrawableContainer.Drawables[1]).Meshes;
+
+            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
         }
 
         public void Unload()

@@ -120,6 +120,7 @@ namespace FirstPlugin
                     ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
                 OpenFileDialog opn = new OpenFileDialog();
+                opn.Filter = "Supported Formats|*.obj";
                 if (opn.ShowDialog() != DialogResult.OK) return;
                 var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(opn.FileName)), null);
                 var f = MarioKart.MK7.KCL.FromOBJ(mod);
