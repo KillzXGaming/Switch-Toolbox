@@ -24,7 +24,7 @@ namespace Switch_Toolbox.Library.Rendering
             var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
             var defaultVert = new VertexShader(File.ReadAllText(pathVert));
 
-            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
+            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
         }
         public override void Prepare(GL_ControlLegacy control)
         {

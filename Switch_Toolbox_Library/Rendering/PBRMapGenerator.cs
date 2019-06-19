@@ -40,12 +40,12 @@ namespace Switch_Toolbox.Library.Rendering
                 GenerateFrameBuffer();
         }
 
-        public void GenerateBrdfMap()
+        public void GenerateBrdfMap(GLControl control)
         {
             if (!IsBufferCreated())
                 GenerateFrameBuffer();
 
-            GL.UseProgram(BrdfShader.program);
+            BrdfShader.Use(control);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             RenderQuad();
 

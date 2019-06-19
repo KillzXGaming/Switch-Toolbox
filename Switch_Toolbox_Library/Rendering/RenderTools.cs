@@ -199,49 +199,6 @@ namespace Switch_Toolbox.Library
       
         }
 
-        public static void DrawScreenQuad()
-        {
-            var vert = new VertexShader(
-            @"#version 330
-
-            in vec3 position;
-            out vec2 texCoord;
-
-            void main()
-            {
-                texCoord.x = (position.x + 1.0) * 0.5;
-                texCoord.y = (position.y + 1.0) * 0.5;
-                gl_Position = vec4(position, 1);
-            }
-            ");
-            var frag = new FragmentShader(
-                @"﻿#version 330 in vec2 texCoord;
-
-                uniform vec3 topColor;
-                uniform vec3 bottomColor;
-
-                out vec4 FragColor;
-
-                void main()
-                {
-	                FragColor = vec4(1);
-	                FragColor.rgb = mix(bottomColor, topColor, texCoord.y);
-                }");
-
-            ShaderProgram shader = new ShaderProgram(frag, vert);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-
-
-            shader.SetVector3("topColor", new Vector3(0, 1, 0));
-            shader.SetVector3("bottomColor", new Vector3(0, 1, 0));
-
-            DrawScreenTriangle(shader);
-        }
-
         private static void DrawScreenTriangle(ShaderProgram shader)
         {
             float[] vertices =

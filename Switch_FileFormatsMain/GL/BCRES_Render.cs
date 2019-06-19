@@ -113,7 +113,7 @@ namespace FirstPlugin
             var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
             var defaultVert = new VertexShader(File.ReadAllText(pathVert));
 
-            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
+            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
         }
 
         public override void Prepare(GL_ControlLegacy control)
@@ -124,7 +124,7 @@ namespace FirstPlugin
             var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
             var defaultVert = new VertexShader(File.ReadAllText(pathVert));
 
-            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
+            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
         }
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
@@ -170,7 +170,7 @@ namespace FirstPlugin
             GL.Enable(EnableCap.CullFace);
         }
 
-        private static void SetBoneUniforms(ShaderProgram shader, CMDLWrapper fmdl, SOBJWrapper fshp)
+        private static void SetBoneUniforms(GLControl control, ShaderProgram shader, CMDLWrapper fmdl, SOBJWrapper fshp)
         {
             foreach (var FaceGroup in fshp.Shape.FaceGroups)
             {
@@ -179,10 +179,10 @@ namespace FirstPlugin
 
                 for (int i = 0; i < FaceGroup.BoneIndexList.Length; i++)
                 {
-                    GL.Uniform1(GL.GetUniformLocation(shader.program, String.Format("boneIds[{0}]", i)), FaceGroup.BoneIndexList[i]);
+                    GL.Uniform1(GL.GetUniformLocation(shader.programs[control], String.Format("boneIds[{0}]", i)), FaceGroup.BoneIndexList[i]);
 
                     Matrix4 transform = fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].invert * fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].Transform;
-                    GL.UniformMatrix4(GL.GetUniformLocation(shader.program, String.Format("bones[{0}]", i)), false, ref transform);
+                    GL.UniformMatrix4(GL.GetUniformLocation(shader.programs[control], String.Format("bones[{0}]", i)), false, ref transform);
                 }
             }
         }
@@ -306,7 +306,7 @@ namespace FirstPlugin
                 {
                     foreach (SOBJWrapper shp in mdl.Shapes)
                     {
-                        DrawModel(shp, mdl, shader, mdl.IsSelected);
+                        DrawModel(control, shp, mdl, shader, mdl.IsSelected);
                     }
                 }
             }
@@ -328,14 +328,14 @@ namespace FirstPlugin
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
         }
 
-        private void DrawModel(SOBJWrapper m, CMDLWrapper mdl, ShaderProgram shader, bool drawSelection)
+        private void DrawModel(GLControl control, SOBJWrapper m, CMDLWrapper mdl, ShaderProgram shader, bool drawSelection)
         {
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
             SetUniforms(m.MaterialWrapper, shader, m, m.DisplayId);
             SetUniformBlocks(m.MaterialWrapper, shader, m, m.DisplayId);
-            SetBoneUniforms(shader, mdl, m);
+            SetBoneUniforms(control,shader, mdl, m);
             SetVertexAttributes(m, shader);
             SetTextureUniforms(m.MaterialWrapper, m, shader);
 

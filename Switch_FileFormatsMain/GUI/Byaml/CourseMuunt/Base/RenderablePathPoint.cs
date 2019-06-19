@@ -1,5 +1,4 @@
-﻿using Gl_EditorFramework;
-using GL_EditorFramework.GL_Core;
+﻿using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -158,7 +157,7 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override void Prepare(GL_ControlModern control)
         {
-            Renderers.ColorBlockRenderer.Initialize();
+            Renderers.ColorBlockRenderer.Initialize(control);
         }
 
         public override void Prepare(GL_ControlLegacy control)
@@ -212,12 +211,6 @@ namespace GL_EditorFramework.EditorDrawables
         {
             Selected = false;
             return REDRAW;
-        }
-
-        public override void ApplyTransformActionToSelection(AbstractTransformAction transformAction)
-        {
-            position = transformAction.NewPos(position);
-            UpdateNodePosition();
         }
 
         public override LocalOrientation GetLocalOrientation(int partIndex)

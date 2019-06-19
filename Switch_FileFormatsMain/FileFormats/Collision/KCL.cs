@@ -574,8 +574,8 @@ namespace FirstPlugin
                     gl_Position = mtxMdl * mtxCam  * vec4(vPosition.xyz, 1.0);
 				}");
 
-                defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
-                solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+                defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
+                solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
 
             }
 
@@ -614,8 +614,8 @@ namespace FirstPlugin
                     gl_Position = mvpMatrix * vec4(vPosition.xyz, 1.0);
 				}");
 
-                defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
-                solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+                defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
+                solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
             }
 
             private void CheckBuffers()

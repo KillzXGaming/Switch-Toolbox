@@ -171,7 +171,7 @@ namespace Switch_Toolbox.Library.Rendering
 					gl_Position = mtxMdl * mtxCam * vec4(vPosition.xyz, 1);
 				}");
 
-            gridShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+            gridShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
         }
 
         public override void Prepare(GL_ControlLegacy control)

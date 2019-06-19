@@ -53,7 +53,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 					gl_Position = mtxCam  * mtxMdl * vec4(position.xyz, 1);
 				}");
 
-            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert);
+            defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
         }
 
         public override void Draw(GL_ControlLegacy control, Pass pass)

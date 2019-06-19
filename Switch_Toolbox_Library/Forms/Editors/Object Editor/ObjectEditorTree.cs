@@ -24,6 +24,8 @@ namespace Switch_Toolbox.Library.Forms
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
 
+        public readonly int MAX_TREENODE_VALUE = 1;
+
         public void AddIArchiveFile(IFileFormat FileFormat)
         {
             TreeNode FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
@@ -40,6 +42,9 @@ namespace Switch_Toolbox.Library.Forms
             int I = 0;
             foreach (var node in nodeFiles)
             {
+                if (I++ == MAX_TREENODE_VALUE)
+                    break;
+
                 string nodeString = node.FileName;
 
                 var roots = nodeString.Split(new char[] { '/' },

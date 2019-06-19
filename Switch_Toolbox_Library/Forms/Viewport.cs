@@ -375,10 +375,10 @@ namespace Switch_Toolbox.Library
 
             bool IsOrtho = orthographicToolStripMenuItem.Checked;
 
-            if (GL_ControlModern != null)
-                GL_ControlModern.UseOrthographicView = IsOrtho;
-            else
-                GL_ControlLegacy.UseOrthographicView = IsOrtho;
+        //    if (GL_ControlModern != null)
+         //       GL_ControlModern.UseOrthographicView = IsOrtho;
+         //   else
+              //  GL_ControlLegacy.UseOrthographicView = IsOrtho;
 
             UpdateViewport();
         }
@@ -398,10 +398,10 @@ namespace Switch_Toolbox.Library
 
             bool IsOrtho = orthographicToolStripMenuItem.Checked;
 
-            if (GL_ControlModern != null)
-                GL_ControlModern.UseOrthographicView = IsOrtho;
-            else
-                GL_ControlLegacy.UseOrthographicView = IsOrtho;
+       //     if (GL_ControlModern != null)
+       //         GL_ControlModern.UseOrthographicView = IsOrtho;
+       //     else
+       //         GL_ControlLegacy.UseOrthographicView = IsOrtho;
 
             UpdateViewport();
         }

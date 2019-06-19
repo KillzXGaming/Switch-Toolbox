@@ -139,7 +139,7 @@ namespace Switch_Toolbox.Library.Rendering
 					gl_Position = vec4(position, 1);
 				}");
 
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);
+            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
         }
 
         public override void Prepare(GL_ControlLegacy control)

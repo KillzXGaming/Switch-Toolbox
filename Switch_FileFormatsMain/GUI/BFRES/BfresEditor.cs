@@ -132,7 +132,7 @@ namespace FirstPlugin.Forms
             {
                 Renderer.CenterCamera(viewport.GL_ControlModern);
                 viewport.UpdateViewport();
-            }
+            } 
         }
 
         public void LoadEditor(UserControl Control)

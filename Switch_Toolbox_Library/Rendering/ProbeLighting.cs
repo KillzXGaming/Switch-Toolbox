@@ -308,7 +308,7 @@ namespace Switch_Toolbox.Library.Rendering
 					gl_Position = mtxMdl * mtxCam * vec4(vPosition.xyz, 1);
 				}");
 
-            ProbeSHShaderProgram = new ShaderProgram(Frag, Vert);
+            ProbeSHShaderProgram = new ShaderProgram(Frag, Vert, control);
         }
 
         public override void Prepare(GL_ControlLegacy control)
