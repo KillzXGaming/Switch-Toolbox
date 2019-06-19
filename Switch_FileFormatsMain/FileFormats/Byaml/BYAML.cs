@@ -61,12 +61,13 @@ namespace FirstPlugin
             public STToolStripItem[] EditMenuExtensions => null;
             public ToolStripButton[] IconButtonMenuExtensions => null;
 
-            STToolStripItem[] toolFileExt = new STToolStripItem[2];
+            STToolStripItem[] toolFileExt = new STToolStripItem[1];
 
             public MenuExt()
             {
-                toolFileExt[0] = new STToolStripItem("BYAML to Big Endian", ConvertLEtoBE);
-                toolFileExt[1] = new STToolStripItem("BYAML to Little Endian", ConvertBEtoLE);
+                toolFileExt[0] = new STToolStripItem("BYAML");
+                toolFileExt[0].DropDownItems.Add(new STToolStripItem("Convert to Big Endian", ConvertLEtoBE));
+                toolFileExt[0].DropDownItems.Add(new STToolStripItem("Convert to Little Endian", ConvertBEtoLE));
             }
 
             public void ConvertLEtoBE(object sender, EventArgs args)

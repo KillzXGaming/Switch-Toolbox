@@ -621,13 +621,49 @@ namespace Toolbox
         void RegisterMenuExtIndex(ToolStrip target, ToolStripButton[] list, int index = 0)
         {
             foreach (var i in list)
-                target.Items.Insert(index++, i);
+            {
+                  target.Items.Insert(index++, i);
+            }
         }
         void RegisterMenuExtIndex(ToolStripMenuItem target, STToolStripItem[] list, int index = 0)
         {
-            foreach (var i in list)
-                target.DropDownItems.Insert(index++, i);
+            foreach (STToolStripItem i in list)
+            {
+                if (i == null)
+                    continue;
+
+                if (!MenuHasItem(target, i))
+                    target.DropDownItems.Insert(index++, i);
+                else
+                    MergeDuplicateMenus(i, GetDuplicateMenuItem(target, i));
+            }
         }
+
+        bool MenuHasItem(ToolStripMenuItem target, STToolStripItem item)
+        {
+            foreach (ToolStripItem i in target.DropDownItems)
+                if (i.Text == item.Text)
+                    return true;
+
+            return false;
+        }
+
+
+        STToolStripItem GetDuplicateMenuItem(ToolStripMenuItem target, STToolStripItem item)
+        {
+            foreach (STToolStripItem i in target.DropDownItems)
+                if (i.Text == item.Text)
+                    return i;
+
+            return null;
+        }
+
+
+        void MergeDuplicateMenus(STToolStripItem src, STToolStripItem dest )
+        {
+            dest.DropDownItems.AddRange(src.DropDownItems);
+        }
+
         void RegisterMenuExtIndex(ToolStrip target, STToolStripItem[] list, int index = 0)
         {
             foreach (var i in list)

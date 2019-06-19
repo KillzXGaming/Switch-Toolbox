@@ -73,7 +73,6 @@ namespace FirstPlugin
             public MenuExt()
             {
                 editExt[0] = new STToolStripItem("Use Advanced Editor As Default", AdvancedEditor);
-                toolExt[0] = new STToolStripItem("Open Bfres Debugger", DebugInfo);
                 newFileExt[0] = new STToolStripItem("BFRES (Switch)", NewSwitchBfres);
                 newFileExt[1] = new STToolStripItem("BFRES (Wii U)", NewWiiUBfres);
 

@@ -70,8 +70,8 @@ namespace FirstPlugin
 
             public MenuExt()
             {
-                toolExt[0] = new STToolStripItem("Extract BNTX");
-                toolExt[0].Click += Export;
+                toolExt[0] = new STToolStripItem("Textures");
+                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch All (BNTX)", Export));
 
                 newFileExt[0] = new STToolStripItem("BNTX");
                 newFileExt[0].Click += New;

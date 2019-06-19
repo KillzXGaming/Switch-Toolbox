@@ -247,8 +247,8 @@ namespace FirstPlugin
             STToolStripItem[] toolExt = new STToolStripItem[1];
             public MenuExt()
             {
-                toolExt[0] = new STToolStripItem("Batch Export NUTEXB");
-                toolExt[0].Click += Export;
+                toolExt[0] = new STToolStripItem("Textures");
+                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (NUTEXB)", Export));
             }
             private void Export(object sender, EventArgs args)
             {

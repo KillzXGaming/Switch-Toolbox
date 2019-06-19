@@ -145,6 +145,7 @@ namespace FirstPlugin
             header.LowerNodes.Clear();
             header.UpperNodes.Clear();
             Nodes.Clear();
+            header = null;
         }
         public byte[] Save()
         {

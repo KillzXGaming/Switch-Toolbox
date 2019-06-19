@@ -83,36 +83,26 @@ namespace FirstPlugin
             PluginRuntime.bntxContainers.Clear();
         }
 
-        class ProbeBoundingConverter : IMenuExtension
+        class MenuExt : IMenuExtension
         {
             public STToolStripItem[] FileMenuExtensions => null;
             public STToolStripItem[] ToolsMenuExtensions => toolsExt;
             public STToolStripItem[] TitleBarExtensions => null;
 
-            readonly STToolStripItem[] toolsExt = new STToolStripItem[1];
-            public ProbeBoundingConverter()
+            readonly STToolStripItem[] toolsExt = new STToolStripItem[2];
+            public MenuExt()
             {
-                toolsExt[0] = new STToolStripItem("Mario Kart 8 Probe Light Converter");
-                toolsExt[0].Click += GenerateProbeLightBounds;
+                toolsExt[0] = new STToolStripItem("Super Mario Odyssey");
+                toolsExt[0].DropDownItems.Add(new STToolStripItem(" Costume Selector", OpenSelector));
+
+                toolsExt[1] = new STToolStripItem("Mario Kart 8");
+                toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
             }
 
             private void GenerateProbeLightBounds(object sender, EventArgs args) {
                 AAMP.GenerateProbeBoundings();
             }
-        }
 
-        class OdysseyCostumeSelectorMenu : IMenuExtension
-        {
-            public STToolStripItem[] FileMenuExtensions => null;
-            public STToolStripItem[] ToolsMenuExtensions => toolsExt;
-            public STToolStripItem[] TitleBarExtensions => null;
-
-            readonly STToolStripItem[] toolsExt = new STToolStripItem[1];
-            public OdysseyCostumeSelectorMenu()
-            {
-                toolsExt[0] = new STToolStripItem("Odyssey Costume Selector");
-                toolsExt[0].Click += OpenSelector;
-            }
             private void OpenSelector(object sender, EventArgs args)
             {
                 if (System.IO.Directory.Exists(Runtime.SmoGamePath))
@@ -255,9 +245,7 @@ namespace FirstPlugin
         private Type[] LoadMenus()
         {
             List<Type> MenuItems = new List<Type>();
-            MenuItems.Add(typeof(OdysseyCostumeSelectorMenu));
-            MenuItems.Add(typeof(ProbeBoundingConverter));
-
+            MenuItems.Add(typeof(MenuExt));
             return MenuItems.ToArray();
         }
         private Type[] LoadFileFormats()
