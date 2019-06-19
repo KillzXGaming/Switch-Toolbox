@@ -315,6 +315,7 @@ namespace FirstPlugin
             Formats.Add(typeof(MKGPDX_PAC));
             Formats.Add(typeof(LZARC));
             Formats.Add(typeof(IGA_PAK));
+            Formats.Add(typeof(MKAGPDX_Model));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
