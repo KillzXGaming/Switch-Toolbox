@@ -11,11 +11,12 @@ using LibHac.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace FirstPlugin
 {
 
-    public class NSP : TreeNodeFile, IFileFormat
+    public class NSP : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -38,6 +39,14 @@ namespace FirstPlugin
         Nca Control { get; set; }
         RomfsNodeWrapper romfsWrapper;
 
+        public bool CanAddFiles { get; set; }
+        public bool CanRenameFiles { get; set; }
+        public bool CanReplaceFiles { get; set; }
+        public bool CanDeleteFiles { get; set; }
+
+        public List<FileEntry> files = new List<FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
         public bool Identify(System.IO.Stream stream)
         {
             return Utils.HasExtension(FileName, ".nsp");
@@ -45,8 +54,6 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            Text = FileName;
-
             string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string KeyFile = Path.Combine(homeFolder, ".switch", "prod.keys");
             string TitleKeyFile = Path.Combine(homeFolder, ".switch", "title.keys");
@@ -72,29 +79,61 @@ namespace FirstPlugin
                             (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
                             .SectionNum, false, IntegrityCheckLevel.None, true));
 
-            romfsWrapper = new RomfsNodeWrapper();
-            romfsWrapper.romfs = romfs;
-            romfsWrapper.FillTreeNodes(Nodes, romfs.RootDir);
+            for (int i = 0; i < romfs.Files.Count; i++)
+                files.Add(new FileEntry(romfs,romfs.Files[i]));
         }
  
         public void Unload()
         {
-            if (romfsWrapper != null)
-            {
-                if (romfsWrapper.romfs != null)
-                {
-                    romfsWrapper.romfs.FileDict.Clear();
-                    romfsWrapper.romfs.Files.Clear();
-                    romfsWrapper.romfs = null;
-                }
-            }
-            Nodes.Clear();
+            files.Clear();
 
             Control = null;
         }
         public byte[] Save()
         {
             return null;
+        }
+
+        public bool AddFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public class FileEntry : ArchiveFileInfo
+        {
+            private Romfs ParentROMFS;
+            private RomfsFile File;
+
+            [Browsable(false)]
+            public override object DisplayProperties => this;
+
+            public override string FileSize => STMath.GetFileSize(File.DataLength, 4);
+            
+            [Browsable(false)]
+            public override byte[] FileData
+            {
+                get
+                {
+                    using (var stream = ParentROMFS.OpenFile(File).AsStream())
+                    {
+                        var mem = new MemoryStream();
+                        stream.CopyTo(mem);
+                        return mem.ToArray();
+                    }
+                }
+            }
+
+            public FileEntry(Romfs romfs, RomfsFile romfsFile)
+            {
+                ParentROMFS = romfs;
+                File = romfsFile;
+                FileName = File.FullPath;
+            }
         }
     }
 }

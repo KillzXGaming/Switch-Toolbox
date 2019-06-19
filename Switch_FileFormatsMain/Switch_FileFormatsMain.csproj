@@ -198,6 +198,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="FileFormats\AAMP\AAMP.cs" />
     <Compile Include="FileFormats\Archives\APAK.cs" />
+    <Compile Include="FileFormats\Archives\IGA_PAK.cs" />
     <Compile Include="FileFormats\Archives\LZARC.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
     <Compile Include="FileFormats\Archives\NXARC.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
+    <Compile Include="FileFormats\Rom\RomfsNodeWrapper.cs" />
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />
     <Compile Include="FileFormats\Shader\NVNSH.cs" />
@@ -266,7 +268,6 @@
     <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FSHA.cs" />
     <Compile Include="FileFormats\Audio\BFSTM.cs" />
     <Compile Include="FileFormats\Archives\NARC.cs" />
-    <Compile Include="FileFormats\Rom\ROMFS.cs" />
     <Compile Include="FileFormats\Archives\SDF.cs" />
     <Compile Include="FileFormats\Shader\SHARCFB.cs" />
     <Compile Include="FileFormats\Audio\BRSTM.cs" />

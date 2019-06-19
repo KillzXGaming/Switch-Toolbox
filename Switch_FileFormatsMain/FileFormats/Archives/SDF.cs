@@ -417,6 +417,9 @@ namespace FirstPlugin
             }
 
             bool IsFile = !Name.Contains("dummy") && decompresedSize > 5;
+
+            Console.WriteLine(Name + " " + IsFile);
+
             if (IsFile)
             {
                 FileEntries.Add(new FileEntry()

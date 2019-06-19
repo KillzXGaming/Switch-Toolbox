@@ -31,9 +31,6 @@ namespace Switch_Toolbox.Library.Forms
             AddNode(FileRoot);
         }
 
-        //The process takes awhile atm so limit splitting if there's a high amount
-        private readonly int MAX_FILE_LOAD = 15000;
-
         void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
         {
             var rootText = root.Text;
@@ -43,9 +40,6 @@ namespace Switch_Toolbox.Library.Forms
             int I = 0;
             foreach (var node in nodeFiles)
             {
-                if (I++ > MAX_FILE_LOAD)
-                    break;
-
                 string nodeString = node.FileName;
 
                 var roots = nodeString.Split(new char[] { '/' },

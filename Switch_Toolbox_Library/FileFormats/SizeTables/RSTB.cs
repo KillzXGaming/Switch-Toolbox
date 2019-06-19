@@ -41,10 +41,6 @@ namespace Switch_Toolbox.Library
             uint OldSize = GetSize(FileName);
             uint NewSize = (uint)ParseSize(FileName, Data, IsYaz0Compressed, Force);
 
-            STConsole.WriteLine($"Setting RSTB Entry!");
-            STConsole.WriteLine($"{FileName} OldSize {OldSize}");
-            STConsole.WriteLine($"{FileName} NewSize {NewSize}");
-
             SetSize(FileName, NewSize);
         }
 
@@ -103,6 +99,7 @@ namespace Switch_Toolbox.Library
         public void Write(FileWriter writer)
         {
             writer.SetByteOrder(IsBigEndian);
+
             writer.WriteSignature("RSTB");
             writer.Write(Crc32Tables.Count);
             writer.Write(NameTables.Count);

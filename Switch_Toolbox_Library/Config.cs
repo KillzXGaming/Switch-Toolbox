@@ -136,6 +136,9 @@ namespace Switch_Toolbox.Library
                     case "ListPanelWidth":
                         int.TryParse(node.InnerText, out Runtime.ObjectEditor.ListPanelWidth);
                         break;
+                    case "EditorDiplayIndex":
+                        int.TryParse(node.InnerText, out Runtime.ObjectEditor.EditorDiplayIndex);
+                        break;
                     case "ViewportWidth":
                         int.TryParse(node.InnerText, out Runtime.ViewportEditor.Width);
                         break;
@@ -402,6 +405,7 @@ namespace Switch_Toolbox.Library
         {
             XmlNode objlistSettingsNode = doc.CreateElement("OBJLISTSETTINGS");
             parentNode.AppendChild(objlistSettingsNode);
+            objlistSettingsNode.AppendChild(createNode(doc, "EditorDiplayIndex", Runtime.ObjectEditor.EditorDiplayIndex.ToString()));
             objlistSettingsNode.AppendChild(createNode(doc, "thumbnailSize", Runtime.thumbnailSize.ToString()));
             objlistSettingsNode.AppendChild(createNode(doc, "ListPanelWidth", Runtime.ObjectEditor.ListPanelWidth.ToString()));
             objlistSettingsNode.AppendChild(createNode(doc, "AddFilesToActiveObjectEditor", Runtime.AddFilesToActiveObjectEditor.ToString()));
