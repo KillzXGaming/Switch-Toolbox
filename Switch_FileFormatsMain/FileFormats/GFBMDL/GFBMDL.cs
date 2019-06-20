@@ -87,11 +87,11 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            Text = FileName;
             DrawableContainer.Name = FileName;
 
             header = new Header();
-            header.Read(new FileReader(stream));
-            DrawableContainer.Drawables.Add(header.Skeleton);
+            header.Read(new FileReader(stream), this);
 
         }
         public void Unload()
@@ -114,9 +114,10 @@ namespace FirstPlugin
             public List<string> TextureMaps = new List<string>();
             public List<string> Materials = new List<string>();
 
-            public void Read(FileReader reader)
+            public void Read(FileReader reader, GFBMDL Root)
             {
                 Skeleton = new STSkeleton();
+                Root.DrawableContainer.Drawables.Add(Skeleton);
 
                 reader.SetByteOrder(false);
 
@@ -147,9 +148,10 @@ namespace FirstPlugin
 
                 if (BoneDataOffset != 0)
                 {
+                    Root.Nodes.Add("Skeleton");
+
                     reader.Seek(BoneDataOffset, SeekOrigin.Begin);
                     uint Count = reader.ReadUInt32();
-                    Console.WriteLine($"BoneCount {Count}");
 
                     for (int i = 0; i < Count; i++)
                     {
@@ -157,7 +159,16 @@ namespace FirstPlugin
                         bone.Read(reader);
                         Skeleton.bones.Add(bone);
                     }
+
+                    foreach (var bone in Skeleton.bones)
+                    {
+                        if (bone.Parent == null)
+                            Root.Nodes[0].Nodes.Add(bone);
+                    }
                 }
+
+                Skeleton.update();
+                Skeleton.reset();
             }
 
             public void Write(FileWriter writer)
@@ -180,7 +191,7 @@ namespace FirstPlugin
                 reader.SeekBegin(BoneDataOffset);
                 long InfoPosition = reader.Position;
 
-                uint BoneInfoOffset = reader.ReadUInt32();
+                int BoneInfoOffset = reader.ReadInt32();
 
                 //Read the info section for position data
                 reader.SeekBegin(InfoPosition - BoneInfoOffset);
@@ -188,47 +199,56 @@ namespace FirstPlugin
                 BoneInfo = new BoneInfo();
                 BoneInfo.Read(reader);
 
+                RotationType = BoneRotationType.Euler;
+                Checked = true;
+
                 if (BoneInfo.NamePosition != 0)
                 {
-                    reader.SeekBegin(DataPosition + BoneInfo.NamePosition);
+                    reader.SeekBegin(InfoPosition + BoneInfo.NamePosition);
                     uint NameLength = reader.ReadUInt32();
                     Text = reader.ReadString((int)NameLength);
                 }
 
                 if (BoneInfo.RotationPosition != 0)
                 {
-                    reader.SeekBegin(DataPosition + BoneInfo.RotationPosition);
+                    reader.SeekBegin(InfoPosition + BoneInfo.RotationPosition);
                     float RotationX = reader.ReadSingle();
                     float RotationY = reader.ReadSingle();
                     float RotationZ = reader.ReadSingle();
                     rotation = new float[] { RotationX,RotationY, RotationZ };
+
+                    Console.WriteLine($"RotationX {RotationX} RotationY {RotationY} RotationX {RotationX} ");
                 }
 
                 if (BoneInfo.TranslationPosition != 0)
                 {
-                    reader.SeekBegin(DataPosition + BoneInfo.RotationPosition);
+                    reader.SeekBegin(InfoPosition + BoneInfo.TranslationPosition);
                     float TranslateX = reader.ReadSingle();
                     float TranslateY = reader.ReadSingle();
                     float TranslateZ = reader.ReadSingle();
                     position = new float[] { TranslateX, TranslateY, TranslateZ };
+
+                    Console.WriteLine($"TranslateX {TranslateX} TranslateY {TranslateY} TranslateZ {TranslateZ} ");
                 }
 
                 if (BoneInfo.ScalePosition != 0)
                 {
-                    reader.SeekBegin(DataPosition + BoneInfo.ScalePosition);
+                    reader.SeekBegin(InfoPosition + BoneInfo.ScalePosition);
                     float ScaleX = reader.ReadSingle();
                     float ScaleY = reader.ReadSingle();
                     float ScaleZ = reader.ReadSingle();
                     scale = new float[] { ScaleX, ScaleY, ScaleZ };
+
+                    Console.WriteLine($"ScaleX {ScaleX} ScaleY {ScaleX} ScaleZ {ScaleX} ");
                 }
 
                 if (BoneInfo.ParentPosition != 0)
                 {
-                    reader.SeekBegin(DataPosition + BoneInfo.ParentPosition);
+                    reader.SeekBegin(InfoPosition + BoneInfo.ParentPosition);
                     parentIndex = reader.ReadInt32();
                 }
 
-                Console.WriteLine("BONE " + Text);
+                Console.WriteLine($"parentIndex {parentIndex} {Text}");
 
                 //Seek back to next bone in array
                 reader.SeekBegin(DataPosition + sizeof(uint));
@@ -244,7 +264,7 @@ namespace FirstPlugin
             internal ushort Unknown2Position { get; set; }
             internal ushort ParentPosition { get; set; }
             internal ushort Unknown3Position { get; set; }
-            internal ushort IsVisablePosition { get; set; }
+            internal ushort IsVisiblePosition { get; set; }
             internal ushort ScalePosition { get; set; }
             internal ushort RotationPosition { get; set; }
             internal ushort TranslationPosition { get; set; }
@@ -259,12 +279,25 @@ namespace FirstPlugin
                 Unknown2Position = reader.ReadUInt16(); 
                 ParentPosition = reader.ReadUInt16();
                 Unknown3Position = reader.ReadUInt16(); //Padding
-                IsVisablePosition = reader.ReadUInt16(); //Points to byte. 0 or 1 for visibilty
+                IsVisiblePosition = reader.ReadUInt16(); //Points to byte. 0 or 1 for visibilty
                 ScalePosition = reader.ReadUInt16();
                 RotationPosition = reader.ReadUInt16();
                 TranslationPosition = reader.ReadUInt16();
                 Unknown4Position = reader.ReadUInt16(); //Padding
                 Unknown5Position = reader.ReadUInt16();  //Padding
+
+               /* Console.WriteLine($"SectionSize {SectionSize}");
+                Console.WriteLine($"NamePosition {NamePosition}");
+                Console.WriteLine($"UnknownPosition {UnknownPosition}");
+                Console.WriteLine($"Unknown2Position {Unknown2Position}");
+                Console.WriteLine($"ParentPosition {ParentPosition}");
+                Console.WriteLine($"Unknown3Position {Unknown3Position}");
+                Console.WriteLine($"IsVisiblePosition {IsVisiblePosition}");
+                Console.WriteLine($"ScalePosition {ScalePosition}");
+                Console.WriteLine($"RotationPosition {RotationPosition}");
+                Console.WriteLine($"TranslationPosition {TranslationPosition}");
+                Console.WriteLine($"Unknown4Position {Unknown4Position}");
+                Console.WriteLine($"Unknown5Position {Unknown5Position}");*/
             }
         }
 
