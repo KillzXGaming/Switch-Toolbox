@@ -304,6 +304,7 @@ namespace FirstPlugin
             Formats.Add(typeof(LZARC));
             Formats.Add(typeof(IGA_PAK));
             Formats.Add(typeof(MKAGPDX_Model));
+            Formats.Add(typeof(GFBMDL));
 
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
@@ -312,7 +313,6 @@ namespace FirstPlugin
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
-                Formats.Add(typeof(GFBMDL));
                 Formats.Add(typeof(NCA));
                 Formats.Add(typeof(XCI));
                 Formats.Add(typeof(BFLAN));

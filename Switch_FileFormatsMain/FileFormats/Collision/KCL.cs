@@ -648,9 +648,8 @@ namespace FirstPlugin
 
                 control.CurrentShader = defaultShaderProgram;
 
-            //    control.UpdateModelMatrix(
-          //      Matrix4.CreateScale(Runtime.previewScale) *
-             //   Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
+                control.UpdateModelMatrix(
+                Matrix4.CreateScale(Runtime.previewScale));
 
                 SetRenderSettings(defaultShaderProgram);
 

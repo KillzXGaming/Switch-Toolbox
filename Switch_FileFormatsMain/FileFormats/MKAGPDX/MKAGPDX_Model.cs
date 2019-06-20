@@ -109,7 +109,6 @@ namespace FirstPlugin
             public void BatchExport(object sender, EventArgs args)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Multiselect = true;
                 ofd.Filter = "Supported Formats|*.bin";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 

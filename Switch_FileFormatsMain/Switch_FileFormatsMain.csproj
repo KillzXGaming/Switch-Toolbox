@@ -241,7 +241,7 @@
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
-    <Compile Include="FileFormats\MKAGPDX\Model\MKAGPDX_Model.cs" />
+    <Compile Include="FileFormats\MKAGPDX\MKAGPDX_Model.cs" />
     <Compile Include="FileFormats\Rom\RomfsNodeWrapper.cs" />
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />

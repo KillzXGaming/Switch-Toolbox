@@ -7,6 +7,7 @@ using Switch_Toolbox;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
+using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
@@ -43,12 +44,55 @@ namespace FirstPlugin
             }
         }
 
+        Viewport viewport
+        {
+            get
+            {
+                var editor = LibraryGUI.Instance.GetObjectEditor();
+                return editor.GetViewport();
+            }
+            set
+            {
+                var editor = LibraryGUI.Instance.GetObjectEditor();
+                editor.LoadViewport(value);
+            }
+        }
+
+        bool DrawablesLoaded = false;
+        public override void OnClick(TreeView treeView)
+        {
+            if (Runtime.UseOpenGL)
+            {
+                if (viewport == null)
+                {
+                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
+                    viewport.Dock = DockStyle.Fill;
+                }
+
+                if (!DrawablesLoaded)
+                {
+                    ObjectEditor.AddContainer(DrawableContainer);
+                    DrawablesLoaded = true;
+                }
+
+                viewport.ReloadDrawables(DrawableContainer);
+                LibraryGUI.Instance.LoadEditor(viewport);
+
+                viewport.Text = Text;
+            }
+        }
+
         public Header header;
+        public DrawableContainer DrawableContainer = new DrawableContainer();
 
         public void Load(System.IO.Stream stream)
         {
+            DrawableContainer.Name = FileName;
+
             header = new Header();
             header.Read(new FileReader(stream));
+            DrawableContainer.Drawables.Add(header.Skeleton);
+
         }
         public void Unload()
         {
@@ -63,6 +107,8 @@ namespace FirstPlugin
 
         public class Header
         {
+            public STSkeleton Skeleton { get; set; }
+
             public uint Version { get; set; }
             public float[] Boundings { get; set; }
             public List<string> TextureMaps = new List<string>();
@@ -70,6 +116,8 @@ namespace FirstPlugin
 
             public void Read(FileReader reader)
             {
+                Skeleton = new STSkeleton();
+
                 reader.SetByteOrder(false);
 
                 Version = reader.ReadUInt32();
@@ -80,6 +128,7 @@ namespace FirstPlugin
                 long Unknown2Offset = reader.ReadOffset(true, typeof(uint));
                 long ShaderOffset = reader.ReadOffset(true, typeof(uint));
                 long VisGroupOffset = reader.ReadOffset(true, typeof(uint));
+                long VertexDataOffset = reader.ReadOffset(true, typeof(uint));
                 long BoneDataOffset = reader.ReadOffset(true, typeof(uint));
 
                 if (TextureOffset != 0)
@@ -89,14 +138,25 @@ namespace FirstPlugin
                     TextureMaps = reader.ReadNameOffsets(Count, true, typeof(uint), true);
                 }
 
-                foreach (var tex in TextureMaps)
-                    Console.WriteLine("TEXNAME " + tex);
-
                 if (MaterialOffset != 0)
                 {
                     reader.Seek(MaterialOffset, SeekOrigin.Begin);
                     uint Count = reader.ReadUInt32();
                     Materials = reader.ReadNameOffsets(Count, true, typeof(uint));
+                }
+
+                if (BoneDataOffset != 0)
+                {
+                    reader.Seek(BoneDataOffset, SeekOrigin.Begin);
+                    uint Count = reader.ReadUInt32();
+                    Console.WriteLine($"BoneCount {Count}");
+
+                    for (int i = 0; i < Count; i++)
+                    {
+                        var bone = new Bone(Skeleton);
+                        bone.Read(reader);
+                        Skeleton.bones.Add(bone);
+                    }
                 }
             }
 
@@ -106,9 +166,106 @@ namespace FirstPlugin
             }
         }
 
-        public class Bone
+        public class Bone : STBone
         {
+            internal BoneInfo BoneInfo { get; set; }
 
+            public Bone(STSkeleton skeleton) : base(skeleton) { }
+
+            public void Read(FileReader reader)
+            {
+                long DataPosition = reader.Position;
+                var BoneDataOffset = reader.ReadOffset(true, typeof(uint));
+
+                reader.SeekBegin(BoneDataOffset);
+                long InfoPosition = reader.Position;
+
+                uint BoneInfoOffset = reader.ReadUInt32();
+
+                //Read the info section for position data
+                reader.SeekBegin(InfoPosition - BoneInfoOffset);
+
+                BoneInfo = new BoneInfo();
+                BoneInfo.Read(reader);
+
+                if (BoneInfo.NamePosition != 0)
+                {
+                    reader.SeekBegin(DataPosition + BoneInfo.NamePosition);
+                    uint NameLength = reader.ReadUInt32();
+                    Text = reader.ReadString((int)NameLength);
+                }
+
+                if (BoneInfo.RotationPosition != 0)
+                {
+                    reader.SeekBegin(DataPosition + BoneInfo.RotationPosition);
+                    float RotationX = reader.ReadSingle();
+                    float RotationY = reader.ReadSingle();
+                    float RotationZ = reader.ReadSingle();
+                    rotation = new float[] { RotationX,RotationY, RotationZ };
+                }
+
+                if (BoneInfo.TranslationPosition != 0)
+                {
+                    reader.SeekBegin(DataPosition + BoneInfo.RotationPosition);
+                    float TranslateX = reader.ReadSingle();
+                    float TranslateY = reader.ReadSingle();
+                    float TranslateZ = reader.ReadSingle();
+                    position = new float[] { TranslateX, TranslateY, TranslateZ };
+                }
+
+                if (BoneInfo.ScalePosition != 0)
+                {
+                    reader.SeekBegin(DataPosition + BoneInfo.ScalePosition);
+                    float ScaleX = reader.ReadSingle();
+                    float ScaleY = reader.ReadSingle();
+                    float ScaleZ = reader.ReadSingle();
+                    scale = new float[] { ScaleX, ScaleY, ScaleZ };
+                }
+
+                if (BoneInfo.ParentPosition != 0)
+                {
+                    reader.SeekBegin(DataPosition + BoneInfo.ParentPosition);
+                    parentIndex = reader.ReadInt32();
+                }
+
+                Console.WriteLine("BONE " + Text);
+
+                //Seek back to next bone in array
+                reader.SeekBegin(DataPosition + sizeof(uint));
+            }
+        }
+
+        //A section that stores position info for bone data
+        public class BoneInfo
+        {
+            internal ushort SectionSize { get; set; }
+            internal ushort NamePosition { get; set; }
+            internal ushort UnknownPosition { get; set; }
+            internal ushort Unknown2Position { get; set; }
+            internal ushort ParentPosition { get; set; }
+            internal ushort Unknown3Position { get; set; }
+            internal ushort IsVisablePosition { get; set; }
+            internal ushort ScalePosition { get; set; }
+            internal ushort RotationPosition { get; set; }
+            internal ushort TranslationPosition { get; set; }
+            internal ushort Unknown4Position { get; set; }
+            internal ushort Unknown5Position { get; set; }
+
+            public void Read(FileReader reader)
+            {
+                SectionSize = reader.ReadUInt16();
+                NamePosition = reader.ReadUInt16();
+                UnknownPosition = reader.ReadUInt16();
+                Unknown2Position = reader.ReadUInt16(); 
+                ParentPosition = reader.ReadUInt16();
+                Unknown3Position = reader.ReadUInt16(); //Padding
+                IsVisablePosition = reader.ReadUInt16(); //Points to byte. 0 or 1 for visibilty
+                ScalePosition = reader.ReadUInt16();
+                RotationPosition = reader.ReadUInt16();
+                TranslationPosition = reader.ReadUInt16();
+                Unknown4Position = reader.ReadUInt16(); //Padding
+                Unknown5Position = reader.ReadUInt16();  //Padding
+            }
         }
 
         public class Material
