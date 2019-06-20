@@ -383,9 +383,27 @@ void main()
 
 	if (RenderAsLighting)
 	{
-	    fragColor.rgb = specularTerm;
+	    diffuseIblColor = texture(irradianceMap, N).rgb;
+	    diffuseTerm = diffuseIblColor * vec3(0.5);
+		diffuseTerm *= kD;
+		diffuseTerm *= cavity;
+		diffuseTerm *= ao;
+		diffuseTerm *= shadow;
+		diffuseTerm += LightingDiffuse;
+
+		// Adjust for metalness.
+		diffuseTerm *= clamp(1 - metallic, 0, 1);
+		diffuseTerm *= vec3(1) - kS.xxx;
+
+	    fragColor.rgb = vec3(0);
+        fragColor.rgb += diffuseTerm;
+	    fragColor.rgb += specularTerm;
 	    fragColor.rgb += emissionTerm;
+		 // Global brightness adjustment.
+		 fragColor.rgb *= 1.5;
+	    // HDR tonemapping
 		fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
+        // Convert back to sRGB.
 		fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
 	}
 

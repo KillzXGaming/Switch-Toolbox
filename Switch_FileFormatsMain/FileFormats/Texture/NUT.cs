@@ -352,6 +352,10 @@ namespace FirstPlugin
                         Gx2HeaderData.Read(reader);
                         Gx2HeaderData.data = Data;
                         Gx2HeaderData.mipData = MipData;
+                        RedChannel = GX2ChanneToGeneric((GX2CompSel)Gx2HeaderData.compSel[0]);
+                        GreenChannel = GX2ChanneToGeneric((GX2CompSel)Gx2HeaderData.compSel[1]);
+                        BlueChannel = GX2ChanneToGeneric((GX2CompSel)Gx2HeaderData.compSel[2]);
+                        AlphaChannel = GX2ChanneToGeneric((GX2CompSel)Gx2HeaderData.compSel[3]);
 
                         Format = Bfres.Structs.FTEX.ConvertFromGx2Format((GX2SurfaceFormat)Gx2HeaderData.format);
                     }
@@ -359,6 +363,16 @@ namespace FirstPlugin
 
                 //Seek back for next image
                 reader.Seek(pos + HeaderSize, System.IO.SeekOrigin.Begin);
+            }
+
+            private STChannelType GX2ChanneToGeneric(GX2CompSel comp)
+            {
+                if (comp == GX2CompSel.ChannelR) return STChannelType.Red;
+                else if (comp == GX2CompSel.ChannelG) return STChannelType.Green;
+                else if (comp == GX2CompSel.ChannelB) return STChannelType.Blue;
+                else if (comp == GX2CompSel.ChannelA) return STChannelType.Alpha;
+                else if (comp == GX2CompSel.Always0) return STChannelType.Zero;
+                else return STChannelType.One;
             }
 
             public void Write(FileWriter writer, bool IsNTP3)
@@ -451,6 +465,11 @@ namespace FirstPlugin
 
         public class NutGX2Surface : GX2.GX2Surface
         {
+            public NutGX2Surface()
+            {
+                compSel = new byte[4] { 0,1,2,3,};
+            }
+
             public void Read(FileReader reader)
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;

@@ -77,6 +77,12 @@ namespace FirstPlugin
             return editor;
         }
 
+        public override void OnAfterAdded()
+        {
+            if (textures.Count > 0)
+                this.TreeView.SelectedNode = textures[0];
+        }
+
         public override void FillEditor(UserControl control)
         {
             ((STPropertyGrid)control).LoadProperty(header);
@@ -263,6 +269,13 @@ namespace FirstPlugin
             uint surfBlockType;
             uint dataBlockType;
             uint mipBlockType;
+            uint vertexShaderHeader = 0x03;
+            uint vertexShaderProgram = 0x05;
+            uint pixelShaderHeader = 0x06;
+            uint pixelShaderProgram = 0x07;
+            uint geometryShaderHeader = 0x08;
+            uint geometryShaderProgram = 0x09;
+            uint userDataBlock = 0x10;
 
             if (header.MajorVersion == 6 && header.MinorVersion == 0)
             {
@@ -296,6 +309,9 @@ namespace FirstPlugin
                 GTXDataBlock block = new GTXDataBlock();
                 block.Read(reader);
                 blocks.Add(block);
+
+                bool BlockIsEmpty = block.BlockType == BlockType.AlignData ||
+                                    block.BlockType == BlockType.EndOfFile;
 
                 //Here we use "if" instead of "case" statements as types vary between versions
                 if ((uint)block.BlockType == surfBlockType)
@@ -331,6 +347,20 @@ namespace FirstPlugin
                 {
                     mipMaps.Add(block.data);
                 }
+                else if ((uint)block.BlockType == vertexShaderHeader)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = "Vertex Shader Header" });
+                else if ((uint)block.BlockType == vertexShaderProgram)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = "Vertex Shader Program" });
+                else if ((uint)block.BlockType == pixelShaderHeader)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = "Pixel Shader Header" });
+                else if ((uint)block.BlockType == pixelShaderProgram)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = "Pixel Shader Program" });
+                else if ((uint)block.BlockType == geometryShaderHeader)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = "Geometry Shader Header" });
+                else if ((uint)block.BlockType == geometryShaderProgram)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = "Geometry Shader Program" });
+                else if (!BlockIsEmpty)
+                    Nodes.Add(new BlockDisplay(block.data) { Text = $"Block Type {block.BlockType.ToString("X")}" });
             }
             if (textures.Count != data.Count)
                 throw new Exception($"Bad size! {textures.Count} {data.Count}");
@@ -339,27 +369,54 @@ namespace FirstPlugin
             int curMip = 0;
             foreach (var node in Nodes)
             {
-                TextureData tex = (TextureData)node;
+                if (node is TextureData)
+                {
+                    TextureData tex = (TextureData)node;
 
-                tex.surface.data = data[curTex];
-                tex.surface.bpp = GX2.surfaceGetBitsPerPixel(tex.surface.format) >> 3;
-                tex.Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)tex.surface.format);
-                tex.Width = tex.surface.width;
-                tex.Height = tex.surface.height;
+                    tex.surface.data = data[curTex];
+                    tex.surface.bpp = GX2.surfaceGetBitsPerPixel(tex.surface.format) >> 3;
+                    tex.Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)tex.surface.format);
+                    tex.Width = tex.surface.width;
+                    tex.Height = tex.surface.height;
 
-                if (tex.surface.numMips > 1)
-                    tex.surface.mipData = mipMaps[curMip++];
-                else
-                    tex.surface.mipData = new byte[0];
+                    if (tex.surface.numMips > 1)
+                        tex.surface.mipData = mipMaps[curMip++];
+                    else
+                        tex.surface.mipData = new byte[0];
 
-                if (tex.surface.mipData == null)
-                    tex.surface.numMips = 1;
+                    if (tex.surface.mipData == null)
+                        tex.surface.numMips = 1;
 
-                curTex++;
+                    curTex++;
+                }
             }
             reader.Close();
             reader.Dispose();
         }
+
+        public class BlockDisplay : TreeNodeCustom
+        {
+            public byte[] BlockData;
+
+            public BlockDisplay(byte[] data)
+            {
+                BlockData = data;
+            }
+
+            public override void OnClick(TreeView treeview)
+            {
+                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                if (editor == null)
+                {
+                    editor = new HexEditor();
+                    LibraryGUI.Instance.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadData(BlockData);
+            }
+        }
+
         public class GTXHeader
         {
             readonly string Magic = "Gfx2";

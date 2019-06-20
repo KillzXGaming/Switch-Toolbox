@@ -739,10 +739,17 @@ namespace Bfres.Structs
                 default:
                     List<STGenericObject> ImportedObjects = new List<STGenericObject>();
                     List<STGenericMaterial> ImportedMaterials = new List<STGenericMaterial>();
-                    List<string> ImportedBoneNames = new List<string>();
                     STSkeleton ImportedSkeleton = new STSkeleton();
 
-                    if (Runtime.DEVELOPER_DEBUG_MODE)
+                    if (ext == ".semodel")
+                    {
+                        SEModel seModel = new SEModel();
+                        seModel.CreateGenericModel(FileName);
+                        ImportedObjects = seModel.objects;
+                        ImportedMaterials = seModel.materials;
+                        ImportedSkeleton = seModel.skeleton;
+                    }
+                    else if (Runtime.DEVELOPER_DEBUG_MODE)
                     {
                         DAE daeFile = new DAE();
                         bool IsLoaded = daeFile.LoadFile(FileName);
@@ -753,7 +760,6 @@ namespace Bfres.Structs
                         ImportedObjects = daeFile.objects;
                         ImportedMaterials = daeFile.materials;
                         ImportedSkeleton = daeFile.skeleton;
-                        ImportedBoneNames = daeFile.BoneNames;
                     }
                     else
                     {
@@ -766,7 +772,6 @@ namespace Bfres.Structs
                         ImportedObjects = assimp.objects;
                         ImportedMaterials = assimp.materials;
                         ImportedSkeleton = assimp.skeleton;
-                        ImportedBoneNames = assimp.BoneNames;
                     }
 
 
@@ -1092,8 +1097,8 @@ namespace Bfres.Structs
                             if (obj.ObjectName == "")
                                 obj.ObjectName = $"Mesh {curShp}";
 
-                            progressBar.Task = $"Generating shape {obj.ObjectName} { curShp} / { ImportedMaterials.Count}";
-                            progressBar.Value = ((curShp++ * 100) / ImportedMaterials.Count);
+                            progressBar.Task = $"Generating shape {obj.ObjectName} { curShp} / { ImportedObjects.Count}";
+                            progressBar.Value = ((curShp++ * 100) / ImportedObjects.Count);
                             progressBar.Refresh();
 
 
@@ -1114,7 +1119,7 @@ namespace Bfres.Structs
 
                             shape.BoneIndex = obj.BoneIndex;
 
-                            if (obj.MaterialIndex + MatStartIndex < materials.Count)
+                            if (obj.MaterialIndex + MatStartIndex < materials.Count && obj.MaterialIndex > 0)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
                                 shape.MaterialIndex = 0;

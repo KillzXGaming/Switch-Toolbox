@@ -226,6 +226,7 @@
     <Compile Include="FileFormats\DAE\DAE.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="FileFormats\R4G4.cs" />
+    <Compile Include="FileFormats\SEModel.cs" />
     <Compile Include="FileFormats\SizeTables\RSTB.cs" />
     <Compile Include="FileFormats\SizeTables\TPFileSizeTable.cs" />
     <Compile Include="FileFormats\TGA.cs" />

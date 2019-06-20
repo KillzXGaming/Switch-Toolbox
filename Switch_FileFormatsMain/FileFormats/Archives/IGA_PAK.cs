@@ -84,7 +84,7 @@ namespace FirstPlugin
 
                 for (int i = 0; i < FileCount; i++)
                 {
-                    var file = new FileEntry();
+                    var file = new FileEntry(FilePath);
                     file.FileName = FileNames[i];
                     file.Read(reader);
                     files.Add(file);
@@ -114,6 +114,9 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            //The archive file used to open the file
+            public string SourceFile { get; set; }
+
             public CompressionType FileCompressionType;
 
             public enum CompressionType : int
@@ -123,27 +126,44 @@ namespace FirstPlugin
                 Deflate,
             }
 
-            public void Read(FileReader reader)
+            public FileEntry(string ArchivePath)
             {
-                uint FileOffset = reader.ReadUInt32();
-                byte[] Unknown = reader.ReadBytes(4);
-                uint DecompressedFileSize = reader.ReadUInt32();
-                FileCompressionType = reader.ReadEnum<CompressionType>(false);
+                SourceFile = ArchivePath;
+            }
 
-                using (reader.TemporarySeek(FileOffset, System.IO.SeekOrigin.Begin))
+            private uint FileOffset;
+            private uint DecompressedFileSize;
+
+            public override byte[] FileData
+            {
+                get
                 {
-                    if (FileCompressionType == CompressionType.None)
+                    using (var reader = new FileReader(SourceFile))
                     {
-                        FileData = reader.ReadBytes((int)DecompressedFileSize);
-                    }
-                    else
-                    {
-                        uint FileSize = reader.ReadUInt32();
-
                         reader.Position = FileOffset;
-                        FileData = reader.ReadBytes((int)FileSize + 0x10);
+                        if (FileCompressionType == CompressionType.None)
+                        {
+                            return reader.ReadBytes((int)DecompressedFileSize);
+                        }
+                        else
+                        {
+                            uint FileSize = reader.ReadUInt32();
+
+                            reader.Position = FileOffset;
+                            return reader.ReadBytes((int)FileSize + 0x10);
+                        }
                     }
                 }
+            }
+
+            public void Read(FileReader reader)
+            {
+                FileOffset = reader.ReadUInt32();
+                byte[] Unknown = reader.ReadBytes(4);
+                DecompressedFileSize = reader.ReadUInt32();
+                FileCompressionType = reader.ReadEnum<CompressionType>(false);
+
+              
             }
         }
     }
