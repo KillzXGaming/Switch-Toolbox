@@ -124,7 +124,7 @@ namespace FirstPlugin
                         stream.Dispose();
 
                         string Path = System.IO.Path.Combine(folderDlg.SelectedPath,
-                                      System.IO.Path.GetFileNameWithoutExtension(file) + ".dds");
+                                      System.IO.Path.GetFileNameWithoutExtension(file) + ".dae");
 
                         model.ExportModel(Path);
                         model.Unload();
