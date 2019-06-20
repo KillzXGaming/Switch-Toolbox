@@ -96,6 +96,8 @@ namespace FirstPlugin
 
                         Skeleton.bones.AddRange(((STSkeleton)model.DrawableContainer.Drawables[0]).bones);
                         Objects.AddRange(((Renderer)model.DrawableContainer.Drawables[1]).Meshes);
+
+                        model.Unload();
                     }
 
                     AssimpSaver assimp = new AssimpSaver();
@@ -179,6 +181,14 @@ namespace FirstPlugin
 
         public void Unload()
         {
+            foreach (var mesh in ((Renderer)DrawableContainer.Drawables[1]).Meshes)
+            {
+                mesh.vertices.Clear();
+                mesh.faces.Clear();
+                mesh.display = new int[0];
+            }
+            ((Renderer)DrawableContainer.Drawables[1]).Meshes.Clear();
+
             DrawableContainer.Drawables.Clear();
             DrawableContainer = null;
             header.Materials.Clear();
