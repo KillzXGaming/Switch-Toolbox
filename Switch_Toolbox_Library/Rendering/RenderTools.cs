@@ -79,6 +79,10 @@ namespace Switch_Toolbox.Library
                     {
                         DDS specularSdr = new DDS(Runtime.PBR.SpecularCubeMapPath);
                         specularpbr = DDS.CreateGLCubeMap(specularSdr);
+                        if (specularSdr.MipCount <= 1)
+                        {
+                            GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
+                        }
                     }
                     else
                     {
