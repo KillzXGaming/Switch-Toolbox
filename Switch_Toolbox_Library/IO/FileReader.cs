@@ -44,7 +44,7 @@ namespace Switch_Toolbox.Library.IO
             return signature == Identifier;
         }
 
-        public string ReadNameOffset(bool IsRelative, Type OffsetType, bool UseNameLength = false)
+        public string ReadNameOffset(bool IsRelative, Type OffsetType, bool ReadNameLength = false, bool IsNameLengthShort = false)
         {
             long pos = Position;
             long offset = 0;
@@ -66,8 +66,13 @@ namespace Switch_Toolbox.Library.IO
                 using (TemporarySeek(offset, SeekOrigin.Begin))
                 {
                     uint NameLength = 0;
-                    if (UseNameLength)
-                        NameLength = ReadUInt32();
+                    if (ReadNameLength)
+                    {
+                        if (IsNameLengthShort)
+                            NameLength = ReadUInt16();
+                        else
+                            NameLength = ReadUInt32();
+                    }
 
                     return ReadString(BinaryStringFormat.ZeroTerminated);
                 }
@@ -76,11 +81,11 @@ namespace Switch_Toolbox.Library.IO
                 return "";
         }
 
-        public List<string> ReadNameOffsets(uint Count, bool IsRelative, Type OffsetType, bool UseNameLength = false)
+        public List<string> ReadNameOffsets(uint Count, bool IsRelative, Type OffsetType, bool ReadNameLength = false)
         {
             List<string> Names = new List<string>();
             for (int i = 0; i < Count; i++)
-                Names.Add(ReadNameOffset(IsRelative, OffsetType, UseNameLength));
+                Names.Add(ReadNameOffset(IsRelative, OffsetType, ReadNameLength));
 
             return Names;
         }
@@ -116,6 +121,16 @@ namespace Switch_Toolbox.Library.IO
                 throw new Exception($"Invalid signature {RealSignature}! Expected {ExpectedSignature}.");
 
             return RealSignature;
+        }
+
+        public float ReadByteAsFloat()
+        {
+            return ReadByte() / 255.0f;
+        }
+
+        public float ReadHalfSingle()
+        {
+            return new Syroot.IOExtension.Half(ReadUInt16());
         }
 
         public void SeekBegin(uint Offset) { Seek(Offset, SeekOrigin.Begin); }

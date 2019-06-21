@@ -557,6 +557,7 @@
     <Compile Include="Generics\GenericMatTexture.cs" />
     <Compile Include="Generics\GenericModel.cs" />
     <Compile Include="Generics\GenericObject.cs" />
+    <Compile Include="Generics\GenericPolygonGroup.cs" />
     <Compile Include="Generics\GenericTexture.cs" />
     <Compile Include="Generics\OpenGLTexture.cs" />
     <Compile Include="Generics\RenderableTex.cs" />
@@ -613,6 +614,8 @@
     <Compile Include="IO\DWord.cs" />
     <Compile Include="IO\FileReader.cs" />
     <Compile Include="IO\FileWriter.cs" />
+    <Compile Include="IO\SyrootCommon\DWord.cs" />
+    <Compile Include="IO\SyrootCommon\Half.cs" />
     <Compile Include="IO\IOExtensions.cs" />
     <Compile Include="IO\Matrix4x4.cs" />
     <Compile Include="IO\STFileLoader.cs" />

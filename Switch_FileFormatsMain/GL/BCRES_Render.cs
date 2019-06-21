@@ -24,14 +24,10 @@ namespace FirstPlugin
         int vbo_position;
         int ibo_elements;
 
-        //Uniform block buffers
-        int TexCoord1Buffer;
-
         private void GenerateBuffers()
         {
             GL.GenBuffers(1, out vbo_position);
             GL.GenBuffers(1, out ibo_elements);
-            GL.GenBuffers(1, out TexCoord1Buffer);
 
             UpdateVertexData();
             UpdateTextureMaps();

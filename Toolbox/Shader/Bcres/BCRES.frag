@@ -1,8 +1,6 @@
 ﻿#version 330
 in vec3 normal;
 in vec3 position;
-
-
 in vec2 f_texcoord0;
 in vec2 f_texcoord1;
 in vec2 f_texcoord2;

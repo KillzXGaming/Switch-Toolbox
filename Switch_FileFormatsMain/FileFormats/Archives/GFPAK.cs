@@ -191,7 +191,7 @@ namespace FirstPlugin
             reader.Seek((long)FileInfoOffset, SeekOrigin.Begin);
             for (int i = 0; i < FileCount; i++)
             {
-                FileEntry fileEntry = new FileEntry();
+                FileEntry fileEntry = new FileEntry(this);
                 fileEntry.Read(reader);
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
                 files.Add(fileEntry);
@@ -319,6 +319,34 @@ namespace FirstPlugin
 
             public uint CompressedFileSize;
             public uint padding;
+
+            private IArchiveFile ArchiveFile;
+
+            public FileEntry(IArchiveFile archiveFile) {
+                ArchiveFile = archiveFile;
+            }
+
+            private bool IsTexturesLoaded = false;
+            public override IFileFormat OpenFile()
+            {
+                var FileFormat = base.OpenFile();
+                bool IsModel = FileFormat is GFBMDL;
+
+                if (IsModel && !IsTexturesLoaded)
+                {
+                    IsTexturesLoaded = true;
+                    foreach (var file in ArchiveFile.Files)
+                    {
+                        if (Utils.GetExtension(file.FileName) == ".bntx")
+                        {
+                            file.FileFormat = file.OpenFile();
+                        }
+                    }
+                }
+
+
+                return base.OpenFile();
+            }
 
             public void Read(FileReader reader)
             {

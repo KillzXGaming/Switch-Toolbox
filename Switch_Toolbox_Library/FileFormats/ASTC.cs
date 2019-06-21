@@ -177,44 +177,30 @@ namespace Switch_Toolbox.Library
             var mem = new System.IO.MemoryStream();
             using (FileWriter writer = new FileWriter(mem))
             {
-                int sizeX = (int)Width;
-                int sizeY = (int)Height;
-                int sizeZ = (int)Depth;
+                if (Depth == 0)
+                    Depth = 1;
 
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-
-                magic = new byte[4];
-                xsize = new byte[3];
-                ysize = new byte[3];
-                zsize = new byte[3];
-
-                magic[0] = MagicFileConstant & 0xFF;
-                magic[1] = (MagicFileConstant >> 8) & 0xFF;
-                magic[2] = (MagicFileConstant >> 16) & 0xFF;
-                magic[3] = (byte)(MagicFileConstant >> 24) & 0xFF;
-
-                writer.Write(magic);
+                writer.Write(MagicFileConstant);
                 writer.Write(BlockDimX);
                 writer.Write(BlockDimY);
                 writer.Write(BlockDimZ);
-
-                xsize[0] = (byte)(sizeX & 0xFF);
-                xsize[1] = (byte)((sizeX >> 8) & 0xFF);
-                xsize[2] = (byte)((sizeX >> 16) & 0xFF);
-                ysize[0] = (byte)(sizeY & 0xFF);
-                ysize[1] = (byte)((sizeY >> 8) & 0xFF);
-                ysize[2] = (byte)((sizeY >> 16) & 0xFF);
-                zsize[0] = (byte)(sizeZ & 0xFF);
-                zsize[1] = (byte)((sizeZ >> 8) & 0xFF);
-                zsize[2] = (byte)((sizeZ >> 16) & 0xFF);
-
-                writer.Write(xsize);
-                writer.Write(ysize);
-                writer.Write(zsize);
+                writer.Write(IntTo3Bytes((int)Width));
+                writer.Write(IntTo3Bytes((int)Height));
+                writer.Write(IntTo3Bytes((int)Depth));
                 writer.Write(DataBlock);
             }
 
             return mem.ToArray();
+        }
+
+        private static byte[] IntTo3Bytes(int value)
+        {
+            byte[] newValue = new byte[3];
+            newValue[0] = (byte)(value & 0xFF);
+            newValue[1] = (byte)((value >> 8) & 0xFF);
+            newValue[2] = (byte)((value >> 16) & 0xFF);
+            return newValue;
         }
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)

@@ -19,3 +19,17 @@ float SrgbToLinear(float x)
 vec3 SrgbToLinear(vec3 color) {
     return vec3(SrgbToLinear(color.r), SrgbToLinear(color.g), SrgbToLinear(color.b));
 }
+
+float GetComponent(int Type, vec4 Texture)
+{
+	 switch (Type)
+	 {
+	     case 0: return Texture.r; 
+	     case 1: return Texture.g; 
+	     case 2: return Texture.b; 
+	     case 3: return Texture.a; 
+	     case 4: return 1; 
+	     case 5: return 0; 
+		 default: return 1;
+	 }
+}

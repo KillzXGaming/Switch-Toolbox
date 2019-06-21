@@ -24,6 +24,8 @@ namespace Switch_Toolbox.Library
 
         }
 
+        public List<STGenericPolygonGroup> PolygonGroups = new List<STGenericPolygonGroup>();
+
         public bool HasPos;
         public bool HasNrm;
         public bool HasUv0;
@@ -75,6 +77,7 @@ namespace Switch_Toolbox.Library
 
         public List<string> boneList = new List<string>();
         public List<Vertex> vertices = new List<Vertex>();
+
         public List<LOD_Mesh> lodMeshes = new List<LOD_Mesh>();
         public class LOD_Mesh
         {
