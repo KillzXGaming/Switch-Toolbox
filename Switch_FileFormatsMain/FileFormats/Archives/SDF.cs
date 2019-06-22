@@ -196,6 +196,7 @@ namespace FirstPlugin
             public ulong DdsType;
             public bool UseDDS;
             public bool IsCompressed = false;
+            public bool IsSwizzled = false;
 
             public override byte[] FileData
             {
@@ -209,11 +210,12 @@ namespace FirstPlugin
 
             public override IFileFormat OpenFile()
             {
+                byte[] Data = FileData;
                 var FileFormat = STFileLoader.OpenFileFormat(
-                    IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
+                    IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), Data, true);
 
                 if (FileFormat is DDS)
-                    ((DDS)FileFormat).SwitchSwizzle = true;
+                    ((DDS)FileFormat).SwitchSwizzle = IsSwizzled;
 
                 return FileFormat;
             }
@@ -245,16 +247,27 @@ namespace FirstPlugin
 
                             if (UseDDS)
                             {
+                               // Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)SDFParent.block2Array[DdsType].UsedBytes).ToArray());
                                 bool IsDX10 = false;
                                 using (var filereader = new FileReader(SDFParent.block2Array[DdsType].Data))
                                 {
                                     filereader.Position = 84;
                                     IsDX10 = filereader.ReadString(4) == "DX10";
 
-                                    if (IsDX10)
+                                     if (IsDX10)
+                                    {
+                                        if (SDFParent.block2Array[DdsType].UsedBytes > 0x94)
+                                            IsSwizzled = true;
+
                                         Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)0x94).ToArray());
+                                    }
                                     else
+                                    {
+                                        if (SDFParent.block2Array[DdsType].UsedBytes > 0x80)
+                                            IsSwizzled = true;
+
                                         Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)0x80).ToArray());
+                                    }
                                 }
                             }
 

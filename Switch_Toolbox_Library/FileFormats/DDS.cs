@@ -776,7 +776,7 @@ namespace Switch_Toolbox.Library
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             if (IsAtscFormat(Format))
-                SwitchSwizzle = true;
+                SwitchSwizzle = false;
 
             if (SwitchSwizzle)
                 return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel);
