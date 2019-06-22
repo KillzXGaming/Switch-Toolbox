@@ -20,7 +20,7 @@ namespace Syroot.IOExtension
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 
-        /// <summary>
+    /*    /// <summary>
         /// Represents the smallest positive <see cref="Half"/> value greater than zero.
         /// </summary>
         public static readonly Half Epsilon = new Half(1);
@@ -48,7 +48,7 @@ namespace Syroot.IOExtension
         /// <summary>
         /// Represents positive infinity.
         /// </summary>
-        public static readonly Half PositiveInfinity = new Half(0b01111100_00000000);
+        public static readonly Half PositiveInfinity = new Half(0b01111100_00000000);*/
 
         private static readonly uint[] _mantissaTable;
         private static readonly uint[] _exponentTable;
@@ -394,7 +394,7 @@ namespace Syroot.IOExtension
             return Equals(Raw == other.Raw);
         }
 
-        /// <summary>
+    /*    /// <summary>
         /// Returns a value indicating whether the specified number evaluates to not a number (<see cref="NaN"/>).
         /// </summary>
         /// <param name="half">A half-precision floating-point number.</param>
@@ -433,6 +433,6 @@ namespace Syroot.IOExtension
         public static bool IsPositiveInfinity(Half half)
         {
             return half.Raw == PositiveInfinity.Raw;
-        }
+        }*/
     }
 }
