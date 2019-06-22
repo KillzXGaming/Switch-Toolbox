@@ -696,7 +696,7 @@ namespace Bfres.Structs
 
         public void SetTransforms()
         {
-            if (BoneU != null)
+         /*   if (BoneU != null)
             {
                 BoneU.TransformRotateZero = (GetRotation() == Quaternion.Identity);
                 BoneU.TransformScaleOne = (GetScale() == Vector3.Zero);
@@ -707,7 +707,7 @@ namespace Bfres.Structs
                 Bone.TransformRotateZero = (GetRotation() == Quaternion.FromEulerAngles(0,0,0));
                 Bone.TransformScaleOne = (GetScale() == Vector3.One);
                 Bone.TransformTranslateZero = (GetPosition() == Vector3.Zero);
-            }
+            }*/
         }
 
         public ResFile GetResFile()
