@@ -147,6 +147,7 @@ namespace FirstPlugin
 
             public uint Version { get; set; }
             public float[] Boundings { get; set; }
+            public List<string> ShaderNames = new List<string>();
             public List<string> TextureMaps = new List<string>();
             public List<string> MaterialNames = new List<string>();
             public List<VertexBuffer> VertexBuffers = new List<VertexBuffer>();
@@ -166,9 +167,9 @@ namespace FirstPlugin
                 Version = reader.ReadUInt32();
                 Boundings = reader.ReadSingles(9);
                 long TextureOffset = reader.ReadOffset(true, typeof(uint));
-                long MaterialOffset = reader.ReadOffset(true, typeof(uint));
+                long ShaderNameOffset = reader.ReadOffset(true, typeof(uint));
                 long Unknown1ffset = reader.ReadOffset(true, typeof(uint));
-                long Unknown2Offset = reader.ReadOffset(true, typeof(uint));
+                long MaterialNameOffset = reader.ReadOffset(true, typeof(uint));
                 long ShaderOffset = reader.ReadOffset(true, typeof(uint));
                 long VisGroupOffset = reader.ReadOffset(true, typeof(uint));
                 long VerteBufferOffset = reader.ReadOffset(true, typeof(uint));
@@ -181,9 +182,16 @@ namespace FirstPlugin
                     TextureMaps = reader.ReadNameOffsets(Count, true, typeof(uint), true);
                 }
 
-                if (MaterialOffset != 0)
+                if (ShaderNameOffset != 0)
                 {
-                    reader.SeekBegin(MaterialOffset);
+                    reader.SeekBegin(ShaderNameOffset);
+                    uint Count = reader.ReadUInt32();
+                    ShaderNames = reader.ReadNameOffsets(Count, true, typeof(uint));
+                }
+
+                if (MaterialNameOffset != 0)
+                {
+                    reader.SeekBegin(MaterialNameOffset);
                     uint Count = reader.ReadUInt32();
                     MaterialNames = reader.ReadNameOffsets(Count, true, typeof(uint));
                 }
