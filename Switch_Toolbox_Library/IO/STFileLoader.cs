@@ -124,6 +124,15 @@ namespace Switch_Toolbox.Library.IO
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Gzip, DecompressedFileSize, CompressedFileSize);
             }
+            if (MagicHex == 0x184D2204)
+            {
+                if (data == null)
+                    data = File.ReadAllBytes(FileName);
+
+                data = STLibraryCompression.Type_LZ4.Decompress(data);
+                return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
+                    CompressionType.Lz4, DecompressedFileSize, CompressedFileSize);
+            }
             if (Path.GetExtension(FileName) == ".lz" && CompType == CompressionType.None)
             {
                 if (data == null)

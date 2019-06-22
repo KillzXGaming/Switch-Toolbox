@@ -150,7 +150,7 @@ namespace FirstPlugin
             byte[] decomp = null;
             if (magic == 0xDFF25B82 || magic == 0xFD2FB528)
                 decomp = STLibraryCompression.ZSTD.Decompress(CompressedBlock);
-            else if (header.Version > 22)
+            else if (magic == 0x184D2204)
                 decomp = STLibraryCompression.Type_LZ4.Decompress(CompressedBlock);
             else
                 decomp = STLibraryCompression.ZLIB.Decompress(CompressedBlock);
