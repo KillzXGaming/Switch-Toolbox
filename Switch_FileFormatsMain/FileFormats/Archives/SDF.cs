@@ -105,9 +105,15 @@ namespace FirstPlugin
                 endId = new SDFTOC_ID(reader);
 
                 for (int i = 0; i < FileEntries.Count; i++)
-                     files.Add(FileEntries[i]);
+                {
+                    FileEntries[i].CanLoadFile = SupportedExtensions.Contains(Utils.GetExtension(FileEntries[i].FileName));
+                    files.Add(FileEntries[i]);
+                }
             }
         }
+
+        private List<string> SupportedExtensions = new List<string>()
+        { ".dds", ".tga" ,".mmb", ".png", ".jpg"  };
 
         private TreeNode GetNodes(TreeNode parent, string[] fileList)
         {

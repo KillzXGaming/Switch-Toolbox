@@ -55,6 +55,10 @@ namespace Switch_Toolbox.Library
         public virtual object DisplayProperties { get; set; }
 
         [Browsable(false)]
+        public virtual bool CanLoadFile { get; set; } = true;
+
+
+        [Browsable(false)]
         public virtual IFileFormat OpenFile()
         {
             return STFileLoader.OpenFileFormat(

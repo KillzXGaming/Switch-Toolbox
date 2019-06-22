@@ -42,8 +42,17 @@ namespace Switch_Toolbox.Library.Forms
             int I = 0;
             foreach (var node in nodeFiles)
             {
+                if (!node.CanLoadFile)
+                    continue;
+
                 if (I++ == MAX_TREENODE_VALUE)
-                    break;
+                {
+                   var result = MessageBox.Show($"The amount of treenodes has reached over {MAX_TREENODE_VALUE} nodes. To prevent memory loss this is put in place. Do you want to continue loading all of them?", 
+                        "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                    if (result != DialogResult.Yes)
+                        break;
+                }
 
                 string nodeString = node.FileName;
 
