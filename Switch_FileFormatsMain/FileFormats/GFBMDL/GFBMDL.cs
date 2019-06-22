@@ -301,7 +301,7 @@ namespace FirstPlugin
                     mesh.SelectedImageKey = "model";
 
                     mesh.BoneIndex = (int)VisualGroups[i].BoneIndex;
-                    mesh.Text = Skeleton.bones[(int)VisualGroups[i].BoneIndex].Text;
+                    mesh.Text = Skeleton.bones[(int)VisualGroups[i].MeshIndex].Text;
                     Root.Renderer.Meshes.Add(mesh);
 
                     var Buffer = VertexBuffers[i];
@@ -367,6 +367,7 @@ namespace FirstPlugin
             public Vector3 BoundingBoxMin = new Vector3(0);
 
             public uint BoneIndex { get; set; }
+            public uint MeshIndex { get; set; }
 
             public void Read(FileReader reader)
             {
@@ -381,25 +382,25 @@ namespace FirstPlugin
                 //Read the info section for position data
                 reader.SeekBegin(InfoPosition - InfoOffset);
                 ushort HeaderLength = reader.ReadUInt16();
-                ushort UnknownPosition = 0;
                 ushort VisBonePosition = 0;
+                ushort VisMeshPosition = 0;
                 ushort Unknown2Position = 0;
                 ushort VisBoundsPosition = 0;
                 ushort Unknown3Position = 0;
 
                 if (HeaderLength == 0x0A)
                 {
-                    UnknownPosition = reader.ReadUInt16();
                     VisBonePosition = reader.ReadUInt16();
-                    Unknown2Position = reader.ReadUInt16();
+                    VisMeshPosition = reader.ReadUInt16();
                     VisBoundsPosition = reader.ReadUInt16();
+                    Unknown2Position = reader.ReadUInt16();
                 }
                 else if (HeaderLength == 0x0C)
                 {
-                    UnknownPosition = reader.ReadUInt16();
                     VisBonePosition = reader.ReadUInt16();
-                    Unknown2Position = reader.ReadUInt16();
+                    VisMeshPosition = reader.ReadUInt16();
                     VisBoundsPosition = reader.ReadUInt16();
+                    Unknown2Position = reader.ReadUInt16();
                     Unknown3Position = reader.ReadUInt16();
                 }
                 else
@@ -410,6 +411,12 @@ namespace FirstPlugin
                     reader.SeekBegin(InfoPosition + VisBoundsPosition);
                     BoundingBoxMin = reader.ReadVec3();
                     BoundingBoxMax = reader.ReadVec3();
+                }
+
+                if (VisMeshPosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + VisMeshPosition);
+                    MeshIndex = reader.ReadUInt32();
                 }
 
                 if (VisBonePosition != 0)

@@ -895,8 +895,6 @@ namespace FirstPlugin
                         ((FTEX)tex.Value).LoadOpenGLTexture();
                 }
             }
-
-            LibraryGUI.Instance.UpdateViewport();
         }
 
         private static void SetRenderPass(FMAT mat)

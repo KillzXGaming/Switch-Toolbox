@@ -1119,12 +1119,12 @@ namespace FirstPlugin
 
             LoadOpenGLTexture();
 
-            UpdateBfresTextureMapping();
+            UpdateTextureMapping();
 
             if (IsEditorActive())
                 UpdateEditor();
         }
-        private void UpdateBfresTextureMapping()
+        private void UpdateTextureMapping()
         {
             var viewport = LibraryGUI.Instance.GetActiveViewport();
             if (viewport == null)
@@ -1137,6 +1137,8 @@ namespace FirstPlugin
                     ((BFRESRender)drawable).UpdateTextureMaps();
                 }
             }
+
+            viewport.UpdateViewport();
         }
 
         public void Export(string FileName, bool ExportSurfaceLevel = false,
