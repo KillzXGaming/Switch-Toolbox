@@ -254,6 +254,7 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.ASTC_5x5_SRGB,         new FormatInfo(16, 5,  5, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_6x5_UNORM,        new FormatInfo(16, 6,  5, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_6x5_SRGB,         new FormatInfo(16, 6,  5, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ASTC_6x6_UNORM,        new FormatInfo(16, 6,  6, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_6x6_SRGB,         new FormatInfo(16, 6,  6, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_8x5_UNORM,        new FormatInfo(16, 8,  5,  1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_8x5_SRGB,         new FormatInfo(16, 8,  5, 1,  TargetBuffer.Color) },
