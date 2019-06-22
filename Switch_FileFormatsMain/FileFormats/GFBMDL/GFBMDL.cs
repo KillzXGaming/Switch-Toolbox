@@ -98,11 +98,41 @@ namespace FirstPlugin
             header = new Header();
             header.Read(new FileReader(stream), this);
 
+            ContextMenuStrip = new STContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
         }
+
+        private void ExportModelAction(object sender, EventArgs args) {
+            ExportModel();
+        }
+
+        private void ExportModel()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.dae;";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                ExportModel(sfd.FileName);
+            }
+        }
+
+        private void ExportModel(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            var model = new STGenericModel();
+            model.Materials = header.GenericMaterials;
+            model.Objects = Renderer.Meshes;
+
+            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
+        }
+
         public void Unload()
         {
 
         }
+
         public byte[] Save()
         {
             var mem = new System.IO.MemoryStream();
@@ -221,7 +251,7 @@ namespace FirstPlugin
 
                 for (int i = 0; i < Materials.Count; i++)
                 {
-                    GFBMaterial mat = new GFBMaterial(Root);
+                    GFBMaterial mat = new GFBMaterial(Root, Materials[i]);
                     mat.Text = Materials[i].Name;
 
                     int textureUnit = 1;
@@ -232,7 +262,7 @@ namespace FirstPlugin
                         STGenericMatTexture matTexture = new STGenericMatTexture();
                         matTexture.Name = textureMap.Name;
                         matTexture.textureUnit = textureUnit++;
-                        matTexture.wrapModeS = 0;
+                        matTexture.wrapModeS = 1;
                         matTexture.wrapModeT = 0;
 
                         if (textureMap.Effect == "Col0Tex")
@@ -390,6 +420,10 @@ namespace FirstPlugin
 
             public List<TextureMap> TextureMaps = new List<TextureMap>();
 
+            public Dictionary<string, SwitchParam> SwitchParams = new Dictionary<string, SwitchParam>();
+            public Dictionary<string, ValueParam> ValueParams = new Dictionary<string, ValueParam>();
+            public Dictionary<string, ColorParam> ColorParams = new Dictionary<string, ColorParam>();
+            
             public void Read(FileReader reader)
             {
                 long DataPosition = reader.Position;
@@ -438,6 +472,53 @@ namespace FirstPlugin
                     ShaderName = reader.ReadNameOffset(true, typeof(uint), true);
                 }
 
+                if (ShaderParamAPosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + ShaderParamAPosition);
+                    var ParamOffset = reader.ReadOffset(true, typeof(uint));
+                    reader.SeekBegin(ParamOffset);
+
+                    uint Count = reader.ReadUInt32();
+                    for (int i = 0; i < Count; i++)
+                    {
+                        SwitchParam param = new SwitchParam();
+                        param.ReadParam(reader);
+                        SwitchParams.Add(param.Name, param);
+                    }
+                }
+
+                if (ShaderParamBPosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + ShaderParamBPosition);
+                    var ParamOffset = reader.ReadOffset(true, typeof(uint));
+                    reader.SeekBegin(ParamOffset);
+
+                    uint Count = reader.ReadUInt32();
+                    for (int i = 0; i < Count; i++)
+                    {
+                        ValueParam param = new ValueParam();
+                        param.ReadParam(reader);
+                        ValueParams.Add(param.Name, param);
+                    }
+                }
+
+
+                if (ShaderParamCPosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + ShaderParamCPosition);
+                    var ParamOffset = reader.ReadOffset(true, typeof(uint));
+                    reader.SeekBegin(ParamOffset);
+
+                    uint Count = reader.ReadUInt32();
+                    for (int i = 0; i < Count; i++)
+                    {
+                        ColorParam param = new ColorParam();
+                        param.ReadParam(reader);
+                        ColorParams.Add(param.Name, param);
+                    }
+                }
+
+
                 if (TextureMapsPosition != 0)
                 {
                     reader.SeekBegin(InfoPosition + TextureMapsPosition);
@@ -455,6 +536,143 @@ namespace FirstPlugin
 
                 //Seek back to next in array
                 reader.SeekBegin(DataPosition + sizeof(uint));
+            }
+        }
+
+        public class ColorParam : BaseParam
+        {
+            public void ReadParam(FileReader reader)
+            {
+                base.Read(reader);
+
+                if (ValuePosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + ValuePosition);
+                    if (Format == 4)
+                        Value = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    else if (Format == 8)
+                        Value = new Vector3(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
+                    else
+                        throw new Exception("Unknown format for switch param! " + Format);
+                }
+                else
+                    Value = 0;
+
+                Console.WriteLine($"Param {Name} {Value}");
+
+                //Seek back to next in array
+                reader.SeekBegin(DataPosition + sizeof(uint));
+            }
+        }
+
+        public class ValueParam : BaseParam
+        {
+            public void ReadParam(FileReader reader)
+            {
+                base.Read(reader);
+
+                if (ValuePosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + ValuePosition);
+                    if (Format == 4)
+                        Value = reader.ReadUInt32();
+                    else if (Format == 8)
+                        Value = reader.ReadSingle();
+                    else
+                        throw new Exception("Unknown format for switch param! " + Format);
+                }
+                else
+                    Value = 0;
+
+                //Seek back to next in array
+                reader.SeekBegin(DataPosition + sizeof(uint));
+            }
+        }
+
+        public class SwitchParam : BaseParam
+        {
+            public void ReadParam(FileReader reader)
+            {
+                base.Read(reader);
+
+                if (ValuePosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + ValuePosition);
+                    if (Format == 4)
+                        Value = (reader.ReadByte() == 1);
+                    else
+                        throw new Exception("Unknown format for switch param! " + Format);
+                }
+                else
+                    Value = false;
+
+                Console.WriteLine($"Param {Name} {Value}");
+
+                //Seek back to next in array
+                reader.SeekBegin(DataPosition + sizeof(uint));
+            }
+        }
+
+        public class BaseParam
+        {
+            public string Effect { get; set; }
+            public string Name { get; set; }
+
+            public uint Index { get; set; } = 0;
+
+            public uint Format { get; set; }
+
+            public object Value { get; set; }
+
+            internal long DataPosition;
+            internal long InfoPosition;
+
+            internal ushort NamePosition;
+            internal ushort FormatPosition;
+            internal ushort ValuePosition;
+
+            public void Read(FileReader reader)
+            {
+                DataPosition = reader.Position;
+                var DataOffset = reader.ReadOffset(true, typeof(uint));
+
+                reader.SeekBegin(DataOffset);
+                InfoPosition = reader.Position;
+                int InfoOffset = reader.ReadInt32();
+
+                //Read the info section for position data
+                reader.SeekBegin(InfoPosition - InfoOffset);
+                ushort HeaderSize = reader.ReadUInt16();
+                NamePosition = 0;
+                FormatPosition = 0;
+                ValuePosition = 0;
+
+                if (HeaderSize == 0x06)
+                {
+                    NamePosition = reader.ReadUInt16();
+                    FormatPosition = reader.ReadUInt16();
+                }
+                else if (HeaderSize == 0x08)
+                {
+                    NamePosition = reader.ReadUInt16();
+                    FormatPosition = reader.ReadUInt16();
+                    ValuePosition = reader.ReadUInt16();
+                }
+                else
+                    throw new Exception("Unexpected header size! " + HeaderSize);
+
+                if (NamePosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + NamePosition);
+                    uint NameLength = reader.ReadUInt32();
+                    Name = reader.ReadString((int)NameLength);
+                }
+
+                if (FormatPosition != 0)
+                {
+                    reader.SeekBegin(InfoPosition + FormatPosition);
+                    Format = reader.ReadUInt32();
+                }
             }
         }
 

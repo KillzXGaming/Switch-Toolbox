@@ -45,9 +45,12 @@ uniform int NoSkinning;
 uniform int RigidSkinning;
 uniform int SingleBoneIndex;
 
-vec2 ST0_Translate;
-float ST0_Rotate;
-vec2 ST0_Scale;
+//Parameters
+uniform float ColorUVScaleU;
+uniform float ColorUVScaleV;
+uniform float ColorUVTranslateU;
+uniform float ColorUVTranslateV;
+
 
 vec4 skin(vec3 pos, ivec4 index)
 {
@@ -127,6 +130,9 @@ void main()
 	tangent = vTangent;
 
 	position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
+
+	f_texcoord0.x *= ColorUVScaleU + ColorUVTranslateU;
+	f_texcoord0.y *= ColorUVScaleV + ColorUVTranslateV;
 
     gl_Position = position;
 

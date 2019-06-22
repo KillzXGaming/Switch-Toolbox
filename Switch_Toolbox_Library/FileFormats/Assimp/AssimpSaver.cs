@@ -87,9 +87,8 @@ namespace Switch_Toolbox.Library
             int MeshIndex = 0;
             foreach (var obj in Meshes)
             {
-                var mesh = SaveMesh((STGenericObject)obj, MeshIndex, skeleton, NodeArray);
+                var mesh = SaveMesh((STGenericObject)obj, MeshIndex++, skeleton, NodeArray);
                 scene.Meshes.Add(mesh);
-                MeshIndex++;
             }
             Node geomNode = new Node(Path.GetFileNameWithoutExtension(FileName), scene.RootNode);
 
@@ -120,10 +119,6 @@ namespace Switch_Toolbox.Library
                 textureCoords1.Add(new Vector3D(v.uv1.X, v.uv1.Y, 0));
                 textureCoords2.Add(new Vector3D(v.uv2.X, v.uv2.Y, 0));
                 vertexColors.Add(new Color4D(v.col.X, v.col.Y, v.col.Z, v.col.W));
-                mesh.TextureCoordinateChannels[0] = textureCoords0;
-                mesh.TextureCoordinateChannels[1] = textureCoords1;
-                mesh.TextureCoordinateChannels[2] = textureCoords2;
-                mesh.VertexColorChannels[0] = vertexColors;
 
                 if (skeleton != null)
                 {
@@ -179,11 +174,27 @@ namespace Switch_Toolbox.Library
 
                 vertexID++;
             }
-            List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
-            for (int f = 0; f < faces.Count; f++)
-                mesh.Faces.Add(new Face(new int[] { faces[f++], faces[f++], faces[f] }));
+
+            if (genericObj.lodMeshes.Count != 0)
+            {
+                List<int> faces = genericObj.lodMeshes[genericObj.DisplayLODIndex].faces;
+                for (int f = 0; f < faces.Count; f++)
+                    mesh.Faces.Add(new Face(new int[] { faces[f++], faces[f++], faces[f] }));
+            }
+            if (genericObj.PolygonGroups.Count != 0)
+            {
+                for (int p = 0; p < genericObj.PolygonGroups.Count; p++)
+                {
+                    var polygonGroup = genericObj.PolygonGroups[p];
+                    for (int f = 0; f < polygonGroup.faces.Count; f++)
+                        mesh.Faces.Add(new Face(new int[] { polygonGroup.faces[f++], polygonGroup.faces[f++], polygonGroup.faces[f] }));
+                }
+            }
 
             mesh.TextureCoordinateChannels.SetValue(textureCoords0, 0);
+            mesh.TextureCoordinateChannels.SetValue(textureCoords1, 1);
+            mesh.TextureCoordinateChannels.SetValue(textureCoords2, 2);
+            mesh.VertexColorChannels.SetValue(vertexColors, 0);
 
             return mesh;
         }

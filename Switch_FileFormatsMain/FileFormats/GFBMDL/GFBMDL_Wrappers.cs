@@ -11,10 +11,13 @@ namespace FirstPlugin
 {
     public class GFBMaterial : STGenericMaterial
     {
+        public GFBMDL.MaterialShaderData MaterialData { get; set; }
+
         public GFBMDL ParentModel { get; set; }
 
-        public GFBMaterial(GFBMDL model) {
+        public GFBMaterial(GFBMDL model, GFBMDL.MaterialShaderData data) {
             ParentModel = model;
+            MaterialData = data;
         }
     }
 

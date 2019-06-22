@@ -211,7 +211,59 @@ namespace FirstPlugin
 
         private static void SetUniforms(GFBMaterial mat, ShaderProgram shader, GFBMesh m, int id)
         {
+            // Texture Maps
+          /*  shader.SetBoolToInt("useColorTex", false);
+            shader.SetBoolToInt("EmissionMaskUse", false);
+            shader.SetBoolToInt("SwitchPriority", false);
+            shader.SetBoolToInt("Layer1Enable", false);
+            shader.SetBoolToInt("AmbientMapEnable", false);
+            shader.SetBoolToInt("NormalMapEnable", false);
+            shader.SetBoolToInt("LightTableEnable", false);
+            shader.SetBoolToInt("BaseColorAddEnable", false);
+            shader.SetBoolToInt("SphereMapEnable", false);
+            shader.SetBoolToInt("EffectVal", false);*/
 
+            //Switch UVs
+            shader.SetBoolToInt("SwitchEmissionMaskTexUV", false);
+            shader.SetBoolToInt("SwitchAmbientTexUV", false);
+            shader.SetBoolToInt("SwitchNormalMapUV", false);
+
+            //UV Scale
+            shader.SetFloat("ColorUVScaleU", 1);
+            shader.SetFloat("ColorUVScaleV", 1);
+
+            //UV Translate
+            shader.SetFloat("ColorUVTranslateU", 0);
+            shader.SetFloat("ColorUVTranslateV", 0);
+
+            SetUniformData(mat, shader, "ColorUVScaleU");
+            SetUniformData(mat, shader, "ColorUVScaleV");
+            SetUniformData(mat, shader, "ColorUVTranslateU");
+            SetUniformData(mat, shader, "ColorUVTranslateV");
+        }
+
+        private static void SetUniformData(GFBMaterial mat, ShaderProgram shader, string propertyName)
+        {
+            if (mat.MaterialData.SwitchParams.ContainsKey(propertyName))
+            {
+                bool Value = (bool)mat.MaterialData.SwitchParams[propertyName].Value;
+                shader.SetBoolToInt(propertyName, Value);
+            }
+            if (mat.MaterialData.ValueParams.ContainsKey(propertyName))
+            {
+                var Value = mat.MaterialData.ValueParams[propertyName].Value;
+                if (Value is float)
+                    shader.SetFloat(propertyName, (float)Value);
+                if (Value is uint)
+                    shader.SetFloat(propertyName, (uint)Value);
+                if (Value is int)
+                    shader.SetFloat(propertyName, (int)Value);
+            }
+            if (mat.MaterialData.ColorParams.ContainsKey(propertyName))
+            {
+                Vector3 Value = (Vector3)mat.MaterialData.ColorParams[propertyName].Value;
+                shader.SetVector3(propertyName, Value);
+            }
         }
 
         private static void SetTextureUniforms(GFBMaterial mat, GFBMesh m, ShaderProgram shader)
