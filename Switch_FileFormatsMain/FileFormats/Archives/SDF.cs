@@ -248,6 +248,7 @@ namespace FirstPlugin
                             if (UseDDS)
                             {
                                // Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)SDFParent.block2Array[DdsType].UsedBytes).ToArray());
+
                                 bool IsDX10 = false;
                                 using (var filereader = new FileReader(SDFParent.block2Array[DdsType].Data))
                                 {
@@ -269,6 +270,8 @@ namespace FirstPlugin
                                         Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)0x80).ToArray());
                                     }
                                 }
+
+                                Console.WriteLine("UsedBytes " + SDFParent.block2Array[DdsType].UsedBytes + " IsSwizzled " + IsSwizzled);
                             }
 
                             for (var i = 0; i < CompressedSizes.Count; i++)
