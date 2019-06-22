@@ -322,6 +322,8 @@ namespace FirstPlugin
                         mesh.vertices.Add(vertex);
                     }
 
+                    mesh.FlipUvsVertical();
+
                     int polyIndex = 0;
                     foreach (var group in Buffer.PolygonGroups)
                     {
