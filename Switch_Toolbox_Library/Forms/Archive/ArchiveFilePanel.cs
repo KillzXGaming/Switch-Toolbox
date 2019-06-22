@@ -61,25 +61,26 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (GetEditor() == 0)
                 UpdatePropertiesView();
-            if (GetEditor() == 1)
+            else if (GetEditor() == 1)
                 UpdateHexView();
-            if (GetEditor() == 2)
+            else if (GetEditor() == 2)
                 UpdateFileEditor();
-            if (GetEditor() == 3)
+            else if (GetEditor() == 3)
                 UpdateTextView();
         }
 
         private void UpdateFileEditor()
         {
-            if (!ArchiveFileInfo.IsSupportedFileFormat())
+            var File = ArchiveFileInfo.FileFormat;
+            if (File == null) //If the file is not open yet, try temporarily for a preview
+                File = ArchiveFileInfo.OpenFile();
+
+            //If the file is still null, just add a basic control and return
+            if (File == null)
             {
                 AddControl(new STUserControl());
                 return;
             }
-
-            var File = ArchiveFileInfo.FileFormat;
-            if (File == null) //If the file is not open yet, try temporarily for a preview
-                File = ArchiveFileInfo.OpenFile();
 
             SetEditorForm(File);
 

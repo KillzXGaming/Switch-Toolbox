@@ -247,15 +247,13 @@ namespace FirstPlugin
 
                             if (UseDDS)
                             {
-                               // Data.Add(SDFParent.block2Array[DdsType].Data.Take((int)SDFParent.block2Array[DdsType].UsedBytes).ToArray());
-
                                 bool IsDX10 = false;
                                 using (var filereader = new FileReader(SDFParent.block2Array[DdsType].Data))
                                 {
                                     filereader.Position = 84;
                                     IsDX10 = filereader.ReadString(4) == "DX10";
 
-                                     if (IsDX10)
+                                    if (IsDX10)
                                     {
                                         if (SDFParent.block2Array[DdsType].UsedBytes > 0x94)
                                             IsSwizzled = true;
@@ -439,8 +437,6 @@ namespace FirstPlugin
             }
 
             bool IsFile = !Name.Contains("dummy") && decompresedSize > 5;
-
-            Console.WriteLine(Name + " " + IsFile);
 
             if (IsFile)
             {
