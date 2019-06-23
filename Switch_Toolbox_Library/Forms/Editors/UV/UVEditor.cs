@@ -247,9 +247,10 @@ namespace Switch_Toolbox.Library.Forms
             if (ActiveObjects.Count <= 0 || ActiveMaterial == null || Runtime.OpenTKInitialized == false)
                 return;
 
-            gL_ControlLegacy2D1.MakeCurrent();
 
             SetupRendering(1);
+
+            gL_ControlLegacy2D1.MakeCurrent();
 
             GL.ClearColor(System.Drawing.Color.FromArgb(40, 40, 40));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

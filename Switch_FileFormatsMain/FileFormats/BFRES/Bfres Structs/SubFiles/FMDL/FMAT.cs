@@ -454,7 +454,6 @@ namespace Bfres.Structs
         //Note this may be rarely needed or not at all
         public byte[] Value_Unk;
 
-
         private void ReadSRT2D(FileReader reader)
         {
             ValueSrt2D = new Srt2D();

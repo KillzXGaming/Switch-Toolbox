@@ -501,6 +501,8 @@ namespace Switch_Toolbox.Library
             if (dataSize <= 0)
                 throw new Exception($"Image is empty!!");
 
+            Console.WriteLine("swizzle pattern " + swizzle);
+
             uint s = (swizzle << 8);
 
             uint blkWidth, blkHeight;
