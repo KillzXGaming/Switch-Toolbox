@@ -704,9 +704,9 @@ namespace Bfres.Structs
             }
             else
             {
-                Bone.TransformRotateZero = BoneU.Rotation == Syroot.Maths.Vector4F.Zero;
-                Bone.TransformScaleOne = BoneU.Scale == Syroot.Maths.Vector3F.One;
-                Bone.TransformTranslateZero = BoneU.Position == Syroot.Maths.Vector3F.Zero;
+                Bone.TransformRotateZero = Bone.Rotation == Syroot.Maths.Vector4F.Zero;
+                Bone.TransformScaleOne = Bone.Scale == Syroot.Maths.Vector3F.One;
+                Bone.TransformTranslateZero = Bone.Position == Syroot.Maths.Vector3F.Zero;
             }
         }
 
