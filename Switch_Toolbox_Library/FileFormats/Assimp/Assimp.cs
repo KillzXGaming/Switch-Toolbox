@@ -68,7 +68,9 @@ namespace Switch_Toolbox.Library
                       Flags |= PostProcessSteps.GenerateNormals;*/
 
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
-                    GetRealNodeNames(FileName);
+
+                    if (Utils.GetExtension(FileName) == ".dae")
+                        GetRealNodeNames(FileName);
 
                     LoadScene();
 
