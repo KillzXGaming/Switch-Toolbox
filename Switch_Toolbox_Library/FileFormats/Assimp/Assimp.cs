@@ -131,7 +131,7 @@ namespace Switch_Toolbox.Library
                 int Index = 0;
                 foreach (Mesh msh in scene.Meshes)
                 {
-                    objects.Add(CreateGenericObject(msh, Index, Matrix4.Identity));
+                    objects.Add(CreateGenericObject(null, msh, Index, Matrix4.Identity));
                     Index++;
                 }
             }
@@ -172,7 +172,7 @@ namespace Switch_Toolbox.Library
             }
 
             foreach (int index in parent.MeshIndices)
-                objects.Add(CreateGenericObject(scene.Meshes[index], index, worldTK));
+                objects.Add(CreateGenericObject(parent, scene.Meshes[index], index, worldTK));
             
             foreach (Node child in parent.Children)
                 BuildNode(child, ref world);
@@ -515,7 +515,7 @@ namespace Switch_Toolbox.Library
             foreach (Node child in node.Children)
                 CreateByNode(child, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, false, ref rootTransform);
         }
-        public STGenericObject CreateGenericObject(Mesh msh, int Index, Matrix4 transform)
+        public STGenericObject CreateGenericObject(Node parentNode,Mesh msh, int Index, Matrix4 transform)
         {
             STGenericObject obj = new STGenericObject();
 
@@ -540,6 +540,9 @@ namespace Switch_Toolbox.Library
             obj.HasBitans = msh.HasTangentBasis;
             obj.HasVertColors = msh.HasVertexColors(0);
             obj.ObjectName = msh.Name;
+            if (parentNode != null && msh.Name == string.Empty)
+                obj.ObjectName = parentNode.Name;
+
             obj.boneList = GetBoneList(msh);
             obj.VertexSkinCount = (byte)GetVertexSkinCount(msh);
 
