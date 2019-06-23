@@ -18,6 +18,7 @@ namespace FirstPlugin
             InitializeComponent();
 
             CanResize = false;
+            ogSkinCountChkBox.Checked = true;
 
             tabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 

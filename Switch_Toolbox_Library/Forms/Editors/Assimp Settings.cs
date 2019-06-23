@@ -33,6 +33,7 @@ namespace Switch_Toolbox.Library.Forms
             SkinLimitMax = (uint)numericUpDown1.Value;
 
             var Flags = PostProcessSteps.None;
+            Flags |= PostProcessSteps.GlobalScale;
 
             if (generateNormalsChk.Checked)
                 Flags |= PostProcessSteps.GenerateNormals;

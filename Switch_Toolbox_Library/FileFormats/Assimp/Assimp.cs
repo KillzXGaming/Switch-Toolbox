@@ -14,6 +14,8 @@ namespace Switch_Toolbox.Library
 {
     public class AssimpData
     {
+        private float UnitScale = 1;
+
         public bool UseTransformMatrix = true;
         public bool RotateSkeleton = false;
         public float RotateSkeletonAmount = 90;
@@ -67,10 +69,14 @@ namespace Switch_Toolbox.Library
                       Flags |= PostProcessSteps.CalculateTangentSpace;
                       Flags |= PostProcessSteps.GenerateNormals;*/
 
+                    
+
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
 
                     if (Utils.GetExtension(FileName) == ".dae")
                         GetRealNodeNames(FileName);
+
+                    STConsole.WriteLine($"UnitScale {UnitScale}");
 
                     LoadScene();
 
@@ -108,10 +114,17 @@ namespace Switch_Toolbox.Library
                         Name = att.InnerText;
                 }
 
-                Console.WriteLine($"BONE ID {ID} Name {Name}");
-
                 if (!DaeHelper.IDMapToName.ContainsKey(ID))
                     DaeHelper.IDMapToName.Add(ID, Name);
+            }
+            XmlNodeList elemListScale = doc.GetElementsByTagName("unit");
+            for (int i = 0; i < elemListScale.Count; i++)
+            {
+                foreach (XmlAttribute att in elemListScale[i].Attributes)
+                {
+                    if (att.Name == "meter")
+                        float.TryParse(att.InnerText, out UnitScale);
+                }
             }
         }
 
@@ -545,6 +558,7 @@ namespace Switch_Toolbox.Library
 
             obj.boneList = GetBoneList(msh);
             obj.VertexSkinCount = (byte)GetVertexSkinCount(msh);
+
 
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
