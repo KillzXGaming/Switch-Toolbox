@@ -68,6 +68,7 @@ namespace Switch_Toolbox.Library
                       Flags |= PostProcessSteps.GenerateNormals;*/
 
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
+                    GetRealNodeNames(FileName);
 
                     LoadScene();
 
@@ -104,6 +105,8 @@ namespace Switch_Toolbox.Library
                     if (att.Name == "name")
                         Name = att.InnerText;
                 }
+
+                Console.WriteLine($"BONE ID {ID} Name {Name}");
 
                 if (!DaeHelper.IDMapToName.ContainsKey(ID))
                     DaeHelper.IDMapToName.Add(ID, Name);
@@ -461,12 +464,10 @@ namespace Switch_Toolbox.Library
                 bone.skeletonParent = skeleton;
                 skeleton.bones.Add(bone);
 
-                bone.Text = node.Name;
-
-                if (node.Name.Contains($"{ParentArmatureName}"))
-                {
-                    bone.Text = node.Name.Replace($"{ParentArmatureName}_", "");
-                }
+                if (DaeHelper.IDMapToName.ContainsKey(node.Name))
+                    bone.Text = DaeHelper.IDMapToName[node.Name];
+                else
+                    bone.Text = node.Name;
 
                 bone.SmoothMatrixIndex = (short)skeleton.bones.IndexOf(bone);
                 bone.RigidMatrixIndex = -1; //Todo calculate these
@@ -634,7 +635,6 @@ namespace Switch_Toolbox.Library
                 if (msh.HasVertexColors(0))
                 {
                     vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
-                    Console.WriteLine("VTX Col " + vert.col);
                 }
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);
@@ -642,9 +642,6 @@ namespace Switch_Toolbox.Library
             }
             if (msh.HasBones)
             {
-                STConsole.WriteLine(msh.Name + " HasBones " + msh.HasBones);
-                STConsole.WriteLine(msh.Name + " BoneCount " + msh.BoneCount);
-
                 for (int i = 0; i < msh.BoneCount; i++)
                 {
                     Bone bn = msh.Bones[i];
@@ -652,6 +649,9 @@ namespace Switch_Toolbox.Library
                     {
                         foreach (VertexWeight w in bn.VertexWeights)
                         {
+                            if (DaeHelper.IDMapToName.ContainsKey(bn.Name))
+                                bn.Name = DaeHelper.IDMapToName[bn.Name];
+
                             vertices[w.VertexID].boneWeights.Add(w.Weight);
                             vertices[w.VertexID].boneNames.Add(bn.Name);
                             BoneNames.Add(bn.Name);
