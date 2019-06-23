@@ -698,15 +698,15 @@ namespace Bfres.Structs
         {
             if (BoneU != null)
             {
-                BoneU.TransformRotateZero = (GetRotation() == Quaternion.Identity);
-                BoneU.TransformScaleOne = (GetScale() == Vector3.Zero);
-                BoneU.TransformTranslateZero = (GetPosition() == Vector3.Zero);
+                BoneU.TransformRotateZero = BoneU.Rotation == Syroot.Maths.Vector4F.Zero;
+                BoneU.TransformScaleOne = BoneU.Scale == Syroot.Maths.Vector3F.One;
+                BoneU.TransformTranslateZero = BoneU.Position == Syroot.Maths.Vector3F.Zero;
             }
             else
             {
-                Bone.TransformRotateZero = (GetRotation() == Quaternion.FromEulerAngles(0,0,0));
-                Bone.TransformScaleOne = (GetScale() == Vector3.One);
-                Bone.TransformTranslateZero = (GetPosition() == Vector3.Zero);
+                Bone.TransformRotateZero = BoneU.Rotation == Syroot.Maths.Vector4F.Zero;
+                Bone.TransformScaleOne = BoneU.Scale == Syroot.Maths.Vector3F.One;
+                Bone.TransformTranslateZero = BoneU.Position == Syroot.Maths.Vector3F.Zero;
             }
         }
 
