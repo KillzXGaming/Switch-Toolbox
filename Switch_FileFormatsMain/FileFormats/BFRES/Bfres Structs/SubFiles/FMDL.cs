@@ -111,6 +111,7 @@ namespace Bfres.Structs
 
             if (dialogResult == DialogResult.Yes)
             {
+                Skeleton.bones.Clear();
                 ((BFRES)Parent.Parent).DrawableContainer.Drawables.Remove(Skeleton);
 
                 shapes.Clear();
@@ -120,6 +121,8 @@ namespace Bfres.Structs
 
                 Nodes.Clear();
                 ((BFRESGroupNode)Parent).RemoveChild(this);
+
+                LibraryGUI.Instance.UpdateViewport();
             }
         }
 
