@@ -576,6 +576,8 @@ namespace FirstPlugin
                 BfresBone bn = new BfresBone(fskl);
                 bn.CloneBaseInstance(genericBone);
                 bn.Text = genericBone.Text;
+                bn.UseRigidMatrix = bn.RigidMatrixIndex != -1;
+                bn.UseSmoothMatrix = bn.SmoothMatrixIndex != -1;
 
                 //Set the bfres bone data
                 if (bn.Bone == null)
