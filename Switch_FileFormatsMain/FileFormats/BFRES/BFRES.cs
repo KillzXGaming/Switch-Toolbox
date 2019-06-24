@@ -885,10 +885,6 @@ namespace FirstPlugin
             var animFolder = new BFRESAnimFolder();
             var externalFilesFolder = new BFRESGroupNode(BRESGroupType.Embedded, true);
 
-            //Reload context menus to load specific context menus
-            modelFolder.LoadContextMenus();
-            texturesFolder.LoadContextMenus();
-
             texturesFolder.ShowNewContextMenu = false;
 
             Nodes.Add(modelFolder);
@@ -1010,9 +1006,6 @@ namespace FirstPlugin
             var texturesFolder = new BNTX() { ImageKey = "folder", SelectedImageKey = "folder", Text = "Textures" };
             var animFolder = new BFRESAnimFolder();
             var externalFilesFolder = new BFRESGroupNode(BRESGroupType.Embedded);
-
-            //Reload context menus for models to load specific context menus
-            modelFolder.LoadContextMenus();
 
             //Texture folder acts like a bntx for saving back
             //This will only save if the user adds textures to it or the file has a bntx already
