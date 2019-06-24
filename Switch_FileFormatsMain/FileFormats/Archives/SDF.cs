@@ -48,12 +48,7 @@ namespace FirstPlugin
         public IEnumerable<ArchiveFileInfo> Files => files;
 
         SDFTOC_Header Header;
-        SDFTOC_ID startId;
-        int[] block1;
-        SDFTOC_ID[] blockIds;
         public SDFTOC_Block2[] block2Array;
-        byte[] DecompressedBlock;
-        SDFTOC_ID endId;
 
         //Thanks to https://github.com/GoldFarmer/rouge_sdf/blob/master/main.cpp for docs/structs
         public void Load(System.IO.Stream stream)
@@ -67,7 +62,7 @@ namespace FirstPlugin
                 Header.Read(reader);
 
                 //Read first id
-                startId = new SDFTOC_ID(reader);
+                var startId = new SDFTOC_ID(reader);
 
                 //Check this flag
                 byte Flag1 = reader.ReadByte();
@@ -76,11 +71,11 @@ namespace FirstPlugin
                     byte[] unk = reader.ReadBytes(0x140);
                 }
 
-                //Read first block
-                block1 = reader.ReadInt32s((int)Header.Block1Count);
+               //Read first block
+                var block1 = reader.ReadInt32s((int)Header.Block1Count);
 
                 //Read ID blocks
-                blockIds = new SDFTOC_ID[Header.Block1Count];
+                var blockIds = new SDFTOC_ID[Header.Block1Count];
                 for (int i = 0; i < Header.Block1Count; i++)
                 {
                     blockIds[i] = new SDFTOC_ID(reader);
@@ -102,22 +97,25 @@ namespace FirstPlugin
                 DecompressNameBlock(magic, reader.ReadBytes((int)Header.CompressedSize), Header);
 
                 //Read last id 
-                endId = new SDFTOC_ID(reader);
+                var endId = new SDFTOC_ID(reader);
 
                 for (int i = 0; i < FileEntries.Count; i++)
                 {
                     FileEntries[i].CanLoadFile = SupportedExtensions.Contains(Utils.GetExtension(FileEntries[i].FileName));
-
                     files.Add(FileEntries[i]);
                 }
+
+                //Remove unused data
+                reader.Dispose();
+                startId = null;
+                block1 = new int[0];
+                blockIds = new SDFTOC_ID[0];
+                endId = null;
             }
         }
 
         private List<string> SupportedExtensions = new List<string>()
-        {".mgraphobject"  };
-
-      //  private List<string> SupportedExtensions = new List<string>()
-    //    { ".dds", ".tga" ,".mmb", ".png", ".jpg", ".mgraphobject"  };
+        { ".dds", ".tga" ,".mmb", ".png", ".jpg", ".mgraphobject"  };
 
         private TreeNode GetNodes(TreeNode parent, string[] fileList)
         {
@@ -164,6 +162,11 @@ namespace FirstPlugin
             {
                 ParseNames(reader);
             }
+
+            CompressedBlock = new byte[0];
+            decomp = new byte[0];
+            decomp = null;
+            CompressedBlock = null;
         }
 
         private ulong readVariadicInteger(int Count, FileReader reader)

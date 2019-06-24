@@ -17,6 +17,8 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class ObjectEditorTree : UserControl
     {
+        private bool SuppressAfterSelectEvent = false;
+
         public ObjectEditor ObjectEditor;
 
         private TreeView _fieldsTreeCache;
@@ -24,81 +26,11 @@ namespace Switch_Toolbox.Library.Forms
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
 
-        public readonly int MAX_TREENODE_VALUE = 4000;
-
         public void AddIArchiveFile(IFileFormat FileFormat)
         {
-            TreeNode FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
-            FillTreeNodes(FileRoot, (IArchiveFile)FileFormat);
+            var FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
+            FileRoot.FillTreeNodes();
             AddNode(FileRoot);
-        }
-
-        void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
-        {
-            var rootText = root.Text;
-            var rootTextLength = rootText.Length;
-            var nodeFiles = archiveFile.Files;
-
-            int I = 0;
-            foreach (var node in nodeFiles)
-            {
-                if (!node.CanLoadFile)
-                    continue;
-
-                if (I++ == MAX_TREENODE_VALUE)
-                {
-                   var result = MessageBox.Show($"The amount of treenodes has reached over {MAX_TREENODE_VALUE} nodes. To prevent memory loss this is put in place. Do you want to continue loading all of them?", 
-                        "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-
-                    if (result != DialogResult.Yes)
-                        break;
-                }
-
-                string nodeString = node.FileName;
-
-                var roots = nodeString.Split(new char[] { '/' },
-                    StringSplitOptions.RemoveEmptyEntries);
-
-                // The initial parent is the root node
-                var parentNode = root;
-                var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
-                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
-                {
-                    // Build the node name
-                    var parentName = roots[rootIndex];
-                    sb.Append("/");
-                    sb.Append(parentName);
-                    var nodeName = sb.ToString();
-
-                    // Search for the node
-                    var index = parentNode.Nodes.IndexOfKey(nodeName);
-                    if (index == -1)
-                    {
-                        // Node was not found, add it
-
-                        var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
-
-                        if (rootIndex == roots.Length - 1)
-                        {
-                            ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
-                            wrapperFile.Name = nodeName;
-                            parentNode.Nodes.Add(wrapperFile);
-                            parentNode = wrapperFile;
-                        }
-                        else
-                        {
-                            folder.Name = nodeName;
-                            parentNode.Nodes.Add(folder);
-                            parentNode = folder;
-                        }
-                    }
-                    else
-                    {
-                        // Node was found, set that as parent and continue
-                        parentNode = parentNode.Nodes[index];
-                    }
-                }
-            }
         }
 
         public void AddNodeCollection(TreeNodeCollection nodes, bool ClearNodes)
@@ -224,6 +156,9 @@ namespace Switch_Toolbox.Library.Forms
         bool RenderedObjectWasSelected = false;
         private void treeViewCustom1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (SuppressAfterSelectEvent)
+                return;
+
             var node = treeViewCustom1.SelectedNode;
 
             //Set the current index used determine what bone is selected.
@@ -309,26 +244,48 @@ namespace Switch_Toolbox.Library.Forms
             ClearNodes();
         }
 
-        private void selectItem(object sender, TreeNodeMouseClickEventArgs e)
+        private void treeViewCustom1_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
-
-            if (viewport == null)
-                return;
-
-            if (e.Node is Animation)
+            if (e.Button == MouseButtons.Right)
             {
-                if (((Animation)e.Node).Bones.Count <= 0)
-                    ((Animation)e.Node).OpenAnimationData();
+                if (e.Node is IContextMenuNode)
+                {
+                    treeNodeContextMenu.Items.Clear();
+                    treeNodeContextMenu.Items.AddRange(((IContextMenuNode)e.Node).GetContextMenuItems());
+                    treeNodeContextMenu.Show(Cursor.Position);
 
-                string AnimName = e.Node.Text;
+                    //Select the node without the evemt
+                    //We don't want editors displaying on only right clicking
+                    SuppressAfterSelectEvent = true;
+                    treeViewCustom1.SelectedNode = e.Node;
+                    SuppressAfterSelectEvent = false;
+                }
+            }
+            else
+            {
+                OnAnimationSelected(e.Node);
+            }
+        }
+
+        private void OnAnimationSelected(TreeNode Node)
+        {
+            if (Node is Animation)
+            {
+                Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+                if (viewport == null)
+                    return;
+
+                if (((Animation)Node).Bones.Count <= 0)
+                    ((Animation)Node).OpenAnimationData();
+
+                string AnimName = Node.Text;
                 AnimName = Regex.Match(AnimName, @"([A-Z][0-9][0-9])(.*)").Groups[0].ToString();
                 if (AnimName.Length > 3)
                     AnimName = AnimName.Substring(3);
 
                 Animation running = new Animation(AnimName);
-                running.ReplaceMe((Animation)e.Node);
-                running.Tag = e.Node;
+                running.ReplaceMe((Animation)Node);
+                running.Tag = Node;
 
                 Queue<TreeNode> NodeQueue = new Queue<TreeNode>();
                 foreach (TreeNode n in treeViewCustom1.Nodes)
@@ -347,7 +304,7 @@ namespace Switch_Toolbox.Library.Forms
                             NodeName = NodeName.Substring(3);
                         if (n is Animation)
                         {
-                            if (n == e.Node)
+                            if (n == Node)
                                 continue;
                             if (NodeName.Equals(AnimName))
                             {

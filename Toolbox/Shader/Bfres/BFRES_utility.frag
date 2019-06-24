@@ -94,7 +94,9 @@ vec3 ReflectionPass(vec3 N, vec3 I, vec4 diffuseMap, vec3 Specular, float aoBlen
     vec3 viewNormal = mat3(sphereMatrix) * normalize(N.xyz);
     vec3 sphereMapColor = SphereMapColor(vert.viewNormal, SphereMap);
 
-	reflectionPass += sphereMapColor * HasSphereMap;
+	if (HasSphereMap == 1)
+		reflectionPass += sphereMapColor;
+
     reflectionPass = max(reflectionPass, vec3(0));
 
     return reflectionPass;

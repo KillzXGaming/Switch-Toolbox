@@ -38,15 +38,16 @@
             this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
             this.searchImgPB = new System.Windows.Forms.PictureBox();
             this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectEditorMenu = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.treeNodeContextMenu = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
-            this.stContextMenuStrip1.SuspendLayout();
+            this.objectEditorMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitter1
@@ -107,7 +108,7 @@
             this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
             this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
             this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
-            this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.selectItem);
+            this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewCustom1_MouseClick);
             this.treeViewCustom1.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragDrop);
             this.treeViewCustom1.DragOver += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragOver);
             this.treeViewCustom1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewCustom1_DoubleClick);
@@ -129,7 +130,7 @@
             // 
             this.stPanel3.Controls.Add(this.searchImgPB);
             this.stPanel3.Controls.Add(this.activeEditorChkBox);
-            this.stPanel3.Controls.Add(this.stContextMenuStrip1);
+            this.stPanel3.Controls.Add(this.objectEditorMenu);
             this.stPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.stPanel3.Location = new System.Drawing.Point(0, 0);
             this.stPanel3.Name = "stPanel3";
@@ -158,18 +159,6 @@
             this.activeEditorChkBox.Text = "Add Files to Active Editor";
             this.activeEditorChkBox.UseVisualStyleBackColor = true;
             this.activeEditorChkBox.CheckedChanged += new System.EventHandler(this.activeEditorChkBox_CheckedChanged);
-            // 
-            // stContextMenuStrip1
-            // 
-            this.stContextMenuStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem});
-            this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(314, 26);
-            this.stContextMenuStrip1.TabIndex = 1;
-            this.stContextMenuStrip1.Text = "stContextMenuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -201,6 +190,23 @@
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
+            // objectEditorMenu
+            // 
+            this.objectEditorMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.objectEditorMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
+            this.objectEditorMenu.Location = new System.Drawing.Point(0, 0);
+            this.objectEditorMenu.Name = "objectEditorMenu";
+            this.objectEditorMenu.Size = new System.Drawing.Size(314, 26);
+            this.objectEditorMenu.TabIndex = 1;
+            this.objectEditorMenu.Text = "stContextMenuStrip1";
+            // 
+            // treeNodeContextMenu
+            // 
+            this.treeNodeContextMenu.Name = "treeNodeContextMenu";
+            this.treeNodeContextMenu.Size = new System.Drawing.Size(61, 4);
+            // 
             // ObjectEditorTree
             // 
             this.Controls.Add(this.splitter1);
@@ -213,8 +219,8 @@
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).EndInit();
-            this.stContextMenuStrip1.ResumeLayout(false);
-            this.stContextMenuStrip1.PerformLayout();
+            this.objectEditorMenu.ResumeLayout(false);
+            this.objectEditorMenu.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -226,14 +232,15 @@
         private STPanel stPanel1;
         private STPanel stPanel3;
         private TreeViewCustom treeViewCustom1;
-        private STMenuStrip stContextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private STTextBox stTextBox1;
         private System.Windows.Forms.PictureBox searchImgPB;
         private STLabel searchLbl;
+        private STCheckBox activeEditorChkBox;
+        private STMenuStrip objectEditorMenu;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortToolStripMenuItem;
-        private STCheckBox activeEditorChkBox;
+        private STContextMenuStrip treeNodeContextMenu;
     }
 }

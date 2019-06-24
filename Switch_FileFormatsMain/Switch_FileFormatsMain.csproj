@@ -504,12 +504,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\EditBox.Designer.cs" />
-    <Compile Include="GUI\AnimationLoader.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\AnimationLoader.Designer.cs">
-      <DependentUpon>AnimationLoader.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\BFRES\BfresEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -930,9 +924,6 @@
     <EmbeddedResource Include="GUI\AAMP\EditBox.resx" />
     <EmbeddedResource Include="GUI\Advanced Editor\TextureViewer.resx">
       <DependentUpon>TextureViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\AnimationLoader.resx">
-      <DependentUpon>AnimationLoader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>

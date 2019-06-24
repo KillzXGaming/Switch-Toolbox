@@ -160,14 +160,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private bool IsConvertableText(Type type)
         {
-            foreach (var inter in type.GetInterfaces())
-            {
-                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IConvertableTextFormat))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return typeof(IConvertableTextFormat).IsAssignableFrom(type);
         }
 
         private void UpdatePropertiesView()

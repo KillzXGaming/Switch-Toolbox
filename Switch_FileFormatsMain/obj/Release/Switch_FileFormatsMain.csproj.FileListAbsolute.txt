@@ -234,7 +234,6 @@ C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Rele
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\Switch_FileFormatsMain.csproj.ResolveComReference.cache
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.GUI.AAMP.EditBox.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.TextureViewer.resources
-C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.AnimationLoader.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.AttributeEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresEditor.resources
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Switch_FileFormatsMain\obj\Release\FirstPlugin.Forms.BfresHeaderEditor.resources

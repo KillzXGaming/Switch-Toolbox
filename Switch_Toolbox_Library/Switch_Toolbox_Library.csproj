@@ -603,6 +603,7 @@
     </Compile>
     <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="Helpers\TreeHelper.cs" />
+    <Compile Include="Interfaces\IContextMenuNode.cs" />
     <Compile Include="Interfaces\IConvertableTextFormat.cs" />
     <Compile Include="Interfaces\IEditor.cs" />
     <Compile Include="Interfaces\IFIleEditor.cs" />

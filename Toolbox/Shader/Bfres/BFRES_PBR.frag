@@ -119,7 +119,7 @@ uniform int UseCavityMap;
 uniform int UseMetalnessMap;
 uniform int UseRoughnessMap;
 
-int isTransparent;
+uniform int isTransparent;
 
 // Diffuse Channel Toggles
 uniform int RedChannel;

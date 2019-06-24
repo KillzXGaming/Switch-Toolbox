@@ -131,6 +131,8 @@ namespace FirstPlugin
                 if (costumSelector.ShowDialog() == DialogResult.OK)
                 {
                     LoadCostumes(costumSelector.SelectedCostumeName);
+
+                    FrameBfres();
                 }
             }
 
@@ -201,6 +203,7 @@ namespace FirstPlugin
             }
 
             private ObjectEditor editor;
+            private BFRES MainCostume = null;
             public void LoadCostume(string fileName)
             {
                 List<BFRES> bfresFiles = new List<BFRES>();
@@ -226,12 +229,23 @@ namespace FirstPlugin
                     LibraryGUI.Instance.CreateMdiWindow(editor);
                 }
 
+                if (MainCostume == null && bfresFiles.Count > 0)
+                    MainCostume = bfresFiles[0];
+            
                 foreach (var bfres in bfresFiles)
                 {
                     editor.AddNode(bfres);
                     bfres.LoadEditors(null);
                     DiableLoadCheck();
                 }
+            }
+
+            private void FrameBfres()
+            {
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+                bfresEditor.FrameCamera(MainCostume.BFRESRender);
+
+                MainCostume = null;
             }
 
             private void DiableLoadCheck()
