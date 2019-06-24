@@ -696,13 +696,6 @@ namespace FirstPlugin
             return editor;
         }
 
-        public void AnimLoader(object sender, EventArgs args)
-        {
-            AnimationLoader loader = new AnimationLoader();
-            loader.TopLevel = true;
-            loader.Show();
-        }
-
         public BFRESRender BFRESRender;
         public void Load(System.IO.Stream stream)
         {
