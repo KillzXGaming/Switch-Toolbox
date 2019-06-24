@@ -394,7 +394,7 @@ namespace FirstPlugin
                             }
                         }
 
-                        if (Header.Version <= 0x15)
+                        if (Header.Version >= 0x17)
                         {
                               fileId = (long)readVariadicInteger(4, reader);
                           }   
