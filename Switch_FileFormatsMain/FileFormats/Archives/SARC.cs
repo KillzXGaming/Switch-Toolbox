@@ -104,7 +104,7 @@ namespace FirstPlugin.New
                 }
             }
         }
-        
+
         private void UnpackToFolder(object sender, EventArgs args)
         {
 
@@ -169,7 +169,7 @@ namespace FirstPlugin.New
         }
 
 
-     
+
 
         public class SarcEntry : ArchiveFileInfo
         {
@@ -182,7 +182,9 @@ namespace FirstPlugin.New
 
             public override Dictionary<string, string> ExtensionImageKeyLookup
             {
-                get { return new Dictionary<string, string>()
+                get
+                {
+                    return new Dictionary<string, string>()
                     {
                            { ".byml", "byaml" },
                            { ".byaml", "byaml" },
@@ -202,26 +204,6 @@ namespace FirstPlugin.New
 
             string ext = Path.GetExtension(fullName);
             string SarcEx = SARCExt.SARC.GuessFileExtension(data);
-        /*    if (SarcEx == ".bfres" || ext == ".sbfres")
-            {
-                sarcEntry.ImageKey = "bfres";
-                sarcEntry.SelectedImageKey = "bfres";
-            }
-            if (SarcEx == ".bntx")
-            {
-                sarcEntry.ImageKey = "bntx";
-                sarcEntry.SelectedImageKey = "bntx";
-            }
-            if (SarcEx == ".byaml")
-            {
-                sarcEntry.ImageKey = "byaml";
-                sarcEntry.SelectedImageKey = "byaml";
-            }
-            if (SarcEx == ".aamp")
-            {
-                sarcEntry.ImageKey = "aamp";
-                sarcEntry.SelectedImageKey = "aamp";
-            }*/
             return sarcEntry;
         }
     }

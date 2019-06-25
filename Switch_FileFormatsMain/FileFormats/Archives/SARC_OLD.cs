@@ -127,20 +127,16 @@ namespace FirstPlugin
             TreeView.Sort();
         }
 
-        public class FolderEntry : TreeNode, IContextMenuNode
+        public class FolderEntry : TreeNode
         {
             public FolderEntry(string text, int imageIndex, int selectedImageIndex)
             {
                 Text = text;
                 ImageIndex = imageIndex;
                 SelectedImageIndex = selectedImageIndex;
-            }
 
-            public ToolStripItem[] GetContextMenuItems()
-            {
-                List<ToolStripItem> Items = new List<ToolStripItem>();
-                Items.Add(new ToolStripMenuItem("Sort Childern", null, SortChildern, Keys.Control | Keys.W));
-                return Items.ToArray();
+                ContextMenu = new ContextMenu();
+                ContextMenu.MenuItems.Add(new MenuItem("Sort Childern", SortChildern));
             }
 
             private void SortChildern(object sender, EventArgs args)
@@ -342,22 +338,17 @@ namespace FirstPlugin
             {
                 ImageKey = "fileBlank";
                 SelectedImageKey = "fileBlank";
-            }
 
-            public ToolStripItem[] GetContextMenuItems()
-            {
-                List<ToolStripItem> Items = new List<ToolStripItem>();
-                Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
-                Items.Add(new STToolStipMenuItem("Export Raw Data to File Location", null, ExportToFileLoc, Keys.Control | Keys.F));
-                Items.Add(new STToolStipMenuItem("Replace Raw Data", null, Replace, Keys.Control | Keys.R));
-                Items.Add(new STToolStripSeparator());
-                Items.Add(new STToolStipMenuItem("Open With Text Editor", null, OpenTextEditor, Keys.Control | Keys.T));
-                Items.Add(new STToolStripSeparator());
-                Items.Add(new STToolStipMenuItem("Remove", null, Remove, Keys.Control | Keys.Delete));
-                Items.Add(new STToolStipMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
-                return Items.ToArray();
+                ContextMenuStrip = new STContextMenuStrip();
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data to File Location", null, ExportToFileLoc, Keys.Control | Keys.F));
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Replace Raw Data", null, Replace, Keys.Control | Keys.R));
+                ContextMenuStrip.Items.Add(new STToolStripSeparator());
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Open With Text Editor", null, OpenTextEditor, Keys.Control | Keys.T));
+                ContextMenuStrip.Items.Add(new STToolStripSeparator());
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Remove", null, Remove, Keys.Control | Keys.Delete));
+                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
             }
-
             public override void OnClick(TreeView treeView)
             {
                 UpdateHexView();
