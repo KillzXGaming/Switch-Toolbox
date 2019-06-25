@@ -534,10 +534,15 @@ namespace FirstPlugin
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listViewCustom1.SelectedItems.Count <= 0)
+            if (listViewCustom1.SelectedItems.Count <= 0 || treeView1.SelectedNode == null)
                 return;
 
+            dynamic targetNode = treeView1.SelectedNode.Tag;
             dynamic target = listViewCustom1.SelectedItems[0].Tag;
+            if (targetNode is IDictionary<string, dynamic>)
+                ((IDictionary<string, dynamic>)targetNode).Remove(listViewCustom1.SelectedItems[0].Text);
+            if (targetNode is IList<dynamic>)
+                ((IList<dynamic>)targetNode).Remove(target);
 
             int index = listViewCustom1.Items.IndexOf(listViewCustom1.SelectedItems[0]);
 
