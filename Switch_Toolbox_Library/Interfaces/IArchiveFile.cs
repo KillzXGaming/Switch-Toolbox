@@ -482,8 +482,11 @@ namespace Switch_Toolbox.Library
                 Extension = FindMatch(archiveFileInfo.FileData);
             }
 
-            if (ArchiveFileInfo.ExtensionImageKeyLookup.ContainsKey(Extension))
-                SetImageKey(ArchiveFileInfo.ExtensionImageKeyLookup[Extension]);
+            if (ArchiveFileInfo.ExtensionImageKeyLookup != null)
+            {
+                if (ArchiveFileInfo.ExtensionImageKeyLookup.ContainsKey(Extension))
+                    SetImageKey(ArchiveFileInfo.ExtensionImageKeyLookup[Extension]);
+            }
 
             switch (Extension)
             {

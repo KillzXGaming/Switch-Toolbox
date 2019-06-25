@@ -611,14 +611,13 @@ namespace FirstPlugin
                 Vector3 lightDirection = new Vector3(0f, 0f, -1f);
                 Vector3 difLightDirection = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
 
-                GL.Enable(EnableCap.Texture2D);
                 GL.Enable(EnableCap.DepthTest);
 
                 foreach (var model in models)
                 {
                     if (Runtime.RenderModels && model.Checked && model.Checked)
                     {
-                        List<int> faces = model.lodMeshes[0].getDisplayFace();
+                        List<int> faces = model.getDisplayFace();
 
                         GL.Begin(PrimitiveType.Triangles);
                         foreach (var index in faces)
@@ -626,7 +625,6 @@ namespace FirstPlugin
                             Vertex vert = model.vertices[index];
                             float normal = Vector3.Dot(difLightDirection, vert.nrm) * 0.5f + 0.5f;
                             GL.Color3(new Vector3(normal));
-                            GL.TexCoord2(vert.uv0);
                             GL.Vertex3(vert.pos);
                         }
                         GL.End();

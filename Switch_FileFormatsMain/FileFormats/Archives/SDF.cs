@@ -172,8 +172,8 @@ namespace FirstPlugin
             byte[] decomp = null;
             if (magic == 0xDFF25B82 || magic == 0xFD2FB528)
                 decomp = STLibraryCompression.ZSTD.Decompress(CompressedBlock);
-            else if (magic == 0x184D2204)
-                decomp = STLibraryCompression.Type_LZ4.Decompress(CompressedBlock);
+            else if (magic == 0x184D2204 || header.Version >= 0x17)
+                decomp = STLibraryCompression.Type_LZ4.Decompress(CompressedBlock, 0, CompressedBlock.Length,(int)header.DecompressedSize);
             else
                 decomp = STLibraryCompression.ZLIB.Decompress(CompressedBlock);
 
@@ -414,7 +414,7 @@ namespace FirstPlugin
                             }
                         }
 
-                        if (Header.Version >= 0x17)
+                        if (Header.Version < 0x16) //Unsure. Rabbids doesn't use it, newer versions don't. 
                         {
                               fileId = (long)readVariadicInteger(4, reader);
                           }   
