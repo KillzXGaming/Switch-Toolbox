@@ -669,6 +669,8 @@ namespace FirstPlugin
 
             if (Runtime.activeGame == Runtime.ActiveGame.KSA)
                 KsaShader.LoadRenderInfo(m, m.renderinfo);
+
+            m.UpdateRenderPass();
         }
         public static void ReadTextureRefs(this FMAT m, Material mat)
         {
@@ -742,7 +744,7 @@ namespace FirstPlugin
                         m.HasSpecularMap = true;
                         texture.Type = MatTexture.TextureType.Specular;
                     }
-                    else if (useSampler == "_x0")
+                    else if (useSampler == "_x0" && TextureName.Contains("Mlt"))
                     {
                         m.HasSphereMap = true;
                         texture.Type = MatTexture.TextureType.SphereMap;

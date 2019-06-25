@@ -13,7 +13,7 @@ using SELib;
 
 namespace Bfres.Structs
 {
-    public class FSKA : Animation
+    public class FSKA : Animation, IContextMenuNode
     {
         public enum TrackType
         {
@@ -41,11 +41,20 @@ namespace Bfres.Structs
             ImageKey = "skeletonAnimation";
             SelectedImageKey = "skeletonAnimation";
 
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Bone Target", null, NewAction, Keys.Control | Keys.W));
-            LoadFileMenus(false);
+            CanRename = true;
+            CanReplace = true;
+            CanExport = true;
+            CanDelete = true;
 
             OpenAnimationData();
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.AddRange(base.GetContextMenuItems());
+            Items.Add(new ToolStripMenuItem("New Bone Target", null, NewAction, Keys.Control | Keys.W));
+            return Items.ToArray();
         }
 
         protected void NewAction(object sender, EventArgs e) { NewBoneAnim(); }
@@ -642,7 +651,7 @@ namespace Bfres.Structs
                 bone.UseSegmentScaleCompensate = bn.ApplySegmentScaleCompensate;
 
                 Bones.Add(bone);
-                Nodes.Add(bone);
+              //  Nodes.Add(bone);
 
                 if (ska.FlagsRotate == SkeletalAnimFlagsRotate.EulerXYZ)
                     bone.RotType = Animation.RotationType.EULER;

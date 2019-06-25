@@ -446,6 +446,7 @@ namespace FirstPlugin
             m.ReadShaderParams(mat);
             m.ReadTextureRefs(mat);
             m.ReadRenderState(mat.RenderState);
+            m.UpdateRenderPass();
         }
         public static void ReadRenderState(this FMAT m, RenderState renderState)
         {

@@ -12,7 +12,7 @@ namespace Switch_Toolbox.Library.NodeWrappers
 {
     //Generic wrapper based on https://github.com/libertyernie/brawltools/blob/40d7431b1a01ef4a0411cd69e51411bd581e93e2/BrawlBox/NodeWrappers/GenericWrapper
     //Store useful generic functions in this wrapper for tree nodes
-    public class STGenericWrapper : TreeNodeCustom
+    public class STGenericWrapper : TreeNodeCustom, IContextMenuNode
     {
         public STGenericWrapper(string name) { Text = name; }
 
@@ -30,50 +30,15 @@ namespace Switch_Toolbox.Library.NodeWrappers
                 return Name;
         }
 
-        private bool canExport;
-        public bool CanExport
-        {
-            get { return canExport; }
-            set
-            {
-                canExport = value;
-                EnableContextMenu(ContextMenuStrip.Items, "Export", canExport);
-            }
-        }
+        public bool IsFolder = false;
 
-        private bool canReplace;
-        public bool CanReplace
-        {
-            get { return canReplace; }
-            set
-            {
-                canReplace = value;
-                EnableContextMenu(ContextMenuStrip.Items, "Replace", canReplace);
-            }
-        }
+        public bool CanExport { get; set; }
 
-        private bool canRename;
-        public bool CanRename
-        {
-            get { return canRename; }
-            set
-            {
-                canRename = value;
-                EnableContextMenu(ContextMenuStrip.Items, "Rename", canRename);
+        public bool CanReplace { get; set; }
 
-            }
-        }
+        public bool CanRename { get; set; }
 
-        private bool canDelete;
-        public bool CanDelete
-        {
-            get { return canDelete; }
-            set
-            {
-                canDelete = value;
-                EnableContextMenu(ContextMenuStrip.Items,"Delete", canDelete);
-            }
-        }
+        public bool CanDelete { get; set; }
 
         private void EnableContextMenu(ToolStripItemCollection Items, string Key, bool Enabled)
         {
@@ -86,52 +51,49 @@ namespace Switch_Toolbox.Library.NodeWrappers
 
         public STGenericWrapper(bool LoadMenus = true)
         {
-            if (LoadMenus)
-                LoadContextMenus();
-            else
-                ContextMenuStrip = new STContextMenuStrip();
-
             CanExport = true;
             CanReplace = false;
             CanRename = true;
             CanDelete = false;
         }
 
-        public virtual void LoadContextMenus()
+        public ToolStripItem[] GetContextMenuItems()
         {
-            LoadFileMenus();
-        }
-
-        public void LoadFileMenus(bool Reset = true)
-        {
-            if (Reset)
-                ContextMenuStrip = new STContextMenuStrip();
-
-            //File Operations
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
+            if (IsFolder)
+            {
+                return new ToolStripItem[]
+                {
+                    new ToolStripMenuItem("Import", null, ImportAction, Keys.Control | Keys.I) {Enabled = CanReplace },
+                    new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E)  {Enabled = CanExport },
+                    new ToolStripMenuItem("Replace All", null, ReplaceAllAction, Keys.Control | Keys.R) {Enabled = CanReplace },
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Sort", null, SortAction, Keys.Control | Keys.N),
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Clear", null, ClearAction, Keys.Control | Keys.Delete) {Enabled = CanDelete } ,
+                };
+            }
+            else
+            {
+                return new ToolStripItem[]
+                {
+                    new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E) {Enabled = CanExport },
+                    new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R) {Enabled = CanReplace },
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.N) {Enabled = CanRename },
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete) {Enabled = CanDelete },
+                };
+            }
         }
 
         public void LoadFolderMenus()
         {
-            ContextMenuStrip = new STContextMenuStrip();
-
             CanExport = false;
             CanReplace = false;
             CanRename = false;
             CanDelete = false;
 
-            //Folder Operations
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import", null, ImportAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace All", null, ReplaceAllAction, Keys.Control | Keys.R));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Sort", null, SortAction, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
+            IsFolder = true;
         }
 
         protected void ReplaceAllAction(object sender, EventArgs e)

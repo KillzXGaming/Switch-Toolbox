@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.NodeWrappers;
 using Switch_Toolbox.Library.Animations;
@@ -10,7 +11,7 @@ using FirstPlugin;
 
 namespace Bfres.Structs
 {
-    public class BFRESAnimFolder : STGenericWrapper
+    public class BFRESAnimFolder : STGenericWrapper, IContextMenuNode
     {
         public BFRESAnimFolder()
         {
@@ -51,22 +52,24 @@ namespace Bfres.Structs
         public void LoadMenus(bool isWiiUBfres)
         {
             IsWiiU = isWiiUBfres;
+        }
 
-            ContextMenuStrip.Items.Clear();
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("New", null,
+                           new ToolStripMenuItem("Skeletal Animation", null, NewSkeletalAnimAction),
+                           new ToolStripMenuItem("Shader Param Animation", null, NewShaderParamAnimAction),
+                           new ToolStripMenuItem("Color Animation", null, NewColorAnimAction),
+                           new ToolStripMenuItem("Texture SRT Animations", null, NewTexSrtAnimAction),
+                           new ToolStripMenuItem("Texture Pattern Animation", null, NewTexPatAnimAction),
+                           new ToolStripMenuItem("Bone Visibility Animation", null, NewBoneVisAnimAction),
+                           new ToolStripMenuItem("Material Visibility Animation", null, NewMatVisAnimAction),
+                           new ToolStripMenuItem("Shape Aniation", null, NewShapeAnimAction),
+                           new ToolStripMenuItem("Scene Aniation", null, NewSceneAnimAction)
+                       ));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New", null,
-                      new ToolStripMenuItem("Skeletal Animation", null, NewSkeletalAnimAction),
-                      new ToolStripMenuItem("Shader Param Animation", null, NewShaderParamAnimAction),
-                      new ToolStripMenuItem("Color Animation", null, NewColorAnimAction),
-                      new ToolStripMenuItem("Texture SRT Animations", null, NewTexSrtAnimAction),
-                      new ToolStripMenuItem("Texture Pattern Animation", null, NewTexPatAnimAction),
-                      new ToolStripMenuItem("Bone Visibility Animation", null, NewBoneVisAnimAction),
-                      new ToolStripMenuItem("Material Visibility Animation", null, NewMatVisAnimAction),
-                      new ToolStripMenuItem("Shape Aniation", null, NewShapeAnimAction),
-                      new ToolStripMenuItem("Scene Aniation", null, NewSceneAnimAction)
-                  ));
-
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import", null,
+            Items.Add(new ToolStripMenuItem("Import", null,
               new ToolStripMenuItem("Skeletal Animation", null, ImportSkeletalAnimAction),
               new ToolStripMenuItem("Shader Param Animation", null, ImportShaderParamAnimAction),
               new ToolStripMenuItem("Color Animation", null, ImportColorAnimAction),
@@ -78,8 +81,11 @@ namespace Bfres.Structs
               new ToolStripMenuItem("Scene Aniation", null, ImportSceneAnimAction)
               ));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
+            Items.Add(new ToolStripMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
+
+            return Items.ToArray();
         }
+
 
         protected void NewSkeletalAnimAction(object sender, EventArgs e) { NewSkeletalAnim(); }
         protected void NewShaderParamAnimAction(object sender, EventArgs e) { NewShaderParamAnim(); }

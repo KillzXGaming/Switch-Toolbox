@@ -553,8 +553,6 @@ namespace FirstPlugin
                 ImageKey = "Texture";
                 SelectedImageKey = "Texture";
 
-                LoadContextMenus();
-
                 CanDelete = false;
                 CanRename = false;
             }

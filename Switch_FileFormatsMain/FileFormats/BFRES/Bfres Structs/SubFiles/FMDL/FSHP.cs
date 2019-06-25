@@ -16,22 +16,24 @@ using OpenTK;
 
 namespace Bfres.Structs
 {
-    public class FSHPFolder : TreeNodeCustom
+    public class FSHPFolder : TreeNodeCustom, IContextMenuNode
     {
         public FSHPFolder()
         {
             Text = "Objects";
             Name = "FshpFolder";
+        }
 
-            ContextMenuStrip = new STContextMenuStrip();
-
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Object", null, Import, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Empty Object", null, CreateEmpty, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Objects", null, ExportAll, Keys.Control | Keys.A));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear All Objects", null, Clear, Keys.Control | Keys.C));
-
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Import Object", null, Import, Keys.Control | Keys.I));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("New Empty Object", null, CreateEmpty, Keys.Control | Keys.N));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Export All Objects", null, ExportAll, Keys.Control | Keys.A));
+            Items.Add(new ToolStripMenuItem("Clear All Objects", null, Clear, Keys.Control | Keys.C));
+            return Items.ToArray();
         }
 
         private void CreateEmpty(object sender, EventArgs args)
@@ -139,7 +141,7 @@ namespace Bfres.Structs
 
         public static int Size = 4 * (3 + 3 + 3 + 3 + 2 + 4 + 4 + 4 + 2 + 2 + 3 + 3);
     }
-    public class FSHP : STGenericObject
+    public class FSHP : STGenericObject, IContextMenuNode
     {
         public bool IsWiiU
         {
@@ -154,46 +156,49 @@ namespace Bfres.Structs
             Checked = true;
             ImageKey = "mesh";
             SelectedImageKey = "mesh";
+        }
 
-            ContextMenuStrip = new STContextMenuStrip();
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
-
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
+            Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
+            Items.Add(new ToolStripSeparator());
 
             ToolStripMenuItem lodMenu = new ToolStripMenuItem("Level Of Detail");
             lodMenu.DropDownItems.Add(new ToolStripMenuItem("Clear LOD Meshes", null, ClearLODMeshes));
-            ContextMenuStrip.Items.Add(lodMenu);
+            Items.Add(lodMenu);
 
             ToolStripMenuItem boundingsMenu = new ToolStripMenuItem("Boundings");
             boundingsMenu.DropDownItems.Add(new ToolStripMenuItem("Regenerate Bounding Boxes/Radius", null, GenerateBoundingBoxes));
-            ContextMenuStrip.Items.Add(boundingsMenu);
+            Items.Add(boundingsMenu);
 
             ToolStripMenuItem uvMenu = new ToolStripMenuItem("UVs");
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Vertical)", null, FlipUvsVertical));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip (Horizontal)", null, FlipUvsHorizontal));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Copy Channel", null, CopyUVChannelAction));
-          //  uvMenu.DropDownItems.Add(new ToolStripMenuItem("Unwrap By Position", null, UVUnwrapPosition));
+            //  uvMenu.DropDownItems.Add(new ToolStripMenuItem("Unwrap By Position", null, UVUnwrapPosition));
 
-            ContextMenuStrip.Items.Add(uvMenu);
+            Items.Add(uvMenu);
 
             ToolStripMenuItem normalsMenu = new ToolStripMenuItem("Normals");
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Smooth (Multiple Meshes)", null, MultiMeshSmoothNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Smooth", null, SmoothNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Invert", null, InvertNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Recalculate", null, RecalculateNormals));
-            ContextMenuStrip.Items.Add(normalsMenu);
+            Items.Add(normalsMenu);
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Recalulate Tangents/Bitangents", null, CalcTansBitans, Keys.Control | Keys.T));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Fill Tangent Space with constant", null, FillTangentsAction, Keys.Control | Keys.W));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Fill Bitangent Space with constant", null, FillBitangentsAction, Keys.Control | Keys.B));
+            Items.Add(new ToolStripMenuItem("Recalulate Tangents/Bitangents", null, CalcTansBitans, Keys.Control | Keys.T));
+            Items.Add(new ToolStripMenuItem("Fill Tangent Space with constant", null, FillTangentsAction, Keys.Control | Keys.W));
+            Items.Add(new ToolStripMenuItem("Fill Bitangent Space with constant", null, FillBitangentsAction, Keys.Control | Keys.B));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Open Material Editor", null, OpenMaterialEditor, Keys.Control | Keys.M));
+            Items.Add(new ToolStripMenuItem("Open Material Editor", null, OpenMaterialEditor, Keys.Control | Keys.M));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, Remove, Keys.Control | Keys.Delete));
+            Items.Add(new ToolStripMenuItem("Delete", null, Remove, Keys.Control | Keys.Delete));
+            return Items.ToArray();
         }
 
         public VertexBuffer VertexBuffer;

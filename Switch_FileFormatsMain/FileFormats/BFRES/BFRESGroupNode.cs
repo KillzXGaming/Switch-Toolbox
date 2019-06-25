@@ -30,13 +30,9 @@ namespace Bfres.Structs
         Embedded,
     }
 
-    public class BFRESGroupNode : STGenericWrapper
+    public class BFRESGroupNode : STGenericWrapper, IContextMenuNode
     {
-        public bool ShowNewContextMenu
-        {
-            set { ContextMenuStrip.Items[0].Visible = value; }
-            get { return ContextMenuStrip.Items[0].Visible; }
-        }
+        public bool ShowNewContextMenu = true;
 
         public bool IsWiiU;
 
@@ -56,39 +52,38 @@ namespace Bfres.Structs
             ImageKey = "folder";
 
             IsWiiU = isWiiU;
-            LoadContextMenus();
-        }
-
-        public override void LoadContextMenus()
-        {
-            ContextMenuStrip = new STContextMenuStrip();
 
             CanExport = false;
             CanReplace = false;
             CanRename = false;
             CanDelete = false;
+        }
 
-            //Folder Operations
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
 
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("New", null, NewAction, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Import", null, ImportAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace (From Folder)", null, ReplaceAllAction, Keys.Control | Keys.R));
-            ContextMenuStrip.Items.Add(new STToolStripSeparator());
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Sort", null, SortAction, Keys.Control | Keys.S));
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
+            Items.Add(new STToolStipMenuItem("New", null, NewAction, Keys.Control | Keys.N) { Enabled = ShowNewContextMenu });
+            Items.Add(new STToolStipMenuItem("Import", null, ImportAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
+            Items.Add(new ToolStripMenuItem("Replace (From Folder)", null, ReplaceAllAction, Keys.Control | Keys.R));
+            Items.Add(new STToolStripSeparator());
+            Items.Add(new STToolStipMenuItem("Sort", null, SortAction, Keys.Control | Keys.S));
+            Items.Add(new STToolStipMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
 
             if (Type == BRESGroupType.Textures)
             {
-                ContextMenuStrip.Items.Add(new STToolStripSeparator());
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Batch Generate Mipmaps", null, BatchGenerateMipmapsAction, Keys.Control | Keys.M));
+                Items.Add(new STToolStripSeparator());
+                Items.Add(new STToolStipMenuItem("Batch Generate Mipmaps", null, BatchGenerateMipmapsAction, Keys.Control | Keys.M));
             }
             if (Type == BRESGroupType.Models)
             {
-                ContextMenuStrip.Items.Add(new STToolStripSeparator());
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Show All Models", null, ShowAllModelsAction, Keys.Control | Keys.A));
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Hide All Models", null, HideAllModelsAction, Keys.Control | Keys.H));
+                Items.Add(new STToolStripSeparator());
+                Items.Add(new STToolStipMenuItem("Show All Models", null, ShowAllModelsAction, Keys.Control | Keys.A));
+                Items.Add(new STToolStipMenuItem("Hide All Models", null, HideAllModelsAction, Keys.Control | Keys.H));
             }
+
+            return Items.ToArray();
         }
 
         public override string ExportFilter { get { return GetSubfileExtensions(true); } }

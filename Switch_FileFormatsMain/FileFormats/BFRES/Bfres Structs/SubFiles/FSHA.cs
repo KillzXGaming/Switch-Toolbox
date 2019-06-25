@@ -16,8 +16,18 @@ namespace Bfres.Structs
 
         public FSHA()
         {
+   
+        }
+
+        public void Initialize()
+        {
             ImageKey = "shapeAnimation";
             SelectedImageKey = "shapeAnimation";
+
+            CanRename = true;
+            CanReplace = true;
+            CanExport = true;
+            CanDelete = true;
         }
 
         public class ShapeAnimEntry : STGenericWrapper
@@ -84,12 +94,14 @@ namespace Bfres.Structs
 
         private void LoadAnim(ShapeAnim shapeAnim)
         {
+            Initialize();
             Text = shapeAnim.Name;
 
             ShapeAnim = shapeAnim;
         }
         private void LoadAnim(ResU.ShapeAnim shapeAnim)
         {
+            Initialize();
             Text = shapeAnim.Name;
 
             ShapeAnimU = shapeAnim;

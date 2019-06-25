@@ -203,6 +203,7 @@
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
     <Compile Include="FileFormats\Archives\NXARC.cs" />
     <Compile Include="FileFormats\Archives\RARC.cs" />
+    <Compile Include="FileFormats\Archives\SARC_OLD.cs" />
     <Compile Include="FileFormats\Archives\SP2.cs" />
     <Compile Include="FileFormats\Archives\TMPK.cs" />
     <Compile Include="FileFormats\Audio\Archives\BARS.cs" />

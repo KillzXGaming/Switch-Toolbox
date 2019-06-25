@@ -85,6 +85,7 @@ namespace Switch_Toolbox.Library
             }
         }
 
+        public virtual Dictionary<string, string> ExtensionImageKeyLookup { get; }
 
         public virtual void Replace()
         {
@@ -475,16 +476,20 @@ namespace Switch_Toolbox.Library
 
             ArchiveFileInfo = archiveFileInfo;
 
-            string Extension = "";
+            string Extension = Utils.GetExtension(text);
             if (ArchiveFileInfo.CheckFileMagic)
             {
                 Extension = FindMatch(archiveFileInfo.FileData);
             }
 
+            if (ArchiveFileInfo.ExtensionImageKeyLookup.ContainsKey(Extension))
+                SetImageKey(ArchiveFileInfo.ExtensionImageKeyLookup[Extension]);
+
             switch (Extension)
             {
                 case ".bntx": SetImageKey("bntx"); break;
                 case ".byaml": SetImageKey("byaml"); break;
+                case ".byml": SetImageKey("byaml"); break;
                 case ".aamp": SetImageKey("aamp"); break;
                 case ".bfres": SetImageKey("bfres"); break;
                 case ".sbfres": SetImageKey("sbfres"); break;

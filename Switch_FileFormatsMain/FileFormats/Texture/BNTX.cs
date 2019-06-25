@@ -20,7 +20,7 @@ using Switch_Toolbox.Library.Animations;
 
 namespace FirstPlugin
 {
-    public class BNTX : TreeNodeFile, IFileFormat
+    public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -118,22 +118,6 @@ namespace FirstPlugin
         public BntxFile BinaryTexFile;
         public string FileNameText;
 
-        private bool hasParent;
-        public bool HasParent
-        {
-            get
-            {
-                hasParent = Parent != null;
-
-                if (ContextMenuStrip != null)
-                {
-                    ContextMenuStrip.Items[0].Enabled = hasParent;
-                    ContextMenuStrip.Items[6].Enabled = hasParent;
-                }
-
-                return hasParent;
-            }
-        }
         public bool CanReplace;
         public bool AllGLInitialized
         {
@@ -159,24 +143,26 @@ namespace FirstPlugin
             LoadFile(stream, Name);
 
             PluginRuntime.bntxContainers.Add(this);
-
-            //Check if bntx is parented to determine if an archive is used
-            bool checkParent = HasParent;
-
-            ContextMenuStrip = new STContextMenuStrip();
-
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, Save, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, Import, Keys.Control | Keys.R));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Texture", null, ImportTextureAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Textures (From Folder)", null, ReplaceAll, Keys.Control | Keys.T));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Textures", null, ExportAll, Keys.Control | Keys.A));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Sort", null, SortTextures, Keys.Control | Keys.S));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Clear", null, Clear, Keys.Control | Keys.C));
         }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            return new ToolStripItem[]
+            {
+                new ToolStripMenuItem("Export", null, Save, Keys.Control | Keys.E),
+                new ToolStripMenuItem("Replace", null, Import, Keys.Control | Keys.R) { Enabled = Parent != null, },
+                new ToolStripSeparator(),
+                new ToolStripMenuItem("Import Texture", null, ImportTextureAction, Keys.Control | Keys.I),
+                new ToolStripMenuItem("Replace Textures (From Folder)", null, ReplaceAll, Keys.Control | Keys.T),
+                new ToolStripMenuItem("Export All Textures", null, ExportAll, Keys.Control | Keys.A),
+                new ToolStripSeparator(),
+                new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N),
+                new ToolStripMenuItem("Sort", null, SortTextures, Keys.Control | Keys.S),
+                new ToolStripSeparator(),
+                new ToolStripMenuItem("Clear", null, Clear, Keys.Control | Keys.C),
+            };
+        }
+
         public void Unload()
         {
             foreach (var tex in Textures.Values)
@@ -261,12 +247,6 @@ namespace FirstPlugin
         }
 
         public void OnPropertyChanged(){ Text = BinaryTexFile.Name; }
-
-        //Check right click to enable/disable certain context menus
-        public override void OnMouseRightClick(TreeView treeview)
-        {
-            bool checkParent = HasParent;
-        }
 
         public void LoadFile(Stream stream, string Name = "")
         {

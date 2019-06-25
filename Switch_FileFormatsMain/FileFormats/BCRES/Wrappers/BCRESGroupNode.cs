@@ -37,22 +37,10 @@ namespace FirstPlugin
         public BCRESGroupNode() : base()
         {
             ImageKey = "folder";
-
-            LoadContextMenus();
         }
 
         public BCRESGroupNode(string name) : base() { Text = name; }
         public BCRESGroupNode(BCRESGroupType type) : base() { Type = type; SetNameByType(); }
-
-        public override void LoadContextMenus()
-        {
-            ContextMenuStrip = new STContextMenuStrip();
-
-            CanExport = false;
-            CanReplace = false;
-            CanRename = false;
-            CanDelete = false;
-        }
 
         public void SetNameByType()
         {

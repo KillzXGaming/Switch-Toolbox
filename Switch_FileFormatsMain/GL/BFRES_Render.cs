@@ -402,12 +402,6 @@ namespace FirstPlugin
             {
                 if (models[m].Checked)
                 {
-                    //Check render pass first!
-                    for (int shp = 0; shp < models[m].shapes.Count; shp++)
-                    {
-                        CheckRenderPass(models[m].shapes[shp].GetMaterial());
-                    }
-
                     List<FSHP> opaque = new List<FSHP>();
                     List<FSHP> transparent = new List<FSHP>();
 
@@ -820,6 +814,9 @@ namespace FirstPlugin
 
                 for (int shp = 0; shp < models[m].shapes.Count; shp++)
                 {
+                    //Update render pass aswell
+                    CheckRenderPass(models[m].shapes[shp].GetMaterial());
+
                     models[m].shapes[shp].Offset = poffset * 4;
                     List<DisplayVertex> pv = models[m].shapes[shp].CreateDisplayVertices(models[m]);
                     Vs.AddRange(pv);
@@ -908,7 +905,6 @@ namespace FirstPlugin
                     CullBack = mat.renderinfo[i].ValueString.Contains("front");
                 }
 
-
                 if (mat.shaderassign.ShaderArchive == "Turbo_UBER")
                 {
                     AglShaderTurbo aglShader = new AglShaderTurbo();
@@ -950,6 +946,10 @@ namespace FirstPlugin
                 {
                     IsTranslucent = mat.renderinfo[i].ValueString.Contains("translucent");
                     IsTransparentMask = mat.renderinfo[i].ValueString.Contains("mask");
+                }
+                if (mat.renderinfo[i].Name == "renderPass")
+                {
+                    IsTransparentMask = mat.renderinfo[i].ValueString.Contains("xlu");
                 }
             }
 
@@ -1012,7 +1012,6 @@ namespace FirstPlugin
             shader.SetVector2("SRT_Scale", new Vector2(1, 1));
             shader.SetFloat("SRT_Rotate", 0);
             shader.SetVector2("SRT_Translate", new Vector2(0, 0));
-
 
             shader.SetInt("selectedBoneIndex", Runtime.SelectedBoneIndex);
 

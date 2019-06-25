@@ -59,6 +59,11 @@ namespace Bfres.Structs
             {
                 MaterialAnimData = data;
                 matAnimWrapper = materialAnimation;
+
+                CanRename = true;
+                CanReplace = true;
+                CanExport = true;
+                CanDelete = true;
             }
 
             public void CreateSampler(string Name, bool IsConstant)
@@ -326,9 +331,6 @@ namespace Bfres.Structs
         {
             ImageKey = "materialAnim";
             SelectedImageKey = "materialAnim";
-
-            ContextMenuStrip = new ContextMenuStrip();
-            LoadFileMenus(false);
         }
 
         protected void NewAction(object sender, EventArgs e) { NewMaterialAnim(); }

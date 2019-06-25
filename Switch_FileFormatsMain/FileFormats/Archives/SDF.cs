@@ -213,7 +213,6 @@ namespace FirstPlugin
         public class FileEntry : ArchiveFileInfo
         {
             public SDF SDFParent;
-            public string FilePath;
             public string FolderPath;
             public string FileBlockPath;
             public ulong PackageID;
@@ -258,10 +257,10 @@ namespace FirstPlugin
                         if (CompressedSizes.Count == 0)
                         {
                             //Decompressed File 
-                            string FileNameBlock = Path.Combine(FolderPath, FilePath);
-                            string FolerPath = Path.GetDirectoryName(FileNameBlock);
-                            if (!Directory.Exists(FolerPath))
-                                Directory.CreateDirectory(FolerPath);
+                       //     string FileNameBlock = Path.Combine(FolderPath, FileName);
+                        //    string FolerPath = Path.GetDirectoryName(FileNameBlock);
+                        //    if (!Directory.Exists(FolerPath))
+                        //        Directory.CreateDirectory(FolerPath);
 
                             Data.Add(stream.getSection((int)Offset, (int)DecompressedSize));
                         }
@@ -459,10 +458,6 @@ namespace FirstPlugin
             string ID = packageId.ToString("D" + 4);
 
             string BlockFilePath = Path.Combine(PathFolder, $"sdf-{layer}-{ID}.sdfdata");
-            if (Append)
-            {
-            
-            }
 
             bool IsFile = !Name.Contains("dummy") && decompresedSize > 5;
 
@@ -473,7 +468,6 @@ namespace FirstPlugin
                     SDFParent = this,
                     FileName = Name,
                     FileBlockPath = BlockFilePath,
-                    FilePath = Name,
                     FolderPath = PathFolder,
                     CompressedSizes = compressedSize,
                     DdsType = ddsType,

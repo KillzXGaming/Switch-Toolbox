@@ -12,7 +12,7 @@ using Bfres.Structs;
 
 namespace FirstPlugin.NodeWrappers
 {
-    public class BFRESWrapper : STGenericWrapper
+    public class BFRESWrapper : STGenericWrapper, IContextMenuNode
     {
         public override void OnClick(TreeView treeview)
         {
@@ -20,25 +20,22 @@ namespace FirstPlugin.NodeWrappers
         }
 
         public bool IsWiiU { get; set; }
-      
-        public bool SettingRemoveUnusedTextures
-        {
-            get
-            {
-                return ((ToolStripMenuItem)SettingsToolStrip.DropDownItems[0]).Checked;
-            }
-        }
+        public bool SettingRemoveUnusedTextures;
 
         private ToolStripMenuItem SettingsToolStrip;
 
         public void LoadMenus(bool isWiiUBfres) {
             IsWiiU = isWiiUBfres;
+        }
 
-            LoadFileMenus(true);
-
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.AddRange(base.GetContextMenuItems());
             SettingsToolStrip = new ToolStripMenuItem("Settings", null);
             SettingsToolStrip.DropDownItems.Add(new ToolStripMenuItem("Remove Unused Textures on Save", null, SettingBooleanAction));
-            ContextMenuStrip.Items.Add(SettingsToolStrip);
+            Items.Add(SettingsToolStrip);
+            return Items.ToArray();
         }
 
         public override void Delete()

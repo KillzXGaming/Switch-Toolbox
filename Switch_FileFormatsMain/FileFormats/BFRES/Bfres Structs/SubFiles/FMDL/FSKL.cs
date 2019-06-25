@@ -168,7 +168,7 @@ namespace Bfres.Structs
             return (FMDL)node.Parent;
         }
 
-        public class fsklNode : STGenericWrapper
+        public class fsklNode : STGenericWrapper, IContextMenuNode
         {
             public FSKL fskl;
 
@@ -195,18 +195,20 @@ namespace Bfres.Structs
                 CanRename = false;
             }
 
-            public override void LoadContextMenus()
+            public ToolStripItem[] GetContextMenuItems()
             {
-                ContextMenuStrip = new STContextMenuStrip();
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Bone", null, NewBoneAction, Keys.Control | Keys.N));
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Bone", null, ImportAction, Keys.Control | Keys.I));
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All Bones", null, ExportAllAction, Keys.Control | Keys.B));
-                ContextMenuStrip.Items.Add(new ToolStripSeparator());
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Matching Bones (From Skeleton)", null, ReplaceMatchingFileAction, Keys.Control | Keys.S));
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Matching Bones (From Folder)", null, ReplaceMatchingFolderAction, Keys.Control | Keys.F));
-                ContextMenuStrip.Items.Add(new ToolStripSeparator());
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Skeleton", null, ExportAction, Keys.Control | Keys.E));
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R));
+                return new ToolStripItem[]
+                {
+                    new ToolStripMenuItem("New Bone", null, NewBoneAction, Keys.Control | Keys.N),
+                    new ToolStripMenuItem("Import Bone", null, ImportAction, Keys.Control | Keys.I),
+                    new ToolStripMenuItem("Export All Bones", null, ExportAllAction, Keys.Control | Keys.B),
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Replace Matching Bones (From Skeleton)", null, ReplaceMatchingFileAction, Keys.Control | Keys.S),
+                    new ToolStripMenuItem("Replace Matching Bones (From Folder)", null, ReplaceMatchingFolderAction, Keys.Control | Keys.F),
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Export Skeleton", null, ExportAction, Keys.Control | Keys.E),
+                    new ToolStripMenuItem("Replace Skeleton", null, ReplaceAction, Keys.Control | Keys.R),
+                };
             }
 
             protected void NewBoneAction(object sender, EventArgs args) { NewChildBone(); }
@@ -508,7 +510,7 @@ namespace Bfres.Structs
             BfresWiiU.ReadSkeleton(node, skl, this);
         }
     }
-    public class BfresBone : STBone
+    public class BfresBone : STBone, IContextMenuNode
     {
         public bool UseSmoothMatrix { get; set; }
 
@@ -582,14 +584,18 @@ namespace Bfres.Structs
             ImageKey = "bone";
             SelectedImageKey = "bone";
             Checked = true;
+        }
 
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Child Bone", null, NewAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Import Child Bone", null, ImportAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Bone", null, ExportAction, Keys.Control | Keys.I));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace Bone", null, ReplaceAction, Keys.Control | Keys.I));
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("New Child Bone", null, NewAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("Import Child Bone", null, ImportAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Export Bone", null, ExportAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("Replace Bone", null, ReplaceAction, Keys.Control | Keys.I));
+            return Items.ToArray();
         }
 
         protected void ExportAction(object sender, EventArgs args) { Export(); }

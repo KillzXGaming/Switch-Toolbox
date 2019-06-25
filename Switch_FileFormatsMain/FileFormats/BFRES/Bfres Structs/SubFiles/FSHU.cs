@@ -20,8 +20,10 @@ namespace Bfres.Structs
             ImageKey = "materialAnim";
             SelectedImageKey = "materialAnim";
 
-            ContextMenuStrip = new ContextMenuStrip();
-            LoadFileMenus(false);
+            CanRename = true;
+            CanReplace = true;
+            CanExport = true;
+            CanDelete = true;
         }
         protected void NewAction(object sender, EventArgs e) { NewMaterialAnim(); }
 

@@ -158,6 +158,16 @@ namespace Switch_Toolbox.Library.Forms
                 editor.FillEditor(ArchiveFileInfo.FileData);
         }
 
+        private void NotifyFormatSwitched()
+        {
+
+        }
+
+        private void SaveTextFormat()
+        {
+
+        }
+
         private bool IsConvertableText(Type type)
         {
             return typeof(IConvertableTextFormat).IsAssignableFrom(type);

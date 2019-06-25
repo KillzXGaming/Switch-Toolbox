@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using Syroot.NintenTools.NSW.Bfres;
 using System.Windows.Forms;
@@ -205,6 +206,56 @@ namespace Bfres.Structs
         public BFRESRender GetRenderer()
         {
            return ((BFRES)Parent.Parent.Parent.Parent).BFRESRender;
+        }
+
+        public void UpdateRenderPass()
+        {
+            if (ImageKey != "material")
+            {
+                ImageKey = "material";
+                SelectedImageKey = "material";
+            }
+
+            bool IsTranslucent = false;
+            bool IsTransparentMask = false;
+
+            for (int i = 0; i < renderinfo.Count; i++)
+            {
+                if (renderinfo[i].Name == "gsys_render_state_mode")
+                {
+                    IsTranslucent = renderinfo[i].ValueString.Contains("translucent");
+                    IsTransparentMask = renderinfo[i].ValueString.Contains("mask");
+                }
+                if (renderinfo[i].Name == "renderPass")
+                {
+                    IsTransparentMask = renderinfo[i].ValueString.Contains("xlu");
+                }
+            }
+
+            if (shaderassign.options.ContainsKey("enable_translucent"))
+                IsTranslucent = shaderassign.options["enable_translucent"] == "1";
+            if (shaderassign.options.ContainsKey("enable_translucent"))
+                IsTransparentMask = shaderassign.options["enable_transparent"] == "1";
+
+            if (MaterialU != null)
+            {
+                IsTranslucent = MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.Translucent;
+                IsTransparentMask = MaterialU.RenderState.FlagsMode == ResU.RenderStateFlagsMode.AlphaMask;
+            }
+
+            isTransparent = IsTransparentMask || IsTranslucent;
+
+            SetMaterialIcon(IsTranslucent, "MaterialTranslucent");
+            SetMaterialIcon(IsTransparentMask, "MaterialTransparent");
+        }
+
+        private void SetMaterialIcon(bool IsEffect, string Key)
+        {
+            if (IsEffect)
+            {
+                ImageKey = Key;
+                SelectedImageKey = Key;
+            }
         }
 
         public bool IsNormalMapTexCoord2()

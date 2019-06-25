@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using FirstPlugin.Forms;
@@ -11,7 +12,7 @@ using Switch_Toolbox.Library.NodeWrappers;
 
 namespace Bfres.Structs
 {
-    public class FSCN : STGenericWrapper
+    public class FSCN : STGenericWrapper, IContextMenuNode
     {
         public SceneAnim SceneAnim;
         public ResU.SceneAnim SceneAnimU;
@@ -30,18 +31,21 @@ namespace Bfres.Structs
 
             ImageKey = "materialAnim";
             SelectedImageKey = "materialAnim";
-
-            ContextMenuStrip = new ContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Camera Animation", null, NewCameraAction, Keys.Control | Keys.C));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Light Animation", null, NewLightAction, Keys.Control | Keys.L));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("New Fog Animation", null, NewFogAction, Keys.Control | Keys.F));
-            LoadFileMenus(false);
         }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("New Camera Animation", null, NewCameraAction, Keys.Control | Keys.C));
+            Items.Add(new ToolStripMenuItem("New Light Animation", null, NewLightAction, Keys.Control | Keys.L));
+            Items.Add(new ToolStripMenuItem("New Fog Animation", null, NewFogAction, Keys.Control | Keys.F));
+            return Items.ToArray();
+        }
+
 
         protected void NewCameraAction(object sender, EventArgs e) { NewCameraAnim(); }
         protected void NewLightAction(object sender, EventArgs e) { NewLightAnim(); }
         protected void NewFogAction(object sender, EventArgs e) { NewFogAnim(); }
-
 
         public void NewCameraAnim()
         {
@@ -176,8 +180,6 @@ namespace Bfres.Structs
                 CanReplace = true;
                 CanExport = true;
                 CanDelete = true;
-
-                ContextMenuStrip = new ContextMenuStrip();
             }
 
             public void LoadAnim(CameraAnim anim)
@@ -263,8 +265,6 @@ namespace Bfres.Structs
                 CanReplace = true;
                 CanExport = true;
                 CanDelete = true;
-
-                ContextMenuStrip = new ContextMenuStrip();
             }
 
             public void LoadAnim(LightAnim anim)
@@ -296,8 +296,6 @@ namespace Bfres.Structs
                 CanReplace = true;
                 CanExport = true;
                 CanDelete = true;
-
-                ContextMenuStrip = new ContextMenuStrip();
             }
 
             public void LoadAnim(FogAnim anim)

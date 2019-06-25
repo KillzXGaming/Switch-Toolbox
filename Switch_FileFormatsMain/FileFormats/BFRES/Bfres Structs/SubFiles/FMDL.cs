@@ -16,7 +16,7 @@ using OpenTK;
 
 namespace Bfres.Structs
 {
-    public class FMDL : STGenericModel
+    public class FMDL : STGenericModel, IContextMenuNode
     {
         //These get updated on UpdateVertexData()
         public Vector3 MaxPosition = new Vector3(0);
@@ -70,29 +70,36 @@ namespace Bfres.Structs
             Checked = true;
             CanReplace = true;
             CanDelete = true;
+            IsFolder = false;
 
             Nodes.Add(new FSHPFolder());
             Nodes.Add(new FMATFolder());
             Nodes.Add(new FSKL.fsklNode());
+        }
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Transform", null, TransformToolAction, Keys.Control | Keys.T));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Calculate Tangents/Bitangents", null, CalcTansBitansAllShapesAction, Keys.Control | Keys.C));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Normals", null,
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.AddRange(base.GetContextMenuItems());
+            Items.Add(new ToolStripMenuItem("Transform", null, TransformToolAction, Keys.Control | Keys.T));
+            Items.Add(new ToolStripMenuItem("Calculate Tangents/Bitangents", null, CalcTansBitansAllShapesAction, Keys.Control | Keys.C));
+            Items.Add(new ToolStripMenuItem("Normals", null,
              new ToolStripMenuItem("Smooth (Multiple Meshes)", null, MultiMeshSmoothNormals),
              new ToolStripMenuItem("Smooth", null, SmoothNormalsAction),
              new ToolStripMenuItem("Recalculate", null, RecalculateNormalsAction)
             ));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("UVs", null,
+            Items.Add(new ToolStripMenuItem("UVs", null,
               new ToolStripMenuItem("Flip Vertical", null, FlipUvsVerticalAction),
               new ToolStripMenuItem("Flip Horizontal", null, FlipUvsHorizontalAction),
               new ToolStripMenuItem("Copy UV Channel", null, CopyUVChannels)
             ));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Colors", null,
+            Items.Add(new ToolStripMenuItem("Colors", null,
               new ToolStripMenuItem("  Set Color", null, SetVertexColorDialogAction),
               new ToolStripMenuItem("Set White Color", null, SetVertexColorWhiteAction)
             ));
+            return Items.ToArray();
         }
 
         protected void TransformToolAction(object sender, EventArgs e) { TransformTool(); }

@@ -14,7 +14,7 @@ using FirstPlugin.Turbo;
 
 namespace FirstPlugin
 {
-    public class BYAML : IEditor<ByamlEditor>, IFileFormat
+    public class BYAML : IEditor<ByamlEditor>, IFileFormat, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Parameter;
 
@@ -49,6 +49,22 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
+
+        #region Text Converter Interface
+        public TextFileType TextFileType => TextFileType.Xml;
+        public bool CanConvertBack => false;
+
+        public string ConvertToString()
+        {
+            return XmlConverter.ToXml(data);
+        }
+
+        public void ConvertFromString(string text)
+        {
+            data = XmlConverter.ToByml(text);
+        }
+
+        #endregion
 
         class MenuExt : IFileMenuExtension
         {
