@@ -582,41 +582,7 @@ namespace FirstPlugin
 
             public override void Prepare(GL_ControlLegacy control)
             {
-                string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Legacy") + "\\KCL.frag";
-                string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Legacy") + "\\KCL.vert";
-
-                var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
-                var defaultVert = new VertexShader(File.ReadAllText(pathVert));
-
-                var solidColorFrag = new FragmentShader(
-          @"#version 330
-				uniform vec4 color;
-                out vec4 FragColor;
-
-				void main(){
-					FragColor = color;
-				}");
-
-                var solidColorVert = new VertexShader(
-              @"#version 330
-                in vec3 vPosition;
-                in vec3 vNormal;
-                in vec3 vColor;
-
-                out vec3 normal;
-                out vec3 color;
-                out vec3 position;
-
-				void main(){
-                    normal = vNormal;
-                    color = vColor;
-	                position = vPosition;
-
-                    gl_Position = mvpMatrix * vec4(vPosition.xyz, 1.0);
-				}");
-
-                defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
-                solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);
+        
             }
 
             private void CheckBuffers()
@@ -633,10 +599,41 @@ namespace FirstPlugin
             }
             public override void Draw(GL_ControlLegacy control, Pass pass)
             {
-                CheckBuffers();
-
                 if (!Runtime.OpenTKInitialized)
                     return;
+
+                Matrix4 mvpMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
+
+                Matrix4 invertedCamera = Matrix4.Identity;
+                if (invertedCamera.Determinant != 0)
+                    invertedCamera = mvpMat.Inverted();
+
+                Vector3 lightDirection = new Vector3(0f, 0f, -1f);
+                Vector3 difLightDirection = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
+
+                GL.Enable(EnableCap.Texture2D);
+                GL.Enable(EnableCap.DepthTest);
+
+                foreach (var model in models)
+                {
+                    if (Runtime.RenderModels && model.Checked && model.Checked)
+                    {
+                        List<int> faces = model.lodMeshes[0].getDisplayFace();
+
+                        GL.Begin(PrimitiveType.Triangles);
+                        foreach (var index in faces)
+                        {
+                            Vertex vert = model.vertices[index];
+                            float normal = Vector3.Dot(difLightDirection, vert.nrm) * 0.5f + 0.5f;
+                            GL.Color3(new Vector3(normal));
+                            GL.TexCoord2(vert.uv0);
+                            GL.Vertex3(vert.pos);
+                        }
+                        GL.End();
+                    }
+                }
+
+                GL.Enable(EnableCap.Texture2D);
             }
 
             public override void Draw(GL_ControlModern control, Pass pass)
