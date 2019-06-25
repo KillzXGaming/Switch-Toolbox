@@ -611,6 +611,7 @@ namespace FirstPlugin
                 Vector3 lightDirection = new Vector3(0f, 0f, -1f);
                 Vector3 difLightDirection = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
 
+                GL.Disable(EnableCap.Texture2D);
                 GL.Enable(EnableCap.DepthTest);
 
                 foreach (var model in models)
