@@ -692,6 +692,10 @@ namespace Switch_Toolbox.Library
             progressBar.Refresh();
 
             Bitmap bitMap = GetBitmap(SurfaceLevel, MipLevel);
+            if (Runtime.ImageEditor.UseComponetSelector)
+            {
+                BitmapExtension.SetChannel(bitMap, RedChannel, GreenChannel, BlueChannel, AlphaChannel);
+            }
             bitMap.Save(FileName);
             bitMap.Dispose();
 
