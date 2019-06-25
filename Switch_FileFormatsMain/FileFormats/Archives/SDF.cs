@@ -71,33 +71,53 @@ namespace FirstPlugin
                     byte[] unk = reader.ReadBytes(0x140);
                 }
 
-               //Read first block
-                var block1 = reader.ReadInt32s((int)Header.Block1Count);
-
-                //Read ID blocks
-                var blockIds = new SDFTOC_ID[Header.Block1Count];
-                for (int i = 0; i < Header.Block1Count; i++)
+                if (Header.DataOffset != 0)
                 {
-                    blockIds[i] = new SDFTOC_ID(reader);
+                    reader.SeekBegin(Header.DataOffset + 0x51);
+
+                    //Here is the compressed block. Check the magic first
+                    uint magic = reader.ReadUInt32();
+                    reader.Seek(-4, SeekOrigin.Current);
+
+                    //Read and decompress the compressed block
+                    //Contains file names and block info
+                    DecompressNameBlock(magic, reader.ReadBytes((int)Header.CompressedSize), Header);
+
+                    //Read last id 
+                    var endId = new SDFTOC_ID(reader);
+                }
+                else
+                {
+
+                    //Read first block
+                    var block1 = reader.ReadInt32s((int)Header.Block1Count);
+
+                    //Read ID blocks
+                    var blockIds = new SDFTOC_ID[Header.Block1Count];
+                    for (int i = 0; i < Header.Block1Count; i++)
+                    {
+                        blockIds[i] = new SDFTOC_ID(reader);
+                    }
+
+                    //Read block 2 (DDS headers)
+                    block2Array = new SDFTOC_Block2[Header.Block2Count];
+                    for (int i = 0; i < Header.Block2Count; i++)
+                    {
+                        block2Array[i] = new SDFTOC_Block2(reader, Header);
+                    }
+
+                    //Here is the compressed block. Check the magic first
+                    uint magic = reader.ReadUInt32();
+                    reader.Seek(-4, SeekOrigin.Current);
+
+                    //Read and decompress the compressed block
+                    //Contains file names and block info
+                    DecompressNameBlock(magic, reader.ReadBytes((int)Header.CompressedSize), Header);
+
+                    //Read last id 
+                    var endId = new SDFTOC_ID(reader);
                 }
 
-                //Read block 2 (DDS headers)
-                block2Array = new SDFTOC_Block2[Header.Block2Count];
-                for (int i = 0; i < Header.Block2Count; i++)
-                {
-                    block2Array[i] = new SDFTOC_Block2(reader, Header);
-                }
-
-                //Here is the compressed block. Check the magic first
-                uint magic = reader.ReadUInt32();
-                reader.Seek(-4, SeekOrigin.Current);
-
-                //Read and decompress the compressed block
-                //Contains file names and block info
-                DecompressNameBlock(magic, reader.ReadBytes((int)Header.CompressedSize), Header);
-
-                //Read last id 
-                var endId = new SDFTOC_ID(reader);
 
                 for (int i = 0; i < FileEntries.Count; i++)
                 {
@@ -108,9 +128,9 @@ namespace FirstPlugin
                 //Remove unused data
                 reader.Dispose();
                 startId = null;
-                block1 = new int[0];
-                blockIds = new SDFTOC_ID[0];
-                endId = null;
+          //      block1 = new int[0];
+           //     blockIds = new SDFTOC_ID[0];
+           //     endId = null;
             }
         }
 
@@ -321,6 +341,7 @@ namespace FirstPlugin
                 {
                     Name += reader.ReadChar();
                 }
+
                 ParseNames(reader, Name);
             }
             else if (ch >= 'A' && ch <= 'Z') //file entry
@@ -481,6 +502,7 @@ namespace FirstPlugin
             public uint Zero { get; set; }
             public uint Block1Count { get; set; }
             public uint Block2Count { get; set; }
+            public uint DataOffset { get; set; }
 
             public void Read(FileReader reader)
             {
@@ -488,6 +510,9 @@ namespace FirstPlugin
                 reader.Seek(4, System.IO.SeekOrigin.Begin);
                 Version = reader.ReadUInt32();
                 DecompressedSize = reader.ReadUInt32();
+                if (Version >= 0x17)
+                    DataOffset = reader.ReadUInt32(); //Or might be size of some sorta block data?
+
                 CompressedSize = reader.ReadUInt32();
                 Zero = reader.ReadUInt32();
                 Block1Count = reader.ReadUInt32();
