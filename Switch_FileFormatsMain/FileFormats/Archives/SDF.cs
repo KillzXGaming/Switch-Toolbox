@@ -118,24 +118,59 @@ namespace FirstPlugin
                     var endId = new SDFTOC_ID(reader);
                 }
 
+                Dictionary<string, int> Extensions = new Dictionary<string, int>();
+                for (int i = 0; i < FileEntries.Count; i++)
+                {
+                    string ext = Utils.GetExtension(FileEntries[i].FileName);
+                    if (!Extensions.ContainsKey(ext))
+                        Extensions.Add(ext, 1);
+                    else
+                        Extensions[ext]++;
+                }
 
                 for (int i = 0; i < FileEntries.Count; i++)
                 {
-                    FileEntries[i].CanLoadFile = SupportedExtensions.Contains(Utils.GetExtension(FileEntries[i].FileName));
+                    string ext = Utils.GetExtension(FileEntries[i].FileName);
+
+                    if (Extensions[ext] > 10000)
+                        FileEntries[i].CanLoadFile = false;
+
                     files.Add(FileEntries[i]);
                 }
 
+                List<string> FilteredExtensions = new List<string>();
+                foreach (var ext in Extensions)
+                {
+                    if (ext.Value > 10000)
+                        FilteredExtensions.Add(ext.Key);
+                }
+
+                if (FilteredExtensions.Count > 0)
+                {
+                    MessageBox.Show($"File extensions have a very large amount of nodes used." +
+                        $" This will be filtered out to prevent slow booting. {ExtsToString(FilteredExtensions.ToArray())}");
+                }
                 //Remove unused data
                 reader.Dispose();
                 startId = null;
+                FilteredExtensions.Clear();
+                Extensions.Clear();
           //      block1 = new int[0];
-           //     blockIds = new SDFTOC_ID[0];
-           //     endId = null;
+          //     blockIds = new SDFTOC_ID[0];
+          //     endId = null;
             }
         }
 
-        private List<string> SupportedExtensions = new List<string>()
-        { ".dds", ".tga" ,".mmb", ".png", ".jpg", ".mgraphobject"  };
+        private string ExtsToString(string[] value)
+        {
+            string output = "";
+            for (int i = 0; i < value.Length; i++)
+                output += $" ({value[i]})";
+            return output;
+        }
+
+        private List<string> FilteredExtensions = new List<string>()
+        {  };
 
         private TreeNode GetNodes(TreeNode parent, string[] fileList)
         {
