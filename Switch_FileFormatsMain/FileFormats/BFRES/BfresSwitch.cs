@@ -782,7 +782,7 @@ namespace FirstPlugin
                     bool IsMetalnessA = useSampler == "_mt0";
                     bool IsFXM = useSampler == "_fm0";
 
-                    if (IsAlbedo) {
+                    if (IsAlbedo0) {
                         m.HasDiffuseMap = true;
                         texture.Type = MatTexture.TextureType.Diffuse;
                     }
