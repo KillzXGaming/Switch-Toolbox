@@ -593,6 +593,7 @@ namespace FirstPlugin
                 }
             }
         }
+
         bool SortedAscending;
         private void SortTextures(object sender, EventArgs args)
         {

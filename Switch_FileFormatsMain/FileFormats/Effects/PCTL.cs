@@ -227,7 +227,7 @@ namespace FirstPlugin
                 int index = 0;
                 if (botwTex.Count > 0)
                 {
-                    TreeNode textureFolder = new TreeNode("Textures");
+                    TextureFolder textureFolder = new TextureFolder("Textures");
                     ptcl.Nodes.Add(textureFolder);
 
                     List<TEXR> TextureList = new List<TEXR>();
@@ -272,6 +272,57 @@ namespace FirstPlugin
                                 {
                                     emitter.DrawableTex.Add(bntx.Textures[tex.TexName]);
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+
+            public class TextureFolder : TreeNodeCustom, IContextMenuNode
+            {
+                public TextureFolder(string text)
+                {
+                    Text = text;
+                }
+
+                public ToolStripItem[] GetContextMenuItems()
+                {
+                    return new ToolStripItem[]
+                    {
+                        new ToolStripMenuItem("Export All Textures", null, ExportAll, Keys.Control | Keys.A),
+                    };
+                }
+
+                private void ExportAll(object sender, EventArgs args)
+                {
+                    List<string> Formats = new List<string>();
+                    Formats.Add("Microsoft DDS (.dds)");
+                    Formats.Add("Portable Graphics Network (.png)");
+                    Formats.Add("Joint Photographic Experts Group (.jpg)");
+                    Formats.Add("Bitmap Image (.bmp)");
+                    Formats.Add("Tagged Image File Format (.tiff)");
+
+                    FolderSelectDialog sfd = new FolderSelectDialog();
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        string folderPath = sfd.SelectedPath;
+
+                        BatchFormatExport form = new BatchFormatExport(Formats);
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            foreach (STGenericTexture tex in Nodes)
+                            {
+                                if (form.Index == 0)
+                                    tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
+                                else if (form.Index == 1)
+                                    tex.SaveBitMap(folderPath + '\\' + tex.Text + ".png");
+                                else if (form.Index == 2)
+                                    tex.SaveBitMap(folderPath + '\\' + tex.Text + ".jpg");
+                                else if (form.Index == 3)
+                                    tex.SaveBitMap(folderPath + '\\' + tex.Text + ".bmp");
+                                else if (form.Index == 4)
+                                    tex.SaveBitMap(folderPath + '\\' + tex.Text + ".tiff");
                             }
                         }
                     }

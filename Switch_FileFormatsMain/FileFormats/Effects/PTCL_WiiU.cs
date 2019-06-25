@@ -54,7 +54,7 @@ namespace FirstPlugin
                 uint ShaderParamTableSize = reader.ReadUInt32();
 
                 var groupEmitterSets = new TreeNode("Emitter Sets");
-                var textureFolder = new TreeNode("Textures");
+                var textureFolder = new PTCL.Header.TextureFolder("Textures");
                 pctl.Nodes.Add(textureFolder);
                 pctl.Nodes.Add(groupEmitterSets);
 
