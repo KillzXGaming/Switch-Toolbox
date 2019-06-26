@@ -1337,6 +1337,8 @@ namespace FirstPlugin
         private void SaveSwitch(MemoryStream mem)
         {
             var resFile = BFRESRender.ResFileNode.resFile;
+            if (resFile.VersionMajor2 == 9)
+                throw new NotImplementedException($"Bfres version does not support saving yet! {resFile.VersionFull}");
 
             resFile.Models.Clear();
             resFile.SkeletalAnims.Clear();
