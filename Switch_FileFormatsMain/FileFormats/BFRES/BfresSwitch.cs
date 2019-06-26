@@ -713,7 +713,7 @@ namespace FirstPlugin
                 bool IsAlbedo = Misc.HackyTextureList.Any(TextureName.Contains);
 
                 //A bit hacky, just use the same samplers for mk8 for nsmbudx
-                if (mat.ShaderAssign.ShaderArchiveName == "Wii_UBER")
+                if (mat.ShaderAssign.ShaderArchiveName == "Wii_UBER" || mat.ShaderAssign.ShaderArchiveName == "Block_UBER")
                     Runtime.activeGame = Runtime.ActiveGame.MK8D;
 
                 if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
