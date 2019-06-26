@@ -495,8 +495,6 @@ namespace Switch_Toolbox.Library
         }
         public static unsafe byte[] DecompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
-            return DecompressCompLibBlock(data, width, height, format);
-
             Console.WriteLine(format);
             Console.WriteLine(data.Length);
             Console.WriteLine(width);
