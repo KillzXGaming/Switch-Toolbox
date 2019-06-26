@@ -9,7 +9,7 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
 
-namespace FirstPlugin.Old
+namespace FirstPlugin
 {
     public class SARC : TreeNodeFile, IFileFormat
     {
