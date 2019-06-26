@@ -247,6 +247,9 @@ namespace FirstPlugin
 
         public void CenterCamera(GL_ControlModern control)
         {
+            if (!Runtime.FrameCamera)
+                return;
+
             var spheres = new List<Vector4>();
             for (int mdl = 0; mdl < models.Count; mdl++)
             {

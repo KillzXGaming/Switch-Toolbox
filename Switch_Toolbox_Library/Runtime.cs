@@ -175,7 +175,9 @@ namespace Switch_Toolbox.Library
         public static bool renderNormalsPoints = false;
         public static bool renderBones = true;
         public static bool renderFog = true;
-        
+
+        public static bool FrameCamera = false;
+
         public static float bonePointSize = 0.2f;
 
         public static bool boneXrayDisplay = false;

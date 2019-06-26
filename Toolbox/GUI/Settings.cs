@@ -87,6 +87,7 @@ namespace Toolbox
             chkDiffyseSkybox.Enabled = chkUseSkyobx.Checked;
             chkBotwFileTable.Checked = Runtime.ResourceTables.BotwTable;
             chkTpFileTable.Checked = Runtime.ResourceTables.TpTable;
+            chkFrameCamera.Checked = Runtime.FrameCamera;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
@@ -650,6 +651,10 @@ namespace Toolbox
             }
 
             Runtime.ResourceTables.TpTable = chkTpFileTable.Checked;
+        }
+
+        private void chkFrameCamera_CheckedChanged(object sender, EventArgs e) {
+            Runtime.FrameCamera = chkFrameCamera.Checked;
         }
     }
 }

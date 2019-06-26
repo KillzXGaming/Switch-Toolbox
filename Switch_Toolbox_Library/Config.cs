@@ -228,6 +228,9 @@ namespace Switch_Toolbox.Library
                     case "DEVELOPER_DEBUG_MODE":
                         bool.TryParse(node.InnerText, out Runtime.DEVELOPER_DEBUG_MODE);
                         break;
+                    case "FrameCamera":
+                        bool.TryParse(node.InnerText, out Runtime.FrameCamera);
+                        break;
                 }
             }
         }
@@ -431,6 +434,7 @@ namespace Switch_Toolbox.Library
             renderSettingsNode.AppendChild(createNode(doc, "normalsLineLength", Runtime.normalsLineLength.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "bonePointSize", Runtime.bonePointSize.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "MaxCameraSpeed", Runtime.MaxCameraSpeed.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "FrameCamera", Runtime.FrameCamera.ToString()));
         }
         
         private static void AppendResourceTableSettings(XmlDocument doc, XmlNode parentNode)

@@ -117,6 +117,7 @@
             this.chkTpFileTable = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel17 = new Switch_Toolbox.Library.Forms.STLabel();
             this.chkBotwFileTable = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.chkFrameCamera = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -831,6 +832,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.chkFrameCamera);
             this.tabPage2.Controls.Add(this.modelLoadArchive);
             this.tabPage2.Controls.Add(this.gridCellCountUD);
             this.tabPage2.Controls.Add(this.stLabel7);
@@ -855,7 +857,7 @@
             // modelLoadArchive
             // 
             this.modelLoadArchive.AutoSize = true;
-            this.modelLoadArchive.Location = new System.Drawing.Point(12, 210);
+            this.modelLoadArchive.Location = new System.Drawing.Point(9, 256);
             this.modelLoadArchive.Name = "modelLoadArchive";
             this.modelLoadArchive.Size = new System.Drawing.Size(205, 17);
             this.modelLoadArchive.TabIndex = 17;
@@ -1233,12 +1235,13 @@
             // 
             this.stLabel17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.stLabel17.AutoSize = true;
             this.stLabel17.Location = new System.Drawing.Point(3, 3);
             this.stLabel17.Name = "stLabel17";
-            this.stLabel17.Size = new System.Drawing.Size(495, 55);
+            this.stLabel17.Size = new System.Drawing.Size(558, 13);
             this.stLabel17.TabIndex = 2;
             this.stLabel17.Text = "These options can prevent file size restrictions.  Check these if you want them t" +
-                                  "o be adjusted when a file gets saved. ";
+    "o be adjusted when a file gets saved. ";
             // 
             // chkBotwFileTable
             // 
@@ -1250,6 +1253,18 @@
             this.chkBotwFileTable.Text = "BOTW Resource File Table (RSTB)";
             this.chkBotwFileTable.UseVisualStyleBackColor = true;
             this.chkBotwFileTable.CheckedChanged += new System.EventHandler(this.chkBotwFileTable_CheckedChanged);
+            // 
+            // chkFrameCamera
+            // 
+            this.chkFrameCamera.AutoSize = true;
+            this.chkFrameCamera.Location = new System.Drawing.Point(9, 208);
+            this.chkFrameCamera.Name = "chkFrameCamera";
+            this.chkFrameCamera.Size = new System.Drawing.Size(210, 17);
+            this.chkFrameCamera.TabIndex = 18;
+            this.chkFrameCamera.Text = "Center camera to model when selected";
+            this.chkFrameCamera.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkFrameCamera.UseVisualStyleBackColor = true;
+            this.chkFrameCamera.CheckedChanged += new System.EventHandler(this.chkFrameCamera_CheckedChanged);
             // 
             // Settings
             // 
@@ -1385,5 +1400,6 @@
         private Switch_Toolbox.Library.Forms.STCheckBox chkTpFileTable;
         private Switch_Toolbox.Library.Forms.STLabel stLabel17;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBotwFileTable;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkFrameCamera;
     }
 }
