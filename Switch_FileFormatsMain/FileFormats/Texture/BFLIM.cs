@@ -229,7 +229,7 @@ namespace FirstPlugin
                 }
                 if (FileFormat is BFLIM)
                 {
-                    ((BFLIM)FileFormat).Export(Folder + FileFormat.FileName + Extension);
+                    ((BFLIM)FileFormat).Export(Path.Combine(Folder, $"{FileFormat.FileName}{Extension}"));
                 }
 
                 FileFormat.Unload();
