@@ -194,7 +194,7 @@ namespace FirstPlugin
 
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Multiselect = true;
-                    ofd.Filter = Utils.GetAllFilters(typeof(BFLIM));
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BFLIM), typeof(SARC) });
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
@@ -203,7 +203,7 @@ namespace FirstPlugin
                         {
                             foreach (string file in ofd.FileNames)
                             {
-                                var FileFormat = STFileLoader.OpenFileFormat(file);
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BFLIM), typeof(SARC) });
                                 if (FileFormat == null)
                                     continue;
 
@@ -220,7 +220,7 @@ namespace FirstPlugin
                 {
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, file.Data);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, new Type[] { typeof(BFLIM) , typeof(SARC) }, file.Data);
                         if (archiveFile == null)
                             continue;
 

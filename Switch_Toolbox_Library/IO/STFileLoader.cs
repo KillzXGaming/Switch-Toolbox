@@ -1,5 +1,6 @@
 ﻿using Syroot.BinaryData;
 using System.IO;
+using System;
 using System.IO.Compression;
 using OpenTK;
 using System.Windows.Forms;
@@ -29,6 +30,45 @@ namespace Switch_Toolbox.Library.IO
             else
                 return null;
         }
+
+        public static IFileFormat OpenFileFormat(string FileName, Type[] FileType, byte[] data = null)
+        {
+            Stream stream;
+            if (data != null)
+                stream = new MemoryStream(data);
+            else
+                stream = File.OpenRead(FileName);
+
+            foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
+            {
+                foreach (Type type in FileType)
+                {
+                    if (fileFormat.GetType() == type)
+                        return OpenFileFormat(FileName, data);
+                }
+            }
+            
+            return null;
+        }
+
+        public static IFileFormat OpenFileFormat(string FileName, Type FileType, byte[] data = null)
+        {
+            Stream stream;
+            if (data != null)
+                stream = new MemoryStream(data);
+            else
+                stream = File.OpenRead(FileName);
+
+            foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
+            {
+                if (fileFormat.GetType() == FileType)
+                    return OpenFileFormat(FileName, data);
+            }
+
+            return null;
+        }
+
+
         /// <summary>
         /// Gets the <see cref="IFileFormat"/> from a file or byte array. 
         /// </summary>

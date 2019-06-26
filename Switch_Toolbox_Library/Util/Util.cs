@@ -194,6 +194,28 @@ namespace Switch_Toolbox.Library
             return Guid.NewGuid().ToString();
         }
 
+        public static string GetAllFilters(Type[] Types)
+        {
+            string Filter = "All Supported Files|";
+            List<string> FilterEach = new List<string>();
+            foreach (var type in Types)
+            {
+                Object instance = Activator.CreateInstance(type);
+
+                IFileFormat f = (IFileFormat)instance;
+                for (int i = 0; i < f.Extension.Length; i++)
+                {
+                    Filter += $"{f.Extension[i]};";
+                    FilterEach.Add($"{f.Description[0]} ({f.Extension[i]}) |{f.Extension[i]}|");
+                }
+            }
+
+            Filter += "|";
+            Filter += string.Join("", FilterEach.ToArray());
+            Filter += "All files(*.*)|*.*";
+            return Filter;
+        }
+
         public static string GetAllFilters(Type type)
         {
             Object instance = Activator.CreateInstance(type);
@@ -243,6 +265,11 @@ namespace Switch_Toolbox.Library
             Filter += string.Join("", FilterEach.ToArray());
             Filter += "All files(*.*)|*.*";
             return Filter;
+        }
+
+        private static void AddCompressionExtensions()
+        {
+
         }
     }
 }
