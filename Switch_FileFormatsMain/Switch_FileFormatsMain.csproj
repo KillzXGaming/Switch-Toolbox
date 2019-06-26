@@ -244,6 +244,7 @@
     <Compile Include="FileFormats\GFBMDL\GFBMDL_Wrappers.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
     <Compile Include="FileFormats\MKAGPDX\MKAGPDX_Model.cs" />
+    <Compile Include="FileFormats\Rom\IStorage.cs" />
     <Compile Include="FileFormats\Rom\RomfsNodeWrapper.cs" />
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />

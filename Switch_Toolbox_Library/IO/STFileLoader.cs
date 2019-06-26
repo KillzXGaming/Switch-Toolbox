@@ -31,7 +31,7 @@ namespace Switch_Toolbox.Library.IO
                 return null;
         }
 
-        public static IFileFormat OpenFileFormat(string FileName, Type[] FileType, byte[] data = null)
+        public static IFileFormat OpenFileFormat(string FileName, Type[] FileTypes, byte[] data = null)
         {
             Stream stream;
             if (data != null)
@@ -41,9 +41,12 @@ namespace Switch_Toolbox.Library.IO
 
             foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
             {
-                foreach (Type type in FileType)
+                fileFormat.FileName = Path.GetFileName(FileName);
+                fileFormat.IFileInfo = new IFileInfo();
+
+                foreach (Type type in FileTypes)
                 {
-                    if (fileFormat.GetType() == type)
+                    if (fileFormat.Identify(stream) && fileFormat.GetType() == type)
                         return OpenFileFormat(FileName, data);
                 }
             }
@@ -124,7 +127,11 @@ namespace Switch_Toolbox.Library.IO
             }
             if (MagicHex == 0x28B52FFD || MagicHex == 0xFD2FB528)
             {
-                data = STLibraryCompression.ZSTD.Decompress(fileReader.getSection(0, data.Length));
+                if (data != null)
+                    data = STLibraryCompression.ZSTD.Decompress(fileReader.getSection(0, data.Length));
+                else
+                    data = STLibraryCompression.ZSTD.Decompress(File.ReadAllBytes(FileName));
+
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Zstb, DecompressedFileSize, CompressedFileSize);
             }

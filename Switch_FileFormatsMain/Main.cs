@@ -213,10 +213,10 @@ namespace FirstPlugin
                 {
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        string ext = System.IO.Path.GetExtension(file.FullName);
+                        string ext = System.IO.Path.GetExtension(file.FileName);
                         if (ext == ".bfres")
                         {
-                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(file.FullName, file.Data));
+                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(file.FileName, file.FileData));
                         }
                     }
                 }
@@ -323,11 +323,13 @@ namespace FirstPlugin
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(Turbo.PartsBIN));
             Formats.Add(typeof(SDF));
+            Formats.Add(typeof(IStorage));
+            Formats.Add(typeof(NCA));
 
+           
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
-                Formats.Add(typeof(NCA));
                 Formats.Add(typeof(XCI));
                 Formats.Add(typeof(BFLAN));
                 Formats.Add(typeof(BFLYT));

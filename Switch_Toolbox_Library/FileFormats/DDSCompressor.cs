@@ -495,6 +495,8 @@ namespace Switch_Toolbox.Library
         }
         public static unsafe byte[] DecompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
+            return DecompressCompLibBlock(data, width, height, format);
+
             Console.WriteLine(format);
             Console.WriteLine(data.Length);
             Console.WriteLine(width);
@@ -612,7 +614,7 @@ namespace Switch_Toolbox.Library
                 return DirectXTex.ImageCompressor.Compress(data, width, height, (int)format, AlphaRef);
             }*/
 
-        public static Bitmap DecompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, bool GetBitmap)
+        public static byte[] DecompressCompLibBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
             byte[] output = null;
 
@@ -644,7 +646,12 @@ namespace Switch_Toolbox.Library
 
             }
 
-            return BitmapExtension.GetBitmap(output, (int)width, (int)height);
+            return output;
+        }
+
+        public static Bitmap DecompressCompLibBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, bool GetBitmap)
+        {
+            return BitmapExtension.GetBitmap(DecompressBlock(data, width, height, format), (int)width, (int)height);
         }
 
         public static int Get16(byte[] Data, int Address)
