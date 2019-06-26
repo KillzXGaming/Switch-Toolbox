@@ -79,16 +79,6 @@
             Gets or sets the stored <see cref="P:BfshaLibrary.BfshaFile.RelocationTable"/> (_RLT) instance.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.BfshaFile.BufferMemoryPool">
-            <summary>
-            Gets or sets the stored <see cref="P:BfshaLibrary.BfshaFile.BufferMemoryPool"/> instances. 
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.BufferMemoryPoolInfo">
-            <summary>
-            Gets or sets the stored <see cref="P:BfshaLibrary.BfshaFile.BufferMemoryPoolInfo"/> instances.
-            </summary>
-        </member>
         <member name="P:BfshaLibrary.BfshaFile.ShaderModels">
             <summary>
             Gets or sets the stored <see cref="!:Model"/> (FMDL) instances.
@@ -107,6 +97,94 @@
             <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
         </member>
         <member name="M:BfshaLibrary.BfshaFile.Save(System.String)">
+            <summary>
+            Saves the contents in the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to save the contents into.</param>
+        </member>
+        <member name="T:BfshaLibrary.BnshFile">
+            <summary>
+            Represents a NintendoWare for Cafe (NW4F) shader file.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.#ctor(System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the given <paramref name="stream"/> which
+            is optionally left open.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.VersionMajor">
+            <summary>
+            Gets or sets the revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.ByteOrder">
+            <summary>
+            Gets the byte order in which data is stored. Must be the endianness of the target platform.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Alignment">
+            <summary>
+            Gets or sets the alignment to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.DataAlignment">
+            <summary>
+            Gets or sets the data alignment to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.TargetAddressSize">
+            <summary>
+            Gets or sets the target adress size to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Flag">
+            <summary>
+            Gets or sets the flag. Unknown purpose.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.BlockOffset">
+            <summary>
+            Gets or sets the BlockOffset. 
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Name">
+            <summary>
+            Gets or sets a name describing the contents.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Path">
+            <summary>
+            Gets or sets the path of the file which originally supplied the data of this instance.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.RelocationTable">
+            <summary>
+            Gets or sets the stored <see cref="P:BfshaLibrary.BnshFile.RelocationTable"/> (_RLT) instance.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.Save(System.String)">
             <summary>
             Saves the contents in the file with the given <paramref name="fileName"/>.
             </summary>
@@ -1839,7 +1917,24 @@
             <param name="stream">The <see cref="T:System.IO.Stream"/> to read data from.</param>
             <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
         </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BnshFile,System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class loading data into the given
+            <paramref name="bfshaFile"/> from the specified <paramref name="stream"/> which is optionally left open.
+            </summary>
+            <param name="bfshaFile">The <see cref="!:Bfsha.bfshaFile"/> instance to load data into.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BfshaFile,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to load data into.</param>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BnshFile,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class from the file with the given
             <paramref name="fileName"/>.
@@ -1852,10 +1947,23 @@
             Gets the loaded <see cref="!:Bfsha.BfshaFile"/> instance.
             </summary>
         </member>
+        <member name="P:BfshaLibrary.Core.BfshaFileLoader.BnshFile">
+            <summary>
+            Gets the loaded <see cref="!:Bfsha.BnshFile"/> instance.
+            </summary>
+        </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.Execute">
             <summary>
             Starts deserializing the data from the <see cref="P:BfshaLibrary.Core.BfshaFileLoader.BfshaFile"/> root.
             </summary>
+        </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.Load``1(System.Int64)">
+            <summary>
+            Reads and returns an <see cref="T:BfshaLibrary.Core.IResData"/> instance of type <typeparamref name="T"/> from the following
+            offset or returns <c>null</c> if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> to read.</typeparam>
+            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> instance or <c>null</c>.</returns>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.Load``1(System.Boolean)">
             <summary>
@@ -1950,6 +2058,15 @@
             <param name="stream">The <see cref="T:System.IO.Stream"/> to save data into.</param>
             <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
         </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BnshFile,System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class saving data from the given
+            <paramref name="BfshaFile"/> into the specified <paramref name="stream"/> which is optionally left open.
+            </summary>
+            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to save data from.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save data into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
         <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BfshaFile,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class for the file with the given
@@ -1958,9 +2075,22 @@
             <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to save.</param>
             <param name="fileName">The name of the file to save the data into.</param>
         </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BnshFile,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class for the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="BfshaFile">The <see cref="!:Bfsha.BnshFile"/> instance to save.</param>
+            <param name="fileName">The name of the file to save the data into.</param>
+        </member>
         <member name="P:BfshaLibrary.Core.BfshaFileSaver.BfshaFile">
             <summary>
             Gets the saved <see cref="!:Bfsha.BfshaFile"/> instance.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.Core.BfshaFileSaver.BnshFile">
+            <summary>
+            Gets the saved <see cref="!:Bfsha.BnshFile"/> instance.
             </summary>
         </member>
         <member name="P:BfshaLibrary.Core.BfshaFileSaver.CurrentIndex">
