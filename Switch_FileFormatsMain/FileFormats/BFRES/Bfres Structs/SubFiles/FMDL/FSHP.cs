@@ -960,7 +960,7 @@ namespace Bfres.Structs
 
             List<string> BonesNotMatched = new List<string>();
 
-            if (ForceSkinCount && !ob.HasIndices)
+            if (ForceSkinCount && !ob.HasIndices && VertexSkinCount != 0)
             {
                 var attributeIndex = new FSHP.VertexAttribute();
                 attributeIndex.Format = ResGFX.AttribFormat.Format_8_8_8_8_UInt;

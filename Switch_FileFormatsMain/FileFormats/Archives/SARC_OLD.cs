@@ -39,8 +39,9 @@ namespace FirstPlugin
             }
         }
 
+        public List<SarcEntry> Files = new List<SarcEntry>();
+
         public Dictionary<string, byte[]> OpenedFiles = new Dictionary<string, byte[]>();
-        public Dictionary<string, byte[]> Files = new Dictionary<string, byte[]>();
 
         public SarcData sarcData;
         public string SarcHash;
@@ -61,7 +62,7 @@ namespace FirstPlugin
             Text = FileName;
 
             ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save", null, Save, Keys.Control | Keys.S));
+            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save",null, Save, Keys.Control | Keys.S));
             ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename Actor Files (Odyssey)", null, RenameActors, Keys.Control | Keys.S));
 
             //  ContextMenuStrip.Items.Add(new STToolStipMenuItem("Unpack to Folder", null, UnpackToFolder, Keys.Control | Keys.E));
@@ -102,7 +103,7 @@ namespace FirstPlugin
                 }
             }
         }
-
+        
         private void UnpackToFolder(object sender, EventArgs args)
         {
 
@@ -113,8 +114,7 @@ namespace FirstPlugin
 
         }
 
-        private void Delete(object sender, EventArgs args)
-        {
+        private void Delete(object sender, EventArgs args) {
             Unload();
             var editor = LibraryGUI.Instance.GetObjectEditor();
             if (editor != null)
@@ -127,16 +127,20 @@ namespace FirstPlugin
             TreeView.Sort();
         }
 
-        public class FolderEntry : TreeNode
+        public class FolderEntry : TreeNode, IContextMenuNode
         {
             public FolderEntry(string text, int imageIndex, int selectedImageIndex)
             {
                 Text = text;
                 ImageIndex = imageIndex;
                 SelectedImageIndex = selectedImageIndex;
+            }
 
-                ContextMenu = new ContextMenu();
-                ContextMenu.MenuItems.Add(new MenuItem("Sort Childern", SortChildern));
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Sort Childern", null, SortChildern, Keys.Control | Keys.W));
+                return Items.ToArray();
             }
 
             private void SortChildern(object sender, EventArgs args)
@@ -328,7 +332,7 @@ namespace FirstPlugin
             }
         }
 
-        public class SarcEntry : TreeNodeCustom
+        public class SarcEntry : TreeNodeCustom, IContextMenuNode
         {
             public SARC sarc; //Sarc file the entry is located in
             public byte[] Data;
@@ -338,17 +342,22 @@ namespace FirstPlugin
             {
                 ImageKey = "fileBlank";
                 SelectedImageKey = "fileBlank";
-
-                ContextMenuStrip = new STContextMenuStrip();
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data to File Location", null, ExportToFileLoc, Keys.Control | Keys.F));
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Replace Raw Data", null, Replace, Keys.Control | Keys.R));
-                ContextMenuStrip.Items.Add(new STToolStripSeparator());
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Open With Text Editor", null, OpenTextEditor, Keys.Control | Keys.T));
-                ContextMenuStrip.Items.Add(new STToolStripSeparator());
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Remove", null, Remove, Keys.Control | Keys.Delete));
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
             }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
+                Items.Add(new STToolStipMenuItem("Export Raw Data to File Location", null, ExportToFileLoc, Keys.Control | Keys.F));
+                Items.Add(new STToolStipMenuItem("Replace Raw Data", null, Replace, Keys.Control | Keys.R));
+                Items.Add(new STToolStripSeparator());
+                Items.Add(new STToolStipMenuItem("Open With Text Editor", null, OpenTextEditor, Keys.Control | Keys.T));
+                Items.Add(new STToolStripSeparator());
+                Items.Add(new STToolStipMenuItem("Remove", null, Remove, Keys.Control | Keys.Delete));
+                Items.Add(new STToolStipMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
+                return Items.ToArray();
+            }
+
             public override void OnClick(TreeView treeView)
             {
                 UpdateHexView();
@@ -379,7 +388,7 @@ namespace FirstPlugin
 
                 IFileFormat file = OpenFile();
                 if (file == null) //File returns null if no supported format is found
-                    return;
+                    return; 
 
                 if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)) && !SuppressFormDialog)
                 {
@@ -596,7 +605,7 @@ namespace FirstPlugin
             sarcEntry.sarc = this;
             sarcEntry.Data = data;
 
-            Files.Add(fullName, data);
+            Files.Add(sarcEntry);
 
             string ext = Path.GetExtension(name);
             string SarcEx = SARCExt.SARC.GuessFileExtension(data);

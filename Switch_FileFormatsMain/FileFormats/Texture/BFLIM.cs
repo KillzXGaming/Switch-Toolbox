@@ -155,7 +155,7 @@ namespace FirstPlugin
         {
             public STToolStripItem[] NewFileMenuExtensions => null;
             public STToolStripItem[] NewFromFileMenuExtensions => newFileExt;
-            public STToolStripItem[] ToolsMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => toolExt;
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
@@ -163,10 +163,76 @@ namespace FirstPlugin
             public ToolStripButton[] IconButtonMenuExtensions => null;
 
             STToolStripItem[] newFileExt = new STToolStripItem[1];
+            STToolStripItem[] toolExt = new STToolStripItem[1];
 
             public MenuExt()
             {
+                toolExt[0] = new STToolStripItem("Textures");
+                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (BFLIM)", Export));
                 newFileExt[0] = new STToolStripItem("BFLIM From Image", CreateNew);
+            }
+            private void Export(object sender, EventArgs args)
+            {
+                string formats = FileFilters.GTX;
+
+                string[] forms = formats.Split('|');
+
+                List<string> Formats = new List<string>();
+                for (int i = 0; i < forms.Length; i++)
+                {
+                    if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
+                    {
+                        if (!forms[i].StartsWith("*"))
+                            Formats.Add(forms[i]);
+                    }
+                }
+
+                BatchFormatExport form = new BatchFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string Extension = form.GetSelectedExtension();
+
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.Multiselect = true;
+                    ofd.Filter = Utils.GetAllFilters(typeof(BFLIM));
+
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        FolderSelectDialog folderDialog = new FolderSelectDialog();
+                        if (folderDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            foreach (string file in ofd.FileNames)
+                            {
+                                var FileFormat = STFileLoader.OpenFileFormat(file);
+                                if (FileFormat == null)
+                                    continue;
+
+                                SearchBinary(FileFormat, folderDialog.SelectedPath, Extension);
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void SearchBinary(IFileFormat FileFormat, string Folder, string Extension)
+            {
+                if (FileFormat is SARC)
+                {
+                    foreach (var file in ((SARC)FileFormat).Files)
+                    {
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, file.Data);
+                        if (archiveFile == null)
+                            continue;
+
+                        SearchBinary(archiveFile, Folder, Extension);
+                    }
+                }
+                if (FileFormat is BFLIM)
+                {
+                    ((BFLIM)FileFormat).Export(Folder + FileFormat.FileName + Extension);
+                }
+
+                FileFormat.Unload();
             }
 
             public void CreateNew(object sender, EventArgs args)

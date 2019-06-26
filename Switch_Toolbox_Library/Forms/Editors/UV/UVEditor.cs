@@ -247,7 +247,6 @@ namespace Switch_Toolbox.Library.Forms
             if (ActiveObjects.Count <= 0 || ActiveMaterial == null || Runtime.OpenTKInitialized == false)
                 return;
 
-
             SetupRendering(1);
 
             gL_ControlLegacy2D1.MakeCurrent();

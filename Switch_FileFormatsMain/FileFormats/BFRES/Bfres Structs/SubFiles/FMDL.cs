@@ -420,35 +420,65 @@ namespace Bfres.Structs
         private void SetCopiedMaterialData(CopyMaterialMenu menu,
             FMAT selectedMaterial, FMAT targetMaterial)
         {
-            targetMaterial.Material.Flags = selectedMaterial.Material.Flags;
-            targetMaterial.Material.UserDatas = selectedMaterial.Material.UserDatas;
-            targetMaterial.Material.UserDataDict = selectedMaterial.Material.UserDataDict;
+            if (targetMaterial.Material != null)
+            {
+                targetMaterial.Material.Flags = selectedMaterial.Material.Flags;
+                targetMaterial.Material.UserDatas = selectedMaterial.Material.UserDatas;
+                targetMaterial.Material.UserDataDict = selectedMaterial.Material.UserDataDict;
 
-            if (menu.chkBoxRenderInfo.Checked)
-            {
-                targetMaterial.Material.RenderInfoDict = selectedMaterial.Material.RenderInfoDict;
-                targetMaterial.Material.RenderInfos = selectedMaterial.Material.RenderInfos;
+                if (menu.chkBoxRenderInfo.Checked)
+                {
+                    targetMaterial.Material.RenderInfoDict = selectedMaterial.Material.RenderInfoDict;
+                    targetMaterial.Material.RenderInfos = selectedMaterial.Material.RenderInfos;
+                }
+                if (menu.chkBoxShaderOptions.Checked)
+                {
+                    targetMaterial.Material.ShaderAssign = selectedMaterial.Material.ShaderAssign;
+                }
+                if (menu.chkBoxShaderParams.Checked)
+                {
+                    targetMaterial.Material.ShaderParamData = selectedMaterial.Material.ShaderParamData;
+                    targetMaterial.Material.ShaderParamDict = selectedMaterial.Material.ShaderParamDict;
+                    targetMaterial.Material.ShaderParams = selectedMaterial.Material.ShaderParams;
+                    targetMaterial.Material.VolatileFlags = selectedMaterial.Material.VolatileFlags;
+                }
+                if (menu.chkBoxTextures.Checked)
+                {
+                    targetMaterial.Material.SamplerDict = selectedMaterial.Material.SamplerDict;
+                    targetMaterial.Material.Samplers = selectedMaterial.Material.Samplers;
+                    targetMaterial.Material.SamplerSlotArray = selectedMaterial.Material.SamplerSlotArray;
+                    targetMaterial.Material.TextureSlotArray = selectedMaterial.Material.TextureSlotArray;
+                    targetMaterial.Material.TextureRefs = selectedMaterial.Material.TextureRefs;
+                }
+                targetMaterial.ReadMaterial(targetMaterial.Material);
             }
-            if (menu.chkBoxShaderOptions.Checked)
+            else
             {
-                targetMaterial.Material.ShaderAssign = selectedMaterial.Material.ShaderAssign;
+                targetMaterial.MaterialU.Flags = selectedMaterial.MaterialU.Flags;
+                targetMaterial.MaterialU.UserData = selectedMaterial.MaterialU.UserData;
+
+                if (menu.chkBoxRenderInfo.Checked)
+                {
+                    targetMaterial.MaterialU.RenderState = selectedMaterial.MaterialU.RenderState;
+                    targetMaterial.MaterialU.RenderInfos = selectedMaterial.MaterialU.RenderInfos;
+                }
+                if (menu.chkBoxShaderOptions.Checked)
+                {
+                    targetMaterial.MaterialU.ShaderAssign = selectedMaterial.MaterialU.ShaderAssign;
+                }
+                if (menu.chkBoxShaderParams.Checked)
+                {
+                    targetMaterial.MaterialU.ShaderParamData = selectedMaterial.MaterialU.ShaderParamData;
+                    targetMaterial.MaterialU.ShaderParams = selectedMaterial.MaterialU.ShaderParams;
+                    targetMaterial.MaterialU.VolatileFlags = selectedMaterial.MaterialU.VolatileFlags;
+                }
+                if (menu.chkBoxTextures.Checked)
+                {
+                    targetMaterial.MaterialU.Samplers = selectedMaterial.MaterialU.Samplers;
+                    targetMaterial.MaterialU.TextureRefs = selectedMaterial.MaterialU.TextureRefs;
+                }
+                targetMaterial.ReadMaterial(targetMaterial.MaterialU);
             }
-            if (menu.chkBoxShaderParams.Checked)
-            {
-                targetMaterial.Material.ShaderParamData = selectedMaterial.Material.ShaderParamData;
-                targetMaterial.Material.ShaderParamDict = selectedMaterial.Material.ShaderParamDict;
-                targetMaterial.Material.ShaderParams = selectedMaterial.Material.ShaderParams;
-                targetMaterial.Material.VolatileFlags = selectedMaterial.Material.VolatileFlags;
-            }
-            if (menu.chkBoxTextures.Checked)
-            {
-                targetMaterial.Material.SamplerDict = selectedMaterial.Material.SamplerDict;
-                targetMaterial.Material.Samplers = selectedMaterial.Material.Samplers;
-                targetMaterial.Material.SamplerSlotArray = selectedMaterial.Material.SamplerSlotArray;
-                targetMaterial.Material.TextureSlotArray = selectedMaterial.Material.TextureSlotArray;
-                targetMaterial.Material.TextureRefs = selectedMaterial.Material.TextureRefs;
-            }
-            targetMaterial.ReadMaterial(targetMaterial.Material);
         }
         private void TransformTool()
         {
