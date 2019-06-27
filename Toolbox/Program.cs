@@ -17,6 +17,8 @@ namespace Toolbox
         [STAThread]
         static void Main()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Switch_Toolbox.Library.Runtime.ExecutableDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
@@ -75,5 +77,33 @@ namespace Toolbox
 
             return result;
         }
+
+        // Custom assembly resolver to find the architecture-specific implementation assembly.
+        private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.StartsWith("DirectXTexNetImpl", StringComparison.OrdinalIgnoreCase))
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var path = GetAssemblyPath(Path.GetDirectoryName(assembly.Location));
+
+                if (!File.Exists(path))
+                {
+                    // If we can't find the file, try using the CodeBase instead (which can
+                    // be different if using shadow copy).
+                    // CodeBase is a uri, so must parse out the filename.
+                    path = GetAssemblyPath(Path.GetDirectoryName(new Uri(assembly.CodeBase).AbsolutePath));
+                }
+
+                return Assembly.LoadFile(path);
+            }
+
+            return null;
+        }
+
+        private static string GetAssemblyPath(string dir) => Path.Combine(dir, "Lib", ArchitectureMoniker, "DirectXTexNetImpl.dll");
+
+        // Note: currently no support for ARM.
+        // Don't use %PROCESSOR_ARCHITECTURE% as it calls x64 'AMD64'.
+        private static string ArchitectureMoniker => Environment.Is64BitProcess ? "x64" : "x86";
     }
 }
