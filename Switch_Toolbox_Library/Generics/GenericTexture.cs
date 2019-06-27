@@ -59,6 +59,14 @@ namespace Switch_Toolbox.Library
             AlphaChannel = STChannelType.Alpha;
         }
 
+        public bool IsCubemap
+        {
+            get
+            {
+                return ArrayCount == 6 || ArrayCount % 6 == 0;
+            }
+        }
+
         /// <summary>
         /// The swizzle method to use when decoding or encoding back a texture.
         /// </summary>

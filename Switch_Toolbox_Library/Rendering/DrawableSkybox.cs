@@ -16,6 +16,15 @@ namespace Switch_Toolbox.Library.Rendering
     {
         ShaderProgram defaultShaderProgram;
 
+        private RenderableTex CustomCubemap = null;
+        public void LoadCustomTexture(STGenericTexture GenericTexture)
+        {
+            CustomCubemap = GenericTexture.RenderableTex;
+
+            if (CustomCubemap == null || !CustomCubemap.GLInitialized)
+                GenericTexture.LoadOpenGLTexture();
+        }
+
         public override void Prepare(GL_ControlModern control)
         {
             string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "HDRSkyBox") + "\\HDRSkyBox.frag";
@@ -34,6 +43,13 @@ namespace Switch_Toolbox.Library.Rendering
         {
             if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
+
+            GL.Disable(EnableCap.CullFace);
+
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
+
+
         }
 
 
@@ -65,23 +81,31 @@ namespace Switch_Toolbox.Library.Rendering
             defaultShaderProgram.SetMatrix4x4("projection", ref proj);
             defaultShaderProgram.SetMatrix4x4("rotView", ref rot);
 
-            if (Runtime.PBR.UseDiffuseSkyTexture)
+            if (CustomCubemap != null)
             {
-                //Load Cubemap
-                if (RenderTools.diffusePbr != null)
-                {
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                   
-                    RenderTools.diffusePbr.Bind();
-                }
+                GL.ActiveTexture(TextureUnit.Texture0);
+                CustomCubemap.Bind();
             }
             else
             {
-                //Load Cubemap
-                if (RenderTools.specularPbr != null)
+                if (Runtime.PBR.UseDiffuseSkyTexture)
                 {
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    RenderTools.specularPbr.Bind();
+                    //Load Cubemap
+                    if (RenderTools.diffusePbr != null)
+                    {
+                        GL.ActiveTexture(TextureUnit.Texture0);
+
+                        RenderTools.diffusePbr.Bind();
+                    }
+                }
+                else
+                {
+                    //Load Cubemap
+                    if (RenderTools.specularPbr != null)
+                    {
+                        GL.ActiveTexture(TextureUnit.Texture0);
+                        RenderTools.specularPbr.Bind();
+                    }
                 }
             }
 
@@ -152,6 +176,8 @@ namespace Switch_Toolbox.Library.Rendering
             GL.BindVertexArray(cubeVBO);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
             GL.BindVertexArray(0);
+
+            GL.Enable(EnableCap.CullFace);
         }
     }
 }

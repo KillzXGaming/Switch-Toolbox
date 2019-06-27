@@ -1275,5 +1275,22 @@ namespace Switch_Toolbox.Library.Forms
         private void replaceAlphaToolStripMenuItem_Click(object sender, EventArgs e) {
             propertiesEditor.EditChannel(STChannelType.Alpha);
         }
+
+        private void previewCubemapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!ActiveTexture.IsCubemap)
+                return;
+
+            CubeMapFaceViewer viewer = new CubeMapFaceViewer();
+            viewer.LoadTexture(ActiveTexture);
+            viewer.Show();
+        }
+
+        private void previewCubemap3DToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CubeMapFaceViewer3D viewer = new CubeMapFaceViewer3D();
+            viewer.LoadTexture(ActiveTexture);
+            viewer.Show();
+        }
     }
 }

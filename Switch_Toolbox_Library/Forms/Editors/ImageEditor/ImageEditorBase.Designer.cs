@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
@@ -71,6 +70,7 @@
             this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useComponentSelectorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewCubemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +83,8 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.previewCubemap3DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -407,28 +409,28 @@
             // replacRedToolStripMenuItem
             // 
             this.replacRedToolStripMenuItem.Name = "replacRedToolStripMenuItem";
-            this.replacRedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replacRedToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.replacRedToolStripMenuItem.Text = "Replace Red";
             this.replacRedToolStripMenuItem.Click += new System.EventHandler(this.replacRedToolStripMenuItem_Click);
             // 
             // replaceGreenToolStripMenuItem
             // 
             this.replaceGreenToolStripMenuItem.Name = "replaceGreenToolStripMenuItem";
-            this.replaceGreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceGreenToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.replaceGreenToolStripMenuItem.Text = "Replace Green";
             this.replaceGreenToolStripMenuItem.Click += new System.EventHandler(this.replaceGreenToolStripMenuItem_Click);
             // 
             // replaceBlueToolStripMenuItem
             // 
             this.replaceBlueToolStripMenuItem.Name = "replaceBlueToolStripMenuItem";
-            this.replaceBlueToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceBlueToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.replaceBlueToolStripMenuItem.Text = "Replace Blue";
             this.replaceBlueToolStripMenuItem.Click += new System.EventHandler(this.replaceBlueToolStripMenuItem_Click);
             // 
             // replaceAlphaToolStripMenuItem
             // 
             this.replaceAlphaToolStripMenuItem.Name = "replaceAlphaToolStripMenuItem";
-            this.replaceAlphaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceAlphaToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.replaceAlphaToolStripMenuItem.Text = "Replace Alpha";
             this.replaceAlphaToolStripMenuItem.Click += new System.EventHandler(this.replaceAlphaToolStripMenuItem_Click);
             // 
@@ -453,7 +455,9 @@
             this.propertyGridToolStripMenuItem,
             this.displayVerticalToolStripMenuItem,
             this.displayAlphaToolStripMenuItem,
-            this.useComponentSelectorToolStripMenuItem});
+            this.useComponentSelectorToolStripMenuItem,
+            this.previewCubemapToolStripMenuItem,
+            this.previewCubemap3DToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -496,6 +500,13 @@
             this.useComponentSelectorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.useComponentSelectorToolStripMenuItem.Text = "Use Component Selector";
             this.useComponentSelectorToolStripMenuItem.Click += new System.EventHandler(this.useComponentSelectorToolStripMenuItem_Click);
+            // 
+            // previewCubemapToolStripMenuItem
+            // 
+            this.previewCubemapToolStripMenuItem.Name = "previewCubemapToolStripMenuItem";
+            this.previewCubemapToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.previewCubemapToolStripMenuItem.Text = "Preview Cubemap";
+            this.previewCubemapToolStripMenuItem.Click += new System.EventHandler(this.previewCubemapToolStripMenuItem_Click);
             // 
             // imageToolStripMenuItem
             // 
@@ -592,6 +603,13 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
+            // previewCubemap3DToolStripMenuItem
+            // 
+            this.previewCubemap3DToolStripMenuItem.Name = "previewCubemap3DToolStripMenuItem";
+            this.previewCubemap3DToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.previewCubemap3DToolStripMenuItem.Text = "Preview Cubemap (3D)";
+            this.previewCubemap3DToolStripMenuItem.Click += new System.EventHandler(this.previewCubemap3DToolStripMenuItem_Click);
+            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -670,5 +688,7 @@
         private System.Windows.Forms.ToolStripMenuItem replaceGreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem replaceBlueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem replaceAlphaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previewCubemapToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previewCubemap3DToolStripMenuItem;
     }
 }

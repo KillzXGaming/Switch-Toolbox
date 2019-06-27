@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Switch_Toolbox.Library.Rendering
 {
+    //Parts roughly based on this helpful gl wrapper https://github.com/ScanMountGoat/SFGraphics/blob/89f96b754e17078153315a259baef3859ef5984d/Projects/SFGraphics/GLObjects/Textures/Texture.cs
     public class RenderableTex
     {
         public int width, height;
@@ -15,32 +16,110 @@ namespace Switch_Toolbox.Library.Rendering
         public PixelInternalFormat pixelInternalFormat;
         public PixelFormat pixelFormat;
         public PixelType pixelType = PixelType.UnsignedByte;
-        public byte[] data;
+        public TextureTarget TextureTarget = TextureTarget.Texture2D;
         public bool GLInitialized = false;
+        public int ImageSize;
+        public bool IsCubeMap = false;
+
+        public TextureWrapMode TextureWrapS
+        {
+            get { return textureWrapS; }
+            set
+            {
+                textureWrapS = value;
+                SetTextureParameter(TextureParameterName.TextureWrapS, (int)value);
+            }
+        }
+
+        public TextureWrapMode TextureWrapT
+        {
+            get { return textureWrapT; }
+            set
+            {
+                textureWrapT = value;
+                SetTextureParameter(TextureParameterName.TextureWrapT, (int)value);
+            }
+        }
+
+        public TextureWrapMode TextureWrapR
+        {
+            get { return textureWrapR; }
+            set
+            {
+                textureWrapR = value;
+                SetTextureParameter(TextureParameterName.TextureWrapR, (int)value);
+            }
+        }
+
+        public TextureMinFilter TextureMinFilter
+        {
+            get { return textureMinFilter; }
+            set
+            {
+                textureMinFilter = value;
+                SetTextureParameter(TextureParameterName.TextureMinFilter, (int)value);
+            }
+        }
+
+        public TextureMagFilter TextureMagFilter
+        {
+            get { return textureMagFilter; }
+            set
+            {
+                textureMagFilter = value;
+                SetTextureParameter(TextureParameterName.TextureMinFilter, (int)value);
+            }
+        }
+
+        private TextureWrapMode textureWrapS = TextureWrapMode.Repeat;
+        private TextureWrapMode textureWrapT = TextureWrapMode.Repeat;
+        private TextureWrapMode textureWrapR = TextureWrapMode.Clamp;
+        private TextureMinFilter textureMinFilter = TextureMinFilter.Linear;
+        private TextureMagFilter textureMagFilter = TextureMagFilter.Linear;
 
         public void Dispose()
         {
             GL.DeleteTexture(TexID);
-            data = null;
         }
 
-        public void LoadOpenGLTexture(STGenericTexture GenericTexture)
+        public void SetTextureParameter(TextureParameterName param, int value)
+        {
+            Bind();
+            GL.TexParameter(TextureTarget, param, value);
+        }
+
+        public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0)
         {
             if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
                 return;
 
-            if (GenericTexture.ArrayCount <= 0)
-            {
-                throw new Exception($"No texture data found with texture {GenericTexture.Text}");
-            }
-
             width = (int)GenericTexture.Width;
             height = (int)GenericTexture.Height;
+            if (GenericTexture.ArrayCount == 0)
+                GenericTexture.ArrayCount = 1;
 
-            data = GenericTexture.GetImageData(0, 0);
+            List<byte[]> ImageData = new List<byte[]>();
+            for (int i = 0; i < GenericTexture.ArrayCount; i++)
+            {
+                if (i >= ArrayStartIndex && i <= ArrayStartIndex + 6) //Only load up to 6 faces
+                    ImageData.Add(GenericTexture.GetImageData(i, 0));
+            }
 
-            if (data.Length <= 0)
+            if (ImageData.Count == 0 || ImageData[0].Length == 0)
                 throw new Exception("Data is empty!");
+
+            IsCubeMap = ImageData.Count == 6;
+            ImageSize = ImageData[0].Length;
+
+            if (IsCubeMap)
+            {
+                TextureTarget = TextureTarget.TextureCubeMap;
+                TextureWrapS = TextureWrapMode.Clamp;
+                TextureWrapT = TextureWrapMode.Clamp;
+                TextureWrapR = TextureWrapMode.Clamp;
+                TextureMinFilter = TextureMinFilter.LinearMipmapLinear;
+                TextureMagFilter = TextureMagFilter.Linear;
+            }
 
             switch (GenericTexture.Format)
             {
@@ -68,11 +147,11 @@ namespace Switch_Toolbox.Library.Rendering
                     //While shaders could prevent this, converting is easier and works fine across all editors
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        data = STGenericTexture.DecodeBlock(data,
+                        ImageData.Add(STGenericTexture.DecodeBlock(ImageData[0],
                         GenericTexture.Width,
                         GenericTexture.Height,
                         GenericTexture.Format,
-                        GenericTexture.PlatformSwizzle);
+                        GenericTexture.PlatformSwizzle));
                         pixelInternalFormat = PixelInternalFormat.Rgba;
                         pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     }
@@ -85,8 +164,8 @@ namespace Switch_Toolbox.Library.Rendering
                 case TEX_FORMAT.BC5_SNORM:
                     pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
 
-                    data = DDSCompressor.DecompressBC5(GenericTexture.GetImageData(0,0),
-                        (int)GenericTexture.Width, (int)GenericTexture.Height, true, true);
+                    ImageData.Add(DDSCompressor.DecompressBC5(ImageData[0],
+                        (int)GenericTexture.Width, (int)GenericTexture.Height, true, true));
                     pixelInternalFormat = PixelInternalFormat.Rgba;
                     pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
@@ -116,11 +195,11 @@ namespace Switch_Toolbox.Library.Rendering
                 default:
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        data = STGenericTexture.DecodeBlock(data,
+                        ImageData.Add(STGenericTexture.DecodeBlock(ImageData[0],
                         GenericTexture.Width,
                         GenericTexture.Height,
                         GenericTexture.Format,
-                        GenericTexture.PlatformSwizzle);
+                        GenericTexture.PlatformSwizzle));
 
                         pixelInternalFormat = PixelInternalFormat.Rgba;
                         pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
@@ -129,38 +208,82 @@ namespace Switch_Toolbox.Library.Rendering
             }
             GLInitialized = true;
 
-            TexID = loadImage(this);
+            TexID = GenerateOpenGLTexture(this, ImageData);
+
+            ImageData.Clear();
         }
 
-        public static int loadImage(RenderableTex t)
+        public static int GenerateOpenGLTexture(RenderableTex t, List<byte[]> ImageData)
         {
             if (!t.GLInitialized)
                 return -1;
 
             int texID = GL.GenTexture();
 
-            GL.BindTexture(TextureTarget.Texture2D, texID);
-
-            if (t.pixelInternalFormat != PixelInternalFormat.Rgba)
+            GL.BindTexture(t.TextureTarget, texID);
+            if (t.IsCubeMap)
             {
-                GL.CompressedTexImage2D<byte>(TextureTarget.Texture2D, 0, (InternalFormat)t.pixelInternalFormat,
-                    t.width, t.height, 0, getImageSize(t), t.data);
-                //Debug.WriteLine(GL.GetError());
+                if (t.pixelInternalFormat != PixelInternalFormat.Rgba)
+                {
+                    t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0]);
+                    t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1]);
+
+                    t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2]);
+                    t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3]);
+
+                    t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4]);
+                    t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5]);
+                }
+                else
+                {
+                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0]);
+                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1]);
+
+                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2]);
+                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3]);
+
+                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4]);
+                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5]);
+                }
             }
             else
             {
-                GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, t.pixelInternalFormat, t.width, t.height, 0,
-                    t.pixelFormat, PixelType.UnsignedByte, t.data);
+                if (t.pixelInternalFormat != PixelInternalFormat.Rgba)
+                {
+                    GL.CompressedTexImage2D<byte>(TextureTarget.Texture2D, 0, (InternalFormat)t.pixelInternalFormat,
+                        t.width, t.height, 0, getImageSize(t), ImageData[0]);
+                    //Debug.WriteLine(GL.GetError());
+                }
+                else
+                {
+                    GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, t.pixelInternalFormat, t.width, t.height, 0,
+                        t.pixelFormat, PixelType.UnsignedByte, ImageData[0]);
+                }
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             }
-
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             return texID;
         }
 
+        private void LoadUncompressedMips(TextureTarget textureTarget, byte[] ImageData, int MipLevel = 0)
+        {
+            GL.TexImage2D<byte>(textureTarget, MipLevel, pixelInternalFormat, width, height, 0,
+                     pixelFormat, PixelType.UnsignedByte, ImageData);
+
+            GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
+        }
+
+        private void LoadCompressedMips(TextureTarget textureTarget, byte[] ImageData, int MipLevel = 0)
+        {
+            GL.CompressedTexImage2D<byte>(textureTarget, MipLevel, (InternalFormat)pixelInternalFormat,
+                  width, height, 0, getImageSize(this), ImageData);
+
+            GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
+        }
+
         public void Bind()
         {
-            GL.BindTexture(TextureTarget.Texture2D, TexID);
+            GL.BindTexture(TextureTarget, TexID);
         }
 
         private static int getImageSize(RenderableTex t)
@@ -182,9 +305,9 @@ namespace Switch_Toolbox.Library.Rendering
                 case PixelInternalFormat.CompressedSrgbAlphaBptcUnorm:
                     return (t.width * t.height);
                 case PixelInternalFormat.Rgba:
-                    return t.data.Length;
+                    return t.ImageSize;
                 default:
-                    return t.data.Length;
+                    return t.ImageSize;
             }
         }
 

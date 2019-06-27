@@ -395,6 +395,12 @@
     <Compile Include="Forms\Editors\HexEditor\SearchHex.Designer.cs">
       <DependentUpon>SearchHex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\ImageEditor\CubeMapFaceViewer3D.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\ImageEditor\CubeMapFaceViewer3D.Designer.cs">
+      <DependentUpon>CubeMapFaceViewer3D.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\ImageEditor\ImageFillColor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -582,11 +588,11 @@
     <Compile Include="Forms\Editors\Assimp Settings.Designer.cs">
       <DependentUpon>Assimp Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Editors\CubeMapFaceCreator.cs">
+    <Compile Include="Forms\Editors\ImageEditor\CubeMapFaceViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Editors\CubeMapFaceCreator.Designer.cs">
-      <DependentUpon>CubeMapFaceCreator.cs</DependentUpon>
+    <Compile Include="Forms\Editors\ImageEditor\CubeMapFaceViewer.Designer.cs">
+      <DependentUpon>CubeMapFaceViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Dialogs\DialogCenter.cs" />
     <Compile Include="Forms\Editors\TransformMeshTool.cs">
@@ -794,8 +800,8 @@
     <EmbeddedResource Include="Forms\Editors\Audio\LoopEditor.resx">
       <DependentUpon>LoopEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\CubeMapFaceCreator.resx">
-      <DependentUpon>CubeMapFaceCreator.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Editors\ImageEditor\CubeMapFaceViewer.resx">
+      <DependentUpon>CubeMapFaceViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\HexEditor\HexEditorNew.resx">
       <DependentUpon>HexEditorNew.cs</DependentUpon>
@@ -805,6 +811,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\HexEditor\SearchHex.resx">
       <DependentUpon>SearchHex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\ImageEditor\CubeMapFaceViewer3D.resx">
+      <DependentUpon>CubeMapFaceViewer3D.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\ImageEditor\ImageFillColor.resx">
       <DependentUpon>ImageFillColor.cs</DependentUpon>
