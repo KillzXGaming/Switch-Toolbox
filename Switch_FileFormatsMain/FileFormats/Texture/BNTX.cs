@@ -1192,6 +1192,11 @@ namespace FirstPlugin
 
             try
             {
+                RedChannel = SetChannel(Texture.ChannelRed);
+                GreenChannel = SetChannel(Texture.ChannelGreen);
+                BlueChannel = SetChannel(Texture.ChannelBlue);
+                AlphaChannel = SetChannel(Texture.ChannelAlpha);
+
                 uint blkWidth = GetBlockWidth(Format);
                 uint blkHeight = GetBlockHeight(Format);
                 uint blkDepth = GetBlockDepth(Format);
