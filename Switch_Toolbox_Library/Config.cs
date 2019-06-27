@@ -231,6 +231,9 @@ namespace Switch_Toolbox.Library
                     case "FrameCamera":
                         bool.TryParse(node.InnerText, out Runtime.FrameCamera);
                         break;
+                    case "UseDirectXTexDecoder":
+                        bool.TryParse(node.InnerText, out Runtime.UseDirectXTexDecoder);
+                        break;
                 }
             }
         }
@@ -353,6 +356,7 @@ namespace Switch_Toolbox.Library
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
 
+            mainSettingsNode.AppendChild(createNode(doc, "UseDirectXTexDecoder", Runtime.UseDirectXTexDecoder.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseOpenGL", Runtime.UseOpenGL.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));

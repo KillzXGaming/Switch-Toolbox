@@ -72,10 +72,12 @@ namespace FirstPlugin
 
             public MenuExt()
             {
+             //   toolExt[0] = new STToolStripItem("Models");
+            //    toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (BFRES)", Export));
+
                 editExt[0] = new STToolStripItem("Use Advanced Editor As Default", AdvancedEditor);
                 newFileExt[0] = new STToolStripItem("BFRES (Switch)", NewSwitchBfres);
                 newFileExt[1] = new STToolStripItem("BFRES (Wii U)", NewWiiUBfres);
-
                 editExt[0].Checked = !PluginRuntime.UseSimpleBfresEditor;
             }
 
@@ -141,6 +143,71 @@ namespace FirstPlugin
                 var debugInfo = new DebugInfoBox();
                 debugInfo.Show();
                 debugInfo.PrintDebugInfo(ofd.FileName);
+            }
+
+            private void Export(object sender, EventArgs args)
+            {
+                string formats = FileFilters.FMDL_EXPORT;
+
+                string[] forms = formats.Split('|');
+
+                List<string> Formats = new List<string>();
+                for (int i = 0; i < forms.Length; i++)
+                {
+                    if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
+                    {
+                        if (!forms[i].StartsWith("*"))
+                            Formats.Add(forms[i]);
+                    }
+                }
+
+                BatchFormatExport form = new BatchFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string Extension = form.GetSelectedExtension();
+
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.Multiselect = true;
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BFRES), typeof(SARC) });
+
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        FolderSelectDialog folderDialog = new FolderSelectDialog();
+                        if (folderDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            foreach (string file in ofd.FileNames)
+                            {
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BFRES), typeof(SARC) });
+                                if (FileFormat == null)
+                                    continue;
+
+                                SearchBinary(FileFormat, folderDialog.SelectedPath, Extension);
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void SearchBinary(IFileFormat FileFormat, string Folder, string Extension)
+            {
+                if (FileFormat is SARC)
+                {
+                    foreach (var file in ((SARC)FileFormat).Files)
+                    {
+                        Console.WriteLine($"{FileFormat.FileName} {file.Text}");
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, new Type[] { typeof(BFRES), typeof(SARC) }, file.Data);
+                        if (archiveFile == null)
+                            continue;
+
+                        SearchBinary(archiveFile, Folder, Extension);
+                    }
+                }
+                if (FileFormat is BFRES)
+                {
+                 //   ((BFRES)FileFormat).Export(Path.Combine(Folder, $"{FileFormat.FileName}{Extension}"));
+                }
+
+                FileFormat.Unload();
             }
         }
 

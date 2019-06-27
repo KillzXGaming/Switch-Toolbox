@@ -377,10 +377,16 @@ namespace Switch_Toolbox.Library
                     case TEX_FORMAT.ETC1_A4:
                         return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, true),
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                    default:
-                        return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format),
-                              (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
+
+                if (Runtime.UseDirectXTexDecoder)
+                {
+                    return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format),
+                      (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                }
+                else
+                    return DecodeNotDirectXTex(data, width, height, Format);
+
             }
             catch (Exception ex)
             {
@@ -388,29 +394,7 @@ namespace Switch_Toolbox.Library
 
                 try
                 {
-                    if (Format == TEX_FORMAT.BC1_UNORM)
-                        return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, false);
-                    else if (Format == TEX_FORMAT.BC1_UNORM_SRGB)
-                        return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, true);
-                    else if (Format == TEX_FORMAT.BC3_UNORM_SRGB)
-                        return DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, false);
-                    else if (Format == TEX_FORMAT.BC3_UNORM)
-                        return DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, true);
-                    else if (Format == TEX_FORMAT.BC4_UNORM)
-                        return DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, false);
-                    else if (Format == TEX_FORMAT.BC4_SNORM)
-                        return DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, true);
-                    else if (Format == TEX_FORMAT.BC5_UNORM)
-                        return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false);
-                    else
-                    {
-                        if (Runtime.UseOpenGL)
-                        {
-                            Runtime.OpenTKInitialized = true;
-                            LoadOpenGLTexture();
-                            return RenderableTex.GLTextureToBitmap(RenderableTex);
-                        }
-                    }
+                    return DecodeNotDirectXTex(data, width, height, Format);
                 }
                 catch
                 {
@@ -419,6 +403,40 @@ namespace Switch_Toolbox.Library
 
                 return null;
             }
+        }
+
+        private Bitmap DecodeNotDirectXTex(byte[] data, uint Width, uint Height, TEX_FORMAT Format)
+        {
+            if (Format == TEX_FORMAT.BC1_UNORM)
+                return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, false);
+            else if (Format == TEX_FORMAT.BC1_UNORM_SRGB)
+                return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, true);
+            else if (Format == TEX_FORMAT.BC3_UNORM_SRGB)
+                return DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, false);
+            else if (Format == TEX_FORMAT.BC3_UNORM)
+                return DDSCompressor.DecompressBC3(data, (int)Width, (int)Height, true);
+            else if (Format == TEX_FORMAT.BC4_UNORM)
+                return DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, false);
+            else if (Format == TEX_FORMAT.BC4_SNORM)
+                return DDSCompressor.DecompressBC4(data, (int)Width, (int)Height, true);
+            else if (Format == TEX_FORMAT.BC5_UNORM)
+                return DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, false);
+            else if (Format == TEX_FORMAT.BC7_UNORM)
+                return BitmapExtension.GetBitmap(CSharpImageLibrary.DDS.Dxt.DecompressBc7(data, (int)Width, (int)Height), (int)Width, (int)Height);
+            else if (Format == TEX_FORMAT.BC7_UNORM_SRGB)
+                return BitmapExtension.GetBitmap(CSharpImageLibrary.DDS.Dxt.DecompressBc7(data, (int)Width, (int)Height), (int)Width, (int)Height);
+            else
+            {
+                if (Runtime.UseOpenGL)
+                {
+                    Runtime.OpenTKInitialized = true;
+                    if (RenderableTex == null || !RenderableTex.GLInitialized)
+                        LoadOpenGLTexture();
+
+                    return RenderableTex.ToBitmap();
+                }
+            }
+            return null;
         }
 
         public static Bitmap DecodeBlockGetBitmap(byte[] data, uint Width, uint Height, TEX_FORMAT Format)

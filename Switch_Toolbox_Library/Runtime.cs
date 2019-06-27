@@ -15,6 +15,8 @@ namespace Switch_Toolbox.Library
 
     public class Runtime
     {
+        public static bool UseDirectXTexDecoder = true;
+
         public static bool DEVELOPER_DEBUG_MODE = false;
 
         public static class ResourceTables

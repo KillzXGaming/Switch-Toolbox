@@ -66,17 +66,21 @@ namespace Switch_Toolbox.Library.Rendering
                 case TEX_FORMAT.BC4_SNORM:
                     //Convert to rgb to prevent red output
                     //While shaders could prevent this, converting is easier and works fine across all editors
-                    data = STGenericTexture.DecodeBlock(data,
+                    if (Runtime.UseDirectXTexDecoder)
+                    {
+                        data = STGenericTexture.DecodeBlock(data,
                         GenericTexture.Width,
                         GenericTexture.Height,
                         GenericTexture.Format,
                         GenericTexture.PlatformSwizzle);
-
-                    pixelInternalFormat = PixelInternalFormat.Rgba;
-                    pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
-
-                   // pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
-                    //     pixelInternalFormat = PixelInternalFormat.CompressedSignedRedRgtc1;
+                        pixelInternalFormat = PixelInternalFormat.Rgba;
+                        pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    }
+                    else
+                    {
+                        pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
+                        pixelInternalFormat = PixelInternalFormat.CompressedSignedRedRgtc1;
+                    }
                     break;
                 case TEX_FORMAT.BC5_SNORM:
                     pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
@@ -110,14 +114,17 @@ namespace Switch_Toolbox.Library.Rendering
                     pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
                 default:
-                    data = STGenericTexture.DecodeBlock(data,
-                        GenericTexture.Width, 
-                        GenericTexture.Height, 
+                    if (Runtime.UseDirectXTexDecoder)
+                    {
+                        data = STGenericTexture.DecodeBlock(data,
+                        GenericTexture.Width,
+                        GenericTexture.Height,
                         GenericTexture.Format,
                         GenericTexture.PlatformSwizzle);
 
-                    pixelInternalFormat = PixelInternalFormat.Rgba;
-                    pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                        pixelInternalFormat = PixelInternalFormat.Rgba;
+                        pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    }
                     break;
             }
             GLInitialized = true;
@@ -198,7 +205,7 @@ namespace Switch_Toolbox.Library.Rendering
             System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, t.width, t.height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             GL.BindTexture(TextureTarget.Texture2D, t.TexID);
             GL.GetTexImage(TextureTarget.Texture2D, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
-
+                
             bitmap.UnlockBits(bitmapData);
             return bitmap;
         }
