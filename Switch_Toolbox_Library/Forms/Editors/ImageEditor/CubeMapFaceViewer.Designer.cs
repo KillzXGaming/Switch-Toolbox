@@ -38,6 +38,7 @@
             this.btnRightArray = new Switch_Toolbox.Library.Forms.STButton();
             this.btnLeftArray = new Switch_Toolbox.Library.Forms.STButton();
             this.pbRightFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
+            this.chkDisplayAlpha = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopFace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFrontFace)).BeginInit();
@@ -50,6 +51,7 @@
             // contentContainer
             // 
             this.contentContainer.BackColor = System.Drawing.Color.White;
+            this.contentContainer.Controls.Add(this.chkDisplayAlpha);
             this.contentContainer.Controls.Add(this.arrayLevelCounterLabel);
             this.contentContainer.Controls.Add(this.btnRightArray);
             this.contentContainer.Controls.Add(this.btnLeftArray);
@@ -69,6 +71,7 @@
             this.contentContainer.Controls.SetChildIndex(this.btnLeftArray, 0);
             this.contentContainer.Controls.SetChildIndex(this.btnRightArray, 0);
             this.contentContainer.Controls.SetChildIndex(this.arrayLevelCounterLabel, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkDisplayAlpha, 0);
             // 
             // pbTopFace
             // 
@@ -167,6 +170,17 @@
             this.pbRightFace.TabIndex = 20;
             this.pbRightFace.TabStop = false;
             // 
+            // chkDisplayAlpha
+            // 
+            this.chkDisplayAlpha.AutoSize = true;
+            this.chkDisplayAlpha.Location = new System.Drawing.Point(421, 94);
+            this.chkDisplayAlpha.Name = "chkDisplayAlpha";
+            this.chkDisplayAlpha.Size = new System.Drawing.Size(90, 17);
+            this.chkDisplayAlpha.TabIndex = 21;
+            this.chkDisplayAlpha.Text = "Display Alpha";
+            this.chkDisplayAlpha.UseVisualStyleBackColor = true;
+            this.chkDisplayAlpha.CheckedChanged += new System.EventHandler(this.chkDisplayAlpha_CheckedChanged);
+            // 
             // CubeMapFaceViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,5 +212,6 @@
         private STButton btnRightArray;
         private STButton btnLeftArray;
         private PictureBoxCustom pbRightFace;
+        private STCheckBox chkDisplayAlpha;
     }
 }

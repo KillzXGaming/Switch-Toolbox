@@ -12,6 +12,8 @@ namespace Switch_Toolbox.Library.Forms
 {
     public partial class CubeMapFaceViewer : STForm
     {
+        private bool DisplayAlpha = true;
+
         public CubeMapFaceViewer()
         {
             InitializeComponent();
@@ -28,6 +30,7 @@ namespace Switch_Toolbox.Library.Forms
             pbLeftFace.Paint += CreatePictureBoxText("Left");
             pbTopFace.Paint += CreatePictureBoxText("Top");
             pbBottomFace.Paint += CreatePictureBoxText("Bottom");
+            chkDisplayAlpha.Checked = DisplayAlpha;
         }
 
         private PaintEventHandler CreatePictureBoxText(string Text)
@@ -65,9 +68,14 @@ namespace Switch_Toolbox.Library.Forms
 
         private void UpdateArrayLevel(int ArrayLevel = 0)
         {
+            if (ActiveTexture == null) return;
+
             for (int i = 0; i < 6; i++)
             {
                 var CubeFaceBitmap = ActiveTexture.GetBitmap(i * (ArrayLevel + 1));
+                if (!DisplayAlpha)
+                    BitmapExtension.SetChannel(CubeFaceBitmap, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
+
                 if (i == FRONT_FACE)
                     pbFrontFace.Image = CubeFaceBitmap;
                 else if (i == BACK_FACE)
@@ -81,6 +89,12 @@ namespace Switch_Toolbox.Library.Forms
                 else if (i == RIGHT_FACE)
                     pbRightFace.Image = CubeFaceBitmap;
             }
+        }
+
+        private void chkDisplayAlpha_CheckedChanged(object sender, EventArgs e)
+        {
+            DisplayAlpha = chkDisplayAlpha.Checked;
+            UpdateArrayLevel();
         }
     }
 }
