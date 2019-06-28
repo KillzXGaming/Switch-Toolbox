@@ -260,6 +260,7 @@ namespace Switch_Toolbox.Library
             FilterEach.Add($"{"Zstb Compressed"} ({"*.zstb"}) |{"*.zstb"}|");
             FilterEach.Add($"{"Lz4 Compressed"} ({"*.lz4"}) |{"*.lz4"}|");
             FilterEach.Add($"{"GZIP Compressed"} ({"*.gz"}) |{"*.gz"}|");
+            FilterEach.Add($"{"SZS ZSTD Compressed File"} ({"*.zs"}) |{"*.zs"}|");
             FilterEach.Add($"{"SZS Yaz0 Compressed"} ({"*.szs"}) |{"*.szs"}|");
             FilterEach.Add($"{"Yaz0 Compressed"} ({"*.yaz0"}) |{"*.yaz0"}|");
 
