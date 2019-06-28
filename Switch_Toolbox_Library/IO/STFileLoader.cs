@@ -179,7 +179,7 @@ namespace Switch_Toolbox.Library.IO
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Zstb, DecompressedFileSize, CompressedFileSize);
             }
-            if (Path.GetExtension(FileName) == ".z" && CompType == CompressionType.None)
+            if (MagicHex2 == 0x789C || MagicHex2 == 0x78DA || Path.GetExtension(FileName) == ".z" && CompType == CompressionType.None)
             {
                 if (data == null)
                     data = File.ReadAllBytes(FileName);

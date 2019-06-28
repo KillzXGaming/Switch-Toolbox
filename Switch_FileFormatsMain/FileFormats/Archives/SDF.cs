@@ -132,7 +132,7 @@ namespace FirstPlugin
                 {
                     string ext = Utils.GetExtension(FileEntries[i].FileName);
 
-                    if (Extensions[ext] > 10000)
+                    if (Extensions[ext] > 10000 && ext != ".mmb")
                         FileEntries[i].CanLoadFile = false;
 
                     files.Add(FileEntries[i]);
@@ -141,7 +141,7 @@ namespace FirstPlugin
                 List<string> FilteredExtensions = new List<string>();
                 foreach (var ext in Extensions)
                 {
-                    if (ext.Value > 10000)
+                    if (ext.Value > 10000 && ext.Key != ".mmb")
                         FilteredExtensions.Add(ext.Key);
                 }
 
