@@ -297,9 +297,10 @@ namespace Switch_Toolbox.Library
 
             var rootText = root.Text;
             var rootTextLength = rootText.Length;
+            var nodeFiles = archiveFile.Files;
 
             int I = 0;
-            foreach (var node in archiveFile.Files)
+            foreach (var node in  archiveFile.Files)
             {
                 if (!node.CanLoadFile)
                     continue;

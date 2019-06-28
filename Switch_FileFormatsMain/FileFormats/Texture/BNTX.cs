@@ -255,6 +255,7 @@ namespace FirstPlugin
             BinaryTexFile = new BntxFile(stream);
             Text = BinaryTexFile.Name;
 
+
             foreach (Texture tex in BinaryTexFile.Textures)
             {
                 TextureData texData = new TextureData(tex, BinaryTexFile);
