@@ -969,7 +969,7 @@ namespace Bfres.Structs
             }
 
             //Check weights. If they are all 1. If they are then they aren't necessary
-            if (ob.VertexSkinCount == 1 || ForcedSkinAmount == 1)
+            if (ob.VertexSkinCount == 1 || ForceSkinCount && ForcedSkinAmount == 1)
             {
                 bool UseWeights = ob.vertices.Any(o => o.boneWeights[0] != 1);
                 if (!UseWeights)
@@ -987,7 +987,7 @@ namespace Bfres.Structs
                 }
             }
 
-            bool UseRigidSkiining = ob.VertexSkinCount == 1;
+            bool UseRigidSkinning = ob.VertexSkinCount == 1;
 
             int vtxIndex = 0;
             foreach (Vertex v in ob.vertices)
@@ -1008,7 +1008,7 @@ namespace Bfres.Structs
                             //Add these after smooth matrices
                             if (nodeRigidIndex[i] != -1)
                             {
-                                if (UseRigidSkiining)
+                                if (UseRigidSkinning)
                                     RigidIds.Add(nodeRigidIndex[i]);
                                 else
                                     RigidIds.Add(defBn.Index);

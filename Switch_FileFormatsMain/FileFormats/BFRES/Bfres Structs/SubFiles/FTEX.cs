@@ -597,7 +597,7 @@ namespace Bfres.Structs
             var surfaces = GX2.Decode(surf);
 
             if (ArrayLevel >= surfaces.Count)
-                throw new Exception("Invalid amount of surfaces decoded!");
+                throw new Exception($"Invalid amount of surfaces decoded! Array Level: {ArrayLevel} Total Arrays: {surfaces.Count} ");
             if (surfaces.Count == 0)
                 throw new Exception("Surfaces came out empty!");
 

@@ -88,6 +88,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.TexParameter(TextureTarget, param, value);
         }
 
+        private bool UseMipmaps = false;
         public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0)
         {
             if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
@@ -98,18 +99,32 @@ namespace Switch_Toolbox.Library.Rendering
             if (GenericTexture.ArrayCount == 0)
                 GenericTexture.ArrayCount = 1;
 
-            List<byte[]> ImageData = new List<byte[]>();
-            for (int i = 0; i < GenericTexture.ArrayCount; i++)
+            List<STGenericTexture.Surface> Surfaces = new List<STGenericTexture.Surface>();
+            if (UseMipmaps && GenericTexture.ArrayCount <= 1)
             {
-                if (i >= ArrayStartIndex && i <= ArrayStartIndex + 6) //Only load up to 6 faces
-                    ImageData.Add(GenericTexture.GetImageData(i, 0));
+                //Load surfaces with mip maps
+                Surfaces = GenericTexture.GetSurfaces(ArrayStartIndex, 6);
             }
-
-            if (ImageData.Count == 0 || ImageData[0].Length == 0)
+            else
+            {
+                //Only load first mip level. Will be generated after
+                for (int i = 0; i < GenericTexture.ArrayCount; i++)
+                {
+                    if (i >= ArrayStartIndex && i <= ArrayStartIndex + 6) //Only load up to 6 faces
+                    {
+                        Surfaces.Add(new STGenericTexture.Surface()
+                        {
+                            mipmaps = new List<byte[]>() { GenericTexture.GetImageData(i, 0) }
+                        });
+                    }
+                }
+            }
+           
+            if (Surfaces.Count == 0 || Surfaces[0].mipmaps[0].Length == 0)
                 throw new Exception("Data is empty!");
 
-            IsCubeMap = ImageData.Count == 6;
-            ImageSize = ImageData[0].Length;
+            IsCubeMap = Surfaces.Count == 6;
+            ImageSize = Surfaces[0].mipmaps[0].Length;
 
             if (IsCubeMap)
             {
@@ -147,11 +162,6 @@ namespace Switch_Toolbox.Library.Rendering
                     //While shaders could prevent this, converting is easier and works fine across all editors
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        ImageData[0] = (STGenericTexture.DecodeBlock(ImageData[0],
-                        GenericTexture.Width,
-                        GenericTexture.Height,
-                        GenericTexture.Format,
-                        GenericTexture.PlatformSwizzle));
                         pixelInternalFormat = PixelInternalFormat.Rgba;
                         pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     }
@@ -162,10 +172,6 @@ namespace Switch_Toolbox.Library.Rendering
                     }
                     break;
                 case TEX_FORMAT.BC5_SNORM:
-                    pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
-
-                    ImageData[0] = (DDSCompressor.DecompressBC5(ImageData[0],
-                        (int)GenericTexture.Width, (int)GenericTexture.Height, true, true));
                     pixelInternalFormat = PixelInternalFormat.Rgba;
                     pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
@@ -195,25 +201,64 @@ namespace Switch_Toolbox.Library.Rendering
                 default:
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        ImageData[0] = STGenericTexture.DecodeBlock(ImageData[0],
-                        GenericTexture.Width,
-                        GenericTexture.Height,
-                        GenericTexture.Format,
-                        GenericTexture.PlatformSwizzle);
-
                         pixelInternalFormat = PixelInternalFormat.Rgba;
                         pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     }
                     break;
             }
             GLInitialized = true;
+            for (int i = 0; i < Surfaces.Count; i++)
+            {
+                for (int MipLevel = 0; MipLevel < Surfaces[i].mipmaps.Count; MipLevel++)
+                {
+                    uint width = Math.Max(1, GenericTexture.Width >> MipLevel);
+                    uint height = Math.Max(1, GenericTexture.Height >> MipLevel);
 
-            TexID = GenerateOpenGLTexture(this, ImageData);
+                    Surfaces[i].mipmaps[MipLevel] = DecodeWithoutOpenGLDecoder(Surfaces[i].mipmaps[MipLevel], width, height, GenericTexture);
+                }
+            }
 
-            ImageData.Clear();
+            TexID = GenerateOpenGLTexture(this, Surfaces);
+
+            Surfaces.Clear();
         }
 
-        public static int GenerateOpenGLTexture(RenderableTex t, List<byte[]> ImageData)
+        private byte[] DecodeWithoutOpenGLDecoder(byte[] ImageData, uint width, uint height, STGenericTexture GenericTexture)
+        {
+            switch (GenericTexture.Format)
+            {
+                case TEX_FORMAT.BC1_UNORM:
+                case TEX_FORMAT.BC1_UNORM_SRGB:
+                case TEX_FORMAT.BC2_UNORM:
+                case TEX_FORMAT.BC2_UNORM_SRGB:
+                case TEX_FORMAT.BC3_UNORM:
+                case TEX_FORMAT.BC3_UNORM_SRGB:
+                case TEX_FORMAT.BC5_UNORM:
+                case TEX_FORMAT.BC6H_SF16:
+                case TEX_FORMAT.BC6H_UF16:
+                case TEX_FORMAT.BC7_UNORM:
+                case TEX_FORMAT.BC7_UNORM_SRGB:
+                case TEX_FORMAT.R8G8B8A8_UNORM:
+                case TEX_FORMAT.R8G8B8A8_UNORM_SRGB:
+                    return ImageData;
+                case TEX_FORMAT.BC5_SNORM:
+                  return  (DDSCompressor.DecompressBC5(ImageData,
+                        (int)width, (int)height, true, true));
+                default:
+                    if (Runtime.UseDirectXTexDecoder)
+                    {
+                        return STGenericTexture.DecodeBlock(ImageData,
+                        width,
+                        height,
+                        GenericTexture.Format,
+                        GenericTexture.PlatformSwizzle);
+                    }
+                    else
+                        return ImageData;
+            }
+        }
+
+        public static int GenerateOpenGLTexture(RenderableTex t, List<STGenericTexture.Surface> ImageData)
         {
             if (!t.GLInitialized)
                 return -1;
@@ -225,60 +270,76 @@ namespace Switch_Toolbox.Library.Rendering
             {
                 if (t.pixelInternalFormat != PixelInternalFormat.Rgba)
                 {
-                    t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0]);
-                    t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1]);
+                    for (int mipLevel = 0; mipLevel < ImageData[0].mipmaps.Count; mipLevel++)
+                    {
+                        int width = Math.Max(1, t.width >> mipLevel);
+                        int height = Math.Max(1, t.height >> mipLevel);
 
-                    t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2]);
-                    t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3]);
+                        t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0], width, height, mipLevel);
+                        t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1], width, height, mipLevel);
 
-                    t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4]);
-                    t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5]);
+                        t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2], width, height, mipLevel);
+                        t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3], width, height, mipLevel);
+
+                        t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4], width, height, mipLevel);
+                        t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5], width, height, mipLevel);
+                    }
                 }
                 else
                 {
-                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0]);
-                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1]);
+                    for (int mipLevel = 0; mipLevel < ImageData[0].mipmaps.Count; mipLevel++)
+                    {
+                        int width = Math.Max(1, t.width >> mipLevel);
+                        int height = Math.Max(1, t.height >> mipLevel);
 
-                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2]);
-                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3]);
+                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0], width, height, mipLevel);
+                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1], width, height, mipLevel);
 
-                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4]);
-                    t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5]);
+                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2], width, height, mipLevel);
+                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3], width, height, mipLevel);
+
+                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4], width, height, mipLevel);
+                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5],  width, height, mipLevel);
+                    }
                 }
+
+                if (ImageData[0].mipmaps.Count == 1)
+                    GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
             }
             else
             {
                 if (t.pixelInternalFormat != PixelInternalFormat.Rgba)
                 {
-                    GL.CompressedTexImage2D<byte>(TextureTarget.Texture2D, 0, (InternalFormat)t.pixelInternalFormat,
-                        t.width, t.height, 0, getImageSize(t), ImageData[0]);
-                    //Debug.WriteLine(GL.GetError());
+                    for (int mipLevel = 0; mipLevel < ImageData[0].mipmaps.Count; mipLevel++)
+                        t.LoadCompressedMips(t.TextureTarget, ImageData[0], t.width, t.height, mipLevel);
                 }
                 else
                 {
-                    GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, t.pixelInternalFormat, t.width, t.height, 0,
-                        t.pixelFormat, PixelType.UnsignedByte, ImageData[0]);
+                    for (int mipLevel = 0; mipLevel < ImageData[0].mipmaps.Count; mipLevel++)
+                        t.LoadUncompressedMips(t.TextureTarget, ImageData[0], t.width, t.height, mipLevel);
                 }
-                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+                if (ImageData[0].mipmaps.Count == 1)
+                    GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             }
 
             return texID;
         }
 
-        private void LoadUncompressedMips(TextureTarget textureTarget, byte[] ImageData, int MipLevel = 0)
+        public void LoadUncompressedMips(TextureTarget textureTarget, STGenericTexture.Surface ImageData,int mipwidth, int mipheight, int MipLevel = 0)
         {
-            GL.TexImage2D<byte>(textureTarget, MipLevel, pixelInternalFormat, width, height, 0,
-                     pixelFormat, PixelType.UnsignedByte, ImageData);
+            GL.TexImage2D<byte>(textureTarget, MipLevel, pixelInternalFormat, mipwidth, mipheight, 0,
+                     pixelFormat, PixelType.UnsignedByte, ImageData.mipmaps[MipLevel]);
 
-            GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
+         //   GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
         }
 
-        private void LoadCompressedMips(TextureTarget textureTarget, byte[] ImageData, int MipLevel = 0)
+        public void LoadCompressedMips(TextureTarget textureTarget, STGenericTexture.Surface ImageData, int mipwidth, int mipheight, int MipLevel = 0)
         {
             GL.CompressedTexImage2D<byte>(textureTarget, MipLevel, (InternalFormat)pixelInternalFormat,
-                  width, height, 0, getImageSize(this), ImageData);
+                  mipwidth, mipheight, 0, getImageSize(this), ImageData.mipmaps[MipLevel]);
 
-            GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
+         //  GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
         }
 
         public void Bind()

@@ -718,7 +718,7 @@ namespace FirstPlugin
 
                 if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
                 {
-                    if (useSampler == "_a0")
+                    if (useSampler == "_a0" && AlbedoCount == 0)
                     {
                         m.HasDiffuseMap = true;
                         AlbedoCount++;

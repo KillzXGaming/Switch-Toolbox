@@ -1171,10 +1171,11 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
+                            if (shape.HasIndices)
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
                             if (ForceSkinInfluence)
                                 shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
-                            else
-                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {

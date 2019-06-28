@@ -28,7 +28,7 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
-        public Color SetIconColor
+        public Color SetIconColor   
         {
             get
             {

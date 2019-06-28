@@ -95,18 +95,29 @@ namespace Switch_Toolbox.Library
 
         public abstract byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0);
 
-        public List<Surface> GetSurfaces()
+        //
+        //Gets a list of surfaces given the start index of the array and the amount of arrays to obtain
+        //
+        public List<Surface> GetSurfaces(int ArrayIndexStart = 0, int ArrayLength = 1 )
         {
+            if (ArrayLength < ArrayCount)
+                ArrayLength = (int)ArrayCount;
+
             var surfaces = new List<Surface>();
             for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
             {
-                List<byte[]> mips = new List<byte[]>();
-                for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                bool IsLower = arrayLevel < ArrayIndexStart;
+                bool IsHigher = arrayLevel > (ArrayIndexStart + ArrayLength);
+                if (!IsLower && !IsHigher)
                 {
-                    mips.Add(GetImageData(arrayLevel, mipLevel));
-                }
+                    List<byte[]> mips = new List<byte[]>();
+                    for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                    {
+                        mips.Add(GetImageData(arrayLevel, mipLevel));
+                    }
 
-                surfaces.Add(new Surface() { mipmaps = mips });
+                    surfaces.Add(new Surface() { mipmaps = mips });
+                }
             }
 
             return surfaces;
