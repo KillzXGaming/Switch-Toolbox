@@ -139,7 +139,6 @@
             // 
             // btnRightArray
             // 
-            this.btnRightArray.Enabled = false;
             this.btnRightArray.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRightArray.Location = new System.Drawing.Point(552, 51);
             this.btnRightArray.Name = "btnRightArray";
@@ -147,6 +146,7 @@
             this.btnRightArray.TabIndex = 18;
             this.btnRightArray.Text = ">";
             this.btnRightArray.UseVisualStyleBackColor = true;
+            this.btnRightArray.Click += new System.EventHandler(this.btnRightArray_Click);
             // 
             // btnLeftArray
             // 
@@ -158,6 +158,7 @@
             this.btnLeftArray.TabIndex = 17;
             this.btnLeftArray.Text = "<";
             this.btnLeftArray.UseVisualStyleBackColor = true;
+            this.btnLeftArray.Click += new System.EventHandler(this.btnLeftArray_Click);
             // 
             // pbRightFace
             // 

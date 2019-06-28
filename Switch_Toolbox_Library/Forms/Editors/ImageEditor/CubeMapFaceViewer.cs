@@ -66,13 +66,20 @@ namespace Switch_Toolbox.Library.Forms
         private const int LEFT_FACE = 4;
         private const int RIGHT_FACE = 5;
 
-        private void UpdateArrayLevel(int ArrayLevel = 0)
+        private int CurArrayDisplayLevel = 0;
+        private int TotalArrayCount = 0;
+
+        private void UpdateArrayLevel()
         {
             if (ActiveTexture == null) return;
 
+            TotalArrayCount = (int)(ActiveTexture.ArrayCount / 6) - 1;
+
+            arrayLevelCounterLabel.Text = $"Array Level: {CurArrayDisplayLevel} / {TotalArrayCount}";
+
             for (int i = 0; i < 6; i++)
             {
-                var CubeFaceBitmap = ActiveTexture.GetBitmap(i * (ArrayLevel + 1));
+                var CubeFaceBitmap = ActiveTexture.GetBitmap(i + (CurArrayDisplayLevel * 6));
                 if (!DisplayAlpha)
                     BitmapExtension.SetChannel(CubeFaceBitmap, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
 
@@ -89,11 +96,37 @@ namespace Switch_Toolbox.Library.Forms
                 else if (i == RIGHT_FACE)
                     pbRightFace.Image = CubeFaceBitmap;
             }
+
+            if (CurArrayDisplayLevel != TotalArrayCount)
+                btnRightArray.Enabled = true;
+            else
+                btnRightArray.Enabled = false;
+
+            if (CurArrayDisplayLevel != 0)
+                btnLeftArray.Enabled = true;
+            else
+                btnLeftArray.Enabled = false;
         }
 
         private void chkDisplayAlpha_CheckedChanged(object sender, EventArgs e)
         {
             DisplayAlpha = chkDisplayAlpha.Checked;
+            UpdateArrayLevel();
+        }
+
+        private void btnRightArray_Click(object sender, EventArgs e)
+        {
+            if (CurArrayDisplayLevel != TotalArrayCount)
+                CurArrayDisplayLevel += 1;
+
+            UpdateArrayLevel();
+        }
+
+        private void btnLeftArray_Click(object sender, EventArgs e)
+        {
+            if (CurArrayDisplayLevel != 0)
+                CurArrayDisplayLevel -= 1;
+
             UpdateArrayLevel();
         }
     }
