@@ -250,7 +250,9 @@ namespace Switch_Toolbox.Library
             Filter += $"{"*.lz4"};";
             Filter += $"{"*.gz"};";
             Filter += $"{"*.szs"};";
+            Filter += $"{"*.zs"};";
             Filter += $"{"*.yaz0"};";
+
 
             FilterEach.Add($"{"Compressed File"} ({"*.cmp"}) |{"*.cmp"}|");
             FilterEach.Add($"{"Zlib Compressed"} ({"*.z"}) |{"*.z"}|");
