@@ -227,7 +227,7 @@ namespace FirstPlugin
             bars = new BarsLib.BARS(stream);
 
             if (bars.AmtaList.Count > 0)
-                Nodes.Add("AMTA");
+                Nodes.Add("Meta Data");
 
             if (bars.audioList.Count > 0)
                 Nodes.Add("Audio");

@@ -183,8 +183,10 @@ namespace Switch_Toolbox.Library
         {
             CheckBuffers();
 
-            if (!Runtime.OpenTKInitialized || !Runtime.renderBones)
+            if (!Runtime.OpenTKInitialized || !Runtime.renderBones || !Visible)
                 return;
+
+            Console.WriteLine($"SKEL Visible " + Visible);
 
             SF.Shader shader = OpenTKSharedResources.shaders["BONE"];
             shader.UseProgram();

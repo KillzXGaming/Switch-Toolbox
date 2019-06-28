@@ -147,7 +147,7 @@ namespace Switch_Toolbox.Library.Rendering
                     //While shaders could prevent this, converting is easier and works fine across all editors
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        ImageData.Add(STGenericTexture.DecodeBlock(ImageData[0],
+                        ImageData[0] = (STGenericTexture.DecodeBlock(ImageData[0],
                         GenericTexture.Width,
                         GenericTexture.Height,
                         GenericTexture.Format,
@@ -164,7 +164,7 @@ namespace Switch_Toolbox.Library.Rendering
                 case TEX_FORMAT.BC5_SNORM:
                     pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
 
-                    ImageData.Add(DDSCompressor.DecompressBC5(ImageData[0],
+                    ImageData[0] = (DDSCompressor.DecompressBC5(ImageData[0],
                         (int)GenericTexture.Width, (int)GenericTexture.Height, true, true));
                     pixelInternalFormat = PixelInternalFormat.Rgba;
                     pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
@@ -195,11 +195,11 @@ namespace Switch_Toolbox.Library.Rendering
                 default:
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        ImageData.Add(STGenericTexture.DecodeBlock(ImageData[0],
+                        ImageData[0] = STGenericTexture.DecodeBlock(ImageData[0],
                         GenericTexture.Width,
                         GenericTexture.Height,
                         GenericTexture.Format,
-                        GenericTexture.PlatformSwizzle));
+                        GenericTexture.PlatformSwizzle);
 
                         pixelInternalFormat = PixelInternalFormat.Rgba;
                         pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
