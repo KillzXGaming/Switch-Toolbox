@@ -35,10 +35,37 @@ namespace Toolbox
             var domain = AppDomain.CurrentDomain;
             domain.AssemblyResolve += LoadAssembly;
 
+            Switch_Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
+
             MainForm form = new MainForm();
             form.openedFiles = Files;
 
             Application.Run(form);
+        }
+
+        private static bool TryLoadDirectXTex()
+        {
+            try
+            {
+                String folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                String filePath = Path.Combine(folder, Environment.Is64BitProcess ? "x64" : "x86", "DirectXTexNetImpl.dll");
+                String filePathLib = Path.Combine(folder, "Lib", Environment.Is64BitProcess ? "x64" : "x86", "DirectXTexNetImpl.dll");
+                if (File.Exists(filePath))
+                {
+                    Assembly assembly = Assembly.LoadFile(filePath);
+                    return true;
+                }
+                if (File.Exists(filePathLib))
+                {
+                    Assembly assembly = Assembly.LoadFile(filePathLib);
+                    return true;
+                }
+            }
+            catch
+            {
+
+            }
+            return false;
         }
 
         /// 
@@ -100,7 +127,7 @@ namespace Toolbox
             return null;
         }
 
-        private static string GetAssemblyPath(string dir) => Path.Combine(dir, "Lib", ArchitectureMoniker, "DirectXTexNetImpl.dll");
+        private static string GetAssemblyPath(string dir) => Path.Combine(dir,"Lib", ArchitectureMoniker, "DirectXTexNetImpl.dll");
 
         // Note: currently no support for ARM.
         // Don't use %PROCESSOR_ARCHITECTURE% as it calls x64 'AMD64'.
