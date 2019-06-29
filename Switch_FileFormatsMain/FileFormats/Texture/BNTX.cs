@@ -144,7 +144,7 @@ namespace FirstPlugin
                         SearchBinary(archiveFile, Folder, Extension);
                     }
                 }
-         /*       if (FileFormat is BNTX)
+                if (FileFormat is BNTX)
                 {
                     foreach (var texture in ((BNTX)FileFormat).Textures.Values)
                         texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
@@ -170,7 +170,7 @@ namespace FirstPlugin
 
                         bntx.Unload();
                     }
-                }*/
+                }
 
                 FileFormat.Unload();
                 GC.Collect();

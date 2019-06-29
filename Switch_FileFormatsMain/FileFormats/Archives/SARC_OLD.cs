@@ -169,6 +169,9 @@ namespace FirstPlugin
 
         public void Unload()
         {
+            foreach (var file in Files)
+                file.FileData = null;
+
             Nodes.Clear();
         }
 
