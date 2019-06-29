@@ -87,28 +87,88 @@ namespace FirstPlugin
                 editor.Text = "Untitled-" + 0;
                 LibraryGUI.Instance.CreateMdiWindow(editor);
             }
+
             private void Export(object sender, EventArgs args)
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Multiselect = true;
+                string formats = FileFilters.BNTX_TEX;
 
-                if (ofd.ShowDialog() == DialogResult.OK)
+                string[] forms = formats.Split('|');
+
+                List<string> Formats = new List<string>();
+                for (int i = 0; i < forms.Length; i++)
                 {
-                    foreach (string file in ofd.FileNames)
+                    if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
                     {
-                        FileReader reader = new FileReader(ofd.FileName);
-                        reader.Seek(16, SeekOrigin.Begin);
-                        int offsetName = reader.ReadInt32();
-
-                        reader.Seek(offsetName, SeekOrigin.Begin);
-                        string Name = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
-
-                        reader.Close();
-                        reader.Dispose();
-
-                        //     System.IO.File.Move(file, Name);
+                        if (!forms[i].StartsWith("*"))
+                            Formats.Add(forms[i]);
                     }
                 }
+
+                BatchFormatExport form = new BatchFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string Extension = form.GetSelectedExtension();
+
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.Multiselect = true;
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        FolderSelectDialog folderDialog = new FolderSelectDialog();
+                        if (folderDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            foreach (string file in ofd.FileNames)
+                            {
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+                                if (FileFormat == null)
+                                    continue;
+
+                                SearchBinary(FileFormat, folderDialog.SelectedPath, Extension);
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void SearchBinary(IFileFormat FileFormat, string Folder, string Extension)
+            {
+                if (FileFormat is SARC)
+                {
+                    foreach (var file in ((SARC)FileFormat).Files)
+                    {
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.Data);
+                        if (archiveFile == null)
+                            continue;
+
+                        SearchBinary(archiveFile, Folder, Extension);
+                    }
+                }
+                if (FileFormat is BNTX)
+                {
+                    foreach (var texture in ((BNTX)FileFormat).Textures.Values)
+                        texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}{Extension}"));
+                }
+                if (FileFormat is BFRES)
+                {
+                    var bntx = ((BFRES)FileFormat).GetBNTX;
+                    if(bntx != null)
+                    {
+                        foreach (var texture in bntx.Textures.Values)
+                            texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}{Extension}"));
+                    }
+                }
+                if (FileFormat is PTCL)
+                {
+                    var bntx = ((PTCL)FileFormat).header.BinaryTextureFile;
+                    if (bntx != null)
+                    {
+                        foreach (var texture in bntx.Textures.Values)
+                            texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}{Extension}"));
+                    }
+                }
+
+                FileFormat.Unload();
             }
         }
 

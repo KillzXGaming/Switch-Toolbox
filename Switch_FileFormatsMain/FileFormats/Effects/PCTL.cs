@@ -138,6 +138,8 @@ namespace FirstPlugin
 
         public class Header
         {
+            public BNTX BinaryTextureFile = null;
+
             public string Signature;
 
             public ushort GraphicsAPIVersion;
@@ -153,7 +155,6 @@ namespace FirstPlugin
 
             //For saving
             public List<SectionBase> Sections = new List<SectionBase>();
-
 
             public void Read(FileReader reader, PTCL ptcl)
             {
@@ -223,6 +224,8 @@ namespace FirstPlugin
                     if (node is SectionBase && ((SectionBase)node).BinaryData is TEXR)
                         botwTex.Add((TEXR)((SectionBase)node).BinaryData);
                 }
+
+                ptcl.header.BinaryTextureFile = bntx;
 
                 int index = 0;
                 if (botwTex.Count > 0)
