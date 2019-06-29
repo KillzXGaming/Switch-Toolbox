@@ -205,10 +205,10 @@ namespace FirstPlugin
 
             FileNameText = FileName;
 
+            LoadFile(stream, Name);
+
             if (!IsLoadingArray)
                 LoadBNTXArray(ContainerArray, stream, this);
-
-            LoadFile(stream, Name);
 
             PluginRuntime.bntxContainers.Add(this);
         }
@@ -257,39 +257,38 @@ namespace FirstPlugin
 
         private static void SearchForBinaryContainerFile(FileReader reader, int Alignment, List<BNTX> Containers)
         {
-            long Pos = reader.Position;
+            long StartPos = reader.Position;
 
             uint TotalSize = (uint)reader.BaseStream.Length;
 
+            //Create bntx for array
+            BNTX bntx = new BNTX();
+            bntx.IFileInfo = new IFileInfo();
+            bntx.Text = "Sheet " + Containers.Count;
+
+            //Get file size in header
             reader.Seek(28);
             uint FileSize = reader.ReadUInt32();
-            reader.SeekBegin(Pos + FileSize);
 
+            //Get total bntx in bytes
+            reader.Seek(StartPos);
+            byte[] Data = reader.ReadBytes((int)FileSize);
+
+            bntx.Load(new MemoryStream(Data));
+            Containers.Add(bntx);
+
+            reader.SeekBegin(StartPos + FileSize);
             if (TotalSize > FileSize)
             {
                 //Align the reader and check for another bntx
                 reader.Align(Alignment);
                 if (reader.Position < TotalSize - 4)
                 {
-                    Console.WriteLine("BNTX ARRAY POS " + reader.Position);
-                    long StartPos = reader.Position;
+                    long NextPos = reader.Position;
                     string Magic = reader.ReadString(4);
                     if (Magic == "BNTX")
                     {
-                        reader.Seek(24);
-                        uint NextFileSize = reader.ReadUInt32();
-
-                        BNTX bntx = new BNTX();
-                        bntx.IFileInfo = new IFileInfo();
-                        bntx.Text = "Sheet " + Containers.Count;
-
-                        reader.Position = StartPos;
-                        byte[] Data = reader.ReadBytes((int)NextFileSize);
-
-                        bntx.Load(new MemoryStream(Data));
-                        Containers.Add(bntx);
-
-                        reader.Position = StartPos;
+                        reader.Position = NextPos;
                         SearchForBinaryContainerFile(reader, Alignment, Containers);
                     }
                 }
