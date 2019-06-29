@@ -158,7 +158,8 @@ namespace Switch_Toolbox.Library
         ASTC_12x12_UNORM = 186,
         ASTC_12x12_SRGB = 187,
 
-        ETC1 = 230,
+        ETC1_SRGB = 229,
+        ETC1_UNORM = 230,
         ETC1_A4 = 231,
         L4 = 232,
         LA4 = 233,

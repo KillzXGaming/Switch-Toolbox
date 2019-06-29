@@ -43,7 +43,7 @@ namespace Switch_Toolbox.Library
                 case PICASurfaceFormat.LA4: return TEX_FORMAT.LA4;
                 case PICASurfaceFormat.L4: return TEX_FORMAT.L4;
                 case PICASurfaceFormat.A4: return TEX_FORMAT.A4;
-                case PICASurfaceFormat.ETC1: return TEX_FORMAT.ETC1;
+                case PICASurfaceFormat.ETC1: return TEX_FORMAT.ETC1_UNORM;
                 case PICASurfaceFormat.ETC1A4: return TEX_FORMAT.ETC1_A4;
                 default:
                     throw new NotImplementedException("Unsupported format! " + format);
@@ -64,7 +64,7 @@ namespace Switch_Toolbox.Library
                 case TEX_FORMAT.A8_UNORM: return PICASurfaceFormat.A8;
                 case TEX_FORMAT.LA4: return PICASurfaceFormat.LA4;
                 case TEX_FORMAT.A4: return PICASurfaceFormat.A4;
-                case TEX_FORMAT.ETC1: return PICASurfaceFormat.ETC1;
+                case TEX_FORMAT.ETC1_UNORM: return PICASurfaceFormat.ETC1;
                 case TEX_FORMAT.ETC1_A4: return PICASurfaceFormat.ETC1A4;
                 default:
                     throw new NotImplementedException("Unsupported format! " + GenericFormat);
@@ -87,7 +87,7 @@ namespace Switch_Toolbox.Library
 
         public static byte[] DecodeBlock(byte[] Input, int Width, int Height, TEX_FORMAT Format)
         {
-            if (Format == TEX_FORMAT.ETC1 || Format == TEX_FORMAT.ETC1_A4)
+            if (Format == TEX_FORMAT.ETC1_UNORM || Format == TEX_FORMAT.ETC1_A4)
                 return ETC1.ETC1Decompress(Input, Width, Height, Format == TEX_FORMAT.ETC1_A4);
 
             byte[] Output = new byte[Width * Height * 4];

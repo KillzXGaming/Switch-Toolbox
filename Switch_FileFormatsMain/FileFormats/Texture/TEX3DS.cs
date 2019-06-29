@@ -54,7 +54,7 @@ namespace FirstPlugin
                     TEX_FORMAT.A8_UNORM,
                     TEX_FORMAT.LA4,
                     TEX_FORMAT.A4,
-                    TEX_FORMAT.ETC1,
+                    TEX_FORMAT.ETC1_UNORM,
                     TEX_FORMAT.ETC1_A4,
             };
             }

@@ -22,7 +22,7 @@ namespace FirstPlugin
             {
                 return new TEX_FORMAT[]
                 {
-                        TEX_FORMAT.ETC1,
+                        TEX_FORMAT.ETC1_UNORM,
                         TEX_FORMAT.ETC1_A4,
 
                         TEX_FORMAT.BC1_UNORM,
@@ -305,7 +305,7 @@ namespace FirstPlugin
                 case BCLIMFormat.HILO8:
                     return TEX_FORMAT.HIL08;
                 case BCLIMFormat.ETC1:
-                    return TEX_FORMAT.ETC1;
+                    return TEX_FORMAT.ETC1_UNORM;
                 case BCLIMFormat.ETC1A4:
                     return TEX_FORMAT.ETC1_A4;
                 case BCLIMFormat.RGB565:

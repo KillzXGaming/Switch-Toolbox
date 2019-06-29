@@ -172,7 +172,9 @@ namespace FirstPlugin
             foreach (var file in Files)
                 file.FileData = null;
 
+            Files.Clear();
             Nodes.Clear();
+            GC.SuppressFinalize(this);
         }
 
         IEnumerable<TreeNode> Collect(TreeNodeCollection nodes)

@@ -293,7 +293,8 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.ASTC_12x10_SRGB,       new FormatInfo(16, 12, 10, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_12x12_UNORM,      new FormatInfo(16, 12, 12, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ASTC_12x12_SRGB,       new FormatInfo(16, 12, 12, 1, TargetBuffer.Color) },
-            { TEX_FORMAT.ETC1,                  new FormatInfo(4, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ETC1_UNORM,            new FormatInfo(4, 1, 1, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.ETC1_SRGB,             new FormatInfo(4, 1, 1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.ETC1_A4,               new FormatInfo(8, 1, 1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.HIL08,                 new FormatInfo(16, 1, 1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.L4,                    new FormatInfo(4, 1, 1, 1, TargetBuffer.Color) },
@@ -390,7 +391,7 @@ namespace Switch_Toolbox.Library
                         (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     case TEX_FORMAT.BC5_SNORM:
                         return DDSCompressor.DecompressBC5(data, (int)width, (int)height, true);
-                    case TEX_FORMAT.ETC1:
+                    case TEX_FORMAT.ETC1_UNORM:
                         return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, false),
                                (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     case TEX_FORMAT.ETC1_A4:

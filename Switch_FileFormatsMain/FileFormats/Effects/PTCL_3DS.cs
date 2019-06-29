@@ -429,7 +429,7 @@ namespace FirstPlugin
                             TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
                             TEX_FORMAT.R8G8_SNORM,
                             TEX_FORMAT.B4G4R4A4_UNORM,
-                            TEX_FORMAT.ETC1,
+                            TEX_FORMAT.ETC1_UNORM,
                             TEX_FORMAT.ETC1_A4,
                             TEX_FORMAT.HIL08,
                             TEX_FORMAT.L4,
@@ -636,7 +636,7 @@ namespace FirstPlugin
                             Format = TEX_FORMAT.B5G6R5_UNORM;
                             break;
                         case SurfaceFormat.ETC1:
-                            Format = TEX_FORMAT.ETC1;
+                            Format = TEX_FORMAT.ETC1_UNORM;
                             break;
                         case SurfaceFormat.ETC1_A4:
                             Format = TEX_FORMAT.ETC1_A4;

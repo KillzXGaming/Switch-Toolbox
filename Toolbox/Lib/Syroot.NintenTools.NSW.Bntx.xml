@@ -2136,11 +2136,6 @@
             The raw bytes of texture data stored for each mip map
             </summary>
         </member>
-        <member name="P:Syroot.NintenTools.NSW.Bntx.Texture.Data">
-            <summary>
-            Gets or sets the raw texture data bytes.
-            </summary>
-        </member>
         <member name="P:Syroot.NintenTools.NSW.Bntx.Texture.Flags">
             <summary>
             Gets or sets info flags
