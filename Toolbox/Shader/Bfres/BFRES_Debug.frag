@@ -217,7 +217,10 @@ void main()
     }
 	if (HasSpecularMap == 1)
     {
-		specIntensity = texture(SpecularMap, f_texcoord0).rgb;
+	if (uking_texture2_texcoord == 1)
+            specIntensity = texture(SpecularMap, f_texcoord1).rgb;
+		else
+            specIntensity = texture(SpecularMap, f_texcoord0).rgb;
     }
 
     if (renderType == 1) // normals vertexColor

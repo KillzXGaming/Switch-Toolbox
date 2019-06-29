@@ -1270,6 +1270,8 @@
   <ItemGroup>
     <None Include="Resources\ViewportIconDisable.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FileFormats\EvemtFlow\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
