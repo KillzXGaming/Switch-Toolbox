@@ -348,29 +348,45 @@ namespace FirstPlugin
         {
             if (ContainerArray.Count > 1)
             {
+                foreach (var container in ContainerArray)
+                {
+                    foreach (var tex in container.Textures.Values)
+                    {
+                        tex.Texture.TextureData.Clear();
+                        tex.Texture = null;
+                        tex.DisposeRenderable();
+                    }
 
+                    container.Textures.Clear();
+                    container.Nodes.Clear();
+
+                    container.BinaryTexFile = null;
+
+                    if (PluginRuntime.bntxContainers.Contains(container))
+                        PluginRuntime.bntxContainers.Remove(container);
+                }
+
+                GC.SuppressFinalize(this);
             }
             else
             {
+                foreach (var tex in Textures.Values)
+                {
+                    tex.Texture.TextureData.Clear();
+                    tex.Texture = null;
+                    tex.DisposeRenderable();
+                }
 
+                Textures.Clear();
+                Nodes.Clear();
+
+                this.BinaryTexFile = null;
+
+                if (PluginRuntime.bntxContainers.Contains(this))
+                    PluginRuntime.bntxContainers.Remove(this);
+
+                GC.SuppressFinalize(this);
             }
-
-            foreach (var tex in Textures.Values)
-            {
-                tex.Texture.TextureData.Clear();
-                tex.Texture = null;
-                tex.DisposeRenderable();
-            }
-
-            Textures.Clear();
-            Nodes.Clear();
-
-            this.BinaryTexFile = null;
-
-            if (PluginRuntime.bntxContainers.Contains(this))
-                PluginRuntime.bntxContainers.Remove(this);
-
-            GC.SuppressFinalize(this);
         }
 
         public static byte[] CreateNewBNTX(string Name)
