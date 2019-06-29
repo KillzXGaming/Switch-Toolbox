@@ -206,7 +206,7 @@ namespace FirstPlugin
             FileNameText = FileName;
 
             if (!IsLoadingArray)
-                LoadBNTXArray(stream, this);
+                LoadBNTXArray(ContainerArray, stream, this);
 
             LoadFile(stream, Name);
 
@@ -214,12 +214,13 @@ namespace FirstPlugin
         }
 
         static bool IsLoadingArray = false;
-        private static void LoadBNTXArray(Stream stream, BNTX bntx)
+        static bool IsSavingArray = false;
+        List<BNTX> ContainerArray = new List<BNTX>();
+        private static void LoadBNTXArray(List<BNTX> Containers, Stream stream, BNTX bntx)
         {
             IsLoadingArray = true;
 
             int Alignment = 4096;
-            List<BNTX> Containers = new List<BNTX>();
             using (var reader = new FileReader(stream, true))
             {
                 SearchForBinaryContainerFile(reader, Alignment, Containers);
@@ -235,6 +236,23 @@ namespace FirstPlugin
 
 
             IsLoadingArray = false;
+        }
+
+        private static void SaveBNTXArray(MemoryStream mem, List<BNTX> Containers)
+        {
+            IsSavingArray = true;
+
+            int Alignment = 4096;
+            using (var saver = new FileWriter(mem))
+            {
+                foreach (var container in Containers)
+                {
+                    saver.Write(container.Save());
+                    saver.Align(Alignment);
+                }
+            }
+
+            IsSavingArray = false;
         }
 
         private static void SearchForBinaryContainerFile(FileReader reader, int Alignment, List<BNTX> Containers)
@@ -793,31 +811,37 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
+            MemoryStream mem = new MemoryStream();
+
             BinaryTexFile.Textures.Clear();
             BinaryTexFile.TextureDict.Clear();
 
-            foreach (TextureData tex in Textures.Values)
+            if (ContainerArray.Count > 0 && !IsSavingArray)
             {
-                if (tex.IsEdited)
+                SaveBNTXArray(mem, ContainerArray);
+            }
+            else
+            {
+                foreach (TextureData tex in Textures.Values)
                 {
-                    for (int i = 0; i < tex.EditedImages.Length; i++)
+                    if (tex.IsEdited)
                     {
-                        tex.SetImageData(tex.EditedImages[i].bitmap, tex.EditedImages[i].ArrayLevel);
-                        tex.EditedImages[i].bitmap.Dispose();
+                        for (int i = 0; i < tex.EditedImages.Length; i++)
+                        {
+                            tex.SetImageData(tex.EditedImages[i].bitmap, tex.EditedImages[i].ArrayLevel);
+                            tex.EditedImages[i].bitmap.Dispose();
+                        }
+                        tex.EditedImages = new EditedBitmap[0];
                     }
-                    tex.EditedImages = new EditedBitmap[0];
+
+                    tex.Texture.Name = tex.Text;
+
+                    BinaryTexFile.Textures.Add(tex.Texture);
+                    BinaryTexFile.TextureDict.Add(tex.Text);
                 }
 
-                tex.Texture.Name = tex.Text;
-
-                BinaryTexFile.Textures.Add(tex.Texture);
-                BinaryTexFile.TextureDict.Add(tex.Text);
+                BinaryTexFile.Save(mem);
             }
-
-
-
-            MemoryStream mem = new MemoryStream();
-            BinaryTexFile.Save(mem);
 
             return mem.ToArray();
         }
