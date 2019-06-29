@@ -207,7 +207,8 @@ namespace FirstPlugin
 
             if (!IsLoadingArray)
                 LoadBNTXArray(ContainerArray, stream, this);
-            else
+
+            if (ContainerArray.Count == 0)
                 LoadFile(stream, Name);
 
             PluginRuntime.bntxContainers.Add(this);
@@ -223,9 +224,12 @@ namespace FirstPlugin
             int Alignment = 4096;
             using (var reader = new FileReader(stream, true))
             {
-                reader.Position = 0;
-                SearchForBinaryContainerFile(reader, Alignment, Containers);
-                reader.Position = 0;
+                if (HasArray(reader, Alignment))
+                {
+                    reader.Position = 0;
+                    SearchForBinaryContainerFile(reader, Alignment, Containers);
+                    reader.Position = 0;
+                }
             }
 
             foreach (var container in Containers)
@@ -255,20 +259,46 @@ namespace FirstPlugin
             IsSavingArray = false;
         }
 
+        private static bool HasArray(FileReader reader, int Alignment)
+        {
+            long StartPos = reader.Position;
+            uint TotalSize = (uint)reader.BaseStream.Length;
+
+            //Get file size in header
+            reader.SeekBegin(StartPos + 28);
+            uint FileSize = reader.ReadUInt32();
+
+            reader.SeekBegin(StartPos + FileSize);
+            if (TotalSize > FileSize)
+            {
+                //Align the reader and check for another bntx
+                reader.Align(Alignment);
+                if (reader.Position < TotalSize - 4)
+                {
+                    string Magic = reader.ReadString(4);
+                    reader.Position = StartPos;
+
+                    return (Magic == "BNTX");
+                }
+            }
+
+            return false;
+        }
+
         private static void SearchForBinaryContainerFile(FileReader reader, int Alignment, List<BNTX> Containers)
         {
             long StartPos = reader.Position;
 
             uint TotalSize = (uint)reader.BaseStream.Length;
 
+            //Get file size in header
+            reader.SeekBegin(StartPos + 28);
+            uint FileSize = reader.ReadUInt32();
+
             //Create bntx for array
             BNTX bntx = new BNTX();
             bntx.IFileInfo = new IFileInfo();
             bntx.Text = "Sheet " + Containers.Count;
-
-            //Get file size in header
-            reader.SeekBegin(StartPos + 28);
-            uint FileSize = reader.ReadUInt32();
 
             //Get total bntx in bytes
             reader.SeekBegin(StartPos);
@@ -315,6 +345,15 @@ namespace FirstPlugin
 
         public void Unload()
         {
+            if (ContainerArray.Count > 1)
+            {
+
+            }
+            else
+            {
+
+            }
+
             foreach (var tex in Textures.Values)
             {
                 tex.Texture.TextureData.Clear();
@@ -812,15 +851,15 @@ namespace FirstPlugin
         {
             MemoryStream mem = new MemoryStream();
 
-            BinaryTexFile.Textures.Clear();
-            BinaryTexFile.TextureDict.Clear();
-
             if (ContainerArray.Count > 0 && !IsSavingArray)
             {
                 SaveBNTXArray(mem, ContainerArray);
             }
             else
             {
+                BinaryTexFile.Textures.Clear();
+                BinaryTexFile.TextureDict.Clear();
+
                 foreach (TextureData tex in Textures.Values)
                 {
                     if (tex.IsEdited)
