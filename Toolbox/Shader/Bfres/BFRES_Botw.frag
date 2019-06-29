@@ -116,6 +116,12 @@ struct VertexAttributes
     vec3 bitangent;
 };
 
+// Diffuse Channel Toggles
+uniform int RedChannel;
+uniform int GreenChannel;
+uniform int BlueChannel;
+uniform int AlphaChannel;
+
 out vec4 fragColor;
 
 #define gamma 2.2
@@ -238,6 +244,8 @@ vec3 FresnelPass(vec3 N, vec3 I)
     return fresnelTerm;
 }
 
+float GetComponent(int Type, vec4 Texture);
+
 void main()
 {
     fragColor = vec4(1);
@@ -262,7 +270,16 @@ void main()
         return;
     }
 
-	vec3 albedo = pow(texture(DiffuseMap, f_texcoord0).rgb, vec3(gamma));
+vec3 albedo = vec3(1);
+    if (HasDiffuse == 1)
+	{
+		vec4 DiffuseTex =  pow(texture(DiffuseMap, f_texcoord0).rgba, vec4(gamma));
+
+		//Comp Selectors
+		albedo.r = GetComponent(RedChannel, DiffuseTex);
+		albedo.g = GetComponent(GreenChannel, DiffuseTex);
+		albedo.b = GetComponent(BlueChannel, DiffuseTex);
+	}
 
 	float metallic = DefaultMetalness;
     if (HasMetalnessMap == 1)
@@ -286,8 +303,8 @@ void main()
 	float lightMapIntensity = 0;
     if (HasLightMap == 1)
     {
-        lightMapColor = texture(BakeLightMap, f_texcoord1).rgb;
-        lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
+      //  lightMapColor = texture(BakeLightMap, f_texcoord1).rgb;
+      //  lightMapIntensity = texture(BakeLightMap, f_texcoord1).a;
     }
 
     // TODO: Extract function.
@@ -315,14 +332,14 @@ void main()
     vec3 V = normalize(I); //Eye View
 	vec3 L = normalize(specLightDirection); //Light
 	vec3 H = normalize(specLightDirection + I); //Half Angle
-    vec3 R = reflect(I, N); // reflection
+    vec3 R = reflect(-I, N); // reflection
 
     // Render passes
 	vec3 outputColor = vec3(0);
     float kDiffuse = clamp(1.0 - metallic, 0, 1);
     outputColor += DiffusePass(albedo, N, L, R) * renderDiffuse;
     outputColor += SpecularPass(albedo, N, H, R, metallic, specularMapIntensity) * renderSpecular;
-    outputColor += FresnelPass(N, I) * renderFresnel;
+    outputColor += FresnelPass(N, V) * renderFresnel;
     if (HasEmissionMap == 1 || enable_emission == 1) //Can be without texture map
         outputColor.rgb += EmissionPass(EmissionMap, emission_intensity, vert, uking_texture2_texcoord, emission_color);
 
@@ -337,7 +354,13 @@ void main()
     //     fragColor *= min(vertexColor, vec4(1));
 
     outputColor = pow(outputColor, vec3(1.0 / gamma));
-    float alpha = texture(DiffuseMap, f_texcoord0).a;
 
-	fragColor = vec4(outputColor, alpha);
+	fragColor.rgb = outputColor;
+
+    // Alpha calculations.
+	if (isTransparent == 1)
+	{
+		 float alpha = GetComponent(AlphaChannel, texture(DiffuseMap, f_texcoord0));
+		 fragColor.a = alpha;
+	 }
 }
