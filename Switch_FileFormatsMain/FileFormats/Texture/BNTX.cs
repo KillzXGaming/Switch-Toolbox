@@ -228,7 +228,11 @@ namespace FirstPlugin
             }
 
             foreach (var container in Containers)
-                bntx.Nodes.Add(container);
+            {
+                foreach (var texture in container.Textures.Values)
+                    bntx.Nodes.Add(texture);
+            }
+
 
             IsLoadingArray = false;
         }
