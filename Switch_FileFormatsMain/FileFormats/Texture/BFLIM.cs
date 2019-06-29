@@ -220,7 +220,7 @@ namespace FirstPlugin
                 {
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, new Type[] { typeof(BFLIM) , typeof(SARC) }, file.Data);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BFLIM) , typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 

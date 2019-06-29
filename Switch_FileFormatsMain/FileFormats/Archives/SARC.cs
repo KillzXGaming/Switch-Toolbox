@@ -134,7 +134,12 @@ namespace FirstPlugin.New
 
         public void Unload()
         {
+            foreach (var file in files)
+                file.FileData = null;
+
             files.Clear();
+
+            GC.SuppressFinalize(this);
         }
 
         IEnumerable<TreeNode> Collect(TreeNodeCollection nodes)

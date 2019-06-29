@@ -137,14 +137,14 @@ namespace FirstPlugin
                 {
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.Data);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
                         SearchBinary(archiveFile, Folder, Extension);
                     }
                 }
-                if (FileFormat is BNTX)
+         /*       if (FileFormat is BNTX)
                 {
                     foreach (var texture in ((BNTX)FileFormat).Textures.Values)
                         texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
@@ -156,6 +156,8 @@ namespace FirstPlugin
                     {
                         foreach (var texture in bntx.Textures.Values)
                             texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+
+                        bntx.Unload();
                     }
                 }
                 if (FileFormat is PTCL)
@@ -165,10 +167,13 @@ namespace FirstPlugin
                     {
                         foreach (var texture in bntx.Textures.Values)
                             texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+
+                        bntx.Unload();
                     }
-                }
+                }*/
 
                 FileFormat.Unload();
+                GC.Collect();
             }
         }
 

@@ -239,19 +239,19 @@ namespace FirstPlugin
 
         private void SaveFileEntryData(SarcEntry sarc)
         {
-            string dir = Path.GetDirectoryName(sarc.FullName);
+            string dir = Path.GetDirectoryName(sarc.FileName);
 
             if (!sarcData.HashOnly)
             {
                 if (dir == string.Empty)
-                    sarc.FullName = sarc.Text;
+                    sarc.FileName = sarc.Text;
                 else
-                    sarc.FullName = Path.Combine(dir, sarc.Text);
+                    sarc.FileName = Path.Combine(dir, sarc.Text);
 
-                sarc.FullName = sarc.FullName.Replace(@"\", "/");
+                sarc.FileName = sarc.FileName.Replace(@"\", "/");
             }
 
-            sarcData.Files.Add(sarc.FullName, sarc.Data);
+            sarcData.Files.Add(sarc.FileName, sarc.FileData);
         }
         public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
         {
@@ -335,7 +335,7 @@ namespace FirstPlugin
         public class SarcEntry : TreeNodeCustom, IContextMenuNode
         {
             public SARC sarc; //Sarc file the entry is located in
-            public byte[] Data;
+            public byte[] FileData;
             public string sarcHash;
 
             public SarcEntry()
@@ -373,17 +373,17 @@ namespace FirstPlugin
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
-                editor.LoadData(Data);
+                editor.LoadData(FileData);
             }
 
             public IFileFormat OpenFile()
             {
-                return STFileLoader.OpenFileFormat(FullName, Data, false, true, this);
+                return STFileLoader.OpenFileFormat(FileName, FileData, false, true, this);
             }
 
             public override void OnDoubleMouseClick(TreeView treeView)
             {
-                if (Data.Length <= 0)
+                if (FileData.Length <= 0)
                     return;
 
                 IFileFormat file = OpenFile();
@@ -396,7 +396,7 @@ namespace FirstPlugin
                 }
                 else if (file != null)
                 {
-                    sarc.OpenedFiles.Add(FullPath, Data);
+                    sarc.OpenedFiles.Add(FullPath, FileData);
                     ReplaceNode(this.Parent, this, (TreeNode)file);
                 }
             }
@@ -414,7 +414,7 @@ namespace FirstPlugin
                 {
                     if (fileFormat.CanSave)
                     {
-                        Data = fileFormat.Save();
+                        FileData = fileFormat.Save();
                         UpdateHexView();
                     }
                 }
@@ -427,7 +427,7 @@ namespace FirstPlugin
 
                 if (fileFormat.CanSave)
                 {
-                    Data = fileFormat.Save();
+                    FileData = fileFormat.Save();
                     UpdateHexView();
                 }
             }
@@ -453,7 +453,7 @@ namespace FirstPlugin
                 // Determine by checking the Text property.  
             }
 
-            public string FullName;
+            public string FileName;
             private void Replace(object sender, EventArgs args)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
@@ -463,13 +463,13 @@ namespace FirstPlugin
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    Data = File.ReadAllBytes(ofd.FileName);
+                    FileData = File.ReadAllBytes(ofd.FileName);
                 }
             }
             private void ExportToFileLoc(object sender, EventArgs args)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                File.WriteAllBytes($"{Path.GetDirectoryName(sarc.FilePath)}/{Text}", Data);
+                File.WriteAllBytes($"{Path.GetDirectoryName(sarc.FilePath)}/{Text}", FileData);
                 Cursor.Current = Cursors.Default;
             }
             private void Export(object sender, EventArgs args)
@@ -481,7 +481,7 @@ namespace FirstPlugin
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, Data);
+                    File.WriteAllBytes(sfd.FileName, FileData);
                 }
             }
 
@@ -495,7 +495,7 @@ namespace FirstPlugin
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
-                editor.FillEditor(Data);
+                editor.FillEditor(FileData);
             }
 
             private void Remove(object sender, EventArgs args)
@@ -599,11 +599,11 @@ namespace FirstPlugin
         public SarcEntry SetupFileEntry(byte[] data, string name, string fullName)
         {
             SarcEntry sarcEntry = new SarcEntry();
-            sarcEntry.FullName = fullName;
+            sarcEntry.FileName = fullName;
             sarcEntry.Name = name;
             sarcEntry.Text = name;
             sarcEntry.sarc = this;
-            sarcEntry.Data = data;
+            sarcEntry.FileData = data;
 
             Files.Add(sarcEntry);
 

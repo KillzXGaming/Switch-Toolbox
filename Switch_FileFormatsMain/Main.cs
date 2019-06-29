@@ -213,10 +213,10 @@ namespace FirstPlugin
                 {
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        string ext = System.IO.Path.GetExtension(file.FullName);
+                        string ext = System.IO.Path.GetExtension(file.FileName);
                         if (ext == ".bfres")
                         {
-                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(file.FullName, file.Data));
+                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(file.FileName, file.FileData));
                         }
                     }
                 }

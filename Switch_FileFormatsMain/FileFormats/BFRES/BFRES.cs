@@ -194,8 +194,7 @@ namespace FirstPlugin
                 {
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        Console.WriteLine($"{FileFormat.FileName} {file.Text}");
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FullName, new Type[] { typeof(BFRES), typeof(SARC) }, file.Data);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BFRES), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
@@ -820,10 +819,57 @@ namespace FirstPlugin
 
             ObjectEditor.RemoveContainer(DrawableContainer);
 
+            if (resFile != null)
+            {
+                resFile.Models.Clear();
+                resFile.SkeletalAnims.Clear();
+                resFile.MaterialAnims.Clear();
+                resFile.SceneAnims.Clear();
+                resFile.ShapeAnims.Clear();
+                resFile.BoneVisibilityAnims.Clear();
+                resFile.ModelDict.Clear();
+                resFile.SkeletalAnimDict.Clear();
+                resFile.MaterialAnimDict.Clear();
+                resFile.SceneAnimDict.Clear();
+                resFile.ShapeAnimDict.Clear();
+                resFile.BoneVisibilityAnimDict.Clear();
+                resFile.ExternalFiles.Clear();
+                resFile.ExternalFileDict.Clear();
+            }
+            else if (resFileU != null)
+            {
+                resFileU.Models.Clear();
+                resFileU.Textures.Clear();
+                resFileU.SkeletalAnims.Clear();
+                resFileU.ShaderParamAnims.Clear();
+                resFileU.ColorAnims.Clear();
+                resFileU.TexSrtAnims.Clear();
+                resFileU.TexPatternAnims.Clear();
+                resFileU.BoneVisibilityAnims.Clear();
+                resFileU.MatVisibilityAnims.Clear();
+                resFileU.ShapeAnims.Clear();
+                resFileU.SceneAnims.Clear();
+                resFileU.ExternalFiles.Clear();
+            }
+
             foreach (var node in TreeViewExtensions.Collect(BFRESRender.ResFileNode.Nodes))
             {
                 if (node is BFRESGroupNode)
                 {
+                    if (((BFRESGroupNode)node).Type == BRESGroupType.Models)
+                    {
+                        for (int i = 0; i < ((BFRESGroupNode)node).Nodes.Count; i++)
+                        {
+                            FMDL model = ((FMDL)((BFRESGroupNode)node).Nodes[i]);
+                            for (int shp = 0; shp < model.shapes.Count; shp++)
+                            {
+                                model.shapes[shp].vertices.Clear();
+                                model.shapes[shp].faces.Clear();
+                                foreach (var lod in model.shapes[shp].lodMeshes)
+                                    lod.faces.Clear();
+                            }
+                        }
+                    }
                     if (((BFRESGroupNode)node).Type == BRESGroupType.Textures)
                     {
                         for (int i = 0; i < ((BFRESGroupNode)node).Nodes.Count; i++)
