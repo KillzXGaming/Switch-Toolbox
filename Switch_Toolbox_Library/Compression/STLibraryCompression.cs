@@ -79,7 +79,7 @@ namespace Switch_Toolbox.Library.IO
                 {
                     using (var zipStream = new DeflateStream(output, CompressionMode.Compress))
                     {
-                        zipStream.Write(b, 2, b.Length);
+                        zipStream.Write(b, 0, b.Length);
 
                         return output.ToArray();
                     }
