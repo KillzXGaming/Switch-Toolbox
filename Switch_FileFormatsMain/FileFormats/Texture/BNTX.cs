@@ -228,8 +228,9 @@ namespace FirstPlugin
                 {
                     reader.Position = 0;
                     SearchForBinaryContainerFile(reader, Alignment, Containers);
-                    reader.Position = 0;
                 }
+
+                reader.Position = 0;
             }
 
             foreach (var container in Containers)
