@@ -181,7 +181,6 @@ namespace FirstPlugin
 
         public PropertieGridData prop;
         public BntxFile BinaryTexFile;
-        public string FileNameText;
 
         public bool CanReplace;
         public bool AllGLInitialized
@@ -203,7 +202,7 @@ namespace FirstPlugin
             IFileInfo.UseEditMenu = true;
             CanSave = true;
 
-            FileNameText = FileName;
+            Text = FileName;
 
             if (!IsLoadingArray)
                 LoadBNTXArray(ContainerArray, stream, this);
@@ -446,7 +445,11 @@ namespace FirstPlugin
             }
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
-            editor.LoadProperty(BinaryTexFile, OnPropertyChanged);
+
+            if (ContainerArray.Count > 0)
+            editor.LoadProperty(ContainerArray[0].BinaryTexFile, OnPropertyChanged);
+            else
+                editor.LoadProperty(BinaryTexFile, OnPropertyChanged);
         }
 
         public void OnPropertyChanged(){ Text = BinaryTexFile.Name; }
