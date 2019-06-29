@@ -205,10 +205,10 @@ namespace FirstPlugin
 
             FileNameText = FileName;
 
-            LoadFile(stream, Name);
-
             if (!IsLoadingArray)
                 LoadBNTXArray(ContainerArray, stream, this);
+            else
+                LoadFile(stream, Name);
 
             PluginRuntime.bntxContainers.Add(this);
         }
@@ -223,8 +223,8 @@ namespace FirstPlugin
             int Alignment = 4096;
             using (var reader = new FileReader(stream, true))
             {
+                reader.Position = 0;
                 SearchForBinaryContainerFile(reader, Alignment, Containers);
-
                 reader.Position = 0;
             }
 
@@ -267,13 +267,12 @@ namespace FirstPlugin
             bntx.Text = "Sheet " + Containers.Count;
 
             //Get file size in header
-            reader.Seek(28);
+            reader.SeekBegin(StartPos + 28);
             uint FileSize = reader.ReadUInt32();
 
             //Get total bntx in bytes
-            reader.Seek(StartPos);
+            reader.SeekBegin(StartPos);
             byte[] Data = reader.ReadBytes((int)FileSize);
-
             bntx.Load(new MemoryStream(Data));
             Containers.Add(bntx);
 
@@ -289,6 +288,7 @@ namespace FirstPlugin
                     if (Magic == "BNTX")
                     {
                         reader.Position = NextPos;
+
                         SearchForBinaryContainerFile(reader, Alignment, Containers);
                     }
                 }
