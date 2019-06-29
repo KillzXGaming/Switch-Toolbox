@@ -348,22 +348,19 @@ namespace FirstPlugin
         {
             if (ContainerArray.Count > 1)
             {
-                foreach (var container in ContainerArray)
+                for (int i = 0; i < ContainerArray.Count; i++)
                 {
-                    foreach (var tex in container.Textures.Values)
+                    foreach (var tex in ContainerArray[i].Textures.Values)
                     {
                         tex.Texture.TextureData.Clear();
                         tex.Texture = null;
                         tex.DisposeRenderable();
                     }
 
-                    container.Textures.Clear();
-                    container.Nodes.Clear();
+                    ContainerArray[i].Textures.Clear();
 
-                    container.BinaryTexFile = null;
-
-                    if (PluginRuntime.bntxContainers.Contains(container))
-                        PluginRuntime.bntxContainers.Remove(container);
+                    if (PluginRuntime.bntxContainers.Contains(ContainerArray[i]))
+                        PluginRuntime.bntxContainers.Remove(ContainerArray[i]);
                 }
 
                 GC.SuppressFinalize(this);
