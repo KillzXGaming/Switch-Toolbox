@@ -607,18 +607,77 @@ namespace FirstPlugin
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
+                BinaryTextureImporterList importer = new BinaryTextureImporterList();
+                List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
+                List<TextureData> TexturesForImportSettings = new List<TextureData>();
+
                 foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
                 {
+                    TextureImporterSettings setting = new TextureImporterSettings();
+
                     string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
+
+                    string ext = Utils.GetExtension(FileName);
+
+                    Console.WriteLine(ext);
 
                     foreach (TextureData node in Textures.Values)
                     {
+                        var DefaultFormat = node.Format;
+
                         if (FileName == node.Text)
                         {
-                            node.Replace(file);
+                            switch (ext)
+                            {
+                                case ".bftex":
+                                    node.Texture.Import(FileName);
+                                    node.Texture.Name = Text;
+                                    node.LoadOpenGLTexture();
+                                    break;
+                                case ".dds":
+                                    setting.LoadDDS(FileName, null, node);
+                                    node.ApplyImportSettings(setting, STCompressionMode.Normal);
+                                    break;
+                                case ".astc":
+                                    setting.LoadASTC(FileName);
+                                    node.ApplyImportSettings(setting, STCompressionMode.Normal);
+                                    break;
+                                case ".png":
+                                case ".tga":
+                                case ".tiff":
+                                case ".gif":
+                                case ".jpg":
+                                case ".jpeg":
+                                    TexturesForImportSettings.Add(node);
+                                    setting.LoadBitMap(FileName);
+                                    importer.LoadSetting(setting);
+                                    if (!STGenericTexture.IsAtscFormat(DefaultFormat))
+                                        setting.Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);
+
+                                    settings.Add(setting);
+                                    break;
+                                default:
+                                    return;
+                            }
                         }
                     }
                 }
+
+                if (settings.Count == 0)
+                {
+                    importer.Close();
+                    importer.Dispose();
+                    return;
+                }
+
+                int settingsIndex = 0;
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (TextureData node in TexturesForImportSettings)
+                        node.ApplyImportSettings(settings[settingsIndex++], importer.CompressionMode);
+                }
+
+                TexturesForImportSettings.Clear();
             }
         }
 
@@ -1156,7 +1215,7 @@ namespace FirstPlugin
                     break;
             }
         }
-        private void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
+        public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
         {
             Cursor.Current = Cursors.WaitCursor;
 
