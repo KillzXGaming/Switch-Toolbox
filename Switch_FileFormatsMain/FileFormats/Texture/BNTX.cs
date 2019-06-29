@@ -205,9 +205,73 @@ namespace FirstPlugin
 
             FileNameText = FileName;
 
+            if (!IsLoadingArray)
+                LoadBNTXArray(stream, this);
+
             LoadFile(stream, Name);
 
             PluginRuntime.bntxContainers.Add(this);
+        }
+
+        static bool IsLoadingArray = false;
+        private static void LoadBNTXArray(Stream stream, BNTX bntx)
+        {
+            IsLoadingArray = true;
+
+            int Alignment = 4096;
+            List<BNTX> Containers = new List<BNTX>();
+            using (var reader = new FileReader(stream, true))
+            {
+                SearchForBinaryContainerFile(reader, Alignment, Containers);
+
+                reader.Position = 0;
+            }
+
+            foreach (var container in Containers)
+                bntx.Nodes.Add(container);
+
+            IsLoadingArray = false;
+        }
+
+        private static void SearchForBinaryContainerFile(FileReader reader, int Alignment, List<BNTX> Containers)
+        {
+            long Pos = reader.Position;
+
+            uint TotalSize = (uint)reader.BaseStream.Length;
+
+            reader.Seek(28);
+            uint FileSize = reader.ReadUInt32();
+            reader.SeekBegin(Pos + FileSize);
+
+            if (TotalSize > FileSize)
+            {
+                //Align the reader and check for another bntx
+                reader.Align(Alignment);
+                if (reader.Position < TotalSize - 4)
+                {
+                    Console.WriteLine("BNTX ARRAY POS " + reader.Position);
+                    long StartPos = reader.Position;
+                    string Magic = reader.ReadString(4);
+                    if (Magic == "BNTX")
+                    {
+                        reader.Seek(24);
+                        uint NextFileSize = reader.ReadUInt32();
+
+                        BNTX bntx = new BNTX();
+                        bntx.IFileInfo = new IFileInfo();
+                        bntx.Text = "Sheet " + Containers.Count;
+
+                        reader.Position = StartPos;
+                        byte[] Data = reader.ReadBytes((int)NextFileSize);
+
+                        bntx.Load(new MemoryStream(Data));
+                        Containers.Add(bntx);
+
+                        reader.Position = StartPos;
+                        SearchForBinaryContainerFile(reader, Alignment, Containers);
+                    }
+                }
+            }
         }
 
         public ToolStripItem[] GetContextMenuItems()
