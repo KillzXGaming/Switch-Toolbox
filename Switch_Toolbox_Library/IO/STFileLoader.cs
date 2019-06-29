@@ -33,7 +33,8 @@ namespace Switch_Toolbox.Library.IO
 
         public static IFileFormat OpenFileFormat(string FileName, Type[] FileTypes, byte[] data = null)
         {
-            CheckCompression(FileName, data);
+            //Todo. Create a compression list like IFileFormat to decompress via an Identiy method
+            data = CheckCompression(FileName, data);
 
             Stream stream;
             if (data != null)
@@ -60,6 +61,8 @@ namespace Switch_Toolbox.Library.IO
         {
             CheckCompression(FileName, data);
 
+            MessageBox.Show((data != null).ToString());
+
             Stream stream;
             if (data != null)
                 stream = new MemoryStream(data);
@@ -75,27 +78,28 @@ namespace Switch_Toolbox.Library.IO
             return null;
         }
 
-        private static void CheckCompression(string FileName, byte[] data)
+        private static byte[] CheckCompression(string FileName, byte[] data)
         {
             if (data != null)
             {
                 using (var reader = new FileReader(data))
                 {
-                    DecompressData(reader, FileName, data);
+                  return  DecompressData(reader, FileName, data);
                 }
             }
             else
             {
                 using (var reader = new FileReader(FileName))
                 {
-                    DecompressData(reader, FileName, data);
+                    return DecompressData(reader, FileName, data);
                 }
             }
         }
 
-        private static void DecompressData(FileReader reader, string FileName, byte[] data)
+        private static byte[] DecompressData(FileReader reader, string FileName, byte[] data)
         {
             reader.ByteOrder = ByteOrder.BigEndian;
+            reader.Position = 0;
             uint MagicHex = reader.ReadUInt32();
             string Magic = reader.ReadMagic(0, 4);
             reader.Position = 0;
@@ -103,17 +107,19 @@ namespace Switch_Toolbox.Library.IO
             if (Magic == "Yaz0")
             {
                 if (data != null)
-                    data = EveryFileExplorer.YAZ0.Decompress(data);
+                    return EveryFileExplorer.YAZ0.Decompress(data);
                 else
-                    data = EveryFileExplorer.YAZ0.Decompress(FileName);
+                    return EveryFileExplorer.YAZ0.Decompress(FileName);
             }
             if (MagicHex == 0x28B52FFD || MagicHex == 0xFD2FB528)
             {
                 if (data != null)
-                    data = STLibraryCompression.ZSTD.Decompress(data);
+                    return  STLibraryCompression.ZSTD.Decompress(data);
                 else
-                    data = STLibraryCompression.ZSTD.Decompress(File.ReadAllBytes(FileName));
+                    return STLibraryCompression.ZSTD.Decompress(File.ReadAllBytes(FileName));
             }
+
+            return data;
         }
 
         /// <summary>
