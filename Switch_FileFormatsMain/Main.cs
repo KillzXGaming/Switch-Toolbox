@@ -290,7 +290,6 @@ namespace FirstPlugin
             
 
             Formats.Add(typeof(NSP));
-            Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));
             Formats.Add(typeof(BFLIM));
@@ -325,8 +324,8 @@ namespace FirstPlugin
             Formats.Add(typeof(SDF));
             Formats.Add(typeof(IStorage));
             Formats.Add(typeof(NCA));
-
-           
+         //   Formats.Add(typeof(RARC));
+            
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {

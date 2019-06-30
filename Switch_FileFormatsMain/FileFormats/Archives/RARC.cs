@@ -10,7 +10,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class RARC : IArchiveFile, IFileFormat
+    public class RARC : IArchiveFile, IFileFormat, IDirectoryContainer
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -44,8 +44,16 @@ namespace FirstPlugin
         }
 
         public List<FileEntry> files = new List<FileEntry>();
+        public List<INode> nodes = new List<INode>();
 
         public IEnumerable<ArchiveFileInfo> Files => files;
+        public IEnumerable<INode> Nodes => nodes;
+
+        public string Name
+        {
+            get { return FileName; }
+            set { FileName = value; }
+        }
 
         private DirectoryEntry[] Directories;
 
@@ -53,7 +61,7 @@ namespace FirstPlugin
         {
             using (var reader = new FileReader(stream))
             {
-                reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+                reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 reader.ReadSignature(4, "RARC");
                 uint FileSize = reader.ReadUInt32();
                 uint HeaderSize = reader.ReadUInt32();
@@ -85,9 +93,9 @@ namespace FirstPlugin
                     Directories[dir].Read(reader);
                     uint NamePointer = StringTablOffset + (uint)pos + Directories[dir].NameOffset;
                     Directories[dir].Name = ReadStringAtTable(reader, NamePointer);
+
+                    nodes.Add(Directories[dir]);
                 }
-
-
 
                 reader.SeekBegin(NodeOffset + pos);
                 for (int n = 0; n < TotalNodeCount; n++)
@@ -124,7 +132,7 @@ namespace FirstPlugin
             
         }
 
-        public class DirectoryEntry
+        public class DirectoryEntry : IDirectoryContainer
         {
             public RARC ParentArchive { get; }
 
@@ -141,6 +149,8 @@ namespace FirstPlugin
             public uint FirstNodeIndex { get; set; }
 
             public DirectoryEntry(RARC rarc) { ParentArchive = rarc; }
+
+            public IEnumerable<INode> Nodes { get; }
 
             public void Read(FileReader reader)
             {

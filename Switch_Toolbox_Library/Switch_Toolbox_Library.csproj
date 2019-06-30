@@ -566,6 +566,8 @@
     <Compile Include="Generics\GenericPolygonGroup.cs" />
     <Compile Include="Generics\GenericTexture.cs" />
     <Compile Include="Generics\OpenGLTexture.cs" />
+    <Compile Include="Interfaces\IDirectoryNode.cs" />
+    <Compile Include="Interfaces\INode.cs" />
     <Compile Include="Rendering\RenderableTex.cs" />
     <Compile Include="Generics\STBone.cs" />
     <Compile Include="Generics\STGenericWrapper.cs" />

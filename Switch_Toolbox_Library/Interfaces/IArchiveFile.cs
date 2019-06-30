@@ -33,7 +33,7 @@ namespace Switch_Toolbox.Library
         bool AddFile(ArchiveFileInfo archiveFileInfo);
         bool DeleteFile(ArchiveFileInfo archiveFileInfo);
     }
-    public class ArchiveFileInfo
+    public class ArchiveFileInfo : INode
     {
         [Browsable(false)]
         public STContextMenuStrip STContextMenuStrip;
@@ -291,6 +291,18 @@ namespace Switch_Toolbox.Library
             FillTreeNodes(this, ArchiveFile);
         }
 
+        private void FillDirectory(TreeNode parent, IEnumerable<INode> Nodes)
+        {
+            foreach (var node in Nodes)
+            {
+                var treeNode = new TreeNode(node.Name);
+                parent.Nodes.Add(treeNode);
+
+                if (node is IDirectoryContainer && ((IDirectoryContainer)node).Nodes != null)
+                    FillDirectory(treeNode, ((IDirectoryContainer)node).Nodes);
+            }
+        }
+
         private void FillTreeNodes(TreeNode root, IArchiveFile archiveFile)
         {
             Nodes.Clear();
@@ -299,54 +311,62 @@ namespace Switch_Toolbox.Library
             var rootTextLength = rootText.Length;
             var nodeFiles = archiveFile.Files;
 
-            int I = 0;
-            foreach (var node in  archiveFile.Files)
+            if (archiveFile is IDirectoryContainer)
             {
-                if (!node.CanLoadFile)
-                    continue;
+                FillDirectory(root,((IDirectoryContainer)archiveFile).Nodes);
+            }
+            else //Else create directories by filename paths
+            {
 
-                string nodeString = node.FileName;
-
-                var roots = nodeString.Split(new char[] { '/' },
-                    StringSplitOptions.RemoveEmptyEntries);
-
-                // The initial parent is the root node
-                var parentNode = root;
-                var sb = new System.Text.StringBuilder(rootText, nodeString.Length + rootTextLength);
-                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
+                int I = 0;
+                foreach (var node in archiveFile.Files)
                 {
-                    // Build the node name
-                    var parentName = roots[rootIndex];
-                    sb.Append("/");
-                    sb.Append(parentName);
-                    var nodeName = sb.ToString();
+                    if (!node.CanLoadFile)
+                        continue;
 
-                    // Search for the node
-                    var index = parentNode.Nodes.IndexOfKey(nodeName);
-                    if (index == -1)
+                    string nodeString = node.FileName;
+
+                    var roots = nodeString.Split(new char[] { '/' },
+                        StringSplitOptions.RemoveEmptyEntries);
+
+                    // The initial parent is the root node
+                    var parentNode = root;
+                    var sb = new System.Text.StringBuilder(rootText, nodeString.Length + rootTextLength);
+                    for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
                     {
-                        // Node was not found, add it
+                        // Build the node name
+                        var parentName = roots[rootIndex];
+                        sb.Append("/");
+                        sb.Append(parentName);
+                        var nodeName = sb.ToString();
 
-                        var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
-
-                        if (rootIndex == roots.Length - 1)
+                        // Search for the node
+                        var index = parentNode.Nodes.IndexOfKey(nodeName);
+                        if (index == -1)
                         {
-                            ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
-                            wrapperFile.Name = nodeName;
-                            parentNode.Nodes.Add(wrapperFile);
-                            parentNode = wrapperFile;
+                            // Node was not found, add it
+
+                            var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
+
+                            if (rootIndex == roots.Length - 1)
+                            {
+                                ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
+                                wrapperFile.Name = nodeName;
+                                parentNode.Nodes.Add(wrapperFile);
+                                parentNode = wrapperFile;
+                            }
+                            else
+                            {
+                                folder.Name = nodeName;
+                                parentNode.Nodes.Add(folder);
+                                parentNode = folder;
+                            }
                         }
                         else
                         {
-                            folder.Name = nodeName;
-                            parentNode.Nodes.Add(folder);
-                            parentNode = folder;
+                            // Node was found, set that as parent and continue
+                            parentNode = parentNode.Nodes[index];
                         }
-                    }
-                    else
-                    {
-                        // Node was found, set that as parent and continue
-                        parentNode = parentNode.Nodes[index];
                     }
                 }
             }
