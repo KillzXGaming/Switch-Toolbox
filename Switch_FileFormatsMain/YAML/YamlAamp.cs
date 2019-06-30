@@ -73,7 +73,7 @@ namespace FirstPlugin
             writer.WriteLine($"{paramObj.HashString} : !obj".Indent(IndentAmount));
             foreach (var entry in paramObj.paramEntries)
             {
-                writer.WriteLine($"{WriteParamData(entry)}".Indent(IndentAmount + 2));
+                writer.WriteLine($"{entry.HashString}: {WriteParamData(entry)}".Indent(IndentAmount + 2));
             }
         }
 
@@ -81,30 +81,48 @@ namespace FirstPlugin
         {
             switch (entry.ParamType)
             {
-                case Aampv1.ParamType.Boolean: return $"{entry.HashString}: {(bool)entry.Value}";
-                case Aampv1.ParamType.BufferBinary: return $"{entry.HashString}: !BufferBinary [ {WriteBytes((byte[])entry.Value)} ]";
-                case Aampv1.ParamType.BufferFloat: return $"{entry.HashString}: !BufferFloat [ {WriteFloats((float[])entry.Value)} ]";
-                case Aampv1.ParamType.BufferInt: return $"{entry.HashString}: !BufferInt [ {WriteInts((int[])entry.Value)} ]";
-                case Aampv1.ParamType.BufferUint: return $"{entry.HashString}: !BufferUint [ {WriteUints((uint[])entry.Value)} ]";
-                case Aampv1.ParamType.Color4F: return $"{entry.HashString}: {WriteColor4F((Vector4F)entry.Value)}";
-                case Aampv1.ParamType.Vector2F: return $"{entry.HashString}: {WriteVec2F((Vector2F)entry.Value)}";
-                case Aampv1.ParamType.Vector3F: return $"{entry.HashString}: {WriteVec3F((Vector3F)entry.Value)}";
-                case Aampv1.ParamType.Vector4F: return $"{entry.HashString}: {WriteVec4F((Vector4F)entry.Value)}";
-                case Aampv1.ParamType.Uint: return $"{entry.HashString}: {(uint)entry.Value}";
-                case Aampv1.ParamType.Int: return $"{entry.HashString}: {(int)entry.Value}";
-                case Aampv1.ParamType.Float: return $"{entry.HashString}: {(float)entry.Value}";
-                case Aampv1.ParamType.String256: return $"{entry.HashString}: !str256 {((AampCommon.StringEntry)entry.Value).ToString()}";
-                case Aampv1.ParamType.String32: return $"{entry.HashString}: !str32 {((AampCommon.StringEntry)entry.Value).ToString()}";
-                case Aampv1.ParamType.String64: return $"{entry.HashString}: !str64 {((AampCommon.StringEntry)entry.Value).ToString()}";
-                case Aampv1.ParamType.StringRef: return $"{entry.HashString}: !strRef {((AampCommon.StringEntry)entry.Value).ToString()}";
-                case Aampv1.ParamType.Curve1: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 1)}";
-                case Aampv1.ParamType.Curve2: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 2)}";
-                case Aampv1.ParamType.Curve3: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 3)}";
-                case Aampv1.ParamType.Curve4: return $"{entry.HashString}: {WriteCurve((Aampv1.Curve[])entry.Value, 4)}";
+                case Aampv1.ParamType.Boolean: return $"{(bool)entry.Value}";
+                case Aampv1.ParamType.BufferBinary: return $"!BufferBinary [ {WriteBytes((byte[])entry.Value)} ]";
+                case Aampv1.ParamType.BufferFloat: return $"!BufferFloat [ {WriteFloats((float[])entry.Value)} ]";
+                case Aampv1.ParamType.BufferInt: return $"BufferInt [ {WriteInts((int[])entry.Value)} ]";
+                case Aampv1.ParamType.BufferUint: return $"!BufferUint [ {WriteUints((uint[])entry.Value)} ]";
+                case Aampv1.ParamType.Color4F: return $"{WriteColor4F((Vector4F)entry.Value)}";
+                case Aampv1.ParamType.Vector2F: return $"{WriteVec2F((Vector2F)entry.Value)}";
+                case Aampv1.ParamType.Vector3F: return $"{WriteVec3F((Vector3F)entry.Value)}";
+                case Aampv1.ParamType.Vector4F: return $"{WriteVec4F((Vector4F)entry.Value)}";
+                case Aampv1.ParamType.Uint: return $"{(uint)entry.Value}";
+                case Aampv1.ParamType.Int: return $"{(int)entry.Value}";
+                case Aampv1.ParamType.Float: return $"{(float)entry.Value}";
+                case Aampv1.ParamType.String256: return $"!str256 {WriteStringEntry((AampCommon.StringEntry)entry.Value)}";
+                case Aampv1.ParamType.String32: return $"!str32 {WriteStringEntry((AampCommon.StringEntry)entry.Value)}";
+                case Aampv1.ParamType.String64: return $"!str64 {WriteStringEntry((AampCommon.StringEntry)entry.Value)}";
+                case Aampv1.ParamType.StringRef: return $"!strRef {WriteStringEntry((AampCommon.StringEntry)entry.Value)}";
+                case Aampv1.ParamType.Curve1: return $"{WriteCurve((Aampv1.Curve[])entry.Value, 1)}";
+                case Aampv1.ParamType.Curve2: return $"{WriteCurve((Aampv1.Curve[])entry.Value, 2)}";
+                case Aampv1.ParamType.Curve3: return $"{WriteCurve((Aampv1.Curve[])entry.Value, 3)}";
+                case Aampv1.ParamType.Curve4: return $"{WriteCurve((Aampv1.Curve[])entry.Value, 4)}";
                 default:
                     throw new Exception("Unsupported type! " + entry.ParamType);
             }
         }
+
+        private static string WriteStringEntry(AampCommon.StringEntry value)
+        {
+            return BytesToStringConverted(value.Data).Replace(" ", string.Empty);
+         //   return Encoding.Default.GetString(value.Data).Replace(" ", string.Empty);
+        }
+
+        static string BytesToStringConverted(byte[] bytes)
+        {
+            using (var stream = new MemoryStream(bytes))
+            {
+                using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream))
+                {
+                    return reader.ReadZeroTerminatedString();
+                }
+            }
+        }
+
 
         private static string WriteCurve(Aampv1.Curve[] curves, int Num)
         {

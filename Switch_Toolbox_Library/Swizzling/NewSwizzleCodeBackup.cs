@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library.NEW
+namespace Switch_Toolbox.Library
 {
     //Todo fix swizzle issues with this one
     public class GX2
@@ -685,12 +685,11 @@ namespace Switch_Toolbox.Library.NEW
 
                         mipOffset = (tex.mipOffset[mipLevel - 1]);
                         if (mipLevel == 1)
-                            mipOffset -= (uint)surfInfo.surfSize;
+                            mipOffset -= (uint)surfInfo.sliceSize;
 
                         surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
-                        data = new byte[surfInfo.surfSize];
-
-                        Array.Copy(tex.mipData, (uint)mipOffset, data, 0, surfInfo.surfSize);
+                        data = new byte[surfInfo.sliceSize];
+                        Array.Copy(tex.mipData, (uint)mipDataOffset + mipOffset, data, 0, surfInfo.sliceSize);
                     }
                     else
                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
@@ -705,8 +704,8 @@ namespace Switch_Toolbox.Library.NEW
 
                 result.Add(mips);
 
-              //  dataOffset += ArrayImageize;
-              //  mipDataOffset += ArrayMipImageize;
+                dataOffset += ArrayImageize;
+                mipDataOffset += ArrayMipImageize;
             }
 
             return result;
@@ -779,7 +778,7 @@ namespace Switch_Toolbox.Library.NEW
 
             if (depth > 1)
             {
-                bankSwizzle = (uint)(slice % 4);
+           //     bankSwizzle = (uint)(slice % 4);
             }
 
             tileMode = GX2TileModeToAddrTileMode(tileMode);
@@ -952,7 +951,7 @@ namespace Switch_Toolbox.Library.NEW
 
             uint thickness = computeSurfaceThickness(tileMode);
 
-            if (IsDepth)
+            if (IsDepth)    
             {
                 pixelBit0 = x & 1;
                 pixelBit1 = y & 1;

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Switch_Toolbox.Library
+namespace Switch_Toolbox.Library.Old
 {
     public class GX2
     {

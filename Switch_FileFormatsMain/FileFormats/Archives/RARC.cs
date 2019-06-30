@@ -88,6 +88,8 @@ namespace FirstPlugin
                 for (int dir = 0; dir < DirectoryCount; dir++)
                     Directories[dir] = new DirectoryEntry(this);
 
+                Console.WriteLine($"DirectoryCount {DirectoryCount}");
+
                 reader.SeekBegin(DirectoryOffset + pos);
                 for (int dir = 0; dir < DirectoryCount; dir++)
                 {
@@ -95,8 +97,7 @@ namespace FirstPlugin
                     uint NamePointer = StringTablOffset + Directories[dir].NameOffset;
                     Directories[dir].Name = ReadStringAtTable(reader, NamePointer);
 
-                    Console.WriteLine($"------------------------------------------");
-                    Console.WriteLine($"Directories Entry { Directories[dir].Name}");
+                    Console.WriteLine($"DirectoryCount {DirectoryCount}");
 
                     long EndDirectoryPos = reader.Position;
                     for (int n = 0; n < Directories[dir].NodeCount; n++)
@@ -107,16 +108,14 @@ namespace FirstPlugin
                         NamePointer = StringTablOffset + entry.NameOffset;
                         entry.Name = ReadStringAtTable(reader, NamePointer);
 
-                        Console.WriteLine($"Node Entry {entry.Name}");
-                        Console.WriteLine($"Node Offset {entry.Offset}");
-                        Console.WriteLine($"Node FileId {entry.FileId}");
-
                         if (entry.FileId != 0xFFFF)
                         {
                             using (reader.TemporarySeek(pos + DataOffset + entry.Offset, System.IO.SeekOrigin.Begin))
                             {
                                 entry.FileData = reader.ReadBytes((int)entry.Size);
                             }
+                            entry.FileName = entry.Name;
+
                             Directories[dir].AddNode(entry);
                         }
                         else
