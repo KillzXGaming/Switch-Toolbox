@@ -72,12 +72,18 @@ Can Preview
 - IGA .pak
 - MKAGPDX Model .bin files
 
-
+## Tutorials
+https://github.com/KillzXGaming/Switch-Toolbox/wiki
+   
+## Issues or Requests
+https://github.com/KillzXGaming/Switch-Toolbox/issues
    
 ## Building
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
+
+## Credits
 
 - Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff and some rendering.
 - Assimp devs for their massive asset library!
@@ -91,17 +97,17 @@ In the event that the tool cannot compile, check references. All the libraries a
 - MelonSpeedruns for logo.
 - BrawlBox team for brawl libaries used for brres parsing.
 
-Resources
+##  Resources
 - [Treeview Icons by icons8](https://icons8.com/)
 - Smash Forge (Currently placeholders)
 
-Documentation
+## Documentation (File Formats)
 - http://mk8.tockdom.com/wiki/
 - https://wiki.oatmealdome.me/Category:File_formats
 - https://github.com/Kinnay/Nintendo-File-Formats/wiki
 - http://Avsys.xyz/wiki/Category:File_Formats
 
-Libraries
+## Libraries
 - [Brawl Lib (for brres section conversion)](https://github.com/libertyernie/brawltools)
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
