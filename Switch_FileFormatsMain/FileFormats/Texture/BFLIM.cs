@@ -584,9 +584,7 @@ namespace FirstPlugin
             surf.swizzle = image.Swizzle;
             surf.numArray = 1;
 
-            var surfaces = GX2.Decode(surf);
-
-            return surfaces[ArrayLevel][MipLevel];
+            return GX2.Decode(surf, ArrayLevel, MipLevel);
         }
 
         public void Unload()

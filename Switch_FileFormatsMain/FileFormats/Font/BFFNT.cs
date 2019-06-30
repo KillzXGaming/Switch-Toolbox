@@ -431,9 +431,7 @@ namespace FirstPlugin
             surf.swizzle = Swizzle;
             surf.numArray = 1;
 
-            var surfaces = GX2.Decode(surf);
-
-            return surfaces[ArrayLevel][MipLevel];
+            return GX2.Decode(surf, ArrayLevel, MipLevel);
         }
 
         public override void OnClick(TreeView treeview)

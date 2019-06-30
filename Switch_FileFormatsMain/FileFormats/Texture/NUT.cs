@@ -389,8 +389,7 @@ namespace FirstPlugin
             {
                 if (Gx2HeaderData != null)
                 {
-                    var surfaces = GX2.Decode(Gx2HeaderData);
-                    return surfaces[ArrayLevel][MipLevel];
+                    return GX2.Decode(Gx2HeaderData, ArrayLevel, MipLevel);
                 }
                 else
                 {

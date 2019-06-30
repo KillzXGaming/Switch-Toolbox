@@ -968,8 +968,7 @@ namespace FirstPlugin
                 surf.swizzle = Swizzle;
                 surf.imageSize = ImageSize;
 
-                var surfaces = GX2.Decode(surf);
-                return surfaces[ArrayLevel][MipLevel];
+                return GX2.Decode(surf, ArrayLevel, MipLevel);
             }
 
             public void Write(FileWriter writer)

@@ -662,8 +662,7 @@ namespace FirstPlugin
                     Console.WriteLine($"mipoffset {mipoffset}");
                 }
 
-                var surfaces = GX2.Decode(surf);
-                return surfaces[ArrayLevel][MipLevel];
+                return GX2.Decode(surf, ArrayLevel, MipLevel);
             }
 
             public void Write(FileWriter writer)

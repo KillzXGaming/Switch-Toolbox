@@ -431,9 +431,13 @@ namespace Switch_Toolbox.Library
         static bool DebugSurface = false;
 
         public static GX2Surface CreateGx2Texture(byte[] imageData, string Name, uint TileMode, uint AAMode,
-            uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint SurfaceDim, uint MipCount)
+               uint Width, uint Height, uint Depth, uint Format, uint swizzle, uint SurfaceDim, uint MipCount)
         {
-            var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, 1, 1, TileMode, 0, 0);
+            var surfOut = getSurfaceInfo((GX2SurfaceFormat)Format, Width, Height, Depth, SurfaceDim, TileMode, AAMode, 0);
+            Console.WriteLine("Imported surfSize" + surfOut.surfSize);
+            Console.WriteLine("Imported data block" + imageData.Length);
+            Console.WriteLine("GX2SurfaceFormat " + (GX2SurfaceFormat)Format);
+
             uint imageSize = (uint)surfOut.surfSize;
             uint alignment = surfOut.baseAlign;
             uint pitch = surfOut.pitch;
@@ -444,6 +448,8 @@ namespace Switch_Toolbox.Library
 
             if (dataSize <= 0)
                 throw new Exception($"Image is empty!!");
+
+            Console.WriteLine("swizzle pattern " + swizzle);
 
             uint s = (swizzle << 8);
 
@@ -476,10 +482,13 @@ namespace Switch_Toolbox.Library
             List<uint> mipOffsets = new List<uint>();
             List<byte[]> Swizzled = new List<byte[]>();
 
+            if (MipCount == 0)
+                MipCount = 1;
+
+            uint Splice = 0;
+
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
-                uint swizzleValue = s;
-
                 var result = TextureHelper.GetCurrentMipSize(Width, Height, blkWidth, blkHeight, bpp, mipLevel);
 
                 uint offset = result.Item1;
@@ -507,8 +516,8 @@ namespace Switch_Toolbox.Library
                 if (mipLevel != 0)
                     mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
 
-                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, 0, 1, surfOut.tileMode, swizzleValue,
-                        surfOut.pitch, surfOut.bpp, 0, 0, data_);
+                byte[] SwizzledData = GX2.swizzle(width_, height_, surfOut.depth, surfOut.height, (uint)Format, 0, 1, surfOut.tileMode, s,
+                        surfOut.pitch, surfOut.bpp, Splice, 0, data_);
 
                 Swizzled.Add(dataAlignBytes.Concat(SwizzledData).ToArray());
 
@@ -518,7 +527,7 @@ namespace Switch_Toolbox.Library
                     tiling1dLevelSet = true;
                 }
 
-                if (!tiling1dLevelSet)
+                if (tiling1dLevelSet == false)
                     tiling1dLevel += 1;
             }
 
@@ -540,11 +549,12 @@ namespace Switch_Toolbox.Library
             surf.bpp = bpp;
             surf.format = (uint)Format;
             surf.numMips = MipCount;
+            surf.imageCount = MipCount;
+            surf.firstSlice = 0;
+            surf.firstMip = 0;
             surf.aa = AAMode;
             surf.mipOffset = mipOffsets.ToArray();
-            surf.numMips = (uint)Swizzled.Count;
             surf.alignment = alignment;
-            surf.mipSize = mipSize;
             surf.imageSize = imageSize;
             surf.data = Swizzled[0];
 
@@ -552,9 +562,12 @@ namespace Switch_Toolbox.Library
             for (int mipLevel = 1; mipLevel < Swizzled.Count; mipLevel++)
             {
                 mips.Add(Swizzled[mipLevel]);
+                Console.WriteLine(Swizzled[mipLevel].Length);
             }
             surf.mipData = Utils.CombineByteArray(mips.ToArray());
             mips.Clear();
+
+            surf.mipSize = surf.mipData != null ? (uint)surf.mipData.Length : 0;
 
 
             Console.WriteLine("");
@@ -594,7 +607,87 @@ namespace Switch_Toolbox.Library
             return ((X - 1) | (Y - 1)) + 1;
         }
 
-        public static List<List<byte[]>> Decode(GX2Surface tex, int ArrayIndex = -1, int MipIndex = -1, string DebugTextureName = "")
+        public static byte[] Decode(GX2Surface tex, int ArrayIndex = -1, int MipIndex = -1, string DebugTextureName = "")
+        {
+            uint blkWidth, blkHeight;
+            if (IsFormatBCN((GX2SurfaceFormat)tex.format))
+            {
+                blkWidth = 4;
+                blkHeight = 4;
+            }
+            else
+            {
+                blkWidth = 1;
+                blkHeight = 1;
+            }
+
+            byte[] data = tex.data;
+
+            var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
+            uint bpp = DIV_ROUND_UP(surfInfo.bpp, 8);
+
+            if (tex.numArray == 0)
+                tex.numArray = 1;
+
+            uint mipCount = tex.numMips;
+            if (tex.mipData == null || tex.mipData.Length <= 0)
+                mipCount = 1;
+
+            int dataOffset = 0;
+            int mipDataOffset = 0;
+
+            for (int arrayLevel = 0; arrayLevel < tex.depth; arrayLevel++)
+            {
+                List<byte[]> mips = new List<byte[]>();
+                for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
+                {
+                    bool GetLevel = (arrayLevel == ArrayIndex && mipLevel == MipIndex);
+
+                    uint swizzle = tex.swizzle;
+
+                    uint width_ = (uint)Math.Max(1, tex.width >> mipLevel);
+                    uint height_ = (uint)Math.Max(1, tex.height >> mipLevel);
+
+                    uint size = DIV_ROUND_UP(width_, blkWidth) * DIV_ROUND_UP(height_, blkHeight) * bpp;
+
+                    uint mipOffset;
+                    if (mipLevel != 0)
+                    {
+                        if (tex.mip_swizzle != 0)
+                            swizzle = tex.mip_swizzle;
+
+                        mipOffset = (tex.mipOffset[mipLevel - 1]);
+                        if (mipLevel == 1)
+                            mipOffset -= (uint)surfInfo.sliceSize;
+
+                        if (GetLevel)
+                        {
+                            surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
+                            data = new byte[surfInfo.sliceSize];
+                            Array.Copy(tex.mipData, (uint)mipDataOffset + mipOffset, data, 0, surfInfo.sliceSize);
+                        }
+                    }
+                    else if (GetLevel)
+                        Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
+
+                    if (GetLevel)
+                    {
+                        byte[] deswizzled = deswizzle(width_, height_, surfInfo.depth, surfInfo.height, (uint)tex.format, 0, tex.use,
+                        surfInfo.tileMode, (uint)swizzle, surfInfo.pitch, surfInfo.bpp, (uint)arrayLevel, 0, data);
+                        //Create a copy and use that to remove uneeded data
+                        byte[] result_ = new byte[size];
+                        Array.Copy(deswizzled, 0, result_, 0, size);
+                        return result_;
+                    }
+                }
+
+                dataOffset += (int)surfInfo.sliceSize;
+                mipDataOffset += (int)surfInfo.sliceSize;
+            }
+            return null;
+        }
+
+        public static List<List<byte[]>> Decode(GX2Surface tex, string DebugTextureName = "")
         {
             if (tex.data == null || tex.data.Length <= 0)
                 throw new Exception("Invalid GX2 surface data. Make sure to not open Tex2 files if this is one. Those will load automatically next to Tex1!");
@@ -700,12 +793,6 @@ namespace Switch_Toolbox.Library
                     byte[] result_ = new byte[size];
                     Array.Copy(deswizzled, 0, result_, 0, size);
                     mips.Add(result_);
-
-                    if (ArrayIndex == arrayLevel && mipLevel == MipIndex)
-                    {
-                        result.Add(mips);
-                        return result;
-                    }
                 }
 
                 result.Add(mips);

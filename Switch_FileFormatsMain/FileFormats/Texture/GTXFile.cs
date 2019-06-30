@@ -689,9 +689,7 @@ namespace FirstPlugin
                 Console.WriteLine("  mip size        = " + surface.mipData.Length);
                 Console.WriteLine("  realSize        = " + surface.imageSize);
 
-                var surfaces = GX2.Decode(surface);
-
-                return surfaces[ArrayLevel][MipLevel];
+                return GX2.Decode(surface, ArrayLevel, MipLevel);
             }
             private void Remove(object sender, EventArgs args) {
                 ((GTXFile)Parent).Nodes.Remove(this);
