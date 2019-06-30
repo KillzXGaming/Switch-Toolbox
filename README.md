@@ -27,10 +27,10 @@ Can Edit Formats
 - BNTX
 - NUTEXB
 - XTX
+- GTX
 - SARC
 - BARS
 - KCL
-- BFFNT
 - BFLIM
 - GFPAK
 - BEA
@@ -40,6 +40,7 @@ Can Edit Formats
 - TMPK
 
 Can Preview
+- BFFNT
 - BCRES
    - Models, materials, and textures.
 - BFSHA
@@ -55,12 +56,22 @@ Can Preview
    - Can preview NTWU, NTP3, and NTWD variants. Editng will be soon
 - MSBT
    - Very basic previewing.
-- TMPK
-  - Can extract files and decompress
-  - Can save back. 
 - MP3, OGG, IDSP, HPS, WAV, BFWAV, BFSTM, BCWAV, BCWAV
   - Can listen to audio and convert between certain formats. Thanks to VGAudio and CSCore
-	
+- NARC
+- SP2 (Team Sonic Racing)
+- GFMDL
+- TEX (3DS)
+- NUSHDB (Switch Namco Shaders)
+- SDF (Snow Drop Engine)
+- NCA
+- NSP
+- IStorage
+- NXARC
+- LZARC
+- IGA .pak
+- MKAGPDX Model .bin files
+
 
    
 ## Building
@@ -84,6 +95,12 @@ Resources
 - [Treeview Icons by icons8](https://icons8.com/)
 - Smash Forge (Currently placeholders)
 
+Documentation
+- http://mk8.tockdom.com/wiki/
+- https://wiki.oatmealdome.me/Category:File_formats
+- https://github.com/Kinnay/Nintendo-File-Formats/wiki
+- http://Avsys.xyz/wiki/Category:File_Formats
+
 Libraries
 - [Brawl Lib (for brres section conversion)](https://github.com/libertyernie/brawltools)
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
@@ -101,6 +118,7 @@ Libraries
 - [Syroot BinaryData](https://gitlab.com/Syroot/BinaryData)
 - [Syroot Maths](https://gitlab.com/Syroot/Maths)
 - [Syroot Bfres Library (Wii U)](https://gitlab.com/Syroot/NintenTools.Bfres)
+- [LibHac](https://github.com/Thealexbarney/LibHac)
 
 License
  in Switch_Toolbox\Lib\Licenses
