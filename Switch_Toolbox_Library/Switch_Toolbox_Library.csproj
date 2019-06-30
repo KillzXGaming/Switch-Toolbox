@@ -568,6 +568,7 @@
     <Compile Include="Generics\OpenGLTexture.cs" />
     <Compile Include="Interfaces\IDirectoryNode.cs" />
     <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="IO\Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Rendering\RenderableTex.cs" />
     <Compile Include="Generics\STBone.cs" />
     <Compile Include="Generics\STGenericWrapper.cs" />
@@ -625,12 +626,12 @@
     <Compile Include="IO\FileWriter.cs" />
     <Compile Include="IO\SyrootCommon\DWord.cs" />
     <Compile Include="IO\SyrootCommon\Half.cs" />
-    <Compile Include="IO\IOExtensions.cs" />
+    <Compile Include="IO\Extensions\IOExtensions.cs" />
     <Compile Include="IO\Matrix4x4.cs" />
     <Compile Include="IO\STFileLoader.cs" />
     <Compile Include="IO\STFileSaver.cs" />
-    <Compile Include="IO\StreamReaderExtensions.cs" />
-    <Compile Include="IO\StringExtension.cs" />
+    <Compile Include="IO\Extensions\StreamReaderExtensions.cs" />
+    <Compile Include="IO\Extensions\StringExtension.cs" />
     <Compile Include="IO\STStream.cs" />
     <Compile Include="Maths\Math.cs" />
     <Compile Include="Plugin\GenericPluginLoader.cs" />

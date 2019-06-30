@@ -658,7 +658,7 @@ namespace Switch_Toolbox.Library
 
                         mipOffset = (tex.mipOffset[mipLevel - 1]);
                         if (mipLevel == 1)
-                            mipOffset -= (uint)surfInfo.sliceSize;
+                            mipOffset -= (uint)surfInfo.surfSize;
 
                         if (GetLevel)
                         {
