@@ -193,7 +193,7 @@ namespace Bfres.Structs
             if (texture != null && texture.MipCount == 1)
                 ReplaceTexture(FileName, Format, texture.MipCount);
             else
-                ReplaceTexture(FileName, Format);
+                ReplaceTexture(FileName, Format, 0, null, false, false, false, texture.SwizzlePattern);
         }
 
         public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, TEX_FORMAT[] SupportedFormats = null,

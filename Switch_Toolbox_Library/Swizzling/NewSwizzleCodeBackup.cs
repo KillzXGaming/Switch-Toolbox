@@ -621,14 +621,14 @@ namespace Switch_Toolbox.Library
                 blkHeight = 1;
             }
 
-            byte[] data = new byte[tex.data.Length];
-            Array.Copy(tex.data, 0, data, 0, tex.data.Length);
-
             var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
             uint bpp = DIV_ROUND_UP(surfInfo.bpp, 8);
 
             if (tex.numArray == 0)
                 tex.numArray = 1;
+
+            byte[] data = new byte[tex.data.Length];
+            byte[] mipdata = new byte[tex.mipData.Length];
 
             uint mipCount = tex.numMips;
             if (tex.mipData == null || tex.mipData.Length <= 0)
@@ -636,6 +636,7 @@ namespace Switch_Toolbox.Library
 
             int dataOffset = 0;
             int mipDataOffset = 0;
+            int mipSpliceSize = 0;
 
             for (int arrayLevel = 0; arrayLevel < tex.depth; arrayLevel++)
             {
@@ -658,17 +659,27 @@ namespace Switch_Toolbox.Library
 
                         mipOffset = (tex.mipOffset[mipLevel - 1]);
                         if (mipLevel == 1)
+                        {
                             mipOffset -= (uint)surfInfo.surfSize;
+                            mipOffset += (uint)mipDataOffset;
+                            mipSpliceSize += (int)mipOffset;
+                        }
 
+                        Console.WriteLine("mipOffset " + mipOffset);
                         if (GetLevel)
                         {
                             surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
-                            data = new byte[surfInfo.sliceSize];
-                            Array.Copy(tex.mipData, (uint)mipDataOffset + mipOffset, data, 0, surfInfo.sliceSize);
+
+                            Array.Copy(tex.mipData, 0, mipdata, 0, tex.mipData.Length);
+                            Array.Copy(tex.mipData, (int)mipOffset, mipdata, 0, (int)surfInfo.sliceSize);
+                            data = mipdata;
                         }
                     }
                     else if (GetLevel)
+                    {
+                        Array.Copy(tex.data, 0, data, 0, tex.data.Length);
                         Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
+                    }
 
                     if (GetLevel)
                     {
@@ -682,7 +693,7 @@ namespace Switch_Toolbox.Library
                 }
 
                 dataOffset += (int)surfInfo.sliceSize;
-                mipDataOffset += (int)surfInfo.sliceSize;
+                mipDataOffset += mipSpliceSize;
             }
             return null;
         }
