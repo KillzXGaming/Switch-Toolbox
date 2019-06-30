@@ -621,7 +621,8 @@ namespace Switch_Toolbox.Library
                 blkHeight = 1;
             }
 
-            byte[] data = tex.data;
+            byte[] data = new byte[tex.data.Length];
+            Array.Copy(tex.data, 0, data, 0, tex.data.Length);
 
             var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
             uint bpp = DIV_ROUND_UP(surfInfo.bpp, 8);
@@ -638,7 +639,6 @@ namespace Switch_Toolbox.Library
 
             for (int arrayLevel = 0; arrayLevel < tex.depth; arrayLevel++)
             {
-                List<byte[]> mips = new List<byte[]>();
                 for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
                 {
                     bool GetLevel = (arrayLevel == ArrayIndex && mipLevel == MipIndex);
