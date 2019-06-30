@@ -594,7 +594,7 @@ namespace Switch_Toolbox.Library
             return ((X - 1) | (Y - 1)) + 1;
         }
 
-        public static List<List<byte[]>> Decode(GX2Surface tex, string DebugTextureName = "")
+        public static List<List<byte[]>> Decode(GX2Surface tex, int ArrayIndex = -1, int MipIndex = -1, string DebugTextureName = "")
         {
             if (tex.data == null || tex.data.Length <= 0)
                 throw new Exception("Invalid GX2 surface data. Make sure to not open Tex2 files if this is one. Those will load automatically next to Tex1!");
@@ -654,7 +654,7 @@ namespace Switch_Toolbox.Library
             if (tex.mipData == null || tex.mipData.Length <= 0)
                 mipCount = 1;
 
-            int ArrayImageize = data.Length / (int)tex.depth;
+            int ArrayImageize = 0;
             int ArrayMipImageize = 0;
 
             if (tex.mipData != null)
@@ -700,12 +700,19 @@ namespace Switch_Toolbox.Library
                     byte[] result_ = new byte[size];
                     Array.Copy(deswizzled, 0, result_, 0, size);
                     mips.Add(result_);
+
+                    if (ArrayIndex == arrayLevel && mipLevel == MipIndex)
+                    {
+                        result.Add(mips);
+                        return result;
+                    }
                 }
 
                 result.Add(mips);
 
-                dataOffset += ArrayImageize;
-                mipDataOffset += ArrayMipImageize;
+                dataOffset += (int)surfInfo.sliceSize;
+                mipDataOffset += (int)surfInfo.sliceSize;
+
             }
 
             return result;

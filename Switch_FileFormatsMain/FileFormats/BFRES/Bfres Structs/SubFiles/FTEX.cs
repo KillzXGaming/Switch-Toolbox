@@ -594,7 +594,7 @@ namespace Bfres.Structs
             if (surf.mipData == null)
                 surf.numMips = 1;
 
-            var surfaces = GX2.Decode(surf);
+            var surfaces = GX2.Decode(surf, ArrayLevel, MipLevel);
 
             if (ArrayLevel >= surfaces.Count)
                 throw new Exception($"Invalid amount of surfaces decoded! Array Level: {ArrayLevel} Total Arrays: {surfaces.Count} ");
