@@ -27,10 +27,10 @@ Can Edit Formats
 - BNTX
 - NUTEXB
 - XTX
+- GTX
 - SARC
 - BARS
 - KCL
-- BFFNT
 - BFLIM
 - GFPAK
 - BEA
@@ -40,6 +40,7 @@ Can Edit Formats
 - TMPK
 
 Can Preview
+- BFFNT
 - BCRES
    - Models, materials, and textures.
 - BFSHA
@@ -55,18 +56,34 @@ Can Preview
    - Can preview NTWU, NTP3, and NTWD variants. Editng will be soon
 - MSBT
    - Very basic previewing.
-- TMPK
-  - Can extract files and decompress
-  - Can save back. 
 - MP3, OGG, IDSP, HPS, WAV, BFWAV, BFSTM, BCWAV, BCWAV
   - Can listen to audio and convert between certain formats. Thanks to VGAudio and CSCore
-	
+- NARC
+- SP2 (Team Sonic Racing)
+- GFMDL
+- TEX (3DS)
+- NUSHDB (Switch Namco Shaders)
+- SDF (Snow Drop Engine)
+- NCA
+- NSP
+- IStorage
+- NXARC
+- LZARC
+- IGA .pak
+- MKAGPDX Model .bin files
 
+## Tutorials
+https://github.com/KillzXGaming/Switch-Toolbox/wiki
+   
+## Issues or Requests
+https://github.com/KillzXGaming/Switch-Toolbox/issues
    
 ## Building
 To build make sure you have Visual Studio installed (I use 2017, older versions may not work) and open the .sln. Then build the solution as release. It should compile properly on the latest.
 
 In the event that the tool cannot compile, check references. All the libraries are stored in Switch-Toolbox/Lib folder. 
+
+## Credits
 
 - Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc) for some code ported over. Specifically animation stuff and some rendering.
 - Assimp devs for their massive asset library!
@@ -80,11 +97,17 @@ In the event that the tool cannot compile, check references. All the libraries a
 - MelonSpeedruns for logo.
 - BrawlBox team for brawl libaries used for brres parsing.
 
-Resources
+##  Resources
 - [Treeview Icons by icons8](https://icons8.com/)
 - Smash Forge (Currently placeholders)
 
-Libraries
+## Documentation (File Formats)
+- http://mk8.tockdom.com/wiki/
+- https://wiki.oatmealdome.me/Category:File_formats
+- https://github.com/Kinnay/Nintendo-File-Formats/wiki
+- http://Avsys.xyz/wiki/Category:File_Formats
+
+## Libraries
 - [Brawl Lib (for brres section conversion)](https://github.com/libertyernie/brawltools)
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
@@ -101,6 +124,7 @@ Libraries
 - [Syroot BinaryData](https://gitlab.com/Syroot/BinaryData)
 - [Syroot Maths](https://gitlab.com/Syroot/Maths)
 - [Syroot Bfres Library (Wii U)](https://gitlab.com/Syroot/NintenTools.Bfres)
+- [LibHac](https://github.com/Thealexbarney/LibHac)
 
 License
  in Switch_Toolbox\Lib\Licenses
