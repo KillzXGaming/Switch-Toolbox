@@ -77,34 +77,56 @@ namespace FirstPlugin
                 uint DirectoryCount = reader.ReadUInt32();
                 uint DirectoryOffset = reader.ReadUInt32();
                 uint TotalNodeCount = reader.ReadUInt32();
-                uint NodeOffset = reader.ReadUInt32();
+                uint NodeOffset = reader.ReadUInt32() + (uint)pos;
                 uint StringTableSize = reader.ReadUInt32();
-                uint StringTablOffset = reader.ReadUInt32();
+                uint StringTablOffset = reader.ReadUInt32() + (uint)pos;
                 ushort NodeCount = reader.ReadUInt16();
                 ushort Unknown = reader.ReadUInt16();
                 byte[] Padding2 = reader.ReadBytes(4);
 
                 Directories = new DirectoryEntry[DirectoryCount];
+                for (int dir = 0; dir < DirectoryCount; dir++)
+                    Directories[dir] = new DirectoryEntry(this);
 
                 reader.SeekBegin(DirectoryOffset + pos);
                 for (int dir = 0; dir < DirectoryCount; dir++)
                 {
-                    Directories[dir] = new DirectoryEntry(this);
                     Directories[dir].Read(reader);
-                    uint NamePointer = StringTablOffset + (uint)pos + Directories[dir].NameOffset;
+                    uint NamePointer = StringTablOffset + Directories[dir].NameOffset;
                     Directories[dir].Name = ReadStringAtTable(reader, NamePointer);
 
-                    nodes.Add(Directories[dir]);
-                }
+                    Console.WriteLine($"------------------------------------------");
+                    Console.WriteLine($"Directories Entry { Directories[dir].Name}");
 
-                reader.SeekBegin(NodeOffset + pos);
-                for (int n = 0; n < TotalNodeCount; n++)
-                {
-                    files.Add(new FileEntry());
+                    long EndDirectoryPos = reader.Position;
+                    for (int n = 0; n < Directories[dir].NodeCount; n++)
                     {
+                        reader.SeekBegin(NodeOffset + ((n + Directories[dir].FirstNodeIndex) * 0x14));
+                        FileEntry entry = new FileEntry();
+                        entry.Read(reader);
+                        NamePointer = StringTablOffset + entry.NameOffset;
+                        entry.Name = ReadStringAtTable(reader, NamePointer);
 
+                        Console.WriteLine($"Node Entry {entry.Name}");
+                        Console.WriteLine($"Node Offset {entry.Offset}");
+                        Console.WriteLine($"Node FileId {entry.FileId}");
+
+                        if (entry.FileId != 0xFFFF)
+                        {
+                            using (reader.TemporarySeek(pos + DataOffset + entry.Offset, System.IO.SeekOrigin.Begin))
+                            {
+                                entry.FileData = reader.ReadBytes((int)entry.Size);
+                            }
+                            Directories[dir].AddNode(entry);
+                        }
+                        else
+                            Directories[dir].AddNode(Directories[entry.Offset]);
                     }
+                    reader.SeekBegin(EndDirectoryPos);
                 }
+
+                this.Name = Directories[0].Name;
+                nodes.AddRange(Directories[0].Nodes);
             }
         }
 
@@ -144,13 +166,19 @@ namespace FirstPlugin
 
             public ushort Hash { get; set; }
 
-            private ushort NodeCount;
+            public ushort NodeCount;
 
             public uint FirstNodeIndex { get; set; }
 
             public DirectoryEntry(RARC rarc) { ParentArchive = rarc; }
 
-            public IEnumerable<INode> Nodes { get; }
+            public IEnumerable<INode> Nodes { get { return nodes; } }
+            public List<INode> nodes = new List<INode>();
+
+            public void AddNode(INode node)
+            {
+                nodes.Add(node);
+            }
 
             public void Read(FileReader reader)
             {
@@ -195,16 +223,18 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            public ushort FileId { get; set; }
             public uint Unknown { get; set; }
 
             internal uint Size;
             internal uint Offset;
-            internal uint NameOffset;
+            internal ushort NameOffset;
 
             public void Read(FileReader reader)
             {
+                FileId = reader.ReadUInt16();
                 uint Unknown = reader.ReadUInt32();
-                NameOffset = reader.ReadUInt32();
+                NameOffset = reader.ReadUInt16();
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
             }

@@ -291,15 +291,24 @@ namespace Switch_Toolbox.Library
             FillTreeNodes(this, ArchiveFile);
         }
 
-        private void FillDirectory(TreeNode parent, IEnumerable<INode> Nodes)
+        private void FillDirectory(TreeNode parent, IEnumerable<INode> Nodes, IArchiveFile archiveFile)
         {
             foreach (var node in Nodes)
             {
-                var treeNode = new TreeNode(node.Name);
-                parent.Nodes.Add(treeNode);
+                if (node is IDirectoryContainer)
+                {
+                    var folder = new ArchiveFolderNodeWrapper(node.Name, archiveFile);
+                    parent.Nodes.Add(folder);
 
-                if (node is IDirectoryContainer && ((IDirectoryContainer)node).Nodes != null)
-                    FillDirectory(treeNode, ((IDirectoryContainer)node).Nodes);
+                    if (((IDirectoryContainer)node).Nodes != null)
+                        FillDirectory(folder, ((IDirectoryContainer)node).Nodes, archiveFile);
+                }
+                else if (node is ArchiveFileInfo)
+                {
+                    ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(node.Name, (ArchiveFileInfo)node, archiveFile);
+                    wrapperFile.Name = node.Name;
+                    parent.Nodes.Add(wrapperFile);
+                }
             }
         }
 
@@ -313,7 +322,7 @@ namespace Switch_Toolbox.Library
 
             if (archiveFile is IDirectoryContainer)
             {
-                FillDirectory(root,((IDirectoryContainer)archiveFile).Nodes);
+                FillDirectory(root,((IDirectoryContainer)archiveFile).Nodes, archiveFile);
             }
             else //Else create directories by filename paths
             {
