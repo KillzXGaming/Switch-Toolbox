@@ -628,7 +628,10 @@ namespace Switch_Toolbox.Library
                 tex.numArray = 1;
 
             byte[] data = new byte[tex.data.Length];
-            byte[] mipdata = new byte[tex.mipData.Length];
+            byte[] mipdata = new byte[0];
+
+            if (tex.mipData != null)
+                mipdata = new byte[tex.mipData.Length];
 
             uint mipCount = tex.numMips;
             if (tex.mipData == null || tex.mipData.Length <= 0)

@@ -151,9 +151,14 @@ namespace Switch_Toolbox.Library.IO
                 byte* end = input + decompressedLength;
                 byte* data = input + pos;
 
-                if (pos > decompressedLength)
+                Console.WriteLine($"decompressedLength " + decompressedLength);
+                Console.WriteLine($"pos " + pos);
+
+                if (pos < decompressedLength)
                 {
                     uint flag;
+
+                    Console.WriteLine($"Pass 1 ");
 
                     while (true)
                     {
@@ -169,6 +174,8 @@ namespace Switch_Toolbox.Library.IO
                         CheckFinished(data, end);
                     }
 
+                    Console.WriteLine($"Pass 2 ");
+
                     flag |= 0x800000;
 
                     data++;
@@ -178,6 +185,7 @@ namespace Switch_Toolbox.Library.IO
                     {
                         IterateFlag(flag, data, output);
                     }
+
 
                     while (true)
                     {
