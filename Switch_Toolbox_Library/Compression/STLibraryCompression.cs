@@ -151,8 +151,6 @@ namespace Switch_Toolbox.Library.IO
                 byte* end = input + decompressedLength;
                 byte* data = input + pos;
 
-                byte[] Output = new byte[decompressedLength];
-
                 if (pos > decompressedLength)
                 {
                     uint flag;
@@ -220,11 +218,11 @@ namespace Switch_Toolbox.Library.IO
                                 if (op_ofs >= 2)
                                 {
                                     Loop1(flag, op_len, chunk, data, output);
+
+                                    Loop2(flag, op_len, data, output, chunk);
                                 }
                             }
                         }
-
-                        Loop2(flag, op_len, data, output, chunk);
                     }
                 }
 
