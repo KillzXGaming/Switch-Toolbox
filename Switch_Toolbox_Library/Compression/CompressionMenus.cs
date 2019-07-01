@@ -85,6 +85,7 @@ namespace Switch_Toolbox.Library.IO
                     SaveFileForCompression(EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel));
                     break;
                 case CompressionType.Zlib:
+                    SaveFileForCompression(STLibraryCompression.ZLIB.Compress(data));
                     break;
                 case CompressionType.Gzip:
                     SaveFileForCompression(STLibraryCompression.GZIP.Compress(data));
