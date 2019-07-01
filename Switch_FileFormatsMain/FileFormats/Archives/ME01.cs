@@ -125,7 +125,7 @@ namespace FirstPlugin
                     //Fixed 128 string length
                     if (i != files.Count - 1)
                     {
-                        int PaddingCount = 128 - files[i].FileName.Length;
+                        int PaddingCount = 128 - files[i].FileName.Length - 1;
                         for (int p = 0; p < PaddingCount; p++)
                             writer.Write((byte)0x30);
                     }
