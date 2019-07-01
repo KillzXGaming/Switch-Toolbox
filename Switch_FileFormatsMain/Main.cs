@@ -325,7 +325,10 @@ namespace FirstPlugin
             Formats.Add(typeof(IStorage));
             Formats.Add(typeof(NCA));
             Formats.Add(typeof(RARC));
+            Formats.Add(typeof(ME01));
+
             
+
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {

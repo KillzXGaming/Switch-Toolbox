@@ -200,6 +200,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\IGA_PAK.cs" />
     <Compile Include="FileFormats\Archives\LZARC.cs" />
+    <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
     <Compile Include="FileFormats\Archives\NXARC.cs" />
     <Compile Include="FileFormats\Archives\RARC.cs" />
