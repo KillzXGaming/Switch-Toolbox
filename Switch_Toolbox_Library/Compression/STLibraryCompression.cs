@@ -166,8 +166,6 @@ namespace Switch_Toolbox.Library.IO
                         for (int i = 0; i < 8; i++)
                             *output++ = *data++;
 
-                        //EndOperation
-
                         CheckFinished(data, end);
                     }
 
@@ -334,9 +332,9 @@ namespace Switch_Toolbox.Library.IO
         {
             byte* ext = end + 0x20;
             if (data < ext)
-                *end-- = *--ext;
-
-            while (data < ext) ;
+                do
+                    *end-- = *--ext;
+                while (data < ext);
         }
 
         public class LZSS
