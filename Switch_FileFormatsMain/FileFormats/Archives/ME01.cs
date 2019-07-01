@@ -23,7 +23,7 @@ namespace FirstPlugin
 
         public bool CanAddFiles { get; set; }
         public bool CanRenameFiles { get; set; }
-        public bool CanReplaceFiles { get; set; }
+        public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; }
 
         public bool Identify(System.IO.Stream stream)
