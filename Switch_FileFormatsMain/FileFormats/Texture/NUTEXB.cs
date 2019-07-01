@@ -14,7 +14,7 @@ using Syroot.NintenTools.NSW.Bntx.GFX;
 
 namespace FirstPlugin
 {
-    public class NUTEXB : STGenericTexture, IFileFormat
+    public class NUTEXB : STGenericTexture, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -588,10 +588,10 @@ namespace FirstPlugin
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
         }
-        MenuItem save = new MenuItem("Save");
-        MenuItem export = new MenuItem("Export");
-        MenuItem replace = new MenuItem("Replace");
-        MenuItem useSizeRestrictions = new MenuItem("UseSizeRestrictions");
+        ToolStripMenuItem save = new ToolStripMenuItem("Save");
+        ToolStripMenuItem export = new ToolStripMenuItem("Export");
+        ToolStripMenuItem replace = new ToolStripMenuItem("Replace");
+        ToolStripMenuItem useSizeRestrictions = new ToolStripMenuItem("UseSizeRestrictions");
 
         public void Load(System.IO.Stream stream)
         {
@@ -605,16 +605,21 @@ namespace FirstPlugin
 
             useSizeRestrictions.Checked = true;
 
-            ContextMenu = new ContextMenu();
-            ContextMenu.MenuItems.Add(save);
-            ContextMenu.MenuItems.Add(useSizeRestrictions);
-            ContextMenu.MenuItems.Add(export);
-            ContextMenu.MenuItems.Add(replace);
-
             save.Click += Save;
             replace.Click += Replace;
             export.Click += Export;
         }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(save);
+            Items.Add(useSizeRestrictions);
+            Items.Add(export);
+            Items.Add(replace);
+            return Items.ToArray();
+        }
+
         public void Unload()
         {
 

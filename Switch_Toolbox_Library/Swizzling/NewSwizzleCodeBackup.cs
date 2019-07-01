@@ -632,7 +632,7 @@ namespace Switch_Toolbox.Library
 
             if (tex.mipData != null)
                 mipdata = new byte[tex.mipData.Length];
-
+    
             uint mipCount = tex.numMips;
             if (tex.mipData == null || tex.mipData.Length <= 0)
                 mipCount = 1;
