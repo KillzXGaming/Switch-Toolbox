@@ -209,9 +209,11 @@
     <Compile Include="Audio\AudioFileRipper.cs" />
     <Compile Include="Audio\VGAudioFile.cs" />
     <Compile Include="Collections\SortExtensions.cs" />
+    <Compile Include="Compression\LZ4F.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
+    <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Cryptography\crc32.cs" />
+    <Compile Include="Security\Cryptography\crc32.cs" />
     <Compile Include="DrawableContainer.cs" />
     <Compile Include="FileFormats\3DS\ETC1.cs" />
     <Compile Include="FileFormats\Animation\SMD.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="FileFormats\SizeTables\TPFileSizeTable.cs" />
     <Compile Include="FileFormats\TGA.cs" />
     <Compile Include="FileFormats\ZIP.cs" />
+    <Compile Include="Format Managers\FormatList.cs" />
     <Compile Include="Forms\Archive\ArchiveFilePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -566,6 +569,7 @@
     <Compile Include="Generics\GenericPolygonGroup.cs" />
     <Compile Include="Generics\GenericTexture.cs" />
     <Compile Include="Generics\OpenGLTexture.cs" />
+    <Compile Include="Interfaces\ICompressionFormat.cs" />
     <Compile Include="Interfaces\IDirectoryNode.cs" />
     <Compile Include="Interfaces\INode.cs" />
     <Compile Include="IO\Extensions\ByteArrayExtensions.cs" />
@@ -685,7 +689,7 @@
     <Compile Include="Interfaces\IFileFormat.cs" />
     <Compile Include="IO\FileIO.cs" />
     <Compile Include="Interfaces\IPlugin.cs" />
-    <Compile Include="Plugin\FileManager.cs" />
+    <Compile Include="Format Managers\FileManager.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

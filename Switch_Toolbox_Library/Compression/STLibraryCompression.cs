@@ -7,6 +7,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Switch_Toolbox.Library.IO
 {
@@ -96,15 +97,14 @@ namespace Switch_Toolbox.Library.IO
                 var output = new MemoryStream();
                 output.Write(new byte[] { 0x78, 0xDA }, 0, 2);
 
-                using (var decompressedStream = new MemoryStream(output.ToArray()))
-                {
-                    using (var zipStream = new DeflateStream(output, CompressionMode.Compress))
-                    {
-                        zipStream.Write(b, 0, b.Length);
+                using (var zipStream = new DeflateStream(output, CompressionMode.Compress, true))
+                    zipStream.Write(b, 0, b.Length);
 
-                        return output.ToArray();
-                    }
-                }
+                //Add this as it weirdly prevents the data getting corrupted
+                //From https://github.com/IcySon55/Kuriimu/blob/f670c2719affc1eaef8b4c40e40985881247acc7/src/Kontract/Compression/ZLib.cs
+                var adler = b.Aggregate(Tuple.Create(1, 0), (x, n) => Tuple.Create((x.Item1 + n) % 65521, (x.Item1 + x.Item2 + n) % 65521));
+                output.Write(new[] { (byte)(adler.Item2 >> 8), (byte)adler.Item2, (byte)(adler.Item1 >> 8), (byte)adler.Item1 }, 0, 4);
+                return output.ToArray();
             }
 
             public static void CopyStream(System.IO.Stream input, System.IO.Stream output)
@@ -128,21 +128,217 @@ namespace Switch_Toolbox.Library.IO
                          (X << 8) & 0xff0000 | (X << 24) & 0xff000000);
             }
 
-            public byte[] Decompress(byte[] data, uint decompressedLength)
+            public static unsafe byte[] Decompress(byte[] input, uint decompressedLength)
             {
-                uint dest = 0;
-                uint source = 0;
+                fixed (byte* outputPtr = new byte[decompressedLength])
+                {
+                    fixed (byte* inputPtr = input)
+                    {
+                        Decompress(outputPtr, inputPtr, decompressedLength);
+                    }
 
+                    byte[] decomp = new byte[decompressedLength];
+                    Marshal.Copy((IntPtr)outputPtr, decomp, 0, decomp.Length);
+                    return decomp;
+                }
+            }
+
+            //Thanks Simon. Code ported from
+            //https://github.com/simontime/MarioTennisAces0x50Decompressor/blob/master/decompress.c
+            public static unsafe void Decompress(byte* output, byte* input, uint decompressedLength)
+            {
                 uint pos = 8;
+                byte* end = input + decompressedLength;
+                byte* data = input + pos;
+
                 byte[] Output = new byte[decompressedLength];
 
                 if (pos > decompressedLength)
                 {
                     uint flag;
+
+                    while (true)
+                    {
+                        flag = 0xFF000000 * data[0];
+                        if (flag != 0)
+                            break;
+
+                        data++;
+
+                        for (int i = 0; i < 8; i++)
+                            *output++ = *data++;
+
+                        //EndOperation
+
+                        CheckFinished(data, end);
+                    }
+
+                    flag |= 0x800000;
+
+                    data++;
+
+                    //IterateFlag
+                    while ((flag & 0x80000000) == 0)
+                    {
+                        IterateFlag(flag, data, output);
+                    }
+
+                    while (true)
+                    {
+                        flag <<= 1;
+
+                        if (flag == 0)
+                            CheckFinished(data, end);
+
+                        int op_ofs = (data[0] >> 4) | (data[1] << 4);
+                        int op_len = data[0] & 0xF;
+
+                        if (op_ofs == 0)
+                            return;
+
+                        byte* chunk = output -op_ofs;
+                        if (op_len > 1)
+                            data += 2;
+                        else
+                        {
+                            int op_len_ext = data[2] + (op_len | 0x10);
+
+                            if (op_len == 1)
+                            {
+                                int add_len = (data[3] << 8) | 0xFF;
+                                data += 4;
+
+                                op_len = op_len_ext + add_len;
+
+                                if (op_ofs >= 2)
+                                    Loop1(flag, op_len, chunk, data, output);
+                            }
+                            else
+                            {
+                                data += 3;
+                                op_len = op_len_ext;
+                                if (op_ofs >= 2)
+                                {
+                                    Loop1(flag, op_len, chunk, data, output);
+                                }
+                            }
+                        }
+
+                        Loop2(flag, op_len, data, output, chunk);
+                    }
                 }
 
-                return Output;
+                EndOperation(data, end);
             }
+        }
+
+        private static unsafe void Loop1(uint flag, int op_len, byte* chunk, byte* data, byte* output)
+        {
+            if (((*chunk ^ *output) & 1) == 0)
+						{
+                if ((*chunk & 1) != 0)
+                {
+                    *output++ = *chunk++;
+                    op_len--;
+                }
+
+                int op_len_sub = op_len - 2;
+
+                if (op_len >= 2)
+                {
+                    int masked_len = ((op_len_sub >> 1) + 1) & 7;
+
+                    byte* out_ptr = output;
+                    byte* chunk_ptr = chunk;
+
+                    if (masked_len != 0)
+                    {
+                        while (masked_len-- != 0)
+                        {
+                            *out_ptr++ = *chunk_ptr++;
+                            *out_ptr++ = *chunk_ptr++;
+                            op_len -= 2;
+                        }
+                    }
+
+                    uint masked_ext_len = (uint)op_len_sub & 0xFFFFFFFE;
+
+                    if (op_len_sub >= 0xE)
+                    {
+                        do
+                        {
+                            for (int i = 0; i < 0x10; i++)
+                                *out_ptr++ = *chunk_ptr++;
+
+                            op_len -= 0x10;
+                        }
+                        while (op_len > 1);
+                    }
+
+                    output += masked_ext_len + 2;
+                    op_len = op_len_sub - (int)masked_ext_len;
+                    chunk += masked_ext_len + 2;
+                }
+
+                if (op_len == 0)
+                    CheckFlag(flag, data, output);
+            }
+
+            Loop2(flag, op_len, data, output, chunk);
+        }
+
+        private static unsafe void Loop2(uint flag, int op_len, byte* data, byte* output, byte* chunk)
+        {
+            int masked_len = op_len & 7;
+            byte* out_ptr = output;
+            byte* chunk_ptr = chunk;
+
+            if (masked_len != 0)
+            {
+                while (masked_len-- != 0)
+                    *out_ptr++ = *chunk_ptr++;
+            }
+
+            if (op_len - 1 >= 7)
+            {
+                do
+                {
+                    for (int i = 0; i < 8; i++)
+                        *out_ptr++ = *chunk_ptr++;
+                }
+                while (chunk_ptr != chunk + op_len);
+            }
+
+            output += op_len;
+
+            CheckFlag(flag, data, output);
+        }
+
+        private static unsafe void CheckFlag(uint flag, byte* data, byte* output)
+        {
+            if ((flag & 0x80000000) == 0)
+                IterateFlag(flag, data, output);
+        }
+
+        private static unsafe void IterateFlag(uint flag, byte* data, byte* output)
+        {
+            flag <<= 1;
+            *output++ = *data++;
+        }
+
+        private static unsafe void CheckFinished(byte* data, byte* end)
+        {
+            if (data >= end)
+                EndOperation(data, end);
+        }
+
+        private static unsafe void EndOperation(byte* data, byte* end)
+        {
+            byte* ext = end + 0x20;
+            if (data < ext)
+                *end-- = *--ext;
+
+            while (data < ext) ;
         }
 
         public class LZSS

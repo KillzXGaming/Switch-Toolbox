@@ -141,19 +141,19 @@ namespace Switch_Toolbox.Library
             }
         }
 
+        public void SaveFileFormat()
+        {
+            if (FileFormat != null && FileFormat.CanSave)
+                _fileData = FileFormat.Save();
+        }
+
         [Browsable(false)]
         public string Name { get; set; } = string.Empty; //File Name (No Path)
 
         [Browsable(false)]
         public virtual byte[] FileData
         {
-            get
-            {
-                if (FileFormat != null && FileFormat.CanSave)
-                    return FileFormat.Save();
-                else
-                    return _fileData;
-            }
+            get { return _fileData; }
             set { _fileData = value; }
         }
 
@@ -681,7 +681,7 @@ namespace Switch_Toolbox.Library
             {
                 if (fileFormat.CanSave)
                 {
-                    ArchiveFileInfo.FileData = fileFormat.Save();
+                    ArchiveFileInfo.SaveFileFormat();
                     UpdateEditor();
                 }
             }

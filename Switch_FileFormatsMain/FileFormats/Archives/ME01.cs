@@ -142,18 +142,14 @@ namespace FirstPlugin
                 {
                     Offsets[i] = (uint)(writer.Position - DataStart);
 
+                    files[i].SaveFileFormat();
                     writer.Write(files[i].FileData);
                     Align(writer, (int)Alignment);
                 }
 
-
                 writer.Seek(12, System.IO.SeekOrigin.Begin);
                 writer.Write(Offsets);
             }
-
-
-
-
 
             return mem.ToArray();
         }

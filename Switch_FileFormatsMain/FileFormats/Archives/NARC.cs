@@ -119,14 +119,9 @@ namespace FirstPlugin
                 {
                     reader.Seek(4, System.IO.SeekOrigin.Begin);
                     uint decompSize = reader.ReadUInt32();
-
                     uint compSize = (uint)reader.BaseStream.Length - 8;
 
-                    byte[] filedata = reader.getSection(8, (int)compSize);
-                    //   data = STLibraryCompression.Type_LZ4.Decompress(filedata, 0, (int)compSize, (int)decompSize);
-                   //   data = STLibraryCompression.GZIP.Decompress(filedata);
-
-                    return data;
+                    return STLibraryCompression.MTA_CUSTOM.Decompress(data, decompSize);
                 }
                 else if (compType == 0x30)
                 {

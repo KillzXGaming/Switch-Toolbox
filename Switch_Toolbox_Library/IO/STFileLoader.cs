@@ -165,6 +165,20 @@ namespace Switch_Toolbox.Library.IO
             fileReader.Position = 0;
             ushort MagicHex2 = fileReader.ReadUInt16();
 
+            Stream stream;
+            if (data != null)
+                stream = new MemoryStream(data);
+            else
+                stream = File.OpenRead(FileName);
+
+            foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
+            {
+                if (compressionFormat.Identify(stream))
+                {
+                    compressionFormat.Decompress(stream);
+                }
+            }
+
             if (Magic == "Yaz0")
             {
                 if (data != null)
@@ -254,12 +268,6 @@ namespace Switch_Toolbox.Library.IO
             }
 
             fileReader.Close();
-
-            Stream stream;
-            if (data != null)
-                stream = new MemoryStream(data);
-            else
-                stream = File.OpenRead(FileName);
 
             foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
             {

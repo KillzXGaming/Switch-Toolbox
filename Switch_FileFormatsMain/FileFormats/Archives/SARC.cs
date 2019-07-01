@@ -16,7 +16,7 @@ namespace FirstPlugin.New
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "SARC", "SARC", "SARC", "SARC", "SARC", "SARC" };
+        public string[] Description { get; set; } = new string[] { "Sorted ARChive" };
         public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sblarc", "*.sbactorpack", ".arc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
@@ -164,6 +164,7 @@ namespace FirstPlugin.New
             sarcData.Files.Clear();
             foreach (var file in files)
             {
+                file.SaveFileFormat();
                 sarcData.Files.Add(file.FileName, file.FileData);
             }
 
@@ -172,9 +173,6 @@ namespace FirstPlugin.New
             IFileInfo.Alignment = sarc.Item1;
             return sarc.Item2;
         }
-
-
-
 
         public class SarcEntry : ArchiveFileInfo
         {

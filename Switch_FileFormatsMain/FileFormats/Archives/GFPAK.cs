@@ -315,7 +315,6 @@ namespace FirstPlugin
             public uint unkown;
             public uint CompressionType;
             private long DataOffset;
-            public IFileFormat FileHandler;
 
             public uint CompressedFileSize;
             public uint padding;
@@ -367,10 +366,7 @@ namespace FirstPlugin
             byte[] CompressedData;
             public void Write(FileWriter writer)
             {
-                if (FileHandler != null && FileHandler.CanSave)
-                {
-                    FileData = FileHandler.Save();
-                }
+                this.SaveFileFormat();
 
                 CompressedData = Compress(FileData, CompressionType);
 

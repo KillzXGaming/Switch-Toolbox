@@ -206,11 +206,6 @@ namespace Switch_Toolbox.Library.IO
                 FileIsCompressed = true;
                 CompressionType = CompressionType.Yaz0;
             }
-            if (extension == ".cmp")
-            {
-                FileIsCompressed = true;
-                CompressionType = CompressionType.Lz4f;
-            }
 
             if (EnableDialog && FileIsCompressed)
             {

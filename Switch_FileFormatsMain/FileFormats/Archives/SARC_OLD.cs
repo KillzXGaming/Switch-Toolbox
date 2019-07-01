@@ -16,7 +16,7 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "SARC", "SARC", "SARC", "SARC", "SARC", "SARC" };
+        public string[] Description { get; set; } = new string[] { "Sorted ARChive" };
         public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sblarc", "*.sbactorpack", ".arc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }

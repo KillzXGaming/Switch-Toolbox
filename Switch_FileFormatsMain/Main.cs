@@ -68,6 +68,8 @@ namespace FirstPlugin
                 List<Type> types = new List<Type>();
                 foreach (Type T in LoadFileFormats())
                     types.Add(T);
+                foreach (Type T in LoadCompressionFormats())
+                    types.Add(T);
                 foreach (Type T in LoadMenus())
                     types.Add(T);
 
@@ -262,6 +264,13 @@ namespace FirstPlugin
             MenuItems.Add(typeof(MenuExt));
             return MenuItems.ToArray();
         }
+
+        private Type[] LoadCompressionFormats()
+        {
+            List<Type> Formats = new List<Type>();
+            return Formats.ToArray();
+        }
+
         private Type[] LoadFileFormats()
         {
             List<Type> Formats = new List<Type>();

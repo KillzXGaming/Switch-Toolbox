@@ -118,6 +118,8 @@ namespace FirstPlugin
             {
                 SetAlignment(writer, files[i].FileName);
                 writer.WriteUint32Offset(files[i]._posHeader + 4);
+
+                files[i].SaveFileFormat();
                 writer.Write(files[i].FileData);
             }
             writer.Close();

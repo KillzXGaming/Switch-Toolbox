@@ -16,7 +16,7 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Message;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Message Binary Text" };
+        public string[] Description { get; set; } = new string[] { "Message Studio Binary Table" };
         public string[] Extension { get; set; } = new string[] { "*.msbt" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
