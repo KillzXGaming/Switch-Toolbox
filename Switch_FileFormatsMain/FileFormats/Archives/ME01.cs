@@ -47,14 +47,17 @@ namespace FirstPlugin
 
         public IEnumerable<ArchiveFileInfo> Files => files;
 
+        private uint Alignment;
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
+
             using (var reader = new FileReader(stream))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
                 reader.ReadSignature(4, "ME01");
                 uint FileCount = reader.ReadUInt32();
-                uint Alignment = reader.ReadUInt32();
+                Alignment = reader.ReadUInt32();
                 uint[] DataOffsets = reader.ReadUInt32s((int)FileCount);
                 uint[] Sizes = reader.ReadUInt32s((int)FileCount);
 
@@ -103,7 +106,68 @@ namespace FirstPlugin
 
         public byte[] Save()
         {
-            return null;
+            var mem = new System.IO.MemoryStream();
+            using (var writer = new FileWriter(mem))
+            {
+                writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+                writer.WriteSignature("ME01");
+                writer.Write(files.Count);
+                writer.Write(Alignment);
+                writer.Write(new uint[files.Count]); //Save space for offsets
+                for (int i = 0; i < files.Count; i++)
+                    writer.Write(files[i].FileData.Length);
+
+                for (int i = 0; i < files.Count; i++)
+                {
+                    writer.WriteString(files[i].FileName);
+
+                    //Fixed 128 string length
+                    if (i != files.Count - 1)
+                    {
+                        int PaddingCount = 128 - files[i].FileName.Length;
+                        for (int p = 0; p < PaddingCount; p++)
+                            writer.Write((byte)0x30);
+                    }
+                    else //Else align normally
+                    {
+                        Align(writer, (int)Alignment);
+                    }
+                }
+
+                uint[] Offsets = new uint[files.Count];
+
+                long DataStart = writer.Position;
+                for (int i = 0; i < files.Count; i++)
+                {
+                    Offsets[i] = (uint)(writer.Position - DataStart);
+
+                    writer.Write(files[i].FileData);
+                    Align(writer, (int)Alignment);
+                }
+
+
+                writer.Seek(12, System.IO.SeekOrigin.Begin);
+                writer.Write(Offsets);
+            }
+
+
+
+
+
+            return mem.ToArray();
+        }
+
+        private void Align(FileWriter writer, int alignment)
+        {
+            var startPos = writer.Position;
+            long position = writer.Seek((-writer.Position % alignment + alignment) % alignment, System.IO.SeekOrigin.Current);
+
+            writer.Seek(startPos, System.IO.SeekOrigin.Begin);
+            while (writer.Position != position)
+            {
+                writer.Write((byte)0x30);
+            }
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
