@@ -24,6 +24,7 @@ namespace Switch_Toolbox.Library.IO
             items.Add(new ToolStripMenuItem("lZ4"));
             items.Add(new ToolStripMenuItem("lZ4F"));
             items.Add(new ToolStripMenuItem("ZSTD"));
+            items.Add(new ToolStripMenuItem("ZLIB"));
 
             SetFunctions(items);
             return items;
@@ -71,6 +72,8 @@ namespace Switch_Toolbox.Library.IO
                 OpenFileForCompression(CompressionType.Lz4f, Compress);
             else if (Name == "ZSTD")
                 OpenFileForCompression(CompressionType.Zstb, Compress);
+            else if (Name == "ZLIB")
+                OpenFileForCompression(CompressionType.Zlib, Compress);
             else throw new Exception("Unimplimented Type! " + Name);
         }
 
@@ -107,6 +110,7 @@ namespace Switch_Toolbox.Library.IO
                         SaveFileForCompression(EveryFileExplorer.YAZ0.Decompress(data));
                         break;
                     case CompressionType.Zlib:
+                        SaveFileForCompression(STLibraryCompression.ZLIB.Decompress(data));
                         break;
                     case CompressionType.Gzip:
                         SaveFileForCompression(STLibraryCompression.GZIP.Decompress(data));

@@ -62,9 +62,30 @@ namespace Switch_Toolbox.Library.IO
             {
                 using (var br = new FileReader(new MemoryStream(b), true))
                 {
+                    if (br.ReadString(4) == "ZCMP")
+                    {
+                       return  DecompressZCMP(b);
+                    }
+                    else
+                    {
+                        var ms = new System.IO.MemoryStream();
+                        br.BaseStream.Position = 2;
+                        using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 6)), CompressionMode.Decompress))
+                            ds.CopyTo(ms);
+                        return ms.ToArray();
+                    }
+                }
+            }
+
+            public static Byte[] DecompressZCMP(byte[] b)
+            {
+                Console.WriteLine("DecompressZCMP");
+
+                using (var br = new FileReader(new MemoryStream(b), true))
+                {
                     var ms = new System.IO.MemoryStream();
-                    br.BaseStream.Position = 2;
-                    using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 6)), CompressionMode.Decompress))
+                    br.BaseStream.Position = 130;
+                    using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 80)), CompressionMode.Decompress))
                         ds.CopyTo(ms);
                     return ms.ToArray();
                 }
