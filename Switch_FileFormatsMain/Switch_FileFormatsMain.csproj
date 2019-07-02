@@ -198,7 +198,9 @@
     <Compile Include="FileFormats\AAMP\AAMP.cs" />
     <Compile Include="FileFormats\Archives\APAK.cs" />
     <Compile Include="FileFormats\Archives\ARC.cs" />
+    <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\IGA_PAK.cs" />
+    <Compile Include="FileFormats\Archives\LM2\LM2_DICT.cs" />
     <Compile Include="FileFormats\Archives\LZARC.cs" />
     <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
@@ -280,7 +282,7 @@
     <Compile Include="GL\Helpers\AlphaGLControl.cs" />
     <Compile Include="GL\Helpers\ColorGLControl.cs" />
     <Compile Include="GUI\AAMP\AampEditor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\AampEditor.Designer.cs">
       <DependentUpon>AampEditor.cs</DependentUpon>
@@ -469,7 +471,7 @@
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingEntryWrapper.cs" />
     <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingWrapper.cs" />
     <Compile Include="GUI\Editors\EffectTableEditor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\Editors\EffectTableEditor.Designer.cs">
       <DependentUpon>EffectTableEditor.cs</DependentUpon>
@@ -481,7 +483,7 @@
       <DependentUpon>CollisionMaterialEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Message\MSBTEditor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\Message\MSBTEditor.Designer.cs">
       <DependentUpon>MSBTEditor.cs</DependentUpon>
@@ -498,10 +500,10 @@
     </Compile>
     <Compile Include="GUI\SMO\MarioCostumeEditor.cs" />
     <Compile Include="GUI\AAMP\AampV1Editor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\AampV2Editor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\EditBox.cs">
       <SubType>Form</SubType>
@@ -776,7 +778,7 @@
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.Designer.cs">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
@@ -857,7 +859,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\Byaml\ByamlEditor.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\Byaml\ByamlEditor.Designer.cs">
       <DependentUpon>ByamlEditor.cs</DependentUpon>

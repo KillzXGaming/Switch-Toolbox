@@ -109,6 +109,7 @@ namespace FirstPlugin
             public byte[] DecompressBlock()
             {
                 byte[] data = GetBlock();
+                Console.WriteLine("DATA " + data.Length);
 
                 var reader = new FileReader(data);
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -121,7 +122,8 @@ namespace FirstPlugin
                     uint decompSize = reader.ReadUInt32();
                     uint compSize = (uint)reader.BaseStream.Length - 8;
 
-                    return STLibraryCompression.MTA_CUSTOM.Decompress(data, decompSize);
+                    var comp = new STLibraryCompression.MTA_CUSTOM();
+                    return comp.Decompress(data, decompSize);
                 }
                 else if (compType == 0x30)
                 {

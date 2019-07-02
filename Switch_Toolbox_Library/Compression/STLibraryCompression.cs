@@ -65,7 +65,7 @@ namespace Switch_Toolbox.Library.IO
                 {
                     if (br.ReadString(4) == "ZCMP")
                     {
-                       return  DecompressZCMP(b);
+                        return DecompressZCMP(b);
                     }
                     else
                     {
@@ -119,16 +119,33 @@ namespace Switch_Toolbox.Library.IO
             }
         }
 
+        public class BPE
+        {
+            public static unsafe byte[] Decompress(byte[] input, uint decompressedLength)
+            {
+                fixed (byte* outputPtr = new byte[decompressedLength])
+                {
+                    fixed (byte* inputPtr = input)
+                    {
+                        Decompress(outputPtr, inputPtr, decompressedLength);
+                    }
+
+                    byte[] decomp = new byte[decompressedLength];
+                    Marshal.Copy((IntPtr)outputPtr, decomp, 0, decomp.Length);
+                    return decomp;
+                }
+            }
+
+            public static unsafe void Decompress(byte* output, byte* input, uint decompressedLength)
+            {
+
+            }
+        }
+
         //Mario Tennis Aces Custom compression
         public class MTA_CUSTOM
         {
-            private static uint Swap(uint X)
-            {
-                return ((X >> 24) & 0xff | (X >> 8) & 0xff00 |
-                         (X << 8) & 0xff0000 | (X << 24) & 0xff000000);
-            }
-
-            public static unsafe byte[] Decompress(byte[] input, uint decompressedLength)
+            public unsafe byte[] Decompress(byte[] input, uint decompressedLength)
             {
                 fixed (byte* outputPtr = new byte[decompressedLength])
                 {
@@ -145,7 +162,7 @@ namespace Switch_Toolbox.Library.IO
 
             //Thanks Simon. Code ported from
             //https://github.com/simontime/MarioTennisAces0x50Decompressor/blob/master/decompress.c
-            public static unsafe void Decompress(byte* output, byte* input, uint decompressedLength)
+            public unsafe void Decompress(byte* output, byte* input, uint decompressedLength)
             {
                 uint pos = 8;
                 byte* end = input + decompressedLength;
@@ -158,8 +175,6 @@ namespace Switch_Toolbox.Library.IO
                 {
                     uint flag;
 
-                    Console.WriteLine($"Pass 1 ");
-
                     while (true)
                     {
                         flag = 0xFF000000 * data[0];
@@ -171,28 +186,36 @@ namespace Switch_Toolbox.Library.IO
                         for (int i = 0; i < 8; i++)
                             *output++ = *data++;
 
-                        CheckFinished(data, end);
+                        var checkFinished = CheckFinished(data, end);
+                        data = checkFinished.data;
+                        end = checkFinished.end;
                     }
-
-                    Console.WriteLine($"Pass 2 ");
 
                     flag |= 0x800000;
 
                     data++;
 
+                    Console.WriteLine($"flag  " + flag);
+
                     //IterateFlag
                     while ((flag & 0x80000000) == 0)
                     {
-                        IterateFlag(flag, data, output);
+                        flag <<= 1;
+                        *output++ = *data++;
                     }
 
+                    Console.WriteLine($"Pass 3 ");
 
                     while (true)
                     {
                         flag <<= 1;
 
                         if (flag == 0)
-                            CheckFinished(data, end);
+                        {
+                            var checkFinished2 = CheckFinished(data, end);
+                            data = checkFinished2.data;
+                            end = checkFinished2.end;
+                        }
 
                         int op_ofs = (data[0] >> 4) | (data[1] << 4);
                         int op_len = data[0] & 0xF;
@@ -200,7 +223,7 @@ namespace Switch_Toolbox.Library.IO
                         if (op_ofs == 0)
                             return;
 
-                        byte* chunk = output -op_ofs;
+                        byte* chunk = output - op_ofs;
                         if (op_len > 1)
                             data += 2;
                         else
@@ -215,7 +238,14 @@ namespace Switch_Toolbox.Library.IO
                                 op_len = op_len_ext + add_len;
 
                                 if (op_ofs >= 2)
-                                    Loop1(flag, op_len, chunk, data, output);
+                                {
+                                    var loop1Data = Loop1(flag, op_len, chunk, data, output);
+                                    flag = loop1Data.flag;
+                                    op_len = loop1Data.op_len;
+                                    chunk = loop1Data.chunk;
+                                    data = loop1Data.data;
+                                    output = loop1Data.output;
+                                }
                             }
                             else
                             {
@@ -223,165 +253,232 @@ namespace Switch_Toolbox.Library.IO
                                 op_len = op_len_ext;
                                 if (op_ofs >= 2)
                                 {
-                                    Loop1(flag, op_len, chunk, data, output);
-
-                                    Loop2(flag, op_len, data, output, chunk);
+                                    var loop1Data = Loop1(flag, op_len, chunk, data, output);
+                                    flag = loop1Data.flag;
+                                    op_len = loop1Data.op_len;
+                                    chunk = loop1Data.chunk;
+                                    data = loop1Data.data;
+                                    output = loop1Data.output;
                                 }
                             }
                         }
+
+                        var loop2Data2 = Loop2(flag, op_len, data, output, chunk);
+                        flag = loop2Data2.flag;
+                        op_len = loop2Data2.op_len;
+                        chunk = loop2Data2.chunk;
+                        data = loop2Data2.data;
+                        output = loop2Data2.output;
                     }
                 }
 
-                EndOperation(data, end);
+                var endOp = EndOperation(data, end);
+                data = endOp.data;
+                end = endOp.end;
             }
-        }
 
-        private static unsafe void Loop1(uint flag, int op_len, byte* chunk, byte* data, byte* output)
-        {
-            if (((*chunk ^ *output) & 1) == 0)
-						{
-                if ((*chunk & 1) != 0)
+            private unsafe class Data
+            {
+                public uint flag;
+                public int op_len;
+                public byte* chunk;
+                public byte* data;
+                public byte* output;
+                public byte* end;
+            }
+
+            unsafe Data Loop1(uint flag, int op_len, byte* chunk, byte* data, byte* output)
+            {
+                if ((((byte)*chunk ^ (byte)*output) & 1) == 0)
                 {
-                    *output++ = *chunk++;
-                    op_len--;
-                }
-
-                int op_len_sub = op_len - 2;
-
-                if (op_len >= 2)
-                {
-                    int masked_len = ((op_len_sub >> 1) + 1) & 7;
-
-                    byte* out_ptr = output;
-                    byte* chunk_ptr = chunk;
-
-                    if (masked_len != 0)
+                    if (((byte)*chunk & 1) != 0)
                     {
-                        while (masked_len-- != 0)
-                        {
-                            *out_ptr++ = *chunk_ptr++;
-                            *out_ptr++ = *chunk_ptr++;
-                            op_len -= 2;
-                        }
+                        *output++ = *chunk++;
+                        op_len--;
                     }
 
-                    uint masked_ext_len = (uint)op_len_sub & 0xFFFFFFFE;
+                    uint op_len_sub = (uint)op_len - 2;
 
-                    if (op_len_sub >= 0xE)
+                    if (op_len >= 2)
                     {
-                        do
+                        int masked_len = (((int)op_len_sub >> 1) + 1) & 7;
+
+                        byte* out_ptr = output;
+                        byte* chunk_ptr = chunk;
+
+                        if (masked_len != 0)
                         {
-                            for (int i = 0; i < 0x10; i++)
+                            while (masked_len-- != 0)
+                            {
                                 *out_ptr++ = *chunk_ptr++;
-
-                            op_len -= 0x10;
+                                *out_ptr++ = *chunk_ptr++;
+                                op_len -= 2;
+                            }
                         }
-                        while (op_len > 1);
+
+                        uint masked_ext_len = op_len_sub & 0xFFFFFFFE;
+
+                        if (op_len_sub >= 0xE)
+                        {
+                            do
+                            {
+                                for (int i = 0; i < 0x10; i++)
+                                    *out_ptr++ = *chunk_ptr++;
+
+                                op_len -= 0x10;
+                            }
+                            while (op_len > 1);
+                        }
+
+                        output += masked_ext_len + 2;
+                        op_len = (int)op_len_sub - (int)masked_ext_len;
+                        chunk += masked_ext_len + 2;
                     }
 
-                    output += masked_ext_len + 2;
-                    op_len = op_len_sub - (int)masked_ext_len;
-                    chunk += masked_ext_len + 2;
+                    if (op_len == 0)
+                    {
+                        if ((flag & 0x80000000) == 0)
+                        {
+                            flag <<= 1;
+                            *output++ = *data++;
+                        }
+                    }
                 }
 
-                if (op_len == 0)
-                    CheckFlag(flag, data, output);
+                return Loop2(flag, op_len, data, output, chunk);
             }
 
-            Loop2(flag, op_len, data, output, chunk);
-        }
-
-        private static unsafe void Loop2(uint flag, int op_len, byte* data, byte* output, byte* chunk)
-        {
-            int masked_len = op_len & 7;
-            byte* out_ptr = output;
-            byte* chunk_ptr = chunk;
-
-            if (masked_len != 0)
+            unsafe Data Loop2(uint flag, int op_len, byte* data, byte* output, byte* chunk)
             {
-                while (masked_len-- != 0)
-                    *out_ptr++ = *chunk_ptr++;
-            }
+                int masked_len = op_len & 7;
+                byte* out_ptr = output;
+                byte* chunk_ptr = chunk;
 
-            if (op_len - 1 >= 7)
-            {
-                do
+                if (masked_len != 0)
                 {
-                    for (int i = 0; i < 8; i++)
+                    while (masked_len-- != 0)
                         *out_ptr++ = *chunk_ptr++;
                 }
-                while (chunk_ptr != chunk + op_len);
+
+                if (op_len - 1 >= 7)
+                {
+                    do
+                    {
+                        for (int i = 0; i < 8; i++)
+                            *out_ptr++ = *chunk_ptr++;
+                    }
+                    while (chunk_ptr != chunk + op_len);
+                }
+
+                output += op_len;
+
+                if ((flag & 0x80000000) == 0)
+                {
+                    flag <<= 1;
+                    *output++ = *data++;
+                }
+
+                return new Data()
+                {
+                    flag = flag,
+                    op_len = op_len,
+                    data = data,
+                    output = output,
+                    chunk = chunk,
+                };
             }
 
-            output += op_len;
+            unsafe Data CheckFinished(byte* data, byte* end)
+            {
+                if (data >= end)
+                    return EndOperation(data, end);
 
-            CheckFlag(flag, data, output);
-        }
+                return new Data()
+                {
+                    data = data,
+                    end = end,
+                };
+            }
 
-        private static unsafe void CheckFlag(uint flag, byte* data, byte* output)
-        {
-            if ((flag & 0x80000000) == 0)
-                IterateFlag(flag, data, output);
-        }
+            unsafe Data EndOperation(byte* data, byte* end)
+            {
+                byte* ext = end + 0x20;
+                if (data < ext)
+                    do
+                        *end-- = *--ext;
+                    while (data < ext);
 
-        private static unsafe void IterateFlag(uint flag, byte* data, byte* output)
-        {
-            flag <<= 1;
-            *output++ = *data++;
-        }
-
-        private static unsafe void CheckFinished(byte* data, byte* end)
-        {
-            if (data >= end)
-                EndOperation(data, end);
-        }
-
-        private static unsafe void EndOperation(byte* data, byte* end)
-        {
-            byte* ext = end + 0x20;
-            if (data < ext)
-                do
-                    *end-- = *--ext;
-                while (data < ext);
+                return new Data()
+                {
+                    data = data,
+                    end = end,
+                };
+            }
         }
 
         public class LZSS
         {
-            //From https://github.com/IcySon55/Kuriimu/blob/f670c2719affc1eaef8b4c40e40985881247acc7/src/Kontract/Compression/LZSS.cs
-            //Todo does not work with Paper Mario Color Splash
-            public static byte[] Decompress(byte[] data, uint decompressedLength)
+            static class LzssParameters
             {
-                using (FileReader reader = new FileReader(new MemoryStream(data), true))
+                /// <summary>Size of the ring buffer.</summary>
+                public const int N = 4096;
+                /// <summary>Maximum match length for position coding. (0x0F + THRESHOLD).</summary>
+                public const int F = 18;
+                /// <summary>Minimum match length for position coding.</summary>
+                public const int THRESHOLD = 3;
+                /// <summary>Index for root of binary search trees.</summary>
+                public const int NIL = N;
+                /// <summary>Character used to fill the ring buffer initially.</summary>
+                //private const ubyte BUFF_INIT = ' ';
+                public const byte BUFF_INIT = 0; // Changed for F-Zero GX
+            }
+
+            public static byte[] Decompress(byte[] input, uint decompressedLength)
+            {
+                List<byte> output = new List<byte>();
+                byte[] ringBuf = new byte[LzssParameters.N];
+                int inputPos = 0, ringBufPos = LzssParameters.N - LzssParameters.F;
+
+                ushort flags = 0;
+
+                // Clear ringBuf with a character that will appear often
+                for (int i = 0; i < LzssParameters.N - LzssParameters.F; i++)
+                    ringBuf[i] = LzssParameters.BUFF_INIT;
+
+                while (inputPos < input.Length)
                 {
-                    List<byte> result = new List<byte>();
+                    // Use 16 bits cleverly to count to 8.
+                    // (After 8 shifts, the high bits will be cleared).
+                    if ((flags & 0xFF00) == 0)
+                        flags = (ushort)(input[inputPos++] | 0x8000);
 
-                    for (int i = 0, flags = 0; ; i++)
+                    if ((flags & 1) == 1)
                     {
-                        if (i % 8 == 0) flags = reader.ReadByte();
-                        if ((flags & 0x80) == 0) result.Add(reader.ReadByte());
-                        else
-                        {
-                            int lengthDist = BitConverter.ToUInt16(reader.ReadBytes(2).Reverse().ToArray(), 0);
-                            int offs = lengthDist % 4096 + 1;
-                            int length = lengthDist / 4096 + 3;
-                            while (length > 0)
-                            {
-                                result.Add(result[result.Count - offs]);
-                                length--;
-                            }
-                        }
-
-                        if (result.Count == decompressedLength)
-                        {
-                            return result.ToArray();
-                        }
-                        else if (result.Count > decompressedLength)
-                        {
-                            throw new InvalidDataException("Went past the end of the stream");
-                        }
-                        flags <<= 1;
+                        // Copy data literally from input
+                        byte c = input[inputPos++];
+                        output.Add(c);
+                        ringBuf[ringBufPos++ % LzssParameters.N] = c;
                     }
+                    else
+                    {
+                        // Copy data from the ring buffer (previous data).
+                        int index = ((input[inputPos + 1] & 0xF0) << 4) | input[inputPos];
+                        int count = (input[inputPos + 1] & 0x0F) + LzssParameters.THRESHOLD;
+                        inputPos += 2;
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            byte c = ringBuf[(index + i) % LzssParameters.N];
+                            output.Add(c);
+                            ringBuf[ringBufPos++ % LzssParameters.N] = c;
+                        }
+                    }
+
+                    // Advance flags & count bits
+                    flags >>= 1;
                 }
+
+                return output.ToArray();
             }
         }
 

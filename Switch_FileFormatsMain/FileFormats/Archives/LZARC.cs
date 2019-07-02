@@ -94,8 +94,10 @@ namespace FirstPlugin
 
             public void Read(FileReader reader)
             {
-                char[] name = reader.ReadChars(128);
-                FileName = new string(name);
+                long pos = reader.Position;
+                FileName = reader.ReadZeroTerminatedString();
+                reader.SeekBegin(pos + 128);
+
                 uint Offset = reader.ReadUInt32();
                 CompressedSize = reader.ReadUInt32();
                 uint Unknown = reader.ReadUInt32();
@@ -104,8 +106,9 @@ namespace FirstPlugin
 
                 using (reader.TemporarySeek((int)Offset, System.IO.SeekOrigin.Begin))
                 {
-                    FileData = reader.ReadBytes((int)CompressedSize);
-              //      STLibraryCompression.LZSS.Decompress(FileData, DecompressedSize);
+                    reader.ReadBytes(8);
+                    FileData = reader.ReadBytes((int)CompressedSize - 8);
+                    FileData = STLibraryCompression.LZSS.Decompress(FileData, DecompressedSize);
                 }
             }
         }

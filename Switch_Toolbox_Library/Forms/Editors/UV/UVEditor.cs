@@ -437,6 +437,7 @@ namespace Switch_Toolbox.Library.Forms
 
                 shape.TransformUVs(Translate, Scale, UvChannelIndex);
                 shape.UpdateVertexData();
+                shape.SaveVertexBuffer();
             }
 
             scaleXUD.Value = 1;

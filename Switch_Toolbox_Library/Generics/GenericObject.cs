@@ -24,6 +24,11 @@ namespace Switch_Toolbox.Library
 
         }
 
+        public virtual void SaveVertexBuffer()
+        {
+
+        }
+
         public List<STGenericPolygonGroup> PolygonGroups = new List<STGenericPolygonGroup>();
 
         public bool HasPos;

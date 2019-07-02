@@ -657,6 +657,100 @@ namespace Switch_Toolbox.Library.Old
             return ((X - 1) | (Y - 1)) + 1;
         }
 
+        public static byte[] Decode(GX2Surface tex, int ArrayIndex = -1, int MipIndex = -1, string DebugTextureName = "")
+        {
+            uint blkWidth, blkHeight;
+            if (IsFormatBCN((GX2SurfaceFormat)tex.format))
+            {
+                blkWidth = 4;
+                blkHeight = 4;
+            }
+            else
+            {
+                blkWidth = 1;
+                blkHeight = 1;
+            }
+
+            var surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
+            uint bpp = DIV_ROUND_UP(surfInfo.bpp, 8);
+
+            if (tex.numArray == 0)
+                tex.numArray = 1;
+
+            byte[] data = new byte[tex.data.Length];
+            byte[] mipdata = new byte[0];
+
+            if (tex.mipData != null)
+                mipdata = new byte[tex.mipData.Length];
+
+            uint mipCount = tex.numMips;
+            if (tex.mipData == null || tex.mipData.Length <= 0)
+                mipCount = 1;
+
+            int dataOffset = 0;
+            int mipDataOffset = 0;
+            int mipSpliceSize = 0;
+
+            for (int arrayLevel = 0; arrayLevel < tex.depth; arrayLevel++)
+            {
+                for (int mipLevel = 0; mipLevel < mipCount; mipLevel++)
+                {
+                    bool GetLevel = (arrayLevel == ArrayIndex && mipLevel == MipIndex);
+
+                    uint swizzle = tex.swizzle;
+
+                    uint width_ = (uint)Math.Max(1, tex.width >> mipLevel);
+                    uint height_ = (uint)Math.Max(1, tex.height >> mipLevel);
+
+                    uint size = DIV_ROUND_UP(width_, blkWidth) * DIV_ROUND_UP(height_, blkHeight) * bpp;
+
+                    uint mipOffset;
+                    if (mipLevel != 0)
+                    {
+                        if (tex.mip_swizzle != 0)
+                            swizzle = tex.mip_swizzle;
+
+                        mipOffset = (tex.mipOffset[mipLevel - 1]);
+                        if (mipLevel == 1)
+                        {
+                            mipOffset -= (uint)surfInfo.surfSize;
+                            mipOffset += (uint)mipDataOffset;
+                            mipSpliceSize += (int)mipOffset;
+                        }
+
+                        Console.WriteLine("mipOffset " + mipOffset);
+                        if (GetLevel)
+                        {
+                            surfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, mipLevel);
+
+                            Array.Copy(tex.mipData, 0, mipdata, 0, tex.mipData.Length);
+                            Array.Copy(tex.mipData, (int)mipOffset, mipdata, 0, (int)surfInfo.sliceSize);
+                            data = mipdata;
+                        }
+                    }
+                    else if (GetLevel)
+                    {
+                        Array.Copy(tex.data, 0, data, 0, tex.data.Length);
+                        Array.Copy(tex.data, (uint)dataOffset, data, 0, size);
+                    }
+
+                    if (GetLevel)
+                    {
+                        byte[] deswizzled = deswizzle(width_, height_, surfInfo.depth, surfInfo.height, (uint)tex.format,
+                        surfInfo.tileMode, (uint)swizzle, surfInfo.pitch, surfInfo.bpp, data, arrayLevel);
+                        //Create a copy and use that to remove uneeded data
+                        byte[] result_ = new byte[size];
+                        Array.Copy(deswizzled, 0, result_, 0, size);
+                        return result_;
+                    }
+                }
+
+                dataOffset += (int)surfInfo.sliceSize;
+                mipDataOffset += mipSpliceSize;
+            }
+            return null;
+        }
+
         public static List<List<byte[]>> Decode(GX2Surface tex, string DebugTextureName = "")
         {
             if (tex.data == null || tex.data.Length <= 0)

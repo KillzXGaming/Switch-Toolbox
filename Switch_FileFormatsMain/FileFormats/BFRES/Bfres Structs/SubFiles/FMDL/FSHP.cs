@@ -1328,6 +1328,12 @@ namespace Bfres.Structs
             output.Z = input.X * matrix.M13 + input.Y * matrix.M23 + input.Z * matrix.M33 + matrix.M43;
             return output;      
         }
+
+        public override void SaveVertexBuffer()
+        {
+            SaveVertexBuffer(GetResFileU() != null);
+        }
+
         public void SaveVertexBuffer(bool IsWiiU)
         {
             if (IsWiiU)

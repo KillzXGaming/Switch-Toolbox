@@ -189,6 +189,16 @@ namespace Switch_Toolbox.Library.IO
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Yaz0, DecompressedFileSize, CompressedFileSize);
             }
+            if (Path.GetExtension(FileName) == ".lz")
+            {
+                if (data == null)
+                    data = File.ReadAllBytes(FileName);
+
+                data = LZ77_WII.Decompress(fileReader.getSection(16, data.Length - 16));
+
+                return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
+                    CompressionType.Yaz0, DecompressedFileSize, CompressedFileSize);
+            }
             if (MagicHex == 0x28B52FFD || MagicHex == 0xFD2FB528)
             {
                 if (data != null)

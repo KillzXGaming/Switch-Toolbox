@@ -210,6 +210,7 @@
     <Compile Include="Audio\VGAudioFile.cs" />
     <Compile Include="Collections\SortExtensions.cs" />
     <Compile Include="Compression\LZ4F.cs" />
+    <Compile Include="Compression\LZ77_WII.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />

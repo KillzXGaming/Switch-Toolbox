@@ -335,8 +335,8 @@ namespace FirstPlugin
             Formats.Add(typeof(NCA));
             Formats.Add(typeof(RARC));
             Formats.Add(typeof(ME01));
-
-            
+         //   Formats.Add(typeof(LM2_DICT));
+            //Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

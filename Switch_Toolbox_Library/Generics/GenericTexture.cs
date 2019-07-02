@@ -144,7 +144,7 @@ namespace Switch_Toolbox.Library
             set {
                 if (value == 0)
                     mipCount = 1;
-                else if (value > 14)
+                else if (value > 17)
                     throw new Exception($"Invalid mip map count! Texture: {Text} Value: {value}");
                 else
                     mipCount = value;
