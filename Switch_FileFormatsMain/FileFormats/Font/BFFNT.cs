@@ -42,6 +42,8 @@ namespace FirstPlugin
         }
 
         FFNT bffnt;
+        public BNTX BinaryTextureFile;
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
@@ -58,6 +60,7 @@ namespace FirstPlugin
                 var bntx = STFileLoader.OpenFileFormat("Sheet_0", Utils.CombineByteArray(tglp.SheetDataList.ToArray()));
                 if (bntx != null) 
                 {
+                    BinaryTextureFile = (BNTX)bntx;
                     textureFolder.Nodes.Add((BNTX)bntx);
                 }
                 else

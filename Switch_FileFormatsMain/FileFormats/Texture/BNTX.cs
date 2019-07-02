@@ -124,7 +124,16 @@ namespace FirstPlugin
                                 if (FileFormat == null)
                                     continue;
 
-                                SearchBinary(FileFormat, folderDialog.SelectedPath, Extension);
+                                if (FileFormat is SARC)
+                                {
+                                    string ArchiveFilePath = Path.Combine(folderDialog.SelectedPath, Path.GetFileNameWithoutExtension(file));
+                                    if (!Directory.Exists(ArchiveFilePath))
+                                        Directory.CreateDirectory(ArchiveFilePath);
+
+                                    SearchBinary(FileFormat, ArchiveFilePath, Extension);
+                                }
+                                else
+                                    SearchBinary(FileFormat, folderDialog.SelectedPath, Extension);
                             }
                         }
                     }
@@ -163,6 +172,17 @@ namespace FirstPlugin
                 if (FileFormat is PTCL)
                 {
                     var bntx = ((PTCL)FileFormat).header.BinaryTextureFile;
+                    if (bntx != null)
+                    {
+                        foreach (var texture in bntx.Textures.Values)
+                            texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+
+                        bntx.Unload();
+                    }
+                }
+                if (FileFormat is BFFNT)
+                {
+                    var bntx = ((BFFNT)FileFormat).BinaryTextureFile;
                     if (bntx != null)
                     {
                         foreach (var texture in bntx.Textures.Values)
