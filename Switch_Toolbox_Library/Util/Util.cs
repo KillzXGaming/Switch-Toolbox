@@ -210,6 +210,27 @@ namespace Switch_Toolbox.Library
                 }
             }
 
+            Filter += $"{"*.z"};";
+            Filter += $"{"*.cmp"};";
+            Filter += $"{"*.yaz0"};";
+            Filter += $"{"*.zstb"};";
+            Filter += $"{"*.lz4"};";
+            Filter += $"{"*.gz"};";
+            Filter += $"{"*.szs"};";
+            Filter += $"{"*.zs"};";
+            Filter += $"{"*.yaz0"};";
+
+
+            FilterEach.Add($"{"Compressed File"} ({"*.cmp"}) |{"*.cmp"}|");
+            FilterEach.Add($"{"Zlib Compressed"} ({"*.z"}) |{"*.z"}|");
+            FilterEach.Add($"{"Yaz0 Compressed"} ({"*.yaz0"}) |{"*.yaz0"}|");
+            FilterEach.Add($"{"Zstb Compressed"} ({"*.zstb"}) |{"*.zstb"}|");
+            FilterEach.Add($"{"Lz4 Compressed"} ({"*.lz4"}) |{"*.lz4"}|");
+            FilterEach.Add($"{"GZIP Compressed"} ({"*.gz"}) |{"*.gz"}|");
+            FilterEach.Add($"{"SZS ZSTD Compressed File"} ({"*.zs"}) |{"*.zs"}|");
+            FilterEach.Add($"{"SZS Yaz0 Compressed"} ({"*.szs"}) |{"*.szs"}|");
+            FilterEach.Add($"{"Yaz0 Compressed"} ({"*.yaz0"}) |{"*.yaz0"}|");
+
             Filter += "|";
             Filter += string.Join("", FilterEach.ToArray());
             Filter += "All files(*.*)|*.*";
