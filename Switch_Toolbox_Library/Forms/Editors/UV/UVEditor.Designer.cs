@@ -37,11 +37,11 @@
             this.scaleXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
             this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
             this.btnApplyTransform = new Switch_Toolbox.Library.Forms.STButton();
+            this.barSlider1 = new ColorSlider.ColorSlider();
             this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
             this.comboBox2 = new Switch_Toolbox.Library.Forms.STComboBox();
             this.comboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.barSlider1 = new ColorSlider.ColorSlider();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transXUD)).BeginInit();
@@ -51,8 +51,8 @@
             // 
             // gL_ControlLegacy2D1
             // 
-            this.gL_ControlLegacy2D1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.gL_ControlLegacy2D1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gL_ControlLegacy2D1.BackColor = System.Drawing.Color.Black;
             this.gL_ControlLegacy2D1.Location = new System.Drawing.Point(0, 70);
@@ -182,9 +182,9 @@
             // 
             // stPanel1
             // 
-            this.stPanel1.Controls.Add(this.barSlider1);
             this.stPanel1.Controls.Add(this.btnApplyTransform);
             this.stPanel1.Controls.Add(this.scaleYUD);
+            this.stPanel1.Controls.Add(this.barSlider1);
             this.stPanel1.Controls.Add(this.transYUD);
             this.stPanel1.Controls.Add(this.stLabel2);
             this.stPanel1.Controls.Add(this.transXUD);
@@ -211,10 +211,43 @@
             this.btnApplyTransform.UseVisualStyleBackColor = false;
             this.btnApplyTransform.Click += new System.EventHandler(this.btnApplyTransform_Click);
             // 
+            // barSlider1
+            // 
+            this.barSlider1.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.barSlider1.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.barSlider1.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.barSlider1.BorderRoundRectSize = new System.Drawing.Size(8, 8);
+            this.barSlider1.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.barSlider1.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.barSlider1.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.barSlider1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            this.barSlider1.ForeColor = System.Drawing.Color.White;
+            this.barSlider1.LargeChange = ((uint)(5u));
+            this.barSlider1.Location = new System.Drawing.Point(65, 7);
+            this.barSlider1.MouseEffects = false;
+            this.barSlider1.Name = "barSlider1";
+            this.barSlider1.ScaleDivisions = 10;
+            this.barSlider1.ScaleSubDivisions = 5;
+            this.barSlider1.ShowDivisionsText = true;
+            this.barSlider1.ShowSmallScale = false;
+            this.barSlider1.Size = new System.Drawing.Size(212, 19);
+            this.barSlider1.SmallChange = ((uint)(1u));
+            this.barSlider1.TabIndex = 18;
+            this.barSlider1.Text = "colorSlider1";
+            this.barSlider1.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.barSlider1.ThumbPenColor = System.Drawing.Color.Silver;
+            this.barSlider1.ThumbRoundRectSize = new System.Drawing.Size(8, 8);
+            this.barSlider1.ThumbSize = new System.Drawing.Size(8, 8);
+            this.barSlider1.TickAdd = 0F;
+            this.barSlider1.TickColor = System.Drawing.Color.White;
+            this.barSlider1.TickDivide = 0F;
+            this.barSlider1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.barSlider1.ValueChanged += new System.EventHandler(this.barSlider1_ValueChanged);
+            this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.barSlider1_Scroll);// 
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(3, 7);
+            this.stLabel2.Location = new System.Drawing.Point(3, 13);
             this.stLabel2.Name = "stLabel2";
             this.stLabel2.Size = new System.Drawing.Size(56, 13);
             this.stLabel2.TabIndex = 2;
@@ -222,7 +255,8 @@
             // 
             // comboBox2
             // 
-            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox2.BorderColor = System.Drawing.Color.Empty;
             this.comboBox2.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBox2.ButtonColor = System.Drawing.Color.Empty;
@@ -258,40 +292,6 @@
             this.stLabel1.TabIndex = 4;
             this.stLabel1.Text = "Active Channel:";
             // 
-            // barSlider1
-            // 
-            this.barSlider1.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.barSlider1.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.barSlider1.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.barSlider1.BorderRoundRectSize = new System.Drawing.Size(8, 8);
-            this.barSlider1.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.barSlider1.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.barSlider1.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.barSlider1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.barSlider1.ForeColor = System.Drawing.Color.White;
-            this.barSlider1.LargeChange = ((uint)(5u));
-            this.barSlider1.Location = new System.Drawing.Point(65, 7);
-            this.barSlider1.MouseEffects = false;
-            this.barSlider1.Name = "barSlider1";
-            this.barSlider1.ScaleDivisions = 10;
-            this.barSlider1.ScaleSubDivisions = 5;
-            this.barSlider1.ShowDivisionsText = true;
-            this.barSlider1.ShowSmallScale = false;
-            this.barSlider1.Size = new System.Drawing.Size(212, 19);
-            this.barSlider1.SmallChange = ((uint)(1u));
-            this.barSlider1.TabIndex = 18;
-            this.barSlider1.Text = "colorSlider1";
-            this.barSlider1.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.barSlider1.ThumbPenColor = System.Drawing.Color.Silver;
-            this.barSlider1.ThumbRoundRectSize = new System.Drawing.Size(8, 8);
-            this.barSlider1.ThumbSize = new System.Drawing.Size(8, 8);
-            this.barSlider1.TickAdd = 0F;
-            this.barSlider1.TickColor = System.Drawing.Color.White;
-            this.barSlider1.TickDivide = 0F;
-            this.barSlider1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.barSlider1.ValueChanged += new System.EventHandler(this.barSlider1_ValueChanged);
-            this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.barSlider1_Scroll);
-            // 
             // UVEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -323,7 +323,7 @@
         private NumericUpDownFloat transXUD;
         private NumericUpDownFloat transYUD;
         private NumericUpDownFloat scaleYUD;
-        private STButton btnApplyTransform;
         private ColorSlider.ColorSlider barSlider1;
+        private STButton btnApplyTransform;
     }
 }

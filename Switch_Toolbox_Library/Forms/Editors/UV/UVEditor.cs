@@ -23,7 +23,7 @@ namespace Switch_Toolbox.Library.Forms
             comboBox1.Items.Add(2);
 
             comboBox1.SelectedIndex = 0;
-            barSlider1.Value = 50;
+            barSlider1.Value = 0;
         }
 
         public class ActiveTexture
@@ -101,33 +101,30 @@ namespace Switch_Toolbox.Library.Forms
                     Vector2 v2 = new Vector2(0);
                     Vector2 v3 = new Vector2(0);
 
-                    if (f.Count < (v + 2) && genericObject.vertices.Count > f[v + 2])
+                    if (UvChannelIndex == 0)
                     {
-                        if (UvChannelIndex == 0)
-                        {
-                            v1 = genericObject.vertices[f[v]].uv0;
-                            v2 = genericObject.vertices[f[v + 1]].uv0;
-                            v3 = genericObject.vertices[f[v + 2]].uv0;
-                        }
-                        if (UvChannelIndex == 1)
-                        {
-                            v1 = genericObject.vertices[f[v]].uv1;
-                            v2 = genericObject.vertices[f[v + 1]].uv1;
-                            v3 = genericObject.vertices[f[v + 2]].uv1;
-                        }
-                        if (UvChannelIndex == 2)
-                        {
-                            v1 = genericObject.vertices[f[v]].uv2;
-                            v2 = genericObject.vertices[f[v + 1]].uv2;
-                            v3 = genericObject.vertices[f[v + 2]].uv2;
-                        }
-
-                        v1 = new Vector2(v1.X, 1 - v1.Y);
-                        v2 = new Vector2(v2.X, 1 - v2.Y);
-                        v3 = new Vector2(v3.X, 1 - v3.Y);
-
-                        DrawUVTriangleAndGrid(v1, v2, v3, divisions, uvColor, lineWidth, gridColor);
+                        v1 = genericObject.vertices[f[v]].uv0;
+                        v2 = genericObject.vertices[f[v + 1]].uv0;
+                        v3 = genericObject.vertices[f[v + 2]].uv0;
                     }
+                    if (UvChannelIndex == 1)
+                    {
+                        v1 = genericObject.vertices[f[v]].uv1;
+                        v2 = genericObject.vertices[f[v + 1]].uv1;
+                        v3 = genericObject.vertices[f[v + 2]].uv1;
+                    }
+                    if (UvChannelIndex == 2)
+                    {
+                        v1 = genericObject.vertices[f[v]].uv2;
+                        v2 = genericObject.vertices[f[v + 1]].uv2;
+                        v3 = genericObject.vertices[f[v + 2]].uv2;
+                    }
+
+                    v1 = new Vector2(v1.X, 1 - v1.Y);
+                    v2 = new Vector2(v2.X, 1 - v2.Y);
+                    v3 = new Vector2(v3.X, 1 - v3.Y);
+
+                    DrawUVTriangleAndGrid(v1, v2, v3, divisions, uvColor, lineWidth, gridColor);
                 }
             }
         }
@@ -247,9 +244,9 @@ namespace Switch_Toolbox.Library.Forms
             if (ActiveObjects.Count <= 0 || ActiveMaterial == null || Runtime.OpenTKInitialized == false)
                 return;
 
-            SetupRendering(1);
-
             gL_ControlLegacy2D1.MakeCurrent();
+
+            SetupRendering(1);
 
             GL.ClearColor(System.Drawing.Color.FromArgb(40, 40, 40));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -274,7 +271,6 @@ namespace Switch_Toolbox.Library.Forms
             GL.PushMatrix();
             GL.Scale(PlaneScaleY * ZoomValue, -PlaneScaleX * ZoomValue, 1);
             GL.Translate(PosX, PosY, 0);
-            GL.Rotate(180, 1, 0, 0);
 
             if (activeTexture.texture != null)
             {
@@ -357,9 +353,7 @@ namespace Switch_Toolbox.Library.Forms
         private void OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Delta > 0 && ZoomValue > 0) ZoomValue += 0.1f;
-            if (e.Delta < 0 && ZoomValue < 30 && ZoomValue > 0.2) ZoomValue -= 0.1f;
-
-            Console.WriteLine("ZoomValue " + ZoomValue);
+            if (e.Delta < 0 && ZoomValue < 30 && ZoomValue > 0.1) ZoomValue -= 0.1f;
 
             gL_ControlLegacy2D1.Invalidate();
         }
@@ -424,6 +418,16 @@ namespace Switch_Toolbox.Library.Forms
             }
         }
 
+        private void barSlider1_Scroll(object sender, EventArgs e)
+        {
+        }
+
+        private void barSlider1_ValueChanged(object sender, EventArgs e)
+        {
+            brightness = (float)barSlider1.Value / 100;
+            gL_ControlLegacy2D1.Invalidate();
+        }
+
         private void OnNumbicValueSRT_ValueChanged(object sender, EventArgs e)
         {
         }
@@ -436,8 +440,8 @@ namespace Switch_Toolbox.Library.Forms
                 Vector2 Translate = new Vector2((float)transXUD.Value, (float)transYUD.Value);
 
                 shape.TransformUVs(Translate, Scale, UvChannelIndex);
-                shape.UpdateVertexData();
                 shape.SaveVertexBuffer();
+                shape.UpdateVertexData();
             }
 
             scaleXUD.Value = 1;
@@ -450,17 +454,6 @@ namespace Switch_Toolbox.Library.Forms
 
         private void gL_ControlLegacy2D1_Resize(object sender, EventArgs e)
         {
-            gL_ControlLegacy2D1.Invalidate();
-        }
-
-        private void barSlider1_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void barSlider1_ValueChanged(object sender, EventArgs e)
-        {
-            brightness = (float)barSlider1.Value / 100;
             gL_ControlLegacy2D1.Invalidate();
         }
     }

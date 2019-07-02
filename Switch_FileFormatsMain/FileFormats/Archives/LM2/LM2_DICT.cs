@@ -86,6 +86,10 @@ namespace FirstPlugin
 
                 for (int i = 0; i < files.Count; i++)
                 {
+                    Nodes.Add(files[i]);
+
+                    continue;
+
                     if (files[i].FileType == FileEntry.FileDataType.Texture)
                     {
                         if (files[i].Unknown3 == 1) //Info
