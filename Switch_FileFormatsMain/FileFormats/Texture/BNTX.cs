@@ -120,7 +120,7 @@ namespace FirstPlugin
                         {
                             foreach (string file in ofd.FileNames)
                             {
-                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BNTX), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
                                 if (FileFormat == null)
                                     continue;
 
@@ -150,7 +150,7 @@ namespace FirstPlugin
 
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.FileData);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BNTX), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
