@@ -186,7 +186,7 @@ namespace FirstPlugin.Forms
             }
             else
             {
-                userDataEditor.LoadUserData(material.Material.UserDatas.ToList());
+                userDataEditor.LoadUserData(material.Material.UserDatas);
             }
         }
 

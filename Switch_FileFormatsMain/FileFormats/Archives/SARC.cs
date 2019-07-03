@@ -9,7 +9,7 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Forms;
 
-namespace FirstPlugin
+namespace FirstPlugin.New
 {
     public class SARC : IArchiveFile, IFileFormat
     {

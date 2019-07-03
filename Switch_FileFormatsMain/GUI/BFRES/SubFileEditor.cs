@@ -55,7 +55,7 @@ namespace FirstPlugin.Forms
             }
             else
             {
-                userDataEditor1.LoadUserData(fmdl.Model.UserData.ToList());
+                userDataEditor1.LoadUserData(fmdl.Model.UserData);
                 stPropertyGrid1.LoadProperty(fmdl.Model, OnPropertyChanged);
             }
         }
@@ -72,7 +72,7 @@ namespace FirstPlugin.Forms
             else
             {
                 stPropertyGrid1.LoadProperty(anim.SkeletalAnim, OnPropertyChanged);
-                userDataEditor1.LoadUserData(anim.SkeletalAnim.UserDatas.ToList());
+                userDataEditor1.LoadUserData(anim.SkeletalAnim.UserDatas);
             }
         }
         public void LoadSubFile(FMAA anim)
@@ -80,7 +80,7 @@ namespace FirstPlugin.Forms
             activeFmaa = anim;
 
             stPropertyGrid1.LoadProperty(anim.MaterialAnim, OnPropertyChanged);
-            userDataEditor1.LoadUserData(anim.MaterialAnim.UserData.ToList());
+            userDataEditor1.LoadUserData(anim.MaterialAnim.UserData);
 
             if (anim.AnimType == MaterialAnimation.AnimationType.TexturePattern)
             {
@@ -159,7 +159,7 @@ namespace FirstPlugin.Forms
             else
             {
                 stPropertyGrid1.LoadProperty(anim.ShapeAnim, OnPropertyChanged);
-                userDataEditor1.LoadUserData(anim.ShapeAnim.UserData.ToList());
+                userDataEditor1.LoadUserData(anim.ShapeAnim.UserData);
             }
         }
         public void LoadSubFile(FSCN anim)
@@ -174,7 +174,7 @@ namespace FirstPlugin.Forms
             else
             {
                 stPropertyGrid1.LoadProperty(anim.SceneAnim, OnPropertyChanged);
-                userDataEditor1.LoadUserData(anim.SceneAnim.UserData.ToList());
+                userDataEditor1.LoadUserData(anim.SceneAnim.UserData);
             }
         }
         public void LoadSubFile(FVIS anim)
@@ -189,7 +189,7 @@ namespace FirstPlugin.Forms
             else
             {
                 stPropertyGrid1.LoadProperty(anim.VisibilityAnim, OnPropertyChanged);
-                userDataEditor1.LoadUserData(anim.VisibilityAnim.UserData.ToList());
+                userDataEditor1.LoadUserData(anim.VisibilityAnim.UserData);
             }
 
             BoneVisualAnimEditor editor = (BoneVisualAnimEditor)GetActiveControl(typeof(BoneVisualAnimEditor));

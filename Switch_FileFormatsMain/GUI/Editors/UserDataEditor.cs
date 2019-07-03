@@ -23,13 +23,13 @@ namespace FirstPlugin
         }
 
         ResDict<UserData> userData;
-        List<ResNX.UserData> userDataNX;
+        IList<ResNX.UserData> userDataNX;
 
         UserData SelectedDataU;
         ResNX.UserData SelectedDataNX;
 
         bool IsWiiU = false;
-        public void LoadUserData(List<ResNX.UserData> UserDataList)
+        public void LoadUserData(IList<ResNX.UserData> UserDataList)
         {
             listViewCustom1.Items.Clear();
 
@@ -39,7 +39,7 @@ namespace FirstPlugin
         }
 
         //Convert the user data from bntx
-        public void LoadUserData(List<ResBNTX.UserData> UserDataList)
+        public void LoadUserData(IList<ResBNTX.UserData> UserDataList)
         {
             userDataNX = new List<ResNX.UserData>();
 
