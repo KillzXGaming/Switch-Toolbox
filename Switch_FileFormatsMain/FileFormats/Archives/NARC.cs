@@ -46,7 +46,7 @@ namespace FirstPlugin
 
             public FileEntry(string Name)
             {
-                Text = Name;
+                Text = Name.Replace(" ", string.Empty).RemoveIllegaleFolderNameCharacters();
 
                 if (Utils.HasExtension(Name, ".cbfmd") ||
                     Utils.HasExtension(Name, ".cbfa") ||

@@ -165,12 +165,17 @@ namespace Switch_Toolbox.Library.IO
             fileReader.Position = 0;
             ushort MagicHex2 = fileReader.ReadUInt16();
 
+            //Another hacky magic check if decomp size is first
+            fileReader.Position = 4;
+            ushort MagicHex3 = fileReader.ReadUInt16();
+
             Stream stream;
             if (data != null)
                 stream = new MemoryStream(data);
             else
                 stream = File.OpenRead(FileName);
 
+            //Note this method will soon be how all compression formats are handled rather than being checked here
             foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
             {
                 if (compressionFormat.Identify(stream))
@@ -215,6 +220,18 @@ namespace Switch_Toolbox.Library.IO
                     data = File.ReadAllBytes(FileName);
 
                 data = STLibraryCompression.ZLIB.Decompress(data);
+                return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
+                    CompressionType.Zlib, DecompressedFileSize, CompressedFileSize);
+            }
+            if (MagicHex3 == 0x789C || MagicHex3 == 0x78DA && CompType == CompressionType.None)
+            {
+                if (data == null)
+                    data = File.ReadAllBytes(FileName);
+
+                fileReader.Position = 0;
+                int OuSize = fileReader.ReadInt32();
+                int InSize = data.Length - 4;
+                data = STLibraryCompression.ZLIB.Decompress(fileReader.getSection(4, InSize));
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Zlib, DecompressedFileSize, CompressedFileSize);
             }
