@@ -38,16 +38,22 @@ namespace Bfres.Structs
 
         private void CreateEmpty(object sender, EventArgs args)
         {
-            var fmdl = ((FMDL)Parent);
-            List<string> ShapeKeys = fmdl.shapes.Select(i => i.Text).ToList();
+            FMDL fmdl = (FMDL)Parent;
+            FSHP mesh = new FSHP();
+            mesh.Text = "EmptyShape";
+            CreateEmptyMesh((FMDL)Parent, mesh);
+        }
 
-            string NewEmptyName = Utils.RenameDuplicateString(ShapeKeys, "EmptyShape");
+        public static void CreateEmptyMesh(FMDL fmdl, FSHP mesh)
+        {
+            List<string> ShapeKeys = fmdl.shapes.Select(i => i.Text).ToList();
+            mesh.Text = Utils.RenameDuplicateString(ShapeKeys, mesh.Text);
 
             if (fmdl.GetResFileU() != null)
             {
                 var Shape = new ResU.Shape();
                 Shape.CreateEmptyMesh();
-                Shape.Name = NewEmptyName;
+                Shape.Name = mesh.Text;
 
                 var VertexBuffer = new ResU.VertexBuffer();
                 VertexBuffer.CreateEmptyVertexBuffer();
@@ -55,8 +61,7 @@ namespace Bfres.Structs
                 fmdl.ModelU.VertexBuffers.Add(VertexBuffer);
                 fmdl.ModelU.Shapes.Add(Shape.Name, Shape);
 
-                FSHP mesh = new FSHP();
-                BfresWiiU.ReadShapesVertices(mesh, Shape, VertexBuffer, (FMDL)Parent);
+                BfresWiiU.ReadShapesVertices(mesh, Shape, VertexBuffer, fmdl);
                 mesh.MaterialIndex = 0;
 
                 fmdl.Nodes["FshpFolder"].Nodes.Add(mesh);
@@ -66,17 +71,16 @@ namespace Bfres.Structs
             {
                 var Shape = new Shape();
                 Shape.CreateEmptyMesh();
-                Shape.Name = NewEmptyName;
+                Shape.Name = mesh.Text;
 
                 var VertexBuffer = new VertexBuffer();
                 VertexBuffer.CreateEmptyVertexBuffer();
 
                 fmdl.Model.VertexBuffers.Add(VertexBuffer);
                 fmdl.Model.Shapes.Add(Shape);
-                fmdl.Model.ShapeDict.Add(NewEmptyName);
+                fmdl.Model.ShapeDict.Add(mesh.Text);
 
-                FSHP mesh = new FSHP();
-                BfresSwitch.ReadShapesVertices(mesh, Shape, VertexBuffer, (FMDL)Parent);
+                BfresSwitch.ReadShapesVertices(mesh, Shape, VertexBuffer, fmdl);
                 mesh.MaterialIndex = 0;
 
                 fmdl.Nodes["FshpFolder"].Nodes.Add(mesh);

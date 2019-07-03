@@ -56,6 +56,18 @@ namespace FirstPlugin.Forms
 
             switch (prm.Type)
             {
+                case ShaderParamType.Int:
+                case ShaderParamType.Int2:
+                case ShaderParamType.Int3:
+                case ShaderParamType.Int4:
+                    DisplayValue = SetValueToString(prm.ValueInt);
+                    break;
+                case ShaderParamType.UInt:
+                case ShaderParamType.UInt2:
+                case ShaderParamType.UInt3:
+                case ShaderParamType.UInt4:
+                    DisplayValue = SetValueToString(prm.ValueUint);
+                    break;
                 case ShaderParamType.Float:
                 case ShaderParamType.Float2:
                 case ShaderParamType.Float2x2:
@@ -241,14 +253,14 @@ namespace FirstPlugin.Forms
                 case ShaderParamType.Float2: panel = new vector2SliderPanel(param.ValueFloat, param); break;
                 case ShaderParamType.Float3: panel = new vector3SliderPanel(param.Name, param.ValueFloat, param); break;
                 case ShaderParamType.Float4: panel = new vector4SliderPanel(param.Name, param.ValueFloat, param); break;
-                case ShaderParamType.Int: panel = new vector1SliderPanel(param.ValueFloat, param); break;
-                case ShaderParamType.Int2: panel = new vector2SliderPanel(param.ValueFloat, param); break;
-                case ShaderParamType.Int3: panel = new vector3SliderPanel(param.Name, param.ValueFloat, param); break;
-                case ShaderParamType.Int4: panel = new vector4SliderPanel(param.Name, param.ValueFloat, param); break;
-                case ShaderParamType.UInt: panel = new vector1SliderPanel(param.ValueFloat, param); break;
-                case ShaderParamType.UInt2: panel = new vector2SliderPanel(param.ValueFloat, param); break;
-                case ShaderParamType.UInt3: panel = new vector3SliderPanel(param.Name, param.ValueFloat, param); break;
-                case ShaderParamType.UInt4: panel = new vector4SliderPanel(param.Name, param.ValueFloat, param); break;
+                case ShaderParamType.Int: panel = new vector1SliderPanel(param.ValueInt, param); break;
+                case ShaderParamType.Int2: panel = new vector2SliderPanel(param.ValueInt, param); break;
+                case ShaderParamType.Int3: panel = new vector3SliderPanel(param.Name, param.ValueInt, param); break;
+                case ShaderParamType.Int4: panel = new vector4SliderPanel(param.Name, param.ValueInt, param); break;
+                case ShaderParamType.UInt: panel = new vector1SliderPanel(param.ValueUint, param); break;
+                case ShaderParamType.UInt2: panel = new vector2SliderPanel(param.ValueUint, param); break;
+                case ShaderParamType.UInt3: panel = new vector3SliderPanel(param.Name, param.ValueUint, param); break;
+                case ShaderParamType.UInt4: panel = new vector4SliderPanel(param.Name, param.ValueUint, param); break;
                 case ShaderParamType.TexSrt: panel = new TexSrtPanel(param.ValueTexSrt,param); break;
                 case ShaderParamType.Bool: panel = new booleanPanel(param.ValueBool, param); break;
                 case ShaderParamType.Bool2: panel = new booleanPanel(param.ValueBool, param); break;

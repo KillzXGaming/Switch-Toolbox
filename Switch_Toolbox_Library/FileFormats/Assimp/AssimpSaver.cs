@@ -95,7 +95,10 @@ namespace Switch_Toolbox.Library
             for (int ob = 0; ob < scene.MeshCount; ob++)
             {
                 geomNode.MeshIndices.Add(ob);
+
+                //     if (!scene.Meshes[ob].HasBones)
             }
+
             scene.RootNode.Children.Add(geomNode);
         }
 

@@ -720,6 +720,19 @@ namespace Bfres.Structs
 
                         foreach (STGenericObject obj in csvModel.objects)
                         {
+                            if (obj.vertices.Count <= 0)
+                            {
+                                STConsole.WriteLine($"0 Vertices found on mesh {obj.ObjectName}! Will add an empty mesh to prevent issues.", 0);
+
+                                FSHP emptyShape = new FSHP();
+                                emptyShape.Text = obj.ObjectName;
+                                if (obj.MaterialIndex < materials.Count)
+                                    emptyShape.MaterialIndex = obj.MaterialIndex;
+
+                                FSHPFolder.CreateEmptyMesh(this, emptyShape);
+                                continue;
+                            }
+
                             int ForceSkinInfluenceMax = obj.VertexSkinCount;
 
                             FSHP shape = new FSHP();
@@ -1132,6 +1145,19 @@ namespace Bfres.Structs
                         int curShp = 0;
                         foreach (STGenericObject obj in ImportedObjects)
                         {
+                            if (obj.vertices.Count <= 0)
+                            {
+                                STConsole.WriteLine($"0 Vertices found on mesh {obj.ObjectName}! Will add an empty mesh to prevent issues.", 0);
+
+                                FSHP emptyShape = new FSHP();
+                                emptyShape.Text = obj.ObjectName;
+                                if (obj.MaterialIndex < materials.Count)
+                                    emptyShape.MaterialIndex = obj.MaterialIndex;
+
+                                FSHPFolder.CreateEmptyMesh(this, emptyShape);
+                                continue;
+                            }
+
                             int ForceSkinInfluenceMax = obj.VertexSkinCount;
 
                             if (obj.ObjectName == "")
