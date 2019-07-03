@@ -66,7 +66,7 @@ namespace FirstPlugin
 
             public BarsProperty(BarsLib.BARS bars)
             {
-                AudioCount = bars.AmtaList.Count;
+                AudioCount = bars.AudioEntries.Count;
             }
         }
 
@@ -226,23 +226,23 @@ namespace FirstPlugin
 
             bars = new BarsLib.BARS(stream);
 
-            if (bars.AmtaList.Count > 0)
+            if (bars.HasMetaData)
                 Nodes.Add("Meta Data");
 
-            if (bars.audioList.Count > 0)
+            if (bars.HasAudioFiles)
                 Nodes.Add("Audio");
 
-            for (int i = 0; i < bars.AmtaList.Count; i++)
+            for (int i = 0; i < bars.AudioEntries.Count; i++)
             {
-                var amtaWrapper = new MetaDataNodeWrapper(bars.AmtaList[i]);
-                string audioName = bars.AmtaList[i].Name;
+                var amtaWrapper = new MetaDataNodeWrapper(bars.AudioEntries[i].MetaData);
+                string audioName = bars.AudioEntries[i].MetaData.Name;
 
                 amtaWrapper.Text = $"{audioName}.amta";
                 Nodes[0].Nodes.Add(amtaWrapper);
 
-                if (bars.audioList.Count > 0)
+                if (bars.AudioEntries[i].AudioFile != null)
                 {
-                    BARSAudioFile audio = bars.audioList[i];
+                    BARSAudioFile audio = bars.AudioEntries[i].AudioFile;
 
                     AudioEntry node = new AudioEntry();
                     node.Type = audio.AudioType;
@@ -288,14 +288,14 @@ namespace FirstPlugin
 
             foreach (TreeNode node in Nodes[1].Nodes)
             {
-                for (int i = 0; i < bars.AmtaList.Count; i++)
+                for (int i = 0; i < bars.AudioEntries.Count; i++)
                 {
-                    string audioName = bars.AmtaList[i].Name;
+                    string audioName = bars.AudioEntries[i].MetaData.Name;
 
                     if (Path.GetFileNameWithoutExtension(node.Text) == audioName)
                     {
                         Console.WriteLine(audioName);
-                        bars.audioList[i].data = ((AudioEntry)node).Data;
+                        bars.AudioEntries[i].AudioFile.data = ((AudioEntry)node).Data;
                     }
                 }
             }
