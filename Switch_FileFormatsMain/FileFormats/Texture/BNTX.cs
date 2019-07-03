@@ -144,13 +144,17 @@ namespace FirstPlugin
             {
                 if (FileFormat is SARC)
                 {
+                    string ArchiveFilePath = Path.Combine(Folder, Path.GetFileNameWithoutExtension(FileFormat.FileName));
+                    if (!Directory.Exists(ArchiveFilePath))
+                        Directory.CreateDirectory(ArchiveFilePath);
+
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
                         var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
-                        SearchBinary(archiveFile, Folder, Extension);
+                        SearchBinary(archiveFile, ArchiveFilePath, Extension);
                     }
                 }
                 if (FileFormat is BNTX)
