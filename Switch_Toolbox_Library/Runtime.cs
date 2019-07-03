@@ -19,6 +19,8 @@ namespace Switch_Toolbox.Library
 
         public static bool DEVELOPER_DEBUG_MODE = false;
 
+        public static bool AlwaysCompressOnSave = false;
+
         public static class ResourceTables
         {
             public static bool TpTable = false;

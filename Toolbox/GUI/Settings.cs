@@ -88,6 +88,7 @@ namespace Toolbox
             chkBotwFileTable.Checked = Runtime.ResourceTables.BotwTable;
             chkTpFileTable.Checked = Runtime.ResourceTables.TpTable;
             chkFrameCamera.Checked = Runtime.FrameCamera;
+            chkAlwaysCompressOnSave.Checked = Runtime.AlwaysCompressOnSave;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
@@ -655,6 +656,10 @@ namespace Toolbox
 
         private void chkFrameCamera_CheckedChanged(object sender, EventArgs e) {
             Runtime.FrameCamera = chkFrameCamera.Checked;
+        }
+
+        private void chkAlwaysCompressOnSave_CheckedChanged(object sender, EventArgs e) {
+           Runtime.AlwaysCompressOnSave = chkAlwaysCompressOnSave.Checked;
         }
     }
 }

@@ -80,6 +80,8 @@
             this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chkAlwaysCompressOnSave = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.chkFrameCamera = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.modelLoadArchive = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.gridCellCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
             this.stLabel7 = new Switch_Toolbox.Library.Forms.STLabel();
@@ -117,7 +119,6 @@
             this.chkTpFileTable = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.stLabel17 = new Switch_Toolbox.Library.Forms.STLabel();
             this.chkBotwFileTable = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.chkFrameCamera = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -832,6 +833,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.chkAlwaysCompressOnSave);
             this.tabPage2.Controls.Add(this.chkFrameCamera);
             this.tabPage2.Controls.Add(this.modelLoadArchive);
             this.tabPage2.Controls.Add(this.gridCellCountUD);
@@ -853,6 +855,30 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Editor";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // chkAlwaysCompressOnSave
+            // 
+            this.chkAlwaysCompressOnSave.AutoSize = true;
+            this.chkAlwaysCompressOnSave.Location = new System.Drawing.Point(9, 210);
+            this.chkAlwaysCompressOnSave.Name = "chkAlwaysCompressOnSave";
+            this.chkAlwaysCompressOnSave.Size = new System.Drawing.Size(219, 17);
+            this.chkAlwaysCompressOnSave.TabIndex = 19;
+            this.chkAlwaysCompressOnSave.Text = "Always compress on save (if used on file)";
+            this.chkAlwaysCompressOnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkAlwaysCompressOnSave.UseVisualStyleBackColor = true;
+            this.chkAlwaysCompressOnSave.CheckedChanged += new System.EventHandler(this.chkAlwaysCompressOnSave_CheckedChanged);
+            // 
+            // chkFrameCamera
+            // 
+            this.chkFrameCamera.AutoSize = true;
+            this.chkFrameCamera.Location = new System.Drawing.Point(9, 233);
+            this.chkFrameCamera.Name = "chkFrameCamera";
+            this.chkFrameCamera.Size = new System.Drawing.Size(210, 17);
+            this.chkFrameCamera.TabIndex = 18;
+            this.chkFrameCamera.Text = "Center camera to model when selected";
+            this.chkFrameCamera.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkFrameCamera.UseVisualStyleBackColor = true;
+            this.chkFrameCamera.CheckedChanged += new System.EventHandler(this.chkFrameCamera_CheckedChanged);
             // 
             // modelLoadArchive
             // 
@@ -1254,18 +1280,6 @@
             this.chkBotwFileTable.UseVisualStyleBackColor = true;
             this.chkBotwFileTable.CheckedChanged += new System.EventHandler(this.chkBotwFileTable_CheckedChanged);
             // 
-            // chkFrameCamera
-            // 
-            this.chkFrameCamera.AutoSize = true;
-            this.chkFrameCamera.Location = new System.Drawing.Point(9, 208);
-            this.chkFrameCamera.Name = "chkFrameCamera";
-            this.chkFrameCamera.Size = new System.Drawing.Size(210, 17);
-            this.chkFrameCamera.TabIndex = 18;
-            this.chkFrameCamera.Text = "Center camera to model when selected";
-            this.chkFrameCamera.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkFrameCamera.UseVisualStyleBackColor = true;
-            this.chkFrameCamera.CheckedChanged += new System.EventHandler(this.chkFrameCamera_CheckedChanged);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1401,5 +1415,6 @@
         private Switch_Toolbox.Library.Forms.STLabel stLabel17;
         private Switch_Toolbox.Library.Forms.STCheckBox chkBotwFileTable;
         private Switch_Toolbox.Library.Forms.STCheckBox chkFrameCamera;
+        private Switch_Toolbox.Library.Forms.STCheckBox chkAlwaysCompressOnSave;
     }
 }

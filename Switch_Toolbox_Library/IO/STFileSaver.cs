@@ -209,9 +209,16 @@ namespace Switch_Toolbox.Library.IO
 
             if (EnableDialog && FileIsCompressed)
             {
-                DialogResult save = MessageBox.Show($"Compress file with {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
+                bool CompressFile = false;
+                if (Runtime.AlwaysCompressOnSave)
+                    CompressFile = true;
+                else
+                {
+                    DialogResult save = MessageBox.Show($"Compress file with {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
+                    CompressFile = (save == DialogResult.Yes);
+                }
 
-                if (save == DialogResult.Yes)
+                if (CompressFile)
                 {
                     switch (CompressionType)
                     {

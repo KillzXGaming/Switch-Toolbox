@@ -234,6 +234,9 @@ namespace Switch_Toolbox.Library
                     case "UseDirectXTexDecoder":
                         bool.TryParse(node.InnerText, out Runtime.UseDirectXTexDecoder);
                         break;
+                    case "AlwaysCompressOnSave":
+                        bool.TryParse(node.InnerText, out Runtime.AlwaysCompressOnSave);
+                        break;
                 }
             }
         }
@@ -357,6 +360,7 @@ namespace Switch_Toolbox.Library
             parentNode.AppendChild(mainSettingsNode);
 
             mainSettingsNode.AppendChild(createNode(doc, "UseDirectXTexDecoder", Runtime.UseDirectXTexDecoder.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "AlwaysCompressOnSave", Runtime.AlwaysCompressOnSave.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseOpenGL", Runtime.UseOpenGL.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
