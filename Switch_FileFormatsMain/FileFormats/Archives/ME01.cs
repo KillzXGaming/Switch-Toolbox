@@ -15,8 +15,8 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "ME01" };
-        public string[] Extension { get; set; } = new string[] { "*.bin" };
+        public string[] Description { get; set; } = new string[] { "ME01", "SA01" };
+        public string[] Extension { get; set; } = new string[] { "*.bin", "*.sgarc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -26,11 +26,14 @@ namespace FirstPlugin
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; }
 
+        private bool IsSA01 = false;
         public bool Identify(System.IO.Stream stream)
         {
             using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "ME01");
+                bool IsMEO1 = reader.CheckSignature(4, "ME01");
+                IsSA01 = reader.CheckSignature(4, "SA01");
+                return IsMEO1 || IsSA01;
             }
         }
 
@@ -54,8 +57,12 @@ namespace FirstPlugin
 
             using (var reader = new FileReader(stream))
             {
-                reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-                reader.ReadSignature(4, "ME01");
+                if (IsSA01)
+                    reader.SetByteOrder(true);
+                else
+                    reader.SetByteOrder(false);
+
+                uint Signature = reader.ReadUInt32();
                 uint FileCount = reader.ReadUInt32();
                 Alignment = reader.ReadUInt32();
                 uint[] DataOffsets = reader.ReadUInt32s((int)FileCount);
@@ -109,9 +116,15 @@ namespace FirstPlugin
             var mem = new System.IO.MemoryStream();
             using (var writer = new FileWriter(mem))
             {
-                writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+                if (IsSA01)
+                    writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                else
+                    writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
 
-                writer.WriteSignature("ME01");
+                if (IsSA01)
+                    writer.WriteSignature("SA01");
+                else
+                    writer.WriteSignature("ME01");
                 writer.Write(files.Count);
                 writer.Write(Alignment);
                 writer.Write(new uint[files.Count]); //Save space for offsets
