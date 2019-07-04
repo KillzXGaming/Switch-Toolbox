@@ -144,6 +144,8 @@ namespace FirstPlugin
                             break;
                     }
 
+                    reader.SeekBegin(pos + SectionSize + 0x10);
+
                     while (reader.BaseStream.Position % 16 != 0 && reader.BaseStream.Position != reader.BaseStream.Length)
                     {
                         reader.ReadByte();

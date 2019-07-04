@@ -30,7 +30,7 @@ namespace Switch_Toolbox.Library.Forms
             textureFileFormatCB.Items.Add("Portable Network Graphics (.png)");
             textureFileFormatCB.Items.Add("Joint Photographic Experts Group (.jpg)");
             textureFileFormatCB.Items.Add("TGA (.tga)");
-            textureFileFormatCB.Items.Add("Tagged Image File Format (.tiff)");
+            textureFileFormatCB.Items.Add("Tagged Image File Format (.tif)");
             textureFileFormatCB.Items.Add("Bitmap Image (.bmp)");
             textureFileFormatCB.SelectedIndex = 0;
 

@@ -1001,7 +1001,7 @@ namespace Bfres.Structs
                 {
                     bool HasMatch = false;
 
-                    //Generate a list of smoth matrices from the node array
+                    //Generate a list of smooth indicies from the node array
                     int i = 0;
                     foreach (var defBn in nodeArrStrings.Select((Value, Index) => new { Value, Index }))
                     {
