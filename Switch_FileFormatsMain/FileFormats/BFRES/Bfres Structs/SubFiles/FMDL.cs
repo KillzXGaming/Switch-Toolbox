@@ -527,6 +527,11 @@ namespace Bfres.Structs
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
 
+            if (ModelU != null)
+                BfresWiiU.SetModel(this);
+            else
+                BfresSwitch.SetModel(this);
+
             switch (ext)
             {
                 case ".bfmdl":
