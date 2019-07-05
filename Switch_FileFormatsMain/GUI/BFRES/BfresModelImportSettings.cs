@@ -327,7 +327,7 @@ namespace FirstPlugin
             comboBoxFormatUvs.Items.Add(AttribFormat.Format_8_8_UNorm);
             comboBoxFormatUvs.SelectedIndex = 1;
 
-            comboBoxFormatTangents.Items.Add(AttribFormat.Format_32_32_32_32_Single);
+            comboBoxFormatVertexColors.Items.Add(AttribFormat.Format_32_32_32_32_Single);
             comboBoxFormatVertexColors.Items.Add(AttribFormat.Format_16_16_16_16_Single);
             comboBoxFormatVertexColors.Items.Add(AttribFormat.Format_16_16_16_16_SNorm);
             comboBoxFormatVertexColors.Items.Add(AttribFormat.Format_8_8_8_8_UNorm);
