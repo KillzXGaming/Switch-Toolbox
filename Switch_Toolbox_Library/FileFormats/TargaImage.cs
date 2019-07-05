@@ -375,6 +375,15 @@ namespace Paloma
            Dispose(false);
         }
 
+        public bool IsSupportedTGA(Stream ImageStream)
+        {
+            using (BinaryReader binReader = new BinaryReader(ImageStream, Encoding.Default, true))
+            {
+                this.LoadTGAFooterInfo(binReader);
+               return this.LoadTGAHeaderInfo(binReader);
+            }
+        }
+
         /// <summary>
         /// Creates a new instance of the TargaImage object with strFileName as the image loaded.
         /// </summary>
@@ -527,7 +536,7 @@ namespace Paloma
         /// Loads the Targa Header information from the file.
         /// </summary>
         /// <param name="binReader">A BinaryReader that points the loaded file byte stream.</param>
-        private void LoadTGAHeaderInfo(BinaryReader binReader)
+        private bool LoadTGAHeaderInfo(BinaryReader binReader)
         {
 
             if (binReader != null && binReader.BaseStream != null && binReader.BaseStream.Length > 0 && binReader.BaseStream.CanSeek == true)
@@ -563,7 +572,8 @@ namespace Paloma
 
                         default:
                             this.ClearAll();
-                            throw new Exception("Targa Image only supports 8, 16, 24, or 32 bit pixel depths.");
+                            return false;
+                        //    throw new Exception("Targa Image only supports 8, 16, 24, or 32 bit pixel depths.");
                     }
                     
 
@@ -676,6 +686,8 @@ namespace Paloma
                 this.ClearAll();
                 throw new Exception(@"Error loading file, could not read file from disk.");
             }
+
+            return true;
         }
 
 

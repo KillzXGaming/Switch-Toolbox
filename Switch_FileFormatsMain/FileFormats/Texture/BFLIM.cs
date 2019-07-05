@@ -168,7 +168,7 @@ namespace FirstPlugin
             public MenuExt()
             {
                 toolExt[0] = new STToolStripItem("Textures");
-                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (BFLIM)", Export));
+                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (Wii U Textures)", Export));
                 newFileExt[0] = new STToolStripItem("BFLIM From Image", CreateNew);
             }
             private void Export(object sender, EventArgs args)
@@ -194,7 +194,7 @@ namespace FirstPlugin
 
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Multiselect = true;
-                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BFLIM), typeof(SARC) });
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BFLIM), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
@@ -203,7 +203,7 @@ namespace FirstPlugin
                         {
                             foreach (string file in ofd.FileNames)
                             {
-                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BFLIM), typeof(SARC) });
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BFLIM), typeof(PTCL), typeof(BFFNT), typeof(SARC) });
                                 if (FileFormat == null)
                                     continue;
 
@@ -234,13 +234,37 @@ namespace FirstPlugin
 
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BFLIM) , typeof(SARC) }, file.FileData);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BFLIM), typeof(BFFNT), typeof(PTCL), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
                         SearchBinary(archiveFile, ArchiveFilePath, Extension);
                     }
                 }
+                if (FileFormat is BFFNT)
+                {
+                    foreach (STGenericTexture texture in ((BFFNT)FileFormat).Gx2Textures)
+                        texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
+                }
+                if (FileFormat is BFRES)
+                {
+                    var FtexContainer = ((BFRES)FileFormat).GetFTEXContainer;
+                    if (FtexContainer != null)
+                    {
+                        foreach (var texture in FtexContainer.ResourceNodes.Values)
+                            ((FTEX)texture).Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
+                    }
+                }
+
+                if (FileFormat is PTCL)
+                {
+                    if (((PTCL)FileFormat).headerU != null)
+                    {
+                        foreach (STGenericTexture texture in ((PTCL)FileFormat).headerU.Textures)
+                            texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
+                    }
+                }
+
                 if (FileFormat is BFLIM)
                 {
                     ((BFLIM)FileFormat).Export(Path.Combine(Folder, $"{FileFormat.FileName}{Extension}"));

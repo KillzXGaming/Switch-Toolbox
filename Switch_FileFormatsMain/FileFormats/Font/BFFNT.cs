@@ -43,6 +43,7 @@ namespace FirstPlugin
 
         FFNT bffnt;
         public BNTX BinaryTextureFile;
+        public List<Gx2ImageBlock> Gx2Textures = new List<Gx2ImageBlock>();
 
         public void Load(System.IO.Stream stream)
         {
@@ -71,6 +72,7 @@ namespace FirstPlugin
                         surface.Text = $"Sheet_{s}";
                         surface.Load(tglp, s);
                         textureFolder.Nodes.Add(surface);
+                        Gx2Textures.Add(surface);
                     }
                 }
             }

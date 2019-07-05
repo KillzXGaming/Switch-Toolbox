@@ -153,6 +153,8 @@ namespace Switch_Toolbox.Library.Rendering
             control.CurrentShader = shader;
             control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
 
+            OnRender(control);
+
             Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
 
             Matrix4 invertedCamera = Matrix4.Identity;
@@ -175,6 +177,12 @@ namespace Switch_Toolbox.Library.Rendering
             GL.Disable(EnableCap.DepthTest);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+        }
+
+        public virtual void OnRender(GLControl control)
+        {
+
         }
 
         private static void SetBoneUniforms(GLControl control, ShaderProgram shader, STSkeleton Skeleton, STGenericObject mesh)

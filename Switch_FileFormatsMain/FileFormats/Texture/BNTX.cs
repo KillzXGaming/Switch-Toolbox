@@ -111,7 +111,7 @@ namespace FirstPlugin
 
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Multiselect = true;
-                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BNTX), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BNTX), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {

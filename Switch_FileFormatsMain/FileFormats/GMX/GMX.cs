@@ -321,6 +321,7 @@ namespace FirstPlugin
                             vert.pos = reader.ReadVec3();
                             vert.nrm = reader.ReadVec3();
                             vert.uv0 = reader.ReadVec2();
+
                             Vertices.Add(vert);
                             Unknowns.Add(Unknown);
                         }
@@ -345,7 +346,7 @@ namespace FirstPlugin
                         {
                             writer.Write(Unknowns[v]);
                             writer.Write(Vertices[v].pos);
-                            writer.Write(Vertices[v].nrm);
+                            writer.Write(-Vertices[v].nrm);
                             writer.Write(Vertices[v].uv0);
                         }
                         else

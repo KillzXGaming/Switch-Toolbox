@@ -61,8 +61,6 @@ namespace Switch_Toolbox.Library.IO
         {
             CheckCompression(FileName, data);
 
-            MessageBox.Show((data != null).ToString());
-
             Stream stream;
             if (data != null)
                 stream = new MemoryStream(data);

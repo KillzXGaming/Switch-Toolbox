@@ -44,7 +44,14 @@ namespace Switch_Toolbox.Library
 
                 reader.Position = reader.BaseStream.Length - 18;
                 bool IsValidMagic = reader.ReadString(10) == MagicFileConstant;
-                return IsValidMagic || Utils.GetExtension(FileName) == ".tga";
+                bool IsTga = IsValidMagic || Utils.GetExtension(FileName) == ".tga";
+                if(IsTga)
+                {
+                    TargaImage tga = new TargaImage();
+                    IsTga = tga.IsSupportedTGA(stream);
+                    stream.Position = 0;
+                }
+                return IsTga;
             }
         }
 
