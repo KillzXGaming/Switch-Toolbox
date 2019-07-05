@@ -136,6 +136,8 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
+                writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
                 PADX padding = new PADX();
 
                 writer.WriteSignature("GMX2");
@@ -146,17 +148,26 @@ namespace FirstPlugin
                     padding.Write(writer, 16);
                     Meshes[i].Write(writer);
 
-                    //Write Vertices
-                    padding.Write(writer, 64);
-                    Meshes[i].VertexGroup.Write(writer, Meshes[i]);
+                    if (Meshes[i].VertexGroup != null)
+                    {
+                        //Write Vertices
+                        padding.Write(writer, 64);
+                        Meshes[i].VertexGroup.Write(writer, Meshes[i]);
+                    }
 
-                    //Write Faces
-                    padding.Write(writer, 16);
-                    Meshes[i].IndexGroup.Write(writer);
+                    if (Meshes[i].IndexGroup != null)
+                    {
+                        //Write Faces
+                        padding.Write(writer, 16);
+                        Meshes[i].IndexGroup.Write(writer);
+                    }
 
-                    //Write VMAPS
-                    padding.Write(writer, 16);
-                    Meshes[i].VMapGroup.Write(writer);
+                    if (Meshes[i].VMapGroup != null)
+                    {
+                        //Write VMAPS
+                        padding.Write(writer, 16);
+                        Meshes[i].VMapGroup.Write(writer);
+                    }
                 }
             }
 
@@ -201,7 +212,7 @@ namespace FirstPlugin
                 public void Write(FileWriter writer, MESH mesh)
                 {
                     writer.WriteSignature("VERT");
-                    writer.Write(Vertices.Count * mesh.VertexSize);
+                    writer.Write(Vertices.Count * mesh.VertexSize + 8);
                     for (int v = 0; v < mesh.VertexCount; v++)
                     {
                         if (mesh.VertexSize == 32)
@@ -251,6 +262,7 @@ namespace FirstPlugin
                 public void Write(FileWriter writer)
                 {
                     writer.WriteSignature("MESH");
+                    writer.Write(40);
                     writer.Write(0);
                     writer.Write(VertexSize);
                     writer.Write(VertexCount);
