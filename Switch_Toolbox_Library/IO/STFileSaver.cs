@@ -207,9 +207,9 @@ namespace Switch_Toolbox.Library.IO
                 CompressionType = CompressionType.Yaz0;
             }
 
+            bool CompressFile = false;
             if (EnableDialog && FileIsCompressed)
             {
-                bool CompressFile = false;
                 if (Runtime.AlwaysCompressOnSave)
                     CompressFile = true;
                 else
@@ -217,27 +217,29 @@ namespace Switch_Toolbox.Library.IO
                     DialogResult save = MessageBox.Show($"Compress file with {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
                     CompressFile = (save == DialogResult.Yes);
                 }
+            }
+            else if (FileIsCompressed)
+                CompressFile = true;
 
-                if (CompressFile)
+            if (CompressFile)
+            {
+                switch (CompressionType)
                 {
-                    switch (CompressionType)
-                    {
-                        case CompressionType.Yaz0:
-                            return EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
-                        case CompressionType.Zstb:
-                            return STLibraryCompression.ZSTD.Compress(data);
-                        case CompressionType.Lz4:
-                            return STLibraryCompression.Type_LZ4.Compress(data);
-                        case CompressionType.Lz4f:
-                            return STLibraryCompression.Type_LZ4F.Compress(data);
-                        case CompressionType.Gzip:
-                            return STLibraryCompression.GZIP.Compress(data);
-                        case CompressionType.Zlib:
-                            return STLibraryCompression.ZLIB.Compress(data, 2);
-                        default:
-                            MessageBox.Show($"Compression Type {CompressionType} not supported!!");
-                            break;
-                    }
+                    case CompressionType.Yaz0:
+                        return EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
+                    case CompressionType.Zstb:
+                        return STLibraryCompression.ZSTD.Compress(data);
+                    case CompressionType.Lz4:
+                        return STLibraryCompression.Type_LZ4.Compress(data);
+                    case CompressionType.Lz4f:
+                        return STLibraryCompression.Type_LZ4F.Compress(data);
+                    case CompressionType.Gzip:
+                        return STLibraryCompression.GZIP.Compress(data);
+                    case CompressionType.Zlib:
+                        return STLibraryCompression.ZLIB.Compress(data, 2);
+                    default:
+                        MessageBox.Show($"Compression Type {CompressionType} not supported!!");
+                        break;
                 }
             }
 
