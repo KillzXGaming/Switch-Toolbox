@@ -221,6 +221,8 @@ namespace Switch_Toolbox.Library.IO
             else if (FileIsCompressed)
                 CompressFile = true;
 
+            Console.WriteLine($"FileIsCompressed {FileIsCompressed} CompressFile {CompressFile} CompressionType {CompressionType}");
+
             if (CompressFile)
             {
                 switch (CompressionType)

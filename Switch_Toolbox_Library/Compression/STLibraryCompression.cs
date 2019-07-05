@@ -24,6 +24,8 @@ namespace Switch_Toolbox.Library.IO
             {
                 case CompressionType.Yaz0:
                     return EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
+                case CompressionType.Zstb:
+                    return ZSTD.Compress(data);
                 case CompressionType.None:
                     return data;
                 default:
