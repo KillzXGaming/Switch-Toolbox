@@ -15,5 +15,6 @@ namespace Switch_Toolbox.Library
         Lz4,
         Lz4f,
         Zstb,
+        MarioTennisCustom,
     }
 }

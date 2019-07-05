@@ -265,6 +265,7 @@
     <Compile Include="FileFormats\XLINK\XLINK.cs" />
     <Compile Include="GL\BCRES_Render.cs" />
     <Compile Include="GL\GFBMDL_Render.cs" />
+    <Compile Include="GL\GMX_Renderer.cs" />
     <Compile Include="GL\Helpers\DepthGLControl.cs" />
     <Compile Include="GL\ShaderData\AglShaderOdyssey.cs" />
     <Compile Include="GL\ShaderData\AglShaderTurbo.cs" />

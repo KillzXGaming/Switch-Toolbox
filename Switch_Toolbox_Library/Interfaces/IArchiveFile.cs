@@ -144,7 +144,7 @@ namespace Switch_Toolbox.Library
         public void SaveFileFormat()
         {
             if (FileFormat != null && FileFormat.CanSave)
-                _fileData = FileFormat.Save();
+                FileData = FileFormat.Save();
         }
 
         [Browsable(false)]

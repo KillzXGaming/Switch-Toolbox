@@ -129,7 +129,10 @@ namespace FirstPlugin
                 writer.Write(Alignment);
                 writer.Write(new uint[files.Count]); //Save space for offsets
                 for (int i = 0; i < files.Count; i++)
+                {
+                    files[i].SaveFileFormat();
                     writer.Write(files[i].FileData.Length);
+                }
 
                 for (int i = 0; i < files.Count; i++)
                 {
@@ -155,7 +158,6 @@ namespace FirstPlugin
                 {
                     Offsets[i] = (uint)(writer.Position - DataStart);
 
-                    files[i].SaveFileFormat();
                     writer.Write(files[i].FileData);
                     Align(writer, (int)Alignment);
                 }

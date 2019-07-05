@@ -194,6 +194,29 @@ namespace Switch_Toolbox.Library.IO
                 return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                     CompressionType.Yaz0, DecompressedFileSize, CompressedFileSize);
             }
+            if (Path.GetExtension(FileName) == ".cbtex")
+            {
+                fileReader.Position = 0;
+                byte compType = fileReader.ReadByte();
+                if (compType == 0x50)
+                {
+                    if (data == null)
+                        data = File.ReadAllBytes(FileName);
+
+                    fileReader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
+                    fileReader.Seek(4, System.IO.SeekOrigin.Begin);
+                    uint decompSize = fileReader.ReadUInt32();
+                    uint compSize = (uint)fileReader.BaseStream.Length - 8;
+
+                    var comp = new STLibraryCompression.MTA_CUSTOM();
+                    data = comp.Decompress(data, decompSize);
+
+                    return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
+                     CompressionType.MarioTennisCustom, DecompressedFileSize, CompressedFileSize);
+                }
+                fileReader.Position = 0;
+            }
             if (Path.GetExtension(FileName) == ".lz")
             {
                 if (data == null)

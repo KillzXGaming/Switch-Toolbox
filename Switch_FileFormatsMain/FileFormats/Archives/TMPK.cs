@@ -103,6 +103,8 @@ namespace FirstPlugin
             writer.Write(0);
             for (int i = 0; i < files.Count; i++)
             {
+                files[i].SaveFileFormat();
+
                 files[i]._posHeader = writer.Position;
                 writer.Write(uint.MaxValue);
                 writer.Write(uint.MaxValue);
@@ -119,7 +121,6 @@ namespace FirstPlugin
                 SetAlignment(writer, files[i].FileName);
                 writer.WriteUint32Offset(files[i]._posHeader + 4);
 
-                files[i].SaveFileFormat();
                 writer.Write(files[i].FileData);
             }
             writer.Close();

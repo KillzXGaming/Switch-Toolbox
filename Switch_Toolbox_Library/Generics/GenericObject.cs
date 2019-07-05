@@ -29,6 +29,11 @@ namespace Switch_Toolbox.Library
 
         }
 
+        public virtual STGenericMaterial GetMaterial()
+        {
+            return new STGenericMaterial();
+        }
+
         public List<STGenericPolygonGroup> PolygonGroups = new List<STGenericPolygonGroup>();
 
         public bool HasPos;

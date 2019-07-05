@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Rendering;
+using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
@@ -39,19 +40,103 @@ namespace FirstPlugin
             }
         }
 
+        Viewport viewport
+        {
+            get
+            {
+                var editor = LibraryGUI.Instance.GetObjectEditor();
+                return editor.GetViewport();
+            }
+            set
+            {
+                var editor = LibraryGUI.Instance.GetObjectEditor();
+                editor.LoadViewport(value);
+            }
+        }
+
+        bool DrawablesLoaded = false;
+        public override void OnClick(TreeView treeView)
+        {
+            if (Runtime.UseOpenGL)
+            {
+                if (viewport == null)
+                {
+                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
+                    viewport.Dock = DockStyle.Fill;
+                }
+
+                if (!DrawablesLoaded)
+                {
+                    ObjectEditor.AddContainer(DrawableContainer);
+                    DrawablesLoaded = true;
+                }
+
+                viewport.ReloadDrawables(DrawableContainer);
+                LibraryGUI.Instance.LoadEditor(viewport);
+
+                viewport.Text = Text;
+            }
+        }
+
         public Header GMXHeader;
+        public GMX_Renderer Renderer;
+
+        public DrawableContainer DrawableContainer = new DrawableContainer();
 
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
 
+            //Set renderer
+            Renderer = new GMX_Renderer();
+            DrawableContainer.Name = FileName;
+            DrawableContainer.Drawables.Add(Renderer);
+
+            //Read file
             GMXHeader = new Header();
             GMXHeader.Read(new FileReader(stream));
             for (int i = 0; i < GMXHeader.Meshes.Count; i++)
             {
-                var node = new TreeNode($"Mesh ({i})");
-                node.Tag = GMXHeader.Meshes[i];
-                Nodes.Add(node);
+                var renderedMesh = new GenericRenderedObject();
+                renderedMesh.Text = $"Mesh ({i})";
+                renderedMesh.ImageKey = "mesh";
+                renderedMesh.SelectedImageKey = "mesh";
+                renderedMesh.Checked = true;
+
+                if (GMXHeader.Meshes[i].VertexGroup != null)
+                {
+                    renderedMesh.vertices = GMXHeader.Meshes[i].VertexGroup.Vertices;
+                }
+
+                if (GMXHeader.Meshes[i].IndexGroup != null)
+                {
+                    renderedMesh.lodMeshes = new List<STGenericObject.LOD_Mesh>();
+                    var msh = new STGenericObject.LOD_Mesh();
+                    msh.PrimitiveType = STPolygonType.Triangle;
+                    msh.FirstVertex = 0;
+
+                  /*  int VertexID = 0;
+                    for (int f = 0; f < GMXHeader.Meshes[i].VertexCount; f+= 3)
+                    {
+                        msh.faces.AddRange(new List<int>() { VertexID + 2, VertexID + 1, VertexID });
+                        VertexID++;
+                    }*/
+
+                    for (int f = 0; f < GMXHeader.Meshes[i].IndexGroup.Indices.Length / 3; f++)
+                    {
+                        ushort face0 = GMXHeader.Meshes[i].IndexGroup.Indices[f + 0];
+                        ushort face1 = GMXHeader.Meshes[i].IndexGroup.Indices[f + 1];
+                        ushort face2 = GMXHeader.Meshes[i].IndexGroup.Indices[f + 2];
+
+                        msh.faces.AddRange(new List<int>() { face2, face1, face0, });
+                    }
+
+                    renderedMesh.lodMeshes.Add(msh);
+                }
+
+                renderedMesh.Tag = GMXHeader.Meshes[i];
+                Nodes.Add(renderedMesh);
+                Renderer.Meshes.Add(renderedMesh);
             }
         }
         public void Unload()
@@ -99,7 +184,7 @@ namespace FirstPlugin
                             break;
                         case "INDX":
                             INDX indexGrp = new INDX();
-                            indexGrp.Read(reader);
+                            indexGrp.Read(reader, GetLastMesh());
                             GetLastMesh().IndexGroup = indexGrp;
                             break;
                         case "VMAP":
@@ -140,6 +225,7 @@ namespace FirstPlugin
 
                 PADX padding = new PADX();
 
+                Console.WriteLine("Saving GMX");
                 writer.WriteSignature("GMX2");
                 writer.Write(HeaderSize);
                 for (int i = 0; i < Meshes.Count; i++)
@@ -171,6 +257,8 @@ namespace FirstPlugin
                 }
                 writer.WriteSignature("ENDX");
                 writer.Write(8); //Last section size
+                writer.Close();
+                writer.Dispose();
             }
 
             public class VERT
@@ -194,6 +282,35 @@ namespace FirstPlugin
                             Vertices.Add(vert);
                         }
                     }
+                    else if (mesh.VertexSize == 12)
+                    {
+                        for (int v = 0; v < mesh.VertexCount; v++)
+                        {
+                            Vertex vert = new Vertex();
+                            vert.pos = reader.ReadVec3();
+                            Vertices.Add(vert);
+                        }
+                    }
+                    else if (mesh.VertexSize == 20)
+                    {
+                        for (int v = 0; v < mesh.VertexCount; v++)
+                        {
+                            Vertex vert = new Vertex();
+                            vert.pos = reader.ReadVec3();
+                            vert.uv0 = reader.ReadVec2();
+                            Vertices.Add(vert);
+                        }
+                    }
+                    else if (mesh.VertexSize == 24)
+                    {
+                        for (int v = 0; v < mesh.VertexCount; v++)
+                        {
+                            Vertex vert = new Vertex();
+                            vert.pos = reader.ReadVec3();
+                            vert.nrm = reader.ReadVec3();
+                            Vertices.Add(vert);
+                        }
+                    }
                     else if (mesh.VertexSize == 36)
                     {
                         for (int v = 0; v < mesh.VertexCount; v++)
@@ -205,7 +322,6 @@ namespace FirstPlugin
                             vert.uv0 = reader.ReadVec2();
                             Vertices.Add(vert);
                             Unknowns.Add(Unknown);
-                            Console.WriteLine($"Unknown {Unknown}");
                         }
                     }
                     else
@@ -287,14 +403,13 @@ namespace FirstPlugin
             {
                 public ushort[] Indices;
 
-                public void Read(FileReader reader)
+                public void Read(FileReader reader, MESH mesh)
                 {
                     reader.ReadSignature(4, "INDX");
                     uint SectionSize = reader.ReadUInt32();
-                    uint FaceCount = (SectionSize - 8) / sizeof(ushort);
 
-                    Indices = new ushort[FaceCount];
-                    for (int i = 0; i < FaceCount; i++)
+                    Indices = new ushort[mesh.FaceCount];
+                    for (int i = 0; i < mesh.FaceCount; i++)
                     {
                         Indices[i] = reader.ReadUInt16();
                     }
@@ -331,7 +446,7 @@ namespace FirstPlugin
                     writer.WriteSignature("VMAP");
                     writer.Write(Indices.Length * sizeof(ushort) + 8);
                     for (int i = 0; i < Indices.Length; i++)
-                        writer.Write(Indices[i]);
+                         writer.Write(Indices[i]);
                 }
             }
 

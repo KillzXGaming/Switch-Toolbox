@@ -145,13 +145,18 @@ namespace Switch_Toolbox.Library.IO
         //Mario Tennis Aces Custom compression
         public class MTA_CUSTOM
         {
+            [DllImport("Lib/LibTennis.dll", CallingConvention = CallingConvention.Cdecl)]
+            static extern void DecompressBuffer(IntPtr output, IntPtr input, uint len);
+
             public unsafe byte[] Decompress(byte[] input, uint decompressedLength)
             {
                 fixed (byte* outputPtr = new byte[decompressedLength])
                 {
                     fixed (byte* inputPtr = input)
                     {
-                        Decompress(outputPtr, inputPtr, decompressedLength);
+                        DecompressBuffer((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
+
+                     //   Decompress(outputPtr, inputPtr, decompressedLength);
                     }
 
                     byte[] decomp = new byte[decompressedLength];

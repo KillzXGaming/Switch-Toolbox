@@ -95,7 +95,7 @@ namespace FirstPlugin
                         }
 
                         Skeleton.bones.AddRange(((STSkeleton)model.DrawableContainer.Drawables[0]).bones);
-                        Objects.AddRange(((Renderer)model.DrawableContainer.Drawables[1]).Meshes);
+                        Objects.AddRange(((GenericModelRenderer)model.DrawableContainer.Drawables[1]).Meshes);
 
                         model.Unload();
                     }
@@ -173,20 +173,20 @@ namespace FirstPlugin
 
             var model = new STGenericModel();
             model.Materials = Materials;
-            model.Objects = ((Renderer)DrawableContainer.Drawables[1]).Meshes;
+            model.Objects = ((GenericModelRenderer)DrawableContainer.Drawables[1]).Meshes;
 
             assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
         }
 
         public void Unload()
         {
-            foreach (var mesh in ((Renderer)DrawableContainer.Drawables[1]).Meshes)
+            foreach (var mesh in ((GenericModelRenderer)DrawableContainer.Drawables[1]).Meshes)
             {
                 mesh.vertices.Clear();
                 mesh.faces.Clear();
                 mesh.display = new int[0];
             }
-            ((Renderer)DrawableContainer.Drawables[1]).Meshes.Clear();
+            ((GenericModelRenderer)DrawableContainer.Drawables[1]).Meshes.Clear();
 
             DrawableContainer.Drawables.Clear();
             DrawableContainer = null;
@@ -200,302 +200,6 @@ namespace FirstPlugin
         public byte[] Save()
         {
             return null;
-        }
-
-        public struct DisplayVertex
-        {
-            // Used for rendering.
-            public Vector3 pos;
-            public Vector3 nrm;
-            public Vector3 tan;
-            public Vector2 uv;
-            public Vector4 col;
-            public Vector4 node;
-            public Vector4 weight;
-            public Vector2 uv2;
-            public Vector2 uv3;
-
-            public static int Size = 4 * (3 + 3 + 3 + 2 + 4 + 4 + 4 + 2 + 2);
-        }
-
-
-        public class MeshWrapper : STGenericObject
-        {
-            public int[] display;
-            public int DisplayId;
-
-            public List<DisplayVertex> CreateDisplayVertices()
-            {
-                display = lodMeshes[DisplayLODIndex].getDisplayFace().ToArray();
-
-                 List<DisplayVertex> displayVertList = new List<DisplayVertex>();
-
-                if (lodMeshes[DisplayLODIndex].faces.Count <= 3)
-                    return displayVertList;
-
-                foreach (Vertex v in vertices)
-                {
-                    DisplayVertex displayVert = new DisplayVertex()
-                    {
-                        pos = v.pos,
-                        nrm = v.nrm,
-                        tan = v.tan.Xyz,
-                        col = v.col,
-                        uv = v.uv0,
-                        uv2 = v.uv1,
-                        uv3 = v.uv2,
-                        node = new Vector4(
-                                 v.boneIds.Count > 0 ? v.boneIds[0] : -1,
-                                 v.boneIds.Count > 1 ? v.boneIds[1] : -1,
-                                 v.boneIds.Count > 2 ? v.boneIds[2] : -1,
-                                 v.boneIds.Count > 3 ? v.boneIds[3] : -1),
-                        weight = new Vector4(
-                                 v.boneWeights.Count > 0 ? v.boneWeights[0] : 0,
-                                 v.boneWeights.Count > 1 ? v.boneWeights[1] : 0,
-                                 v.boneWeights.Count > 2 ? v.boneWeights[2] : 0,
-                                 v.boneWeights.Count > 3 ? v.boneWeights[3] : 0),
-                    };
-
-                    displayVertList.Add(displayVert);
-
-                      /*    Console.WriteLine($"---------------------------------------------------------------------------------------");
-                           Console.WriteLine($"Position   {displayVert.pos.X} {displayVert.pos.Y} {displayVert.pos.Z}");
-                           Console.WriteLine($"Normal     {displayVert.nrm.X} {displayVert.nrm.Y} {displayVert.nrm.Z}");
-                           Console.WriteLine($"Tanget     {displayVert.tan.X} {displayVert.tan.Y} {displayVert.tan.Z}");
-                           Console.WriteLine($"Color      {displayVert.col.X} {displayVert.col.Y} {displayVert.col.Z} {displayVert.col.W}");
-                           Console.WriteLine($"UV Layer 1 {displayVert.uv.X} {displayVert.uv.Y}");
-                           Console.WriteLine($"UV Layer 2 {displayVert.uv2.X} {displayVert.uv2.Y}");
-                           Console.WriteLine($"UV Layer 3 {displayVert.uv3.X} {displayVert.uv3.Y}");
-                           Console.WriteLine($"Bone Index {displayVert.node.X} {displayVert.node.Y} {displayVert.node.Z} {displayVert.node.W}");
-                           Console.WriteLine($"Weights    {displayVert.weight.X} {displayVert.weight.Y} {displayVert.weight.Z} {displayVert.weight.W}");
-                           Console.WriteLine($"---------------------------------------------------------------------------------------");*/
-                }
-
-                return displayVertList;
-            }
-
-        }
-
-        public class Renderer : AbstractGlDrawable
-        {
-            public Vector3 Max = new Vector3(0);
-            public Vector3 Min = new Vector3(0);
-
-            public List<ushort> SelectedTypes = new List<ushort>();
-
-            public Vector3 position = new Vector3(0, 0, 0);
-
-            protected bool Selected = false;
-            protected bool Hovered = false;
-
-            // public override bool IsSelected() => Selected;
-            //  public override bool IsSelected(int partIndex) => Selected;
-
-            public bool IsHovered() => Selected;
-
-            // gl buffer objects
-            int vbo_position;
-            int ibo_elements;
-
-            public List<MeshWrapper> Meshes = new List<MeshWrapper>();
-
-            private void GenerateBuffers()
-            {
-                GL.GenBuffers(1, out vbo_position);
-                GL.GenBuffers(1, out ibo_elements);
-            }
-
-            public void Destroy()
-            {
-                GL.DeleteBuffer(vbo_position);
-                GL.DeleteBuffer(ibo_elements);
-            }
-
-            public void UpdateVertexData()
-            {
-                if (!Runtime.OpenTKInitialized)
-                    return;
-
-                DisplayVertex[] Vertices;
-                int[] Faces;
-
-                int poffset = 0;
-                int voffset = 0;
-                List<DisplayVertex> Vs = new List<DisplayVertex>();
-                List<int> Ds = new List<int>();
-                foreach (var m in Meshes)
-                {
-                    m.Offset = poffset * 4;
-                    List<DisplayVertex> pv = m.CreateDisplayVertices();
-                    Vs.AddRange(pv);
-
-                    for (int i = 0; i < m.lodMeshes[m.DisplayLODIndex].displayFaceSize; i++)
-                    {
-                        Ds.Add(m.display[i] + voffset);
-                    }
-                    poffset += m.lodMeshes[m.DisplayLODIndex].displayFaceSize;
-                    voffset += pv.Count;
-                }
-
-                // Binds
-                Vertices = Vs.ToArray();
-                Faces = Ds.ToArray();
-
-                // Bind only once!
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-                GL.BufferData<DisplayVertex>(BufferTarget.ArrayBuffer, (IntPtr)(Vertices.Length * DisplayVertex.Size), Vertices, BufferUsageHint.StaticDraw);
-
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
-                GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
-
-                LibraryGUI.Instance.UpdateViewport();
-            }
-
-            public ShaderProgram defaultShaderProgram;
-
-            public override void Prepare(GL_ControlModern control)
-            {
-                string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "MKAGPDX") + "\\MKAGPDX_Model.frag";
-                string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "MKAGPDX") + "\\MKAGPDX_Model.vert";
-
-                var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
-                var defaultVert = new VertexShader(File.ReadAllText(pathVert));
-
-                defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
-            }
-
-            public override void Prepare(GL_ControlLegacy control)
-            {
-            }
-
-            private void CheckBuffers()
-            {
-                if (!Runtime.OpenTKInitialized)
-                    return;
-
-                bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
-                if (!buffersWereInitialized)
-                {
-                    GenerateBuffers();
-                    UpdateVertexData();
-                }
-            }
-            public override void Draw(GL_ControlLegacy control, Pass pass)
-            {
-                CheckBuffers();
-
-                if (!Runtime.OpenTKInitialized)
-                    return;
-            }
-
-            public override void Draw(GL_ControlModern control, Pass pass)
-            {
-                CheckBuffers();
-
-                if (!Runtime.OpenTKInitialized)
-                    return;
-
-                control.CurrentShader = defaultShaderProgram;
-                SetRenderSettings(defaultShaderProgram);
-
-                Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
-
-                GL.Disable(EnableCap.CullFace);
-
-                GL.Uniform3(defaultShaderProgram["difLightDirection"], Vector3.TransformNormal(new Vector3(0f, 0f, -1f), camMat.Inverted()).Normalized());
-                GL.Uniform3(defaultShaderProgram["difLightColor"], new Vector3(1));
-                GL.Uniform3(defaultShaderProgram["ambLightColor"], new Vector3(1));
-
-                defaultShaderProgram.EnableVertexAttributes();
-
-                foreach (var mdl in Meshes)
-                {
-                    DrawModel(mdl, defaultShaderProgram);
-                }
-
-                defaultShaderProgram.DisableVertexAttributes();
-
-                GL.UseProgram(0);
-                GL.Disable(EnableCap.DepthTest);
-                GL.Enable(EnableCap.DepthTest);
-                GL.Enable(EnableCap.CullFace);
-            }
-            private void SetRenderSettings(ShaderProgram shader)
-            {
-                shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
-                GL.Uniform1(defaultShaderProgram["renderType"], (int)Runtime.viewportShading);
-
-            }
-            private void DrawModel(MeshWrapper m, ShaderProgram shader, bool drawSelection = false)
-            {
-                if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
-                    return;
-
-                SetVertexAttributes(m, shader);
-
-                if (m.Checked)
-                {
-                    if ((m.IsSelected))
-                    {
-                        DrawModelSelection(m, shader);
-                    }
-                    else
-                    {
-                        if (Runtime.RenderModelWireframe)
-                        {
-                            DrawModelWireframe(m, shader);
-                        }
-
-                        if (Runtime.RenderModels)
-                        {
-                            GL.DrawElements(PrimitiveType.Triangles, m.lodMeshes[m.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, m.Offset);
-                        }
-                    }
-                }
-            }
-            private static void DrawModelSelection(MeshWrapper p, ShaderProgram shader)
-            {
-                //This part needs to be reworked for proper outline. Currently would make model disappear
-
-                GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
-
-                GL.Enable(EnableCap.StencilTest);
-                // use vertex color for wireframe color
-                GL.Uniform1(shader["colorOverride"], 1);
-                GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-                GL.Enable(EnableCap.LineSmooth);
-                GL.LineWidth(1.5f);
-                GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                GL.Uniform1(shader["colorOverride"], 0);
-
-                GL.Enable(EnableCap.DepthTest);
-            }
-            private void SetVertexAttributes(MeshWrapper m, ShaderProgram shader)
-            {
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-                GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 0); //+12
-                GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 12); //+12
-                GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, DisplayVertex.Size, 24); //+12
-                GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 36); //+8
-                GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, DisplayVertex.Size, 44); //+16
-                GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, DisplayVertex.Size, new IntPtr(60)); //+16
-                GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, DisplayVertex.Size, 76);//+16
-                GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 92);//+8
-                GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, DisplayVertex.Size, 100);//+8
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
-            }
-            private static void DrawModelWireframe(MeshWrapper p, ShaderProgram shader)
-            {
-                // use vertex color for wireframe color
-                GL.Uniform1(shader["colorOverride"], 1);
-                GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-                GL.Enable(EnableCap.LineSmooth);
-                GL.LineWidth(1.5f);
-                GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                GL.Uniform1(shader["colorOverride"], 0);
-            }
         }
 
         Viewport viewport
@@ -550,12 +254,12 @@ namespace FirstPlugin
             public List<Node> LowerNodes = new List<Node>();
 
             public STSkeleton Skeleton { get; set; }
-            Renderer DrawableRenderer { get; set; }
+            GenericModelRenderer DrawableRenderer { get; set; }
 
             public void Read(FileReader reader, MKAGPDX_Model root)
             {
                 Skeleton = new STSkeleton();
-                DrawableRenderer = new Renderer();
+                DrawableRenderer = new GenericModelRenderer();
                 root.DrawableContainer.Drawables.Add(Skeleton);
                 root.DrawableContainer.Drawables.Add(DrawableRenderer);
 
@@ -720,13 +424,13 @@ namespace FirstPlugin
                 }
                 else if (Node.IsMesh)
                 {
-                    MeshWrapper meshNode = new MeshWrapper();
+                    GenericRenderedObject meshNode = new GenericRenderedObject();
                     meshNode.ImageKey = "mesh";
                     meshNode.SelectedImageKey = "mesh";
 
                     int i = 0;
-                    meshNode.lodMeshes = new List<MeshWrapper.LOD_Mesh>();
-                    var msh = new MeshWrapper.LOD_Mesh();
+                    meshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
+                    var msh = new GenericRenderedObject.LOD_Mesh();
                     msh.PrimitiveType = STPolygonType.Triangle;
                     msh.FirstVertex = 0;
                     msh.faces = Node.SubMeshes[0].Faces;
@@ -738,12 +442,12 @@ namespace FirstPlugin
                     {
                         if (i > 0)
                         {
-                            MeshWrapper subMeshNode = new MeshWrapper();
+                            GenericRenderedObject subMeshNode = new GenericRenderedObject();
                             subMeshNode.ImageKey = "mesh";
                             subMeshNode.SelectedImageKey = "mesh";
 
-                            subMeshNode.lodMeshes = new List<MeshWrapper.LOD_Mesh>();
-                            var submsh = new MeshWrapper.LOD_Mesh();
+                            subMeshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
+                            var submsh = new GenericRenderedObject.LOD_Mesh();
                             submsh.PrimitiveType = STPolygonType.Triangle;
                             submsh.FirstVertex = 0;
                             submsh.faces = subMesh.Faces;

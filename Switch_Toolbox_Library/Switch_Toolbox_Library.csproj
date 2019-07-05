@@ -214,6 +214,8 @@
     <Compile Include="Compression\STLibraryCompression.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
+    <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
     <Compile Include="Security\Cryptography\crc32.cs" />
     <Compile Include="DrawableContainer.cs" />
     <Compile Include="FileFormats\3DS\ETC1.cs" />
