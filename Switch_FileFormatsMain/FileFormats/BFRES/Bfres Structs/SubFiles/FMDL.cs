@@ -599,6 +599,9 @@ namespace Bfres.Structs
         //Function addes shapes, vertices and meshes
         public void AddOjects(string FileName, ResFile resFileNX, ResU.ResFile resFileU,  bool Replace = true)
         {
+            //If using original attributes, this to look them up
+            Dictionary<string, List<FSHP.VertexAttribute>> AttributeMatcher = new Dictionary<string, List<FSHP.VertexAttribute>>();
+
             bool IsWiiU = (resFileU != null);
 
             int MatStartIndex = materials.Count;
@@ -704,6 +707,17 @@ namespace Bfres.Structs
                                     //Match the skin count setting if names match
                                     //Only one match should be found as shapes can't have duped names
                                     csvModel.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+
+                                    if (csvsettings.MapOriginalMaterials)
+                                        csvModel.objects[i].MaterialIndex = ((FSHP)Matches[0]).MaterialIndex;
+
+                                    if (csvsettings.LimitSkinCount)
+                                        csvModel.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
+
+                                    if (csvsettings.UseOriginalAttributes)
+                                    {
+                                        AttributeMatcher.Add(csvModel.objects[i].ObjectName, Matches[0].vertexAttributes);
+                                    }
                                 }
                                 else
                                 {
@@ -747,7 +761,12 @@ namespace Bfres.Structs
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
                             shape.MaterialIndex = 0;
-                            shape.vertexAttributes = csvsettings.CreateNewAttributes();
+
+                            if (AttributeMatcher.ContainsKey(obj.ObjectName))
+                                shape.vertexAttributes = csvsettings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);
+                            else
+                                shape.vertexAttributes = csvsettings.CreateNewAttributes();
+
                             shape.BoneIndex = 0;
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
@@ -851,9 +870,6 @@ namespace Bfres.Structs
                         bool HasTextures = ((BFRES)Parent.Parent).HasTextures;
                         settings.UpdateTexturePlaceholderSetting(HasTextures);
                     }
-
-                    //If using original attributes, this to look them up
-                    Dictionary<string, List<FSHP.VertexAttribute>> AttributeMatcher = new Dictionary<string, List<FSHP.VertexAttribute>>();
 
                     settings.SetModelAttributes(ImportedObjects[0]);
                     if (settings.ShowDialog() == DialogResult.OK)

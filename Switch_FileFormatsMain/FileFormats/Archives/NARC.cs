@@ -109,6 +109,7 @@ namespace FirstPlugin
             public byte[] DecompressBlock()
             {
                 byte[] data = GetBlock();
+                return data;
                 Console.WriteLine("DATA " + data.Length);
 
                 var reader = new FileReader(data);
@@ -125,7 +126,7 @@ namespace FirstPlugin
                     var comp = new STLibraryCompression.MTA_CUSTOM();
                     return comp.Decompress(data, decompSize);
                 }
-                else if (compType == 0x30)
+                else if (compType == 0x20)
                 {
                     uint decompSize = reader.ReadUInt32();
                     uint compSize = (uint)reader.BaseStream.Length - 14;
@@ -135,6 +136,17 @@ namespace FirstPlugin
                     reader.Dispose();
 
                     data = STLibraryCompression.ZLIB.Decompress(filedata);
+                }
+                else if (compType == 0x30)
+                {
+                    uint decompSize = reader.ReadUInt32();
+                    uint compSize = (uint)reader.BaseStream.Length - 14;
+
+                    byte[] filedata = reader.getSection(14, (int)compSize);
+                    reader.Close();
+                    reader.Dispose();
+
+                    data = STLibraryCompression.GZIP.Decompress(filedata);
                 }
                 return data;
             }
