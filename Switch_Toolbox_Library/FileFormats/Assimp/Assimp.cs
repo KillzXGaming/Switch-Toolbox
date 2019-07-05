@@ -417,6 +417,33 @@ namespace Switch_Toolbox.Library
                     return 0;
             }
         }
+
+        private Node GetSklRoot(Node node, List<string> boneNames)
+        {
+            string Name = node.Name;
+
+            if (DaeHelper.IDMapToName.ContainsKey(node.Name))
+                Name = DaeHelper.IDMapToName[node.Name];
+
+            string ParentArmatureName = node.Parent != null ? node.Parent.Name : "";
+            if (ParentArmatureName != string.Empty && DaeHelper.IDMapToName.ContainsKey(ParentArmatureName))
+                ParentArmatureName = DaeHelper.IDMapToName[ParentArmatureName];
+
+            bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
+                       Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
+                       Name.Contains("skl_root");
+
+            if (IsBone)
+                return node;
+
+            if (node.HasChildren)
+            {
+                foreach (Node child in node.Children)
+                    GetSklRoot(child, boneNames);
+            }
+            return null;
+        }
+
         private void BuildSkeletonNodes(Node node, List<string> boneNames, STSkeleton skeleton, ref Matrix4x4 rootTransform)
         {
             Matrix4x4 trafo = node.Transform;
@@ -454,8 +481,16 @@ namespace Switch_Toolbox.Library
             {
                 if (node.HasChildren)
                 {
-                    foreach (Node child in node.Children)
-                        BuildSkeletonNodes(child, boneNames, skeleton, ref world);
+                   var SklRoot =  GetSklRoot(node, boneNames);
+                    if (SklRoot != null)
+                    {
+                        BuildSkeletonNodes(SklRoot, boneNames, skeleton, ref world);
+                    }
+                    else
+                    {
+                        foreach (Node child in node.Children)
+                            BuildSkeletonNodes(child, boneNames, skeleton, ref world);
+                    }
                 }
             }
         }

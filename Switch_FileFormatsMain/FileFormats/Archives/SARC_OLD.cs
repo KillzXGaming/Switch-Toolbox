@@ -217,7 +217,7 @@ namespace FirstPlugin
                     else
                     {
                         sarcData.Files.Add(SetSarcPath(node, this),
-                            STLibraryCompression.CompressFile(OpenedFiles[node.FullPath], fileFormat));
+                           OpenedFiles[node.FullPath]);
                     }
                 }
             }
