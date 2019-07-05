@@ -145,7 +145,7 @@ namespace FirstPlugin
                 for (int i = 0; i < Meshes.Count; i++)
                 {
                     //Write mesh header
-                    padding.Write(writer, 16);
+                    padding.Write(writer, 32);
                     Meshes[i].Write(writer);
 
                     if (Meshes[i].VertexGroup != null)
@@ -158,22 +158,25 @@ namespace FirstPlugin
                     if (Meshes[i].IndexGroup != null)
                     {
                         //Write Faces
-                        padding.Write(writer, 16);
+                        padding.Write(writer, 32);
                         Meshes[i].IndexGroup.Write(writer);
                     }
 
                     if (Meshes[i].VMapGroup != null)
                     {
                         //Write VMAPS
-                        padding.Write(writer, 16);
+                        padding.Write(writer, 32);
                         Meshes[i].VMapGroup.Write(writer);
                     }
                 }
+                writer.WriteSignature("ENDX");
+                writer.Write(8); //Last section size
             }
 
             public class VERT
             {
                 public List<Vertex> Vertices = new List<Vertex>();
+                public List<uint> Unknowns = new List<uint>();
 
                 public void Read(FileReader reader, MESH mesh)
                 {
@@ -201,7 +204,7 @@ namespace FirstPlugin
                             vert.nrm = reader.ReadVec3();
                             vert.uv0 = reader.ReadVec2();
                             Vertices.Add(vert);
-
+                            Unknowns.Add(Unknown);
                             Console.WriteLine($"Unknown {Unknown}");
                         }
                     }
@@ -223,7 +226,7 @@ namespace FirstPlugin
                         }
                         else if (mesh.VertexSize == 36)
                         {
-                            writer.Write(0);
+                            writer.Write(Unknowns[v]);
                             writer.Write(Vertices[v].pos);
                             writer.Write(Vertices[v].nrm);
                             writer.Write(Vertices[v].uv0);
@@ -244,6 +247,11 @@ namespace FirstPlugin
                 public ushort VertexCount { get; set; }
                 public uint FaceCount { get; set; }
 
+                public uint Unknown { get; set; }
+                public uint Unknown1 { get; set; }
+                public uint Unknown2 { get; set; }
+                public uint Unknown3 { get; set; }
+
                 public void Read(FileReader reader)
                 {
                     reader.ReadSignature(4, "MESH");
@@ -253,10 +261,10 @@ namespace FirstPlugin
                     VertexCount = reader.ReadUInt16();
                     uint Padding2 = reader.ReadUInt32();
                     FaceCount = reader.ReadUInt32();
-                    uint Padding3 = reader.ReadUInt32();
-                    uint Padding4 = reader.ReadUInt32();
-                    uint Padding5 = reader.ReadUInt32();
-                    uint Padding6 = reader.ReadUInt32();
+                    Unknown = reader.ReadUInt32();
+                    Unknown1 = reader.ReadUInt32();
+                    Unknown2 = reader.ReadUInt32();
+                    Unknown3 = reader.ReadUInt32();
                 }
 
                 public void Write(FileWriter writer)
@@ -268,10 +276,10 @@ namespace FirstPlugin
                     writer.Write(VertexCount);
                     writer.Write(0);
                     writer.Write(FaceCount);
-                    writer.Write(0);
-                    writer.Write(0);
-                    writer.Write(0);
-                    writer.Write(0);
+                    writer.Write(Unknown);
+                    writer.Write(Unknown1);
+                    writer.Write(Unknown2);
+                    writer.Write(Unknown3);
                 }
             }
 
@@ -295,7 +303,7 @@ namespace FirstPlugin
                 public void Write(FileWriter writer)
                 {
                     writer.WriteSignature("INDX");
-                    writer.Write(Indices.Length * sizeof(ushort) - 8);
+                    writer.Write(Indices.Length * sizeof(ushort) + 8);
                     for (int i = 0; i < Indices.Length; i++)
                         writer.Write(Indices[i]);
                 }
@@ -321,7 +329,7 @@ namespace FirstPlugin
                 public void Write(FileWriter writer)
                 {
                     writer.WriteSignature("VMAP");
-                    writer.Write(Indices.Length * sizeof(ushort) - 8);
+                    writer.Write(Indices.Length * sizeof(ushort) + 8);
                     for (int i = 0; i < Indices.Length; i++)
                         writer.Write(Indices[i]);
                 }
@@ -338,13 +346,26 @@ namespace FirstPlugin
                 public void Write(FileWriter writer, uint Alignment)
                 {
                     long pos = writer.Position;
+
+                    //Check if alignment is needed first!
+                    using (writer.TemporarySeek(pos + 8, System.IO.SeekOrigin.Begin))
+                    {
+                        var startPos = writer.Position;
+                        long position = writer.Seek((-writer.Position % Alignment + Alignment) % Alignment, System.IO.SeekOrigin.Current);
+
+                        if (startPos == position)
+                            return;
+                    }
+
                     writer.WriteSignature("PADX");
                     writer.Write(uint.MaxValue);
                     Align(writer, (int)Alignment);
 
                     long endPos = writer.Position;
-                    writer.Seek(pos + 4, System.IO.SeekOrigin.Begin);
-                    writer.Write((uint)(endPos - pos));
+                    using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin))
+                    {
+                        writer.Write((uint)(endPos - pos));
+                    }
                 }
 
                 private void Align(FileWriter writer, int alignment)
