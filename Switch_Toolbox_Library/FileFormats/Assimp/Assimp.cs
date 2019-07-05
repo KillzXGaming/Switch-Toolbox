@@ -194,6 +194,7 @@ namespace Switch_Toolbox.Library
         {
             objects.Clear();
             materials.Clear();
+            BoneNames.Clear();
             skeleton = new STSkeleton();
 
             processNode();
@@ -439,7 +440,7 @@ namespace Switch_Toolbox.Library
             if (node.HasChildren)
             {
                 foreach (Node child in node.Children)
-                    GetSklRoot(child, boneNames);
+                    return GetSklRoot(child, boneNames);
             }
             return null;
         }
@@ -707,7 +708,9 @@ namespace Switch_Toolbox.Library
 
                             vertices[w.VertexID].boneWeights.Add(w.Weight);
                             vertices[w.VertexID].boneNames.Add(bn.Name);
-                            BoneNames.Add(bn.Name);
+
+                            if (!BoneNames.Contains(bn.Name))
+                                BoneNames.Add(bn.Name);
                         }
                     }
                 }
