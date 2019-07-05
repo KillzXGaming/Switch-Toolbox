@@ -43,6 +43,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
+
             GMXHeader = new Header();
             GMXHeader.Read(new FileReader(stream));
             for (int i = 0; i < GMXHeader.Meshes.Count; i++)
@@ -58,7 +60,9 @@ namespace FirstPlugin
         }
         public byte[] Save()
         {
-            return null;
+            var mem = new System.IO.MemoryStream();
+            GMXHeader.Write(new FileWriter(mem));
+            return mem.ToArray();
         }
 
         public class Header
@@ -132,8 +136,28 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
+                PADX padding = new PADX();
+
                 writer.WriteSignature("GMX2");
                 writer.Write(HeaderSize);
+                for (int i = 0; i < Meshes.Count; i++)
+                {
+                    //Write mesh header
+                    padding.Write(writer, 16);
+                    Meshes[i].Write(writer);
+
+                    //Write Vertices
+                    padding.Write(writer, 64);
+                    Meshes[i].VertexGroup.Write(writer, Meshes[i]);
+
+                    //Write Faces
+                    padding.Write(writer, 16);
+                    Meshes[i].IndexGroup.Write(writer);
+
+                    //Write VMAPS
+                    padding.Write(writer, 16);
+                    Meshes[i].VMapGroup.Write(writer);
+                }
             }
 
             public class VERT
@@ -174,10 +198,28 @@ namespace FirstPlugin
                         throw new Exception($"Unsupported Vertex Size {mesh.VertexSize}");
                 }
 
-                public void Write(FileWriter writer)
+                public void Write(FileWriter writer, MESH mesh)
                 {
                     writer.WriteSignature("VERT");
-
+                    writer.Write(Vertices.Count * mesh.VertexSize);
+                    for (int v = 0; v < mesh.VertexCount; v++)
+                    {
+                        if (mesh.VertexSize == 32)
+                        {
+                            writer.Write(Vertices[v].pos);
+                            writer.Write(Vertices[v].nrm);
+                            writer.Write(Vertices[v].uv0);
+                        }
+                        else if (mesh.VertexSize == 36)
+                        {
+                            writer.Write(0);
+                            writer.Write(Vertices[v].pos);
+                            writer.Write(Vertices[v].nrm);
+                            writer.Write(Vertices[v].uv0);
+                        }
+                        else
+                            throw new Exception($"Unsupported Vertex Size {mesh.VertexSize}");
+                    }
                 }
             }
 
@@ -283,10 +325,26 @@ namespace FirstPlugin
 
                 public void Write(FileWriter writer, uint Alignment)
                 {
+                    long pos = writer.Position;
                     writer.WriteSignature("PADX");
-                    writer.Write(Alignment - 8);
-                    for (int i = 0; i < Alignment; i++)
+                    writer.Write(uint.MaxValue);
+                    Align(writer, (int)Alignment);
+
+                    long endPos = writer.Position;
+                    writer.Seek(pos + 4, System.IO.SeekOrigin.Begin);
+                    writer.Write((uint)(endPos - pos));
+                }
+
+                private void Align(FileWriter writer, int alignment)
+                {
+                    var startPos = writer.Position;
+                    long position = writer.Seek((-writer.Position % alignment + alignment) % alignment, System.IO.SeekOrigin.Current);
+
+                    writer.Seek(startPos, System.IO.SeekOrigin.Begin);
+                    while (writer.Position != position)
+                    {
                         writer.Write(byte.MaxValue);
+                    }
                 }
             }
         }

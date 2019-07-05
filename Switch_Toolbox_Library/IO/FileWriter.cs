@@ -81,5 +81,24 @@ namespace Switch_Toolbox.Library.IO
                 Write((uint)pos - (uint)RelativeOffsetPosition);
             }
         }
+
+        public void Write(OpenTK.Vector2 v)
+        {
+            Write(v.X);
+            Write(v.Y);
+        }
+        public void Write(OpenTK.Vector3 v)
+        {
+            Write(v.X);
+            Write(v.Y);
+            Write(v.Z);
+        }
+        public void Write(OpenTK.Vector4 v)
+        {
+            Write(v.X);
+            Write(v.Y);
+            Write(v.Z);
+            Write(v.W);
+        }
     }
 }
