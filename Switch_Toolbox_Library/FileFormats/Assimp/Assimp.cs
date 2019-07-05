@@ -431,7 +431,7 @@ namespace Switch_Toolbox.Library
 
             bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
                        Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
-                       Name.Contains("skl_root");
+                       Name.Contains("skl_root") || Name == "Root";
 
             if (IsBone)
                 return node;
@@ -481,7 +481,7 @@ namespace Switch_Toolbox.Library
             {
                 if (node.HasChildren)
                 {
-                   var SklRoot =  GetSklRoot(node, boneNames);
+                    var SklRoot =  GetSklRoot(node, boneNames);
                     if (SklRoot != null)
                     {
                         BuildSkeletonNodes(SklRoot, boneNames, skeleton, ref world);
