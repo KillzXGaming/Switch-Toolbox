@@ -122,13 +122,14 @@ namespace FirstPlugin
                         VertexID++;
                     }*/
 
-                    for (int f = 0; f < GMXHeader.Meshes[i].IndexGroup.Indices.Length / 3; f++)
+                    for (int f = 0; f < GMXHeader.Meshes[i].IndexGroup.Indices.Length; f++)
                     {
-                        ushort face0 = GMXHeader.Meshes[i].IndexGroup.Indices[f + 0];
-                        ushort face1 = GMXHeader.Meshes[i].IndexGroup.Indices[f + 1];
-                        ushort face2 = GMXHeader.Meshes[i].IndexGroup.Indices[f + 2];
-
-                        msh.faces.AddRange(new List<int>() { face2, face1, face0, });
+                        msh.faces.AddRange(new int[3]
+                        {
+                           GMXHeader.Meshes[i].IndexGroup.Indices[f++],
+                           GMXHeader.Meshes[i].IndexGroup.Indices[f++],
+                           GMXHeader.Meshes[i].IndexGroup.Indices[f]
+                        });
                     }
 
                     renderedMesh.lodMeshes.Add(msh);
