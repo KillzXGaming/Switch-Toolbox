@@ -202,7 +202,16 @@ namespace Switch_Toolbox.Library
             if (scene.RootNode != null)
             {
                 var idenity = Matrix4x4.Identity;
-                BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref idenity);
+
+                var SklRoot = GetSklRoot(scene.RootNode, BoneNames);
+                if (SklRoot != null)
+                {
+                    BuildSkeletonNodes(SklRoot, BoneNames, skeleton, ref idenity);
+                }
+                else
+                {
+                    BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref idenity);
+                }
 
                 skeleton.update();
                 skeleton.reset();
@@ -482,16 +491,8 @@ namespace Switch_Toolbox.Library
             {
                 if (node.HasChildren)
                 {
-                    var SklRoot =  GetSklRoot(node, boneNames);
-                    if (SklRoot != null)
-                    {
-                        BuildSkeletonNodes(SklRoot, boneNames, skeleton, ref world);
-                    }
-                    else
-                    {
                         foreach (Node child in node.Children)
                             BuildSkeletonNodes(child, boneNames, skeleton, ref world);
-                    }
                 }
             }
         }
