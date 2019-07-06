@@ -518,6 +518,8 @@ namespace FirstPlugin
                     return TEX_FORMAT.BC4_UNORM;
                 case BFLIMFormat.BC5_UNORM:
                     return TEX_FORMAT.BC5_UNORM;
+                case BFLIMFormat.RGB565_Indirect_UNORM:
+                    return TEX_FORMAT.B5G6R5_UNORM;
                 default:
                     throw new Exception("Unsupported format " + format);
             }
