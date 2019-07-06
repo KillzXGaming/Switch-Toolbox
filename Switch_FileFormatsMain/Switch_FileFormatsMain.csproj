@@ -1277,6 +1277,7 @@
     <None Include="Resources\ViewportIconDisable.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="FileFormats\BMD\" />
     <Folder Include="FileFormats\EvemtFlow\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

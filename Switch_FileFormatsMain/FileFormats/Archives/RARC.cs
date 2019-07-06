@@ -57,6 +57,9 @@ namespace FirstPlugin
 
         private DirectoryEntry[] Directories;
 
+        private uint HeaderSize = 32;
+        private uint Unknown = 256;
+
         public void Load(System.IO.Stream stream)
         {
             using (var reader = new FileReader(stream))
@@ -64,7 +67,7 @@ namespace FirstPlugin
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 reader.ReadSignature(4, "RARC");
                 uint FileSize = reader.ReadUInt32();
-                uint HeaderSize = reader.ReadUInt32();
+                HeaderSize = reader.ReadUInt32();
                 uint DataOffset = reader.ReadUInt32();
                 uint FileDataSize = reader.ReadUInt32();
                 uint EndOfFileOffset = reader.ReadUInt32();
@@ -81,7 +84,7 @@ namespace FirstPlugin
                 uint StringTableSize = reader.ReadUInt32();
                 uint StringTablOffset = reader.ReadUInt32() + (uint)pos;
                 ushort NodeCount = reader.ReadUInt16();
-                ushort Unknown = reader.ReadUInt16();
+                Unknown = reader.ReadUInt16();
                 byte[] Padding2 = reader.ReadBytes(4);
 
                 Directories = new DirectoryEntry[DirectoryCount];
@@ -126,6 +129,121 @@ namespace FirstPlugin
 
                 this.Name = Directories[0].Name;
                 nodes.AddRange(Directories[0].Nodes);
+            }
+        }
+
+        public int GetTotalCount()
+        {
+            int count = 0;
+            foreach (var dir in Directories)
+                GetTotalCount(dir, count);
+            return count;
+        }
+
+        public int GetFileCount()
+        {
+            int count = 0;
+            foreach (var dir in Directories)
+                GetFileCount(dir, count);
+            return count;
+        }
+
+        public int GetDirectoryCount()
+        {
+            int count = 0;
+            foreach (var dir in Directories)
+                GetDirectoryCount(dir, count);
+            return count;
+        }
+
+        private int GetTotalCount(INode node, int count)
+        {
+            count++;
+
+            foreach (var c in ((DirectoryEntry)node).nodes)
+                return GetDirectoryCount(c, count);
+
+            return count;
+        }
+
+
+        private int GetFileCount(INode node, int count)
+        {
+            if (node is FileEntry)
+                count++;
+
+            foreach (var c in ((DirectoryEntry)node).nodes)
+                return GetDirectoryCount(c, count);
+
+            return count;
+        }
+
+        private int GetDirectoryCount(INode node, int count)
+        {
+            if (node is DirectoryEntry)
+                count++;
+
+            foreach (var c in ((DirectoryEntry)node).nodes)
+                return GetDirectoryCount(c, count);
+
+            return count;
+        }
+
+        public void SaveFile(FileWriter writer)
+        {
+            long pos = writer.Position;
+
+            writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+            writer.WriteSignature("RARC");
+            writer.Write(uint.MaxValue); //FileSize
+            writer.Write(HeaderSize);
+            writer.Write(uint.MaxValue); //DataOffset
+            writer.Write(uint.MaxValue); //End of file
+            writer.Seek(8); //padding
+
+            writer.SeekBegin(HeaderSize);
+            long InfoPos = writer.Position;
+
+            writer.Write(GetDirectoryCount()); 
+            writer.Write(uint.MaxValue); //DirectoryOffset
+            writer.Write(GetFileCount());
+            writer.Write(uint.MaxValue); //File Node Offset
+            writer.Write(uint.MaxValue); //String pool size
+            writer.Write(uint.MaxValue); //String pool offset
+            writer.Write((ushort)GetFileCount());
+            writer.Write((ushort)Unknown);
+            writer.Write(0); //padding
+
+            //Write directory Offset
+            WriteOffset(writer, 0x4, InfoPos);
+            for (int dir = 0; dir < Directories.Length; dir++)
+            {
+                Directories[dir].Write(writer);
+            }
+
+            for (int dir = 0; dir < Directories.Length; dir++)
+            {
+
+            }
+
+            //Write file size
+            using (writer.TemporarySeek(pos + 0x4, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)writer.BaseStream.Length);
+            }
+        }
+
+        private void WriteDirectories()
+        {
+
+        }
+
+        private void WriteOffset(FileWriter writer, long Target, long RelativePosition)
+        {
+            long Position = writer.Position;
+            using (writer.TemporarySeek(RelativePosition + Target, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)Position);
             }
         }
 
@@ -179,6 +297,8 @@ namespace FirstPlugin
                 nodes.Add(node);
             }
 
+
+            internal long _positionPtr;
             public void Read(FileReader reader)
             {
                 Identifier = reader.ReadUInt32();
@@ -190,6 +310,8 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
+                _positionPtr = writer.Position;
+
                 Hash = CalculateHash(Name);
 
                 writer.Write(Identifier);
@@ -207,7 +329,9 @@ namespace FirstPlugin
 
         public byte[] Save()
         {
-            return null;
+            var mem = new System.IO.MemoryStream();
+            SaveFile(new FileWriter(mem));
+            return mem.ToArray();
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -229,13 +353,27 @@ namespace FirstPlugin
             internal uint Offset;
             internal ushort NameOffset;
 
+            internal long _positionPtr;
             public void Read(FileReader reader)
             {
                 FileId = reader.ReadUInt16();
-                uint Unknown = reader.ReadUInt32();
+                Unknown = reader.ReadUInt32();
                 NameOffset = reader.ReadUInt16();
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
+            }
+
+            public void Write(FileWriter writer)
+            {
+                _positionPtr = writer.Position;
+
+                SaveFileFormat();
+
+                writer.Write(FileId);
+                writer.Write(Unknown);
+                writer.Write(NameOffset);
+                writer.Write(uint.MaxValue);
+                writer.Write(FileData.Length);
             }
         }
     }

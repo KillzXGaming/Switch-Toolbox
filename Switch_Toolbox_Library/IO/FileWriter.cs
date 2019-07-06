@@ -82,6 +82,10 @@ namespace Switch_Toolbox.Library.IO
             }
         }
 
+        public void SeekBegin(uint Offset) { Seek(Offset, SeekOrigin.Begin); }
+        public void SeekBegin(int Offset) { Seek(Offset, SeekOrigin.Begin); }
+        public void SeekBegin(long Offset) { Seek(Offset, SeekOrigin.Begin); }
+
         public void Write(OpenTK.Vector2 v)
         {
             Write(v.X);

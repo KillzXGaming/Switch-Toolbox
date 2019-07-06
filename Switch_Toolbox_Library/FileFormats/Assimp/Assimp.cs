@@ -471,7 +471,7 @@ namespace Switch_Toolbox.Library
 
             bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
                           Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
-                          Name.Contains("skl_root") || Name.Contains("_root");
+                          Name.Contains("skl_root") || Name.Contains("_root") || Name.Contains("Root");
 
             short SmoothIndex = 0;
             short RigidIndex = -1;
@@ -480,19 +480,14 @@ namespace Switch_Toolbox.Library
             if (IsBone)
             {
                 var idenity = Matrix4x4.Identity;
-
-                var Root = node;
-                if (node.Parent != null)
-                    Root = node.Parent;
-
                 CreateByNode(node, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
             }
             else
             {
                 if (node.HasChildren)
                 {
-                        foreach (Node child in node.Children)
-                            BuildSkeletonNodes(child, boneNames, skeleton, ref world);
+                    foreach (Node child in node.Children)
+                        BuildSkeletonNodes(child, boneNames, skeleton, ref world);
                 }
             }
         }
