@@ -36,6 +36,12 @@ namespace Switch_Toolbox.Library
     public class ArchiveFileInfo : INode
     {
         [Browsable(false)]
+        public string ImageKey { get; set; }
+
+        [Browsable(false)]
+        public string SelectedImageKey { get; set; }
+
+        [Browsable(false)]
         public STContextMenuStrip STContextMenuStrip;
 
         [Browsable(false)]

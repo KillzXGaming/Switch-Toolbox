@@ -23,6 +23,8 @@ namespace Switch_Toolbox.Library.Forms
             hexBox1.ForeColor = FormThemes.BaseTheme.FormForeColor;
             hexBox1.SelectionBackColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
             hexBox1.SelectionForeColor = FormThemes.BaseTheme.FormForeColor;
+            fixedBytesToolStripMenuItem.Checked = true;
+            hexBox1.UseFixedBytesPerLine = true;
         }
 
         public override void OnControlClosing()
@@ -83,6 +85,11 @@ namespace Switch_Toolbox.Library.Forms
                 else
                     options.Text = searchHex.findString;
             }
+        }
+
+        private void fixedBytesToolStripMenuItem_Click(object sender, EventArgs e) {
+            hexBox1.UseFixedBytesPerLine = fixedBytesToolStripMenuItem.Checked;
+            hexBox1.Refresh();
         }
     }
 }

@@ -30,6 +30,8 @@
         {
             this.hexBox1 = new Be.Windows.Forms.HexBox();
             this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fixedBytesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip1.SuspendLayout();
@@ -49,18 +51,34 @@
             this.hexBox1.Size = new System.Drawing.Size(529, 430);
             this.hexBox1.StringViewVisible = true;
             this.hexBox1.TabIndex = 0;
-            this.hexBox1.UseFixedBytesPerLine = true;
             this.hexBox1.VScrollBarVisible = true;
             // 
             // stContextMenuStrip1
             // 
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewToolStripMenuItem,
             this.editToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
             this.stContextMenuStrip1.Size = new System.Drawing.Size(529, 24);
             this.stContextMenuStrip1.TabIndex = 1;
             this.stContextMenuStrip1.Text = "stContextMenuStrip1";
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fixedBytesToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // fixedBytesToolStripMenuItem
+            // 
+            this.fixedBytesToolStripMenuItem.CheckOnClick = true;
+            this.fixedBytesToolStripMenuItem.Name = "fixedBytesToolStripMenuItem";
+            this.fixedBytesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fixedBytesToolStripMenuItem.Text = "Fixed Bytes";
+            this.fixedBytesToolStripMenuItem.Click += new System.EventHandler(this.fixedBytesToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -77,13 +95,13 @@
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
-            // HexEditor2
+            // HexEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.hexBox1);
             this.Controls.Add(this.stContextMenuStrip1);
-            this.Name = "HexEditor2";
+            this.Name = "HexEditor";
             this.Size = new System.Drawing.Size(529, 454);
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();
@@ -98,5 +116,7 @@
         private STMenuStrip stContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fixedBytesToolStripMenuItem;
     }
 }

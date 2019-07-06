@@ -13,7 +13,7 @@ using Switch_Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class BEA : TreeNodeFile, IFileFormat
+    public class BEA : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -22,7 +22,8 @@ namespace FirstPlugin
         public bool CanDeleteFiles { get; set; } = false;
         public bool CanReplaceFiles { get; set; } = true;
 
-        public IEnumerable<ArchiveFileInfo> Files { get; }
+        public List<FileEntry> files = new List<FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Bevel Engine Archive" };
@@ -89,23 +90,23 @@ namespace FirstPlugin
                             bea.FileName = file;
                             bea.Load(new FileStream(file, FileMode.Open));
 
-                            foreach (FileEntry asset in bea.Nodes)
+                            foreach (FileEntry asset in bea.Files)
                             {
-                                if (Path.GetExtension(asset.FullName) == ".lua")
+                                if (Path.GetExtension(asset.FileName) == ".lua")
                                 {
                                     try
                                     {
-                                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{folderPath}/{bea.Name}/{asset.FullName}")))
+                                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{folderPath}/{asset.FileName}")))
                                         {
-                                            if (!File.Exists(asset.FullName))
+                                            if (!File.Exists(asset.FileName))
                                             {
-                                                if (!Directory.Exists($"{folderPath}/{bea.Name}/{asset.FullName}"))
+                                                if (!Directory.Exists($"{folderPath}/{bea.FileName}"))
                                                 {
-                                                    Directory.CreateDirectory(Path.GetDirectoryName($"{folderPath}/{bea.Name}/{asset.FullName}"));
+                                                    Directory.CreateDirectory(Path.GetDirectoryName($"{folderPath}/{asset.FileName}"));
                                                 }
                                             }
                                         }
-                                        File.WriteAllBytes($"{folderPath}/{bea.Name}/{asset.FullName}", GetASSTData(asset));
+                                        File.WriteAllBytes($"{folderPath}/{asset.FileName}", GetASSTData(asset));
                                     }
                                     catch
                                     {
@@ -120,24 +121,13 @@ namespace FirstPlugin
         }
 
         public BezelEngineArchive beaFile;
-        static STProgressBar progressBar;
 
         public void Load(System.IO.Stream stream)
         {
-            Text = FileName;
             CanSave = true;
-
             beaFile = new BezelEngineArchive(stream);
-            FillTreeNodes(this, beaFile.FileList);
-
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Save", null, Save, Keys.Control | Keys.S));
-            ContextMenuStrip.Items.Add(new STToolStripSeparator());
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Preview Window", null, PreviewWindow, Keys.Control | Keys.P));
-            ContextMenuStrip.Items.Add(new STToolStripSeparator());
-            ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export All", null, ExportAll, Keys.Control | Keys.E));
-
-            CanDelete = true;
+            foreach (var file in beaFile.FileList.Values)
+                files.Add(SetupFileEntry(file));
         }
         public void Unload()
         {
@@ -154,16 +144,6 @@ namespace FirstPlugin
             return false;
         }
 
-        IEnumerable<TreeNode> Collect(TreeNodeCollection nodes)
-        {
-            foreach (TreeNode node in nodes)
-            {
-                yield return node;
-
-                foreach (var child in Collect(node.Nodes))
-                    yield return child;
-            }
-        }
         private void Save(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -185,140 +165,26 @@ namespace FirstPlugin
             beaFile.FileList.Clear();
             beaFile.FileDictionary.Clear();
 
-            foreach (TreeNode node in Collect(Nodes))
+            foreach (FileEntry node in Files)
             {
-                if (node is TreeNodeFile && node != this)
-                {
-                    IFileFormat fileFormat = (IFileFormat)node;
-                    if (fileFormat != null && fileFormat.CanSave)
-                    {
-                        byte[] uncomrompressedData = new byte[0];
+                node.SaveFileFormat();
 
-                        //Save any active files in the editor if supported
-                        if (fileFormat.CanSave)
-                            uncomrompressedData = fileFormat.Save();
-
-                        //Create a new asset entry
-                        ASST asset = new ASST();
-                        asset.unk = 2;
-                        asset.unk2 = 2;
-                        asset.UncompressedSize = uncomrompressedData.LongLength;
-
-                        if (fileFormat.IFileInfo.FileIsCompressed)
-                            asset.FileData = STLibraryCompression.ZSTD.Compress(uncomrompressedData);
-                        else
-                            asset.FileData = uncomrompressedData;
-
-                        asset.FileName = fileFormat.FilePath;
-                        beaFile.FileList.Add(fileFormat.FilePath, asset);
-                        beaFile.FileDictionary.Add(fileFormat.FilePath);
-                    }
-                }
-                else if (node is FileEntry)
-                {
-                    ASST asset = new ASST();
-                    asset.unk = ((FileEntry)node).unk1;
-                    asset.unk2 = ((FileEntry)node).unk2;
-                    asset.FileName = ((FileEntry)node).FullName;
-                    asset.FileData = ((FileEntry)node).data;
-                    byte[] uncomp = GetASSTData((FileEntry)node);
-                    asset.UncompressedSize = uncomp.Length;
-                    beaFile.FileList.Add(asset.FileName, asset);
-                    beaFile.FileDictionary.Add(asset.FileName);
-                }
+                ASST asset = new ASST();
+                asset.unk = node.unk1;
+                asset.unk2 = node.unk2;
+                asset.FileName = node.FileName;
+                asset.FileData = node.CompressedData;
+                asset.UncompressedSize = node.FileData.Length;
+                beaFile.FileList.Add(asset.FileName, asset);
+                beaFile.FileDictionary.Add(asset.FileName);
             }
 
             MemoryStream mem = new MemoryStream();
             beaFile.Save(mem);
             return mem.ToArray();
         }
-        private void ExportAll(object sender, EventArgs args)
-        {
-            FolderSelectDialog fsd = new FolderSelectDialog();
+    
 
-            if (fsd.ShowDialog() == DialogResult.OK)
-            {
-                progressBar = new STProgressBar();
-                progressBar.Task = "Extracing Files...";
-                progressBar.Refresh();
-                progressBar.Value = 0;
-                progressBar.StartPosition = FormStartPosition.CenterScreen;
-                progressBar.Show();
-
-                ExportAll(fsd.SelectedPath, progressBar);
-            }
-        }
-        private void ExportAll(string Folder, STProgressBar progressBar)
-        {
-            int Curfile = 0;
-            foreach (FileEntry asst in Nodes)
-            {
-                int value = (Curfile * 100) / beaFile.FileList.Count;
-                progressBar.Value = value;
-                progressBar.Refresh();
-
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{Folder}/{beaFile.Name}/{asst.FullName}")))
-                    {
-                        if (!File.Exists(asst.FullName))
-                        {
-                            if (!Directory.Exists($"{Folder}/{beaFile.Name}/{asst.FullName}"))
-                            {
-                                Directory.CreateDirectory(Path.GetDirectoryName($"{Folder}/{beaFile.Name}/{asst.FullName}"));
-                            }
-                        }
-                    }
-                    File.WriteAllBytes($"{Folder}/{beaFile.Name}/{asst.FullName}", GetASSTData(asst));
-                }
-                catch
-                {
-
-                }
-
-                Curfile++;
-                if (value == 99)
-                    value = 100;
-                progressBar.Value = value;
-                progressBar.Refresh();
-            }
-        }
-        private void CallRecursive(TreeView treeView)
-        {
-            // Print each node recursively.  
-            TreeNodeCollection nodes = treeView.Nodes;
-            foreach (TreeNode n in nodes)
-            {
-                PrintRecursive(n);
-            }
-        }
-        private void PrintRecursive(TreeNode treeNode)
-        {
-            if (treeNode is FileEntry)
-            {
-                ((FileEntry)treeNode).OnDoubleMouseClick(treeNode.TreeView);
-            }
-
-            // Print each node recursively.  
-            foreach (TreeNode tn in treeNode.Nodes)
-            {
-                PrintRecursive(tn);
-            }
-        }
-
-        public void PreviewWindow(object sender, EventArgs args)
-        {
-            PreviewFormatList previewFormatList = new PreviewFormatList();
-
-            if (previewFormatList.ShowDialog() == DialogResult.OK)
-            {
-                CallRecursive(TreeView);
-                Console.WriteLine("Loaded files");
-                Console.WriteLine(PluginRuntime.bntxContainers.Count);
-                PreviewEditor previewWindow = new PreviewEditor();
-                previewWindow.Show();
-            }
-        }
         public bool Compressed;
         public class FolderEntry : TreeNode
         {
@@ -333,77 +199,45 @@ namespace FirstPlugin
                 Text = Name;
             }
         }
-        public class FileEntry : TreeNodeCustom
+        public class FileEntry : ArchiveFileInfo
         {
             public FileEntry()
             {
-                ImageKey = "fileBlank";
-                SelectedImageKey = "fileBlank";
 
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
-
-                MenuItem replace = new MenuItem("Replace");
-                ContextMenu.MenuItems.Add(replace);
-                replace.Click += Replace;
             }
 
-            public string FullName;
-            public IFileFormat FileHandle; //Load file instance to save later if possible
-            public byte[] data;
             public ushort unk1;
             public ushort unk2;
             public bool IsCompressed;
 
-            private void Export(object sender, EventArgs args)
+            public override byte[] FileData
             {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
-                sfd.DefaultExt = Path.GetExtension(Text);
-                sfd.Filter = "All files(*.*)|*.*";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllBytes(sfd.FileName, GetASSTData(this));
-                }
+                get { return GetASSTData(this); }
+                set { SetASST(this, value); }
             }
 
-            private void Replace(object sender, EventArgs args)
+            public byte[] CompressedData;
+
+            public override Dictionary<string, string> ExtensionImageKeyLookup
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.FileName = Text;
-                ofd.DefaultExt = Path.GetExtension(Text);
-                ofd.Filter = "All files(*.*)|*.*";
-
-                if (ofd.ShowDialog() == DialogResult.OK)
+                get
                 {
-                     SetASST(this, File.ReadAllBytes(ofd.FileName));
-                }
-            }
-
-            public override void OnClick(TreeView treeView)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(GetASSTData(this));
-            }
-
-            public override void OnDoubleMouseClick(TreeView treeview)
-            {
-                if (GetASSTData(this) != null)
-                {
-                    TreeNode node = STFileLoader.GetNodeFileFormat(FullName, GetASSTData(this), true, this, true, IsCompressed, CompressionType.Zstb);
-
-                    if (node != null)
-                        ReplaceNode(this.Parent, this, node);
+                    return new Dictionary<string, string>()
+                    {
+                           { ".bntx", "bntx" },
+                           { ".byml", "byaml" },
+                           { ".byaml", "byaml" },
+                           { ".bfres", "bfres" },
+                           { ".sbfres", "bfres" },
+                           { ".aamp", "aamp" },
+                           { ".fmdb", "bfres" },
+                           { ".fskb", "bfres" },
+                           { ".ftsb", "bfres" },
+                           { ".fvmb", "bfres" },
+                           { ".fvbb", "bfres" },
+                           { ".fspb", "bfres" },
+                           { ".fsnb", "bfres" },
+                    };
                 }
             }
         }
@@ -418,153 +252,26 @@ namespace FirstPlugin
         public static byte[] GetASSTData(FileEntry entry)
         {
             if (entry.IsCompressed)
-                return STLibraryCompression.ZSTD.Decompress(entry.data);
+                return STLibraryCompression.ZSTD.Decompress(entry.CompressedData);
             else
-                return entry.data;
+                return entry.CompressedData;
         }
         public static void SetASST(FileEntry fileEntry, byte[] data)
         {
             if (fileEntry.IsCompressed)
-                fileEntry.data = STLibraryCompression.ZSTD.Compress(data);
+                fileEntry.CompressedData = STLibraryCompression.ZSTD.Compress(data);
             else
-                fileEntry.data = data;
+                fileEntry.CompressedData = data;
         }
 
-        void FillTreeNodes(TreeNode root, Dictionary<string, ASST> files)
-        {
-            var rootText = root.Text;
-            var rootTextLength = rootText.Length;
-            var nodeStrings = files;
-            foreach (var node in nodeStrings)
-            {
-                string nodeString = node.Key;
-
-                var roots = nodeString.Split(new char[] { '/' },
-                    StringSplitOptions.RemoveEmptyEntries);
-
-                // The initial parent is the root node
-                TreeNode parentNode = root;
-                var sb = new StringBuilder(rootText, nodeString.Length + rootTextLength);
-                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
-                {
-                    // Build the node name
-                    var parentName = roots[rootIndex];
-                    sb.Append("/");
-                    sb.Append(parentName);
-                    var nodeName = sb.ToString();
-
-                    // Search for the node
-                    var index = parentNode.Nodes.IndexOfKey(nodeName);
-                    if (index == -1)
-                    {
-                        // Node was not found, add it
-
-                        var temp = new TreeNode(parentName, 0, 0);
-                        if (rootIndex == roots.Length - 1)
-                            temp = SetupFileEntry(node.Value,parentName, node.Value.FileName, node.Value.IsCompressed);
-                        else
-                            temp = SetupFolderEntry(temp);
-
-                        temp.Name = nodeName;
-                        parentNode.Nodes.Add(temp);
-                        parentNode = temp;
-                    }
-                    else
-                    {
-                        // Node was found, set that as parent and continue
-                        parentNode = parentNode.Nodes[index];
-                    }
-                }
-            }
-        }
-
-        public FolderEntry SetupFolderEntry(TreeNode node)
-        {
-            FolderEntry folder = new FolderEntry();
-            folder.Text = node.Text;
-
-            return folder;
-        }
-
-        List<string> BuildFinalList(List<string> paths)
-        {
-            var finalList = new List<string>();
-            foreach (var path in paths)
-            {
-                bool found = false;
-                foreach (var item in finalList)
-                {
-                    if (item.StartsWith(path, StringComparison.Ordinal))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    finalList.Add(path);
-                }
-            }
-            return finalList;
-        }
-
-        public FileEntry SetupFileEntry(ASST asset,string name, string fullName, bool IsCompressed)
+        public FileEntry SetupFileEntry(ASST asset)
         {
             FileEntry fileEntry = new FileEntry();
-            fileEntry.FullName = fullName;
-            fileEntry.Name = name;
-            fileEntry.Text = name;
+            fileEntry.FileName = asset.FileName;
             fileEntry.unk1 = asset.unk;
             fileEntry.unk2 = asset.unk2;
-            fileEntry.IsCompressed = IsCompressed;
-            fileEntry.data = asset.FileData;
-
-            //Now check magic
-            //Todo clean this part up
-            byte[] data = asset.FileData;
-            if (IsCompressed)
-            {
-                try
-                {
-                    data = STLibraryCompression.ZSTD.Decompress(asset.FileData);
-                }
-                catch
-                {
-                    Console.WriteLine("Unkwon compression for file " + fileEntry.Name);
-                }
-            }
-
-
-            string ext = Path.GetExtension(name);
-            string SarcEx = SARCExt.SARC.GuessFileExtension(data);
-            if (name.EndsWith("bfres") || name.EndsWith("fmdb") || name.EndsWith("fskb") ||
-                       name.EndsWith("ftsb") || name.EndsWith("fvmb") || name.EndsWith("fvbb") ||
-                       name.EndsWith("fspb") || name.EndsWith("fsnb"))
-            {
-                fileEntry.ImageKey = "bfres";
-                fileEntry.SelectedImageKey = "bfres";
-            }
-            if (SarcEx == ".bntx")
-            {
-                fileEntry.ImageKey = "bntx";
-                fileEntry.SelectedImageKey = "bntx";
-            }
-            if (SarcEx == ".byaml")
-            {
-                fileEntry.ImageKey = "byaml";
-                fileEntry.SelectedImageKey = "byaml";
-            }
-            if (SarcEx == ".aamp")
-            {
-                fileEntry.ImageKey = "aamp";
-                fileEntry.SelectedImageKey = "aamp";
-            }
-            if (ext == ".lua")
-            {
-
-            }
-            data = new byte[0];
-
+            fileEntry.IsCompressed = asset.IsCompressed;
+            fileEntry.CompressedData = asset.FileData;
             return fileEntry;
         }
     }

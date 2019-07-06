@@ -78,7 +78,7 @@ namespace FirstPlugin
                 long pos = reader.Position;
 
                 uint DirectoryCount = reader.ReadUInt32();
-                uint DirectoryOffset = reader.ReadUInt32();
+                uint DirectoryOffset = reader.ReadUInt32() + (uint)pos;
                 uint TotalNodeCount = reader.ReadUInt32();
                 uint NodeOffset = reader.ReadUInt32() + (uint)pos;
                 uint StringTableSize = reader.ReadUInt32();
@@ -92,17 +92,19 @@ namespace FirstPlugin
                     Directories[dir] = new DirectoryEntry(this);
 
                 Console.WriteLine($"DirectoryCount {DirectoryCount}");
+                Console.WriteLine($"StringTablOffset {StringTablOffset}");
 
-                reader.SeekBegin(DirectoryOffset + pos);
+                reader.SeekBegin(DirectoryOffset);
                 for (int dir = 0; dir < DirectoryCount; dir++)
                 {
                     Directories[dir].Read(reader);
+                }
+
+                for (int dir = 0; dir < DirectoryCount; dir++)
+                {
                     uint NamePointer = StringTablOffset + Directories[dir].NameOffset;
                     Directories[dir].Name = ReadStringAtTable(reader, NamePointer);
 
-                    Console.WriteLine($"DirectoryCount {DirectoryCount}");
-
-                    long EndDirectoryPos = reader.Position;
                     for (int n = 0; n < Directories[dir].NodeCount; n++)
                     {
                         reader.SeekBegin(NodeOffset + ((n + Directories[dir].FirstNodeIndex) * 0x14));
@@ -111,7 +113,16 @@ namespace FirstPlugin
                         NamePointer = StringTablOffset + entry.NameOffset;
                         entry.Name = ReadStringAtTable(reader, NamePointer);
 
-                        if (entry.FileId != 0xFFFF)
+                        //These make it crash so just skip them
+                        //Unsure what purpose these have
+                        if (entry.Name == "." || entry.Name == "..")
+                            continue;
+
+                        if (entry.IsDirectory)
+                        {
+                            Directories[dir].AddNode(Directories[entry.Offset]);
+                        }
+                        else
                         {
                             using (reader.TemporarySeek(pos + DataOffset + entry.Offset, System.IO.SeekOrigin.Begin))
                             {
@@ -121,10 +132,7 @@ namespace FirstPlugin
 
                             Directories[dir].AddNode(entry);
                         }
-                        else
-                            Directories[dir].AddNode(Directories[entry.Offset]);
                     }
-                    reader.SeekBegin(EndDirectoryPos);
                 }
 
                 this.Name = Directories[0].Name;
@@ -346,8 +354,13 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            //According to this to determine directory or not 
+            //https://github.com/LordNed/WArchive-Tools/blob/3c7fdefe54b4c7634a042847b7455de61705033f/ArchiveToolsLib/Archive/Archive.cs#L44
+            public bool IsDirectory { get { return (Flags & 2) >> 1 == 1; } }
+
             public ushort FileId { get; set; }
-            public uint Unknown { get; set; }
+            public ushort Hash { get; set; }
+            public byte Flags { get; set; }
 
             internal uint Size;
             internal uint Offset;
@@ -357,7 +370,9 @@ namespace FirstPlugin
             public void Read(FileReader reader)
             {
                 FileId = reader.ReadUInt16();
-                Unknown = reader.ReadUInt32();
+                Hash = reader.ReadUInt16();
+                Flags = reader.ReadByte();
+                reader.Seek(1); //Padding
                 NameOffset = reader.ReadUInt16();
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
@@ -370,7 +385,9 @@ namespace FirstPlugin
                 SaveFileFormat();
 
                 writer.Write(FileId);
-                writer.Write(Unknown);
+                writer.Write(Hash);
+                writer.Write(Flags);
+                writer.Seek(1); //Padding
                 writer.Write(NameOffset);
                 writer.Write(uint.MaxValue);
                 writer.Write(FileData.Length);
