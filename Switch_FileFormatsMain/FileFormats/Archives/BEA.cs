@@ -238,6 +238,7 @@ namespace FirstPlugin
                            { ".fspb", "bfres" },
                            { ".ftxb", "bntx" },
                            { ".fsnb", "bfres" },
+                           { ".fmab", "bfres" },
                     };
                 }
             }
