@@ -40,7 +40,7 @@ Can Edit Formats
 - TMPK
 
 Can Preview
-- BFFNT
+- BFFNT (Textures only)
 - BCRES
    - Models, materials, and textures.
 - BFSHA
@@ -70,7 +70,13 @@ Can Preview
 - NXARC
 - LZARC
 - IGA .pak
+- RARC
+- GMX (TPHD Models)
 - MKAGPDX Model .bin files
+- MKAGPDX Archive .pac files
+- ME01 and SA01 archives. 
+
+
 
 ## Tutorials
 https://github.com/KillzXGaming/Switch-Toolbox/wiki
