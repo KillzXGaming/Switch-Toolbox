@@ -517,12 +517,6 @@ namespace Switch_Toolbox.Library
                 Extension = FindMatch(archiveFileInfo.FileData);
             }
 
-            if (ArchiveFileInfo.ExtensionImageKeyLookup != null)
-            {
-                if (ArchiveFileInfo.ExtensionImageKeyLookup.ContainsKey(Extension))
-                    SetImageKey(ArchiveFileInfo.ExtensionImageKeyLookup[Extension]);
-            }
-
             switch (Extension)
             {
                 case ".bntx": SetImageKey("bntx"); break;
@@ -531,8 +525,8 @@ namespace Switch_Toolbox.Library
                 case ".aamp": SetImageKey("aamp"); break;
                 case ".bfres": SetImageKey("bfres"); break;
                 case ".sbfres": SetImageKey("sbfres"); break;
-                case ".dds": 
-                case ".tga": 
+                case ".dds":
+                case ".tga":
                 case ".jpg":
                 case ".jpeg":
                 case ".tiff":
@@ -542,6 +536,12 @@ namespace Switch_Toolbox.Library
                     SetImageKey("texture"); break;
 
                 default: SetImageKey("fileBlank"); break;
+            }
+
+            if (ArchiveFileInfo.ExtensionImageKeyLookup != null)
+            {
+                if (ArchiveFileInfo.ExtensionImageKeyLookup.ContainsKey(Extension))
+                    SetImageKey(ArchiveFileInfo.ExtensionImageKeyLookup[Extension]);
             }
         }
 
