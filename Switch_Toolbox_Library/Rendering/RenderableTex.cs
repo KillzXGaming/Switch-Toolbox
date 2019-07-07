@@ -89,7 +89,7 @@ namespace Switch_Toolbox.Library.Rendering
         }
 
         private bool UseMipmaps = false;
-        public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0)
+        public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0, bool LoadArrayLevels = false)
         {
             if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
                 return;
@@ -117,6 +117,9 @@ namespace Switch_Toolbox.Library.Rendering
                             mipmaps = new List<byte[]>() { GenericTexture.GetImageData(i, 0) }
                         });
                     }
+
+                    if (!LoadArrayLevels)
+                        break;
                 }
             }
            
