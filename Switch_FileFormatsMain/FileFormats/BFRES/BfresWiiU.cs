@@ -503,6 +503,22 @@ namespace FirstPlugin
                         AlbedoCount++;
                         texture.Type = MatTexture.TextureType.Diffuse;
                     }
+                    else if (useSampler == "s_diffuse")
+                    {
+                        m.HasDiffuseMap = true;
+                        AlbedoCount++;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler == "s_normal")
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    else if (useSampler == "s_specmask")
+                    {
+                        m.HasSpecularMap = true;
+                        texture.Type = MatTexture.TextureType.Specular;
+                    }
                     else if (useSampler == "_a1")
                     {
                         m.HasDiffuseLayer = true;
@@ -549,63 +565,20 @@ namespace FirstPlugin
                         m.HasAmbientOcclusionMap = true;
                     }
                 }
-                else if (Runtime.activeGame == Runtime.ActiveGame.SMO)
-                {
-                    if (useSampler == "_a0")
-                    {
-                        if (AlbedoCount == 0)
-                        {
-                            m.HasDiffuseMap = true;
-                            AlbedoCount++;
-                            texture.Type = MatTexture.TextureType.Diffuse;
-                        }
-                    }
-                    else if (useSampler == "_n0")
-                    {
-                        m.HasNormalMap = true;
-                        texture.Type = MatTexture.TextureType.Normal;
-                    }
-                    else if (useSampler == "_e0")
-                    {
-                        m.HasEmissionMap = true;
-                        texture.Type = MatTexture.TextureType.Emission;
-                    }
-                    else if (TextureName.Contains("mtl"))
-                    {
-                        m.HasMetalnessMap = true;
-                        texture.Type = MatTexture.TextureType.Metalness;
-                    }
-                    else if (TextureName.Contains("rgh"))
-                    {
-                        texture.Type = MatTexture.TextureType.Roughness;
-                        m.HasRoughnessMap = true;
-                    }
-                    else if (TextureName.Contains("sss"))
-                    {
-
-                        texture.Type = MatTexture.TextureType.SubSurfaceScattering;
-                        m.HasSubSurfaceScatteringMap = true;
-                    }
-                    else if (texture.SamplerName == "_ao0")
-                    {
-                        texture.Type = MatTexture.TextureType.AO;
-                        m.HasAmbientOcclusionMap = true;
-                    }
-                }
                 else
                 {
-                    if (texture.SamplerName == "s_diffuse")
+                    if (useSampler == "s_diffuse")
                     {
                         m.HasDiffuseMap = true;
                         AlbedoCount++;
                         texture.Type = MatTexture.TextureType.Diffuse;
                     }
-                    else if (texture.SamplerName == "s_normal")
+                    else if (useSampler == "s_normal")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-                    else if (texture.SamplerName == "s_specmask")
+                    else if (useSampler == "s_specmask")
                     {
                         m.HasSpecularMap = true;
                         texture.Type = MatTexture.TextureType.Specular;
@@ -616,7 +589,7 @@ namespace FirstPlugin
                         AlbedoCount++;
                         texture.Type = MatTexture.TextureType.Diffuse;
                     }
-                    if (useSampler == "_n0")
+                    else if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
@@ -677,6 +650,8 @@ namespace FirstPlugin
                         m.HasAmbientOcclusionMap = true;
                     }
                 }
+
+                Console.WriteLine($"{useSampler} {texture.Type}");
 
                 texture.textureUnit = textureUnit++;
 
