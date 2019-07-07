@@ -115,7 +115,6 @@ namespace Bfres.Structs
         public override void Delete()
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to remove this model? This cannot be undone!", "", MessageBoxButtons.YesNo);
-
             if (dialogResult == DialogResult.Yes)
             {
                 Skeleton.bones.Clear();
@@ -130,6 +129,8 @@ namespace Bfres.Structs
                 ((BFRESGroupNode)Parent).RemoveChild(this);
 
                 LibraryGUI.Instance.UpdateViewport();
+
+                Unload();
             }
         }
 

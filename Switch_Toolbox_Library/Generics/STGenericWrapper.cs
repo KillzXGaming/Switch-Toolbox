@@ -196,7 +196,7 @@ namespace Switch_Toolbox.Library.NodeWrappers
                 Replace(ofd.FileName);
             }
         }
-        protected void DeleteAction(object sender, EventArgs e) { Delete(); Unload(); }
+        protected void DeleteAction(object sender, EventArgs e) { Delete();}
         protected void RenameAction(object sender, EventArgs e) { Rename(); }
         protected void SortAction(object sender, EventArgs e) { Sort(); }
         protected void ClearAction(object sender, EventArgs e) { Clear(); }
