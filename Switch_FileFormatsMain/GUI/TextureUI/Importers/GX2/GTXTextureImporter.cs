@@ -251,7 +251,7 @@ namespace FirstPlugin
 
                 MipmapNum.Value = SelectedTexSettings.MipCount;
 
-                SwizzleNum.Value = (SelectedTexSettings.Swizzle >> 8) & 7;
+                SwizzleNum.Value = SelectedTexSettings.SwizzlePattern;
             }
         }
 
