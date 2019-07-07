@@ -594,7 +594,23 @@ namespace FirstPlugin
                 }
                 else
                 {
-                    if (useSampler == "_a0")
+                    if (texture.SamplerName == "s_diffuse")
+                    {
+                        m.HasDiffuseMap = true;
+                        AlbedoCount++;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (texture.SamplerName == "s_normal")
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    else if (texture.SamplerName == "s_specmask")
+                    {
+                        m.HasSpecularMap = true;
+                        texture.Type = MatTexture.TextureType.Specular;
+                    }
+                    else if (useSampler == "_a0")
                     {
                         m.HasDiffuseMap = true;
                         AlbedoCount++;

@@ -117,9 +117,6 @@ namespace Switch_Toolbox.Library.Rendering
                             mipmaps = new List<byte[]>() { GenericTexture.GetImageData(i, 0) }
                         });
                     }
-
-                    if (!LoadArrayLevels)
-                        break;
                 }
             }
            
