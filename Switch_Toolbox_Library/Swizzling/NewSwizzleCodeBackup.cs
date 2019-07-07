@@ -627,6 +627,10 @@ namespace Switch_Toolbox.Library
             if (tex.numArray == 0)
                 tex.numArray = 1;
 
+            if (tex.data.Length <= 0)
+                tex.data = tex.mipData;
+
+
             byte[] data = new byte[tex.data.Length];
             byte[] mipdata = new byte[0];
 

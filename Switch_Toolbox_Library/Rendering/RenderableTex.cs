@@ -94,6 +94,8 @@ namespace Switch_Toolbox.Library.Rendering
             if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
                 return;
 
+
+            return;
             width = (int)GenericTexture.Width;
             height = (int)GenericTexture.Height;
             if (GenericTexture.ArrayCount == 0)
