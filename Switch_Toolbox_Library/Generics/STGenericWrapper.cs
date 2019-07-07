@@ -96,7 +96,11 @@ namespace Switch_Toolbox.Library.NodeWrappers
             IsFolder = true;
         }
 
-        protected void ReplaceAllAction(object sender, EventArgs e)
+        protected void ReplaceAllAction(object sender, EventArgs e) {
+            ReplaceAll();
+        }
+
+        public virtual void ReplaceAll()
         {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)

@@ -95,12 +95,131 @@ namespace Bfres.Structs
         protected void HideAllModelsAction(object sender, EventArgs e) { HideAllModels(); }
         protected void ShowAllModelsAction(object sender, EventArgs e) { ShowAllModels(); }
 
+        public override void ReplaceAll()
+        {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                if (Type == BRESGroupType.Textures)
+                {
+                    GTXTextureImporter importer = new GTXTextureImporter();
+                    List<GTXImporterSettings> settings = new List<GTXImporterSettings>();
+
+                    foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
+                    {
+                        string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
+
+                        foreach (FTEX ftex in Nodes)
+                        {
+                            if (FileName == ftex.Text)
+                            {
+                                string ext = Path.GetExtension(file);
+                                ext = ext.ToLower();
+
+                                if (ext == ".bftex")
+                                {
+                                    ftex.texture = new ResU.Texture();
+                                    ftex.texture.Import(file, GetResFileU());
+                                    ftex.IsEdited = true;
+                                    ftex.Read(ftex.texture);
+                                }
+                                else if (ext == ".dds" || ext == ".dds2")
+                                {
+                                    ftex.texture = new ResU.Texture();
+
+                                    GTXImporterSettings setting = FTEX.SetImporterSettings(file);
+                                    if (setting.DataBlockOutput != null)
+                                    {
+                                        var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
+                                        var tex = FTEX.FromGx2Surface(surface, setting.TexName);
+                                        ftex.UpdateTex(tex);
+
+                                        ftex.IsEdited = true;
+                                        ftex.Read(ftex.texture);
+                                        ftex.LoadOpenGLTexture();
+                                    }
+                                }
+                                else
+                                {
+                                    settings.Add(FTEX.SetImporterSettings(file));
+                                }
+                            }
+                        }
+                    }
+
+                    if (settings.Count == 0)
+                    {
+                        importer.Dispose();
+                    }
+                    else
+                    {
+                        importer.LoadSettings(settings);
+                        if (importer.ShowDialog() == DialogResult.OK)
+                        {
+                            foreach (var setting in settings)
+                            {
+                                foreach (FTEX ftex in Nodes)
+                                {
+                                    if (setting.TexName == ftex.Text)
+                                    {
+                                        if (setting.GenerateMipmaps)
+                                        {
+                                            setting.DataBlockOutput.Clear();
+                                            setting.DataBlockOutput.Add(setting.GenerateMips());
+                                        }
+
+                                        if (setting.DataBlockOutput != null)
+                                        {
+                                            ftex.texture = new ResU.Texture();
+                                            var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
+                                            var tex = FTEX.FromGx2Surface(surface, setting.TexName);
+                                            ftex.UpdateTex(tex);
+                                            ftex.IsEdited = true;
+
+                                            ftex.Read(ftex.texture);
+                                            ftex.LoadOpenGLTexture();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Something went wrong???");
+                                        }
+                                    }
+                                }
+                            }
+
+                            settings.Clear();
+
+                            GC.Collect();
+                            Cursor.Current = Cursors.Default;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
+                    {
+                        string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
+
+                        foreach (TreeNode node in Nodes)
+                        {
+                            if (node is STGenericWrapper)
+                            {
+                                if (FileName == node.Text)
+                                {
+                                    ((STGenericWrapper)node).Replace(file);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void BatchGenerateMipmaps()
         {
             foreach (FTEX texture in Nodes)
             {
                 texture.SetImageData(texture.GetBitmap(), 0);
-                
             }
         }
 
