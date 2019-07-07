@@ -221,7 +221,20 @@ namespace FirstPlugin
         bool DialogShown = false;
         private void formatComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
+            if (listViewCustom1.SelectedItems.Count > 1)
+            {
+               foreach (int index in listViewCustom1.SelectedIndices)
+                {
+                    if (formatComboBox.SelectedItem is GX2.GX2SurfaceFormat)
+                    {
+                        settings[index].Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
+                        listViewCustom1.Items[index].SubItems[1].Text = settings[index].Format.ToString();
+                    }
+                }
+
+                SetupSettings();
+            }
+            else if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
             {
                 SetupSettings();
             }
