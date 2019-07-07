@@ -242,7 +242,7 @@ namespace FirstPlugin
 
         private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listViewCustom1.SelectedItems.Count > 0)
+            if (listViewCustom1.SelectedItems.Count == 1)
             {
                 SelectedIndex = listViewCustom1.SelectedIndices[0];
 
