@@ -213,7 +213,12 @@ namespace FirstPlugin
                 if (header.Version <= 12)
                 {
                     UniformVariables.Read(reader);
-                    UniformBlocks.Read(reader, header.Version, true);
+
+                    if (header.Version >= 11)
+                    {
+                        UniformBlocks.Read(reader, header.Version, true);
+                    }
+
                     SamplerVariables.Read(reader);
                     AttributeVariables.Read(reader);
                 }
