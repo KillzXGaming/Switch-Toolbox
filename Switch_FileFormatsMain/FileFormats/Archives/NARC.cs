@@ -109,8 +109,6 @@ namespace FirstPlugin
             public byte[] DecompressBlock()
             {
                 byte[] data = GetBlock();
-                return data;
-                Console.WriteLine("DATA " + data.Length);
 
                 var reader = new FileReader(data);
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
