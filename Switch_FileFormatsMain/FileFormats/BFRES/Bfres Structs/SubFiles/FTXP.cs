@@ -204,6 +204,15 @@ namespace Bfres.Structs
             }
         }
 
+        public override void OnDoubleMouseClick(TreeView treeview)
+        {
+            var ParentFolder = this.Parent;
+
+            BfresTexturePatternEditor form = new BfresTexturePatternEditor(ParentFolder.Nodes);
+            form.LoadAnim(this);
+            form.Show();
+        }
+
         public override string ExportFilter => FileFilters.GetFilter(typeof(FTXP));
 
         public override void Export(string FileName)

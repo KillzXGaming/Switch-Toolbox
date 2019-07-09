@@ -39,7 +39,7 @@ namespace Switch_Toolbox.Library.Animations
         public bool IsBaked { get; set; }
 
         public float Frame = 0;
-        public int FrameCount = 0;
+        public int FrameCount { get; set; } = 0;
 
         public List<KeyNode> Bones = new List<KeyNode>();
 

@@ -336,7 +336,7 @@ namespace FirstPlugin
             Formats.Add(typeof(ME01));
             Formats.Add(typeof(LM2_DICT));
             Formats.Add(typeof(GMX));
-
+        //    Formats.Add(typeof(TPL));
             //Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use

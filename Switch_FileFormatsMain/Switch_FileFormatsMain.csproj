@@ -209,6 +209,7 @@
     <Compile Include="FileFormats\Archives\SARC_OLD.cs" />
     <Compile Include="FileFormats\Archives\SP2.cs" />
     <Compile Include="FileFormats\Archives\TMPK.cs" />
+    <Compile Include="FileFormats\Archives\U8.cs" />
     <Compile Include="FileFormats\Audio\Archives\BARS.cs" />
     <Compile Include="FileFormats\Audio\BARSLIST.cs" />
     <Compile Include="FileFormats\Audio\BCSTM.cs" />
@@ -243,6 +244,8 @@
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
+    <Compile Include="FileFormats\Gamecube\TPL.cs" />
+    <Compile Include="libWiiSharp\TPL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL_Wrappers.cs" />
     <Compile Include="FileFormats\GMX\GMX.cs" />
@@ -674,7 +677,7 @@
       <DependentUpon>RenderInfoDataEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\TexturePattern\BfresTexturePatternEditor.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFRES\TexturePattern\BfresTexturePatternEditor.Designer.cs">
       <DependentUpon>BfresTexturePatternEditor.cs</DependentUpon>
@@ -919,7 +922,9 @@
     <Compile Include="XML\BfresMaterial2XML.cs" />
     <Compile Include="XML\Bfsha2Xml.cs" />
     <Compile Include="XML\Sharc2XML.cs" />
+    <Compile Include="YAML\YamlFmaa.cs" />
     <Compile Include="YAML\YamlFmat.cs" />
+    <Compile Include="YAML\YamlFska.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\InjectTexErrored.dds" />
@@ -1279,6 +1284,9 @@
   <ItemGroup>
     <Folder Include="FileFormats\BMD\" />
     <Folder Include="FileFormats\EvemtFlow\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ArrowIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

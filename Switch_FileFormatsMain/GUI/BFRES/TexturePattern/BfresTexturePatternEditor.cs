@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ using Bfres.Structs;
 
 namespace FirstPlugin.Forms
 {
-    public partial class BfresTexturePatternEditor : UserControl
+    public partial class BfresTexturePatternEditor : STForm
     {
         public PlayerState AnimationPlayerState = PlayerState.Stop;
 
@@ -40,11 +41,11 @@ namespace FirstPlugin.Forms
 
         ImageList imgList = new ImageList();
 
-        public BfresTexturePatternEditor()
+        private List<MaterialAnimation> MaterialAnimations;
+        public BfresTexturePatternEditor(TreeNodeCollection materialAnimations)
         {
             InitializeComponent();
 
-            btnEditSamplers.Enabled = false;
             listViewCustom1.HeaderStyle = ColumnHeaderStyle.None;
             listViewCustom1.BackColor = FormThemes.BaseTheme.TextEditorBackColor;
             imgList = new ImageList()
@@ -56,23 +57,40 @@ namespace FirstPlugin.Forms
             stPanel4.BackColor = FormThemes.BaseTheme.FormBackColor;
 
             timer1.Interval = 100 / 60;
+
+            treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
+            treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
+
+            toolstripShiftUp.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+            backgroundCB.Items.Add("Checkerboard");
+            backgroundCB.Items.Add("Black");
+            backgroundCB.Items.Add("White");
+
+            backgroundCB.SelectedIndex = 0;
+
+            MaterialAnimations = new List<MaterialAnimation>();
+            foreach (TreeNode matAnim in materialAnimations)
+            {
+                MaterialAnimations.Add((MaterialAnimation)matAnim);
+                activeAnimCB.Items.Add(matAnim.Text);
+            }
         }
 
-        MaterialAnimation.Material material;
         FMAA.BfresSamplerAnim activeSampler;
 
         FTXP.BfresSamplerAnim activeSampleU;
 
-        MaterialAnimation activeMaterialAnim;
+        MaterialAnimation _activeMaterialAnim;
         MaterialAnimation ActiveMaterialAnim
         {
             get
             {
-                return activeMaterialAnim;
+                return _activeMaterialAnim;
             }
             set
             {
-                activeMaterialAnim = value;
+                _activeMaterialAnim = value;
 
                 maxFrameCounterUD.Maximum = value.FrameCount;
                 maxFrameCounterUD.Value = value.FrameCount;
@@ -88,90 +106,68 @@ namespace FirstPlugin.Forms
         {
 
         }
-
-        public void LoadAnim(FTXP materialAnim)
+    
+        public bool IsLoaded = false;
+        public void LoadAnim(MaterialAnimation materialAnim)
         {
             if (materialAnim.Materials.Count <= 0)
                 return;
 
             IsLoaded = false;
 
-            ActiveMaterialAnim = materialAnim;
-
-
-            materialCB.Items.Clear();
-            samplerCB.Items.Clear();
-
-            foreach (var mat in materialAnim.Materials)
-                materialCB.Items.Add(mat.Text);
-
-            materialCB.SelectedIndex = 0;
-
-            material = materialAnim.Materials[materialCB.SelectedIndex];
-
-            if (material.Samplers.Count <= 0)
-                return;
-
-            foreach (var sampler in material.Samplers)
-                samplerCB.Items.Add(sampler.Text);
-
-            samplerCB.SelectedIndex = 0;
-
-            activeSampleU = (FTXP.BfresSamplerAnim)material.Samplers[samplerCB.SelectedIndex];
-
-            listViewCustom1.SuspendLayout();
-            listViewCustom1.Items.Clear();
-
-            LoadAniamtion(materialAnim, activeSampleU);
-
-            listViewCustom1.ResumeLayout();
+            ReloadAnimationView(materialAnim);
 
             IsLoaded = true;
+
+            activeAnimCB.SelectItemByText(materialAnim.Text);
             animationTrackBar.Value = 0;
         }
 
-
-
-        public bool IsLoaded = false;
-        public void LoadAnim(FMAA materialAnim)
+        private void ReloadAnimationView(MaterialAnimation materialAnim)
         {
-            if (materialAnim.Materials.Count <= 0)
-                return;
+            frameCountUD.Maximum = materialAnim.FrameCount;
+            frameCountUD.Bind(materialAnim, "FrameCount");
 
-            IsLoaded = false;
+            treeView1.Nodes.Clear();
 
-            ActiveMaterialAnim = materialAnim;
-
-
-            materialCB.Items.Clear();
-            samplerCB.Items.Clear();
-
+            int Index = 0;
             foreach (var mat in materialAnim.Materials)
-                materialCB.Items.Add(mat.Text);
+            {
+                mat.Nodes.Clear();
 
-            materialCB.SelectedIndex = 0;
+                var matWrapper = new TreeNode(mat.Text) { Tag = mat, };
+                treeView1.Nodes.Add(matWrapper);
 
-            material = materialAnim.Materials[materialCB.SelectedIndex];
+                foreach (var sampler in mat.Samplers)
+                    matWrapper.Nodes.Add(new TreeNode(sampler.Text) { Tag = sampler, });
 
-            if (material.Samplers.Count <= 0)
-                return;
+                if (matWrapper.Nodes.Count > 0 && Index == 0)
+                    treeView1.SelectedNode = matWrapper.Nodes[0];
 
-            foreach (var sampler in material.Samplers)
-                samplerCB.Items.Add(sampler.Text);
+                Index++;
+            }
 
-            samplerCB.SelectedIndex = 0;
 
-            activeSampler = (FMAA.BfresSamplerAnim)material.Samplers[samplerCB.SelectedIndex];
+            ReloadAnimationView();
+        }
 
+        private void ReloadAnimationView()
+        {
             listViewCustom1.SuspendLayout();
             listViewCustom1.Items.Clear();
 
-            LoadAniamtion(materialAnim, activeSampler);
+            if (activeSampleU != null)
+                LoadAniamtion(ActiveMaterialAnim, activeSampleU);
+            else
+                LoadAniamtion(ActiveMaterialAnim, activeSampler);
 
             listViewCustom1.ResumeLayout();
 
-            IsLoaded = true;
-            animationTrackBar.Value = 0;
+            if (listViewCustom1.Items.Count > 0)
+            {
+                listViewCustom1.Items[0].Selected = true;
+                listViewCustom1.Select();
+            }
         }
 
         Dictionary<int, Bitmap> Images = new Dictionary<int, Bitmap>();
@@ -251,48 +247,6 @@ namespace FirstPlugin.Forms
         private void SelectThumbnailItems()
         {
 
-        }
-
-        private void materialCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (material == null || !IsLoaded)
-                return;
-
-            if (materialCB.SelectedIndex >= 0)
-            {
-                btnEditSamplers.Enabled = true;
-
-                material = ActiveMaterialAnim.Materials[materialCB.SelectedIndex];
-
-                if (activeSampleU != null)
-                    LoadAniamtion(ActiveMaterialAnim, activeSampleU);
-                else
-                    LoadAniamtion(ActiveMaterialAnim, activeSampler);
-            }
-            else
-            {
-                btnEditSamplers.Enabled = false;
-            }
-        }
-
-        private void samplerCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (material == null || !IsLoaded)
-                return;
-
-            if (samplerCB.SelectedIndex >= 0)
-            {
-                if (activeSampleU != null)
-                {
-                    activeSampleU = (FTXP.BfresSamplerAnim)material.Samplers[samplerCB.SelectedIndex];
-                    LoadAniamtion(ActiveMaterialAnim, activeSampleU);
-                }
-                else
-                {
-                    activeSampler = (FMAA.BfresSamplerAnim)material.Samplers[samplerCB.SelectedIndex];
-                    LoadAniamtion(ActiveMaterialAnim, activeSampler);
-                }
-            }
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -515,19 +469,6 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private void stButton1_Click(object sender, EventArgs e)
-        {
-            if (materialCB.SelectedIndex < 0)
-                return;
-
-            TexPatternInfoEditor editor = new TexPatternInfoEditor();
-            editor.LoadAnim(ActiveMaterialAnim, ActiveMaterialAnim.Materials[materialCB.SelectedIndex]);
-            if (editor.ShowDialog() == DialogResult.OK)
-            {
-
-            }
-        }
-
         private void textureFrameUD_ValueChanged(object sender, EventArgs e)
         {
             if (listViewCustom1.SelectedItems.Count > 0 && KeyFrames.Count > 0)
@@ -535,6 +476,61 @@ namespace FirstPlugin.Forms
                 int SelectedFrame = KeyFrames[listViewCustom1.SelectedIndices[0]];
 
             }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (ActiveMaterialAnim == null || !IsLoaded)
+                return;
+
+            var node = treeView1.SelectedNode;
+            if (node.Tag is MaterialAnimation.Material)
+            {
+
+            }
+            if (node.Tag is MaterialAnimation.SamplerKeyGroup)
+            {
+                if (ActiveMaterialAnim is FMAA)
+                    activeSampler = (FMAA.BfresSamplerAnim)node.Tag;
+                else
+                    activeSampleU = (FTXP.BfresSamplerAnim)node.Tag;
+
+                ReloadAnimationView();
+            }
+        }
+
+        private void addKeyFrameToolstrip_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void removeKeyFrameToolstrip_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolstripShiftUp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolstripShiftDown_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void activeAnimCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (activeAnimCB.SelectedIndex != -1 && IsLoaded)
+            {
+                ActiveMaterialAnim = MaterialAnimations[activeAnimCB.SelectedIndex];
+                ReloadAnimationView(ActiveMaterialAnim);
+            }
+        }
+
+        private void backgroundCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

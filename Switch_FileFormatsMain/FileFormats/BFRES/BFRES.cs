@@ -385,6 +385,8 @@ namespace FirstPlugin
             return false;
         }
 
+        public STForm ActiveFormEditor; //For active form windows as editors
+
         private bool DrawablesLoaded = false;
         public void LoadEditors(object SelectedSection)
         {
@@ -731,20 +733,6 @@ namespace FirstPlugin
                     OpenSubFileEditor<FMAA>(SelectedSection, bfresEditor);
                 else if (SelectedSection is FVIS)
                     OpenSubFileEditor<FVIS>(SelectedSection, bfresEditor);
-
-
-                /*   else if (SelectedSection is FMAA && ((FMAA)SelectedSection).AnimType == MaterialAnimation.AnimationType.TexturePattern)
-                {
-                    BfresTexturePatternEditor editor = (BfresTexturePatternEditor)bfresEditor.GetActiveEditor(typeof(BfresTexturePatternEditor));
-                    if (editor == null)
-                    {
-                        editor = new BfresTexturePatternEditor();
-                        bfresEditor.LoadEditor(editor);
-                    }
-                    editor.Text = Text;
-                    editor.Dock = DockStyle.Fill;
-                    editor.LoadAnim((FMAA)SelectedSection);
-                }*/
             }
         }
 

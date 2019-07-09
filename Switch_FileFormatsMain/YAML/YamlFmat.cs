@@ -8,7 +8,7 @@ using SharpYaml;
 using SharpYaml.Serialization;
 using Syroot.NintenTools.NSW.Bfres;
 
-namespace FirstPlugin.YAML
+namespace FirstPlugin
 {
     public class YamlFmat
     {

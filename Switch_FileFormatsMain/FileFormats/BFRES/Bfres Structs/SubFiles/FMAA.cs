@@ -45,6 +45,15 @@ namespace Bfres.Structs
                    name.Contains(VisibiltyAnimType2);
         }
 
+        public override void OnDoubleMouseClick(TreeView treeview)
+        {
+            var ParentFolder = this.Parent;
+
+            BfresTexturePatternEditor form = new BfresTexturePatternEditor(ParentFolder.Nodes);
+            form.LoadAnim(this);
+            form.Show();
+        }
+
         public class MaterialAnimEntry : Material
         {
             public FMAA matAnimWrapper;
