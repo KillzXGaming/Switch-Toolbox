@@ -238,6 +238,26 @@ namespace FirstPlugin.Forms
                         }
                     }
                 }
+                if (listViewCustom1.InvokeRequired)
+                {
+                    listViewCustom1.Invoke((MethodInvoker)delegate
+                    {
+                        if (listViewCustom1.Items.Count > 0)
+                        {
+                            listViewCustom1.Items[0].Selected = true;
+                            listViewCustom1.Select();
+                        }
+                    });
+                }
+                else
+                {
+                    if (listViewCustom1.Items.Count > 0)
+                    {
+                        listViewCustom1.Items[0].Selected = true;
+                        listViewCustom1.Select();
+                    }
+                }
+
 
                 IsLoading = false;
             }));
