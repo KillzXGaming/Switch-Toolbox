@@ -39,7 +39,9 @@ namespace Switch_Toolbox.Library
         public void SetEntry(string FileName, byte[] Data = null, bool IsYaz0Compressed = false, bool Force = false)
         {
             uint OldSize = GetSize(FileName);
-            uint NewSize = (uint)ParseSize(FileName, Data, IsYaz0Compressed, Force);
+            uint NewSize = (uint)ParseSize(FileName, Data, IsYaz0Compressed, Force) + 8192; //Add an additional set of bytes for some room
+
+            STConsole.WriteLine($"Setting {FileName} OldSize {OldSize} NewSize {NewSize} Is Yaz0 Compressed {IsYaz0Compressed}");
 
             SetSize(FileName, NewSize);
         }
