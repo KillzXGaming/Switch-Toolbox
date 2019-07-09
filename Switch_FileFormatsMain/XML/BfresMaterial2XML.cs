@@ -48,17 +48,39 @@ namespace FirstPlugin
         public static void ReadShaderParams(XmlDocument doc, XmlNode parentNode, FMAT mat)
         {
             mat.matparam.Clear();
+            int Index = 0;
             foreach (XmlNode node in parentNode.ChildNodes)
             {
                 string Value = node.Attributes[0].Value;
                 BfresShaderParam param = new BfresShaderParam();
                 param.Name = node.Name;
-                Console.WriteLine(node.Name);
+                param.DependedIndex = (ushort)Index;
+                param.DependIndex = (ushort)Index;
 
+                ushort DependedIndex = 0;
+                ushort DependIndex = 0;
+
+                Index++;
                 foreach (XmlAttribute att in node.Attributes)
                 {
                     Console.WriteLine(att);
 
+                    if (att.Name == "DependedIndex")
+                    {
+                        string DependedIndexStr = att.Value;
+                        if (ushort.TryParse(DependedIndexStr, out DependedIndex))
+                        {
+                            param.DependedIndex = DependedIndex;
+                        }
+                    }
+                    if (att.Name == "DependIndex")
+                    {
+                        string DependIndexStr = att.Value;
+                        if (ushort.TryParse(DependIndexStr, out DependIndex))
+                        {
+                            param.DependIndex = DependIndex;
+                        }
+                    }
                     if (att.Name == "Format")
                     {
                         string Format = att.Value;
@@ -341,19 +363,19 @@ namespace FirstPlugin
                         Value = string.Join(",", param.Value.ValueReserved);
                         break;
                     case ShaderParamType.Srt2D:
-                        WriteSrt2DParamNode(doc, param.Value.ValueSrt2D, param.Key, matParamsNode);
+                        WriteSrt2DParamNode(doc, param.Value, matParamsNode);
                         IsSrt = true;
                         break;
                     case ShaderParamType.Srt3D:
-                        WriteSrt3DParamNode(doc, param.Value.ValueSrt3D, param.Key, matParamsNode);
+                        WriteSrt3DParamNode(doc, param.Value, matParamsNode);
                         IsSrt = true;
                         break;
                     case ShaderParamType.TexSrt:
-                        WriteTexSrtParamNode(doc, param.Value.ValueTexSrt, param.Key, matParamsNode);
+                        WriteTexSrtParamNode(doc, param.Value, matParamsNode);
                         IsSrt = true;
                         break;
                     case ShaderParamType.TexSrtEx:
-                        WriteTexSrtExParamNode(doc, param.Value.ValueTexSrtEx, param.Key, matParamsNode);
+                        WriteTexSrtExParamNode(doc, param.Value, matParamsNode);
                         IsSrt = true;
                         break;
                     case ShaderParamType.UInt:
@@ -369,47 +391,57 @@ namespace FirstPlugin
                     XmlNode ParamNode = doc.CreateElement(param.Key);
                     AddAttribute(doc, "Value", Value, ParamNode);
                     AddAttribute(doc, "Format", param.Value.Type.ToString(), ParamNode);
+                    AddAttribute(doc, "DependedIndex",  param.Value.DependedIndex.ToString(), ParamNode);
+                    AddAttribute(doc, "DependIndex", param.Value.DependIndex.ToString(), ParamNode);
                     matParamsNode.AppendChild(ParamNode);
                 }
             }
         }
-        private static void WriteSrt2DParamNode(XmlDocument doc, Srt2D srt2D, string Name, XmlNode node)
+        private static void WriteSrt2DParamNode(XmlDocument doc,BfresShaderParam param, XmlNode node)
         {
-            XmlNode ParamNode = doc.CreateElement(Name);
-            AddAttribute(doc, "Scaling", srt2D.Scaling.ToString(), ParamNode);
-            AddAttribute(doc, "Rotation", srt2D.Rotation.ToString(), ParamNode);
-            AddAttribute(doc, "Translation", srt2D.Translation.ToString(), ParamNode);
+            XmlNode ParamNode = doc.CreateElement(param.Name);
+            AddAttribute(doc, "Scaling", param.ValueSrt2D.Scaling.ToString(), ParamNode);
+            AddAttribute(doc, "Rotation", param.ValueSrt2D.Rotation.ToString(), ParamNode);
+            AddAttribute(doc, "Translation", param.ValueSrt2D.Translation.ToString(), ParamNode);
             AddAttribute(doc, "Format", ShaderParamType.Srt2D.ToString(), ParamNode);
+            AddAttribute(doc, "DependedIndex", param.DependedIndex.ToString(), ParamNode);
+            AddAttribute(doc, "DependIndex", param.DependIndex.ToString(), ParamNode);
             node.AppendChild(ParamNode);
         }
-        private static void WriteSrt3DParamNode(XmlDocument doc, Srt3D srt3D, string Name, XmlNode node)
+        private static void WriteSrt3DParamNode(XmlDocument doc, BfresShaderParam param, XmlNode node)
         {
-            XmlNode ParamNode = doc.CreateElement(Name);
-            AddAttribute(doc, "Scaling", srt3D.Scaling.ToString(), ParamNode);
-            AddAttribute(doc, "Rotation", srt3D.Rotation.ToString(), ParamNode);
-            AddAttribute(doc, "Translation", srt3D.Translation.ToString(), ParamNode);
+            XmlNode ParamNode = doc.CreateElement(param.Name);
+            AddAttribute(doc, "Scaling", param.ValueSrt3D.Scaling.ToString(), ParamNode);
+            AddAttribute(doc, "Rotation", param.ValueSrt3D.Rotation.ToString(), ParamNode);
+            AddAttribute(doc, "Translation", param.ValueSrt3D.Translation.ToString(), ParamNode);
             AddAttribute(doc, "Format", ShaderParamType.Srt3D.ToString(), ParamNode);
+            AddAttribute(doc, "DependedIndex", param.DependedIndex.ToString(), ParamNode);
+            AddAttribute(doc, "DependIndex", param.DependIndex.ToString(), ParamNode);
             node.AppendChild(ParamNode);
         }
-        private static void WriteTexSrtParamNode(XmlDocument doc, TexSrt texSrt, string Name, XmlNode node)
+        private static void WriteTexSrtParamNode(XmlDocument doc, BfresShaderParam param, XmlNode node)
         {
-            XmlNode ParamNode = doc.CreateElement(Name);
-            AddAttribute(doc, "Mode", texSrt.Mode.ToString(), ParamNode);
-            AddAttribute(doc, "Scaling", texSrt.Scaling.ToString(), ParamNode);
-            AddAttribute(doc, "Rotation", texSrt.Rotation.ToString(), ParamNode);
-            AddAttribute(doc, "Translation", texSrt.Translation.ToString(), ParamNode);
+            XmlNode ParamNode = doc.CreateElement(param.Name);
+            AddAttribute(doc, "Mode", param.ValueTexSrt.Mode.ToString(), ParamNode);
+            AddAttribute(doc, "Scaling", param.ValueTexSrt.Scaling.ToString(), ParamNode);
+            AddAttribute(doc, "Rotation", param.ValueTexSrt.Rotation.ToString(), ParamNode);
+            AddAttribute(doc, "Translation", param.ValueTexSrt.Translation.ToString(), ParamNode);
             AddAttribute(doc, "Format", ShaderParamType.TexSrt.ToString(), ParamNode);
+            AddAttribute(doc, "DependedIndex", param.DependedIndex.ToString(), ParamNode);
+            AddAttribute(doc, "DependIndex", param.DependIndex.ToString(), ParamNode);
             node.AppendChild(ParamNode);
         }
-        private static void WriteTexSrtExParamNode(XmlDocument doc, TexSrtEx texSrtEx, string Name, XmlNode node)
+        private static void WriteTexSrtExParamNode(XmlDocument doc, BfresShaderParam param, XmlNode node)
         {
-            XmlNode ParamNode = doc.CreateElement(Name);
-            AddAttribute(doc, "Mode", texSrtEx.Mode.ToString(), ParamNode);
-            AddAttribute(doc, "Scaling", texSrtEx.Scaling.ToString(), ParamNode);
-            AddAttribute(doc, "Rotation", texSrtEx.Rotation.ToString(), ParamNode);
-            AddAttribute(doc, "Translation", texSrtEx.Translation.ToString(), ParamNode);
-            AddAttribute(doc, "MatrixPointer", texSrtEx.MatrixPointer.ToString(), ParamNode);
+            XmlNode ParamNode = doc.CreateElement(param.Name);
+            AddAttribute(doc, "Mode", param.ValueTexSrtEx.Mode.ToString(), ParamNode);
+            AddAttribute(doc, "Scaling", param.ValueTexSrtEx.Scaling.ToString(), ParamNode);
+            AddAttribute(doc, "Rotation", param.ValueTexSrtEx.Rotation.ToString(), ParamNode);
+            AddAttribute(doc, "Translation", param.ValueTexSrtEx.Translation.ToString(), ParamNode);
+            AddAttribute(doc, "MatrixPointer", param.ValueTexSrtEx.MatrixPointer.ToString(), ParamNode);
             AddAttribute(doc, "Format", ShaderParamType.TexSrtEx.ToString(), ParamNode);
+            AddAttribute(doc, "DependedIndex", param.DependedIndex.ToString(), ParamNode);
+            AddAttribute(doc, "DependIndex", param.DependIndex.ToString(), ParamNode);
             node.AppendChild(ParamNode);
         }
 
