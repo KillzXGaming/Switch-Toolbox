@@ -99,6 +99,9 @@ namespace FirstPlugin.Forms
                 animationTrackBar.Maximum = value.FrameCount;
                 animationTrackBar.Minimum = 0;
                 currentFrameCounterUD.Value = 0;
+
+                frameCountUD.Maximum = value.FrameCount;
+                frameCountUD.Value = value.FrameCount;
             }
         }
 
@@ -125,9 +128,6 @@ namespace FirstPlugin.Forms
 
         private void ReloadAnimationView(MaterialAnimation materialAnim)
         {
-            frameCountUD.Maximum = materialAnim.FrameCount;
-            frameCountUD.Bind(materialAnim, "FrameCount");
-
             treeView1.Nodes.Clear();
 
             int Index = 0;
@@ -200,7 +200,7 @@ namespace FirstPlugin.Forms
                         break;
 
                     var keyFrame = activeSampler.GetKeyFrame(Frame);
-            
+                    Console.WriteLine($"keyFrame {Frame} Keyed {keyFrame.IsKeyed}");
                     if (keyFrame.IsKeyed || activeSampler.Constant)
                     {
                         string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)keyFrame.Value);
