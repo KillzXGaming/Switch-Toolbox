@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Switch_Toolbox.Library.Animations;
 using Switch_Toolbox.Library.Forms;
+using Switch_Toolbox.Library;
 using Bfres.Structs;
 
 namespace FirstPlugin.Forms
@@ -63,11 +64,10 @@ namespace FirstPlugin.Forms
 
             toolstripShiftUp.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
-            backgroundCB.Items.Add("Checkerboard");
-            backgroundCB.Items.Add("Black");
-            backgroundCB.Items.Add("White");
+            foreach (var type in Enum.GetValues(typeof(Runtime.PictureBoxBG)).Cast<Runtime.PictureBoxBG>())
+                backgroundCB.Items.Add(type);
 
-            backgroundCB.SelectedIndex = 0;
+            backgroundCB.SelectedItem = Runtime.pictureBoxStyle;
 
             MaterialAnimations = new List<MaterialAnimation>();
             foreach (TreeNode matAnim in materialAnimations)
@@ -77,9 +77,7 @@ namespace FirstPlugin.Forms
             }
         }
 
-        FMAA.BfresSamplerAnim activeSampler;
-
-        FTXP.BfresSamplerAnim activeSampleU;
+        MaterialAnimation.SamplerKeyGroup activeSampler;
 
         MaterialAnimation _activeMaterialAnim;
         MaterialAnimation ActiveMaterialAnim
@@ -153,13 +151,12 @@ namespace FirstPlugin.Forms
 
         private void ReloadAnimationView()
         {
+            editToolStripMenuItem.Enabled = false;
+
             listViewCustom1.SuspendLayout();
             listViewCustom1.Items.Clear();
 
-            if (activeSampleU != null)
-                LoadAniamtion(ActiveMaterialAnim, activeSampleU);
-            else
-                LoadAniamtion(ActiveMaterialAnim, activeSampler);
+            LoadAniamtion(ActiveMaterialAnim, activeSampler);
 
             listViewCustom1.ResumeLayout();
 
@@ -167,6 +164,8 @@ namespace FirstPlugin.Forms
             {
                 listViewCustom1.Items[0].Selected = true;
                 listViewCustom1.Select();
+
+                editToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -372,18 +371,6 @@ namespace FirstPlugin.Forms
                         pictureBoxCustom1.Image = Images[Frame];
                 }
             }
-            if (activeSampleU != null)
-            {
-                var keyFrame = activeSampleU.GetKeyFrame(Frame);
-
-                var tex = activeSampleU.GetActiveTexture((int)keyFrame.Value);
-                if (tex != null)
-                {
-                    if (Images.ContainsKey(Frame))
-                        pictureBoxCustom1.Image = Images[Frame];
-                }
-            }
-
         }
 
         private void currentFrameCounterUD_ValueChanged(object sender, EventArgs e)
@@ -398,10 +385,14 @@ namespace FirstPlugin.Forms
         {
             if (listViewCustom1.SelectedItems.Count > 0 && KeyFrames.Count > 0)
             {
+                editToolStripMenuItem.Enabled = true;
+
                 int SelectedFrame = KeyFrames[listViewCustom1.SelectedIndices[0]];
                 animationTrackBar.Value = SelectedFrame;
                 textureFrameUD.Value = SelectedFrame;
             }
+            else
+                editToolStripMenuItem.Enabled = false;
         }
 
         private void animationTrackBar_Scroll(object sender, ScrollEventArgs e)
@@ -437,8 +428,10 @@ namespace FirstPlugin.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            bool IsWiiU = activeSampler is FTXP.BfresSamplerAnim;
+
             Texture_Selector editor = new Texture_Selector();
-            editor.LoadTexture("", activeSampleU != null);
+            editor.LoadTexture("", IsWiiU);
 
             if (editor.ShowDialog() == DialogResult.OK)
             {
@@ -450,9 +443,9 @@ namespace FirstPlugin.Forms
                 if (!ActiveMaterialAnim.Textures.Contains(NewTex))
                     ActiveMaterialAnim.Textures.Add(NewTex);
 
-                if (activeSampler != null)
+                if (activeSampler is FMAA.BfresSamplerAnim)
                 {
-                    activeSampler.AddKeyFrame(NewTex);
+                    ((FMAA.BfresSamplerAnim)activeSampler).AddKeyFrame(NewTex);
                 }
                 else
                 {
@@ -464,12 +457,14 @@ namespace FirstPlugin.Forms
         {
             if (listViewCustom1.SelectedItems.Count > 0)
             {
+                bool IsWiiU = activeSampler is FTXP.BfresSamplerAnim;
+
                 int SelectedFrame = KeyFrames[listViewCustom1.SelectedIndices[0]];
 
                 string currentTex = listViewCustom1.SelectedItems[0].Text;
 
                 Texture_Selector editor = new Texture_Selector();
-                editor.LoadTexture(currentTex, activeSampleU != null);
+                editor.LoadTexture(currentTex, IsWiiU);
 
                 if (editor.ShowDialog() == DialogResult.OK)
                 {
@@ -479,13 +474,83 @@ namespace FirstPlugin.Forms
                         ActiveMaterialAnim.Textures.Add(NewTex);
 
                     int index = ActiveMaterialAnim.Textures.IndexOf(NewTex);
-                    if (activeSampleU != null)
-                        activeSampleU.SetValue(SelectedFrame, index);
-                    else
-                        activeSampler.SetValue(SelectedFrame, index);
-
+                    activeSampler.SetValue(SelectedFrame, index);
                     ActiveMaterialAnim.UpdateAnimationData();
                 }
+            }
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count > 0 && activeSampler != null)
+            {
+                int Frame = animationTrackBar.Value;
+
+                var keyFrame = activeSampler.GetKeyFrame(Frame);
+
+                var tex = activeSampler.GetActiveTexture((int)keyFrame.Value);
+                if (tex != null)
+                {
+                    using (var sfd = new SaveFileDialog())
+                    {
+                        if (tex is FTEX)
+                        {
+                            sfd.Filter = FileFilters.FTEX;
+                            if (sfd.ShowDialog() == DialogResult.OK)
+                            {
+                                if (tex is FTEX)
+                                    ((FTEX)tex).Export(sfd.FileName);
+                            }
+                        }
+                        if (tex is TextureData)
+                        {
+                            sfd.Filter = FileFilters.BNTX_TEX;
+                            if (sfd.ShowDialog() == DialogResult.OK)
+                            {
+                                if (tex is TextureData)
+                                    ((TextureData)tex).Export(sfd.FileName);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void replaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count > 0 && activeSampler != null)
+            {
+                int Frame = animationTrackBar.Value;
+
+                var keyFrame = activeSampler.GetKeyFrame(Frame);
+
+                var tex = activeSampler.GetActiveTexture((int)keyFrame.Value);
+                if (tex != null)
+                {
+                    using (var ofd = new OpenFileDialog())
+                    {
+                        if (tex is FTEX)
+                        {
+                            ofd.Filter = FileFilters.FTEX;
+                            if (ofd.ShowDialog() == DialogResult.OK)
+                            {
+                                if (tex is FTEX)
+                                    ((FTEX)tex).Replace(ofd.FileName);
+                            }
+                        }
+                        if (tex is TextureData)
+                        {
+                            ofd.Filter = FileFilters.BNTX_TEX;
+                            if (ofd.ShowDialog() == DialogResult.OK)
+                            {
+                                if (tex is TextureData)
+                                    ((TextureData)tex).Replace(ofd.FileName);
+                            }
+                        }
+                    }
+                }
+
+                ReloadAnimationView();
             }
         }
 
@@ -510,10 +575,7 @@ namespace FirstPlugin.Forms
             }
             if (node.Tag is MaterialAnimation.SamplerKeyGroup)
             {
-                if (ActiveMaterialAnim is FMAA)
-                    activeSampler = (FMAA.BfresSamplerAnim)node.Tag;
-                else
-                    activeSampleU = (FTXP.BfresSamplerAnim)node.Tag;
+                activeSampler = (MaterialAnimation.SamplerKeyGroup)node.Tag;
 
                 ReloadAnimationView();
             }
@@ -521,12 +583,35 @@ namespace FirstPlugin.Forms
 
         private void addKeyFrameToolstrip_Click(object sender, EventArgs e)
         {
+            if (activeSampler != null)
+            {
+                bool IsWiiU = activeSampler is FTXP.BfresSamplerAnim;
 
+                Texture_Selector editor = new Texture_Selector();
+                editor.LoadTexture("", IsWiiU);
+                if (editor.ShowDialog() == DialogResult.OK)
+                {
+                    string NewTex = editor.GetSelectedTexture();
+
+                    if (ActiveMaterialAnim.Textures == null)
+                        ActiveMaterialAnim.Textures = new List<string>();
+
+                    if (!ActiveMaterialAnim.Textures.Contains(NewTex))
+                        ActiveMaterialAnim.Textures.Add(NewTex);
+
+                    if (activeSampler != null)
+                        activeSampler.AddKeyFrame(NewTex);
+                }
+            }
         }
 
         private void removeKeyFrameToolstrip_Click(object sender, EventArgs e)
         {
-
+            if (activeSampler != null)
+            {
+                int Frame = animationTrackBar.Value;
+                activeSampler.RemoveKeyFrame(Frame);
+            }
         }
 
         private void toolstripShiftUp_Click(object sender, EventArgs e)
@@ -550,7 +635,26 @@ namespace FirstPlugin.Forms
 
         private void backgroundCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Runtime.pictureBoxStyle = (Runtime.PictureBoxBG)backgroundCB.SelectedItem;
+            UpdateBackgroundImage();
+        }
 
+        private void UpdateBackgroundImage()
+        {
+            switch (Runtime.pictureBoxStyle)
+            {
+                case Runtime.PictureBoxBG.Black:
+                    pictureBoxCustom1.BackgroundImage = null;
+                    pictureBoxCustom1.BackColor = Color.Black;
+                    break;
+                case Runtime.PictureBoxBG.White:
+                    pictureBoxCustom1.BackgroundImage = null;
+                    pictureBoxCustom1.BackColor = Color.White;
+                    break;
+                case Runtime.PictureBoxBG.Checkerboard:
+                    pictureBoxCustom1.BackgroundImage = Switch_Toolbox.Library.Properties.Resources.CheckerBackground;
+                    break;
+            }
         }
     }
 }

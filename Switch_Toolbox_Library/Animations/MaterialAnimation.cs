@@ -89,7 +89,32 @@ namespace Switch_Toolbox.Library.Animations
                 SetValue(index, Frame);
             }
 
+            public virtual void RemoveKeyFrame(int Frame)
+            {
 
+            }
+
+            public virtual void AddKeyFrame(string TextureName, float Frame = -1, bool IsConstant = false)
+            {
+                Constant = IsConstant;
+
+                //Add the texture if it does not exist for both wrapper and bfres itself
+                if (!MaterialAnimation.Textures.Contains(TextureName))
+                    MaterialAnimation.Textures.Add(TextureName);
+
+                //Set our index
+                int index = MaterialAnimation.Textures.IndexOf(TextureName);
+
+                if (Frame == -1)
+                {
+                    Frame = EndFrame + 1; //Add to the end of the list by default
+                }
+
+                //For non constants we load a curve
+                if (!Constant)
+                {
+                }
+            }
 
             public virtual STGenericTexture GetActiveTexture(int Frame) { return null; }
         }

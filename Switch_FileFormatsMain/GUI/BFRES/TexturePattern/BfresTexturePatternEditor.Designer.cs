@@ -74,6 +74,8 @@
             this.btnBackward1 = new Switch_Toolbox.Library.Forms.STButton();
             this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -209,7 +211,7 @@
             this.addKeyFrameToolstrip.Image = global::FirstPlugin.Properties.Resources.AddIcon;
             this.addKeyFrameToolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addKeyFrameToolstrip.Name = "addKeyFrameToolstrip";
-            this.addKeyFrameToolstrip.Size = new System.Drawing.Size(29, 20);
+            this.addKeyFrameToolstrip.Size = new System.Drawing.Size(21, 20);
             this.addKeyFrameToolstrip.Text = "Add Frame";
             this.addKeyFrameToolstrip.Click += new System.EventHandler(this.addKeyFrameToolstrip_Click);
             // 
@@ -219,7 +221,7 @@
             this.removeKeyFrameToolstrip.Image = global::FirstPlugin.Properties.Resources.RemoveIcon;
             this.removeKeyFrameToolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.removeKeyFrameToolstrip.Name = "removeKeyFrameToolstrip";
-            this.removeKeyFrameToolstrip.Size = new System.Drawing.Size(29, 20);
+            this.removeKeyFrameToolstrip.Size = new System.Drawing.Size(21, 20);
             this.removeKeyFrameToolstrip.Text = "Remove Frame";
             this.removeKeyFrameToolstrip.Click += new System.EventHandler(this.removeKeyFrameToolstrip_Click);
             // 
@@ -229,7 +231,7 @@
             this.toolstripShiftUp.Image = global::FirstPlugin.Properties.Resources.ArrowIcon;
             this.toolstripShiftUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolstripShiftUp.Name = "toolstripShiftUp";
-            this.toolstripShiftUp.Size = new System.Drawing.Size(29, 20);
+            this.toolstripShiftUp.Size = new System.Drawing.Size(21, 20);
             this.toolstripShiftUp.Text = "Move Up";
             this.toolstripShiftUp.Click += new System.EventHandler(this.toolstripShiftUp_Click);
             // 
@@ -239,7 +241,7 @@
             this.toolstripShiftDown.Image = global::FirstPlugin.Properties.Resources.ArrowIcon;
             this.toolstripShiftDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolstripShiftDown.Name = "toolstripShiftDown";
-            this.toolstripShiftDown.Size = new System.Drawing.Size(29, 20);
+            this.toolstripShiftDown.Size = new System.Drawing.Size(21, 20);
             this.toolstripShiftDown.Text = "Move Down";
             this.toolstripShiftDown.Click += new System.EventHandler(this.toolstripShiftDown_Click);
             // 
@@ -279,6 +281,7 @@
             // 
             // stLabel4
             // 
+            this.stLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.stLabel4.AutoSize = true;
             this.stLabel4.Location = new System.Drawing.Point(6, 447);
             this.stLabel4.Name = "stLabel4";
@@ -288,6 +291,7 @@
             // 
             // textureFrameUD
             // 
+            this.textureFrameUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textureFrameUD.Location = new System.Drawing.Point(77, 445);
             this.textureFrameUD.Maximum = new decimal(new int[] {
             2147483647,
@@ -301,6 +305,7 @@
             // 
             // stLabel1
             // 
+            this.stLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.stLabel1.AutoSize = true;
             this.stLabel1.Location = new System.Drawing.Point(6, 478);
             this.stLabel1.Name = "stLabel1";
@@ -310,7 +315,7 @@
             // 
             // treeView1
             // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView1.Location = new System.Drawing.Point(6, 494);
             this.treeView1.Name = "treeView1";
@@ -446,7 +451,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
-            this.pictureBoxCustom1.Location = new System.Drawing.Point(16, 58);
+            this.pictureBoxCustom1.Location = new System.Drawing.Point(16, 63);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
             this.pictureBoxCustom1.Size = new System.Drawing.Size(776, 514);
             this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -619,9 +624,27 @@
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToolStripMenuItem,
+            this.replaceToolStripMenuItem});
+            this.editToolStripMenuItem.Enabled = false;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
+            // replaceToolStripMenuItem
+            // 
+            this.replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
+            this.replaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceToolStripMenuItem.Text = "Replace";
+            this.replaceToolStripMenuItem.Click += new System.EventHandler(this.replaceToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -748,5 +771,7 @@
         private Switch_Toolbox.Library.Forms.STLabel stLabel5;
         private Switch_Toolbox.Library.Forms.STComboBox activeAnimCB;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;
     }
 }

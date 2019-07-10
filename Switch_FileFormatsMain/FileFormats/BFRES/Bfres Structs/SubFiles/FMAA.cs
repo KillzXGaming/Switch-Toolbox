@@ -477,32 +477,6 @@ namespace Bfres.Structs
                 Text = Name;
             }
 
-            public void AddKeyFrame(string TextureName, float Frame = -1, bool IsConstant = false)
-            {
-                Constant = IsConstant;
-
-                var MatAnim = MatAnimWrapper.MaterialAnim;
-
-                //Add the texture if it does not exist for both wrapper and bfres itself
-                if (!MatAnim.TextureNames.Contains(TextureName))
-                    MatAnim.TextureNames.Add(TextureName);
-                if (!MatAnimWrapper.Textures.Contains(TextureName))
-                    MatAnimWrapper.Textures.Add(TextureName);
-
-                //Set our index
-                int index = MatAnimWrapper.Textures.IndexOf(TextureName);
-
-                if (Frame == -1)
-                {
-                    Frame = EndFrame + 1; //Add to the end of the list by default
-                }
-
-                //For non constants we load a curve
-                if (!Constant)
-                {
-                }
-            }
-
             private AnimCurve CreateAnimCurve()
             {
                 //Create empty curve
