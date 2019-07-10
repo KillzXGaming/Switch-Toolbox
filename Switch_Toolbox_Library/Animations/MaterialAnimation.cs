@@ -89,9 +89,19 @@ namespace Switch_Toolbox.Library.Animations
                 SetValue(index, Frame);
             }
 
+            public virtual void ShiftKeyUp(int Frame)
+            {
+                MaterialAnimation.IsEdited = true;
+            }
+
+            public virtual void ShiftKeyDown(int Frame)
+            {
+                MaterialAnimation.IsEdited = true;
+            }
+
             public virtual void RemoveKeyFrame(int Frame)
             {
-
+                MaterialAnimation.IsEdited = true;
             }
 
             public virtual void AddKeyFrame(string TextureName, float Frame = -1, bool IsConstant = false)
@@ -114,6 +124,8 @@ namespace Switch_Toolbox.Library.Animations
                 if (!Constant)
                 {
                 }
+
+                MaterialAnimation.IsEdited = true;
             }
 
             public virtual STGenericTexture GetActiveTexture(int Frame) { return null; }

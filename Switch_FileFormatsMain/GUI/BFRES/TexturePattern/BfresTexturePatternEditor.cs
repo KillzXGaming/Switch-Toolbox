@@ -178,8 +178,6 @@ namespace FirstPlugin.Forms
             if (activeSampler == null || IsLoading)
                 return;
 
-            int imageIndex = 0;
-
             imgList.Images.Clear();
             Images.Clear();
             KeyFrames.Clear();
@@ -199,42 +197,9 @@ namespace FirstPlugin.Forms
                         break;
 
                     var keyFrame = activeSampler.GetKeyFrame(Frame);
-                    Console.WriteLine($"keyFrame {Frame} Keyed {keyFrame.IsKeyed}");
                     if (keyFrame.IsKeyed || activeSampler.Constant)
                     {
-                        string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)keyFrame.Value);
-
-                        var tex = activeSampler.GetActiveTexture((int)keyFrame.Value);
-
-                        if (tex != null)
-                        {
-                            Bitmap temp = tex.GetBitmap();
-                            Images.Add(Frame, temp);
-                            KeyFrames.Add(Frame);
-
-                            if (listViewCustom1.InvokeRequired)
-                            {
-                                listViewCustom1.Invoke((MethodInvoker)delegate {
-                                    // Running on the UI thread
-                                    listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + tex.Text, imageIndex++);
-                                    imgList.Images.Add(temp);
-                                    var dummy = imgList.Handle;
-                                });
-                            }
-                            else
-                                listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + tex.Text, imageIndex++);
-                        }
-                        else
-                        {
-                            if (listViewCustom1.InvokeRequired)
-                            {
-                                listViewCustom1.Invoke((MethodInvoker)delegate {
-                                    listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + TextureKey, imageIndex++);
-                                });
-                            }
-                            else
-                                listViewCustom1.Items.Add($"{Frame} / {anim.FrameCount} \n" + TextureKey, imageIndex++);
-                        }
+                        AddKeyFrame((int)keyFrame.Value, Frame);
                     }
                 }
                 if (listViewCustom1.InvokeRequired)
@@ -261,6 +226,47 @@ namespace FirstPlugin.Forms
                 IsLoading = false;
             }));
             Thread.Start();
+        }
+
+        private void AddKeyFrame(int Index, int Frame)
+        {
+            if (activeSampler == null)
+                return;
+
+            string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)Index);
+
+            var tex = activeSampler.GetActiveTexture((int)Index);
+            int ImageIndex = imgList.Images.Count;
+
+            if (tex != null)
+            {
+                Bitmap temp = tex.GetBitmap();
+                Images.Add(Frame, temp);
+                KeyFrames.Add(Frame);
+
+                if (listViewCustom1.InvokeRequired)
+                {
+                    listViewCustom1.Invoke((MethodInvoker)delegate {
+                        // Running on the UI thread
+                        listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
+                        imgList.Images.Add(temp);
+                        var dummy = imgList.Handle;
+                    });
+                }
+                else
+                    listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
+            }
+            else
+            {
+                if (listViewCustom1.InvokeRequired)
+                {
+                    listViewCustom1.Invoke((MethodInvoker)delegate {
+                        listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + TextureKey, ImageIndex);
+                    });
+                }
+                else
+                    listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + TextureKey, ImageIndex);
+            }
         }
 
         private void SelectThumbnailItems()
@@ -443,13 +449,7 @@ namespace FirstPlugin.Forms
                 if (!ActiveMaterialAnim.Textures.Contains(NewTex))
                     ActiveMaterialAnim.Textures.Add(NewTex);
 
-                if (activeSampler is FMAA.BfresSamplerAnim)
-                {
-                    ((FMAA.BfresSamplerAnim)activeSampler).AddKeyFrame(NewTex);
-                }
-                else
-                {
-                }
+                activeSampler.AddKeyFrame(NewTex);
             }
         }
 
@@ -616,12 +616,20 @@ namespace FirstPlugin.Forms
 
         private void toolstripShiftUp_Click(object sender, EventArgs e)
         {
-
+            if (activeSampler != null)
+            {
+                int Frame = animationTrackBar.Value;
+                activeSampler.ShiftKeyUp(Frame);
+            }
         }
 
         private void toolstripShiftDown_Click(object sender, EventArgs e)
         {
-
+            if (activeSampler != null)
+            {
+                int Frame = animationTrackBar.Value;
+                activeSampler.ShiftKeyDown(Frame);
+            }
         }
 
         private void activeAnimCB_SelectedIndexChanged(object sender, EventArgs e)
