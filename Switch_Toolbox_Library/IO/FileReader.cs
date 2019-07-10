@@ -44,6 +44,20 @@ namespace Switch_Toolbox.Library.IO
             return signature == Identifier;
         }
 
+        public bool CheckSignature(uint Identifier, long position = 0)
+        {
+            if (Position + 4 >= BaseStream.Length || position < 0)
+                return false;
+
+            Position = position;
+            uint signature = ReadUInt32();
+
+            //Reset position
+            Position = 0;
+
+            return signature == Identifier;
+        }
+
         public string ReadNameOffset(bool IsRelative, Type OffsetType, bool ReadNameLength = false, bool IsNameLengthShort = false)
         {
             long pos = Position;
@@ -205,7 +219,7 @@ namespace Switch_Toolbox.Library.IO
         }
         public byte[] getSection(int offset, int size)
         {
-            Seek(offset, SeekOrigin.Begin);
+            Position = offset;
             return ReadBytes(size);
         }
         public Vector4 ReadVec4()
