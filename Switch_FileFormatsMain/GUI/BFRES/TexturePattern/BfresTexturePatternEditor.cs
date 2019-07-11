@@ -561,7 +561,7 @@ namespace FirstPlugin.Forms
                 int Index = listViewCustom1.SelectedIndices[0];
 
                 int SelectedFrame = KeyFrames[Index];
-                var ListItem = listViewCustom1.SelectedItems[Index];
+                var ListItem = listViewCustom1.SelectedItems[0];
 
                 
             }
