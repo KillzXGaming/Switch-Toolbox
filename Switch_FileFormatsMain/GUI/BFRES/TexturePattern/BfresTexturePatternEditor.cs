@@ -558,10 +558,15 @@ namespace FirstPlugin.Forms
         {
             if (listViewCustom1.SelectedItems.Count > 0 && KeyFrames.Count > 0)
             {
-                int SelectedFrame = KeyFrames[listViewCustom1.SelectedIndices[0]];
+                int Index = listViewCustom1.SelectedIndices[0];
 
+                int SelectedFrame = KeyFrames[Index];
+                var ListItem = listViewCustom1.SelectedItems[Index];
+
+                
             }
         }
+
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {

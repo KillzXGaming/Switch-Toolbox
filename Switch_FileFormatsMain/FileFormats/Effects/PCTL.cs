@@ -395,7 +395,27 @@ namespace FirstPlugin
             public uint SubSectionCount;
 
             public object BinaryData;
-            public byte[] BinaryDataBytes;
+
+            private byte[] binaryDataBytes;
+            public byte[] BinaryDataBytes
+            {
+                get
+                {
+                 /*   if (BinaryData == null)
+                        return binaryDataBytes;
+                    else if (BinaryData is BFRES)
+                        return (((BFRES)BinaryData).Save());
+                    else if (BinaryData is BNTX)
+                        return (((BNTX)BinaryData).Save());
+                    else*/
+
+                        return binaryDataBytes;
+                }
+                set
+                {
+                    binaryDataBytes = value;
+                }
+            }
 
             public List<SectionBase> ChildSections = new List<SectionBase>();
             public byte[] data;
@@ -620,12 +640,15 @@ namespace FirstPlugin
                         SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "G3PR":
-                         SaveHeader(writer, header, ((BFRES)BinaryData).Save(), 4096);
-                        //  SaveHeader(writer, header, BinaryDataBytes, 4096);
+                      //   SaveHeader(writer, header, ((BFRES)BinaryData).Save(), 4096);
+                          SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "GRTF":
                         SaveHeader(writer, header, ((BNTX)BinaryData).Save(), 4096);
-                        // SaveHeader(writer, header, BinaryDataBytes, 4096);
+                       //  SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        break;
+                    case "PRIM":
+                        SaveHeader(writer, header, BinaryDataBytes);
                         break;
                     case "EMTR":
                         //Write all the data first
@@ -669,8 +692,11 @@ namespace FirstPlugin
 
             public List<BinarySavedEntry> BinariesSaved = new List<BinarySavedEntry>();
 
-            private void SaveHeader(FileWriter writer,Header header, byte[] BinaryFile, int BinaryAlignment)
+            private void SaveHeader(FileWriter writer,Header header, byte[] BinaryFile, int BinaryAlignment = 0)
             {
+                if (Signature != "PRIM")
+                    writer.Align(16);
+
                 if (BinaryFile != null && BinaryFile.Length > 0)
                     SectionSize = (uint)BinaryFile.Length;
 
@@ -714,7 +740,8 @@ namespace FirstPlugin
                 {
                     if (BinaryFile != null && BinaryFile.Length > 0)
                     {
-                        writer.Align(BinaryAlignment); //Align the file
+                        if (BinaryAlignment != 0)
+                            writer.Align(BinaryAlignment); //Align the file
                         Console.WriteLine($"{Signature} DATA BLOCK " + writer.Position + " " + BinaryFile.Length);
 
                         writer.WriteUint32Offset(_ofsBinaryPos, BasePosition); //Save binary offset
@@ -729,7 +756,9 @@ namespace FirstPlugin
                         writer.WriteUint32Offset(binary._ofsData, binary.Position); //Save binary offset
                         writer.Write(binary.Data); //Save binary data
                     }
+
                     BinariesSaved.Clear();
+
                 }
 
                 if (NextSectionOffset != NullOffset)

@@ -245,7 +245,11 @@ namespace Switch_Toolbox.Library
 
         private void RepackAction(object sender, EventArgs args)
         {
-
+            FolderSelectDialog dlg = new FolderSelectDialog();
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                string FolderPath = dlg.SelectedPath;
+            }
         }
 
         private void PreviewAction(object sender, EventArgs args)
