@@ -14,6 +14,8 @@ namespace Switch_Toolbox.Library.Rendering
 {
     public class GenericModelRenderer : AbstractGlDrawable
     {
+        public static List<ITextureContainer> TextureContainers = new List<ITextureContainer>();
+
         public List<GenericRenderedObject> Meshes = new List<GenericRenderedObject>();
         public STSkeleton Skeleton = new STSkeleton();
 
@@ -309,14 +311,14 @@ namespace Switch_Toolbox.Library.Rendering
 
             string activeTex = tex.Name;
 
-        /*    foreach (var bntx in TextureContainers)
+            foreach (var container in TextureContainers)
             {
-                if (TextureContainers.ContainsKey(activeTex))
+                if (container.Textures.ContainsKey(activeTex))
                 {
-                    BindGLTexture(bntx, tex, shader, activeTex);
+                    BindGLTexture(tex, shader, container.Textures[activeTex]);
                     return tex.textureUnit + 1;
                 }
-            }*/
+            }
 
             return tex.textureUnit + 1;
         }
