@@ -102,6 +102,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, reading/converting uncompressed types for DDS, and documentation for GTX, XTX, and BNTX
 - MelonSpeedruns for logo.
 - BrawlBox team for brawl libaries used for brres parsing.
+- Sage of Mirrors for SuperBMDLib. 
 
 ##  Resources
 - [Treeview Icons by icons8](https://icons8.com/)
@@ -114,6 +115,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - http://Avsys.xyz/wiki/Category:File_Formats
 
 ## Libraries
+- [SuperBMDLib] (https://github.com/Sage-of-Mirrors/SuperBMD)
 - [Brawl Lib (for brres section conversion)](https://github.com/libertyernie/brawltools)
 - [Exelix (Sarc, kcl, and byml libraries)](https://github.com/exelix11/EditorCore/tree/master/FileFormatPlugins)
 - [ZstdNet (Compression)](https://github.com/skbkontur/ZstdNet)
