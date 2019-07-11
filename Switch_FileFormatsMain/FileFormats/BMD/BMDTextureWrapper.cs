@@ -15,7 +15,16 @@ namespace FirstPlugin
     {
         public override bool CanEdit { get; set; } = false;
 
-        public override TEX_FORMAT[] SupportedFormats => throw new NotImplementedException();
+        public override TEX_FORMAT[] SupportedFormats
+        {
+            get
+            {
+                return new TEX_FORMAT[]
+                {
+
+                };
+            }
+        }
 
         SuperBMDLib.Materials.BinaryTextureImage TextureImage;
 
