@@ -210,6 +210,9 @@ void main()
 		 fragColor.a = alpha;
 	 }
 
+    if (renderVertColor == 1)
+        fragColor *= min(vert.vertexColor, vec4(1));
+
 
 	 //Debug Shading
 	vec2 displayTexCoord =  f_texcoord0;

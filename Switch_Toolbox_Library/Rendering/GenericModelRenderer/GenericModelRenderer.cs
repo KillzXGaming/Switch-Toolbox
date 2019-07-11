@@ -325,6 +325,9 @@ namespace Switch_Toolbox.Library.Rendering
 
         private static void BindGLTexture(STGenericMatTexture tex, ShaderProgram shader, STGenericTexture texture)
         {
+            if (texture.RenderableTex == null || !texture.RenderableTex.GLInitialized)
+                texture.LoadOpenGLTexture();
+
             if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
             {
                 shader.SetInt("RedChannel", (int)texture.RedChannel);
