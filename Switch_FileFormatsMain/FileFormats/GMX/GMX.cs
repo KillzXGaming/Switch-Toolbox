@@ -44,12 +44,12 @@ namespace FirstPlugin
         {
             get
             {
-                var editor = LibraryGUI.Instance.GetObjectEditor();
+                var editor = LibraryGUI.GetObjectEditor();
                 return editor.GetViewport();
             }
             set
             {
-                var editor = LibraryGUI.Instance.GetObjectEditor();
+                var editor = LibraryGUI.GetObjectEditor();
                 editor.LoadViewport(value);
             }
         }
@@ -72,7 +72,7 @@ namespace FirstPlugin
                 }
 
                 viewport.ReloadDrawables(DrawableContainer);
-                LibraryGUI.Instance.LoadEditor(viewport);
+                LibraryGUI.LoadEditor(viewport);
 
                 viewport.Text = Text;
             }

@@ -16,13 +16,7 @@ namespace Switch_Toolbox.Library
 {
     public class LibraryGUI
     {
-        private static LibraryGUI _instance;
-        public static LibraryGUI Instance { get { return _instance == null ? _instance = new LibraryGUI() : _instance; } }
-
-
-        public List<EditableObject> editableObjects = new List<EditableObject>();
-
-        public Viewport GetActiveViewport()
+        public static Viewport GetActiveViewport()
         {
             var viewport = GetActiveContent();
 
@@ -42,7 +36,7 @@ namespace Switch_Toolbox.Library
             return null;
         }
 
-        public AnimationPanel GetAnimationPanel()
+        public static AnimationPanel GetAnimationPanel()
         {
             var editor = GetActiveContent();
             if (editor != null && editor is IViewportContainer)
@@ -52,24 +46,24 @@ namespace Switch_Toolbox.Library
             return null;
         }
 
-        public void UpdateViewport()
+        public static void UpdateViewport()
         {   
             Viewport viewport = GetActiveViewport();
 
             if (viewport != null)
                 viewport.UpdateViewport();
         }
-        public Form GetActiveForm()
+        public static Form GetActiveForm()
         {
             return Runtime.MainForm.ActiveMdiChild;
         }
-        public void CreateMdiWindow(STForm form, bool Show = true)
+        public static void CreateMdiWindow(STForm form, bool Show = true)
         {
             var mainform = Application.OpenForms[0];
 
             ((IMdiContainer)mainform).AddChildContainer(form);
         }
-        public ObjectEditor GetObjectEditor()
+        public static ObjectEditor GetObjectEditor()
         {
             if (Runtime.MainForm.ActiveMdiChild is ObjectEditor)
             {
@@ -77,7 +71,7 @@ namespace Switch_Toolbox.Library
             }
             return null;
         }
-        public void LoadViewportEditor(Control control)
+        public static void LoadViewportEditor(Control control)
         {
             control.Dock = DockStyle.Fill;
 
@@ -100,14 +94,14 @@ namespace Switch_Toolbox.Library
                 ((ViewportDivider)activeContent).editorPanel.Controls.Add(control);
             }
         }
-        public void LoadEditor(Control control)
+        public static void LoadEditor(Control control)
         {
             if (Runtime.MainForm.ActiveMdiChild is ObjectEditor)
             {
                 ((ObjectEditor)Runtime.MainForm.ActiveMdiChild).LoadEditor(control);
             }
         }
-        public UserControl GetActiveContent(Type type = null)
+        public static UserControl GetActiveContent(Type type = null)
         {
             if (Runtime.MainForm.ActiveMdiChild == null)
                 return null;
@@ -154,7 +148,7 @@ namespace Switch_Toolbox.Library
             }
             return null;
         }
-        public void LoadViewport(Viewport viewport)
+        public static void LoadViewport(Viewport viewport)
         {
  
         }

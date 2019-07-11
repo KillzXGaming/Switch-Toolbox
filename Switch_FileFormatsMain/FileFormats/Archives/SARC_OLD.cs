@@ -116,7 +116,7 @@ namespace FirstPlugin
 
         private void Delete(object sender, EventArgs args) {
             Unload();
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor != null)
                 editor.ResetControls();
         }
@@ -370,11 +370,11 @@ namespace FirstPlugin
 
             private void UpdateHexView()
             {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
                 if (editor == null)
                 {
                     editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
@@ -411,7 +411,7 @@ namespace FirstPlugin
                 UserControl form = GetEditorForm(fileFormat);
                 form.Text = (((IFileFormat)fileFormat).FileName);
 
-                var parentForm = LibraryGUI.Instance.GetActiveForm();
+                var parentForm = LibraryGUI.GetActiveForm();
 
                 GenericEditorForm editorForm = new GenericEditorForm(true, form);
                 editorForm.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
@@ -492,11 +492,11 @@ namespace FirstPlugin
 
             private void OpenTextEditor(object sender, EventArgs args)
             {
-                TextEditor editor = (TextEditor)LibraryGUI.Instance.GetActiveContent(typeof(TextEditor));
+                TextEditor editor = (TextEditor)LibraryGUI.GetActiveContent(typeof(TextEditor));
                 if (editor == null)
                 {
                     editor = new TextEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;

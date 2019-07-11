@@ -170,7 +170,7 @@ namespace FirstPlugin
                 materialIndexUD.Value = materialComboBox1.SelectedIndex;
             }
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void ReloadMaterialList()
@@ -201,7 +201,7 @@ namespace FirstPlugin
                 boneIndexUD.Value = bonesCB.SelectedIndex;
             }
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void valueUD_ValueChanged(object sender, EventArgs e)
@@ -265,7 +265,7 @@ namespace FirstPlugin
             {
                 activeShape.DisplayLODIndex = lodDisplayCB.SelectedIndex;
                 activeShape.UpdateVertexData();
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
         }
 

@@ -308,7 +308,7 @@ namespace Switch_Toolbox.Library
             { TEX_FORMAT.D24_UNORM_S8_UINT,    new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)        },
             { TEX_FORMAT.D32_FLOAT,            new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)        },
             { TEX_FORMAT.D32_FLOAT_S8X24_UINT, new FormatInfo(8, 1, 1, 1,TargetBuffer.DepthStencil) }
-     }; 
+        }; 
 
         /// <summary>
         /// A Surface contains mip levels of compressed/uncompressed texture data
@@ -371,6 +371,8 @@ namespace Switch_Toolbox.Library
             uint width = Math.Max(1, Width >> MipLevel);
             uint height = Math.Max(1, Height >> MipLevel);
             byte[] data = GetImageData(ArrayLevel, MipLevel);
+            if (data.Length == 0)
+                return new Bitmap(1,1);
 
             try
             {
@@ -614,41 +616,47 @@ namespace Switch_Toolbox.Library
             astc.Load(new FileStream(path, FileMode.Open));
         }
 
+        public override string ExportFilter
+        {
+            get
+            {
+                if (IsAtscFormat(Format))
+                {
+                    return "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff;*.astc|" +
+                                "Microsoft DDS |*.dds|" +
+                                "Portable Network Graphics |*.png|" +
+                                "Joint Photographic Experts Group |*.jpg|" +
+                                "Bitmap Image |*.bmp|" +
+                                "Tagged Image File Format |*.tiff|" +
+                                "ASTC |*.astc|" +
+                                "All files(*.*)|*.*";
+                }
+                else
+                {
+                    return "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
+                                 "Microsoft DDS |*.dds|" +
+                                 "Portable Network Graphics |*.png|" +
+                                 "Joint Photographic Experts Group |*.jpg|" +
+                                 "Bitmap Image |*.bmp|" +
+                                 "Tagged Image File Format |*.tiff|" +
+                                 "All files(*.*)|*.*";
+                }
+            }
+        }
+
         public void ExportImage()
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = Text;
             sfd.DefaultExt = "dds";
-
-            if (IsAtscFormat(Format))
-            {
-                sfd.DefaultExt = "astc";
-                sfd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff;*.astc|" +
-                            "Microsoft DDS |*.dds|" +
-                            "Portable Network Graphics |*.png|" +
-                            "Joint Photographic Experts Group |*.jpg|" +
-                            "Bitmap Image |*.bmp|" +
-                            "Tagged Image File Format |*.tiff|" +
-                            "ASTC |*.astc|" +
-                            "All files(*.*)|*.*";
-            }
-            else
-            {
-                sfd.Filter = "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff|" +
-                             "Microsoft DDS |*.dds|" +
-                             "Portable Network Graphics |*.png|" +
-                             "Joint Photographic Experts Group |*.jpg|" +
-                             "Bitmap Image |*.bmp|" +
-                             "Tagged Image File Format |*.tiff|" +
-                             "All files(*.*)|*.*";
-            }
-
+            sfd.Filter = ExportFilter;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 Export(sfd.FileName);
             }
         }
+
         public void Export(string FileName, bool ExportSurfaceLevel = false,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
@@ -965,7 +973,7 @@ namespace Switch_Toolbox.Library
         {
             DisposeRenderable();
 
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor != null)
             {
                 editor.RemoveFile(this);

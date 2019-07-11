@@ -166,12 +166,12 @@ namespace FirstPlugin
             {
                 bool IsSuccess = TryDecompileBinary();
 
-                TextEditor editor = (TextEditor)LibraryGUI.Instance.GetActiveContent(typeof(TextEditor));
+                TextEditor editor = (TextEditor)LibraryGUI.GetActiveContent(typeof(TextEditor));
                 if (editor == null)
                 {
                     editor = new TextEditor();
                     editor.Dock = DockStyle.Fill;
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
 
                 editor.Text = Text;

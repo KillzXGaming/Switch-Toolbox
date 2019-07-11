@@ -128,7 +128,7 @@ namespace Bfres.Structs
                 Nodes.Clear();
                 ((BFRESGroupNode)Parent).RemoveChild(this);
 
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
 
                 Unload();
             }
@@ -415,7 +415,7 @@ namespace Bfres.Structs
                         }
                     }
                 }
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
         }
         private void SetCopiedMaterialData(CopyMaterialMenu menu,

@@ -409,7 +409,7 @@ namespace FirstPlugin
 
                 IsEdited = true;
                 LoadOpenGLTexture();
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
             catch (Exception ex)
             {

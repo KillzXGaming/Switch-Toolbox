@@ -99,7 +99,7 @@ namespace Bfres.Structs
         public override void Delete()
         {
             ((BFRESGroupNode)Parent).RemoveChild(this);
-            LibraryGUI.Instance.UpdateViewport(); //Update texture display
+            LibraryGUI.UpdateViewport(); //Update texture display
         }
 
         public override void Export(string FileName) => Export(FileName);
@@ -245,7 +245,7 @@ namespace Bfres.Structs
                     IsReplaced = true;
                     Read(texture);
                     LoadOpenGLTexture();
-                    LibraryGUI.Instance.UpdateViewport();
+                    LibraryGUI.UpdateViewport();
                 }
             }
             else
@@ -269,7 +269,7 @@ namespace Bfres.Structs
                         IsReplaced = true;
                         Read(texture);
                         LoadOpenGLTexture();
-                        LibraryGUI.Instance.UpdateViewport();
+                        LibraryGUI.UpdateViewport();
                     }
                     else
                     {
@@ -499,7 +499,7 @@ namespace Bfres.Structs
                 IsEdited = true;
                 Read(texture);
                 LoadOpenGLTexture();
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
             catch (Exception ex)
             {
@@ -715,7 +715,7 @@ namespace Bfres.Structs
 
         private bool IsEditorActive()
         {
-            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
             if (bfresEditor != null)
             {
                 var imageEditor = bfresEditor.GetActiveEditor(typeof(ImageEditorBase));
@@ -723,7 +723,7 @@ namespace Bfres.Structs
             }
             else
             {
-                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
                 return editor != null;
             }
         }
@@ -740,13 +740,13 @@ namespace Bfres.Structs
                 return;
             }
 
-            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)
             {
                 editor = new ImageEditorBase();
                 editor.Dock = DockStyle.Fill;
 
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
             editor.Text = Text;
             editor.LoadProperties(this.texture, OnPropertyChanged);

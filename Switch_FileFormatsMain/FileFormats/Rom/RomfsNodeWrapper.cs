@@ -69,11 +69,11 @@ namespace FirstPlugin
 
 
 
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
                 if (editor == null)
                 {
                     editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
@@ -113,7 +113,7 @@ namespace FirstPlugin
                         MethodInfo method = objectType.GetMethod("OpenForm");
                         var form = (STForm)method.Invoke(fileFormat, new object[0]);
                         form.Text = text;
-                        LibraryGUI.Instance.CreateMdiWindow(form, true);
+                        LibraryGUI.CreateMdiWindow(form, true);
 
                         HasEditorActive = true;
                     }
@@ -126,7 +126,7 @@ namespace FirstPlugin
                 //ObjectEditor is for treenode types. Editors will be on the right side, treenodes on the left
                 ObjectEditor editor = new ObjectEditor((IFileFormat)fileFormat);
                 editor.Text = text;
-                LibraryGUI.Instance.CreateMdiWindow(editor, true);
+                LibraryGUI.CreateMdiWindow(editor, true);
             }
         }
 

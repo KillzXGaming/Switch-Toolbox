@@ -77,7 +77,7 @@ namespace Bfres.Structs
             UserControl form = GetEditorForm(fileFormat);
             form.Text = (((IFileFormat)fileFormat).FileName);
 
-            var parentForm = LibraryGUI.Instance.GetActiveForm();
+            var parentForm = LibraryGUI.GetActiveForm();
 
             GenericEditorForm editorForm = new GenericEditorForm(true, form);
             editorForm.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);

@@ -86,7 +86,7 @@ namespace Switch_Toolbox.Library
 
         public void ResetModels()
         {
-            var viewport = LibraryGUI.Instance.GetActiveViewport();
+            var viewport = LibraryGUI.GetActiveViewport();
             if (viewport == null)
                 return;
             if (viewport.scene == null)
@@ -232,7 +232,7 @@ namespace Switch_Toolbox.Library
             if (IsDisposed)
                 return;
 
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+            Viewport viewport = LibraryGUI.GetActiveViewport();
 
             if (viewport == null)
                 return;
@@ -306,7 +306,7 @@ namespace Switch_Toolbox.Library
             if (currentAnimation == null)
                 return;
 
-            var viewport = LibraryGUI.Instance.GetActiveViewport();
+            var viewport = LibraryGUI.GetActiveViewport();
             if (viewport == null || viewport.scene == null)
                 return;
 
@@ -383,7 +383,7 @@ namespace Switch_Toolbox.Library
 
         private void AnimationPanel_Load(object sender, EventArgs e)
         {
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+            Viewport viewport = LibraryGUI.GetActiveViewport();
             if (viewport != null)
             {
                 if (viewport.GL_ControlLegacy != null)

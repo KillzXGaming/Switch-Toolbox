@@ -103,13 +103,13 @@ namespace FirstPlugin
         private bool DrawablesLoaded;
         public void LoadEditors(TreeNode Wrapper, Action OnPropertyChanged)
         {
-            BcresEditor bcresEditor = (BcresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BcresEditor));
+            BcresEditor bcresEditor = (BcresEditor)LibraryGUI.GetActiveContent(typeof(BcresEditor));
             bool HasModels = RenderedBcres.Models.Count > 0;
             if (bcresEditor == null)
             {
                 bcresEditor = new BcresEditor(HasModels);
                 bcresEditor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(bcresEditor);
+                LibraryGUI.LoadEditor(bcresEditor);
             }
 
             if (!DrawablesLoaded)

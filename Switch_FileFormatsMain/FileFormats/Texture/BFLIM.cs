@@ -302,7 +302,7 @@ namespace FirstPlugin
 
                     bflim.ImageData = ftex.texture.Data;
                     var form = new GenericEditorForm(false, bflim.OpenForm());
-                    LibraryGUI.Instance.CreateMdiWindow(form);
+                    LibraryGUI.CreateMdiWindow(form);
 
                     bflim.UpdateForm();
                 }
@@ -593,7 +593,7 @@ namespace FirstPlugin
 
                 IsEdited = true;
                 LoadOpenGLTexture();
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
             catch (Exception ex)
             {

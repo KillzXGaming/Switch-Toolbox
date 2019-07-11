@@ -99,7 +99,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         public void UpdateTextureMaps()
@@ -107,7 +107,7 @@ namespace Switch_Toolbox.Library.Rendering
             if (!Runtime.OpenTKInitialized)
                 return;
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         public ShaderProgram defaultShaderProgram;
@@ -216,7 +216,13 @@ namespace Switch_Toolbox.Library.Rendering
 
         private static void SetUniforms(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
         {
-      
+            //UV Scale
+            shader.SetFloat("ColorUVScaleU", 1);
+            shader.SetFloat("ColorUVScaleV", 1);
+
+            //UV Translate
+            shader.SetFloat("ColorUVTranslateU", 0);
+            shader.SetFloat("ColorUVTranslateV", 0);
         }
 
         private static void SetUniformData(STGenericMaterial mat, ShaderProgram shader, string propertyName)

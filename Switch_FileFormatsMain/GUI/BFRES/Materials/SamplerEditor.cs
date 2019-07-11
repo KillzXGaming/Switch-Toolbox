@@ -216,7 +216,7 @@ namespace FirstPlugin.Forms
                     ActiveMatTexture.magFilter = 0;
             }
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void textureRefListView_SelectedIndexChanged(object sender, EventArgs e)

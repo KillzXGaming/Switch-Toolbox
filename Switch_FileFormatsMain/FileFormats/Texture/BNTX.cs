@@ -85,7 +85,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor(bntx);
                 editor.Text = "Untitled-" + 0;
-                LibraryGUI.Instance.CreateMdiWindow(editor);
+                LibraryGUI.CreateMdiWindow(editor);
             }
 
             private void Export(object sender, EventArgs args)
@@ -437,7 +437,7 @@ namespace FirstPlugin
         {
             Nodes.Remove(textureData);
             Textures.Remove(textureData.Text);
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         public override UserControl GetEditor()
@@ -461,11 +461,11 @@ namespace FirstPlugin
                 return;
             }
 
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
             if (editor == null)
             {
                 editor = new STPropertyGrid();
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
@@ -601,7 +601,7 @@ namespace FirstPlugin
                     Nodes.Add(setting.textureData);
                     Textures.Add(setting.textureData.Text, setting.textureData);
                     setting.textureData.LoadOpenGLTexture();
-                    LibraryGUI.Instance.UpdateViewport();
+                    LibraryGUI.UpdateViewport();
                 }
                 else
                 {
@@ -1261,7 +1261,7 @@ namespace FirstPlugin
 
         private bool IsEditorActive()
         {
-            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)
                 return false;
             else
@@ -1276,12 +1276,12 @@ namespace FirstPlugin
                 return;
             }
 
-            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)
             {
                 editor = new ImageEditorBase();
                 editor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
             if (Texture.UserData != null)
             {
@@ -1409,7 +1409,7 @@ namespace FirstPlugin
         }
         private void UpdateTextureMapping()
         {
-            var viewport = LibraryGUI.Instance.GetActiveViewport();
+            var viewport = LibraryGUI.GetActiveViewport();
             if (viewport == null)
                 return;
 
@@ -1480,7 +1480,7 @@ namespace FirstPlugin
                 Texture.TextureData[ArrayLevel][0] = combinedMips;
 
                 LoadOpenGLTexture();
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
             catch (Exception ex)
             {

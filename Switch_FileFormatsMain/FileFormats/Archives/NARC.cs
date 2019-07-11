@@ -95,11 +95,11 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeView)
             {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
                 if (editor == null)
                 {
                     editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;

@@ -106,7 +106,7 @@ namespace FirstPlugin.Forms
                     ActiveMatTexture.magFilter = 0;
             }
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void stTextBox2_TextChanged(object sender, EventArgs e)

@@ -40,7 +40,7 @@ namespace FirstPlugin.NodeWrappers
 
         public override void Delete()
         {
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor != null)
             {
                 editor.RemoveFile(this);

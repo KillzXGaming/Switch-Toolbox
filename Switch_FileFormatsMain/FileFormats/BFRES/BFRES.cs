@@ -85,7 +85,7 @@ namespace FirstPlugin
             {
                 BFRES file = null;
 
-                ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+                ObjectEditor editor = (ObjectEditor)LibraryGUI.GetActiveForm();
                 if (editor != null)
                 {
                     file = (BFRES)editor.GetActiveFile();
@@ -118,7 +118,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor(bfres);
                 editor.Text = "Untitled-" + 0;
-                LibraryGUI.Instance.CreateMdiWindow(editor);
+                LibraryGUI.CreateMdiWindow(editor);
             }
             private void NewSwitchBfres(object sender, EventArgs args)
             {
@@ -130,7 +130,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor(bfres);
                 editor.Text = "Untitled-" + 0;
-                LibraryGUI.Instance.CreateMdiWindow(editor);
+                LibraryGUI.CreateMdiWindow(editor);
             }
             private void DebugInfo(object sender, EventArgs args)
             {
@@ -267,7 +267,7 @@ namespace FirstPlugin
             {
                 Text = resFileU.Name;
             }
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
 
             if (editor != null)
                 editor.Refresh();
@@ -289,7 +289,7 @@ namespace FirstPlugin
 
         public void LoadSimpleMode()
         {
-            ObjectEditor editor = (ObjectEditor)LibraryGUI.Instance.GetActiveForm();
+            ObjectEditor editor = (ObjectEditor)LibraryGUI.GetActiveForm();
             if (editor == null)
                 return;
 
@@ -390,7 +390,7 @@ namespace FirstPlugin
         private bool DrawablesLoaded = false;
         public void LoadEditors(object SelectedSection)
         {
-            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
             bool HasModels = false;
             bool hasShapes = HasShapes();
 
@@ -400,7 +400,7 @@ namespace FirstPlugin
 
                 bfresEditor = new BfresEditor(HasModels);
                 bfresEditor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(bfresEditor);
+                LibraryGUI.LoadEditor(bfresEditor);
             }
 
             bool ViewportToggled = bfresEditor.DisplayViewport;
@@ -480,12 +480,12 @@ namespace FirstPlugin
 
             if (SelectedSection is ExternalFileData)
             {
-                ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.Instance.GetActiveContent(typeof(ArchiveFilePanel));
+                ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.GetActiveContent(typeof(ArchiveFilePanel));
                 if (editor == null)
                 {
                     editor = new ArchiveFilePanel();
                     editor.Dock = DockStyle.Fill;
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
 
                 editor.LoadFile(((ExternalFileData)SelectedSection).ArchiveFileInfo);

@@ -275,7 +275,7 @@ namespace Toolbox
             SetFormatSettings((IFileFormat)file);
 
             //Check for active object editors
-            Form editor = (Form)LibraryGUI.Instance.GetActiveForm();
+            Form editor = (Form)LibraryGUI.GetActiveForm();
 
             bool useActiveEditor = false;
 
@@ -956,9 +956,9 @@ namespace Toolbox
 
         private void ResetAnimPanel()
         {
-            if (LibraryGUI.Instance.GetAnimationPanel() != null)
+            if (LibraryGUI.GetAnimationPanel() != null)
             {
-                LibraryGUI.Instance.GetAnimationPanel().CurrentAnimation = null;
+                LibraryGUI.GetAnimationPanel().CurrentAnimation = null;
             }
         }
 

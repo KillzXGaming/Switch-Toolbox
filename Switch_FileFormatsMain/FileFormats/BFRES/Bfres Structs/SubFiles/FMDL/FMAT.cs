@@ -70,7 +70,7 @@ namespace Bfres.Structs
                     }
                 }
             }
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         public void Import()

@@ -31,7 +31,7 @@ namespace Switch_Toolbox.Library
 
         private void selectItem(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+            Viewport viewport = LibraryGUI.GetActiveViewport();
 
             if (viewport == null)
                 return;
@@ -85,10 +85,10 @@ namespace Switch_Toolbox.Library
                     }
                 }
 
-                if (LibraryGUI.Instance.GetAnimationPanel() != null)
+                if (LibraryGUI.GetAnimationPanel() != null)
                 {
                     Console.WriteLine("running" + running.Text);
-                    LibraryGUI.Instance.GetAnimationPanel().CurrentAnimation = running;
+                    LibraryGUI.GetAnimationPanel().CurrentAnimation = running;
                 }
             }
         }
@@ -158,7 +158,7 @@ namespace Switch_Toolbox.Library
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
 
             if (e.Node is STGenericModel)
             {

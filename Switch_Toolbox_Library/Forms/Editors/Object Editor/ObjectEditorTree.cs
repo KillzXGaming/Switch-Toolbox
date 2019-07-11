@@ -179,7 +179,7 @@ namespace Switch_Toolbox.Library.Forms
             //Check if it is renderable for updating the viewport
             if (IsRenderable(node))
             {
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
                 RenderedObjectWasSelected = true;
             }
             else
@@ -188,7 +188,7 @@ namespace Switch_Toolbox.Library.Forms
                 //This will disable selection view and other things
                 if (RenderedObjectWasSelected)
                 {
-                    LibraryGUI.Instance.UpdateViewport();
+                    LibraryGUI.UpdateViewport();
                     RenderedObjectWasSelected = false;
                 }
             }
@@ -271,7 +271,7 @@ namespace Switch_Toolbox.Library.Forms
         {
             if (Node is Animation)
             {
-                Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+                Viewport viewport = LibraryGUI.GetActiveViewport();
                 if (viewport == null)
                     return;
 
@@ -323,9 +323,9 @@ namespace Switch_Toolbox.Library.Forms
                     }
                 }
 
-                if (LibraryGUI.Instance.GetAnimationPanel() != null)
+                if (LibraryGUI.GetAnimationPanel() != null)
                 {
-                    LibraryGUI.Instance.GetAnimationPanel().CurrentAnimation = running;
+                    LibraryGUI.GetAnimationPanel().CurrentAnimation = running;
                 }
             }
         }
@@ -370,7 +370,7 @@ namespace Switch_Toolbox.Library.Forms
 
             if (UpdateViewport)
             {
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
         }
 

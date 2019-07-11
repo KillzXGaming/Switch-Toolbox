@@ -405,11 +405,11 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
                 if (editor == null)
                 {
                     editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
@@ -651,7 +651,7 @@ namespace FirstPlugin
                     ApplySurface(NewSurface);
                     IsEdited = true;
                     LoadOpenGLTexture();
-                    LibraryGUI.Instance.UpdateViewport();
+                    LibraryGUI.UpdateViewport();
                 }
                 catch (Exception ex)
                 {
@@ -735,7 +735,7 @@ namespace FirstPlugin
                     MipCount = surface.numMips;
                     ArrayCount = surface.numArray;
 
-                    ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                    ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
 
                     if (editor != null)
                         UpdateEditor();
@@ -748,13 +748,13 @@ namespace FirstPlugin
 
             public void UpdateEditor()
             {
-                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
                 if (editor == null)
                 {
                     editor = new ImageEditorBase();
                     editor.Dock = DockStyle.Fill;
 
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 var tex = FTEX.FromGx2Surface(surface, Text);

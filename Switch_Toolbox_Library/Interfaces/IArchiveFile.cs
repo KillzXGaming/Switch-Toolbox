@@ -261,11 +261,11 @@ namespace Switch_Toolbox.Library
 
         public override void OnClick(TreeView treeView)
         {
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
             if (editor == null)
             {
                 editor = new STPropertyGrid();
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
@@ -454,11 +454,11 @@ namespace Switch_Toolbox.Library
 
         public override void OnClick(TreeView treeView)
         {
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
             if (editor == null)
             {
                 editor = new STPropertyGrid();
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
@@ -618,11 +618,11 @@ namespace Switch_Toolbox.Library
 
         private void OpenTextEditorAction(object sender, EventArgs args)
         {
-            TextEditor editor = (TextEditor)LibraryGUI.Instance.GetActiveContent(typeof(TextEditor));
+            TextEditor editor = (TextEditor)LibraryGUI.GetActiveContent(typeof(TextEditor));
             if (editor == null)
             {
                 editor = new TextEditor();
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
@@ -683,7 +683,7 @@ namespace Switch_Toolbox.Library
             UserControl form = GetEditorForm(fileFormat);
             form.Text = (((IFileFormat)fileFormat).FileName);
 
-            var parentForm = LibraryGUI.Instance.GetActiveForm();
+            var parentForm = LibraryGUI.GetActiveForm();
 
             GenericEditorForm editorForm = new GenericEditorForm(true, form);
             editorForm.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
@@ -723,12 +723,12 @@ namespace Switch_Toolbox.Library
 
         public void UpdateEditor()
         {
-            ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.Instance.GetActiveContent(typeof(ArchiveFilePanel));
+            ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.GetActiveContent(typeof(ArchiveFilePanel));
             if (editor == null)
             {
                 editor = new ArchiveFilePanel();
                 editor.Dock = DockStyle.Fill;
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
 
             editor.LoadFile(ArchiveFileInfo);

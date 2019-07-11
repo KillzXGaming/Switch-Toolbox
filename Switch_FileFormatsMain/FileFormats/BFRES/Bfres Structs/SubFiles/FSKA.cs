@@ -172,7 +172,7 @@ namespace Bfres.Structs
 
         private STSkeleton GetActiveSkeleton()
         {
-            var viewport = LibraryGUI.Instance.GetActiveViewport();
+            var viewport = LibraryGUI.GetActiveViewport();
             if (viewport != null)
             {
                 foreach (var drawable in viewport.scene.objects)

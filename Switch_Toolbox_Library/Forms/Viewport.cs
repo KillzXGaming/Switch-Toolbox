@@ -352,7 +352,7 @@ namespace Switch_Toolbox.Library
 
         private void resetPoseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var animationPanel1 = LibraryGUI.Instance.GetAnimationPanel();
+            var animationPanel1 = LibraryGUI.GetAnimationPanel();
 
             if (animationPanel1 != null)
             {

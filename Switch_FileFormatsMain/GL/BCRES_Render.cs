@@ -79,7 +79,7 @@ namespace FirstPlugin
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         public void UpdateTextureMaps()
@@ -96,7 +96,7 @@ namespace FirstPlugin
                 }
             }
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         public ShaderProgram defaultShaderProgram;

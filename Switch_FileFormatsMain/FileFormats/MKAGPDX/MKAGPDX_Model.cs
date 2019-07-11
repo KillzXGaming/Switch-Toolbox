@@ -192,8 +192,9 @@ namespace FirstPlugin
             DrawableContainer = null;
             header.Materials.Clear();
             header.TextureMaps.Clear();
-            header.LowerNodes.Clear();
-            header.UpperNodes.Clear();
+            header.TotalNodes.Clear();
+            header.BoneList.Clear();
+            header.LinkNodes.Clear();
             Nodes.Clear();
             header = null;
         }
@@ -206,12 +207,12 @@ namespace FirstPlugin
         {
             get
             {
-                var editor = LibraryGUI.Instance.GetObjectEditor();
+                var editor = LibraryGUI.GetObjectEditor();
                 return editor.GetViewport();
             }
             set
             {
-                var editor = LibraryGUI.Instance.GetObjectEditor();
+                var editor = LibraryGUI.GetObjectEditor();
                 editor.LoadViewport(value);
             }
         }
@@ -234,7 +235,7 @@ namespace FirstPlugin
                 }
 
                 viewport.ReloadDrawables(DrawableContainer);
-                LibraryGUI.Instance.LoadEditor(viewport);
+                LibraryGUI.LoadEditor(viewport);
 
                 viewport.Text = Text;
             }
@@ -249,9 +250,9 @@ namespace FirstPlugin
             public List<Material> Materials = new List<Material>();
             public List<string> TextureMaps = new List<string>();
 
-            public List<Node> UpperNodes = new List<Node>();
-            public Tuple<Node, Node> LinkNodes; //Links two nodes for some reason
-            public List<Node> LowerNodes = new List<Node>();
+            public List<Node> BoneList = new List<Node>();
+            public List<Tuple<Node, Node>> LinkNodes = new List<Tuple<Node, Node>>(); //Links two nodes. Possbily a mesh to bones for example
+            public List<Node> TotalNodes = new List<Node>();
 
             public STSkeleton Skeleton { get; set; }
             GenericModelRenderer DrawableRenderer { get; set; }
@@ -287,18 +288,19 @@ namespace FirstPlugin
                 uint TextureMapsCount = reader.ReadUInt32();
                 uint TextureMapsOffset = reader.ReadUInt32();
 
-                //Seems to be a node based structure. Not %100 sure what decides which gets put into which
-                uint UpperLevelNodeCount = reader.ReadUInt32();
-                uint UpperLevelNodeOffset = reader.ReadUInt32();
+                uint BoneCount = reader.ReadUInt32();
+                uint BoneOffset = reader.ReadUInt32();
                 uint FirstNodeOffset = reader.ReadUInt32(); //Either an offset or the total size of section up to the node
                 uint LinkNodeCount = reader.ReadUInt32();
                 uint LinkNodeOffset = reader.ReadUInt32();
-                uint LowerLevelNodeCount = reader.ReadUInt32();
-                uint LowerLevelNodeOffset = reader.ReadUInt32();
+                uint TotalNodeCount = reader.ReadUInt32();
+                uint TotalNodeOffset = reader.ReadUInt32();
                 uint Padding2 = reader.ReadUInt32();
                 uint[] Unknowns = reader.ReadUInt32s(10);
 
                 root.Nodes.Add("Materials");
+                root.Nodes.Add("Root");
+                root.Nodes.Add("All Nodes");
 
                 long pos = reader.Position;
 
@@ -339,14 +341,15 @@ namespace FirstPlugin
                         }
                     }
 
-                        root.Nodes[0].Nodes.Add(genericMat);
+                    root.Nodes[0].Nodes.Add(genericMat);
                 }
 
-                if (LowerLevelNodeCount != 0)
+
+                if (TotalNodeCount != 0)
                 {
-                    for (int i = 0; i < LowerLevelNodeCount; i++)
+                    for (int i = 0; i < TotalNodeCount; i++)
                     {
-                        reader.SeekBegin(LowerLevelNodeOffset + (i * 8));
+                        reader.SeekBegin(TotalNodeOffset + (i * 8));
 
                         string NodeName = reader.ReadNameOffset(false, typeof(uint));
                         uint Offset = reader.ReadUInt32();
@@ -357,9 +360,37 @@ namespace FirstPlugin
                             Node node = new Node();
                             node.Name = NodeName;
                             node.Read(reader);
-                            LowerNodes.Add(node);
+                            TotalNodes.Add(node);
                         }
                     }
+                }
+
+                if (BoneCount != 0)
+                {
+                    for (int i = 0; i < BoneCount; i++)
+                    {
+                        reader.SeekBegin(BoneOffset + (i * 8));
+
+                        string NodeName = reader.ReadNameOffset(false, typeof(uint));
+                        uint Offset = reader.ReadUInt32();
+
+                        if (Offset != 0)
+                        {
+                            reader.SeekBegin(Offset);
+                            Node node = new Node();
+                            node.Name = NodeName;
+                            node.Read(reader);
+                            BoneList.Add(node); //This list is for mapping to meshes
+                        }
+                    }
+                }
+
+                foreach (var node in TotalNodes)
+                {
+                    // TreeNode lowerWrapper = new TreeNode($"{node.Name}");
+                    // root.Nodes[3].Nodes.Add(lowerWrapper);
+
+                    LoadChildern(TotalNodes, node, root.Nodes[2]);
                 }
 
                 if (FirstNodeOffset != 0)
@@ -368,35 +399,82 @@ namespace FirstPlugin
                     uint NodeOffset = reader.ReadUInt32();
                     reader.SeekBegin(NodeOffset);
                     Node node = new Node();
-                    node.Name = GetNodeName(LowerNodes, node);
+                    node.Name = GetNodeName(TotalNodes, node);
                     node.Read(reader);
 
-                    LoadChildern(LowerNodes, node, root);
+                    LoadBones(TotalNodes, node, root.Nodes[1]);
+                }
+
+
+
+                if (LinkNodeCount != 0)
+                {
+                    root.Nodes.Add("Links");
+
+                    for (int i = 0; i < LinkNodeCount; i++)
+                    {
+                        TreeNode linkWrapper = new TreeNode($"Link {i}");
+                        root.Nodes[3].Nodes.Add(linkWrapper);
+
+                        reader.SeekBegin(LinkNodeOffset + (i * 12));
+
+                        uint NodeOffset1 = reader.ReadUInt32();
+                        uint NodeOffset2 = reader.ReadUInt32();
+                        uint Index = reader.ReadUInt32();
+
+                        reader.SeekBegin(NodeOffset1);
+                        Node node1 = new Node();
+                        node1.Name = GetNodeName(TotalNodes, node1);
+                        node1.Read(reader);
+
+                        reader.SeekBegin(NodeOffset2);
+                        Node node2 = new Node();
+                        node2.Name = GetNodeName(TotalNodes, node1);
+                        node2.Read(reader);
+
+                      //  LoadChildern(TotalNodes, node1, linkWrapper);
+                       // LoadChildern(TotalNodes, node2, linkWrapper);
+
+                        LinkNodes.Add(Tuple.Create(node1, node2));
+                    }
                 }
 
                 Skeleton.update();
                 Skeleton.reset();
-
-
             }
 
             private void LoadChildern(List<Node> NodeLookup, Node Node, TreeNode root)
             {
-                var NewNode = SetWrapperNode(Node);
-                root.Nodes.Add(NewNode);
+                var NewNode = SetWrapperNode(Node, root);
 
                 for (int i = 0; i < Node.Children.Count; i++)
                 {
                     Node.Children[i].Name = GetNodeName(NodeLookup, Node.Children[i]);
 
-                    var newChild = SetWrapperNode(Node.Children[i]);
-                    NewNode.Nodes.Add(newChild);
+                    var newChild = SetWrapperNode(Node.Children[i], NewNode);
 
                     LoadChildern(NodeLookup, Node.Children[i], newChild);
                 }
             }
 
-            private TreeNode SetWrapperNode(Node Node)
+            private List<SubMesh> AddedMeshes = new List<SubMesh>();
+
+
+            private void LoadBones(List<Node> NodeLookup, Node Node, TreeNode root)
+            {
+                var NewNode = SetBoneNode(Node, root);
+
+                for (int i = 0; i < Node.Children.Count; i++)
+                {
+                    Node.Children[i].Name = GetNodeName(NodeLookup, Node.Children[i]);
+
+                    var newChild = SetBoneNode(Node.Children[i], NewNode);
+
+                    LoadBones(NodeLookup, Node.Children[i], newChild);
+                }
+            }
+
+            private TreeNode SetBoneNode(Node Node, TreeNode parentNode)
             {
                 if (Node.IsBone)
                 {
@@ -420,54 +498,62 @@ namespace FirstPlugin
                     if (Node.IsBone)
                         Skeleton.bones.Add(boneNode);
 
+                    parentNode.Nodes.Add(boneNode);
+
                     return boneNode;
                 }
-                else if (Node.IsMesh)
+                return new TreeNode(Node.Name);
+            }
+
+            private TreeNode SetWrapperNode(Node Node, TreeNode parentNode)
+            {
+                if (Node.IsMesh)
                 {
-                    GenericRenderedObject meshNode = new GenericRenderedObject();
-                    meshNode.ImageKey = "mesh";
-                    meshNode.SelectedImageKey = "mesh";
-
+                    List<TreeNode> MeshNodes = new List<TreeNode>();
                     int i = 0;
-                    meshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
-                    var msh = new GenericRenderedObject.LOD_Mesh();
-                    msh.PrimitiveType = STPolygonType.Triangle;
-                    msh.FirstVertex = 0;
-                    msh.faces = Node.SubMeshes[0].Faces;
-                    meshNode.vertices = Node.SubMeshes[0].Vertices;
-
-                    meshNode.lodMeshes.Add(msh);
-
                     foreach (SubMesh subMesh in Node.SubMeshes)
                     {
-                        if (i > 0)
-                        {
-                            GenericRenderedObject subMeshNode = new GenericRenderedObject();
-                            subMeshNode.ImageKey = "mesh";
-                            subMeshNode.SelectedImageKey = "mesh";
+                        GenericRenderedObject subMeshNode = new GenericRenderedObject();
+                        subMeshNode.ImageKey = "mesh";
+                        subMeshNode.SelectedImageKey = "mesh";
+                        subMeshNode.Checked = true;
+                        subMeshNode.Text = $"{Node.Name} {i}";
 
-                            subMeshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
-                            var submsh = new GenericRenderedObject.LOD_Mesh();
-                            submsh.PrimitiveType = STPolygonType.Triangle;
-                            submsh.FirstVertex = 0;
-                            submsh.faces = subMesh.Faces;
-                            subMeshNode.lodMeshes.Add(submsh);
+                        subMeshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
+                        var submsh = new GenericRenderedObject.LOD_Mesh();
+                        submsh.PrimitiveType = STPolygonType.Triangle;
+                        submsh.FirstVertex = 0;
+                        submsh.faces = subMesh.Faces;
+                        subMeshNode.lodMeshes.Add(submsh);
 
-                            subMeshNode.vertices = subMesh.Vertices;
+                        subMeshNode.vertices = subMesh.Vertices;
+
+                        //Check duplicate models being rendered
+                        if (!AddedMeshes.Contains(subMesh))
                             DrawableRenderer.Meshes.Add(subMeshNode);
-                        }
 
+                        AddedMeshes.Add(subMesh);
+
+                        if (i == 0)
+                            parentNode.Nodes.Add(subMeshNode);
+                        else
+                            parentNode.Nodes[0].Nodes.Add(subMeshNode);
+
+                        MeshNodes.Add(subMeshNode);
                         i++;
                     }
 
-                    meshNode.Checked = true;
-                    meshNode.Text = Node.Name;
-                    DrawableRenderer.Meshes.Add(meshNode);
+                    var FirstNode = MeshNodes[0];
+                    MeshNodes.Clear();
 
-                    return meshNode;
+                    return FirstNode;
                 }
                 else
-                    return new TreeNode(Node.Name);
+                {
+                    var NewNode = new TreeNode(Node.Name);
+                    parentNode.Nodes.Add(NewNode);
+                    return NewNode;
+                }
             }
 
             private static string GetNodeName(List<Node> NodeLookup, Node node)
@@ -558,13 +644,14 @@ namespace FirstPlugin
                 uint UnknownOffset = reader.ReadUInt32();
                 uint TexCoord0Offset = reader.ReadUInt32();
                 uint TexCoord1Offset = reader.ReadUInt32();
-                uint Unknown1Offset = reader.ReadUInt32();
-                uint Unknown2Offset = reader.ReadUInt32();
+                uint TexCoord2Offset = reader.ReadUInt32();
+                uint TexCoord3Offset = reader.ReadUInt32();
                 uint FaceOffset = reader.ReadUInt32();
                 uint SkinCount = reader.ReadUInt32(); //Unsure
                 uint Unknown = reader.ReadUInt32(); //Something related to count
                 uint WeightOffset = reader.ReadUInt32();
-                uint Unknown2 = reader.ReadUInt32(); 
+                uint Unknown2 = reader.ReadUInt32();
+
 
                 for (int i = 0; i < VertexCount; i++)
                 {
@@ -587,6 +674,20 @@ namespace FirstPlugin
                     {
                         reader.SeekBegin(TexCoord0Offset + (i * 8));
                         vertex.uv0 = reader.ReadVec2();
+                    }
+                    if (TexCoord1Offset != 0)
+                    {
+                        reader.SeekBegin(TexCoord1Offset + (i * 8));
+                        vertex.uv1 = reader.ReadVec2();
+                    }
+                    if (TexCoord2Offset != 0)
+                    {
+                        reader.SeekBegin(TexCoord2Offset + (i * 8));
+                        vertex.uv2 = reader.ReadVec2();
+                    }
+                    if (TexCoord3Offset != 0)
+                    {
+                        reader.SeekBegin(TexCoord3Offset + (i * 8));
                     }
                 }
 

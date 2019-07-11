@@ -143,7 +143,7 @@ namespace FirstPlugin
 
                 ObjectEditor editor = new ObjectEditor(kcl);
                 editor.Text = name;
-                LibraryGUI.Instance.CreateMdiWindow(editor);
+                LibraryGUI.CreateMdiWindow(editor);
             }
         }
 
@@ -299,12 +299,12 @@ namespace FirstPlugin
         {
             get
             {
-                var editor = LibraryGUI.Instance.GetObjectEditor();
+                var editor = LibraryGUI.GetObjectEditor();
                 return editor.GetViewport();
             }
             set
             {
-                var editor = LibraryGUI.Instance.GetObjectEditor();
+                var editor = LibraryGUI.GetObjectEditor();
                 editor.LoadViewport(value);
             }
         }
@@ -328,7 +328,7 @@ namespace FirstPlugin
                 }
 
                 viewport.ReloadDrawables(DrawableContainer);
-                LibraryGUI.Instance.LoadEditor(viewport);
+                LibraryGUI.LoadEditor(viewport);
 
                 viewport.Text = Text;
             }
@@ -514,7 +514,7 @@ namespace FirstPlugin
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
                 GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
 
-                LibraryGUI.Instance.UpdateViewport();
+                LibraryGUI.UpdateViewport();
             }
 
             public void DrawGlobalOctree()

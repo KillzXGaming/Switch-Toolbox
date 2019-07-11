@@ -140,6 +140,10 @@
     <Reference Include="SharpYaml">
       <HintPath>..\Toolbox\Lib\SharpYaml.dll</HintPath>
     </Reference>
+    <Reference Include="SuperBMDLib">
+      <HintPath>..\Toolbox\Lib\SuperBMDLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
       <Private>False</Private>
@@ -238,13 +242,16 @@
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
     <Compile Include="FileFormats\Bin\KartParts.cs" />
+    <Compile Include="FileFormats\BMD\BMD.cs" />
+    <Compile Include="FileFormats\BMD\BMDShapeWrapper.cs" />
+    <Compile Include="FileFormats\BMD\BMDTextureWrapper.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
     <Compile Include="FileFormats\Effects\EFCF.cs" />
     <Compile Include="FileFormats\Effects\PTCL_3DS.cs" />
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
-    <Compile Include="FileFormats\Gamecube\TPL.cs" />
+    <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="libWiiSharp\TPL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
@@ -1283,7 +1290,6 @@
     <None Include="Resources\ViewportIconDisable.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="FileFormats\BMD\" />
     <Folder Include="FileFormats\EvemtFlow\" />
   </ItemGroup>
   <ItemGroup>

@@ -211,7 +211,7 @@ namespace Toolbox
             if (IsStartup)
                 return;
 
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+            Viewport viewport = LibraryGUI.GetActiveViewport();
             if (viewport == null)
                 return;
 
@@ -305,7 +305,7 @@ namespace Toolbox
             if (IsStartup)
                 return;
 
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+            Viewport viewport = LibraryGUI.GetActiveViewport();
             if (viewport == null)
                 return;
 

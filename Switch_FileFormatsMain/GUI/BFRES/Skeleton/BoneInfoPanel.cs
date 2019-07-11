@@ -44,7 +44,7 @@ namespace FirstPlugin
         }
 
         private void visibleChk_CheckedChanged(object sender, EventArgs e) {
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
     }
 }

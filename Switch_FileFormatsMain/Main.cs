@@ -228,7 +228,7 @@ namespace FirstPlugin
                 if (editor == null)
                 {
                     editor = new ObjectEditor();
-                    LibraryGUI.Instance.CreateMdiWindow(editor);
+                    LibraryGUI.CreateMdiWindow(editor);
                 }
 
                 if (MainCostume == null && bfresFiles.Count > 0)
@@ -244,7 +244,7 @@ namespace FirstPlugin
 
             private void FrameBfres()
             {
-                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
                 bfresEditor.FrameCamera(MainCostume.BFRESRender);
 
                 MainCostume = null;
@@ -252,7 +252,7 @@ namespace FirstPlugin
 
             private void DiableLoadCheck()
             {
-                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.Instance.GetActiveContent(typeof(BfresEditor));
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
                 bfresEditor.IsLoaded = false;
                 bfresEditor.DisplayAllDDrawables();
             }
@@ -336,9 +336,10 @@ namespace FirstPlugin
             Formats.Add(typeof(ME01));
             Formats.Add(typeof(LM2_DICT));
             Formats.Add(typeof(GMX));
-          //  Formats.Add(typeof(GCDisk));
-          //  Formats.Add(typeof(TPL));
-          //  Formats.Add(typeof(GFA));
+            Formats.Add(typeof(BMD));
+            Formats.Add(typeof(GCDisk));
+            Formats.Add(typeof(TPL));
+            //  Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

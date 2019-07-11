@@ -470,13 +470,13 @@ namespace FirstPlugin
             }
             public void UpdateEditor()
             {
-                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.Instance.GetActiveContent(typeof(ImageEditorBase));
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
                 if (editor == null)
                 {
                     editor = new ImageEditorBase();
                     editor.Dock = DockStyle.Fill;
 
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.LoadImage(this);

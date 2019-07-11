@@ -722,6 +722,7 @@
     <Compile Include="STToolStipMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Swizzling\Decode_Gamecube.cs" />
     <Compile Include="Swizzling\Swizzle_3DS.cs" />
     <Compile Include="Swizzling\GX2.cs" />
     <Compile Include="Swizzling\NewSwizzleCodeBackup.cs" />

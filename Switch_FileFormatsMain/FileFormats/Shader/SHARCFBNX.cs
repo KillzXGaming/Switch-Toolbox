@@ -78,11 +78,11 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-                ShaderEditor editor = (ShaderEditor)LibraryGUI.Instance.GetActiveContent(typeof(ShaderEditor));
+                ShaderEditor editor = (ShaderEditor)LibraryGUI.GetActiveContent(typeof(ShaderEditor));
                 if (editor == null)
                 {
                     editor = new ShaderEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
 
                 editor.Text = Text;

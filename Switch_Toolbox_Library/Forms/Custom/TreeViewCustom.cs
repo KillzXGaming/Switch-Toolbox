@@ -47,11 +47,11 @@ namespace Switch_Toolbox.Library
             var Editor = GetEditor();
             Editor.Dock = DockStyle.Fill;
 
-            var ActiveEditor = LibraryGUI.Instance.GetActiveContent(Editor.GetType());
+            var ActiveEditor = LibraryGUI.GetActiveContent(Editor.GetType());
             if (ActiveEditor != null)
                 Editor = ActiveEditor;
             else
-                LibraryGUI.Instance.LoadEditor(Editor);
+                LibraryGUI.LoadEditor(Editor);
 
             FillEditor(Editor);
         }
@@ -68,7 +68,7 @@ namespace Switch_Toolbox.Library
 
         private void Delete(object sender, EventArgs args)
         {
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor != null)
             {
                 editor.RemoveFile(this);

@@ -244,7 +244,7 @@ namespace FirstPlugin.Forms
 
         private void chkboxVisible_CheckedChanged(object sender, EventArgs e)
         {
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void textureRefListView_SelectedIndexChanged(object sender, EventArgs e)

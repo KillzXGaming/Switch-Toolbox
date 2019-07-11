@@ -570,7 +570,7 @@ namespace Bfres.Structs
                 if (Type == BRESGroupType.Models)
                 {
                     ((BFRES)Parent).BFRESRender.UpdateModelList();
-                    LibraryGUI.Instance.UpdateViewport();
+                    LibraryGUI.UpdateViewport();
                 }
             }
         }

@@ -46,11 +46,11 @@ namespace FirstPlugin
 
         public override void OnClick(TreeView treeview)
         {
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
             if (editor == null)
             {
                 editor = new STPropertyGrid();
-                LibraryGUI.Instance.LoadEditor(editor);
+                LibraryGUI.LoadEditor(editor);
             }
 
             var prop = new BarsProperty(bars);
@@ -165,11 +165,11 @@ namespace FirstPlugin
                 var audioFile = new VGAdudioFile();
                 audioFile.LoadAudio(new MemoryStream(Data), new BFWAV());
 
-                AudioPlayerPanel editor = (AudioPlayerPanel)LibraryGUI.Instance.GetActiveContent(typeof(AudioPlayerPanel));
+                AudioPlayerPanel editor = (AudioPlayerPanel)LibraryGUI.GetActiveContent(typeof(AudioPlayerPanel));
                 if (editor == null)
                 {
                     editor = new AudioPlayerPanel();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
@@ -178,11 +178,11 @@ namespace FirstPlugin
 
             private void ShowHexView()
             {
-                HexEditor editor = (HexEditor)LibraryGUI.Instance.GetActiveContent(typeof(HexEditor));
+                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
                 if (editor == null)
                 {
                     editor = new HexEditor();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
@@ -203,11 +203,11 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.Instance.GetActiveContent(typeof(STPropertyGrid));
+                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
                 if (editor == null)
                 {
                     editor = new STPropertyGrid();
-                    LibraryGUI.Instance.LoadEditor(editor);
+                    LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;

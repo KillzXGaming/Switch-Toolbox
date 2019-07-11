@@ -193,7 +193,7 @@ namespace FirstPlugin
         //    for (int s = 0; s < Model.shapes.Count; s++)
              //   Model.shapes[s].TransformBindedBone(activeBone.Text);
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void stDropDownPanel1_Load(object sender, EventArgs e)
@@ -217,7 +217,7 @@ namespace FirstPlugin
                 SetBoneTransform(activeBone);
             }
 
-            LibraryGUI.Instance.UpdateViewport();
+            LibraryGUI.UpdateViewport();
         }
 
         private void boneInfoPanel1_Load(object sender, EventArgs e)

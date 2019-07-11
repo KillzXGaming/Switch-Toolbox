@@ -125,7 +125,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public static List<DrawableContainer> GetDrawableContainers()
         {
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor == null)
                 return new List<DrawableContainer>();
 
@@ -134,7 +134,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public static void AddContainer(DrawableContainer drawable)
         {
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor == null)
                 return;
 
@@ -143,7 +143,7 @@ namespace Switch_Toolbox.Library.Forms
 
         public static void RemoveContainer(DrawableContainer drawable)
         {
-            var editor = LibraryGUI.Instance.GetObjectEditor();
+            var editor = LibraryGUI.GetObjectEditor();
             if (editor == null)
                 return;
 
@@ -173,7 +173,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void ObjectEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Viewport viewport = LibraryGUI.Instance.GetActiveViewport();
+            Viewport viewport = LibraryGUI.GetActiveViewport();
 
             if (viewport != null)
                 viewport.FormClosing();
