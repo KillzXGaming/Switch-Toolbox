@@ -233,7 +233,7 @@ namespace FirstPlugin
             {
                 var texWrapper = new BMDTextureWrapper(BMDFile.Textures.Textures[i]);
                 TextureFolder.Nodes.Add(texWrapper);
-                Textures.Add(texWrapper.Text, texWrapper);
+                Renderer.TextureList.Add(texWrapper);
             }
         }
 

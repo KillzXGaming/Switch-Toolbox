@@ -27,7 +27,8 @@ namespace FirstPlugin
             {
                 int texIndex = mat.TextureIndices[0];
 
-                STGenericMatTexture matTexture = new STGenericMatTexture();
+                BMDTextureMap matTexture = new BMDTextureMap(this);
+                matTexture.TextureIndex = texIndex;
                 matTexture.Name = ParentModel.Textures[texIndex].Name;
                 matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                 matTexture.textureUnit = textureUnit++;

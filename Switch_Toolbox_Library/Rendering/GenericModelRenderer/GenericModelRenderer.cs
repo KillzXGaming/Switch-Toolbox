@@ -270,7 +270,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
         }
 
-        private static void SetTextureUniforms(STGenericMaterial mat, STGenericObject m, ShaderProgram shader)
+        private void SetTextureUniforms(STGenericMaterial mat, STGenericObject m, ShaderProgram shader)
         {
             SetDefaultTextureAttributes(mat, shader);
             LoadDebugTextureMaps(shader);
@@ -309,7 +309,7 @@ namespace Switch_Toolbox.Library.Rendering
             shader.SetInt("brdfLUT", 27);
         }
 
-        private static void TextureUniform(ShaderProgram shader, STGenericMaterial mat, bool hasTex, string name, STGenericMatTexture mattex)
+        private void TextureUniform(ShaderProgram shader, STGenericMaterial mat, bool hasTex, string name, STGenericMatTexture mattex)
         {
             if (mattex.textureState == STGenericMatTexture.TextureState.Binded)
                 return;
@@ -321,7 +321,7 @@ namespace Switch_Toolbox.Library.Rendering
             }
         }
 
-        public static int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
+        public virtual int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
@@ -340,7 +340,7 @@ namespace Switch_Toolbox.Library.Rendering
             return tex.textureUnit + 1;
         }
 
-        private static void BindGLTexture(STGenericMatTexture tex, ShaderProgram shader, STGenericTexture texture)
+        public static void BindGLTexture(STGenericMatTexture tex, ShaderProgram shader, STGenericTexture texture)
         {
             if (texture.RenderableTex == null || !texture.RenderableTex.GLInitialized)
                 texture.LoadOpenGLTexture();

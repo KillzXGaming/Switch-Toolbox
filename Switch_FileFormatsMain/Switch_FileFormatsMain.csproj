@@ -245,6 +245,7 @@
     <Compile Include="FileFormats\BMD\BMD.cs" />
     <Compile Include="FileFormats\BMD\BMDMaterialWrapper.cs" />
     <Compile Include="FileFormats\BMD\BMDShapeWrapper.cs" />
+    <Compile Include="FileFormats\BMD\BMDTextureMap.cs" />
     <Compile Include="FileFormats\BMD\BMDTextureWrapper.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
     <Compile Include="FileFormats\Effects\EFCF.cs" />
