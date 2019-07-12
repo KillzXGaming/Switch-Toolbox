@@ -123,6 +123,7 @@ namespace FirstPlugin
             for (int i = 0; i < BMDFile.Shapes.Shapes.Count; i++)
             {
                 var mat = new BMDMaterialWrapper(BMDFile.Materials.GetMaterial(i), BMDFile);
+                mat.Text = BMDFile.Materials.GetMaterialName(i);
                 MaterialFolder.Nodes.Add(mat);
 
                 var shpWrapper = new BMDShapeWrapper(BMDFile.Shapes.Shapes[i], BMDFile, mat);
