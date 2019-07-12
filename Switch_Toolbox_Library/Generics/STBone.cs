@@ -55,6 +55,24 @@ namespace Switch_Toolbox.Library
             return sca;
         }
 
+        public void FromTransform(Matrix4 Transform)
+        {
+            var pos = Transform.ExtractTranslation();
+            var quat = Transform.ExtractRotation();
+            var scale = Transform.ExtractScale();
+
+            position[0] = pos.X;
+            position[1] = pos.X;
+            position[2] = pos.Z;
+
+            var eul = Switch_Toolbox.Library.Animations.ANIM.quattoeul(quat);
+            rotation = new float[] { eul.X, eul.Y, eul.Z, 1 };
+
+            scale[0] = scale.X;
+            scale[1] = scale.X;
+            scale[2] = scale.Z;
+        }
+
         private void ApplyTransforms()
         {
             position = new float[] { pos.X, pos .Y, pos .Z};

@@ -390,7 +390,7 @@ namespace Switch_Toolbox.Library.Forms
 
 
             if (image != null)
-            {/*
+            {
                 if (ChannelIndex == 1)
                     BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.One);
                 else if (ChannelIndex == 2)
@@ -425,7 +425,7 @@ namespace Switch_Toolbox.Library.Forms
                                 BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Green, STChannelType.Blue, AlphaDisplay);
                         }
                     }
-                }*/
+                }
 
                 DecodeProcessFinished = true;
 

@@ -97,6 +97,7 @@ namespace FirstPlugin
         private TreeNode TextureFolder;
         private TreeNode ShapeFolder;
         private TreeNode MaterialFolder;
+        private TreeNode SkeletonFolder;
 
         public void Load(System.IO.Stream stream)
         {
@@ -112,21 +113,36 @@ namespace FirstPlugin
             BMD_Renderer.TextureContainers.Add(this);
 
             ShapeFolder = new TreeNode("Shapes");
+            SkeletonFolder = new TreeNode("Skeleton");
             MaterialFolder = new TreeNode("Materials");
             TextureFolder = new TreeNode("Textures");
             Nodes.Add(ShapeFolder);
             Nodes.Add(MaterialFolder);
+            Nodes.Add(SkeletonFolder);
             Nodes.Add(TextureFolder);
 
             BMDFile = Model.Load(stream);
 
+            var skeleton = new STSkeleton();
+            DrawableContainer.Drawables.Add(skeleton);
+            FillSkeleton(BMDFile.Scenegraph, skeleton, BMDFile.Joints.FlatSkeleton);
+
+            foreach (var bone in skeleton.bones)
+            {
+                if (bone.Parent == null)
+                    SkeletonFolder.Nodes.Add(bone);
+
+            }
+
             for (int i = 0; i < BMDFile.Shapes.Shapes.Count; i++)
             {
+                var curShape = BMDFile.Shapes.Shapes[BMDFile.Shapes.RemapTable[i]];
+
                 var mat = new BMDMaterialWrapper(BMDFile.Materials.GetMaterial(i), BMDFile);
                 mat.Text = BMDFile.Materials.GetMaterialName(i);
                 MaterialFolder.Nodes.Add(mat);
 
-                var shpWrapper = new BMDShapeWrapper(BMDFile.Shapes.Shapes[i], BMDFile, mat);
+                var shpWrapper = new BMDShapeWrapper(curShape, BMDFile, mat);
                 shpWrapper.Text = $"Shape {i}";
                 ShapeFolder.Nodes.Add(shpWrapper);
                 Renderer.Meshes.Add(shpWrapper);
@@ -134,7 +150,6 @@ namespace FirstPlugin
                 var polyGroup = new STGenericPolygonGroup();
                 shpWrapper.PolygonGroups.Add(polyGroup);
 
-                var curShape = BMDFile.Shapes.Shapes[i];
                 var VertexAttributes = BMDFile.VertexData.Attributes;
 
                 int vertexID = 0;
@@ -189,11 +204,52 @@ namespace FirstPlugin
                 }
             }
 
+            CorrectMaterialIndices(Renderer.Meshes, BMDFile.Scenegraph, BMDFile.Materials);
+
             for (int i = 0; i < BMDFile.Textures.Textures.Count; i++)
             {
                 var texWrapper = new BMDTextureWrapper(BMDFile.Textures.Textures[i]);
                 TextureFolder.Nodes.Add(texWrapper);
                 Textures.Add(texWrapper.Text, texWrapper);
+            }
+        }
+
+        public void CorrectMaterialIndices(List<GenericRenderedObject> Meshes, SuperBMDLib.BMD.INF1 INF1, SuperBMDLib.BMD.MAT3 materials)
+        {
+            foreach (SuperBMDLib.Scenegraph.SceneNode node in INF1.FlatNodes)
+            {
+                if (node.Type == SuperBMDLib.Scenegraph.Enums.NodeType.Shape)
+                {
+                    if (node.Index < Meshes.Count)
+                    {
+                        int matIndex = node.Parent.Index;
+                        ((BMDShapeWrapper)Meshes[node.Index]).SetMaterial((STGenericMaterial)MaterialFolder.Nodes[materials.m_RemapIndices[matIndex]]);
+                    }
+                }
+            }
+        }
+
+        public void FillSkeleton(SuperBMDLib.BMD.INF1 INF1, STSkeleton skeleton, List<SuperBMDLib.Rigging.Bone> flatSkeleton)
+        {
+            for (int i = 1; i < INF1.FlatNodes.Count; i++)
+            {
+                SuperBMDLib.Scenegraph.SceneNode curNode = INF1.FlatNodes[i];
+
+                if (curNode.Type == SuperBMDLib.Scenegraph.Enums.NodeType.Joint)
+                {
+                    var Bone = flatSkeleton[curNode.Index];
+
+                    var stBone = new STBone(skeleton);
+                    stBone.Text = Bone.Name;
+                    stBone.FromTransform(Bone.TransformationMatrix);
+
+                    if (Bone.Parent != null)
+                        stBone.parentIndex = flatSkeleton.IndexOf(Bone.Parent);
+                    else
+                        stBone.parentIndex = -1;
+
+                    skeleton.bones.Add(stBone);
+                }
             }
         }
 

@@ -30,6 +30,11 @@ namespace FirstPlugin
             return material;
         }
 
+        public void SetMaterial(STGenericMaterial mat)
+        {
+            material = mat;
+        }
+
         public override void OnClick(TreeView treeView)
         {
             STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));

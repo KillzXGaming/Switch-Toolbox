@@ -21,6 +21,8 @@ namespace Switch_Toolbox.Library.Rendering
 
         public Matrix4 ModelTransform = Matrix4.Identity;
 
+        public virtual bool UsePBR { get; set; } = false;
+
         // gl buffer objects
         int vbo_position;
         int ibo_elements;
@@ -116,19 +118,34 @@ namespace Switch_Toolbox.Library.Rendering
 
         public override void Prepare(GL_ControlModern control)
         {
-            string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "GFBModel.frag");
-            string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "GFBModel.vert");
-            string pathUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\Utility.frag";
-            string pathPbrUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\PbrUtility.frag";
+            if (UsePBR)
+            {
+                string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "GFBModel.frag");
+                string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "GFBModel.vert");
+                string pathPbrUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\PbrUtility.frag";
+                string pathUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\Utility.frag";
 
+                var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
+                var defaultVert = new VertexShader(File.ReadAllText(pathVert));
+                var pbrUtiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathPbrUtiltyFrag));
+                var utiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathUtiltyFrag));
 
-            var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
-            var defaultVert = new VertexShader(File.ReadAllText(pathVert));
-            var utiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathUtiltyFrag));
-            var pbrUtiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathPbrUtiltyFrag));
+                defaultShaderProgram = new ShaderProgram(new Shader[]
+                {   utiltyFrag, pbrUtiltyFrag, defaultVert, defaultFrag }, control);
+            }
+            else
+            {
+                string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "GenericShader.frag");
+                string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "GenericShader.vert");
+                string pathUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\Utility.frag";
 
-            defaultShaderProgram = new ShaderProgram(new Shader[]
-            {   utiltyFrag, pbrUtiltyFrag, defaultVert, defaultFrag }, control);
+                var defaultFrag = new FragmentShader(File.ReadAllText(pathFrag));
+                var defaultVert = new VertexShader(File.ReadAllText(pathVert));
+                var utiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathUtiltyFrag));
+
+                defaultShaderProgram = new ShaderProgram(new Shader[]
+                {   utiltyFrag, defaultVert, defaultFrag }, control);
+            }
         }
 
         public override void Prepare(GL_ControlLegacy control)
