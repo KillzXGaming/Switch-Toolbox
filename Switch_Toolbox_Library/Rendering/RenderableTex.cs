@@ -119,9 +119,9 @@ namespace Switch_Toolbox.Library.Rendering
                     }
                 }
             }
-           
+
             if (Surfaces.Count == 0 || Surfaces[0].mipmaps[0].Length == 0)
-                throw new Exception("Data is empty!");
+                return;
 
             IsCubeMap = Surfaces.Count == 6;
             ImageSize = Surfaces[0].mipmaps[0].Length;

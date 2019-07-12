@@ -55,7 +55,7 @@ namespace FirstPlugin
 
             editor.Text = Text;
             editor.LoadProperties(TextureImage);
-            editor.LoadImage(this);
+            editor.LoadImage(this); 
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)

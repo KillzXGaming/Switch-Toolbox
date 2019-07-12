@@ -18,30 +18,11 @@ namespace FirstPlugin
         Shape BMDShape;
 
         private STGenericMaterial material;
-        public BMDShapeWrapper(Shape shape, SuperBMDLib.Model model, int Index)
+        public BMDShapeWrapper(Shape shape, SuperBMDLib.Model model, BMDMaterialWrapper mat)
         {
             BMDShape = shape;
             ParentModel = model;
-            material = new STGenericMaterial();
-        //   material.Text = $"Material {Index}";
-
-            var mat = model.Materials.m_Materials[Index];
-
-            int textureUnit = 1;
-            if (mat.TextureIndices[0] != -1)
-            {
-                int texIndex = mat.TextureIndices[0];
-
-                STGenericMatTexture matTexture = new STGenericMatTexture();
-                matTexture.Name = ParentModel.Textures[texIndex].Name;
-                matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
-                matTexture.textureUnit = textureUnit++;
-                matTexture.wrapModeS = 0;
-                matTexture.wrapModeT = 0;
-                material.TextureMaps.Add(matTexture);
-            }
-
-         
+            material = mat;
         }
 
         public override STGenericMaterial GetMaterial()

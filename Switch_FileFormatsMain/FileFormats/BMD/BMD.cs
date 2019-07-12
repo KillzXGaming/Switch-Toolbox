@@ -96,6 +96,7 @@ namespace FirstPlugin
         public Model BMDFile;
         private TreeNode TextureFolder;
         private TreeNode ShapeFolder;
+        private TreeNode MaterialFolder;
 
         public void Load(System.IO.Stream stream)
         {
@@ -110,16 +111,22 @@ namespace FirstPlugin
 
             BMD_Renderer.TextureContainers.Add(this);
 
-            ShapeFolder = new TreeNode("Shapes"); 
+            ShapeFolder = new TreeNode("Shapes");
+            MaterialFolder = new TreeNode("Materials");
             TextureFolder = new TreeNode("Textures");
             Nodes.Add(ShapeFolder);
+            Nodes.Add(MaterialFolder);
             Nodes.Add(TextureFolder);
 
             BMDFile = Model.Load(stream);
 
             for (int i = 0; i < BMDFile.Shapes.Shapes.Count; i++)
             {
-                var shpWrapper = new BMDShapeWrapper(BMDFile.Shapes.Shapes[i], BMDFile, i);
+                var mat = new BMDMaterialWrapper(BMDFile.Materials.m_Materials[i], BMDFile);
+                mat.Text = $"Material {i}";
+                MaterialFolder.Nodes.Add(mat);
+
+                var shpWrapper = new BMDShapeWrapper(BMDFile.Shapes.Shapes[i], BMDFile, mat);
                 shpWrapper.Text = $"Shape {i}";
                 ShapeFolder.Nodes.Add(shpWrapper);
                 Renderer.Meshes.Add(shpWrapper);
@@ -186,7 +193,6 @@ namespace FirstPlugin
             {
                 var texWrapper = new BMDTextureWrapper(BMDFile.Textures.Textures[i]);
                 TextureFolder.Nodes.Add(texWrapper);
-
                 Textures.Add(texWrapper.Text, texWrapper);
             }
         }

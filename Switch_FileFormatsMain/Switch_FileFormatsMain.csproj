@@ -243,6 +243,7 @@
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
     <Compile Include="FileFormats\Bin\KartParts.cs" />
     <Compile Include="FileFormats\BMD\BMD.cs" />
+    <Compile Include="FileFormats\BMD\BMDMaterialWrapper.cs" />
     <Compile Include="FileFormats\BMD\BMDShapeWrapper.cs" />
     <Compile Include="FileFormats\BMD\BMDTextureWrapper.cs" />
     <Compile Include="FileFormats\Collision\KclFile.cs" />
