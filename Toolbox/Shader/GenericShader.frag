@@ -169,8 +169,13 @@ void main()
 		 fragColor.a = alpha;
 	 }
 
+     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
+
     if (renderVertColor == 1)
         fragColor *= min(vert.vertexColor, vec4(1));
+
+     // Global brightness adjustment.
+	 fragColor.rgb *= 1.5;
 
 	 //Debug Shading
 	vec2 displayTexCoord =  f_texcoord0;
