@@ -192,10 +192,12 @@ namespace FirstPlugin
                                         Matrix4 test = BMDFile.SkinningEnvelopes.InverseBindMatrices[vert.VertexWeight.BoneIndices[0]].Inverted();
                                         test.Transpose();
                                         vertex.pos = OpenTK.Vector3.TransformPosition(vertex.pos, test);
+                                        vertex.nrm = OpenTK.Vector3.TransformNormal(vertex.nrm, test);
                                     }
                                     else
                                     {
                                         vertex.pos = OpenTK.Vector3.TransformPosition(vertex.pos, BMDFile.Joints.FlatSkeleton[vert.VertexWeight.BoneIndices[0]].TransformationMatrix);
+                                        vertex.nrm = OpenTK.Vector3.TransformNormal(vertex.nrm, BMDFile.Joints.FlatSkeleton[vert.VertexWeight.BoneIndices[0]].TransformationMatrix);
                                     }
                                 }
 
