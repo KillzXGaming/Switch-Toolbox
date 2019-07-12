@@ -95,6 +95,7 @@ namespace FirstPlugin
         public DrawableContainer DrawableContainer = new DrawableContainer();
 
         public Model BMDFile;
+        public STSkeleton Skeleton;
         private TreeNode TextureFolder;
         private TreeNode ShapeFolder;
         private TreeNode MaterialFolder;
@@ -107,11 +108,23 @@ namespace FirstPlugin
 
             //Set renderer
             Renderer = new BMD_Renderer();
+            Skeleton = new STSkeleton();
+
             DrawableContainer.Name = FileName;
             DrawableContainer.Drawables.Add(Renderer);
+            DrawableContainer.Drawables.Add(Skeleton);
+
             Textures = new Dictionary<string, STGenericTexture>();
 
             BMD_Renderer.TextureContainers.Add(this);
+
+            BMDFile = Model.Load(stream);
+            LoadBMD(BMDFile);
+        }
+
+        private void LoadBMD(Model model)
+        {
+            Nodes.Clear();
 
             ShapeFolder = new TreeNode("Shapes");
             SkeletonFolder = new TreeNode("Skeleton");
@@ -122,13 +135,12 @@ namespace FirstPlugin
             Nodes.Add(SkeletonFolder);
             Nodes.Add(TextureFolder);
 
-            BMDFile = Model.Load(stream);
 
-            var skeleton = new STSkeleton();
-            DrawableContainer.Drawables.Add(skeleton);
-            FillSkeleton(BMDFile.Scenegraph, skeleton, BMDFile.Joints.FlatSkeleton);
+            BMDFile = model;
 
-            foreach (var bone in skeleton.bones)
+            FillSkeleton(BMDFile.Scenegraph, Skeleton, BMDFile.Joints.FlatSkeleton);
+
+            foreach (var bone in Skeleton.bones)
             {
                 if (bone.Parent == null)
                     SkeletonFolder.Nodes.Add(bone);
@@ -140,7 +152,6 @@ namespace FirstPlugin
                 var curShape = BMDFile.Shapes.Shapes[BMDFile.Shapes.RemapTable[i]];
 
                 var mat = new BMDMaterialWrapper(BMDFile.Materials.GetMaterial(i), BMDFile);
-                mat.Text = BMDFile.Materials.GetMaterialName(i);
                 MaterialFolder.Nodes.Add(mat);
 
                 var shpWrapper = new BMDShapeWrapper(curShape, BMDFile, mat);
@@ -280,7 +291,33 @@ namespace FirstPlugin
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.Add(new STToolStripSeparator());
+            Items.Add(new STToolStipMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+            Items.Add(new STToolStipMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
             return Items.ToArray();
+        }
+
+        private void ExportAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Collada DAE |*.dae;";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                BMDFile.ExportAssImp(sfd.FileName, "dae", new ExportSettings());
+            }
+        }
+
+        private void ReplaceAction(object sender, EventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Collada DAE |*.dae;";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Arguments arguments = new Arguments();
+                arguments.input_path = ofd.FileName;
+                var model = Model.Load(arguments);
+                LoadBMD(model);
+            }
         }
 
         private void SaveAction(object sender, EventArgs args)
