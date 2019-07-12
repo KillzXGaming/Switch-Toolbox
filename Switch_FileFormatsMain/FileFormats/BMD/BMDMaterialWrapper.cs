@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.Forms;
 using SuperBMDLib.Materials;
 
 namespace FirstPlugin
@@ -18,6 +20,8 @@ namespace FirstPlugin
             Material = mat;
             ParentModel = model;
 
+            Text = mat.Name;
+
             int textureUnit = 1;
             if (mat.TextureIndices[0] != -1)
             {
@@ -31,6 +35,12 @@ namespace FirstPlugin
                 matTexture.wrapModeT = ConvertWrapMode(ParentModel.Textures[texIndex].WrapT);
 
                 TextureMaps.Add(matTexture);
+
+                foreach (var textureIndex in mat.TextureIndices)
+                {
+                    if (textureIndex != -1)
+                        Nodes.Add(ParentModel.Textures[textureIndex].Name);
+                }
             }
         }
 
@@ -47,6 +57,19 @@ namespace FirstPlugin
                 default:
                     throw new Exception($"Unknown WrapMode {WrapMode}");
             }
+        }
+
+        public override void OnClick(TreeView treeView)
+        {
+            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
+            if (editor == null)
+            {
+                editor = new STPropertyGrid();
+                LibraryGUI.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadProperty(Material, null);
         }
     }
 }
