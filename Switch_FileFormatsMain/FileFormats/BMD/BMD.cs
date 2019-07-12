@@ -14,6 +14,7 @@ using System.Drawing;
 using SuperBMDLib.Rigging;
 using SuperBMDLib.Geometry.Enums;
 using SuperBMDLib.Util;
+using OpenTK;
 
 namespace FirstPlugin
 {
@@ -176,6 +177,26 @@ namespace FirstPlugin
                                 {
                                     var color0 = VertexAttributes.Color_0[(int)vert.Color0Index];
                                     vertex.col = new OpenTK.Vector4(color0.R, color0.G, color0.B, color0.A);
+                                }
+
+                                for (int j = 0; j < vert.VertexWeight.WeightCount; j++)
+                                {
+                                    vertex.boneWeights.Add(vert.VertexWeight.Weights[j]);
+                                    vertex.boneIds.Add(vert.VertexWeight.BoneIndices[j]);
+                                }
+
+                                if (vert.VertexWeight.WeightCount == 1)
+                                {
+                                    if (BMDFile.SkinningEnvelopes.InverseBindMatrices.Count > vert.VertexWeight.BoneIndices[0])
+                                    {
+                                        Matrix4 test = BMDFile.SkinningEnvelopes.InverseBindMatrices[vert.VertexWeight.BoneIndices[0]].Inverted();
+                                        test.Transpose();
+                                        vertex.pos = OpenTK.Vector3.TransformPosition(vertex.pos, test);
+                                    }
+                                    else
+                                    {
+                                        vertex.pos = OpenTK.Vector3.TransformPosition(vertex.pos, BMDFile.Joints.FlatSkeleton[vert.VertexWeight.BoneIndices[0]].TransformationMatrix);
+                                    }
                                 }
 
                                 for (int texCoordNum = 0; texCoordNum < 8; texCoordNum++)
