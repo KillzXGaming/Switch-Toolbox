@@ -71,7 +71,7 @@ namespace OdysseyEditor
         void LoadObjects(int scenarioIndex = -1)
         {
             Stream s = new MemoryStream(SzsFiles[Path.GetFileNameWithoutExtension(Filename) + ".byml"]);
-            LoadedByml = ByamlFile.LoadN(s,false, Syroot.BinaryData.ByteOrder.LittleEndian);
+            LoadedByml = ByamlFile.LoadN(s,false, Syroot.BinaryData.ByteOrder.LittleEndian).RootNode;
 
             if (scenarioIndex == -1)
             {

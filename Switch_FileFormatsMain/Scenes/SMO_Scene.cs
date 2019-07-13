@@ -4,8 +4,11 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using Switch_Toolbox.Library;
+using Switch_Toolbox.Library.IO;
+using Switch_Toolbox.Library.Forms;
 using ByamlExt.Byaml;
 using OdysseyEditor;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
@@ -15,11 +18,60 @@ namespace FirstPlugin
     {
         public static void LoadStage(string MapName)
         {
-            if (File.Exists($"{Runtime.SmoGamePath}StageData\\{MapName}Map.szs"))
+            string StageByml = $"{Runtime.SmoGamePath}\\StageData\\{MapName}Map.szs";
+
+            Console.WriteLine($"{StageByml} {File.Exists($"{StageByml}")}");
+            if (File.Exists($"{StageByml}"))
             {
-                string StageByml = $"{Runtime.SmoGamePath}StageData\\{MapName}Map.szs";
-                new Level(StageByml, -1);
+                var TextureSzs = $"{Runtime.SmoGamePath}\\ObjectData\\{MapName}Texture.szs";
+
+                ObjectEditor editor = new ObjectEditor();
+                LibraryGUI.CreateMdiWindow(editor);
+
+                var level = new Level(StageByml, -1);
+                foreach (var obj in level.objs)
+                {
+                    foreach (var ob in obj.Value)
+                    {
+                        var Transform = Utils.TransformValues(ob.transform.Pos, ob.transform.Rot, ob.transform.Scale);
+
+                        var bfresData = BfresFromSzs(ob.Name);
+
+                        if (bfresData != null)
+                        {
+                            BFRES bfresFile = (BFRES)STFileLoader.OpenFileFormat(ob.Name, bfresData);
+                            bfresFile.BFRESRender.ModelTransform = Transform;
+
+                            editor.AddNode(bfresFile);
+                            bfresFile.LoadEditors(null);
+                            DiableLoadCheck();
+                        }
+                    }
+                }
+
+                TextureSzs = null;
+                GC.Collect();
             }
+        }
+
+        private static void DiableLoadCheck()
+        {
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+            bfresEditor.IsLoaded = false;
+            bfresEditor.DisplayAllDDrawables();
+        }
+
+        private static byte[] BfresFromSzs(string fileName)
+        {
+            if (File.Exists($"{Runtime.SmoGamePath}\\ObjectData\\{fileName}.szs"))
+            {
+                var SzsFiles = SARCExt.SARC.UnpackRamN(EveryFileExplorer.YAZ0.Decompress($"{Runtime.SmoGamePath}\\ObjectData\\{fileName}.szs")).Files;
+                if (SzsFiles.ContainsKey(fileName + ".bfres"))
+                {
+                    return SzsFiles[fileName + ".bfres"];
+                }
+            }
+            return null;
         }
 
         public static Dictionary<string, string> OdysseyStages = new Dictionary<string, string>()
