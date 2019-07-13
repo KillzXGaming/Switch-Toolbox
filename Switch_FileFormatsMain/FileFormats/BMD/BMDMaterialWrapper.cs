@@ -40,8 +40,11 @@ namespace FirstPlugin
                 matTexture.Name = ParentModel.Textures[texIndex].Name;
                 matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                 matTexture.textureUnit = textureUnit++;
-                matTexture.wrapModeS = ConvertWrapMode(ParentModel.Textures[texIndex].WrapS);
-                matTexture.wrapModeT = ConvertWrapMode(ParentModel.Textures[texIndex].WrapT);
+
+                matTexture.wrapModeS = (int)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapS);
+                matTexture.wrapModeT = (int)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapT);
+                matTexture.minFilter = (int)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MinFilter);
+                matTexture.magFilter = (int)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MagFilter);
 
                 TextureMaps.Add(matTexture);
 
@@ -50,21 +53,6 @@ namespace FirstPlugin
                     if (textureIndex != -1)
                         Nodes.Add(ParentModel.Textures[textureIndex].Name);
                 }
-            }
-        }
-
-        private int ConvertWrapMode(BinaryTextureImage.WrapModes WrapMode)
-        {
-            switch (WrapMode)
-            {
-                case BinaryTextureImage.WrapModes.Repeat:
-                    return 0;
-                case BinaryTextureImage.WrapModes.MirroredRepeat:
-                    return 1;
-                case BinaryTextureImage.WrapModes.ClampToEdge:
-                    return 2;
-                default:
-                    throw new Exception($"Unknown WrapMode {WrapMode}");
             }
         }
 

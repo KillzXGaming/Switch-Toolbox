@@ -61,17 +61,6 @@ namespace FirstPlugin
             GXToOpenGL.SetDitherEnabled(bmdMaterial.Material.Dither);
         }
 
-        public static TextureMagFilter GetMagFilter(SuperBMDLib.Materials.BinaryTextureImage.FilterMode fromMode)
-        {
-            switch (fromMode)
-            {
-                case SuperBMDLib.Materials.BinaryTextureImage.FilterMode.Nearest: return TextureMagFilter.Nearest;
-                case SuperBMDLib.Materials.BinaryTextureImage.FilterMode.Linear: return TextureMagFilter.Linear;
-            }
-
-            return TextureMagFilter.Nearest;
-        }
-
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);
