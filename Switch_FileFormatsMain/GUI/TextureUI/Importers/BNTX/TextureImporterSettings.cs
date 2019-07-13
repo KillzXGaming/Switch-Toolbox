@@ -33,6 +33,9 @@ namespace FirstPlugin
         public uint SampleCount = 1;
         public uint Pitch = 32;
         public uint[] Regs;
+
+        public TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB;
+
         public SurfaceFormat Format;
 
         public SurfaceDim SurfaceDim = SurfaceDim.Dim2D;
@@ -106,7 +109,8 @@ namespace FirstPlugin
             DecompressedData.Clear();
 
             TexName = STGenericTexture.SetNameFromPath(Name);
-            Format = TextureData.GenericToBntxSurfaceFormat(Runtime.PreferredTexFormat);
+
+            Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);
 
             GenerateMipmaps = true;
             LoadImage(new Bitmap(Image));
@@ -117,7 +121,7 @@ namespace FirstPlugin
             DecompressedData.Clear();
 
             TexName = STGenericTexture.SetNameFromPath(FileName);
-            Format = TextureData.GenericToBntxSurfaceFormat(Runtime.PreferredTexFormat);
+            Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);
 
             GenerateMipmaps = true;
 
