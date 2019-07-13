@@ -130,7 +130,7 @@ namespace OdysseyEditor
         [Browsable(false)]
         public Transform transform
         {
-            get => new Transform() { Pos = Pos, Rot = Rot, Scale = Scale };
+            get { return new Transform() { Pos = Pos, Rot = Rot, Scale = Scale }; }
             set
             {
                 Pos = value.Pos;
