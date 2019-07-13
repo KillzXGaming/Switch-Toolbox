@@ -145,6 +145,7 @@ namespace Switch_Toolbox.Library.Forms
             this.LblTitle.Size = new System.Drawing.Size(33, 17);
             this.LblTitle.TabIndex = 5;
             this.LblTitle.Text = "Title";
+            this.LblTitle.DoubleClick += new System.EventHandler(this.LblTitle_DoubleClick);
             this.LblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
             // 
             // PicIcon
@@ -154,6 +155,7 @@ namespace Switch_Toolbox.Library.Forms
             this.PicIcon.Size = new System.Drawing.Size(16, 16);
             this.PicIcon.TabIndex = 4;
             this.PicIcon.TabStop = false;
+            this.PicIcon.DoubleClick += new System.EventHandler(this.PicIcon_DoubleClick);
             // 
             // BtnMinimize
             // 
@@ -202,7 +204,7 @@ namespace Switch_Toolbox.Library.Forms
             // 
             // STForm
             // 
-            this.ClientSize = new System.Drawing.Size(549, 398);
+            this.ClientSize = new System.Drawing.Size(549, 398);c
             this.ControlBox = false;
             this.Controls.Add(this.contentContainer);
             this.DoubleBuffered = true;
@@ -310,7 +312,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void TitleBar_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && e.Y < 28)
+            if (e.Button == MouseButtons.Left && e.Y < 28 && e.Clicks == 1)
             {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
@@ -404,7 +406,23 @@ namespace Switch_Toolbox.Library.Forms
 
         private void TitleBar_DoubleClick(object sender, EventArgs e)
         {
-            if (canResize)
+            if (CanResize)
+            {
+                Maximize();
+            }
+        }
+
+        private void LblTitle_DoubleClick(object sender, EventArgs e)
+        {
+            if (CanResize)
+            {
+                Maximize();
+            }
+        }
+
+        private void PicIcon_DoubleClick(object sender, EventArgs e)
+        {
+            if (CanResize)
             {
                 Maximize();
             }
