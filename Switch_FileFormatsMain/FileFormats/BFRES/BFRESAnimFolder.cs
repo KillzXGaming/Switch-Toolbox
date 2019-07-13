@@ -65,8 +65,8 @@ namespace Bfres.Structs
                            new ToolStripMenuItem("Texture Pattern Animation", null, NewTexPatAnimAction),
                            new ToolStripMenuItem("Bone Visibility Animation", null, NewBoneVisAnimAction),
                            new ToolStripMenuItem("Material Visibility Animation", null, NewMatVisAnimAction),
-                           new ToolStripMenuItem("Shape Aniation", null, NewShapeAnimAction),
-                           new ToolStripMenuItem("Scene Aniation", null, NewSceneAnimAction)
+                           new ToolStripMenuItem("Shape Animation", null, NewShapeAnimAction),
+                           new ToolStripMenuItem("Scene Animation", null, NewSceneAnimAction)
                        ));
 
             Items.Add(new ToolStripMenuItem("Import", null,
@@ -77,8 +77,8 @@ namespace Bfres.Structs
               new ToolStripMenuItem("Texture Pattern Animation", null, ImportTexPatAnimAction),
               new ToolStripMenuItem("Bone Visibility Animation", null, ImportBoneVisAnimAction),
               new ToolStripMenuItem("Material Visibility Animation", null, ImportMatVisAnimAction),
-              new ToolStripMenuItem("Shape Aniation", null, ImportShapeAnimAction),
-              new ToolStripMenuItem("Scene Aniation", null, ImportSceneAnimAction)
+              new ToolStripMenuItem("Shape Animation", null, ImportShapeAnimAction),
+              new ToolStripMenuItem("Scene Animation", null, ImportSceneAnimAction)
               ));
 
             Items.Add(new ToolStripMenuItem("Clear", null, ClearAction, Keys.Control | Keys.C));
