@@ -204,7 +204,7 @@ namespace Switch_Toolbox.Library.Forms
             // 
             // STForm
             // 
-            this.ClientSize = new System.Drawing.Size(549, 398);c
+            this.ClientSize = new System.Drawing.Size(549, 398);
             this.ControlBox = false;
             this.Controls.Add(this.contentContainer);
             this.DoubleBuffered = true;
