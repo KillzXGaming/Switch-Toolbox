@@ -233,6 +233,11 @@ namespace Switch_Toolbox.Library.Rendering
        
         }
 
+        public virtual void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
+        {
+
+        }
+
         private static void SetUniforms(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
         {
             //UV Scale
@@ -409,6 +414,7 @@ namespace Switch_Toolbox.Library.Rendering
                     if (group.faces.Count <= 3)
                         return;
 
+                    SetRenderData(Material, shader, m);
                     SetUniforms(Material, shader, m);
                     SetUniformBlocks(Material, shader, m);
                     SetBoneUniforms(control, shader, Skeleton, m);

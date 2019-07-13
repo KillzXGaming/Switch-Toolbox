@@ -12,7 +12,7 @@ namespace FirstPlugin
 {
     public class BMDMaterialWrapper : STGenericMaterial
     {
-        Material Material;
+        public Material Material;
         SuperBMDLib.Model ParentModel;
 
         public BMDMaterialWrapper(Material mat, SuperBMDLib.Model model)

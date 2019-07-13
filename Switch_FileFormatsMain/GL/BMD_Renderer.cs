@@ -9,6 +9,7 @@ using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using SuperBMDLib.Materials.Enums;
 
 namespace FirstPlugin
 {
@@ -19,6 +20,27 @@ namespace FirstPlugin
         public override void OnRender(GLControl control)
         {
          
+        }
+
+        public override void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
+        {
+            var bmdMaterial = (BMDMaterialWrapper)mat;
+
+            switch (bmdMaterial.Material.CullMode)
+            {
+                case CullMode.None:
+                    GL.Disable(EnableCap.CullFace);
+                    break;
+                case CullMode.Back:
+                    GL.CullFace(CullFaceMode.Back);
+                    break;
+                case CullMode.Front:
+                    GL.CullFace(CullFaceMode.Front);
+                    break;
+                case CullMode.All:
+                    GL.CullFace(CullFaceMode.FrontAndBack);
+                    break;
+            }
         }
 
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
