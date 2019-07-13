@@ -17,6 +17,7 @@ using Switch_Toolbox.Library;
 using Switch_Toolbox.Library.Forms;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library.Animations;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
@@ -1261,12 +1262,19 @@ namespace FirstPlugin
 
         private bool IsEditorActive()
         {
-            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
-            if (editor == null)
-                return false;
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+            if (bfresEditor != null)
+            {
+                var imageEditor = bfresEditor.GetActiveEditor(typeof(ImageEditorBase));
+                return imageEditor != null;
+            }
             else
-                return true;
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+                return editor != null;
+            }
         }
+
 
         public void UpdateEditor()
         {
@@ -1407,6 +1415,7 @@ namespace FirstPlugin
             if (IsEditorActive())
                 UpdateEditor();
         }
+
         private void UpdateTextureMapping()
         {
             var viewport = LibraryGUI.GetActiveViewport();
