@@ -107,8 +107,6 @@ namespace Bfres.Structs
             if (Nodes.Count <= 0)
                 return;
 
-            return;
-
             BatchEditBaseAnimDataForm form = new BatchEditBaseAnimDataForm();
             form.LoadAnim((Animation)Nodes[0]);
 
