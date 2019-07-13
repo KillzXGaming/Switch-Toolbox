@@ -256,6 +256,12 @@
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
+    <Compile Include="GUI\BMD\BMDModelImportSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BMD\BMDModelImportSettings.Designer.cs">
+      <DependentUpon>BMDModelImportSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="libWiiSharp\TPL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL_Wrappers.cs" />
@@ -1106,6 +1112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.resx">
       <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BMD\BMDModelImportSettings.resx">
+      <DependentUpon>BMDModelImportSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.resx">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>

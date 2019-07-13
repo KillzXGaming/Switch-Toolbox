@@ -313,10 +313,17 @@ namespace FirstPlugin
             ofd.Filter = "Collada DAE |*.dae;";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Arguments arguments = new Arguments();
-                arguments.input_path = ofd.FileName;
-                var model = Model.Load(arguments);
-                LoadBMD(model);
+                BMDModelImportSettings settings = new BMDModelImportSettings();
+                if (settings.ShowDialog() == DialogResult.OK)
+                {
+                    Arguments arguments = new Arguments();
+                    arguments.input_path = ofd.FileName;
+                    arguments.texheaders_path = settings.TexturePath;
+                    arguments.materials_path = settings.MaterialPath;
+
+                    var model = Model.Load(arguments);
+                    LoadBMD(model);
+                }
             }
         }
 
