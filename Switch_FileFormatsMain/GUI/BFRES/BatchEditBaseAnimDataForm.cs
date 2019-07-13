@@ -20,6 +20,8 @@ namespace FirstPlugin
 
         public string TargetBone => boneListCB.GetSelectedText();
 
+        public bool SegmentScaleCompensate => scaleCompChk.Checked;
+
         public BatchEditBaseAnimDataForm()
         {
             InitializeComponent();
@@ -33,12 +35,25 @@ namespace FirstPlugin
             }
         }
 
+        private Animation activeAnim;
+
         public void LoadAnim(Animation anim)
         {
+            activeAnim = anim;
+
             foreach (var bone in anim.Bones)
                 boneListCB.Items.Add(bone.Text);
 
             boneListCB.SelectedIndex = 0;
+        }
+
+        private void boneListCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (activeAnim != null)
+            {
+                int index = boneListCB.SelectedIndex;
+                scaleCompChk.Checked = activeAnim.Bones[index].UseSegmentScaleCompensate;
+            }
         }
     }
 }

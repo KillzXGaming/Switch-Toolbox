@@ -37,6 +37,7 @@
             this.scaleYUD = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
             this.scaleZUD = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
             this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.scaleCompChk = new Switch_Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleXUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
@@ -45,6 +46,7 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.scaleCompChk);
             this.contentContainer.Controls.Add(this.stButton1);
             this.contentContainer.Controls.Add(this.scaleZUD);
             this.contentContainer.Controls.Add(this.scaleYUD);
@@ -64,6 +66,7 @@
             this.contentContainer.Controls.SetChildIndex(this.scaleYUD, 0);
             this.contentContainer.Controls.SetChildIndex(this.scaleZUD, 0);
             this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
+            this.contentContainer.Controls.SetChildIndex(this.scaleCompChk, 0);
             // 
             // stLabel1
             // 
@@ -85,6 +88,7 @@
             this.boneListCB.ReadOnly = true;
             this.boneListCB.Size = new System.Drawing.Size(132, 21);
             this.boneListCB.TabIndex = 13;
+            this.boneListCB.SelectedIndexChanged += new System.EventHandler(this.boneListCB_SelectedIndexChanged);
             // 
             // stLabel2
             // 
@@ -161,6 +165,16 @@
             this.stButton1.Text = "Ok";
             this.stButton1.UseVisualStyleBackColor = false;
             // 
+            // scaleCompChk
+            // 
+            this.scaleCompChk.AutoSize = true;
+            this.scaleCompChk.Location = new System.Drawing.Point(165, 58);
+            this.scaleCompChk.Name = "scaleCompChk";
+            this.scaleCompChk.Size = new System.Drawing.Size(160, 17);
+            this.scaleCompChk.TabIndex = 21;
+            this.scaleCompChk.Text = "Segment Scale Compensate";
+            this.scaleCompChk.UseVisualStyleBackColor = true;
+            // 
             // BatchEditBaseAnimDataForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -187,5 +201,6 @@
         private Switch_Toolbox.Library.Forms.STComboBox boneListCB;
         private Switch_Toolbox.Library.Forms.STButton stButton1;
         private Switch_Toolbox.Library.Forms.STNumbericUpDown scaleZUD;
+        private Switch_Toolbox.Library.Forms.STCheckBox scaleCompChk;
     }
 }

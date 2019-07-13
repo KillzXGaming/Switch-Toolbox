@@ -126,6 +126,7 @@ namespace Bfres.Structs
                                     boneAnim.FlagsBase |= ResU.BoneAnimFlagsBase.Scale;
                                     boneAnim.ApplyScaleOne = false;
                                     boneAnim.ApplyScaleUniform = false;
+                                    boneAnim.ApplySegmentScaleCompensate = form.SegmentScaleCompensate;
                                     baseData.Scale = new Syroot.Maths.Vector3F(form.ScaleX, form.ScaleY, form.ScaleZ);
                                 }
 
@@ -145,6 +146,7 @@ namespace Bfres.Structs
                                     boneAnim.FlagsBase |= ResNX.BoneAnimFlagsBase.Scale;
                                     boneAnim.ApplyScaleOne = false;
                                     boneAnim.ApplyScaleUniform = false;
+                                    boneAnim.ApplySegmentScaleCompensate = form.SegmentScaleCompensate;
                                     baseData.Scale = new Syroot.Maths.Vector3F(form.ScaleX, form.ScaleY, form.ScaleZ);
                                 }
 
