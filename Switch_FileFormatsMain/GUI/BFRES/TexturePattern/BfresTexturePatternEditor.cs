@@ -186,22 +186,37 @@ namespace FirstPlugin.Forms
             listViewCustom1.Items.Clear();
             listViewCustom1.View = View.SmallIcon;
 
+            int ImageIndex = 0;
+            for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
+            {
+                //Constants always show so break after first frame
+                if (activeSampler.Constant && Frame != 0)
+                    break;
+
+                var keyFrame = activeSampler.GetKeyFrame(Frame);
+                if (keyFrame.IsKeyed || activeSampler.Constant)
+                {
+                    AddKeyFrame((int)keyFrame.Value, Frame, ImageIndex++);
+                }
+            }
+
             Thread Thread = new Thread((ThreadStart)(() =>
             {
-                IsLoading = true;
-
                 for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
                 {
                     //Constants always show so break after first frame
-                    if (activeSampler.Constant && Frame != 0) 
+                    if (activeSampler.Constant && Frame != 0)
                         break;
 
                     var keyFrame = activeSampler.GetKeyFrame(Frame);
                     if (keyFrame.IsKeyed || activeSampler.Constant)
                     {
-                        AddKeyFrame((int)keyFrame.Value, Frame);
+                        AddKeyFrameImage((int)keyFrame.Value, Frame);
                     }
                 }
+
+                IsLoading = true;
+
                 if (listViewCustom1.InvokeRequired)
                 {
                     listViewCustom1.Invoke((MethodInvoker)delegate
@@ -228,7 +243,35 @@ namespace FirstPlugin.Forms
             Thread.Start();
         }
 
-        private void AddKeyFrame(int Index, int Frame)
+        private void AddKeyFrameImage(int Index, int Frame)
+        {
+            var tex = activeSampler.GetActiveTexture((int)Index);
+            if (tex != null)
+            {
+                Bitmap temp = tex.GetBitmap();
+
+                if (!Images.ContainsKey(Frame))
+                    Images.Add(Frame, temp);
+                else
+                {
+                    Images.Remove(Frame);
+                    Images.Add(Frame, temp);
+                }
+
+                KeyFrames.Add(Frame);
+
+                if (listViewCustom1.InvokeRequired)
+                {
+                    listViewCustom1.Invoke((MethodInvoker)delegate {
+                        // Running on the UI thread
+                        imgList.Images.Add(temp);
+                        var dummy = imgList.Handle;
+                    });
+                }
+            }
+        }
+
+        private void AddKeyFrame(int Index, int Frame, int ImageIndex)
         {
             if (activeSampler == null)
                 return;
@@ -236,37 +279,8 @@ namespace FirstPlugin.Forms
             string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)Index);
 
             var tex = activeSampler.GetActiveTexture((int)Index);
-            int ImageIndex = imgList.Images.Count;
 
-            if (tex != null)
-            {
-                Bitmap temp = tex.GetBitmap();
-                Images.Add(Frame, temp);
-                KeyFrames.Add(Frame);
-
-                if (listViewCustom1.InvokeRequired)
-                {
-                    listViewCustom1.Invoke((MethodInvoker)delegate {
-                        // Running on the UI thread
-                        listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
-                        imgList.Images.Add(temp);
-                        var dummy = imgList.Handle;
-                    });
-                }
-                else
-                    listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
-            }
-            else
-            {
-                if (listViewCustom1.InvokeRequired)
-                {
-                    listViewCustom1.Invoke((MethodInvoker)delegate {
-                        listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + TextureKey, ImageIndex);
-                    });
-                }
-                else
-                    listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + TextureKey, ImageIndex);
-            }
+            listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
         }
 
         private void SelectThumbnailItems()
