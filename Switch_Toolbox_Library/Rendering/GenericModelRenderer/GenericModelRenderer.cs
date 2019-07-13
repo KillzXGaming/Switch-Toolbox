@@ -378,7 +378,7 @@ namespace Switch_Toolbox.Library.Rendering
             shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
         }
 
-        private void DrawModels(ShaderProgram shader, GL_ControlModern control)
+        public virtual void DrawModels(ShaderProgram shader, GL_ControlModern control)
         {
             shader.EnableVertexAttributes();
             foreach (STGenericObject shp in Meshes)
@@ -405,7 +405,7 @@ namespace Switch_Toolbox.Library.Rendering
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
         }
 
-        private void DrawModel(GLControl control, STSkeleton Skeleton, STGenericMaterial Material, STGenericObject m, ShaderProgram shader)
+        public void DrawModel(GLControl control, STSkeleton Skeleton, STGenericMaterial Material, STGenericObject m, ShaderProgram shader)
         {
             if (m.PolygonGroups.Count > 0)
             {

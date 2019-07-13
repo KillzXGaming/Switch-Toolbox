@@ -173,6 +173,7 @@ namespace FirstPlugin.Forms
         public List<int> KeyFrames = new List<int>(); //Used for getting the frame of the list item
 
         public bool IsLoading = false;
+        private Thread Thread;
         private void LoadAniamtion(MaterialAnimation anim, MaterialAnimation.SamplerKeyGroup activeSampler)
         {
             if (activeSampler == null || IsLoading)
@@ -200,7 +201,7 @@ namespace FirstPlugin.Forms
                 }
             }
 
-            Thread Thread = new Thread((ThreadStart)(() =>
+            Thread = new Thread((ThreadStart)(() =>
             {
                 for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
                 {

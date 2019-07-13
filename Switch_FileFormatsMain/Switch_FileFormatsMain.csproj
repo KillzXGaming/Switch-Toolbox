@@ -256,6 +256,7 @@
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
+    <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GUI\BMD\BMDModelImportSettings.cs">
       <SubType>Form</SubType>
     </Compile>

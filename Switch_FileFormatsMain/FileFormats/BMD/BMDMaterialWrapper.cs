@@ -15,6 +15,14 @@ namespace FirstPlugin
         public Material Material;
         SuperBMDLib.Model ParentModel;
 
+        public bool isTransparent
+        {
+            get
+            {
+                return (Material.Flag & 3) == 0;
+            }
+        }
+
         public BMDMaterialWrapper(Material mat, SuperBMDLib.Model model)
         {
             Material = mat;

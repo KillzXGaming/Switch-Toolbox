@@ -22,25 +22,54 @@ namespace FirstPlugin
          
         }
 
+        public override void DrawModels(ShaderProgram shader, GL_ControlModern control)
+        {
+            shader.EnableVertexAttributes();
+
+            List<STGenericObject> opaque = new List<STGenericObject>();
+            List<STGenericObject> transparent = new List<STGenericObject>();
+
+            for (int m = 0; m < Meshes.Count; m++)
+            {
+                if (((BMDMaterialWrapper)Meshes[m].GetMaterial()).isTransparent)
+                    transparent.Add(Meshes[m]);
+                else
+                    opaque.Add(Meshes[m]);
+            }
+
+            for (int m = 0; m < transparent.Count; m++)
+            {
+                DrawModel(control, Skeleton, transparent[m].GetMaterial(), transparent[m], shader);
+            }
+
+            for (int m = 0; m < opaque.Count; m++)
+            {
+                DrawModel(control, Skeleton, opaque[m].GetMaterial(), opaque[m], shader);
+            }
+            shader.DisableVertexAttributes();
+        }
+
         public override void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
         {
             var bmdMaterial = (BMDMaterialWrapper)mat;
 
-            switch (bmdMaterial.Material.CullMode)
+            shader.SetBoolToInt("isTransparent", bmdMaterial.isTransparent);
+
+            GXToOpenGL.SetBlendState(bmdMaterial.Material.BMode);
+            GXToOpenGL.SetCullState(bmdMaterial.Material.CullMode);
+            GXToOpenGL.SetDepthState(bmdMaterial.Material.ZMode, false);
+            GXToOpenGL.SetDitherEnabled(bmdMaterial.Material.Dither);
+        }
+
+        public static TextureMagFilter GetMagFilter(SuperBMDLib.Materials.BinaryTextureImage.FilterMode fromMode)
+        {
+            switch (fromMode)
             {
-                case CullMode.None:
-                    GL.Disable(EnableCap.CullFace);
-                    break;
-                case CullMode.Back:
-                    GL.CullFace(CullFaceMode.Back);
-                    break;
-                case CullMode.Front:
-                    GL.CullFace(CullFaceMode.Front);
-                    break;
-                case CullMode.All:
-                    GL.CullFace(CullFaceMode.FrontAndBack);
-                    break;
+                case SuperBMDLib.Materials.BinaryTextureImage.FilterMode.Nearest: return TextureMagFilter.Nearest;
+                case SuperBMDLib.Materials.BinaryTextureImage.FilterMode.Linear: return TextureMagFilter.Linear;
             }
+
+            return TextureMagFilter.Nearest;
         }
 
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
