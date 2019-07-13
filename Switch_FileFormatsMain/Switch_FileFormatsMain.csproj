@@ -322,6 +322,8 @@
     <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Scenes\SMO_Scene.cs" />
+    <Compile Include="Scenes\ZTP_Scene.cs" />
     <Compile Include="YAML\YamlAamp.cs" />
     <Compile Include="GUI\BCRES\BcresEditor.cs">
       <SubType>UserControl</SubType>
