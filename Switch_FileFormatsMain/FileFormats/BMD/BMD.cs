@@ -149,7 +149,7 @@ namespace FirstPlugin
 
             for (int i = 0; i < BMDFile.Shapes.Shapes.Count; i++)
             {
-                var curShape = BMDFile.Shapes.Shapes[BMDFile.Shapes.RemapTable[i]];
+                var curShape = BMDFile.Shapes.Shapes[i];
 
                 var mat = new BMDMaterialWrapper(BMDFile.Materials.GetMaterial(i), BMDFile);
                 MaterialFolder.Nodes.Add(mat);
