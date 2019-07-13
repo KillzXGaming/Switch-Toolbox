@@ -215,6 +215,12 @@
     <Compile Include="Compression\YAZ0.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Forms\SceneSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SceneSelector.Designer.cs">
+      <DependentUpon>SceneSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\ITextureContainer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
@@ -903,6 +909,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\HintHelpDialog.resx">
       <DependentUpon>HintHelpDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SceneSelector.resx">
+      <DependentUpon>SceneSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\STConsoleForm.resx">
       <DependentUpon>STConsoleForm.cs</DependentUpon>

@@ -95,10 +95,19 @@ namespace FirstPlugin
             public MenuExt()
             {
                 toolsExt[0] = new STToolStripItem("Super Mario Odyssey");
+                toolsExt[0].DropDownItems.Add(new STToolStripItem(" Kingdom Selector", OpenKingdomSelector));
                 toolsExt[0].DropDownItems.Add(new STToolStripItem(" Costume Selector", OpenSelector));
 
                 toolsExt[1] = new STToolStripItem("Mario Kart 8");
                 toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
+            }
+
+            private void OpenKingdomSelector(object sender, EventArgs args)
+            {
+                SceneSelector sceneSelect = new SceneSelector();
+                sceneSelect.LoadDictionary(SMO_Scene.OdysseyStages);
+                if (sceneSelect.ShowDialog() == DialogResult.OK)
+                    SMO_Scene.LoadStage(sceneSelect.SelectedFile);
             }
 
             private void GenerateProbeLightBounds(object sender, EventArgs args) {
