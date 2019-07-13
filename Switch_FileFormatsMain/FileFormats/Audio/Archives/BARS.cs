@@ -293,14 +293,16 @@ namespace FirstPlugin
 
             foreach (TreeNode node in Nodes[1].Nodes)
             {
-                for (int i = 0; i < bars.AudioEntries.Count; i++)
+                if (node is AudioEntry)
                 {
-                    string audioName = bars.AudioEntries[i].MetaData.Name;
-
-                    if (Path.GetFileNameWithoutExtension(node.Text) == audioName)
+                    for (int i = 0; i < bars.AudioEntries.Count; i++)
                     {
-                        Console.WriteLine(audioName);
-                        bars.AudioEntries[i].AudioFile.data = ((AudioEntry)node).Data;
+                        string audioName = bars.AudioEntries[i].MetaData.Name;
+
+                        if (Path.GetFileNameWithoutExtension(node.Text) == audioName)
+                        {
+                            bars.AudioEntries[i].AudioFile.data = ((AudioEntry)node).Data;
+                        }
                     }
                 }
             }

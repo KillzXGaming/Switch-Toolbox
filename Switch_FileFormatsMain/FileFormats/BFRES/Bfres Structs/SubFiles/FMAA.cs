@@ -691,7 +691,16 @@ namespace Bfres.Structs
 
         public override void Export(string FileName)
         {
-            MaterialAnim.Export(FileName, GetResFile());
+            string ext = Utils.GetExtension(FileName);
+
+            if (ext == ".bfmaa")
+            {
+                MaterialAnim.Export(FileName, GetResFile());
+            }
+            else if (ext == ".yaml")
+            {
+               System.IO.File.WriteAllText(FileName, YamlFmaa.ToYaml(FileName, this));
+            }
         }
         public override void Replace(string FileName)
         {
@@ -702,6 +711,10 @@ namespace Bfres.Structs
                 MaterialAnim.Import(FileName);
                 MaterialAnim.Name = Text;
                 LoadAnim(MaterialAnim);
+            }
+            else if (ext == ".yaml")
+            {
+              
             }
             else if (ext == ".gif" || ext == ".png" || ext == ".apng")
             {
