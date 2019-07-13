@@ -34,7 +34,7 @@ namespace FirstPlugin
         UserBlock = 0x16,
     }
 
-    public class GTXFile : TreeNodeFile, IFileFormat
+    public class GTXFile : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -94,11 +94,17 @@ namespace FirstPlugin
             Text = FileName;
 
             ReadGx2(new FileReader(stream));
-
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
         }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            return new ToolStripItem[]
+            {
+                new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S),
+                new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E),
+            };
+        }
+
         private void Save(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -554,6 +560,7 @@ namespace FirstPlugin
                 SelectedImageKey = "Texture";
 
                 CanDelete = false;
+                CanReplace = true;
                 CanRename = false;
             }
 
