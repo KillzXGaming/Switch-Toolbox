@@ -1201,5 +1201,8 @@
   <ItemGroup>
     <None Include="Resources\materialSphereTransparent.tif" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MetaInfo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

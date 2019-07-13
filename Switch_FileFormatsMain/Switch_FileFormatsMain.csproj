@@ -1322,5 +1322,8 @@
   <ItemGroup>
     <None Include="Resources\ArrowIcon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MetaInfo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

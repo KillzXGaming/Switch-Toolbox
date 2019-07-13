@@ -235,6 +235,9 @@ namespace FirstPlugin
             for (int i = 0; i < bars.AudioEntries.Count; i++)
             {
                 var amtaWrapper = new MetaDataNodeWrapper(bars.AudioEntries[i].MetaData);
+                amtaWrapper.ImageKey = "MetaInfo";
+                amtaWrapper.SelectedImageKey = amtaWrapper.ImageKey;
+
                 string audioName = bars.AudioEntries[i].MetaData.Name;
 
                 amtaWrapper.Text = $"{audioName}.amta";

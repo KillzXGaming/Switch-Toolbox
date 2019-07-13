@@ -127,6 +127,8 @@ namespace Switch_Toolbox.Library
             imgList.Images.Add("folder", Properties.Resources.skeleton);
             imgList.Images.Add("TextureMaterialMap", Properties.Resources.TextureMaterialMap);
 
+            imgList.Images.Add("MetaInfo", Properties.Resources.MetaInfo);
+
             imgList.Images.Add("MaterialTranslucent", Properties.Resources.materialSphereTranslucent);
             imgList.Images.Add("MaterialTransparent", Properties.Resources.materialSphereTransparent);
 
