@@ -47,7 +47,7 @@
             this.contentContainer.Controls.Add(this.materalPathTB);
             this.contentContainer.Controls.Add(this.stLabel1);
             this.contentContainer.Controls.Add(this.texturePathTB);
-            this.contentContainer.Size = new System.Drawing.Size(164, 231);
+            this.contentContainer.Size = new System.Drawing.Size(185, 232);
             this.contentContainer.Controls.SetChildIndex(this.texturePathTB, 0);
             this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
             this.contentContainer.Controls.SetChildIndex(this.materalPathTB, 0);
@@ -64,7 +64,7 @@
             this.texturePathTB.ReadOnly = true;
             this.texturePathTB.Size = new System.Drawing.Size(121, 20);
             this.texturePathTB.TabIndex = 11;
-            this.texturePathTB.TextChanged += new System.EventHandler(this.texturePathTB_TextChanged);
+            this.texturePathTB.DoubleClick += new System.EventHandler(this.texturePathTB_DoubleClick);
             // 
             // stLabel1
             // 
@@ -92,7 +92,7 @@
             this.materalPathTB.ReadOnly = true;
             this.materalPathTB.Size = new System.Drawing.Size(121, 20);
             this.materalPathTB.TabIndex = 13;
-            this.materalPathTB.TextChanged += new System.EventHandler(this.materalPathTB_TextChanged);
+            this.materalPathTB.DoubleClick += new System.EventHandler(this.materalPathTB_DoubleClick);
             // 
             // stLabel3
             // 
@@ -119,8 +119,9 @@
             // 
             // stButton1
             // 
+            this.stButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(73, 202);
+            this.stButton1.Location = new System.Drawing.Point(101, 200);
             this.stButton1.Name = "stButton1";
             this.stButton1.Size = new System.Drawing.Size(75, 23);
             this.stButton1.TabIndex = 18;
@@ -131,7 +132,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(170, 236);
+            this.ClientSize = new System.Drawing.Size(191, 237);
             this.Name = "BMDModelImportSettings";
             this.Text = "J3D Import Settings";
             this.contentContainer.ResumeLayout(false);

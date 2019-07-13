@@ -20,16 +20,18 @@ namespace FirstPlugin
         {
             InitializeComponent();
             stComboBox1.SelectedIndex = 0;
+
+            CanResize = false;
         }
 
-        private void texturePathTB_TextChanged(object sender, EventArgs e)
+        private void texturePathTB_DoubleClick(object sender, EventArgs e)
         {
             FolderSelectDialog ofd = new FolderSelectDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
                 texturePathTB.Text = ofd.SelectedPath;
         }
 
-        private void materalPathTB_TextChanged(object sender, EventArgs e)
+        private void materalPathTB_DoubleClick(object sender, EventArgs e)
         {
             FolderSelectDialog ofd = new FolderSelectDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
