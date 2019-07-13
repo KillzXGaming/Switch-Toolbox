@@ -58,7 +58,6 @@ namespace Bfres.Structs
         }
 
         protected void NewAction(object sender, EventArgs e) { NewBoneAnim(); }
-
         public void NewBoneAnim()
         {
             var boneAnim = new BoneAnimNode("NewBoneTarget", true);
@@ -133,6 +132,11 @@ namespace Bfres.Structs
             else if (ext == ".chr0")
             {
                 STSkeleton skeleton = GetActiveSkeleton();
+
+                for (int i = 0; i <= FrameCount; i++)
+                {
+
+                }
 
                 if (SkeletalAnimU != null)
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FileName);

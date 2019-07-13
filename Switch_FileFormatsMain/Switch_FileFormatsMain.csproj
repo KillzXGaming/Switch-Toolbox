@@ -257,6 +257,12 @@
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
+    <Compile Include="GUI\BFRES\BatchEditBaseAnimDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BatchEditBaseAnimDataForm.Designer.cs">
+      <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BMD\BMDModelImportSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -968,6 +974,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BCRES\Material\SamplerEditorSimple.resx">
       <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BatchEditBaseAnimDataForm.resx">
+      <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresEditor.resx">
       <DependentUpon>BfresEditor.cs</DependentUpon>

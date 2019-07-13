@@ -72,7 +72,7 @@ namespace FirstPlugin
 
         public class AudioEntry : TreeNodeCustom
         {
-            public AudioType Type;
+            public string Magic;
             public byte[] Data;
 
             public AudioEntry()
@@ -88,12 +88,12 @@ namespace FirstPlugin
             }
             public void SetupMusic()
             {
-                if (Type == AudioType.Bfwav)
+                if (Magic == "FWAV" || Magic == "BWAV")
                 {
                     ImageKey = "bfwav";
                     SelectedImageKey = "bfwav";
                 }
-                else if (Type == AudioType.Bfstp)
+                else if (Magic == "FSTP")
                 {
                     ImageKey = "bfstp";
                     SelectedImageKey = "bfstp";
@@ -148,9 +148,9 @@ namespace FirstPlugin
             }
             public void UpdateEditor()
             {
-                switch (Type)
+                switch (Magic)
                 {
-                    case AudioType.Bfwav:
+                    case "FWAV":
                        // ShowHexView();
                         ShowBfwavPlayer();
                         break;
@@ -245,16 +245,18 @@ namespace FirstPlugin
                     BARSAudioFile audio = bars.AudioEntries[i].AudioFile;
 
                     AudioEntry node = new AudioEntry();
-                    node.Type = audio.AudioType;
+                    node.Magic = audio.Magic;
                     node.Data = audio.data;
                     node.SetupMusic();
 
-                    if (audio.AudioType == AudioType.Bfwav)
+                    if (audio.Magic == "FWAV")
                         node.Text = audioName + ".bfwav";
-                    else if (audio.AudioType == AudioType.Bfstp)
+                    else if (audio.Magic == "FSTP")
                         node.Text = audioName + ".bfstp";
+                    else if (audio.Magic == "BWAV")
+                        node.Text = audioName + ".bwav";
                     else
-                        node.Text = audioName + ".UNKOWN";
+                        node.Text = $"{audioName}.{audio.Magic}";
 
                     Nodes[1].Nodes.Add(node);
                 }

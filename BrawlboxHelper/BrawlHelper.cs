@@ -10,6 +10,26 @@ using BrawlLib.Wii.Animations;
 
 namespace BrawlboxHelper
 {
+    public class KeyGroupData
+    {
+        public float Value;
+    }
+
+    public class BoneAnimKeyData
+    {
+        public Dictionary<int, KeyGroupData> XPOS = new Dictionary<int, KeyGroupData>();
+        public Dictionary<int, KeyGroupData> YPOS = new Dictionary<int, KeyGroupData>();
+        public Dictionary<int, KeyGroupData> ZPOS = new Dictionary<int, KeyGroupData>();
+
+        public Dictionary<int, KeyGroupData> XROT = new Dictionary<int, KeyGroupData>();
+        public Dictionary<int, KeyGroupData> YROT = new Dictionary<int, KeyGroupData>();
+        public Dictionary<int, KeyGroupData> ZROT = new Dictionary<int, KeyGroupData>();
+
+        public Dictionary<int, KeyGroupData> XSCA = new Dictionary<int, KeyGroupData>();
+        public Dictionary<int, KeyGroupData> YSCA = new Dictionary<int, KeyGroupData>();
+        public Dictionary<int, KeyGroupData> ZSCA = new Dictionary<int, KeyGroupData>();
+    }
+
     public class FSHUConverter
     {
         public static ResU.ShaderParamAnim Clr02Fshu(string FileName)
@@ -241,6 +261,8 @@ namespace BrawlboxHelper
 
     public class FSKAConverter
     {
+        public static List<BoneAnimKeyData> BoneAnimKeys = new List<BoneAnimKeyData>();
+
         static float Deg2Rad = (float)(Math.PI / 180f);
         static float Rad2Deg = (float)(180f / Math.PI);
 

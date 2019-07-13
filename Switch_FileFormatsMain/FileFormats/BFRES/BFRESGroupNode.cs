@@ -82,6 +82,11 @@ namespace Bfres.Structs
                 Items.Add(new STToolStipMenuItem("Show All Models", null, ShowAllModelsAction, Keys.Control | Keys.A));
                 Items.Add(new STToolStipMenuItem("Hide All Models", null, HideAllModelsAction, Keys.Control | Keys.H));
             }
+            if (Type == BRESGroupType.SkeletalAnim)
+            {
+                Items.Add(new STToolStripSeparator());
+                Items.Add(new STToolStipMenuItem("Batch Edit Base Data", null, BatchEditBaseAnimDataAction, Keys.Control | Keys.A));
+            }
 
             return Items.ToArray();
         }
@@ -94,6 +99,66 @@ namespace Bfres.Structs
 
         protected void HideAllModelsAction(object sender, EventArgs e) { HideAllModels(); }
         protected void ShowAllModelsAction(object sender, EventArgs e) { ShowAllModels(); }
+
+        protected void BatchEditBaseAnimDataAction(object sender, EventArgs e) { BatchEditBaseAnimData(); }
+
+        private void BatchEditBaseAnimData()
+        {
+            if (Nodes.Count <= 0)
+                return;
+
+            return;
+
+            BatchEditBaseAnimDataForm form = new BatchEditBaseAnimDataForm();
+            form.LoadAnim((Animation)Nodes[0]);
+
+            if (form.ShowDialog()== DialogResult.OK)
+            {
+                foreach (FSKA animation in Nodes)
+                {
+                    if (animation.SkeletalAnimU != null)
+                    {
+                        foreach (var boneAnim in animation.SkeletalAnimU.BoneAnims)
+                        {
+                            if (boneAnim.Name == form.TargetBone)
+                            {
+                                var baseData = boneAnim.BaseData;
+                                if (form.HasCustomScale)
+                                {
+                                    boneAnim.FlagsBase |= ResU.BoneAnimFlagsBase.Scale;
+                                    boneAnim.ApplyScaleOne = false;
+                                    boneAnim.ApplyScaleUniform = false;
+                                    baseData.Scale = new Syroot.Maths.Vector3F(form.ScaleX, form.ScaleY, form.ScaleZ);
+                                }
+
+                                boneAnim.BaseData = baseData;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var boneAnim in animation.SkeletalAnim.BoneAnims)
+                        {
+                            if (boneAnim.Name == form.TargetBone)
+                            {
+                                var baseData = boneAnim.BaseData;
+                                if (form.HasCustomScale)
+                                {
+                                    boneAnim.FlagsBase |= ResNX.BoneAnimFlagsBase.Scale;
+                                    boneAnim.ApplyScaleOne = false;
+                                    boneAnim.ApplyScaleUniform = false;
+                                    baseData.Scale = new Syroot.Maths.Vector3F(form.ScaleX, form.ScaleY, form.ScaleZ);
+                                }
+
+                                boneAnim.BaseData = baseData;
+                            }
+                        }
+                    }
+
+                    animation.OpenAnimationData();
+                }
+            }
+        }
 
         public override void ReplaceAll()
         {
