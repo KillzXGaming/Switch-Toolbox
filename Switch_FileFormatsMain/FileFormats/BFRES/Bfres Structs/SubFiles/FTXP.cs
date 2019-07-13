@@ -149,6 +149,15 @@ namespace Bfres.Structs
             public override STGenericTexture GetActiveTexture(int index)
             {
                 string name = GetActiveTextureNameByIndex(index);
+
+                var bfres = (BFRES)AnimWrapper.Parent.Parent.Parent;
+                var BfresTextures = bfres.GetFTEXContainer;
+                if (BfresTextures != null)
+                {
+                    if (BfresTextures.ResourceNodes.ContainsKey(name))
+                        return (STGenericTexture)BfresTextures.ResourceNodes[name];
+                }
+
                 foreach (var ftexFolder in PluginRuntime.ftexContainers)
                 {
                     if (ftexFolder.ResourceNodes.ContainsKey(name))

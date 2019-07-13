@@ -499,19 +499,28 @@ namespace Bfres.Structs
 
             public override STGenericTexture GetActiveTexture(int index)
             {
+                string name = "";
+                try
+                {
+                    name = MatAnimWrapper.Textures[(int)index];
+                }
+                catch
+                {
+                    throw new Exception("Index out of range " + index);
+                }
+
+                var bfres = (BFRES)MatAnimWrapper.Parent.Parent.Parent;
+                var BfresTextures = bfres.GetBNTX;
+                if (BfresTextures != null)
+                {
+                    if (BfresTextures.Textures.ContainsKey(name))
+                        return BfresTextures.Textures[name];
+                }
+
                 foreach (var bntx in PluginRuntime.bntxContainers)
                 {
-                    try
-                    {
-                        string name = MatAnimWrapper.Textures[(int)index];
-
-                        if (bntx.Textures.ContainsKey(name))
-                            return bntx.Textures[name];
-                    }
-                    catch
-                    {
-                        throw new Exception("Index out of range " + index);
-                    }
+                    if (bntx.Textures.ContainsKey(name))
+                        return bntx.Textures[name];
                 }
                 return null;
             }
