@@ -163,7 +163,7 @@ namespace FirstPlugin
                 {
                     ResNX.TexturePatternAnimInfo animInfo = new ResNX.TexturePatternAnimInfo();
                     animInfo.Name = patternInfoU.Name;
-                    animInfo.CurveIndex = (uint)patternInfoU.CurveIndex;
+                    animInfo.CurveIndex = (ushort)patternInfoU.CurveIndex;
                     animInfo.BeginConstant = (ushort)patternInfoU.SubBindIndex;
                     matAnimData.TexturePatternAnimInfos.Add(animInfo);
                 }
