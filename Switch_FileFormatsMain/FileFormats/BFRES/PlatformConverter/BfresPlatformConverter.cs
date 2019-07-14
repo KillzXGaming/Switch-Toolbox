@@ -144,6 +144,7 @@ namespace FirstPlugin
             texPatternAnim.Name = materialAnim.Name;
             texPatternAnim.Path = materialAnim.Path;
             texPatternAnim.BindIndices = materialAnim.BindIndices;
+            texPatternAnim.FrameCount = materialAnim.FrameCount;
 
             //Fill both lists. On save only one will be used depending on version
             foreach (var texName in materialAnim.TextureNames)
@@ -155,6 +156,7 @@ namespace FirstPlugin
             for (int m = 0; m < materialAnim.MaterialAnimDataList.Count; m++)
             {
                 ResU.TexPatternMatAnim matAnimData = new ResU.TexPatternMatAnim();
+                texPatternAnim.TexPatternMatAnims.Add(matAnimData);
                 matAnimData.Name = materialAnim.MaterialAnimDataList[m].Name;
                 matAnimData.Curves = ConvertAnimCurveSwitchToWiiU(materialAnim.MaterialAnimDataList[m].Curves);
 
