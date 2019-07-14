@@ -223,6 +223,12 @@ namespace FirstPlugin
                 {
                     foreach (var texturePatternCfg in matCfg.TexturePatternInfos)
                     {
+                        if (texturePatternCfg.ConstantValue == null)
+                        {
+                            if (!Textures.Contains(texturePatternCfg.ConstantValue.Texture))
+                                Textures.Add(texturePatternCfg.ConstantValue.Texture);
+                        }
+
                         if (texturePatternCfg.CurveData == null)
                             continue;
 
