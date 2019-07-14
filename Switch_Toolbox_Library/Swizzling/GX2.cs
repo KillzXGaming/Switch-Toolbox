@@ -508,7 +508,17 @@ namespace Switch_Toolbox.Library.Old
 
             Console.WriteLine("swizzle pattern " + swizzle);
 
-            uint s = (swizzle << 8);
+            //Since people still have swizzle issues, lets use this older swizzle method and see if it works better
+            uint s = 0;
+            if (TileMode == 1 || TileMode == 2 ||
+                  TileMode == 3 || TileMode == 16)
+            {
+                s = swizzle << 8;
+            }
+            else
+                s = 0xd0000 | swizzle << 8;
+
+            Console.WriteLine("swizzle pattern s " + s);
 
             uint blkWidth, blkHeight;
             if (GX2.IsFormatBCN((GX2SurfaceFormat)Format))
@@ -586,10 +596,10 @@ namespace Switch_Toolbox.Library.Old
                     tiling1dLevel += 1;
             }
 
-            if (tiling1dLevelSet)
-                s |= tiling1dLevel << 16;
-            else
-                s |= 13 << 16;
+      //      if (tiling1dLevelSet)
+      //          s |= tiling1dLevel << 16;
+      //      else
+           //     s |= 13 << 16;
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.depth = Depth;
@@ -613,6 +623,10 @@ namespace Switch_Toolbox.Library.Old
             surf.imageSize = imageSize;
             surf.data = Swizzled[0];
             surf.compSel = new byte[4] { 0, 1, 2, 3 };
+
+            if (surf.format == 1)
+                surf.compSel = new byte[4] { 0, 5, 5, 5 };
+
             surf.texRegs = CreateRegisters(surf);
 
             List<byte[]> mips = new List<byte[]>();

@@ -648,7 +648,7 @@ namespace FirstPlugin
                     (uint)surface.height,
                     (uint)surface.depth,
                     (uint)surface.format,
-                    (uint)surface.swizzle,
+                    (uint)0,
                     (uint)surface.dim,
                     (uint)surface.numMips
                     );

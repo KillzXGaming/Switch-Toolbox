@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Switch_Toolbox.Library
 {
-    //Todo fix swizzle issues with this one
     public class GX2
     {
         public const uint SwizzleMask = 0xFF00FF;
@@ -451,7 +450,14 @@ namespace Switch_Toolbox.Library
 
             Console.WriteLine("swizzle pattern " + swizzle);
 
-            uint s = (swizzle << 8);
+            uint s = 0;
+            if (TileMode == 1 || TileMode == 2 ||
+                  TileMode == 3 || TileMode == 16)
+            {
+                s = swizzle << 8;
+            }
+            else
+                s = 0xd0000 | swizzle << 8;
 
             uint blkWidth, blkHeight;
             if (GX2.IsFormatBCN((GX2SurfaceFormat)Format))
@@ -531,10 +537,10 @@ namespace Switch_Toolbox.Library
                     tiling1dLevel += 1;
             }
 
-            if (tiling1dLevelSet)
-                s |= (uint)(tiling1dLevel << 16);
-            else
-                s |= (uint)(13 << 16);
+         //   if (tiling1dLevelSet)
+          //      s |= (uint)(tiling1dLevel << 16);
+        //    else
+           //     s |= (uint)(13 << 16);
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.depth = Depth;
@@ -841,6 +847,9 @@ namespace Switch_Toolbox.Library
         /*---------------------------------------
          *
          * Code ported from AboodXD's GTX Extractor:
+          A Python Address Library for Wii U textures.
+         Copyright © 2018 AboodXD
+         Licensed under GNU GPLv3
          * https://github.com/aboood40091/GTX-Extractor/blob/cf1a15c41630745d9a0d370bafe5760c1e5f8cbe/addrlib/addrlib_cy.pyx
          *
          *---------------------------------------*/
