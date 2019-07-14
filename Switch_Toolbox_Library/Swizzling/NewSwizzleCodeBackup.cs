@@ -557,6 +557,7 @@ namespace Switch_Toolbox.Library
             surf.alignment = alignment;
             surf.imageSize = imageSize;
             surf.data = Swizzled[0];
+            surf.texRegs = CreateRegisters(surf);
 
             List<byte[]> mips = new List<byte[]>();
             for (int mipLevel = 1; mipLevel < Swizzled.Count; mipLevel++)

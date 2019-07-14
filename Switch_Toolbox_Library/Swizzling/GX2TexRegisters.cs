@@ -70,6 +70,9 @@ namespace Switch_Toolbox.Library
 
         public static uint[] CreateTexRegs(uint width, uint height, uint numMips, uint format_, uint tileMode, uint pitch, byte[] compSel)
         {
+            if (compSel == null || compSel.Length != 4)
+                compSel = new byte[4] { 0, 1, 2, 3 };
+
             pitch = Math.Max(pitch, 8);
             var register0 = _register0((int)width - 1, (int)(pitch / 8) - 1, 0, (int)tileMode, 1);
 
@@ -106,7 +109,7 @@ namespace Switch_Toolbox.Library
             byte[] reg3 = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(register3));
             byte[] reg4 = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(register4));*/
 
-            return new uint[] { (uint)register0, (uint)register1, (uint)register2, (uint)register3, (uint)register4 };
+            return new uint[5] { (uint)register0, (uint)register1, (uint)register2, (uint)register3, (uint)register4 };
         }
 
     }

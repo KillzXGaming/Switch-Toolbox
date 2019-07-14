@@ -593,7 +593,7 @@ namespace FirstPlugin
                 surface.tileMode = NewSurface.tileMode;
                 surface.use = NewSurface.use;
                 surface.width = NewSurface.width;
-                surface.texRegs = GX2.CreateRegisters(NewSurface);
+                surface.texRegs = NewSurface.texRegs;
 
                 SetChannelComponents();
             }
@@ -637,33 +637,26 @@ namespace FirstPlugin
                 surface.numMips = MipCount;
                 surface.mipOffset = new uint[MipCount];
 
-                try
-                {
-                    //Create image block from bitmap first
-                    var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
+                //Create image block from bitmap first
+                var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
 
-                    //Swizzle and create surface
-                    var NewSurface = GX2.CreateGx2Texture(data, Text,
-                        (uint)surface.tileMode,
-                        (uint)surface.aa,
-                        (uint)surface.width,
-                        (uint)surface.height,
-                        (uint)surface.depth,
-                        (uint)surface.format,
-                        (uint)surface.swizzle,
-                        (uint)surface.dim,
-                        (uint)surface.numMips
-                        );
+                //Swizzle and create surface
+                var NewSurface = GX2.CreateGx2Texture(data, Text,
+                    (uint)surface.tileMode,
+                    (uint)surface.aa,
+                    (uint)surface.width,
+                    (uint)surface.height,
+                    (uint)surface.depth,
+                    (uint)surface.format,
+                    (uint)surface.swizzle,
+                    (uint)surface.dim,
+                    (uint)surface.numMips
+                    );
 
-                    ApplySurface(NewSurface);
-                    IsEdited = true;
-                    LoadOpenGLTexture();
-                    LibraryGUI.UpdateViewport();
-                }
-                catch (Exception ex)
-                {
-                    STErrorDialog.Show("Failed to swizzle and compress image " + Text, "Error", ex.ToString());
-                }
+                ApplySurface(NewSurface);
+                IsEdited = true;
+                LoadOpenGLTexture();
+                LibraryGUI.UpdateViewport();
             }
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)

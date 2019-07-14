@@ -710,6 +710,8 @@ namespace Switch_Toolbox.Library.Forms
 
         private void UpdateEdit(Image image)
         {
+            if (ActiveTexture.ArrayCount == 0) ActiveTexture.ArrayCount = 1;
+
             ActiveTexture.EditedImages = new EditedBitmap[ActiveTexture.ArrayCount];
             ActiveTexture.EditedImages[CurArrayDisplayLevel] = new EditedBitmap()
             {
@@ -751,7 +753,8 @@ namespace Switch_Toolbox.Library.Forms
 
             if (ActiveTexture.EditedImages != null && ActiveTexture.EditedImages[CurArrayDisplayLevel] != null)
             {
-                ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
+                if (ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap != null)
+                    ActiveTexture.EditedImages[CurArrayDisplayLevel].bitmap.Dispose();
                 ActiveTexture.EditedImages[CurArrayDisplayLevel] = null;
             }
 
@@ -1031,6 +1034,9 @@ namespace Switch_Toolbox.Library.Forms
 
         public void SaveAndApplyImage(Bitmap image, bool DecodeBack)
         {
+            if (image == null)
+                return;
+
             if (saveBtn.InvokeRequired)
             {
                 saveBtn.Invoke(new MethodInvoker(
