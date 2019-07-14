@@ -35,7 +35,7 @@ namespace FirstPlugin
 
         public static string FCLH = GetFilter(".bfcsh");
         public static string FSTH = GetFilter(".bfsth");
-        public static string FTXP = GetFilter(".bftxp", ".gif");
+        public static string FTXP = GetFilter(".bftxp", ".yaml", ".gif");
         public static string FMTV = GetFilter(".bfmvi");
         public static string FBNV = GetFilter(".bfbvi");
         public static string FSCN = GetFilter(".bfscn");
@@ -134,6 +134,7 @@ namespace FirstPlugin
                     case ".chr0": filters.Add(ext, "CHR0 Animation"); break;
                     case ".anim": filters.Add(ext, "Maya Animation"); break;
                     case ".yaml": filters.Add(ext, "Yet Another Markup Language"); break;
+                    case ".gif": filters.Add(ext, "Graphics Interchange Format"); break;
                     default:
                         filters.Add(ext, ""); break;
                 }

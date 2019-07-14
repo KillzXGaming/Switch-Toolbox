@@ -131,6 +131,51 @@ namespace FirstPlugin
             return matAnim;
         }
 
+        public static ResU.TexPatternAnim FTXPConvertSwitchToWiiU(ResNX.MaterialAnim materialAnim)
+        {
+            var texPatternAnim = new ResU.TexPatternAnim();
+
+            //Different versions use different lists
+            if (texPatternAnim.TextureRefNames == null)
+                texPatternAnim.TextureRefNames = new List<ResU.TextureRef>();
+            if (texPatternAnim.TextureRefs == null)
+                texPatternAnim.TextureRefs = new ResU.ResDict<ResU.TextureRef>();
+
+            texPatternAnim.Name = materialAnim.Name;
+            texPatternAnim.Path = materialAnim.Path;
+            texPatternAnim.BindIndices = materialAnim.BindIndices;
+
+            //Fill both lists. On save only one will be used depending on version
+            foreach (var texName in materialAnim.TextureNames)
+            {
+                texPatternAnim.TextureRefNames.Add(new ResU.TextureRef() { Name = texName });
+                texPatternAnim.TextureRefs.Add(texName, new ResU.TextureRef() { Name = texName });
+            }
+
+            for (int m = 0; m < materialAnim.MaterialAnimDataList.Count; m++)
+            {
+                ResU.TexPatternMatAnim matAnimData = new ResU.TexPatternMatAnim();
+                matAnimData.Name = materialAnim.MaterialAnimDataList[m].Name;
+                matAnimData.Curves = ConvertAnimCurveSwitchToWiiU(materialAnim.MaterialAnimDataList[m].Curves);
+
+               foreach (var constants in materialAnim.MaterialAnimDataList[m].Constants)
+                {
+                    matAnimData.BaseDataList.Add((ushort)(int)constants.Value);
+                }
+
+                foreach (var patternInfoNX in materialAnim.MaterialAnimDataList[m].TexturePatternAnimInfos)
+                {
+                    var patternInfoU = new ResU.PatternAnimInfo();
+                    patternInfoU.Name = patternInfoNX.Name;
+                    patternInfoU.CurveIndex = (sbyte)patternInfoNX.CurveIndex;
+                    patternInfoU.SubBindIndex = patternInfoNX.SubBindIndex;
+                    matAnimData.PatternAnimInfos.Add(patternInfoU);
+                }
+            }
+
+            return texPatternAnim;
+        }
+
         public static ResNX.MaterialAnim FTXPConvertWiiUToSwitch(ResU.TexPatternAnim texPatternAnim)
         {
             //Different versions use different lists

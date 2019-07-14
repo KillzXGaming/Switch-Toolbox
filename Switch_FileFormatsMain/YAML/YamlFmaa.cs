@@ -308,7 +308,7 @@ namespace FirstPlugin
             return config.FromYaml();
         }
 
-        public static string ToYaml(string Name, FMAA anim)
+        public static string ToYaml(string Name, MaterialAnim MatAnim)
         {
             var serializerSettings = new SerializerSettings()
             {
@@ -319,7 +319,6 @@ namespace FirstPlugin
             serializerSettings.ComparerForKeySorting = null;
             serializerSettings.RegisterTagMapping("AnimConfig", typeof(AnimConfig));
 
-            var MatAnim = anim.MaterialAnim;
             var config = new AnimConfig();
             config.ToYaml(MatAnim);
 

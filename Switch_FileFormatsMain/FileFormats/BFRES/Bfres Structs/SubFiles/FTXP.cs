@@ -226,7 +226,21 @@ namespace Bfres.Structs
 
         public override void Export(string FileName)
         {
-            TexPatternAnim.Export(FileName, GetResFile());
+            string ext = Utils.GetExtension(FileName);
+            if (ext == ".bftxp")
+            {
+                TexPatternAnim.Export(FileName, GetResFile());
+            }
+            else if (ext == ".bfmaa")
+            {
+                var fmaa = BfresPlatformConverter.FTXPConvertWiiUToSwitch(TexPatternAnim);
+                fmaa.Export(FileName, new Syroot.NintenTools.NSW.Bfres.ResFile());
+            }
+            else if (ext == ".yaml")
+            {
+                var yaml = YamlFmaa.ToYaml(FileName, BfresPlatformConverter.FTXPConvertWiiUToSwitch(TexPatternAnim));
+                System.IO.File.WriteAllText(FileName, yaml);
+            }
         }
 
         public override void Replace(string FileName) {
@@ -239,9 +253,24 @@ namespace Bfres.Structs
 
             if (ext == ".bftxp")
             {
-                TexPatternAnim.Import(FileName, resFile);
+                bool IsSwitch = BfresUtilies.IsSubSectionSwitch(FileName);
+                if (IsSwitch)
+                {
+                    var fmaa = new Syroot.NintenTools.NSW.Bfres.MaterialAnim();
+                    fmaa.Import(FileName);
+                    TexPatternAnim = BfresPlatformConverter.FTXPConvertSwitchToWiiU(fmaa);
+                }
+                else
+                    TexPatternAnim.Import(FileName, resFile);
+
                 TexPatternAnim.Name = Text;
                 LoadAnim(TexPatternAnim);
+            }
+            else if (ext == ".yaml")
+            {
+                var fmaa = new Syroot.NintenTools.NSW.Bfres.MaterialAnim();
+                fmaa = YamlFmaa.FromYaml(FileName);
+                TexPatternAnim = BfresPlatformConverter.FTXPConvertSwitchToWiiU(fmaa);
             }
             else if (ext == ".gif")
             {
