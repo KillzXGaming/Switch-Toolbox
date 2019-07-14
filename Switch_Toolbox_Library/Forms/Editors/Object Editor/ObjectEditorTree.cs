@@ -559,11 +559,6 @@ namespace Switch_Toolbox.Library.Forms
             return null;
         }
 
-        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
         private void treeViewCustom1_KeyPress(object sender, KeyEventArgs e)
         {
             if (treeViewCustom1.SelectedNode != null && e.KeyData.HasFlag(Keys.ControlKey) && treeViewCustom1.SelectedNode is IContextMenuNode)
