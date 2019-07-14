@@ -157,6 +157,13 @@ namespace FirstPlugin
                                 i++;
                             }
 
+                            curve.EndFrame = curve.Frames.Max();
+
+                            if (curve.Keys.Length > 1)
+                            {
+                                curve.Delta = curve.Keys[curve.Keys.Length - 1,0] - curve.Keys[0, 0];
+                            }
+
                             if (MaxFrame < byte.MaxValue)
                                 curve.FrameType = AnimCurveFrameType.Byte;
                             else if (MaxFrame < ushort.MaxValue)
