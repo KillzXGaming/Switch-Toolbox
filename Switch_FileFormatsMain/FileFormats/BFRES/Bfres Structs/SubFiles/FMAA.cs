@@ -62,17 +62,13 @@ namespace Bfres.Structs
 
             public MaterialAnimEntry(string name) : base(name)
             {
+           
             }
 
             public void LoadMaterial(MaterialAnimData data, FMAA materialAnimation)
             {
                 MaterialAnimData = data;
                 matAnimWrapper = materialAnimation;
-
-                CanRename = true;
-                CanReplace = true;
-                CanExport = true;
-                CanDelete = true;
             }
 
             public void CreateSampler(string Name, bool IsConstant)
@@ -340,6 +336,11 @@ namespace Bfres.Structs
         {
             ImageKey = "materialAnim";
             SelectedImageKey = "materialAnim";
+
+            CanRename = true;
+            CanReplace = true;
+            CanExport = true;
+            CanDelete = true;
         }
 
         protected void NewAction(object sender, EventArgs e) { NewMaterialAnim(); }
