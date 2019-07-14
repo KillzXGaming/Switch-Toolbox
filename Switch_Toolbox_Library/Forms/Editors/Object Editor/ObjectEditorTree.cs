@@ -561,7 +561,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void treeViewCustom1_KeyPress(object sender, KeyEventArgs e)
         {
-            if (treeViewCustom1.SelectedNode != null && e.KeyData.HasFlag(Keys.ControlKey) && treeViewCustom1.SelectedNode is IContextMenuNode)
+            if (treeViewCustom1.SelectedNode != null && treeViewCustom1.SelectedNode is IContextMenuNode)
             {
                 IContextMenuNode node = (IContextMenuNode)treeViewCustom1.SelectedNode;
 
