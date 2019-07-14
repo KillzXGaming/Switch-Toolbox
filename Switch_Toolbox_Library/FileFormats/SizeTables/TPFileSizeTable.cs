@@ -6,17 +6,76 @@ using System.Threading.Tasks;
 using Switch_Toolbox.Library.IO;
 using Switch_Toolbox.Library;
 using Syroot.BinaryData;
+using Switch_Toolbox.Library.Forms;
+using System.Windows.Forms;
 
 namespace Switch_Toolbox.Library
 {
-    public class TPFileSizeTable
+    public class TPFileSizeTable : IEditor<FileTableViewTPHD>, IFileFormat
     {
+        public FileType FileType { get; set; } = FileType.Resource;
+
+        public bool CanSave { get; set; } = true;
+        public bool FileIsEdited { get; set; } = false;
+        public bool FileIsCompressed { get; set; } = false;
+        public string[] Description { get; set; } = new string[] { "TPHD FileTable" };
+        public string[] Extension { get; set; } = new string[] { "*.txt" };
+        public CompressionType CompressionType { get; set; } = CompressionType.None;
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+        public IFileInfo IFileInfo { get; set; }
+
+        private bool IsDecompressed = false;
+
+        public bool Identify(System.IO.Stream stream)
+        {
+            return FileName == "FileSizeList.txt" || FileName == "DecompressedSizeList.txt";
+        }
+
+        public Type[] Types
+        {
+            get
+            {
+                List<Type> types = new List<Type>();
+                return types.ToArray();
+            }
+        }
+
+        public FileTableViewTPHD OpenForm()
+        {
+            FileTableViewTPHD form = new FileTableViewTPHD();
+            form.Dock = DockStyle.Fill;
+            form.LoadTable(this, DecompressedFileSizes.Count > 0);
+            return form;
+        }
+
+        public void FillEditor(UserControl control)
+        {
+        }
+
         public class DecompressedTableEntry
         {
             public string FilePath { get; set; }
             public uint CompressedSize { get; set; }
             public uint DecompressedSize { get; set; }
             public string Precentage { get; set; }
+        }
+
+        public void Load(System.IO.Stream stream)
+        {
+            IsDecompressed = FileName == "DecompressedSizeList.txt";
+            if (IsDecompressed)
+                ReadDecompressedTable(new FileReader(stream));
+            else
+                ReadCompressedTable(new FileReader(stream));
+        }
+        public void Unload()
+        {
+
+        }
+        public byte[] Save()
+        {
+            return null;
         }
 
         public bool UseCompressedSizes = false;

@@ -215,6 +215,12 @@
     <Compile Include="Compression\YAZ0.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Forms\SizeTables\FileTableViewTPHD.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\SizeTables\FileTableViewTPHD.Designer.cs">
+      <DependentUpon>FileTableViewTPHD.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SceneSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -901,6 +907,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditor2.resx">
       <DependentUpon>UVEditor2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SizeTables\FileTableViewTPHD.resx">
+      <DependentUpon>FileTableViewTPHD.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GenericEditorForm.resx">
       <DependentUpon>GenericEditorForm.cs</DependentUpon>

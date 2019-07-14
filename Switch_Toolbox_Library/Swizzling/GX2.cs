@@ -533,7 +533,7 @@ namespace Switch_Toolbox.Library.Old
             if (tilingDepth != 1)
                 throw new Exception($"Unsupported Depth {surfOut.depth}!");
 
-            int tiling1dLevel = 0;
+            uint tiling1dLevel = 0;
             bool tiling1dLevelSet = false;
 
             List<uint> mipOffsets = new List<uint>();
@@ -582,14 +582,14 @@ namespace Switch_Toolbox.Library.Old
                     tiling1dLevelSet = true;
                 }
 
-                if (tiling1dLevelSet == false)
+                if (!tiling1dLevelSet)
                     tiling1dLevel += 1;
             }
 
             if (tiling1dLevelSet)
-                s |= (uint)(tiling1dLevel << 16);
+                s |= tiling1dLevel << 16;
             else
-                s |= (uint)(13 << 16);
+                s |= 13 << 16;
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.depth = Depth;
@@ -951,7 +951,7 @@ namespace Switch_Toolbox.Library.Old
 
             if (depth > 1)
             {
-                bankSwizzle = (uint)(depthLevel % 4);
+                //bankSwizzle = (uint)(depthLevel % 4);
             }
 
             tileMode = GX2TileModeToAddrTileMode(tileMode);

@@ -316,6 +316,7 @@ namespace Switch_Toolbox.Library.IO
             }
 
             fileReader.Close();
+            fileReader.Dispose();
 
             foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
             {

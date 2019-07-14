@@ -15,6 +15,7 @@ namespace Switch_Toolbox.Library
             Formats.Add(typeof(DDS));
             Formats.Add(typeof(ASTC));
             Formats.Add(typeof(TGA));
+            Formats.Add(typeof(TPFileSizeTable));
             return Formats.ToArray();
         }
 
