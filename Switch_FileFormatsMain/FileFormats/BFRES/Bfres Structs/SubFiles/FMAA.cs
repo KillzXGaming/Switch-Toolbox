@@ -132,9 +132,9 @@ namespace Bfres.Structs
             int TexturePatternCurveIndex = 0;
             int ParamCurveIndex = 0;
 
+            MaterialAnim.MaterialAnimDataList.Clear();
             foreach (MaterialAnimEntry mat in Materials)
             {
-                mat.MaterialAnimData = new MaterialAnimData();
                 mat.MaterialAnimData.Name = mat.Text;
                 MaterialAnim.MaterialAnimDataList.Add(mat.MaterialAnimData);
 
