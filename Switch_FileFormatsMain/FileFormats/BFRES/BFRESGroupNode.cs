@@ -522,10 +522,22 @@ namespace Bfres.Structs
                         }
                         break;
                     case BRESGroupType.TexPatAnim:
-                        FTXP ftxp = new FTXP(new ResU.TexPatternAnim());
-                        ftxp.Text = ResourceName;
-                        ftxp.Replace(FileName, resFileU);
-                        Nodes.Add(ftxp);
+                        if (IsWiiU)
+                        {
+                            FTXP ftxp = new FTXP(new ResU.TexPatternAnim());
+                            ftxp.Text = ResourceName;
+                            ftxp.Replace(FileName, resFileU);
+                            Nodes.Add(ftxp);
+                        }
+                        else
+                        {
+                            FMAA fmaaTxp = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.TexturePattern);
+                            fmaaTxp.Text = ResourceName;
+                            fmaaTxp.Replace(FileName);
+                            Nodes.Add(fmaaTxp);
+                        }
+
+                     
                         break;
                     case BRESGroupType.BoneVisAnim:
                         FVIS fbnv = new FVIS();
