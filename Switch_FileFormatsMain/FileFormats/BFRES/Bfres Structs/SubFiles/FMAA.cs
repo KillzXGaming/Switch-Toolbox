@@ -339,6 +339,8 @@ namespace Bfres.Structs
             CanReplace = true;
             CanExport = true;
             CanDelete = true;
+
+            Materials.Clear();
         }
 
         protected void NewAction(object sender, EventArgs e) { NewMaterialAnim(); }
@@ -370,7 +372,6 @@ namespace Bfres.Structs
             MaterialAnim = anim;
             FrameCount = MaterialAnim.FrameCount;
             Text = GetString(anim.Name);
-
             if (anim.TextureNames != null)
             {
                 foreach (var name in anim.TextureNames)
