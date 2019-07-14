@@ -107,7 +107,7 @@ namespace FirstPlugin
                     case ".bfbn": filters.Add(ext, "Bfres Bone"); break;
                     case ".bfskl": filters.Add(ext, "Bfres Skeleton"); break;
                     case ".bfska": filters.Add(ext, "Bfres Skeletal Animation"); break;
-                    case ".bfmma": filters.Add(ext, "Bfres Material Animation"); break;
+                    case ".bfmaa": filters.Add(ext, "Bfres Material Animation"); break;
                     case ".bfshu": filters.Add(ext, "Bfres Shader Param Animation"); break;
                     case ".bfcsh": filters.Add(ext, "Bfres Color Animation"); break;
                     case ".bfsth": filters.Add(ext, "Bfres Texture Srt Animation"); break;
