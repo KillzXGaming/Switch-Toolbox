@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Bfres.Structs;
 using SharpYaml;
+using SharpYaml.Events;
 using SharpYaml.Serialization;
+using SharpYaml.Serialization.Serializers;
 using Syroot.NintenTools.NSW.Bfres;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace FirstPlugin
 {
@@ -19,10 +23,12 @@ namespace FirstPlugin
             public bool Loop { get; set; }
             public int FrameCount { get; set; }
 
-            public List<MatAnimConfig> MaterialAnimConfigs = new List<MatAnimConfig>();
+            public List<MatAnimConfig> MaterialAnimConfigs { get; set; }
 
-            public AnimConfig(MaterialAnim materialAnim)
+            public void ToYaml(MaterialAnim materialAnim)
             {
+                MaterialAnimConfigs = new List<MatAnimConfig>();
+
                 Name = materialAnim.Name;
                 Path = materialAnim.Path;
                 FrameCount = materialAnim.FrameCount;
@@ -133,7 +139,7 @@ namespace FirstPlugin
                             int FrameCount = texturePatternCfg.CurveData.KeyFrames.Count;
 
                             curve.Frames = new float[FrameCount];
-                            curve.Keys = new float[FrameCount, 0];
+                            curve.Keys = new float[FrameCount, 1];
 
                             int MaxFrame = 0;
                             int MaxIndex = 0;
@@ -201,12 +207,17 @@ namespace FirstPlugin
 
         public class ConstantTPConfig
         {
-            public string Texture;
+            public string Texture { get; set; }
         }
 
         public class CurveTPConfig
         {
-            public Dictionary<int, string> KeyFrames = new Dictionary<int, string>();
+            public Dictionary<int, string> KeyFrames { get; set; }
+
+            public CurveTPConfig()
+            {
+                KeyFrames = new Dictionary<int, string>(); 
+            }
         }
 
         public class MatAnimConfig
@@ -247,14 +258,15 @@ namespace FirstPlugin
         {
             var serializerSettings = new SerializerSettings()
             {
-                EmitTags = false
+               // EmitTags = false
             };
 
             serializerSettings.DefaultStyle = YamlStyle.Any;
             serializerSettings.ComparerForKeySorting = null;
+            serializerSettings.RegisterTagMapping("AnimConfig", typeof(AnimConfig));
 
-            var serializer = new Serializer(serializerSettings);
-            var config = serializer.Deserialize<AnimConfig>(Name);
+            var serializer = new Serializer( serializerSettings);
+            var config = serializer.Deserialize<AnimConfig>(File.ReadAllText(Name));
 
             return ((AnimConfig)config).FromYaml();
         }
@@ -263,17 +275,21 @@ namespace FirstPlugin
         {
             var serializerSettings = new SerializerSettings()
             {
-                EmitTags = false
+              //  EmitTags = false
             };
 
             serializerSettings.DefaultStyle = YamlStyle.Any;
             serializerSettings.ComparerForKeySorting = null;
+            serializerSettings.RegisterTagMapping("AnimConfig", typeof(AnimConfig));
 
             var MatAnim = anim.MaterialAnim;
-            var config = new AnimConfig(MatAnim);
+            var config = new AnimConfig();
+            config.ToYaml(MatAnim);
 
             var serializer = new Serializer(serializerSettings);
-            return serializer.Serialize(config);
+            string yaml = serializer.Serialize(config, typeof(AnimConfig));
+
+            return yaml;
         }
 
         private void SetConfig()

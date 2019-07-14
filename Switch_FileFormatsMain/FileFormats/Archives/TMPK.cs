@@ -123,6 +123,7 @@ namespace FirstPlugin
 
                 writer.Write(files[i].FileData);
             }
+
             writer.Close();
             writer.Dispose();
         }
