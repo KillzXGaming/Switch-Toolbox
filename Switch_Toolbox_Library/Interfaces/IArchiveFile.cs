@@ -110,7 +110,7 @@ namespace Switch_Toolbox.Library
 
         public virtual void Export()
         {
-            string fileName = Path.GetFileName(FileName.RemoveIllegaleFileNameCharacters());
+            string fileName = Path.GetFileName(FileName.RemoveIllegaleFolderNameCharacters());
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = fileName;
