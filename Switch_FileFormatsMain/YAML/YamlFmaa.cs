@@ -56,6 +56,12 @@ namespace FirstPlugin
                         infoCfg.IsConstant = patternInfo.BeginConstant != ushort.MaxValue;
                         matConfig.TexturePatternInfos.Add(infoCfg);
 
+                        if (infoCfg.IsConstant)
+                        {
+                            infoCfg.ConstantValue = new ConstantTPConfig();
+                            int Index = (int)mat.Constants[(int)patternInfo.BeginConstant].Value;
+                            infoCfg.ConstantValue.Texture = materialAnim.TextureNames[Index];
+                        }
                         if (patternInfo.CurveIndex != uint.MaxValue)
                         {
                             var curve = mat.Curves[(int)patternInfo.CurveIndex];
@@ -75,6 +81,11 @@ namespace FirstPlugin
                     }
                 }
             }
+        }
+
+        public class ConstantTPConfig
+        {
+            public string Texture;
         }
 
         public class CurveTPConfig
@@ -111,6 +122,8 @@ namespace FirstPlugin
 
             public bool IsConstant { get; set; }
 
+            public ConstantTPConfig ConstantValue { get; set; }
+
             public CurveTPConfig CurveData { get; set; }
         }
 
@@ -120,6 +133,9 @@ namespace FirstPlugin
             {
                 EmitTags = false
             };
+
+            serializerSettings.DefaultStyle = YamlStyle.Any;
+            serializerSettings.ComparerForKeySorting = null;
 
             var MatAnim = anim.MaterialAnim;
             var config = new AnimConfig(MatAnim);
