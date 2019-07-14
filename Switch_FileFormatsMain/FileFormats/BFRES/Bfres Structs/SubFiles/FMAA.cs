@@ -24,6 +24,25 @@ namespace Bfres.Structs
         private static readonly string VisibiltyAnimType = "_fvm";
         private static readonly string VisibiltyAnimType2 = "_vm";
 
+        public string GetTypeExtension()
+        {
+            if (Parent == null)
+                return "";
+
+            BFRESGroupNode AnimFolder = (BFRESGroupNode)Parent;
+
+            switch (AnimFolder.Type)
+            {
+                case BRESGroupType.TexPatAnim: return TexturePatternAnimType;
+                case BRESGroupType.ShaderParamAnim: return ShaderParamAnimType;
+                case BRESGroupType.TexSrtAnim: return TextureSrtAnimType;
+                case BRESGroupType.ColorAnim: return ColorAnimType;
+                case BRESGroupType.MatVisAnim: return VisibiltyAnimType;
+                default:
+                    return "";
+            }
+        }
+
         public static bool IsShaderParamAnimation(string name) {
             return name.Contains(ShaderParamAnimType) ||
                    name.Contains(ShaderParamAnimType2);
@@ -709,20 +728,20 @@ namespace Bfres.Structs
             if (ext == ".bfmaa")
             {
                 MaterialAnim.Import(FileName);
-                MaterialAnim.Name = Text;
+                MaterialAnim.Name = Text + GetTypeExtension();
                 LoadAnim(MaterialAnim);
             }
             else if (ext == ".yaml")
             {
                 MaterialAnim = YamlFmaa.FromYaml(FileName);
-                MaterialAnim.Name = Text;
+                MaterialAnim.Name = Text + GetTypeExtension();
                 LoadAnim(MaterialAnim);
             }
             else if (ext == ".gif" || ext == ".png" || ext == ".apng")
             {
                 BNTX bntx = PluginRuntime.bntxContainers[0];
                 GifToTexturePatternAnimation anim = new GifToTexturePatternAnimation(FileName, bntx, this);
-                MaterialAnim.Name = Text;
+                MaterialAnim.Name = Text + GetTypeExtension();
                 LoadAnim(MaterialAnim);
             }
         }
