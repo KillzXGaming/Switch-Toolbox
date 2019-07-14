@@ -558,5 +558,28 @@ namespace Switch_Toolbox.Library.Forms
 
             return null;
         }
+
+        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void treeViewCustom1_KeyPress(object sender, KeyEventArgs e)
+        {
+            if (treeViewCustom1.SelectedNode != null && treeViewCustom1.SelectedNode is IContextMenuNode)
+            {
+                IContextMenuNode node = (IContextMenuNode)treeViewCustom1.SelectedNode;
+
+                var Items = node.GetContextMenuItems();
+                foreach (ToolStripItem toolstrip in Items)
+                {
+                    if (toolstrip is ToolStripMenuItem)
+                    {
+                        if (((ToolStripMenuItem)toolstrip).ShortcutKeys == e.KeyData)
+                            toolstrip.PerformClick();
+                    }
+                }
+            }
+        }
     }
 }
