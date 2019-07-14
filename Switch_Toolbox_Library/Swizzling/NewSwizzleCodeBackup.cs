@@ -607,6 +607,11 @@ namespace Switch_Toolbox.Library
             return ((X - 1) | (Y - 1)) + 1;
         }
 
+        public static uint[] CreateRegisters(GX2Surface surface)
+        {
+            return GX2TexRegisters.CreateTexRegs(surface.width, surface.height, surface.numMips, surface.format, surface.tileMode, surface.pitch, surface.compSel);
+        }
+
         public static byte[] Decode(GX2Surface tex, int ArrayIndex = -1, int MipIndex = -1, string DebugTextureName = "")
         {
             uint blkWidth, blkHeight;

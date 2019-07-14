@@ -430,6 +430,11 @@ namespace Switch_Toolbox.Library.Old
             Console.WriteLine($"tileIndex     {surf.tileIndex}");
         }
 
+        public static uint[] CreateRegisters(GX2Surface surface)
+        {
+            return GX2TexRegisters.CreateTexRegs(surface.width, surface.height, surface.numMips, surface.format, surface.tileMode, surface.pitch, surface.compSel);
+        }
+
         public static void GenerateMipSurfaceData(GX2Surface surface)
         {
             var surfOut = getSurfaceInfo((GX2SurfaceFormat)surface.format, surface.width, surface.height, 1, 1, surface.tileMode, 0, 0);

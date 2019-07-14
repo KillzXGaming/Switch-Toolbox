@@ -590,10 +590,10 @@ namespace FirstPlugin
                 surface.pitch = NewSurface.pitch;
                 surface.resourceFlags = NewSurface.resourceFlags;
                 surface.swizzle = NewSurface.swizzle;
-             //   surface.texRegs = NewSurface.texRegs;
                 surface.tileMode = NewSurface.tileMode;
                 surface.use = NewSurface.use;
                 surface.width = NewSurface.width;
+                surface.texRegs = GX2.CreateRegisters(NewSurface);
 
                 SetChannelComponents();
             }
@@ -733,6 +733,7 @@ namespace FirstPlugin
                     surface.numSlices = ftex.texture.ArrayLength;
                     surface.imageCount = ftex.texture.MipCount;
                     surface.pitch = ftex.texture.Pitch;
+                    surface.texRegs = GX2.CreateRegisters(surface);
 
                     SetChannelComponents();
 
