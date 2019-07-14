@@ -201,6 +201,9 @@ namespace FirstPlugin.Forms
                 }
             }
 
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
             Thread = new Thread((ThreadStart)(() =>
             {
                 for (int Frame = 0; Frame <= anim.FrameCount; Frame++)
@@ -277,6 +280,10 @@ namespace FirstPlugin.Forms
         private void AddKeyFrame(int Index, int Frame, int ImageIndex)
         {
             if (activeSampler == null)
+                return;
+
+            bool IsValidIndex = Index < ActiveMaterialAnim.Textures.Count && Index != -1;
+            if (!IsValidIndex) //Indices can be invalid for example if an animation is switched quickly in editor
                 return;
 
             string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)Index);

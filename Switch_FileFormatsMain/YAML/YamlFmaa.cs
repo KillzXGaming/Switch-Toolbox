@@ -102,6 +102,9 @@ namespace FirstPlugin
                 for (int i = 0; i < matAnim.BindIndices.Length; i++)
                     matAnim.BindIndices[i] = ushort.MaxValue;
 
+                int ShaderParamCurveIndex = 0;
+                int TexturePatternCurveIndex = 0;
+
                 Console.WriteLine("MaterialAnimConfigs " + MaterialAnimConfigs.Count);
                 foreach (var matCfg in MaterialAnimConfigs)
                 {
@@ -109,6 +112,8 @@ namespace FirstPlugin
                     matAnimData.Name = matCfg.Name;
                     matAnimData.Constants = new List<AnimConstant>();
                     matAnimData.Curves = new List<AnimCurve>();
+                    matAnimData.TexturePatternAnimInfos = new List<TexturePatternAnimInfo>();
+                    matAnimData.ParamAnimInfos = new List<ParamAnimInfo>();
                     matAnimData.BeginVisalConstantIndex = -1;
                     matAnimData.ShaderParamCurveIndex = -1;
                     matAnimData.VisualConstantIndex = -1;
@@ -119,7 +124,6 @@ namespace FirstPlugin
                     uint CurveIndex = 0;
                     ushort BeginConstantIndex = 0;
 
-                    Console.WriteLine("texturePatternCfg " + matCfg.TexturePatternInfos.Count);
                     foreach (var texturePatternCfg in matCfg.TexturePatternInfos)
                     {
                         TexturePatternAnimInfo patternInfo = new TexturePatternAnimInfo();
@@ -142,7 +146,7 @@ namespace FirstPlugin
                         {
                             patternInfo.CurveIndex = CurveIndex++;
 
-                            matAnimData.TexturePatternCurveIndex = 0;
+                            matAnimData.TexturePatternCurveIndex = TexturePatternCurveIndex;
                             matAnimData.BeginVisalConstantIndex = 0;
 
                             AnimCurve curve = new AnimCurve();
@@ -204,9 +208,12 @@ namespace FirstPlugin
                     {
 
                     }
+
+                    TexturePatternCurveIndex += matAnimData.TexturePatternAnimInfos.Where(item => item.CurveIndex != uint.MaxValue).ToList().Count;
+                    ShaderParamCurveIndex += matAnimData.ParamAnimInfos.Where(item => item.BeginCurve != ushort.MaxValue).ToList().Count;
                 }
 
-                 return matAnim;
+                return matAnim;
             }
 
             private List<string> GenerateTextureList()
