@@ -81,6 +81,108 @@ namespace FirstPlugin
                     }
                 }
             }
+
+            public MaterialAnim FromYaml()
+            {
+                MaterialAnim matAnim = new MaterialAnim();
+                matAnim.Name = Name;
+                matAnim.Path = Path;
+                matAnim.FrameCount = FrameCount;
+                matAnim.TextureNames = GenerateTextureList();
+
+                foreach (var matCfg in MaterialAnimConfigs)
+                {
+                    var matAnimData = new MaterialAnimData();
+                    matAnimData.Constants = new List<AnimConstant>();
+                    matAnimData.Curves = new List<AnimCurve>();
+                    matAnimData.BeginVisalConstantIndex = 0;
+
+                    foreach (var texturePatternCfg in matCfg.TexturePatternInfos)
+                    {
+                        if (texturePatternCfg.IsConstant && texturePatternCfg.ConstantValue != null)
+                        {
+                            AnimConstant constant = new AnimConstant();
+                            constant.AnimDataOffset = 0;
+                            constant.Value = matAnim.TextureNames.IndexOf(texturePatternCfg.ConstantValue.Texture);
+                        }
+                        else if (texturePatternCfg.CurveData != null)
+                        {
+                            AnimCurve curve = new AnimCurve();
+                            matAnimData.Curves.Add(curve);
+
+                            curve.Offset = 0;
+                            curve.AnimDataOffset = 0;
+                            curve.Scale = 1;
+                            curve.CurveType = AnimCurveType.StepInt;
+                            curve.StartFrame = 0;
+
+                            int FrameCount = texturePatternCfg.CurveData.KeyFrames.Count;
+
+                            curve.Frames = new float[FrameCount];
+                            curve.Keys = new float[FrameCount, 0];
+
+                            int MaxFrame = 0;
+                            int MaxIndex = 0;
+
+                            int i = 0;
+                            foreach (var KeyFrame in texturePatternCfg.CurveData.KeyFrames)
+                            {
+                                int Index = matAnim.TextureNames.IndexOf(KeyFrame.Value);
+                                curve.Frames[i] = KeyFrame.Key;
+                                curve.Keys[i, 0] = Index;
+
+                                MaxFrame = Math.Max(MaxIndex, KeyFrame.Key);
+                                MaxIndex = Math.Max(MaxIndex, Index);
+
+                                i++;
+                            }
+
+                            if (MaxFrame < byte.MaxValue)
+                                curve.FrameType = AnimCurveFrameType.Byte;
+                            else if (MaxFrame < ushort.MaxValue)
+                                curve.FrameType = AnimCurveFrameType.Decimal10x5;
+                            else
+                                curve.FrameType = AnimCurveFrameType.Single;
+
+                            if (MaxIndex < byte.MaxValue)
+                                curve.KeyType = AnimCurveKeyType.SByte;
+                            else if (MaxIndex < ushort.MaxValue)
+                                curve.KeyType = AnimCurveKeyType.Int16;
+                            else
+                                curve.KeyType = AnimCurveKeyType.Single;
+
+                        }
+                    }
+
+                    foreach (var paramCfg in matCfg.ParamInfos)
+                    {
+
+                    }
+
+                    matAnim.MaterialAnimDataList.Add(matAnimData);
+                }
+
+                 return matAnim;
+            }
+
+            private List<string> GenerateTextureList()
+            {
+                List<string> Textures = new List<string>();
+                foreach (var matCfg in MaterialAnimConfigs)
+                {
+                    foreach (var texturePatternCfg in matCfg.TexturePatternInfos)
+                    {
+                        if (texturePatternCfg.CurveData == null)
+                            continue;
+
+                        foreach (var KeyFrame in texturePatternCfg.CurveData.KeyFrames)
+                            if (!Textures.Contains(KeyFrame.Value))
+                                Textures.Add(KeyFrame.Value);
+                    }
+                }
+
+                return Textures;
+            }
         }
 
         public class ConstantTPConfig
@@ -125,6 +227,14 @@ namespace FirstPlugin
             public ConstantTPConfig ConstantValue { get; set; }
 
             public CurveTPConfig CurveData { get; set; }
+        }
+
+        public static MaterialAnim FromYaml(string Name)
+        {
+            var serializer = new Serializer();
+            var config = serializer.Deserialize(Name);
+
+            return ((AnimConfig)config).FromYaml();
         }
 
         public static string ToYaml(string Name, FMAA anim)

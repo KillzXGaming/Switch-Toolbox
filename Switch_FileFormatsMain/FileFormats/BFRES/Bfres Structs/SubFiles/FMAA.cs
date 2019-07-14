@@ -713,7 +713,9 @@ namespace Bfres.Structs
             }
             else if (ext == ".yaml")
             {
-              
+                MaterialAnim = YamlFmaa.FromYaml(FileName);
+                MaterialAnim.Name = Text;
+                LoadAnim(MaterialAnim);
             }
             else if (ext == ".gif" || ext == ".png" || ext == ".apng")
             {
