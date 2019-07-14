@@ -72,8 +72,20 @@ namespace FirstPlugin
 
         public class AudioEntry : TreeNodeCustom
         {
+            public BARSAudioFile audioFile;
+
             public string Magic;
-            public byte[] Data;
+            public byte[] Data
+            {
+                get
+                {
+                    return audioFile.data;
+                }
+                set
+                {
+                    audioFile.data = value;
+                }
+            }
 
             public AudioEntry()
             {
@@ -248,8 +260,8 @@ namespace FirstPlugin
                     BARSAudioFile audio = bars.AudioEntries[i].AudioFile;
 
                     AudioEntry node = new AudioEntry();
+                    node.audioFile = audio;
                     node.Magic = audio.Magic;
-                    node.Data = audio.data;
                     node.SetupMusic();
 
                     if (audio.Magic == "FWAV")
@@ -290,23 +302,6 @@ namespace FirstPlugin
         public byte[] Save()
         {
             MemoryStream mem = new MemoryStream();
-
-            foreach (TreeNode node in Nodes[1].Nodes)
-            {
-                if (node is AudioEntry)
-                {
-                    for (int i = 0; i < bars.AudioEntries.Count; i++)
-                    {
-                        string audioName = bars.AudioEntries[i].MetaData.Name;
-
-                        if (Path.GetFileNameWithoutExtension(node.Text) == audioName)
-                        {
-                            bars.AudioEntries[i].AudioFile.data = ((AudioEntry)node).Data;
-                        }
-                    }
-                }
-            }
-
             bars.Save(mem);
             return mem.ToArray();
         }
