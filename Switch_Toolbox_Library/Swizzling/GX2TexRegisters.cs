@@ -12,7 +12,7 @@ namespace Switch_Toolbox.Library
         /*
          Copyright © 2018 AboodXD
          Licensed under GNU GPLv3*/
-        public static int _register0(int width, int pitch, int tileType, int tileMode, int dim)
+        public static uint _register0(uint width, uint pitch, uint tileType, uint tileMode, uint dim)
         {
             return (
               (width & 0x1FFF) << 19
@@ -26,9 +26,9 @@ namespace Switch_Toolbox.Library
         public static int _register1(int format_, int depth, int height)
         {
             return (
-       (format_ & 0x3F) << 26
-     | (depth & 0x1FFF) << 13
-     | (height & 0x1FFF));
+               (format_ & 0x3F) << 26
+             | (depth & 0x1FFF) << 13
+             | (height & 0x1FFF));
         }
 
         public static int _register2(int baseLevel, int dstSelW, int dstSelZ, int dstSelY, int dstSelX, int requestSize, int endian, int forceDegamma, int surfMode, int numFormat, int formatComp)
@@ -82,7 +82,7 @@ namespace Switch_Toolbox.Library
             }
 
             pitch = Math.Max(pitch, 8);
-            var register0 = _register0((int)width - 1, (int)(pitch / 8) - 1, 0, (int)tileMode, 1);
+            var register0 = _register0(width - 1, (pitch / 8) - 1, 0, tileMode, 1);
 
             // register1
             var register1 = _register1((int)format_, 0, (int)height - 1);
@@ -117,7 +117,7 @@ namespace Switch_Toolbox.Library
             byte[] reg3 = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(register3));
             byte[] reg4 = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(register4));*/
 
-            return new uint[5] { (uint)register0, (uint)register1, (uint)register2, (uint)register3, (uint)register4 };
+            return new uint[5] { register0, (uint)register1, (uint)register2, (uint)register3, (uint)register4 };
         }
 
     }

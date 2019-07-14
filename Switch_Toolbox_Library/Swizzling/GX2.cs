@@ -432,7 +432,12 @@ namespace Switch_Toolbox.Library.Old
 
         public static uint[] CreateRegisters(GX2Surface surface)
         {
-            return GX2TexRegisters.CreateTexRegs(surface.width, surface.height, surface.numMips, surface.format, surface.tileMode, surface.pitch, surface.compSel);
+            Console.WriteLine("BCN " + IsFormatBCN((GX2SurfaceFormat)surface.format));
+
+            if (IsFormatBCN((GX2SurfaceFormat)surface.format))
+                return GX2TexRegisters.CreateTexRegs(surface.width, surface.height, surface.numMips, surface.format, surface.tileMode, surface.pitch * 4, surface.compSel);
+            else
+                return GX2TexRegisters.CreateTexRegs(surface.width, surface.height, surface.numMips, surface.format, surface.tileMode, surface.pitch, surface.compSel);
         }
 
         public static void GenerateMipSurfaceData(GX2Surface surface)
