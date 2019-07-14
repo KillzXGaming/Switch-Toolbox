@@ -95,10 +95,11 @@ namespace FirstPlugin
             //Read file
             GMXHeader = new Header();
             GMXHeader.Read(new FileReader(stream));
+
+            int MeshIndex = 0;
             for (int i = 0; i < GMXHeader.Meshes.Count; i++)
             {
                 var renderedMesh = new GenericRenderedObject();
-                renderedMesh.Text = $"Mesh ({i})";
                 renderedMesh.ImageKey = "mesh";
                 renderedMesh.SelectedImageKey = "mesh";
                 renderedMesh.Checked = true;
@@ -136,8 +137,13 @@ namespace FirstPlugin
                 }
 
                 renderedMesh.Tag = GMXHeader.Meshes[i];
-                Nodes.Add(renderedMesh);
-                Renderer.Meshes.Add(renderedMesh);
+
+                if (GMXHeader.Meshes[i].VertexGroup != null)
+                {
+                    renderedMesh.Text = $"Mesh ({MeshIndex++})";
+                    Nodes.Add(renderedMesh);
+                    Renderer.Meshes.Add(renderedMesh);
+                }
             }
         }
         public void Unload()
@@ -318,6 +324,7 @@ namespace FirstPlugin
                         {
                             Vertex vert = new Vertex();
                             uint Unknown = reader.ReadUInt32(); //Bone index?
+
                             vert.pos = reader.ReadVec3();
                             vert.nrm = reader.ReadVec3();
                             vert.uv0 = reader.ReadVec2();
