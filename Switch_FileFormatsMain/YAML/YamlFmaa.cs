@@ -30,10 +30,23 @@ namespace FirstPlugin
                 {
                     MatAnimConfig matConfig = new MatAnimConfig();
                     matConfig.Name = mat.Name;
+                    MaterialAnimConfigs.Add(matConfig);
 
                     foreach (var paramInfo in mat.ParamAnimInfos)
                     {
+                        ParamInfo paramCfg = new ParamInfo();
+                        paramCfg.Name = paramInfo.Name;
+                        paramCfg.IsConstant = paramInfo.BeginConstant != ushort.MaxValue;
+                        matConfig.ParamInfos.Add(paramCfg);
 
+                        if (paramInfo.BeginCurve != ushort.MaxValue)
+                        {
+                            var curve = mat.Curves[(int)paramInfo.BeginCurve];
+                            for (int i = 0; i < paramInfo.IntCurveCount + paramInfo.FloatCurveCount; i++)
+                            {
+
+                            }
+                        }
                     }
 
                     foreach (var patternInfo in mat.TexturePatternAnimInfos)
@@ -41,10 +54,23 @@ namespace FirstPlugin
                         PatternInfo infoCfg = new PatternInfo();
                         infoCfg.Name = patternInfo.Name;
                         infoCfg.IsConstant = patternInfo.BeginConstant != ushort.MaxValue;
+                        matConfig.TexturePatternInfos.Add(infoCfg);
+
                         if (patternInfo.CurveIndex != uint.MaxValue)
                         {
                             var curve = mat.Curves[(int)patternInfo.CurveIndex];
                             infoCfg.CurveData = new CurveTPConfig();
+
+                            if (curve.Scale == 0)
+                                curve.Scale = 1;
+
+                            for (int f = 0; f < curve.Frames.Length; f++)
+                            {
+                                int frame = (int)curve.Frames[f];
+                                int Value = (int)curve.Offset + (int)curve.Keys[f, 0] * (int)curve.Scale;
+
+                                infoCfg.CurveData.KeyFrames.Add(frame, materialAnim.TextureNames[Value]);
+                            }
                         }
                     }
                 }
@@ -53,7 +79,7 @@ namespace FirstPlugin
 
         public class CurveTPConfig
         {
-
+            public Dictionary<int, string> KeyFrames = new Dictionary<int, string>();
         }
 
         public class MatAnimConfig
@@ -62,7 +88,12 @@ namespace FirstPlugin
 
             public List<PatternInfo> TexturePatternInfos { get; set; }
             public List<ParamInfo> ParamInfos { get; set; }
-            public List<PatternInfo> TexturePatternInfo { get; set; }
+
+            public MatAnimConfig()
+            {
+                TexturePatternInfos = new List<PatternInfo>();
+                ParamInfos = new List<ParamInfo>();
+            }
         }
 
         public class ParamInfo

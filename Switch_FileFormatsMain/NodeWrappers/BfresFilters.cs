@@ -24,7 +24,7 @@ namespace FirstPlugin
         public static string FSKA_EXPORT = GetFilter(".bfska", ".anim", ".seanim", ".smd", ".chr0");
         public static string FSKA_REPLACE = GetFilter(".bfska",".anim", ".seanim", ".smd", ".chr0");
 
-        public static string FMAA = GetFilter(".bfmaa", ".gif");
+        public static string FMAA = GetFilter(".bfmaa",".yaml", ".gif");
 
         public static string FSHU_REPLACE_PARAM = GetFilter(".bfmaa", ".bfshu");
         public static string FSHU_REPLACE_SRT = GetFilter(".bfmaa", ".bftsh");
@@ -133,6 +133,7 @@ namespace FirstPlugin
                     case ".astc": filters.Add(ext, "Adaptable Scalable Texture Compression"); break;
                     case ".chr0": filters.Add(ext, "CHR0 Animation"); break;
                     case ".anim": filters.Add(ext, "Maya Animation"); break;
+                    case ".yaml": filters.Add(ext, "Yet Another Markup Language"); break;
                     default:
                         filters.Add(ext, ""); break;
                 }

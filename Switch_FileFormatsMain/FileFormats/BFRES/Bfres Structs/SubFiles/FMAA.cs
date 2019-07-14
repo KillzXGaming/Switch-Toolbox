@@ -126,33 +126,31 @@ namespace Bfres.Structs
 
         public void SaveAnimData()
         {
-            if (!IsEdited)
-                return;
-
             MaterialAnim.FrameCount = FrameCount;
             MaterialAnim.TextureNames = Textures;
 
             int TexturePatternCurveIndex = 0;
             int ParamCurveIndex = 0;
 
-            MaterialAnimData data = new MaterialAnimData();
-            MaterialAnim.MaterialAnimDataList.Add(data);
-
             foreach (MaterialAnimEntry mat in Materials)
             {
                 mat.MaterialAnimData = new MaterialAnimData();
                 mat.MaterialAnimData.Name = mat.Text;
+                MaterialAnim.MaterialAnimDataList.Add(mat.MaterialAnimData);
 
-                //Set default indices as unused for now
-                mat.MaterialAnimData.BeginVisalConstantIndex = -1;
-                mat.MaterialAnimData.ShaderParamCurveIndex = -1;
-                mat.MaterialAnimData.TexturePatternCurveIndex = -1;
-                mat.MaterialAnimData.VisalCurveIndex = -1;
-                mat.MaterialAnimData.VisualConstantIndex = -1;
+                if (IsEdited)
+                {
+                    //Set default indices as unused for now
+                    mat.MaterialAnimData.BeginVisalConstantIndex = -1;
+                    mat.MaterialAnimData.ShaderParamCurveIndex = -1;
+                    mat.MaterialAnimData.TexturePatternCurveIndex = -1;
+                    mat.MaterialAnimData.VisalCurveIndex = -1;
+                    mat.MaterialAnimData.VisualConstantIndex = -1;
 
-                //Load our first curve index if a sampler or param has one
-                SavePatternInfos(data, mat, TexturePatternCurveIndex);
-                SaveParamInfos(data, mat, ParamCurveIndex);
+                    //Load our first curve index if a sampler or param has one
+                  //  SavePatternInfos(data, mat, TexturePatternCurveIndex);
+                 //   SaveParamInfos(data, mat, ParamCurveIndex);
+                }
             }
 
             UpdateMaterialBinds();
