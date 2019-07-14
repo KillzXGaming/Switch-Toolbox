@@ -267,6 +267,8 @@ namespace FirstPlugin.Forms
                         // Running on the UI thread
                         imgList.Images.Add(temp);
                         var dummy = imgList.Handle;
+
+                        listViewCustom1.Refresh();
                     });
                 }
             }
