@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CopyNativeAssimp" AfterTargets="BeforeBuild">
+     <ItemGroup>
+        <NativeAssimpLibs Include="$(MSBuildThisFileDirectory)\native\win-x86\Assimp32.dll;
+                                   $(MSBuildThisFileDirectory)\native\win-x64\Assimp64.dll;"/>
+    </ItemGroup>
+    <Message Text="Copying native Assimp libraries..." Importance="high" />
+    <Copy SourceFiles="@(NativeAssimpLibs)" DestinationFolder="$(OutputPath)" />
+  </Target>
+  <Target Name="CleanAssimp" AfterTargets="Clean">
+    <Message Text="Cleaning native Assimp libraries..." Importance="high" />
+    <Delete Files="$(TargetDir)Assimp32.dll; $(TargetDir)Assimp64.dll" />
+  </Target>
+</Project>
