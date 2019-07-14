@@ -271,6 +271,7 @@ namespace Bfres.Structs
                 var fmaa = new Syroot.NintenTools.NSW.Bfres.MaterialAnim();
                 fmaa = YamlFmaa.FromYaml(FileName);
                 TexPatternAnim = BfresPlatformConverter.FTXPConvertSwitchToWiiU(fmaa);
+                LoadAnim(TexPatternAnim);
             }
             else if (ext == ".gif")
             {
