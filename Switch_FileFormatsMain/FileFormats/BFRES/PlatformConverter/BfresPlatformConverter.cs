@@ -146,6 +146,9 @@ namespace FirstPlugin
             texPatternAnim.BindIndices = materialAnim.BindIndices;
             texPatternAnim.FrameCount = materialAnim.FrameCount;
 
+            if (materialAnim.Loop)
+                texPatternAnim.Flags |= ResU.TexPatternAnimFlags.Looping;
+
             //Fill both lists. On save only one will be used depending on version
             foreach (var texName in materialAnim.TextureNames)
             {

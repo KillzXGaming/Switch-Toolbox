@@ -46,6 +46,8 @@ namespace Bfres.Structs
             TexPatternAnim = anim;
             FrameCount = anim.FrameCount;
 
+            Materials.Clear();
+            Textures.Clear();
             if (anim.TextureRefNames != null)
             {
                 foreach (var tex in anim.TextureRefNames)
