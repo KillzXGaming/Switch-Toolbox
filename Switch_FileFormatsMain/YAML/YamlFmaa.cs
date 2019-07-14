@@ -166,6 +166,8 @@ namespace FirstPlugin
                             foreach (var KeyFrame in texturePatternCfg.CurveData.KeyFrames)
                             {
                                 int Index = matAnim.TextureNames.IndexOf(KeyFrame.Value);
+                                Console.WriteLine($"{Index} {KeyFrame.Value}");
+
                                 curve.Frames[i] = KeyFrame.Key;
                                 curve.Keys[i, 0] = Index;
 

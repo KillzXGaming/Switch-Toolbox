@@ -391,6 +391,8 @@ namespace Bfres.Structs
             MaterialAnim = anim;
             FrameCount = MaterialAnim.FrameCount;
             Text = GetString(anim.Name);
+
+            Textures.Clear();
             if (anim.TextureNames != null)
             {
                 foreach (var name in anim.TextureNames)
