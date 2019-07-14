@@ -121,6 +121,10 @@ namespace FirstPlugin
                             AnimConstant constant = new AnimConstant();
                             constant.AnimDataOffset = 0;
                             constant.Value = matAnim.TextureNames.IndexOf(texturePatternCfg.ConstantValue.Texture);
+                            matAnimData.Constants.Add(constant);
+
+                            matAnimData.VisualConstantIndex = 0;
+                            matAnimData.BeginVisalConstantIndex = 0;
                         }
                         else if (texturePatternCfg.CurveData != null)
                         {
@@ -177,7 +181,6 @@ namespace FirstPlugin
                                 curve.KeyType = AnimCurveKeyType.Int16;
                             else
                                 curve.KeyType = AnimCurveKeyType.Single;
-
                         }
                     }
 
