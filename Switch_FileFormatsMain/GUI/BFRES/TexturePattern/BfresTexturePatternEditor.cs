@@ -280,8 +280,10 @@ namespace FirstPlugin.Forms
             string TextureKey = activeSampler.GetActiveTextureNameByIndex((int)Index);
 
             var tex = activeSampler.GetActiveTexture((int)Index);
-
-            listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
+            if (tex != null)
+                listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + tex.Text, ImageIndex);
+            else
+                listViewCustom1.Items.Add($"{Frame} / {ActiveMaterialAnim.FrameCount} \n" + TextureKey, ImageIndex);
         }
 
         private void SelectThumbnailItems()

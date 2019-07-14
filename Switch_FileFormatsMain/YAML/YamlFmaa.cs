@@ -102,9 +102,11 @@ namespace FirstPlugin
                 for (int i = 0; i < matAnim.BindIndices.Length; i++)
                     matAnim.BindIndices[i] = ushort.MaxValue;
 
+                Console.WriteLine("MaterialAnimConfigs " + MaterialAnimConfigs.Count);
                 foreach (var matCfg in MaterialAnimConfigs)
                 {
                     var matAnimData = new MaterialAnimData();
+                    matAnimData.Name = matCfg.Name;
                     matAnimData.Constants = new List<AnimConstant>();
                     matAnimData.Curves = new List<AnimCurve>();
                     matAnimData.BeginVisalConstantIndex = -1;
@@ -114,10 +116,20 @@ namespace FirstPlugin
                     matAnimData.VisalCurveIndex = -1;
                     matAnim.MaterialAnimDataList.Add(matAnimData);
 
+                    uint CurveIndex = 0;
+                    ushort BeginConstantIndex = 0;
+
+                    Console.WriteLine("texturePatternCfg " + matCfg.TexturePatternInfos.Count);
                     foreach (var texturePatternCfg in matCfg.TexturePatternInfos)
                     {
+                        TexturePatternAnimInfo patternInfo = new TexturePatternAnimInfo();
+                        patternInfo.Name = texturePatternCfg.Name;
+                        matAnimData.TexturePatternAnimInfos.Add(patternInfo);
+
                         if (texturePatternCfg.IsConstant && texturePatternCfg.ConstantValue != null)
                         {
+                            patternInfo.BeginConstant = BeginConstantIndex++;
+
                             AnimConstant constant = new AnimConstant();
                             constant.AnimDataOffset = 0;
                             constant.Value = matAnim.TextureNames.IndexOf(texturePatternCfg.ConstantValue.Texture);
@@ -128,6 +140,8 @@ namespace FirstPlugin
                         }
                         else if (texturePatternCfg.CurveData != null)
                         {
+                            patternInfo.CurveIndex = CurveIndex++;
+
                             matAnimData.TexturePatternCurveIndex = 0;
                             matAnimData.BeginVisalConstantIndex = 0;
 
@@ -188,8 +202,6 @@ namespace FirstPlugin
                     {
 
                     }
-
-                    matAnim.MaterialAnimDataList.Add(matAnimData);
                 }
 
                  return matAnim;
@@ -276,9 +288,9 @@ namespace FirstPlugin
             serializerSettings.RegisterTagMapping("AnimConfig", typeof(AnimConfig));
 
             var serializer = new Serializer( serializerSettings);
-            var config = serializer.Deserialize<AnimConfig>(File.ReadAllText(Name));
+            AnimConfig config = serializer.Deserialize<AnimConfig>(File.ReadAllText(Name));
 
-            return ((AnimConfig)config).FromYaml();
+            return config.FromYaml();
         }
 
         public static string ToYaml(string Name, FMAA anim)
