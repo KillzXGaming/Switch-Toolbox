@@ -32,6 +32,7 @@ after_build:
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Shader"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\libzstd.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\LZ4.dll"
+  - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\assimp.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Gl_EditorFramework.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Switch_Toolbox.Library.dll"
   - 7z a "Switch-Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Buffers.dll"
