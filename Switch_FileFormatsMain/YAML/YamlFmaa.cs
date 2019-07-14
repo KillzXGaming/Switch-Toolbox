@@ -70,7 +70,7 @@ namespace FirstPlugin
                             int Index = (int)mat.Constants[(int)patternInfo.BeginConstant].Value;
                             infoCfg.ConstantValue.Texture = materialAnim.TextureNames[Index];
                         }
-                        if (patternInfo.CurveIndex != uint.MaxValue)
+                        if (patternInfo.CurveIndex != ushort.MaxValue)
                         {
                             var curve = mat.Curves[(int)patternInfo.CurveIndex];
                             infoCfg.CurveData = new CurveTPConfig();
@@ -121,7 +121,7 @@ namespace FirstPlugin
                     matAnimData.VisalCurveIndex = -1;
                     matAnim.MaterialAnimDataList.Add(matAnimData);
 
-                    uint CurveIndex = 0;
+                    ushort CurveIndex = 0;
                     ushort BeginConstantIndex = 0;
 
                     foreach (var texturePatternCfg in matCfg.TexturePatternInfos)

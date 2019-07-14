@@ -103,7 +103,7 @@ namespace Bfres.Structs
                 else
                 {
                     SamplerInfo.BeginConstant = (ushort)65535;
-                    SamplerInfo.CurveIndex = (uint)mat.Curves.Count;
+                    SamplerInfo.CurveIndex = (ushort)mat.Curves.Count;
                 }
                 mat.TexturePatternAnimInfos.Add(SamplerInfo);
 
