@@ -165,10 +165,17 @@ namespace FirstPlugin
                 var VertexAttributes = BMDFile.VertexData.Attributes;
 
                 int vertexID = 0;
+                int packetID = 0;
                 foreach (SuperBMDLib.Geometry.Packet pack in curShape.Packets)
                 {
+                    var packetNode = new TreeNode($"Packet {packetID++}");
+                    shpWrapper.Nodes.Add(packetNode);
+
                     foreach (SuperBMDLib.Geometry.Primitive prim in pack.Primitives)
                     {
+                        var primitiveNode = new TreeNode($"Primitive {prim.PrimitiveType}");
+                        packetNode.Nodes.Add(primitiveNode);
+
                         List<SuperBMDLib.Geometry.Vertex> triVertices = J3DUtility.PrimitiveToTriangles(prim);
                         for (int triIndex = 0; triIndex < triVertices.Count; triIndex += 3)
                         {
@@ -177,6 +184,12 @@ namespace FirstPlugin
                             for (int triVertIndex = 0; triVertIndex < 3; triVertIndex++)
                             {
                                 SuperBMDLib.Geometry.Vertex vert = triVertices[triIndex + triVertIndex];
+                            
+                                if (triVertIndex == 0)
+                                {
+                                    foreach (var att in curShape.Descriptor.Attributes)
+                                        primitiveNode.Nodes.Add($"Attribute {att.Key} {att.Value.Item1}");
+                                }
 
                                 Vertex vertex = new Vertex();
                                 vertex.pos = VertexAttributes.Positions[(int)vert.GetAttributeIndex(GXVertexAttribute.Position)];

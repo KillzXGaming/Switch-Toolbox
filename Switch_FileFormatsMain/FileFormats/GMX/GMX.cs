@@ -338,9 +338,11 @@ namespace FirstPlugin
                         for (int v = 0; v < mesh.VertexCount; v++)
                         {
                             Vertex vert = new Vertex();
+                            uint Unknown = reader.ReadUInt32(); //Bone index?
                             vert.pos = reader.ReadVec3();
                             vert.nrm = reader.ReadVec3();
-                            vert.uv0 = reader.ReadVec2();
+                            var Color0 = reader.ReadBytes(4);
+                            vert.col = ColorUtility.ToVector4(Color0);
                             vert.uv1 = reader.ReadVec2();
 
                             Vertices.Add(vert);
