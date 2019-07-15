@@ -239,6 +239,8 @@ namespace Switch_Toolbox.Library.IO
                         return STLibraryCompression.GZIP.Compress(data);
                     case CompressionType.Zlib:
                         return STLibraryCompression.ZLIB.Compress(data, 2);
+                    case CompressionType.None:
+                        return data;
                     default:
                         MessageBox.Show($"Compression Type {CompressionType} not supported!!");
                         break;

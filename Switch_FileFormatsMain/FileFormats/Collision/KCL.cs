@@ -22,7 +22,7 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Collision;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "KCL" };
+        public string[] Description { get; set; } = new string[] { "WiiU/Switch Collision" };
         public string[] Extension { get; set; } = new string[] { "*.kcl" };
         public string FileName { get; set; }
         public string FilePath { get; set; }

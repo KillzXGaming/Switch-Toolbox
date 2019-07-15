@@ -323,14 +323,23 @@ namespace FirstPlugin
                         for (int v = 0; v < mesh.VertexCount; v++)
                         {
                             Vertex vert = new Vertex();
-                            uint Unknown = reader.ReadUInt32(); //Bone index?
-
-                            vert.pos = reader.ReadVec3();
-                            vert.nrm = reader.ReadVec3();
-                            vert.uv0 = reader.ReadVec2();
+                            if (mesh.Unknown1 != 0)
+                            {
+                                uint Unknown = reader.ReadUInt32(); //Bone index?
+                                vert.pos = reader.ReadVec3();
+                                vert.nrm = reader.ReadVec3();
+                                vert.uv0 = reader.ReadVec2();
+                                Unknowns.Add(Unknown);
+                            }
+                            else
+                            {
+                                vert.pos = reader.ReadVec3();
+                                vert.nrm = reader.ReadVec3();
+                                vert.col = ColorUtility.ToVector4(reader.ReadBytes(4));
+                                vert.uv0 = reader.ReadVec2();
+                            }
 
                             Vertices.Add(vert);
-                            Unknowns.Add(Unknown);
                         }
                     }
                     else if (mesh.VertexSize == 40)
@@ -338,11 +347,29 @@ namespace FirstPlugin
                         for (int v = 0; v < mesh.VertexCount; v++)
                         {
                             Vertex vert = new Vertex();
-                            uint Unknown = reader.ReadUInt32(); //Bone index?
+                            if (mesh.Unknown1 != 0)
+                            {
+                                uint Unknown = reader.ReadUInt32(); //Bone index?
+                                vert.pos = reader.ReadVec3();
+                                vert.nrm = reader.ReadVec3();
+                                vert.col = ColorUtility.ToVector4(reader.ReadBytes(4));
+                                vert.uv0 = reader.ReadVec2();
+                            }
+                            else
+                                throw new Exception($"Unsupported Vertex Size {mesh.VertexSize}");
+
+                            Vertices.Add(vert);
+                        }
+                    }
+                    else if (mesh.VertexSize == 44)
+                    {
+                        for (int v = 0; v < mesh.VertexCount; v++)
+                        {
+                            Vertex vert = new Vertex();
                             vert.pos = reader.ReadVec3();
                             vert.nrm = reader.ReadVec3();
-                            var Color0 = reader.ReadBytes(4);
-                            vert.col = ColorUtility.ToVector4(Color0);
+                            vert.col = ColorUtility.ToVector4(reader.ReadBytes(4));
+                            vert.uv0 = reader.ReadVec2();
                             vert.uv1 = reader.ReadVec2();
 
                             Vertices.Add(vert);

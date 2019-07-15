@@ -10,7 +10,7 @@ using Switch_Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class RARC : IArchiveFile, IFileFormat, IDirectoryContainer
+    public class RARC : IArchiveFile, IFileFormat, IDirectoryContainer, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -60,8 +60,29 @@ namespace FirstPlugin
         private uint HeaderSize = 32;
         private uint Unknown = 256;
 
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            return Items.ToArray();
+        }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(this);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
+        }
+
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
+
             using (var reader = new FileReader(stream))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -143,7 +164,7 @@ namespace FirstPlugin
         public int GetTotalCount()
         {
             int count = 0;
-            foreach (var dir in Directories)
+            foreach (var dir in Nodes)
                 GetTotalCount(dir, count);
             return count;
         }
@@ -151,7 +172,7 @@ namespace FirstPlugin
         public int GetFileCount()
         {
             int count = 0;
-            foreach (var dir in Directories)
+            foreach (var dir in Nodes)
                 GetFileCount(dir, count);
             return count;
         }
@@ -159,7 +180,7 @@ namespace FirstPlugin
         public int GetDirectoryCount()
         {
             int count = 0;
-            foreach (var dir in Directories)
+            foreach (var dir in Nodes)
                 GetDirectoryCount(dir, count);
             return count;
         }
@@ -168,8 +189,11 @@ namespace FirstPlugin
         {
             count++;
 
-            foreach (var c in ((DirectoryEntry)node).nodes)
-                return GetDirectoryCount(c, count);
+            if (node is DirectoryEntry)
+            {
+                foreach (var c in ((DirectoryEntry)node).nodes)
+                    return GetTotalCount(c, count);
+            }
 
             return count;
         }
@@ -180,8 +204,11 @@ namespace FirstPlugin
             if (node is FileEntry)
                 count++;
 
-            foreach (var c in ((DirectoryEntry)node).nodes)
-                return GetDirectoryCount(c, count);
+            if (node is DirectoryEntry)
+            {
+                foreach (var c in ((DirectoryEntry)node).nodes)
+                    return GetFileCount(c, count);
+            }
 
             return count;
         }
@@ -189,10 +216,12 @@ namespace FirstPlugin
         private int GetDirectoryCount(INode node, int count)
         {
             if (node is DirectoryEntry)
+            {
                 count++;
 
-            foreach (var c in ((DirectoryEntry)node).nodes)
-                return GetDirectoryCount(c, count);
+                foreach (var c in ((DirectoryEntry)node).nodes)
+                    return GetDirectoryCount(c, count);
+            }
 
             return count;
         }
@@ -206,6 +235,7 @@ namespace FirstPlugin
             writer.Write(uint.MaxValue); //FileSize
             writer.Write(HeaderSize);
             writer.Write(uint.MaxValue); //DataOffset
+            writer.Write(uint.MaxValue); //File Size
             writer.Write(uint.MaxValue); //End of file
             writer.Seek(8); //padding
 
@@ -223,15 +253,22 @@ namespace FirstPlugin
             writer.Write(0); //padding
 
             //Write directory Offset
-            WriteOffset(writer, 0x4, InfoPos);
+            WriteOffset(writer, 4, InfoPos);
             for (int dir = 0; dir < Directories.Length; dir++)
             {
                 Directories[dir].Write(writer);
             }
 
+            writer.Seek(16); //Add padding after directories
+
+            //Write the node offset
+            WriteOffset(writer, 12, InfoPos);
             for (int dir = 0; dir < Directories.Length; dir++)
             {
+                for (int n = 0; n < Directories[dir].NodeCount; n++)
+                {
 
+                }
             }
 
             //Write file size
@@ -251,7 +288,7 @@ namespace FirstPlugin
             long Position = writer.Position;
             using (writer.TemporarySeek(RelativePosition + Target, System.IO.SeekOrigin.Begin))
             {
-                writer.Write((uint)Position);
+                writer.Write((uint)(Position - RelativePosition));
             }
         }
 
