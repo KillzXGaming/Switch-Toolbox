@@ -135,7 +135,6 @@ namespace FirstPlugin
             Nodes.Add(SkeletonFolder);
             Nodes.Add(TextureFolder);
 
-
             BMDFile = model;
 
             FillSkeleton(BMDFile.Scenegraph, Skeleton, BMDFile.Joints.FlatSkeleton);

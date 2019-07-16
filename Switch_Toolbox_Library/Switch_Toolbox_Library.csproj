@@ -735,12 +735,13 @@
     <Compile Include="STToolStipMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Swizzling\Decode_Gamecube.cs" />
-    <Compile Include="Swizzling\GX2TexRegisters.cs" />
-    <Compile Include="Swizzling\Swizzle_3DS.cs" />
-    <Compile Include="Swizzling\GX2.cs" />
-    <Compile Include="Swizzling\NewSwizzleCodeBackup.cs" />
-    <Compile Include="Swizzling\TegraX1Swizzle.cs" />
+    <Compile Include="Texture Decoding\Gamecube\Color32.cs" />
+    <Compile Include="Texture Decoding\Gamecube\Decode_Gamecube.cs" />
+    <Compile Include="Texture Decoding\Wii U\GX2TexRegisters.cs" />
+    <Compile Include="Texture Decoding\Gamecube\ImageDataFormat.cs" />
+    <Compile Include="Texture Decoding\3DS\Swizzle_3DS.cs" />
+    <Compile Include="Texture Decoding\Wii U\GX2.cs" />
+    <Compile Include="Texture Decoding\Switch\TegraX1Swizzle.cs" />
     <Compile Include="ThemeConfig.cs" />
     <Compile Include="UpdateProgram.cs" />
     <Compile Include="Util\ColorUtility.cs" />

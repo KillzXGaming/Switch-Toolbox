@@ -337,7 +337,7 @@ namespace FirstPlugin
                     TextureData textureData = new TextureData();
                     textureData.surface = surface;
                     textureData.MipCount = surface.numMips;
-                    textureData.ArrayCount = surface.numArray;
+                    textureData.ArrayCount = surface.depth;
                     textureData.Text = "Texture" + ImageInfo;
                     Nodes.Add(textureData);
                     textures.Add(textureData);
@@ -734,7 +734,7 @@ namespace FirstPlugin
                     Width = surface.width;
                     Height = surface.height;
                     MipCount = surface.numMips;
-                    ArrayCount = surface.numArray;
+                    ArrayCount = surface.depth;
 
                     ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
 

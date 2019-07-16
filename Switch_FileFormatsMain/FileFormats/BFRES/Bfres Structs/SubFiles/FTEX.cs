@@ -380,7 +380,7 @@ namespace Bfres.Structs
             Width = tex.Width;
             Height = tex.Height;
             Format = ConvertFromGx2Format(tex.Format);
-            ArrayCount = tex.ArrayLength;
+            ArrayCount = tex.Depth;
             MipCount = tex.MipCount;
 
             RedChannel = GX2ChanneToGeneric(texture.CompSelR);
@@ -388,8 +388,6 @@ namespace Bfres.Structs
             BlueChannel = GX2ChanneToGeneric(texture.CompSelB);
             AlphaChannel = GX2ChanneToGeneric(texture.CompSelA);
 
-            if (tex.ArrayLength == 0)
-                ArrayCount = tex.Depth; //Some older bfres don't use array length????
 
             if (texture.MipData == null || texture.MipData.Length <= 0)
                 MipCount = 1;

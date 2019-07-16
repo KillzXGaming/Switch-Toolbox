@@ -95,6 +95,8 @@ namespace Switch_Toolbox.Library
 
         public abstract byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0);
 
+        public virtual byte[] GetPaletteData() { return new byte[0]; }
+
         //
         //Gets a list of surfaces given the start index of the array and the amount of arrays to obtain
         //
@@ -171,6 +173,11 @@ namespace Switch_Toolbox.Library
         /// The <see cref="TEX_FORMAT"/> Format of the image. 
         /// </summary>
         public TEX_FORMAT Format { get; set; } = TEX_FORMAT.R8G8B8A8_UNORM;
+
+        /// <summary>
+        /// The <see cref="PALETTE_FORMAT"/> Format of the image. 
+        /// </summary>
+        public PALETTE_FORMAT PaletteFormat { get; set; } = PALETTE_FORMAT.None;
 
         public RenderableTex RenderableTex { get; set; }
 
@@ -371,6 +378,7 @@ namespace Switch_Toolbox.Library
             uint width = Math.Max(1, Width >> MipLevel);
             uint height = Math.Max(1, Height >> MipLevel);
             byte[] data = GetImageData(ArrayLevel, MipLevel);
+            byte[] paletteData = GetPaletteData();
             if (data.Length == 0)
                 return new Bitmap(1,1);
 
@@ -384,6 +392,12 @@ namespace Switch_Toolbox.Library
                       (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     Image.RotateFlip(RotateFlipType.RotateNoneFlipY); //It's upside down for some reason so flip it
                     return Image;
+                }
+
+                if (PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
+                {
+                    return BitmapExtension.GetBitmap(Decode_Gamecube.DecodeData(data, paletteData, width, height, Format, PaletteFormat),
+                          (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
 
                 switch (Format)
@@ -403,7 +417,7 @@ namespace Switch_Toolbox.Library
 
                 if (Runtime.UseDirectXTexDecoder)
                 {
-                    return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format),
+                    return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format, new byte[0]),
                       (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
                 else
@@ -461,9 +475,9 @@ namespace Switch_Toolbox.Library
             return null;
         }
 
-        public static Bitmap DecodeBlockGetBitmap(byte[] data, uint Width, uint Height, TEX_FORMAT Format)
+        public static Bitmap DecodeBlockGetBitmap(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None)
         {
-            Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format),
+            Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format, paletteData, PaletteFormat),
                (int)Width, (int)Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             return bitmap;
@@ -477,7 +491,7 @@ namespace Switch_Toolbox.Library
         /// <param name="Height">The height of the image in pixels.</param>
         /// <param name=" DDS.DXGI_FORMAT">The image format.</param>
         /// <returns>Returns a byte array of decoded data. </returns>
-        public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format, PlatformSwizzle PlatformSwizzle = PlatformSwizzle.None)
+        public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None, PlatformSwizzle PlatformSwizzle = PlatformSwizzle.None)
         {
             if (data == null)     throw new Exception($"Data is null!");
             if (Format <= 0)      throw new Exception($"Invalid Format!");
@@ -488,6 +502,10 @@ namespace Switch_Toolbox.Library
             if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
             {
                 return CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
+            }
+            if (PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
+            {
+                return ConvertBgraToRgba(Decode_Gamecube.DecodeData(data, paletteData, Width, Height, Format, PaletteFormat));
             }
 
             if (Format == TEX_FORMAT.R32G8X24_FLOAT)
@@ -642,6 +660,10 @@ namespace Switch_Toolbox.Library
                                  "All files(*.*)|*.*";
                 }
             }
+        }
+
+        public override void Export(string FileName) {
+            Export(FileName);
         }
 
         public void ExportImage()

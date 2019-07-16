@@ -34,7 +34,10 @@ namespace FirstPlugin
 
             Text = TextureImage.Name;
 
-            Format = TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
+            Format = Decode_Gamecube.ToGenericFormat((Decode_Gamecube.TextureFormats)Image.Format);
+            PaletteFormat = Decode_Gamecube.ToGenericPaletteFormat((Decode_Gamecube.PaletteFormats)Image.PaletteFormat);
+            PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
+
             Width = TextureImage.Width;
             Height = TextureImage.Height;
             MipCount = TextureImage.MipMapCount;
@@ -58,9 +61,14 @@ namespace FirstPlugin
             editor.LoadImage(this); 
         }
 
+        public override byte[] GetPaletteData()
+        {
+            return TextureImage.PaletteData;
+        }
+
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
-            return ImageUtilty.ConvertBgraToRgba(TextureImage.RGBAImageData);
+            return TextureImage.ImageData;
         }
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)

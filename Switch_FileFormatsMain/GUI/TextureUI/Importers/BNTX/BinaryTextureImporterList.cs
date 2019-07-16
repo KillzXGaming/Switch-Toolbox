@@ -184,7 +184,7 @@ namespace FirstPlugin
                     else
                     {
                         bitmap = STGenericTexture.DecodeBlockGetBitmap(mips[0],
-                        SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight, TextureData.ConvertFormat(SelectedTexSettings.Format));
+                        SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight, TextureData.ConvertFormat(SelectedTexSettings.Format), new byte[0]);
                     }
                 }
 

@@ -182,7 +182,7 @@ namespace FirstPlugin
 
                 bitmap = FTEX.DecodeBlockGetBitmap(mips[0], SelectedTexSettings.
                 TexWidth, SelectedTexSettings.TexHeight, FTEX.ConvertFromGx2Format(
-                    (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)SelectedTexSettings.Format));
+                    (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)SelectedTexSettings.Format), new byte[0]);
 
                 pictureBox1.Image = bitmap;
 

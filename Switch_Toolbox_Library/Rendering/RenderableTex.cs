@@ -251,6 +251,8 @@ namespace Switch_Toolbox.Library.Rendering
                         width,
                         height,
                         GenericTexture.Format,
+                        new byte[0],
+                        PALETTE_FORMAT.None,
                         GenericTexture.PlatformSwizzle);
                     }
                     else

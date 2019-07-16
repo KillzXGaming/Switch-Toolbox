@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace Switch_Toolbox.Library
 {
+    public enum PALETTE_FORMAT : uint
+    {
+        None,
+        IA8,
+        RGB565,
+        RGB5A3,
+    }
+
     //DXGI formats are first, then ASTC formats after
     public enum TEX_FORMAT : uint
     {
@@ -168,5 +176,17 @@ namespace Switch_Toolbox.Library
         HIL08 = 236,
         A4 = 237,
         R4G4_UNORM = 238,
+
+        I4 = 239,
+        I8 = 240,
+        IA4 = 241,
+        IA8 = 242,
+        R5G5B5_UNORM = 243,
+        R5G5B5A3_UNORM = 244,
+        RGBA32 = 245,
+        C4 = 246,
+        C8 = 247,
+        C14X2 = 248,
+        CMPR = 249,
     }
 }

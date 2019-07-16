@@ -58,7 +58,7 @@ namespace Switch_Toolbox.Library.Forms
                 var mipmaps = STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(activeImage),
                                         activeImage.Width, activeImage.Height, Format, 0.5f);
 
-                newImage = BitmapExtension.SwapBlueRedChannels(STGenericTexture.DecodeBlockGetBitmap(mipmaps, (uint)image.Width, (uint)image.Height, Format));
+                newImage = BitmapExtension.SwapBlueRedChannels(STGenericTexture.DecodeBlockGetBitmap(mipmaps, (uint)image.Width, (uint)image.Height, Format, new byte[0]));
 
                 pictureBoxCustom1.Image = newImage;
 
