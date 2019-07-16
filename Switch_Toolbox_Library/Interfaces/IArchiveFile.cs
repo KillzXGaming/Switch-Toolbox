@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.Forms;
+using Toolbox.Library.IO;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public enum ArchiveFileState
     {

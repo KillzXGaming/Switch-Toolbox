@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public enum NumericDataType
     {
@@ -79,10 +79,10 @@ namespace Switch_Toolbox.Library.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(STUserControl));
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
             this.downArrow = new System.Windows.Forms.PictureBox();
             this.upArrow = new System.Windows.Forms.PictureBox();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             ((System.ComponentModel.ISupportInitialize)(this.downArrow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upArrow)).BeginInit();
             this.stPanel1.SuspendLayout();
@@ -111,7 +111,7 @@ namespace Switch_Toolbox.Library.Forms
             // upArrow
             // 
             this.upArrow.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.upArrow.Image = global::Switch_Toolbox.Library.Properties.Resources.NumbericUpDownArrow;
+            this.upArrow.Image = global::Toolbox.Library.Properties.Resources.NumbericUpDownArrow;
             this.upArrow.Location = new System.Drawing.Point(1, 3);
             this.upArrow.Name = "upArrow";
             this.upArrow.Size = new System.Drawing.Size(19, 11);

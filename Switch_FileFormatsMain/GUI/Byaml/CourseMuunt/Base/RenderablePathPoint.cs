@@ -2,7 +2,7 @@
 using GL_EditorFramework.Interfaces;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 using FirstPlugin.Turbo.CourseMuuntStructs;
 using FirstPlugin.Turbo;

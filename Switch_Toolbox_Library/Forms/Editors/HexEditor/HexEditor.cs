@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Be.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public partial class HexEditor : STUserControl
     {

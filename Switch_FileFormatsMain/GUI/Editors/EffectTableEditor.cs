@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
@@ -102,7 +102,7 @@ namespace FirstPlugin.Forms
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                ptcl =  (PTCL)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(ofd.FileName);
+                ptcl =  (PTCL)Toolbox.Library.IO.STFileLoader.OpenFileFormat(ofd.FileName);
 
                 ReloadDataGrid();
             }

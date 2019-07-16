@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using GL_EditorFramework.Interfaces;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 using GL_EditorFramework.GL_Core;
 using System.Drawing;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 using GL_EditorFramework.EditorDrawables;
 using FirstPlugin.Forms;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
@@ -30,7 +30,7 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 return reader.ReadUInt32() == 0x02020000;

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library;
+using Toolbox.Library.Rendering;
 using System.Windows.Forms;
 using OpenTK;
 

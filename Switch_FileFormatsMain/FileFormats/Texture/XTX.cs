@@ -4,11 +4,11 @@ using System.IO;
 using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
-using Switch_Toolbox;
+using Toolbox;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {

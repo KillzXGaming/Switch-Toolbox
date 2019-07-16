@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using LibHac;
 
-namespace Switch_Toolbox
+namespace Toolbox
 {
     public partial class KeySelectionForm : STForm
     {

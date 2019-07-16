@@ -9,8 +9,8 @@ using System.Threading;
 using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bntx;
 using Syroot.NintenTools.NSW.Bntx.GFX;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
@@ -154,7 +154,7 @@ namespace FirstPlugin
                 compressionModeCB.Visible = false;
             }
 
-            Bitmap bitmap = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+            Bitmap bitmap = Toolbox.Library.Imaging.GetLoadingImage();
 
             if (compressionModeCB.SelectedIndex == 0)
                 CompressionMode = STCompressionMode.Fast;

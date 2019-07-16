@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImagePropertiesEditor
     {
@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.channelListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.channelListView = new Toolbox.Library.Forms.ListViewCustom();
             this.ChannelsColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.stChannelToolstripMenu = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.stChannelToolstripMenu = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.replaceChannelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stTabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();

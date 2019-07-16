@@ -17,7 +17,7 @@ using CSCore.SoundOut;
 using CSCore.CoreAudioAPI;
 using CSCore.Tags.ID3;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public partial class AudioPlayer : STForm
     {

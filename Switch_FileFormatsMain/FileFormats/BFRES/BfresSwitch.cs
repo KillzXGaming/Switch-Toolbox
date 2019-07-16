@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Syroot.NintenTools.NSW.Bfres;
 using Syroot.NintenTools.NSW.Bfres.Helpers;
 using Syroot.NintenTools.NSW.Bfres.GFX;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Rendering;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.Rendering;
+using Toolbox.Library.Forms;
 using OpenTK;
 using System.Windows.Forms;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Animations;
 
 namespace FirstPlugin
 {

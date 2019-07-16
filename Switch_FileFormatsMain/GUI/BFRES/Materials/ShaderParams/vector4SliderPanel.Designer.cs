@@ -34,7 +34,7 @@
             this.barSlider3 = new BarSlider.BarSlider();
             this.barSlider2 = new BarSlider.BarSlider();
             this.barSlider1 = new BarSlider.BarSlider();
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.alphaPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorPB)).BeginInit();
             this.SuspendLayout();
@@ -279,6 +279,6 @@
         private BarSlider.BarSlider barSlider4;
         private System.Windows.Forms.PictureBox alphaPB;
         private System.Windows.Forms.PictureBox colorPB;
-        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
+        private Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class TextEditor
     {
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.scintilla1 = new ScintillaNET.Scintilla();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();

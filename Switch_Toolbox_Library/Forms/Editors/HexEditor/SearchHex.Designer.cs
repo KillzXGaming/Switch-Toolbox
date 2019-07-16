@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class SearchHex
     {
@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.txtFind = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.chkMatchCase = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.btnOK = new Switch_Toolbox.Library.Forms.STButton();
+            this.txtFind = new Toolbox.Library.Forms.STTextBox();
+            this.chkMatchCase = new Toolbox.Library.Forms.STCheckBox();
+            this.btnOK = new Toolbox.Library.Forms.STButton();
             this.hexFind = new Be.Windows.Forms.HexBox();
             this.radioBtnText = new System.Windows.Forms.RadioButton();
             this.raditnHex = new System.Windows.Forms.RadioButton();
@@ -142,7 +142,7 @@
         #endregion
 
         private STTextBox txtFind;
-        private Switch_Toolbox.Library.Forms.STCheckBox chkMatchCase;
+        private Toolbox.Library.Forms.STCheckBox chkMatchCase;
         private STButton btnOK;
         private Be.Windows.Forms.HexBox hexFind;
         private System.Windows.Forms.RadioButton radioBtnText;

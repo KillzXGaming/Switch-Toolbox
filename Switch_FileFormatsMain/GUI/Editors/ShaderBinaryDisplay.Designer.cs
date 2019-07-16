@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.textEditor1 = new Switch_Toolbox.Library.Forms.TextEditor();
-            this.hexEditor1 = new Switch_Toolbox.Library.Forms.HexEditor();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.textEditor1 = new Toolbox.Library.Forms.TextEditor();
+            this.hexEditor1 = new Toolbox.Library.Forms.HexEditor();
             this.stPanel1.SuspendLayout();
             this.stPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -97,10 +97,10 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.HexEditor hexEditor1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.HexEditor hexEditor1;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
-        private Switch_Toolbox.Library.Forms.TextEditor textEditor1;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.TextEditor textEditor1;
     }
 }

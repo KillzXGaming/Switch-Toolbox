@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
-            this.stComboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
+            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
@@ -87,8 +87,8 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
-        private Switch_Toolbox.Library.Forms.STComboBox stComboBox1;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STComboBox stComboBox1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }

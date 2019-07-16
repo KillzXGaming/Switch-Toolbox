@@ -5,7 +5,7 @@ using GL_EditorFramework.Interfaces;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using System.Drawing;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
@@ -156,7 +156,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             }
             catch (Exception ex)
             {
-                Switch_Toolbox.Library.Forms.STErrorDialog.Show($"Invalid path points at Group {groupID} Path {pathID}! Invalid connection to group {pathPoint.PathID} point {pathPoint.PtID}", "Path Creator",
+                Toolbox.Library.Forms.STErrorDialog.Show($"Invalid path points at Group {groupID} Path {pathID}! Invalid connection to group {pathPoint.PathID} point {pathPoint.PtID}", "Path Creator",
                     $"Group {groupID} \n" +
                     $"Path {pathID} \n" +
                     $"Group ID {pathPoint.PathID} \n" +

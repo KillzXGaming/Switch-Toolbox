@@ -8,7 +8,7 @@ namespace Ryujinx.Graphics.Gal.Texture
 {
     public class ASTCDecoderException : Exception
     {
-        public ASTCDecoderException(string ExMsg) : base(ExMsg) { Switch_Toolbox.Library.Forms.STErrorDialog.Show(ExMsg, "", ExMsg); }
+        public ASTCDecoderException(string ExMsg) : base(ExMsg) { Toolbox.Library.Forms.STErrorDialog.Show(ExMsg, "", ExMsg); }
     }
 
     //https://github.com/GammaUNC/FasTC/blob/master/ASTCEncoder/src/Decompressor.cpp

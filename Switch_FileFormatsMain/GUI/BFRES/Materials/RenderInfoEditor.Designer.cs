@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.renderInfoListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.renderInfoListView = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnEdit = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrolDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnEdit = new Toolbox.Library.Forms.STButton();
+            this.btnScrolDown = new Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // btnRemove
@@ -144,13 +144,13 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.ListViewCustom renderInfoListView;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.ListViewCustom renderInfoListView;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
-        private Switch_Toolbox.Library.Forms.STButton btnEdit;
-        private Switch_Toolbox.Library.Forms.STButton btnScrolDown;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.STButton btnEdit;
+        private Toolbox.Library.Forms.STButton btnScrolDown;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
     }
 }

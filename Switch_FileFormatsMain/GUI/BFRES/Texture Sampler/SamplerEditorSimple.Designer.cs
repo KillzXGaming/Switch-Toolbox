@@ -30,17 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SamplerEditorSimple));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.textureBP = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stTextBox2 = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.samplerCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.nameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
-            this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.textureBP = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stTextBox2 = new Toolbox.Library.Forms.STTextBox();
+            this.samplerCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.nameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
+            this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -223,17 +223,17 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.PictureBoxCustom textureBP;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STTextBox stTextBox2;
-        private Switch_Toolbox.Library.Forms.STComboBox samplerCB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STTextBox nameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
-        private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.PictureBoxCustom textureBP;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STTextBox stTextBox2;
+        private Toolbox.Library.Forms.STComboBox samplerCB;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STTextBox nameTB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayVerticalToolStripMenuItem;
     }

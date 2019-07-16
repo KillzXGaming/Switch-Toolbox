@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Syroot.NintenTools.NSW.Bfres;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using ResU = Syroot.NintenTools.Bfres;
 using FirstPlugin; 
-using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Forms;
+using Toolbox.Library.IO;
 
 namespace Bfres.Structs
 {

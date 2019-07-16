@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Assimp;
 using OpenTK;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
+using Toolbox.Library.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class AssimpData
     {

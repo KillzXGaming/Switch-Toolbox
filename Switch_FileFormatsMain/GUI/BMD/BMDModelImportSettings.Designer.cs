@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.texturePathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.materalPathTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stComboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.texturePathTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.materalPathTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,12 +143,12 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTextBox texturePathTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STTextBox materalPathTB;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STComboBox stComboBox1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STTextBox texturePathTB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STTextBox materalPathTB;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STComboBox stComboBox1;
+        private Toolbox.Library.Forms.STLabel stLabel3;
     }
 }

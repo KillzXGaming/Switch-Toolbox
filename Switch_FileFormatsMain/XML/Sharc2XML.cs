@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin
 {

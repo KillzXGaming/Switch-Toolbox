@@ -8,7 +8,7 @@ using System.Collections;
 using System.Drawing;
 using System.IO;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     internal class APNGUtility
     {

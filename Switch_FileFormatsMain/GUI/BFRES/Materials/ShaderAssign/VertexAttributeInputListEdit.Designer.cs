@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
+            this.btnScrollDown = new Toolbox.Library.Forms.STButton();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -169,14 +169,14 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollDown;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.STButton btnScrollDown;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }

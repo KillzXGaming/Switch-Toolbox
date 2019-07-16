@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class FileTableViewTPHD
     {
@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();

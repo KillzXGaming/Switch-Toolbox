@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel4 = new Toolbox.Library.Forms.STPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.viewIntroCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -245,19 +245,19 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewIntroCameraToolStripMenuItem;
-        private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
+        private Toolbox.Library.Forms.STTabControl stTabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel4;
+        private Toolbox.Library.Forms.STPanel stPanel4;
         private System.Windows.Forms.TreeView treeView1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel3;
+        private Toolbox.Library.Forms.STPanel stPanel3;
     }
 }

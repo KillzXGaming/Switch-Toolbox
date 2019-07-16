@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 using Syroot.BinaryData;
 using System.IO;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 using SFGraphics.GLObjects.Textures;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
     public class DDS : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
@@ -47,7 +47,7 @@ namespace Switch_Toolbox.Library
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 return reader.CheckSignature(4, "DDS ");
             }

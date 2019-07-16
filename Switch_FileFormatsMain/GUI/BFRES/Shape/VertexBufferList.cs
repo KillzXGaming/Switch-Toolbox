@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 
 namespace FirstPlugin.Forms
 {

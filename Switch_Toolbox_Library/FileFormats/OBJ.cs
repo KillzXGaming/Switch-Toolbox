@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using OpenTK;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class OBJ
     {

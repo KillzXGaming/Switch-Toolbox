@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Texture_Selector));
-            this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
+            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.addTextureBtn = new System.Windows.Forms.Button();
             this.RemoveTextureBtn = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -166,14 +166,14 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
+        private Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button addTextureBtn;
         private System.Windows.Forms.Button RemoveTextureBtn;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STTextBox stTextBox1;
+        private Toolbox.Library.Forms.STLabel stLabel1;
     }
 }

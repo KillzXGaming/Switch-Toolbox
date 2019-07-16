@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImageProgramSettings
     {
@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.textureImageFormatCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.textureFileFormatCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.textureImageFormatCB = new Toolbox.Library.Forms.STComboBox();
+            this.textureFileFormatCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 

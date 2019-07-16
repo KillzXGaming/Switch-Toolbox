@@ -5,13 +5,13 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 using Ryujinx.Graphics.Gal.Texture; //For ASTC
-using Switch_Toolbox.Library.NodeWrappers;
+using Toolbox.Library.NodeWrappers;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public enum STCompressionMode
     {

@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class STSaveLogDialog
     {
@@ -27,10 +27,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnDetails = new Switch_Toolbox.Library.Forms.STButton();
-            this.lblMessage = new Switch_Toolbox.Library.Forms.STLabel();
+            this.btnDetails = new Toolbox.Library.Forms.STButton();
+            this.lblMessage = new Toolbox.Library.Forms.STLabel();
             this.tbDetails = new System.Windows.Forms.RichTextBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // btnDetails
@@ -105,8 +105,8 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STButton btnDetails;
-        private Switch_Toolbox.Library.Forms.STLabel lblMessage;
+        private Toolbox.Library.Forms.STButton btnDetails;
+        private Toolbox.Library.Forms.STLabel lblMessage;
         private System.Windows.Forms.RichTextBox tbDetails;
         private STButton stButton1;
     }

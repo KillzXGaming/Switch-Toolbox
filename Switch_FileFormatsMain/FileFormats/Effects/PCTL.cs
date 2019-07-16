@@ -4,12 +4,12 @@ using System.Linq;
 using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library;
 using System.IO;
 using Syroot.BinaryData;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using Bfres.Structs;
 
 namespace FirstPlugin
@@ -27,7 +27,7 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 if (reader.CheckSignature(4, "VFXB") ||
                     reader.CheckSignature(4, "SPBD") ||

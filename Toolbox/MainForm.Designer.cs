@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.menuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.menuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,15 +59,15 @@
             this.reportBugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.requestFeatureToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.tabForms = new Switch_Toolbox.Library.Forms.STTabControl();
-            this.tabControlContextMenuStrip = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.tabForms = new Toolbox.Library.Forms.STTabControl();
+            this.tabControlContextMenuStrip = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.closeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.BtnMdiMinimize = new System.Windows.Forms.PictureBox();
             this.BtnMdiMinMax = new System.Windows.Forms.PictureBox();
             this.BtnMdiClose = new System.Windows.Forms.PictureBox();
-            this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
+            this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.updateToolstrip = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
@@ -479,7 +479,7 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STMenuStrip menuStrip1;
+        private Toolbox.Library.Forms.STMenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
@@ -494,18 +494,18 @@
         private System.Windows.Forms.ToolStripMenuItem maximizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeAllToolStripMenuItem;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STTabControl tabForms;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STTabControl tabForms;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private Switch_Toolbox.Library.Forms.STContextMenuStrip tabControlContextMenuStrip;
+        private Toolbox.Library.Forms.STContextMenuStrip tabControlContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fileAssociationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mainSettingsToolStripMenuItem;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
-        private Switch_Toolbox.Library.Forms.STToolStrip stToolStrip1;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STToolStrip stToolStrip1;
         private System.Windows.Forms.ToolStripButton updateToolstrip;
         private System.Windows.Forms.ToolStripMenuItem newFromFileToolStripMenuItem;
         private System.Windows.Forms.PictureBox BtnMdiMinimize;

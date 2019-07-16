@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     /// <summary>
     /// Represents a 4-byte value which can hold differently typed data.

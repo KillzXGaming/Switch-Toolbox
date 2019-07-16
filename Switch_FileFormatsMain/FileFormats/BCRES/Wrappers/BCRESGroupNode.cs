@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {

@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library.Animations;
+using Toolbox.Library.Forms;
+using Toolbox.Library;
 using Bfres.Structs;
 
 namespace FirstPlugin.Forms
@@ -337,8 +337,8 @@ namespace FirstPlugin.Forms
 
         private void UpdateAnimationUI()
         {
-            btnPlay.BackgroundImage = IsPlaying ? Switch_Toolbox.Library.Properties.Resources.PauseBtn
-                : Switch_Toolbox.Library.Properties.Resources.PlayArrowR;
+            btnPlay.BackgroundImage = IsPlaying ? Toolbox.Library.Properties.Resources.PauseBtn
+                : Toolbox.Library.Properties.Resources.PlayArrowR;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -697,7 +697,7 @@ namespace FirstPlugin.Forms
                     pictureBoxCustom1.BackColor = Color.White;
                     break;
                 case Runtime.PictureBoxBG.Checkerboard:
-                    pictureBoxCustom1.BackgroundImage = Switch_Toolbox.Library.Properties.Resources.CheckerBackground;
+                    pictureBoxCustom1.BackgroundImage = Toolbox.Library.Properties.Resources.CheckerBackground;
                     break;
             }
         }

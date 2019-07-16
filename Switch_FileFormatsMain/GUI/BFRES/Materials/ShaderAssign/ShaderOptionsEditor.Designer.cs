@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnScrolDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnEdit = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.shaderOptionsListView = new Switch_Toolbox.Library.Forms.STListView();
+            this.btnScrolDown = new Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
+            this.btnEdit = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.shaderOptionsListView = new Toolbox.Library.Forms.STListView();
             this.ovlColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ovlColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.shaderOptionsListView)).BeginInit();
@@ -151,12 +151,12 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.STButton btnEdit;
-        private Switch_Toolbox.Library.Forms.STButton btnScrolDown;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
-        private Switch_Toolbox.Library.Forms.STListView shaderOptionsListView;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.STButton btnEdit;
+        private Toolbox.Library.Forms.STButton btnScrolDown;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.STListView shaderOptionsListView;
         private BrightIdeasSoftware.OLVColumn ovlColumn1;
         private BrightIdeasSoftware.OLVColumn ovlColumn2;
     }

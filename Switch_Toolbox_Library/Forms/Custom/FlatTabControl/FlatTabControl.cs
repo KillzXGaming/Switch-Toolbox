@@ -10,7 +10,7 @@ using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using System.Windows.Forms;
 
 namespace FlatTabControl
@@ -166,7 +166,7 @@ namespace FlatTabControl
 			if (this.SelectedTab != null)
 			{
 				TabPage tabPage = this.SelectedTab;
-                tabPage.BackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageActive;
+                tabPage.BackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageActive;
 
                 Color color = tabPage.BackColor;
 				border = new Pen(color);
@@ -195,14 +195,14 @@ namespace FlatTabControl
 
             foreach (TabPage tpCheck in TabPages)
             {
-                tpCheck.BackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageInactive;
-                tpCheck.ForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
+                tpCheck.BackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageInactive;
+                tpCheck.ForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
             }
 
             if (SelectedTab != null)
             {
-                SelectedTab.BackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageActive;
-                SelectedTab.ForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TextForeColor;
+                SelectedTab.BackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageActive;
+                SelectedTab.ForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TextForeColor;
             }
 
             this.Refresh();
@@ -573,14 +573,14 @@ namespace FlatTabControl
         {
             foreach (TabPage tpCheck in TabPages)
             {
-                tpCheck.BackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageInactive;
-                tpCheck.ForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
+                tpCheck.BackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageInactive;
+                tpCheck.ForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
             }
 
             if (SelectedTab != null)
             {
-                SelectedTab.BackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageActive;
-                SelectedTab.ForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.TextForeColor;
+                SelectedTab.BackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TabPageActive;
+                SelectedTab.ForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.TextForeColor;
             }
         }
     }

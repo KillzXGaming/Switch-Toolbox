@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     //The panel when a file in an archive is clicked on
     //Configures the editor view, ie Hex, Editor, Text Edtior, etc

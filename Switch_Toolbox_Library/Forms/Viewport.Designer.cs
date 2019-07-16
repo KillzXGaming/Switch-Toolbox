@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library
+﻿namespace Toolbox.Library
 {
     partial class Viewport
     {
@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drawContainersCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.panelViewport = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.drawContainersCB = new Toolbox.Library.Forms.STComboBox();
+            this.panelViewport = new Toolbox.Library.Forms.STPanel();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,8 +51,8 @@
             this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.stContextMenuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -60,7 +60,7 @@
             // normalsShadingToolStripMenuItem
             // 
             this.normalsShadingToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.normalsShadingToolStripMenuItem.Image = global::Switch_Toolbox.Library.Properties.Resources.normalsSphere;
+            this.normalsShadingToolStripMenuItem.Image = global::Toolbox.Library.Properties.Resources.normalsSphere;
             this.normalsShadingToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.normalsShadingToolStripMenuItem.Name = "normalsShadingToolStripMenuItem";
             this.normalsShadingToolStripMenuItem.Size = new System.Drawing.Size(204, 46);

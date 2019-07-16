@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class STGenericMatTexture
     {

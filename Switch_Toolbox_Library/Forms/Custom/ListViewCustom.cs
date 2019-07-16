@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     [ToolboxItem(true)]
     [ToolboxBitmap(typeof(ListView))]

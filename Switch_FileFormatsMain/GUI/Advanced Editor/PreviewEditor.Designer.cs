@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +62,6 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
     }
 }

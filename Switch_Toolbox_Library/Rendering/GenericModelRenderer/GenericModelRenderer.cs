@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public class GenericModelRenderer : AbstractGlDrawable
     {

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -93,7 +93,7 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;

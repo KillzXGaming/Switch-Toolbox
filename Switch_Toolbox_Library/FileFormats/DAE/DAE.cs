@@ -10,9 +10,9 @@ using System.Globalization;
 using System.Xml;
 using ColladaHelper;
 using OpenTK;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class DAE : DAEHelper
     {

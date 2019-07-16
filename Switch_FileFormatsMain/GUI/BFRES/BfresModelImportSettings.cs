@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres.GFX;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Rendering;
 using Bfres.Structs;
 
 namespace FirstPlugin

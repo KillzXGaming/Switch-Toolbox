@@ -11,7 +11,7 @@ using Bfres.Structs;
 using ResUGX2 = Syroot.NintenTools.Bfres.GX2;
 using Syroot.NintenTools.NSW.Bfres.GX2;
 using Syroot.NintenTools.NSW.Bfres;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
@@ -53,7 +53,7 @@ namespace FirstPlugin.Forms
                 {
                     Thread = new Thread((ThreadStart)(() =>
                     {
-                        textureBP.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                        textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
                         textureBP.Image = bntx.Textures[texture.Name].GetBitmap();
                     }));
                     Thread.Start();
@@ -65,7 +65,7 @@ namespace FirstPlugin.Forms
                 {
                     Thread = new Thread((ThreadStart)(() =>
                     {
-                        textureBP.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                        textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
                         textureBP.Image = ((FTEX)ftexCont.ResourceNodes[texture.Name]).GetBitmap();
                     }));
                     Thread.Start();

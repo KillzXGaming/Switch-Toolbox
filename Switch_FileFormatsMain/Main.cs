@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library.IO;
 using FirstPlugin.Forms;
 
 namespace FirstPlugin

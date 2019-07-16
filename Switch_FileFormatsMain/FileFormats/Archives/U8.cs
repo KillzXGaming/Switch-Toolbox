@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox;
+using Toolbox;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
@@ -28,7 +28,7 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 return reader.ReadUInt32() == 0x55AA382D;

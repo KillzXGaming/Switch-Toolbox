@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stDataGridView1 = new Switch_Toolbox.Library.Forms.STDataGridView();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stDataGridView1 = new Toolbox.Library.Forms.STDataGridView();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.addPTCLReferenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.stDataGridView1)).BeginInit();
             this.stPanel1.SuspendLayout();
@@ -97,9 +97,9 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STDataGridView stDataGridView1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
+        private Toolbox.Library.Forms.STDataGridView stDataGridView1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem addPTCLReferenceToolStripMenuItem;
     }
 }

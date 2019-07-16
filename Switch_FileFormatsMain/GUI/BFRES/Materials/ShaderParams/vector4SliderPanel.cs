@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using Syroot.NintenTools.NSW.Bfres;
 using Bfres.Structs;
 using System.Windows.Forms;

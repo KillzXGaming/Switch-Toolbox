@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class STBone : TreeNodeCustom
     {
@@ -65,7 +65,7 @@ namespace Switch_Toolbox.Library
             position[1] = pos.X;
             position[2] = pos.Z;
 
-            var eul = Switch_Toolbox.Library.Animations.ANIM.quattoeul(quat);
+            var eul = Toolbox.Library.Animations.ANIM.quattoeul(quat);
             rotation = new float[] { eul.X, eul.Y, eul.Z, 1 };
 
             scale[0] = scale.X;
@@ -80,7 +80,7 @@ namespace Switch_Toolbox.Library
                 rotation = new float[] { rot.X, rot.Y, rot.Z, rot.W };
             else
             {
-                var eul = Switch_Toolbox.Library.Animations.ANIM.quattoeul(rot);
+                var eul = Toolbox.Library.Animations.ANIM.quattoeul(rot);
                 rotation = new float[] { eul.X, eul.Y, eul.Z, 1 };
             }
 

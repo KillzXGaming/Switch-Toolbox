@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class DialogCenteringService : IDisposable
     {

@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library
+﻿namespace Toolbox.Library
 {
     partial class ObjectList
     {
@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.panel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.treeView1 = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stContextMenuStrip = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.panel1 = new Toolbox.Library.Forms.STPanel();
+            this.treeView1 = new Toolbox.Library.TreeViewCustom();
+            this.stContextMenuStrip = new Toolbox.Library.Forms.STMenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -141,13 +141,13 @@
 
         #endregion
 
-        public Switch_Toolbox.Library.TreeViewCustom treeView1;
-        private Switch_Toolbox.Library.Forms.STMenuStrip stContextMenuStrip;
+        public Toolbox.Library.TreeViewCustom treeView1;
+        private Toolbox.Library.Forms.STMenuStrip stContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem smallToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mediumToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem largeToolStripMenuItem;
-        private Switch_Toolbox.Library.Forms.STPanel panel1;
+        private Toolbox.Library.Forms.STPanel panel1;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
     }
 }

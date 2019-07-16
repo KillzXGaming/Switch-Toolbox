@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class XmlDoc
     {

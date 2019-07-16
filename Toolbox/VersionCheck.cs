@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace Toolbox
 {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin.Forms
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.NodeWrappers;
+using Toolbox.Library;
+using Toolbox.Library.Animations;
+using Toolbox.Library.NodeWrappers;
 using FirstPlugin;
 using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;

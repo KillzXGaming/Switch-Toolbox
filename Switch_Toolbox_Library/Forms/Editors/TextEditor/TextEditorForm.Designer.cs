@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class TextEditorForm
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textEditor1 = new Switch_Toolbox.Library.Forms.TextEditor();
+            this.textEditor1 = new Toolbox.Library.Forms.TextEditor();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 

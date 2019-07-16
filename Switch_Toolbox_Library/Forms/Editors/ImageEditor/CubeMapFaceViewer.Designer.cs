@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class CubeMapFaceViewer
     {
@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CubeMapFaceViewer));
-            this.pbTopFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.pbFrontFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.pbLeftFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.pbBottomFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.pbBackFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.arrayLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnRightArray = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnLeftArray = new Switch_Toolbox.Library.Forms.STButton();
-            this.pbRightFace = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.chkDisplayAlpha = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.pbTopFace = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.pbFrontFace = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.pbLeftFace = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.pbBottomFace = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.pbBackFace = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.arrayLevelCounterLabel = new Toolbox.Library.Forms.STLabel();
+            this.btnRightArray = new Toolbox.Library.Forms.STButton();
+            this.btnLeftArray = new Toolbox.Library.Forms.STButton();
+            this.pbRightFace = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.chkDisplayAlpha = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopFace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFrontFace)).BeginInit();

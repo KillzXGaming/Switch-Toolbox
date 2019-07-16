@@ -1,7 +1,7 @@
 ﻿using SELib;
 using OpenTK;
 
-namespace Switch_Toolbox.Library.Animations
+namespace Toolbox.Library.Animations
 {
     public class SEANIM
     {

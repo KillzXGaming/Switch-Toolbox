@@ -5,7 +5,7 @@ using System.IO.Compression;
 using OpenTK;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public class STFileLoader
     {

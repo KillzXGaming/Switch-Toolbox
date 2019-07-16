@@ -6,9 +6,9 @@ using Octokit;
 using System.IO;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
-namespace Switch_Toolbox
+namespace Toolbox
 {
     public class UpdateProgram
     {

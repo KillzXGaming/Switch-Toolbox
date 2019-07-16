@@ -1,5 +1,5 @@
-﻿using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library;
+﻿using Toolbox.Library.NodeWrappers;
+using Toolbox.Library;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
@@ -7,8 +7,8 @@ using System;
 using FirstPlugin;
 using ResU = Syroot.NintenTools.Bfres;
 using ResNX = Syroot.NintenTools.NSW.Bfres;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
+using Toolbox.Library.Forms;
 
 namespace Bfres.Structs
 {

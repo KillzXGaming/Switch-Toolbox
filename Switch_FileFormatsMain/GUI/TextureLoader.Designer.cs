@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.stComboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.barSlider1 = new BarSlider.BarSlider();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
             this.textureContextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.replaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -193,12 +193,12 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STComboBox stComboBox1;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STComboBox stComboBox1;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private BarSlider.BarSlider barSlider1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.STButton btnRemove;
         private System.Windows.Forms.ContextMenuStrip textureContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;

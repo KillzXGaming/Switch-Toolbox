@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Rendering;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.Rendering;
+using Toolbox.Library.Forms;
 using FirstPlugin.Forms;
 
 namespace FirstPlugin

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using SFGraphics.GLObjects.Shaders;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public static class OpenTKSharedResources
     {
@@ -66,7 +66,7 @@ namespace Switch_Toolbox.Library.Rendering
         public static void EnableOpenTKDebugOutput()
         {
 #if DEBUG
-            // This isn't free, so skip this step when not debugging.
+            /*// This isn't free, so skip this step when not debugging.
             // TODO: Only works with Intel integrated.
             if (SFGraphics.Tools.OpenGLExtensions.IsAvailable("GL_KHR_debug"))
             {
@@ -77,7 +77,7 @@ namespace Switch_Toolbox.Library.Rendering
                 int[] ids = { };
                 GL.DebugMessageControl(DebugSourceControl.DontCare, DebugTypeControl.DontCare,
                     DebugSeverityControl.DontCare, 0, ids, true);
-            }
+            }*/
 #endif
         }
 

@@ -6,7 +6,7 @@ using Octokit;
 using System.IO;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace Toolbox
 {

@@ -4,7 +4,7 @@ using System.Xml;
 using System.Drawing;
 using System.IO;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Based on
     // https://github.com/jam1garner/Smash-Forge/blob/26e0dcbd84cdf8a4ffe3fbe0b0317520a4099286/Smash%20Forge/Filetypes/Application/Config.cs
@@ -95,9 +95,9 @@ namespace Switch_Toolbox.Library
                         int.TryParse(node.InnerText, out Runtime.Yaz0CompressionLevel);
                         break;
                     case "FormTheme":
-                        Switch_Toolbox.Library.Forms.FormThemes.Preset preset;
+                        Toolbox.Library.Forms.FormThemes.Preset preset;
                         Enum.TryParse(node.InnerText, out preset);
-                        Switch_Toolbox.Library.Forms.FormThemes.ActivePreset = preset;
+                        Toolbox.Library.Forms.FormThemes.ActivePreset = preset;
                         break;
                     case "MaximizeMdiWindow": bool.TryParse(node.InnerText, out Runtime.MaximizeMdiWindow);
                         break;
@@ -366,7 +366,7 @@ namespace Switch_Toolbox.Library
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));
-            mainSettingsNode.AppendChild(createNode(doc, "FormTheme", Switch_Toolbox.Library.Forms.FormThemes.ActivePreset.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "FormTheme", Toolbox.Library.Forms.FormThemes.ActivePreset.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "MaximizeMdiWindow", Runtime.MaximizeMdiWindow.ToString()));
         }
         private static void AppendImageEditorSettings(XmlDocument doc, XmlNode parentNode)

@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stCheckBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stCheckBox2 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stCheckBox3 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stCheckBox4 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
+            this.stCheckBox2 = new Toolbox.Library.Forms.STCheckBox();
+            this.stCheckBox3 = new Toolbox.Library.Forms.STCheckBox();
+            this.stCheckBox4 = new Toolbox.Library.Forms.STCheckBox();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
             this.SuspendLayout();
             // 
             // stCheckBox1
@@ -101,10 +101,10 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox1;
-        private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox2;
-        private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox3;
-        private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox4;
-        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
+        private Toolbox.Library.Forms.STCheckBox stCheckBox1;
+        private Toolbox.Library.Forms.STCheckBox stCheckBox2;
+        private Toolbox.Library.Forms.STCheckBox stCheckBox3;
+        private Toolbox.Library.Forms.STCheckBox stCheckBox4;
+        private Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

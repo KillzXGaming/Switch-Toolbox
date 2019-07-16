@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 using System.Windows.Forms;
 using aampv1 = AampV1Library;
 using aampv2 = AampV2Library;

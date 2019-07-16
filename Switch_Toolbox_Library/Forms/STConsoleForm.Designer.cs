@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class STConsoleForm
     {
@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 

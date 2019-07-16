@@ -11,7 +11,7 @@ using VGAudio.Containers.Wave;
 using VGAudio.Formats;
 using VGAudio.Utilities;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class VGAdudioFile
     {

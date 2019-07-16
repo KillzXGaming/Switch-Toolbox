@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public abstract class TreeNodeCustom : TreeNode
     {

@@ -21,7 +21,7 @@ namespace Toolbox
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Switch_Toolbox.Library.Runtime.ExecutableDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            Toolbox.Library.Runtime.ExecutableDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
             string[] args = Environment.GetCommandLineArgs();
 
@@ -35,7 +35,7 @@ namespace Toolbox
             var domain = AppDomain.CurrentDomain;
             domain.AssemblyResolve += LoadAssembly;
 
-            Switch_Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
+            Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
 
             MainForm form = new MainForm();
             form.openedFiles = Files;

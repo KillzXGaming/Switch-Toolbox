@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Rendering;
 using System.Windows.Forms;
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
@@ -14,7 +14,7 @@ using GL_EditorFramework.EditorDrawables;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public partial class Viewport : UserControl
     {

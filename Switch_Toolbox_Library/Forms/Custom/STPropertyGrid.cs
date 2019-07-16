@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public partial class STPropertyGrid : UserControl
     {
@@ -20,18 +20,18 @@ namespace Switch_Toolbox.Library.Forms
 
             if (FormThemes.ActivePreset != FormThemes.Preset.White)
             {
-                this.propertyGrid1.CategoryForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
-                this.propertyGrid1.CategorySplitterColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.CategoryForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
+                this.propertyGrid1.CategorySplitterColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
                 this.propertyGrid1.CommandsActiveLinkColor = System.Drawing.Color.Red;
-                this.propertyGrid1.CommandsBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIParentBackColor;
-                this.propertyGrid1.DisabledItemForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
-                this.propertyGrid1.HelpBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-                this.propertyGrid1.HelpBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-                this.propertyGrid1.HelpForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
-                this.propertyGrid1.LineColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-                this.propertyGrid1.ViewBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.MDIChildBorderColor;
-                this.propertyGrid1.ViewBorderColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
-                this.propertyGrid1.ViewForeColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
+                this.propertyGrid1.CommandsBorderColor = Toolbox.Library.Forms.FormThemes.BaseTheme.MDIParentBackColor;
+                this.propertyGrid1.DisabledItemForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.DisabledItemColor;
+                this.propertyGrid1.HelpBackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.HelpBorderColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.HelpForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
+                this.propertyGrid1.LineColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.ViewBackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.MDIChildBorderColor;
+                this.propertyGrid1.ViewBorderColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+                this.propertyGrid1.ViewForeColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormForeColor;
             }
         }
 

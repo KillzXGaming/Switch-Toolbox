@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox
+﻿namespace Toolbox
 {
     partial class KeySelectionForm
     {
@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.setProdKeyPath = new Switch_Toolbox.Library.Forms.STButton();
-            this.setTitleKeyPath = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnOk = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.TextBoxTitleKey = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.TextBoxProdKeyPath = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.setProdKeyPath = new Toolbox.Library.Forms.STButton();
+            this.setTitleKeyPath = new Toolbox.Library.Forms.STButton();
+            this.btnOk = new Toolbox.Library.Forms.STButton();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.TextBoxTitleKey = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.TextBoxProdKeyPath = new Toolbox.Library.Forms.STTextBox();
             this.SuspendLayout();
             // 
             // setProdKeyPath
@@ -126,12 +126,12 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTextBox TextBoxProdKeyPath;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STTextBox TextBoxTitleKey;
-        private Switch_Toolbox.Library.Forms.STButton btnOk;
-        private Switch_Toolbox.Library.Forms.STButton setTitleKeyPath;
-        private Switch_Toolbox.Library.Forms.STButton setProdKeyPath;
+        private Toolbox.Library.Forms.STTextBox TextBoxProdKeyPath;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STTextBox TextBoxTitleKey;
+        private Toolbox.Library.Forms.STButton btnOk;
+        private Toolbox.Library.Forms.STButton setTitleKeyPath;
+        private Toolbox.Library.Forms.STButton setProdKeyPath;
     }
 }

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using ScintillaNET;
 using ScintillaNET_FindReplaceDialog;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public partial class TextEditor : UserControl
     {

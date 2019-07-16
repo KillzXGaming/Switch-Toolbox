@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textureChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.paramChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.renderInfosChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.optionsChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.UserDataChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.textureChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.paramChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.renderInfosChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.optionsChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.UserDataChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -161,13 +161,13 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STCheckBox textureChkBox;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STCheckBox UserDataChkBox;
-        private Switch_Toolbox.Library.Forms.STCheckBox optionsChkBox;
-        private Switch_Toolbox.Library.Forms.STCheckBox renderInfosChkBox;
-        private Switch_Toolbox.Library.Forms.STCheckBox paramChkBox;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STCheckBox textureChkBox;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STCheckBox UserDataChkBox;
+        private Toolbox.Library.Forms.STCheckBox optionsChkBox;
+        private Toolbox.Library.Forms.STCheckBox renderInfosChkBox;
+        private Toolbox.Library.Forms.STCheckBox paramChkBox;
+        private Toolbox.Library.Forms.STLabel stLabel1;
     }
 }

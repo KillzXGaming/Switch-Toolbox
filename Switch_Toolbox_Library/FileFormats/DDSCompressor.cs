@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using System.Runtime.InteropServices;
 using DirectXTexNet;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class DDSCompressor
     {

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SELib;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 using OpenTK;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class SEModel
     {

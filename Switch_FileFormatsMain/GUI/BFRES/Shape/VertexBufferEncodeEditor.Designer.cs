@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.formatCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.nameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.formatCB = new Toolbox.Library.Forms.STComboBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.nameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,11 +130,11 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STComboBox formatCB;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STTextBox nameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STComboBox formatCB;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STTextBox nameTB;
+        private Toolbox.Library.Forms.STLabel stLabel2;
     }
 }

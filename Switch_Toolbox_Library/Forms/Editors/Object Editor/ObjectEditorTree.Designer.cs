@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ObjectEditorTree
     {
@@ -30,20 +30,20 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.searchLbl = new Switch_Toolbox.Library.Forms.STLabel();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.searchLbl = new Toolbox.Library.Forms.STLabel();
+            this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
             this.searchImgPB = new System.Windows.Forms.PictureBox();
-            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.objectEditorMenu = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.activeEditorChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.objectEditorMenu = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeNodeContextMenu = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.treeNodeContextMenu = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.stPanel1.SuspendLayout();
             this.stPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
@@ -142,7 +142,7 @@
             // 
             this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
-            this.searchImgPB.Image = global::Switch_Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
+            this.searchImgPB.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
             this.searchImgPB.Location = new System.Drawing.Point(-654, 5);
             this.searchImgPB.Name = "searchImgPB";
             this.searchImgPB.Size = new System.Drawing.Size(22, 17);

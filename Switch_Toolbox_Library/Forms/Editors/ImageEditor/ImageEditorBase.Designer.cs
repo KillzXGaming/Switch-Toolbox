@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImageEditorBase
     {
@@ -31,26 +31,26 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.bottomLabel = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel4 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel5 = new Toolbox.Library.Forms.STPanel();
+            this.bottomLabel = new Toolbox.Library.Forms.STLabel();
             this.pictureBoxCustom1 = new Cyotek.Windows.Forms.ImageBox();
-            this.stContextMenuStrip2 = new Switch_Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.stContextMenuStrip2 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.alphaBtn = new Switch_Toolbox.Library.Forms.STButton();
-            this.editBtn = new Switch_Toolbox.Library.Forms.STButton();
-            this.saveBtn = new Switch_Toolbox.Library.Forms.STButton();
-            this.arrayLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
-            this.BtmMipsLeft = new Switch_Toolbox.Library.Forms.STButton();
-            this.mipLevelCounterLabel = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnRightArray = new Switch_Toolbox.Library.Forms.STButton();
-            this.BtnMipsRight = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnLeftArray = new Switch_Toolbox.Library.Forms.STButton();
-            this.imageBGComboBox = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.alphaBtn = new Toolbox.Library.Forms.STButton();
+            this.editBtn = new Toolbox.Library.Forms.STButton();
+            this.saveBtn = new Toolbox.Library.Forms.STButton();
+            this.arrayLevelCounterLabel = new Toolbox.Library.Forms.STLabel();
+            this.BtmMipsLeft = new Toolbox.Library.Forms.STButton();
+            this.mipLevelCounterLabel = new Toolbox.Library.Forms.STLabel();
+            this.btnRightArray = new Toolbox.Library.Forms.STButton();
+            this.BtnMipsRight = new Toolbox.Library.Forms.STButton();
+            this.btnLeftArray = new Toolbox.Library.Forms.STButton();
+            this.imageBGComboBox = new Toolbox.Library.Forms.STComboBox();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -636,11 +636,11 @@
 
         #endregion
         private STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STComboBox imageBGComboBox;
-        private Switch_Toolbox.Library.Forms.STButton BtnMipsRight;
-        private Switch_Toolbox.Library.Forms.STButton BtmMipsLeft;
-        private Switch_Toolbox.Library.Forms.STButton btnRightArray;
-        private Switch_Toolbox.Library.Forms.STButton btnLeftArray;
+        private Toolbox.Library.Forms.STComboBox imageBGComboBox;
+        private Toolbox.Library.Forms.STButton BtnMipsRight;
+        private Toolbox.Library.Forms.STButton BtmMipsLeft;
+        private Toolbox.Library.Forms.STButton btnRightArray;
+        private Toolbox.Library.Forms.STButton btnLeftArray;
         private STLabel mipLevelCounterLabel;
         private STPanel stPanel3;
         private STLabel arrayLevelCounterLabel;

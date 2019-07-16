@@ -9,10 +9,10 @@ using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Thanks to forge! Based on
     // https://github.com/jam1garner/Smash-Forge/blob/52844da94c7bed830d841e0d7e5d49c3f2c69471/Smash%20Forge/GUI/ModelViewport.cs

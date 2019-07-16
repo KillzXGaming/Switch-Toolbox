@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class TransformMeshTool
     {
@@ -45,15 +45,15 @@
             this.flipX90 = new System.Windows.Forms.Button();
             this.flipY90 = new System.Windows.Forms.Button();
             this.flipZ90 = new System.Windows.Forms.Button();
-            this.scaXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.scaYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.scaZUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.posXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.posYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.posZUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.rotXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.rotYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.rotZUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
+            this.scaXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.scaYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.scaZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.posXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.posYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.posZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.rotXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.rotYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.rotZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             ((System.ComponentModel.ISupportInitialize)(this.scaXUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaZUD)).BeginInit();

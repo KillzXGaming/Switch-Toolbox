@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library;
 using Syroot.BinaryData;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class TPFileSizeTable : IEditor<FileTableViewTPHD>, IFileFormat
     {

@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using OpenTK;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public class FileReader : BinaryDataReader
     {

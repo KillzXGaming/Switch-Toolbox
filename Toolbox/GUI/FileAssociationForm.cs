@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using System.Reflection;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace Toolbox
 {

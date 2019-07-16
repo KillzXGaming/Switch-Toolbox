@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class LoopEditor
     {
@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.startLoopUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.endLoopUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.chkCanLoop = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnOk = new Switch_Toolbox.Library.Forms.STButton();
+            this.startLoopUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.endLoopUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.chkCanLoop = new Toolbox.Library.Forms.STCheckBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.btnOk = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLoopUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.endLoopUD)).BeginInit();
@@ -151,7 +151,7 @@
 
         public NumericUpDownUint startLoopUD;
         public NumericUpDownUint endLoopUD;
-        public Switch_Toolbox.Library.Forms.STCheckBox chkCanLoop;
+        public Toolbox.Library.Forms.STCheckBox chkCanLoop;
         private STLabel stLabel1;
         private STLabel stLabel2;
         private STButton btnOk;

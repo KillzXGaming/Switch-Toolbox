@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PluginContracts;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
    public static class GenericPluginLoader
     {

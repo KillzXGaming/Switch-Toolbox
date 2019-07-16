@@ -4,8 +4,8 @@ using System.Linq;
 using System.IO;
 using System.Drawing;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.IO;
 using Syroot.NintenTools.Bfres.GX2;
 using Bfres.Structs;
 

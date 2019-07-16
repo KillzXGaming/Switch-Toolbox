@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnEdit = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.btnEdit = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnScrolDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnScrolDown = new Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // btnEdit
@@ -152,14 +152,14 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
-        private Switch_Toolbox.Library.Forms.STButton btnEdit;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnEdit;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private Switch_Toolbox.Library.Forms.STButton btnScrolDown;
+        private Toolbox.Library.Forms.STButton btnScrolDown;
     }
 }

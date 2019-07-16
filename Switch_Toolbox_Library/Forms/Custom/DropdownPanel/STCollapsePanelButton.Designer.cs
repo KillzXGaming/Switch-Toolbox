@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class STCollapsePanelButton
     {
@@ -30,8 +30,8 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.alternativeLabel = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.alternativeLabel = new Toolbox.Library.Forms.STLabel();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -42,7 +42,7 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.Image = global::Switch_Toolbox.Library.Properties.Resources.arrowMinimize_;
+            this.pictureBox1.Image = global::Toolbox.Library.Properties.Resources.arrowMinimize_;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(30, 18);

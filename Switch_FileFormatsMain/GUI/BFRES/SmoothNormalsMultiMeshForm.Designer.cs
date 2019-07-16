@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,8 +96,8 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.TreeViewCustom treeViewCustom1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.TreeViewCustom treeViewCustom1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton stButton1;
     }
 }

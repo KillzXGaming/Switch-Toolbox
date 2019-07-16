@@ -4,7 +4,7 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     
     public class STToolStripSeparator : ToolStripSeparator

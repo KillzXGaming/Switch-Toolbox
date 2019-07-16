@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Drawing;
 using System.IO;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin
 {

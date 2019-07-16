@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library
+﻿namespace Toolbox.Library
 {
     partial class AnimationPanel
     {
@@ -30,12 +30,12 @@
         {
             this.button2 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.loopChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.loopChkBox = new Toolbox.Library.Forms.STCheckBox();
             this.totalFrame = new System.Windows.Forms.NumericUpDown();
             this.currentFrameUpDown = new System.Windows.Forms.NumericUpDown();
             this.animationPlayBtn = new System.Windows.Forms.Button();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.animationTrackBar = new Switch_Toolbox.Library.Forms.TimeLine();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.animationTrackBar = new Toolbox.Library.Forms.TimeLine();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalFrame)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.currentFrameUpDown)).BeginInit();
@@ -44,7 +44,7 @@
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.button2.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.arrowL;
+            this.button2.BackgroundImage = global::Toolbox.Library.Properties.Resources.arrowL;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -109,7 +109,7 @@
             // animationPlayBtn
             // 
             this.animationPlayBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.animationPlayBtn.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.arrowR;
+            this.animationPlayBtn.BackgroundImage = global::Toolbox.Library.Properties.Resources.arrowR;
             this.animationPlayBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.animationPlayBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.animationPlayBtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));

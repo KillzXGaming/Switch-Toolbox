@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class AudioPlayerPanel
     {
@@ -29,34 +29,34 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.audioBarPanel = new Switch_Toolbox.Library.Forms.STPanel();
+            this.audioBarPanel = new Toolbox.Library.Forms.STPanel();
             this.trackbarVolume = new ColorSlider.ColorSlider();
-            this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.btnStop = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnForward1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnPlay = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnBackward1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stPanel4 = new Toolbox.Library.Forms.STPanel();
+            this.btnStop = new Toolbox.Library.Forms.STButton();
+            this.btnForward1 = new Toolbox.Library.Forms.STButton();
+            this.btnPlay = new Toolbox.Library.Forms.STButton();
+            this.btnBackward1 = new Toolbox.Library.Forms.STButton();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.colorSlider1 = new ColorSlider.ColorSlider();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.audioListView = new Switch_Toolbox.Library.Forms.STListView();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.audioListView = new Toolbox.Library.Forms.STListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.audioDevice = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.channelCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.audioDevice = new Toolbox.Library.Forms.STComboBox();
+            this.channelCB = new Toolbox.Library.Forms.STComboBox();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loopingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.chkLoopPlayer = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.chkLoopPlayer = new Toolbox.Library.Forms.STCheckBox();
             this.audioBarPanel.SuspendLayout();
             this.stPanel4.SuspendLayout();
             this.stPanel1.SuspendLayout();
@@ -143,7 +143,7 @@
             // btnStop
             // 
             this.btnStop.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnStop.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.StopBtn;
+            this.btnStop.BackgroundImage = global::Toolbox.Library.Properties.Resources.StopBtn;
             this.btnStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnStop.FlatAppearance.BorderSize = 0;
             this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -157,7 +157,7 @@
             // btnForward1
             // 
             this.btnForward1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnForward1.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.RewindArrows1R;
+            this.btnForward1.BackgroundImage = global::Toolbox.Library.Properties.Resources.RewindArrows1R;
             this.btnForward1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnForward1.FlatAppearance.BorderSize = 0;
             this.btnForward1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -170,7 +170,7 @@
             // btnPlay
             // 
             this.btnPlay.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnPlay.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.PlayArrowR;
+            this.btnPlay.BackgroundImage = global::Toolbox.Library.Properties.Resources.PlayArrowR;
             this.btnPlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPlay.FlatAppearance.BorderSize = 0;
             this.btnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -184,7 +184,7 @@
             // btnBackward1
             // 
             this.btnBackward1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnBackward1.BackgroundImage = global::Switch_Toolbox.Library.Properties.Resources.RewindArrows1L;
+            this.btnBackward1.BackgroundImage = global::Toolbox.Library.Properties.Resources.RewindArrows1L;
             this.btnBackward1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnBackward1.FlatAppearance.BorderSize = 0;
             this.btnBackward1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -475,6 +475,6 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loopingToolStripMenuItem;
         private STButton btnStop;
-        private Switch_Toolbox.Library.Forms.STCheckBox chkLoopPlayer;
+        private Toolbox.Library.Forms.STCheckBox chkLoopPlayer;
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Text;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
+using Toolbox.Library.IO;
+using Toolbox.Library;
 using System.IO;
 using Syroot.BinaryData;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using Bfres.Structs;
 
 namespace FirstPlugin

@@ -2,12 +2,12 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
 using FirstPlugin;
 using Syroot.NintenTools.NSW.Bfres;
 using FirstPlugin.Forms;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Animations;
 
 namespace Bfres.Structs
 {

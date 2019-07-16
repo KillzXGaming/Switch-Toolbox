@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using OpenTK;
 using System.Text;
 
-namespace Switch_Toolbox.Library.Animations
+namespace Toolbox.Library.Animations
 {
     //Todo rewrite this
     //Currently from forge

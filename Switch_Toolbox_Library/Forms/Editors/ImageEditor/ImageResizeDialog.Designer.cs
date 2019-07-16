@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImageResizeDialog
     {
@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageResizeDialog));
-            this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.btnOk = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnCancel = new Switch_Toolbox.Library.Forms.STButton();
-            this.widthUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.chkKeepAspectRatio = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.resampleCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.heightUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
+            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.btnOk = new Toolbox.Library.Forms.STButton();
+            this.btnCancel = new Toolbox.Library.Forms.STButton();
+            this.widthUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.chkKeepAspectRatio = new Toolbox.Library.Forms.STCheckBox();
+            this.resampleCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.heightUD = new Toolbox.Library.Forms.NumericUpDownUint();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.widthUD)).BeginInit();
@@ -214,7 +214,7 @@
         private STLabel stLabel2;
         private STLabel stLabel1;
         private STComboBox resampleCB;
-        private Switch_Toolbox.Library.Forms.STCheckBox chkKeepAspectRatio;
+        private Toolbox.Library.Forms.STCheckBox chkKeepAspectRatio;
         private NumericUpDownUint widthUD;
         private STButton btnCancel;
         private STButton btnOk;

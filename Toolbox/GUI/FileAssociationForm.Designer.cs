@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chkAll = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
+            this.chkAll = new Toolbox.Library.Forms.STCheckBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
@@ -124,10 +124,10 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STCheckBox chkAll;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STCheckBox chkAll;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
     }

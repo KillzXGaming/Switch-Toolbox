@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Switch_Toolbox.Library.Animations
+namespace Toolbox.Library.Animations
 {
     public class BooleanKeyFrame
     {

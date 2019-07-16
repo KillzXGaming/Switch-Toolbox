@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public class STUserControl : UserControl
     {

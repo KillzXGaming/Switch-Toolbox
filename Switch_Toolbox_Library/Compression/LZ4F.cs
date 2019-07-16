@@ -4,10 +4,10 @@ using System.Linq;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using K4os.Compression.LZ4.Streams;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class LZ4F : ICompressionFormat
     {

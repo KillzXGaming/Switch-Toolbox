@@ -9,7 +9,7 @@ using System.Linq;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public class STLibraryCompression
     {

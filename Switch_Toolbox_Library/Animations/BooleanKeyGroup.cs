@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK;
 
-namespace Switch_Toolbox.Library.Animations
+namespace Toolbox.Library.Animations
 {
     public class BooleanKeyGroup : TreeNode
     {

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK;
 using SELib;
-using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.NodeWrappers;
+using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 
-namespace Switch_Toolbox.Library.Animations
+namespace Toolbox.Library.Animations
 {
     public enum InterpolationType
     {

@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class HueSaturationAdjuster
     {
@@ -31,9 +31,9 @@
             this.hueTrackBar = new System.Windows.Forms.TrackBar();
             this.saturationTrackBar = new System.Windows.Forms.TrackBar();
             this.brightnessTrackBar = new System.Windows.Forms.TrackBar();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             ((System.ComponentModel.ISupportInitialize)(this.hueTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.saturationTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.brightnessTrackBar)).BeginInit();

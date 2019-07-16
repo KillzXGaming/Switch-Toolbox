@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms.Custom
+namespace Toolbox.Library.Forms.Custom
 {
     public partial class STNumericBox : UserControl
     {

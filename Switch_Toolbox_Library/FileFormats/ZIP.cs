@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class ZIP : TreeNodeFile, IFileFormat
     {
@@ -22,7 +22,7 @@ namespace Switch_Toolbox.Library
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 reader.SetByteOrder(true);
                 return reader.ReadInt32() == MagicFileConstant;

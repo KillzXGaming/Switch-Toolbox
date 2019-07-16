@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.SuspendLayout();
             // 
             // listViewCustom1
@@ -69,7 +69,7 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
     }
 }

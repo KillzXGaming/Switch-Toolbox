@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.userDataEditor1 = new UserDataEditor();
             this.stTabControl1.SuspendLayout();
@@ -138,13 +138,13 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
+        private Toolbox.Library.Forms.STTabControl stTabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private UserDataEditor userDataEditor1;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STPanel stPanel2;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
     }
 }

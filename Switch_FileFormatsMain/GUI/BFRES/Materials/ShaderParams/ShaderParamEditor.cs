@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library;
 using OpenTK;
 
 namespace FirstPlugin.Forms

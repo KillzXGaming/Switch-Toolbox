@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using Bfres.Structs;
 using ResU = Syroot.NintenTools.Bfres;
 using ResNX = Syroot.NintenTools.NSW.Bfres;
@@ -98,7 +98,7 @@ namespace FirstPlugin
 
             Thread = new Thread((ThreadStart)(() =>
             {
-                pictureBoxCustom1.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                pictureBoxCustom1.Image = Toolbox.Library.Imaging.GetLoadingImage();
                 var image = texData.GetBitmap();
 
                 if (pictureBoxCustom1.InvokeRequired)

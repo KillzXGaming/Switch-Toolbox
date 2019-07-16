@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library.IO;
 using System.Windows.Forms;
 using FirstPlugin.Forms;
 
@@ -24,7 +24,7 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 return reader.CheckSignature(4, "BNSH");
             }

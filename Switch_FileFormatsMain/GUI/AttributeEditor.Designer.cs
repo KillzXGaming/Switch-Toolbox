@@ -35,10 +35,10 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.formatCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.formatCB = new Toolbox.Library.Forms.STComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.hintLabel = new System.Windows.Forms.Label();
-            this.attributeCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.attributeCB = new Toolbox.Library.Forms.STComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
@@ -116,7 +116,7 @@
             // 
             // formatCB
             // 
-            this.formatCB.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.formatCB.DropDownStyle = Toolbox.Library.Forms.STComboBox.STDropDownStyle;
             this.formatCB.FormattingEnabled = true;
             this.formatCB.Location = new System.Drawing.Point(374, 59);
             this.formatCB.Name = "formatCB";
@@ -153,7 +153,7 @@
             // 
             // attributeCB
             // 
-            this.attributeCB.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.attributeCB.DropDownStyle = Toolbox.Library.Forms.STComboBox.STDropDownStyle;
             this.attributeCB.FormattingEnabled = true;
             this.attributeCB.Location = new System.Drawing.Point(374, 21);
             this.attributeCB.Name = "attributeCB";
@@ -212,11 +212,11 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private Switch_Toolbox.Library.Forms.STComboBox formatCB;
+        private Toolbox.Library.Forms.STComboBox formatCB;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Label label3;
-        private Switch_Toolbox.Library.Forms.STComboBox attributeCB;
+        private Toolbox.Library.Forms.STComboBox attributeCB;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label hintLabel;
         private System.Windows.Forms.Button button3;

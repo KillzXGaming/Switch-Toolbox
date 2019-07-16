@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using System.Windows.Forms;
 using Syroot.NintenTools.Bfres;
 using FirstPlugin.Forms;
@@ -7,7 +7,7 @@ using FirstPlugin;
 using Bfres.Structs;
 using System;
 using System.Linq;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Animations;
 
 namespace Bfres.Structs
 {

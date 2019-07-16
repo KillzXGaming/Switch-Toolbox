@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.boneListCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.scaleXUD = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
-            this.scaleYUD = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
-            this.scaleZUD = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.scaleCompChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.boneListCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.scaleXUD = new Toolbox.Library.Forms.STNumbericUpDown();
+            this.scaleYUD = new Toolbox.Library.Forms.STNumbericUpDown();
+            this.scaleZUD = new Toolbox.Library.Forms.STNumbericUpDown();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.scaleCompChk = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleXUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
@@ -192,15 +192,15 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STNumbericUpDown scaleYUD;
-        private Switch_Toolbox.Library.Forms.STNumbericUpDown scaleXUD;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STComboBox boneListCB;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STNumbericUpDown scaleZUD;
-        private Switch_Toolbox.Library.Forms.STCheckBox scaleCompChk;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STNumbericUpDown scaleYUD;
+        private Toolbox.Library.Forms.STNumbericUpDown scaleXUD;
+        private Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STComboBox boneListCB;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STNumbericUpDown scaleZUD;
+        private Toolbox.Library.Forms.STCheckBox scaleCompChk;
     }
 }

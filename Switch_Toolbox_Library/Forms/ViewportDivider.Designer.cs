@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ViewportDivider
     {
@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.editorPanel = new Switch_Toolbox.Library.Forms.STPanel();
-            this.viewportPanel = new Switch_Toolbox.Library.Forms.STPanel();
+            this.editorPanel = new Toolbox.Library.Forms.STPanel();
+            this.viewportPanel = new Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.SuspendLayout();
             // 

@@ -4,9 +4,9 @@ using System.IO;
 using System.IO.Compression;
 using OpenTK;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public class STFileSaver
     {

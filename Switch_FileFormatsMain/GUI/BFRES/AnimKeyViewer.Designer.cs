@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stListView1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrolDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton3 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton4 = new Switch_Toolbox.Library.Forms.STButton();
-            this.numericUpDownFloat1 = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.numericUpDownFloat2 = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.numericUpDownFloat3 = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.numericUpDownFloat4 = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stListView1 = new Toolbox.Library.Forms.ListViewCustom();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.btnScrolDown = new Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
+            this.stButton3 = new Toolbox.Library.Forms.STButton();
+            this.stButton4 = new Toolbox.Library.Forms.STButton();
+            this.numericUpDownFloat1 = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.numericUpDownFloat2 = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.numericUpDownFloat3 = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.numericUpDownFloat4 = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloat1)).BeginInit();
@@ -275,18 +275,18 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.ListViewCustom stListView1;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton btnScrolDown;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
-        private Switch_Toolbox.Library.Forms.STButton stButton3;
-        private Switch_Toolbox.Library.Forms.STButton stButton4;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat1;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat2;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat3;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat4;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.ListViewCustom stListView1;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton btnScrolDown;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.STButton stButton3;
+        private Toolbox.Library.Forms.STButton stButton4;
+        private Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat1;
+        private Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat2;
+        private Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat3;
+        private Toolbox.Library.Forms.NumericUpDownFloat numericUpDownFloat4;
+        private Toolbox.Library.Forms.STLabel stLabel1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }

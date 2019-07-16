@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using OpenTK;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Animations
+namespace Toolbox.Library.Animations
 {
     //Todo rewrite this
     //Currently from forge

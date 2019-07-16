@@ -29,26 +29,26 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinaryTextureImporterList));
-            this.button2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.button1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.button2 = new Toolbox.Library.Forms.STButton();
+            this.button1 = new Toolbox.Library.Forms.STButton();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.Name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Format = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SwizzleNum = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
-            this.label5 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.tileModeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.ImgDimComb = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.label3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.MipmapNum = new Switch_Toolbox.Library.Forms.STNumbericUpDown();
-            this.WidthLabel = new Switch_Toolbox.Library.Forms.STLabel();
-            this.HeightLabel = new Switch_Toolbox.Library.Forms.STLabel();
-            this.pictureBox1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.formatComboBox = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.compressionModeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.SwizzleNum = new Toolbox.Library.Forms.STNumbericUpDown();
+            this.label5 = new Toolbox.Library.Forms.STLabel();
+            this.tileModeCB = new Toolbox.Library.Forms.STComboBox();
+            this.label4 = new Toolbox.Library.Forms.STLabel();
+            this.ImgDimComb = new Toolbox.Library.Forms.STComboBox();
+            this.label3 = new Toolbox.Library.Forms.STLabel();
+            this.label2 = new Toolbox.Library.Forms.STLabel();
+            this.label1 = new Toolbox.Library.Forms.STLabel();
+            this.MipmapNum = new Toolbox.Library.Forms.STNumbericUpDown();
+            this.WidthLabel = new Toolbox.Library.Forms.STLabel();
+            this.HeightLabel = new Toolbox.Library.Forms.STLabel();
+            this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.formatComboBox = new Toolbox.Library.Forms.STComboBox();
+            this.compressionModeCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -312,25 +312,25 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STButton button2;
-        private Switch_Toolbox.Library.Forms.STButton button1;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
-        private Switch_Toolbox.Library.Forms.STNumbericUpDown SwizzleNum;
-        private Switch_Toolbox.Library.Forms.STLabel label5;
-        private Switch_Toolbox.Library.Forms.STComboBox tileModeCB;
-        private Switch_Toolbox.Library.Forms.STLabel label4;
-        private Switch_Toolbox.Library.Forms.STComboBox ImgDimComb;
-        private Switch_Toolbox.Library.Forms.STLabel label3;
-        private Switch_Toolbox.Library.Forms.STLabel label2;
-        private Switch_Toolbox.Library.Forms.STLabel label1;
-        private Switch_Toolbox.Library.Forms.STNumbericUpDown MipmapNum;
-        private Switch_Toolbox.Library.Forms.STLabel WidthLabel;
-        private Switch_Toolbox.Library.Forms.STLabel HeightLabel;
-        private Switch_Toolbox.Library.Forms.PictureBoxCustom pictureBox1;
-        private Switch_Toolbox.Library.Forms.STComboBox formatComboBox;
+        private Toolbox.Library.Forms.STButton button2;
+        private Toolbox.Library.Forms.STButton button1;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STNumbericUpDown SwizzleNum;
+        private Toolbox.Library.Forms.STLabel label5;
+        private Toolbox.Library.Forms.STComboBox tileModeCB;
+        private Toolbox.Library.Forms.STLabel label4;
+        private Toolbox.Library.Forms.STComboBox ImgDimComb;
+        private Toolbox.Library.Forms.STLabel label3;
+        private Toolbox.Library.Forms.STLabel label2;
+        private Toolbox.Library.Forms.STLabel label1;
+        private Toolbox.Library.Forms.STNumbericUpDown MipmapNum;
+        private Toolbox.Library.Forms.STLabel WidthLabel;
+        private Toolbox.Library.Forms.STLabel HeightLabel;
+        private Toolbox.Library.Forms.PictureBoxCustom pictureBox1;
+        private Toolbox.Library.Forms.STComboBox formatComboBox;
         private System.Windows.Forms.ColumnHeader Name;
         private System.Windows.Forms.ColumnHeader Format;
-        private Switch_Toolbox.Library.Forms.STComboBox compressionModeCB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STComboBox compressionModeCB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
     }
 }

@@ -33,7 +33,7 @@
             this.barSlider2 = new BarSlider.BarSlider();
             this.barSlider3 = new BarSlider.BarSlider();
             this.barSlider4 = new BarSlider.BarSlider();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // colorWheel1
@@ -246,6 +246,6 @@
         private BarSlider.BarSlider barSlider2;
         private BarSlider.BarSlider barSlider3;
         private BarSlider.BarSlider barSlider4;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STButton stButton1;
     }
 }

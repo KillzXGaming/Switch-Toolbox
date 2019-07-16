@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.SuspendLayout();
             // 
             // stPropertyGrid1
@@ -54,6 +54,6 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
     }
 }

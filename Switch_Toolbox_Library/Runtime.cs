@@ -8,7 +8,7 @@ using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Thanks to Smash Forge for a few of these!
     // https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Runtime.cs

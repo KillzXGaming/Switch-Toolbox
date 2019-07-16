@@ -1,9 +1,9 @@
 ﻿using System;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using System.Windows.Forms;
 using FirstPlugin;
-using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Forms;
 
 namespace Bfres.Structs
 {

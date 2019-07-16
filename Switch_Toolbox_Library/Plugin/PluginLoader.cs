@@ -7,7 +7,7 @@ using System.IO;
 using System.Reflection;
 using PluginContracts;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class PluginLoader
     {

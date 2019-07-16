@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class STOptionsDialog
     {
@@ -27,12 +27,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnClose = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnDetails = new Switch_Toolbox.Library.Forms.STButton();
-            this.lblMessage = new Switch_Toolbox.Library.Forms.STLabel();
+            this.btnClose = new Toolbox.Library.Forms.STButton();
+            this.btnDetails = new Toolbox.Library.Forms.STButton();
+            this.lblMessage = new Toolbox.Library.Forms.STLabel();
             this.tbDetails = new System.Windows.Forms.RichTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,7 +90,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Switch_Toolbox.Library.Properties.Resources.QuestionCheck;
+            this.pictureBox1.Image = global::Toolbox.Library.Properties.Resources.QuestionCheck;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(50, 37);
@@ -137,9 +137,9 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton btnClose;
-        private Switch_Toolbox.Library.Forms.STButton btnDetails;
-        private Switch_Toolbox.Library.Forms.STLabel lblMessage;
+        private Toolbox.Library.Forms.STButton btnClose;
+        private Toolbox.Library.Forms.STButton btnDetails;
+        private Toolbox.Library.Forms.STLabel lblMessage;
         private System.Windows.Forms.RichTextBox tbDetails;
         private System.Windows.Forms.PictureBox pictureBox1;
         private STButton stButton1;

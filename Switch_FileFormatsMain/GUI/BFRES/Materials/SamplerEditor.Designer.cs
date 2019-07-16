@@ -29,24 +29,24 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SamplerEditor));
-            this.stLabel14 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.textureNameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.samplerHintTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.textureRefListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.stLabel14 = new Toolbox.Library.Forms.STLabel();
+            this.textureNameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.samplerHintTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.textureRefListView = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnEdit = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
+            this.btnEdit = new Toolbox.Library.Forms.STButton();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.samplerTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.textureBP = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.stPanel5 = new Toolbox.Library.Forms.STPanel();
+            this.samplerTB = new Toolbox.Library.Forms.STTextBox();
+            this.textureBP = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.stPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textureBP)).BeginInit();
             this.SuspendLayout();
@@ -255,23 +255,23 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STLabel stLabel14;
-        private Switch_Toolbox.Library.Forms.STTextBox textureNameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STTextBox samplerHintTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.PictureBoxCustom textureBP;
-        private Switch_Toolbox.Library.Forms.ListViewCustom textureRefListView;
+        private Toolbox.Library.Forms.STLabel stLabel14;
+        private Toolbox.Library.Forms.STTextBox textureNameTB;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STTextBox samplerHintTB;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.PictureBoxCustom textureBP;
+        private Toolbox.Library.Forms.ListViewCustom textureRefListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
-        private Switch_Toolbox.Library.Forms.STButton btnEdit;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnEdit;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel5;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
-        private Switch_Toolbox.Library.Forms.STTextBox samplerTB;
+        private Toolbox.Library.Forms.STPanel stPanel5;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STTextBox samplerTB;
     }
 }

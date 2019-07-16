@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class ThemeConfig
     {

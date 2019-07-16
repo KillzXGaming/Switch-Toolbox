@@ -8,7 +8,7 @@ using GL_EditorFramework.Interfaces;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using System.Drawing;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {

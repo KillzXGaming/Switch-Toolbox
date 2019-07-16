@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using FirstPlugin.Forms;
 using FirstPlugin;
 using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;
 
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Animations;
+using Toolbox.Library.NodeWrappers;
 
 namespace Bfres.Structs
 {

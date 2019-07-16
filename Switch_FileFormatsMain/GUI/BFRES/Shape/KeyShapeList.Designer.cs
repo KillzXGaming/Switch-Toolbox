@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnRemoveKeyShape = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnAddKeyShape = new Switch_Toolbox.Library.Forms.STButton();
-            this.keyShapeListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.btnRemoveKeyShape = new Toolbox.Library.Forms.STButton();
+            this.btnAddKeyShape = new Toolbox.Library.Forms.STButton();
+            this.keyShapeListView = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnMoveKeyShapeDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnMoveKeyShapeUp = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnMoveKeyShapeDown = new Toolbox.Library.Forms.STButton();
+            this.btnMoveKeyShapeUp = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // btnRemoveKeyShape
@@ -118,11 +118,11 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STButton btnRemoveKeyShape;
-        private Switch_Toolbox.Library.Forms.STButton btnAddKeyShape;
-        private Switch_Toolbox.Library.Forms.ListViewCustom keyShapeListView;
+        private Toolbox.Library.Forms.STButton btnRemoveKeyShape;
+        private Toolbox.Library.Forms.STButton btnAddKeyShape;
+        private Toolbox.Library.Forms.ListViewCustom keyShapeListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private Switch_Toolbox.Library.Forms.STButton btnMoveKeyShapeDown;
-        private Switch_Toolbox.Library.Forms.STButton btnMoveKeyShapeUp;
+        private Toolbox.Library.Forms.STButton btnMoveKeyShapeDown;
+        private Toolbox.Library.Forms.STButton btnMoveKeyShapeUp;
     }
 }

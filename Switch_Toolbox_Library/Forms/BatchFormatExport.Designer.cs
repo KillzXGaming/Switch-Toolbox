@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library
+﻿namespace Toolbox.Library
 {
     partial class BatchFormatExport
     {
@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.comboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.OkButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // comboBox1
             // 
-            this.comboBox1.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.comboBox1.DropDownStyle = Toolbox.Library.Forms.STComboBox.STDropDownStyle;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(12, 41);
             this.comboBox1.Name = "comboBox1";
@@ -85,7 +85,7 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STComboBox comboBox1;
+        private Toolbox.Library.Forms.STComboBox comboBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button OkButton;
     }

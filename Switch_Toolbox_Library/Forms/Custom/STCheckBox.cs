@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     /// <summary>
     /// CheckBox created with code & design skills.

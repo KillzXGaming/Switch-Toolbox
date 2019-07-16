@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bfres;
 using OpenTK;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin.Forms
 {
@@ -24,7 +24,7 @@ namespace FirstPlugin.Forms
         {
             InitializeComponent();
 
-            stTabControl1.myBackColor = Switch_Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
+            stTabControl1.myBackColor = Toolbox.Library.Forms.FormThemes.BaseTheme.FormBackColor;
 
             if (!Runtime.IsDebugMode)
             {

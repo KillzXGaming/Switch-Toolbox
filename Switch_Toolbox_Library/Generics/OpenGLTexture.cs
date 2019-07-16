@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Class based on https://github.com/ScanMountGoat/SFGraphics/blob/2cba15420b40d42c4254583336dbc3ca6a0d28dc/Projects/SFGraphics/GLObjects/Textures/Texture.cs
     //This makes managing textures easier

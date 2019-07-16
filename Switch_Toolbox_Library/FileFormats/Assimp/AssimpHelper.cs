@@ -7,7 +7,7 @@ using Assimp;
 using OpenTK;
 using SN = System.Numerics;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public static class AssimpHelper
     {

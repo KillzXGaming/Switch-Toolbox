@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //
     // A class which can create generic texture instances from bitmaps for usage in opengl and image editors.

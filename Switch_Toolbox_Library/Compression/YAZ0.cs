@@ -4,9 +4,9 @@ using System.Linq;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class YAZ0 : ICompressionFormat
     {

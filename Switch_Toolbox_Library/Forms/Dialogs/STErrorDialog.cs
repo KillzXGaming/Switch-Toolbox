@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     //Based from https://stackoverflow.com/questions/8653430/how-can-i-show-a-message-box-with-details-in-winforms/40469355#40469355
 

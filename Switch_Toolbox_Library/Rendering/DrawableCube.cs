@@ -9,9 +9,9 @@ using GL_EditorFramework.EditorDrawables;
 using GL_EditorFramework;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public class DrawableCube : AbstractGlDrawable
     {

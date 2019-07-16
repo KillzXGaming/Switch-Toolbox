@@ -116,7 +116,7 @@ namespace FirstPlugin
         {
             using (var stream = new MemoryStream(bytes))
             {
-                using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream))
+                using (var reader = new Toolbox.Library.IO.FileReader(stream))
                 {
                     return reader.ReadZeroTerminatedString();
                 }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.checkBox1 = new Toolbox.Library.Forms.STCheckBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -131,7 +131,7 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox1;
+        private Toolbox.Library.Forms.STCheckBox checkBox1;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

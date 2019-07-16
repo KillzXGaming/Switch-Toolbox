@@ -8,15 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library.NodeWrappers;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Rendering;
 
 namespace Toolbox
 {
@@ -1145,32 +1145,32 @@ namespace Toolbox
 
         private void BtnMdiClose_MouseEnter(object sender, System.EventArgs e)
         {
-            BtnMdiClose.Image = Switch_Toolbox.Library.Properties.Resources.Close_Hover;
+            BtnMdiClose.Image = Toolbox.Library.Properties.Resources.Close_Hover;
         }
 
         private void BtnMdiClose_MouseLeave(object sender, System.EventArgs e)
         {
-            BtnMdiClose.Image = Switch_Toolbox.Library.Properties.Resources.Close;
+            BtnMdiClose.Image = Toolbox.Library.Properties.Resources.Close;
         }
 
         private void BtnMdiMinMax_MouseEnter(object sender, EventArgs e)
         {
-            BtnMdiMinMax.Image = Switch_Toolbox.Library.Properties.Resources.maximize_sele;
+            BtnMdiMinMax.Image = Toolbox.Library.Properties.Resources.maximize_sele;
         }
 
         private void BtnMdiMinMax_MouseLeave(object sender, EventArgs e)
         {
-            BtnMdiMinMax.Image = Switch_Toolbox.Library.Properties.Resources.maximize;
+            BtnMdiMinMax.Image = Toolbox.Library.Properties.Resources.maximize;
         }
 
         private void BtnMdiMinimize_MouseEnter(object sender, EventArgs e)
         {
-            BtnMdiMinimize.Image = Switch_Toolbox.Library.Properties.Resources.minimize_sele;
+            BtnMdiMinimize.Image = Toolbox.Library.Properties.Resources.minimize_sele;
         }
 
         private void BtnMdiMinimize_MouseLeave(object sender, EventArgs e)
         {
-            BtnMdiMinimize.Image = Switch_Toolbox.Library.Properties.Resources.minimize;
+            BtnMdiMinimize.Image = Toolbox.Library.Properties.Resources.minimize;
         }
 
         private void BtnMdiClose_Click(object sender, EventArgs e)

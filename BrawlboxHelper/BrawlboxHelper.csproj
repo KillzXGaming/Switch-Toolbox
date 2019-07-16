@@ -75,14 +75,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Switch_Toolbox_Library\Switch_Toolbox_Library.csproj">
-      <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
-      <Name>Switch_Toolbox_Library</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <ProjectReference Include="..\Switch_Toolbox_Library\Toolbox_Library.csproj">
+      <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
+      <Name>Toolbox_Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

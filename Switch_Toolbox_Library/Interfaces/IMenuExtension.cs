@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Based on Exelix's menu ext
     public interface IMenuExtension

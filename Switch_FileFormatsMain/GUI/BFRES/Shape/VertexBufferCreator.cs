@@ -1,5 +1,5 @@
 ﻿using System;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres.GFX;
 using System.Linq;

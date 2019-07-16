@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrameTextureThumbnail));
-            this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.textureNameLbl = new Switch_Toolbox.Library.Forms.STLabel();
-            this.frameCounterLbl = new Switch_Toolbox.Library.Forms.STLabel();
+            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.textureNameLbl = new Toolbox.Library.Forms.STLabel();
+            this.frameCounterLbl = new Toolbox.Library.Forms.STLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
             this.stPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -100,9 +100,9 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STLabel textureNameLbl;
-        private Switch_Toolbox.Library.Forms.STLabel frameCounterLbl;
+        private Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STLabel textureNameLbl;
+        private Toolbox.Library.Forms.STLabel frameCounterLbl;
     }
 }

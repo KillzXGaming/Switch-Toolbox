@@ -10,10 +10,10 @@ using System.Windows.Forms;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
 using System.Text.RegularExpressions;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.Animations;
+using Toolbox.Library.IO;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public partial class ObjectEditor : STForm
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Syroot.NintenTools.NSW.Bfres;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using ResU = Syroot.NintenTools.Bfres;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Animations;
 
 namespace Bfres.Structs
 {

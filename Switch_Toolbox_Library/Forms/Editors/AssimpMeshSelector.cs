@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Assimp;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 using OpenTK;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public partial class AssimpMeshSelector : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class Assimp_Settings
     {
@@ -28,20 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.generateNormalsChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.smoothNormalsChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.generateTansBitansChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.flipUVsChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.limtBoneWeightChk = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.generateNormalsChk = new Toolbox.Library.Forms.STCheckBox();
+            this.smoothNormalsChk = new Toolbox.Library.Forms.STCheckBox();
+            this.generateTansBitansChk = new Toolbox.Library.Forms.STCheckBox();
+            this.flipUVsChk = new Toolbox.Library.Forms.STCheckBox();
+            this.limtBoneWeightChk = new Toolbox.Library.Forms.STCheckBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.preTransformVerticesChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.triangulateChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.joinDupedVertsSk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.leftHandedChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.useNodeTransform = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.rotateBones = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.preTransformVerticesChk = new Toolbox.Library.Forms.STCheckBox();
+            this.triangulateChk = new Toolbox.Library.Forms.STCheckBox();
+            this.joinDupedVertsSk = new Toolbox.Library.Forms.STCheckBox();
+            this.leftHandedChk = new Toolbox.Library.Forms.STCheckBox();
+            this.useNodeTransform = new Toolbox.Library.Forms.STCheckBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.rotateBones = new Toolbox.Library.Forms.STCheckBox();
             this.rotateBonesUD = new System.Windows.Forms.NumericUpDown();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -307,16 +307,16 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STCheckBox generateNormalsChk;
-        private Switch_Toolbox.Library.Forms.STCheckBox smoothNormalsChk;
-        private Switch_Toolbox.Library.Forms.STCheckBox generateTansBitansChk;
-        private Switch_Toolbox.Library.Forms.STCheckBox flipUVsChk;
-        private Switch_Toolbox.Library.Forms.STCheckBox limtBoneWeightChk;
+        private Toolbox.Library.Forms.STCheckBox generateNormalsChk;
+        private Toolbox.Library.Forms.STCheckBox smoothNormalsChk;
+        private Toolbox.Library.Forms.STCheckBox generateTansBitansChk;
+        private Toolbox.Library.Forms.STCheckBox flipUVsChk;
+        private Toolbox.Library.Forms.STCheckBox limtBoneWeightChk;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private Switch_Toolbox.Library.Forms.STCheckBox preTransformVerticesChk;
-        private Switch_Toolbox.Library.Forms.STCheckBox triangulateChk;
-        private Switch_Toolbox.Library.Forms.STCheckBox joinDupedVertsSk;
-        private Switch_Toolbox.Library.Forms.STCheckBox leftHandedChk;
+        private Toolbox.Library.Forms.STCheckBox preTransformVerticesChk;
+        private Toolbox.Library.Forms.STCheckBox triangulateChk;
+        private Toolbox.Library.Forms.STCheckBox joinDupedVertsSk;
+        private Toolbox.Library.Forms.STCheckBox leftHandedChk;
         private STCheckBox useNodeTransform;
         private STButton stButton2;
         private STButton stButton1;

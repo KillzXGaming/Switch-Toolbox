@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.samplerNameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnEdit = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnCancel = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnOK = new Switch_Toolbox.Library.Forms.STButton();
-            this.constantChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.samplerNameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.btnEdit = new Toolbox.Library.Forms.STButton();
+            this.btnCancel = new Toolbox.Library.Forms.STButton();
+            this.btnOK = new Toolbox.Library.Forms.STButton();
+            this.constantChkBox = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,11 +129,11 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTextBox samplerNameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STButton btnEdit;
-        private Switch_Toolbox.Library.Forms.STButton btnCancel;
-        private Switch_Toolbox.Library.Forms.STButton btnOK;
-        private Switch_Toolbox.Library.Forms.STCheckBox constantChkBox;
+        private Toolbox.Library.Forms.STTextBox samplerNameTB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STButton btnEdit;
+        private Toolbox.Library.Forms.STButton btnCancel;
+        private Toolbox.Library.Forms.STButton btnOK;
+        private Toolbox.Library.Forms.STCheckBox constantChkBox;
     }
 }

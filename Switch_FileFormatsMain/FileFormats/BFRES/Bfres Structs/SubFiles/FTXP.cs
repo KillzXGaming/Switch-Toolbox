@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using FirstPlugin;
 using FirstPlugin.Forms;
 using Syroot.NintenTools.Bfres;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library;
+using Toolbox.Library.Animations;
 
 namespace Bfres.Structs
 {

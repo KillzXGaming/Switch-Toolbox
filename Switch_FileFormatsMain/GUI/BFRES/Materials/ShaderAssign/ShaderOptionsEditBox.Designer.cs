@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxName = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.textBoxValue = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.label1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.label2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.button1 = new Switch_Toolbox.Library.Forms.STButton();
+            this.textBoxName = new Toolbox.Library.Forms.STTextBox();
+            this.textBoxValue = new Toolbox.Library.Forms.STTextBox();
+            this.label1 = new Toolbox.Library.Forms.STLabel();
+            this.label2 = new Toolbox.Library.Forms.STLabel();
+            this.button1 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -108,10 +108,10 @@
 
         #endregion
 
-        public Switch_Toolbox.Library.Forms.STTextBox textBoxName;
-        public Switch_Toolbox.Library.Forms.STTextBox textBoxValue;
-        private Switch_Toolbox.Library.Forms.STLabel label1;
-        private Switch_Toolbox.Library.Forms.STLabel label2;
-        private Switch_Toolbox.Library.Forms.STButton button1;
+        public Toolbox.Library.Forms.STTextBox textBoxName;
+        public Toolbox.Library.Forms.STTextBox textBoxValue;
+        private Toolbox.Library.Forms.STLabel label1;
+        private Toolbox.Library.Forms.STLabel label2;
+        private Toolbox.Library.Forms.STButton button1;
     }
 }

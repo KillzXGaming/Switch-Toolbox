@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox
+﻿namespace Toolbox
 {
     partial class PluginManager
     {

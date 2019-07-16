@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public static class IOExtensions
     {

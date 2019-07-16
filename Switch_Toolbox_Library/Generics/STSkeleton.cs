@@ -10,12 +10,12 @@ using OpenTK.Graphics.OpenGL;
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 using SF = SFGraphics.GLObjects.Shaders;
 
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class STSkeleton : EditableObject
     {

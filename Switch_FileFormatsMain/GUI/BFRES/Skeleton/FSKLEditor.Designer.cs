@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stFlowLayoutPanel1 = new Switch_Toolbox.Library.Forms.STFlowLayoutPanel();
-            this.stDropDownPanel1 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
-            this.scalingModeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.rotationModeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stDropDownPanel2 = new Switch_Toolbox.Library.Forms.STDropDownPanel();
-            this.stButton3 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnRgidIndices = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnSmoothIndices = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel5 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stFlowLayoutPanel1 = new Toolbox.Library.Forms.STFlowLayoutPanel();
+            this.stDropDownPanel1 = new Toolbox.Library.Forms.STDropDownPanel();
+            this.scalingModeCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.rotationModeCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stDropDownPanel2 = new Toolbox.Library.Forms.STDropDownPanel();
+            this.stButton3 = new Toolbox.Library.Forms.STButton();
+            this.btnRgidIndices = new Toolbox.Library.Forms.STButton();
+            this.btnSmoothIndices = new Toolbox.Library.Forms.STButton();
+            this.stLabel5 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel2.SuspendLayout();
@@ -221,18 +221,18 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STFlowLayoutPanel stFlowLayoutPanel1;
-        private Switch_Toolbox.Library.Forms.STDropDownPanel stDropDownPanel1;
-        private Switch_Toolbox.Library.Forms.STComboBox scalingModeCB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STComboBox rotationModeCB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STDropDownPanel stDropDownPanel2;
-        private Switch_Toolbox.Library.Forms.STButton stButton3;
-        private Switch_Toolbox.Library.Forms.STButton btnRgidIndices;
-        private Switch_Toolbox.Library.Forms.STButton btnSmoothIndices;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel5;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STFlowLayoutPanel stFlowLayoutPanel1;
+        private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel1;
+        private Toolbox.Library.Forms.STComboBox scalingModeCB;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STComboBox rotationModeCB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel2;
+        private Toolbox.Library.Forms.STButton stButton3;
+        private Toolbox.Library.Forms.STButton btnRgidIndices;
+        private Toolbox.Library.Forms.STButton btnSmoothIndices;
+        private Toolbox.Library.Forms.STLabel stLabel5;
+        private Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STLabel stLabel3;
     }
 }

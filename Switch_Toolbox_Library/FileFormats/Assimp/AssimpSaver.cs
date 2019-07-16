@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using Assimp;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library;
+using Toolbox.Library.Animations;
+using Toolbox.Library.Rendering;
 using System.Windows.Forms;
 using System.Linq;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class AssimpSaver
     {
@@ -143,7 +143,7 @@ namespace Switch_Toolbox.Library
 
                             if (boneInd == -1)
                             {
-                                var matrices = Switch_Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(STbone);
+                                var matrices = Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(STbone);
 
                                 //Set the inverse matrix
                                 Matrix4x4 transform = matrices.inverse.FromNumerics();

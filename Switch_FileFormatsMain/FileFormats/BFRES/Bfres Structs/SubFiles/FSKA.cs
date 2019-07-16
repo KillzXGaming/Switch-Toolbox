@@ -3,12 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using Syroot.NintenTools.NSW.Bfres;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using ResU = Syroot.NintenTools.Bfres;
 using FirstPlugin;
 using OpenTK;
-using Switch_Toolbox.Library.Animations;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
+using Toolbox.Library.Forms;
 using SELib;
 
 namespace Bfres.Structs

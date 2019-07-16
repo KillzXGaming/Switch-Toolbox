@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library.Forms.test
+namespace Toolbox.Library.Forms.test
 {
     public partial class UVEditor : UserControl
     {

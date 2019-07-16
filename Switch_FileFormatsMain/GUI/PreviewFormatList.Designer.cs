@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.checkBox2 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.checkBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.checkBox2 = new Toolbox.Library.Forms.STCheckBox();
+            this.checkBox1 = new Toolbox.Library.Forms.STCheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -97,8 +97,8 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox2;
-        private Switch_Toolbox.Library.Forms.STCheckBox checkBox1;
+        private Toolbox.Library.Forms.STCheckBox checkBox2;
+        private Toolbox.Library.Forms.STCheckBox checkBox1;
         private System.Windows.Forms.Button button1;
     }
 }

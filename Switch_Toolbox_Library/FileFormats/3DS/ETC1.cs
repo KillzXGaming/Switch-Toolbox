@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //From https://github.com/gdkchan/SPICA/blob/42c4181e198b0fd34f0a567345ee7e75b54cb58b/SPICA/PICA/Converters/TextureCompression.cs
     public class ETC1

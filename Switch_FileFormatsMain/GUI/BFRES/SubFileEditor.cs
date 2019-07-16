@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Forms;
+using Toolbox.Library.NodeWrappers;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Animations;
 
 namespace FirstPlugin.Forms
 {

@@ -11,8 +11,8 @@ using System.Windows.Forms;
 using Syroot.NintenTools.NSW.Bntx;
 using Syroot.NintenTools.NSW.Bntx.GFX;
 using System.Runtime.InteropServices;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {

@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class HintHelpDialog
     {
@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.BtmMipsLeft = new Switch_Toolbox.Library.Forms.STButton();
-            this.BtnMipsRight = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
+            this.BtmMipsLeft = new Toolbox.Library.Forms.STButton();
+            this.BtnMipsRight = new Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 

@@ -28,17 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.scalingModeCN = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.scalingModeCN = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.scaYUD = new BarSlider.BarSlider();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.scaXUD = new BarSlider.BarSlider();
             this.rotXUD = new BarSlider.BarSlider();
             this.transXUD = new BarSlider.BarSlider();
             this.transYUD = new BarSlider.BarSlider();
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
             this.SuspendLayout();
             // 
             // scalingModeCN
@@ -348,16 +348,16 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STComboBox scalingModeCN;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STComboBox scalingModeCN;
+        private Toolbox.Library.Forms.STLabel stLabel1;
         private BarSlider.BarSlider scaYUD;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STLabel stLabel4;
         private BarSlider.BarSlider scaXUD;
         private BarSlider.BarSlider rotXUD;
         private BarSlider.BarSlider transXUD;
         private BarSlider.BarSlider transYUD;
-        private Switch_Toolbox.Library.Forms.STTextBox stTextBox1;
+        private Toolbox.Library.Forms.STTextBox stTextBox1;
     }
 }

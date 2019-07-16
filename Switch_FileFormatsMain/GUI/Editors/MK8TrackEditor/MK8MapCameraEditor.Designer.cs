@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.leBtnRadio = new System.Windows.Forms.RadioButton();
             this.beBtnRadio = new System.Windows.Forms.RadioButton();
-            this.glControl2D1 = new Switch_Toolbox.Library.Forms.GLControl2D();
+            this.glControl2D1 = new Toolbox.Library.Forms.GLControl2D();
             this.SuspendLayout();
             this.Controls.Add(this.glControl2D1);
             this.Controls.Add(this.beBtnRadio);
@@ -95,9 +95,9 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
         private System.Windows.Forms.RadioButton beBtnRadio;
         private System.Windows.Forms.RadioButton leBtnRadio;
-        private Switch_Toolbox.Library.Forms.GLControl2D glControl2D1;
+        private Toolbox.Library.Forms.GLControl2D glControl2D1;
     }
 }

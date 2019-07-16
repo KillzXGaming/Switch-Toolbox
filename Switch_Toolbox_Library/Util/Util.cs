@@ -6,9 +6,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using OpenTK;
 using System.Reflection;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
    public class Utils
     {

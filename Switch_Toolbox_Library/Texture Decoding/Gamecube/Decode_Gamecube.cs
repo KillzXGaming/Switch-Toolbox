@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using Chadsoft.CTools.Image;
 using SuperBMDLib.Util;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class Decode_Gamecube
     {

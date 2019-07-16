@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using Bfres.Structs;
 using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin
 {

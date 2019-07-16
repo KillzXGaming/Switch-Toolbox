@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using LibHac.IO;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using LibHac;
 
 namespace FirstPlugin

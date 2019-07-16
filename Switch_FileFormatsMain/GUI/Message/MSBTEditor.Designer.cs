@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.editTextTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.originalTextTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.hexEditor1 = new Switch_Toolbox.Library.Forms.HexEditor();
+            this.editTextTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.originalTextTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.hexEditor1 = new Toolbox.Library.Forms.HexEditor();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -219,14 +219,14 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private Switch_Toolbox.Library.Forms.HexEditor hexEditor1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STTextBox originalTextTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STTextBox editTextTB;
+        private Toolbox.Library.Forms.HexEditor hexEditor1;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STTextBox originalTextTB;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STTextBox editTextTB;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
     }

@@ -8,11 +8,11 @@ using System.Windows.Forms;
 using GL_EditorFramework.StandardCameras;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class LibraryGUI
     {

@@ -28,21 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stTabControl1 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.hexVertexData = new Switch_Toolbox.Library.Forms.HexEditor();
+            this.hexVertexData = new Toolbox.Library.Forms.HexEditor();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.hexTextData = new Switch_Toolbox.Library.Forms.TextEditor();
+            this.hexTextData = new Toolbox.Library.Forms.TextEditor();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.hexPixelData = new Switch_Toolbox.Library.Forms.HexEditor();
+            this.hexPixelData = new Toolbox.Library.Forms.HexEditor();
             this.splitter2 = new System.Windows.Forms.Splitter();
-            this.pixelTextData = new Switch_Toolbox.Library.Forms.TextEditor();
+            this.pixelTextData = new Toolbox.Library.Forms.TextEditor();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.hexGeomData = new Switch_Toolbox.Library.Forms.HexEditor();
+            this.hexGeomData = new Toolbox.Library.Forms.HexEditor();
             this.splitter3 = new System.Windows.Forms.Splitter();
-            this.geomTextData = new Switch_Toolbox.Library.Forms.TextEditor();
-            this.textEditor1 = new Switch_Toolbox.Library.Forms.TextEditor();
+            this.geomTextData = new Toolbox.Library.Forms.TextEditor();
+            this.textEditor1 = new Toolbox.Library.Forms.TextEditor();
             this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -211,20 +211,20 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTabControl stTabControl1;
+        private Toolbox.Library.Forms.STTabControl stTabControl1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage1;
-        private Switch_Toolbox.Library.Forms.TextEditor hexTextData;
-        private Switch_Toolbox.Library.Forms.HexEditor hexVertexData;
+        private Toolbox.Library.Forms.TextEditor hexTextData;
+        private Toolbox.Library.Forms.HexEditor hexVertexData;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.HexEditor hexPixelData;
+        private Toolbox.Library.Forms.HexEditor hexPixelData;
         private System.Windows.Forms.Splitter splitter2;
-        private Switch_Toolbox.Library.Forms.TextEditor pixelTextData;
-        private Switch_Toolbox.Library.Forms.HexEditor hexGeomData;
+        private Toolbox.Library.Forms.TextEditor pixelTextData;
+        private Toolbox.Library.Forms.HexEditor hexGeomData;
         private System.Windows.Forms.Splitter splitter3;
-        private Switch_Toolbox.Library.Forms.TextEditor geomTextData;
-        private Switch_Toolbox.Library.Forms.TextEditor textEditor1;
+        private Toolbox.Library.Forms.TextEditor geomTextData;
+        private Toolbox.Library.Forms.TextEditor textEditor1;
     }
 }

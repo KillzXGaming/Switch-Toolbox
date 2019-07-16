@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnExport = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnImport = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrolDown = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
-            this.shaderParamListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.btnExport = new Toolbox.Library.Forms.STButton();
+            this.btnImport = new Toolbox.Library.Forms.STButton();
+            this.btnScrolDown = new Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
+            this.shaderParamListView = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -169,13 +169,13 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton btnExport;
-        private Switch_Toolbox.Library.Forms.STButton btnImport;
-        private Switch_Toolbox.Library.Forms.STButton btnScrolDown;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
-        private Switch_Toolbox.Library.Forms.ListViewCustom shaderParamListView;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton btnExport;
+        private Toolbox.Library.Forms.STButton btnImport;
+        private Toolbox.Library.Forms.STButton btnScrolDown;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.ListViewCustom shaderParamListView;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
         private System.Windows.Forms.ColumnHeader columnHeader1;

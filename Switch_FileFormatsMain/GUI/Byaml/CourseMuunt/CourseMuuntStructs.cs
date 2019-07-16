@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 using System.ComponentModel;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
@@ -307,7 +307,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             if (!System.IO.File.Exists(FilePath))
                 return;
 
-            KCL kcl = (KCL)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
+            KCL kcl = (KCL)Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
 
             if (kcl != null)
                 KclObjects.Add(kcl);
@@ -318,7 +318,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             if (!System.IO.File.Exists(FilePath))
                 return;
 
-            BFRES bfres = (BFRES)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
+            BFRES bfres = (BFRES)Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
 
             if (bfres != null)
                 BfresObjects.Add(bfres);
@@ -329,7 +329,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             if (!System.IO.File.Exists(FilePath))
                 return;
 
-            AAMP aamp = (AAMP)Switch_Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
+            AAMP aamp = (AAMP)Toolbox.Library.IO.STFileLoader.OpenFileFormat(FilePath);
 
             if (aamp != null)
                 ParameterArchives.Add(aamp);

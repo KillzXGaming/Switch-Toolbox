@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using Syroot.NintenTools.NSW.Bfres;
 
 

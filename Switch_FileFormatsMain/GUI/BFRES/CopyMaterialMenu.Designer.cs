@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.chkBoxShaderParams = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.chkBoxShaderParams = new Toolbox.Library.Forms.STCheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkBoxShaderOptions = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.chkBoxTextures = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.chkBoxRenderInfo = new Switch_Toolbox.Library.Forms.STCheckBox();
+            this.chkBoxShaderOptions = new Toolbox.Library.Forms.STCheckBox();
+            this.chkBoxTextures = new Toolbox.Library.Forms.STCheckBox();
+            this.chkBoxRenderInfo = new Toolbox.Library.Forms.STCheckBox();
             this.materialTreeView = new System.Windows.Forms.TreeView();
             this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -132,10 +132,10 @@
 
         #endregion
         private System.Windows.Forms.Label label1;
-        public Switch_Toolbox.Library.Forms.STCheckBox chkBoxShaderParams;
-        public Switch_Toolbox.Library.Forms.STCheckBox chkBoxShaderOptions;
-        public Switch_Toolbox.Library.Forms.STCheckBox chkBoxTextures;
-        public Switch_Toolbox.Library.Forms.STCheckBox chkBoxRenderInfo;
+        public Toolbox.Library.Forms.STCheckBox chkBoxShaderParams;
+        public Toolbox.Library.Forms.STCheckBox chkBoxShaderOptions;
+        public Toolbox.Library.Forms.STCheckBox chkBoxTextures;
+        public Toolbox.Library.Forms.STCheckBox chkBoxRenderInfo;
         public System.Windows.Forms.TreeView materialTreeView;
         private System.Windows.Forms.Button button1;
     }

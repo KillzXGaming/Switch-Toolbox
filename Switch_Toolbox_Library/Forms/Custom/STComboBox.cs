@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public class STComboBox : ComboBox
     {

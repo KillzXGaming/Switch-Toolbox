@@ -28,34 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radiusUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
+            this.radiusUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.label22 = new System.Windows.Forms.Label();
-            this.extendZUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.extendYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.extendXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
+            this.extendZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.extendYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.extendXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.centerZUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.centerYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.centerXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
+            this.centerZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.centerYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.centerXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.FaceCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.offsetUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnOk = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnRemove = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.FaceCountUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.offsetUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.btnOk = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnScrollUp = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnScrollDown = new Switch_Toolbox.Library.Forms.STButton();
+            this.btnScrollUp = new Toolbox.Library.Forms.STButton();
+            this.btnScrollDown = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radiusUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.extendZUD)).BeginInit();
@@ -524,33 +524,33 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat radiusUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat radiusUD;
         private System.Windows.Forms.Label label22;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat extendZUD;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat extendYUD;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat extendXUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat extendZUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat extendYUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat extendXUD;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label21;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat centerZUD;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat centerYUD;
-        private Switch_Toolbox.Library.Forms.NumericUpDownFloat centerXUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat centerZUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat centerYUD;
+        private Toolbox.Library.Forms.NumericUpDownFloat centerXUD;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
-        private Switch_Toolbox.Library.Forms.STButton btnOk;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint offsetUD;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint FaceCountUD;
-        private Switch_Toolbox.Library.Forms.STButton btnRemove;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
-        private Switch_Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private Toolbox.Library.Forms.STButton btnOk;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.NumericUpDownUint offsetUD;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.NumericUpDownUint FaceCountUD;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollUp;
-        private Switch_Toolbox.Library.Forms.STButton btnScrollDown;
+        private Toolbox.Library.Forms.STButton btnScrollUp;
+        private Toolbox.Library.Forms.STButton btnScrollDown;
     }
 }

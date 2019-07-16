@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library;
 using System.Windows.Forms;
 using FirstPlugin.Turbo.CourseMuuntStructs;
 using GL_EditorFramework.EditorDrawables;
@@ -12,8 +12,8 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using aampv1 = AampV1Library;
 using aampv2 = AampV2Library;
-using Switch_Toolbox.Library.Rendering;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.Rendering;
+using Toolbox.Library.IO;
 using FirstPlugin.Turbo;
 
 namespace FirstPlugin.Forms

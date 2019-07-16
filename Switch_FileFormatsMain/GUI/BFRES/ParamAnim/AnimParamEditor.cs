@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Syroot.NintenTools.Bfres;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Animations;
 
 namespace FirstPlugin.Forms
 {

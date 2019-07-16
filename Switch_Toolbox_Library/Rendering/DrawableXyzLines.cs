@@ -10,7 +10,7 @@ using GL_EditorFramework;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public class DrawableXyzLines : AbstractGlDrawable
     {

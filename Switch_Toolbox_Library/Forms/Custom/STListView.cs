@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BrightIdeasSoftware;
 using System.Runtime.InteropServices;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public class STListView : ObjectListView
     {

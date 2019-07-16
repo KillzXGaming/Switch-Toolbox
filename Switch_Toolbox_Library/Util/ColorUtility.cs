@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using OpenTK;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class ColorUtility
     {

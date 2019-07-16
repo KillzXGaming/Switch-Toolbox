@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ObjectEditorList
     {
@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.activeEditorChkBox = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.searchLbl = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.activeEditorChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.searchLbl = new Toolbox.Library.Forms.STLabel();
             this.searchImgPB = new System.Windows.Forms.PictureBox();
-            this.stTextBox1 = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stContextMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.listViewCustom1 = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -122,7 +122,7 @@
             // 
             this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
-            this.searchImgPB.Image = global::Switch_Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
+            this.searchImgPB.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
             this.searchImgPB.Location = new System.Drawing.Point(-646, 5);
             this.searchImgPB.Name = "searchImgPB";
             this.searchImgPB.Size = new System.Drawing.Size(22, 17);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using Syroot.NintenTools.NSW.Bfres;
 using Bfres.Structs;
 

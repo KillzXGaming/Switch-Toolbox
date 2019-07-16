@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stListView1 = new Switch_Toolbox.Library.Forms.STListView();
+            this.stListView1 = new Toolbox.Library.Forms.STListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.numericUpDownUint1 = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.stMenuStrip1 = new Switch_Toolbox.Library.Forms.STMenuStrip();
+            this.numericUpDownUint1 = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.byMaterialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.stListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).BeginInit();
@@ -179,15 +179,15 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STListView stListView1;
+        private Toolbox.Library.Forms.STListView stListView1;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint numericUpDownUint1;
-        private Switch_Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
+        private Toolbox.Library.Forms.NumericUpDownUint numericUpDownUint1;
+        private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem selectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem byMaterialToolStripMenuItem;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STPanel stPanel1;
     }
 }

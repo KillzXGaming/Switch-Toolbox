@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using Switch_Toolbox;
+using Toolbox;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
 using VGAudio.Formats;
 using VGAudio.Containers.NintendoWare;
 
@@ -25,7 +25,7 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 bool IsValidSig = reader.CheckSignature(4, "WAVE"); //RIFF is also used in avi so just use WAVE
                 bool IsValidExt = reader.CheckSignature(4, ".wav");

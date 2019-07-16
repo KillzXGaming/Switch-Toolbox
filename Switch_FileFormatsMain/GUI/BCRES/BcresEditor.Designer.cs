@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.toggleViewportToolStripBtn = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel2.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
@@ -126,10 +126,10 @@
 
         #endregion
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel3;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STPanel stPanel3;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STToolStrip stToolStrip1;
+        private Toolbox.Library.Forms.STToolStrip stToolStrip1;
         private System.Windows.Forms.ToolStripButton toggleViewportToolStripBtn;
     }
 }

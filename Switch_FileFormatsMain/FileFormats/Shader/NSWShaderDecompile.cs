@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 
 namespace FirstPlugin
 {
@@ -64,7 +64,7 @@ namespace FirstPlugin
                     }
                     catch (Exception ex)
                     {
-                        Switch_Toolbox.Library.Forms.STErrorDialog.Show("Failed to decompile shader!", "Shader Tools", ex.ToString());
+                        Toolbox.Library.Forms.STErrorDialog.Show("Failed to decompile shader!", "Shader Tools", ex.ToString());
                         return "";
                     }
                 }

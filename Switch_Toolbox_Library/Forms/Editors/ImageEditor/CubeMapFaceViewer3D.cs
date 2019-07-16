@@ -10,10 +10,10 @@ using System.Windows.Forms;
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.EditorDrawables;
 using GL_EditorFramework.StandardCameras;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library;
+using Toolbox.Library.Rendering;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public partial class CubeMapFaceViewer3D : STForm
     {

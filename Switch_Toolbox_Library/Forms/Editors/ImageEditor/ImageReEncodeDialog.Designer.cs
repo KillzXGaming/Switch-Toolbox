@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImageReEncodeDialog
     {
@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageReEncodeDialog));
-            this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
-            this.btnOk = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnCancel = new Switch_Toolbox.Library.Forms.STButton();
-            this.mipcountUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel5 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.formatCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.btnOk = new Toolbox.Library.Forms.STButton();
+            this.btnCancel = new Toolbox.Library.Forms.STButton();
+            this.mipcountUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel5 = new Toolbox.Library.Forms.STLabel();
+            this.formatCB = new Toolbox.Library.Forms.STComboBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mipcountUD)).BeginInit();

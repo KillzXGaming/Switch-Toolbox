@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public class STForm : Form
     {
@@ -94,7 +94,7 @@ namespace Switch_Toolbox.Library.Forms
 
         private void InitializeComponent()
         {
-            this.contentContainer = new Switch_Toolbox.Library.Forms.STPanel();
+            this.contentContainer = new Toolbox.Library.Forms.STPanel();
             this.TitleBar = new System.Windows.Forms.Panel();
             this.LblTitle = new System.Windows.Forms.Label();
             this.PicIcon = new System.Windows.Forms.PictureBox();
@@ -161,7 +161,7 @@ namespace Switch_Toolbox.Library.Forms
             // 
             this.BtnMinimize.BackColor = System.Drawing.Color.Transparent;
             this.BtnMinimize.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnMinimize.Image = global::Switch_Toolbox.Library.Properties.Resources.minimize;
+            this.BtnMinimize.Image = global::Toolbox.Library.Properties.Resources.minimize;
             this.BtnMinimize.Location = new System.Drawing.Point(429, 0);
             this.BtnMinimize.Name = "BtnMinimize";
             this.BtnMinimize.Size = new System.Drawing.Size(38, 25);
@@ -176,7 +176,7 @@ namespace Switch_Toolbox.Library.Forms
             // 
             this.BtnMinMax.BackColor = System.Drawing.Color.Transparent;
             this.BtnMinMax.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnMinMax.Image = global::Switch_Toolbox.Library.Properties.Resources.maximize;
+            this.BtnMinMax.Image = global::Toolbox.Library.Properties.Resources.maximize;
             this.BtnMinMax.Location = new System.Drawing.Point(467, 0);
             this.BtnMinMax.Name = "BtnMinMax";
             this.BtnMinMax.Size = new System.Drawing.Size(38, 25);
@@ -191,7 +191,7 @@ namespace Switch_Toolbox.Library.Forms
             // 
             this.BtnClose.BackColor = System.Drawing.Color.Transparent;
             this.BtnClose.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnClose.Image = global::Switch_Toolbox.Library.Properties.Resources.Close;
+            this.BtnClose.Image = global::Toolbox.Library.Properties.Resources.Close;
             this.BtnClose.Location = new System.Drawing.Point(505, 0);
             this.BtnClose.Name = "BtnClose";
             this.BtnClose.Size = new System.Drawing.Size(38, 25);

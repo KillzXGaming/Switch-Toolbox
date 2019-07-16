@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImageFillColor
     {
@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stCheckBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton3 = new Switch_Toolbox.Library.Forms.STButton();
+            this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.stButton3 = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 

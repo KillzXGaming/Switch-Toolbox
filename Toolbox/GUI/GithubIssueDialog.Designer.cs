@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.typeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.infoTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.titleTB = new Switch_Toolbox.Library.Forms.STTextBox();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.typeCB = new Toolbox.Library.Forms.STComboBox();
+            this.infoTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.titleTB = new Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -157,14 +157,14 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STTextBox titleTB;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STComboBox typeCB;
-        private Switch_Toolbox.Library.Forms.STTextBox infoTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STTextBox titleTB;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STComboBox typeCB;
+        private Toolbox.Library.Forms.STTextBox infoTB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
     }
 }

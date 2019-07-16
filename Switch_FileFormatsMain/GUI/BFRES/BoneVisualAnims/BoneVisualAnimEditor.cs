@@ -9,8 +9,8 @@ using Syroot.NintenTools.NSW.Bfres;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
 using BrightIdeasSoftware;
 
 namespace FirstPlugin.Forms

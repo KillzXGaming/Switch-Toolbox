@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using CsvHelper;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Parsing based on wiki https://zeldamods.org/wiki/ResourceSizeTable.product.rsizetable
     //Functions from https://github.com/zeldamods/rstb/blob/master/rstb/rstb.py

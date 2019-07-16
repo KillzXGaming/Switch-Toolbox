@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FirstPlugin;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin.Forms
 {

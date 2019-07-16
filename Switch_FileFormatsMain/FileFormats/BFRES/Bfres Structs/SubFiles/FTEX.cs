@@ -4,13 +4,13 @@ using System.Linq;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
 using Syroot.NintenTools.Bfres;
 using Syroot.NintenTools.Bfres.GX2;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using FirstPlugin;
 using FirstPlugin.Forms;
 

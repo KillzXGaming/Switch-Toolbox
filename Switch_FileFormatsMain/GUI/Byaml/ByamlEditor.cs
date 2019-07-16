@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Syroot.BinaryData;
 using EditorCore;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library;
 using ByamlExt;
 using FirstPlugin.Forms;
 

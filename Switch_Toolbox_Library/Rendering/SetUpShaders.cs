@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public static class ShaderTools
     {
@@ -28,7 +28,7 @@ namespace Switch_Toolbox.Library.Rendering
 
         private static void SetUpAllShaders()
         {
-            if (Switch_Toolbox.Library.Runtime.UseLegacyGL)
+            if (Toolbox.Library.Runtime.UseLegacyGL)
                 SetUpLegacyBfresShaders();
             else
             {

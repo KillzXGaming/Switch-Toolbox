@@ -2,10 +2,10 @@
 using FirstPlugin.Forms;
 using OpenTK;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using Bfres.Structs;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Rendering;
 using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;
 

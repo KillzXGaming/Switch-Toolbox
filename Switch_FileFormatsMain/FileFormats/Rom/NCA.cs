@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using LibHac;
 using LibHac.IO;
 

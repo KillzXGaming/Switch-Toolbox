@@ -7,10 +7,10 @@ using SFGraphics.GLObjects.Textures;
 using SFGraphics.GLObjects.Textures.TextureFormats;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using GL_EditorFramework.GL_Core;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class RenderTools
     {

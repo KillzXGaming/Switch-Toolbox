@@ -22,3 +22,16 @@ C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb
 C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox-38ceb8d7163902ecb569774ab4db327a194d6f99\Updater\obj\Debug\Updater.pdb
 C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Updater\bin\Debug\Octokit.dll
 C:\Users\Nathan\Documents\GitHub\Switch_Toolbox\Switch-Toolbox\Updater\obj\Debug\Updater.csproj.CopyComplete
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\bin\Debug\Updater.exe.config
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\bin\Debug\Updater.exe.manifest
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\bin\Debug\Updater.application
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\bin\Debug\Updater.exe
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\bin\Debug\Updater.pdb
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\bin\Debug\Octokit.dll
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.csproj.CoreCompileInputs.cache
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.TrustInfo.xml
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.exe.manifest
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.application
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.csproj.CopyComplete
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.exe
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.pdb

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public class FileWriter : BinaryDataWriter
     {

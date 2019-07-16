@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 using OpenTK;
 
 namespace FirstPlugin

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GL_EditorFramework.Interfaces;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Represents a container that stores multiple drawables
     //These can be switched between the viewport

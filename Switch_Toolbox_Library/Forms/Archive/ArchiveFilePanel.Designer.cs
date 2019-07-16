@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ArchiveFilePanel
     {
@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stComboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.stPanel2.SuspendLayout();
             this.SuspendLayout();
             // 

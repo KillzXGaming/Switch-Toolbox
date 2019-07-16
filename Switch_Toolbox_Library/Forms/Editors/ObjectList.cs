@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
-using Switch_Toolbox.Library.Rendering;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library.Rendering;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public partial class ObjectList : UserControl
     {

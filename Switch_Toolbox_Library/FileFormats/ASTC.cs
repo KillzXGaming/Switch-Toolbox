@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 using System.Drawing;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class ASTC : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
     {
@@ -63,7 +63,7 @@ namespace Switch_Toolbox.Library
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 return reader.ReadInt32() == MagicFileConstant;
             }

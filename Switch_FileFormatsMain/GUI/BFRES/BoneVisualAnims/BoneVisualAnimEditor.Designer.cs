@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new Switch_Toolbox.Library.Forms.STDataGridView();
-            this.btnAdd = new Switch_Toolbox.Library.Forms.STButton();
+            this.dataGridView1 = new Toolbox.Library.Forms.STDataGridView();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,7 +75,7 @@
         }
 
         #endregion
-        private Switch_Toolbox.Library.Forms.STDataGridView dataGridView1;
-        private Switch_Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.STDataGridView dataGridView1;
+        private Toolbox.Library.Forms.STButton btnAdd;
     }
 }

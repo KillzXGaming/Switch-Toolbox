@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     //Rips audio related files into XML format for translating fetched data
     public class AudioFileRipper

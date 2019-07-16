@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms.Custom
+﻿namespace Toolbox.Library.Forms.Custom
 {
     partial class STNumericBox
     {

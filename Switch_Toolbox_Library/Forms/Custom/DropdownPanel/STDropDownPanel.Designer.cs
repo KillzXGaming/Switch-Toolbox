@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class STDropDownPanel
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stCollapsePanelButton1 = new Switch_Toolbox.Library.Forms.STCollapsePanelButton();
+            this.stCollapsePanelButton1 = new Toolbox.Library.Forms.STCollapsePanelButton();
             this.SuspendLayout();
             // 
             // stCollapsePanelButton1

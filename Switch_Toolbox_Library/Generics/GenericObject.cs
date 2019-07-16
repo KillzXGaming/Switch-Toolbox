@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenTK;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.Rendering;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class STGenericObject : TreeNodeCustom
     {

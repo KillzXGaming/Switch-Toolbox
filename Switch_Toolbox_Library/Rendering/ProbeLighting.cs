@@ -9,7 +9,7 @@ using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
 using GL_EditorFramework;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public class ProbeLighting : AbstractGlDrawable
     {

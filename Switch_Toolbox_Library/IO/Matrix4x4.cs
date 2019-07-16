@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Numerics;
 
-namespace Switch_Toolbox.Library.IO
+namespace Toolbox.Library.IO
 {
     public static class MatrixExenstion
     {

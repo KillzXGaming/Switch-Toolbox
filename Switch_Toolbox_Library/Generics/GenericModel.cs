@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.NodeWrappers;
+using Toolbox.Library.NodeWrappers;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class STGenericModel : STGenericWrapper
     {

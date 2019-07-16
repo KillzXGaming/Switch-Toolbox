@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
 
-namespace Switch_Toolbox.Library.NodeWrappers
+namespace Toolbox.Library.NodeWrappers
 {
     //Generic wrapper based on https://github.com/libertyernie/brawltools/blob/40d7431b1a01ef4a0411cd69e51411bd581e93e2/BrawlBox/NodeWrappers/GenericWrapper
     //Store useful generic functions in this wrapper for tree nodes

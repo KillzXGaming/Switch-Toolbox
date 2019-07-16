@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stToolStrip1 = new Switch_Toolbox.Library.Forms.STToolStrip();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.toggleViewportToolStripBtn = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stTabControl2 = new Switch_Toolbox.Library.Forms.STTabControl();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stTabControl2 = new Toolbox.Library.Forms.STTabControl();
             this.timelineTabPage = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.textureLoader1 = new Forms.TextureLoader();
-            this.stPanel5 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel5 = new Toolbox.Library.Forms.STPanel();
             this.stPanel2.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -200,16 +200,16 @@
 
         #endregion
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel3;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STPanel stPanel3;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
-        private Switch_Toolbox.Library.Forms.STTabControl stTabControl2;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STTabControl stTabControl2;
         private System.Windows.Forms.TabPage timelineTabPage;
         private System.Windows.Forms.TabPage tabPage5;
         private Forms.TextureLoader textureLoader1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel5;
-        private Switch_Toolbox.Library.Forms.STToolStrip stToolStrip1;
+        private Toolbox.Library.Forms.STPanel stPanel5;
+        private Toolbox.Library.Forms.STToolStrip stToolStrip1;
         private System.Windows.Forms.ToolStripButton toggleViewportToolStripBtn;
     }
 }

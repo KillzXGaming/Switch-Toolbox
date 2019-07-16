@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textureNameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnEdit = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.currentFrameCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.maxFrameCountUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnCancel = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnOK = new Switch_Toolbox.Library.Forms.STButton();
+            this.textureNameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.btnEdit = new Toolbox.Library.Forms.STButton();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.currentFrameCountUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.maxFrameCountUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.btnCancel = new Toolbox.Library.Forms.STButton();
+            this.btnOK = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentFrameCountUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxFrameCountUD)).BeginInit();
@@ -174,14 +174,14 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTextBox textureNameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STButton btnEdit;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint currentFrameCountUD;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint maxFrameCountUD;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STButton btnCancel;
-        private Switch_Toolbox.Library.Forms.STButton btnOK;
+        private Toolbox.Library.Forms.STTextBox textureNameTB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STButton btnEdit;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.NumericUpDownUint currentFrameCountUD;
+        private Toolbox.Library.Forms.NumericUpDownUint maxFrameCountUD;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STButton btnCancel;
+        private Toolbox.Library.Forms.STButton btnOK;
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using System.Windows.Forms;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class STConsole : RichTextBox
     {

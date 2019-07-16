@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textureListView = new Switch_Toolbox.Library.Forms.ListViewCustom();
+            this.textureListView = new Toolbox.Library.Forms.ListViewCustom();
             this.textureContextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.replaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +84,7 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.ListViewCustom textureListView;
+        private Toolbox.Library.Forms.ListViewCustom textureListView;
         private System.Windows.Forms.ContextMenuStrip textureContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;

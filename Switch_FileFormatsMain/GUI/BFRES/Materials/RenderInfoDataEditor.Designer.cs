@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.nameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.typeCB = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.nameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.typeCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.valueTB = new System.Windows.Forms.RichTextBox();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.btnCancel = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnOk = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.presetCB = new Switch_Toolbox.Library.Forms.STComboBox();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.btnCancel = new Toolbox.Library.Forms.STButton();
+            this.btnOk = new Toolbox.Library.Forms.STButton();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.presetCB = new Toolbox.Library.Forms.STComboBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -85,7 +85,7 @@
             // 
             // typeCB
             // 
-            this.typeCB.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;
+            this.typeCB.DropDownStyle = Toolbox.Library.Forms.STComboBox.STDropDownStyle;
             this.typeCB.FormattingEnabled = true;
             this.typeCB.Location = new System.Drawing.Point(62, 88);
             this.typeCB.Name = "typeCB";
@@ -159,7 +159,7 @@
             // 
             // presetCB
             // 
-            this.presetCB.DropDownStyle = Switch_Toolbox.Library.Forms.STComboBox.STDropDownStyle;;
+            this.presetCB.DropDownStyle = Toolbox.Library.Forms.STComboBox.STDropDownStyle;;
             this.presetCB.FormattingEnabled = true;
             this.presetCB.Location = new System.Drawing.Point(62, 62);
             this.presetCB.Name = "presetCB";
@@ -182,15 +182,15 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTextBox nameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STTextBox nameTB;
+        private Toolbox.Library.Forms.STLabel stLabel3;
         private System.Windows.Forms.RichTextBox valueTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STComboBox typeCB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STButton btnOk;
-        private Switch_Toolbox.Library.Forms.STButton btnCancel;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
-        private Switch_Toolbox.Library.Forms.STComboBox presetCB;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STComboBox typeCB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STButton btnOk;
+        private Toolbox.Library.Forms.STButton btnCancel;
+        private Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STComboBox presetCB;
     }
 }

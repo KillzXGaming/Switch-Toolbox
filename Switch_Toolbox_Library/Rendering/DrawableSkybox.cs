@@ -8,9 +8,9 @@ using OpenTK.Graphics.OpenGL;
 using GL_EditorFramework.GL_Core;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public class DrawableSkybox : AbstractGlDrawable
     {

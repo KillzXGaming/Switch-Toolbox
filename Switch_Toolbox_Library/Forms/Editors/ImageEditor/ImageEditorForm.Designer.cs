@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms
+﻿namespace Toolbox.Library.Forms
 {
     partial class ImageEditorForm
     {
@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.editorBase = new Switch_Toolbox.Library.Forms.ImageEditorBase();
-            this.btnCancel = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnSave = new Switch_Toolbox.Library.Forms.STButton();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.editorBase = new Toolbox.Library.Forms.ImageEditorBase();
+            this.btnCancel = new Toolbox.Library.Forms.STButton();
+            this.btnSave = new Toolbox.Library.Forms.STButton();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.SuspendLayout();

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using BcresLibrary;
 
 namespace FirstPlugin.Forms
@@ -38,7 +38,7 @@ namespace FirstPlugin.Forms
                 {
                     Thread = new Thread((ThreadStart)(() =>
                     {
-                        textureBP.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                        textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
                         textureBP.Image = ((TXOBWrapper)bcresGrp.ResourceNodes[texture.Name]).GetBitmap();
                     }));
                     Thread.Start();

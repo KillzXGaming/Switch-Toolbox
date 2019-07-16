@@ -11,7 +11,7 @@ using CSCore.Streams.Effects;
 using CSCore.CoreAudioAPI;
 using WinformsVisualization.Visualization;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public class MusicPlayer : Component
     {

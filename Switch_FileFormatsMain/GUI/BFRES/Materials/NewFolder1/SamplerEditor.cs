@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using Bfres.Structs;
 using ResUGX2 = Syroot.NintenTools.Bfres.GX2;
 using ResGFX = Syroot.NintenTools.NSW.Bfres.GFX;
@@ -243,7 +243,7 @@ namespace FirstPlugin.Forms
                     {
                         Thread = new Thread((ThreadStart)(() =>
                         {
-                            textureBP.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                            textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
                             textureBP.Image = bntx.Textures[name].GetBitmap();
                         }));
                         Thread.Start();
@@ -255,7 +255,7 @@ namespace FirstPlugin.Forms
                     {
                         Thread = new Thread((ThreadStart)(() =>
                         {
-                            textureBP.Image = Switch_Toolbox.Library.Imaging.GetLoadingImage();
+                            textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
                             textureBP.Image = ((FTEX)ftexCont.ResourceNodes[name]).GetBitmap();
                         }));
                         Thread.Start();
@@ -416,7 +416,7 @@ namespace FirstPlugin.Forms
             tex.SamplerName = "_a1";
             tex.FragShaderSampler = "_a1";
             tex.Name = "Untitled";
-            tex.Type = Switch_Toolbox.Library.STGenericMatTexture.TextureType.Unknown;
+            tex.Type = Toolbox.Library.STGenericMatTexture.TextureType.Unknown;
             tex.wrapModeS = 0;
             tex.wrapModeT = 0;
             tex.wrapModeW = 2;

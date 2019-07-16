@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library
+﻿namespace Toolbox.Library
 {
     internal class CRC
     {

@@ -13,10 +13,10 @@ using Syroot.NintenTools.NSW.Bntx.GFX;
 using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Forms;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library.Animations;
+using Toolbox.Library;
+using Toolbox.Library.Forms;
+using Toolbox.Library.IO;
+using Toolbox.Library.Animations;
 using FirstPlugin.Forms;
 
 namespace FirstPlugin
@@ -40,7 +40,7 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Switch_Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 return reader.CheckSignature(4, "BNTX");
             }

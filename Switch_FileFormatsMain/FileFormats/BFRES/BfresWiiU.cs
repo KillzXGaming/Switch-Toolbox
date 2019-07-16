@@ -8,9 +8,9 @@ using Syroot.NintenTools.Bfres.Helpers;
 using Syroot.NintenTools.Bfres.GX2;
 using System.Windows.Forms;
 using Bfres.Structs;
-using Switch_Toolbox.Library.IO;
-using Switch_Toolbox.Library;
-using Switch_Toolbox.Library.Rendering;
+using Toolbox.Library.IO;
+using Toolbox.Library;
+using Toolbox.Library.Rendering;
 using OpenTK;
 using ResNSW = Syroot.NintenTools.NSW.Bfres;
 

@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.nameTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.parentTB = new Switch_Toolbox.Library.Forms.STTextBox();
-            this.visibleChk = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.parentIndexUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel5 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.nameIndexUD = new Switch_Toolbox.Library.Forms.NumericUpDownInt();
+            this.nameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.parentTB = new Toolbox.Library.Forms.STTextBox();
+            this.visibleChk = new Toolbox.Library.Forms.STCheckBox();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.parentIndexUD = new Toolbox.Library.Forms.NumericUpDownInt();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel5 = new Toolbox.Library.Forms.STLabel();
+            this.nameIndexUD = new Toolbox.Library.Forms.NumericUpDownInt();
             ((System.ComponentModel.ISupportInitialize)(this.parentIndexUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nameIndexUD)).BeginInit();
             this.SuspendLayout();
@@ -188,15 +188,15 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STTextBox nameTB;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STTextBox parentTB;
-        private Switch_Toolbox.Library.Forms.STCheckBox visibleChk;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.NumericUpDownInt parentIndexUD;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel5;
-        private Switch_Toolbox.Library.Forms.NumericUpDownInt nameIndexUD;
+        private Toolbox.Library.Forms.STTextBox nameTB;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STTextBox parentTB;
+        private Toolbox.Library.Forms.STCheckBox visibleChk;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.NumericUpDownInt parentIndexUD;
+        private Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STLabel stLabel5;
+        private Toolbox.Library.Forms.NumericUpDownInt nameIndexUD;
     }
 }

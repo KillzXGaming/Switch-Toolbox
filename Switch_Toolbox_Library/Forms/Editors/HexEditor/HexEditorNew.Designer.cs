@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms.Old
+﻿namespace Toolbox.Library.Forms.Old
 {
     partial class HexEditor
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.SuspendLayout();
             // 
             // stPanel1

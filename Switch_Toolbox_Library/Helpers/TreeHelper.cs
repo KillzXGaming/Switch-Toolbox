@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Switch_Toolbox.Library.Forms;
+using Toolbox.Library.Forms;
 using System.Windows.Forms;
 using System.IO;
-using Switch_Toolbox.Library.IO;
+using Toolbox.Library.IO;
 
-namespace Switch_Toolbox.Library
+namespace Toolbox.Library
 {
     public class TreeHelper
     {

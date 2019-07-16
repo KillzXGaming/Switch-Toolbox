@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using Switch_Toolbox.Library;
+using Toolbox.Library;
 using System.Windows.Forms;
 
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public enum STPolygonType : uint
     {

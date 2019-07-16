@@ -1,4 +1,4 @@
-﻿namespace Switch_Toolbox.Library.Forms.test
+﻿namespace Toolbox.Library.Forms.test
 {
     partial class UVEditor
     {
@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             this.gL_ControlLegacy2D1 = new OpenTK.GLControl();
-            this.scaleYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.transYUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.transXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.scaleXUD = new Switch_Toolbox.Library.Forms.NumericUpDownFloat();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.scaleYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.transYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.transXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.scaleXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.barSlider1 = new ColorSlider.ColorSlider();
-            this.btnApplyTransform = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.comboBox2 = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.comboBox1 = new Switch_Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.btnApplyTransform = new Toolbox.Library.Forms.STButton();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.comboBox2 = new Toolbox.Library.Forms.STComboBox();
+            this.comboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transXUD)).BeginInit();
@@ -312,9 +312,9 @@
         #endregion
         private STPanel stPanel1;
         private STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STComboBox comboBox1;
+        private Toolbox.Library.Forms.STComboBox comboBox1;
         private OpenTK.GLControl gL_ControlLegacy2D1;
-        private Switch_Toolbox.Library.Forms.STComboBox comboBox2;
+        private Toolbox.Library.Forms.STComboBox comboBox2;
         private STLabel stLabel2;
         private NumericUpDownFloat scaleXUD;
         private STLabel stLabel3;

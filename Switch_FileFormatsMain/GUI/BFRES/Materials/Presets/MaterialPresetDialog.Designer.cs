@@ -30,14 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.stCheckBox1 = new Switch_Toolbox.Library.Forms.STCheckBox();
-            this.stLabel2 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stLabel1 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.treeViewCustom1 = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stLabel3 = new Switch_Toolbox.Library.Forms.STLabel();
-            this.stButton1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stButton2 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stLabel4 = new Switch_Toolbox.Library.Forms.STLabel();
+            this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
+            this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -171,14 +171,14 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.TreeViewCustom treeViewCustom1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel2;
-        private Switch_Toolbox.Library.Forms.STCheckBox stCheckBox1;
+        private Toolbox.Library.TreeViewCustom treeViewCustom1;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STLabel stLabel2;
+        private Toolbox.Library.Forms.STCheckBox stCheckBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel3;
-        private Switch_Toolbox.Library.Forms.STButton stButton2;
-        private Switch_Toolbox.Library.Forms.STButton stButton1;
-        private Switch_Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STButton stButton2;
+        private Toolbox.Library.Forms.STButton stButton1;
+        private Toolbox.Library.Forms.STLabel stLabel4;
     }
 }

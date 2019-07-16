@@ -8,7 +8,7 @@ using GL_EditorFramework.GL_Core;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
-namespace Switch_Toolbox.Library.Rendering
+namespace Toolbox.Library.Rendering
 {
     public class PBRMapGenerator
     {

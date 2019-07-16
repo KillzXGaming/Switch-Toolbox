@@ -8,7 +8,7 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Switch_Toolbox.Library.Forms
+namespace Toolbox.Library.Forms
 {
     public static class NoneBlockingDialog
     {

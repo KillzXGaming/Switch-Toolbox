@@ -31,21 +31,21 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TexturePatternAnimEditor));
             this.trackbarKeyEditor1 = new TrackbarKeyEditor.TrackbarKeyEditor();
-            this.stListView1 = new Switch_Toolbox.Library.Forms.STListView();
-            this.samplerTreeView = new Switch_Toolbox.Library.TreeViewCustom();
-            this.stPropertyGrid1 = new Switch_Toolbox.Library.Forms.STPropertyGrid();
-            this.stPanel1 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.stPanel4 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.btnStop = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnForward1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnPlay = new Switch_Toolbox.Library.Forms.STButton();
-            this.btnBackward1 = new Switch_Toolbox.Library.Forms.STButton();
-            this.stPanel3 = new Switch_Toolbox.Library.Forms.STPanel();
-            this.animCurrentFrameUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.animMaxFrameUD = new Switch_Toolbox.Library.Forms.NumericUpDownUint();
-            this.pictureBoxCustom1 = new Switch_Toolbox.Library.Forms.PictureBoxCustom();
+            this.stListView1 = new Toolbox.Library.Forms.STListView();
+            this.samplerTreeView = new Toolbox.Library.TreeViewCustom();
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stPanel4 = new Toolbox.Library.Forms.STPanel();
+            this.btnStop = new Toolbox.Library.Forms.STButton();
+            this.btnForward1 = new Toolbox.Library.Forms.STButton();
+            this.btnPlay = new Toolbox.Library.Forms.STButton();
+            this.btnBackward1 = new Toolbox.Library.Forms.STButton();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.animCurrentFrameUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.animMaxFrameUD = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel2 = new Switch_Toolbox.Library.Forms.STPanel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             ((System.ComponentModel.ISupportInitialize)(this.stListView1)).BeginInit();
             this.stPanel1.SuspendLayout();
             this.stPanel4.SuspendLayout();
@@ -298,21 +298,21 @@
 
         #endregion
 
-        private Switch_Toolbox.Library.Forms.STListView stListView1;
+        private Toolbox.Library.Forms.STListView stListView1;
         private TrackbarKeyEditor.TrackbarKeyEditor trackbarKeyEditor1;
-        private Switch_Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
-        private Switch_Toolbox.Library.TreeViewCustom samplerTreeView;
-        private Switch_Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
+        private Toolbox.Library.TreeViewCustom samplerTreeView;
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
+        private Toolbox.Library.Forms.STPanel stPanel1;
         private System.Windows.Forms.Splitter splitter1;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel2;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel3;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint animCurrentFrameUD;
-        private Switch_Toolbox.Library.Forms.NumericUpDownUint animMaxFrameUD;
-        private Switch_Toolbox.Library.Forms.STPanel stPanel4;
-        private Switch_Toolbox.Library.Forms.STButton btnStop;
-        private Switch_Toolbox.Library.Forms.STButton btnForward1;
-        private Switch_Toolbox.Library.Forms.STButton btnPlay;
-        private Switch_Toolbox.Library.Forms.STButton btnBackward1;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STPanel stPanel3;
+        private Toolbox.Library.Forms.NumericUpDownUint animCurrentFrameUD;
+        private Toolbox.Library.Forms.NumericUpDownUint animMaxFrameUD;
+        private Toolbox.Library.Forms.STPanel stPanel4;
+        private Toolbox.Library.Forms.STButton btnStop;
+        private Toolbox.Library.Forms.STButton btnForward1;
+        private Toolbox.Library.Forms.STButton btnPlay;
+        private Toolbox.Library.Forms.STButton btnBackward1;
     }
 }
