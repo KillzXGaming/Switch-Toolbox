@@ -975,7 +975,7 @@ namespace Bfres.Structs
             //Check weights. If they are all 1. If they are then they aren't necessary
             if (ob.VertexSkinCount == 1 || ForceSkinCount && ForcedSkinAmount == 1)
             {
-                bool UseWeights = ob.vertices.Any(o => o.boneWeights[0] != 1);
+                bool UseWeights = ob.vertices.Any(o => o.boneWeights.Count > 0);
                 if (!UseWeights)
                 {
                     for (int v = 0; v < ob.vertices.Count; v++)
