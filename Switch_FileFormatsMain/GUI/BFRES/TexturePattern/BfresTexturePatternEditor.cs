@@ -249,6 +249,8 @@ namespace FirstPlugin.Forms
 
         private void AddKeyFrameImage(int Index, int Frame)
         {
+            KeyFrames.Add(Frame);
+
             var tex = activeSampler.GetActiveTexture((int)Index);
             if (tex != null)
             {
@@ -261,8 +263,6 @@ namespace FirstPlugin.Forms
                     Images.Remove(Frame);
                     Images.Add(Frame, temp);
                 }
-
-                KeyFrames.Add(Frame);
 
                 if (listViewCustom1.InvokeRequired)
                 {
@@ -401,8 +401,14 @@ namespace FirstPlugin.Forms
                 {
                     if (Images.ContainsKey(Frame))
                         pictureBoxCustom1.Image = Images[Frame];
+                    else
+                        pictureBoxCustom1.Image = null;
                 }
+                else
+                    pictureBoxCustom1.Image = null;
             }
+            else
+                pictureBoxCustom1.Image = null;
         }
 
         private void currentFrameCounterUD_ValueChanged(object sender, EventArgs e)
