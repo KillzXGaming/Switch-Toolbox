@@ -178,6 +178,9 @@ namespace FirstPlugin
             IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
             data = ByamlFile.LoadN(stream);
+
+            stream.Dispose();
+            stream.Close();
         }
         public void Unload()
         {
