@@ -257,22 +257,16 @@ namespace FirstPlugin
 
         public override void Replace(string FileName)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = FileFilters.GTX;
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
+            Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
+            ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true, false, SwizzlePattern);
+            if (ftex.texture != null)
             {
-                Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
-                ftex.ReplaceTexture(ofd.FileName, Format, 1, SupportedFormats, true, true, false, (uint)(SheetIndex * 2));
-                if (ftex.texture != null)
-                {
-                    TextureTGLP.Format = (ushort)ConvertToGx2(Format);
-                    TextureTGLP.SheetHeight = (ushort)ftex.texture.Height;
-                    TextureTGLP.SheetWidth = (ushort)ftex.texture.Width;
-                    TextureTGLP.SheetDataList[SheetIndex] = ftex.texture.Data;
+                TextureTGLP.Format = (ushort)ConvertToGx2(Format);
+                TextureTGLP.SheetHeight = (ushort)ftex.texture.Height;
+                TextureTGLP.SheetWidth = (ushort)ftex.texture.Width;
+                TextureTGLP.SheetDataList[SheetIndex] = ftex.texture.Data;
 
-                    UpdateEditor();
-                }
+                UpdateEditor();
             }
         }
 
@@ -367,13 +361,13 @@ namespace FirstPlugin
 
                 //Swizzle and create surface
                 var surface = GX2.CreateGx2Texture(data, Text,
-                 (uint)2,
+                 (uint)4,
                  (uint)0,
                  (uint)Width,
                  (uint)Height,
                  (uint)1,
                  (uint)Gx2Format,
-                 (uint)Swizzle,
+                 (uint)SwizzlePattern,
                  (uint)1,
                  (uint)MipCount
                  );
