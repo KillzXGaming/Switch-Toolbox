@@ -35,7 +35,6 @@ namespace Toolbox
             form.MdiParent = this;
             form.Show();
 
-
             IFileFormat activeFile;
 
             if (form is ObjectEditor)
