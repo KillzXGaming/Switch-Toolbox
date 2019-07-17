@@ -166,17 +166,38 @@ namespace FirstPlugin
             ushort Padding = reader.ReadUInt16();
 
             reader.Seek(HeaderSize, SeekOrigin.Begin);
-            string SignatureCheck = CheckSignature(reader);
-            switch (SignatureCheck)
+            FontSection = new FINF();
+            FontSection.Read(reader, this);
+            Blocks.Add(FontSection);
+
+            //Check for any unread blocks
+            reader.Seek(HeaderSize, SeekOrigin.Begin);
+            while (!reader.EndOfStream)
             {
-                case "FINF":
-                    FontSection = new FINF();
-                    FontSection.Read(reader, this);
-                    Blocks.Add(FontSection);
-                    break;
-                default:
-                    throw new NotImplementedException("Unsupported block found! " + SignatureCheck);
+                long BlockStart = reader.Position;
+
+                string BlockSignature = reader.ReadString(4, Encoding.ASCII);
+                uint BlockSize = reader.ReadUInt32();
+
+                switch (BlockSignature)
+                {
+                    case "FFNT":
+                    case "CMAP":
+                    case "CWDH":
+                    case "TGLP":
+                    case "FINF":
+                        break;
+                    case "KRNG": //What the HECK is this section
+                        break;
+                    default:
+                        throw new Exception("Unknown block found! " + BlockSignature);
+                }
+
+                reader.SeekBegin(BlockStart + BlockSize);
             }
+
+
+
 
             reader.Close();
             reader.Dispose();
@@ -202,6 +223,14 @@ namespace FirstPlugin
             string Signature = reader.ReadString(4, Encoding.ASCII);
             reader.Seek(-4, SeekOrigin.Current);
             return Signature;
+        }
+    }
+
+    public class KRNG
+    {
+        public void Read(FileReader reader)
+        {
+
         }
     }
 
@@ -469,6 +498,8 @@ namespace FirstPlugin
 
     public class FINF : BFFNT_Block
     {
+        public Dictionary<char, int> CodeMapDictionary = new Dictionary<char, int>();
+
         public uint Size;
         public FontType Type { get; set; }
         public byte Width { get; set; }
@@ -559,7 +590,7 @@ namespace FirstPlugin
         public BNTX BinaryTextureFile;
         public List<Gx2ImageBlock> Gx2Textures = new List<Gx2ImageBlock>();
 
-        public uint Size;
+        public uint SectionSize;
         public byte CellWidth { get; set; }
         public byte CellHeight { get; set; }
         public byte MaxCharWidth { get; set; }
@@ -578,7 +609,7 @@ namespace FirstPlugin
             string Signature = reader.ReadString(4, Encoding.ASCII);
             if (Signature != "TGLP")
                 throw new Exception($"Invalid signature {Signature}! Expected TGLP.");
-            Size = reader.ReadUInt32();
+            SectionSize = reader.ReadUInt32();
             CellWidth = reader.ReadByte();
             CellHeight = reader.ReadByte();
             SheetCount = reader.ReadByte();
@@ -653,8 +684,10 @@ namespace FirstPlugin
 
     public class CMAP
     {
-        public uint CharacterCodeBegin { get; set; }
-        public uint CharacterCodeEnd { get; set; }
+        public uint SectionSize;
+
+        public char CharacterCodeBegin { get; set; }
+        public char CharacterCodeEnd { get; set; }
 
         public Mapping MappingMethod { get; set; }
 
@@ -667,29 +700,80 @@ namespace FirstPlugin
             Scan,
         }
 
+        public CMAP NextCodeMapSection { get; set; }
+
         public void Read(FileReader reader, FFNT header)
         {
+            uint CodeBegin = 0;
+            uint CodeEnd = 0;
+
+            long pos = reader.Position;
+
             reader.ReadSignature(4, "CMAP");
-            uint SectionSize = reader.ReadUInt32();
-            if (header.Version > 0x3000000)
+            SectionSize = reader.ReadUInt32();
+            if (header.Version.SwapBytes() > 0x3000000 || header.Version > 0x00000103)
             {
-                CharacterCodeBegin = reader.ReadUInt32();
-                CharacterCodeEnd = reader.ReadUInt32();
+                CodeBegin = reader.ReadUInt32();
+                CodeEnd = reader.ReadUInt32();
                 MappingMethod = reader.ReadEnum<Mapping>(true);
                 Padding = reader.ReadUInt16();
             }
             else
             {
-                CharacterCodeBegin = reader.ReadUInt16();
-                CharacterCodeEnd = reader.ReadUInt16();
+                CodeBegin = reader.ReadUInt16();
+                CodeEnd = reader.ReadUInt16();
                 MappingMethod = reader.ReadEnum<Mapping>(true);
                 Padding = reader.ReadUInt16();
             }
+
+            CharacterCodeBegin = (char)CodeBegin;
+            CharacterCodeEnd = (char)CodeEnd;
+
             uint NextMapOffset = reader.ReadUInt32();
+
+            //Mapping methods from
+            https://github.com/IcySon55/Kuriimu/blob/f670c2719affc1eaef8b4c40e40985881247acc7/src/Cetera/Font/BFFNT.cs#L211
+            switch (MappingMethod)
+            {
+                case Mapping.Direct:
+                    var charOffset = reader.ReadUInt16();
+                    for (char i = CharacterCodeBegin; i <= CharacterCodeEnd; i++)
+                    {
+                        int idx = i - CharacterCodeBegin + charOffset;
+                        header.FontSection.CodeMapDictionary[i] = idx < ushort.MaxValue ? idx : 0;
+                    }
+                    break;
+                case Mapping.Table:
+                    for (char i = CharacterCodeBegin; i <= CharacterCodeEnd; i++)
+                    {
+                        short idx = reader.ReadInt16();
+                        if (idx != -1) header.FontSection.CodeMapDictionary[i] = idx;
+                    }
+                    break;
+                case Mapping.Scan:
+                    var CharEntryCount = reader.ReadUInt16();
+                    for (int i = 0; i < CharEntryCount; i++)
+                    {
+                        char charCode = reader.ReadChar();
+                        short index = reader.ReadInt16();
+                        if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+                    }
+                    break;
+            }
+
             if (NextMapOffset != 0)
             {
-                reader.Seek(NextMapOffset - 8, SeekOrigin.Current);
+                reader.SeekBegin(NextMapOffset - 8);
+                NextCodeMapSection = new CMAP();
+                NextCodeMapSection.Read(reader, header);
             }
+            else
+                reader.SeekBegin(pos + SectionSize);
+        }
+
+        public void Write()
+        {
+
         }
     }
 
@@ -707,15 +791,25 @@ namespace FirstPlugin
             get { return (ushort)(GlobalIndexLastWidthEntry - GlobalIndexFirstWidthEntry + 1); }
         }
 
+        public uint SectionSize;
+
         public void Read(FileReader reader, FFNT header)
         {
+            long pos = reader.Position;
+
             reader.ReadSignature(4, "CWDH");
-            uint SectionSize = reader.ReadUInt32();
+            SectionSize = reader.ReadUInt32();
             GlobalIndexFirstWidthEntry = reader.ReadUInt16();
             GlobalIndexLastWidthEntry = reader.ReadUInt16();
             uint NextWidthSectionOffset = reader.ReadUInt32();
-
-            reader.Seek((int)NextWidthSectionOffset - 8, SeekOrigin.Current);
+            if (NextWidthSectionOffset != 0)
+            {
+                reader.SeekBegin((int)NextWidthSectionOffset - 8);
+                NextWidthSection = new CWDH();
+                NextWidthSection.Read(reader, header);
+            }
+            else
+                reader.SeekBegin(pos + SectionSize);
         }
     }
 
