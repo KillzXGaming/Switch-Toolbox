@@ -9,7 +9,7 @@ using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 
-namespace FirstPlugin
+namespace FirstPlugin.Old
 {
     public class SARC : TreeNodeFile, IFileFormat
     {

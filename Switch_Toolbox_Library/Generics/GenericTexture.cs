@@ -100,16 +100,16 @@ namespace Toolbox.Library
         //
         //Gets a list of surfaces given the start index of the array and the amount of arrays to obtain
         //
-        public List<Surface> GetSurfaces(int ArrayIndexStart = 0, int ArrayLength = 1 )
+        public List<Surface> GetSurfaces(int ArrayIndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1 )
         {
-            if (ArrayLength < ArrayCount)
-                ArrayLength = (int)ArrayCount;
+            if (GetAllSurfaces)
+                GetSurfaceAmount = (int)ArrayCount;
 
             var surfaces = new List<Surface>();
             for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
             {
                 bool IsLower = arrayLevel < ArrayIndexStart;
-                bool IsHigher = arrayLevel > (ArrayIndexStart + ArrayLength);
+                bool IsHigher = arrayLevel >= (ArrayIndexStart + GetSurfaceAmount);
                 if (!IsLower && !IsHigher)
                 {
                     List<byte[]> mips = new List<byte[]>();
@@ -716,7 +716,7 @@ namespace Toolbox.Library
         {
             List<Surface> surfaces = null;
             if (ExportSurfaceLevel)
-                surfaces = GetSurfaces(SurfaceLevel);
+                surfaces = GetSurfaces(SurfaceLevel, false);
             else
                 surfaces = GetSurfaces();
 
@@ -796,7 +796,7 @@ namespace Toolbox.Library
         {
             List<Surface> surfaces = null;
             if (ExportSurfaceLevel)
-                surfaces = GetSurfaces(SurfaceLevel);
+                surfaces = GetSurfaces(SurfaceLevel, false, 1);
             else
                 surfaces = GetSurfaces();
 

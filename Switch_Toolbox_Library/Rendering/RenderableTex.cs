@@ -103,7 +103,7 @@ namespace Toolbox.Library.Rendering
             if (UseMipmaps && GenericTexture.ArrayCount <= 1)
             {
                 //Load surfaces with mip maps
-                Surfaces = GenericTexture.GetSurfaces(ArrayStartIndex, 6);
+                Surfaces = GenericTexture.GetSurfaces(ArrayStartIndex, false, 6);
             }
             else
             {
