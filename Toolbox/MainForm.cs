@@ -48,7 +48,11 @@ namespace Toolbox
 
         public MainForm()
         {
+            FormThemes.ActivePreset = FormThemes.Preset.Dark;
+
             InitializeComponent();
+
+            LoadConfig();
         }
 
         public void Reload()
