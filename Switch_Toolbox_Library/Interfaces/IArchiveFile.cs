@@ -191,15 +191,23 @@ namespace Toolbox.Library
 
         public ToolStripItem[] GetContextMenuItems()
         {
-            return new ToolStripItem[]
-            {
-              new STToolStripItem("Save", SaveAction) { Enabled = ((IFileFormat)ArchiveFile).CanSave},
-              new STToolStripSeparator(),
-              new STToolStripItem("Repack", RepackAction){ Enabled = ArchiveFile.CanReplaceFiles},
-              new STToolStripItem("Extract All", ExtractAllAction),
-              new STToolStripSeparator(),
-              new STToolStripItem("Preview Archive", PreviewAction),
+            var ToolStrips = new ToolStripItem[]
+{
+                    new STToolStripItem("Save", SaveAction) { Enabled = ((IFileFormat)ArchiveFile).CanSave},
+                    new STToolStripSeparator(),
+                    new STToolStripItem("Repack", RepackAction){ Enabled = ArchiveFile.CanReplaceFiles},
+                    new STToolStripItem("Extract All", ExtractAllAction),
+                    new STToolStripSeparator(),
+                    new STToolStripItem("Preview Archive", PreviewAction),
             };
+
+            var toolStripList = ToolStrips.ToList();
+            if (ArchiveFile is IContextMenuNode)
+            {
+                toolStripList.AddRange(((IContextMenuNode)ArchiveFile).GetContextMenuItems());
+            }
+
+            return toolStripList.ToArray();
         }
 
         private void EnableContextMenu(ToolStripItemCollection Items, string Key, bool Enabled)

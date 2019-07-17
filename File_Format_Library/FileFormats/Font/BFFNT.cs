@@ -146,8 +146,18 @@ namespace FirstPlugin
         public uint Version { get; set; }
 
         public FINF FontSection { get; set; }
+        public FontKerningTable KerningTable { get; set; }
 
         public List<BFFNT_Block> Blocks = new List<BFFNT_Block>();
+
+        public PlatformType Platform { get; set; } = PlatformType.Cafe;
+
+        public enum PlatformType
+        {
+            Cafe,
+            NX,
+            Ctr
+        }
 
         public void Read(FileReader reader)
         {
@@ -164,6 +174,17 @@ namespace FirstPlugin
             uint FileSize = reader.ReadUInt16();
             ushort BlockCount = reader.ReadUInt16();
             ushort Padding = reader.ReadUInt16();
+
+            if (reader.ByteOrder == Syroot.BinaryData.ByteOrder.LittleEndian)
+            {
+                if (Version > 0x3000000 || Version > 0x00000103)
+                    Platform = PlatformType.NX;
+                else
+                    Platform = PlatformType.Ctr;
+            }
+            else
+                Platform = PlatformType.Cafe;
+
 
             reader.Seek(HeaderSize, SeekOrigin.Begin);
             FontSection = new FINF();
@@ -187,7 +208,9 @@ namespace FirstPlugin
                     case "TGLP":
                     case "FINF":
                         break;
-                    case "KRNG": //What the HECK is this section
+                    case "KRNG":
+                        KerningTable = new FontKerningTable();
+                        KerningTable.Read(reader, this);
                         break;
                     default:
                         throw new Exception("Unknown block found! " + BlockSignature);
@@ -226,11 +249,34 @@ namespace FirstPlugin
         }
     }
 
-    public class KRNG
+    //Kerning Table
+    //https://github.com/dnasdw/3dsfont/blob/4ead538d225d5d05929dce9d736bec91a6158052/src/bffnt/ResourceFormat.h
+    public class FontKerningTable
     {
-        public void Read(FileReader reader)
-        {
+        public KerningFirstTable FirstTable { get; set; }
 
+        public void Read(FileReader reader, FFNT Header)
+        {
+            if (Header.Platform == FFNT.PlatformType.NX)
+            {
+                ushort FirstWordCount = reader.ReadUInt16();
+                ushort padding = reader.ReadUInt16();
+
+                FirstTable = new KerningFirstTable();
+                FirstTable.Read(reader, Header);
+            }
+        }
+    }
+
+    public class KerningFirstTable
+    {
+        public void Read(FileReader reader, FFNT Header)
+        {
+            if (Header.Platform == FFNT.PlatformType.NX)
+            {
+                uint FirstWordCount = reader.ReadUInt16();
+                uint Offset = reader.ReadUInt16();
+            }
         }
     }
 
@@ -711,7 +757,7 @@ namespace FirstPlugin
 
             reader.ReadSignature(4, "CMAP");
             SectionSize = reader.ReadUInt32();
-            if (header.Version > 0x3000000 || header.Version > 0x00000103)
+            if (header.Platform == FFNT.PlatformType.NX)
             {
                 CodeBegin = reader.ReadUInt32();
                 CodeEnd = reader.ReadUInt32();
@@ -752,16 +798,19 @@ namespace FirstPlugin
                     break;
                 case Mapping.Scan:
                     var CharEntryCount = reader.ReadUInt16();
+
+                    if (header.Platform == FFNT.PlatformType.NX)
+                        reader.ReadUInt16(); //Padding
+
                     for (int i = 0; i < CharEntryCount; i++)
                     {
-                        if (header.Version > 0x3000000 || header.Version > 0x00000103)
+                        if (header.Platform == FFNT.PlatformType.NX)
                         {
                             //Seems to have a spacing of a ushort for each entry
-                            char charCode = reader.ReadChar();
-                            short padding = reader.ReadInt16();
+                            uint charCode = reader.ReadUInt16();
                             short index = reader.ReadInt16();
-                            short padding2 = reader.ReadInt16();
-                            if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+                            short padding = reader.ReadInt16();
+                            if (index != -1) header.FontSection.CodeMapDictionary[(char)charCode] = index;
                         }
                         else
                         {

@@ -11,7 +11,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class SARC : IArchiveFile, IFileFormat
+    public class SARC : IArchiveFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -81,6 +81,13 @@ namespace FirstPlugin
         {
             files.Remove((SarcEntry)archiveFileInfo);
             return true;
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Rename Actor Files (Odyssey)", null, RenameActors, Keys.Control | Keys.R));
+            return Items.ToArray();
         }
 
         private void RenameActors(object sender, EventArgs args)
