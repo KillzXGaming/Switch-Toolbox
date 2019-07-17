@@ -243,7 +243,7 @@ namespace FirstPlugin
                 }
                 if (FileFormat is BFFNT)
                 {
-                    foreach (STGenericTexture texture in ((BFFNT)FileFormat).Gx2Textures)
+                    foreach (STGenericTexture texture in ((BFFNT)FileFormat).bffnt.FontSection.TextureGlyph.Gx2Textures)
                         texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
                 }
                 if (FileFormat is BFRES)

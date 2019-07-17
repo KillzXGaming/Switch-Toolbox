@@ -66,6 +66,49 @@ namespace Toolbox.Library
             }
         }
 
+        public static List<Tuple<string, string>> ReadFiles(string directory)
+        {
+            var Files = new List<Tuple<string, string>>();
+            ProcessDirectory(directory, Files);
+            return Files;
+        }
+
+        private static void ProcessDirectory(string targetDirectory, List<Tuple<string, string>> FileList)
+        {
+            var fileEntries = GetRelativePaths(targetDirectory);
+
+            foreach (string fileName in fileEntries)
+            {
+                char[] sep = { '\\' };
+                string[] fn = fileName.Split(sep);
+                string tempf = "";
+                for (int i = 0; i < fn.Length; i++)
+                {
+                    tempf += fn[i];
+                    if (fn.Length > 2 && (i != fn.Length - 1))
+                    {
+                        tempf += "/";
+                    }
+                }
+
+                FileList.Add(Tuple.Create(tempf, $"{targetDirectory}/{fileName}"));
+            }
+
+            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            foreach (string subdirectory in subdirectoryEntries)
+                ProcessDirectory(subdirectory, FileList);
+        }
+
+        private static IEnumerable<string> GetRelativePaths(string root)
+        {
+            int rootLength = root.Length + (root[root.Length - 1] == '\\' ? 0 : 1);
+
+            foreach (string path in Directory.GetFiles(root, "*", SearchOption.AllDirectories))
+            {
+                yield return path.Remove(0, rootLength);
+            }
+        }
+
         private static void CreateDirectoryIfExists(string Dir)
         {
             if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName(Dir)))

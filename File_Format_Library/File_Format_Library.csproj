@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Toolbox\bin\Release\Lib\Plugins\</OutputPath>
+    <OutputPath>..\Toolbox\bin\Debug\Lib\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -257,6 +257,12 @@
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
+    <Compile Include="GUI\BFFNT\BffntEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFFNT\BffntEditor.Designer.cs">
+      <DependentUpon>BffntEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFRES\BatchEditBaseAnimDataForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -974,6 +980,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BCRES\Material\SamplerEditorSimple.resx">
       <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
+      <DependentUpon>BffntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BatchEditBaseAnimDataForm.resx">
       <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>

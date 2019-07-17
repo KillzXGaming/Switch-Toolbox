@@ -112,6 +112,11 @@ namespace Toolbox.Library.Forms
         private Color BACK_COLOR = Color.FromArgb(30, 30, 30);
         private Color FORE_COLOR = Color.White;
 
+        public string GetText()
+        {
+            return scintilla1.Text;
+        }
+
         public void FillEditor(byte[] Data)
         {
             FillEditor(Encoding.Default.GetString(Data));

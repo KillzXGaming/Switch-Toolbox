@@ -963,16 +963,16 @@ namespace Toolbox.Library.Forms
                 switch (UseExtension)
                 {
                     case ".dds":
-                        ActiveTexture.SaveDDS(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        ActiveTexture.SaveDDS(TemporaryName, true, false, CurArrayDisplayLevel, CurMipDisplayLevel);
                         break;
                     case ".astc":
-                        ActiveTexture.SaveASTC(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        ActiveTexture.SaveASTC(TemporaryName, true, false, CurArrayDisplayLevel, CurMipDisplayLevel);
                         break;
                     case ".tga":
-                        ActiveTexture.SaveTGA(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        ActiveTexture.SaveTGA(TemporaryName, true, false, CurArrayDisplayLevel, CurMipDisplayLevel);
                         break;
                     default:
-                        ActiveTexture.SaveBitMap(TemporaryName, CurArrayDisplayLevel, CurMipDisplayLevel);
+                        ActiveTexture.SaveBitMap(TemporaryName, true, false, CurArrayDisplayLevel, CurMipDisplayLevel);
                         break;
                 }
 

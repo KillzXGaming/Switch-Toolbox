@@ -69,12 +69,18 @@ namespace FirstPlugin.New
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+            files.Add(new SarcEntry()
+            {
+                FileData = archiveFileInfo.FileData,
+                FileName = archiveFileInfo.FileName,
+            });
+            return true;
         }
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+            files.Remove((SarcEntry)archiveFileInfo);
+            return true;
         }
 
         private void RenameActors(object sender, EventArgs args)
@@ -204,9 +210,6 @@ namespace FirstPlugin.New
             SarcEntry sarcEntry = new SarcEntry();
             sarcEntry.FileName = fullName;
             sarcEntry.FileData = data;
-
-            string ext = Path.GetExtension(fullName);
-            string SarcEx = SARCExt.SARC.GuessFileExtension(data);
             return sarcEntry;
         }
     }

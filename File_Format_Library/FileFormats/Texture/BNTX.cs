@@ -187,7 +187,7 @@ namespace FirstPlugin
                 }
                 if (FileFormat is BFFNT)
                 {
-                    var bntx = ((BFFNT)FileFormat).BinaryTextureFile;
+                    var bntx = ((BFFNT)FileFormat).bffnt.FontSection.TextureGlyph.BinaryTextureFile;
                     if (bntx != null)
                     {
                         foreach (var texture in bntx.Textures.Values)

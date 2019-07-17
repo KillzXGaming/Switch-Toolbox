@@ -24,9 +24,11 @@ namespace Toolbox.Library.Forms
 
             ReloadEditors();
             _IsLoaded = true;
+            saveBtn.Visible = false;
         }
 
-        public void LoadFile(ArchiveFileInfo archiveFileInfo) {
+        public void LoadFile(ArchiveFileInfo archiveFileInfo)
+        {
             ArchiveFileInfo = archiveFileInfo;
         }
 
@@ -67,6 +69,11 @@ namespace Toolbox.Library.Forms
                 UpdateFileEditor();
             else if (GetEditor() == 3)
                 UpdateTextView();
+
+            if (GetEditor() == 2 || GetEditor() == 3)
+                saveBtn.Visible = true;
+            else
+                saveBtn.Visible = false;
         }
 
         private void UpdateFileEditor()
@@ -220,6 +227,28 @@ namespace Toolbox.Library.Forms
                 Runtime.ObjectEditor.EditorDiplayIndex = stComboBox1.SelectedIndex;
                 UpdateEditor();
             }
+        }
+
+        private void saveBtn_Click(object sender, EventArgs e)
+        {
+            bool IsTextEditor = GetEditor() == 3;
+
+            var File = ArchiveFileInfo.FileFormat;
+            if (IsTextEditor && File != null && IsConvertableText(File.GetType()) && ((IConvertableTextFormat)File).CanConvertBack)
+            {
+                TextEditor editor = (TextEditor)GetActiveEditor(typeof(TextEditor));
+                ((IConvertableTextFormat)File).ConvertFromString(editor.GetText());
+
+                ArchiveFileInfo.SaveFileFormat();
+                MessageBox.Show($"Saved {File.FileName} to archive!");
+            }
+            else if (File != null && File.CanSave)
+            {
+                ArchiveFileInfo.SaveFileFormat();
+                MessageBox.Show($"Saved {File.FileName} to archive!");
+            }
+            else
+                MessageBox.Show($"File format does not support saving!");
         }
     }
 }

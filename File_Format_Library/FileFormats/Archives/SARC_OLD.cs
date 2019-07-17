@@ -414,6 +414,7 @@ namespace FirstPlugin
                 var parentForm = LibraryGUI.GetActiveForm();
 
                 GenericEditorForm editorForm = new GenericEditorForm(true, form);
+                editorForm.Text = Text;
                 editorForm.FormClosing += (sender, e) => FormClosing(sender, e, fileFormat);
                 if (editorForm.ShowDialog() == DialogResult.OK)
                 {

@@ -32,6 +32,7 @@
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.saveBtn = new Toolbox.Library.Forms.STButton();
             this.stPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,6 +48,7 @@
             // 
             // stPanel2
             // 
+            this.stPanel2.Controls.Add(this.saveBtn);
             this.stPanel2.Controls.Add(this.stLabel1);
             this.stPanel2.Controls.Add(this.stComboBox1);
             this.stPanel2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -77,6 +79,16 @@
             this.stComboBox1.TabIndex = 0;
             this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);
             // 
+            // saveBtn
+            // 
+            this.saveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveBtn.Location = new System.Drawing.Point(249, 0);
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(105, 23);
+            this.saveBtn.TabIndex = 2;
+            this.saveBtn.Text = "Save";
+            this.saveBtn.UseVisualStyleBackColor = false;
+            // 
             // ArchiveFilePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -97,5 +109,6 @@
         private STPanel stPanel2;
         private STLabel stLabel1;
         private STComboBox stComboBox1;
+        private STButton saveBtn;
     }
 }

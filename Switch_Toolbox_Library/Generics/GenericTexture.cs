@@ -666,6 +666,19 @@ namespace Toolbox.Library
             Export(FileName);
         }
 
+        public void ExportArrayImage(int ArrayIndex = 0)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Text;
+            sfd.DefaultExt = "dds";
+            sfd.Filter = ExportFilter;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Export(sfd.FileName, true, false, ArrayIndex);
+            }
+        }
+
         public void ExportImage()
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -688,18 +701,25 @@ namespace Toolbox.Library
             switch (ext)
             {
                 case ".dds":
-                    SaveDDS(FileName);
+                    SaveDDS(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
                     break;
                 case ".astc":
-                    SaveASTC(FileName);
+                    SaveASTC(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
                     break;
                 default:
-                    SaveBitMap(FileName);
+                    SaveBitMap(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
                     break;
             }
         }
-        public void SaveASTC(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
+        public void SaveASTC(string FileName, bool ExportSurfaceLevel = false,
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
+            List<Surface> surfaces = null;
+            if (ExportSurfaceLevel)
+                surfaces = GetSurfaces(SurfaceLevel);
+            else
+                surfaces = GetSurfaces();
+
             ASTC atsc = new ASTC();
             atsc.Width = Width;
             atsc.Height = Height;
@@ -707,15 +727,16 @@ namespace Toolbox.Library
             atsc.BlockDimX = (byte)GetBlockWidth(Format);
             atsc.BlockDimY = (byte)GetBlockHeight(Format);
             atsc.BlockDimZ = (byte)GetBlockDepth(Format);
-            var surfaces = GetSurfaces();
             atsc.DataBlock = Utils.CombineByteArray(surfaces[0].mipmaps.ToArray());
             File.WriteAllBytes(FileName, atsc.Save());
         }
-        public void SaveTGA(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
+        public void SaveTGA(string FileName, bool ExportSurfaceLevel = false,
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
            
         }
-        public void SaveBitMap(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
+        public void SaveBitMap(string FileName, bool ExportSurfaceLevel = false,
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Exporting Image Data...";
@@ -724,7 +745,7 @@ namespace Toolbox.Library
             progressBar.Show();
             progressBar.Refresh();
 
-            if (ArrayCount > 1)
+            if (ArrayCount > 1 && !ExportSurfaceLevel)
             {
                 progressBar.Task = "Select dialog option... ";
 
@@ -770,9 +791,14 @@ namespace Toolbox.Library
             progressBar.Value = 100;
             progressBar.Close();
         }
-        public void SaveDDS(string FileName, int SurfaceLevel = 0, int MipLevel = 0)
+        public void SaveDDS(string FileName, bool ExportSurfaceLevel = false,
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
-            var surfaces = GetSurfaces();
+            List<Surface> surfaces = null;
+            if (ExportSurfaceLevel)
+                surfaces = GetSurfaces(SurfaceLevel);
+            else
+                surfaces = GetSurfaces();
 
             if (Depth == 0)
                 Depth = 1;

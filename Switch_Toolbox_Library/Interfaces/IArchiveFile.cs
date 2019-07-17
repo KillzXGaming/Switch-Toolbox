@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using System.Text.RegularExpressions;
-using System.ComponentModel;
 
 namespace Toolbox.Library
 {
@@ -249,6 +248,39 @@ namespace Toolbox.Library
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 string FolderPath = dlg.SelectedPath;
+
+                STProgressBar progressBar = new STProgressBar();
+                progressBar.Task = "Reading Directory...";
+                progressBar.Value = 0;
+                progressBar.StartPosition = FormStartPosition.CenterScreen;
+                progressBar.Show();
+                progressBar.Refresh();
+
+                var ProccessedFiles = TreeHelper.ReadFiles(FolderPath);
+
+                progressBar.Task = "Repacking Files...";
+                progressBar.Refresh();
+
+                for (int i = 0; i < ProccessedFiles.Count; i++)
+                {
+                    progressBar.Value = (i * 100) / ProccessedFiles.Count;
+                    progressBar.Task = $"Packing {ProccessedFiles[i].Item1}";
+                    progressBar.Refresh();
+
+                    ArchiveFile.AddFile(new ArchiveFileInfo()
+                    {
+                        FileName = ProccessedFiles[i].Item1,
+                        FileData = File.ReadAllBytes(ProccessedFiles[i].Item2),
+                    });
+                }
+
+                progressBar.Close();
+                progressBar.Dispose();
+                ProccessedFiles.Clear();
+
+                GC.Collect();
+
+                FillTreeNodes();
             }
         }
 

@@ -4,6 +4,8 @@ namespace Toolbox.Library.Forms
 {
     public class STUserControl : UserControl
     {
+        public string Text { get; set; } = "";
+
         public STUserControl()
         {
             BackColor = FormThemes.BaseTheme.FormBackColor;

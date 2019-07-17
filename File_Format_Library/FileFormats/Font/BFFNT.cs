@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using System.IO;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using System.Drawing;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
-    public class BFFNT : TreeNodeFile, IFileFormat
+    public class BFFNT : IFileFormat, IEditor<BffntEditor>
     {
         public FileType FileType { get; set; } = FileType.Font;
 
@@ -41,28 +41,35 @@ namespace FirstPlugin
             }
         }
 
-        FFNT bffnt;
-        public BNTX BinaryTextureFile;
-        public List<Gx2ImageBlock> Gx2Textures = new List<Gx2ImageBlock>();
+        public FFNT bffnt;
+
+        public BffntEditor OpenForm()
+        {
+            BffntEditor form = new BffntEditor();
+            form.Text = "BFFNT Editor";
+            form.Dock = DockStyle.Fill;
+            form.LoadFontFile(this);
+            return form;
+        }
+
+        public void FillEditor(UserControl control)
+        {
+            ((BffntEditor)control).LoadFontFile(this);
+        }
 
         public void Load(System.IO.Stream stream)
         {
-            Text = FileName;
-
             bffnt = new FFNT();
             bffnt.Read(new FileReader(stream));
 
-            TGLP tglp = bffnt.GetFontSection().tglp;
+            TGLP tglp = bffnt.FontSection.TextureGlyph;
 
-            var textureFolder = new TreeNode("Textures");
-            Nodes.Add(textureFolder);
             if (tglp.SheetDataList.Count > 0)
             {
                 var bntx = STFileLoader.OpenFileFormat("Sheet_0", Utils.CombineByteArray(tglp.SheetDataList.ToArray()));
-                if (bntx != null) 
+                if (bntx != null)
                 {
-                    BinaryTextureFile = (BNTX)bntx;
-                    textureFolder.Nodes.Add((BNTX)bntx);
+                    tglp.BinaryTextureFile = (BNTX)bntx;
                 }
                 else
                 {
@@ -71,18 +78,16 @@ namespace FirstPlugin
                         var surface = new Gx2ImageBlock();
                         surface.Text = $"Sheet_{s}";
                         surface.Load(tglp, s);
-                        textureFolder.Nodes.Add(surface);
-                        Gx2Textures.Add(surface);
+                        tglp.Gx2Textures.Add(surface);
                     }
                 }
             }
 
-
             int i = 0;
             foreach (byte[] texture in tglp.SheetDataList)
             {
-             //   BNTX file = (BNTX)STFileLoader.OpenFileFormat("Sheet" + i++, texture);
-             //  Nodes.Add(file);
+                //   BNTX file = (BNTX)STFileLoader.OpenFileFormat("Sheet" + i++, texture);
+                //  Nodes.Add(file);
             }
         }
         public void Unload()
@@ -138,17 +143,9 @@ namespace FirstPlugin
     {
         public ushort BOM;
         public ushort HeaderSize;
-        public uint Version;
+        public uint Version { get; set; }
 
-        public FINF GetFontSection()
-        {
-            foreach (var block in Blocks)
-            {
-                if (block.GetType() == typeof(FINF))
-                    return (FINF)block;
-            }
-            return null;
-        }
+        public FINF FontSection { get; set; }
 
         public List<BFFNT_Block> Blocks = new List<BFFNT_Block>();
 
@@ -173,9 +170,9 @@ namespace FirstPlugin
             switch (SignatureCheck)
             {
                 case "FINF":
-                    FINF finf = new FINF();
-                    finf.Read(reader);
-                    Blocks.Add(finf);
+                    FontSection = new FINF();
+                    FontSection.Read(reader, this);
+                    Blocks.Add(FontSection);
                     break;
                 default:
                     throw new NotImplementedException("Unsupported block found! " + SignatureCheck);
@@ -473,59 +470,81 @@ namespace FirstPlugin
     public class FINF : BFFNT_Block
     {
         public uint Size;
-        public byte Type;
-        public byte Width;
-        public byte Height;
-        public byte Ascend;
-        public ushort LineFeed;
-        public ushort AlterCharIndex;
-        public byte DefaultLeftWidth;
-        public byte DefaultGlyphWidth;
-        public byte DefaultCharWidth;
-        public byte CharEncoding;
-        public TGLP tglp;
+        public FontType Type { get; set; }
+        public byte Width { get; set; }
+        public byte Height { get; set; }
+        public byte Ascent { get; set; }
+        public ushort LineFeed { get; set; }
+        public ushort AlterCharIndex { get; set; }
+        public byte DefaultLeftWidth { get; set; }
+        public byte DefaultGlyphWidth { get; set; }
+        public byte DefaultCharWidth { get; set; }
+        public CharacterCode CharEncoding { get; set; }
+        public TGLP TextureGlyph;
+        public CMAP CodeMap;
+        public CWDH CharacterWidth;
 
-        public void Read(FileReader reader)
+        public enum FontType : byte
+        {
+            Glyph = 1,
+            Texture = 2,
+            PackedTexture = 3,
+        }
+
+        public enum CharacterCode : byte
+        {
+            Unicode = 1,
+            ShiftJIS = 2,
+            CP1252 = 3,
+        }
+
+        public void Read(FileReader reader, FFNT Header)
         {
             string Signature = reader.ReadString(4, Encoding.ASCII);
             if (Signature != "FINF")
                 throw new Exception($"Invalid signature {Signature}! Expected FINF.");
             Size = reader.ReadUInt32();
-            Type = reader.ReadByte();
+            Type = reader.ReadEnum<FontType>(true);
             Height = reader.ReadByte();
             Width = reader.ReadByte();
-            Ascend = reader.ReadByte();
+            Ascent = reader.ReadByte();
             LineFeed = reader.ReadUInt16();
             AlterCharIndex = reader.ReadUInt16();
             DefaultLeftWidth = reader.ReadByte();
             DefaultGlyphWidth = reader.ReadByte();
             DefaultCharWidth = reader.ReadByte();
-            CharEncoding = reader.ReadByte();
+            CharEncoding = reader.ReadEnum<CharacterCode>(true);
             uint tglpOffset = reader.ReadUInt32();
             uint cwdhOffset = reader.ReadUInt32();
             uint cmapOffset = reader.ReadUInt32();
 
-            tglp = new TGLP();
+            TextureGlyph = new TGLP();
             using (reader.TemporarySeek(tglpOffset - 8, SeekOrigin.Begin))
-            {
-                tglp.Read(reader);
-            }
+                TextureGlyph.Read(reader);
+
+            CharacterWidth = new CWDH();
+            using (reader.TemporarySeek(cwdhOffset - 8, SeekOrigin.Begin))
+                CharacterWidth.Read(reader, Header);
+
+            CodeMap = new CMAP();
+            using (reader.TemporarySeek(cmapOffset - 8, SeekOrigin.Begin))
+                CodeMap.Read(reader, Header);
         }
 
         public void Write(FileWriter writer)
         {
             writer.WriteSignature("FINF");
             writer.Write(uint.MaxValue);
-            writer.Write(Type);
+            writer.Write(Type, true);
             writer.Write(Height);
             writer.Write(Width);
-            writer.Write(Ascend);
+            writer.Write(Ascent);
             writer.Write(LineFeed);
             writer.Write(AlterCharIndex);
             writer.Write(DefaultLeftWidth);
             writer.Write(DefaultGlyphWidth);
             writer.Write(DefaultCharWidth);
-            writer.Write(CharEncoding);
+            writer.Write(CharEncoding, true);
 
             long _ofsTGLP = writer.Position;
             writer.Write(uint.MaxValue);
@@ -537,17 +556,21 @@ namespace FirstPlugin
     }
     public class TGLP
     {
+        public BNTX BinaryTextureFile;
+        public List<Gx2ImageBlock> Gx2Textures = new List<Gx2ImageBlock>();
+
         public uint Size;
-        public byte CellWidth;
-        public byte CellHeight;
-        public byte MaxCharWidth;
-        public uint SheetSize;
-        public ushort BaseLinePos;
-        public ushort Format;
-        public ushort ColumnCount;
-        public ushort RowCount;
-        public ushort SheetWidth;
-        public ushort SheetHeight;
+        public byte CellWidth { get; set; }
+        public byte CellHeight { get; set; }
+        public byte MaxCharWidth { get; set; }
+        public byte SheetCount { get; private set; }
+        public uint SheetSize { get; set; }
+        public ushort BaseLinePos { get; set; }
+        public ushort Format { get; set; }
+        public ushort ColumnCount { get; set; }
+        public ushort RowCount { get; set; }
+        public ushort SheetWidth { get; set; }
+        public ushort SheetHeight { get; set; }
         public List<byte[]> SheetDataList = new List<byte[]>();
 
         public void Read(FileReader reader)
@@ -558,7 +581,7 @@ namespace FirstPlugin
             Size = reader.ReadUInt32();
             CellWidth = reader.ReadByte();
             CellHeight = reader.ReadByte();
-            byte SheetCount = reader.ReadByte();
+            SheetCount = reader.ReadByte();
             MaxCharWidth = reader.ReadByte();
             SheetSize = reader.ReadUInt32();
             BaseLinePos = reader.ReadUInt16();
@@ -618,6 +641,14 @@ namespace FirstPlugin
                 writer.Write((uint)(SectionEndPosition - _ofsSectionSize - 4));
             }
         }
+
+        public STGenericTexture GetImageSheet(int Index)
+        {
+            if (BinaryTextureFile != null) //BNTX uses only one image with multiple arrays
+                return BinaryTextureFile.Textures.ElementAt(0).Value;
+            else
+                return Gx2Textures[Index];
+        }
     }
 
     public class CMAP
@@ -638,7 +669,7 @@ namespace FirstPlugin
 
         public void Read(FileReader reader, FFNT header)
         {
-            reader.ReadSignature(4, "CMAP ");
+            reader.ReadSignature(4, "CMAP");
             uint SectionSize = reader.ReadUInt32();
             if (header.Version > 0x3000000)
             {
@@ -660,5 +691,38 @@ namespace FirstPlugin
                 reader.Seek(NextMapOffset - 8, SeekOrigin.Current);
             }
         }
+    }
+
+    public class CWDH
+    {
+        public ushort GlobalIndexFirstWidthEntry { get; set; }
+        public ushort GlobalIndexLastWidthEntry { get; set; }
+
+        public List<CharacterWidthEntry> WidthEntries = new List<CharacterWidthEntry>();
+
+        public CWDH NextWidthSection { get; set; }
+
+        public ushort EntryCount
+        {
+            get { return (ushort)(GlobalIndexLastWidthEntry - GlobalIndexFirstWidthEntry + 1); }
+        }
+
+        public void Read(FileReader reader, FFNT header)
+        {
+            reader.ReadSignature(4, "CWDH");
+            uint SectionSize = reader.ReadUInt32();
+            GlobalIndexFirstWidthEntry = reader.ReadUInt16();
+            GlobalIndexLastWidthEntry = reader.ReadUInt16();
+            uint NextWidthSectionOffset = reader.ReadUInt32();
+
+            reader.Seek((int)NextWidthSectionOffset - 8, SeekOrigin.Current);
+        }
+    }
+
+    public class CharacterWidthEntry
+    {
+        public sbyte LeftWidth { get; set; }
+        public byte GlyphWidth { get; set; }
+        public byte Width { get; set; }
     }
 }
