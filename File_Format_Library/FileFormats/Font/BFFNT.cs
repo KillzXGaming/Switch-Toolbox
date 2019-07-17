@@ -711,7 +711,7 @@ namespace FirstPlugin
 
             reader.ReadSignature(4, "CMAP");
             SectionSize = reader.ReadUInt32();
-            if (header.Version.SwapBytes() > 0x3000000 || header.Version > 0x00000103)
+            if (header.Version > 0x3000000 || header.Version > 0x00000103)
             {
                 CodeBegin = reader.ReadUInt32();
                 CodeEnd = reader.ReadUInt32();
@@ -754,9 +754,21 @@ namespace FirstPlugin
                     var CharEntryCount = reader.ReadUInt16();
                     for (int i = 0; i < CharEntryCount; i++)
                     {
-                        char charCode = reader.ReadChar();
-                        short index = reader.ReadInt16();
-                        if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+                        if (header.Version > 0x3000000 || header.Version > 0x00000103)
+                        {
+                            //Seems to have a spacing of a ushort for each entry
+                            char charCode = reader.ReadChar();
+                            short padding = reader.ReadInt16();
+                            short index = reader.ReadInt16();
+                            short padding2 = reader.ReadInt16();
+                            if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+                        }
+                        else
+                        {
+                            char charCode = reader.ReadChar();
+                            short index = reader.ReadInt16();
+                            if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+                        }
                     }
                     break;
             }
