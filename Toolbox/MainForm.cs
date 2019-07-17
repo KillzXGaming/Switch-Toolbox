@@ -48,23 +48,12 @@ namespace Toolbox
 
         public MainForm()
         {
-            FormThemes.ActivePreset = FormThemes.Preset.Dark;
-
-            Runtime.MainForm = this;
-            LoadConfig();
-
             InitializeComponent();
-            compressionToolStripMenuItem.DropDownItems.AddRange(CompressionMenus.GetMenuItems().ToArray());
-
-            //Redo setting this since designer keeps resetting this
-            tabForms.myBackColor = FormThemes.BaseTheme.FormBackColor;
-
-            OnMdiWindowClosed();
-            ResetMenus();
         }
 
         public void Reload()
         {
+            LoadConfig();
             SupportedFormats = FileManager.GetFileFormats();
             FileMenuExtensions = FileManager.GetMenuExtensions();
         }
@@ -74,6 +63,17 @@ namespace Toolbox
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            FormThemes.ActivePreset = FormThemes.Preset.Dark;
+
+            Runtime.MainForm = this;
+            compressionToolStripMenuItem.DropDownItems.AddRange(CompressionMenus.GetMenuItems().ToArray());
+
+            //Redo setting this since designer keeps resetting this
+            tabForms.myBackColor = FormThemes.BaseTheme.FormBackColor;
+
+            OnMdiWindowClosed();
+            ResetMenus();
+
             bool HasVersionFile = true;
             VersionCheck version = new VersionCheck(HasVersionFile);
 
