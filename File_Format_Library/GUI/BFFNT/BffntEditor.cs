@@ -31,7 +31,6 @@ namespace FirstPlugin.Forms
             InitializeComponent();
         }
 
-
         public List<IFileFormat> GetFileFormats()
         {
             return new List<IFileFormat>() { FileFormat };
@@ -83,6 +82,24 @@ namespace FirstPlugin.Forms
 
             if (textureGlyph.SheetCount > 0)
                 imagesCB.SelectedIndex = 0;
+        }
+
+        private void imagePanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (ActiveFile == null) return;
+
+            int ImageIndex = imagesCB.SelectedIndex;
+            if (e.Button == MouseButtons.Right && ImageIndex != -1)
+            {
+                var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
+
+                if (image is IContextMenuNode)
+                {
+                    imageMenuStrip.Items.Clear();
+                    imageMenuStrip.Items.AddRange(((IContextMenuNode)image).GetContextMenuItems());
+                    imageMenuStrip.Show(Cursor.Position);
+                }
+            }
         }
 
         private void imagesCB_SelectedIndexChanged(object sender, EventArgs e)

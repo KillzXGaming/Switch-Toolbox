@@ -35,3 +35,4 @@ C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.appli
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.csproj.CopyComplete
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.exe
 C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.pdb
+C:\Users\Nathan\Documents\GitHub\SwitchToolboxV1\Updater\obj\Debug\Updater.csprojAssemblyReference.cache

@@ -475,7 +475,7 @@
             this.imagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseMove);
             this.imagePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseUp);
             this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
-            this.imagePanel.ContextMenuStrip = imageMenuStrip;
+            this.imagePanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseClick);
             // 
             // imagesCB
             // 
@@ -501,9 +501,7 @@
             // 
             // imageMenuStrip
             // 
-            this.imageMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportToolStripMenuItem,
-            this.copyToolStripMenuItem});
+            this.imageMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {});
             this.imageMenuStrip.Name = "stContextMenuStrip1";
             this.imageMenuStrip.Size = new System.Drawing.Size(108, 48);
             // 
