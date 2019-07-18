@@ -784,6 +784,9 @@ namespace FirstPlugin
             else
                 writer.Align(8192);
 
+            if (BinaryTextureFile != null)
+                BinaryTextureFile.Save();
+
             long DataPosition = writer.Position;
             using (writer.TemporarySeek(_ofsSheetBlocks, SeekOrigin.Begin))
             {
