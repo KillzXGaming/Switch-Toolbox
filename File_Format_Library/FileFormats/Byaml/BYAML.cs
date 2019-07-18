@@ -52,7 +52,7 @@ namespace FirstPlugin
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Xml;
-        public bool CanConvertBack => false;
+        public bool CanConvertBack => true;
 
         public string ConvertToString()
         {
