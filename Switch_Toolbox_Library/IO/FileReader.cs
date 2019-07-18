@@ -46,7 +46,7 @@ namespace Toolbox.Library.IO
 
         public bool CheckSignature(uint Identifier, long position = 0)
         {
-            if (Position + 4 >= BaseStream.Length || position < 0)
+            if (Position + 4 >= BaseStream.Length || position < 0 || position + 4 >= BaseStream.Length)
                 return false;
 
             Position = position;
