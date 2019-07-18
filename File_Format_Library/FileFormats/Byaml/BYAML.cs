@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Threading.Tasks;
+using System.Text;
 using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
@@ -61,7 +61,9 @@ namespace FirstPlugin
 
         public void ConvertFromString(string text)
         {
-            data = XmlConverter.ToByml(text);
+            byte[] TextData = Encoding.Unicode.GetBytes(text);
+            StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
+            data = XmlConverter.ToByml(t.ReadToEnd());
         }
 
         #endregion
