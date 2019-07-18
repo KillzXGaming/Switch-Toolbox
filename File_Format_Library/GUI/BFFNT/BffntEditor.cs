@@ -89,16 +89,16 @@ namespace FirstPlugin.Forms
             if (ActiveFile == null) return;
 
             int ImageIndex = imagesCB.SelectedIndex;
-            if (e.Button == MouseButtons.Right && ImageIndex != -1)
-            {
-                var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
 
-                if (image is IContextMenuNode)
+                if (e.Button == MouseButtons.Right && ImageIndex != -1)
                 {
-                    imageMenuStrip.Items.Clear();
-                    imageMenuStrip.Items.AddRange(((IContextMenuNode)image).GetContextMenuItems());
-                    imageMenuStrip.Show(Cursor.Position);
-                }
+                    var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
+
+                imageMenuStrip.Items.Clear();
+                imageMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportImageAction, Keys.Control | Keys.E));
+                imageMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceImageAction, Keys.Control | Keys.R));
+                imageMenuStrip.Items.Add(new ToolStripMenuItem("Copy", null, CopyImageAction, Keys.Control | Keys.C));
+                imageMenuStrip.Show(Cursor.Position);
             }
         }
 
@@ -106,26 +106,29 @@ namespace FirstPlugin.Forms
         {
             int ImageIndex = imagesCB.SelectedIndex;
             if (ImageIndex != -1)
+                UpdateImagePanel(ImageIndex);
+        }
+
+        private void UpdateImagePanel(int ImageIndex)
+        {
+            var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
+            bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
+
+            if (IsBntx)
             {
-                var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
-                bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
-
-                if (IsBntx)
-                {
-                    PanelImage = image.GetBitmap(ImageIndex);
-                }
-                else
-                {
-                    PanelImage = image.GetBitmap();
-                }
-
-                if (PanelImage != null)
-                {
-                    PanelImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                }
-
-                FillCells();
+                PanelImage = image.GetBitmap(ImageIndex);
             }
+            else
+            {
+                PanelImage = image.GetBitmap();
+            }
+
+            if (PanelImage != null)
+            {
+                PanelImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            }
+
+            FillCells();
 
             imagePanel.Refresh();
         }
@@ -139,7 +142,29 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        
+        private void ReplaceImageAction(object sender, EventArgs e)
+        {
+            int ImageIndex = imagesCB.SelectedIndex;
+            if (ImageIndex != -1)
+            {
+                var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
+                bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
+
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = image.ReplaceFilter;
+                ofd.Multiselect = false;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    image.Replace(ofd.FileName);
+                }
+
+                UpdateImagePanel(ImageIndex);
+            }
+        }
+
+        private void ExportImageAction(object sender, EventArgs e)
         {
             int ImageIndex = imagesCB.SelectedIndex;
             if (ImageIndex != -1)
@@ -294,7 +319,7 @@ namespace FirstPlugin.Forms
             graphics.ScaleTransform(textureGlyph.SheetWidth, textureGlyph.SheetHeight);
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyImageAction(object sender, EventArgs e)
         {
             if (PanelImage != null)
                 Clipboard.SetImage(PanelImage);
