@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BffntEditor));
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.lineFeedUD = new Toolbox.Library.Forms.NumericUpDownUint();
             this.stLabel13 = new Toolbox.Library.Forms.STLabel();
@@ -56,13 +55,21 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.imageMenuStrip = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imagesCB = new Toolbox.Library.Forms.STComboBox();
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
-            this.imageMenuStrip = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
-            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.characterCodeCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel14 = new Toolbox.Library.Forms.STLabel();
+            this.numericUpDownUint1 = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stLabel15 = new Toolbox.Library.Forms.STLabel();
+            this.numericUpDownUint2 = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stLabel16 = new Toolbox.Library.Forms.STLabel();
+            this.numericUpDownUint3 = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.stLabel17 = new Toolbox.Library.Forms.STLabel();
+            this.imagePanel = new Toolbox.Library.Forms.STPanel();
             this.stPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lineFeedUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.leftSpacingUD)).BeginInit();
@@ -73,9 +80,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.ascentUD)).BeginInit();
             this.stPanel2.SuspendLayout();
             this.stPanel3.SuspendLayout();
-            this.stPanel4.SuspendLayout();
             this.imageMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
+            this.stPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint3)).BeginInit();
             this.SuspendLayout();
             // 
             // stPanel1
@@ -315,6 +324,14 @@
             // 
             // stPanel2
             // 
+            this.stPanel2.Controls.Add(this.numericUpDownUint3);
+            this.stPanel2.Controls.Add(this.stLabel17);
+            this.stPanel2.Controls.Add(this.numericUpDownUint2);
+            this.stPanel2.Controls.Add(this.stLabel16);
+            this.stPanel2.Controls.Add(this.numericUpDownUint1);
+            this.stPanel2.Controls.Add(this.stLabel15);
+            this.stPanel2.Controls.Add(this.stLabel14);
+            this.stPanel2.Controls.Add(this.characterCodeCB);
             this.stPanel2.Controls.Add(this.stLabel2);
             this.stPanel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.stPanel2.Location = new System.Drawing.Point(619, 0);
@@ -350,7 +367,7 @@
             // 
             // stPanel3
             // 
-            this.stPanel3.Controls.Add(this.pictureBoxCustom1);
+            this.stPanel3.Controls.Add(this.imagePanel);
             this.stPanel3.Controls.Add(this.imagesCB);
             this.stPanel3.Controls.Add(this.stLabel3);
             this.stPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -358,6 +375,28 @@
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(412, 438);
             this.stPanel3.TabIndex = 4;
+            // 
+            // imageMenuStrip
+            // 
+            this.imageMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToolStripMenuItem,
+            this.copyToolStripMenuItem});
+            this.imageMenuStrip.Name = "stContextMenuStrip1";
+            this.imageMenuStrip.Size = new System.Drawing.Size(108, 48);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // imagesCB
             // 
@@ -396,42 +435,101 @@
             this.stPanel4.Size = new System.Drawing.Size(819, 438);
             this.stPanel4.TabIndex = 2;
             // 
-            // imageMenuStrip
+            // characterCodeCB
             // 
-            this.imageMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportToolStripMenuItem,
-            this.copyToolStripMenuItem});
-            this.imageMenuStrip.Name = "stContextMenuStrip1";
-            this.imageMenuStrip.Size = new System.Drawing.Size(181, 70);
+            this.characterCodeCB.BorderColor = System.Drawing.Color.Empty;
+            this.characterCodeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.characterCodeCB.ButtonColor = System.Drawing.Color.Empty;
+            this.characterCodeCB.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.characterCodeCB.FormattingEnabled = true;
+            this.characterCodeCB.Location = new System.Drawing.Point(103, 27);
+            this.characterCodeCB.Name = "characterCodeCB";
+            this.characterCodeCB.ReadOnly = true;
+            this.characterCodeCB.Size = new System.Drawing.Size(72, 39);
+            this.characterCodeCB.TabIndex = 2;
             // 
-            // pictureBoxCustom1
+            // stLabel14
             // 
-            this.pictureBoxCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.stLabel14.AutoSize = true;
+            this.stLabel14.Location = new System.Drawing.Point(13, 45);
+            this.stLabel14.Name = "stLabel14";
+            this.stLabel14.Size = new System.Drawing.Size(84, 13);
+            this.stLabel14.TabIndex = 3;
+            this.stLabel14.Text = "Character Code:";
+            // 
+            // numericUpDownUint1
+            // 
+            this.numericUpDownUint1.Location = new System.Drawing.Point(100, 118);
+            this.numericUpDownUint1.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownUint1.Name = "numericUpDownUint1";
+            this.numericUpDownUint1.Size = new System.Drawing.Size(97, 20);
+            this.numericUpDownUint1.TabIndex = 21;
+            // 
+            // stLabel15
+            // 
+            this.stLabel15.AutoSize = true;
+            this.stLabel15.Location = new System.Drawing.Point(13, 120);
+            this.stLabel15.Name = "stLabel15";
+            this.stLabel15.Size = new System.Drawing.Size(77, 13);
+            this.stLabel15.TabIndex = 20;
+            this.stLabel15.Text = "Texture Width:";
+            // 
+            // numericUpDownUint2
+            // 
+            this.numericUpDownUint2.Location = new System.Drawing.Point(100, 80);
+            this.numericUpDownUint2.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownUint2.Name = "numericUpDownUint2";
+            this.numericUpDownUint2.Size = new System.Drawing.Size(97, 20);
+            this.numericUpDownUint2.TabIndex = 23;
+            // 
+            // stLabel16
+            // 
+            this.stLabel16.AutoSize = true;
+            this.stLabel16.Location = new System.Drawing.Point(13, 82);
+            this.stLabel16.Name = "stLabel16";
+            this.stLabel16.Size = new System.Drawing.Size(73, 13);
+            this.stLabel16.TabIndex = 22;
+            this.stLabel16.Text = "Left Spacing::";
+            // 
+            // numericUpDownUint3
+            // 
+            this.numericUpDownUint3.Location = new System.Drawing.Point(100, 154);
+            this.numericUpDownUint3.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownUint3.Name = "numericUpDownUint3";
+            this.numericUpDownUint3.Size = new System.Drawing.Size(97, 20);
+            this.numericUpDownUint3.TabIndex = 25;
+            // 
+            // stLabel17
+            // 
+            this.stLabel17.AutoSize = true;
+            this.stLabel17.Location = new System.Drawing.Point(13, 156);
+            this.stLabel17.Name = "stLabel17";
+            this.stLabel17.Size = new System.Drawing.Size(79, 13);
+            this.stLabel17.TabIndex = 24;
+            this.stLabel17.Text = "Effictive Width:";
+            // 
+            // imagePanel
+            // 
+            this.imagePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
-            this.pictureBoxCustom1.ContextMenuStrip = this.imageMenuStrip;
-            this.pictureBoxCustom1.Location = new System.Drawing.Point(6, 36);
-            this.pictureBoxCustom1.Name = "pictureBoxCustom1";
-            this.pictureBoxCustom1.Size = new System.Drawing.Size(400, 399);
-            this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxCustom1.TabIndex = 2;
-            this.pictureBoxCustom1.TabStop = false;
-            // 
-            // exportToolStripMenuItem
-            // 
-            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportToolStripMenuItem.Text = "Export";
-            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
-            // 
-            // copyToolStripMenuItem
-            // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.imagePanel.Location = new System.Drawing.Point(6, 33);
+            this.imagePanel.Name = "imagePanel";
+            this.imagePanel.Size = new System.Drawing.Size(400, 402);
+            this.imagePanel.TabIndex = 2;
+            this.imagePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.imagePanel_Paint);
             // 
             // BffntEditor
             // 
@@ -453,9 +551,11 @@
             this.stPanel2.PerformLayout();
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
-            this.stPanel4.ResumeLayout(false);
             this.imageMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();
+            this.stPanel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -491,9 +591,17 @@
         private Toolbox.Library.Forms.STPanel stPanel4;
         private Toolbox.Library.Forms.NumericUpDownUint lineFeedUD;
         private Toolbox.Library.Forms.STLabel stLabel13;
-        private Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
         private Toolbox.Library.Forms.STContextMenuStrip imageMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private Toolbox.Library.Forms.STComboBox characterCodeCB;
+        private Toolbox.Library.Forms.STLabel stLabel14;
+        private Toolbox.Library.Forms.NumericUpDownUint numericUpDownUint3;
+        private Toolbox.Library.Forms.STLabel stLabel17;
+        private Toolbox.Library.Forms.NumericUpDownUint numericUpDownUint2;
+        private Toolbox.Library.Forms.STLabel stLabel16;
+        private Toolbox.Library.Forms.NumericUpDownUint numericUpDownUint1;
+        private Toolbox.Library.Forms.STLabel stLabel15;
+        private Toolbox.Library.Forms.STPanel imagePanel;
     }
 }

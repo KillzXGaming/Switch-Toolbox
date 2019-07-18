@@ -18,6 +18,8 @@ namespace FirstPlugin.Forms
             InitializeComponent();
         }
 
+        private Image PanelImage { get; set; }
+
         private FFNT ActiveFile;
         public void LoadFontFile(BFFNT fontFile)
         {
@@ -37,7 +39,17 @@ namespace FirstPlugin.Forms
             fontWidthUD.Bind(ActiveFile.FontSection, "Width");
             fontHeightUD.Bind(ActiveFile.FontSection, "Height");
 
+            ReloadCharacterCodes();
             ReloadTextures();
+        }
+
+        private void ReloadCharacterCodes()
+        {
+            foreach (char entry in ActiveFile.FontSection.CodeMapDictionary.Keys)
+                characterCodeCB.Items.Add(entry);
+
+            if (ActiveFile.FontSection.CodeMapDictionary.Count > 0)
+                characterCodeCB.SelectedIndex = 0;
         }
 
         private void ReloadTextures()
@@ -61,12 +73,21 @@ namespace FirstPlugin.Forms
 
                 if (IsBntx)
                 {
-                    pictureBoxCustom1.Image = image.GetBitmap(ImageIndex);
+                    PanelImage = image.GetBitmap(ImageIndex);
                 }
                 else
                 {
-                    pictureBoxCustom1.Image = image.GetBitmap();
+                    PanelImage = image.GetBitmap();
                 }
+            }
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle ee = new Rectangle(10, 10, 30, 30);
+            using (Pen pen = new Pen(Color.Red, 2))
+            {
+                e.Graphics.DrawRectangle(pen, ee);
             }
         }
 
@@ -85,10 +106,60 @@ namespace FirstPlugin.Forms
             }
         }
 
+        public class FontCell
+        {
+            public Rectangle DrawnRectangle;
+
+            public Color Color { get; set; }
+
+            public FontCell()
+            {
+                Color = Color.Cyan;
+            }
+        }
+
+        private FontCell[] FontCells;
+
+        private void imagePanel_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphics = e.Graphics;
+            graphics.DrawImage(PanelImage, 0.0f, 0.0f);
+
+            if (ActiveFile == null)
+                return;
+
+            var textureGlyph = ActiveFile.FontSection.TextureGlyph;
+
+            FontCells = new FontCell[textureGlyph.ColumnCount * textureGlyph.RowCount];
+
+            int CellPosY = 0;
+            for (int c = 0; c < (int)textureGlyph.ColumnCount; c++)
+            {
+                int CellPosX = 0;
+                for (int r = 0; r < (int)textureGlyph.RowCount; r++)
+                {
+                    int Index = c + r;
+
+                    FontCells[Index] = new FontCell();
+                    FontCells[Index].DrawnRectangle = new Rectangle()
+                    {
+                        X = CellPosX,
+                        Y = CellPosY,
+                        Width = (int)textureGlyph.CellWidth,
+                        Height = (int)textureGlyph.CellHeight,
+                    };
+
+                    graphics.DrawRectangle(new Pen(FontCells[Index].Color), FontCells[Index].DrawnRectangle);
+                    CellPosX += (int)textureGlyph.CellWidth;
+                }
+                CellPosY += (int)textureGlyph.CellHeight;
+            }
+        }
+
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (pictureBoxCustom1.Image != null)
-                Clipboard.SetImage(pictureBoxCustom1.Image);
+            if (PanelImage != null)
+                Clipboard.SetImage(PanelImage);
         }
     }
 }

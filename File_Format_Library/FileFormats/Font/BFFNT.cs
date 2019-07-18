@@ -203,14 +203,20 @@ namespace FirstPlugin
                 switch (BlockSignature)
                 {
                     case "FFNT":
-                    case "CMAP":
+                    case "FFNA":
+                    case "FCPX":
                     case "CWDH":
+                    case "CGLP":
+                    case "CMAP":
                     case "TGLP":
                     case "FINF":
                         break;
                     case "KRNG":
                         KerningTable = new FontKerningTable();
                         KerningTable.Read(reader, this);
+                        break;
+                    case "GLGR":
+                    case "HTGL":
                         break;
                     default:
                         throw new Exception("Unknown block found! " + BlockSignature);
@@ -270,6 +276,9 @@ namespace FirstPlugin
 
     public class KerningFirstTable
     {
+        public uint FirstWordCount { get; set; }
+        public uint Offset { get; set; }
+
         public void Read(FileReader reader, FFNT Header)
         {
             if (Header.Platform == FFNT.PlatformType.NX)
@@ -561,6 +570,9 @@ namespace FirstPlugin
         public CMAP CodeMap;
         public CWDH CharacterWidth;
 
+        public List<CWDH> CharacterWidths { get; set; }
+        public List<CMAP> CodeMaps { get; set; }
+
         public enum FontType : byte
         {
             Glyph = 1,
@@ -577,6 +589,9 @@ namespace FirstPlugin
 
         public void Read(FileReader reader, FFNT Header)
         {
+            CharacterWidths = new List<CWDH>();
+            CodeMaps = new List<CMAP>();
+
             string Signature = reader.ReadString(4, Encoding.ASCII);
             if (Signature != "FINF")
                 throw new Exception($"Invalid signature {Signature}! Expected FINF.");
@@ -600,12 +615,14 @@ namespace FirstPlugin
                 TextureGlyph.Read(reader);
 
             CharacterWidth = new CWDH();
+            CharacterWidths.Add(CharacterWidth);
             using (reader.TemporarySeek(cwdhOffset - 8, SeekOrigin.Begin))
-                CharacterWidth.Read(reader, Header);
+                CharacterWidth.Read(reader, Header, CharacterWidths);
 
             CodeMap = new CMAP();
+            CodeMaps.Add(CodeMap);
             using (reader.TemporarySeek(cmapOffset - 8, SeekOrigin.Begin))
-                CodeMap.Read(reader, Header);
+                CodeMap.Read(reader, Header, CodeMaps);
         }
 
         public void Write(FileWriter writer)
@@ -629,6 +646,23 @@ namespace FirstPlugin
             writer.Write(uint.MaxValue);
             long _ofsCMAP = writer.Position;
             writer.Write(uint.MaxValue);
+        }
+
+        public CWDH GetCharacterWidth(int index)
+        {
+            if (index == -1)
+                return null;
+
+            for (int i = 0; i < CharacterWidths.Count; i++)
+            {
+                if (CharacterWidths[i].StartIndex <= index && CharacterWidths[i].EndIndex >= index)
+                {
+                    int CharaIndex = index - CharacterWidths[i].StartIndex;
+                    return CharacterWidths[CharaIndex];
+                }
+            }
+
+            throw new Exception("Failed to get valid character index!");
         }
     }
     public class TGLP
@@ -728,6 +762,24 @@ namespace FirstPlugin
         }
     }
 
+    public interface CharMapping { }
+
+    public class CMAPIndexTable : CharMapping
+    {
+        public short[] Table { get; set; }
+    }
+
+    public class CMAPDirect : CharMapping
+    {
+        public ushort Offset { get; set; }
+    }
+
+    public class CMAPScanMapping : CharMapping
+    {
+        public uint[] Codes { get; set; }
+        public short[] Indexes { get; set; }
+    }
+
     public class CMAP
     {
         public uint SectionSize;
@@ -739,6 +791,8 @@ namespace FirstPlugin
 
         private ushort Padding;
 
+        public CharMapping MappingData;
+
         public enum Mapping : ushort
         {
             Direct,
@@ -748,7 +802,7 @@ namespace FirstPlugin
 
         public CMAP NextCodeMapSection { get; set; }
 
-        public void Read(FileReader reader, FFNT header)
+        public void Read(FileReader reader, FFNT header, List<CMAP> CodeMaps)
         {
             uint CodeBegin = 0;
             uint CodeEnd = 0;
@@ -788,13 +842,22 @@ namespace FirstPlugin
                         int idx = i - CharacterCodeBegin + charOffset;
                         header.FontSection.CodeMapDictionary[i] = idx < ushort.MaxValue ? idx : 0;
                     }
+
+                    MappingData = new CMAPDirect();
+                    ((CMAPDirect)MappingData).Offset = charOffset;
                     break;
                 case Mapping.Table:
+                    List<short> table = new List<short>();
                     for (char i = CharacterCodeBegin; i <= CharacterCodeEnd; i++)
                     {
                         short idx = reader.ReadInt16();
                         if (idx != -1) header.FontSection.CodeMapDictionary[i] = idx;
+
+                        table.Add(idx);
                     }
+
+                    MappingData = new CMAPIndexTable();
+                    ((CMAPIndexTable)MappingData).Table = table.ToArray();
                     break;
                 case Mapping.Scan:
                     var CharEntryCount = reader.ReadUInt16();
@@ -802,23 +865,35 @@ namespace FirstPlugin
                     if (header.Platform == FFNT.PlatformType.NX)
                         reader.ReadUInt16(); //Padding
 
+                    uint[] codes = new uint[CharEntryCount];
+                    short[] indexes = new short[CharEntryCount];
+
                     for (int i = 0; i < CharEntryCount; i++)
                     {
                         if (header.Platform == FFNT.PlatformType.NX)
                         {
-                            //Seems to have a spacing of a ushort for each entry
-                            uint charCode = reader.ReadUInt16();
+                            uint charCode = reader.ReadUInt32();
                             short index = reader.ReadInt16();
                             short padding = reader.ReadInt16();
                             if (index != -1) header.FontSection.CodeMapDictionary[(char)charCode] = index;
+
+                            codes[i] = charCode;
+                            indexes[i] = index;
                         }
                         else
                         {
                             char charCode = reader.ReadChar();
                             short index = reader.ReadInt16();
                             if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+
+                            codes[i] = charCode;
+                            indexes[i] = index;
                         }
                     }
+
+                    MappingData = new CMAPScanMapping();
+                    ((CMAPScanMapping)MappingData).Codes = codes;
+                    ((CMAPScanMapping)MappingData).Indexes = indexes;
                     break;
             }
 
@@ -826,10 +901,29 @@ namespace FirstPlugin
             {
                 reader.SeekBegin(NextMapOffset - 8);
                 NextCodeMapSection = new CMAP();
-                NextCodeMapSection.Read(reader, header);
+                NextCodeMapSection.Read(reader, header, CodeMaps);
+                CodeMaps.Add(NextCodeMapSection);
             }
             else
                 reader.SeekBegin(pos + SectionSize);
+        }
+
+        //From https://github.com/dnasdw/3dsfont/blob/79e6f4ab6676d82fdcd6c0f79d9b0d7a343f82b5/src/bcfnt2charset/bcfnt2charset.cpp#L3
+        //Todo add the rest of the encoding types
+        public char CodeToU16Code(FINF.CharacterCode characterCode, ushort code)
+        {
+            if (code < 0x20)
+            {
+                return (char)0;
+            }
+
+            switch (characterCode)
+            {
+                case FINF.CharacterCode.Unicode:
+                    return (char)code;
+            }
+
+            return (char)code;
         }
 
         public void Write()
@@ -840,8 +934,8 @@ namespace FirstPlugin
 
     public class CWDH
     {
-        public ushort GlobalIndexFirstWidthEntry { get; set; }
-        public ushort GlobalIndexLastWidthEntry { get; set; }
+        public ushort StartIndex { get; set; }
+        public ushort EndIndex { get; set; }
 
         public List<CharacterWidthEntry> WidthEntries = new List<CharacterWidthEntry>();
 
@@ -849,25 +943,26 @@ namespace FirstPlugin
 
         public ushort EntryCount
         {
-            get { return (ushort)(GlobalIndexLastWidthEntry - GlobalIndexFirstWidthEntry + 1); }
+            get { return (ushort)(EndIndex - StartIndex + 1); }
         }
 
         public uint SectionSize;
 
-        public void Read(FileReader reader, FFNT header)
+        public void Read(FileReader reader, FFNT header, List<CWDH> CharacterWidths)
         {
             long pos = reader.Position;
 
             reader.ReadSignature(4, "CWDH");
             SectionSize = reader.ReadUInt32();
-            GlobalIndexFirstWidthEntry = reader.ReadUInt16();
-            GlobalIndexLastWidthEntry = reader.ReadUInt16();
+            EndIndex = reader.ReadUInt16();
+            StartIndex = reader.ReadUInt16();
             uint NextWidthSectionOffset = reader.ReadUInt32();
             if (NextWidthSectionOffset != 0)
             {
                 reader.SeekBegin((int)NextWidthSectionOffset - 8);
                 NextWidthSection = new CWDH();
-                NextWidthSection.Read(reader, header);
+                NextWidthSection.Read(reader, header, CharacterWidths);
+                CharacterWidths.Add(NextWidthSection);
             }
             else
                 reader.SeekBegin(pos + SectionSize);
