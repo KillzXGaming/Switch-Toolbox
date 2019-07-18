@@ -202,6 +202,9 @@ namespace Toolbox.Library
                     new STToolStripItem("Extract All", ExtractAllAction),
                     new STToolStripSeparator(),
                     new STToolStripItem("Preview Archive", PreviewAction),
+                    new STToolStripSeparator(),
+                    new STToolStripItem("Add Folder", AddFolderAction) { Enabled = ArchiveFile.CanAddFiles},
+                    new STToolStripItem("Add File", AddFileAction) { Enabled = ArchiveFile.CanAddFiles},
             };
 
             var toolStripList = ToolStrips.ToList();
@@ -211,6 +214,23 @@ namespace Toolbox.Library
             }
 
             return toolStripList.ToArray();
+        }
+
+        private void AddFolderAction(object sender, EventArgs args)
+        {
+            Nodes.Add(new ArchiveFolderNodeWrapper("NewFolder", ArchiveFile));
+        }
+
+        private void AddFileAction(object sender, EventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Raw Data (*.*)|*.*";
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                TreeHelper.AddFiles(this, ArchiveFile, ofd.FileNames);
+            }
         }
 
         public void UpdateFileNames()
@@ -508,8 +528,14 @@ namespace Toolbox.Library
                 new STToolStripItem("Replace Folder", ReplaceAction) { Enabled = ArchiveFile.CanReplaceFiles },
                 new STToolStripItem("Delete Folder", DeleteAction) { Enabled = ArchiveFile.CanDeleteFiles },
                 new STToolStripSeparator(),
-               new STToolStripItem("Add File", AddFileAction) { Enabled = ArchiveFile.CanAddFiles },
+                new STToolStripItem("Add Folder", AddFolderAction) { Enabled = ArchiveFile.CanAddFiles },
+                new STToolStripItem("Add File", AddFileAction) { Enabled = ArchiveFile.CanAddFiles },
             };
+        }
+
+        private void AddFolderAction(object sender, EventArgs args)
+        {
+            Nodes.Add(new ArchiveFolderNodeWrapper("NewFolder", ArchiveFile));
         }
 
         private void AddFileAction(object sender, EventArgs args)
