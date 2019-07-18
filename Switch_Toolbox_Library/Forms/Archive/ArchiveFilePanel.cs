@@ -89,11 +89,8 @@ namespace Toolbox.Library.Forms
                 return;
             }
 
+            ArchiveFileInfo.FileFormat = File;
             SetEditorForm(File);
-
-            //If the format isn't active we can just dispose it
-            if (ArchiveFileInfo.FileFormat == null)
-                File.Unload();
         }
 
         private bool CheckActiveType(Type type)
@@ -162,6 +159,8 @@ namespace Toolbox.Library.Forms
             }
             else
                 editor.FillEditor(ArchiveFileInfo.FileData);
+
+            ArchiveFileInfo.FileFormat = File;
         }
 
         private void NotifyFormatSwitched()
