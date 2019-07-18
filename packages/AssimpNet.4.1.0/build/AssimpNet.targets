@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <!-- Copy/clean native dependencies only for projects that don't output a *.deps.json file (netframework projects). Netcore projects will
+       copy out the native dependencies during publish, and during development debugging/running, the binaries will be loaded from the nuget cache.
+       Optionally, the property $(ForceCopyNativeAssimp) can be set to true to always run these targets. -->
+  
+  <Target Name="CopyNativeAssimp" AfterTargets="AfterBuild" Condition="'$(ForceCopyNativeAssimp)' == 'true' OR !Exists('$(TargetDir)$(AssemblyName).deps.json')">
+    <ItemGroup>
+        <NativeAssimpLibs Include="$(MSBuildThisFileDirectory)..\runtimes\**\*.*"/>
+    </ItemGroup>  
+    <Message Text="Copying native Assimp libraries..." Importance="high" />
+    <Message Text="$(TargetDir)$(AssemblyName).deps.json" Importance="high" />
+    <Copy SourceFiles="@(NativeAssimpLibs)" DestinationFolder="$(OutputPath)\runtimes\%(RecursiveDir)" />
+  </Target>
+ 
+  <Target Name="CleanNativeAssimp" BeforeTargets="BeforeClean" Condition="'$(ForceCopyNativeAssimp)' == 'true' OR !Exists('$(TargetDir)$(AssemblyName).deps.json')">
+    <Message Text="Cleaning native Assimp libraries..." Importance="high" />
+    <ItemGroup>
+	      <NativeAssimpLibsToDelete Include="$(TargetDir)runtimes\**\*assimp*.*;" />
+    </ItemGroup>
+    <Delete Files="@(NativeAssimpLibsToDelete)" />
+  </Target>
+</Project>

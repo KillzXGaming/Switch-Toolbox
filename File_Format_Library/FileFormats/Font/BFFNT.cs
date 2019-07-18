@@ -59,6 +59,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
+
             bffnt = new FFNT();
             bffnt.Read(new FileReader(stream));
 
@@ -232,9 +234,12 @@ namespace FirstPlugin
             reader.Dispose();
         }
 
+        internal int BlockCounter = 0;
         public void Write(FileWriter writer)
         {
             writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
+            BlockCounter = 1;
 
             writer.WriteSignature("FFNT");
             writer.Write(BOM);
@@ -243,8 +248,24 @@ namespace FirstPlugin
             writer.Write(Version);
             long _ofsFileSize = writer.Position;
             writer.Write(uint.MaxValue);
-            writer.Write((ushort)Blocks.Count);
+            long _ofsBlockNum = writer.Position;
+            writer.Write((ushort)0); //BlockCount
             writer.Write((ushort)0);
+
+            writer.SeekBegin(HeaderSize);
+            FontSection.Write(writer, this);
+
+            //Save Block Count
+            using (writer.TemporarySeek(_ofsBlockNum, SeekOrigin.Begin))
+            {
+                writer.Write((ushort)(BlockCounter + 1));
+            }
+
+            //Save File size
+            using (writer.TemporarySeek(_ofsFileSize, SeekOrigin.Begin))
+            {
+                writer.Write((uint)(writer.BaseStream.Length));
+            }
         }
 
         private string CheckSignature(FileReader reader)
@@ -610,6 +631,10 @@ namespace FirstPlugin
             uint cwdhOffset = reader.ReadUInt32();
             uint cmapOffset = reader.ReadUInt32();
 
+            //Add counter for TGLP
+            //Note the other counters are inside sections due to recusive setup
+            Header.BlockCounter += 1; 
+
             TextureGlyph = new TGLP();
             using (reader.TemporarySeek(tglpOffset - 8, SeekOrigin.Begin))
                 TextureGlyph.Read(reader);
@@ -625,8 +650,10 @@ namespace FirstPlugin
                 CodeMap.Read(reader, Header, CodeMaps);
         }
 
-        public void Write(FileWriter writer)
+        public void Write(FileWriter writer, FFNT header)
         {
+            long pos = writer.Position;
+
             writer.WriteSignature("FINF");
             writer.Write(uint.MaxValue);
             writer.Write(Type, true);
@@ -646,6 +673,26 @@ namespace FirstPlugin
             writer.Write(uint.MaxValue);
             long _ofsCMAP = writer.Position;
             writer.Write(uint.MaxValue);
+
+
+            //Save section size
+            long endPos = writer.Position;
+            using (writer.TemporarySeek(pos + 4, SeekOrigin.Begin))
+            {
+                writer.Write((uint)(endPos - pos));
+            }
+
+            //Save Texture Glyph
+            writer.WriteUint32Offset(_ofsTGLP, -8);
+            TextureGlyph.Write(writer, header);
+
+            //Save Character Widths
+            writer.WriteUint32Offset(_ofsCWDH, -8);
+            CharacterWidth.Write(writer, header);
+
+            //Save Code Maps
+            writer.WriteUint32Offset(_ofsCMAP, -8);
+            CodeMap.Write(writer, header);
         }
 
         public CWDH GetCharacterWidth(int index)
@@ -712,10 +759,11 @@ namespace FirstPlugin
             }
         }
 
-        public void Write(FileWriter writer)
+        public void Write(FileWriter writer, FFNT Header)
         {
+            long pos = writer.Position;
+
             writer.WriteSignature("TGLP");
-            long _ofsSectionSize = writer.Position;
             writer.Write(uint.MaxValue);
             writer.Write(CellWidth);
             writer.Write(CellHeight);
@@ -730,7 +778,11 @@ namespace FirstPlugin
             writer.Write(SheetHeight);
             long _ofsSheetBlocks = writer.Position;
             writer.Write(uint.MaxValue);
-            writer.Align(8192);
+
+            if (Header.Platform == FFNT.PlatformType.NX)
+                writer.Align(4096);
+            else
+                writer.Align(8192);
 
             long DataPosition = writer.Position;
             using (writer.TemporarySeek(_ofsSheetBlocks, SeekOrigin.Begin))
@@ -743,13 +795,12 @@ namespace FirstPlugin
                 writer.Write(SheetDataList[i]);
             }
 
+
             long SectionEndPosition = writer.Position;
-
             //End of section. Set the size
-
-            using (writer.TemporarySeek(_ofsSectionSize, SeekOrigin.Begin))
+            using (writer.TemporarySeek(pos + 4, SeekOrigin.Begin))
             {
-                writer.Write((uint)(SectionEndPosition - _ofsSectionSize - 4));
+                writer.Write((uint)(SectionEndPosition - pos));
             }
         }
 
@@ -882,9 +933,9 @@ namespace FirstPlugin
                         }
                         else
                         {
-                            char charCode = reader.ReadChar();
+                            ushort charCode = reader.ReadUInt16();
                             short index = reader.ReadInt16();
-                            if (index != -1) header.FontSection.CodeMapDictionary[charCode] = index;
+                            if (index != -1) header.FontSection.CodeMapDictionary[(char)charCode] = index;
 
                             codes[i] = charCode;
                             indexes[i] = index;
@@ -908,6 +959,81 @@ namespace FirstPlugin
                 reader.SeekBegin(pos + SectionSize);
         }
 
+        public void Write(FileWriter writer, FFNT Header)
+        {
+            Header.BlockCounter += 1;
+
+            long pos = writer.Position;
+
+            writer.WriteSignature("CMAP");
+            writer.Write(uint.MaxValue); //Section Size
+            if (Header.Platform == FFNT.PlatformType.NX)
+            {
+                writer.Write((uint)CharacterCodeBegin);
+                writer.Write((uint)CharacterCodeEnd);
+            }
+            else
+            {
+                writer.Write((ushort)CharacterCodeBegin);
+                writer.Write((ushort)CharacterCodeEnd);
+            }
+
+            writer.Write(MappingMethod, true);
+            writer.Seek(2);
+
+            long DataPos = writer.Position;
+            writer.Write(0); //Next Section Offset
+
+            //Write the data
+            switch (MappingMethod)
+            {
+                case Mapping.Direct:
+                    writer.Write(((CMAPDirect)MappingData).Offset);
+                    break;
+                case Mapping.Table:
+                    for (int i = 0; i < ((CMAPIndexTable)MappingData).Table.Length; i++)
+                    {
+                        writer.Write(((CMAPIndexTable)MappingData).Table[i]);
+                    }
+                    break;
+                case Mapping.Scan:
+                    writer.Write((ushort)((CMAPScanMapping)MappingData).Codes.Length);
+                    if (Header.Platform == FFNT.PlatformType.NX)
+                        writer.Seek(2); //Padding
+
+                    for (int i = 0; i < ((CMAPScanMapping)MappingData).Codes.Length; i++)
+                    {
+                        if (Header.Platform == FFNT.PlatformType.NX)
+                        {
+                            writer.Write((uint)((CMAPScanMapping)MappingData).Codes[i]);
+                            writer.Write(((CMAPScanMapping)MappingData).Indexes[i]);
+                            writer.Seek(2); //Padding
+                        }
+                        else
+                        {
+                            writer.Write((ushort)((CMAPScanMapping)MappingData).Codes[i]);
+                            writer.Write(((CMAPScanMapping)MappingData).Indexes[i]);
+                        }
+                    }
+                    break;
+            }
+            writer.Align(4); //Padding
+
+
+            //Save section size
+            long endPos = writer.Position;
+            using (writer.TemporarySeek(pos + 4, SeekOrigin.Begin))
+            {
+                writer.Write((uint)(endPos - pos));
+            }
+
+            if (NextCodeMapSection != null)
+            {
+                writer.WriteUint32Offset(DataPos, -8);
+                NextCodeMapSection.Write(writer, Header);
+            }
+        }
+
         //From https://github.com/dnasdw/3dsfont/blob/79e6f4ab6676d82fdcd6c0f79d9b0d7a343f82b5/src/bcfnt2charset/bcfnt2charset.cpp#L3
         //Todo add the rest of the encoding types
         public char CodeToU16Code(FINF.CharacterCode characterCode, ushort code)
@@ -924,11 +1050,6 @@ namespace FirstPlugin
             }
 
             return (char)code;
-        }
-
-        public void Write()
-        {
-
         }
     }
 
@@ -954,9 +1075,19 @@ namespace FirstPlugin
 
             reader.ReadSignature(4, "CWDH");
             SectionSize = reader.ReadUInt32();
-            EndIndex = reader.ReadUInt16();
             StartIndex = reader.ReadUInt16();
+            EndIndex = reader.ReadUInt16();
             uint NextWidthSectionOffset = reader.ReadUInt32();
+
+            for (ushort i = StartIndex; i <= EndIndex; i++)
+            {
+                var entry = new CharacterWidthEntry();
+                entry.LeftWidth = reader.ReadSByte();
+                entry.GlyphWidth = reader.ReadByte();
+                entry.Width = reader.ReadByte();
+                WidthEntries.Add(entry);
+            }
+
             if (NextWidthSectionOffset != 0)
             {
                 reader.SeekBegin((int)NextWidthSectionOffset - 8);
@@ -966,6 +1097,43 @@ namespace FirstPlugin
             }
             else
                 reader.SeekBegin(pos + SectionSize);
+        }
+
+        public void Write(FileWriter writer, FFNT Header)
+        {
+            Header.BlockCounter += 1;
+
+            long pos = writer.Position;
+
+            writer.WriteSignature("CWDH");
+            writer.Write(uint.MaxValue); //Section Size
+            writer.Write(StartIndex);
+            writer.Write(EndIndex);
+
+            long DataPos = writer.Position;
+            writer.Write(0); //NextOffset
+
+            for (int i = 0; i < WidthEntries.Count; i++)
+            {
+                writer.Write(WidthEntries[i].LeftWidth);
+                writer.Write(WidthEntries[i].GlyphWidth);
+                writer.Write(WidthEntries[i].Width);
+            }
+
+            writer.Align(4);
+
+            if (NextWidthSection != null)
+            {
+                writer.WriteUint32Offset(DataPos, -8);
+                NextWidthSection.Write(writer, Header);
+            }
+
+            //Save section size
+            long endPos = writer.Position;
+            using (writer.TemporarySeek(pos + 4, SeekOrigin.Begin))
+            {
+                writer.Write((uint)(endPos - pos));
+            }
         }
     }
 

@@ -1,0 +1,209 @@
+----------------------------------------------------------------------
+CHANGELOG
+----------------------------------------------------------------------
+
+4.1.0 (10-28-2018)
+
+  - Updated to target .Net Standard 1.3 (additional .Net 3.5 and .Net 4 targets)
+  - Removed old IL patcher to use new MemoryInterop.ILPatcher build time dependency (allows us to build cross-platform)
+  - Rewrote Sample application to be a .Net Core app that uses the Veldrid low-level graphics library for rendering
+  - Added x64 linux native binary, x64 macOS native binary
+		- Tested on Ubuntu 18.04 and MacOS 10.13 (High Sierra)
+  - Several fixes and updates to target latest Assimp release
+  - Ported over "UnmanagedLibrary" abstract code and refactored AssimpLibrary
+  - Added "ThrowOnLoadFailure" to configure getting back a "false" if native library fails to load or throw an exception (the default). Mono should no longer
+    throw a "NotImplemented" exception because of trying to get the error code from windows.
+  - !!Breaking Change!! Native DLLs are deployed differently and resolved at runtime differently
+		- Removed "DefaultLibraryPathXXBit" properties from AssimpLibrary, they are meaningless now (and probably not used)
+		- Introduced "UnmanagedLibraryResolver" that lets you set the following to completely configure native DLL loading:
+				1. Multiple probing paths
+				2. Multiple fallback library names (e.g. versioned binaries)
+				3. Override name if the default native library name is not good enough for your tastes.
+		- Search order of the native DLL is as follows:
+				1. Search user-specified probing paths
+				2. Search {AppBaseDirectory}/runtimes/{RID}/native/
+				3. Search {AppBaseDirectory}/
+				4. Search nuget cache based on assembly name/informational version ({UserProfile}/.nuget/packages/AssimpNet/{PackageVersion}/runtimes/{RID}/native/)
+				5. If all above failed, return the given name of the DLL (or override name) and let the OS try and find it (different OS' may have different strategies).
+		- The resolver is only used in AssimpLibrary.LoadLibrary(). The other two overloads still take in a user-supplied path/to/your/DLL.
+		- Native DLLs are now deployed in the "runtimes" folder of the nuget package. This means they are now picked up as dependencies by netcore (*.deps.json)
+		  and automatically get copied during the "dotnet publish" command. During development, the system will try and locate the native DLLs in the nuget cache
+		  (.net framework 3.5/4.0 targets still use the MSBuild targets file to copy the runtime folder to the output folder). The folder structure looks like this:
+				- runtimes/win-x64/native/assimp.dll
+				- runtimes/win-x86/native/assimp.dll
+				- runtimes/osx-x64/native/libassimp.dylib
+				- runtimes/linux-x64/native/libassimp.so
+		- All native binaries are named "assimp" or "libassimp" depending on platform, since we're putting them in "well known" architecture folders, no need to have unique names
+  - [Source Only] Added a Unity script that will make it easier for users to load the native DLLs when running in Editor/Standalone Unity 3D
+    - Build outputs a folder called "UnityPlugin" which you can drag and drop into the Unity Editor. A package will be available in the Asset Store as well.
+
+
+Targets Assimp 4.1.0
+
+
+
+======================================================================
+
+
+
+
+3.3.2 (12-26-2016)
+
+  - Fixed up nuget package build targets.
+  - Added donated mac library implementation (haven't personally tested)
+  - Removed null/empty string checks for import format hint for reading streams - if you don't supply
+    a hint, Assimp will automatically try to detect what format it is
+  - Added logging when an invalid export format ID is encountered -- be sure to use "collada" and not "dae".
+  - Added additional null/empty checks if adding a material property with an invalid fully qualified name.
+
+Targets Assimp 3.1.1
+
+
+
+======================================================================
+
+
+
+
+3.3 (07-3-2014)
+
+  - Upgraded to Assimp 3.1.1 - now with FBX support!
+  - Added matrix property configuration type
+  - Added root node transformation property configuration for use with "PreTransformVertices" post process step
+  - Added collada "ignore up direction" property configuration
+  - Added various FBX importer property configurations
+  - Added global property configuration to disable bone visualization when a model only has animations and no geometry
+  - Added support for Metadata objects on nodes
+  - Fixed issue with marshaling mesh names, AiMesh and AiAnimMesh are now blittable. All unmanaged structs are blittable
+    and .NET runtime marshaling is avoided due to issues with marshaling fixed buffers in non-blittable structures.
+
+Happy Fourth Of July!
+
+Targets Assimp 3.1.1
+
+
+
+======================================================================
+
+
+
+
+3.2 (03-14-2013)
+
+  - Added IOSystem/IOStream support, allowing for custom IO handling. An IOSystem can be registered to an AssimpImporter,
+    which is used during ImportFile and ConvertFile APIs. It currently is not supported for ImportFileFromStream APIs.
+  - Fixed marshalling of String material property values
+  - Fixed aiGetTexture function signature to take in an array of 2 UV wrapmodes
+
+Targets Assimp 3.0.1270
+
+
+
+======================================================================
+
+
+
+
+3.1 (01-01-2013)
+
+  - Added AnyCPU support, replaced AssimpMethods with AssimpLibrary that dynamically loads/unloads the unmanaged Assimp DLL
+    optionally, a custom file path can be specified to load the Assimp DLL. By default, the 32 or 64 bit Assimp DLL is loaded from the
+    same directory that the AssimpNet DLL is located in, depending on the bitness of the process.
+  
+  - Added missing properties for PreState/PostState in NodeAnimationChannel
+  
+
+Targets Assimp 3.0.1270
+
+
+
+======================================================================
+
+
+
+
+3.0 (11-11-2012)
+
+  - Upgraded to Assimp3.0
+  
+  - Added Convert API to AssimpImporter to utilize new Export functionality
+  
+  - Several fixes to Matrix-Quaternion structures
+  
+
+Targets Assimp 3.0.1270
+
+
+
+======================================================================
+
+
+
+ 
+2.1.2.1 Refresh (7-27-2012)
+
+	- Added root transformations to the importer - can specify Scale, XRotation, YRotation, and ZRotation. Can use these properties to bake the
+	  transformation by specifying the "PreTransformVertices" post process flag.
+
+	- Added missing OffsetMatrix property to Bone
+
+
+Targets Assimp 2.0.854
+
+
+
+======================================================================
+
+
+
+
+2.1.2 (4-4-2012)
+
+	- Added RemoveConfigs() method to AssimpImporter
+	
+	- Fixed an occassional crash when mashalling string material properties
+
+
+Targets Assimp 2.0.854
+
+
+
+======================================================================
+
+
+
+ 
+2.1 (1-28-2012)
+
+	- Added Matrix3x3, Matrix4x4 methods.
+	
+	- Fixed several bugs in Quaternion.
+
+	- Added unit tests for Matrix3x3, Matrix4x4, Quaternion.
+
+	- Added "ImportFileFromStream" AssimpMethod and equivalent methods to the AssimpImporter: 
+
+	   This is the implementation for "aiImportFileFromMemory".
+
+
+	- Added a "ReadStreamFully" method to MemoryHelper.
+
+	- Added "Importer Settings" config classes.
+
+	- Added a sample a port of Assimp's simple textured OpenGL sample using OpenTK.
+
+
+Targets Assimp 2.0.854
+
+
+
+======================================================================
+
+
+
+2.0 (1-22-2012)
+
+	- Initial release, core API is finished.
+
+
+Targets Assimp 2.0.854

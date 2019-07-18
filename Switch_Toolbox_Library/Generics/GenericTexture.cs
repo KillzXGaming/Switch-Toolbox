@@ -666,7 +666,12 @@ namespace Toolbox.Library
             Export(FileName);
         }
 
-        public void ExportArrayImage(int ArrayIndex = 0)
+        public class ImageExportArguments
+        {
+            public bool FlipY = false;
+        }
+
+        public void ExportArrayImage(int ArrayIndex = 0, ImageExportArguments Arguments = null)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = Text;
@@ -675,11 +680,11 @@ namespace Toolbox.Library
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Export(sfd.FileName, true, false, ArrayIndex);
+                Export(sfd.FileName, true, false, ArrayIndex, 0, Arguments);
             }
         }
 
-        public void ExportImage()
+        public void ExportImage(ImageExportArguments Arguments = null)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = Text;
@@ -688,12 +693,12 @@ namespace Toolbox.Library
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Export(sfd.FileName);
+                Export(sfd.FileName, false, false, 0,0, Arguments);
             }
         }
 
         public void Export(string FileName, bool ExportSurfaceLevel = false,
-            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0, ImageExportArguments Arguments = null)
         {
             string ext = Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -701,18 +706,19 @@ namespace Toolbox.Library
             switch (ext)
             {
                 case ".dds":
-                    SaveDDS(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
+                    SaveDDS(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel, Arguments);
                     break;
                 case ".astc":
-                    SaveASTC(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
+                    SaveASTC(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel, Arguments);
                     break;
                 default:
-                    SaveBitMap(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
+                    SaveBitMap(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel, Arguments);
                     break;
             }
         }
         public void SaveASTC(string FileName, bool ExportSurfaceLevel = false,
-            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0,
+            ImageExportArguments Arguments = null)
         {
             List<Surface> surfaces = null;
             if (ExportSurfaceLevel)
@@ -731,12 +737,14 @@ namespace Toolbox.Library
             File.WriteAllBytes(FileName, atsc.Save());
         }
         public void SaveTGA(string FileName, bool ExportSurfaceLevel = false,
-            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0,
+            ImageExportArguments Arguments = null)
         {
            
         }
         public void SaveBitMap(string FileName, bool ExportSurfaceLevel = false,
-            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0,
+            ImageExportArguments Arguments = null)
         {
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Exporting Image Data...";
@@ -785,6 +793,10 @@ namespace Toolbox.Library
             {
                 BitmapExtension.SetChannel(bitMap, RedChannel, GreenChannel, BlueChannel, AlphaChannel);
             }
+
+            if (Arguments != null && Arguments.FlipY)
+                bitMap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
             bitMap.Save(FileName);
             bitMap.Dispose();
 
@@ -792,7 +804,8 @@ namespace Toolbox.Library
             progressBar.Close();
         }
         public void SaveDDS(string FileName, bool ExportSurfaceLevel = false,
-            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
+            bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0, 
+            ImageExportArguments Arguments = null)
         {
             List<Surface> surfaces = null;
             if (ExportSurfaceLevel)

@@ -8,21 +8,43 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
+using Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
-    public partial class BffntEditor : STUserControl
+    public class ImagePaenl : STPanel
+    {
+        public ImagePaenl()
+        {
+            this.SetStyle(
+            ControlStyles.AllPaintingInWmPaint |
+            ControlStyles.UserPaint |
+            ControlStyles.DoubleBuffer,
+            true);
+        }
+    }
+
+    public partial class BffntEditor : STUserControl, IFIleEditor
     {
         public BffntEditor()
         {
             InitializeComponent();
         }
 
+
+        public List<IFileFormat> GetFileFormats()
+        {
+            return new List<IFileFormat>() { FileFormat };
+        }
+
         private Image PanelImage { get; set; }
 
         private FFNT ActiveFile;
+        private BFFNT FileFormat;
+
         public void LoadFontFile(BFFNT fontFile)
         {
+            FileFormat = fontFile;
             ActiveFile = fontFile.bffnt;
 
             fontTypeCB.Bind(typeof(FINF.FontType), ActiveFile.FontSection, "Type");
@@ -79,7 +101,16 @@ namespace FirstPlugin.Forms
                 {
                     PanelImage = image.GetBitmap();
                 }
+
+                if (PanelImage != null)
+                {
+                    PanelImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                }
+
+                FillCells();
             }
+
+            imagePanel.Refresh();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -99,10 +130,15 @@ namespace FirstPlugin.Forms
                 var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
                 bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
 
-                if(IsBntx)
-                    image.ExportArrayImage(ImageIndex);
+                var args = new STGenericTexture.ImageExportArguments()
+                {
+                    FlipY = true,
+                };
+
+                if (IsBntx)
+                    image.ExportArrayImage(ImageIndex, args);
                 else
-                    image.ExportImage();
+                    image.ExportImage(args);
             }
         }
 
@@ -116,9 +152,104 @@ namespace FirstPlugin.Forms
             {
                 Color = Color.Cyan;
             }
+
+            public bool IsHit(int X, int Y)
+            {
+                if (DrawnRectangle == null) return false;
+
+                if ((X > DrawnRectangle.X) && (X < DrawnRectangle.X + DrawnRectangle.Width) &&
+                    (Y > DrawnRectangle.Y) && (Y < DrawnRectangle.Y + DrawnRectangle.Height))
+                    return true;
+                else
+                    return false;
+            }
+
+            public bool IsSelected { get; private set; }
+
+            public void Select()
+            {
+                Color = Color.Blue;
+                IsSelected = true;
+            }
+
+            public void Unselect()
+            {
+                Color = Color.Cyan;
+                IsSelected = false;
+            }
         }
 
         private FontCell[] FontCells;
+
+        private void LoadGlyphs()
+        {
+            var textureGlyph = ActiveFile.FontSection.TextureGlyph;
+
+            for (int c = 0; c < (int)textureGlyph.ColumnCount; c++)
+            {
+                for (int r = 0; r < (int)textureGlyph.RowCount; r++)
+                {
+                }
+            }
+        }
+
+        public GlyphImage[] GlyphImages;
+
+        public class GlyphImage
+        {
+            public Image Image { get; set; }
+        }
+
+        private void FillCells()
+        {
+            List<GlyphImage> images = new List<GlyphImage>();
+            List<FontCell> Cells = new List<FontCell>();
+
+            var textureGlyph = ActiveFile.FontSection.TextureGlyph;
+            var fontSection = ActiveFile.FontSection;
+
+            PanelImage = BitmapExtension.Resize(PanelImage, textureGlyph.SheetWidth, textureGlyph.SheetHeight);
+
+            Console.WriteLine($"ColumnCount {textureGlyph.ColumnCount}");
+            Console.WriteLine($"RowCount {textureGlyph.RowCount}");
+
+            int y = 0;
+            for (int c = 0; c < (int)textureGlyph.RowCount; c++)
+            {
+                int x = 0;
+                for (int r = 0; r < (int)textureGlyph.ColumnCount; r++)
+                {
+                    var rect = new Rectangle(x, y, textureGlyph.CellWidth, textureGlyph.CellHeight);
+
+                    Cells.Add(new FontCell()
+                    {
+                        DrawnRectangle = rect,
+                    });
+
+                 /*   var glyphImage = new GlyphImage();
+                    glyphImage.Image = CopyRegionIntoImage(bitmap, rect);
+                    glyphImage.Image.Save($"Glpyh{c} {r}.png");
+                    images.Add(glyphImage);*/
+
+
+                    x += (int)textureGlyph.CellWidth;
+                }
+                y += (int)textureGlyph.CellHeight;
+            }
+
+            GlyphImages = images.ToArray();
+            FontCells = Cells.ToArray();
+        }
+
+        private static Bitmap CopyRegionIntoImage(Image srcBitmap, Rectangle srcRegion)
+        {
+            Bitmap destBitmap = new Bitmap(srcRegion.Width, srcRegion.Height);
+            using (Graphics grD = Graphics.FromImage(destBitmap))
+            {
+                grD.DrawImage(srcBitmap, new Rectangle(0,0,destBitmap.Width, destBitmap.Height), srcRegion, GraphicsUnit.Pixel);
+            }
+            return destBitmap;
+        }
 
         private void imagePanel_Paint(object sender, PaintEventArgs e)
         {
@@ -130,36 +261,66 @@ namespace FirstPlugin.Forms
 
             var textureGlyph = ActiveFile.FontSection.TextureGlyph;
 
-            FontCells = new FontCell[textureGlyph.ColumnCount * textureGlyph.RowCount];
+             if (FontCells == null)
+                return;
 
-            int CellPosY = 0;
-            for (int c = 0; c < (int)textureGlyph.ColumnCount; c++)
-            {
-                int CellPosX = 0;
-                for (int r = 0; r < (int)textureGlyph.RowCount; r++)
+            for (int i = 0; i < FontCells.Length; i++) {
+                if (FontCells[i].IsSelected)
                 {
-                    int Index = c + r;
+                    SolidBrush semiTransBrush = new SolidBrush(Color.FromArgb(70, 0, 255, 255));
 
-                    FontCells[Index] = new FontCell();
-                    FontCells[Index].DrawnRectangle = new Rectangle()
-                    {
-                        X = CellPosX,
-                        Y = CellPosY,
-                        Width = (int)textureGlyph.CellWidth,
-                        Height = (int)textureGlyph.CellHeight,
-                    };
-
-                    graphics.DrawRectangle(new Pen(FontCells[Index].Color), FontCells[Index].DrawnRectangle);
-                    CellPosX += (int)textureGlyph.CellWidth;
+                    graphics.DrawRectangle(new Pen(FontCells[i].Color, 1), FontCells[i].DrawnRectangle);
+                    graphics.FillRectangle(semiTransBrush, FontCells[i].DrawnRectangle);
                 }
-                CellPosY += (int)textureGlyph.CellHeight;
             }
+
+            graphics.ScaleTransform(textureGlyph.SheetWidth, textureGlyph.SheetHeight);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (PanelImage != null)
                 Clipboard.SetImage(PanelImage);
+        }
+
+        bool isMouseDown = false;
+        private void imagePanel_MouseDown(object sender, MouseEventArgs e) {
+            isMouseDown = true;
+        }
+
+        private void imagePanel_MouseUp(object sender, MouseEventArgs e) {
+            isMouseDown = false;
+        }
+
+        private void imagePanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (FontCells != null)
+            {
+                for (int i = 0; i < FontCells.Length; i++)
+                {
+                    if (FontCells[i] == null) continue;
+
+                    if (FontCells[i].IsHit(e.X, e.Y))
+                        FontCells[i].Select();
+                    else 
+                        FontCells[i].Unselect();
+                }
+
+                imagePanel.Refresh();
+            }
+        }
+
+        private void imagePanel_MouseLeave(object sender, EventArgs e)
+        {
+            isMouseDown = false;
+
+            if (FontCells != null)
+            {
+                for (int i = 0; i < FontCells.Length; i++)
+                    FontCells[i].Unselect();
+
+                imagePanel.Refresh();
+            }
         }
     }
 }
