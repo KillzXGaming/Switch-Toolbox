@@ -232,13 +232,20 @@ namespace Toolbox.Library.Forms
             bool IsTextEditor = GetEditor() == 3;
 
             var File = ArchiveFileInfo.FileFormat;
-            if (IsTextEditor && File != null && IsConvertableText(File.GetType()) && ((IConvertableTextFormat)File).CanConvertBack)
+            if (IsTextEditor && File != null && IsConvertableText(File.GetType()))
             {
-                TextEditor editor = (TextEditor)GetActiveEditor(typeof(TextEditor));
-                ((IConvertableTextFormat)File).ConvertFromString(editor.GetText());
+                if (((IConvertableTextFormat)File).CanConvertBack)
+                {
+                    TextEditor editor = (TextEditor)GetActiveEditor(typeof(TextEditor));
+                    ((IConvertableTextFormat)File).ConvertFromString(editor.GetText());
 
-                ArchiveFileInfo.SaveFileFormat();
-                MessageBox.Show($"Saved {File.FileName} to archive!");
+                    ArchiveFileInfo.SaveFileFormat();
+                    MessageBox.Show($"Saved {File.FileName} to archive!");
+                }
+                else
+                {
+                    MessageBox.Show($"File format does not support converting back from type: {((IConvertableTextFormat)File).TextFileType}!");
+                }
             }
             else if (File != null && File.CanSave)
             {
