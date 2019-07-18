@@ -9,7 +9,7 @@ using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 
-namespace FirstPlugin.New
+namespace FirstPlugin
 {
     public class SARC : IArchiveFile, IFileFormat, IContextMenuNode
     {

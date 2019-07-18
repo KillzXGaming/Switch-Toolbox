@@ -179,6 +179,8 @@ namespace Toolbox.Library
     //Wrapper for the archive file itself
     public class ArchiveRootNodeWrapper : ArchiveBase, IContextMenuNode
     {
+        public List<ArchiveFileWrapper> FileNodes = new List<ArchiveFileWrapper>();
+
         public virtual object PropertyDisplay { get; set; }
 
         public ArchiveRootNodeWrapper(string text, IArchiveFile archiveFile) 
@@ -210,6 +212,29 @@ namespace Toolbox.Library
             return toolStripList.ToArray();
         }
 
+        public void UpdateFileNames()
+        {
+            if (!ArchiveFile.CanRenameFiles)
+                return;
+
+            for (int i = 0; i < FileNodes.Count; i++)
+                FileNodes[i].ArchiveFileInfo.FileName = SetFullath(FileNodes[i], this);
+        }
+
+        private static string SetFullath(TreeNode node, TreeNode root)
+        {
+            string nodePath = node.FullPath;
+            int startIndex = nodePath.IndexOf(root.Text);
+            if (startIndex > 0)
+                nodePath = nodePath.Substring(startIndex);
+
+            string slash = Path.DirectorySeparatorChar.ToString();
+            string slashAlt = Path.AltDirectorySeparatorChar.ToString();
+
+            string SetPath = nodePath.Replace(root.Text + slash, string.Empty).Replace(slash ?? "", slashAlt);
+            return !(SetPath == string.Empty) ? SetPath : node.Text;
+        }
+
         private void EnableContextMenu(ToolStripItemCollection Items, string Key, bool Enabled)
         {
             foreach (ToolStripItem item in Items)
@@ -221,6 +246,8 @@ namespace Toolbox.Library
 
         private void SaveAction(object sender, EventArgs args)
         {
+            UpdateFileNames();
+
             //Archive files are IFIleFormats
             var FileFormat = ((IFileFormat)ArchiveFile);
 
@@ -413,6 +440,7 @@ namespace Toolbox.Library
                                 wrapperFile.Name = nodeName;
                                 parentNode.Nodes.Add(wrapperFile);
                                 parentNode = wrapperFile;
+                                FileNodes.Add(wrapperFile);
                             }
                             else
                             {
@@ -531,7 +559,10 @@ namespace Toolbox.Library
             RenameDialog dialog = new RenameDialog();
             dialog.SetString(Text);
 
-            if (dialog.ShowDialog() == DialogResult.OK) { Text = dialog.textBox1.Text; }
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Text = dialog.textBox1.Text;
+            }
         }
 
         private void ReplaceAction(object sender, EventArgs args)
