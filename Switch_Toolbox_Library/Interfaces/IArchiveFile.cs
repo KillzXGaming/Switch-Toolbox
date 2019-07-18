@@ -27,8 +27,9 @@ namespace Toolbox.Library
         bool CanReplaceFiles { get; } 
         bool CanDeleteFiles { get; }
 
-        IEnumerable<ArchiveFileInfo> Files { get; set; }
+        IEnumerable<ArchiveFileInfo> Files { get; }
 
+        void ClearFiles();
         bool AddFile(ArchiveFileInfo archiveFileInfo);
         bool DeleteFile(ArchiveFileInfo archiveFileInfo);
     }
@@ -296,7 +297,7 @@ namespace Toolbox.Library
                 progressBar.Task = "Repacking Files...";
                 progressBar.Refresh();
 
-                (ArchiveFile.Files as List<ArchiveFileInfo>)?.Clear();
+                ArchiveFile.ClearFiles();
 
                 for (int i = 0; i < ProccessedFiles.Count; i++)
                 {

@@ -46,13 +46,10 @@ namespace FirstPlugin
 
         public List<INode> nodes = new List<INode>();
 
-        public IEnumerable<ArchiveFileInfo> Files
-        {
-            get { return null; }
-            set { }
-        }
-
+        public IEnumerable<ArchiveFileInfo> Files => null;
         public IEnumerable<INode> Nodes => nodes;
+
+        public void ClearFiles() { nodes.Clear(); }
 
         public string Name
         {

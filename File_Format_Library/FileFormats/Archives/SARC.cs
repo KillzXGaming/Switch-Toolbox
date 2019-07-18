@@ -45,11 +45,9 @@ namespace FirstPlugin
         public bool CanDeleteFiles { get; set; } = true;
 
         public List<SarcEntry> files = new List<SarcEntry>();
-        public IEnumerable<ArchiveFileInfo> Files
-        {
-            get { return files; }
-            set { }
-        }
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public void ClearFiles() { files.Clear(); }
 
         public SarcData sarcData;
         public string SarcHash;

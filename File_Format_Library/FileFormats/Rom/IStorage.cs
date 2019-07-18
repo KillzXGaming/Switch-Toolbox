@@ -35,11 +35,9 @@ namespace FirstPlugin
         public bool CanDeleteFiles { get; set; }
 
         public List<NSP.FileEntry> files = new List<NSP.FileEntry>();
-        public IEnumerable<ArchiveFileInfo> Files
-        {
-            get { return files; }
-            set { }
-        }
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public void ClearFiles() { files.Clear(); }
 
         public bool Identify(System.IO.Stream stream)
         {
