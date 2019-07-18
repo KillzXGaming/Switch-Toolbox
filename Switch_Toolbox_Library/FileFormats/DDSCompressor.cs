@@ -237,7 +237,7 @@ namespace Toolbox.Library
             int W = (width + 3) / 4;
             int H = (height + 3) / 4;
 
-            byte[] Output = new byte[W * H * 64];
+            byte[] Output = new byte[width * height * 4];
 
             for (int Y = 0; Y < H; Y++)
             {
@@ -430,6 +430,7 @@ namespace Toolbox.Library
                     }
                 }
             }
+
             return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
         }
         public static unsafe byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float AlphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)

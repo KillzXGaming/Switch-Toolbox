@@ -348,6 +348,8 @@ namespace FirstPlugin
             Formats.Add(typeof(BMD));
             Formats.Add(typeof(GCDisk));
             Formats.Add(typeof(TPL));
+            Formats.Add(typeof(BFTTF));
+
             //  Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use
