@@ -1007,7 +1007,7 @@ namespace FirstPlugin
                         {
                             writer.Write((uint)((CMAPScanMapping)MappingData).Codes[i]);
                             writer.Write(((CMAPScanMapping)MappingData).Indexes[i]);
-                            writer.Seek(2); //Padding
+                            writer.Write((ushort)0); //Padding
                         }
                         else
                         {
