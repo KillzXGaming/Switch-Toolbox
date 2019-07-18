@@ -35,7 +35,53 @@ namespace FirstPlugin
             get
             {
                 List<Type> types = new List<Type>();
+                types.Add(typeof(MenuExt));
                 return types.ToArray();
+            }
+        }
+
+        class MenuExt : IFileMenuExtension
+        {
+            public STToolStripItem[] NewFileMenuExtensions => newFileMenu;
+            public STToolStripItem[] NewFromFileMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => null;
+            public STToolStripItem[] TitleBarExtensions => null;
+            public STToolStripItem[] CompressionMenuExtensions => null;
+            public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
+
+            STToolStripItem[] newFileMenu = new STToolStripItem[2];
+            STToolStripItem[] newFromFileMenu = new STToolStripItem[1];
+
+            public MenuExt()
+            {
+                newFileMenu[0] = new STToolStripItem("SARC (Wii U)", CreateNewBigEndianSarc);
+                newFileMenu[1] = new STToolStripItem("SARC (Switch/3DS)", CreateNewLittleEndianSarc);
+            }
+
+            private void CreateNewBigEndianSarc(object sender, EventArgs e)
+            {
+                SARC sarc = new SARC();
+                sarc.IFileInfo = new IFileInfo();
+                sarc.FileName = "NewArchive.szs";
+                CreateNewSARC(sarc, true);
+
+                ObjectEditor editor = new ObjectEditor(sarc);
+                editor.Text = "NewArchive.szs";
+                LibraryGUI.CreateMdiWindow(editor);
+            }
+
+            private void CreateNewLittleEndianSarc(object sender, EventArgs e)
+            {
+                SARC sarc = new SARC();
+                sarc.IFileInfo = new IFileInfo();
+                sarc.FileName = "NewArchive.szs";
+                CreateNewSARC(sarc, false);
+
+                ObjectEditor editor = new ObjectEditor(sarc);
+                editor.Text = "NewArchive.szs";
+                LibraryGUI.CreateMdiWindow(editor);
             }
         }
 
@@ -50,7 +96,22 @@ namespace FirstPlugin
         public void ClearFiles() { files.Clear(); }
 
         public SarcData sarcData;
-        public string SarcHash;
+
+        public static void CreateNewSARC(SARC sarc, bool IsBigEndian)
+        {
+            sarc.CanSave = true;
+            sarc.IFileInfo.UseEditMenu = true;
+
+            sarc.sarcData = new SarcData();
+            sarc.sarcData.HashOnly = false;
+            sarc.sarcData.Files = new Dictionary<string, byte[]>();
+
+            if (IsBigEndian)
+            sarc.sarcData.endianness = Syroot.BinaryData.ByteOrder.BigEndian;
+            else
+                sarc.sarcData.endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
+        }
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
@@ -61,7 +122,6 @@ namespace FirstPlugin
             sarcData.HashOnly = SzsFiles.HashOnly;
             sarcData.Files = SzsFiles.Files;
             sarcData.endianness = GetByteOrder(stream);
-            SarcHash = Utils.GenerateUniqueHashID();
 
             foreach (var file in SzsFiles.Files)
                 files.Add(SetupFileEntry(file.Key, file.Value));

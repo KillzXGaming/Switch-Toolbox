@@ -135,12 +135,17 @@ namespace Toolbox.Library
                 string FileName = Path.GetFileName(Files[i]);
 
                 //Don't add the root file name
-                if (parentNode.FullPath != string.Empty || !(parentNode is ArchiveRootNodeWrapper))
+                if (parentNode.FullPath != string.Empty && !(parentNode is ArchiveRootNodeWrapper))
                 {
-                    File.ArchiveFileInfo.FileName = Path.Combine(parentNode.FullPath, FileName);
+                    string FullPath = Path.Combine(parentNode.FullPath, FileName);
+                    FullPath = FullPath.Substring(FullPath.IndexOf("/", 1) + 1);
+                    //       FullPath.Substring(Path.GetPathRoot(FullPath).Length);
+                    Console.WriteLine($"FullPath {FullPath}");
+                    File.ArchiveFileInfo.FileName = FullPath;
                 }
                 else
                     File.ArchiveFileInfo.FileName = FileName;
+
 
                 bool HasAddedFile = archiveFile.AddFile(File.ArchiveFileInfo);
 
