@@ -116,7 +116,6 @@ namespace Toolbox.Library.Forms
                     Editor = ActiveEditor;
 
                 ((TreeNodeFile)fileFormat).FillEditor(Editor);
-
             }
 
             Type objectType = fileFormat.GetType();

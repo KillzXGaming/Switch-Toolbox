@@ -30,9 +30,9 @@
         {
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.saveBtn = new Toolbox.Library.Forms.STButton();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
-            this.saveBtn = new Toolbox.Library.Forms.STButton();
             this.stPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +57,17 @@
             this.stPanel2.Size = new System.Drawing.Size(369, 27);
             this.stPanel2.TabIndex = 1;
             // 
+            // saveBtn
+            // 
+            this.saveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveBtn.Location = new System.Drawing.Point(249, 0);
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(105, 23);
+            this.saveBtn.TabIndex = 2;
+            this.saveBtn.Text = "Save";
+            this.saveBtn.UseVisualStyleBackColor = false;
+            this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
+            // 
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
@@ -79,22 +90,12 @@
             this.stComboBox1.TabIndex = 0;
             this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);
             // 
-            // saveBtn
-            // 
-            this.saveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.saveBtn.Location = new System.Drawing.Point(249, 0);
-            this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(105, 23);
-            this.saveBtn.TabIndex = 2;
-            this.saveBtn.Text = "Save";
-            this.saveBtn.UseVisualStyleBackColor = false;
-            // 
             // ArchiveFilePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.stPanel2);
             this.Controls.Add(this.stPanel1);
+            this.Controls.Add(this.stPanel2);
             this.Name = "ArchiveFilePanel";
             this.Size = new System.Drawing.Size(369, 309);
             this.stPanel2.ResumeLayout(false);

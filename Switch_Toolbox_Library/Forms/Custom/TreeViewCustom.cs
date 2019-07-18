@@ -39,7 +39,7 @@ namespace Toolbox.Library
             }
         }
 
-        public virtual UserControl GetEditor() { return new STUserControl(); }
+        public virtual UserControl GetEditor() { return new STUserControl() { Dock = DockStyle.Fill }; }
         public virtual void FillEditor(UserControl control) { }
 
         public override void OnClick(TreeView treeview)
