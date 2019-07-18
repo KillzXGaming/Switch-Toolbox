@@ -45,7 +45,10 @@ namespace FirstPlugin
         }
 
         public List<FileEntry> files = new List<FileEntry>();
-        public IEnumerable<ArchiveFileInfo> Files => files;
+        public IEnumerable<ArchiveFileInfo> Files  {
+            get { return files; }
+            set { }
+        }
 
         SDFTOC_Header Header;
         public SDFTOC_Block2[] block2Array;

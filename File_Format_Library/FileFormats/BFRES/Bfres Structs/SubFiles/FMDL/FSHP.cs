@@ -1041,15 +1041,17 @@ namespace Bfres.Structs
                 {
                     int j = 0;
 
-                    SortedDictionary<int, float> envelopes = new SortedDictionary<int, float>();
+                    List<Tuple<int, float>> envelopes = new List<Tuple<int, float>>();
                     for (j = 0; j < v.boneIds.Count; j++)
-                        envelopes.Add(v.boneIds[j], v.boneWeights[j]);
+                        envelopes.Add(Tuple.Create(v.boneIds[j], v.boneWeights[j]));
+
+                    envelopes.Sort((x, y) => y.Item1.CompareTo(x.Item1));
 
                     j = 0;
-                    foreach (var envelope in envelopes)
+                    foreach (var envelope in envelopes.OrderBy(x => x.Item1))
                     {
-                        v.boneIds[j] = envelope.Key;
-                        v.boneWeights[j] = envelope.Value;
+                        v.boneIds[j] = envelope.Item1;
+                        v.boneWeights[j] = envelope.Item2;
                         j++;
                     }
 

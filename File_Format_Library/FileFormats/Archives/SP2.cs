@@ -39,7 +39,11 @@ namespace FirstPlugin
         }
 
         public List<FileInfo> files = new List<FileInfo>();
-        public IEnumerable<ArchiveFileInfo> Files => files;
+        public IEnumerable<ArchiveFileInfo> Files
+        {
+            get { return files; }
+            set { }
+        }
 
         public bool CanAddFiles { get; set; }
         public bool CanRenameFiles { get; set; }

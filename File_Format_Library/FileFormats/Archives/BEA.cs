@@ -23,7 +23,11 @@ namespace FirstPlugin
         public bool CanReplaceFiles { get; set; } = true;
 
         public List<FileEntry> files = new List<FileEntry>();
-        public IEnumerable<ArchiveFileInfo> Files => files;
+        public IEnumerable<ArchiveFileInfo> Files
+        {
+            get { return files; }
+            set { }
+        }
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Bevel Engine Archive" };

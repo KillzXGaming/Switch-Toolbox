@@ -46,7 +46,12 @@ namespace FirstPlugin
         public List<FileEntry> files = new List<FileEntry>();
         public List<INode> nodes = new List<INode>();
 
-        public IEnumerable<ArchiveFileInfo> Files => files;
+        public IEnumerable<ArchiveFileInfo> Files
+        {
+            get { return files; }
+            set { }
+        }
+
         public IEnumerable<INode> Nodes => nodes;
 
         public string Name

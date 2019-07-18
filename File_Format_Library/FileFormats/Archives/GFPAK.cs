@@ -93,7 +93,11 @@ namespace FirstPlugin
         }
 
         public List<FileEntry> files = new List<FileEntry>();
-        public IEnumerable<ArchiveFileInfo> Files => files;
+        public IEnumerable<ArchiveFileInfo> Files
+        {
+            get { return files; }
+            set { }
+        }
 
         public bool CanAddFiles { get; set; } = false;
         public bool CanRenameFiles { get; set; } = false;
