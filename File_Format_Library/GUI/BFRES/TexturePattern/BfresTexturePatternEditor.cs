@@ -401,8 +401,6 @@ namespace FirstPlugin.Forms
                 {
                     if (Images.ContainsKey(Frame))
                         pictureBoxCustom1.Image = Images[Frame];
-                    else
-                        pictureBoxCustom1.Image = null;
                 }
                 else
                     pictureBoxCustom1.Image = null;
