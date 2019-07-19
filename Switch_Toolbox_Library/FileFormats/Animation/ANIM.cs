@@ -216,10 +216,10 @@ namespace Toolbox.Library.Animations
                 file.WriteLine("startTime " + 1 + ";");
                 file.WriteLine("endTime " + a.FrameCount + ";");
 
-                a.SetFrame(a.FrameCount - 1); //from last frame
-                for (int li = 0; li < a.FrameCount; ++li) //go through each frame with nextFrame
-                    a.NextFrame(vbn);
-                a.NextFrame(vbn);  //go on first frame
+         //       a.SetFrame(a.FrameCount - 1); //from last frame
+         //       for (int li = 0; li < a.FrameCount; ++li) //go through each frame with nextFrame
+           //         a.NextFrame(vbn);
+            //    a.NextFrame(vbn, false);  //go on first frame
 
                 int i = 0;
 

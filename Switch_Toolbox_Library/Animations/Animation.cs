@@ -541,7 +541,7 @@ namespace Toolbox.Library.Animations
                 if (child is Animation)
                 {
                     ((Animation)child).SetFrame(Frame);
-                    ((Animation)child).NextFrame(skeleton, isChild: true);
+                    ((Animation)child).NextFrame(skeleton, isChild, AdancedNextFrame);
                 }
             }
 
