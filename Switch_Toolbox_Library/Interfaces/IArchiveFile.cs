@@ -218,7 +218,7 @@ namespace Toolbox.Library
 
         private void AddFolderAction(object sender, EventArgs args)
         {
-            Nodes.Add(new ArchiveFolderNodeWrapper("NewFolder", ArchiveFile));
+            Nodes.Add(new ArchiveFolderNodeWrapper("NewFolder", ArchiveFile, this));
         }
 
         private void AddFileAction(object sender, EventArgs args)
@@ -239,10 +239,10 @@ namespace Toolbox.Library
                 return;
 
             for (int i = 0; i < FileNodes.Count; i++)
-                FileNodes[i].ArchiveFileInfo.FileName = SetFullath(FileNodes[i], this);
+                FileNodes[i].ArchiveFileInfo.FileName = SetFullPath(FileNodes[i], this);
         }
 
-        private static string SetFullath(TreeNode node, TreeNode root)
+        private static string SetFullPath(TreeNode node, TreeNode root)
         {
             string nodePath = node.FullPath;
             int startIndex = nodePath.IndexOf(root.Text);
@@ -397,7 +397,7 @@ namespace Toolbox.Library
             {
                 if (node is IDirectoryContainer)
                 {
-                    var folder = new ArchiveFolderNodeWrapper(node.Name, archiveFile);
+                    var folder = new ArchiveFolderNodeWrapper(node.Name, archiveFile, this);
                     parent.Nodes.Add(folder);
 
                     if (((IDirectoryContainer)node).Nodes != null)
@@ -455,7 +455,7 @@ namespace Toolbox.Library
                         {
                             // Node was not found, add it
 
-                            var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile);
+                            var folder = new ArchiveFolderNodeWrapper(parentName, archiveFile, this);
 
                             if (rootIndex == roots.Length - 1)
                             {
@@ -486,6 +486,8 @@ namespace Toolbox.Library
     //Wrapper for folders
     public class ArchiveFolderNodeWrapper : ArchiveBase, IContextMenuNode
     {
+        public ArchiveRootNodeWrapper RootNode;
+
         public virtual object PropertyDisplay { get; set; }
 
         public bool CanReplace
@@ -510,8 +512,9 @@ namespace Toolbox.Library
             }
         }
 
-        public ArchiveFolderNodeWrapper(string text, IArchiveFile archiveFile ) : base(archiveFile)
+        public ArchiveFolderNodeWrapper(string text, IArchiveFile archiveFile, ArchiveRootNodeWrapper root ) : base(archiveFile)
         {
+            RootNode = root;
             Text = text;
             PropertyDisplay = new GenericFolderProperties();
             ((GenericFolderProperties)PropertyDisplay).Name = Text;
@@ -535,7 +538,7 @@ namespace Toolbox.Library
 
         private void AddFolderAction(object sender, EventArgs args)
         {
-            Nodes.Add(new ArchiveFolderNodeWrapper("NewFolder", ArchiveFile));
+            Nodes.Add(new ArchiveFolderNodeWrapper("NewFolder", ArchiveFile, RootNode));
         }
 
         private void AddFileAction(object sender, EventArgs args)

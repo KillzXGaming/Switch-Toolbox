@@ -139,7 +139,6 @@ namespace Toolbox.Library
                 {
                     string FullPath = Path.Combine(parentNode.FullPath, FileName);
                     FullPath = FullPath.Substring(FullPath.IndexOf("/", 1) + 1);
-                    //       FullPath.Substring(Path.GetPathRoot(FullPath).Length);
                     Console.WriteLine($"FullPath {FullPath}");
                     File.ArchiveFileInfo.FileName = FullPath;
                 }
@@ -150,7 +149,14 @@ namespace Toolbox.Library
                 bool HasAddedFile = archiveFile.AddFile(File.ArchiveFileInfo);
 
                 if (HasAddedFile)
+                {
+                    if (parentNode is ArchiveRootNodeWrapper)
+                        ((ArchiveRootNodeWrapper)parentNode).FileNodes.Add(File);
+                    if (parentNode is ArchiveFolderNodeWrapper)
+                        ((ArchiveRootNodeWrapper)parentNode).FileNodes.Add(File);
+
                     parentNode.Nodes.Add(File);
+                }
             }
         }
 
