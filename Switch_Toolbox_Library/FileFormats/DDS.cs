@@ -30,7 +30,7 @@ namespace Toolbox.Library
             }
         }
 
-        public override bool CanEdit { get; set; } = false;
+        public override bool CanEdit { get; set; } = true;
 
         public bool CanSave { get; set; } = false;
         public bool FileIsEdited { get; set; } = false;
@@ -786,7 +786,7 @@ namespace Toolbox.Library
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+            bdata = GenerateMipsAndCompress(bitmap, MipCount, Format);
         }
 
         //Todo create actual cube map conversion with Renderable Texture from generic one

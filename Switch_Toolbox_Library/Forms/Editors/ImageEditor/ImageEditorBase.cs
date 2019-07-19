@@ -728,6 +728,7 @@ namespace Toolbox.Library.Forms
             };
 
             pictureBoxCustom1.Image = image;
+            pictureBoxCustom1.Refresh();
 
             TotalMipCount = ActiveTexture.MipCount - 1;
             TotalArrayCount = ActiveTexture.ArrayCount - 1;
