@@ -315,6 +315,7 @@ namespace Toolbox.Library.Animations
             {
                 float v = 0;
 
+                float scale = 1;
                 switch (type)
                 {
                     case "translateX":
@@ -334,7 +335,8 @@ namespace Toolbox.Library.Animations
                             Quaternion q = new Quaternion(rt.XROT.GetValue(key.Frame), rt.YROT.GetValue(key.Frame), rt.ZROT.GetValue(key.Frame), rt.WROT.GetValue(key.Frame));
                             v = quattoeul(q).X * (float)(180f / Math.PI);
                         }
-                            break;
+                        scale = (float)(180f / Math.PI);
+                        break;
                     case "rotateY":
                         if (rt.RotType == Animation.RotationType.EULER)
                             v = key.Value * (float)(180f / Math.PI);
@@ -343,6 +345,7 @@ namespace Toolbox.Library.Animations
                             Quaternion q = new Quaternion(rt.XROT.GetValue(key.Frame), rt.YROT.GetValue(key.Frame), rt.ZROT.GetValue(key.Frame), rt.WROT.GetValue(key.Frame));
                             v = quattoeul(q).Y * (float)(180f / Math.PI);
                         }
+                        scale = (float)(180f / Math.PI);
                         break;
                     case "rotateZ":
                         if (rt.RotType == Animation.RotationType.EULER)
@@ -352,6 +355,7 @@ namespace Toolbox.Library.Animations
                             Quaternion q = new Quaternion(rt.XROT.GetValue(key.Frame), rt.YROT.GetValue(key.Frame), rt.ZROT.GetValue(key.Frame), rt.WROT.GetValue(key.Frame));
                             v = quattoeul(q).Z * (float)(180f / Math.PI);
                         }
+                        scale = (float)(180f / Math.PI);
                         break;
                     case "scaleX":
                         v = key.Value;
@@ -364,7 +368,7 @@ namespace Toolbox.Library.Animations
                         break;
                 }
 
-                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} fixed fixed 1 1 0 " + key.In * (float)(180f/Math.PI) + " 1 " + key.In * (float)(180f / Math.PI) + " 1;", v);
+                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} linear linear 1 1 0 " + key.In * scale + " 1 " + (key.Out != -1 ? key.Out : key.In) * scale + " 1;", v);
             }
 
             file.WriteLine(" }");
