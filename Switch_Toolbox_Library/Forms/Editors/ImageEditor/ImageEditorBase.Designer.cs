@@ -71,6 +71,7 @@
             this.displayAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useComponentSelectorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.previewCubemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewCubemap3DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +85,6 @@
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.previewCubemap3DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -331,6 +331,7 @@
             this.imageBGComboBox.Size = new System.Drawing.Size(95, 21);
             this.imageBGComboBox.TabIndex = 2;
             this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
+            this.imageBGComboBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imageBGComboBox_MouseClick);
             // 
             // stContextMenuStrip1
             // 
@@ -508,6 +509,13 @@
             this.previewCubemapToolStripMenuItem.Text = "Preview Cubemap";
             this.previewCubemapToolStripMenuItem.Click += new System.EventHandler(this.previewCubemapToolStripMenuItem_Click);
             // 
+            // previewCubemap3DToolStripMenuItem
+            // 
+            this.previewCubemap3DToolStripMenuItem.Name = "previewCubemap3DToolStripMenuItem";
+            this.previewCubemap3DToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.previewCubemap3DToolStripMenuItem.Text = "Preview Cubemap (3D)";
+            this.previewCubemap3DToolStripMenuItem.Click += new System.EventHandler(this.previewCubemap3DToolStripMenuItem_Click);
+            // 
             // imageToolStripMenuItem
             // 
             this.imageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -602,13 +610,6 @@
             this.brightnessContrastToolStripMenuItem.Name = "brightnessContrastToolStripMenuItem";
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
-            // 
-            // previewCubemap3DToolStripMenuItem
-            // 
-            this.previewCubemap3DToolStripMenuItem.Name = "previewCubemap3DToolStripMenuItem";
-            this.previewCubemap3DToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.previewCubemap3DToolStripMenuItem.Text = "Preview Cubemap (3D)";
-            this.previewCubemap3DToolStripMenuItem.Click += new System.EventHandler(this.previewCubemap3DToolStripMenuItem_Click);
             // 
             // ImageEditorBase
             // 

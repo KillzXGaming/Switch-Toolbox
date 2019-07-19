@@ -246,13 +246,21 @@ namespace Toolbox.Library.Forms
                 case Runtime.PictureBoxBG.Black:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Color.Black;
+                    imageBGComboBox.BackColor =FormThemes.BaseTheme.ComboBoxBackColor;
                     break;
                 case Runtime.PictureBoxBG.White:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Color.White;
+                    imageBGComboBox.BackColor = FormThemes.BaseTheme.ComboBoxBackColor;
                     break;
                 case Runtime.PictureBoxBG.Checkerboard:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Client;
+                    imageBGComboBox.BackColor = FormThemes.BaseTheme.ComboBoxBackColor;
+                    break;
+                case Runtime.PictureBoxBG.Custom:
+                    pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
+                    pictureBoxCustom1.BackColor = Runtime.CustomPicureBoxBGColor;
+                    imageBGComboBox.BackColor = Runtime.CustomPicureBoxBGColor;
                     break;
             }
         }
@@ -1297,6 +1305,20 @@ namespace Toolbox.Library.Forms
             CubeMapFaceViewer3D viewer = new CubeMapFaceViewer3D();
             viewer.LoadTexture(ActiveTexture);
             viewer.Show();
+        }
+
+        private void imageBGComboBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Runtime.pictureBoxStyle == Runtime.PictureBoxBG.Custom)
+            {
+                ColorDialog dlg = new ColorDialog();
+                dlg.Color = Runtime.CustomPicureBoxBGColor;
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    Runtime.CustomPicureBoxBGColor = dlg.Color;
+                    UpdateBackgroundImage();
+                }
+            }
         }
     }
 }

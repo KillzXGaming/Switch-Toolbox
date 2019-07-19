@@ -237,6 +237,9 @@ namespace Toolbox.Library
                     case "AlwaysCompressOnSave":
                         bool.TryParse(node.InnerText, out Runtime.AlwaysCompressOnSave);
                         break;
+                    case "CustomPicureBoxBGColor":
+                        TryParseHexColor(node, ref Runtime.CustomPicureBoxBGColor);
+                        break;
                 }
             }
         }
@@ -379,6 +382,7 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "UseComponetSelector", Runtime.ImageEditor.UseComponetSelector.ToString()));
             PathsNode.AppendChild(createNode(doc, "EnablePixelGrid", Runtime.ImageEditor.EnablePixelGrid.ToString()));
             PathsNode.AppendChild(createNode(doc, "EnableImageZoom", Runtime.ImageEditor.EnableImageZoom.ToString()));
+            parentNode.AppendChild(createNode(doc, "CustomPicureBoxBGColor", ColorTranslator.ToHtml(Runtime.CustomPicureBoxBGColor)));
         }
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
         {

@@ -99,7 +99,6 @@ namespace FirstPlugin
             }
         }
 
-        ImageEditorBase form;
         public ImageEditorBase OpenForm()
         {
             bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
@@ -115,7 +114,7 @@ namespace FirstPlugin
             prop.TileMode = image.TileMode;
             prop.Swizzle = image.Swizzle;
 
-            form = new ImageEditorBase();
+            ImageEditorBase form = new ImageEditorBase();
             form.Text = Text;
             form.Dock = DockStyle.Fill;
             form.AddFileContextEvent("Save", Save);
@@ -126,14 +125,22 @@ namespace FirstPlugin
             return form;
         }
 
+        private ImageEditorBase form;
+
+        public void UpdateForm()
+        {
+            UpdateForm(form);
+        }
+
         public void FillEditor(UserControl control)
         {
+            form = (ImageEditorBase)control;
             UpdateForm();
         }
 
-        private void UpdateForm()
+        private void UpdateForm(ImageEditorBase form)
         {
-            if (form != null && image != null)
+            if (image != null)
             {
                 Properties prop = new Properties();
                 prop.Width = Width;
@@ -629,7 +636,7 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            form.Dispose();
         }
         public byte[] Save()
         {

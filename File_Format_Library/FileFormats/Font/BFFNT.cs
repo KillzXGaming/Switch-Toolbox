@@ -13,7 +13,7 @@ using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
-    public class BFFNT : IFileFormat, IEditor<BffntEditor>
+    public class BFFNT : IFileFormat, IEditor<BffntEditor>, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Font;
 
@@ -56,6 +56,22 @@ namespace FirstPlugin
         {
             ((BffntEditor)control).LoadFontFile(this);
         }
+
+
+        #region Text Converter Interface
+        public TextFileType TextFileType => TextFileType.Xml;
+        public bool CanConvertBack => false;
+
+        public string ConvertToString()
+        {
+            return BffntCharSet2Xlor.ToXlor(this);
+        }
+
+        public void ConvertFromString(string text)
+        {
+        }
+
+        #endregion
 
         public void Load(System.IO.Stream stream)
         {
@@ -166,8 +182,8 @@ namespace FirstPlugin
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
             string Signature = reader.ReadString(4, Encoding.ASCII);
-            if (Signature != "FFNT")
-                throw new Exception($"Invalid signature {Signature}! Expected FFNT.");
+            if (Signature != "FFNT" && Signature != "CFNT")
+                throw new Exception($"Invalid signature {Signature}! Expected FFNT or CFNT.");
 
             BOM = reader.ReadUInt16();
             reader.CheckByteOrderMark(BOM);
@@ -187,6 +203,8 @@ namespace FirstPlugin
             else
                 Platform = PlatformType.Cafe;
 
+            if (Signature == "CFNT")
+                Platform = PlatformType.Ctr;
 
             reader.Seek(HeaderSize, SeekOrigin.Begin);
             FontSection = new FINF();
@@ -280,6 +298,8 @@ namespace FirstPlugin
     //https://github.com/dnasdw/3dsfont/blob/4ead538d225d5d05929dce9d736bec91a6158052/src/bffnt/ResourceFormat.h
     public class FontKerningTable
     {
+        private byte[] Data;
+
         public KerningFirstTable FirstTable { get; set; }
 
         public void Read(FileReader reader, FFNT Header)
@@ -620,37 +640,81 @@ namespace FirstPlugin
             if (Signature != "FINF")
                 throw new Exception($"Invalid signature {Signature}! Expected FINF.");
             Size = reader.ReadUInt32();
-            Type = reader.ReadEnum<FontType>(true);
-            Height = reader.ReadByte();
-            Width = reader.ReadByte();
-            Ascent = reader.ReadByte();
-            LineFeed = reader.ReadUInt16();
-            AlterCharIndex = reader.ReadUInt16();
-            DefaultLeftWidth = reader.ReadByte();
-            DefaultGlyphWidth = reader.ReadByte();
-            DefaultCharWidth = reader.ReadByte();
-            CharEncoding = reader.ReadEnum<CharacterCode>(true);
-            uint tglpOffset = reader.ReadUInt32();
-            uint cwdhOffset = reader.ReadUInt32();
-            uint cmapOffset = reader.ReadUInt32();
 
-            //Add counter for TGLP
-            //Note the other counters are inside sections due to recusive setup
-            Header.BlockCounter += 1; 
+            if (Header.Platform == FFNT.PlatformType.Ctr)
+            {
+                Type = reader.ReadEnum<FontType>(true);
+                LineFeed = reader.ReadUInt16();
+                AlterCharIndex = reader.ReadUInt16();
+                DefaultLeftWidth = reader.ReadByte();
+                DefaultGlyphWidth = reader.ReadByte();
+                DefaultCharWidth = reader.ReadByte();
+                CharEncoding = reader.ReadEnum<CharacterCode>(true);
+                uint tglpOffset = reader.ReadUInt32();
+                uint cwdhOffset = reader.ReadUInt32();
+                uint cmapOffset = reader.ReadUInt32();
 
-            TextureGlyph = new TGLP();
-            using (reader.TemporarySeek(tglpOffset - 8, SeekOrigin.Begin))
-                TextureGlyph.Read(reader);
+                Height = reader.ReadByte();
+                Width = reader.ReadByte();
+                Ascent = reader.ReadByte();
+                reader.ReadByte(); //Padding
 
-            CharacterWidth = new CWDH();
-            CharacterWidths.Add(CharacterWidth);
-            using (reader.TemporarySeek(cwdhOffset - 8, SeekOrigin.Begin))
-                CharacterWidth.Read(reader, Header, CharacterWidths);
 
-            CodeMap = new CMAP();
-            CodeMaps.Add(CodeMap);
-            using (reader.TemporarySeek(cmapOffset - 8, SeekOrigin.Begin))
-                CodeMap.Read(reader, Header, CodeMaps);
+                //Add counter for TGLP
+                //Note the other counters are inside sections due to recusive setup
+                Header.BlockCounter += 1;
+
+                TextureGlyph = new TGLP();
+                using (reader.TemporarySeek(tglpOffset - 8, SeekOrigin.Begin))
+                    TextureGlyph.Read(reader);
+
+                CharacterWidth = new CWDH();
+                CharacterWidths.Add(CharacterWidth);
+                using (reader.TemporarySeek(cwdhOffset - 8, SeekOrigin.Begin))
+                    CharacterWidth.Read(reader, Header, CharacterWidths);
+
+                CodeMap = new CMAP();
+                CodeMaps.Add(CodeMap);
+                using (reader.TemporarySeek(cmapOffset - 8, SeekOrigin.Begin))
+                    CodeMap.Read(reader, Header, CodeMaps);
+
+            }
+            else
+            {
+
+                Type = reader.ReadEnum<FontType>(true);
+                Height = reader.ReadByte();
+                Width = reader.ReadByte();
+                Ascent = reader.ReadByte();
+                LineFeed = reader.ReadUInt16();
+                AlterCharIndex = reader.ReadUInt16();
+                DefaultLeftWidth = reader.ReadByte();
+                DefaultGlyphWidth = reader.ReadByte();
+                DefaultCharWidth = reader.ReadByte();
+                CharEncoding = reader.ReadEnum<CharacterCode>(true);
+                uint tglpOffset = reader.ReadUInt32();
+                uint cwdhOffset = reader.ReadUInt32();
+                uint cmapOffset = reader.ReadUInt32();
+
+                //Add counter for TGLP
+                //Note the other counters are inside sections due to recusive setup
+                Header.BlockCounter += 1;
+
+                TextureGlyph = new TGLP();
+                using (reader.TemporarySeek(tglpOffset - 8, SeekOrigin.Begin))
+                    TextureGlyph.Read(reader);
+
+                CharacterWidth = new CWDH();
+                CharacterWidths.Add(CharacterWidth);
+                using (reader.TemporarySeek(cwdhOffset - 8, SeekOrigin.Begin))
+                    CharacterWidth.Read(reader, Header, CharacterWidths);
+
+                CodeMap = new CMAP();
+                CodeMaps.Add(CodeMap);
+                using (reader.TemporarySeek(cmapOffset - 8, SeekOrigin.Begin))
+                    CodeMap.Read(reader, Header, CodeMaps);
+
+            }
         }
 
         public void Write(FileWriter writer, FFNT header)

@@ -138,6 +138,8 @@ namespace Toolbox.Library
         public static bool EnableVersionCheck = true;
         public static bool EnablePBR = true;
 
+        public static Color CustomPicureBoxBGColor = Color.DarkCyan;
+
         public static bool enableVSync = false;
         public static float floorSize = 30f;
         public static Color floorColor = Color.Gray;
@@ -222,6 +224,7 @@ namespace Toolbox.Library
             Checkerboard,
             Black,
             White,
+            Custom,
         }
 
         public enum CameraMovement

@@ -124,7 +124,12 @@ namespace FirstPlugin
             sarcData.endianness = GetByteOrder(stream);
 
             foreach (var file in SzsFiles.Files)
-                files.Add(SetupFileEntry(file.Key, file.Value));
+            {
+                string fileName = file.Key;
+                if (SzsFiles.HashOnly)
+                    fileName = SARCExt.SARC.TryGetNameFromHashTable(fileName);
+                files.Add(SetupFileEntry(fileName, file.Value));
+            }
 
             sarcData.Files.Clear();
         }
