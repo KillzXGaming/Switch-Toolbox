@@ -143,7 +143,11 @@ namespace FirstPlugin.Forms
                 form.editorBase.Dock = DockStyle.Fill;
                 form.editorBase.LoadProperties(image.GenericProperties);
                 form.editorBase.LoadImage(image);
-                form.ShowDialog();
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    UpdateImagePanel(ImageIndex);
+                }
             }
         }
         

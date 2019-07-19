@@ -266,7 +266,7 @@ namespace FirstPlugin
                     if (node.Index < Meshes.Count)
                     {
                         int matIndex = node.Parent.Index;
-                        ((BMDShapeWrapper)Meshes[node.Index]).SetMaterial((STGenericMaterial)MaterialFolder.Nodes[materials.m_RemapIndices[matIndex]]);
+                        ((BMDShapeWrapper)Meshes[node.Index]).SetMaterial((STGenericMaterial)MaterialFolder.Nodes[matIndex]);
                     }
                 }
             }

@@ -37,7 +37,7 @@ namespace FirstPlugin
 
         public override void OnClick(TreeView treeView)
         {
-            STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
+         /*   STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
             if (editor == null)
             {
                 editor = new STPropertyGrid();
@@ -45,7 +45,7 @@ namespace FirstPlugin
             }
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
-            editor.LoadProperty(BMDShape, null);
+            editor.LoadProperty(BMDShape, null);(*/
         }
     }
 }
