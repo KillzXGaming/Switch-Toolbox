@@ -363,10 +363,13 @@ namespace FirstPlugin
             ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true, false, SwizzlePattern);
             if (ftex.texture != null)
             {
-                TextureTGLP.Format = (ushort)ConvertToGx2(Format);
+                TextureTGLP.Format = (ushort)ConvertToGx2(ftex.Format);
                 TextureTGLP.SheetHeight = (ushort)ftex.texture.Height;
                 TextureTGLP.SheetWidth = (ushort)ftex.texture.Width;
                 TextureTGLP.SheetDataList[SheetIndex] = ftex.texture.Data;
+                Format = ftex.Format;
+                Width = ftex.texture.Height;
+                Height = ftex.texture.Height;
 
                 UpdateEditor();
             }

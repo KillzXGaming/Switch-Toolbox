@@ -12,18 +12,6 @@ using Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
-    public class ImagePaenl : STPanel
-    {
-        public ImagePaenl()
-        {
-            this.SetStyle(
-            ControlStyles.AllPaintingInWmPaint |
-            ControlStyles.UserPaint |
-            ControlStyles.DoubleBuffer,
-            true);
-        }
-    }
-
     public partial class BffntEditor : STUserControl, IFIleEditor
     {
         public BffntEditor()
@@ -98,6 +86,7 @@ namespace FirstPlugin.Forms
                 imageMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportImageAction, Keys.Control | Keys.E));
                 imageMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceImageAction, Keys.Control | Keys.R));
                 imageMenuStrip.Items.Add(new ToolStripMenuItem("Copy", null, CopyImageAction, Keys.Control | Keys.C));
+                imageMenuStrip.Items.Add(new ToolStripMenuItem("Open Image Editor", null, ImageEditorAction, Keys.Control | Keys.E));
                 imageMenuStrip.Show(Cursor.Position);
             }
         }
@@ -142,6 +131,21 @@ namespace FirstPlugin.Forms
             }
         }
 
+        private void ImageEditorAction(object sender, EventArgs e)
+        {
+            int ImageIndex = imagesCB.SelectedIndex;
+            if (ImageIndex != -1)
+            {
+                var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
+
+                ImageEditorForm form = new ImageEditorForm(true);
+                form.editorBase.Text = Text;
+                form.editorBase.Dock = DockStyle.Fill;
+                form.editorBase.LoadProperties(image.GenericProperties);
+                form.editorBase.LoadImage(image);
+                form.ShowDialog();
+            }
+        }
         
         private void ReplaceImageAction(object sender, EventArgs e)
         {
@@ -365,4 +369,17 @@ namespace FirstPlugin.Forms
             }
         }
     }
+
+    public class ImagePaenl : STPanel
+    {
+        public ImagePaenl()
+        {
+            this.SetStyle(
+            ControlStyles.AllPaintingInWmPaint |
+            ControlStyles.UserPaint |
+            ControlStyles.DoubleBuffer,
+            true);
+        }
+    }
+
 }
