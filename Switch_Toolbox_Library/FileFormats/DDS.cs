@@ -65,6 +65,7 @@ namespace Toolbox.Library
         public void Load(System.IO.Stream stream)
         {
             IsActive = true;
+            CanSave = true;
 
             FileReader reader = new FileReader(stream);
             reader.ByteOrder = ByteOrder.LittleEndian;
@@ -786,7 +787,7 @@ namespace Toolbox.Library
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            bdata = GenerateMipsAndCompress(bitmap, MipCount, Format);
+            SetArrayLevel(GenerateMipsAndCompress(bitmap, MipCount, Format), ArrayLevel);
         }
 
         //Todo create actual cube map conversion with Renderable Texture from generic one
@@ -894,6 +895,41 @@ namespace Toolbox.Library
                 Offset += size;
             }
             return surfaces;
+        }
+
+        public void SetArrayLevel(byte[] data, int ArrayIndex)
+        {
+            uint formatSize = GetBytesPerPixel(Format);
+
+            uint Offset = 0;
+            for (byte i = 0; i < ArrayCount; ++i)
+            {
+                if (i == ArrayIndex)
+                {
+                    Array.Copy(data, 0, bdata, Offset, data.Length);
+                }
+
+                uint MipWidth = Width, MipHeight = Height;
+                for (int j = 0; j < MipCount; ++j)
+                {
+                    MipWidth = (uint)Math.Max(1, Width >> j);
+                    MipHeight = (uint)Math.Max(1, Height >> j);
+
+                    uint size = (MipWidth * MipHeight); //Total pixels
+                    if (IsCompressed(Format))
+                    {
+                        size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                        if (size < formatSize)
+                            size = formatSize;
+                    }
+                    else
+                    {
+                        size = (uint)(size * GetBytesPerPixel(Format)); //Bytes per pixel
+                    }
+
+                    Offset += size;
+                }
+            }
         }
 
         public static List<Surface> GetArrayFaces(STGenericTexture tex, byte[] ImageData, uint Length)
