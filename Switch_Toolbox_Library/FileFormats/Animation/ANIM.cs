@@ -11,7 +11,33 @@ namespace Toolbox.Library.Animations
     //https://github.com/jam1garner/Smash-Forge/blob/3a5b770a96b2ba7e67ff3912ca23941851f6d9eb/Smash%20Forge/Filetypes/Animation/ANIM.cs
     public class ANIM
 	{
-		private class AnimKey{
+        private class AnimHeader
+        {
+            public string animVersion;
+            public string mayaVersion;
+            public float startTime;
+            public float endTime;
+            public float startUnitless;
+            public float endUnitless;
+            public string timeUnit;
+            public string linearUnit;
+            public string angularUnit;
+
+            public AnimHeader()
+            {
+                animVersion = "1.1";
+                mayaVersion = "2015";
+                startTime = 0;
+                endTime = 0;
+                startUnitless = 0;
+                endUnitless = 0;
+                timeUnit = "ntscf";
+                linearUnit = "cm";
+                angularUnit = "deg";
+            }
+        }
+
+        private class AnimKey{
 			public float input, output;
 			public string intan, outtan;
 			public float t1 = 0, w1 = 1;
@@ -181,8 +207,14 @@ namespace Toolbox.Library.Animations
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@fname))
             {
-                file.WriteLine("animVersion 1.1;");
-                file.WriteLine("mayaVersion 2014 x64;\ntimeUnit ntscf;\nlinearUnit cm;\nangularUnit deg;\nstartTime 1;\nendTime " + (a.FrameCount+1) + ";");
+                AnimHeader header = new AnimHeader();
+                file.WriteLine("animVersion " + header.animVersion + ";");
+                file.WriteLine("mayaVersion " + header.mayaVersion + ";");
+                file.WriteLine("timeUnit " + header.timeUnit + ";");
+                file.WriteLine("linearUnit " + header.linearUnit + ";");
+                file.WriteLine("angularUnit " + header.angularUnit + ";");
+                file.WriteLine("startTime " + 1 + ";");
+                file.WriteLine("endTime " + a.FrameCount + ";");
 
                 a.SetFrame(a.FrameCount - 1); //from last frame
                 for (int li = 0; li < a.FrameCount; ++li) //go through each frame with nextFrame
@@ -202,7 +234,6 @@ namespace Toolbox.Library.Animations
                         // count the attributes
                         Animation.KeyNode n = a.GetBone(b.Text);
                         int ac = 0;
-
 
                         if (n.XPOS.HasAnimation())
                         {
@@ -259,6 +290,9 @@ namespace Toolbox.Library.Animations
                             writeKey(file, n.ZSCA, n, a.Size(), "scaleZ");
                             file.WriteLine("}");
                         }
+
+                        if (ac == 0)
+                            file.WriteLine("anim " + b.Text + " 0 0 0;");
                     }
                     else
                     {
