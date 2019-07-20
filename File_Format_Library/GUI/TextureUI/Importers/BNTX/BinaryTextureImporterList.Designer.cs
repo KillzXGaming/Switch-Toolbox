@@ -192,15 +192,16 @@
             this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(230, 21);
             this.ImgDimComb.TabIndex = 24;
+            this.ImgDimComb.SelectedIndexChanged += new System.EventHandler(this.ImgDimComb_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(756, 136);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 13);
+            this.label3.Size = new System.Drawing.Size(96, 13);
             this.label3.TabIndex = 23;
-            this.label3.Text = "Image Dimension";
+            this.label3.Text = "Surface Dimension";
             // 
             // label2
             // 
@@ -299,6 +300,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1096, 560);
             this.KeyPreview = true;
+            this.Name = "BinaryTextureImporterList";
             this.Text = "Texture Importer";
             this.Load += new System.EventHandler(this.BinaryTextureImporterList_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinaryTextureImporterList_KeyDown);

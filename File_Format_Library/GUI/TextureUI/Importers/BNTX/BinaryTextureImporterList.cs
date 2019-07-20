@@ -131,13 +131,18 @@ namespace FirstPlugin
             if (SelectedTexSettings.Format == SurfaceFormat.Invalid || SelectedIndex == -1)
                 return;
 
+
             WidthLabel.Text = $"Width {SelectedTexSettings.TexWidth}";
             HeightLabel.Text = $"Height {SelectedTexSettings.TexHeight}";
 
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            if (formatComboBox.SelectedItem is SurfaceFormat)
+            if (formatComboBox.SelectedItem is SurfaceDim)
+                SelectedTexSettings.SurfaceDim = (SurfaceDim)formatComboBox.SelectedItem;
+
+
+           if (formatComboBox.SelectedItem is SurfaceFormat)
             {
                 SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
 
@@ -249,6 +254,8 @@ namespace FirstPlugin
 
                 SelectedTexSettings = settings[listViewCustom1.SelectedIndices[0]];
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
+                ImgDimComb.SelectedItem = SelectedTexSettings.SurfaceDim;
+
 
                 SetupSettings();
 
@@ -295,6 +302,14 @@ namespace FirstPlugin
         private void compressionModeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
+            {
+                SetupSettings();
+            }
+        }
+
+        private void ImgDimComb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ImgDimComb.SelectedIndex > -1 && SelectedTexSettings != null)
             {
                 SetupSettings();
             }

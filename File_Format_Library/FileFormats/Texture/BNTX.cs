@@ -1353,6 +1353,8 @@ namespace FirstPlugin
         //The tex format can be adjusted in the function if necessary. Will normally be set to format in settings
         public void Replace(string FileName, uint MaxMipLevel = 0, TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB, SurfaceDim surfaceDim = SurfaceDim.Dim2D) 
         {
+            Console.WriteLine("surfaceDim" + surfaceDim);
+
             string ext = Path.GetExtension(FileName);
             ext = ext.ToLower();
 
