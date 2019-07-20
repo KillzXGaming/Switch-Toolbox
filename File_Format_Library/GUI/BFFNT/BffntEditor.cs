@@ -170,7 +170,10 @@ namespace FirstPlugin.Forms
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    image.Replace(ofd.FileName);
+                    if (IsBntx)
+                        ((TextureData)image).Replace(ofd.FileName, 0, 0, image.Format, ((TextureData)image).Texture.SurfaceDim);
+                    else
+                        image.Replace(ofd.FileName);
                 }
 
                 UpdateImagePanel(ImageIndex);

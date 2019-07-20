@@ -438,7 +438,7 @@ namespace FirstPlugin
             {
                 var bntxFile = new BNTX();
                 var tex = new TextureData();
-                tex.Replace(FileName, MipCount, Format);
+                tex.Replace(FileName, MipCount, 0, Format);
 
                 //If it's null, the operation is cancelled
                 if (tex.Texture == null)

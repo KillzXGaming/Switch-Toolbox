@@ -1342,7 +1342,7 @@ namespace FirstPlugin
         public override string ReplaceFilter => FileFilters.BNTX_TEX;
 
         public override void Replace(string FileName) {
-            Replace(FileName, MipCount, Format, Texture.SurfaceDim);
+            Replace(FileName, MipCount, 0, Format,  Texture.SurfaceDim);
         }
 
         public override void Export(string FileName) {
@@ -1351,7 +1351,7 @@ namespace FirstPlugin
 
         //Max mip level will be set automatically unless overwritten
         //The tex format can be adjusted in the function if necessary. Will normally be set to format in settings
-        public void Replace(string FileName, uint MaxMipLevel = 0, TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB, SurfaceDim surfaceDim = SurfaceDim.Dim2D) 
+        public void Replace(string FileName, uint MaxMipLevel = 0, uint ArrayIndex = 0, TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB, SurfaceDim surfaceDim = SurfaceDim.Dim2D) 
         {
             Console.WriteLine("surfaceDim" + surfaceDim);
 
@@ -1362,6 +1362,8 @@ namespace FirstPlugin
             BinaryTextureImporterList importer = new BinaryTextureImporterList();
 
             setting.SurfaceDim = surfaceDim;
+
+            var ImageDataCached = Texture.TextureData;
 
             switch (ext)
             {
@@ -1397,6 +1399,15 @@ namespace FirstPlugin
                     }
                     break;
             }
+
+            //After image data is replaced, use original and swap the specific array index
+            for (int i = 0; i < ImageDataCached.Count; i++)
+            {
+                if (i == ArrayIndex)
+                    ImageDataCached[i] = Texture.TextureData[0]; 
+            }
+
+            Texture.TextureData = ImageDataCached;
         }
         public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
         {
