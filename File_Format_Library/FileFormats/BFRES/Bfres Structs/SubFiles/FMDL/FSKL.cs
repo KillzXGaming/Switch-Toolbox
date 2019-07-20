@@ -34,6 +34,9 @@ namespace Bfres.Structs
                 List<Syroot.Maths.Matrix3x4> SmoothMatrices = new List<Syroot.Maths.Matrix3x4>();
                 List<ushort> RigidIndices = new List<ushort>();
 
+                foreach (var Bone in Skeleton.Bones.Values)
+                    Bone.InverseMatrix = new Syroot.Maths.Matrix3x4();
+
                 ushort SmoothIndex = 0;
                 foreach (BfresBone bn in bones)
                 {
@@ -45,10 +48,12 @@ namespace Bfres.Structs
                             if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex != -1)
                             {
                                 bn.SmoothMatrixIndex = (short)SmoothIndex++;
+
                                 Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
                                 SmoothIndices.Add(BoneIndex);
 
                                 var mat = MatrixExenstion.GetMatrixInverted(bn);
+                                Bone.InverseMatrix = mat;
                                 SmoothMatrices.Add(mat);
                             }
                         }
