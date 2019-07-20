@@ -137,11 +137,16 @@ namespace FirstPlugin.Forms
             if (ImageIndex != -1)
             {
                 var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
+                bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
 
                 ImageEditorForm form = new ImageEditorForm(true);
                 form.editorBase.Text = Text;
                 form.editorBase.Dock = DockStyle.Fill;
-                form.editorBase.LoadProperties(image.GenericProperties);
+
+                if (IsBntx)
+                    form.editorBase.LoadProperties(((TextureData)image).Texture);
+                else
+                    form.editorBase.LoadProperties(image.GenericProperties);
                 form.editorBase.LoadImage(image);
 
                 if (form.ShowDialog() == DialogResult.OK)

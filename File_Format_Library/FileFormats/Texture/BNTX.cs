@@ -1342,7 +1342,7 @@ namespace FirstPlugin
         public override string ReplaceFilter => FileFilters.BNTX_TEX;
 
         public override void Replace(string FileName) {
-            Replace(FileName, MipCount, Format);
+            Replace(FileName, MipCount, Format, Texture.SurfaceDim);
         }
 
         public override void Export(string FileName) {
@@ -1351,13 +1351,15 @@ namespace FirstPlugin
 
         //Max mip level will be set automatically unless overwritten
         //The tex format can be adjusted in the function if necessary. Will normally be set to format in settings
-        public void Replace(string FileName, uint MaxMipLevel = 0, TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB) 
+        public void Replace(string FileName, uint MaxMipLevel = 0, TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB, SurfaceDim surfaceDim = SurfaceDim.Dim2D) 
         {
             string ext = Path.GetExtension(FileName);
             ext = ext.ToLower();
 
             TextureImporterSettings setting = new TextureImporterSettings();
             BinaryTextureImporterList importer = new BinaryTextureImporterList();
+
+            setting.SurfaceDim = surfaceDim;
 
             switch (ext)
             {
