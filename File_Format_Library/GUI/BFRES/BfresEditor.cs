@@ -18,6 +18,18 @@ namespace FirstPlugin.Forms
     {
         private bool _displayViewport = true;
 
+        private bool _displayAll = false;
+        public bool DisplayAll
+        {
+            get { return _displayAll; }
+            set
+            {
+                _displayAll = value;
+                if (viewport != null)
+                    viewport.DisplayAll = value;
+            }
+        }
+
         public bool DisplayViewport
         {
             get
@@ -91,6 +103,7 @@ namespace FirstPlugin.Forms
             {
                 viewport = new Viewport(ObjectEditor.GetDrawableContainers());
                 viewport.Dock = DockStyle.Fill;
+                viewport.DisplayAll = DisplayAll;
             }
 
             //If the option is enabled by settings, and it has models display the viewport
@@ -150,7 +163,10 @@ namespace FirstPlugin.Forms
         public void UpdateViewport()
         {
             if (viewport != null && Runtime.UseOpenGL && Runtime.DisplayViewport)
+            {
+                viewport.DisplayAll = DisplayAll;
                 viewport.UpdateViewport();
+            }
         }
 
 

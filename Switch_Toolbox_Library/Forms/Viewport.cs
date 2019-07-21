@@ -18,6 +18,18 @@ namespace Toolbox.Library
 {
     public partial class Viewport : UserControl
     {
+        public bool DisplayAll
+        {
+            get
+            {
+                return chkDisplayAllModels.Checked;
+            }
+            set
+            {
+                chkDisplayAllModels.Checked = value;
+            }
+        }
+
         public List<DrawableContainer> DrawableContainers;
 
         public EditorScene scene = new EditorScene();
@@ -483,6 +495,12 @@ namespace Toolbox.Library
 
         private void drawContainersCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (chkDisplayAllModels.Checked)
+            {
+                DrawAllActive();
+                return;
+            }
+
             if (drawContainersCB.SelectedIndex == 0)
                 DrawAllActive();
             else if (drawContainersCB.SelectedIndex > 0)
@@ -518,6 +536,15 @@ namespace Toolbox.Library
         private void drawContainersCB_MouseDown(object sender, MouseEventArgs e)
         {
             ReloadDrawables();
+        }
+
+        private void chkDisplayAllModels_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkDisplayAllModels.Checked)
+            {
+                drawContainersCB.SelectedIndex = 0;
+                DrawAllActive();
+            }
         }
     }
 }

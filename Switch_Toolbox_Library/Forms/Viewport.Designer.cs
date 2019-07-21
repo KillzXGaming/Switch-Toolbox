@@ -53,6 +53,7 @@
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.chkDisplayAllModels = new Toolbox.Library.Forms.STCheckBox();
             this.stContextMenuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -256,6 +257,7 @@
             // 
             this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel1.Controls.Add(this.chkDisplayAllModels);
             this.stPanel1.Controls.Add(this.stLabel1);
             this.stPanel1.Controls.Add(this.drawContainersCB);
             this.stPanel1.Location = new System.Drawing.Point(0, 26);
@@ -271,6 +273,17 @@
             this.stLabel1.Size = new System.Drawing.Size(83, 13);
             this.stLabel1.TabIndex = 1;
             this.stLabel1.Text = "Active Model(s):";
+            // 
+            // chkDisplayAllModels
+            // 
+            this.chkDisplayAllModels.AutoSize = true;
+            this.chkDisplayAllModels.Location = new System.Drawing.Point(282, 2);
+            this.chkDisplayAllModels.Name = "chkDisplayAllModels";
+            this.chkDisplayAllModels.Size = new System.Drawing.Size(74, 17);
+            this.chkDisplayAllModels.TabIndex = 2;
+            this.chkDisplayAllModels.Text = "Display All";
+            this.chkDisplayAllModels.UseVisualStyleBackColor = true;
+            this.chkDisplayAllModels.CheckedChanged += new System.EventHandler(this.chkDisplayAllModels_CheckedChanged);
             // 
             // Viewport
             // 
@@ -317,5 +330,6 @@
         private Forms.STComboBox drawContainersCB;
         private Forms.STPanel stPanel1;
         private Forms.STLabel stLabel1;
+        private Forms.STCheckBox chkDisplayAllModels;
     }
 }

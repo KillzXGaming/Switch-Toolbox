@@ -211,6 +211,9 @@ namespace FirstPlugin
                         }
                     }
                 }
+
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+                bfresEditor.DisplayAll = true;
             }
 
             private ObjectEditor editor;

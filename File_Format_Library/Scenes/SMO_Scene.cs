@@ -52,6 +52,9 @@ namespace FirstPlugin
                 TextureSzs = null;
                 GC.Collect();
             }
+
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+            bfresEditor.DisplayAll = true;
         }
 
         private static void DiableLoadCheck()
