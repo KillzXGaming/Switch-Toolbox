@@ -247,6 +247,9 @@ namespace Toolbox.Library
 
         private static string SetFullPath(TreeNode node, TreeNode root)
         {
+            if (node.TreeView == null)
+                return node.Text;
+
             string nodePath = node.FullPath;
             int startIndex = nodePath.IndexOf(root.Text);
             if (startIndex > 0)
