@@ -1363,7 +1363,9 @@ namespace FirstPlugin
 
             setting.SurfaceDim = surfaceDim;
 
-            var ImageDataCached = Texture.TextureData;
+            var ImageDataCached = new List<List<byte[]>>();
+            if (Texture.TextureData != null)
+                ImageDataCached = Texture.TextureData;
 
             switch (ext)
             {
