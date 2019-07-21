@@ -12,6 +12,64 @@ namespace Toolbox.Library
 {
     public class TreeHelper
     {
+        public static void CreateFileDirectory(TreeNode root)
+        {
+            List<TreeNode> treeNodes = new List<TreeNode>();
+            foreach (TreeNode n in root.Nodes)
+                treeNodes.Add(n);
+
+            var rootText = root.Text;
+            var rootTextLength = rootText.Length;
+            root.Nodes.Clear();
+
+            int I = 0;
+            foreach (TreeNode node in treeNodes)
+            {
+                string nodeString = node.Text;
+
+                var roots = nodeString.Split(new char[] { '/' },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                // The initial parent is the root node
+                var parentNode = root;
+                var sb = new System.Text.StringBuilder(rootText, nodeString.Length + rootTextLength);
+                for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
+                {
+                    // Build the node name
+                    var parentName = roots[rootIndex];
+                    sb.Append("/");
+                    sb.Append(parentName);
+                    var nodeName = sb.ToString();
+
+                    // Search for the node
+                    var index = parentNode.Nodes.IndexOfKey(nodeName);
+                    if (index == -1)
+                    {
+                        // Node was not found, add it
+                        var folder = new TreeNode(parentName);
+                        if (rootIndex == roots.Length - 1)
+                        {
+                            node.Text = parentName;
+                            parentNode.Nodes.Add(node);
+                            parentNode = node;
+                        }
+                        else
+                        {
+                            folder.Name = nodeName;
+                            parentNode.Nodes.Add(folder);
+                            parentNode = folder;
+                        }
+                    }
+                    else
+                    {
+                        // Node was found, set that as parent and continue
+                        parentNode = parentNode.Nodes[index];
+                    }
+                }
+            }
+        }
+
+
         public static void ExtractAllFiles(string ParentPath, TreeNodeCollection Nodes)
         {
             FolderSelectDialog folderDialog = new FolderSelectDialog();

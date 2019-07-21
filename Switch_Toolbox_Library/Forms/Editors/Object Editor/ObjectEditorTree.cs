@@ -31,6 +31,12 @@ namespace Toolbox.Library.Forms
             var FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
             FileRoot.FillTreeNodes();
             AddNode(FileRoot);
+
+            if (FileFormat is TreeNode) //It can still be both, so add all it's nodes
+            {
+                foreach (TreeNode n in ((TreeNode)FileFormat).Nodes)
+                    FileRoot.Nodes.Add(n);
+            }
         }
 
         public void AddNodeCollection(TreeNodeCollection nodes, bool ClearNodes)

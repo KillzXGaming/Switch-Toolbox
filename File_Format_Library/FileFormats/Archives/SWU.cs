@@ -5,16 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace FirstPlugin
 {
-    public class SP2 : IFileFormat, IArchiveFile
+    public class SWU : TreeNodeFile, IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Team Sonic Racing Archive" };
-        public string[] Extension { get; set; } = new string[] { "*.sp2" };
+        public string[] Description { get; set; } = new string[] { "Sonic and All Stars Racing Transformed Archive" };
+        public string[] Extension { get; set; } = new string[] { "*.swu" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -23,7 +26,7 @@ namespace FirstPlugin
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return Utils.HasExtension(FileName, ".sp2");
+                return Utils.HasExtension(FileName, ".swu");
             }
         }
 
@@ -62,6 +65,11 @@ namespace FirstPlugin
 
             using (var reader = new FileReader(stream))
             {
+                reader.SetByteOrder(true);
+
+                bool IsWiiU = true;
+
+                Text = FileName;
                 while (!reader.EndOfStream)
                 {
                     ChunkHeader chunk = new ChunkHeader();
@@ -77,26 +85,33 @@ namespace FirstPlugin
                     Chunks.Add(chunk);
 
                     var Identifer = chunk.Identifier.Reverse();
-
                     switch (Identifer)
                     {
                         case ChunkTextureFile:
-                            if (chunk.ChunkSize > 0x88)
+                            SWUTexture texture = new SWUTexture();
+                            reader.SeekBegin(chunk.Position + 72);
+                            texture.ImageKey = "texture";
+                            texture.SelectedImageKey = "texture";
+                            texture.ReadChunk(reader, IsWiiU);
+                            chunk.ChunkData = texture;
+                            if (chunk.ChunkSize > 244)
                             {
-                                reader.Seek(chunk.Position + 0x88, System.IO.SeekOrigin.Begin);
+                                reader.Seek(chunk.Position + 244, System.IO.SeekOrigin.Begin);
                                 chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                                texture.Text = chunk.FileName;
                             }
+                            Nodes.Add(texture);
                             break;
                         case ChunkMetaInfo:
                             break;
-                     /*   case ChunkAnimInfo:
+                        case ChunkAnimInfo:
                             if (chunk.ChunkSize > 0xB0)
                             {
-                              //  reader.Seek(chunk.Position + 0xB0, System.IO.SeekOrigin.Begin);
-                               // chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                           //     reader.Seek(chunk.Position + 0xB0, System.IO.SeekOrigin.Begin);
+                           //     chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
                             }
                             break;
-                        case ChunkAnimData:
+                   /*     case ChunkAnimData:
                             AnimationFile animFile = new AnimationFile();
                             animFile.Read(reader);
                             chunk.ChunkData = animFile;
@@ -123,6 +138,127 @@ namespace FirstPlugin
 
                 ReadGPUFile(FilePath);
             }
+
+            TreeHelper.CreateFileDirectory(this);
+        }
+
+        public class SWUTexture : STGenericTexture, IChunkData
+        {
+            public byte[] ImageData;
+
+            public FileType FileType { get; set; } = FileType.Image;
+
+            public override bool CanEdit { get; set; } = false;
+
+            public override TEX_FORMAT[] SupportedFormats
+            {
+                get
+                {
+                    return new TEX_FORMAT[] {
+                    TEX_FORMAT.R8G8B8A8_UNORM,
+                };
+                }
+            }
+
+            public override void OnClick(TreeView treeview)
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+                if (editor == null)
+                {
+                    editor = new ImageEditorBase();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.LoadEditor(editor);
+                }
+
+                if (GX2Surface != null)
+                {
+                    var tex = Bfres.Structs.FTEX.FromGx2Surface(GX2Surface, Text);
+                    editor.LoadProperties(tex);
+                }
+
+                editor.Text = Text;
+                editor.LoadImage(this);
+            }
+
+            GX2.GX2Surface GX2Surface;
+
+            public void ReadChunk(FileReader reader, bool IsWiiU)
+            {
+                if (IsWiiU)
+                {
+                    reader.SetByteOrder(true);
+
+                    Console.WriteLine("TEX pos " + reader.Position);
+                    GX2Surface = new GX2.GX2Surface();
+                    GX2Surface.dim = reader.ReadUInt32();
+                    GX2Surface.width = reader.ReadUInt32();
+                    GX2Surface.height = reader.ReadUInt32();
+                    GX2Surface.depth = reader.ReadUInt32();
+                    GX2Surface.numMips = reader.ReadUInt32();
+                    GX2Surface.format = reader.ReadUInt32();
+                    GX2Surface.aa = reader.ReadUInt32();
+                    GX2Surface.use = reader.ReadUInt32();
+                    GX2Surface.imageSize = reader.ReadUInt32();
+                    GX2Surface.imagePtr = reader.ReadUInt32();
+                    GX2Surface.mipSize = reader.ReadUInt32();
+                    GX2Surface.mipPtr = reader.ReadUInt32();
+                    GX2Surface.tileMode = reader.ReadUInt32();
+                    GX2Surface.swizzle = reader.ReadUInt32();
+                    GX2Surface.alignment = reader.ReadUInt32();
+                    GX2Surface.pitch = reader.ReadUInt32();
+                    GX2Surface.mipOffset = reader.ReadUInt32s(13);
+                    GX2Surface.firstMip = reader.ReadUInt32();
+                    GX2Surface.imageCount = reader.ReadUInt32();
+                    GX2Surface.firstSlice = reader.ReadUInt32();
+                    GX2Surface.numSlices = reader.ReadUInt32();
+                    GX2Surface.compSel = reader.ReadBytes(4);
+                    GX2Surface.texRegs = reader.ReadUInt32s(4);
+
+                    RedChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[0]);
+                    GreenChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[1]);
+                    BlueChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[2]);
+                    AlphaChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[3]);
+
+                    if (GX2Surface.numMips > 13)
+                        return;
+
+                    Width = GX2Surface.width;
+                    Height = GX2Surface.height;
+                    MipCount = GX2Surface.numMips;
+                    ArrayCount = GX2Surface.numArray;
+                    Format = Bfres.Structs.FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)GX2Surface.format);
+                }
+            }
+
+            private STChannelType GX2ChanneToGeneric(Syroot.NintenTools.Bfres.GX2.GX2CompSel comp)
+            {
+                if (comp == Syroot.NintenTools.Bfres.GX2.GX2CompSel.ChannelR) return STChannelType.Red;
+                else if (comp == Syroot.NintenTools.Bfres.GX2. GX2CompSel.ChannelG) return STChannelType.Green;
+                else if (comp == Syroot.NintenTools.Bfres.GX2.GX2CompSel.ChannelB) return STChannelType.Blue;
+                else if (comp == Syroot.NintenTools.Bfres.GX2.GX2CompSel.ChannelA) return STChannelType.Alpha;
+                else if (comp == Syroot.NintenTools.Bfres.GX2.GX2CompSel.Always0) return STChannelType.Zero;
+                else return STChannelType.One;
+            }
+
+            public override void SetImageData(Bitmap bitmap, int ArrayLevel)
+            {
+                throw new NotImplementedException("Cannot set image data! Operation not implemented!");
+            }
+
+            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+            {
+                if (GX2Surface != null)
+                {
+                    GX2Surface.data = ImageData;
+                    GX2Surface.mipData = ImageData;
+
+                    return GX2.Decode(GX2Surface, ArrayLevel, MipLevel);
+                }
+                else
+                {
+                    return ImageData;
+                }
+            }
         }
 
         private void ReadGPUFile(string FileName)
@@ -148,6 +284,14 @@ namespace FirstPlugin
                         //Get CPU chunk data
                         if (Chunks[i].ChunkData != null)
                         {
+                            if (Chunks[i].ChunkData is SWUTexture)
+                            {
+                                SWUTexture texFile = (SWUTexture)Chunks[i].ChunkData;
+                                if (Chunks[i].FileSize != 0)
+                                    texFile.ImageData = reader.ReadBytes((int)Chunks[i].FileSize);
+
+                                continue;
+                            }
                             if ( Chunks[i].ChunkData is AnimationFile)
                             {
                                 AnimationFile animFile = (AnimationFile)Chunks[i].ChunkData;
@@ -201,6 +345,7 @@ namespace FirstPlugin
                             else
                                 fileInfo.FileData = new byte[0];
                         }
+
                         files.Add(fileInfo);
 
                         //Don't advance the stream unless the chunk has a pointer
