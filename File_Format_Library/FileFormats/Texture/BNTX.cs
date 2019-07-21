@@ -1364,7 +1364,7 @@ namespace FirstPlugin
             setting.SurfaceDim = surfaceDim;
 
             var ImageDataCached = new List<List<byte[]>>();
-            if (Texture.TextureData != null)
+            if (Texture != null && Texture.TextureData != null)
                 ImageDataCached = Texture.TextureData;
 
             switch (ext)
@@ -1409,7 +1409,8 @@ namespace FirstPlugin
                     ImageDataCached[i] = Texture.TextureData[0]; 
             }
 
-            Texture.TextureData = ImageDataCached;
+            if (ImageDataCached.Count > 0)
+                Texture.TextureData = ImageDataCached;
         }
         public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
         {
