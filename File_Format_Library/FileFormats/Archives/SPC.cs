@@ -101,7 +101,7 @@ namespace FirstPlugin
                                    animFile.Read(reader);
                                    chunk.ChunkData = animFile;
                                    break;
-                            /*   case ChunkSkeletonData:
+                               case ChunkSkeletonData:
                                    SkeletonFile skelFile = new SkeletonFile();
                                    skelFile.Read(reader);
                                    chunk.ChunkData = skelFile;
@@ -115,7 +115,7 @@ namespace FirstPlugin
                                    MaterialFile matFile = new MaterialFile();
                                    matFile.Read(reader);
                                    chunk.ChunkData = matFile;
-                                   break;*/
+                                   break;
                     }
 
                     chunk.FileName = chunk.FileName.RemoveIllegaleFolderNameCharacters();
@@ -251,9 +251,9 @@ namespace FirstPlugin
                 long pos = reader.Position;
 
                 uint unk3 = reader.ReadUInt32();
-                uint unk4 = reader.ReadUInt32(); //Set to 1
                 uint SectionSize = reader.ReadUInt32(); //At the end, the file name
-                uint Padding = reader.ReadUInt32();
+                uint unk4 = reader.ReadUInt32(); //Set to 1
+                uint unk5 = reader.ReadUInt32();
                 uint NextSectionOffset = reader.ReadUInt32();
 
                 reader.Seek(pos, System.IO.SeekOrigin.Begin);
@@ -279,9 +279,9 @@ namespace FirstPlugin
                 long pos = reader.Position;
 
                 uint unk3 = reader.ReadUInt32();
-                uint unk4 = reader.ReadUInt32(); //Set to 1
                 uint SectionSize = reader.ReadUInt32(); //At the end, the file name
-                uint Padding = reader.ReadUInt32();
+                uint unk4 = reader.ReadUInt32(); //Set to 1
+                uint unk5 = reader.ReadUInt32();
 
                 reader.Seek(pos, System.IO.SeekOrigin.Begin);
                 //Material FILE
@@ -301,9 +301,9 @@ namespace FirstPlugin
                 long pos = reader.Position;
 
                 uint unk3 = reader.ReadUInt32();
-                uint unk4 = reader.ReadUInt32(); //Set to 1
                 uint SectionSize = reader.ReadUInt32(); //At the end, the file name
-                uint Padding = reader.ReadUInt32();
+                uint unk4 = reader.ReadUInt32(); //Set to 1
+                uint unk5 = reader.ReadUInt32();
 
                 reader.Seek(pos, System.IO.SeekOrigin.Begin);
                 //SKEL FILE
