@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.Library;
 using OpenTK;
 
 namespace FirstPlugin
@@ -48,16 +49,11 @@ namespace FirstPlugin
         {
             Color SetColor = Color.White;
 
-            int someIntX = (int)Math.Ceiling(value.X * 255);
-            int someIntY = (int)Math.Ceiling(value.Y * 255);
-            int someIntZ = (int)Math.Ceiling(value.Z * 255);
-            int someIntW = (int)Math.Ceiling(value.W * 255);
-
             SetColor = Color.FromArgb(
         255,
-        someIntX,
-        someIntY,
-        someIntZ
+         Utils.FloatToIntClamp(value.X),
+         Utils.FloatToIntClamp(value.Y),
+         Utils.FloatToIntClamp(value.Z)
         );
 
             columnHeader2.Text = "R";

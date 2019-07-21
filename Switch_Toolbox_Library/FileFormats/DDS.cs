@@ -545,6 +545,9 @@ namespace Toolbox.Library
             Width = header.width;
             Height = header.height;
             MipCount = header.mipmapCount;
+            Depth = header.depth;
+            if (Depth == 0)
+                Depth = 1;
 
             byte[] Components = new byte[4] { 0, 1, 2, 3 };
 
@@ -897,37 +900,40 @@ namespace Toolbox.Library
             return surfaces;
         }
 
-        public void SetArrayLevel(byte[] data, int ArrayIndex)
+        public void SetArrayLevel(byte[] data, int ArrayIndex, int DepthIndex = 0)
         {
             uint formatSize = GetBytesPerPixel(Format);
 
             uint Offset = 0;
-            for (byte i = 0; i < ArrayCount; ++i)
+            for (byte d = 0; d < Depth; ++d)
             {
-                if (i == ArrayIndex)
+                for (byte i = 0; i < ArrayCount; ++i)
                 {
-                    Array.Copy(data, 0, bdata, Offset, data.Length);
-                }
-
-                uint MipWidth = Width, MipHeight = Height;
-                for (int j = 0; j < MipCount; ++j)
-                {
-                    MipWidth = (uint)Math.Max(1, Width >> j);
-                    MipHeight = (uint)Math.Max(1, Height >> j);
-
-                    uint size = (MipWidth * MipHeight); //Total pixels
-                    if (IsCompressed(Format))
+                    if (i == ArrayIndex)
                     {
-                        size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
-                        if (size < formatSize)
-                            size = formatSize;
-                    }
-                    else
-                    {
-                        size = (uint)(size * GetBytesPerPixel(Format)); //Bytes per pixel
+                        Array.Copy(data, 0, bdata, Offset, data.Length);
                     }
 
-                    Offset += size;
+                    uint MipWidth = Width, MipHeight = Height;
+                    for (int j = 0; j < MipCount; ++j)
+                    {
+                        MipWidth = (uint)Math.Max(1, Width >> j);
+                        MipHeight = (uint)Math.Max(1, Height >> j);
+
+                        uint size = (MipWidth * MipHeight); //Total pixels
+                        if (IsCompressed(Format))
+                        {
+                            size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                            if (size < formatSize)
+                                size = formatSize;
+                        }
+                        else
+                        {
+                            size = (uint)(size * GetBytesPerPixel(Format)); //Bytes per pixel
+                        }
+
+                        Offset += size;
+                    }
                 }
             }
         }
@@ -941,32 +947,35 @@ namespace Toolbox.Library
                 uint formatSize = GetBytesPerPixel(tex.Format);
 
                 uint Offset = 0;
-                for (byte i = 0; i < Length; ++i)
+                for (byte d = 0; d < tex.Depth; ++d)
                 {
-                    var Surface = new STGenericTexture.Surface();
-
-                    uint MipWidth = tex.Width, MipHeight = tex.Height;
-                    for (int j = 0; j < tex.MipCount; ++j)
+                    for (byte i = 0; i < Length; ++i)
                     {
-                        MipWidth = (uint)Math.Max(1, tex.Width >> j);
-                        MipHeight = (uint)Math.Max(1, tex.Height >> j);
+                        var Surface = new STGenericTexture.Surface();
 
-                        uint size = (MipWidth * MipHeight); //Total pixels
-                        if (IsCompressed(tex.Format))
+                        uint MipWidth = tex.Width, MipHeight = tex.Height;
+                        for (int j = 0; j < tex.MipCount; ++j)
                         {
-                            size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
-                            if (size < formatSize)
-                                size = formatSize;
-                        }
-                        else
-                        {
-                            size = (uint)(size * GetBytesPerPixel(tex.Format)); //Bytes per pixel
-                        }
+                            MipWidth = (uint)Math.Max(1, tex.Width >> j);
+                            MipHeight = (uint)Math.Max(1, tex.Height >> j);
 
-                        Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
-                        Offset += size;
+                            uint size = (MipWidth * MipHeight); //Total pixels
+                            if (IsCompressed(tex.Format))
+                            {
+                                size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                                if (size < formatSize)
+                                    size = formatSize;
+                            }
+                            else
+                            {
+                                size = (uint)(size * GetBytesPerPixel(tex.Format)); //Bytes per pixel
+                            }
+
+                            Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
+                            Offset += size;
+                        }
+                        Surfaces.Add(Surface);
                     }
-                    Surfaces.Add(Surface);
                 }
 
                 return Surfaces;

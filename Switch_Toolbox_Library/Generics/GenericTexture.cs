@@ -1075,15 +1075,15 @@ namespace Toolbox.Library
 
             [Browsable(true)]
             [ReadOnly(true)]
-            [Description("Format of the image.")]
-            [Category("Image Info")]
-            public TEX_FORMAT Format { get; set; }
-
-            [Browsable(true)]
-            [ReadOnly(true)]
             [Description("Depth of the image (3D type).")]
             [Category("Image Info")]
             public uint Depth { get; set; }
+
+            [Browsable(true)]
+            [ReadOnly(true)]
+            [Description("Format of the image.")]
+            [Category("Image Info")]
+            public TEX_FORMAT Format { get; set; }
 
             [Browsable(true)]
             [ReadOnly(true)]
