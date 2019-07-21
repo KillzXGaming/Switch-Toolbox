@@ -19,6 +19,7 @@ namespace FirstPlugin
 
             CanResize = false;
             ogSkinCountChkBox.Checked = true;
+            chkMapOriginalMaterials.Checked = true;
 
             tabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
@@ -55,7 +56,14 @@ namespace FirstPlugin
         public bool ResetColorParams;
 
         public bool LimitSkinCount => ogSkinCountChkBox.Checked;
-        public bool MapOriginalMaterials => chkMapOriginalMaterials.Checked;
+        public bool MapOriginalMaterials
+        {
+            get
+            {
+               return chkMapOriginalMaterials.Checked && chkBoxImportMat.Checked;
+            }
+        }
+
         public bool UseOriginalAttributes => chkOriginalAttributesFormats.Checked;
         public bool UseOriginalAttributeFormats => chkOriginalAttributesFormats.Checked;
 
