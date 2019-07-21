@@ -89,11 +89,11 @@ namespace FirstPlugin
                             break;
                         case ChunkMetaInfo:
                             break;
-                     /*   case ChunkAnimInfo:
+                        case ChunkAnimInfo:
                             if (chunk.ChunkSize > 0xB0)
                             {
-                              //  reader.Seek(chunk.Position + 0xB0, System.IO.SeekOrigin.Begin);
-                               // chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                                reader.Seek(chunk.Position + 0xB0, System.IO.SeekOrigin.Begin);
+                                chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
                             }
                             break;
                         case ChunkAnimData:
@@ -115,7 +115,7 @@ namespace FirstPlugin
                             MaterialFile matFile = new MaterialFile();
                             matFile.Read(reader);
                             chunk.ChunkData = matFile;
-                            break;*/
+                            break;
                     }
 
                     reader.Seek(chunk.Position + chunk.ChunkSize, System.IO.SeekOrigin.Begin);

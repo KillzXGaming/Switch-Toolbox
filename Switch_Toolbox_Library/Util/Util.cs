@@ -93,7 +93,7 @@ namespace Toolbox.Library
 
         public static string GetExtension(string FileName)
         {
-            return Path.GetExtension(FileName).ToLower();
+            return Path.GetExtension(FileName.RemoveIllegaleFileNameCharacters()).ToLower();
         }
            
         public static bool HasExtension(string FileName, string Extension)
