@@ -105,11 +105,11 @@ namespace FirstPlugin
                         case ChunkAnimInfo:
                             if (chunk.ChunkSize > 0xB0)
                             {
-                           //     reader.Seek(chunk.Position + 0xB0, System.IO.SeekOrigin.Begin);
-                           //     chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                                reader.Seek(chunk.Position + 0xB0, System.IO.SeekOrigin.Begin);
+                                chunk.FileName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
                             }
                             break;
-                   /*     case ChunkAnimData:
+                        case ChunkAnimData:
                             AnimationFile animFile = new AnimationFile();
                             animFile.Read(reader);
                             chunk.ChunkData = animFile;
@@ -128,7 +128,7 @@ namespace FirstPlugin
                             MaterialFile matFile = new MaterialFile();
                             matFile.Read(reader);
                             chunk.ChunkData = matFile;
-                            break;*/
+                            break;
                     }
 
                     reader.Seek(chunk.Position + chunk.ChunkSize, System.IO.SeekOrigin.Begin);
@@ -182,47 +182,47 @@ namespace FirstPlugin
 
             public void ReadChunk(FileReader reader)
             {
-                reader.SetByteOrder(true);
+               reader.SetByteOrder(true);
 
-                Console.WriteLine("TEX pos " + reader.Position);
-                GX2Surface = new GX2.GX2Surface();
-                GX2Surface.dim = reader.ReadUInt32();
-                GX2Surface.width = reader.ReadUInt32();
-                GX2Surface.height = reader.ReadUInt32();
-                GX2Surface.depth = reader.ReadUInt32();
-                GX2Surface.numMips = reader.ReadUInt32();
-                GX2Surface.format = reader.ReadUInt32();
-                GX2Surface.aa = reader.ReadUInt32();
-                GX2Surface.use = reader.ReadUInt32();
-                GX2Surface.imageSize = reader.ReadUInt32();
-                GX2Surface.imagePtr = reader.ReadUInt32();
-                GX2Surface.mipSize = reader.ReadUInt32();
-                GX2Surface.mipPtr = reader.ReadUInt32();
-                GX2Surface.tileMode = reader.ReadUInt32();
-                GX2Surface.swizzle = reader.ReadUInt32();
-                GX2Surface.alignment = reader.ReadUInt32();
-                GX2Surface.pitch = reader.ReadUInt32();
-                GX2Surface.mipOffset = reader.ReadUInt32s(13);
-                GX2Surface.firstMip = reader.ReadUInt32();
-                GX2Surface.imageCount = reader.ReadUInt32();
-                GX2Surface.firstSlice = reader.ReadUInt32();
-                GX2Surface.numSlices = reader.ReadUInt32();
-                GX2Surface.compSel = reader.ReadBytes(4);
-                GX2Surface.texRegs = reader.ReadUInt32s(4);
+                    Console.WriteLine("TEX pos " + reader.Position);
+                    GX2Surface = new GX2.GX2Surface();
+                    GX2Surface.dim = reader.ReadUInt32();
+                    GX2Surface.width = reader.ReadUInt32();
+                    GX2Surface.height = reader.ReadUInt32();
+                    GX2Surface.depth = reader.ReadUInt32();
+                    GX2Surface.numMips = reader.ReadUInt32();
+                    GX2Surface.format = reader.ReadUInt32();
+                    GX2Surface.aa = reader.ReadUInt32();
+                    GX2Surface.use = reader.ReadUInt32();
+                    GX2Surface.imageSize = reader.ReadUInt32();
+                    GX2Surface.imagePtr = reader.ReadUInt32();
+                    GX2Surface.mipSize = reader.ReadUInt32();
+                    GX2Surface.mipPtr = reader.ReadUInt32();
+                    GX2Surface.tileMode = reader.ReadUInt32();
+                    GX2Surface.swizzle = reader.ReadUInt32();
+                    GX2Surface.alignment = reader.ReadUInt32();
+                    GX2Surface.pitch = reader.ReadUInt32();
+                    GX2Surface.mipOffset = reader.ReadUInt32s(13);
+                    GX2Surface.firstMip = reader.ReadUInt32();
+                    GX2Surface.imageCount = reader.ReadUInt32();
+                    GX2Surface.firstSlice = reader.ReadUInt32();
+                    GX2Surface.numSlices = reader.ReadUInt32();
+                    GX2Surface.compSel = reader.ReadBytes(4);
+                    GX2Surface.texRegs = reader.ReadUInt32s(4);
 
-                RedChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[0]);
-                GreenChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[1]);
-                BlueChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[2]);
-                AlphaChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[3]);
+                    RedChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[0]);
+                    GreenChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[1]);
+                    BlueChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[2]);
+                    AlphaChannel = GX2ChanneToGeneric((Syroot.NintenTools.Bfres.GX2.GX2CompSel)GX2Surface.compSel[3]);
 
-                if (GX2Surface.numMips > 13)
-                    return;
+                    if (GX2Surface.numMips > 13)
+                        return;
 
-                Width = GX2Surface.width;
-                Height = GX2Surface.height;
-                MipCount = GX2Surface.numMips;
-                ArrayCount = GX2Surface.numArray;
-                Format = Bfres.Structs.FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)GX2Surface.format);
+                    Width = GX2Surface.width;
+                    Height = GX2Surface.height;
+                    MipCount = GX2Surface.numMips;
+                    ArrayCount = GX2Surface.numArray;
+                    Format = Bfres.Structs.FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)GX2Surface.format);
             }
 
             private STChannelType GX2ChanneToGeneric(Syroot.NintenTools.Bfres.GX2.GX2CompSel comp)

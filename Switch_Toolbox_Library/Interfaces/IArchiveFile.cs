@@ -36,6 +36,9 @@ namespace Toolbox.Library
     public class ArchiveFileInfo : INode
     {
         [Browsable(false)]
+        public string SourceFile { get; internal set; }
+
+        [Browsable(false)]
         public string ImageKey { get; set; }
 
         [Browsable(false)]
@@ -432,6 +435,9 @@ namespace Toolbox.Library
                 {
                     if (!node.CanLoadFile)
                         continue;
+
+                    if (!((IFileFormat)archiveFile).IFileInfo.InArchive && File.Exists(((IFileFormat)archiveFile).FilePath))
+                        node.SourceFile = ((IFileFormat)archiveFile).FilePath;
 
                     string nodeString = node.FileName;
 

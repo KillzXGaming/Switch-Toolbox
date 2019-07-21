@@ -82,14 +82,9 @@ namespace FirstPlugin
                 List<TexturePOWE> Textures = new List<TexturePOWE>();
 
                 TreeNode textureFolder = new TreeNode("Textures");
-                Nodes.Add(textureFolder);
 
                 for (int i = 0; i < files.Count; i++)
                 {
-                    Nodes.Add(files[i]);
-
-                    continue;
-
                     if (files[i].FileType == FileEntry.FileDataType.Texture)
                     {
                         if (files[i].Unknown3 == 1) //Info
@@ -100,6 +95,8 @@ namespace FirstPlugin
                                 while (textureReader.ReadUInt32() == TexturePOWE.Identifier)
                                 {
                                     var texture = new TexturePOWE();
+                                    texture.ImageKey = "texture";
+                                    texture.SelectedImageKey = texture.ImageKey;
                                     texture.Index = ImageIndex;
                                     texture.Read(textureReader);
                                     texture.Text = $"Texture {ImageIndex}";
@@ -110,10 +107,15 @@ namespace FirstPlugin
                         }
                         else //Block
                         {
+                            uint Offset = 0;
                             foreach (var tex in Textures)
                             {
                                 if (tex.Index == ImageIndex)
-                                    tex.ImageData = files[i].FileData;
+                                {
+                                    tex.ImageData = Utils.SubArray(files[i].FileData, Offset, tex.ImageSize);
+                                }
+
+                                Offset += tex.ImageSize;
                             }
                             ImageIndex++;
                         }
@@ -121,6 +123,9 @@ namespace FirstPlugin
                     else
                         Nodes.Add(files[i]);
                 }
+
+                if (textureFolder.Nodes.Count > 0)
+                    Nodes.Add(textureFolder);
             }
         }
 
