@@ -13,7 +13,7 @@ using System.Drawing;
 namespace FirstPlugin
 {
     //Parse info based on https://github.com/TheFearsomeDzeraora/LM2L
-    public class LM2_DICT : TreeNodeFile, IFileFormat
+    public class LM2_DICT : TreeNodeFile, IFileFormat, IArchiveFile
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -48,8 +48,13 @@ namespace FirstPlugin
         }
 
         public List<FileEntry> files = new List<FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public void ClearFiles() { files.Clear(); }
 
         public bool IsCompressed = false;
+
+        public LM2_ChunkTable ChunkTable;
 
         public void Load(System.IO.Stream stream)
         {
@@ -65,14 +70,45 @@ namespace FirstPlugin
 
                 reader.SeekBegin(0x2C);
                 byte[] Unknowns = reader.ReadBytes((int)FileCount);
+
+                long FileTablePos = reader.Position;
                 for (int i = 0; i < FileCount; i++)
                 {
                     var file = new FileEntry(this);
                     file.Read(reader);
-                    if (file.FileType != 0)
+
+                    //Skip the file table entries as those are not needed to be loaded
+                    if (file.FileType != 0 && i > 1)
                     {
-                        file.Text = $"File {i} (Unknowns {file.FileType}  {file.Unknown2}  {file.Unknown3})";
+                        file.FileName = $"File {i} (FileType: ({file.FileType}) Unknowns:  {file.Unknown2}  {file.Unknown3})";
                         files.Add(file);
+                    }
+                    //The first file stores a chunk layout
+                    //The second one seems to be a duplicate? 
+                    if (i == 0) 
+                    {
+                        using (var tableReader = new FileReader(file.FileData))
+                        {
+                            ChunkTable = new LM2_ChunkTable();
+                            ChunkTable.Read(tableReader);
+
+                            TreeNode debugFolder = new TreeNode("DEBUG TABLE INFO");
+                            Nodes.Add(debugFolder);
+
+                            TreeNode list1 = new TreeNode("Entry List 1");
+                            TreeNode list2 = new TreeNode("Entry List 2 ");
+                            debugFolder.Nodes.Add(list1);
+                            debugFolder.Nodes.Add(list2);
+
+                            foreach (var chunk in ChunkTable.ChunkEntries)
+                            {
+                                list1.Nodes.Add($"ChunkOffset {chunk.ChunkOffset} ChunkType {chunk.ChunkType.ToString("X")} Unknown1 {chunk.Unknown1}  Unknown2 {chunk.Unknown2}  Unknown3 {chunk.Unknown3}");
+                            }
+                            foreach (var chunk in ChunkTable.ChunkSubEntries)
+                            {
+                                list2.Nodes.Add($"ChunkOffset {chunk.ChunkOffset} ChunkType {chunk.ChunkType.ToString("X")}  Unknown {chunk.Unknown}");
+                            }
+                        }
                     }
                 }
 
@@ -85,13 +121,14 @@ namespace FirstPlugin
 
                 for (int i = 0; i < files.Count; i++)
                 {
-                    if (files[i].FileType == FileEntry.FileDataType.Texture)
+                    if (files[i].FileType == FileEntry.DataType.Texture)
                     {
                         if (files[i].Unknown3 == 1) //Info
                         {
                             //Read the info
                             using (var textureReader = new FileReader(files[i].FileData))
                             {
+                                int headerIndex = 0;
                                 while (textureReader.ReadUInt32() == TexturePOWE.Identifier)
                                 {
                                     var texture = new TexturePOWE();
@@ -99,7 +136,7 @@ namespace FirstPlugin
                                     texture.SelectedImageKey = texture.ImageKey;
                                     texture.Index = ImageIndex;
                                     texture.Read(textureReader);
-                                    texture.Text = $"Texture {ImageIndex}";
+                                    texture.Text = $"Texture {headerIndex++}";
                                     textureFolder.Nodes.Add(texture);
                                     Textures.Add(texture);
                                 }
@@ -120,8 +157,6 @@ namespace FirstPlugin
                             ImageIndex++;
                         }
                     }
-                    else
-                        Nodes.Add(files[i]);
                 }
 
                 if (textureFolder.Nodes.Count > 0)
@@ -231,41 +266,29 @@ namespace FirstPlugin
             }
         }
 
-        public class FileEntry : TreeNodeCustom
+        public class FileEntry : ArchiveFileInfo
         {
             public LM2_DICT ParentDictionary { get; set; }
 
             public uint Offset;
             public uint DecompressedSize;
             public uint CompressedSize;
-            public FileDataType FileType; 
+            public DataType FileType; 
             public byte Unknown2;
             public byte Unknown3; //Possibly the effect? 0 for image block, 1 for info
 
-            public enum FileDataType : ushort
+            public enum DataType : ushort
             {
                 Texture = 0x80,
             }
 
-            public byte[] FileData
+            public override byte[] FileData
             {
                 get { return GetData(); }
                 set
                 {
 
                 }
-            }
-
-            public override void OnClick(TreeView treeview)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.LoadEditor(editor);
-                }
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(FileData);
             }
 
             public FileEntry(LM2_DICT dict)
@@ -278,7 +301,7 @@ namespace FirstPlugin
                 Offset = reader.ReadUInt32();
                 DecompressedSize = reader.ReadUInt32();
                 CompressedSize = reader.ReadUInt32();
-                FileType = reader.ReadEnum<FileDataType>(false);
+                FileType = reader.ReadEnum<DataType>(false);
                 Unknown2 = reader.ReadByte();
                 Unknown3 = reader.ReadByte();
             }

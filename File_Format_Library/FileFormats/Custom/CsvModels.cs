@@ -264,7 +264,7 @@ namespace FirstPlugin
                     break;
             }
 
-            if (objects[0].weightsT.Count != objects[0].vertices.Count)
+            if (objects[0].weightsT.Count > 0 && objects[0].weightsT.Count != objects[0].vertices.Count)
                 throw new Exception("Incorrect vertex amount");
 
             foreach (STGenericObject obj in objects)
@@ -277,16 +277,20 @@ namespace FirstPlugin
                     foreach (float f in obj.weightsT[v])
                         obj.vertices[v].boneWeights.Add(f);
                 }
+
+                int vID = 0;
                 foreach (Vertex v in obj.vertices)
                 {
                     if (v.boneNames.Count == 1)
-                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]}");
+                        Console.WriteLine($"{vID} {v.boneNames[0]} {v.boneWeights[0]}");
                     if (v.boneNames.Count == 2)
-                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]}");
+                        Console.WriteLine($"{vID} {v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]}");
                     if (v.boneNames.Count == 3)
-                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]} {v.boneNames[2]} {v.boneWeights[2]}");
+                        Console.WriteLine($"{vID} {v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]} {v.boneNames[2]} {v.boneWeights[2]}");
                     if (v.boneNames.Count == 4)
-                        Console.WriteLine($"{v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]} {v.boneNames[2]} {v.boneWeights[2]} {v.boneNames[3]} {v.boneWeights[3]}");
+                        Console.WriteLine($"{vID} {v.boneNames[0]} {v.boneWeights[0]} {v.boneNames[1]} {v.boneWeights[1]} {v.boneNames[2]} {v.boneWeights[2]} {v.boneNames[3]} {v.boneWeights[3]}");
+
+                    vID++;
                 }
             }
 

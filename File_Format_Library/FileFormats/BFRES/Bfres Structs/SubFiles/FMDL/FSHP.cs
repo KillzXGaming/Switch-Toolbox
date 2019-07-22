@@ -1403,6 +1403,12 @@ namespace Bfres.Structs
                     vert.Data = weights.ToArray();
                     vert.Format = att.Format;
                     atrib.Add(vert);
+
+                    for (int i = 0; i < weights.Count; i++)
+                    {
+                        Console.WriteLine($"w {i} {weights[i]}");
+                    }
+
                 }
                 if (att.Name == "_i0")
                 {
