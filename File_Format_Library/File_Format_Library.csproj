@@ -206,6 +206,9 @@
     <Compile Include="FileFormats\Archives\IGA_PAK.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_ChunkTable.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_DICT.cs" />
+    <Compile Include="FileFormats\Archives\LM2\LM2_Enums.cs" />
+    <Compile Include="FileFormats\Archives\LM2\LM2_Model.cs" />
+    <Compile Include="FileFormats\Archives\LM2\TexturePOWE.cs" />
     <Compile Include="FileFormats\Archives\LZARC.cs" />
     <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />

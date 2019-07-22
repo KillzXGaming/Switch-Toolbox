@@ -183,7 +183,8 @@ namespace Toolbox.Library
     //Wrapper for the archive file itself
     public class ArchiveRootNodeWrapper : ArchiveBase, IContextMenuNode
     {
-        public List<ArchiveFileWrapper> FileNodes = new List<ArchiveFileWrapper>();
+        //A list that links archive file infos to treenodes of varying types
+        public List<Tuple<ArchiveFileInfo, TreeNode>> FileNodes = new List<Tuple<ArchiveFileInfo, TreeNode>>();
 
         public virtual object PropertyDisplay { get; set; }
 
@@ -193,6 +194,11 @@ namespace Toolbox.Library
             Text = text;
 
             PropertyDisplay = new GenericArchiveProperties(archiveFile, text);
+        }
+
+        public void AddFileNode(ArchiveFileWrapper fileWrapper)
+        {
+            FileNodes.Add(Tuple.Create(fileWrapper.ArchiveFileInfo, (TreeNode)fileWrapper));
         }
 
         public ToolStripItem[] GetContextMenuItems()
@@ -232,7 +238,7 @@ namespace Toolbox.Library
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                TreeHelper.AddFiles(this, ArchiveFile, ofd.FileNames);
+                TreeHelper.AddFiles(this, this, ofd.FileNames);
             }
         }
 
@@ -242,7 +248,9 @@ namespace Toolbox.Library
                 return;
 
             for (int i = 0; i < FileNodes.Count; i++)
-                FileNodes[i].ArchiveFileInfo.FileName = SetFullPath(FileNodes[i], this);
+            {
+                FileNodes[i].Item1.FileName = SetFullPath(FileNodes[i].Item2, this);
+            }
         }
 
         private static string SetFullPath(TreeNode node, TreeNode root)
@@ -411,7 +419,7 @@ namespace Toolbox.Library
                 }
                 else if (node is ArchiveFileInfo)
                 {
-                    ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(node.Name, (ArchiveFileInfo)node, archiveFile);
+                    ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(node.Name, (ArchiveFileInfo)node, this);
                     wrapperFile.Name = node.Name;
                     parent.Nodes.Add(wrapperFile);
                 }
@@ -468,11 +476,11 @@ namespace Toolbox.Library
 
                             if (rootIndex == roots.Length - 1)
                             {
-                                ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, archiveFile);
+                                ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(parentName, node, this);
                                 wrapperFile.Name = nodeName;
                                 parentNode.Nodes.Add(wrapperFile);
                                 parentNode = wrapperFile;
-                                FileNodes.Add(wrapperFile);
+                                AddFileNode(wrapperFile);
                             }
                             else
                             {
@@ -557,7 +565,7 @@ namespace Toolbox.Library
             ofd.Multiselect = true;
 
             if (ofd.ShowDialog() == DialogResult.OK) {
-                TreeHelper.AddFiles(this, ArchiveFile, ofd.FileNames);
+                TreeHelper.AddFiles(this, RootNode, ofd.FileNames);
             }
         }
 
@@ -618,11 +626,14 @@ namespace Toolbox.Library
     //Wrapper for files
     public class ArchiveFileWrapper : ArchiveBase, IContextMenuNode
     {
+        public ArchiveRootNodeWrapper RootNode;
+
         public virtual ArchiveFileInfo ArchiveFileInfo { get; set; }
 
-        public ArchiveFileWrapper(string text, ArchiveFileInfo archiveFileInfo, IArchiveFile archiveFile) : base(archiveFile)
+        public ArchiveFileWrapper(string text, ArchiveFileInfo archiveFileInfo, ArchiveRootNodeWrapper rootNode) : base(rootNode.ArchiveFile)
         {
             Text = text;
+            RootNode = rootNode;
         //    ReloadMenus(archiveFile);
 
             ArchiveFileInfo = archiveFileInfo;
@@ -705,12 +716,12 @@ namespace Toolbox.Library
             else return "";
         }
 
-        public static ArchiveFileWrapper FromPath(string FilePath, IArchiveFile archiveFile)
+        public static ArchiveFileWrapper FromPath(string FilePath, ArchiveRootNodeWrapper rootNode)
         {
             var ArchiveFileInfo = new ArchiveFileInfo();
             ArchiveFileInfo.FileName = FilePath;
             ArchiveFileInfo.FileData = File.ReadAllBytes(FilePath);
-            return new ArchiveFileWrapper(Path.GetFileName(FilePath), ArchiveFileInfo, archiveFile);
+            return new ArchiveFileWrapper(Path.GetFileName(FilePath), ArchiveFileInfo, rootNode);
         }
 
         public ToolStripItem[] GetContextMenuItems()
@@ -781,12 +792,12 @@ namespace Toolbox.Library
                 OpenFormDialog(file);
             }
             else if (file is TreeNode)
-                ReplaceNode(this.Parent, this, (TreeNode)file);
+                ReplaceNode(this.Parent, this, (TreeNode)file, RootNode);
             else if (file is IArchiveFile)
             {
                 var FileRoot = new ArchiveRootNodeWrapper(file.FileName, (IArchiveFile)file);
                 FileRoot.FillTreeNodes();
-                ReplaceNode(this.Parent, this, FileRoot);
+                ReplaceNode(this.Parent, this, FileRoot, RootNode);
             }
         }
 
@@ -847,14 +858,19 @@ namespace Toolbox.Library
             editor.UpdateEditor();
         }
 
-        public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
+        public static void ReplaceNode(TreeNode node, ArchiveFileWrapper replaceNode, TreeNode NewNode, ArchiveRootNodeWrapper rootNode)
         {
             if (NewNode == null)
                 return;
 
+            var fileInfo = replaceNode.ArchiveFileInfo;
+
             int index = node.Nodes.IndexOf(replaceNode);
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
+
+            rootNode.FileNodes.RemoveAt(index);
+            rootNode.FileNodes.Insert(index, Tuple.Create(fileInfo, NewNode));
 
             NewNode.ImageKey = replaceNode.ImageKey;
             NewNode.SelectedImageKey = replaceNode.SelectedImageKey;

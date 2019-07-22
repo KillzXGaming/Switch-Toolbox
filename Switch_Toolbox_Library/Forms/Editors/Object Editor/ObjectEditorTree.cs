@@ -540,8 +540,8 @@ namespace Toolbox.Library.Forms
 
         private void treeViewCustom1_DragOver(object sender, DragEventArgs e)
         {
-            var file = GetActiveArchive();
-            if (file == null || !file.CanReplaceFiles)
+            var root = GetActiveArchive();
+            if (root == null || !root.ArchiveFile.CanReplaceFiles)
                 return;
 
             Point pt = treeViewCustom1.PointToClient(new Point(e.X, e.Y));
@@ -557,10 +557,15 @@ namespace Toolbox.Library.Forms
              //   e.Effect = DragDropEffects.None;
         }
 
-        private IArchiveFile GetActiveArchive()
+        private ArchiveRootNodeWrapper GetActiveArchive()
         {
-            if (treeViewCustom1.SelectedNode != null && treeViewCustom1.SelectedNode is ArchiveBase)
-                return ((ArchiveBase)treeViewCustom1.SelectedNode).ArchiveFile;
+            var node = treeViewCustom1.SelectedNode;
+            if (node != null && node is ArchiveRootNodeWrapper)
+                return (ArchiveRootNodeWrapper)node;
+            if (node != null && node is ArchiveFileWrapper)
+                return ((ArchiveFileWrapper)node).RootNode;
+            if (node != null && node is ArchiveFolderNodeWrapper)
+                return ((ArchiveFolderNodeWrapper)node).RootNode;
 
             return null;
         }

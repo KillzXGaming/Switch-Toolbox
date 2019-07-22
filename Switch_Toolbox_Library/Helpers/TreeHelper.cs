@@ -183,13 +183,15 @@ namespace Toolbox.Library
         }
 
 
-        public static void AddFiles(TreeNode parentNode, IArchiveFile archiveFile, string[] Files)
+        public static void AddFiles(TreeNode parentNode, ArchiveRootNodeWrapper rootNode, string[] Files)
         {
+            var archiveFile = rootNode.ArchiveFile;
+
             if (Files == null || Files.Length <= 0 || !archiveFile.CanAddFiles) return;
 
             for (int i = 0; i < Files.Length; i++)
             {
-                var File = ArchiveFileWrapper.FromPath(Files[i], archiveFile);
+                var File = ArchiveFileWrapper.FromPath(Files[i], rootNode);
                 string FileName = Path.GetFileName(Files[i]);
 
                 //Don't add the root file name
@@ -209,9 +211,9 @@ namespace Toolbox.Library
                 if (HasAddedFile)
                 {
                     if (parentNode is ArchiveRootNodeWrapper)
-                        ((ArchiveRootNodeWrapper)parentNode).FileNodes.Add(File);
+                        ((ArchiveRootNodeWrapper)parentNode).AddFileNode(File);
                     if (parentNode is ArchiveFolderNodeWrapper)
-                        ((ArchiveRootNodeWrapper)parentNode).FileNodes.Add(File);
+                        ((ArchiveRootNodeWrapper)parentNode).AddFileNode(File);
 
                     parentNode.Nodes.Add(File);
                 }

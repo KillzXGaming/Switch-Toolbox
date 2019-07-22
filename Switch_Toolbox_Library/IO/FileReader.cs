@@ -147,6 +147,50 @@ namespace Toolbox.Library.IO
             return new Syroot.IOExtension.Half(ReadUInt16());
         }
 
+        public Matrix4 ReadMatrix4(bool SwapRows = false)
+        {
+            Matrix4 mat4 = new Matrix4();
+            if (SwapRows)
+            {
+                mat4.M11 = ReadSingle();
+                mat4.M21 = ReadSingle();
+                mat4.M31 = ReadSingle();
+                mat4.M41 = ReadSingle();
+                mat4.M12 = ReadSingle();
+                mat4.M22 = ReadSingle();
+                mat4.M32 = ReadSingle();
+                mat4.M42 = ReadSingle();
+                mat4.M13 = ReadSingle();
+                mat4.M23 = ReadSingle();
+                mat4.M33 = ReadSingle();
+                mat4.M43 = ReadSingle();
+                mat4.M14 = ReadSingle();
+                mat4.M24 = ReadSingle();
+                mat4.M34 = ReadSingle();
+                mat4.M44 = ReadSingle();
+            }
+            else
+            {
+                mat4.M11 = ReadSingle();
+                mat4.M12 = ReadSingle();
+                mat4.M13 = ReadSingle();
+                mat4.M14 = ReadSingle();
+                mat4.M21 = ReadSingle();
+                mat4.M22 = ReadSingle();
+                mat4.M23 = ReadSingle();
+                mat4.M24 = ReadSingle();
+                mat4.M31 = ReadSingle();
+                mat4.M32 = ReadSingle();
+                mat4.M33 = ReadSingle();
+                mat4.M34 = ReadSingle();
+                mat4.M41 = ReadSingle();
+                mat4.M42 = ReadSingle();
+                mat4.M43 = ReadSingle();
+                mat4.M44 = ReadSingle();
+            }
+            return mat4;
+        }
+
         public void SeekBegin(uint Offset) { Seek(Offset, SeekOrigin.Begin); }
         public void SeekBegin(int Offset)  { Seek(Offset, SeekOrigin.Begin); }
         public void SeekBegin(long Offset) { Seek(Offset, SeekOrigin.Begin); }

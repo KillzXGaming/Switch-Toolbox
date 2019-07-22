@@ -7,6 +7,7 @@ using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using FirstPlugin.Forms;
+using FirstPlugin.LuigisMansion.DarkMoon;
 
 namespace FirstPlugin
 {

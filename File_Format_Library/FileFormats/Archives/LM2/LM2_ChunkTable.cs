@@ -5,8 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
 
-namespace FirstPlugin
+namespace FirstPlugin.LuigisMansion.DarkMoon
 {
+    public class ChunkEntry
+    {
+        public uint Unknown1;
+        public uint ChunkOffset;
+        public DataType ChunkType;
+        public uint ChunkSubCount;
+        public uint Unknown3;
+    }
+
+    public class ChunkSubEntry
+    {
+        public SubDataType ChunkType;
+        public uint ChunkSize;
+        public uint ChunkOffset;
+    }
+
     //Table consists of 2 chunk entry lists that define how the .data reads sections
     public class LM2_ChunkTable
     {
@@ -17,28 +33,6 @@ namespace FirstPlugin
         //Example, the first list may have image headers, while the second include both image headers and image blocks
         public List<ChunkEntry> ChunkEntries = new List<ChunkEntry>();
         public List<ChunkSubEntry> ChunkSubEntries = new List<ChunkSubEntry>();
-
-        public class ChunkEntry
-        {
-            public uint Unknown1;
-            public uint ChunkOffset;
-            public uint ChunkType;
-            public uint ChunkSubCount;
-            public uint Unknown3;
-        }
-
-        public class ChunkSubEntry
-        {
-            public uint ChunkSize;
-            public DataType ChunkType;
-            public uint Unknown;
-        }
-
-        public enum DataType : uint
-        {
-            TextureHeader = 0x0201B501,
-            TextureData   = 0x1701B502,
-        }
 
         public void Read(FileReader tableReader)
         {
@@ -52,8 +46,8 @@ namespace FirstPlugin
 
                 entry.Unknown1 = tableReader.ReadUInt32(); //8
                 entry.ChunkOffset = tableReader.ReadUInt32(); //The chunk offset in the file. Relative to the first chunk position in the file
-                entry.ChunkType = tableReader.ReadUInt32(); //The type of chunk. 0x8701B5 for example for texture info
-                entry.ChunkSubCount = tableReader.ReadUInt32();
+                entry.ChunkType = tableReader.ReadEnum<DataType>(false); //The type of chunk. 0x8701B5 for example for texture info
+                entry.ChunkSubCount = tableReader.ReadUInt32(); //Uncertain about this. 2 for textures (info + block). Some sections however use large numbers.
 
                 //This increases by 2 each chunk info, however the starting value is not 0
                 //Note the last entry does not have this
@@ -71,9 +65,9 @@ namespace FirstPlugin
             while (!tableReader.EndOfStream && tableReader.Position <= tableReader.BaseStream.Length - 12)
             {
                 ChunkSubEntry subEntry = new ChunkSubEntry();
-                subEntry.ChunkType = tableReader.ReadEnum<DataType>(false); //The type of chunk. 0x8701B5 for example for texture info
+                subEntry.ChunkType = tableReader.ReadEnum<SubDataType>(false); //The type of chunk. 0x8701B5 for example for texture info
                 subEntry.ChunkSize = tableReader.ReadUInt32(); 
-                subEntry.Unknown = tableReader.ReadUInt32(); 
+                subEntry.ChunkOffset = tableReader.ReadUInt32(); 
                 ChunkSubEntries.Add(subEntry);
             }
         }
