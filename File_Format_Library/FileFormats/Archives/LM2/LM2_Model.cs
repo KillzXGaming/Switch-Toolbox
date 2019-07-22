@@ -112,11 +112,19 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             Console.WriteLine($"Mesh {genericObj.Text} Format {formatInfo.Format} BufferLength {formatInfo.BufferLength}");
 
                             uint bufferOffet = BufferStart + VertexBufferPointers[i];
-                     /*       for (int v = 0; v < mesh.VertexCount; v++)
-                            {
-                                reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
 
-                            }*/
+                            using (reader.TemporarySeek(bufferOffet, System.IO.SeekOrigin.Begin))
+                            {
+                                var bufferNodeDebug = new DebugVisualBytes(reader.ReadBytes((int)formatInfo.BufferLength * mesh.VertexCount));
+                                bufferNodeDebug.Text = "Buffer";
+                                genericObj.Nodes.Add(bufferNodeDebug);
+                            }
+
+                            /*       for (int v = 0; v < mesh.VertexCount; v++)
+                                   {
+                                       reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
+                                   }*/
 
                             switch (formatInfo.Format)
                             {
@@ -134,19 +142,40 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                         reader.BaseStream.Position += 0x4;
 
                                         vert.pos = Vector3.TransformPosition(vert.pos, Transform);
-
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
 
-                                    /*    reader.BaseStream.Position += 8;
+                                        Console.WriteLine("vert.uv0  " + vert.uv0);
 
-                                        //  vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                        //   vert.uv2 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                                        if (formatInfo.BufferLength == 22)
+                                        {
+                                            Console.WriteLine("unk 1 " + reader.ReadUInt16());
+                                            Console.WriteLine("unk 2 " + reader.ReadUInt16());
+                                            Console.WriteLine("unk 3 " + reader.ReadUInt16());
+                                            Console.WriteLine("unk 4 " + reader.ReadUInt16());
 
-                                        vert.nrm = new Vector3(
-                                            UShortToFloatDecode(reader.ReadInt16()),
-                                            UShortToFloatDecode(reader.ReadInt16()),
-                                            UShortToFloatDecode(reader.ReadInt16()));*/
-                                    }
+                                            var vec4 = Set_10_10_10_2_UNorm(reader.ReadUInt32());
+                                            vert.nrm = vec4.Xyz;
+                                        }
+
+
+                                     //   reader.BaseStream.Position += 0x2;
+
+                                   /*     vert.col = new Vector4(
+                                                    UShortToFloatDecode(reader.ReadInt16()),
+                                                    UShortToFloatDecode(reader.ReadInt16()),
+                                                    UShortToFloatDecode(reader.ReadInt16()),
+                                                    UShortToFloatDecode(reader.ReadInt16()));*/
+
+                /*    reader.BaseStream.Position += 8;
+
+                    //  vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                    //   vert.uv2 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+
+                    vert.nrm = new Vector3(
+                        UShortToFloatDecode(reader.ReadInt16()),
+                        UShortToFloatDecode(reader.ReadInt16()),
+                        UShortToFloatDecode(reader.ReadInt16()));*/
+            }
                                     break;
                                 case VertexDataFormat.Float32:
                                     for (int v = 0; v < mesh.VertexCount; v++)
@@ -183,8 +212,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
                                         vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                                         vert.pos = Vector3.TransformPosition(vert.pos, Transform);
-
-                                        reader.BaseStream.Position += 0x4;
+                                        Console.WriteLine("F32_32 unk 1 " + reader.ReadUInt16());
+                                        Console.WriteLine("F32_32 unk 2 " + reader.ReadUInt16());
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
                                     }
                                     break;
@@ -197,13 +226,19 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             }
         }
 
-        public static Vector2 NormalizeUvCoordsToFloat(ushort inU, ushort inV)
+        private static Vector4 Set_10_10_10_2_UNorm(uint value)
         {
-            //Normalize U coordinate
-            float U = (float)inU / (float)1024;
-            //Normalize V coordinate
-            float V = (float)inV / (float)1024;
-            return new Vector2(U, V);
+            return new Vector4(
+                (value & 0b00000000_00000000_00000011_11111111) / 1023f,
+                ((value & 0b00000000_00001111_11111100_00000000) >> 10) / 1023f,
+                ((value & 0b00111111_11110000_00000000_00000000) >> 20) / 1023f,
+                ((value & 0b11000000_00000000_00000000_00000000) >> 30) / 3f);
+        }
+
+
+        public static Vector2 NormalizeUvCoordsToFloat(ushort U, ushort V)
+        {
+            return new Vector2( U / 1024f, V / 1024f);
         }
 
         public static float UShortToFloatDecode(short input)
@@ -237,6 +272,49 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         }
 
         public void OnPropertyChanged() { }
+    }
+
+
+    public class DebugVisualBytes : TreeNodeFile, IContextMenuNode
+    {
+        public byte[] Data;
+
+        public DebugVisualBytes(byte[] bytes)
+        {
+            Data = bytes;
+        }
+
+        public override void OnClick(TreeView treeView)
+        {
+            HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
+            if (editor == null)
+            {
+                editor = new HexEditor();
+                LibraryGUI.LoadEditor(editor);
+            }
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            editor.LoadData(Data);
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
+            return Items.ToArray();
+        }
+
+        private void Export(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Text;
+            sfd.Filter = "Raw Data (*.*)|*.*";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.WriteAllBytes(sfd.FileName, Data);
+            }
+        }
     }
 
     public class LM2_IndexList

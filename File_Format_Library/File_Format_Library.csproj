@@ -213,6 +213,7 @@
     <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
     <Compile Include="FileFormats\Archives\NXARC.cs" />
+    <Compile Include="FileFormats\Archives\PACx30XL.cs" />
     <Compile Include="FileFormats\Archives\RARC.cs" />
     <Compile Include="FileFormats\Archives\SARC_OLD.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\GameDataToc.cs" />
