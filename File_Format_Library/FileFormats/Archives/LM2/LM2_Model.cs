@@ -152,9 +152,6 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                             Console.WriteLine("unk 2 " + reader.ReadUInt16());
                                             Console.WriteLine("unk 3 " + reader.ReadUInt16());
                                             Console.WriteLine("unk 4 " + reader.ReadUInt16());
-
-                                            var vec4 = Set_10_10_10_2_UNorm(reader.ReadUInt32());
-                                            vert.nrm = vec4.Xyz;
                                         }
 
 
@@ -225,16 +222,6 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 }
             }
         }
-
-        private static Vector4 Set_10_10_10_2_UNorm(uint value)
-        {
-            return new Vector4(
-                (value & 0b00000000_00000000_00000011_11111111) / 1023f,
-                ((value & 0b00000000_00001111_11111100_00000000) >> 10) / 1023f,
-                ((value & 0b00111111_11110000_00000000_00000000) >> 20) / 1023f,
-                ((value & 0b11000000_00000000_00000000_00000000) >> 30) / 3f);
-        }
-
 
         public static Vector2 NormalizeUvCoordsToFloat(ushort U, ushort V)
         {
