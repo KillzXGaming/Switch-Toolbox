@@ -40,7 +40,6 @@ namespace Toolbox
 
 
             Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
-            Toolbox.Library.Runtime.UseDirectXTexDecoder = false;
 
             Application.Run(form);
         }
