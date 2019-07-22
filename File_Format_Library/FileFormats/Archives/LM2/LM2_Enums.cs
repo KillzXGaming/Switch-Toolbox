@@ -11,6 +11,20 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         Texture = 0x8701B500,
     }
 
+    public enum VertexDataFormat
+    {
+        Float16,
+        Float32,
+        Float32_32,
+        Float32_32_32,
+    }
+
+    public enum IndexFormat : ushort
+    {
+        Index_16 = 0x0,
+        Index_8  = 0x8000,
+    }
+
     public enum SubDataType : uint
     {
         ModelStart            = 0x1201B006,

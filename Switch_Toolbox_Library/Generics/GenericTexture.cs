@@ -463,6 +463,7 @@ namespace Toolbox.Library
                 return BitmapExtension.GetBitmap(CSharpImageLibrary.DDS.Dxt.DecompressBc7(data, (int)Width, (int)Height), (int)Width, (int)Height);
             else
             {
+
                 if (Runtime.UseOpenGL)
                 {
                     Runtime.OpenTKInitialized = true;

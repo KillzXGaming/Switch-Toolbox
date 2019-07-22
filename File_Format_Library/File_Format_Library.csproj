@@ -266,6 +266,7 @@
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
+    <Compile Include="GL\LM2_Render.cs" />
     <Compile Include="GUI\BFFNT\BffntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

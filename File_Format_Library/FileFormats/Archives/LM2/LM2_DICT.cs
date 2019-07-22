@@ -57,24 +57,23 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public LM2_ChunkTable ChunkTable;
         public List<FileEntry> fileEntries = new List<FileEntry>();
 
-        //The click event will load the viewport and any models found in the file if there are any
-        public override void OnClick(TreeView treeview)
-        {
-            if (modelFolder.Nodes.Count != 0)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
+        public LM2_Renderer Renderer;
+        public DrawableContainer DrawableContainer = new DrawableContainer();
 
         TreeNode textureFolder = new TreeNode("Textures");
         TreeNode modelFolder = new TreeNode("Models");
 
+        public byte[] GetFile003Data()
+        {
+           return fileEntries[3].GetData(); //Get the fourth file
+        }
+
         public void Load(System.IO.Stream stream)
         {
+            DrawableContainer.Name = FileName;
+            Renderer = new LM2_Renderer();
+            DrawableContainer.Drawables.Add(Renderer);
+
             using (var reader = new FileReader(stream))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
@@ -132,7 +131,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 //Set an instance of our current data
                 //Chunks are in order, so you build off of when an instance gets loaded
                 TexturePOWE currentTexture = new TexturePOWE();
-                LM2_Model currentModel = new LM2_Model();
+                LM2_Model currentModel = new LM2_Model(this);
 
                 //Each part of the file is divided into multiple file/section entries
                 //The first entry being the chunk table parsed before this
@@ -176,12 +175,16 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             currentTexture.ImageData = chunkEntry.FileData;
                             break;
                         case SubDataType.ModelStart:
+                            currentModel = new LM2_Model(this);
                             currentModel.ModelInfo = new LM2_ModelInfo();
                             currentModel.Text = $"Model {modelIndex}";
                             currentModel.ModelInfo.Data = chunkEntry.FileData;
                             modelFolder.Nodes.Add(currentModel);
-
                             modelIndex++;
+                            break;
+                        case SubDataType.MeshBuffers:
+                            currentModel.BufferStart = chunkEntry.Entry.ChunkOffset;
+                            currentModel.BufferSize = chunkEntry.Entry.ChunkSize;
                             break;
                         case SubDataType.VertexStartPointers:
                             using (var vtxPtrReader = new FileReader(chunkEntry.FileData))
@@ -204,7 +207,12 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             break;
                         case SubDataType.ModelTransform:
                             using (var transformReader = new FileReader(chunkEntry.FileData))
-                                currentModel.Transform = transformReader.ReadMatrix4();
+                            {
+                                if (transformReader.BaseStream.Length == 0x40)
+                                    currentModel.Transform = transformReader.ReadMatrix4();
+                                else
+                                    currentModel.Transform = OpenTK.Matrix4.Identity;
+                            }
                             break;
                         default:
                             break;
@@ -213,15 +221,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
                 foreach (LM2_Model model in modelFolder.Nodes)
                 {
-                    for (int i = 0; i < model.VertexBufferPointers.Count; i++)
-                    {
-                        LM2_Mesh mesh = model.Meshes[i];
-
-                        RenderableMeshWrapper genericObj = new RenderableMeshWrapper();
-                        genericObj.Mesh = mesh;
-                        genericObj.Text = $"Mesh {i}";
-                        model.Nodes.Add(genericObj);
-                    }
+                    model.ReadVertexBuffers();
                 }
 
                 if (modelFolder.Nodes.Count > 0)
