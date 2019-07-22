@@ -102,11 +102,11 @@ namespace FirstPlugin
 
                             foreach (var chunk in ChunkTable.ChunkEntries)
                             {
-                                list1.Nodes.Add($"ChunkOffset {chunk.ChunkOffset} ChunkType {chunk.ChunkType.ToString("X")} Unknown1 {chunk.Unknown1}  Unknown2 {chunk.Unknown2}  Unknown3 {chunk.Unknown3}");
+                                list1.Nodes.Add($"ChunkType {chunk.ChunkType.ToString("X")} ChunkOffset {chunk.ChunkOffset}  Unknown1 {chunk.Unknown1}  ChunkSubCount {chunk.ChunkSubCount}  Unknown3 {chunk.Unknown3}");
                             }
                             foreach (var chunk in ChunkTable.ChunkSubEntries)
                             {
-                                list2.Nodes.Add($"ChunkOffset {chunk.ChunkOffset} ChunkType {chunk.ChunkType.ToString("X")}  Unknown {chunk.Unknown}");
+                                list2.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkSize {chunk.ChunkSize}   Unknown {chunk.Unknown}");
                             }
                         }
                     }
@@ -129,7 +129,7 @@ namespace FirstPlugin
                             using (var textureReader = new FileReader(files[i].FileData))
                             {
                                 int headerIndex = 0;
-                                while (textureReader.ReadUInt32() == TexturePOWE.Identifier)
+                                while (!textureReader.EndOfStream && textureReader.ReadUInt32() == TexturePOWE.Identifier)
                                 {
                                     var texture = new TexturePOWE();
                                     texture.ImageKey = "texture";

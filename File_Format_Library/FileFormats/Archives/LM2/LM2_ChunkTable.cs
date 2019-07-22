@@ -23,19 +23,27 @@ namespace FirstPlugin
             public uint Unknown1;
             public uint ChunkOffset;
             public uint ChunkType;
-            public uint Unknown2;
+            public uint ChunkSubCount;
             public uint Unknown3;
         }
 
         public class ChunkSubEntry
         {
-            public uint ChunkOffset;
-            public uint ChunkType;
+            public uint ChunkSize;
+            public DataType ChunkType;
             public uint Unknown;
+        }
+
+        public enum DataType : uint
+        {
+            TextureHeader = 0x0201B501,
+            TextureData   = 0x1701B502,
         }
 
         public void Read(FileReader tableReader)
         {
+            tableReader.SetByteOrder(false);
+
             //Each data type has chunk info. There is no counter so keep checking idenfier
             while (tableReader.ReadUInt32() == ChunkInfoIdenfier)
             {
@@ -45,7 +53,7 @@ namespace FirstPlugin
                 entry.Unknown1 = tableReader.ReadUInt32(); //8
                 entry.ChunkOffset = tableReader.ReadUInt32(); //The chunk offset in the file. Relative to the first chunk position in the file
                 entry.ChunkType = tableReader.ReadUInt32(); //The type of chunk. 0x8701B5 for example for texture info
-                entry.Unknown2 = tableReader.ReadUInt32();
+                entry.ChunkSubCount = tableReader.ReadUInt32();
 
                 //This increases by 2 each chunk info, however the starting value is not 0
                 //Note the last entry does not have this
@@ -55,7 +63,7 @@ namespace FirstPlugin
             if (ChunkEntries.Count > 0)
                 ChunkEntries.LastOrDefault<ChunkEntry>().Unknown3 = 0;
 
-            tableReader.Seek(-4); //Seek 4 back as the last entry lacks unkown 4
+            tableReader.Position -= 4; //Seek 4 back as the last entry lacks unkown 4
                                   //Check the chunk types
                                   //This time it includes more chunks (like image blocks)
 
@@ -63,9 +71,9 @@ namespace FirstPlugin
             while (!tableReader.EndOfStream && tableReader.Position <= tableReader.BaseStream.Length - 12)
             {
                 ChunkSubEntry subEntry = new ChunkSubEntry();
-                subEntry.ChunkType = tableReader.ReadUInt32(); //The type of chunk. 0x8701B5 for example for texture info
-                subEntry.Unknown = tableReader.ReadUInt32(); //This seems to be the same value as the other Unknown2 in the last section
-                subEntry.ChunkOffset = tableReader.ReadUInt32(); //The chunk offset in the file. Relative to the first chunk position in the file
+                subEntry.ChunkType = tableReader.ReadEnum<DataType>(false); //The type of chunk. 0x8701B5 for example for texture info
+                subEntry.ChunkSize = tableReader.ReadUInt32(); 
+                subEntry.Unknown = tableReader.ReadUInt32(); 
                 ChunkSubEntries.Add(subEntry);
             }
         }
