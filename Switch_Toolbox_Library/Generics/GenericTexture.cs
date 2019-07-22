@@ -443,7 +443,11 @@ namespace Toolbox.Library
 
         private Bitmap DecodeNotDirectXTex(byte[] data, uint Width, uint Height, TEX_FORMAT Format)
         {
-            if (Format == TEX_FORMAT.BC1_UNORM)
+            if (Format == TEX_FORMAT.R8G8B8A8_UNORM)
+                return BitmapExtension.GetBitmap(data, (int)Width, (int)Height);
+            else if (Format == TEX_FORMAT.R8G8B8A8_UNORM_SRGB)
+                return BitmapExtension.GetBitmap(data, (int)Width, (int)Height);
+            else if (Format == TEX_FORMAT.BC1_UNORM)
                 return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, false);
             else if (Format == TEX_FORMAT.BC1_UNORM_SRGB)
                 return DDSCompressor.DecompressBC1(data, (int)Width, (int)Height, true);
