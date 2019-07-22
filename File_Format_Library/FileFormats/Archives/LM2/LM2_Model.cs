@@ -37,7 +37,6 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             }
         }
 
-        bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
             if (Runtime.UseOpenGL)
@@ -48,10 +47,10 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                     viewport.Dock = DockStyle.Fill;
                 }
 
-                if (!DrawablesLoaded)
+                if (!DataDictionary.DrawablesLoaded)
                 {
                     ObjectEditor.AddContainer(DataDictionary.DrawableContainer);
-                    DrawablesLoaded = true;
+                    DataDictionary.DrawablesLoaded = true;
                 }
 
                 viewport.ReloadDrawables(DataDictionary.DrawableContainer);
@@ -190,6 +189,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                     }
                                     break;
                             }
+
+                            genericObj.TransformPosition(new Vector3(0), new Vector3(-90, 0, 0), new Vector3(1));
                         }
                     }
                 }

@@ -68,6 +68,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
            return fileEntries[3].GetData(); //Get the fourth file
         }
 
+        public bool DrawablesLoaded = false;
         public void Load(System.IO.Stream stream)
         {
             DrawableContainer.Name = FileName;
