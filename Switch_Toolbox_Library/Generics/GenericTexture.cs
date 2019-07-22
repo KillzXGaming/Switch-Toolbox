@@ -415,6 +415,8 @@ namespace Toolbox.Library
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
 
+                Console.WriteLine("Decoding " + Format + " " + Runtime.UseDirectXTexDecoder);
+
                 if (Runtime.UseDirectXTexDecoder)
                 {
                     return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format, new byte[0]),

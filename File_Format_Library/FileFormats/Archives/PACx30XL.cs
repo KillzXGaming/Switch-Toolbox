@@ -54,10 +54,20 @@ namespace FirstPlugin
             using (var reader = new FileReader(stream))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-                bool IsVersion2 = reader.CheckSignature(8, "PACx302L");
-              
+                bool IsVersion2 = reader.CheckSignature(8, "PACx402L");
+                reader.SeekBegin(8);
 
+                uint Checksum = reader.ReadUInt32();
+                uint FileSize = reader.ReadUInt32();
 
+                if (IsVersion2)
+                {
+
+                }
+                else
+                {
+
+                }
             }
         }
 

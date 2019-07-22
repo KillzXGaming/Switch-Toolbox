@@ -232,7 +232,7 @@ namespace Toolbox.Library
                         bool.TryParse(node.InnerText, out Runtime.FrameCamera);
                         break;
                     case "UseDirectXTexDecoder":
-                        bool.TryParse(node.InnerText, out Runtime.UseDirectXTexDecoder);
+                      //  bool.TryParse(node.InnerText, out Runtime.UseDirectXTexDecoder);
                         break;
                     case "AlwaysCompressOnSave":
                         bool.TryParse(node.InnerText, out Runtime.AlwaysCompressOnSave);

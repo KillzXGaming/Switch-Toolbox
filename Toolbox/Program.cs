@@ -35,10 +35,12 @@ namespace Toolbox
             var domain = AppDomain.CurrentDomain;
             domain.AssemblyResolve += LoadAssembly;
 
-            Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
-
             MainForm form = new MainForm();
             form.openedFiles = Files;
+
+
+            Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
+            Toolbox.Library.Runtime.UseDirectXTexDecoder = false;
 
             Application.Run(form);
         }
