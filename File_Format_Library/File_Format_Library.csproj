@@ -203,6 +203,7 @@
     <Compile Include="FileFormats\Archives\APAK.cs" />
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
+    <Compile Include="FileFormats\Archives\HyruleWarriors\HWBinGzResource.cs" />
     <Compile Include="FileFormats\Archives\IGA_PAK.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_ChunkTable.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_DICT.cs" />
