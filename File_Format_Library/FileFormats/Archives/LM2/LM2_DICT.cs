@@ -13,7 +13,7 @@ using System.Drawing;
 namespace FirstPlugin.LuigisMansion.DarkMoon
 {
     //Parse info based on https://github.com/TheFearsomeDzeraora/LM2L
-    public class LM2_DICT : TreeNodeFile, IFileFormat, IArchiveFile
+    public class LM2_DICT : TreeNodeFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -47,10 +47,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             }
         }
 
-        public List<ChunkDataEntry> files = new List<ChunkDataEntry>();
-        public IEnumerable<ArchiveFileInfo> Files => files;
-
-        public void ClearFiles() { files.Clear(); }
+        public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
         public bool IsCompressed = false;
 
@@ -62,6 +59,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
         TreeNode textureFolder = new TreeNode("Textures");
         TreeNode modelFolder = new TreeNode("Models");
+        TreeNode chunkFolder = new TreeNode("Chunks");
 
         public byte[] GetFile003Data()
         {
@@ -74,6 +72,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             DrawableContainer.Name = FileName;
             Renderer = new LM2_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
+
+            Text = FileName;
 
             using (var reader = new FileReader(stream))
             {
@@ -98,7 +98,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                     file.Read(reader);
                     fileEntries.Add(file);
                     tableNodes.Nodes.Add(file);
-
+                    
                     //The first file stores a chunk layout
                     //The second one seems to be a duplicate? 
                     if (i == 0) 
@@ -116,7 +116,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             debugFolder.Nodes.Add(tableNodes);
                             debugFolder.Nodes.Add(list1);
                             debugFolder.Nodes.Add(list2);
-
+                            debugFolder.Nodes.Add(chunkFolder);
+                            
                             foreach (var chunk in ChunkTable.ChunkEntries)
                             {
                                 list1.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkOffset {chunk.ChunkOffset}  Unknown1 {chunk.Unknown1}  ChunkSubCount {chunk.ChunkSubCount}  Unknown3 {chunk.Unknown3}");
@@ -150,8 +151,9 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 {
                     var chunkEntry = new ChunkDataEntry(this, chunk);
                     chunkEntry.DataFile = File003Data;
-                    chunkEntry.FileName = $"Chunk {chunk.ChunkType} {chunkId++}";
-                    files.Add(chunkEntry);
+                    chunkEntry.Text = $"Chunk {chunk.ChunkType} {chunkId++}";
+                    chunkEntries.Add(chunkEntry);
+                    chunkFolder.Nodes.Add(chunkEntry);
 
                     switch (chunk.ChunkType)
                     {
@@ -253,7 +255,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             return false;
         }
 
-        public class ChunkDataEntry : ArchiveFileInfo
+        public class ChunkDataEntry : TreeNodeFile, IContextMenuNode
         {
             public byte[] DataFile;
             public LM2_DICT ParentDictionary { get; set; }
@@ -265,22 +267,48 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 Entry = entry;
             }
 
-            public override byte[] FileData
+            public byte[] FileData
             {
-                get { return GetData(); }
-                set
+                get
                 {
-
+                    using (var reader = new FileReader(DataFile))
+                    {
+                        reader.SeekBegin(Entry.ChunkOffset);
+                        return reader.ReadBytes((int)Entry.ChunkSize);
+                    }
                 }
             }
 
-            private byte[] GetData( )
+            public ToolStripItem[] GetContextMenuItems()
             {
-                using (var reader = new FileReader(DataFile))
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
+                return Items.ToArray();
+            }
+
+            private void Export(object sender, EventArgs args)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = Text;
+                sfd.Filter = "Raw Data (*.*)|*.*";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    reader.SeekBegin(Entry.ChunkOffset);
-                    return reader.ReadBytes((int)Entry.ChunkSize);
+                    System.IO.File.WriteAllBytes(sfd.FileName, FileData);
                 }
+            }
+
+            public override void OnClick(TreeView treeView)
+            {
+                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
+                if (editor == null)
+                {
+                    editor = new HexEditor();
+                    LibraryGUI.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadData(FileData);
             }
         }
 

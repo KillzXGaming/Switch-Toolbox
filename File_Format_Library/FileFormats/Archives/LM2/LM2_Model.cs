@@ -139,10 +139,15 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                             UShortToFloatDecode(reader.ReadInt16()),
                                             UShortToFloatDecode(reader.ReadInt16()),
                                             UShortToFloatDecode(reader.ReadInt16()));
-                                        reader.BaseStream.Position += 0x4;
+
+                                        Console.WriteLine("F16 unk 1 " + reader.ReadUInt16());
+                                        Console.WriteLine("F16 unk 2 " + reader.ReadUInt16());
+
+                                 //       reader.BaseStream.Position += 0x4;
 
                                         vert.pos = Vector3.TransformPosition(vert.pos, Transform);
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+
 
                                         Console.WriteLine("vert.uv0  " + vert.uv0);
 
@@ -222,6 +227,16 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 }
             }
         }
+
+        private static Vector4 Set_10_10_10_2_UNorm(uint value)
+        {
+            return new Vector4(
+                (value & 0b00000000_00000000_00000011_11111111) / 1023f,
+                ((value & 0b00000000_00001111_11111100_00000000) >> 10) / 1023f,
+                ((value & 0b00111111_11110000_00000000_00000000) >> 20) / 1023f,
+                ((value & 0b11000000_00000000_00000000_00000000) >> 30) / 3f);
+        }
+
 
         public static Vector2 NormalizeUvCoordsToFloat(ushort U, ushort V)
         {

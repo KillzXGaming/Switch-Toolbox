@@ -153,7 +153,9 @@ namespace Toolbox.Library
         public void SaveFileFormat()
         {
             if (FileFormat != null && FileFormat.CanSave)
-                FileData = FileFormat.Save();
+            {
+                FileData = STLibraryCompression.CompressFile(FileFormat.Save(), FileFormat);
+            }
         }
 
         [Browsable(false)]

@@ -356,7 +356,8 @@ namespace FirstPlugin
             Formats.Add(typeof(GCDisk));
             Formats.Add(typeof(TPL));
             Formats.Add(typeof(BFTTF));
-
+            Formats.Add(typeof(PACx30XL));
+            
             //  Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use
