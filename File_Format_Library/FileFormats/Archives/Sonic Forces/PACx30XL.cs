@@ -96,7 +96,7 @@ namespace FirstPlugin
         public void LoadTree(PacNode node, DirectoryEntry parentNode)
         {
             INode newNode = null;
-            if (node.HasData)
+            if (node.HasData  && node.Data != null)
                 newNode = new FileEntry(node);
             else
                 newNode = new DirectoryEntry(node);
@@ -118,7 +118,7 @@ namespace FirstPlugin
             public DirectoryEntry(PacNode node)
             {
                 Name = node.Name;
-                if (node.Name == null) Name = "";
+                if (node.Name == null) Name = "Node";
             }
         }
 
@@ -128,7 +128,7 @@ namespace FirstPlugin
             {
                 Name = node.Name;
                 FileData = node.Data;
-                if (node.Name == null) Name = "";
+                if (node.Name == null) Name = "File Node";
                 if (FileData == null) FileData = new byte[0];
             }
         }
@@ -187,13 +187,12 @@ namespace FirstPlugin
                 if (nameOffset != 0)
                 {
                     reader.SeekBegin((long)nameOffset);
-                    Name = reader.ReadString(fullPathSize);
+                    Name = reader.ReadZeroTerminatedString();
                 }
                 if (dataOffset != 0)
                 {
                     reader.SeekBegin((long)dataOffset);
-                    uint CheckSumCheck = reader.ReadUInt32();
-                    if (CheckSumCheck == PacFile.Checksum)
+                    if (reader.ReadUInt32() == PacFile.Checksum)
                     {
                         uint dataSize = reader.ReadUInt32();
                         ulong padding = reader.ReadUInt64();
@@ -214,6 +213,7 @@ namespace FirstPlugin
                         reader.SeekBegin((long)dataOffset);
                         PacNodeTree tree = new PacNodeTree();
                         tree.Read(reader, PacFile);
+                        Children.Add(tree.RootNode);
                     }
                 }
                 if (childIndicesOffset != 0)
