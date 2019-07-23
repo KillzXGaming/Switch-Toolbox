@@ -605,6 +605,9 @@ namespace Toolbox.Library
 
         public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef, STCompressionMode CompressionMode = STCompressionMode.Fast)
         {
+            if (!Runtime.UseDirectXTexDecoder)
+                return data;
+
             if (IsCompressed(format))
                 return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, alphaRef, CompressionMode);
             else if (IsAtscFormat(format))
