@@ -59,6 +59,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
         TreeNode textureFolder = new TreeNode("Textures");
         TreeNode modelFolder = new TreeNode("Models");
+        TreeNode materialNamesFolder = new TreeNode("Material Names");
         TreeNode chunkFolder = new TreeNode("Chunks");
 
         public byte[] GetFile003Data()
@@ -211,10 +212,19 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                         case SubDataType.ModelTransform:
                             using (var transformReader = new FileReader(chunkEntry.FileData))
                             {
-                                if (transformReader.BaseStream.Length == 0x40)
-                                    currentModel.Transform = transformReader.ReadMatrix4();
-                                else
-                                    currentModel.Transform = OpenTK.Matrix4.Identity;
+                                //This is possibly very wrong
+                                //The data isn't always per mesh, but sometimes is
+                                if (transformReader.BaseStream.Length / 0x40 == currentModel.Meshes.Count)
+                                {
+                                    for (int i = 0; i < currentModel.Meshes.Count; i++)
+                                        currentModel.Meshes[i].Transform = transformReader.ReadMatrix4();
+                                }
+                            }
+                            break;
+                        case SubDataType.MaterialName:
+                            using (var matReader = new FileReader(chunkEntry.FileData))
+                            {
+                                materialNamesFolder.Nodes.Add(matReader.ReadZeroTerminatedString());
                             }
                             break;
                         default:
@@ -232,6 +242,9 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
                 if (textureFolder.Nodes.Count > 0)
                     Nodes.Add(textureFolder);
+
+                if (materialNamesFolder.Nodes.Count > 0)
+                    Nodes.Add(materialNamesFolder);
             }
         }
 

@@ -357,6 +357,7 @@ namespace FirstPlugin
             Formats.Add(typeof(TPL));
             Formats.Add(typeof(BFTTF));
             Formats.Add(typeof(PACx30XL));
+            Formats.Add(typeof(BinGzArchive));
             
             //  Formats.Add(typeof(GFA));
 

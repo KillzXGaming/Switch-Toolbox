@@ -86,6 +86,7 @@ namespace FirstPlugin
                     editor.LoadData(mem.ToArray());
                 }
             }
+
             public override void OnDoubleMouseClick(TreeView treeview)
             {
                 string filePath = GetFilePath();

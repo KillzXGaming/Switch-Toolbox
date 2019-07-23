@@ -130,6 +130,21 @@ namespace FirstPlugin
                 }
             }
 
+            public override void Export()
+            {
+                string fileName = Path.GetFileName(FileName.RemoveIllegaleFolderNameCharacters());
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = fileName;
+                sfd.DefaultExt = Path.GetExtension(fileName);
+                sfd.Filter = "Raw Data (*.*)|*.*";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    ParentROMFS.OpenFile(File).WriteAllBytes($"{sfd.FileName}");
+                }
+            }
+
             public FileEntry(Romfs romfs, RomfsFile romfsFile)
             {
                 ParentROMFS = romfs;

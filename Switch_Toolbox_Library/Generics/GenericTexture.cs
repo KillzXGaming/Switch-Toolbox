@@ -930,28 +930,23 @@ namespace Toolbox.Library
 
         public static int GenerateTotalMipCount(uint Width, uint Height)
         {
-            int MipmapNum = 0;
-            uint num = Math.Max(Width, Height);
+            int mipCount = 1;
 
             int width = (int)Width;
             int height = (int)Height;
 
-            while (true)
+            while (width > 1 || height > 1)
             {
-                num >>= 1;
+                ++mipCount;
 
-                width = width / 2;
-                height = height / 2;
-                if (width <= 0 || height <= 0)
-                    break;
-
-                if (num > 0)
-                    ++MipmapNum;
-                else
-                    break;
+                if (width > 1)
+                    width /= 2;
+                
+                if (height > 1)
+                    height /= 2;    
             }
 
-            return MipmapNum;
+            return mipCount;
         }
 
         public static string SetNameFromPath(string path)
