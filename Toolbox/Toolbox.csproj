@@ -476,6 +476,9 @@
     <Content Include="Lib\Syroot.NintenTools.Bfres.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Lib\Syroot.NintenTools.MarioKart8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\Syroot.NintenTools.NSW.Bfres.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
