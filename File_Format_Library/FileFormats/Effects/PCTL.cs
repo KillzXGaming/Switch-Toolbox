@@ -94,6 +94,8 @@ namespace FirstPlugin
 
             reader.Close();
             reader.Dispose();
+            stream.Close();
+            stream.Dispose();
 
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S));
