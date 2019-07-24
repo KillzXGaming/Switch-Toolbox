@@ -66,10 +66,13 @@ namespace Toolbox.Library.Forms
             
         }
 
-        public void LoadFile(IWaveSource source, IFileFormat fileFormat, bool ClearPlaylist = false, object AudioStruct = null)
+        public void LoadFile(IWaveSource source, IFileFormat fileFormat, bool ClearPlaylist = true, object AudioStruct = null)
         {
             if (ClearPlaylist)
+            {
                 audioListView.Items.Clear();
+                AudioFileFormats.Clear();
+            }
 
             AudioFile file = new AudioFile();
             file.Title = fileFormat.FileName;
@@ -83,8 +86,6 @@ namespace Toolbox.Library.Forms
             }
 
             AudioFileFormats.Add(fileFormat);
-
-
             audioListView.AddObject(file);
 
             AudioChannel audioChannel = new AudioChannel();
@@ -105,10 +106,13 @@ namespace Toolbox.Library.Forms
 
         }
 
-        public void LoadFile(AudioData audioData, IFileFormat fileFormat, bool ClearPlaylist = false)
+        public void LoadFile(AudioData audioData, IFileFormat fileFormat, bool ClearPlaylist = true)
         {
             if (ClearPlaylist)
+            {
                 audioListView.Items.Clear();
+                AudioFileFormats.Clear();
+            }
 
             AudioFileFormats.Add(fileFormat);
 
