@@ -19,7 +19,7 @@ using SF = SFGraphics.GLObjects.Shaders;
 
 namespace FirstPlugin
 {
-    public class BFRESRender : AbstractGlDrawable
+    public class BFRESRender : AbstractGlDrawable, IMeshContainer
     {
         private bool Disposing = false;
 
@@ -37,6 +37,20 @@ namespace FirstPlugin
         // gl buffer objects
         int vbo_position;
         int ibo_elements;
+
+        public List<STGenericObject> Meshes
+        {
+            get
+            {
+                List<STGenericObject> meshes = new List<STGenericObject>();
+                for (int m =0; m < models.Count; m++)
+                {
+                    for (int s = 0; s < models[m].shapes.Count; s++)
+                        meshes.Add(models[m].shapes[s]);
+                }
+                return meshes;
+            }
+        }
 
         private List<FMDL> _models = new List<FMDL>();
         public List<FMDL> models

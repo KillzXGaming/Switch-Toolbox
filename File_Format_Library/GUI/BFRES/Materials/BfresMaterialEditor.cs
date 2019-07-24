@@ -74,43 +74,6 @@ namespace FirstPlugin.Forms
             chkboxVisible.Bind(material, "Enabled");
 
             FillForm();
-
-            uvEditor1.ActiveObjects.Clear();
-            uvEditor1.Textures.Clear();
-
-            foreach (var shp in ((FMDL)material.Parent.Parent).shapes)
-            {
-                if (shp.GetMaterial().Text == material.Text)
-                {
-                    uvEditor1.ActiveObjects.Add(shp);
-                }
-            }
-
-            foreach (var ftexContainer in PluginRuntime.ftexContainers)
-            {
-                foreach (var texmap in material.TextureMaps)
-                {
-                    if (ftexContainer.ResourceNodes.ContainsKey(texmap.Name))
-                    {
-                        uvEditor1.Textures.Add(LoadTextureUvMap(texmap, (FTEX)ftexContainer.ResourceNodes[texmap.Name]));
-                    }
-                }
-            }
-
-            foreach (var bntx in PluginRuntime.bntxContainers)
-            {
-                foreach (var texmap in material.TextureMaps)
-                {
-                    if (bntx.Textures.ContainsKey(texmap.Name))
-                    {
-                        uvEditor1.Textures.Add(LoadTextureUvMap(texmap, bntx.Textures[texmap.Name]));
-                    }
-                }
-            }
-
-            uvEditor1.Reset();
-            uvEditor1.ActiveMaterial = material;
-            uvEditor1.Refresh();
         }
         private UVEditor.ActiveTexture LoadTextureUvMap(STGenericMatTexture texmap, STGenericTexture genericTexture)
         {

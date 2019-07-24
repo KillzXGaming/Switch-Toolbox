@@ -54,6 +54,24 @@ namespace Toolbox
             Application.Run(form);
         }
 
+        private static bool TryLoadZSTD()
+        {
+            try
+            {
+                String folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                String filePath = Path.Combine(folder, Environment.Is64BitProcess ? "x64" : "x86", "libzstd.dll");
+                if (File.Exists(filePath))
+                {
+                    Assembly assembly = Assembly.LoadFile(filePath);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return false;
+        }
+
         private static bool TryLoadDirectXTex()
         {
             try

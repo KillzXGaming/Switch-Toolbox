@@ -251,14 +251,17 @@ namespace Toolbox.Library
 
             for (int i = 0; i < FileNodes.Count; i++)
             {
-                FileNodes[i].Item1.FileName = SetFullPath(FileNodes[i].Item2, this);
+                string NewName = SetFullPath(FileNodes[i].Item2, this);
+                if (NewName != string.Empty)
+                    FileNodes[i].Item1.FileName = NewName;
             }
         }
 
         private static string SetFullPath(TreeNode node, TreeNode root)
         {
-            if (node.TreeView == null)
-                return node.Text;
+            if (node.TreeView == null) {
+                return string.Empty;
+            }
 
             string nodePath = node.FullPath;
             int startIndex = nodePath.IndexOf(root.Text);
@@ -269,7 +272,11 @@ namespace Toolbox.Library
             string slashAlt = Path.AltDirectorySeparatorChar.ToString();
 
             string SetPath = nodePath.Replace(root.Text + slash, string.Empty).Replace(slash ?? "", slashAlt);
-            return !(SetPath == string.Empty) ? SetPath : node.Text;
+
+            Console.WriteLine($"FullPath { node.FullPath}");
+            Console.WriteLine($"SetPath {SetPath}");
+
+            return SetPath;
         }
 
         private void EnableContextMenu(ToolStripItemCollection Items, string Key, bool Enabled)
@@ -286,7 +293,7 @@ namespace Toolbox.Library
             Save("", true);
         }
 
-        public void Save(string FileName, bool UseDialog)
+        private void Save(string FileName, bool UseDialog)
         {
             UpdateFileNames();
 
@@ -882,12 +889,13 @@ namespace Toolbox.Library
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
 
-            rootNode.FileNodes.RemoveAt(index);
-            rootNode.FileNodes.Insert(index, Tuple.Create(fileInfo, NewNode));
 
             NewNode.ImageKey = replaceNode.ImageKey;
             NewNode.SelectedImageKey = replaceNode.SelectedImageKey;
             NewNode.Text = replaceNode.Text;
+
+            rootNode.FileNodes.RemoveAt(index);
+            rootNode.FileNodes.Insert(index, Tuple.Create(fileInfo, NewNode));
         }
 
         private void RenameAction(object sender, EventArgs args)

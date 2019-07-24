@@ -46,9 +46,9 @@ namespace Toolbox.Library.Forms
 
         public float brightness = 0.5f; //To see uv maps easier
         public int UvChannelIndex = 0;
-        public STGenericMaterial ActiveMaterial;
 
         public List<STGenericObject> ActiveObjects = new List<STGenericObject>();
+        public List<STGenericMaterial> ActiveMaterials = new List<STGenericMaterial>();
 
         public List<ActiveTexture> Textures = new List<ActiveTexture>();
 
@@ -241,7 +241,7 @@ namespace Toolbox.Library.Forms
 
         private void gL_ControlLegacy2D1_Paint(object sender, PaintEventArgs e)
         {
-            if (ActiveObjects.Count <= 0 || ActiveMaterial == null || Runtime.OpenTKInitialized == false)
+            if (!Runtime.OpenTKInitialized)
                 return;
 
             gL_ControlLegacy2D1.MakeCurrent();
@@ -289,7 +289,8 @@ namespace Toolbox.Library.Forms
             //Params include Amount to repeat
             DrawTexturedPlane(5);
 
-            DrawUVs(ActiveObjects);
+            if (ActiveObjects.Count > 0)
+                DrawUVs(ActiveObjects);
 
             GL.PopMatrix();
 

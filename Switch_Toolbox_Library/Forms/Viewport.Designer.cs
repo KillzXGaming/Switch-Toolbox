@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.chkDisplayAllModels = new Toolbox.Library.Forms.STCheckBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.drawContainersCB = new Toolbox.Library.Forms.STComboBox();
             this.panelViewport = new Toolbox.Library.Forms.STPanel();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
@@ -51,11 +54,9 @@
             this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
-            this.chkDisplayAllModels = new Toolbox.Library.Forms.STCheckBox();
-            this.stContextMenuStrip1.SuspendLayout();
+            this.uVViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1.SuspendLayout();
+            this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // normalsShadingToolStripMenuItem
@@ -67,6 +68,38 @@
             this.normalsShadingToolStripMenuItem.Size = new System.Drawing.Size(204, 46);
             this.normalsShadingToolStripMenuItem.Text = "Normals Shading";
             this.normalsShadingToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // stPanel1
+            // 
+            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel1.Controls.Add(this.chkDisplayAllModels);
+            this.stPanel1.Controls.Add(this.stLabel1);
+            this.stPanel1.Controls.Add(this.drawContainersCB);
+            this.stPanel1.Location = new System.Drawing.Point(0, 26);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(778, 24);
+            this.stPanel1.TabIndex = 5;
+            // 
+            // chkDisplayAllModels
+            // 
+            this.chkDisplayAllModels.AutoSize = true;
+            this.chkDisplayAllModels.Location = new System.Drawing.Point(282, 2);
+            this.chkDisplayAllModels.Name = "chkDisplayAllModels";
+            this.chkDisplayAllModels.Size = new System.Drawing.Size(74, 17);
+            this.chkDisplayAllModels.TabIndex = 2;
+            this.chkDisplayAllModels.Text = "Display All";
+            this.chkDisplayAllModels.UseVisualStyleBackColor = true;
+            this.chkDisplayAllModels.CheckedChanged += new System.EventHandler(this.chkDisplayAllModels_CheckedChanged);
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(3, 3);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(83, 13);
+            this.stLabel1.TabIndex = 1;
+            this.stLabel1.Text = "Active Model(s):";
             // 
             // drawContainersCB
             // 
@@ -99,7 +132,8 @@
             this.shadingToolStripMenuItem,
             this.resetCameraToolStripMenuItem,
             this.resetPoseToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+            this.optionsToolStripMenuItem,
+            this.uVViewerToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
             this.stContextMenuStrip1.Size = new System.Drawing.Size(781, 24);
@@ -249,41 +283,16 @@
             // reloadShadersToolStripMenuItem
             // 
             this.reloadShadersToolStripMenuItem.Name = "reloadShadersToolStripMenuItem";
-            this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reloadShadersToolStripMenuItem.Text = "Reload Shaders";
             this.reloadShadersToolStripMenuItem.Click += new System.EventHandler(this.reloadShadersToolStripMenuItem_Click);
             // 
-            // stPanel1
+            // uVViewerToolStripMenuItem
             // 
-            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stPanel1.Controls.Add(this.chkDisplayAllModels);
-            this.stPanel1.Controls.Add(this.stLabel1);
-            this.stPanel1.Controls.Add(this.drawContainersCB);
-            this.stPanel1.Location = new System.Drawing.Point(0, 26);
-            this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(778, 24);
-            this.stPanel1.TabIndex = 5;
-            // 
-            // stLabel1
-            // 
-            this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(3, 3);
-            this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(83, 13);
-            this.stLabel1.TabIndex = 1;
-            this.stLabel1.Text = "Active Model(s):";
-            // 
-            // chkDisplayAllModels
-            // 
-            this.chkDisplayAllModels.AutoSize = true;
-            this.chkDisplayAllModels.Location = new System.Drawing.Point(282, 2);
-            this.chkDisplayAllModels.Name = "chkDisplayAllModels";
-            this.chkDisplayAllModels.Size = new System.Drawing.Size(74, 17);
-            this.chkDisplayAllModels.TabIndex = 2;
-            this.chkDisplayAllModels.Text = "Display All";
-            this.chkDisplayAllModels.UseVisualStyleBackColor = true;
-            this.chkDisplayAllModels.CheckedChanged += new System.EventHandler(this.chkDisplayAllModels_CheckedChanged);
+            this.uVViewerToolStripMenuItem.Name = "uVViewerToolStripMenuItem";
+            this.uVViewerToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.uVViewerToolStripMenuItem.Text = "UV Viewer";
+            this.uVViewerToolStripMenuItem.Click += new System.EventHandler(this.uVViewerToolStripMenuItem_Click);
             // 
             // Viewport
             // 
@@ -295,10 +304,10 @@
             this.Controls.Add(this.stContextMenuStrip1);
             this.Name = "Viewport";
             this.Size = new System.Drawing.Size(781, 522);
-            this.stContextMenuStrip1.ResumeLayout(false);
-            this.stContextMenuStrip1.PerformLayout();
             this.stPanel1.ResumeLayout(false);
             this.stPanel1.PerformLayout();
+            this.stContextMenuStrip1.ResumeLayout(false);
+            this.stContextMenuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -331,5 +340,6 @@
         private Forms.STPanel stPanel1;
         private Forms.STLabel stLabel1;
         private Forms.STCheckBox chkDisplayAllModels;
+        private System.Windows.Forms.ToolStripMenuItem uVViewerToolStripMenuItem;
     }
 }

@@ -8,6 +8,7 @@ using SARCExt;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
+using Toolbox.Library.Security.Cryptography;
 
 namespace FirstPlugin
 {
@@ -126,9 +127,13 @@ namespace FirstPlugin
             foreach (var file in SzsFiles.Files)
             {
                 string fileName = file.Key;
+                string Hash = string.Empty;
                 if (SzsFiles.HashOnly)
+                {
                     fileName = SARCExt.SARC.TryGetNameFromHashTable(fileName);
-                files.Add(SetupFileEntry(fileName, file.Value));
+                    Hash = file.Key;
+                }
+                files.Add(SetupFileEntry(fileName, file.Value, Hash));
             }
 
             sarcData.Files.Clear();
@@ -244,8 +249,28 @@ namespace FirstPlugin
             sarcData.Files.Clear();
             foreach (var file in files)
             {
+                Console.WriteLine("sarc file name " + file.FileName);
                 file.SaveFileFormat();
-                sarcData.Files.Add(file.FileName, file.FileData);
+
+                if (sarcData.HashOnly)
+                {
+                    sarcData.Files.Add(file.HashName, file.FileData);
+
+                    /*
+                    uint hash = 0;
+                    bool IsHash = uint.TryParse(file.FileName, out hash);
+                    if (IsHash && file.FileName.Length == 8)
+                    {
+                        sarcData.Files.Add(file.FileName, file.FileData);
+                    }
+                    else
+                    {
+                        string Hash = Crc32.Compute(file.FileName).ToString();
+                        sarcData.Files.Add(Hash, file.FileData);
+                    }*/
+                }
+                else
+                    sarcData.Files.Add(file.FileName, file.FileData);
             }
 
             Tuple<int, byte[]> sarc = SARCExt.SARC.PackN(sarcData);
@@ -257,6 +282,8 @@ namespace FirstPlugin
         public class SarcEntry : ArchiveFileInfo
         {
             public SARC sarc; //Sarc file the entry is located in
+
+            public string HashName;
 
             public SarcEntry()
             {
@@ -279,11 +306,12 @@ namespace FirstPlugin
             }
         }
 
-        public SarcEntry SetupFileEntry(string fullName, byte[] data)
+        public SarcEntry SetupFileEntry(string fullName, byte[] data, string HashName)
         {
             SarcEntry sarcEntry = new SarcEntry();
             sarcEntry.FileName = fullName;
             sarcEntry.FileData = data;
+            sarcEntry.HashName = HashName;
             return sarcEntry;
         }
     }

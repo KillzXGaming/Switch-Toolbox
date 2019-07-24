@@ -42,22 +42,27 @@
             this.comboBox2 = new Toolbox.Library.Forms.STComboBox();
             this.comboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transXUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleXUD)).BeginInit();
             this.stPanel1.SuspendLayout();
+            this.stPanel2.SuspendLayout();
+            this.stPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // gL_ControlLegacy2D1
             // 
-            this.gL_ControlLegacy2D1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.gL_ControlLegacy2D1.BackColor = System.Drawing.Color.Black;
-            this.gL_ControlLegacy2D1.Location = new System.Drawing.Point(0, 70);
+            this.gL_ControlLegacy2D1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gL_ControlLegacy2D1.Location = new System.Drawing.Point(0, 0);
             this.gL_ControlLegacy2D1.Name = "gL_ControlLegacy2D1";
-            this.gL_ControlLegacy2D1.Size = new System.Drawing.Size(605, 454);
+            this.gL_ControlLegacy2D1.Size = new System.Drawing.Size(443, 454);
             this.gL_ControlLegacy2D1.TabIndex = 2;
             this.gL_ControlLegacy2D1.VSync = false;
             this.gL_ControlLegacy2D1.Paint += new System.Windows.Forms.PaintEventHandler(this.gL_ControlLegacy2D1_Paint);
@@ -74,7 +79,7 @@
             0,
             0,
             196608});
-            this.scaleYUD.Location = new System.Drawing.Point(135, 43);
+            this.scaleYUD.Location = new System.Drawing.Point(75, 32);
             this.scaleYUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -98,7 +103,7 @@
             0,
             0,
             196608});
-            this.transYUD.Location = new System.Drawing.Point(360, 43);
+            this.transYUD.Location = new System.Drawing.Point(75, 102);
             this.transYUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -122,7 +127,7 @@
             0,
             0,
             196608});
-            this.transXUD.Location = new System.Drawing.Point(281, 43);
+            this.transXUD.Location = new System.Drawing.Point(5, 102);
             this.transXUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -141,7 +146,7 @@
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(205, 45);
+            this.stLabel4.Location = new System.Drawing.Point(3, 66);
             this.stLabel4.Name = "stLabel4";
             this.stLabel4.Size = new System.Drawing.Size(51, 13);
             this.stLabel4.TabIndex = 5;
@@ -150,7 +155,7 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(25, 45);
+            this.stLabel3.Location = new System.Drawing.Point(3, 11);
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(34, 13);
             this.stLabel3.TabIndex = 4;
@@ -164,7 +169,7 @@
             0,
             0,
             196608});
-            this.scaleXUD.Location = new System.Drawing.Point(65, 43);
+            this.scaleXUD.Location = new System.Drawing.Point(5, 32);
             this.scaleXUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -182,17 +187,11 @@
             // 
             // stPanel1
             // 
-            this.stPanel1.Controls.Add(this.btnApplyTransform);
-            this.stPanel1.Controls.Add(this.scaleYUD);
+            this.stPanel1.Controls.Add(this.stComboBox1);
             this.stPanel1.Controls.Add(this.barSlider1);
-            this.stPanel1.Controls.Add(this.transYUD);
             this.stPanel1.Controls.Add(this.stLabel2);
-            this.stPanel1.Controls.Add(this.transXUD);
             this.stPanel1.Controls.Add(this.comboBox2);
-            this.stPanel1.Controls.Add(this.stLabel4);
             this.stPanel1.Controls.Add(this.comboBox1);
-            this.stPanel1.Controls.Add(this.stLabel3);
-            this.stPanel1.Controls.Add(this.scaleXUD);
             this.stPanel1.Controls.Add(this.stLabel1);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
@@ -203,7 +202,7 @@
             // btnApplyTransform
             // 
             this.btnApplyTransform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyTransform.Location = new System.Drawing.Point(430, 41);
+            this.btnApplyTransform.Location = new System.Drawing.Point(3, 138);
             this.btnApplyTransform.Name = "btnApplyTransform";
             this.btnApplyTransform.Size = new System.Drawing.Size(119, 23);
             this.btnApplyTransform.TabIndex = 9;
@@ -243,7 +242,8 @@
             this.barSlider1.TickDivide = 0F;
             this.barSlider1.TickStyle = System.Windows.Forms.TickStyle.None;
             this.barSlider1.ValueChanged += new System.EventHandler(this.barSlider1_ValueChanged);
-            this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.barSlider1_Scroll);// 
+            this.barSlider1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.barSlider1_Scroll);
+            // 
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
@@ -255,13 +255,13 @@
             // 
             // comboBox2
             // 
-            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox2.BorderColor = System.Drawing.Color.Empty;
             this.comboBox2.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBox2.ButtonColor = System.Drawing.Color.Empty;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(290, 7);
+            this.comboBox2.Location = new System.Drawing.Point(290, 34);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.ReadOnly = true;
             this.comboBox2.Size = new System.Drawing.Size(166, 21);
@@ -292,11 +292,70 @@
             this.stLabel1.TabIndex = 4;
             this.stLabel1.Text = "Active Channel:";
             // 
+            // stPanel2
+            // 
+            this.stPanel2.Controls.Add(this.stButton1);
+            this.stPanel2.Controls.Add(this.btnApplyTransform);
+            this.stPanel2.Controls.Add(this.stLabel3);
+            this.stPanel2.Controls.Add(this.scaleYUD);
+            this.stPanel2.Controls.Add(this.transYUD);
+            this.stPanel2.Controls.Add(this.scaleXUD);
+            this.stPanel2.Controls.Add(this.transXUD);
+            this.stPanel2.Controls.Add(this.stLabel4);
+            this.stPanel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.stPanel2.Location = new System.Drawing.Point(0, 70);
+            this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Size = new System.Drawing.Size(159, 454);
+            this.stPanel2.TabIndex = 3;
+            // 
+            // stComboBox1
+            // 
+            this.stComboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stComboBox1.BorderColor = System.Drawing.Color.Empty;
+            this.stComboBox1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.stComboBox1.ButtonColor = System.Drawing.Color.Empty;
+            this.stComboBox1.FormattingEnabled = true;
+            this.stComboBox1.Location = new System.Drawing.Point(290, 7);
+            this.stComboBox1.Name = "stComboBox1";
+            this.stComboBox1.ReadOnly = true;
+            this.stComboBox1.Size = new System.Drawing.Size(166, 21);
+            this.stComboBox1.TabIndex = 19;
+            // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(159, 70);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 454);
+            this.splitter1.TabIndex = 4;
+            this.splitter1.TabStop = false;
+            // 
+            // stPanel3
+            // 
+            this.stPanel3.Controls.Add(this.gL_ControlLegacy2D1);
+            this.stPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel3.Location = new System.Drawing.Point(162, 70);
+            this.stPanel3.Name = "stPanel3";
+            this.stPanel3.Size = new System.Drawing.Size(443, 454);
+            this.stPanel3.TabIndex = 5;
+            // 
+            // stButton1
+            // 
+            this.stButton1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(145, 0);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(14, 454);
+            this.stButton1.TabIndex = 10;
+            this.stButton1.UseVisualStyleBackColor = false;
+            // 
             // UVEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.gL_ControlLegacy2D1);
+            this.Controls.Add(this.stPanel3);
+            this.Controls.Add(this.splitter1);
+            this.Controls.Add(this.stPanel2);
             this.Controls.Add(this.stPanel1);
             this.Name = "UVEditor";
             this.Size = new System.Drawing.Size(605, 524);
@@ -306,6 +365,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.scaleXUD)).EndInit();
             this.stPanel1.ResumeLayout(false);
             this.stPanel1.PerformLayout();
+            this.stPanel2.ResumeLayout(false);
+            this.stPanel2.PerformLayout();
+            this.stPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -325,5 +387,10 @@
         private NumericUpDownFloat scaleYUD;
         private ColorSlider.ColorSlider barSlider1;
         private STButton btnApplyTransform;
+        private STPanel stPanel2;
+        private STComboBox stComboBox1;
+        private System.Windows.Forms.Splitter splitter1;
+        private STPanel stPanel3;
+        private STButton stButton1;
     }
 }

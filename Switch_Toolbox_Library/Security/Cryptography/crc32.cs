@@ -5,7 +5,7 @@
 
 using System.Text;
 
-namespace System.Security.Cryptography
+namespace Toolbox.Library.Security.Cryptography
 {
     /// <summary>
     /// Computes a CRC32 checksum.

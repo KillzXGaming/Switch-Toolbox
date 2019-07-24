@@ -158,6 +158,7 @@
     </Reference>
     <Reference Include="Syroot.NintenTools.MarioKart8">
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.MarioKart8.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres">
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
@@ -165,6 +166,7 @@
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bntx">
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers">

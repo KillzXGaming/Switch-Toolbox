@@ -90,6 +90,14 @@ namespace Toolbox.Library
             }
         }
 
+        public DrawableContainer GetActiveContainer()
+        {
+            if (drawContainersCB.SelectedIndex - 1 < 0)
+                return null;
+
+            return DrawableContainers[drawContainersCB.SelectedIndex - 1];
+        }
+
         //Reloads drawable containers with the active container selected
         public void ReloadDrawables(DrawableContainer ActiveContainer)
         {
@@ -544,6 +552,34 @@ namespace Toolbox.Library
             {
                 drawContainersCB.SelectedIndex = 0;
                 DrawAllActive();
+            }
+        }
+
+        private void uVViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Runtime.UseOpenGL)
+                return;
+
+            var container = GetActiveContainer();
+            if (container == null) return;
+
+            List<STGenericObject> meshes = new List<STGenericObject>();
+            for (int i = 0; i < container.Drawables.Count; i++)
+            {
+                if (container.Drawables[i] is IMeshContainer)
+                {
+                    for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
+                        meshes.Add(((IMeshContainer)container.Drawables[i]).Meshes[m]);
+                }
+            }
+
+            Console.WriteLine($"MeshCount " + meshes.Count);
+
+            if (meshes.Count > 0)
+            {
+                UVEditorForm uvEditor1 = new UVEditorForm();
+                uvEditor1.LoadEditor(meshes);
+                uvEditor1.Show();
             }
         }
     }
