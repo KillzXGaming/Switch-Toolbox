@@ -39,7 +39,17 @@ namespace Toolbox
             form.openedFiles = Files;
 
 
-            Toolbox.Library.Runtime.UseDirectXTexDecoder = TryLoadDirectXTex();
+            bool LoadedDX = TryLoadDirectXTex();
+            if (!LoadedDX && !Toolbox.Library.Runtime.UseDirectXTexDecoder)
+            {
+               var result = MessageBox.Show("Direct X Tex Failed to load! Make sure to install Visual C++ and Direct X Tex. Do you want to go to the install sites?");
+                if (result == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
+                    System.Diagnostics.Process.Start("https://www.microsoft.com/en-us/download/details.aspx?id=35");
+                }
+            }
+            Toolbox.Library.Runtime.UseDirectXTexDecoder= LoadedDX;
 
             Application.Run(form);
         }
@@ -62,9 +72,9 @@ namespace Toolbox
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                MessageBox.Show(ex.ToString());
             }
             return false;
         }
