@@ -192,8 +192,7 @@
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="ZstdNet, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolbox\Lib\ZstdNet.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Toolbox\ZstdNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
