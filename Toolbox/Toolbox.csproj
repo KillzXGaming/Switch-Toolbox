@@ -515,6 +515,9 @@
     <Content Include="x86\libzstd.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ZstdNet.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\Save.png" />
     <None Include="Resources\UpdateIcon.png" />
     <None Include="Shader\Utility\PbrUtility.frag">
