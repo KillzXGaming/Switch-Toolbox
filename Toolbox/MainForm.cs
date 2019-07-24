@@ -406,6 +406,9 @@ namespace Toolbox
                 if (node is ArchiveBase)
                 {
                     format = (IFileFormat)((ArchiveBase)node).ArchiveFile;
+
+                    if (node is ArchiveRootNodeWrapper)
+                        ((ArchiveRootNodeWrapper)node).UpdateFileNames();
                 }
                 else if (node is IFileFormat)
                 {
@@ -413,7 +416,6 @@ namespace Toolbox
                 }
                 if (format != null)
                 {
-
                     if (!format.CanSave)
                         return;
 

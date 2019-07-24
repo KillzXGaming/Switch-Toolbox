@@ -283,23 +283,34 @@ namespace Toolbox.Library
 
         private void SaveAction(object sender, EventArgs args)
         {
+            Save("", true);
+        }
+
+        public void Save(string FileName, bool UseDialog)
+        {
             UpdateFileNames();
 
             //Archive files are IFIleFormats
             var FileFormat = ((IFileFormat)ArchiveFile);
 
             Cursor.Current = Cursors.WaitCursor;
-            List<IFileFormat> formats = new List<IFileFormat>();
-            formats.Add(FileFormat);
-
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = Utils.GetAllFilters(formats);
-            sfd.FileName = FileFormat.FileName;
-
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (UseDialog)
             {
-                STFileSaver.SaveFileFormat(FileFormat, sfd.FileName);
+                List<IFileFormat> formats = new List<IFileFormat>();
+                formats.Add(FileFormat);
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = Utils.GetAllFilters(formats);
+                sfd.FileName = FileFormat.FileName;
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    FileName = sfd.FileName;
+                else
+                    return;
             }
+
+            STFileSaver.SaveFileFormat(FileFormat, FileName);
+
             GC.Collect();
         }
 
