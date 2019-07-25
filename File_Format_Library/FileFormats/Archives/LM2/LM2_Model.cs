@@ -12,6 +12,55 @@ using OpenTK;
 
 namespace FirstPlugin.LuigisMansion.DarkMoon
 {
+    public class LM2_ModelFolder : TreeNodeCustom, IContextMenuNode
+    {
+        public LM2_DICT DataDictionary;
+
+        public LM2_ModelFolder(LM2_DICT dict)
+        {
+            DataDictionary = dict;
+            Text = "Models";
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Export", null, ExportModelAction, Keys.Control | Keys.E));
+            return Items.ToArray();
+        }
+
+        private void ExportModelAction(object sender, EventArgs args)
+        {
+            ExportModel();
+        }
+
+        private void ExportModel()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.dae;";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                ExportModel(sfd.FileName);
+            }
+        }
+
+        private void ExportModel(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+            //  foreach (var msh in DataDictionary.Renderer.Meshes)
+            //    Materials.Add(msh.GetMaterial());
+
+            var model = new STGenericModel();
+            model.Materials = Materials;
+            model.Objects = DataDictionary.Renderer.Meshes;
+
+            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+        }
+    }
+
     public class LM2_Model : TreeNodeCustom
     {
         public LM2_DICT DataDictionary;

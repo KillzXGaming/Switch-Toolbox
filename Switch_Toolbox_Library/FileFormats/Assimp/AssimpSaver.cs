@@ -87,7 +87,7 @@ namespace Toolbox.Library
             int MeshIndex = 0;
             foreach (var obj in Meshes)
             {
-                var mesh = SaveMesh((STGenericObject)obj, MeshIndex++, skeleton, NodeArray);
+                var mesh = SaveMesh((STGenericObject)obj, scene, MeshIndex++, skeleton, NodeArray);
                 scene.Meshes.Add(mesh);
             }
             Node geomNode = new Node(Path.GetFileNameWithoutExtension(FileName), scene.RootNode);
@@ -102,11 +102,15 @@ namespace Toolbox.Library
             scene.RootNode.Children.Add(geomNode);
         }
 
-        private Mesh SaveMesh(STGenericObject genericObj, int index, STSkeleton skeleton, List<int> NodeArray)
+        private Mesh SaveMesh(STGenericObject genericObj, Scene scene, int index, STSkeleton skeleton, List<int> NodeArray)
         {
             //Assimp is weird so use mesh_# for the name. We'll change it back after save
             Mesh mesh = new Mesh($"mesh_{ index }", PrimitiveType.Triangle);
-            mesh.MaterialIndex = genericObj.MaterialIndex;
+
+            if (genericObj.MaterialIndex < scene.MaterialCount && genericObj.MaterialIndex > 0)
+                mesh.MaterialIndex = genericObj.MaterialIndex;
+            else
+                mesh.MaterialIndex = 0;
 
             List<Vector3D> textureCoords0 = new List<Vector3D>();
             List<Vector3D> textureCoords1 = new List<Vector3D>();
@@ -527,6 +531,14 @@ namespace Toolbox.Library
                 }
             }
 
+            if (Materials.Count == 0)
+            {
+                Material material = new Material();
+                material.Name = "New Material";
+                scene.Materials.Add(material);
+                return;
+            }
+
             foreach (var mat in Materials)
             {
                 var genericMat = (STGenericMaterial)mat;
@@ -585,7 +597,7 @@ namespace Toolbox.Library
             Scene scene = new Scene();
             scene.RootNode = new Node("Root");
 
-            var mesh = SaveMesh(genericObject,0, null, null);
+            var mesh = SaveMesh(genericObject, scene, 0, null, null);
             mesh.MaterialIndex = 0;
             scene.Meshes.Add(mesh);
 

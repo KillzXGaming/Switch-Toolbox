@@ -210,7 +210,6 @@ namespace FirstPlugin
                 long pos = reader.Position;
 
                 uint entryCount = reader.ReadUInt32();
-                Console.WriteLine($"entryCount {entryCount}");
 
                 uint[] Offsets = reader.ReadUInt32s((int)entryCount);
                 for (int i =0; i < entryCount; i++)
