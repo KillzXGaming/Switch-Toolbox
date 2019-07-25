@@ -152,8 +152,16 @@ namespace FirstPlugin
             //Fill both lists. On save only one will be used depending on version
             foreach (var texName in materialAnim.TextureNames)
             {
-                texPatternAnim.TextureRefNames.Add(new ResU.TextureRef() { Name = texName });
-                texPatternAnim.TextureRefs.Add(texName, new ResU.TextureRef() { Name = texName });
+                var textureRef = new ResU.TextureRef();
+                foreach (var container in PluginRuntime.ftexContainers) {
+                    if (container.ResourceNodes.ContainsKey(texName)) {
+                        textureRef.Texture = ((Bfres.Structs.FTEX)container.ResourceNodes[texName]).texture;
+                    }
+                }
+
+                textureRef.Name = texName;
+                texPatternAnim.TextureRefNames.Add(textureRef);
+                texPatternAnim.TextureRefs.Add(texName, textureRef);
             }
 
             for (int m = 0; m < materialAnim.MaterialAnimDataList.Count; m++)

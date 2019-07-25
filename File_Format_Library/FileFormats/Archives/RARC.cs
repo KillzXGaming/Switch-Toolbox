@@ -146,7 +146,6 @@ namespace FirstPlugin
                         if (entry.IsDirectory)
                         {
                             Directories[dir].AddNode(Directories[entry.Offset]);
-
                             _savedDirectories.Add(entry);
                         }
                         else
