@@ -163,73 +163,44 @@ namespace FirstPlugin
             }
         }
 
-        public int GetTotalCount()
-        {
-            int count = 0;
-            foreach (var dir in Nodes)
-                GetTotalCount(dir, count);
-            return count;
-        }
+        private List<FileEntry> _savedFiles = new List<FileEntry>();
+        private List<DirectoryEntry> _savedDirectories = new List<DirectoryEntry>();
 
-        public int GetFileCount()
+        private void LoadAllDirectoriesAndFiles(DirectoryEntry parentDir)
         {
-            int count = 0;
-            foreach (var dir in Nodes)
-                GetFileCount(dir, count);
-            return count;
-        }
-
-        public int GetDirectoryCount()
-        {
-            int count = 0;
-            foreach (var dir in Nodes)
-                GetDirectoryCount(dir, count);
-            return count;
-        }
-
-        private int GetTotalCount(INode node, int count)
-        {
-            count++;
-
-            if (node is DirectoryEntry)
+            for (int i = 0; i < parentDir.nodes.Count; i++)
             {
-                foreach (var c in ((DirectoryEntry)node).nodes)
-                    return GetTotalCount(c, count);
+                if (parentDir.nodes[i] is DirectoryEntry)
+                {
+                   _savedDirectories.Add((DirectoryEntry)parentDir.nodes[i]);
+                }
+                else
+                    _savedFiles.Add((FileEntry)parentDir.nodes[i]);
             }
 
-            return count;
-        }
-
-
-        private int GetFileCount(INode node, int count)
-        {
-            if (node is FileEntry)
-                count++;
-
-            if (node is DirectoryEntry)
+            for (int i = 0; i < parentDir.nodes.Count; i++)
             {
-                foreach (var c in ((DirectoryEntry)node).nodes)
-                    return GetFileCount(c, count);
+                if (parentDir.nodes[i] is DirectoryEntry)
+                    LoadAllDirectoriesAndFiles((DirectoryEntry)parentDir.nodes[i]);
             }
-
-            return count;
         }
 
-        private int GetDirectoryCount(INode node, int count)
-        {
-            if (node is DirectoryEntry)
-            {
-                count++;
-
-                foreach (var c in ((DirectoryEntry)node).nodes)
-                    return GetDirectoryCount(c, count);
-            }
-
-            return count;
-        }
-
+        //Save a string table to a char array like WArchive 
+        //It's a good idea, and i don't want to deal with offset linking
+        private List<char> _exportStringTable;
+        private List<byte[]> _savedFileData;
         public void SaveFile(FileWriter writer)
         {
+            _exportStringTable = new List<char>();
+            _savedFileData = new List<byte[]>();
+
+            _savedDirectories.Add(Directories[0]);
+            LoadAllDirectoriesAndFiles(Directories[0]);
+
+            _exportStringTable = new List<char>();
+            _exportStringTable.AddRange(".\0".ToCharArray());
+            _exportStringTable.AddRange("..\0".ToCharArray());
+
             long pos = writer.Position;
 
             writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -244,39 +215,125 @@ namespace FirstPlugin
             writer.SeekBegin(HeaderSize);
             long InfoPos = writer.Position;
 
-            writer.Write(GetDirectoryCount()); 
+            writer.Write(_savedDirectories.Count); 
             writer.Write(uint.MaxValue); //DirectoryOffset
-            writer.Write(GetFileCount());
+            writer.Write(_savedDirectories.Count + _savedFiles.Count);
             writer.Write(uint.MaxValue); //File Node Offset
             writer.Write(uint.MaxValue); //String pool size
             writer.Write(uint.MaxValue); //String pool offset
-            writer.Write((ushort)GetFileCount());
+            writer.Write((ushort)0);
             writer.Write((ushort)Unknown);
             writer.Write(0); //padding
 
             //Write directory Offset
             WriteOffset(writer, 4, InfoPos);
-            for (int dir = 0; dir < Directories.Length; dir++)
+            for (int dir = 0; dir < _savedDirectories.Count; dir++)
             {
-                Directories[dir].Write(writer);
+                writer.Write(_savedDirectories[dir].Identifier);
+                writer.Write((int)_exportStringTable.Count);
+                writer.Write(_savedDirectories[dir].Hash);
+                writer.Write((ushort)(_savedDirectories[dir].nodes.Count));
+              //  writer.Write(_savedDirectories[dir].FirstNodeIndex);
+                 writer.Write(_savedFiles.FindIndex(i => i.Name == _savedDirectories[dir].nodes[0].Name));
+
+                _exportStringTable.AddRange(_savedDirectories[dir].Name.ToCharArray());
+                _exportStringTable.Add('\0'); //Null terminated
             }
 
-            writer.Seek(16); //Add padding after directories
+            writer.Align(32);
 
-            //Write the node offset
+            //Write the files
             WriteOffset(writer, 12, InfoPos);
-            for (int dir = 0; dir < Directories.Length; dir++)
+            foreach (FileEntry entry in _savedFiles)
             {
-                for (int n = 0; n < Directories[dir].NodeCount; n++)
-                {
+                entry.SaveFileFormat();
 
+                writer.Write(entry.FileId);
+                writer.Write(entry.Hash);
+                writer.Write(entry.Flags);
+                writer.Seek(1); //Padding
+
+                //I'm not sure what each dot does, but handle these based on 
+                //https://github.com/LordNed/WArchive-Tools/blob/master/ArchiveToolsLib/Archive/ArchivePacker.cs#L122
+                if ((entry.Name == "."))
+                {
+                    writer.Write((ushort)0);
                 }
+                else if ((entry.Name == ".."))
+                {
+                    writer.Write((ushort)2);
+                }
+                else
+                {
+                    if (_savedFiles.Find(i => i.Name == entry.Name) != null)
+                    {
+                        string test = new string(_exportStringTable.ToArray());
+
+                        int testt = test.IndexOf(entry.Name);
+
+                        writer.Write((ushort)test.IndexOf(entry.Name));
+                    }
+
+                    else
+                    {
+                        // Offset of name in the string table
+                        writer.Write((ushort)_exportStringTable.Count);
+
+                        // Add name to string table
+                        _exportStringTable.AddRange(entry.Name.ToCharArray());
+
+                        // Strings must be null terminated
+                        _exportStringTable.Add('\0');
+                    }
+                }
+
+                if (entry.Flags == 0x02)
+                {
+                    if (entry.FileData[0] != byte.MaxValue)
+                    {
+                        writer.Write((int)entry.FileData[0]);
+                    }
+                    else
+                   {
+                        writer.Write((int)-1);
+                    }
+
+                    writer.Write((int)0x10); //Fixed data size
+                }
+                if (entry.Flags == 0x11)
+                {
+                    writer.Write((int)_savedFileData.Count);
+                    writer.Write(_savedFileData.Count);
+                    writer.Write(entry.FileData.Length);
+                    _savedFileData.Add(entry.FileData);
+                }
+
+                writer.Write(0);
             }
 
-            //Write file size
+            writer.Align(32);
+
+            WriteOffset(writer, 20, InfoPos);
+            writer.Write(_exportStringTable.ToArray());
+
+            writer.Align(32);
+
+            WriteOffset(writer, 12, pos);
+            foreach (var data in _savedFileData)
+                writer.Write(data);
+
+            writer.Align(32);
+
+            //Write string table size
             using (writer.TemporarySeek(pos + 0x4, System.IO.SeekOrigin.Begin))
             {
                 writer.Write((uint)writer.BaseStream.Length);
+            }
+
+            //Write file size
+            using (writer.TemporarySeek(InfoPos + 16, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)_exportStringTable.Count);
             }
         }
 
@@ -323,15 +380,10 @@ namespace FirstPlugin
             public RARC ParentArchive { get; }
 
             public string Name { get; set; }
-
-            private uint Identifier;
-
+            public uint Identifier;
             internal uint NameOffset; //Relative to string table
-
             public ushort Hash { get; set; }
-
             public ushort NodeCount;
-
             public uint FirstNodeIndex { get; set; }
 
             public DirectoryEntry(RARC rarc) { ParentArchive = rarc; }
@@ -344,8 +396,6 @@ namespace FirstPlugin
                 nodes.Add(node);
             }
 
-
-            internal long _positionPtr;
             public void Read(FileReader reader)
             {
                 Identifier = reader.ReadUInt32();
@@ -355,17 +405,8 @@ namespace FirstPlugin
                 FirstNodeIndex = reader.ReadUInt32();
             }
 
-            public void Write(FileWriter writer)
-            {
-                _positionPtr = writer.Position;
-
+            public void UpdateHash() {
                 Hash = CalculateHash(Name);
-
-                writer.Write(Identifier);
-                writer.Write(NameOffset);
-                writer.Write(Hash);
-                writer.Write(NodeCount);
-                writer.Write(FirstNodeIndex);
             }
         }
 
@@ -415,21 +456,6 @@ namespace FirstPlugin
                 NameOffset = reader.ReadUInt16();
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
-            }
-
-            public void Write(FileWriter writer)
-            {
-                _positionPtr = writer.Position;
-
-                SaveFileFormat();
-
-                writer.Write(FileId);
-                writer.Write(Hash);
-                writer.Write(Flags);
-                writer.Seek(1); //Padding
-                writer.Write(NameOffset);
-                writer.Write(uint.MaxValue);
-                writer.Write(FileData.Length);
             }
         }
     }

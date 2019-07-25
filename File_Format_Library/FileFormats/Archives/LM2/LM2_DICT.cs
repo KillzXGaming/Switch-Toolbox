@@ -57,8 +57,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public LM2_Renderer Renderer;
         public DrawableContainer DrawableContainer = new DrawableContainer();
 
-        TreeNode textureFolder = new TreeNode("Textures");
-        TreeNode modelFolder = new TreeNode("Models");
+        TextureFolder textureFolder = new TextureFolder("Textures");
+        LM2_ModelFolder modelFolder;
         TreeNode materialNamesFolder = new TreeNode("Material Names");
         TreeNode chunkFolder = new TreeNode("Chunks");
 
@@ -70,6 +70,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public bool DrawablesLoaded = false;
         public void Load(System.IO.Stream stream)
         {
+            modelFolder = new LM2_ModelFolder(this); 
             DrawableContainer.Name = FileName;
             Renderer = new LM2_Renderer();
             DrawableContainer.Drawables.Add(Renderer);

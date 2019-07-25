@@ -241,9 +241,12 @@ namespace FirstPlugin
 
                         if (FaceGroup.SkinnningMode == SkinnningMode.Rigid)
                         {
-                            Matrix4 sb = skeleton.bones[(int)FaceGroup.BoneIndexList[v.boneIds[0]]].Transform;
-                            v.pos = Vector3.TransformPosition(v.pos, sb);
-                            v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                            if (v.boneIds.Count > 0)
+                            {
+                                Matrix4 sb = skeleton.bones[(int)FaceGroup.BoneIndexList[v.boneIds[0]]].Transform;
+                                v.pos = Vector3.TransformPosition(v.pos, sb);
+                                v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                            }
                         }
                         if (FaceGroup.SkinnningMode == SkinnningMode.None)
                         {

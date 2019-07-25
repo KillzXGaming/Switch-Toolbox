@@ -23,7 +23,7 @@ namespace Toolbox.Library
         public static Type[] GetCompressionFormats()
         {
             List<Type> Formats = new List<Type>();
-
+            Formats.Add(typeof(LZSS));
             return Formats.ToArray();
         }
     }

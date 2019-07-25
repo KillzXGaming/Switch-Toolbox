@@ -210,6 +210,16 @@ namespace Toolbox.Library
                 }
             }
 
+            //Get compression formats
+            foreach (ICompressionFormat f in FileManager.GetCompressionFormats())
+            {
+                for (int i = 0; i < f.Extension.Length; i++)
+                {
+                    Filter += $"{f.Extension[i]};";
+                    FilterEach.Add($"{f.Description[0]} ({f.Extension[i]}) |{f.Extension[i]}|");
+                }
+            }
+
             Filter += $"{"*.z"};";
             Filter += $"{"*.cmp"};";
             Filter += $"{"*.yaz0"};";
@@ -264,6 +274,17 @@ namespace Toolbox.Library
                     FilterEach.Add($"{f.Description[0]} ({f.Extension[i]}) |{f.Extension[i]}|");
                 }
             }
+
+            //Get compression formats
+            foreach (ICompressionFormat f in FileManager.GetCompressionFormats())
+            {
+                for (int i = 0; i < f.Extension.Length; i++)
+                {
+                    Filter += $"{f.Extension[i]};";
+                    FilterEach.Add($"{f.Description[0]} ({f.Extension[i]}) |{f.Extension[i]}|");
+                }
+            }
+
             Filter += $"{"*.z"};";
             Filter += $"{"*.cmp"};";
             Filter += $"{"*.yaz0"};";

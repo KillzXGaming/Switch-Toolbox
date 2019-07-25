@@ -225,6 +225,8 @@
     <Compile Include="FileFormats\Archives\Sonic Racing\SP2.cs" />
     <Compile Include="FileFormats\Archives\TMPK.cs" />
     <Compile Include="FileFormats\Archives\U8.cs" />
+    <Compile Include="FileFormats\Archives\Grezzo\ZAR.cs" />
+    <Compile Include="FileFormats\Archives\Grezzo\ZSI.cs" />
     <Compile Include="FileFormats\Audio\Archives\BARS.cs" />
     <Compile Include="FileFormats\Audio\BARSLIST.cs" />
     <Compile Include="FileFormats\Audio\BCSTM.cs" />
@@ -267,6 +269,7 @@
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
+    <Compile Include="FileFormats\Texture\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />

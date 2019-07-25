@@ -231,7 +231,7 @@ namespace Toolbox.Library.IO
             if (OffsetType == typeof(int))
                 offset = ReadInt32();
 
-            if (offset == 0) return null;
+            if (offset == 0) return string.Empty;
 
             if (IsRelative)
                 offset = offset + pos;
@@ -261,11 +261,19 @@ namespace Toolbox.Library.IO
             }
             return output.ToArray();
         }
+
+        public byte[] getSection(uint offset, uint size)
+        {
+            Position = offset;
+            return ReadBytes((int)size);
+        }
+
         public byte[] getSection(int offset, int size)
         {
             Position = offset;
             return ReadBytes(size);
         }
+
         public Vector4 ReadVec4()
         {
             return new Vector4(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());

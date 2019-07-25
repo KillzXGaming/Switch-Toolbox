@@ -137,6 +137,9 @@ namespace FirstPlugin
             }
 
             sarcData.Files.Clear();
+
+        //    stream.Close();
+         //   stream.Dispose();
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
