@@ -99,7 +99,7 @@ namespace FirstPlugin
                 byte encoding = reader.ReadByte();
                 Version = reader.ReadByte();
                 ushort SectionCount = reader.ReadUInt16();
-                ushort Unknown = reader.ReadUInt16();
+                Unknown = reader.ReadUInt16();
                 uint FileSize = reader.ReadUInt32();
                 Reserved = reader.ReadBytes(10);
 

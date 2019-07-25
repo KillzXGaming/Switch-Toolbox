@@ -338,14 +338,14 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public ushort IndexCount { get; private set; } //divide by 3 to get face count
         public IndexFormat IndexFormat { get; private set; } //0x0 - ushort, 0x8000 - byte
 
-        public ushort BufferStride { get; private set; }
+        public ushort BufferPtrOffset { get; private set; }
         public ushort Unknown { get; private set; }
         public ulong DataFormat { get; private set; }
         public uint Unknown2 { get; private set; }
         public uint Unknown3 { get; private set; }
-        public uint Unknown4 { get; private set; }
+        public uint Unknown4 { get; private set; } //Increases after each mesh. Always 0 for the first mesh (some sort of offset)?
         public ushort VertexCount { get; private set; }
-        public ushort Unknown7 { get; private set; }
+        public ushort Unknown7 { get; private set; } //Always 256?
         public uint HashID { get; private set; }
 
         public Matrix4 Transform { get; set; } = Matrix4.Identity;
@@ -355,7 +355,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             IndexStartOffset = reader.ReadUInt32();
             IndexCount = reader.ReadUInt16();
             IndexFormat = reader.ReadEnum<IndexFormat>(true);
-            BufferStride = reader.ReadUInt16();
+            BufferPtrOffset = reader.ReadUInt16(); //I believe this might be for the buffer pointers. It shifts by 4 for each mesh
             Unknown = reader.ReadUInt16();
             DataFormat = reader.ReadUInt64();
             Unknown2 = reader.ReadUInt32();

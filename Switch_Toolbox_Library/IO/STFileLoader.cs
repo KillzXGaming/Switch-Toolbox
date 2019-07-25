@@ -366,8 +366,8 @@ namespace Toolbox.Library.IO
 
             if (!LeaveStreamOpen)
             {
-              //    stream.Close();
-              //    stream.Dispose();
+                stream.Close();
+                stream.Dispose();
             }
 
             return fileFormat;

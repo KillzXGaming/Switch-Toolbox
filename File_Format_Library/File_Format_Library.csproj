@@ -266,6 +266,7 @@
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
+    <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />

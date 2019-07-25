@@ -274,8 +274,29 @@ namespace FirstPlugin
                 {
                     foreach (string bn in obj.bones[v])
                         obj.vertices[v].boneNames.Add(bn);
+
+                    //Produce identical results for the weight output as BFRES_Vertex.py
+                    //This should prevent encoding back and exploding
+                    float MaxWeight = 1.0f;
+                    int i = 0;
                     foreach (float f in obj.weightsT[v])
-                        obj.vertices[v].boneWeights.Add(f);
+                    {
+                        float weight = f;
+                        if (i + 1 == obj.weightsT.Count)
+                            weight = MaxWeight;
+
+                        if (weight >= MaxWeight)
+                        {
+                            weight = MaxWeight;
+                            MaxWeight = 0;
+                        }
+                        else
+                            MaxWeight -= weight;
+
+                        obj.vertices[v].boneWeights.Add(weight);
+
+                        i++;
+                    }
                 }
 
                 int vID = 0;
