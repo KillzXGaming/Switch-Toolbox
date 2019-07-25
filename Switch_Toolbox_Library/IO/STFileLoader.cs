@@ -178,7 +178,7 @@ namespace Toolbox.Library.IO
             {
                 if (compressionFormat.Identify(stream))
                 {
-                    compressionFormat.Decompress(stream);
+                    stream = compressionFormat.Decompress(stream);
                 }
             }
 
@@ -349,10 +349,7 @@ namespace Toolbox.Library.IO
             if (Compressed)
                 fileFormat.IFileInfo.CompressionType = CompType;
 
-
             fileFormat.Load(stream);
-
-
             if (fileFormat is TreeNode)
             {
                 if (archiveNode != null)
@@ -366,8 +363,8 @@ namespace Toolbox.Library.IO
 
             if (!LeaveStreamOpen)
             {
-                stream.Close();
                 stream.Dispose();
+                GC.SuppressFinalize(stream);
             }
 
             return fileFormat;
