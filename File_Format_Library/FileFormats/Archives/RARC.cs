@@ -144,6 +144,8 @@ namespace FirstPlugin
                         if (entry.IsDirectory)
                         {
                             Directories[dir].AddNode(Directories[entry.Offset]);
+
+                            _savedDirectories.Add(entry);
                         }
                         else
                         {
@@ -164,7 +166,8 @@ namespace FirstPlugin
         }
 
         private List<FileEntry> _savedFiles = new List<FileEntry>();
-        private List<DirectoryEntry> _savedDirectories = new List<DirectoryEntry>();
+        private List<FileEntry> _savedDirectories = new List<FileEntry>();
+        private List<DirectoryEntry> _savedNodes = new List<DirectoryEntry>();
 
         private void LoadAllDirectoriesAndFiles(DirectoryEntry parentDir)
         {
@@ -172,7 +175,7 @@ namespace FirstPlugin
             {
                 if (parentDir.nodes[i] is DirectoryEntry)
                 {
-                   _savedDirectories.Add((DirectoryEntry)parentDir.nodes[i]);
+                   //_savedDirectories.Add((DirectoryEntry)parentDir.nodes[i]);
                 }
                 else
                     _savedFiles.Add((FileEntry)parentDir.nodes[i]);
@@ -193,8 +196,8 @@ namespace FirstPlugin
         {
             _exportStringTable = new List<char>();
             _savedFileData = new List<byte[]>();
+            _savedNodes = Directories.ToList();
 
-            _savedDirectories.Add(Directories[0]);
             LoadAllDirectoriesAndFiles(Directories[0]);
 
             _exportStringTable = new List<char>();
@@ -215,7 +218,7 @@ namespace FirstPlugin
             writer.SeekBegin(HeaderSize);
             long InfoPos = writer.Position;
 
-            writer.Write(_savedDirectories.Count); 
+            writer.Write(_savedNodes.Count); 
             writer.Write(uint.MaxValue); //DirectoryOffset
             writer.Write(_savedDirectories.Count + _savedFiles.Count);
             writer.Write(uint.MaxValue); //File Node Offset
@@ -225,36 +228,32 @@ namespace FirstPlugin
             writer.Write((ushort)Unknown);
             writer.Write(0); //padding
 
-            //Write directory Offset
-            WriteOffset(writer, 4, InfoPos);
-            for (int dir = 0; dir < _savedDirectories.Count; dir++)
-            {
-                writer.Write(_savedDirectories[dir].Identifier);
-                writer.Write((int)_exportStringTable.Count);
-                writer.Write(_savedDirectories[dir].Hash);
-                writer.Write((ushort)(_savedDirectories[dir].nodes.Count));
-              //  writer.Write(_savedDirectories[dir].FirstNodeIndex);
-                 writer.Write(_savedFiles.FindIndex(i => i.Name == _savedDirectories[dir].nodes[0].Name));
+            List<FileEntry> TotalList = _savedDirectories.Concat(_savedFiles).ToList();
 
-                _exportStringTable.AddRange(_savedDirectories[dir].Name.ToCharArray());
+            //Write nodes
+            WriteOffset(writer, 4, InfoPos);
+            for (int dir = 0; dir < _savedNodes.Count; dir++)
+            {
+                writer.Write(_savedNodes[dir].Identifier);
+                writer.Write((int)_exportStringTable.Count);
+                writer.Write(_savedNodes[dir].Hash);
+                writer.Write((ushort)(_savedNodes[dir].nodes.Count));
+                writer.Write(TotalList.FindIndex(i => i.Name == _savedNodes[dir].nodes[0].Name));
+                _exportStringTable.AddRange(_savedNodes[dir].Name.ToCharArray());
                 _exportStringTable.Add('\0'); //Null terminated
             }
 
             writer.Align(32);
 
-            //Write the files
+            //Write the directories and files
             WriteOffset(writer, 12, InfoPos);
-            foreach (FileEntry entry in _savedFiles)
+            foreach (FileEntry entry in TotalList)
             {
-                entry.SaveFileFormat();
-
                 writer.Write(entry.FileId);
                 writer.Write(entry.Hash);
                 writer.Write(entry.Flags);
                 writer.Seek(1); //Padding
 
-                //I'm not sure what each dot does, but handle these based on 
-                //https://github.com/LordNed/WArchive-Tools/blob/master/ArchiveToolsLib/Archive/ArchivePacker.cs#L122
                 if ((entry.Name == "."))
                 {
                     writer.Write((ushort)0);
@@ -265,7 +264,16 @@ namespace FirstPlugin
                 }
                 else
                 {
-                    if (_savedFiles.Find(i => i.Name == entry.Name) != null)
+                    // Offset of name in the string table
+                    writer.Write((ushort)_exportStringTable.Count);
+
+                    // Add name to string table
+                    _exportStringTable.AddRange(entry.Name.ToCharArray());
+
+                    // Strings must be null terminated
+                    _exportStringTable.Add('\0');
+
+             /*     if (_savedFiles.Find(i => i.Name == entry.Name) != null)
                     {
                         string test = new string(_exportStringTable.ToArray());
 
@@ -276,34 +284,22 @@ namespace FirstPlugin
 
                     else
                     {
-                        // Offset of name in the string table
-                        writer.Write((ushort)_exportStringTable.Count);
-
-                        // Add name to string table
-                        _exportStringTable.AddRange(entry.Name.ToCharArray());
-
-                        // Strings must be null terminated
-                        _exportStringTable.Add('\0');
-                    }
+                
+                    }*/
                 }
 
                 if (entry.Flags == 0x02)
                 {
-                    if (entry.FileData[0] != byte.MaxValue)
-                    {
-                        writer.Write((int)entry.FileData[0]);
-                    }
-                    else
-                   {
-                        writer.Write((int)-1);
-                    }
-
-                    writer.Write((int)0x10); //Fixed data size
+                    writer.Write((int)TotalList.IndexOf(entry));
+                    writer.Write((int)0); //Fixed data size
                 }
                 if (entry.Flags == 0x11)
                 {
-                    writer.Write((int)_savedFileData.Count);
-                    writer.Write(_savedFileData.Count);
+                    uint dataOffset = 0;
+                    foreach (var data in _savedFileData)
+                        dataOffset += (uint)data.Length;
+
+                    writer.Write(dataOffset);
                     writer.Write(entry.FileData.Length);
                     _savedFileData.Add(entry.FileData);
                 }
@@ -318,11 +314,32 @@ namespace FirstPlugin
 
             writer.Align(32);
 
-            WriteOffset(writer, 12, pos);
+
+            var dataPos = writer.Position;
+            using (writer.TemporarySeek(pos + 12, System.IO.SeekOrigin.Begin)) {
+                writer.Write((uint)(dataPos - InfoPos));
+            }
+
             foreach (var data in _savedFileData)
                 writer.Write(data);
 
+            uint DataSize = (uint)(writer.Position - dataPos);
+
             writer.Align(32);
+
+            uint EndFileSize = (uint)(writer.Position - dataPos);
+
+            //Write data size
+            using (writer.TemporarySeek(pos + 16, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)DataSize);
+            }
+
+            //Write end of file size
+            using (writer.TemporarySeek(pos + 20, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)EndFileSize);
+            }
 
             //Write string table size
             using (writer.TemporarySeek(pos + 0x4, System.IO.SeekOrigin.Begin))

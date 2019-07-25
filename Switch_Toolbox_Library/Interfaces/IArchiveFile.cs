@@ -442,6 +442,7 @@ namespace Toolbox.Library
                     ArchiveFileWrapper wrapperFile = new ArchiveFileWrapper(node.Name, (ArchiveFileInfo)node, this);
                     wrapperFile.Name = node.Name;
                     parent.Nodes.Add(wrapperFile);
+                    AddFileNode(wrapperFile);
                 }
             }
         }
