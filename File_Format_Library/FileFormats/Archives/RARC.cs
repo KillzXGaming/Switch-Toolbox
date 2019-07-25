@@ -128,6 +128,8 @@ namespace FirstPlugin
                     uint NamePointer = StringTablOffset + Directories[dir].NameOffset;
                     Directories[dir].Name = ReadStringAtTable(reader, NamePointer);
 
+                    Console.WriteLine($"{  Directories[dir].Name } {dir}");
+
                     for (int n = 0; n < Directories[dir].NodeCount; n++)
                     {
                         reader.SeekBegin(NodeOffset + ((n + Directories[dir].FirstNodeIndex) * 0x14));
