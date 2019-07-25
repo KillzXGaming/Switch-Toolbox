@@ -82,7 +82,7 @@ namespace Bfres.Structs
                             Value1 = (int)animCurve.Offset + (int)animCurve.Keys[i, 0] * animCurve.Scale,
                         });
 
-                        Console.WriteLine($"Frame {animCurve.Frames[i]} Offset " + (int)animCurve.Offset + " " + ((int)animCurve.Offset + (int)animCurve.Keys[i, 0] * animCurve.Scale));
+                        Console.WriteLine($"Frame {animCurve.Frames[i]} FrameINT {(int)animCurve.Frames[i]} Offset " + (int)animCurve.Offset + " " + ((int)animCurve.Offset + (int)animCurve.Keys[i, 0] * animCurve.Scale));
                         break;
                     default:
                         throw new Exception("Unsupported anim type!");
