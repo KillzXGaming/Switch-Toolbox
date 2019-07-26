@@ -195,6 +195,7 @@ namespace FirstPlugin
         private List<byte[]> _savedFileData;
         public void SaveFile(FileWriter writer)
         {
+            _savedFiles.Clear();
             _exportStringTable = new List<char>();
             _savedFileData = new List<byte[]>();
             _savedNodes = Directories.ToList();

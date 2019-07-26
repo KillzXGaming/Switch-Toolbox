@@ -87,7 +87,10 @@ namespace Toolbox.Library
         public bool IsInDecompressedFileSizeList(string FileName) => DecompressedFileSizes.ContainsKey(FileName);
 
         public void SetFileSizeEntry(string FileName, uint Size) {
+            uint OldSize = FileSizes[FileName];
             FileSizes[FileName] = Size;
+
+            STConsole.WriteLine($"Old size: {OldSize} New size: {Size}");
         }
 
         public void SetDecompressedFileSizeEntry(string FileName, uint CompressedSize, uint DecompressedSize) {
