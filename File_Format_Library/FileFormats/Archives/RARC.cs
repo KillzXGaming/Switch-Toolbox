@@ -251,6 +251,8 @@ namespace FirstPlugin
             WriteOffset(writer, 12, InfoPos);
             foreach (FileEntry entry in TotalList)
             {
+                entry.SaveFileFormat();
+
                 writer.Write(entry.FileId);
                 writer.Write(entry.Hash);
                 writer.Write(entry.Flags);
