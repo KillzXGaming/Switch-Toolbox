@@ -213,7 +213,7 @@ namespace Toolbox.Library
                     if (parentNode is ArchiveRootNodeWrapper)
                         ((ArchiveRootNodeWrapper)parentNode).AddFileNode(File);
                     if (parentNode is ArchiveFolderNodeWrapper)
-                        ((ArchiveRootNodeWrapper)parentNode).AddFileNode(File);
+                        ((ArchiveFolderNodeWrapper)parentNode).RootNode.AddFileNode(File);
 
                     parentNode.Nodes.Add(File);
                 }
@@ -238,12 +238,12 @@ namespace Toolbox.Library
 
             foreach (var node in TreeViewExtensions.Collect(folderNode.Nodes))
             {
-                var parentNode = node.Parent;
-                parentNode.Nodes.Remove(node);
-
                 if (node is ArchiveFileWrapper)
                     archiveFile.DeleteFile(((ArchiveFileWrapper)node).ArchiveFileInfo);
             }
+
+            var parentNode = folderNode.Parent;
+            parentNode.Nodes.Remove(folderNode);
         }
     }
 }
