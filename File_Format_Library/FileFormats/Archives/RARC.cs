@@ -291,10 +291,10 @@ namespace FirstPlugin
 
                 if (entry.Flags == 0x02)
                 {
-                    writer.Write((int)TotalList.IndexOf(entry));
-                    writer.Write((int)0); //Fixed data size
+                    writer.Write((int)TotalList.IndexOf(entry) + 1);
+                    writer.Write((int)0); 
                 }
-                if (entry.Flags == 0x11)
+                else
                 {
                     uint dataOffset = 0;
                     foreach (var data in _savedFileData)
