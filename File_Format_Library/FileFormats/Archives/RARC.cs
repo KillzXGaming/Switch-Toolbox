@@ -221,7 +221,7 @@ namespace FirstPlugin
 
             writer.Write(_savedNodes.Count); 
             writer.Write(uint.MaxValue); //DirectoryOffset
-            writer.Write(_savedDirectories.Count + _savedFiles.Count);
+            writer.Write(_savedNodes.Count + _savedDirectories.Count + _savedFiles.Count);
             writer.Write(uint.MaxValue); //File Node Offset
             writer.Write(uint.MaxValue); //String pool size
             writer.Write(uint.MaxValue); //String pool offset
