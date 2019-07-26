@@ -34,6 +34,7 @@ namespace Toolbox.Library
             {
                 case PICASurfaceFormat.RGB565: return TEX_FORMAT.B5G6R5_UNORM;
                 case PICASurfaceFormat.RGB8: return TEX_FORMAT.R8G8_UNORM;
+                case PICASurfaceFormat.RGBA8: return TEX_FORMAT.R8G8B8A8_UNORM;
                 case PICASurfaceFormat.RGBA5551: return TEX_FORMAT.B5G5R5A1_UNORM;
                 case PICASurfaceFormat.RGBA4: return TEX_FORMAT.B4G4R4A4_UNORM;
                 case PICASurfaceFormat.LA8: return TEX_FORMAT.LA8;
@@ -56,6 +57,7 @@ namespace Toolbox.Library
             {
                 case TEX_FORMAT.B5G6R5_UNORM: return PICASurfaceFormat.RGB565;
                 case TEX_FORMAT.R8G8_UNORM: return PICASurfaceFormat.RGB8;
+                case TEX_FORMAT.R8G8B8A8_UNORM: return PICASurfaceFormat.RGBA8;
                 case TEX_FORMAT.B5G5R5A1_UNORM: return PICASurfaceFormat.RGBA5551;
                 case TEX_FORMAT.B4G4R4A4_UNORM: return PICASurfaceFormat.RGBA4;
                 case TEX_FORMAT.LA8: return PICASurfaceFormat.LA8;

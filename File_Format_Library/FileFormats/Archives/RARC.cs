@@ -84,9 +84,13 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
+            CanRenameFiles = true;
+            CanReplaceFiles = true;
 
             using (var reader = new FileReader(stream))
             {
+                _savedDirectories.Clear();
+
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 reader.ReadSignature(4, "RARC");
                 uint FileSize = reader.ReadUInt32();
@@ -249,6 +253,7 @@ namespace FirstPlugin
 
             //Write the directories and files
             WriteOffset(writer, 12, InfoPos);
+            int I = 0;
             foreach (FileEntry entry in TotalList)
             {
                 entry.SaveFileFormat();

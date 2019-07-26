@@ -225,8 +225,9 @@
     <Compile Include="FileFormats\Archives\Sonic Racing\SP2.cs" />
     <Compile Include="FileFormats\Archives\TMPK.cs" />
     <Compile Include="FileFormats\Archives\U8.cs" />
-    <Compile Include="FileFormats\Archives\Grezzo\ZAR.cs" />
-    <Compile Include="FileFormats\Archives\Grezzo\ZSI.cs" />
+    <Compile Include="FileFormats\Grezzo\CMB.cs" />
+    <Compile Include="FileFormats\Grezzo\ZAR.cs" />
+    <Compile Include="FileFormats\Grezzo\ZSI.cs" />
     <Compile Include="FileFormats\Audio\Archives\BARS.cs" />
     <Compile Include="FileFormats\Audio\BARSLIST.cs" />
     <Compile Include="FileFormats\Audio\BCSTM.cs" />

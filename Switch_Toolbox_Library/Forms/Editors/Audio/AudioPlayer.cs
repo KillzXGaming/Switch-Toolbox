@@ -63,7 +63,7 @@ namespace Toolbox.Library.Forms
 
         public void LoadFile(byte[] AudioData)
         {
-            
+
         }
 
         public void LoadFile(IWaveSource source, IFileFormat fileFormat, bool ClearPlaylist = false, object AudioStruct = null)
@@ -137,13 +137,13 @@ namespace Toolbox.Library.Forms
                     memWav.Position = 0;
 
                     //Load the player
-                     audioChannel.audioPlayer.Open(new MemoryStream(audioChannel.Data),"test.wav", activeDevice);
+                    audioChannel.audioPlayer.Open(new MemoryStream(audioChannel.Data), "test.wav", activeDevice);
 
-               /*     OpenFileDialog openFileDialog = new OpenFileDialog();
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        audioChannel.audioPlayer.Open(openFileDialog.FileName, activeDevice);
-                    }*/
+                    /*     OpenFileDialog openFileDialog = new OpenFileDialog();
+                         if (openFileDialog.ShowDialog() == DialogResult.OK)
+                         {
+                             audioChannel.audioPlayer.Open(openFileDialog.FileName, activeDevice);
+                         }*/
 
 
                     audioChannel.audioPlayer.PlaybackStopped += (s, args) =>
@@ -289,7 +289,7 @@ namespace Toolbox.Library.Forms
 
         #region SpectumBar
 
-     
+
         private void GenerateLineSpectrum()
         {
             if (lineSpectrum == null)
@@ -359,6 +359,9 @@ namespace Toolbox.Library.Forms
 
         private void ResetPlayers()
         {
+            if (selectedFile == null || selectedFile.Channels == null)
+                return;
+
             foreach (var channel in selectedFile.Channels)
             {
                 channel.audioPlayer.Stop();
@@ -404,10 +407,27 @@ namespace Toolbox.Library.Forms
 
         private void AudioPlayer_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Console.WriteLine("Closing audio form");
+
+            var channel = GetActiveAudio();
+            if (channel != null)
+            {
+                channel.audioPlayer.Stop();
+                channel.audioPlayer.Position = TimeSpan.Zero;
+                colorSlider1.Value = 0;
+            }
+
             channelCB.Items.Clear();
 
             foreach (var obj in audioListView.Objects)
             {
+                foreach (var chan in ((AudioFile)obj).Channels)
+                {
+                    chan.audioStream.Dispose();
+                    chan.audioPlayer.Dispose();
+                    chan.samplerSource.Dispose();
+                }
+
                 ((AudioFile)obj).Dispose();
             }
             audioListView.ClearObjects();

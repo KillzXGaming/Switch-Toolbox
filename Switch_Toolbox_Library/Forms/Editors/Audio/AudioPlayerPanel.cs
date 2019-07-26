@@ -69,10 +69,7 @@ namespace Toolbox.Library.Forms
         public void LoadFile(IWaveSource source, IFileFormat fileFormat, bool ClearPlaylist = true, object AudioStruct = null)
         {
             if (ClearPlaylist)
-            {
-                audioListView.Items.Clear();
-                AudioFileFormats.Clear();
-            }
+                ResetAudioList();
 
             AudioFile file = new AudioFile();
             file.Title = fileFormat.FileName;
@@ -109,10 +106,7 @@ namespace Toolbox.Library.Forms
         public void LoadFile(AudioData audioData, IFileFormat fileFormat, bool ClearPlaylist = true)
         {
             if (ClearPlaylist)
-            {
-                audioListView.Items.Clear();
-                AudioFileFormats.Clear();
-            }
+                ResetAudioList();
 
             AudioFileFormats.Add(fileFormat);
 
@@ -363,11 +357,17 @@ namespace Toolbox.Library.Forms
 
         private void ResetPlayers()
         {
+            if (selectedFile == null || selectedFile.Channels == null)
+                return;
+
             foreach (var channel in selectedFile.Channels)
             {
                 channel.audioPlayer.Stop();
                 channel.audioPlayer.Position = TimeSpan.Zero;
             }
+
+            colorSlider1.Value = 0;
+            btnPlay.BackgroundImage = Properties.Resources.PlayArrowR;
         }
 
         private void colorSlider1_ValueChanged(object sender, EventArgs e)
@@ -405,16 +405,41 @@ namespace Toolbox.Library.Forms
             channel.audioPlayer.Volume = trackbarVolume.Value;
         }
 
-
-        private void AudioPlayer_FormClosed(object sender, FormClosedEventArgs e)
+        public void ResetAudioList()
         {
+            ResetPlayers();
+
             channelCB.Items.Clear();
+            if (audioListView.Objects == null)
+                return;
 
             foreach (var obj in audioListView.Objects)
             {
+                foreach (var chan in ((AudioFile)obj).Channels)
+                {
+                    chan.audioStream.Dispose();
+                    chan.audioPlayer.Dispose();
+                    chan.samplerSource.Dispose();
+                }
+
                 ((AudioFile)obj).Dispose();
             }
             audioListView.ClearObjects();
+        }
+
+        public override void OnControlClosing()
+        {
+            Console.WriteLine("Closing audio panel");
+
+            var channel = GetActiveAudio();
+            if (channel != null)
+            {
+                channel.audioPlayer.Stop();
+                channel.audioPlayer.Position = TimeSpan.Zero;
+                colorSlider1.Value = 0;
+            }
+
+            ResetAudioList();
         }
 
         private void loopingToolStripMenuItem_Click(object sender, EventArgs e)

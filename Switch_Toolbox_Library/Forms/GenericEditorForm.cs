@@ -34,5 +34,14 @@ namespace Toolbox.Library.Forms
                 stPanel1.Dock = DockStyle.Fill;
             }
         }
+
+        private void GenericEditorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach (var control in stPanel1.Controls)
+            {
+                if (control is STUserControl)
+                    ((STUserControl)control).OnControlClosing();
+            }
+        }
     }
 }
