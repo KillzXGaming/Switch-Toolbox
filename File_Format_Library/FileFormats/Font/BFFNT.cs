@@ -388,7 +388,7 @@ namespace FirstPlugin
                 TextureTGLP.SheetWidth = (ushort)ftex.texture.Width;
                 TextureTGLP.SheetDataList[SheetIndex] = ftex.texture.Data;
                 Format = ftex.Format;
-                Width = ftex.texture.Height;
+                Width = ftex.texture.Width;
                 Height = ftex.texture.Height;
 
                 UpdateEditor();
