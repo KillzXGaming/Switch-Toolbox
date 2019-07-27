@@ -275,6 +275,14 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             genericObj.TransformPosition(new Vector3(0), new Vector3(-90, 0, 0), new Vector3(1));
                         }
                     }
+
+                    //Flip all the UVs
+                    for (int v = 0; v < genericObj.vertices.Count; v++)
+                    {
+                        genericObj.vertices[v].uv0 = new Vector2(genericObj.vertices[v].uv0.X, 1 - genericObj.vertices[v].uv0.Y);
+                        genericObj.vertices[v].uv1 = new Vector2(genericObj.vertices[v].uv1.X, 1 - genericObj.vertices[v].uv1.Y);
+                        genericObj.vertices[v].uv2 = new Vector2(genericObj.vertices[v].uv2.X, 1 - genericObj.vertices[v].uv2.Y);
+                    }
                 }
             }
         }
