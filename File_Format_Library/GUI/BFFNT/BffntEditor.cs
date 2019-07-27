@@ -164,6 +164,8 @@ namespace FirstPlugin.Forms
                 var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
                 bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
 
+                image.Parameters.FlipY = true;
+
                 OpenFileDialog ofd = new OpenFileDialog();
                 ofd.Filter = image.ReplaceFilter;
                 ofd.Multiselect = false;
@@ -188,15 +190,12 @@ namespace FirstPlugin.Forms
                 var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
                 bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
 
-                var args = new STGenericTexture.ImageExportArguments()
-                {
-                    FlipY = true,
-                };
+                image.Parameters.FlipY = true;
 
                 if (IsBntx)
-                    image.ExportArrayImage(ImageIndex, args);
+                    image.ExportArrayImage(ImageIndex);
                 else
-                    image.ExportImage(args);
+                    image.ExportImage();
             }
         }
 

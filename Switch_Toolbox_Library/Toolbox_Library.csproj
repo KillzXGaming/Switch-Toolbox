@@ -232,6 +232,7 @@
     <Compile Include="Forms\SceneSelector.Designer.cs">
       <DependentUpon>SceneSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Interfaces\IMeshContainer.cs" />
     <Compile Include="Interfaces\ITextureContainer.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
@@ -586,12 +587,12 @@
     </Compile>
     <Compile Include="Generics\BoundingBox.cs" />
     <Compile Include="Generics\GenericBitmapTexture.cs" />
-    <Compile Include="Generics\GenericMaterial.cs" />
-    <Compile Include="Generics\GenericMatTexture.cs" />
+    <Compile Include="Generics\Materials\GenericMaterial.cs" />
+    <Compile Include="Generics\Materials\GenericMatTexture.cs" />
     <Compile Include="Generics\GenericModel.cs" />
     <Compile Include="Generics\GenericObject.cs" />
     <Compile Include="Generics\GenericPolygonGroup.cs" />
-    <Compile Include="Generics\GenericTexture.cs" />
+    <Compile Include="Generics\Texture\GenericTexture.cs" />
     <Compile Include="Generics\OpenGLTexture.cs" />
     <Compile Include="Interfaces\ICompressionFormat.cs" />
     <Compile Include="Interfaces\IDirectoryNode.cs" />

@@ -95,6 +95,9 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
             MipCount = 1;
             Format = CTR_3DS.ConvertPICAToGenericFormat((CTR_3DS.PICASurfaceFormat)FormatCtr);
+
+            Parameters = new ImageParameters();
+            Parameters.FlipY = true;
         }
 
         public override void OnClick(TreeView treeview)

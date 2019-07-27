@@ -47,6 +47,15 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             }
         }
 
+        public override void OnAfterAdded()
+        {
+            if (!DrawablesLoaded)
+            {
+                ObjectEditor.AddContainer(DrawableContainer);
+                DrawablesLoaded = true;
+            }
+        }
+
         public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
         public bool IsCompressed = false;

@@ -396,6 +396,8 @@ namespace Toolbox.Library.Forms
                 LoadChannelEditor(image);
             }
 
+            if (ActiveTexture.Parameters.FlipY)
+                image.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
             if (image != null)
             {
