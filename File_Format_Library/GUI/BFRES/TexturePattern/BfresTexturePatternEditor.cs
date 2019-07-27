@@ -356,7 +356,7 @@ namespace FirstPlugin.Forms
                 {
                     animationTrackBar.Value++;
                 }
-            }
+            }   
         }
 
         private void maxFrameCounterUD_ValueChanged(object sender, EventArgs e)
@@ -364,6 +364,7 @@ namespace FirstPlugin.Forms
             if (ActiveMaterialAnim == null) return;
             if (maxFrameCounterUD.Value < 1)
             {
+                maxFrameCounterUD.Maximum = 1;
                 maxFrameCounterUD.Value = 1;
             }
             else

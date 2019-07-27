@@ -394,7 +394,7 @@
             0,
             0,
             131072});
-            this.boneSizeUD.Location = new System.Drawing.Point(368, 211);
+            this.boneSizeUD.Location = new System.Drawing.Point(369, 209);
             this.boneSizeUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -432,7 +432,7 @@
             0,
             0,
             131072});
-            this.normalsLineUD.Location = new System.Drawing.Point(371, 237);
+            this.normalsLineUD.Location = new System.Drawing.Point(370, 235);
             this.normalsLineUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -503,7 +503,7 @@
             0,
             0,
             131072});
-            this.previewScaleUD.Location = new System.Drawing.Point(372, 261);
+            this.previewScaleUD.Location = new System.Drawing.Point(370, 261);
             this.previewScaleUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
