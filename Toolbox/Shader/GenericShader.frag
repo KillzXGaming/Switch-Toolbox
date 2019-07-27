@@ -94,7 +94,7 @@ float GetComponent(int Type, vec4 Texture);
 
 void main()
 {
-    fragColor = vec4(1);
+    fragColor = vec4(0);
 
     // Create a struct for passing all the vertex attributes to other functions.
     VertexAttributes vert;
@@ -116,7 +116,7 @@ void main()
         return;
     }
 
-	vec3 albedo = vec3(1);
+	vec3 albedo = vec3(0.5);
     if (HasDiffuse == 1)
 	{
 		vec4 DiffuseTex =  pow(texture(DiffuseMap, f_texcoord0).rgba, vec4(gamma));
@@ -127,55 +127,18 @@ void main()
 		albedo.b = GetComponent(BlueChannel, DiffuseTex);
 	}
 
-	float metallic = 0;
-    if (HasMetalnessMap == 1)
-        metallic = texture(MetalnessMap, f_texcoord0).r;
+	   // Diffuse lighting.
+     float halfLambert = dot(difLightDirection, normal) * 0.5 + 0.5;
+ 	 albedo *= halfLambert;
 
-	float roughness = 0.5;
-    if (HasRoughnessMap == 1)
-        roughness = texture(RoughnessMap, f_texcoord0).r;
-
-	float ao = 1;
-    if (HasShadowMap == 1)
-        ao = texture(BakeShadowMap, f_texcoord1).r;
-
-	vec3 emissionTerm = vec3(0);
-
-    // Calculate shading vectors.
-    vec3 I = vec3(0,0,-1) * mat3(mtxCam);
-    vec3 N = normal;
-
-    vec3 V = normalize(I); // view
-	vec3 L = normalize(specLightDirection); // Light
-	vec3 H = normalize(specLightDirection + I); // half angle
-    vec3 R = reflect(-I, N); // reflection
-
-    // Specular pass.
-    int maxSpecularLod = 8;
-    vec3 specularIblColor = textureLod(specularIbl, R, roughness * maxSpecularLod).rgb;
-
-
-  // Add render passes.
-    fragColor.rgb = vec3(0);
-    fragColor.rgb += albedo;
-    fragColor.rgb += emissionTerm;
-
-    fragColor.rgb *= min(boneWeightsColored, vec3(1));
-
-    // Alpha calculations.
-	if (isTransparent == 1)
-	{
-		 float alpha = GetComponent(AlphaChannel, texture(DiffuseMap, f_texcoord0));
-		 fragColor.a = alpha;
-	 }
-
-     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
+    fragColor.rgb += albedo.rgb;
+    fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
 
     if (renderVertColor == 1)
         fragColor *= min(vert.vertexColor, vec4(1));
 
      // Global brightness adjustment.
-	 fragColor.rgb *= 1.5;
+	// fragColor.rgb *= 1.5;
 
 	 //Debug Shading
 	vec2 displayTexCoord =  f_texcoord0;
@@ -192,7 +155,8 @@ void main()
         fragColor = vec4(displayNormal.rgb,1);
 	else if (renderType == 2)
 	{
-
+	    float halfLambert = dot(difLightDirection, normal) * 0.5 + 0.5;
+        fragColor = vec4(vec3(halfLambert), 1);
 	}
 	else if (renderType == 3) //DiffuseColor
 	{
@@ -207,7 +171,7 @@ void main()
     else if (renderType == 5) // vertexColor
         fragColor = vertexColor;
 	else if (renderType == 6) //Display Ambient Occlusion
-        fragColor = vec4(vec3(ao), 1);
+        fragColor = vec4(1);
    else if (renderType == 7) // uv coords
         fragColor = vec4(displayTexCoord.x, displayTexCoord.y, 1, 1);
     else if (renderType == 8) // uv test pattern

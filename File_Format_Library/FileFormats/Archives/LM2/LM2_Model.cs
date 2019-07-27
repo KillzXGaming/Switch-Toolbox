@@ -188,7 +188,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                             UShortToFloatDecode(reader.ReadInt16()));
 
                                         Vector4 nrm = Read_8_8_8_8_Snorm(reader);
-                                        vert.nrm = nrm.Xyz;
+                                        vert.nrm = nrm.Xyz.Normalized();
 
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
@@ -261,7 +261,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                         vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
                                         Vector4 nrm = Read_8_8_8_8_Snorm(reader);
-                                        vert.nrm = nrm.Xyz;
+                                        vert.nrm = nrm.Xyz.Normalized();
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
                                         vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
 
