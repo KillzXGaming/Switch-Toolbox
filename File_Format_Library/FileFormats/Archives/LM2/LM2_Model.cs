@@ -187,21 +187,14 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                             UShortToFloatDecode(reader.ReadInt16()),
                                             UShortToFloatDecode(reader.ReadInt16()));
 
-                                        reader.BaseStream.Position += 0x4;
+                                        Vector4 nrm = Read_8_8_8_8_Snorm(reader);
+                                        vert.nrm = nrm.Xyz;
 
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                        vert.nrm = new Vector3(
-                                            UShortToFloatDecode(reader.ReadInt16()),
-                                            UShortToFloatDecode(reader.ReadInt16()),
-                                            UShortToFloatDecode(reader.ReadInt16()));
+                                       // vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
 
-                                        reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength) + 38);
-                                        vert.col = new Vector4(
-                                       UShortToFloatDecode(reader.ReadInt16()),
-                                       UShortToFloatDecode(reader.ReadInt16()),
-                                       UShortToFloatDecode(reader.ReadInt16()),
-                                       UShortToFloatDecode(reader.ReadInt16()));
+                                    //    vert.col = Read_8_8_8_8_Unorm(reader);
 
 
                                         if (formatInfo.BufferLength == 22)
@@ -267,9 +260,14 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
                                         vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-                                        Console.WriteLine("F32_32 unk 1 " + reader.ReadUInt16());
-                                        Console.WriteLine("F32_32 unk 2 " + reader.ReadUInt16());
+                                        Vector4 nrm = Read_8_8_8_8_Snorm(reader);
+                                        vert.nrm = nrm.Xyz;
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                                        vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+
+                                        if (formatInfo.BufferLength > 20)
+                                        vert.col = Read_8_8_8_8_Unorm(reader);
+
                                     }
                                     break;
                             }
@@ -279,6 +277,21 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                     }
                 }
             }
+        }
+
+        public static Vector4 Read_8_8_8_8_Snorm(FileReader reader)
+        {
+            return new Vector4(reader.ReadSByte() / 255f, reader.ReadSByte() / 255f, reader.ReadSByte() / 255f, reader.ReadSByte() / 255f);
+        }
+
+        public static Vector4 Read_8_8_8_8_Unorm(FileReader reader)
+        {
+            return new Vector4(reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f);
+        }
+
+        public static Vector3 Read_8_8_8_Unorm(FileReader reader)
+        {
+            return new Vector3(reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f );
         }
 
         public static Vector2 NormalizeUvCoordsToFloat(ushort U, ushort V)

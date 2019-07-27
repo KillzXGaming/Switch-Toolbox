@@ -183,9 +183,9 @@ void main()
 	if (uvChannel == 1)
 		displayTexCoord =  f_texcoord0;
 	if (uvChannel == 2)
-		displayTexCoord =  f_texcoord2;
+		displayTexCoord =  f_texcoord1;
 	if (uvChannel == 3)
-		displayTexCoord =  f_texcoord3;
+		displayTexCoord =  f_texcoord2;
 
     vec3 displayNormal = (normal.xyz * 0.5) + 0.5;
     if (renderType == 1) // normals color
