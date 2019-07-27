@@ -192,10 +192,6 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                       // vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-
-                                    //    vert.col = Read_8_8_8_8_Unorm(reader);
-
 
                                         if (formatInfo.BufferLength == 22)
                                         {
@@ -204,25 +200,6 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                             Console.WriteLine("unk 3 " + reader.ReadUInt16());
                                             Console.WriteLine("unk 4 " + reader.ReadUInt16());
                                         }
-
-
-                                        //   reader.BaseStream.Position += 0x2;
-
-                                        /*     vert.col = new Vector4(
-                                                         UShortToFloatDecode(reader.ReadInt16()),
-                                                         UShortToFloatDecode(reader.ReadInt16()),
-                                                         UShortToFloatDecode(reader.ReadInt16()),
-                                                         UShortToFloatDecode(reader.ReadInt16()));*/
-
-                                        /*    reader.BaseStream.Position += 8;
-
-                                            //  vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                            //   vert.uv2 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-
-                                            vert.nrm = new Vector3(
-                                                UShortToFloatDecode(reader.ReadInt16()),
-                                                UShortToFloatDecode(reader.ReadInt16()),
-                                                UShortToFloatDecode(reader.ReadInt16()));*/
                                     }
                                     break;
                                 case VertexDataFormat.Float32:
@@ -241,13 +218,16 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                     reader.BaseStream.Position = BufferStart + VertexBufferPointers[i] + 0x08;
                                     for (int v = 0; v < mesh.VertexCount; v++)
                                     {
+                                        reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
                                         Vertex vert = new Vertex();
                                         genericObj.vertices.Add(vert);
 
                                         vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-
-                                        reader.BaseStream.Position += formatInfo.BufferLength - 0x14;
+                                        vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                                        vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                                        vert.col = Read_8_8_8_8_Unorm(reader);
                                     }
                                     break;
                                 case VertexDataFormat.Float32_32_32:
@@ -265,9 +245,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
                                         vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
 
-                                        if (formatInfo.BufferLength > 20)
-                                        vert.col = Read_8_8_8_8_Unorm(reader);
-
+                                        if (formatInfo.BufferLength >= 0x1C)
+                                            vert.col = Read_8_8_8_8_Unorm(reader);
                                     }
                                     break;
                             }
@@ -469,7 +448,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             { 0x4E315C83A856FBF7, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
             { 0xBD15F722F07FC596, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
             { 0xFBACD243DDCC31B7, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
-            { 0x8A4CC565333626D9, new FormatInfo(VertexDataFormat.Float32_32, 0x1C)},
+            { 0x8A4CC565333626D9, new FormatInfo(VertexDataFormat.Float32_32, 0x18)},
             { 0x8B8CE58EAA846002, new FormatInfo(VertexDataFormat.Float32_32_32, 0x14)},
         };
     }

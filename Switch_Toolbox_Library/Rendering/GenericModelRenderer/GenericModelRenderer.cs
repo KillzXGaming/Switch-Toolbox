@@ -376,6 +376,7 @@ namespace Toolbox.Library.Rendering
             shader.SetInt("renderType", (int)Runtime.viewportShading);
             shader.SetInt("selectedBoneIndex", Runtime.SelectedBoneIndex);
             shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
+            shader.SetInt("uvChannel", (int)Runtime.uvChannel);
         }
 
         public virtual void DrawModels(ShaderProgram shader, GL_ControlModern control)
