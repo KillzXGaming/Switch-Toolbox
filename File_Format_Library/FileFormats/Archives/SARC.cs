@@ -247,6 +247,17 @@ namespace FirstPlugin
                 }
             }
         }
+
+        static uint NameHash(string name)
+        {
+            uint result = 0;
+            for (int i = 0; i < name.Length; i++)
+            {
+                result = name[i] + result * 0x00000065;
+            }
+            return result;
+        }
+
         public byte[] Save()
         {
             sarcData.Files.Clear();

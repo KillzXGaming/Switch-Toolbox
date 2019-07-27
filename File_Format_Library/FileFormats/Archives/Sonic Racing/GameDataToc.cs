@@ -63,7 +63,6 @@ namespace FirstPlugin
             return raw;
         }
 
-        //Decryption process from https://github.com/TheFearsomeDzeraora/BFTTFutil/blob/master/Program.cs
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;

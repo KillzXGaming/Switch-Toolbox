@@ -91,15 +91,16 @@ namespace FirstPlugin
                     var fileEntry = new FileEntry();
                     reader.SeekBegin(Offsets[i]);
                     string Magic = reader.ReadString(8);
+                    reader.Seek(-8);
                     switch (Magic)
                     {
                         case "G1TG0060": //PC or Wii U Texture
                             GITextureContainer GITextureU = new GITextureContainer();
-                            GITextureU.Read(reader, true);
+                            GITextureU.Read(reader);
                             break;
                         case "GT1G0600": //Switch Texture
                             GITextureContainer GITexture = new GITextureContainer();
-                            GITexture.Read(reader, false);
+                            GITexture.Read(reader);
                             break;
                     }
 
@@ -111,60 +112,7 @@ namespace FirstPlugin
                 }
              }
         }
-
-        public class GITextureContainer
-        {
-            public void Read(FileReader reader, bool IsWiiU)
-            {
-                long StartPos = reader.Position;
-
-                uint FileSize = reader.ReadUInt32();
-                uint DataOffset = reader.ReadUInt32();
-                uint TextureCount = reader.ReadUInt32();
-                uint unk = reader.ReadUInt32();
-                uint unk2 = reader.ReadUInt32();
-                uint[] unk3s = reader.ReadUInt32s((int)TextureCount);
-
-                for (int i = 0; i < TextureCount; i++)
-                {
-                    reader.SeekBegin(StartPos + DataOffset + (i * 4));
-
-                    uint InfoOffset = reader.ReadUInt32();
-
-                    reader.SeekBegin(DataOffset + InfoOffset);
-                    byte unk4 = reader.ReadByte();
-                    byte format = reader.ReadByte();
-
-                }
-            }
-        }
-
-        public class GITexture : STGenericTexture
-        {
-            public override bool CanEdit { get; set; } = false;
-
-            public byte[] ImageData;
-
-            public override TEX_FORMAT[] SupportedFormats
-            {
-                get
-                {
-                    return new TEX_FORMAT[] {
-                    TEX_FORMAT.R8G8B8A8_UNORM,
-                };
-                }
-            }
-
-            public override void SetImageData(Bitmap bitmap, int ArrayLevel)
-            {
-            }
-
-            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
-            {
-                return ImageData;
-            }
-        }
-            
+     
         public void Unload()
         {
 

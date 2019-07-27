@@ -187,7 +187,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                             UShortToFloatDecode(reader.ReadInt16()),
                                             UShortToFloatDecode(reader.ReadInt16()));
 
-                                        //       reader.BaseStream.Position += 0x4;
+                                        reader.BaseStream.Position += 0x4;
 
                                         vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
                                         vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
@@ -445,7 +445,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             { 0x314A20AEFADABB22, new FormatInfo(VertexDataFormat.Float32_32_32, 0x18)},
             { 0x0F3F68A287C2B716, new FormatInfo(VertexDataFormat.Float32_32_32, 0x18)},
             { 0x27F993771090E6EB, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
-            { 0x4E315C83A856FBF7, new FormatInfo(VertexDataFormat.Float32, 0x1C)},
+            { 0x4E315C83A856FBF7, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
             { 0xBD15F722F07FC596, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
             { 0xFBACD243DDCC31B7, new FormatInfo(VertexDataFormat.Float32_32_32, 0x1C)},
             { 0x8A4CC565333626D9, new FormatInfo(VertexDataFormat.Float32_32, 0x1C)},
