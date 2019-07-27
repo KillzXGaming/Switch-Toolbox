@@ -197,9 +197,16 @@ namespace Toolbox.Library
                 //Don't add the root file name
                 if (parentNode.FullPath != string.Empty && !(parentNode is ArchiveRootNodeWrapper))
                 {
-                    string FullPath = Path.Combine(parentNode.FullPath, FileName);
-                    FullPath = FullPath.Substring(FullPath.IndexOf("/", 1) + 1);
-                    Console.WriteLine($"FullPath {FullPath}");
+                    string nodePath = parentNode.FullPath;
+                    int startIndex = nodePath.IndexOf(rootNode.Text);
+                    if (startIndex > 0)
+                        nodePath = nodePath.Substring(startIndex);
+
+                    string slash = Path.DirectorySeparatorChar.ToString();
+                    string slashAlt = Path.AltDirectorySeparatorChar.ToString();
+                    string SetPath = nodePath.Replace(rootNode.Text + slash, string.Empty).Replace(slash ?? "", slashAlt);
+
+                    string FullPath = Path.Combine(SetPath, FileName).Replace(slash ?? "", slashAlt);
                     File.ArchiveFileInfo.FileName = FullPath;
                 }
                 else
@@ -210,12 +217,12 @@ namespace Toolbox.Library
 
                 if (HasAddedFile)
                 {
+                    parentNode.Nodes.Add(File);
+
                     if (parentNode is ArchiveRootNodeWrapper)
                         ((ArchiveRootNodeWrapper)parentNode).AddFileNode(File);
                     if (parentNode is ArchiveFolderNodeWrapper)
                         ((ArchiveFolderNodeWrapper)parentNode).RootNode.AddFileNode(File);
-
-                    parentNode.Nodes.Add(File);
                 }
             }
         }

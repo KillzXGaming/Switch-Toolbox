@@ -201,6 +201,13 @@ namespace Toolbox.Library
         public void AddFileNode(ArchiveFileWrapper fileWrapper)
         {
             FileNodes.Add(Tuple.Create(fileWrapper.ArchiveFileInfo, (TreeNode)fileWrapper));
+
+            string FullName = SetFullPath(fileWrapper, this);
+            if (FullName != string.Empty)
+            {
+                Console.WriteLine($"Updating info {FullName}");
+                fileWrapper.ArchiveFileInfo.FileName = FullName;
+            }
         }
 
         public ToolStripItem[] GetContextMenuItems()
