@@ -902,7 +902,7 @@ namespace Toolbox.Library
                 case TEX_FORMAT.BC5_SNORM:
                     channels[0] = STChannelType.Red;
                     channels[1] = STChannelType.Green;
-                    channels[2] = STChannelType.Zero;
+                    channels[2] = STChannelType.One;
                     channels[3] = STChannelType.One;
                     break;
                 case TEX_FORMAT.BC4_UNORM:
