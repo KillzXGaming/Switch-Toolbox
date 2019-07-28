@@ -37,12 +37,15 @@ namespace FirstPlugin
 
         bool useMuunt = true;
 
+        private TextEditor xmlEditor;
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
         {
             InitializeComponent();
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
+
+            stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             if (byaml.FileName == "course_muunt_debug.byaml" && useMuunt)
             {
@@ -66,6 +69,11 @@ namespace FirstPlugin
 
             if (byml == null) return;
             ParseBymlFirstNode();
+
+            xmlEditor = new TextEditor();
+            stPanel2.Controls.Add(xmlEditor);
+            xmlEditor.Dock = DockStyle.Fill;
+            xmlEditor.IsXML = true;
         }
 
         void ParseBymlFirstNode()
@@ -615,6 +623,40 @@ namespace FirstPlugin
                 Point pt = listViewCustom1.PointToScreen(e.Location);
                 stContextMenuStrip1.Show(pt);
             }
+        }
+
+        private void btnToXml_Click(object sender, EventArgs e)
+        {
+            xmlEditor.FillEditor(XmlConverter.ToXml(new BymlFileData {
+                Version = bymlVer,
+                byteOrder = byteOrder,
+                SupportPaths = pathSupport,
+                RootNode = byml
+            }));
+        }
+
+        private void btnXmlToByaml_Click(object sender, EventArgs e)
+        {
+            string editorText = xmlEditor.GetText();
+            if (editorText == string.Empty)
+                return;
+
+            try
+            {
+                byte[] TextData = Encoding.Unicode.GetBytes(xmlEditor.GetText());
+                StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
+                byml = XmlConverter.ToByml(t.ReadToEnd()).RootNode;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Byaml failed to convert! " + ex.ToString());
+                return;
+            }
+
+            treeView1.Nodes.Clear();
+            ParseBymlFirstNode();
+
+            MessageBox.Show("Byaml converted successfully!");
         }
     }
 }

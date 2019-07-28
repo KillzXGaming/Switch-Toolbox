@@ -47,20 +47,28 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.addItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnXmlToByaml = new Toolbox.Library.Forms.STButton();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.btnToXml = new Toolbox.Library.Forms.STButton();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel1.SuspendLayout();
+            this.stTabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            this.Controls.Add(this.stPanel1);
             // 
             // treeView1
             // 
@@ -69,7 +77,7 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(181, 368);
+            this.treeView1.Size = new System.Drawing.Size(178, 363);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.BeforeExpand);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -170,7 +178,7 @@
             this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(358, 368);
+            this.listViewCustom1.Size = new System.Drawing.Size(353, 363);
             this.listViewCustom1.TabIndex = 0;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
@@ -189,12 +197,12 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Data";
-            this.columnHeader3.Width = 151;
+            this.columnHeader3.Width = 146;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -204,18 +212,54 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewCustom1);
-            this.splitContainer1.Size = new System.Drawing.Size(543, 368);
-            this.splitContainer1.SplitterDistance = 181;
+            this.splitContainer1.Size = new System.Drawing.Size(535, 363);
+            this.splitContainer1.SplitterDistance = 178;
             this.splitContainer1.TabIndex = 14;
             // 
             // stPanel1
             // 
-            this.stPanel1.Controls.Add(this.splitContainer1);
+            this.stPanel1.Controls.Add(this.stTabControl1);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stPanel1.Location = new System.Drawing.Point(0, 25);
+            this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(543, 368);
+            this.stPanel1.Size = new System.Drawing.Size(549, 398);
             this.stPanel1.TabIndex = 15;
+            // 
+            // stTabControl1
+            // 
+            this.stTabControl1.Controls.Add(this.tabPage1);
+            this.stTabControl1.Controls.Add(this.tabPage2);
+            this.stTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stTabControl1.Location = new System.Drawing.Point(0, 0);
+            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
+            this.stTabControl1.Name = "stTabControl1";
+            this.stTabControl1.SelectedIndex = 0;
+            this.stTabControl1.Size = new System.Drawing.Size(549, 398);
+            this.stTabControl1.TabIndex = 15;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.splitContainer1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(541, 369);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Editor";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btnToXml);
+            this.tabPage2.Controls.Add(this.stPanel2);
+            this.tabPage2.Controls.Add(this.btnXmlToByaml);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(541, 369);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "XML Editor";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // stContextMenuStrip1
             // 
@@ -255,13 +299,45 @@
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
+            // btnXmlToByaml
+            // 
+            this.btnXmlToByaml.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnXmlToByaml.Location = new System.Drawing.Point(128, 6);
+            this.btnXmlToByaml.Name = "btnXmlToByaml";
+            this.btnXmlToByaml.Size = new System.Drawing.Size(107, 23);
+            this.btnXmlToByaml.TabIndex = 0;
+            this.btnXmlToByaml.Text = "Compile";
+            this.btnXmlToByaml.UseVisualStyleBackColor = false;
+            this.btnXmlToByaml.Click += new System.EventHandler(this.btnXmlToByaml_Click);
+            // 
+            // stPanel2
+            // 
+            this.stPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel2.Location = new System.Drawing.Point(6, 35);
+            this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Size = new System.Drawing.Size(532, 328);
+            this.stPanel2.TabIndex = 1;
+            // 
+            // btnToXml
+            // 
+            this.btnToXml.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnToXml.Location = new System.Drawing.Point(15, 6);
+            this.btnToXml.Name = "btnToXml";
+            this.btnToXml.Size = new System.Drawing.Size(107, 23);
+            this.btnToXml.TabIndex = 2;
+            this.btnToXml.Text = "Generate";
+            this.btnToXml.UseVisualStyleBackColor = false;
+            this.btnToXml.Click += new System.EventHandler(this.btnToXml_Click);
+            // 
             // ByamlEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 398);
+            this.Controls.Add(this.stPanel1);
             this.Name = "ByamlEditor";
-            this.Text = "ByamlEditor";
+            this.Size = new System.Drawing.Size(549, 398);
             this.Load += new System.EventHandler(this.ByamlViewer_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -269,6 +345,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.stPanel1.ResumeLayout(false);
+            this.stTabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -299,5 +378,11 @@
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addItemToolStripMenuItem;
+        private Toolbox.Library.Forms.STTabControl stTabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private Toolbox.Library.Forms.STButton btnXmlToByaml;
+        private Toolbox.Library.Forms.STPanel stPanel2;
+        private Toolbox.Library.Forms.STButton btnToXml;
     }
 }
