@@ -497,7 +497,7 @@ namespace Toolbox.Library
             short SmoothIndex, short RigidIndex, bool IsRoot, ref Assimp.Matrix4x4 rootTransform)
         {
             Matrix4x4 trafo = node.Transform;
-            Matrix4x4 world = trafo * rootTransform;
+            Matrix4x4 world = trafo;
             var transformMat = AssimpHelper.TKMatrix(world);
 
             int matchedBoneIndex = skeleton.bones.FindIndex(item => item.Name == node.Name);
@@ -508,6 +508,7 @@ namespace Toolbox.Library
 
                 STBone bone = new STBone();
                 bone.skeletonParent = skeleton;
+                bone.RotationType = STBone.BoneRotationType.Euler;
                 skeleton.bones.Add(bone);
 
                 if (DaeHelper.IDMapToName.ContainsKey(node.Name))
@@ -545,11 +546,11 @@ namespace Toolbox.Library
                 var rotation = transformMat.ExtractRotation();
                 var position = transformMat.ExtractTranslation();
 
-                var rotEular = AssimpHelper.ToEular(rotation);
+                var rotEular = STMath.ToEulerAngles(rotation);
 
                 bone.position = new float[] { position.X, position.Y, position.Z };
                 bone.scale = new float[] { scale.X, scale.Y, scale.Z };
-                bone.rotation = new float[] { rotEular.X, rotEular.Y, rotEular.Z, 0 };
+                bone.rotation = new float[] { rotEular.X, rotEular.Y, rotEular.Z, 1 };
             }
             else
             {

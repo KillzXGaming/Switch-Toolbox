@@ -116,7 +116,8 @@ namespace Toolbox.Library
                                        input.A3, input.B3, input.C3, input.D3,
                                        input.A4, input.B4, input.C4, input.D4);
         }
-        public static Vector3 ToEular(OpenTK.Quaternion q)
+
+        public static Vector3 ToEulerAngles(OpenTK.Quaternion q)
         {
             Matrix4 mat = Matrix4.CreateFromQuaternion(q);
             float x, y, z;

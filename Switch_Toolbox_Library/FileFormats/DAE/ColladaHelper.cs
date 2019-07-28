@@ -936,7 +936,7 @@ namespace ColladaHelper
                         mat.ClearTranslation();
                         mat.Invert();
                         var quat = mat.ExtractRotation();
-                        rot = Toolbox.Library.AssimpHelper.ToEular(quat);
+                        rot = Toolbox.Library.AssimpHelper.ToEulerAngles(quat);
                         if (float.IsNaN(rot.X)) rot.X = 0;
                         if (float.IsNaN(rot.Y)) rot.Y = 0;
                         if (float.IsNaN(rot.Z)) rot.Z = 0;

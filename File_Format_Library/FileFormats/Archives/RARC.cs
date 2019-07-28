@@ -361,6 +361,9 @@ namespace FirstPlugin
             {
                 writer.Write((uint)_exportStringTable.Count);
             }
+
+            writer.Dispose();
+            GC.SuppressFinalize(writer);
         }
 
         private void WriteDirectories()

@@ -434,7 +434,6 @@ namespace FirstPlugin
                 LoadComponents(Format);
 
                 uint ImageSize = reader.ReadUInt32();
-                Console.WriteLine(ImageSize);
 
                 reader.Position = 0;
                 ImageData = reader.ReadBytes((int)ImageSize);
@@ -567,8 +566,6 @@ namespace FirstPlugin
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
-            uint bpp = GetBytesPerPixel(Format);
-
             if (image.Is3DS)
             {
                 PlatformSwizzle = PlatformSwizzle.Platform_3DS;
@@ -576,6 +573,8 @@ namespace FirstPlugin
             }
             else
             {
+                uint bpp = GetBytesPerPixel(Format);
+
                 GX2.GX2Surface surf = new GX2.GX2Surface();
                 surf.bpp = bpp;
                 surf.height = image.Height;
