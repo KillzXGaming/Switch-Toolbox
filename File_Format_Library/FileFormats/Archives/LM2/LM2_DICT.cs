@@ -83,7 +83,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             DrawableContainer.Name = FileName;
             Renderer = new LM2_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
-
+            
             Text = FileName;
 
             using (var reader = new FileReader(stream))
@@ -181,6 +181,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                 currentTexture.Read(textureReader);
                                 currentTexture.Text = $"Texture {ImageHeaderIndex}";
                                 textureFolder.Nodes.Add(currentTexture);
+                                Renderer.TextureList.Add(currentTexture);
 
                                 ImageHeaderIndex++;
                             }
@@ -218,6 +219,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                     currentModel.Meshes.Add(mesh);
                                 }
                             }
+                            currentModel.ModelInfo.Read(new FileReader(currentModel.ModelInfo.Data), currentModel.Meshes);
                             break;
                         case SubDataType.ModelTransform:
                             using (var transformReader = new FileReader(chunkEntry.FileData))

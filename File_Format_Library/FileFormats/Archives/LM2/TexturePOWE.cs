@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
@@ -72,6 +72,32 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
         public byte[] ImageData { get; set; }
 
+        private POWEProperties properties;
+
+        public class POWEProperties
+        {
+            [Browsable(false)]
+            public uint ID { get; set; }
+
+            public string HashID
+            {
+                get
+                {
+                    return ID.ToString("x");
+                }
+            }
+
+            [ReadOnly(true)]
+            public uint Width { get; set; }
+            [ReadOnly(true)]
+            public uint Height { get; set; }
+            [ReadOnly(true)]
+            public byte NumMips { get; set; }
+            [ReadOnly(true)]
+            public TEX_FORMAT Format { get; set; }
+
+        }
+
         public void Read(FileReader reader)
         {
             //Magic and ID not pointed to for sub entries so just skip them for now
@@ -98,7 +124,16 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
             Parameters = new ImageParameters();
             Parameters.FlipY = true;
+
+            properties = new POWEProperties();
+            properties.ID = ID2;
+            properties.Width = Width;
+            properties.Height = Height;
+            properties.NumMips = numMips;
+            properties.Format = Format;
         }
+
+
 
         public override void OnClick(TreeView treeview)
         {
@@ -111,7 +146,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 LibraryGUI.LoadEditor(editor);
             }
             editor.Text = Text;
-            editor.LoadProperties(this.GenericProperties);
+            editor.LoadProperties(properties);
             editor.LoadImage(this);
         }
 

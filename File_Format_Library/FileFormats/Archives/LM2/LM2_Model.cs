@@ -121,6 +121,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                     RenderableMeshWrapper genericObj = new RenderableMeshWrapper();
                     genericObj.Mesh = mesh;
                     genericObj.Text = $"Mesh {i}";
+                    genericObj.SetMaterial(mesh.Material);
+
                     Nodes.Add(genericObj);
                     DataDictionary.Renderer.Meshes.Add(genericObj);
 
@@ -247,6 +249,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             genericObj.TransformPosition(new Vector3(0), new Vector3(-90, 0, 0), new Vector3(1));
                         }
                     }
+
+                    genericObj.RemoveDuplicateVertices();
                 }
             }
         }
@@ -282,11 +286,79 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
     public class LM2_ModelInfo
     {
         public byte[] Data;
+
+        public void Read(FileReader reader, List<LM2_Mesh> Meshes)
+        {
+            // This is very dumb. Just look and try to find the mesh hash and get the texture after
+            int pos = 0;
+            while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 5)
+            {
+                reader.Position = pos++;
+                uint HashIDCheck = reader.ReadUInt32();
+                for (int i = 0; i < Meshes.Count; i++)
+                {
+                    if (Meshes[i].HashID == HashIDCheck)
+                    {
+                        uint TextureHashID = reader.ReadUInt32();
+
+                        Meshes[i].Material = new LM2_Material();
+                        var texUnit = 1;
+                        Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
+                        {
+                            textureUnit = texUnit++,
+                            Type = STGenericMatTexture.TextureType.Diffuse,
+                            Name = TextureHashID.ToString("x"),
+                        });
+                    }
+                }
+            }
+
+            /*
+            for (int i = 0; i < Meshes.Count; i++)
+            {
+                //This section keeps varing so just search for mesh hash id and get texture hash after it
+
+
+                uint Unknown = reader.ReadUInt32(); //A81E313F
+                reader.Seek(40);
+
+                //Not sure what this is. Not a transform as the UVs seem fine as is
+                float[] Unknown2 = reader.ReadSingles(5); //0.5, 1, 0.5,0.5, 1
+                reader.Seek(4); //Padding
+                uint MeshHashID = reader.ReadUInt32();
+                uint TextureHashID = reader.ReadUInt32();
+                uint UnknownHashID = reader.ReadUInt32(); //Material hash??
+
+                //Go through each mesh and find a matching hash
+                for (int m = 0; m < Meshes.Count; m++)
+                {
+                    if (Meshes[m].HashID == MeshHashID)
+                    {
+
+                    }
+                };
+
+                if (i != Meshes.Count - 1)
+                    reader.Seek(4); //padding on all but last entry
+            }*/
+        }
     }
 
     public class RenderableMeshWrapper : GenericRenderedObject
     {
         public LM2_Mesh Mesh { get; set; }
+
+        LM2_Material material;
+
+        public override STGenericMaterial GetMaterial()
+        {
+            return material;
+        }
+
+        public void SetMaterial(LM2_Material mat)
+        {
+            material = mat;
+        }
 
         public override void OnClick(TreeView treeView)
         {
@@ -382,10 +454,14 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public ushort Unknown7 { get; private set; } //Always 256?
         public uint HashID { get; private set; }
 
+        public LM2_Material Material { get; set; }
+
         public Matrix4 Transform { get; set; } = Matrix4.Identity;
 
         public void Read(FileReader reader)
         {
+            Material = new LM2_Material();
+
             IndexStartOffset = reader.ReadUInt32();
             IndexCount = reader.ReadUInt16();
             IndexFormat = reader.ReadEnum<IndexFormat>(true);

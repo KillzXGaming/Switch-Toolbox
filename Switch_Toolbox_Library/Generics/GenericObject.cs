@@ -196,13 +196,16 @@ namespace Toolbox.Library
             }
         }
 
+        public void RemoveDuplicateVertices()
+        {
+        }
+
         public void FlipUvsVertical()
         {
             foreach (Vertex v in vertices)
             {
                 v.uv0 = new Vector2(v.uv0.X, 1 - v.uv0.Y);
             }
-
         }
         public void FlipUvsHorizontal()
         {

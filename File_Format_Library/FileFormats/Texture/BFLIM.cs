@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
@@ -41,33 +41,6 @@ namespace FirstPlugin
                         TEX_FORMAT.R10G10B10A2_UNORM,
                         TEX_FORMAT.B4G4R4A4_UNORM,
                 };
-            }
-        }
-
-        public static BFLIMFormat ConvertFormatGenericToBflim(TEX_FORMAT Format)
-        {
-            switch (Format)
-            {
-                case TEX_FORMAT.A8_UNORM: return BFLIMFormat.L8_UNORM;
-                case TEX_FORMAT.R8G8_UNORM: return BFLIMFormat.LA8;
-                case TEX_FORMAT.R8G8_SNORM: return BFLIMFormat.LA8;
-                case TEX_FORMAT.B5G6R5_UNORM: return BFLIMFormat.RGB565;
-                case TEX_FORMAT.B5G5R5A1_UNORM: return BFLIMFormat.RGB5A1;
-                case TEX_FORMAT.R8G8B8A8_UNORM: return BFLIMFormat.RGBA8;
-                case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return BFLIMFormat.RGBA8_SRGB;
-                case TEX_FORMAT.R10G10B10A2_UNORM: return BFLIMFormat.RGB10A2_UNORM;
-                case TEX_FORMAT.B4G4R4A4_UNORM: return BFLIMFormat.RGBA4;
-                case TEX_FORMAT.BC1_UNORM: return BFLIMFormat.BC1_UNORM;
-                case TEX_FORMAT.BC1_UNORM_SRGB: return BFLIMFormat.BC1_SRGB;
-                case TEX_FORMAT.BC2_UNORM: return BFLIMFormat.BC2_UNORM;
-                case TEX_FORMAT.BC2_UNORM_SRGB: return BFLIMFormat.BC2_SRGB;
-                case TEX_FORMAT.BC3_UNORM: return BFLIMFormat.BC3_UNORM;
-                case TEX_FORMAT.BC3_UNORM_SRGB: return BFLIMFormat.BC3_SRGB;
-                case TEX_FORMAT.BC4_UNORM: return BFLIMFormat.BC4A_UNORM;
-                case TEX_FORMAT.BC4_SNORM: return BFLIMFormat.BC4L_UNORM;
-                case TEX_FORMAT.BC5_UNORM: return BFLIMFormat.BC5_UNORM;
-                default:
-                    throw new Exception("Unsupported format " + Format);
             }
         }
 
@@ -114,7 +87,7 @@ namespace FirstPlugin
             prop.TileMode = image.TileMode;
             prop.Swizzle = image.Swizzle;
 
-            ImageEditorBase form = new ImageEditorBase();
+            form = new ImageEditorBase();
             form.Text = Text;
             form.Dock = DockStyle.Fill;
             form.AddFileContextEvent("Save", Save);
@@ -299,11 +272,11 @@ namespace FirstPlugin
                     bflim.Text = ftex.texture.Name;
                     bflim.image = new Image();
                     bflim.image.Swizzle = (byte)ftex.texture.Swizzle;
-                    bflim.image.BflimFormat = BFLIM.ConvertFormatGenericToBflim(ftex.Format);
+                    bflim.image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;
                     bflim.image.Height = (ushort)ftex.texture.Height;
                     bflim.image.Width = (ushort)ftex.texture.Width;
 
-                    bflim.Format = BFLIM.GetFormat(bflim.image.BflimFormat);
+                    bflim.Format = FormatsWiiU[bflim.image.BflimFormat];
                     bflim.Width = bflim.image.Width;
                     bflim.Height = bflim.image.Height;
 
@@ -340,11 +313,11 @@ namespace FirstPlugin
             if (ftex.texture != null)
             {
                 image.Swizzle = (byte)ftex.texture.Swizzle;
-                image.BflimFormat = ConvertFormatGenericToBflim(ftex.Format);
+                image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;
                 image.Height = (ushort)ftex.texture.Height;
                 image.Width = (ushort)ftex.texture.Width;
 
-                Format = GetFormat(image.BflimFormat);
+                Format = FormatsWiiU[image.BflimFormat];
                 Width = image.Width;
                 Height = image.Height;
 
@@ -444,10 +417,17 @@ namespace FirstPlugin
                 header = new Header();
                 header.Read(reader);
 
+                bool Is3DS = reader.ByteOrder == Syroot.BinaryData.ByteOrder.LittleEndian;
+
                 reader.Seek(header.HeaderSize + FileSize - 0x28, SeekOrigin.Begin);
-                image = new Image();
+                image = new Image(Is3DS);
                 image.Read(reader);
-                Format = GetFormat(image.BflimFormat);
+
+                if (Is3DS)
+                    Format = Formats3DS[image.BflimFormat];
+                else
+                    Format = FormatsWiiU[image.BflimFormat];
+
                 Width = image.Width;
                 Height = image.Height;
 
@@ -485,82 +465,59 @@ namespace FirstPlugin
             }
         }
 
-        public static TEX_FORMAT GetFormat(BFLIMFormat format)
+        public static Dictionary<byte, TEX_FORMAT> Formats3DS = new Dictionary<byte, TEX_FORMAT>()
         {
-            switch (format)
-            {
-                case BFLIMFormat.L8_UNORM:
-                case BFLIMFormat.A8:
-                    return TEX_FORMAT.A8_UNORM;
-                case BFLIMFormat.LA4:
-                    return TEX_FORMAT.B4G4R4A4_UNORM;
-                case BFLIMFormat.LA8:
-                case BFLIMFormat.HILO8:
-                    return TEX_FORMAT.R8G8_UNORM;
-                case BFLIMFormat.RGB565:
-                    return TEX_FORMAT.B5G6R5_UNORM;
-                case BFLIMFormat.RGBX8:
-                case BFLIMFormat.RGBA8:
-                    return TEX_FORMAT.R8G8B8A8_UNORM;
-                case BFLIMFormat.RGBA8_SRGB:
-                    return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
-                case BFLIMFormat.RGB10A2_UNORM:
-                    return TEX_FORMAT.R10G10B10A2_UNORM;
-                case BFLIMFormat.RGB5A1:
-                    return TEX_FORMAT.B5G5R5A1_UNORM;
-                case BFLIMFormat.RGBA4:
-                    return TEX_FORMAT.B4G4R4A4_UNORM;
-                case BFLIMFormat.BC1_UNORM:
-                    return TEX_FORMAT.BC1_UNORM;
-                case BFLIMFormat.BC1_SRGB:
-                    return TEX_FORMAT.BC1_UNORM_SRGB;
-                case BFLIMFormat.BC2_UNORM:
-                    return TEX_FORMAT.BC2_UNORM_SRGB;
-                case BFLIMFormat.BC3_UNORM:
-                    return TEX_FORMAT.BC3_UNORM;
-                case BFLIMFormat.BC3_SRGB:
-                    return TEX_FORMAT.BC3_UNORM_SRGB;
-                case BFLIMFormat.BC4L_UNORM:
-                case BFLIMFormat.BC4A_UNORM:
-                    return TEX_FORMAT.BC4_UNORM;
-                case BFLIMFormat.BC5_UNORM:
-                    return TEX_FORMAT.BC5_UNORM;
-                case BFLIMFormat.RGB565_Indirect_UNORM:
-                    return TEX_FORMAT.B5G6R5_UNORM;
-                default:
-                    throw new Exception("Unsupported format " + format);
-            }
-        }
+            [0] = TEX_FORMAT.L8,
+            [1] = TEX_FORMAT.A8_UNORM,
+            [2] = TEX_FORMAT.A4,
+            [3] = TEX_FORMAT.LA8,
+            [4] = TEX_FORMAT.HIL08,
+            [5] = TEX_FORMAT.B5G6R5_UNORM,
+            [6] = TEX_FORMAT.R8G8B8A8_UNORM,
+            [7] = TEX_FORMAT.B5G5R5A1_UNORM,
+            [8] = TEX_FORMAT.B4G4R4A4_UNORM,
+            [9] = TEX_FORMAT.R8G8B8A8_UNORM,
+            [10] = TEX_FORMAT.ETC1_UNORM,
+            [11] = TEX_FORMAT.ETC1_A4,
+            [12] = TEX_FORMAT.BC1_UNORM,
+            [13] = TEX_FORMAT.BC2_UNORM,
+            [14] = TEX_FORMAT.BC3_UNORM,
+            [15] = TEX_FORMAT.BC4_UNORM, //BC4L_UNORM
+            [16] = TEX_FORMAT.BC4_UNORM, //BC4A_UNORM
+            [17] = TEX_FORMAT.BC5_UNORM,
+            [18] = TEX_FORMAT.L4,
+            [19] = TEX_FORMAT.A4,
+        };
 
-        public enum BFLIMFormat : byte
+        public static Dictionary<byte, TEX_FORMAT> FormatsWiiU = new Dictionary<byte, TEX_FORMAT>()
         {
-            L8_UNORM,
-            A8,
-            LA4,
-            LA8,
-            HILO8,
-            RGB565,
-            RGBX8,
-            RGB5A1,
-            RGBA4,
-            RGBA8,
-            ETC1,
-            ETC1A4,
-            BC1_UNORM,
-            BC2_UNORM,
-            BC3_UNORM,
-            BC4L_UNORM,
-            BC4A_UNORM,
-            BC5_UNORM,
-            L4_UNORM,
-            A4_UNORM,
-            RGBA8_SRGB,
-            BC1_SRGB,
-            BC2_SRGB,
-            BC3_SRGB,
-            RGB10A2_UNORM,
-            RGB565_Indirect_UNORM,
-        }
+            [0] = TEX_FORMAT.L8,
+            [1] = TEX_FORMAT.A8_UNORM,
+            [2] = TEX_FORMAT.A4,
+            [3] = TEX_FORMAT.LA8,
+            [4] = TEX_FORMAT.R8G8_UNORM, //HILO8
+            [5] = TEX_FORMAT.B5G6R5_UNORM,
+            [6] = TEX_FORMAT.R8G8B8A8_UNORM,
+            [7] = TEX_FORMAT.B5G5R5A1_UNORM,
+            [8] = TEX_FORMAT.B4G4R4A4_UNORM,
+            [9] = TEX_FORMAT.R8G8B8A8_UNORM,
+            [10] = TEX_FORMAT.ETC1_UNORM,
+            [11] = TEX_FORMAT.ETC1_A4,
+            [12] = TEX_FORMAT.BC1_UNORM,
+            [13] = TEX_FORMAT.BC2_UNORM,
+            [14] = TEX_FORMAT.BC3_UNORM,
+            [15] = TEX_FORMAT.BC4_UNORM, //BC4L_UNORM
+            [16] = TEX_FORMAT.BC4_UNORM, //BC4A_UNORM
+            [17] = TEX_FORMAT.BC5_UNORM,
+            [18] = TEX_FORMAT.L4,
+            [19] = TEX_FORMAT.A4,
+            [20] = TEX_FORMAT.R8G8B8A8_UNORM,
+            [21] = TEX_FORMAT.BC1_UNORM_SRGB,
+            [22] = TEX_FORMAT.BC2_UNORM_SRGB,
+            [23] = TEX_FORMAT.BC3_UNORM_SRGB,
+            [24] = TEX_FORMAT.R10G10B10A2_UNORM,
+            [25] = TEX_FORMAT.R5G5B5_UNORM,
+        };
 
         public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
         {
@@ -589,7 +546,7 @@ namespace FirstPlugin
                     );
 
                 image.Swizzle = (byte)surface.swizzle;
-                image.BflimFormat = ConvertFormatGenericToBflim(Format);
+                image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == Format).Key;
                 image.Height = (ushort)surface.height;
                 image.Width = (ushort)surface.width;
 
@@ -612,26 +569,34 @@ namespace FirstPlugin
         {
             uint bpp = GetBytesPerPixel(Format);
 
-            GX2.GX2Surface surf = new GX2.GX2Surface();
-            surf.bpp = bpp;
-            surf.height = image.Height;
-            surf.width = image.Width;
-            surf.aa = (uint)GX2.GX2AAMode.GX2_AA_MODE_1X;
-            surf.alignment = image.Alignment;
-            surf.depth = 1;
-            surf.dim = (uint)GX2.GX2SurfaceDimension.DIM_2D;
-            surf.format = (uint)FTEX.ConvertToGx2Format(Format);
-            surf.use = (uint)GX2.GX2SurfaceUse.USE_COLOR_BUFFER;
-            surf.pitch = 0;
-            surf.data = ImageData;
-            surf.numMips = 1;
-            surf.mipOffset = new uint[0];
-            surf.mipData = ImageData;
-            surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
-            surf.swizzle = image.Swizzle;
-            surf.numArray = 1;
+            if (image.Is3DS)
+            {
+                PlatformSwizzle = PlatformSwizzle.Platform_3DS;
+                return ImageData;
+            }
+            else
+            {
+                GX2.GX2Surface surf = new GX2.GX2Surface();
+                surf.bpp = bpp;
+                surf.height = image.Height;
+                surf.width = image.Width;
+                surf.aa = (uint)GX2.GX2AAMode.GX2_AA_MODE_1X;
+                surf.alignment = image.Alignment;
+                surf.depth = 1;
+                surf.dim = (uint)GX2.GX2SurfaceDimension.DIM_2D;
+                surf.format = (uint)FTEX.ConvertToGx2Format(Format);
+                surf.use = (uint)GX2.GX2SurfaceUse.USE_COLOR_BUFFER;
+                surf.pitch = 0;
+                surf.data = ImageData;
+                surf.numMips = 1;
+                surf.mipOffset = new uint[0];
+                surf.mipData = ImageData;
+                surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
+                surf.swizzle = image.Swizzle;
+                surf.numArray = 1;
 
-            return GX2.Decode(surf, ArrayLevel, MipLevel);
+                return GX2.Decode(surf, ArrayLevel, MipLevel);
+            }
         }
 
         public void Unload()
@@ -706,9 +671,15 @@ namespace FirstPlugin
             public ushort Width;
             public ushort Height;
             public ushort Alignment;
-            public BFLIMFormat BflimFormat;
+            public byte BflimFormat;
             public byte Flags;
 
+            public bool Is3DS = false;
+
+            public Image(bool is3DS)
+            {
+                Is3DS = is3DS;
+            }
 
             public Image()
             {
@@ -748,7 +719,7 @@ namespace FirstPlugin
                 Width = reader.ReadUInt16();
                 Height = reader.ReadUInt16();
                 Alignment = reader.ReadUInt16();
-                BflimFormat = reader.ReadEnum<BFLIMFormat>(true);
+                BflimFormat = reader.ReadByte();
                 Flags = reader.ReadByte();
             }
 
@@ -759,7 +730,7 @@ namespace FirstPlugin
                 writer.Write(Width);
                 writer.Write(Height);
                 writer.Write(Alignment);
-                writer.Write(BflimFormat, true);
+                writer.Write(BflimFormat);
                 writer.Write(Flags);
             }
         }
