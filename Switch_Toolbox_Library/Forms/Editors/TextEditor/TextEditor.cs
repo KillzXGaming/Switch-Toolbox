@@ -34,6 +34,39 @@ namespace Toolbox.Library.Forms
                 {
                     scintilla1.Lexer = Lexer.Xml;
 
+                    // Enable folding
+                    scintilla1.SetProperty("fold", "1");
+                    scintilla1.SetProperty("fold.compact", "1");
+                    scintilla1.SetProperty("fold.html", "1");
+
+                    scintilla1.Margins[0].Width = 20;
+
+                    // Use Margin 2 for fold markers
+                    scintilla1.Margins[2].Type = MarginType.Symbol;
+                    scintilla1.Margins[2].Mask = Marker.MaskFolders;
+                    scintilla1.Margins[2].Sensitive = true;
+                    scintilla1.Margins[2].Width = 20;
+
+                    // Reset folder markers
+                    for (int i = Marker.FolderEnd; i <= Marker.FolderOpen; i++)
+                    {
+                        scintilla1.Markers[i].SetForeColor(BACK_COLOR);
+                        scintilla1.Markers[i].SetBackColor(Color.Gray);
+                    }
+
+                    // Style the folder markers
+                    scintilla1.Markers[Marker.Folder].Symbol = MarkerSymbol.BoxPlus;
+               //     scintilla1.Markers[Marker.Folder].SetBackColor(FormThemes.BaseTheme.TextEditorBackColor);
+                    scintilla1.Markers[Marker.FolderOpen].Symbol = MarkerSymbol.BoxMinus;
+                    scintilla1.Markers[Marker.FolderEnd].Symbol = MarkerSymbol.BoxPlusConnected;
+                //    scintilla1.Markers[Marker.FolderEnd].SetBackColor(FormThemes.BaseTheme.TextEditorBackColor);
+                    scintilla1.Markers[Marker.FolderMidTail].Symbol = MarkerSymbol.TCorner;
+                    scintilla1.Markers[Marker.FolderOpenMid].Symbol = MarkerSymbol.BoxMinusConnected;
+                    scintilla1.Markers[Marker.FolderSub].Symbol = MarkerSymbol.VLine;
+                    scintilla1.Markers[Marker.FolderTail].Symbol = MarkerSymbol.LCorner;
+
+                    scintilla1.AutomaticFold = AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change;
+
                     scintilla1.Styles[Style.Xml.XmlStart].ForeColor = Color.FromArgb(128, 128, 128);
                     scintilla1.Styles[Style.Xml.XmlEnd].ForeColor = Color.FromArgb(128, 128, 128);
                     scintilla1.Styles[Style.Xml.Default].ForeColor = Color.FromArgb(180, 180, 180);
@@ -47,6 +80,9 @@ namespace Toolbox.Library.Forms
                     scintilla1.Styles[Style.Xml.Attribute].ForeColor = Color.FromArgb(146, 202, 244);
                     scintilla1.Styles[Style.Xml.AttributeUnknown].ForeColor = Color.FromArgb(146, 202, 244);
                     scintilla1.Styles[Style.Xml.CData].ForeColor = Color.FromArgb(214, 157, 133);
+
+                    scintilla1.SetFoldMarginColor(true, BACK_COLOR);
+                    scintilla1.SetFoldMarginHighlightColor(true, BACK_COLOR);
                 }
             }
         }
@@ -81,6 +117,9 @@ namespace Toolbox.Library.Forms
                     scintilla1.Styles[Style.Xml.Attribute].ForeColor = Color.FromArgb(86, 156, 214);
                     scintilla1.Styles[Style.Xml.AttributeUnknown].ForeColor = Color.FromArgb(86, 156, 214);
                     scintilla1.Styles[Style.Xml.CData].ForeColor = Color.FromArgb(214, 157, 133);
+
+                    scintilla1.SetKeywords(1, "!aamp !io");
+                    scintilla1.SetKeywords(4, "!color !vec2 !vec3 !vec4 !str32 !str64 !str128 !str256 !obj");
                 }
             }
         }
@@ -104,7 +143,6 @@ namespace Toolbox.Library.Forms
             findAllResultsPanel1.BackColor = FormThemes.BaseTheme.TextEditorBackColor;
             findAllResultsPanel1.ForeColor = FormThemes.BaseTheme.TextForeColor;
             findAllResultsPanel1.Scintilla.SetWhitespaceBackColor(true, Color.FromArgb(50, 50, 50));
-
 
 
             FillEditor("");
@@ -152,8 +190,12 @@ namespace Toolbox.Library.Forms
             scintilla1.Styles[Style.LineNumber].ForeColor = FORE_COLOR;
             scintilla1.Styles[Style.IndentGuide].ForeColor = FORE_COLOR;
             scintilla1.Styles[Style.IndentGuide].BackColor = BACK_COLOR;
-
+            scintilla1.Styles[Style.FoldDisplayText].BackColor = BACK_COLOR;
+            scintilla1.Styles[Style.Default].BackColor = BACK_COLOR;
             scintilla1.Styles[Style.LineNumber].ForeColor = Color.DarkCyan;
+            scintilla1.Styles[Style.BraceBad].BackColor = BACK_COLOR;
+            scintilla1.Styles[Style.BraceLight].BackColor = BACK_COLOR;
+            scintilla1.Styles[Style.CallTip].BackColor = BACK_COLOR;
 
             scintilla1.Lexer = Lexer.Cpp;
 
@@ -161,13 +203,7 @@ namespace Toolbox.Library.Forms
         }
         private void UpdateLineNumbers(int startingAtLine)
         {
-            // Starting at the specified line index, update each
-            // subsequent line margin text with a hex line number.
-            for (int i = startingAtLine; i < scintilla1.Lines.Count; i++)
-            {
-                scintilla1.Lines[i].MarginStyle = Style.LineNumber;
-                scintilla1.Lines[i].MarginText = i.ToString();
-            }
+            scintilla1.Margins[0].Width = scintilla1.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + 2;
         }
 
 
