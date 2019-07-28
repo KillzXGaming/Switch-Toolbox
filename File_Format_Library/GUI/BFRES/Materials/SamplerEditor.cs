@@ -187,9 +187,9 @@ namespace FirstPlugin.Forms
 
             if (ActiveMatTexture.wiiUSampler != null)
             {
-                ActiveMatTexture.wrapModeS = (int)ActiveMatTexture.wiiUSampler.ClampX;
-                ActiveMatTexture.wrapModeT = (int)ActiveMatTexture.wiiUSampler.ClampY;
-                ActiveMatTexture.wrapModeW = (int)ActiveMatTexture.wiiUSampler.ClampZ;
+                ActiveMatTexture.wrapModeS = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampX);
+                ActiveMatTexture.wrapModeT = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampY);
+                ActiveMatTexture.wrapModeW = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampZ);
 
                 if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Point)
                     ActiveMatTexture.minFilter = 1;
@@ -202,9 +202,9 @@ namespace FirstPlugin.Forms
             }
             else
             {
-                ActiveMatTexture.wrapModeS = (int)ActiveMatTexture.switchSampler.WrapModeU;
-                ActiveMatTexture.wrapModeT = (int)ActiveMatTexture.switchSampler.WrapModeV;
-                ActiveMatTexture.wrapModeW = (int)ActiveMatTexture.switchSampler.WrapModeW;
+                ActiveMatTexture.wrapModeS = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeU);
+                ActiveMatTexture.wrapModeT = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeV);
+                ActiveMatTexture.wrapModeW = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeW);
 
                 if (ActiveMatTexture.switchSampler.ShrinkXY == ResNX.Sampler.ShrinkFilterModes.Points)
                     ActiveMatTexture.minFilter = 1;
@@ -217,6 +217,22 @@ namespace FirstPlugin.Forms
             }
 
             LibraryGUI.UpdateViewport();
+        }
+
+        private int SetWrapMode(int wrapMode)
+        {
+            switch (wrapMode)
+            {
+                case (int)ResNX.GFX.TexClamp.Repeat:
+                    return 0;
+                case (int)ResNX.GFX.TexClamp.Mirror:
+                    return 1;
+                case (int)ResNX.GFX.TexClamp.Clamp:
+                case (int)ResNX.GFX.TexClamp.ClampToEdge:
+                    return 2;
+                default:
+                    return 2;
+            }
         }
 
         private void textureRefListView_SelectedIndexChanged(object sender, EventArgs e)
