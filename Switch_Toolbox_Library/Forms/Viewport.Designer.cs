@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.normalsShadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toOriginToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.chkDisplayAllModels = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
@@ -36,10 +39,17 @@
             this.panelViewport = new Toolbox.Library.Forms.STPanel();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.modeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.perspectiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cameraToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toOriginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toActiveModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.orbitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.walkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.perspectiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orientationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.frontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,10 +57,6 @@
             this.bottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.shadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toOriginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toActiveModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,6 +74,27 @@
             this.normalsShadingToolStripMenuItem.Size = new System.Drawing.Size(204, 46);
             this.normalsShadingToolStripMenuItem.Text = "Normals Shading";
             this.normalsShadingToolStripMenuItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // resetToolStripMenuItem
+            // 
+            this.resetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toOriginToolStripMenuItem1,
+            this.toCenterToolStripMenuItem});
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.resetToolStripMenuItem.Text = "Reset";
+            // 
+            // toOriginToolStripMenuItem1
+            // 
+            this.toOriginToolStripMenuItem1.Name = "toOriginToolStripMenuItem1";
+            this.toOriginToolStripMenuItem1.Size = new System.Drawing.Size(125, 22);
+            this.toOriginToolStripMenuItem1.Text = "To Origin";
+            // 
+            // toCenterToolStripMenuItem
+            // 
+            this.toCenterToolStripMenuItem.Name = "toCenterToolStripMenuItem";
+            this.toCenterToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.toCenterToolStripMenuItem.Text = "To Center";
             // 
             // stPanel1
             // 
@@ -130,7 +157,7 @@
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewToolStripMenuItem,
             this.shadingToolStripMenuItem,
-            this.resetCameraToolStripMenuItem,
+            this.cameraToolStripMenuItem1,
             this.resetPoseToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.uVViewerToolStripMenuItem});
@@ -142,43 +169,96 @@
             // 
             // viewToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cameraToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
             // 
-            // cameraToolStripMenuItem
+            // shadingToolStripMenuItem
             // 
-            this.cameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.modeToolStripMenuItem,
+            this.shadingToolStripMenuItem.Name = "shadingToolStripMenuItem";
+            this.shadingToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.shadingToolStripMenuItem.Text = "Shading";
+            this.shadingToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.shadingToolStripMenuItem_DropDownItemClicked);
+            // 
+            // cameraToolStripMenuItem1
+            // 
+            this.cameraToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetCameraToolStripMenuItem,
+            this.modeToolStripMenuItem1,
+            this.projectionToolStripMenuItem,
             this.orientationToolStripMenuItem});
-            this.cameraToolStripMenuItem.Name = "cameraToolStripMenuItem";
-            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.cameraToolStripMenuItem.Text = "Camera";
+            this.cameraToolStripMenuItem1.Name = "cameraToolStripMenuItem1";
+            this.cameraToolStripMenuItem1.Size = new System.Drawing.Size(60, 20);
+            this.cameraToolStripMenuItem1.Text = "Camera";
             // 
-            // modeToolStripMenuItem
+            // resetCameraToolStripMenuItem
             // 
-            this.modeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.perspectiveToolStripMenuItem,
-            this.orthographicToolStripMenuItem});
-            this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
-            this.modeToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.modeToolStripMenuItem.Text = "Mode";
+            this.resetCameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toOriginToolStripMenuItem,
+            this.toActiveModelToolStripMenuItem});
+            this.resetCameraToolStripMenuItem.Name = "resetCameraToolStripMenuItem";
+            this.resetCameraToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetCameraToolStripMenuItem.Text = "Reset";
             // 
-            // perspectiveToolStripMenuItem
+            // toOriginToolStripMenuItem
             // 
-            this.perspectiveToolStripMenuItem.Name = "perspectiveToolStripMenuItem";
-            this.perspectiveToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
-            this.perspectiveToolStripMenuItem.Text = "Perspective";
-            this.perspectiveToolStripMenuItem.Click += new System.EventHandler(this.perspectiveToolStripMenuItem_Click);
+            this.toOriginToolStripMenuItem.Name = "toOriginToolStripMenuItem";
+            this.toOriginToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.toOriginToolStripMenuItem.Text = "To Origin";
+            this.toOriginToolStripMenuItem.Click += new System.EventHandler(this.toOriginToolStripMenuItem_Click);
+            // 
+            // toActiveModelToolStripMenuItem
+            // 
+            this.toActiveModelToolStripMenuItem.Name = "toActiveModelToolStripMenuItem";
+            this.toActiveModelToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.toActiveModelToolStripMenuItem.Text = "To Active Model";
+            this.toActiveModelToolStripMenuItem.Click += new System.EventHandler(this.toActiveModelToolStripMenuItem_Click);
+            // 
+            // modeToolStripMenuItem1
+            // 
+            this.modeToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.orbitToolStripMenuItem,
+            this.walkToolStripMenuItem});
+            this.modeToolStripMenuItem1.Name = "modeToolStripMenuItem1";
+            this.modeToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.modeToolStripMenuItem1.Text = "Mode";
+            // 
+            // orbitToolStripMenuItem
+            // 
+            this.orbitToolStripMenuItem.Name = "orbitToolStripMenuItem";
+            this.orbitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.orbitToolStripMenuItem.Text = "Orbit";
+            this.orbitToolStripMenuItem.Click += new System.EventHandler(this.orbitToolStripMenuItem_Click);
+            // 
+            // walkToolStripMenuItem
+            // 
+            this.walkToolStripMenuItem.Name = "walkToolStripMenuItem";
+            this.walkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.walkToolStripMenuItem.Text = "Walk";
+            this.walkToolStripMenuItem.Click += new System.EventHandler(this.walkToolStripMenuItem_Click);
+            // 
+            // projectionToolStripMenuItem
+            // 
+            this.projectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.orthographicToolStripMenuItem,
+            this.perspectiveToolStripMenuItem});
+            this.projectionToolStripMenuItem.Name = "projectionToolStripMenuItem";
+            this.projectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.projectionToolStripMenuItem.Text = "Projection";
             // 
             // orthographicToolStripMenuItem
             // 
             this.orthographicToolStripMenuItem.Name = "orthographicToolStripMenuItem";
-            this.orthographicToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.orthographicToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.orthographicToolStripMenuItem.Text = "Orthographic";
             this.orthographicToolStripMenuItem.Click += new System.EventHandler(this.orthographicToolStripMenuItem_Click);
+            // 
+            // perspectiveToolStripMenuItem
+            // 
+            this.perspectiveToolStripMenuItem.Name = "perspectiveToolStripMenuItem";
+            this.perspectiveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.perspectiveToolStripMenuItem.Text = "Perspective";
+            this.perspectiveToolStripMenuItem.Click += new System.EventHandler(this.perspectiveToolStripMenuItem_Click);
             // 
             // orientationToolStripMenuItem
             // 
@@ -190,7 +270,7 @@
             this.rightToolStripMenuItem,
             this.leftToolStripMenuItem});
             this.orientationToolStripMenuItem.Name = "orientationToolStripMenuItem";
-            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.orientationToolStripMenuItem.Text = "Orientation";
             // 
             // frontToolStripMenuItem
@@ -235,36 +315,6 @@
             this.leftToolStripMenuItem.Text = "Left";
             this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
             // 
-            // shadingToolStripMenuItem
-            // 
-            this.shadingToolStripMenuItem.Name = "shadingToolStripMenuItem";
-            this.shadingToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
-            this.shadingToolStripMenuItem.Text = "Shading";
-            this.shadingToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.shadingToolStripMenuItem_DropDownItemClicked);
-            // 
-            // resetCameraToolStripMenuItem
-            // 
-            this.resetCameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toOriginToolStripMenuItem,
-            this.toActiveModelToolStripMenuItem});
-            this.resetCameraToolStripMenuItem.Name = "resetCameraToolStripMenuItem";
-            this.resetCameraToolStripMenuItem.Size = new System.Drawing.Size(91, 20);
-            this.resetCameraToolStripMenuItem.Text = "Reset Camera";
-            // 
-            // toOriginToolStripMenuItem
-            // 
-            this.toOriginToolStripMenuItem.Name = "toOriginToolStripMenuItem";
-            this.toOriginToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.toOriginToolStripMenuItem.Text = "To Origin";
-            this.toOriginToolStripMenuItem.Click += new System.EventHandler(this.toOriginToolStripMenuItem_Click);
-            // 
-            // toActiveModelToolStripMenuItem
-            // 
-            this.toActiveModelToolStripMenuItem.Name = "toActiveModelToolStripMenuItem";
-            this.toActiveModelToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.toActiveModelToolStripMenuItem.Text = "To Active Model";
-            this.toActiveModelToolStripMenuItem.Click += new System.EventHandler(this.toActiveModelToolStripMenuItem_Click);
-            // 
             // resetPoseToolStripMenuItem
             // 
             this.resetPoseToolStripMenuItem.Name = "resetPoseToolStripMenuItem";
@@ -283,7 +333,7 @@
             // reloadShadersToolStripMenuItem
             // 
             this.reloadShadersToolStripMenuItem.Name = "reloadShadersToolStripMenuItem";
-            this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadShadersToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.reloadShadersToolStripMenuItem.Text = "Reload Shaders";
             this.reloadShadersToolStripMenuItem.Click += new System.EventHandler(this.reloadShadersToolStripMenuItem_Click);
             // 
@@ -323,8 +373,6 @@
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadShadersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetPoseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cameraToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem perspectiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem orthographicToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem orientationToolStripMenuItem;
@@ -341,5 +389,14 @@
         private Forms.STLabel stLabel1;
         private Forms.STCheckBox chkDisplayAllModels;
         private System.Windows.Forms.ToolStripMenuItem uVViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cameraToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toOriginToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toCenterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem orbitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem walkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem projectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem walkToolStripMenuItem1;
     }
 }

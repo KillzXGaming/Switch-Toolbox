@@ -56,6 +56,8 @@ namespace Toolbox.Library
             Runtime.viewportEditors.Add(editor);
 
             perspectiveToolStripMenuItem.Checked = Runtime.ViewportCameraMode == Runtime.CameraMode.Perspective;
+            orbitToolStripMenuItem.Checked = Runtime.cameraMovement == Runtime.CameraMovement.Inspect;
+            walkToolStripMenuItem.Checked = Runtime.cameraMovement == Runtime.CameraMovement.Walk;
 
             foreach (var type in Enum.GetValues(typeof(Runtime.ViewportShading)).Cast<Runtime.ViewportShading>())
             {
@@ -581,6 +583,34 @@ namespace Toolbox.Library
                 uvEditor1.LoadEditor(meshes);
                 uvEditor1.Show();
             }
+        }
+
+        private void UpdateCameraMovement()
+        {
+            if (orbitToolStripMenuItem.Checked)
+            {
+                walkToolStripMenuItem.Checked = true;
+                orbitToolStripMenuItem.Checked = false;
+
+                Runtime.cameraMovement = Runtime.CameraMovement.Walk;
+            }
+            else
+            {
+                orbitToolStripMenuItem.Checked = true;
+                walkToolStripMenuItem.Checked = false;
+                Runtime.cameraMovement = Runtime.CameraMovement.Inspect;
+            }
+
+            LoadViewportRuntimeValues();
+            UpdateViewport();
+        }
+
+        private void walkToolStripMenuItem_Click(object sender, EventArgs e) {
+            UpdateCameraMovement();
+        }
+
+        private void orbitToolStripMenuItem_Click(object sender, EventArgs e) {
+            UpdateCameraMovement();
         }
     }
 }
