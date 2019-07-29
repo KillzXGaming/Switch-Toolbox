@@ -35,7 +35,12 @@ namespace Toolbox.Library
     }
     public class ArchiveFileInfo : INode
     {
+        // Opens the file format automatically (may take longer to open the archive file)
         [Browsable(false)]
+        public bool OpenFileFormatOnLoad { get; set; }
+
+        [Browsable(false)]
+        // The source file. If an archive is in another archive, this is necessary to get the original path
         public string SourceFile { get; internal set; }
 
         [Browsable(false)]
@@ -509,6 +514,8 @@ namespace Toolbox.Library
                                 parentNode.Nodes.Add(wrapperFile);
                                 parentNode = wrapperFile;
                                 AddFileNode(wrapperFile);
+
+                                if (node.OpenFileFormatOnLoad) wrapperFile.OpenFileFormat();
                             }
                             else
                             {
@@ -807,7 +814,11 @@ namespace Toolbox.Library
             ArchiveFileInfo.Replace();
         }
 
-        public override void OnDoubleMouseClick(TreeView treeview)
+        public override void OnDoubleMouseClick(TreeView treeview) {
+            OpenFileFormat();
+        }
+
+        public void OpenFileFormat()
         {
             IFileFormat file = ArchiveFileInfo.OpenFile();
             if (file == null) //Format not supported so return

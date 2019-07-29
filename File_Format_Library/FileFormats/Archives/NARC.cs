@@ -82,7 +82,6 @@ namespace FirstPlugin
                 FileName = Name.Replace(" ", string.Empty).RemoveIllegaleFolderNameCharacters();
             }
 
-
             public override byte[] FileData
             {
                 get

@@ -487,7 +487,7 @@ namespace Toolbox.Library
 
         public static Bitmap DecodeBlockGetBitmap(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None)
         {
-            Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format, paletteData, null, PaletteFormat),
+            Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format, paletteData, new ImageParameters(), PaletteFormat),
                (int)Width, (int)Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             return bitmap;
