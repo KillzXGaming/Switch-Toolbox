@@ -422,7 +422,7 @@ namespace Toolbox.Library
 
                 if (Runtime.UseDirectXTexDecoder)
                 {
-                    return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format, new byte[0]),
+                    return BitmapExtension.GetBitmap(DecodeBlock(data, width, height, Format, new byte[0], Parameters),
                       (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
                 else
@@ -487,7 +487,7 @@ namespace Toolbox.Library
 
         public static Bitmap DecodeBlockGetBitmap(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None)
         {
-            Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format, paletteData, PaletteFormat),
+            Bitmap bitmap = BitmapExtension.GetBitmap(DecodeBlock(data, Width, Height, Format, paletteData, null, PaletteFormat),
                (int)Width, (int)Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             return bitmap;
@@ -501,7 +501,7 @@ namespace Toolbox.Library
         /// <param name="Height">The height of the image in pixels.</param>
         /// <param name=" DDS.DXGI_FORMAT">The image format.</param>
         /// <returns>Returns a byte array of decoded data. </returns>
-        public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None, PlatformSwizzle PlatformSwizzle = PlatformSwizzle.None)
+        public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, ImageParameters parameters, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None, PlatformSwizzle PlatformSwizzle = PlatformSwizzle.None)
         {
             if (data == null)     throw new Exception($"Data is null!");
             if (Format <= 0)      throw new Exception($"Invalid Format!");
@@ -509,33 +509,37 @@ namespace Toolbox.Library
             if (Width <= 0)       throw new Exception($"Invalid width size {Width}!");
             if (Height <= 0)      throw new Exception($"Invalid height size {Height}!");
 
+            byte[] imageData = new byte[0];
+            bool DontSwapRG = false;
+
             if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
             {
-                return CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
+                imageData = CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
+                DontSwapRG = true;
             }
             if (PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
-            {
-                return ConvertBgraToRgba(Decode_Gamecube.DecodeData(data, paletteData, Width, Height, Format, PaletteFormat));
-            }
-
+                imageData = Decode_Gamecube.DecodeData(data, paletteData, Width, Height, Format, PaletteFormat);
+            
             if (Format == TEX_FORMAT.R32G8X24_FLOAT)
-                return ConvertBgraToRgba(DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32G8X24_TYPELESS));
+                imageData = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32G8X24_TYPELESS);
 
             if (Format == TEX_FORMAT.BC5_SNORM)
-                return ConvertBgraToRgba(DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true, true));
+                imageData = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true, true);
 
             if (IsCompressed(Format))
-                return ConvertBgraToRgba(DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format));
+                imageData = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
             else
             {
-                //If blue channel becomes first, do not swap them!
-          //      if (Format.ToString().StartsWith("B") || Format == TEX_FORMAT.B5G6R5_UNORM)
-             //       return DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
                 if (IsAtscFormat(Format))
-                    return ConvertBgraToRgba(ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1));
+                    imageData = ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1);
                 else
-                    return ConvertBgraToRgba(DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format));
+                    imageData = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
             }
+
+            if (parameters.DontSwapRG || DontSwapRG)
+                return imageData;
+            else
+                return ConvertBgraToRgba(imageData);
         }
 
         public string DebugInfo()

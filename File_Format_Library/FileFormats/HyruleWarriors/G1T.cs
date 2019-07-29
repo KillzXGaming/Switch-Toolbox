@@ -134,11 +134,9 @@ namespace FirstPlugin
                 switch (format)
                 {
                     case 0x5F:
-                    case 0x01: 
+                    case 0x01:
+                    case 0x09:
                         tex.Format = TEX_FORMAT.R8G8B8A8_UNORM;
-                        break;
-                    case 0x09: 
-                        tex.Format = TEX_FORMAT.R32G32B32A32_FLOAT;
                         break;
                     case 0x06:
                     case 0x59: //Switch
@@ -156,6 +154,13 @@ namespace FirstPlugin
                 }
 
                 uint textureSize = (Width * Height * STGenericTexture.GetBytesPerPixel(tex.Format)) / 8;
+                if (format == 0x09)
+                    textureSize = (Width * Height * 64) / 8;
+                if (format == 0x01)
+                {
+                    textureSize = (Width * Height * 32) / 8;
+                    tex.Parameters.DontSwapRG = true;
+                }
 
                 tex.ImageData = reader.ReadBytes((int)textureSize);
                 Nodes.Add(tex);

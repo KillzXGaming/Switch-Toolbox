@@ -252,6 +252,7 @@ namespace Toolbox.Library.Rendering
                         height,
                         GenericTexture.Format,
                         new byte[0],
+                        GenericTexture.Parameters,
                         PALETTE_FORMAT.None,
                         GenericTexture.PlatformSwizzle);
                     }

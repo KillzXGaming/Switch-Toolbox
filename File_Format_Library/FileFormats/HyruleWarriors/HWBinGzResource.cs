@@ -140,12 +140,12 @@ namespace FirstPlugin
                             Nodes.Add(GITextureU);
                             break;
                         default:
-                            files.Add(fileEntry);
                             break;
-
                     }
+
+                    files.Add(fileEntry);
                 }
-             }
+            }
         }
      
         public void Unload()
