@@ -461,6 +461,17 @@ namespace Bfres.Structs
             return uvMaps;
         }
 
+        public VertexAttribute GetWeightAttribute(int index)
+        {
+            foreach (var attribute in vertexAttributes)
+            {
+                if (attribute.Name == $"_w{index}")
+                    return attribute;
+            }
+
+            return null;
+        }
+
         private void Rename(object sender, EventArgs args)
         {
             RenameDialog dialog = new RenameDialog();
@@ -1644,6 +1655,7 @@ namespace Bfres.Structs
                 float[] weightsA = new float[4];
                 int[] indicesA = new int[4];
 
+
                 if (vtx.boneWeights.Count >= 1)
                     weightsA[0] = vtx.boneWeights[0];
                 if (vtx.boneWeights.Count >= 2)
@@ -1652,6 +1664,44 @@ namespace Bfres.Structs
                     weightsA[2] = vtx.boneWeights[2];
                 if (vtx.boneWeights.Count >= 4)
                     weightsA[3] = vtx.boneWeights[3];
+
+                var WeightAttribute = GetWeightAttribute(0);
+
+                if (WeightAttribute != null)
+                {
+                    if (WeightAttribute.Format == ResGFX.AttribFormat.Format_8_UNorm ||
+                        WeightAttribute.Format == ResGFX.AttribFormat.Format_8_8_UNorm ||
+                        WeightAttribute.Format == ResGFX.AttribFormat.Format_8_8_8_8_UNorm)
+                    {
+                        //Produce identical results for the weight output as BFRES_Vertex.py
+                        //This should prevent encoding back and exploding
+                        int MaxWeight = 255;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (vtx.boneWeights.Count < i + 1)
+                            {
+                                weightsA[i] = 0;
+                                MaxWeight = 0;
+                            }
+                            else
+                            {
+                                int weight = (int)(vtx.boneWeights[i] * 255);
+                                if (vtx.boneWeights.Count == i + 1)
+                                    weight = MaxWeight;
+
+                                if (weight >= MaxWeight)
+                                {
+                                    weight = MaxWeight;
+                                    MaxWeight = 0;
+                                }
+                                else
+                                    MaxWeight -= weight;
+
+                                weightsA[i] = weight / 255f;
+                            }
+                        }
+                    }
+                }
 
                 if (vtx.boneIds.Count >= 1)
                     indicesA[0] = vtx.boneIds[0];
