@@ -214,6 +214,9 @@
     <Compile Include="Compression\YAZ0.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Forms\ColorAlphaBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\Editors\UV\UVEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

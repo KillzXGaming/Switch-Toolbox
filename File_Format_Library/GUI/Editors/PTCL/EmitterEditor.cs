@@ -99,28 +99,42 @@ namespace FirstPlugin
 
         bool IsColorsLoaded = false;
 
+        public ColorAlphaBox GetColor(int colorType, int index)
+        {
+            foreach (Control control in stPanel2.Controls)
+            {
+                if (control.Name == $"color{colorType}Index{index}")
+                    return (ColorAlphaBox)control;
+            }
+            return null;
+        }
+
+        public void RefreshColorBoxes()
+        {
+            foreach (Control control in stPanel2.Controls)
+            {
+                if (control is ColorAlphaBox)
+                    control.Refresh();
+            }
+        }
+
         private void LoadColors(PTCL.Emitter Emitter)
         {
             IsColorsLoaded = false;
 
-            color0Index0.BackColor = Emitter.Color0Array[0].Color;
-            color0Index1.BackColor = Emitter.Color0Array[1].Color;
-            color0Index2.BackColor = Emitter.Color0Array[2].Color;
-            color0Index3.BackColor = Emitter.Color0Array[3].Color;
-            color0Index4.BackColor = Emitter.Color0Array[4].Color;
-            color0Index5.BackColor = Emitter.Color0Array[5].Color;
-            color0Index6.BackColor = Emitter.Color0Array[6].Color;
-            color0Index7.BackColor = Emitter.Color0Array[7].Color;
+            for (int i = 0; i < 8; i++)
+            {
+                var colrBtn = GetColor(0, i);
+                colrBtn.Color = Emitter.Color0Array[i].Color;
+            }
 
+            for (int i = 0; i < 8; i++)
+            {
+                var colrBtn = GetColor(1, i);
+                colrBtn.Color = Emitter.Color1Array[i].Color;
+            }
 
-            color1Index0.BackColor = Emitter.Color1Array[0].Color;
-            color1Index1.BackColor = Emitter.Color1Array[1].Color;
-            color1Index2.BackColor = Emitter.Color1Array[2].Color;
-            color1Index3.BackColor = Emitter.Color1Array[3].Color;
-            color1Index4.BackColor = Emitter.Color1Array[4].Color;
-            color1Index5.BackColor = Emitter.Color1Array[5].Color;
-            color1Index6.BackColor = Emitter.Color1Array[6].Color;
-            color1Index7.BackColor = Emitter.Color1Array[7].Color;
+            RefreshColorBoxes();
 
             color0TB.Text = Utils.ColorToHex(Emitter.Color0Array[0].Color);
             color0TB2.Text = Utils.ColorToHex(Emitter.Color0Array[1].Color);
@@ -171,17 +185,13 @@ namespace FirstPlugin
 
         private void color_Click(object sender, EventArgs e)
         {
-            var button = sender as Button;
+            var button = sender as ColorAlphaBox;
             if (button != null)
             {
                 char LastChar = button.Name[button.Name.Length - 1];
-
-                Console.WriteLine(button.Name + " LastChar " + LastChar + " " + ActiveEmitter.Color0Array.Length);
                 int index = int.Parse(LastChar.ToString());
 
                 ColorDialog dialog = new ColorDialog();
-
-
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     if (button.Name.Contains("color0"))
@@ -189,7 +199,8 @@ namespace FirstPlugin
                     else
                         ActiveEmitter.Color1Array[index].Color = dialog.Color;
 
-                    button.BackColor = dialog.Color;
+                    button.Color = dialog.Color;
+                    RefreshColorBoxes();
                 }
             }
         }

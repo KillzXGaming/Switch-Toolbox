@@ -31,22 +31,22 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmitterEditor));
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
-            this.color1Index0 = new System.Windows.Forms.Button();
-            this.color0Index0 = new System.Windows.Forms.Button();
-            this.color0Index1 = new System.Windows.Forms.Button();
-            this.color1Index1 = new System.Windows.Forms.Button();
-            this.color0Index3 = new System.Windows.Forms.Button();
-            this.color1Index3 = new System.Windows.Forms.Button();
-            this.color0Index2 = new System.Windows.Forms.Button();
-            this.color1Index2 = new System.Windows.Forms.Button();
-            this.color0Index7 = new System.Windows.Forms.Button();
-            this.color1Index7 = new System.Windows.Forms.Button();
-            this.color0Index6 = new System.Windows.Forms.Button();
-            this.color1Index6 = new System.Windows.Forms.Button();
-            this.color0Index5 = new System.Windows.Forms.Button();
-            this.color1Index5 = new System.Windows.Forms.Button();
-            this.color0Index4 = new System.Windows.Forms.Button();
-            this.color1Index4 = new System.Windows.Forms.Button();
+            this.color1Index0 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index0 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index1 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index1 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index3 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index3 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index2 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index2 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index7 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index7 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index6 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index6 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index5 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index5 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color0Index4 = new Toolbox.Library.Forms.ColorAlphaBox();
+            this.color1Index4 = new Toolbox.Library.Forms.ColorAlphaBox();
             this.color0TB = new Toolbox.Library.Forms.STTextBox();
             this.color0TB2 = new Toolbox.Library.Forms.STTextBox();
             this.color0TB4 = new Toolbox.Library.Forms.STTextBox();
@@ -104,178 +104,178 @@
             // 
             // color1Index0
             // 
-            this.color1Index0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index0.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index0.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index0.BackgroundImage")));
+            this.color1Index0.Color = System.Drawing.Color.Empty;
             this.color1Index0.Location = new System.Drawing.Point(181, 46);
             this.color1Index0.Name = "color1Index0";
             this.color1Index0.Size = new System.Drawing.Size(50, 50);
             this.color1Index0.TabIndex = 3;
-            this.color1Index0.TabStop = false;
-            this.color1Index0.UseVisualStyleBackColor = false;
             this.color1Index0.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index0
             // 
-            this.color0Index0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index0.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index0.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index0.BackgroundImage")));
+            this.color0Index0.Color = System.Drawing.Color.Empty;
             this.color0Index0.Location = new System.Drawing.Point(6, 46);
             this.color0Index0.Name = "color0Index0";
             this.color0Index0.Size = new System.Drawing.Size(50, 50);
             this.color0Index0.TabIndex = 4;
-            this.color0Index0.TabStop = false;
-            this.color0Index0.UseVisualStyleBackColor = false;
             this.color0Index0.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index1
             // 
-            this.color0Index1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index1.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index1.BackgroundImage")));
+            this.color0Index1.Color = System.Drawing.Color.Empty;
             this.color0Index1.Location = new System.Drawing.Point(6, 102);
             this.color0Index1.Name = "color0Index1";
             this.color0Index1.Size = new System.Drawing.Size(50, 50);
             this.color0Index1.TabIndex = 6;
-            this.color0Index1.TabStop = false;
-            this.color0Index1.UseVisualStyleBackColor = false;
             this.color0Index1.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index1
             // 
-            this.color1Index1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index1.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index1.BackgroundImage")));
+            this.color1Index1.Color = System.Drawing.Color.Empty;
             this.color1Index1.Location = new System.Drawing.Point(181, 102);
             this.color1Index1.Name = "color1Index1";
             this.color1Index1.Size = new System.Drawing.Size(50, 50);
             this.color1Index1.TabIndex = 5;
-            this.color1Index1.TabStop = false;
-            this.color1Index1.UseVisualStyleBackColor = false;
             this.color1Index1.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index3
             // 
-            this.color0Index3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index3.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index3.BackgroundImage")));
+            this.color0Index3.Color = System.Drawing.Color.Empty;
             this.color0Index3.Location = new System.Drawing.Point(6, 214);
             this.color0Index3.Name = "color0Index3";
             this.color0Index3.Size = new System.Drawing.Size(50, 50);
             this.color0Index3.TabIndex = 10;
-            this.color0Index3.TabStop = false;
-            this.color0Index3.UseVisualStyleBackColor = false;
             this.color0Index3.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index3
             // 
-            this.color1Index3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index3.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index3.BackgroundImage")));
+            this.color1Index3.Color = System.Drawing.Color.Empty;
             this.color1Index3.Location = new System.Drawing.Point(181, 214);
             this.color1Index3.Name = "color1Index3";
             this.color1Index3.Size = new System.Drawing.Size(50, 50);
             this.color1Index3.TabIndex = 9;
-            this.color1Index3.TabStop = false;
-            this.color1Index3.UseVisualStyleBackColor = false;
             this.color1Index3.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index2
             // 
-            this.color0Index2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index2.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index2.BackgroundImage")));
+            this.color0Index2.Color = System.Drawing.Color.Empty;
             this.color0Index2.Location = new System.Drawing.Point(6, 158);
             this.color0Index2.Name = "color0Index2";
             this.color0Index2.Size = new System.Drawing.Size(50, 50);
             this.color0Index2.TabIndex = 8;
-            this.color0Index2.TabStop = false;
-            this.color0Index2.UseVisualStyleBackColor = false;
             this.color0Index2.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index2
             // 
-            this.color1Index2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index2.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index2.BackgroundImage")));
+            this.color1Index2.Color = System.Drawing.Color.Empty;
             this.color1Index2.Location = new System.Drawing.Point(181, 158);
             this.color1Index2.Name = "color1Index2";
             this.color1Index2.Size = new System.Drawing.Size(50, 50);
             this.color1Index2.TabIndex = 7;
-            this.color1Index2.TabStop = false;
-            this.color1Index2.UseVisualStyleBackColor = false;
             this.color1Index2.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index7
             // 
-            this.color0Index7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index7.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index7.BackgroundImage")));
+            this.color0Index7.Color = System.Drawing.Color.Empty;
             this.color0Index7.Location = new System.Drawing.Point(6, 438);
             this.color0Index7.Name = "color0Index7";
             this.color0Index7.Size = new System.Drawing.Size(50, 50);
             this.color0Index7.TabIndex = 18;
-            this.color0Index7.TabStop = false;
-            this.color0Index7.UseVisualStyleBackColor = false;
             this.color0Index7.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index7
             // 
-            this.color1Index7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index7.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index7.BackgroundImage")));
+            this.color1Index7.Color = System.Drawing.Color.Empty;
             this.color1Index7.Location = new System.Drawing.Point(181, 438);
             this.color1Index7.Name = "color1Index7";
             this.color1Index7.Size = new System.Drawing.Size(50, 50);
             this.color1Index7.TabIndex = 17;
-            this.color1Index7.TabStop = false;
-            this.color1Index7.UseVisualStyleBackColor = false;
             this.color1Index7.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index6
             // 
-            this.color0Index6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index6.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index6.BackgroundImage")));
+            this.color0Index6.Color = System.Drawing.Color.Empty;
             this.color0Index6.Location = new System.Drawing.Point(6, 382);
             this.color0Index6.Name = "color0Index6";
             this.color0Index6.Size = new System.Drawing.Size(50, 50);
             this.color0Index6.TabIndex = 16;
-            this.color0Index6.TabStop = false;
-            this.color0Index6.UseVisualStyleBackColor = false;
             this.color0Index6.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index6
             // 
-            this.color1Index6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index6.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index6.BackgroundImage")));
+            this.color1Index6.Color = System.Drawing.Color.Empty;
             this.color1Index6.Location = new System.Drawing.Point(181, 382);
             this.color1Index6.Name = "color1Index6";
             this.color1Index6.Size = new System.Drawing.Size(50, 50);
             this.color1Index6.TabIndex = 15;
-            this.color1Index6.TabStop = false;
-            this.color1Index6.UseVisualStyleBackColor = false;
             this.color1Index6.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index5
             // 
-            this.color0Index5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index5.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index5.BackgroundImage")));
+            this.color0Index5.Color = System.Drawing.Color.Empty;
             this.color0Index5.Location = new System.Drawing.Point(6, 326);
             this.color0Index5.Name = "color0Index5";
             this.color0Index5.Size = new System.Drawing.Size(50, 50);
             this.color0Index5.TabIndex = 14;
-            this.color0Index5.TabStop = false;
-            this.color0Index5.UseVisualStyleBackColor = false;
             this.color0Index5.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index5
             // 
-            this.color1Index5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index5.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index5.BackgroundImage")));
+            this.color1Index5.Color = System.Drawing.Color.Empty;
             this.color1Index5.Location = new System.Drawing.Point(181, 326);
             this.color1Index5.Name = "color1Index5";
             this.color1Index5.Size = new System.Drawing.Size(50, 50);
             this.color1Index5.TabIndex = 13;
-            this.color1Index5.TabStop = false;
-            this.color1Index5.UseVisualStyleBackColor = false;
             this.color1Index5.Click += new System.EventHandler(this.color_Click);
             // 
             // color0Index4
             // 
-            this.color0Index4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color0Index4.BackColor = System.Drawing.Color.Transparent;
+            this.color0Index4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color0Index4.BackgroundImage")));
+            this.color0Index4.Color = System.Drawing.Color.Empty;
             this.color0Index4.Location = new System.Drawing.Point(6, 270);
             this.color0Index4.Name = "color0Index4";
             this.color0Index4.Size = new System.Drawing.Size(50, 50);
             this.color0Index4.TabIndex = 12;
-            this.color0Index4.TabStop = false;
-            this.color0Index4.UseVisualStyleBackColor = false;
             this.color0Index4.Click += new System.EventHandler(this.color_Click);
             // 
             // color1Index4
             // 
-            this.color1Index4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.color1Index4.BackColor = System.Drawing.Color.Transparent;
+            this.color1Index4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("color1Index4.BackgroundImage")));
+            this.color1Index4.Color = System.Drawing.Color.Empty;
             this.color1Index4.Location = new System.Drawing.Point(181, 270);
             this.color1Index4.Name = "color1Index4";
             this.color1Index4.Size = new System.Drawing.Size(50, 50);
             this.color1Index4.TabIndex = 11;
-            this.color1Index4.TabStop = false;
-            this.color1Index4.UseVisualStyleBackColor = false;
             this.color1Index4.Click += new System.EventHandler(this.color_Click);
             // 
             // color0TB
@@ -424,6 +424,7 @@
             // 
             // pictureBox2
             // 
+            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
             this.pictureBox2.Location = new System.Drawing.Point(14, 192);
             this.pictureBox2.Name = "pictureBox2";
@@ -434,6 +435,7 @@
             // 
             // pictureBox3
             // 
+            this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
             this.pictureBox3.Location = new System.Drawing.Point(14, 361);
             this.pictureBox3.Name = "pictureBox3";
@@ -444,6 +446,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.Location = new System.Drawing.Point(14, 41);
             this.pictureBox1.Name = "pictureBox1";
@@ -591,22 +594,22 @@
 
         private Toolbox.Library.Forms.STLabel stLabel1;
         private Toolbox.Library.Forms.STLabel stLabel2;
-        private System.Windows.Forms.Button color1Index0;
-        private System.Windows.Forms.Button color0Index0;
-        private System.Windows.Forms.Button color0Index1;
-        private System.Windows.Forms.Button color1Index1;
-        private System.Windows.Forms.Button color0Index3;
-        private System.Windows.Forms.Button color1Index3;
-        private System.Windows.Forms.Button color0Index2;
-        private System.Windows.Forms.Button color1Index2;
-        private System.Windows.Forms.Button color0Index7;
-        private System.Windows.Forms.Button color1Index7;
-        private System.Windows.Forms.Button color0Index6;
-        private System.Windows.Forms.Button color1Index6;
-        private System.Windows.Forms.Button color0Index5;
-        private System.Windows.Forms.Button color1Index5;
-        private System.Windows.Forms.Button color0Index4;
-        private System.Windows.Forms.Button color1Index4;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index0;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index0;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index1;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index1;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index3;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index3;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index2;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index2;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index7;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index7;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index6;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index6;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index5;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index5;
+        private Toolbox.Library.Forms.ColorAlphaBox color0Index4;
+        private Toolbox.Library.Forms.ColorAlphaBox color1Index4;
         private Toolbox.Library.Forms.STTextBox color0TB;
         private Toolbox.Library.Forms.STTextBox color0TB2;
         private Toolbox.Library.Forms.STTextBox color0TB4;
