@@ -676,6 +676,11 @@ namespace Bfres.Structs
             switch (Format)
             {
                 case GX2SurfaceFormat.T_BC5_UNorm:
+                    tex.CompSelR = GX2CompSel.ChannelR;
+                    tex.CompSelG = GX2CompSel.ChannelG;
+                    tex.CompSelB = GX2CompSel.Always1; //This is important for botw
+                    tex.CompSelA = GX2CompSel.Always1;
+                    break;
                 case GX2SurfaceFormat.T_BC5_SNorm:
                     tex.CompSelR = GX2CompSel.ChannelR;
                     tex.CompSelG = GX2CompSel.ChannelG;
