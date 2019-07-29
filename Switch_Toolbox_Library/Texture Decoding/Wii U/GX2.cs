@@ -778,6 +778,9 @@ namespace Toolbox.Library
                  Console.WriteLine("  data size       = " + tex.data.Length);
                  Console.WriteLine("  realSize        = " + tex.imageSize);*/
 
+            if (tex.mipOffset == null || tex.mipOffset.Length == 0)
+                tex.mipOffset = GenerateMipOffsets(tex);
+
             uint blkWidth, blkHeight;
             if (IsFormatBCN((GX2SurfaceFormat)tex.format))
             {

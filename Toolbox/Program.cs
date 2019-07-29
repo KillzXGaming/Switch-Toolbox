@@ -42,7 +42,7 @@ namespace Toolbox
             bool LoadedDX = TryLoadDirectXTex();
             if (!LoadedDX && !Toolbox.Library.Runtime.UseDirectXTexDecoder)
             {
-               var result = MessageBox.Show("Direct X Tex Failed to load! Make sure to install Visual C++ and Direct X Tex. Do you want to go to the install sites?");
+               var result = MessageBox.Show("Direct X Tex Failed to load! Make sure to install Visual C++ and Direct X Tex. Do you want to go to the install sites?", "", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     System.Diagnostics.Process.Start("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");

@@ -629,18 +629,11 @@ namespace FirstPlugin
                 surf.data = data;
                 surf.mipData = data;
                 surf.numMips = MipCount;
-                surf.mipOffset = new uint[MipCount];
-                surf.mipData = null;
                 surf.tileMode = TileMode;
                 surf.swizzle = Swizzle;
                 surf.imageSize = ImageSize;
 
                 // GX2.GenerateMipSurfaceData(surf);
-
-                foreach (var mipoffset in surf.mipOffset)
-                {
-                    Console.WriteLine($"mipoffset {mipoffset}");
-                }
 
                 return GX2.Decode(surf, ArrayLevel, MipLevel);
             }
