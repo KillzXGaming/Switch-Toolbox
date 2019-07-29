@@ -124,28 +124,24 @@ namespace FirstPlugin
                     var comp = new STLibraryCompression.MTA_CUSTOM();
                     return comp.Decompress(data, decompSize);
                 }
-                else if (compType == 0x20)
+                else if (compType == 0x30 || compType == 0x20)
                 {
                     uint decompSize = reader.ReadUInt32();
                     uint compSize = (uint)reader.BaseStream.Length - 14;
+
+                    reader.SeekBegin(14);
+                    bool IsGZIP = reader.ReadUInt16() == 0x1F8B;
 
                     byte[] filedata = reader.getSection(14, (int)compSize);
                     reader.Close();
                     reader.Dispose();
 
-                    data = STLibraryCompression.ZLIB.Decompress(filedata);
+                    if (IsGZIP)
+                        data = STLibraryCompression.GZIP.Decompress(filedata);
+                    else
+                        data = STLibraryCompression.ZLIB.Decompress(filedata);
                 }
-                else if (compType == 0x30)
-                {
-                    uint decompSize = reader.ReadUInt32();
-                    uint compSize = (uint)reader.BaseStream.Length - 14;
 
-                    byte[] filedata = reader.getSection(14, (int)compSize);
-                    reader.Close();
-                    reader.Dispose();
-
-                    data = STLibraryCompression.GZIP.Decompress(filedata);
-                }
                 return data;
             }
 
