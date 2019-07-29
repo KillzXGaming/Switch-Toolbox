@@ -64,12 +64,39 @@ namespace FirstPlugin
             using (var reader = new FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                reader.SeekBegin(132);
-                ushort magic = reader.ReadUInt16();
-                if (reader.ReadUInt16() == 0X78DA)
+                uint unk = reader.ReadUInt32();
+                if (unk == 65536)
                 {
-                    var data = STLibraryCompression.ZLIB.Decompress(reader.getSection(132, (int)reader.BaseStream.Length - 132));
-                    return new MemoryStream(data);
+                    uint chunkCount = reader.ReadUInt32();
+                    uint unk2 = reader.ReadUInt32();
+                    uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
+
+                    reader.Align(128);
+
+                    List<byte[]> DecompressedChunks = new List<byte[]>();
+
+                    //Now search for zlibbed chunks
+                    while (!reader.EndOfStream)
+                    {
+                        uint size = reader.ReadUInt32();
+
+                        long pos = reader.Position;
+                        ushort magic = reader.ReadUInt16();
+
+                        ///Check zlib magic
+                        if (magic == 0x78da)
+                        {
+                            var data = STLibraryCompression.ZLIB.Decompress(reader.getSection((uint)pos, size));
+                            DecompressedChunks.Add(data);
+
+                            reader.SeekBegin(pos + size); //Seek the compressed size and align it to goto the next chunk
+                            reader.Align(128);
+                        }
+                        else //If the magic check fails, seek back 2. This shouldn't happen, but just incase
+                            reader.Seek(-2);
+                    }
+                    //Return the decompressed stream with all chunks combined
+                    return new MemoryStream(Utils.CombineByteArray(DecompressedChunks.ToArray()));
                 }
             }
             return stream;
@@ -107,7 +134,7 @@ namespace FirstPlugin
                     {
                         case "GT1G": //Textures
                         case "G1TG": //Textures
-                            GT1 GITextureU = new GT1();
+                            G1T GITextureU = new G1T();
                             GITextureU.FileName = $"TextureContainer{i}.gt1";
                             GITextureU.Read(new FileReader(fileEntry.FileData));
                             Nodes.Add(GITextureU);

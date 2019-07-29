@@ -20,17 +20,10 @@ namespace Toolbox.Library.Forms
 
 
             this.SetStyle(
-    ControlStyles.AllPaintingInWmPaint |
-    ControlStyles.UserPaint |
-    ControlStyles.DoubleBuffer,
-    true);
-            //   this.SizeMode = PictureBoxSizeMode.StretchImage;
-        }
-
-        public void SetColor(Color color)
-        {
-            //Draw 2 rectangles, color on the left, alpha on the right
-
+            ControlStyles.AllPaintingInWmPaint |
+            ControlStyles.UserPaint |
+            ControlStyles.DoubleBuffer,
+            true);
         }
 
         protected override void OnPaint(PaintEventArgs pe)

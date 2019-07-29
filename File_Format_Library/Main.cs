@@ -362,7 +362,8 @@ namespace FirstPlugin
             Formats.Add(typeof(ZAR));
            // Formats.Add(typeof(ZSI));
             Formats.Add(typeof(CTXB));
-            Formats.Add(typeof(GT1));
+            Formats.Add(typeof(G1T));
+         //   Formats.Add(typeof(G1M));
 
             //  Formats.Add(typeof(GFA));
 

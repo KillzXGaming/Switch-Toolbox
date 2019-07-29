@@ -206,7 +206,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
-    <Compile Include="FileFormats\HyruleWarriors\GITextureContainer.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1T.cs" />
     <Compile Include="FileFormats\HyruleWarriors\HWBinGzResource.cs" />
     <Compile Include="FileFormats\Archives\IGA_PAK.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_ChunkTable.cs" />
@@ -271,7 +271,9 @@
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
+    <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Texture\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />

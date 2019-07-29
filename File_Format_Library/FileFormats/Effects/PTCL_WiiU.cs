@@ -318,12 +318,11 @@ namespace FirstPlugin
                 {
                     byte[] ImageData = ftex.texture.Data;
 
-
                     if (ftex.texture.MipData != null)
                         ImageData = Utils.CombineByteArray(ftex.texture.Data, ftex.texture.MipData);
 
-                    //  if (ImageData.Length != size)
-                    // MessageBox.Show($"Image size does not match! Make sure mip map count, format, height and width are all the same! Original Size {size} Import {ImageData.Length}", );
+                    if (ImageData.Length != size)
+                        MessageBox.Show($"Image size does not match! Make sure mip map count, format, height and width are all the same! Original Size {size} Import {ImageData.Length}");
 
                     Swizzle = (byte)ftex.texture.Swizzle;
 
@@ -628,6 +627,7 @@ namespace FirstPlugin
                 surf.use = 0x1;
                 surf.pitch = 0;
                 surf.data = data;
+                surf.mipData = data;
                 surf.numMips = MipCount;
                 surf.mipOffset = new uint[MipCount];
                 surf.mipData = null;
