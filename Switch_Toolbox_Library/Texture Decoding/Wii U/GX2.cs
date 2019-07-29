@@ -622,6 +622,31 @@ namespace Toolbox.Library
                 return GX2TexRegisters.CreateTexRegs(surface.width, surface.height, surface.numMips, surface.format, surface.tileMode, surface.pitch, surface.compSel);
         }
 
+        public static uint[] GenerateMipOffsets(GX2Surface tex)
+        {
+            var surfOut = GX2.getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, 1, 1, tex.tileMode, 0, 0);
+            uint imageSize = (uint)surfOut.surfSize;
+            uint mipSize = 0;
+
+            List<uint> mipOffsets = new List<uint>();
+            for (int mipLevel = 0; mipLevel < tex.numMips; mipLevel++)
+            {
+                if (mipLevel != 0)
+                {
+                    surfOut = GX2.getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, 1, 1, tex.tileMode, 0, mipLevel);
+
+                    if (mipLevel == 1)
+                        mipOffsets.Add(imageSize);
+                    else
+                        mipOffsets.Add(mipSize);
+
+                    byte[] dataAlignBytes = new byte[RoundUp(mipSize, surfOut.baseAlign) - mipSize];
+                    mipSize += (uint)(surfOut.surfSize + dataAlignBytes.Length);
+                }
+            }
+            return mipOffsets.ToArray();
+        }
+
         public static byte[] Decode(GX2Surface tex, int ArrayIndex = -1, int MipIndex = -1, string DebugTextureName = "")
         {
             uint blkWidth, blkHeight;
@@ -635,6 +660,9 @@ namespace Toolbox.Library
                 blkWidth = 1;
                 blkHeight = 1;
             }
+
+            if (tex.mipOffset == null || tex.mipOffset.Length == 0)
+                tex.mipOffset = GenerateMipOffsets(tex);
 
             var ImageSurfInfo = getSurfaceInfo((GX2SurfaceFormat)tex.format, tex.width, tex.height, tex.depth, (uint)tex.dim, (uint)tex.tileMode, (uint)tex.aa, 0);
             uint bpp = DIV_ROUND_UP(ImageSurfInfo.bpp, 8);

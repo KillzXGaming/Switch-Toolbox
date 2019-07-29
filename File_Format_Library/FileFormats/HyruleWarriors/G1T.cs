@@ -15,7 +15,7 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Image;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "G1T Texture" };
+        public string[] Description { get; set; } = new string[] { "G1T Textre" };
         public string[] Extension { get; set; } = new string[] { "*.g1t" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
