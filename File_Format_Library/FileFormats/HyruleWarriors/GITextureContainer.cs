@@ -83,8 +83,6 @@ namespace FirstPlugin
             else
                 Platform = GT1Platform.WiiU;
 
-            Console.WriteLine(Platform);
-
             uint FileSize = reader.ReadUInt32();
             uint DataOffset = reader.ReadUInt32();
             uint TextureCount = reader.ReadUInt32();
@@ -97,13 +95,8 @@ namespace FirstPlugin
                 reader.SeekBegin(StartPos + DataOffset + (i * 4));
 
                 uint InfoOffset = reader.ReadUInt32();
-                uint NextOffset = reader.ReadUInt32();
-
-                if (i == TextureCount - 1)
-                    NextOffset = (uint)reader.BaseStream.Length - DataOffset;
 
                 reader.SeekBegin(DataOffset + InfoOffset);
-                Console.WriteLine(reader.Position);
 
                 byte numMips = reader.ReadByte();
                 byte format = reader.ReadByte();
@@ -112,28 +105,23 @@ namespace FirstPlugin
                 byte unknown4 = reader.ReadByte(); //0
                 byte unknown5 = reader.ReadByte(); //1
                 byte unknown6 = reader.ReadByte(); //12
-                byte unknown7 = reader.ReadByte(); //1
-                uint unknown8 = reader.ReadUInt32();
-                uint padding4 = reader.ReadUInt32();
-                uint unknown9 = reader.ReadUInt32(); //1
+                byte extraHeader = reader.ReadByte();
 
                 if (reader.ByteOrder == Syroot.BinaryData.ByteOrder.LittleEndian)
                 {
                     numMips = SwapEndianByte(numMips);
                     texDims = SwapEndianByte(texDims);
+                    extraHeader = SwapEndianByte(extraHeader);
                 }
 
-                uint Width = (uint)(texDims & 0xF0) / 16;
-                uint Height = (uint)(texDims & 0x0F);
-                Width = (uint)Math.Pow(2, Width);
-                Height = (uint)Math.Pow(2, Height);
+                if (extraHeader == 1)
+                {
+                    var extSize = reader.ReadInt32();
+                    var ext = reader.ReadBytes(extSize - 4);
+                }
 
-                // uint Width = (uint)(1 << (texDims >> 4));
-                //  uint Height = (uint)(1 << (texDims & 0x0F));
-
-                const uint InfoHeaderSize = 20;
-
-                uint ImageSize = NextOffset - InfoOffset - InfoHeaderSize;
+                uint Width = (uint)Math.Pow(2, texDims / 16);
+                uint Height = (uint)Math.Pow(2, texDims % 16);
 
                 GITexture tex = new GITexture(this);
                 tex.ImageKey = "texture";
@@ -163,7 +151,9 @@ namespace FirstPlugin
                         throw new Exception("Unsupported format! " + format.ToString("x"));
                 }
 
-                tex.ImageData = reader.ReadBytes((int)ImageSize);
+                uint textureSize = (Width * Height * STGenericTexture.GetBytesPerPixel(tex.Format)) / 8;
+
+                tex.ImageData = reader.ReadBytes((int)textureSize);
                 Nodes.Add(tex);
             }
         }
@@ -253,8 +243,7 @@ namespace FirstPlugin
             else if (ContainerParent.Platform == GT1.GT1Platform.Switch)
             {
                 return ImageData;
-
-                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
+             //   return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
             }
             else
             {
