@@ -1667,39 +1667,31 @@ namespace Bfres.Structs
 
                 var WeightAttribute = GetWeightAttribute(0);
 
-                if (WeightAttribute != null)
+                //Produce identical results for the weight output as BFRES_Vertex.py
+                //This should prevent encoding back and exploding
+                int MaxWeight = 255;
+                for (int i = 0; i < 4; i++)
                 {
-                    if (WeightAttribute.Format == ResGFX.AttribFormat.Format_8_UNorm ||
-                        WeightAttribute.Format == ResGFX.AttribFormat.Format_8_8_UNorm ||
-                        WeightAttribute.Format == ResGFX.AttribFormat.Format_8_8_8_8_UNorm)
+                    if (vtx.boneWeights.Count < i + 1)
                     {
-                        //Produce identical results for the weight output as BFRES_Vertex.py
-                        //This should prevent encoding back and exploding
-                        int MaxWeight = 255;
-                        for (int i = 0; i < 4; i++)
+                        weightsA[i] = 0;
+                        MaxWeight = 0;
+                    }
+                    else
+                    {
+                        int weight = (int)(vtx.boneWeights[i] * 255);
+                        if (vtx.boneWeights.Count == i + 1)
+                            weight = MaxWeight;
+
+                        if (weight >= MaxWeight)
                         {
-                            if (vtx.boneWeights.Count < i + 1)
-                            {
-                                weightsA[i] = 0;
-                                MaxWeight = 0;
-                            }
-                            else
-                            {
-                                int weight = (int)(vtx.boneWeights[i] * 255);
-                                if (vtx.boneWeights.Count == i + 1)
-                                    weight = MaxWeight;
-
-                                if (weight >= MaxWeight)
-                                {
-                                    weight = MaxWeight;
-                                    MaxWeight = 0;
-                                }
-                                else
-                                    MaxWeight -= weight;
-
-                                weightsA[i] = weight / 255f;
-                            }
+                            weight = MaxWeight;
+                            MaxWeight = 0;
                         }
+                        else
+                            MaxWeight -= weight;
+
+                        weightsA[i] = weight / 255f;
                     }
                 }
 
