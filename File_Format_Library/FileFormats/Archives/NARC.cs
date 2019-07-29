@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace FirstPlugin
 {
-    class NARC : TreeNodeFile, IFileFormat
+    class NARC : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -38,75 +38,64 @@ namespace FirstPlugin
             }
         }
 
-        public class FileEntry : TreeNodeCustom
+        public bool CanAddFiles { get; set; }
+        public bool CanRenameFiles { get; set; }
+        public bool CanReplaceFiles { get; set; }
+        public bool CanDeleteFiles { get; set; }
+
+        public List<FileEntry> files = new List<FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public void ClearFiles() { files.Clear(); }
+
+        public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            public byte[] FileData { get; set; }
+            return false;
+        }
+
+        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public class FileEntry : ArchiveFileInfo
+        {
             public NARC.FileAllocationEntry entry;
             public FileImageBlock fileImage;
 
+            public override Dictionary<string, string> ExtensionImageKeyLookup
+            {
+                get
+                {
+                    return new Dictionary<string, string>()
+                    {
+                        {".cbfmd", "bfres" },
+                        {".cbfa",  "bfres" },
+                        {".cbfsa", "bfres" },
+                        {".cbntx", "bntx" },
+                    };
+                }
+            }
+
             public FileEntry(string Name)
             {
-                Text = Name.Replace(" ", string.Empty).RemoveIllegaleFolderNameCharacters();
-
-                if (Utils.HasExtension(Name, ".cbfmd") ||
-                    Utils.HasExtension(Name, ".cbfa") ||
-                    Utils.HasExtension(Name, ".cbfsa"))
-                {
-                    ImageKey = "bfres";
-                    SelectedImageKey = "bfres";
-                }
-                if (Utils.HasExtension(Name, ".cbntx"))
-                {
-                    ImageKey = "bntx";
-                    SelectedImageKey = "bntx";
-                }
-
-                ContextMenuStrip = new STContextMenuStrip();
-                ContextMenuStrip.Items.Add(new STToolStipMenuItem("Export Raw Data", null, Export, Keys.Control | Keys.E));
+                FileName = Name.Replace(" ", string.Empty).RemoveIllegaleFolderNameCharacters();
             }
-            private void Export(object sender, EventArgs args)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
 
-                if (sfd.ShowDialog() == DialogResult.OK)
+
+            public override byte[] FileData
+            {
+                get
                 {
-                    System.IO.File.WriteAllBytes(sfd.FileName, DecompressBlock());
+                    return DecompressBlock();
+                }
+                set
+                {
+
                 }
             }
 
-            public override void OnDoubleMouseClick(TreeView treeView)
-            {
-                TreeNode node = STFileLoader.GetNodeFileFormat(Text, DecompressBlock(), true, this);
-
-                if (node != null)
-                    ReplaceNode(this.Parent, this, node);
-            }
-
-            public static void ReplaceNode(TreeNode node, TreeNode replaceNode, TreeNode NewNode)
-            {
-                if (NewNode == null)
-                    return;
-
-                int index = node.Nodes.IndexOf(replaceNode);
-                node.Nodes.RemoveAt(index);
-                node.Nodes.Insert(index, NewNode);
-            }
-
-            public override void OnClick(TreeView treeView)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(DecompressBlock());
-            }
-
-            public byte[] DecompressBlock()
+            private byte[] DecompressBlock()
             {
                 byte[] data = GetBlock();
 
@@ -157,8 +146,6 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            Text = FileName;
-
             header = new Header(new FileReader(stream));
             var names = GetNames(header.FNTB);
 
@@ -170,9 +157,10 @@ namespace FirstPlugin
                     entry = header.FATB.FileEntries[i],
                     fileImage = header.FIMG,
                 });
-                Nodes.Add(FileEntries[i]);
+                files.Add(FileEntries[i]);
             }
         }
+
         public List<string> GetNames(FileNameTable nameTable)
         {
             var names = new List<string>();
