@@ -10,7 +10,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class BinGzArchive : IArchiveFile, IFileFormat
+    public class BinGzArchive : TreeNodeFile, IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -48,7 +48,15 @@ namespace FirstPlugin
 
         private void CheckEndianness(FileReader reader)
         {
+            uint Count = reader.ReadUInt32();
+            uint FirstOffset = reader.ReadUInt32();
 
+            if (FirstOffset == (Count * 8) + 4)
+                reader.SetByteOrder(false);
+            else
+                reader.SetByteOrder(true);
+
+            reader.Position = 0;
         }
 
         private Stream CheckCompression(Stream stream)
@@ -84,31 +92,31 @@ namespace FirstPlugin
                     Offsets[i] = reader.ReadUInt32();
                     Sizes[i] = reader.ReadUInt32();
                 }
-                
 
                 for (int i = 0; i < Count; i++)
                 {
                     var fileEntry = new FileEntry();
                     reader.SeekBegin(Offsets[i]);
-                    string Magic = reader.ReadString(8);
-                    reader.Seek(-8);
-                    switch (Magic)
-                    {
-                        case "G1TG0060": //PC or Wii U Texture
-                            GITextureContainer GITextureU = new GITextureContainer();
-                            GITextureU.Read(reader);
-                            break;
-                        case "GT1G0600": //Switch Texture
-                            GITextureContainer GITexture = new GITextureContainer();
-                            GITexture.Read(reader);
-                            break;
-                    }
-
+                    string Magic = reader.ReadString(4);
+                    reader.Seek(-4);
+                    reader.SeekBegin(Offsets[i]);
                     fileEntry.FileData = reader.ReadBytes((int)Sizes[i]);
                     fileEntry.FileName = $"File {i}";
-                    files.Add(fileEntry);
 
+                    switch (Magic)
+                    {
+                        case "GT1G": //Textures
+                        case "G1TG": //Textures
+                            GT1 GITextureU = new GT1();
+                            GITextureU.FileName = $"TextureContainer{i}.gt1";
+                            GITextureU.Read(new FileReader(fileEntry.FileData));
+                            Nodes.Add(GITextureU);
+                            break;
+                        default:
+                            files.Add(fileEntry);
+                            break;
 
+                    }
                 }
              }
         }

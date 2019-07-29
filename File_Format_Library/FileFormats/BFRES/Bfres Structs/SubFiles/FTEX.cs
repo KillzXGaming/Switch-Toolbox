@@ -625,6 +625,7 @@ namespace Bfres.Structs
                 case TEX_FORMAT.B8G8R8A8_UNORM: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNorm;
                 case TEX_FORMAT.B8G8R8A8_UNORM_SRGB: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB;
                 case TEX_FORMAT.R32G8X24_FLOAT: return GX2SurfaceFormat.T_R32_Float_X8_X24;
+                case TEX_FORMAT.R32G32B32A32_FLOAT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_Float;
                 default:
                     throw new Exception($"Cannot convert format {texFormat}");
             }
@@ -658,7 +659,8 @@ namespace Bfres.Structs
                 case GX2SurfaceFormat.TC_R8_G8_UNorm: return TEX_FORMAT.R8G8_UNORM;
                 case GX2SurfaceFormat.TC_R8_G8_SNorm: return TEX_FORMAT.R8G8_SNORM;
                 case GX2SurfaceFormat.TC_R8_UNorm: return TEX_FORMAT.R8_UNORM;
-                    case GX2SurfaceFormat.TC_R16_G16_B16_A16_Float: return TEX_FORMAT.R16G16B16A16_FLOAT;
+                case GX2SurfaceFormat.TC_R32_G32_B32_A32_Float: return TEX_FORMAT.R32G32B32A32_FLOAT;
+                case GX2SurfaceFormat.TC_R16_G16_B16_A16_Float: return TEX_FORMAT.R16G16B16A16_FLOAT;
                 case GX2SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
                     throw new Exception($"Cannot convert format {GX2Format}");

@@ -495,7 +495,6 @@ namespace Toolbox.Library
         public static unsafe byte[] DecompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format)
         {
             Console.WriteLine(format);
-            Console.WriteLine(data.Length);
             Console.WriteLine(width);
             Console.WriteLine(height);
 
@@ -510,34 +509,30 @@ namespace Toolbox.Library
             else
                 FormatDecompressed = DXGI_FORMAT.R8G8B8A8_UNORM;
 
-            if (data.Length == inputSlicePitch)
+            byte* buf;
+            buf = (byte*)Marshal.AllocHGlobal((int)inputSlicePitch);
+            Marshal.Copy(data, 0, (IntPtr)buf, (int)inputSlicePitch);
+
+            DirectXTexNet.Image inputImage = new DirectXTexNet.Image(
+                width, height, (DXGI_FORMAT)format, inputRowPitch,
+                inputSlicePitch, (IntPtr)buf, null);
+
+            TexMetadata texMetadata = new TexMetadata(width, height, 1, 1, 1, 0, 0,
+                (DXGI_FORMAT)format, TEX_DIMENSION.TEXTURE2D);
+
+            ScratchImage scratchImage = TexHelper.Instance.InitializeTemporary(
+                new DirectXTexNet.Image[] { inputImage }, texMetadata, null);
+
+            using (var decomp = scratchImage.Decompress(0, FormatDecompressed))
             {
-                byte* buf;
-                buf = (byte*)Marshal.AllocHGlobal((int)inputSlicePitch);
-                Marshal.Copy(data, 0, (IntPtr)buf, (int)inputSlicePitch);
+                byte[] result = new byte[4 * width * height];
+                Marshal.Copy(decomp.GetImage(0).Pixels, result, 0, result.Length);
 
-                DirectXTexNet.Image inputImage = new DirectXTexNet.Image(
-                    width, height, (DXGI_FORMAT)format, inputRowPitch,
-                    inputSlicePitch, (IntPtr)buf, null);
+                inputImage = null;
+                scratchImage.Dispose();
 
-                TexMetadata texMetadata = new TexMetadata(width, height, 1, 1, 1, 0, 0,
-                    (DXGI_FORMAT)format, TEX_DIMENSION.TEXTURE2D);
-
-                ScratchImage scratchImage = TexHelper.Instance.InitializeTemporary(
-                    new DirectXTexNet.Image[] { inputImage }, texMetadata, null);
-
-                using (var decomp = scratchImage.Decompress(0, FormatDecompressed))
-                {
-                    byte[] result = new byte[4 * width * height];
-                    Marshal.Copy(decomp.GetImage(0).Pixels, result, 0, result.Length);
-
-                    inputImage = null;
-                    scratchImage.Dispose();
-
-                    return result;
-                }
+                return result;
             }
-            return null;
         }
         public static unsafe byte[] DecodePixelBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float AlphaRef = 0.5f)
         {

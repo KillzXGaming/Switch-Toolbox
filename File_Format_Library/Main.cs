@@ -362,8 +362,8 @@ namespace FirstPlugin
             Formats.Add(typeof(ZAR));
            // Formats.Add(typeof(ZSI));
             Formats.Add(typeof(CTXB));
+            Formats.Add(typeof(GT1));
 
-            
             //  Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use
