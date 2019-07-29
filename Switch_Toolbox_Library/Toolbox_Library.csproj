@@ -233,6 +233,7 @@
       <DependentUpon>SceneSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Generics\Texture\ImageParameters.cs" />
+    <Compile Include="Generics\Texture\STTextureFolder.cs" />
     <Compile Include="Interfaces\IMeshContainer.cs" />
     <Compile Include="Interfaces\ITextureContainer.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />

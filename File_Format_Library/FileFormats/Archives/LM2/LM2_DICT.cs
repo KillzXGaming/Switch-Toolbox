@@ -66,7 +66,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public LM2_Renderer Renderer;
         public DrawableContainer DrawableContainer = new DrawableContainer();
 
-        TextureFolder textureFolder = new TextureFolder("Textures");
+        STTextureFolder textureFolder = new STTextureFolder("Textures");
         LM2_ModelFolder modelFolder;
         TreeNode materialNamesFolder = new TreeNode("Material Names");
         TreeNode chunkFolder = new TreeNode("Chunks");
