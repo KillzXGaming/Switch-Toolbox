@@ -1010,42 +1010,26 @@ namespace FirstPlugin
 
         public class Emitter : TreeNodeCustom
         {
-            public Color[] Color0s = new Color[8];
-            public Color[] Color1s = new Color[8];
             public List<STGenericTexture> DrawableTex = new List<STGenericTexture>();
             public List<SamplerInfo> Samplers = new List<SamplerInfo>();
-            public ColorData[] Color0Array = new ColorData[8];
-            public ColorData[] Color1Array = new ColorData[8];
-
-            public class ColorData
-            {
-                public float R;
-                public float G;
-                public float B;
-                public float A;
-            }
+            public STColor[] Color0Array = new STColor[8];
+            public STColor[] Color1Array = new STColor[8];
 
             public void Read(FileReader reader, Header ptclHeader)
             {
                 uint Position = (uint)reader.Position; 
 
-                Color0Array = new ColorData[8];
-                Color1Array = new ColorData[8];
+                Color0Array = new STColor[8];
+                Color1Array = new STColor[8];
 
                 reader.Seek(Position + 880, SeekOrigin.Begin);
                 for (int i = 0; i < 8; i++)
                 {
-                    Color0Array[i] = new ColorData();
+                    Color0Array[i] = new STColor();
                     Color0Array[i].R = reader.ReadSingle();
                     Color0Array[i].G = reader.ReadSingle();
                     Color0Array[i].B = reader.ReadSingle();
                     float time       = reader.ReadSingle();
-
-                    int red = Utils.FloatToIntClamp(Color0Array[i].R);
-                    int green = Utils.FloatToIntClamp(Color0Array[i].G);
-                    int blue = Utils.FloatToIntClamp(Color0Array[i].B);
-
-                    Color0s[i] = Color.FromArgb(255, red, green, blue);
                 }
                 for (int i = 0; i < 8; i++)
                 {
@@ -1053,22 +1037,14 @@ namespace FirstPlugin
                     float padding = reader.ReadSingle();
                     float padding2 = reader.ReadSingle();
                     float time    = reader.ReadSingle();
-
-                    int alpha = Utils.FloatToIntClamp(Color0Array[i].A);
                 }
                 for (int i = 0; i < 8; i++)
                 {
-                    Color1Array[i] = new ColorData();
+                    Color1Array[i] = new STColor();
                     Color1Array[i].R = reader.ReadSingle();
                     Color1Array[i].G = reader.ReadSingle();
                     Color1Array[i].B = reader.ReadSingle();
                     float time = reader.ReadSingle();
-
-                    int red = Utils.FloatToIntClamp(Color1Array[i].R);
-                    int green = Utils.FloatToIntClamp(Color1Array[i].G);
-                    int blue = Utils.FloatToIntClamp(Color1Array[i].B);
-
-                    Color1s[i] = Color.FromArgb(255, red, green, blue);
                 }
                 for (int i = 0; i < 8; i++)
                 {
@@ -1143,7 +1119,7 @@ namespace FirstPlugin
                 {
 
                 }
-                    float R = reader.ReadSingle();
+                float R = reader.ReadSingle();
                 float G = reader.ReadSingle();
                 float B = reader.ReadSingle();
                 float A = reader.ReadSingle();

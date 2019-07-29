@@ -283,41 +283,21 @@ namespace FirstPlugin
                 ColorPosition = reader.Position;
                 for (int i = 0; i < 8; i++)
                 {
-                    ColorData clr = new ColorData();
+                    STColor clr = new STColor();
                     clr.R = reader.ReadSingle();
                     clr.G = reader.ReadSingle();
                     clr.B = reader.ReadSingle();
                     clr.A = reader.ReadSingle();
                     Color0Array[i] = clr;
-
-                    int red = Utils.FloatToIntClamp(clr.R);
-                    int green = Utils.FloatToIntClamp(clr.G);
-                    int blue = Utils.FloatToIntClamp(clr.B);
-                    int alpha = Utils.FloatToIntClamp(clr.A);
-
-                    //          Console.WriteLine($"Color0 {i} R {R} G {G} B {B} A {A}");
-                    //         Console.WriteLine($"Color0 {i} R {red} G {green} B {blue} A {alpha}");
-
-                    Color0s[i] = Color.FromArgb(alpha, red, green, blue);
                 }
                 for (int i = 0; i < 8; i++)
                 {
-                    ColorData clr = new ColorData();
+                    STColor clr = new STColor();
                     clr.R = reader.ReadSingle();
                     clr.G = reader.ReadSingle();
                     clr.B = reader.ReadSingle();
                     clr.A = reader.ReadSingle();
                     Color1Array[i] = clr;
-
-                    int red = Utils.FloatToIntClamp(clr.R);
-                    int green = Utils.FloatToIntClamp(clr.G);
-                    int blue = Utils.FloatToIntClamp(clr.B);
-                    int alpha = Utils.FloatToIntClamp(clr.A);
-
-                    //      Console.WriteLine($"Color1 {i} R {R} G {G} B {B} A {A}");
-                    //    Console.WriteLine($"Color1 {i} R {red} G {green} B {blue} A {alpha}");
-
-                    Color1s[i] = Color.FromArgb(alpha, red, green, blue);
                 }
             }
 

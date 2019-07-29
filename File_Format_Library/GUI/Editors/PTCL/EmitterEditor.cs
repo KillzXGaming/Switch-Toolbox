@@ -103,41 +103,41 @@ namespace FirstPlugin
         {
             IsColorsLoaded = false;
 
-            color0Index0.BackColor = Emitter.Color0s[0];
-            color0Index1.BackColor = Emitter.Color0s[1];
-            color0Index2.BackColor = Emitter.Color0s[2];
-            color0Index3.BackColor = Emitter.Color0s[3];
-            color0Index4.BackColor = Emitter.Color0s[4];
-            color0Index5.BackColor = Emitter.Color0s[5];
-            color0Index6.BackColor = Emitter.Color0s[6];
-            color0Index7.BackColor = Emitter.Color0s[7];
+            color0Index0.BackColor = Emitter.Color0Array[0].Color;
+            color0Index1.BackColor = Emitter.Color0Array[1].Color;
+            color0Index2.BackColor = Emitter.Color0Array[2].Color;
+            color0Index3.BackColor = Emitter.Color0Array[3].Color;
+            color0Index4.BackColor = Emitter.Color0Array[4].Color;
+            color0Index5.BackColor = Emitter.Color0Array[5].Color;
+            color0Index6.BackColor = Emitter.Color0Array[6].Color;
+            color0Index7.BackColor = Emitter.Color0Array[7].Color;
 
 
-            color1Index0.BackColor = Emitter.Color1s[0];
-            color1Index1.BackColor = Emitter.Color1s[1];
-            color1Index2.BackColor = Emitter.Color1s[2];
-            color1Index3.BackColor = Emitter.Color1s[3];
-            color1Index4.BackColor = Emitter.Color1s[4];
-            color1Index5.BackColor = Emitter.Color1s[5];
-            color1Index6.BackColor = Emitter.Color1s[6];
-            color1Index7.BackColor = Emitter.Color1s[7];
+            color1Index0.BackColor = Emitter.Color1Array[0].Color;
+            color1Index1.BackColor = Emitter.Color1Array[1].Color;
+            color1Index2.BackColor = Emitter.Color1Array[2].Color;
+            color1Index3.BackColor = Emitter.Color1Array[3].Color;
+            color1Index4.BackColor = Emitter.Color1Array[4].Color;
+            color1Index5.BackColor = Emitter.Color1Array[5].Color;
+            color1Index6.BackColor = Emitter.Color1Array[6].Color;
+            color1Index7.BackColor = Emitter.Color1Array[7].Color;
 
-            color0TB.Text = Utils.ColorToHex(Emitter.Color0s[0]);
-            color0TB2.Text = Utils.ColorToHex(Emitter.Color0s[1]);
-            color0TB3.Text = Utils.ColorToHex(Emitter.Color0s[2]);
-            color0TB4.Text = Utils.ColorToHex(Emitter.Color0s[3]);
-            color0TB5.Text = Utils.ColorToHex(Emitter.Color0s[4]);
-            color0TB6.Text = Utils.ColorToHex(Emitter.Color0s[5]);
-            color0TB7.Text = Utils.ColorToHex(Emitter.Color0s[6]);
-            color0TB8.Text = Utils.ColorToHex(Emitter.Color0s[7]);
-            color1TB.Text = Utils.ColorToHex(Emitter.Color1s[0]);
-            color1TB2.Text = Utils.ColorToHex(Emitter.Color1s[1]);
-            color1TB3.Text = Utils.ColorToHex(Emitter.Color1s[2]);
-            color1TB4.Text = Utils.ColorToHex(Emitter.Color1s[3]);
-            color1TB5.Text = Utils.ColorToHex(Emitter.Color1s[4]);
-            color1TB6.Text = Utils.ColorToHex(Emitter.Color1s[5]);
-            color1TB7.Text = Utils.ColorToHex(Emitter.Color1s[6]);
-            color1TB8.Text = Utils.ColorToHex(Emitter.Color1s[7]);
+            color0TB.Text = Utils.ColorToHex(Emitter.Color0Array[0].Color);
+            color0TB2.Text = Utils.ColorToHex(Emitter.Color0Array[1].Color);
+            color0TB3.Text = Utils.ColorToHex(Emitter.Color0Array[2].Color);
+            color0TB4.Text = Utils.ColorToHex(Emitter.Color0Array[3].Color);
+            color0TB5.Text = Utils.ColorToHex(Emitter.Color0Array[4].Color);
+            color0TB6.Text = Utils.ColorToHex(Emitter.Color0Array[5].Color);
+            color0TB7.Text = Utils.ColorToHex(Emitter.Color0Array[6].Color);
+            color0TB8.Text = Utils.ColorToHex(Emitter.Color0Array[7].Color);
+            color1TB.Text = Utils.ColorToHex(Emitter.Color1Array[0].Color);
+            color1TB2.Text = Utils.ColorToHex(Emitter.Color1Array[1].Color);
+            color1TB3.Text = Utils.ColorToHex(Emitter.Color1Array[2].Color);
+            color1TB4.Text = Utils.ColorToHex(Emitter.Color1Array[3].Color);
+            color1TB5.Text = Utils.ColorToHex(Emitter.Color1Array[4].Color);
+            color1TB6.Text = Utils.ColorToHex(Emitter.Color1Array[5].Color);
+            color1TB7.Text = Utils.ColorToHex(Emitter.Color1Array[6].Color);
+            color1TB8.Text = Utils.ColorToHex(Emitter.Color1Array[7].Color);
 
             IsColorsLoaded = true;
         }
@@ -185,21 +185,9 @@ namespace FirstPlugin
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     if (button.Name.Contains("color0"))
-                    {
-                        ActiveEmitter.Color0Array[index].R = (float)dialog.Color.R / 255;
-                        ActiveEmitter.Color0Array[index].G = (float)dialog.Color.G / 255;
-                        ActiveEmitter.Color0Array[index].B = (float)dialog.Color.B / 255;
-                        ActiveEmitter.Color0Array[index].A = (float)dialog.Color.A / 255;
-                        ActiveEmitter.Color0s[index] = dialog.Color;
-                    }
+                        ActiveEmitter.Color0Array[index].Color = dialog.Color;
                     else
-                    {
-                        ActiveEmitter.Color1Array[index].R = (float)dialog.Color.R / 255;
-                        ActiveEmitter.Color1Array[index].G = (float)dialog.Color.G / 255;
-                        ActiveEmitter.Color1Array[index].B = (float)dialog.Color.B / 255;
-                        ActiveEmitter.Color1Array[index].A = (float)dialog.Color.A / 255;
-                        ActiveEmitter.Color1s[index] = dialog.Color;
-                    }
+                        ActiveEmitter.Color1Array[index].Color = dialog.Color;
 
                     button.BackColor = dialog.Color;
                 }
@@ -222,26 +210,23 @@ namespace FirstPlugin
                 Color[] colors0 = new Color[8];
                 Color[] colors1 = new Color[8];
 
-                colors0[0] = Utils.HexToColor(color0TB.Text);
-                colors0[1] = Utils.HexToColor(color0TB2.Text);
-                colors0[2] = Utils.HexToColor(color0TB3.Text);
-                colors0[3] = Utils.HexToColor(color0TB4.Text);
-                colors0[4] = Utils.HexToColor(color0TB5.Text);
-                colors0[5] = Utils.HexToColor(color0TB6.Text);
-                colors0[6] = Utils.HexToColor(color0TB7.Text);
-                colors0[7] = Utils.HexToColor(color0TB8.Text);
+                ActiveEmitter.Color0Array[0].Color = Utils.HexToColor(color0TB.Text);
+                ActiveEmitter.Color0Array[1].Color = Utils.HexToColor(color0TB2.Text);
+                ActiveEmitter.Color0Array[2].Color = Utils.HexToColor(color0TB3.Text);
+                ActiveEmitter.Color0Array[3].Color = Utils.HexToColor(color0TB4.Text);
+                ActiveEmitter.Color0Array[4].Color = Utils.HexToColor(color0TB5.Text);
+                ActiveEmitter.Color0Array[5].Color = Utils.HexToColor(color0TB6.Text);
+                ActiveEmitter.Color0Array[6].Color = Utils.HexToColor(color0TB7.Text);
+                ActiveEmitter.Color0Array[7].Color = Utils.HexToColor(color0TB8.Text);
 
-                colors1[0] = Utils.HexToColor(color1TB.Text);
-                colors1[1] = Utils.HexToColor(color1TB2.Text);
-                colors1[2] = Utils.HexToColor(color1TB3.Text);
-                colors1[3] = Utils.HexToColor(color1TB4.Text);
-                colors1[4] = Utils.HexToColor(color1TB5.Text);
-                colors1[5] = Utils.HexToColor(color1TB6.Text);
-                colors1[6] = Utils.HexToColor(color1TB7.Text);
-                colors1[7] = Utils.HexToColor(color1TB8.Text);
-
-                ActiveEmitter.Color0s = colors0;
-                ActiveEmitter.Color1s = colors1;
+                ActiveEmitter.Color1Array[0].Color = Utils.HexToColor(color1TB.Text);
+                ActiveEmitter.Color1Array[1].Color = Utils.HexToColor(color1TB2.Text);
+                ActiveEmitter.Color1Array[2].Color = Utils.HexToColor(color1TB3.Text);
+                ActiveEmitter.Color1Array[3].Color = Utils.HexToColor(color1TB4.Text);
+                ActiveEmitter.Color1Array[4].Color = Utils.HexToColor(color1TB5.Text);
+                ActiveEmitter.Color1Array[5].Color = Utils.HexToColor(color1TB6.Text);
+                ActiveEmitter.Color1Array[6].Color = Utils.HexToColor(color1TB7.Text);
+                ActiveEmitter.Color1Array[7].Color = Utils.HexToColor(color1TB8.Text);
 
                 LoadColors(ActiveEmitter);
             }
