@@ -133,8 +133,11 @@ namespace FirstPlugin
 
                 switch (format)
                 {
-                    case 0x01: //PC?
-                    case 0x09: //Wii U
+                    case 0x5F:
+                    case 0x01: 
+                        tex.Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                        break;
+                    case 0x09: 
                         tex.Format = TEX_FORMAT.R32G32B32A32_FLOAT;
                         break;
                     case 0x06:
@@ -143,6 +146,7 @@ namespace FirstPlugin
                         tex.Format = TEX_FORMAT.BC1_UNORM;
                         break;
                     case 0x12:
+                    case 0x8:
                     case 0x5B:  //Switch
                     case 0x62:  //Wii U
                         tex.Format = TEX_FORMAT.BC3_UNORM;
