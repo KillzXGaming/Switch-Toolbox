@@ -54,7 +54,7 @@ namespace Toolbox.Library.Forms
 
             return Flags;
         }
-
+            
         private void limtBoneWeightChk_CheckedChanged(object sender, EventArgs e) {
             numericUpDown1.Enabled = limtBoneWeightChk.Checked;
         }

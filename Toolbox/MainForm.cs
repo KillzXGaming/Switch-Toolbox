@@ -157,6 +157,10 @@ namespace Toolbox
                 {
                     Runtime.UseLegacyGL = true;
                 }
+                if (major <= 1)
+                {
+                    Runtime.UseOpenGL = false;
+                }
             }
         }
 
