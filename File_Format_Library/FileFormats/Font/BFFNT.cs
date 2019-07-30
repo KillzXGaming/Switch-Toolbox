@@ -380,7 +380,7 @@ namespace FirstPlugin
         public override void Replace(string FileName)
         {
             Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
-            ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true, false, SwizzlePattern);
+            ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true, false);
             if (ftex.texture != null)
             {
                 TextureTGLP.Format = (ushort)ConvertToGx2(ftex.Format);

@@ -39,8 +39,6 @@ namespace Toolbox.Library.Forms
                 Flags |= PostProcessSteps.GenerateNormals;
             if (smoothNormalsChk.Checked)
                 Flags |= PostProcessSteps.GenerateSmoothNormals;
-            if (generateTansBitansChk.Checked)
-                Flags |= PostProcessSteps.CalculateTangentSpace;
             if (flipUVsChk.Checked)
                 Flags |= PostProcessSteps.FlipUVs;
             if (limtBoneWeightChk.Checked)

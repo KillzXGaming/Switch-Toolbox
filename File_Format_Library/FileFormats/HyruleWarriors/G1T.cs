@@ -133,21 +133,36 @@ namespace FirstPlugin
 
                 switch (format)
                 {
-                    case 0x5F:
-                    case 0x01:
+                    case 0x00: //ABGR
+                    case 0x01: //BGRA 32 bit (no mip maps)
+                    case 0x02: //RGBA 32 bit
                     case 0x09:
                         tex.Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         break;
                     case 0x06:
-                    case 0x59: //Switch
-                    case 0x60: //Wii U
+                    case 0x10: //PC and xbox (swizzled)
+                    case 0x59: 
+                    case 0x60: //Swizzled
                         tex.Format = TEX_FORMAT.BC1_UNORM;
                         break;
-                    case 0x12:
+                    case 0x7:
                     case 0x8:
-                    case 0x5B:  //Switch
-                    case 0x62:  //Wii U
+                    case 0x12: //PC and xbox (swizzled)
+                    case 0x5B: 
+                    case 0x62: //bc1 swizzled
                         tex.Format = TEX_FORMAT.BC3_UNORM;
+                        break;
+                    case 0x5C:
+                        tex.Format = TEX_FORMAT.BC4_UNORM;
+                        break;
+                    case 0x5D: //DXT5 swizzled or ATI2
+                        tex.Format = TEX_FORMAT.BC5_UNORM;
+                        break;
+                    case 0x5E:
+                        tex.Format = TEX_FORMAT.BC6H_UF16; //Uses cubemaps
+                        break;
+                    case 0x5F:
+                        tex.Format = TEX_FORMAT.BC7_UNORM;
                         break;
                     default:
                         throw new Exception("Unsupported format! " + format.ToString("x"));

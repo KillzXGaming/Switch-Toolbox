@@ -67,7 +67,7 @@ namespace FirstPlugin
         public void ConvertFromString(string text)
         {
             if (aampFileV1 != null)
-                AampYamlConverter.ToAamp(aampFileV1);
+                AampYamlConverter.ToAamp(aampFileV1, text);
         }
 
         #endregion

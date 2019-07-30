@@ -30,7 +30,6 @@
         {
             this.generateNormalsChk = new Toolbox.Library.Forms.STCheckBox();
             this.smoothNormalsChk = new Toolbox.Library.Forms.STCheckBox();
-            this.generateTansBitansChk = new Toolbox.Library.Forms.STCheckBox();
             this.flipUVsChk = new Toolbox.Library.Forms.STCheckBox();
             this.limtBoneWeightChk = new Toolbox.Library.Forms.STCheckBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -62,13 +61,11 @@
             this.contentContainer.Controls.Add(this.numericUpDown1);
             this.contentContainer.Controls.Add(this.limtBoneWeightChk);
             this.contentContainer.Controls.Add(this.flipUVsChk);
-            this.contentContainer.Controls.Add(this.generateTansBitansChk);
             this.contentContainer.Controls.Add(this.smoothNormalsChk);
             this.contentContainer.Controls.Add(this.generateNormalsChk);
             this.contentContainer.Size = new System.Drawing.Size(290, 336);
             this.contentContainer.Controls.SetChildIndex(this.generateNormalsChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.smoothNormalsChk, 0);
-            this.contentContainer.Controls.SetChildIndex(this.generateTansBitansChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.flipUVsChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.limtBoneWeightChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.numericUpDown1, 0);
@@ -106,26 +103,13 @@
             this.smoothNormalsChk.Text = "Smooth Normals";
             this.smoothNormalsChk.UseVisualStyleBackColor = true;
             // 
-            // generateTansBitansChk
-            // 
-            this.generateTansBitansChk.AutoSize = true;
-            this.generateTansBitansChk.Checked = true;
-            this.generateTansBitansChk.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.generateTansBitansChk.ForeColor = System.Drawing.Color.White;
-            this.generateTansBitansChk.Location = new System.Drawing.Point(9, 134);
-            this.generateTansBitansChk.Name = "generateTansBitansChk";
-            this.generateTansBitansChk.Size = new System.Drawing.Size(173, 17);
-            this.generateTansBitansChk.TabIndex = 2;
-            this.generateTansBitansChk.Text = "Generate Tangents/Bitangents";
-            this.generateTansBitansChk.UseVisualStyleBackColor = true;
-            // 
             // flipUVsChk
             // 
             this.flipUVsChk.AutoSize = true;
             this.flipUVsChk.Checked = true;
             this.flipUVsChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.flipUVsChk.ForeColor = System.Drawing.Color.White;
-            this.flipUVsChk.Location = new System.Drawing.Point(9, 157);
+            this.flipUVsChk.Location = new System.Drawing.Point(9, 134);
             this.flipUVsChk.Name = "flipUVsChk";
             this.flipUVsChk.Size = new System.Drawing.Size(65, 17);
             this.flipUVsChk.TabIndex = 3;
@@ -138,7 +122,7 @@
             this.limtBoneWeightChk.Checked = true;
             this.limtBoneWeightChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.limtBoneWeightChk.ForeColor = System.Drawing.Color.White;
-            this.limtBoneWeightChk.Location = new System.Drawing.Point(9, 180);
+            this.limtBoneWeightChk.Location = new System.Drawing.Point(9, 157);
             this.limtBoneWeightChk.Name = "limtBoneWeightChk";
             this.limtBoneWeightChk.Size = new System.Drawing.Size(113, 17);
             this.limtBoneWeightChk.TabIndex = 5;
@@ -152,7 +136,7 @@
             this.numericUpDown1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown1.Enabled = false;
             this.numericUpDown1.ForeColor = System.Drawing.Color.White;
-            this.numericUpDown1.Location = new System.Drawing.Point(132, 179);
+            this.numericUpDown1.Location = new System.Drawing.Point(132, 156);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             4,
             0,
@@ -171,7 +155,7 @@
             // 
             this.preTransformVerticesChk.AutoSize = true;
             this.preTransformVerticesChk.ForeColor = System.Drawing.Color.White;
-            this.preTransformVerticesChk.Location = new System.Drawing.Point(9, 203);
+            this.preTransformVerticesChk.Location = new System.Drawing.Point(9, 180);
             this.preTransformVerticesChk.Name = "preTransformVerticesChk";
             this.preTransformVerticesChk.Size = new System.Drawing.Size(130, 17);
             this.preTransformVerticesChk.TabIndex = 7;
@@ -184,7 +168,7 @@
             this.triangulateChk.Checked = true;
             this.triangulateChk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.triangulateChk.ForeColor = System.Drawing.Color.White;
-            this.triangulateChk.Location = new System.Drawing.Point(9, 226);
+            this.triangulateChk.Location = new System.Drawing.Point(9, 203);
             this.triangulateChk.Name = "triangulateChk";
             this.triangulateChk.Size = new System.Drawing.Size(79, 17);
             this.triangulateChk.TabIndex = 8;
@@ -197,7 +181,7 @@
             this.joinDupedVertsSk.Checked = true;
             this.joinDupedVertsSk.CheckState = System.Windows.Forms.CheckState.Checked;
             this.joinDupedVertsSk.ForeColor = System.Drawing.Color.White;
-            this.joinDupedVertsSk.Location = new System.Drawing.Point(9, 249);
+            this.joinDupedVertsSk.Location = new System.Drawing.Point(9, 226);
             this.joinDupedVertsSk.Name = "joinDupedVertsSk";
             this.joinDupedVertsSk.Size = new System.Drawing.Size(121, 17);
             this.joinDupedVertsSk.TabIndex = 9;
@@ -208,7 +192,7 @@
             // 
             this.leftHandedChk.AutoSize = true;
             this.leftHandedChk.ForeColor = System.Drawing.Color.White;
-            this.leftHandedChk.Location = new System.Drawing.Point(9, 272);
+            this.leftHandedChk.Location = new System.Drawing.Point(9, 249);
             this.leftHandedChk.Name = "leftHandedChk";
             this.leftHandedChk.Size = new System.Drawing.Size(109, 17);
             this.leftHandedChk.TabIndex = 10;
@@ -309,7 +293,6 @@
 
         private Toolbox.Library.Forms.STCheckBox generateNormalsChk;
         private Toolbox.Library.Forms.STCheckBox smoothNormalsChk;
-        private Toolbox.Library.Forms.STCheckBox generateTansBitansChk;
         private Toolbox.Library.Forms.STCheckBox flipUVsChk;
         private Toolbox.Library.Forms.STCheckBox limtBoneWeightChk;
         private System.Windows.Forms.NumericUpDown numericUpDown1;

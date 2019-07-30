@@ -7,6 +7,10 @@ using Aampv1 = AampV1Library;
 using Aampv2 = AampV2Library;
 using System.IO;
 using Syroot.Maths;
+using SharpYaml;
+using SharpYaml.Events;
+using SharpYaml.Serialization;
+using SharpYaml.Serialization.Serializers;
 
 namespace FirstPlugin
 {
@@ -24,6 +28,13 @@ namespace FirstPlugin
 
     public class AampYamlConverter
     {
+        public class YamlAamp
+        {
+            public const string Identifier = "!aamp";
+
+            public string version { get; set; }
+        }
+
         #region V1 AAMP
 
         public static string ToYaml(Aampv1.AampFile aampFile)
@@ -133,9 +144,46 @@ namespace FirstPlugin
             return curveStr;
         }
 
-        public static void ToAamp(Aampv1.AampFile aampFile)
+        //I could've used a yaml parser, but incase i need to change it up to look nicer and support leo's aamp layout, do it manually
+        public static void ToAamp(Aampv1.AampFile aampFile, string text)
         {
+            byte[] TextData = Encoding.Unicode.GetBytes(text);
+            StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
 
+            var yaml = new YamlStream();
+           yaml.Load(new StringReader(text));
+
+      /*     var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
+           foreach (var item in mapping.AllNodes)
+           {
+               Console.WriteLine("n " + item);
+           }*/
+
+            /*    byte[] TextData = Encoding.Unicode.GetBytes(text);
+                StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
+                using (var reader = new StringReader(t.ReadToEnd()))
+                {
+                    string AampCheck = reader.ReadLine();
+                    if (AampCheck != "!aamp")
+                        throw new Exception($"Expected !aamp got {AampCheck} at line 0");
+                    string VersionCheck = reader.ReadLine();
+                    string num = GetProperty(VersionCheck);
+                    if (num == "1")
+                    {
+
+                    }
+                }*/
+        }
+
+        public static void ParseList(StringReader reader)
+        {
+        }
+
+        public static string GetProperty(string line)
+        {
+            if (line.Contains(":"))
+                return line.Split(':')[1].Replace(string.Empty, "");
+            return line;
         }
 
         #endregion

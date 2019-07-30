@@ -61,7 +61,76 @@ namespace FirstPlugin
             else
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
-            string Version = reader.ReadString(4);
+            uint Version = reader.ReadUInt32();
+            uint FileSize = reader.ReadUInt32();
+            uint firstChunkOffset = reader.ReadUInt32();
+            uint padding = reader.ReadUInt32();
+            uint numChunks = reader.ReadUInt32();
+
+            switch (Version)
+            {
+                case 0x30303334:break;
+                case 0x30303335: break;
+                case 0x30303336: break;
+                case 0x30303337: break;
+                default: break;
+            }
+
+            reader.SeekBegin(firstChunkOffset);
+            for (int i =0; i < numChunks; i++)
+            {
+                long chunkPos = reader.Position;
+                string chunkMagic = reader.ReadString(4, Encoding.ASCII);
+                uint version = reader.ReadUInt32();
+                uint chunkSize = reader.ReadUInt32();
+
+                if (chunkMagic == "G1MF")
+                {
+
+                }
+                else if (chunkMagic == "G1MS")
+                {
+
+                }
+                else if (chunkMagic == "G1MM")
+                {
+
+                }
+                else if (chunkMagic == "G1MG")
+                {
+
+                }
+                else if (chunkMagic == "COLL")
+                {
+
+                }
+                else if (chunkMagic == "HAIR")
+                {
+
+                }
+                else if (chunkMagic == "NUNO")
+                {
+
+                }
+                else if (chunkMagic == "NUNS")
+                {
+
+                }
+                else if (chunkMagic == "NUNV")
+                {
+
+                }
+                else if (chunkMagic == "EXTR")
+                {
+
+                }
+                else
+                {
+
+                }
+
+                reader.SeekBegin(chunkPos + chunkSize);
+            }
         }
     }
 }
