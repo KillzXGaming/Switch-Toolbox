@@ -17,7 +17,8 @@ namespace Toolbox.Library.Forms
         private bool AutoSearch => chkAutoSearch.Checked;
         private bool MatchCase => chkMatchCase.Checked;
         private bool SearchSubNodes => chkSearchSubNodes.Checked;
-
+        private bool UpdateDoubleClick => chkUpdateDoubleClick.Checked;
+        
         private List<TreeNode> TreenodeLookup = new List<TreeNode>();
 
         public SearchNodeForm(TreeView tree)
@@ -99,7 +100,7 @@ namespace Toolbox.Library.Forms
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewCustom1.SelectedItems.Count > 0)
+            if (listViewCustom1.SelectedItems.Count > 0 && UpdateDoubleClick)
             {
                 int index = listViewCustom1.SelectedIndices[0];
 
@@ -125,6 +126,15 @@ namespace Toolbox.Library.Forms
         private void SearchNodeForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             treeView.HideSelection = true;
+        }
+
+        private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e) {
+            if (UpdateDoubleClick || listViewCustom1.SelectedItems.Count == 0)
+                return;
+
+            int index = listViewCustom1.SelectedIndices[0];
+            treeView.SelectedNode = TreenodeLookup[index];
+            treeView.Refresh();
         }
     }
 }

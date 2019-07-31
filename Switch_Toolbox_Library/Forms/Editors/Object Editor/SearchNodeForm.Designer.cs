@@ -38,11 +38,13 @@
             this.chkAutoSearch = new Toolbox.Library.Forms.STCheckBox();
             this.listViewModeCB = new Toolbox.Library.Forms.STComboBox();
             this.lblFoundEntries = new Toolbox.Library.Forms.STLabel();
+            this.chkUpdateDoubleClick = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkUpdateDoubleClick);
             this.contentContainer.Controls.Add(this.lblFoundEntries);
             this.contentContainer.Controls.Add(this.listViewModeCB);
             this.contentContainer.Controls.Add(this.chkAutoSearch);
@@ -62,6 +64,7 @@
             this.contentContainer.Controls.SetChildIndex(this.chkAutoSearch, 0);
             this.contentContainer.Controls.SetChildIndex(this.listViewModeCB, 0);
             this.contentContainer.Controls.SetChildIndex(this.lblFoundEntries, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkUpdateDoubleClick, 0);
             // 
             // listViewCustom1
             // 
@@ -72,13 +75,14 @@
             this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.listViewCustom1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewCustom1.Location = new System.Drawing.Point(5, 84);
+            this.listViewCustom1.Location = new System.Drawing.Point(5, 100);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(397, 279);
+            this.listViewCustom1.Size = new System.Drawing.Size(397, 263);
             this.listViewCustom1.TabIndex = 11;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
+            this.listViewCustom1.SelectedIndexChanged += new System.EventHandler(this.listViewCustom1_SelectedIndexChanged);
             this.listViewCustom1.DoubleClick += new System.EventHandler(this.listViewCustom1_DoubleClick);
             // 
             // columnHeader1
@@ -170,6 +174,16 @@
             this.lblFoundEntries.TabIndex = 19;
             this.lblFoundEntries.Text = "Found Entries:";
             // 
+            // chkUpdateDoubleClick
+            // 
+            this.chkUpdateDoubleClick.AutoSize = true;
+            this.chkUpdateDoubleClick.Location = new System.Drawing.Point(9, 82);
+            this.chkUpdateDoubleClick.Name = "chkUpdateDoubleClick";
+            this.chkUpdateDoubleClick.Size = new System.Drawing.Size(138, 17);
+            this.chkUpdateDoubleClick.TabIndex = 20;
+            this.chkUpdateDoubleClick.Text = "Update by Double Click";
+            this.chkUpdateDoubleClick.UseVisualStyleBackColor = true;
+            // 
             // SearchNodeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,5 +210,6 @@
         private STComboBox listViewModeCB;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private STLabel lblFoundEntries;
+        private STCheckBox chkUpdateDoubleClick;
     }
 }
