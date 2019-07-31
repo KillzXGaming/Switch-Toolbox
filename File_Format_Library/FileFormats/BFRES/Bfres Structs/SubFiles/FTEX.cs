@@ -627,6 +627,8 @@ namespace Bfres.Structs
                 case TEX_FORMAT.R32G32B32A32_FLOAT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_Float;
                 case TEX_FORMAT.R32G32B32A32_UINT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_UInt;
                 case TEX_FORMAT.R32G32B32A32_SINT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_SInt;
+                case TEX_FORMAT.L8: return GX2SurfaceFormat.TC_R8_UNorm;
+                case TEX_FORMAT.LA8: return GX2SurfaceFormat.TC_R8_G8_UNorm;
                 default:
                     throw new Exception($"Cannot convert format {texFormat}");
             }

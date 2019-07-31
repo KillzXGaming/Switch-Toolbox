@@ -16,7 +16,7 @@ using System.ComponentModel;
 namespace FirstPlugin
 {
 
-    public class NSP : IArchiveFile, IFileFormat
+    public class NSP : IArchiveFile, IFileFormat, IFileDisposeAfterLoad
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -38,6 +38,8 @@ namespace FirstPlugin
 
         Nca Control { get; set; }
         RomfsNodeWrapper romfsWrapper;
+
+        public bool CanDispose { get { return false; } }
 
         public bool CanAddFiles { get; set; }
         public bool CanRenameFiles { get; set; }
@@ -121,12 +123,9 @@ namespace FirstPlugin
             {
                 get
                 {
-                    using (var stream = ParentROMFS.OpenFile(File).AsStream())
-                    {
-                        var mem = new MemoryStream();
-                        stream.CopyTo(mem);
-                        return mem.ToArray();
-                    }
+                    var mem = new MemoryStream();
+                    ParentROMFS.OpenFile(File).CopyToStream(mem);
+                    return mem.ToArray();
                 }
             }
 

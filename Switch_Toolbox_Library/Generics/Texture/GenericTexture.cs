@@ -416,6 +416,9 @@ namespace Toolbox.Library
                     case TEX_FORMAT.ETC1_A4:
                         return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, true),
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    case TEX_FORMAT.LA8:
+                        return BitmapExtension.GetBitmap(DecodeLA8(data, (int)width, (int)height),
+                              (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
 
                 Console.WriteLine("Decoding " + Format + " " + Runtime.UseDirectXTexDecoder);
@@ -444,6 +447,43 @@ namespace Toolbox.Library
 
                 return null;
             }
+        }
+
+        private static byte[] DecodeLA8(byte[] Input, int Width, int Height)
+        {
+            int bpp = 16;
+
+            if (Input.Length != Width * Height * bpp)
+                throw new Exception($"Unexpected size! {Input.Length}. Expected {Width * Height * bpp}");
+
+            byte[] Output = new byte[Width * Height * 4];
+
+            int inPos = 0;
+            int outPos = 0;
+
+            for (int Y = 0; Y < Height; Y++)
+            {
+                for (int X = 0; X < Width; X++)
+                {
+                    inPos = (Y * Width + X) * bpp;
+                    outPos = (Y * Width + X) * 4;
+
+                    int pixel = 0;
+                    for (int i = 0; i < bpp; i++)
+                        pixel |= Input[inPos + i] << (8 * i);
+
+                    byte[] Components = new byte[4];
+                    Components[2] = (byte)(pixel & 0xFF);
+                    Components[3] = (byte)((pixel & 0xFF00) >> 8);
+
+                    Output[outPos + 3] = Components[3];
+                    Output[outPos + 2] = Components[2];
+                    Output[outPos + 1] = Components[1];
+                    Output[outPos + 0] = Components[0];
+                }
+            }
+
+            return Output;
         }
 
         private Bitmap DecodeNotDirectXTex(byte[] data, uint Width, uint Height, TEX_FORMAT Format)
