@@ -162,6 +162,7 @@
             // 
             // lblFoundEntries
             // 
+            this.lblFoundEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblFoundEntries.AutoSize = true;
             this.lblFoundEntries.Location = new System.Drawing.Point(163, 372);
             this.lblFoundEntries.Name = "lblFoundEntries";

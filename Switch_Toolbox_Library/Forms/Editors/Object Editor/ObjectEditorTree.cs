@@ -524,10 +524,5 @@ namespace Toolbox.Library.Forms
             SearchNodeForm form = new SearchNodeForm(treeViewCustom1);
             form.Show(this);
         }
-
-        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
-        {
-
-        }
     }
 }
