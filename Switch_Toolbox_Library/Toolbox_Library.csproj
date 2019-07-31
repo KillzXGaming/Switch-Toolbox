@@ -210,12 +210,20 @@
     <Compile Include="Compression\LZ4F.cs" />
     <Compile Include="Compression\LZ77_WII.cs" />
     <Compile Include="Compression\LZSS.cs" />
+    <Compile Include="Compression\MIO0.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
-    <Compile Include="Compression\YAZ0.cs" />
+    <Compile Include="Compression\Yay0.cs" />
+    <Compile Include="Compression\Yaz0.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Forms\ColorAlphaBox.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.Designer.cs">
+      <DependentUpon>SearchNodeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\UV\UVEditorForm.cs">
       <SubType>Form</SubType>
@@ -237,6 +245,7 @@
     </Compile>
     <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Generics\Texture\STTextureFolder.cs" />
+    <Compile Include="Interfaces\ICloneableNode.cs" />
     <Compile Include="Interfaces\IMeshContainer.cs" />
     <Compile Include="Interfaces\ITextureContainer.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
@@ -888,6 +897,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\Object Editor\ObjectEditorTree.resx">
       <DependentUpon>ObjectEditorTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\Object Editor\SearchNodeForm.resx">
+      <DependentUpon>SearchNodeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\ObjectList.resx">
       <DependentUpon>ObjectList.cs</DependentUpon>

@@ -515,7 +515,7 @@ namespace Toolbox.Library
                                 parentNode = wrapperFile;
                                 AddFileNode(wrapperFile);
 
-                                if (node.OpenFileFormatOnLoad) wrapperFile.OpenFileFormat();
+                                if (node.OpenFileFormatOnLoad) wrapperFile.OpenFileFormat(null);
                             }
                             else
                             {
@@ -815,10 +815,10 @@ namespace Toolbox.Library
         }
 
         public override void OnDoubleMouseClick(TreeView treeview) {
-            OpenFileFormat();
+            OpenFileFormat(treeview);
         }
 
-        public void OpenFileFormat()
+        public void OpenFileFormat(TreeView treeview)
         {
             IFileFormat file = ArchiveFileInfo.OpenFile();
             if (file == null) //Format not supported so return
@@ -831,12 +831,12 @@ namespace Toolbox.Library
                 OpenFormDialog(file);
             }
             else if (file is TreeNode)
-                ReplaceNode(this.Parent, this, (TreeNode)file, RootNode);
+                ReplaceNode(this.Parent, treeview, this, (TreeNode)file, RootNode);
             else if (file is IArchiveFile)
             {
                 var FileRoot = new ArchiveRootNodeWrapper(file.FileName, (IArchiveFile)file);
                 FileRoot.FillTreeNodes();
-                ReplaceNode(this.Parent, this, FileRoot, RootNode);
+                ReplaceNode(this.Parent, treeview, this, FileRoot, RootNode);
             }
         }
 
@@ -897,16 +897,26 @@ namespace Toolbox.Library
             editor.UpdateEditor();
         }
 
-        public static void ReplaceNode(TreeNode node, ArchiveFileWrapper replaceNode, TreeNode NewNode, ArchiveRootNodeWrapper rootNode)
+        public static void ReplaceNode(TreeNode node, TreeView treeview, ArchiveFileWrapper replaceNode, TreeNode NewNode, ArchiveRootNodeWrapper rootNode)
         {
             if (NewNode == null)
                 return;
 
             var fileInfo = replaceNode.ArchiveFileInfo;
 
-            int index = node.Nodes.IndexOf(replaceNode);
-            node.Nodes.RemoveAt(index);
-            node.Nodes.Insert(index, NewNode);
+            int index = 0;
+            if (node == null)
+            {
+                index = treeview.Nodes.IndexOf(replaceNode);
+                treeview.Nodes.RemoveAt(index);
+                treeview.Nodes.Insert(index, NewNode);
+            }
+            else
+            {
+                index = node.Nodes.IndexOf(replaceNode);
+                node.Nodes.RemoveAt(index);
+                node.Nodes.Insert(index, NewNode);
+            }
 
 
             NewNode.ImageKey = replaceNode.ImageKey;

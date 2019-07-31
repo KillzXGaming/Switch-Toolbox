@@ -85,6 +85,7 @@
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.stContextMenuStrip3 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -175,7 +176,7 @@
             this.pictureBoxCustom1.ContextMenuStrip = this.stContextMenuStrip2;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
-            this.pictureBoxCustom1.Size = new System.Drawing.Size(383, 406);
+            this.pictureBoxCustom1.Size = new System.Drawing.Size(383, 382);
             this.pictureBoxCustom1.TabIndex = 0;
             this.pictureBoxCustom1.ZoomChanged += new System.EventHandler(this.pictureBoxCustom1_ZoomChanged);
             // 
@@ -611,6 +612,11 @@
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
             // 
+            // stContextMenuStrip3
+            // 
+            this.stContextMenuStrip3.Name = "stContextMenuStrip3";
+            this.stContextMenuStrip3.Size = new System.Drawing.Size(61, 4);
+            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -691,5 +697,6 @@
         private System.Windows.Forms.ToolStripMenuItem replaceAlphaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem previewCubemapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem previewCubemap3DToolStripMenuItem;
+        private STContextMenuStrip stContextMenuStrip3;
     }
 }

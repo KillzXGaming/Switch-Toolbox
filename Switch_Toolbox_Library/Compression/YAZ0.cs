@@ -8,9 +8,9 @@ using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
-    public class YAZ0 : ICompressionFormat
+    public class Yaz0 : ICompressionFormat
     {
-        public string[] Description { get; set; } = new string[] { "YAZ0" };
+        public string[] Description { get; set; } = new string[] { "Yaz0" };
         public string[] Extension { get; set; } = new string[] { "*.yaz0", "*.szs",};
 
         public bool Identify(Stream stream)

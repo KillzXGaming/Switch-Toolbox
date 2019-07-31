@@ -12,6 +12,8 @@ using GL_EditorFramework.EditorDrawables;
 using System.Text.RegularExpressions;
 using Toolbox.Library.Animations;
 using Toolbox.Library.IO;
+using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 
 namespace Toolbox.Library.Forms
 {
@@ -21,7 +23,7 @@ namespace Toolbox.Library.Forms
 
         public ObjectEditor ObjectEditor;
 
-        private TreeView _fieldsTreeCache;
+        private List<TreeNode> _fieldsTreeCache = new List<TreeNode>();
 
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
@@ -72,7 +74,6 @@ namespace Toolbox.Library.Forms
             {
                 AddNodes(node, ClearAllNodes);
             }
-            //       _fieldsTreeCache.Nodes.Add(node);
         }
 
         private void AddNodes(TreeNode node, bool ClearAllNodes = false)
@@ -87,7 +88,6 @@ namespace Toolbox.Library.Forms
         public void ClearNodes()
         {
             treeViewCustom1.Nodes.Clear();
-            //  _fieldsTreeCache.Nodes.Clear();
         }
 
         public bool AddFilesToActiveEditor
@@ -109,12 +109,8 @@ namespace Toolbox.Library.Forms
 
             ObjectEditor = objectEditor;
 
-            _fieldsTreeCache = new TreeView();
-
             if (Runtime.ObjectEditor.ListPanelWidth > 0)
                 stPanel1.Width = Runtime.ObjectEditor.ListPanelWidth;
-
-            searchLbl.BackColor = stTextBox1.BackColor;
 
             treeViewCustom1.BackColor = FormThemes.BaseTheme.ObjectEditorBackColor;
 
@@ -397,75 +393,10 @@ namespace Toolbox.Library.Forms
         private void treeViewCustom1_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
             e.DrawDefault = true;
-
             bool IsCheckable = (e.Node is STGenericObject || e.Node is STGenericModel
                                                           || e.Node is STBone);
-
             if (!IsCheckable)
                 TreeViewExtensions.HideCheckBox(e.Node);
-        }
-
-        private void treeViewCustom1_MouseClick(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void stTextBox1_TextChanged(object sender, EventArgs e)
-        {
-            UpdateSearchBox();
-        }
-
-        private void stTextBox1_Click(object sender, EventArgs e)
-        {
-            searchImgPB.Visible = false;
-            searchLbl.Visible = false;
-        }
-
-        private void stTextBox1_Leave(object sender, EventArgs e)
-        {
-            UpdateSearchBox();
-        }
-
-        private void UpdateSearchBox()
-        {
-            if (stTextBox1.Text != string.Empty)
-            {
-                searchImgPB.Visible = false;
-                searchLbl.Visible = false;
-            }
-            else
-            {
-                searchLbl.Visible = true;
-                searchImgPB.Visible = true;
-            }
-        }
-
-        private void SearchText(string searchText)
-        {
-            //blocks repainting tree till all objects loaded
-            this.treeViewCustom1.BeginUpdate();
-            this.treeViewCustom1.Nodes.Clear();
-            if (searchText != string.Empty)
-            {
-                foreach (TreeNode _parentNode in _fieldsTreeCache.Nodes)
-                {
-                    foreach (TreeNode _childNode in _parentNode.Nodes)
-                    {
-                        if (_childNode.Text.StartsWith(searchText))
-                        {
-                            this.treeViewCustom1.Nodes.Add((TreeNode)_childNode.Clone());
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (TreeNode _node in this._fieldsTreeCache.Nodes)
-                {
-                    treeViewCustom1.Nodes.Add((TreeNode)_node.Clone());
-                }
-            }
-            //enables redrawing tree after all objects have been added
-            this.treeViewCustom1.EndUpdate();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -586,6 +517,17 @@ namespace Toolbox.Library.Forms
                     }
                 }
             }
+        }
+
+        private void searchFormToolStrip_Click(object sender, EventArgs e)
+        {
+            SearchNodeForm form = new SearchNodeForm(treeViewCustom1);
+            form.Show(this);
+        }
+
+        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }
