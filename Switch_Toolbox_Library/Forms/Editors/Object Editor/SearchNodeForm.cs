@@ -25,6 +25,7 @@ namespace Toolbox.Library.Forms
             InitializeComponent();
 
             treeView = tree;
+            treeView.HideSelection = false;
 
             listViewCustom1.SmallImageList = TreeViewCustom.imgList;
             listViewCustom1.LargeImageList = TreeViewCustom.imgList;
@@ -52,8 +53,14 @@ namespace Toolbox.Library.Forms
                 UpdateSearchResults(searchTB.Text);
         }
 
+        private int TotalNodeCount;
         private void UpdateSearchResults(string text)
         {
+            if (text == string.Empty)
+                return;
+
+            TotalNodeCount = 0;
+
             listViewCustom1.BeginUpdate();
             listViewCustom1.Items.Clear();
             TreenodeLookup.Clear();
@@ -62,6 +69,8 @@ namespace Toolbox.Library.Forms
                 RecurvsiveTreeNodeSearch(node, text);
 
             listViewCustom1.EndUpdate();
+
+            lblFoundEntries.Text = $"Found Entries {TreenodeLookup.Count} of {TotalNodeCount}";
         }
 
         private void RecurvsiveTreeNodeSearch(TreeNode parentNode, string text)
@@ -84,6 +93,8 @@ namespace Toolbox.Library.Forms
                 foreach (TreeNode node in parentNode.Nodes)
                     RecurvsiveTreeNodeSearch(node, text);
             }
+
+            TotalNodeCount++;
         }
 
         private void listViewCustom1_DoubleClick(object sender, EventArgs e)
@@ -109,6 +120,11 @@ namespace Toolbox.Library.Forms
 
         private void chkMatchCase_CheckedChanged(object sender, EventArgs e) {
             UpdateSearchResults(searchTB.Text);
+        }
+
+        private void SearchNodeForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            treeView.HideSelection = true;
         }
     }
 }

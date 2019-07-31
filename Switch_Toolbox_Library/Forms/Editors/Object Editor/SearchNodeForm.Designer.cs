@@ -37,11 +37,13 @@
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.chkAutoSearch = new Toolbox.Library.Forms.STCheckBox();
             this.listViewModeCB = new Toolbox.Library.Forms.STComboBox();
+            this.lblFoundEntries = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.lblFoundEntries);
             this.contentContainer.Controls.Add(this.listViewModeCB);
             this.contentContainer.Controls.Add(this.chkAutoSearch);
             this.contentContainer.Controls.Add(this.stLabel1);
@@ -59,6 +61,7 @@
             this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkAutoSearch, 0);
             this.contentContainer.Controls.SetChildIndex(this.listViewModeCB, 0);
+            this.contentContainer.Controls.SetChildIndex(this.lblFoundEntries, 0);
             // 
             // listViewCustom1
             // 
@@ -157,6 +160,15 @@
             this.listViewModeCB.TabIndex = 18;
             this.listViewModeCB.SelectedIndexChanged += new System.EventHandler(this.listViewModeCB_SelectedIndexChanged);
             // 
+            // lblFoundEntries
+            // 
+            this.lblFoundEntries.AutoSize = true;
+            this.lblFoundEntries.Location = new System.Drawing.Point(163, 372);
+            this.lblFoundEntries.Name = "lblFoundEntries";
+            this.lblFoundEntries.Size = new System.Drawing.Size(75, 13);
+            this.lblFoundEntries.TabIndex = 19;
+            this.lblFoundEntries.Text = "Found Entries:";
+            // 
             // SearchNodeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,6 +176,7 @@
             this.ClientSize = new System.Drawing.Size(408, 398);
             this.Name = "SearchNodeForm";
             this.Text = "Search Nodes";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SearchNodeForm_FormClosed);
             this.contentContainer.ResumeLayout(false);
             this.contentContainer.PerformLayout();
             this.ResumeLayout(false);
@@ -181,5 +194,6 @@
         private STCheckBox chkAutoSearch;
         private STComboBox listViewModeCB;
         private System.Windows.Forms.ColumnHeader columnHeader1;
+        private STLabel lblFoundEntries;
     }
 }

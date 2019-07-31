@@ -297,10 +297,7 @@ namespace FirstPlugin
             Formats.Add(typeof(KCL));
             Formats.Add(typeof(BFFNT));
             Formats.Add(typeof(MSBT));
-
-            //     Formats.Add(typeof(BFSAR));
             Formats.Add(typeof(BARS));
-
             Formats.Add(typeof(GFPAK));
             Formats.Add(typeof(NUTEXB));
             Formats.Add(typeof(NUT));
@@ -309,8 +306,6 @@ namespace FirstPlugin
             Formats.Add(typeof(PTCL));
             Formats.Add(typeof(EFF));
             Formats.Add(typeof(EFCF));
-            
-
             Formats.Add(typeof(NSP));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));
@@ -343,7 +338,6 @@ namespace FirstPlugin
             Formats.Add(typeof(IGA_PAK));
             Formats.Add(typeof(MKAGPDX_Model));
             Formats.Add(typeof(GFBMDL));
-
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(SDF));
             Formats.Add(typeof(IStorage));
@@ -358,22 +352,23 @@ namespace FirstPlugin
             Formats.Add(typeof(BFTTF));
             Formats.Add(typeof(PACx30XL));
             Formats.Add(typeof(BinGzArchive));
-            //   Formats.Add(typeof(MSBP));
             Formats.Add(typeof(ZAR));
-           // Formats.Add(typeof(ZSI));
             Formats.Add(typeof(CTXB));
             Formats.Add(typeof(G1T));
-         //   Formats.Add(typeof(G1M));
+            Formats.Add(typeof(BFLYT));
 
-            //  Formats.Add(typeof(GFA));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
                 Formats.Add(typeof(XCI));
                 Formats.Add(typeof(BFLAN));
-                Formats.Add(typeof(BFLYT));
                 Formats.Add(typeof(XLINK));
+                Formats.Add(typeof(BFSAR));
+                Formats.Add(typeof(GFA));
+                Formats.Add(typeof(G1M));
+                Formats.Add(typeof(ZSI));
+                Formats.Add(typeof(MSBP));
             }
 
 
