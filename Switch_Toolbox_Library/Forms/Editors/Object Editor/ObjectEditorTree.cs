@@ -230,6 +230,12 @@ namespace Toolbox.Library.Forms
 
         public void FormClosing()
         {
+            if (searchForm != null)
+            {
+                searchForm.Close();
+                searchForm.Dispose();
+            }
+
             foreach (var control in stPanel2.Controls)
             {
                 if (control is STUserControl)
@@ -519,10 +525,11 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        private SearchNodeForm searchForm;
         private void searchFormToolStrip_Click(object sender, EventArgs e)
         {
-            SearchNodeForm form = new SearchNodeForm(treeViewCustom1);
-            form.Show(this);
+            searchForm = new SearchNodeForm(treeViewCustom1);
+            searchForm.Show(this);
         }
     }
 }

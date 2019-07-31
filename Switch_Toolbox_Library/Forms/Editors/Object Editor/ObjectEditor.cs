@@ -178,6 +178,8 @@ namespace Toolbox.Library.Forms
             if (viewport != null)
                 viewport.FormClosing();
 
+
+
             if (ObjectTree != null)
                 ObjectTree.FormClosing();
         }
