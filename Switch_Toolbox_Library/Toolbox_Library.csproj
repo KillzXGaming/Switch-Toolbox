@@ -245,7 +245,7 @@
     </Compile>
     <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Generics\Texture\STTextureFolder.cs" />
-    <Compile Include="Interfaces\ICanDispose.cs" />
+    <Compile Include="Interfaces\ILeaveOpenOnLoad.cs" />
     <Compile Include="Interfaces\ICloneableNode.cs" />
     <Compile Include="Interfaces\IMeshContainer.cs" />
     <Compile Include="Interfaces\ITextureContainer.cs" />

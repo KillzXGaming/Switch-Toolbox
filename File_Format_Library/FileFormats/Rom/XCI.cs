@@ -7,7 +7,7 @@ using Toolbox.Library;
 
 namespace FirstPlugin
 {
-    public class XCI : IFileFormat, IFileDisposeAfterLoad
+    public class XCI : IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -31,8 +31,6 @@ namespace FirstPlugin
         {
             return Utils.HasExtension(FileName, ".xci");
         }
-
-        public bool CanDispose { get { return false; } }
 
         public void Load(System.IO.Stream stream)
         {

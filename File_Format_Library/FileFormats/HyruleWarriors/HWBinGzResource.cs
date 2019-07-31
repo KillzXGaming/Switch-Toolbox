@@ -111,6 +111,8 @@ namespace FirstPlugin
 
                 uint Count = reader.ReadUInt32();
 
+                Console.WriteLine($"Count {Count}");
+
                 uint[] Offsets = new uint[Count];
                 uint[] Sizes = new uint[Count];
 

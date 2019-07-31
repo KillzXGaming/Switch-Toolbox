@@ -9,7 +9,7 @@ using LibHac;
 
 namespace FirstPlugin
 {
-    public class IStorage : IArchiveFile, IFileFormat, IFileDisposeAfterLoad
+    public class IStorage : IArchiveFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -33,8 +33,6 @@ namespace FirstPlugin
         public bool CanRenameFiles { get; set; }
         public bool CanReplaceFiles { get; set; }
         public bool CanDeleteFiles { get; set; }
-
-        public bool CanDispose { get { return false; } }
 
         public List<NSP.FileEntry> files = new List<NSP.FileEntry>();
         public IEnumerable<ArchiveFileInfo> Files => files;

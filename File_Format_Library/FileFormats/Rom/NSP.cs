@@ -16,7 +16,7 @@ using System.ComponentModel;
 namespace FirstPlugin
 {
 
-    public class NSP : IArchiveFile, IFileFormat, IFileDisposeAfterLoad
+    public class NSP : IArchiveFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -38,8 +38,6 @@ namespace FirstPlugin
 
         Nca Control { get; set; }
         RomfsNodeWrapper romfsWrapper;
-
-        public bool CanDispose { get { return false; } }
 
         public bool CanAddFiles { get; set; }
         public bool CanRenameFiles { get; set; }

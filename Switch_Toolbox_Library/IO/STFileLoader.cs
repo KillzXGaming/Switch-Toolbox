@@ -361,8 +361,8 @@ namespace Toolbox.Library.IO
             }
             //After file has been loaded and read, we'll dispose unless left open
 
-            if (fileFormat is IFileDisposeAfterLoad) {
-                LeaveStreamOpen = !((IFileDisposeAfterLoad)fileFormat).CanDispose;
+            if (fileFormat is ILeaveOpenOnLoad) {
+                LeaveStreamOpen = true;
             }
 
             if (!LeaveStreamOpen)

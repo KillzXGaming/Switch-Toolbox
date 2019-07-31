@@ -830,14 +830,21 @@ namespace Toolbox.Library
             {
                 OpenFormDialog(file);
             }
-            else if (file is TreeNode)
-                ReplaceNode(this.Parent, treeview, this, (TreeNode)file, RootNode);
             else if (file is IArchiveFile)
             {
                 var FileRoot = new ArchiveRootNodeWrapper(file.FileName, (IArchiveFile)file);
                 FileRoot.FillTreeNodes();
+
+                if (file is TreeNode) //It can still be both, so add all it's nodes
+                {
+                    foreach (TreeNode n in ((TreeNode)file).Nodes)
+                        FileRoot.Nodes.Add(n);
+                }
+
                 ReplaceNode(this.Parent, treeview, this, FileRoot, RootNode);
             }
+            else if (file is TreeNode)
+                ReplaceNode(this.Parent, treeview, this, (TreeNode)file, RootNode);
         }
 
         private void OpenFormDialog(IFileFormat fileFormat)

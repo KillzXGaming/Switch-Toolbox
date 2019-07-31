@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace Toolbox.Library
 {
     //Check if the opened file stream should be disposed after loading 
-    public interface IFileDisposeAfterLoad
+    public interface ILeaveOpenOnLoad
     {
-        bool CanDispose { get; }
     }
 }
