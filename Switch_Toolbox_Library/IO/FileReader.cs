@@ -127,9 +127,11 @@ namespace Toolbox.Library.IO
                 ByteOrder = ByteOrder.LittleEndian;
         }
 
-        public string ReadSignature(int length, string ExpectedSignature)
+        public string ReadSignature(int length, string ExpectedSignature, bool TrimEnd = false)
         {
-            string RealSignature = ReadString(length, Encoding.ASCII);
+            string RealSignature =  ReadString(length, Encoding.ASCII);
+
+            if (TrimEnd) RealSignature = RealSignature.TrimEnd(' ');
 
             if (RealSignature != ExpectedSignature)
                 throw new Exception($"Invalid signature {RealSignature}! Expected {ExpectedSignature}.");

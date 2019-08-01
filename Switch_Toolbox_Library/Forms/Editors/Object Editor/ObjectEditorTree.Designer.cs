@@ -32,6 +32,7 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.nodeSizeCB = new Toolbox.Library.Forms.STComboBox();
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
@@ -79,6 +80,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.nodeSizeCB);
             this.stPanel1.Controls.Add(this.stPanel4);
             this.stPanel1.Controls.Add(this.stToolStrip1);
             this.stPanel1.Controls.Add(this.stPanel3);
@@ -88,6 +90,20 @@
             this.stPanel1.Size = new System.Drawing.Size(314, 542);
             this.stPanel1.TabIndex = 11;
             this.stPanel1.Resize += new System.EventHandler(this.stPanel1_Resize);
+            // 
+            // nodeSizeCB
+            // 
+            this.nodeSizeCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.nodeSizeCB.BorderColor = System.Drawing.Color.Empty;
+            this.nodeSizeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.nodeSizeCB.ButtonColor = System.Drawing.Color.Empty;
+            this.nodeSizeCB.FormattingEnabled = true;
+            this.nodeSizeCB.Location = new System.Drawing.Point(172, 29);
+            this.nodeSizeCB.Name = "nodeSizeCB";
+            this.nodeSizeCB.ReadOnly = true;
+            this.nodeSizeCB.Size = new System.Drawing.Size(136, 21);
+            this.nodeSizeCB.TabIndex = 5;
+            this.nodeSizeCB.SelectedIndexChanged += new System.EventHandler(this.nodeSizeCB_SelectedIndexChanged);
             // 
             // stPanel4
             // 
@@ -106,6 +122,7 @@
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainer1.Panel1Collapsed = true;
             // 
             // splitContainer1.Panel2
             // 
@@ -113,7 +130,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(305, 485);
             this.splitContainer1.SplitterDistance = 201;
             this.splitContainer1.TabIndex = 1;
-            this.splitContainer1.Panel1Collapsed = true;
             // 
             // treeViewCustom1
             // 
@@ -125,7 +141,7 @@
             this.treeViewCustom1.Location = new System.Drawing.Point(0, 0);
             this.treeViewCustom1.Name = "treeViewCustom1";
             this.treeViewCustom1.SelectedImageIndex = 0;
-            this.treeViewCustom1.Size = new System.Drawing.Size(305, 280);
+            this.treeViewCustom1.Size = new System.Drawing.Size(305, 485);
             this.treeViewCustom1.TabIndex = 0;
             this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
             this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
@@ -240,7 +256,7 @@
             // sortToolStripMenuItem
             // 
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
@@ -248,7 +264,7 @@
             // 
             this.dockSearchListToolStripMenuItem.CheckOnClick = true;
             this.dockSearchListToolStripMenuItem.Name = "dockSearchListToolStripMenuItem";
-            this.dockSearchListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dockSearchListToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.dockSearchListToolStripMenuItem.Text = "Dock Search List";
             this.dockSearchListToolStripMenuItem.Click += new System.EventHandler(this.dockSearchListToolStripMenuItem_Click);
             // 
@@ -302,5 +318,6 @@
         private STPanel stPanel4;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem dockSearchListToolStripMenuItem;
+        private STComboBox nodeSizeCB;
     }
 }

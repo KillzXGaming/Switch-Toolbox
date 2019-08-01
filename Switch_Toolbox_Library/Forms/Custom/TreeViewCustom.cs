@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -80,9 +80,12 @@ namespace Toolbox.Library
 
         }
     }
+
     public class TreeViewCustom : TreeView
     {
         private readonly Dictionary<int, TreeNode> _treeNodes = new Dictionary<int, TreeNode>();
+
+        public List<ITextureIconLoader> TextureIcons = new List<ITextureIconLoader>();
 
         public TreeViewCustom()
         {
@@ -99,13 +102,65 @@ namespace Toolbox.Library
             imgList.Images.Add(image);
         }
 
-        public int ImageWidth = 21;
-        public int ImageHeight = 21;
-        public void ReloadImages()
+        public void ReloadTextureIcons()
+        {
+            Thread Thread = new Thread((ThreadStart)(() =>
+            {
+                foreach (var textureIconList in TextureIcons)
+                {
+                    foreach (TreeNode node in textureIconList.IconTextureList)
+                    {
+                        if (node is STGenericTexture)
+                        {
+                            var image = ((STGenericTexture)node).GetBitmap();
+                            AddImageOnThread(image, node);
+                        }
+                    }
+                }
+            }));
+            Thread.Start();
+        }
+
+        public void ReloadTextureIcons(ITextureIconLoader textureIconList)
+        {
+            Thread Thread = new Thread((ThreadStart)(() =>
+            {
+                foreach (TreeNode node in textureIconList.IconTextureList)
+                {
+                    if (node is STGenericTexture)
+                    {
+                        var image = ((STGenericTexture)node).GetBitmap();
+                        AddImageOnThread(image, node);
+                    }
+                }
+            }));
+            Thread.Start();
+        }
+
+        public void AddImageOnThread(Image image, TreeNode node)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate {
+                    // Running on the UI thread
+
+                    node.ImageIndex = this.ImageList.Images.Count;
+                    node.SelectedImageIndex = node.ImageIndex;
+
+                    this.ImageList.Images.Add(image);
+                    var dummy = this.ImageList.Handle;
+                    this.Refresh();
+
+                    image.Dispose();
+                });
+            }
+        }
+
+        public void ReloadImages(int Width = 22, int Height = 22)
         {
             imgList = new ImageList();
             imgList.ColorDepth = ColorDepth.Depth32Bit;
-            imgList.ImageSize = new Size(ImageWidth, ImageHeight);
+            imgList.ImageSize = new Size(Width, Height);
             imgList.Images.Add("folder", Properties.Resources.Folder);
             imgList.Images.Add("resource", Properties.Resources.Folder);
             imgList.Images.Add("Texture", Properties.Resources.Texture);

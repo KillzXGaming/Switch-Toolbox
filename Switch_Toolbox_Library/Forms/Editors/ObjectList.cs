@@ -25,8 +25,6 @@ namespace Toolbox.Library
         public ObjectList()
         {
             InitializeComponent();
-            ApplyThumbnailSetting(Runtime.thumbnailSize);
-            //        treeView1.Sort();
         }
 
         private void selectItem(object sender, TreeNodeMouseClickEventArgs e)
@@ -91,47 +89,6 @@ namespace Toolbox.Library
                     LibraryGUI.GetAnimationPanel().CurrentAnimation = running;
                 }
             }
-        }
-
-        private void ApplyThumbnailSetting(Runtime.ThumbnailSize size)
-        {
-            switch (size)
-            {
-                case Runtime.ThumbnailSize.Small:
-                    treeView1.ImageHeight = 21;
-                    treeView1.ImageWidth = 21;
-                    smallToolStripMenuItem.BackColor = Color.FromArgb(80, 80, 80);
-                    break;
-                case Runtime.ThumbnailSize.Medium:
-                    treeView1.ImageHeight = 27;
-                    treeView1.ImageWidth = 27;
-                    mediumToolStripMenuItem.BackColor = Color.FromArgb(80, 80, 80);
-                    break;
-                case Runtime.ThumbnailSize.Large:
-                    treeView1.ImageHeight = 34;
-                    treeView1.ImageWidth = 34;
-                    largeToolStripMenuItem.BackColor = Color.FromArgb(80, 80, 80);
-                    break;
-            }
-            treeView1.ReloadImages();
-        }
-
-        private void largeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Runtime.thumbnailSize = Runtime.ThumbnailSize.Large;
-            ApplyThumbnailSetting(Runtime.thumbnailSize);
-        }
-
-        private void mediumToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Runtime.thumbnailSize = Runtime.ThumbnailSize.Medium;
-            ApplyThumbnailSetting(Runtime.thumbnailSize);
-        }
-
-        private void smallToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Runtime.thumbnailSize = Runtime.ThumbnailSize.Small;
-            ApplyThumbnailSetting(Runtime.thumbnailSize);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)

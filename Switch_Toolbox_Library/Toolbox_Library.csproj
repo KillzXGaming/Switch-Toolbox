@@ -216,6 +216,7 @@
     <Compile Include="Compression\Yaz0.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="FileFormats\DDS\RGBAPixelDecoder.cs" />
     <Compile Include="Forms\ColorAlphaBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -245,11 +246,12 @@
     </Compile>
     <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Generics\Texture\STTextureFolder.cs" />
-    <Compile Include="Interfaces\ILeaveOpenOnLoad.cs" />
-    <Compile Include="Interfaces\ICloneableNode.cs" />
-    <Compile Include="Interfaces\IMeshContainer.cs" />
-    <Compile Include="Interfaces\ITextureContainer.cs" />
-    <Compile Include="Interfaces\IUpdateForm.cs" />
+    <Compile Include="Interfaces\FileFormatting\ILeaveOpenOnLoad.cs" />
+    <Compile Include="Interfaces\Textures\ITextureIconLoader.cs" />
+    <Compile Include="Interfaces\Utility\ICloneableNode.cs" />
+    <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
+    <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
+    <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\STColor.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
@@ -610,9 +612,9 @@
     <Compile Include="Generics\GenericPolygonGroup.cs" />
     <Compile Include="Generics\Texture\GenericTexture.cs" />
     <Compile Include="Generics\OpenGLTexture.cs" />
-    <Compile Include="Interfaces\ICompressionFormat.cs" />
-    <Compile Include="Interfaces\IDirectoryNode.cs" />
-    <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Interfaces\FileFormatting\ICompressionFormat.cs" />
+    <Compile Include="Interfaces\FileFormatting\IDirectoryNode.cs" />
+    <Compile Include="Interfaces\FileFormatting\INode.cs" />
     <Compile Include="IO\Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Rendering\RenderableTex.cs" />
     <Compile Include="Generics\STBone.cs" />
@@ -657,14 +659,14 @@
     </Compile>
     <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="Helpers\TreeHelper.cs" />
-    <Compile Include="Interfaces\IContextMenuNode.cs" />
-    <Compile Include="Interfaces\IConvertableTextFormat.cs" />
-    <Compile Include="Interfaces\IEditor.cs" />
-    <Compile Include="Interfaces\IFIleEditor.cs" />
-    <Compile Include="Interfaces\IMdiContainer.cs" />
-    <Compile Include="Interfaces\IMenuExtension.cs" />
-    <Compile Include="Interfaces\ITexture.cs" />
-    <Compile Include="Interfaces\IViewportContainer.cs" />
+    <Compile Include="Interfaces\Forms\IContextMenuNode.cs" />
+    <Compile Include="Interfaces\FileFormatting\IConvertableTextFormat.cs" />
+    <Compile Include="Interfaces\Forms\IEditor.cs" />
+    <Compile Include="Interfaces\Forms\IFIleEditor.cs" />
+    <Compile Include="Interfaces\Forms\IMdiContainer.cs" />
+    <Compile Include="Interfaces\Forms\IMenuExtension.cs" />
+    <Compile Include="Interfaces\Textures\ITexture.cs" />
+    <Compile Include="Interfaces\Forms\IViewportContainer.cs" />
     <Compile Include="Compression\CompressionMenus.cs" />
     <Compile Include="IO\DWord.cs" />
     <Compile Include="IO\FileReader.cs" />
@@ -726,8 +728,8 @@
     <Compile Include="Forms\Dialogs\RenameDialog.Designer.cs">
       <DependentUpon>RenameDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IArchiveFile.cs" />
-    <Compile Include="Interfaces\IFileFormat.cs" />
+    <Compile Include="Interfaces\FileFormatting\IArchiveFile.cs" />
+    <Compile Include="Interfaces\FileFormatting\IFileFormat.cs" />
     <Compile Include="IO\FileIO.cs" />
     <Compile Include="Interfaces\IPlugin.cs" />
     <Compile Include="Format Managers\FileManager.cs" />

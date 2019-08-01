@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using GL_EditorFramework.Interfaces;
 using GL_EditorFramework.EditorDrawables;
@@ -98,6 +98,10 @@ namespace Toolbox.Library.Forms
                 ObjectTree.Dock = DockStyle.Fill;
                 stPanel1.Controls.Add(ObjectTree);
                 AddNode((TreeNode)FileFormat);
+            }
+
+            if (FileFormat is ITextureIconLoader) {
+                ObjectTree.LoadGenericTextureIcons((ITextureIconLoader)FileFormat);
             }
         }
 

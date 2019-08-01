@@ -33,6 +33,14 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        private enum TreeNodeSize
+        {
+            Small,
+            Normal,
+            Large,
+            ExtraLarge,
+        }
+
         public ObjectEditor ObjectEditor;
 
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
@@ -127,6 +135,11 @@ namespace Toolbox.Library.Forms
             treeViewCustom1.BackColor = FormThemes.BaseTheme.ObjectEditorBackColor;
 
             AddFilesToActiveEditor = Runtime.AddFilesToActiveObjectEditor;
+
+            foreach (TreeNodeSize nodeSize in (TreeNodeSize[])Enum.GetValues(typeof(TreeNodeSize)))
+                nodeSizeCB.Items.Add(nodeSize);
+
+            nodeSizeCB.SelectedIndex = 1;
         }
 
         public Viewport GetViewport() => viewport;
@@ -309,21 +322,24 @@ namespace Toolbox.Library.Forms
                 var result = MessageBox.Show("If you remove this file, any unsaved progress will be lost! Continue?",
                     "Remove Dialog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (node is IFileFormat)
+                if (result == DialogResult.Yes)
                 {
-                    ((IFileFormat)node).Unload();
+                    if (node is IFileFormat)
+                    {
+                        ((IFileFormat)node).Unload();
+                    }
+
+                    treeViewCustom1.Nodes.Remove(node);
+                    ResetEditor();
+
+                    //Force garbage collection.
+                    GC.Collect();
+
+                    // Wait for all finalizers to complete before continuing.
+                    GC.WaitForPendingFinalizers();
+
+                    ((IUpdateForm)Runtime.MainForm).UpdateForm();
                 }
-
-                treeViewCustom1.Nodes.Remove(node);
-                ResetEditor();
-
-                //Force garbage collection.
-                GC.Collect();
-
-                // Wait for all finalizers to complete before continuing.
-                GC.WaitForPendingFinalizers();
-
-                ((IUpdateForm)Runtime.MainForm).UpdateForm();
             }
         }
 
@@ -622,7 +638,6 @@ namespace Toolbox.Library.Forms
             UpdateSearchPanelDockState();
         }
 
-
         private void UpdateSearchPanelDockState()
         {
             if (IsSearchPanelDocked)
@@ -640,5 +655,34 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public void LoadGenericTextureIcons(ITextureIconLoader iconList) {
+            treeViewCustom1.TextureIcons.Add(iconList);
+            treeViewCustom1.ReloadTextureIcons(iconList);
+        }
+
+        private void nodeSizeCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var nodeSize = nodeSizeCB.SelectedItem;
+            if (nodeSize != null)
+            {
+                int Size = 22;
+
+                switch ((TreeNodeSize)nodeSize)
+                {
+                    case TreeNodeSize.Small: Size = 18;
+                        break;
+                    case TreeNodeSize.Normal: Size = 22;
+                        break;
+                    case TreeNodeSize.Large: Size = 30;
+                        break;
+                    case TreeNodeSize.ExtraLarge: Size = 35;
+                        break;
+                }
+
+                treeViewCustom1.ItemHeight = Size;
+                treeViewCustom1.ReloadImages(Size, Size);
+                treeViewCustom1.ReloadTextureIcons();
+            }
+        }
     }
 }

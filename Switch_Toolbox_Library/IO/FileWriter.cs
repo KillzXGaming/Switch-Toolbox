@@ -70,6 +70,22 @@ namespace Toolbox.Library.IO
                 ByteOrder = ByteOrder.LittleEndian;
         }
 
+        public void WriteString(string text, uint fixedSize)
+        {
+            long pos = Position;
+            WriteString(text);
+            Seek(pos + fixedSize);
+        }
+
+        //Writes the total size of a section as a uint. 
+        public void WriteSectionSizeU32(long position, long startPosition, long endPosition)
+        {
+            using (TemporarySeek(position, System.IO.SeekOrigin.Begin))
+            {
+                Write((uint)endPosition - startPosition);
+            }
+        }
+
         //
         // RelativeOffsetPosition controls the relative position the offset starts at
         //

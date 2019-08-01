@@ -274,7 +274,7 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
-    <Compile Include="FileFormats\Texture\CTXB.cs" />
+    <Compile Include="FileFormats\Grezzo\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
@@ -285,6 +285,12 @@
     </Compile>
     <Compile Include="GUI\BFFNT\BffntEditor.Designer.cs">
       <DependentUpon>BffntEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutEditor.Designer.cs">
+      <DependentUpon>LayoutEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\BatchEditBaseAnimDataForm.cs">
       <SubType>Form</SubType>
@@ -1006,6 +1012,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
       <DependentUpon>BffntEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutEditor.resx">
+      <DependentUpon>LayoutEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BatchEditBaseAnimDataForm.resx">
       <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>

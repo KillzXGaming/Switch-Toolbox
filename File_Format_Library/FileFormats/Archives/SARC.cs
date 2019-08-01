@@ -314,6 +314,7 @@ namespace FirstPlugin
                            { ".byaml", "byaml" },
                            { ".bfres", "bfres" },
                            { ".sbfres", "bfres" },
+                           { ".bflim", "texture" },
                            { ".aamp", "aamp" },
                     };
                 }
