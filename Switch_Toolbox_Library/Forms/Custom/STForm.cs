@@ -24,7 +24,6 @@ namespace Toolbox.Library.Forms
         }
 
         public void AddControl(Control control) {
-            this.contentContainer.Controls.Clear();
             this.contentContainer.Controls.Add(this.stPanel1);
             stPanel1.Controls.Add(control);
         }
@@ -208,6 +207,9 @@ namespace Toolbox.Library.Forms
             // 
             // stPanel1
             // 
+            this.stPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.stPanel1.Location = new System.Drawing.Point(0, 27);
             this.stPanel1.Name = "stPanel1";
             this.stPanel1.Size = new System.Drawing.Size(543, 366);
