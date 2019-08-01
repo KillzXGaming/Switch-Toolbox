@@ -618,11 +618,6 @@ namespace Toolbox.Library.Forms
             form.Show(this);
         }
 
-        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
         private void dockSearchListToolStripMenuItem_Click(object sender, EventArgs e) {
             UpdateSearchPanelDockState();
         }
