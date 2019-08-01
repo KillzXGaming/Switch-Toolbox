@@ -684,5 +684,12 @@ namespace Toolbox.Library.Forms
                 treeViewCustom1.ReloadTextureIcons();
             }
         }
+
+        private void treeViewCustom1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node != null && e.Node is ITextureIconLoader) {
+                LoadGenericTextureIcons((ITextureIconLoader)e.Node);
+            }
+        }
     }
 }

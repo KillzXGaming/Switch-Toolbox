@@ -11,7 +11,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class CTXB : TreeNodeFile, IFileFormat
+    public class CTXB : TreeNodeFile, IFileFormat, ITextureIconLoader
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -37,6 +37,19 @@ namespace FirstPlugin
                 List<Type> types = new List<Type>();
                 return types.ToArray();
             }
+        }
+
+        public List<STGenericTexture> IconTextureList
+        {
+            get
+            {
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (STGenericTexture node in Nodes)
+                    textures.Add(node);
+
+                return textures;
+            }
+            set { }
         }
 
         public Header header;

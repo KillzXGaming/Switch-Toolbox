@@ -98,7 +98,7 @@ namespace FirstPlugin
 
         public Model BMDFile;
         public STSkeleton Skeleton;
-        private TreeNode TextureFolder;
+        private BMDTextureFolder TextureFolder;
         private TreeNode ShapeFolder;
         private TreeNode MaterialFolder;
         private TreeNode SkeletonFolder;
@@ -125,6 +125,27 @@ namespace FirstPlugin
             LoadBMD(BMDFile);
         }
 
+        private class BMDTextureFolder : STTextureFolder, ITextureIconLoader
+        {
+            public List<STGenericTexture> IconTextureList
+            {
+                get
+                {
+                    List<STGenericTexture> textures = new List<STGenericTexture>();
+                    foreach (STGenericTexture node in Nodes)
+                        textures.Add(node);
+
+                    return textures;
+                }
+                set { }
+            }
+
+            public BMDTextureFolder(string text) : base(text)
+            {
+
+            }
+        }
+
         private void LoadBMD(Model model)
         {
             Nodes.Clear();
@@ -132,7 +153,7 @@ namespace FirstPlugin
             ShapeFolder = new TreeNode("Shapes");
             SkeletonFolder = new TreeNode("Skeleton");
             MaterialFolder = new TreeNode("Materials");
-            TextureFolder = new TreeNode("Textures");
+            TextureFolder = new BMDTextureFolder("Textures");
             Nodes.Add(ShapeFolder);
             Nodes.Add(MaterialFolder);
             Nodes.Add(SkeletonFolder);

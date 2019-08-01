@@ -144,6 +144,7 @@
             this.treeViewCustom1.Size = new System.Drawing.Size(305, 485);
             this.treeViewCustom1.TabIndex = 0;
             this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
+            this.treeViewCustom1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewCustom1_BeforeExpand);
             this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
             this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
             this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewCustom1_MouseClick);

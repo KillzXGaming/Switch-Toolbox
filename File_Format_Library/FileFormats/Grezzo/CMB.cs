@@ -10,7 +10,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class CMB : TreeNodeFile, IFileFormat, ITextureIconLoader
+    public class CMB : TreeNodeFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -41,12 +41,8 @@ namespace FirstPlugin
         public Header header;
         STTextureFolder texFolder;
 
-        public List<STGenericTexture> IconTextureList { get; set; }
-
         public void Load(System.IO.Stream stream)
         {
-            IconTextureList = new List<STGenericTexture>();
-
             header = new Header();
             header.Read(new FileReader(stream));
 
@@ -55,7 +51,7 @@ namespace FirstPlugin
             //Load textures
             if (header.SectionData.TextureChunk != null)
             {
-                texFolder = new STTextureFolder("Texture");
+                texFolder = new TextureFolder("Texture");
                 Nodes.Add(texFolder);
 
                 int texIndex = 0;
@@ -74,7 +70,6 @@ namespace FirstPlugin
                     texWrapper.Format = CTR_3DS.ConvertPICAToGenericFormat(tex.PicaFormat);
                     texWrapper.ImageData = tex.ImageData;
                     texFolder.Nodes.Add(texWrapper);
-                    IconTextureList.Add(texWrapper);
                 }
             }
         }
@@ -93,6 +88,27 @@ namespace FirstPlugin
             OOT3DS,
             MM3DS,
             LM3DS,
+        }
+
+        private class TextureFolder : STTextureFolder, ITextureIconLoader
+        {
+            public List<STGenericTexture> IconTextureList
+            {
+                get
+                {
+                    List<STGenericTexture> textures = new List<STGenericTexture>();
+                    foreach (STGenericTexture node in Nodes)
+                        textures.Add(node);
+
+                    return textures;
+                }
+                set {}
+            }
+
+            public TextureFolder(string text) : base(text)
+            {
+
+            }
         }
 
         public class Header

@@ -130,20 +130,8 @@ namespace Toolbox.Library
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            this.BeginUpdate();
-
             Thread = new Thread((ThreadStart)(() =>
             {
-                foreach (TreeNode node in textureIconList.IconTextureList)
-                    node.ImageKey = "Texture";
-
-                this.Invoke((MethodInvoker)delegate
-                {
-                    {
-                        this.Refresh();
-                    }
-                });
-
                 foreach (TreeNode node in textureIconList.IconTextureList)
                 {
                     if (node is STGenericTexture)
@@ -159,19 +147,6 @@ namespace Toolbox.Library
                         }
                     }
                 }
-
-                if (this.InvokeRequired)
-                {
-                    this.Invoke((MethodInvoker)delegate
-                    {
-                        {
-                            this.EndUpdate();
-                            this.Refresh();
-                        }
-                    });
-                }
-                else
-                    this.EndUpdate();
             }));
             Thread.Start();
 

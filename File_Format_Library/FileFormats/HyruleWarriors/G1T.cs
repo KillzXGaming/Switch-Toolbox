@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace FirstPlugin
 { 
-    public class G1T : TreeNodeFile, IFileFormat, IContextMenuNode
+    public class G1T : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureIconLoader
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -53,6 +53,18 @@ namespace FirstPlugin
             return null;
         }
 
+        public List<STGenericTexture> IconTextureList
+        {
+            get
+            {
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (STGenericTexture node in Nodes)
+                    textures.Add(node);
+
+                return textures;
+            }
+            set { }
+        }
 
         public GT1Platform Platform;
 
