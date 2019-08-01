@@ -86,6 +86,7 @@ namespace Toolbox.Library
         private readonly Dictionary<int, TreeNode> _treeNodes = new Dictionary<int, TreeNode>();
 
         public List<ITextureIconLoader> TextureIcons = new List<ITextureIconLoader>();
+        public List<ISingleTextureIconLoader> SingleTextureIcons = new List<ISingleTextureIconLoader>();
 
         public TreeViewCustom()
         {
@@ -121,6 +122,32 @@ namespace Toolbox.Library
                         }
                     }
                 }
+
+                foreach (var texIcon in SingleTextureIcons)
+                {
+                    var image = texIcon.IconTexture.GetBitmap();
+                    AddImageOnThread(image, texIcon.IconTexture);
+                }
+            }));
+            Thread.Start();
+        }
+
+        public void ReloadTextureIcons(ISingleTextureIconLoader textureIcon)
+        {
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
+            Thread = new Thread((ThreadStart)(() =>
+            {
+                try
+                {
+                    var image = textureIcon.IconTexture.GetBitmap();
+                    AddImageOnThread(image, textureIcon.IconTexture);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }));
             Thread.Start();
         }
@@ -149,7 +176,6 @@ namespace Toolbox.Library
                 }
             }));
             Thread.Start();
-
         }
 
         public void AddImageOnThread(Image image, TreeNode node)

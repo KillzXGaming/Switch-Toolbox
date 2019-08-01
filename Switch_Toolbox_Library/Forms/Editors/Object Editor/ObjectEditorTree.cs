@@ -101,6 +101,10 @@ namespace Toolbox.Library.Forms
                 ClearNodes();
             treeViewCustom1.Nodes.Add(node); // Add the new nodes
             treeViewCustom1.EndUpdate(); // Allow the treeview to update visually
+
+            if (node is ISingleTextureIconLoader) {
+                LoadGenericTextureIcons((ISingleTextureIconLoader)node);
+            }
         }
 
         public void ClearNodes()
@@ -660,6 +664,11 @@ namespace Toolbox.Library.Forms
             treeViewCustom1.ReloadTextureIcons(iconList);
         }
 
+        public void LoadGenericTextureIcons(ISingleTextureIconLoader iconTex) {
+            treeViewCustom1.SingleTextureIcons.Add(iconTex);
+            treeViewCustom1.ReloadTextureIcons(iconTex);
+        }
+
         private void nodeSizeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             var nodeSize = nodeSizeCB.SelectedItem;
@@ -689,6 +698,9 @@ namespace Toolbox.Library.Forms
         {
             if (e.Node != null && e.Node is ITextureIconLoader) {
                 LoadGenericTextureIcons((ITextureIconLoader)e.Node);
+            }
+            if (e.Node != null && e.Node is ISingleTextureIconLoader) {
+                LoadGenericTextureIcons((ISingleTextureIconLoader)e.Node);
             }
         }
     }

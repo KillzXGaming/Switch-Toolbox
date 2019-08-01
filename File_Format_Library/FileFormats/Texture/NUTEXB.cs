@@ -14,8 +14,10 @@ using Syroot.NintenTools.NSW.Bntx.GFX;
 
 namespace FirstPlugin
 {
-    public class NUTEXB : STGenericTexture, IFileFormat, IContextMenuNode
+    public class NUTEXB : STGenericTexture, IFileFormat, IContextMenuNode, ISingleTextureIconLoader
     {
+        public STGenericTexture IconTexture { get { return this; } }
+
         public FileType FileType { get; set; } = FileType.Image;
 
         public override TEX_FORMAT[] SupportedFormats

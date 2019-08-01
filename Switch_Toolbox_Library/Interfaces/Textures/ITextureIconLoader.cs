@@ -12,4 +12,11 @@ namespace Toolbox.Library
     {
         List<STGenericTexture> IconTextureList { get; set; }
     }
+
+    //Reprenets a single texture that loads an icon. 
+    //These will check both on expand, and on root
+    public interface ISingleTextureIconLoader
+    {
+        STGenericTexture IconTexture { get;}
+    }
 }
