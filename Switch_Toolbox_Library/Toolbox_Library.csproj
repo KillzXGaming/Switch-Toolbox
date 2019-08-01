@@ -249,6 +249,7 @@
     <Compile Include="Interfaces\ICloneableNode.cs" />
     <Compile Include="Interfaces\IMeshContainer.cs" />
     <Compile Include="Interfaces\ITextureContainer.cs" />
+    <Compile Include="Interfaces\IUpdateForm.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\STColor.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />

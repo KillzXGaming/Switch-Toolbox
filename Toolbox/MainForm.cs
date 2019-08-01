@@ -20,7 +20,7 @@ using Toolbox.Library.Rendering;
 
 namespace Toolbox
 {
-    public partial class MainForm : Form, IMdiContainer
+    public partial class MainForm : Form, IMdiContainer, IUpdateForm
     {
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
@@ -53,6 +53,15 @@ namespace Toolbox
             InitializeComponent();
 
             LoadConfig();
+        }
+
+        public void UpdateForm()
+        {
+            if (ActiveMdiChild is ObjectEditor)
+            {
+                var activeFile = ((ObjectEditor)ActiveMdiChild).GetActiveFile();
+                SetFormatSettings(activeFile);
+            }
         }
 
         public void Reload()
@@ -243,9 +252,7 @@ namespace Toolbox
             if (File.Exists(FileName))
                 SaveRecentFile(FileName);
 
-
             object file = STFileLoader.OpenFileFormat(FileName);
-
 
             if (file == null) //File might not be supported so return
                 return;

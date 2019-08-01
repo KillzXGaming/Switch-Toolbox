@@ -292,6 +292,9 @@ namespace Toolbox.Library.Forms
             var node = treeViewCustom1.SelectedNode;
             if (node != null)
             {
+                var result = MessageBox.Show("If you remove this file, any unsaved progress will be lost! Continue?",
+                    "Remove Dialog", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
                 if (node is IFileFormat)
                 {
                     ((IFileFormat)node).Unload();
@@ -299,6 +302,14 @@ namespace Toolbox.Library.Forms
 
                 treeViewCustom1.Nodes.Remove(node);
                 ResetEditor();
+
+                //Force garbage collection.
+                GC.Collect();
+
+                // Wait for all finalizers to complete before continuing.
+                GC.WaitForPendingFinalizers();
+
+                ((IUpdateForm)Runtime.MainForm).UpdateForm();
             }
         }
 

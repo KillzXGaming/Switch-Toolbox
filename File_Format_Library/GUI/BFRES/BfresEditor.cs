@@ -99,7 +99,7 @@ namespace FirstPlugin.Forms
             stTabControl2.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             //Always create an instance of the viewport unless opengl is disabled
-            if (viewport == null && Runtime.UseOpenGL)
+            if (viewport == null && Runtime.UseOpenGL || viewport.IsDisposed && Runtime.UseOpenGL)
             {
                 viewport = new Viewport(ObjectEditor.GetDrawableContainers());
                 viewport.Dock = DockStyle.Fill;
