@@ -23,8 +23,6 @@ namespace Toolbox.Library.Forms
 
         public ObjectEditor ObjectEditor;
 
-        private List<TreeNode> _fieldsTreeCache = new List<TreeNode>();
-
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
 
@@ -258,8 +256,22 @@ namespace Toolbox.Library.Forms
             {
                 if (e.Node is IContextMenuNode)
                 {
+                    bool IsRoot = e.Node.Parent == null;
+
                     treeNodeContextMenu.Items.Clear();
-                    treeNodeContextMenu.Items.AddRange(((IContextMenuNode)e.Node).GetContextMenuItems());
+                    if (IsRoot)
+                    {
+                        foreach (var item in ((IContextMenuNode)e.Node).GetContextMenuItems())
+                        {
+                            if (item.Text != "Delete" || item.Text != "Remove")
+                                treeNodeContextMenu.Items.Add(item);
+                        }
+                        treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
+                    }
+                    else
+                    {
+                        treeNodeContextMenu.Items.AddRange(((IContextMenuNode)e.Node).GetContextMenuItems());
+                    }
                     treeNodeContextMenu.Show(Cursor.Position);
 
                     //Select the node without the evemt
@@ -273,6 +285,34 @@ namespace Toolbox.Library.Forms
             {
                 OnAnimationSelected(e.Node);
             }
+        }
+
+        private void DeleteAction(object sender, EventArgs args)
+        {
+            var node = treeViewCustom1.SelectedNode;
+            if (node != null)
+            {
+                if (node is IFileFormat)
+                {
+                    ((IFileFormat)node).Unload();
+                }
+
+                treeViewCustom1.Nodes.Remove(node);
+                ResetEditor();
+            }
+        }
+
+        private void ResetEditor()
+        {
+            foreach (Control control in stPanel2.Controls)
+            {
+                if (control is STUserControl)
+                    ((STUserControl)control).OnControlClosing();
+
+                control.Dispose();
+            }
+
+            stPanel2.Controls.Clear();
         }
 
         private void OnAnimationSelected(TreeNode Node)
@@ -351,8 +391,9 @@ namespace Toolbox.Library.Forms
         public void ResetControls()
         {
             treeViewCustom1.Nodes.Clear();
-            stPanel2.Controls.Clear();
             Text = "";
+
+            ResetEditor();
         }
 
         bool UpdateViewport = false;

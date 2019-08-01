@@ -449,6 +449,7 @@ namespace Toolbox.Library
             }
         }
 
+        //Method from https://github.com/aboood40091/BNTX-Editor/blob/master/formConv.py
         private static byte[] DecodeLA8(byte[] Input, int Width, int Height)
         {
             int bpp = 16;
@@ -1071,18 +1072,6 @@ namespace Toolbox.Library
             }
 
             return comp;
-        }
-
-        public override void Delete()
-        {
-            DisposeRenderable();
-
-            var editor = LibraryGUI.GetObjectEditor();
-            if (editor != null)
-            {
-                editor.RemoveFile(this);
-                editor.ResetControls();
-            }
         }
 
         public Properties GenericProperties

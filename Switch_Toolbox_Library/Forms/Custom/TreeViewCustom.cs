@@ -71,7 +71,6 @@ namespace Toolbox.Library
             var editor = LibraryGUI.GetObjectEditor();
             if (editor != null)
             {
-                editor.RemoveFile(this);
                 editor.ResetControls();
             }
         }

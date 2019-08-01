@@ -20,8 +20,6 @@ namespace Toolbox.Library.Forms
         private ObjectEditorTree ObjectTree;
         private ObjectEditorList ObjectList; //Optionally usable for archives
 
-        private TreeView _fieldsTreeCache;
-
         public void BeginUpdate() { ObjectTree.BeginUpdate(); }
         public void EndUpdate() { ObjectTree.EndUpdate(); }
 
@@ -178,19 +176,8 @@ namespace Toolbox.Library.Forms
             if (viewport != null)
                 viewport.FormClosing();
 
-
-
             if (ObjectTree != null)
                 ObjectTree.FormClosing();
-        }
-
-        public void RemoveFile(TreeNode File)
-        {
-            if (File is IFileFormat) {
-                ((IFileFormat)File).Unload();
-            }
-
-            ObjectTree.RemoveFile(File);
         }
 
         public void ResetControls()

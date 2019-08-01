@@ -38,16 +38,6 @@ namespace FirstPlugin.NodeWrappers
             return Items.ToArray();
         }
 
-        public override void Delete()
-        {
-            var editor = LibraryGUI.GetObjectEditor();
-            if (editor != null)
-            {
-                editor.RemoveFile(this);
-                editor.ResetControls();
-            }
-        }
-
         protected void SettingBooleanAction(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem)
