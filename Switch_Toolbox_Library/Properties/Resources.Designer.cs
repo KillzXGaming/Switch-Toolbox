@@ -73,6 +73,16 @@ namespace Toolbox.Library.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap AddIcon {
+            get {
+                object obj = ResourceManager.GetObject("AddIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap AlphaIcon {
             get {
                 object obj = ResourceManager.GetObject("AlphaIcon", resourceCulture);

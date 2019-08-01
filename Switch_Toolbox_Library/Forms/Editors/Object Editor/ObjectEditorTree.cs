@@ -457,7 +457,15 @@ namespace Toolbox.Library.Forms
                 TreeViewExtensions.HideCheckBox(e.Node);
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            AddNewFile();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e) {
+            AddNewFile();
+        }
+
+        private void AddNewFile()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = Utils.GetAllFilters(FileManager.GetFileFormats());
@@ -481,6 +489,10 @@ namespace Toolbox.Library.Forms
             {
                 var node = (TreeNode)file;
                 AddNode(node);
+            }
+            else if (file is IArchiveFile)
+            {
+                AddIArchiveFile((IFileFormat)file);
             }
             else
             {
@@ -582,6 +594,11 @@ namespace Toolbox.Library.Forms
         {
             searchForm = new SearchNodeForm(treeViewCustom1);
             searchForm.Show(this);
+        }
+
+        private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

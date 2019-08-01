@@ -33,10 +33,8 @@
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
-            this.searchFormToolStrip = new System.Windows.Forms.ToolStripButton();
             this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
-            this.searchImgPB = new System.Windows.Forms.PictureBox();
             this.activeEditorChkBox = new Toolbox.Library.Forms.STCheckBox();
             this.objectEditorMenu = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,11 +42,14 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeNodeContextMenu = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.searchFormToolStrip = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.searchImgPB = new System.Windows.Forms.PictureBox();
             this.stPanel1.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
             this.stPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
             this.objectEditorMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).BeginInit();
             this.SuspendLayout();
             // 
             // splitter1
@@ -84,22 +85,13 @@
             // stToolStrip1
             // 
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
             this.searchFormToolStrip});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 26);
             this.stToolStrip1.Name = "stToolStrip1";
             this.stToolStrip1.Size = new System.Drawing.Size(314, 25);
             this.stToolStrip1.TabIndex = 3;
             this.stToolStrip1.Text = "stToolStrip1";
-            // 
-            // searchFormToolStrip
-            // 
-            this.searchFormToolStrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.searchFormToolStrip.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail1;
-            this.searchFormToolStrip.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchFormToolStrip.Name = "searchFormToolStrip";
-            this.searchFormToolStrip.Size = new System.Drawing.Size(23, 22);
-            this.searchFormToolStrip.Text = "toolStripButton1";
-            this.searchFormToolStrip.Click += new System.EventHandler(this.searchFormToolStrip_Click);
             // 
             // treeViewCustom1
             // 
@@ -134,18 +126,6 @@
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(314, 26);
             this.stPanel3.TabIndex = 2;
-            // 
-            // searchImgPB
-            // 
-            this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
-            this.searchImgPB.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
-            this.searchImgPB.Location = new System.Drawing.Point(-654, 5);
-            this.searchImgPB.Name = "searchImgPB";
-            this.searchImgPB.Size = new System.Drawing.Size(22, 17);
-            this.searchImgPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.searchImgPB.TabIndex = 1;
-            this.searchImgPB.TabStop = false;
             // 
             // activeEditorChkBox
             // 
@@ -205,6 +185,38 @@
             this.treeNodeContextMenu.Name = "treeNodeContextMenu";
             this.treeNodeContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
+            // searchFormToolStrip
+            // 
+            this.searchFormToolStrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.searchFormToolStrip.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail1;
+            this.searchFormToolStrip.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchFormToolStrip.Name = "searchFormToolStrip";
+            this.searchFormToolStrip.Size = new System.Drawing.Size(23, 22);
+            this.searchFormToolStrip.Text = "toolStripButton1";
+            this.searchFormToolStrip.Click += new System.EventHandler(this.searchFormToolStrip_Click);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::Toolbox.Library.Properties.Resources.AddIcon;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // searchImgPB
+            // 
+            this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
+            this.searchImgPB.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
+            this.searchImgPB.Location = new System.Drawing.Point(-654, 5);
+            this.searchImgPB.Name = "searchImgPB";
+            this.searchImgPB.Size = new System.Drawing.Size(22, 17);
+            this.searchImgPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.searchImgPB.TabIndex = 1;
+            this.searchImgPB.TabStop = false;
+            // 
             // ObjectEditorTree
             // 
             this.Controls.Add(this.splitter1);
@@ -218,9 +230,9 @@
             this.stToolStrip1.PerformLayout();
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).EndInit();
             this.objectEditorMenu.ResumeLayout(false);
             this.objectEditorMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchImgPB)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -242,5 +254,6 @@
         private STContextMenuStrip treeNodeContextMenu;
         private STToolStrip stToolStrip1;
         private System.Windows.Forms.ToolStripButton searchFormToolStrip;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

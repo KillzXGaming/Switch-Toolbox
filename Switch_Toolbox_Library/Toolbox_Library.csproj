@@ -1245,6 +1245,9 @@
   <ItemGroup>
     <None Include="Resources\MetaInfo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddIcon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
