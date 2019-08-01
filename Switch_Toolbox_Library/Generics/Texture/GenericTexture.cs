@@ -520,25 +520,27 @@ namespace Toolbox.Library
                 imageData = CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
                 DontSwapRG = true;
             }
-            if (PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
+            else if (PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
                 imageData = Decode_Gamecube.DecodeData(data, paletteData, Width, Height, Format, PaletteFormat);
-            
-            if (Format == TEX_FORMAT.R32G8X24_FLOAT)
-                imageData = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32G8X24_TYPELESS);
-
-            if (Format == TEX_FORMAT.BC5_SNORM)
-                imageData = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true, true);
-
-            if (IsCompressed(Format))
-                imageData = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
             else
             {
-                if (IsAtscFormat(Format))
-                    imageData = ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1);
-                else
-                    imageData = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
+                if (Format == TEX_FORMAT.R32G8X24_FLOAT)
+                    imageData = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, DDS.DXGI_FORMAT.DXGI_FORMAT_R32G8X24_TYPELESS);
 
-                //    imageData = RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
+                if (Format == TEX_FORMAT.BC5_SNORM)
+                    imageData = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true, true);
+
+                if (IsCompressed(Format))
+                    imageData = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
+                else
+                {
+                    if (IsAtscFormat(Format))
+                        imageData = ASTCDecoder.DecodeToRGBA8888(data, (int)GetBlockWidth(Format), (int)GetBlockHeight(Format), 1, (int)Width, (int)Height, 1);
+                    else
+                        imageData = DDSCompressor.DecodePixelBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);
+
+                    //    imageData = RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
+                }
             }
 
             if (parameters.DontSwapRG || DontSwapRG)

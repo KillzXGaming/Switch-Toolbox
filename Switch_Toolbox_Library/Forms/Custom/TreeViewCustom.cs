@@ -102,9 +102,13 @@ namespace Toolbox.Library
             imgList.Images.Add(image);
         }
 
+        private Thread Thread;
         public void ReloadTextureIcons()
         {
-            Thread Thread = new Thread((ThreadStart)(() =>
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
+            Thread = new Thread((ThreadStart)(() =>
             {
                 foreach (var textureIconList in TextureIcons)
                 {
@@ -123,18 +127,54 @@ namespace Toolbox.Library
 
         public void ReloadTextureIcons(ITextureIconLoader textureIconList)
         {
-            Thread Thread = new Thread((ThreadStart)(() =>
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
+            this.BeginUpdate();
+
+            Thread = new Thread((ThreadStart)(() =>
             {
+                foreach (TreeNode node in textureIconList.IconTextureList)
+                    node.ImageKey = "Texture";
+
+                this.Invoke((MethodInvoker)delegate
+                {
+                    {
+                        this.Refresh();
+                    }
+                });
+
                 foreach (TreeNode node in textureIconList.IconTextureList)
                 {
                     if (node is STGenericTexture)
                     {
-                        var image = ((STGenericTexture)node).GetBitmap();
-                        AddImageOnThread(image, node);
+                        try
+                        {
+                            var image = ((STGenericTexture)node).GetBitmap();
+                            AddImageOnThread(image, node);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
                     }
                 }
+
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        {
+                            this.EndUpdate();
+                            this.Refresh();
+                        }
+                    });
+                }
+                else
+                    this.EndUpdate();
             }));
             Thread.Start();
+
         }
 
         public void AddImageOnThread(Image image, TreeNode node)
@@ -149,7 +189,6 @@ namespace Toolbox.Library
 
                     this.ImageList.Images.Add(image);
                     var dummy = this.ImageList.Handle;
-                    this.Refresh();
 
                     image.Dispose();
                 });

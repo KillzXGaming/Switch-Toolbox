@@ -23,6 +23,8 @@ namespace FirstPlugin
 {
     public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode
     {
+        public List<STGenericTexture> IconTextureList { get; set; }
+
         public FileType FileType { get; set; } = FileType.Image;
 
         public bool CanSave { get; set; }
@@ -482,6 +484,7 @@ namespace FirstPlugin
         public void LoadFile(Stream stream, string Name = "")
         {
             Textures = new Dictionary<string, TextureData>(StringComparer.InvariantCultureIgnoreCase);
+            IconTextureList = new List<STGenericTexture>();
 
             BinaryTexFile = new BntxFile(stream);
             Text = BinaryTexFile.Name;
