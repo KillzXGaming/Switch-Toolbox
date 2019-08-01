@@ -498,6 +498,8 @@ namespace Toolbox.Library.Forms
             {
                 STErrorDialog.Show("Invalid file type. Cannot add file to object list.", "Object List", "");
             }
+
+            ((IUpdateForm)Runtime.MainForm).UpdateForm();
         }
 
         private void sortToolStripMenuItem_Click(object sender, EventArgs e)
