@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Toolbox.Library.Forms
 {
-    public partial class SearchNodeForm : STForm
+    public partial class SearchNodePanel : STUserControl
     {
         private TreeView treeView;
 
@@ -21,7 +21,7 @@ namespace Toolbox.Library.Forms
         
         private List<TreeNode> TreenodeLookup = new List<TreeNode>();
 
-        public SearchNodeForm(TreeView tree)
+        public SearchNodePanel(TreeView tree)
         {
             InitializeComponent();
 
@@ -123,7 +123,7 @@ namespace Toolbox.Library.Forms
             UpdateSearchResults(searchTB.Text);
         }
 
-        private void SearchNodeForm_FormClosed(object sender, FormClosedEventArgs e)
+        public override void OnControlClosing()
         {
             treeView.HideSelection = true;
         }

@@ -21,6 +21,18 @@ namespace Toolbox.Library.Forms
     {
         private bool SuppressAfterSelectEvent = false;
 
+        private bool IsSearchPanelDocked
+        {
+            get
+            {
+                return dockSearchListToolStripMenuItem.Checked;
+            }
+            set
+            {
+                dockSearchListToolStripMenuItem.Checked = value;
+            }
+        }
+
         public ObjectEditor ObjectEditor;
 
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
@@ -104,6 +116,8 @@ namespace Toolbox.Library.Forms
         public ObjectEditorTree(ObjectEditor objectEditor)
         {
             InitializeComponent();
+
+            UpdateSearchPanelDockState();
 
             ObjectEditor = objectEditor;
 
@@ -230,7 +244,7 @@ namespace Toolbox.Library.Forms
         {
             if (searchForm != null)
             {
-                searchForm.Close();
+                searchForm.OnControlClosing();
                 searchForm.Dispose();
             }
 
@@ -591,16 +605,45 @@ namespace Toolbox.Library.Forms
             }
         }
 
-        private SearchNodeForm searchForm;
+        private SearchNodePanel searchForm;
         private void searchFormToolStrip_Click(object sender, EventArgs e)
         {
-            searchForm = new SearchNodeForm(treeViewCustom1);
-            searchForm.Show(this);
+            searchForm = new SearchNodePanel(treeViewCustom1);
+            searchForm.Dock = DockStyle.Fill;
+            STForm form = new STForm();
+
+            var panel = new STPanel() { Dock = DockStyle.Fill };
+            panel.Controls.Add(searchForm);
+            form.AddControl(panel);
+            form.Show(this);
         }
 
         private void treeViewCustom1_DoubleClick(object sender, MouseEventArgs e)
         {
 
         }
+
+        private void dockSearchListToolStripMenuItem_Click(object sender, EventArgs e) {
+            UpdateSearchPanelDockState();
+        }
+
+
+        private void UpdateSearchPanelDockState()
+        {
+            if (IsSearchPanelDocked)
+            {
+                splitContainer1.Panel1Collapsed = false;
+                splitContainer1.Panel1.Controls.Clear();
+
+                searchForm = new SearchNodePanel(treeViewCustom1);
+                searchForm.Dock = DockStyle.Fill;
+                splitContainer1.Panel1.Controls.Add(searchForm);
+            }
+            else
+            {
+                splitContainer1.Panel1Collapsed = true;
+            }
+        }
+
     }
 }

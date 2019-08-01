@@ -1,6 +1,6 @@
 ﻿namespace Toolbox.Library.Forms
 {
-    partial class SearchNodeForm
+    partial class SearchNodePanel
     {
         /// <summary>
         /// Required designer variable.
@@ -39,32 +39,7 @@
             this.listViewModeCB = new Toolbox.Library.Forms.STComboBox();
             this.lblFoundEntries = new Toolbox.Library.Forms.STLabel();
             this.chkUpdateDoubleClick = new Toolbox.Library.Forms.STCheckBox();
-            this.contentContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contentContainer
-            // 
-            this.contentContainer.Controls.Add(this.chkUpdateDoubleClick);
-            this.contentContainer.Controls.Add(this.lblFoundEntries);
-            this.contentContainer.Controls.Add(this.listViewModeCB);
-            this.contentContainer.Controls.Add(this.chkAutoSearch);
-            this.contentContainer.Controls.Add(this.stLabel1);
-            this.contentContainer.Controls.Add(this.searchBtn);
-            this.contentContainer.Controls.Add(this.chkSearchSubNodes);
-            this.contentContainer.Controls.Add(this.chkMatchCase);
-            this.contentContainer.Controls.Add(this.searchTB);
-            this.contentContainer.Controls.Add(this.listViewCustom1);
-            this.contentContainer.Size = new System.Drawing.Size(402, 393);
-            this.contentContainer.Controls.SetChildIndex(this.listViewCustom1, 0);
-            this.contentContainer.Controls.SetChildIndex(this.searchTB, 0);
-            this.contentContainer.Controls.SetChildIndex(this.chkMatchCase, 0);
-            this.contentContainer.Controls.SetChildIndex(this.chkSearchSubNodes, 0);
-            this.contentContainer.Controls.SetChildIndex(this.searchBtn, 0);
-            this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
-            this.contentContainer.Controls.SetChildIndex(this.chkAutoSearch, 0);
-            this.contentContainer.Controls.SetChildIndex(this.listViewModeCB, 0);
-            this.contentContainer.Controls.SetChildIndex(this.lblFoundEntries, 0);
-            this.contentContainer.Controls.SetChildIndex(this.chkUpdateDoubleClick, 0);
             // 
             // listViewCustom1
             // 
@@ -75,7 +50,7 @@
             this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.listViewCustom1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewCustom1.Location = new System.Drawing.Point(5, 100);
+            this.listViewCustom1.Location = new System.Drawing.Point(5, 77);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
             this.listViewCustom1.Size = new System.Drawing.Size(397, 263);
@@ -93,7 +68,7 @@
             // searchTB
             // 
             this.searchTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.searchTB.Location = new System.Drawing.Point(49, 31);
+            this.searchTB.Location = new System.Drawing.Point(48, 3);
             this.searchTB.Name = "searchTB";
             this.searchTB.Size = new System.Drawing.Size(248, 20);
             this.searchTB.TabIndex = 12;
@@ -102,7 +77,7 @@
             // chkMatchCase
             // 
             this.chkMatchCase.AutoSize = true;
-            this.chkMatchCase.Location = new System.Drawing.Point(9, 59);
+            this.chkMatchCase.Location = new System.Drawing.Point(8, 31);
             this.chkMatchCase.Name = "chkMatchCase";
             this.chkMatchCase.Size = new System.Drawing.Size(86, 17);
             this.chkMatchCase.TabIndex = 13;
@@ -113,7 +88,7 @@
             // chkSearchSubNodes
             // 
             this.chkSearchSubNodes.AutoSize = true;
-            this.chkSearchSubNodes.Location = new System.Drawing.Point(196, 59);
+            this.chkSearchSubNodes.Location = new System.Drawing.Point(195, 31);
             this.chkSearchSubNodes.Name = "chkSearchSubNodes";
             this.chkSearchSubNodes.Size = new System.Drawing.Size(111, 17);
             this.chkSearchSubNodes.TabIndex = 14;
@@ -123,7 +98,7 @@
             // searchBtn
             // 
             this.searchBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.searchBtn.Location = new System.Drawing.Point(318, 55);
+            this.searchBtn.Location = new System.Drawing.Point(317, 27);
             this.searchBtn.Name = "searchBtn";
             this.searchBtn.Size = new System.Drawing.Size(75, 23);
             this.searchBtn.TabIndex = 15;
@@ -134,7 +109,7 @@
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(9, 33);
+            this.stLabel1.Location = new System.Drawing.Point(8, 5);
             this.stLabel1.Name = "stLabel1";
             this.stLabel1.Size = new System.Drawing.Size(38, 13);
             this.stLabel1.TabIndex = 16;
@@ -143,7 +118,7 @@
             // chkAutoSearch
             // 
             this.chkAutoSearch.AutoSize = true;
-            this.chkAutoSearch.Location = new System.Drawing.Point(101, 59);
+            this.chkAutoSearch.Location = new System.Drawing.Point(100, 31);
             this.chkAutoSearch.Name = "chkAutoSearch";
             this.chkAutoSearch.Size = new System.Drawing.Size(85, 17);
             this.chkAutoSearch.TabIndex = 17;
@@ -157,7 +132,7 @@
             this.listViewModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.listViewModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.listViewModeCB.FormattingEnabled = true;
-            this.listViewModeCB.Location = new System.Drawing.Point(5, 369);
+            this.listViewModeCB.Location = new System.Drawing.Point(5, 346);
             this.listViewModeCB.Name = "listViewModeCB";
             this.listViewModeCB.ReadOnly = true;
             this.listViewModeCB.Size = new System.Drawing.Size(143, 21);
@@ -168,7 +143,7 @@
             // 
             this.lblFoundEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblFoundEntries.AutoSize = true;
-            this.lblFoundEntries.Location = new System.Drawing.Point(163, 372);
+            this.lblFoundEntries.Location = new System.Drawing.Point(163, 349);
             this.lblFoundEntries.Name = "lblFoundEntries";
             this.lblFoundEntries.Size = new System.Drawing.Size(75, 13);
             this.lblFoundEntries.TabIndex = 19;
@@ -177,24 +152,31 @@
             // chkUpdateDoubleClick
             // 
             this.chkUpdateDoubleClick.AutoSize = true;
-            this.chkUpdateDoubleClick.Location = new System.Drawing.Point(9, 82);
+            this.chkUpdateDoubleClick.Location = new System.Drawing.Point(8, 54);
             this.chkUpdateDoubleClick.Name = "chkUpdateDoubleClick";
             this.chkUpdateDoubleClick.Size = new System.Drawing.Size(138, 17);
             this.chkUpdateDoubleClick.TabIndex = 20;
             this.chkUpdateDoubleClick.Text = "Update by Double Click";
             this.chkUpdateDoubleClick.UseVisualStyleBackColor = true;
             // 
-            // SearchNodeForm
+            // SearchNodePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(408, 398);
-            this.Name = "SearchNodeForm";
-            this.Text = "Search Nodes";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SearchNodeForm_FormClosed);
-            this.contentContainer.ResumeLayout(false);
-            this.contentContainer.PerformLayout();
+            this.Controls.Add(this.chkUpdateDoubleClick);
+            this.Controls.Add(this.lblFoundEntries);
+            this.Controls.Add(this.listViewModeCB);
+            this.Controls.Add(this.chkAutoSearch);
+            this.Controls.Add(this.stLabel1);
+            this.Controls.Add(this.searchBtn);
+            this.Controls.Add(this.chkSearchSubNodes);
+            this.Controls.Add(this.chkMatchCase);
+            this.Controls.Add(this.searchTB);
+            this.Controls.Add(this.listViewCustom1);
+            this.Name = "SearchNodePanel";
+            this.Size = new System.Drawing.Size(408, 375);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

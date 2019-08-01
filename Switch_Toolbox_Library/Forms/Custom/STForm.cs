@@ -24,7 +24,9 @@ namespace Toolbox.Library.Forms
         }
 
         public void AddControl(Control control) {
-            contentContainer.Controls.Add(control);
+            this.contentContainer.Controls.Clear();
+            this.contentContainer.Controls.Add(this.stPanel1);
+            stPanel1.Controls.Add(control);
         }
 
         public override string Text
@@ -54,6 +56,7 @@ namespace Toolbox.Library.Forms
         private const int WM_SETREDRAW = 0xb;
         private const int WM_NCHITTEST = 0x84;
         protected STPanel contentContainer;
+        private STPanel stPanel1;
         private const int WM_NCLBUTTONDOWN = 0xa1;
 
         [DllImport("user32.dll")]
@@ -101,6 +104,7 @@ namespace Toolbox.Library.Forms
             this.BtnMinimize = new System.Windows.Forms.PictureBox();
             this.BtnMinMax = new System.Windows.Forms.PictureBox();
             this.BtnClose = new System.Windows.Forms.PictureBox();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.contentContainer.SuspendLayout();
             this.TitleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PicIcon)).BeginInit();
@@ -201,6 +205,13 @@ namespace Toolbox.Library.Forms
             this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click);
             this.BtnClose.MouseEnter += new System.EventHandler(this.BtnClose_MouseEnter);
             this.BtnClose.MouseLeave += new System.EventHandler(this.BtnClose_MouseLeave);
+            // 
+            // stPanel1
+            // 
+            this.stPanel1.Location = new System.Drawing.Point(0, 27);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(543, 366);
+            this.stPanel1.TabIndex = 11;
             // 
             // STForm
             // 
