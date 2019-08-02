@@ -188,8 +188,6 @@ namespace Toolbox.Library
             if (!Runtime.OpenTKInitialized || !Runtime.renderBones || !Visible)
                 return;
 
-            Console.WriteLine($"SKEL Visible " + Visible);
-
             SF.Shader shader = OpenTKSharedResources.shaders["BONE"];
             shader.UseProgram();
 

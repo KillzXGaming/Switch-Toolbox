@@ -522,14 +522,22 @@ namespace Toolbox.Library
                     for (int a = 0; a < DrawableContainers[i].Drawables.Count; a++)
                     {
                         if (i == index)
-                            DrawableContainers[i].Drawables[a].Visible = true;
+                            SetDrawableVisibilty(DrawableContainers[i].Drawables[a], true);
                         else
-                            DrawableContainers[i].Drawables[a].Visible = false;
+                            SetDrawableVisibilty(DrawableContainers[i].Drawables[a], false);
                     }
                 }
             }
 
             UpdateViewport();
+        }
+
+        private void SetDrawableVisibilty(AbstractGlDrawable drawable, bool show)
+        {
+            if (drawable is EditableObject)
+                ((EditableObject)drawable).Visible = show;
+            else
+                ((AbstractGlDrawable)drawable).Visible = show;
         }
 
         private void DrawAllActive()
