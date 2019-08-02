@@ -125,11 +125,43 @@ namespace Toolbox.Library
 
                 foreach (var texIcon in SingleTextureIcons)
                 {
+                    if (texIcon == null || texIcon.IconTexture == null)
+                        continue;
+
                     var image = texIcon.IconTexture.GetBitmap();
                     AddImageOnThread(image, texIcon.IconTexture);
                 }
             }));
             Thread.Start();
+        }
+
+        public void ReloadTextureIcons(ISingleTextureIconLoader textureIcon, Image image)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    ReloadTextureIcons(textureIcon.IconTexture, image);
+                });
+            }
+            else
+            {
+                ReloadTextureIcons(textureIcon.IconTexture, image);
+            }
+        }
+
+        private void ReloadTextureIcons(TreeNode node, Image image)
+        {
+            if (node.ImageIndex != -1 && node.ImageIndex < this.ImageList.Images.Count)
+                this.ImageList.Images[node.ImageIndex] = image;
+            else
+            {
+                node.ImageIndex = this.ImageList.Images.Count;
+                node.SelectedImageIndex = node.ImageIndex;
+
+                this.ImageList.Images.Add(image);
+            }
+            this.Refresh();
         }
 
         public void ReloadTextureIcons(ISingleTextureIconLoader textureIcon)

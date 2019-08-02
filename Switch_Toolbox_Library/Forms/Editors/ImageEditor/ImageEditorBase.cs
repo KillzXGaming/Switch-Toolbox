@@ -366,6 +366,18 @@ namespace Toolbox.Library.Forms
 
         public Image BaseImage;
 
+        private void UpdateTreeIcon(TreeNode node, Image image)
+        {
+            if (node is ISingleTextureIconLoader)
+            {
+                ObjectEditor editor = LibraryGUI.GetObjectEditor();
+                if (editor != null) //The editor isn't always in object editor so check
+                {
+                    editor.UpdateTextureIcon((ISingleTextureIconLoader)node, image);
+                }
+            }
+        }
+
         private void UpdatePictureBox(int ChannelIndex = 0)
         {
             if (ActiveTexture == null)
@@ -466,6 +478,9 @@ namespace Toolbox.Library.Forms
 
         private void PushImage(Image image)
         {
+            if (image != null)
+                UpdateTreeIcon(ActiveTexture, image);
+
             if (pictureBoxCustom1.InvokeRequired)
             {
                 pictureBoxCustom1.Invoke(this.OnDataAcquiredEvent,
@@ -731,6 +746,8 @@ namespace Toolbox.Library.Forms
 
             pictureBoxCustom1.Image = image;
             pictureBoxCustom1.Refresh();
+
+            UpdateTreeIcon(ActiveTexture, image);
 
             TotalMipCount = ActiveTexture.MipCount - 1;
             TotalArrayCount = ActiveTexture.ArrayCount - 1;

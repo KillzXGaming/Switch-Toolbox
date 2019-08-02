@@ -249,6 +249,10 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public void UpdateTextureIcon(ISingleTextureIconLoader texturIcon, Image image) {
+            treeViewCustom1.ReloadTextureIcons(texturIcon, image);
+        }
+
         public List<Control> GetEditors()
         {
             List<Control> controls = new List<Control>();
