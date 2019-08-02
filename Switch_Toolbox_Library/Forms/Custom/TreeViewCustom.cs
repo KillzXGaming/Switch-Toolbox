@@ -152,6 +152,8 @@ namespace Toolbox.Library
 
         private void ReloadTextureIcons(TreeNode node, Image image)
         {
+            image = BitmapExtension.Resize(image, this.ImageList.ImageSize);
+
             if (node.ImageIndex != -1 && node.ImageIndex < this.ImageList.Images.Count)
                 this.ImageList.Images[node.ImageIndex] = image;
             else
