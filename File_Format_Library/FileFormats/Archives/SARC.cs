@@ -17,7 +17,7 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Sorted ARChive" };
+        public string[] Description { get; set; } = new string[] { "Sead (hashed) Archived Resource" };
         public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sbfarc", "*.sblarc", "*.sbactorpack", ".arc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }

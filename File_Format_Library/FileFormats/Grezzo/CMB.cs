@@ -243,7 +243,7 @@ namespace FirstPlugin
                                     shape.Position.VertexData[v].Y,
                                     shape.Position.VertexData[v].Z);
 
-                                if (shape.Normal != null)
+                                if (shape.Normal.VertexData != null)
                                 {
                                     vert.nrm = new OpenTK.Vector3(
                                     shape.Normal.VertexData[v].X,
@@ -260,19 +260,19 @@ namespace FirstPlugin
                                     shape.Color.VertexData[v].W).Normalized();
                                 }
 
-                                if (shape.TexCoord0 != null)
+                                if (shape.TexCoord0.VertexData != null)
                                 {
                                     vert.uv0 = new OpenTK.Vector2(
                                     shape.TexCoord0.VertexData[v].X,
                                     shape.TexCoord0.VertexData[v].Y);
                                 }
 
-                                if (shape.TexCoord1 != null)
+                                if (shape.TexCoord1.VertexData != null)
                                 {
                                
                                 }
 
-                                if (shape.TexCoord2 != null)
+                                if (shape.TexCoord2.VertexData != null)
                                 {
                                
                                 }
@@ -296,7 +296,7 @@ namespace FirstPlugin
 
                                 bool HasWeights = shape.Primatives[0].SkinningMode == SkinningMode.SMOOTH_SKINNING;
 
-                             /*  if (shape.BoneIndices != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
+                            /*   if (shape.BoneIndices.VertexData != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
                                 {
                                     var BoneIndices = shape.BoneIndices.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
@@ -305,7 +305,7 @@ namespace FirstPlugin
                                         vert.boneIds.Add((int)index);
                                     }
                                 }
-                                if (shape.BoneWeights != null && HasWeights && shape.BoneWeights.VertexData.Length > v)
+                                if (shape.BoneWeights.VertexData != null && HasWeights && shape.BoneWeights.VertexData.Length > v)
                                 {
                                     var BoneWeights = shape.BoneWeights.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
