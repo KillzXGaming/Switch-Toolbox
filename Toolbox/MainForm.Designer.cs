@@ -456,6 +456,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.MdiChildActivate += new System.EventHandler(this.MainForm_MdiChildActivate);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);

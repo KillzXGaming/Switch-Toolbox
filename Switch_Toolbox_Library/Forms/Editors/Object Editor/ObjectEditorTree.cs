@@ -561,8 +561,8 @@ namespace Toolbox.Library.Forms
         private void activeEditorChkBox_CheckedChanged(object sender, EventArgs e)
         {
             AddFilesToActiveEditor = activeEditorChkBox.Checked;
+            Console.WriteLine("AddFilesToActiveObjectEditor " + Runtime.AddFilesToActiveObjectEditor);
         }
-
 
         private void treeViewCustom1_DragDrop(object sender, DragEventArgs e)
         {

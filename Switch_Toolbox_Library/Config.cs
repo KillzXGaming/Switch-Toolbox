@@ -32,7 +32,11 @@ namespace Toolbox.Library
             ReadConfigFromFile(fileName);
         }
 
-        private static void ReadConfigFromFile(string fileName)
+        private static void ReadConfigFromFile(string fileName) {
+            ReadConfigXMLFromFile(fileName);
+        }
+
+        private static XmlDocument ReadConfigXMLFromFile(string fileName)
         {
             int discordImageKey;
             XmlDocument doc = new XmlDocument();
@@ -242,6 +246,8 @@ namespace Toolbox.Library
                         break;
                 }
             }
+
+            return doc;
         }
 
         private static bool TryParsePoint(XmlNode node, ref Point point)

@@ -66,7 +66,6 @@ namespace Toolbox
 
         public void Reload()
         {
-            LoadConfig();
             SupportedFormats = FileManager.GetFileFormats();
             FileMenuExtensions = FileManager.GetMenuExtensions();
         }
@@ -124,6 +123,7 @@ namespace Toolbox
             LoadPLugins();
             UpdateToolbar(HasVersionFile);
             Reload();
+            LoadConfig();
             LoadMDITheme();
             LoadRecentList();
             LoadPluginFileContextMenus();
@@ -1267,6 +1267,9 @@ namespace Toolbox
         {
             ShaderTools.SaveErrorLogs();
 
-        }   
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+        }
     }
 }
