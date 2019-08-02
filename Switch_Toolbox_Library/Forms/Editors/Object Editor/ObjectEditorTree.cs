@@ -670,7 +670,7 @@ namespace Toolbox.Library.Forms
 
         public void LoadGenericTextureIcons(ISingleTextureIconLoader iconTex) {
             treeViewCustom1.SingleTextureIcons.Add(iconTex);
-            treeViewCustom1.ReloadTextureIcons(iconTex);
+            treeViewCustom1.ReloadTextureIcons(iconTex, false);
         }
 
         private void nodeSizeCB_SelectedIndexChanged(object sender, EventArgs e)
@@ -694,7 +694,7 @@ namespace Toolbox.Library.Forms
 
                 treeViewCustom1.ItemHeight = Size;
                 treeViewCustom1.ReloadImages(Size, Size);
-                treeViewCustom1.ReloadTextureIcons();
+                treeViewCustom1.ReloadTextureIcons(true);
             }
         }
 

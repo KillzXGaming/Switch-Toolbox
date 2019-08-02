@@ -104,9 +104,9 @@ namespace Toolbox.Library
         }
 
         private Thread Thread;
-        public void ReloadTextureIcons()
+        public void ReloadTextureIcons(bool CanAbortThread)
         {
-            if (Thread != null && Thread.IsAlive)
+            if (Thread != null && Thread.IsAlive && CanAbortThread)
                 Thread.Abort();
 
             Thread = new Thread((ThreadStart)(() =>
@@ -166,9 +166,9 @@ namespace Toolbox.Library
             this.Refresh();
         }
 
-        public void ReloadTextureIcons(ISingleTextureIconLoader textureIcon)
+        public void ReloadTextureIcons(ISingleTextureIconLoader textureIcon, bool CanAbortThread)
         {
-            if (Thread != null && Thread.IsAlive)
+            if (Thread != null && Thread.IsAlive && CanAbortThread)
                 Thread.Abort();
 
             Thread = new Thread((ThreadStart)(() =>
