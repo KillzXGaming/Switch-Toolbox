@@ -19,6 +19,8 @@ namespace Toolbox.Library
 {
     public class STSkeleton : EditableObject
     {
+        public virtual float PreviewScale { get; set; } = 1.0f;
+
         public Vector3 position = new Vector3(0, 0, 0);
 
         protected bool Selected = false;
@@ -200,7 +202,7 @@ namespace Toolbox.Library
                 DrawBoundingBoxes();
 
             control.UpdateModelMatrix(
-            Matrix4.CreateScale(Runtime.previewScale) *
+            Matrix4.CreateScale(Runtime.previewScale * PreviewScale) *
             Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
 
 

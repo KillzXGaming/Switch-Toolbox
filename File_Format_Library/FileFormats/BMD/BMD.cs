@@ -18,10 +18,8 @@ using OpenTK;
 
 namespace FirstPlugin
 {
-    public class BMD : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer, ITextureIconLoader
+    public class BMD : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer
     {
-        public List<STGenericTexture> IconTextureList { get; set; }
-
         public FileType FileType { get; set; } = FileType.Layout;
 
         public bool CanSave { get; set; }
@@ -117,7 +115,6 @@ namespace FirstPlugin
             DrawableContainer.Drawables.Add(Skeleton);
 
             Textures = new Dictionary<string, STGenericTexture>();
-            IconTextureList = new List<STGenericTexture>();
 
             BMD_Renderer.TextureContainers.Add(this);
 
@@ -278,7 +275,6 @@ namespace FirstPlugin
                 var texWrapper = new BMDTextureWrapper(BMDFile.Textures.Textures[i]);
                 TextureFolder.Nodes.Add(texWrapper);
                 Renderer.TextureList.Add(texWrapper);
-                IconTextureList.Add(texWrapper);
             }
         }
 

@@ -14,6 +14,8 @@ namespace Toolbox.Library.Rendering
 {
     public class GenericModelRenderer : AbstractGlDrawable
     {
+        public virtual float PreviewScale { get; set; } = 1.0f;
+
         public static List<ITextureContainer> TextureContainers = new List<ITextureContainer>();
 
         public List<GenericRenderedObject> Meshes = new List<GenericRenderedObject>();
@@ -170,7 +172,7 @@ namespace Toolbox.Library.Rendering
 
             ShaderProgram shader = defaultShaderProgram;
             control.CurrentShader = shader;
-            control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
+            control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale * PreviewScale) * ModelTransform);
 
             OnRender(control);
 

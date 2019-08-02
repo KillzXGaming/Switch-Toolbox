@@ -272,7 +272,7 @@ namespace Toolbox.Library
             imgList.Images.Add("vec3", Properties.Resources.IconVec3);
             imgList.Images.Add("vec4", Properties.Resources.IconVec4);
 
-            Bitmap bmp = new Bitmap(32, 32);
+            Bitmap bmp = new Bitmap(Width, Height);
             Graphics g = Graphics.FromImage(bmp);
             g.Clear(Color.Transparent);
 
