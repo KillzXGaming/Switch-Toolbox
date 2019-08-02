@@ -389,9 +389,6 @@ namespace Toolbox.Library.Forms
 
             var image = ActiveTexture.GetBitmap(CurArrayDisplayLevel, CurMipDisplayLevel);
 
-            if (image != null)
-                UpdateTreeIcon(ActiveTexture, image);
-
             //Keep base image for channel viewer updating/editing
             if (image != null)
                 BaseImage = new Bitmap(image);
@@ -456,8 +453,11 @@ namespace Toolbox.Library.Forms
 
                 // BitmapExtension.SetChannels(image, HasRedChannel, HasBlueChannel, HasGreenChannel, HasAlphaChannel);
                 PushImage(image);
-            }
 
+
+                if (image != null)
+                    UpdateTreeIcon(ActiveTexture, image);
+            }
         }
 
         private bool HasZeroAlpha()
