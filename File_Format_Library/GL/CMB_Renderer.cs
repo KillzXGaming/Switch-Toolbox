@@ -23,6 +23,14 @@ namespace FirstPlugin
            
         }
 
+        public override void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
+        {
+            var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).Material;
+
+
+            //shader.SetBoolToInt("isTransparent", cmbMaterial.isTransparent);
+        }
+
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + tex.textureUnit + 1);

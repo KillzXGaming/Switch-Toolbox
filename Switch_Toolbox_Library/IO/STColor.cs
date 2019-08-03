@@ -35,7 +35,17 @@ namespace Toolbox.Library
                 A = color.A / 255f;
             }
         }
-            
+
+        public static STColor FromBytes(byte[] color)
+        {
+            STColor col = new STColor();
+            col.R = color[0] / 255f;
+            col.G = color[1] / 255f;
+            col.B = color[2] / 255f;
+            col.A = color[3] / 255f;
+
+            return col;
+        }
 
         public STColor()
         {

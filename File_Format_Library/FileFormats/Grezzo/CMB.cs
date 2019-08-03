@@ -9,6 +9,7 @@ using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Rendering;
 using Grezzo.CmbEnums;
+using OpenTK.Graphics.OpenGL;
 
 namespace FirstPlugin
 {
@@ -192,7 +193,7 @@ namespace FirstPlugin
                     int materialIndex = 0;
                     foreach (var mat in header.SectionData.MaterialChunk.Materials)
                     {
-                        STGenericMaterial material = new STGenericMaterial();
+                        CMBMaterialWrapper material = new CMBMaterialWrapper(mat);
                         material.Text = $"Material {materialIndex++}";
                         materialFolder.Nodes.Add(material);
                         materials.Add(material);
@@ -348,6 +349,8 @@ namespace FirstPlugin
 
                 if (texFolder.Nodes.Count > 0)
                     Nodes.Add(texFolder);
+
+                materials.Clear();
             }
         }
 
@@ -369,7 +372,12 @@ namespace FirstPlugin
 
         public class CMBMaterialWrapper : STGenericMaterial
         {
-            
+            public Material Material { get; set; }
+
+            public CMBMaterialWrapper(Material material)
+            {
+                Material = material;
+            }
         }
 
         public class CMBTextureMapWrapper : STGenericMatTexture
@@ -1176,6 +1184,7 @@ namespace FirstPlugin
 
             public List<Material> Materials = new List<Material>();
 
+            internal int textureCombinerSettingsTableOffs;
             public void Read(FileReader reader, Header header)
             {
                 long pos = reader.Position;
@@ -1183,16 +1192,19 @@ namespace FirstPlugin
                 reader.ReadSignature(4, Magic);
                 uint sectionSize = reader.ReadUInt32();
                 uint count = reader.ReadUInt32();
+
+                int materialSize = 0x15C;
+                if (header.Version >= CMBVersion.MM3DS)
+                    materialSize = 0x16C;
+
+                textureCombinerSettingsTableOffs = (int)(pos + (count * materialSize));
+
                 for (int i = 0; i < count; i++)
                 {
-                    int materialSize = 0x15C;
-                    if (header.Version >= CMBVersion.MM3DS)
-                        materialSize = 0x16C;
-
                     reader.SeekBegin(pos + 0xC + (i * materialSize));
 
                     Material mat = new Material();
-                    mat.Read(reader, header);
+                    mat.Read(reader, header, this);
                     Materials.Add(mat);
                 }
             }
@@ -1216,7 +1228,22 @@ namespace FirstPlugin
             public TextureMap[] TextureMaps;
             public TextureMatrix[] TextureMaticies;
 
-            public void Read(FileReader reader, Header header)
+            public List<TextureCombiner> TextureCombiners = new List<TextureCombiner>();
+
+            public STColor[] ConstantColors;
+
+            public bool AlphaTestEnable;
+            public float AlphaTestReference;
+
+            public bool DepthTestEnable;
+
+            public bool DepthWriteEnable;
+
+            public AlphaFunction AlphaTestFunction;
+
+            public DepthFunction DepthTestFunction;
+
+            public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
                 TextureMaps = new TextureMap[3];
                 TextureMaticies = new TextureMatrix[3];
@@ -1254,7 +1281,118 @@ namespace FirstPlugin
                     TextureMaticies[j].Translate = reader.ReadVec2SY();
                     TextureMaticies[j].Rotate = reader.ReadSingle();
                 }
+
+                uint unkColor0 = reader.ReadUInt32();
+
+                ConstantColors = new STColor[6];
+                ConstantColors[0] = STColor.FromBytes(reader.ReadBytes(4));
+                ConstantColors[1] = STColor.FromBytes(reader.ReadBytes(4));
+                ConstantColors[2] = STColor.FromBytes(reader.ReadBytes(4));
+                ConstantColors[3] = STColor.FromBytes(reader.ReadBytes(4));
+                ConstantColors[4] = STColor.FromBytes(reader.ReadBytes(4));
+                ConstantColors[5] = STColor.FromBytes(reader.ReadBytes(4));
+
+                float bufferColorR = reader.ReadSingle();
+                float bufferColorG = reader.ReadSingle();
+                float bufferColorB = reader.ReadSingle();
+                float bufferColorA = reader.ReadSingle();
+
+                int bumpTextureIndex = reader.ReadInt16();
+                int lightEnvBumpUsage = reader.ReadInt16();
+
+                // Fragment lighting table.
+                byte reflectanceRSamplerIsAbs = reader.ReadByte();
+                ushort reflectanceRSamplerInput = reader.ReadUInt16();
+                uint reflectanceRSamplerScale = reader.ReadUInt32();
+
+                byte reflectanceGSamplerIsAbs = reader.ReadByte();
+                ushort reflectanceGSamplerInput = reader.ReadUInt16();
+                uint reflectanceGSamplerScale = reader.ReadUInt32();
+
+                byte reflectanceBSamplerIsAbs = reader.ReadByte();
+                ushort reflectanceBSamplerInput = reader.ReadUInt16();
+                uint reflectanceBSamplerScale = reader.ReadUInt32();
+
+                byte reflectance0SamplerIsAbs = reader.ReadByte();
+                ushort reflectance0SamplerInput = reader.ReadUInt16();
+                uint reflectance0SamplerScale = reader.ReadUInt32();
+
+                byte reflectance1SamplerIsAbs = reader.ReadByte();
+                ushort reflectance1SamplerInput = reader.ReadUInt16();
+                uint reflectance1SamplerScale = reader.ReadUInt32();
+
+                byte fresnelSamplerIsAbs = reader.ReadByte();
+                ushort fresnelSamplerInput = reader.ReadUInt16();
+                uint fresnelSamplerScale = reader.ReadUInt32();
+
+                reader.SeekBegin(pos + 0x120);
+                uint textureCombinerTableCount = reader.ReadUInt32();
+                int textureCombinerTableIdx = (int)pos + 0x124;
+                for (int i = 0; i < textureCombinerTableCount; i++)
+                {
+                    reader.SeekBegin(textureCombinerTableIdx + 0x00);
+                    ushort textureCombinerIndex = reader.ReadUInt16();
+
+                    reader.SeekBegin(materialChunkParent.textureCombinerSettingsTableOffs + textureCombinerIndex * 0x28);
+                    TextureCombiner combner = new TextureCombiner();
+                    combner.combineRGB = reader.ReadEnum<CombineResultOpDMP>(false);
+                    combner.combineAlpha = reader.ReadEnum<CombineResultOpDMP>(false);
+                    combner.scaleRGB = reader.ReadEnum<CombineScaleDMP>(false);
+                    combner.scaleAlpha = reader.ReadEnum<CombineScaleDMP>(false);
+                    combner.bufferInputRGB = reader.ReadEnum<CombineBufferInputDMP>(false);
+                    combner.bufferInputAlpha = reader.ReadEnum<CombineBufferInputDMP>(false);
+                    combner.source0RGB = reader.ReadEnum<CombineSourceDMP>(false);
+                    combner.source1RGB = reader.ReadEnum<CombineSourceDMP>(false);
+                    combner.source2RGB = reader.ReadEnum<CombineSourceDMP>(false);
+                    combner.op0RGB = reader.ReadEnum<CombineOpDMP>(false);
+                    combner.op1RGB = reader.ReadEnum<CombineOpDMP>(false);
+                    combner.op2RGB = reader.ReadEnum<CombineOpDMP>(false);
+                    combner.source0Alpha = reader.ReadEnum<CombineSourceDMP>(false);
+                    combner.source1Alpha = reader.ReadEnum<CombineSourceDMP>(false);
+                    combner.source2Alpha = reader.ReadEnum<CombineSourceDMP>(false);
+                    combner.op0Alpha = reader.ReadEnum<CombineOpDMP>(false);
+                    combner.op1Alpha = reader.ReadEnum<CombineOpDMP>(false);
+                    combner.op2Alpha = reader.ReadEnum<CombineOpDMP>(false);
+                    combner.constantIndex = reader.ReadUInt32();
+                    TextureCombiners.Add(combner);
+
+                    textureCombinerTableIdx += 0x2;
+                }
+
+                reader.SeekBegin(pos + 0x130);
+                AlphaTestEnable = reader.ReadBoolean();
+                AlphaTestReference = reader.ReadByte() / 255.0f;
+                AlphaTestFunction = reader.ReadEnum<AlphaFunction>(false);
+
+                DepthTestEnable = reader.ReadBoolean();
+                DepthWriteEnable = reader.ReadBoolean();
+                DepthTestFunction = reader.ReadEnum<DepthFunction>(false);
             }
+        }
+
+        public class TextureCombiner
+        {
+            public CombineResultOpDMP combineRGB;
+            public CombineResultOpDMP combineAlpha;
+            public CombineScaleDMP scaleRGB;
+            public CombineScaleDMP scaleAlpha;
+            public CombineBufferInputDMP bufferInputRGB;
+            public CombineBufferInputDMP bufferInputAlpha;
+            public CombineSourceDMP source0RGB;
+            public CombineSourceDMP source1RGB;
+            public CombineSourceDMP source2RGB;
+            public CombineOpDMP op0RGB;
+            public CombineOpDMP op1RGB;
+            public CombineOpDMP op2RGB;
+            public CombineSourceDMP source0Alpha;
+            public CombineSourceDMP source1Alpha;
+            public CombineSourceDMP source2Alpha;
+
+            public CombineOpDMP op0Alpha;
+            public CombineOpDMP op1Alpha;
+            public CombineOpDMP op2Alpha;
+            public uint constantIndex;
+
         }
 
         public class TextureMatrix

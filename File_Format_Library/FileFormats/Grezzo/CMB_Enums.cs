@@ -58,7 +58,7 @@ namespace Grezzo.CmbEnums
         MIRRORED_REPEAT = 0x8370,
     }
 
-    public enum CombineResultOpDMP
+    public enum CombineResultOpDMP : ushort
     {
         REPLACE = 0x1E01,
         MODULATE = 0x2100,
@@ -72,7 +72,7 @@ namespace Grezzo.CmbEnums
         ADD_MULT = 0x6402,
     };
 
-    public enum CombineScaleDMP
+    public enum CombineScaleDMP : ushort
     {
         _1 = 0x01,
         _2 = 0x02,
@@ -85,7 +85,7 @@ namespace Grezzo.CmbEnums
         PREVIOUS_BUFFER = 0x8579,
     };
 
-    public enum CombineSourceDMP
+    public enum CombineSourceDMP : ushort
     {
         TEXTURE0 = 0x84C0,
         TEXTURE1 = 0x84C1,
@@ -99,7 +99,7 @@ namespace Grezzo.CmbEnums
         FRAGMENT_SECONDARY_COLOR = 0x6211,
     };
 
-    public enum CombineOpDMP
+    public enum CombineOpDMP : ushort
     {
         SRC_COLOR = 0x0300,
         ONE_MINUS_SRC_COLOR = 0x0301,
