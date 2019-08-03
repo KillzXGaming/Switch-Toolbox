@@ -30,7 +30,11 @@ namespace FirstPlugin
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "ZAR/x01") || reader.CheckSignature(4, "GAR\x02") || reader.CheckSignature(4, "GAR\x05");
+                return reader.CheckSignature(4, "ZAR\x01") ||
+                       reader.CheckSignature(4, "GAR\x02") ||
+                       reader.CheckSignature(4, "GAR\x03") ||
+                       reader.CheckSignature(4, "GAR\x04") ||
+                       reader.CheckSignature(4, "GAR\x05");
             }
         }
 
@@ -168,7 +172,10 @@ namespace FirstPlugin
                 {
                     for (int f = 0; f < ((FileGroup)FileGroups[i]).FileCount; f++)
                     {
-                        GarFileInfos.Add(new GarFileInfo(reader));
+                        if (Version == VersionMagic.ZAR1)
+                            GarFileInfos.Add(new ZarFileInfo(reader));
+                        else
+                            GarFileInfos.Add(new GarFileInfo(reader));
                     }
                 }
 
@@ -176,11 +183,22 @@ namespace FirstPlugin
                 uint[] Offsets = reader.ReadUInt32s(FileCount);
                 for (int i = 0; i < GarFileInfos.Count; i++)
                 {
-                    files.Add(new FileEntry()
+                    if (GarFileInfos[i] is ZarFileInfo)
                     {
-                        FileName = ((GarFileInfo)GarFileInfos[i]).FileName,
-                        FileData = reader.getSection(Offsets[i], ((GarFileInfo)GarFileInfos[i]).FileSize)
-                    });
+                        files.Add(new FileEntry()
+                        {
+                            FileName = ((ZarFileInfo)GarFileInfos[i]).FileName,
+                            FileData = reader.getSection(Offsets[i], ((ZarFileInfo)GarFileInfos[i]).FileSize)
+                        });
+                    }
+                    else
+                    {
+                        files.Add(new FileEntry()
+                        {
+                            FileName = ((GarFileInfo)GarFileInfos[i]).FileName,
+                            FileData = reader.getSection(Offsets[i], ((GarFileInfo)GarFileInfos[i]).FileSize)
+                        });
+                    }
                 }
             }
 

@@ -92,6 +92,8 @@ namespace FirstPlugin
 
             shader.SetBoolToInt("isTransparent", cmbMaterial.BlendEnaled);
 
+            SetGLCullMode(cmbMaterial.CullMode);
+
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(cmbMaterial.BlendingFactorSrcAlpha, cmbMaterial.BlendingFactorDestAlpha);
             GL.BlendColor(1.0f, 1.0f, 1.0f, cmbMaterial.BlendColorA);
@@ -101,6 +103,21 @@ namespace FirstPlugin
                 GL.Disable(EnableCap.AlphaTest);
 
             GL.AlphaFunc(cmbMaterial.AlphaTestFunction, cmbMaterial.AlphaTestReference);
+        }
+
+        private void SetGLCullMode(CullMode CullMode)
+        {
+            GL.Enable(EnableCap.CullFace);
+
+            if (CullMode == CullMode.BACK)
+                GL.CullFace(CullFaceMode.Back);
+            if (CullMode == CullMode.FRONT)
+                GL.CullFace(CullFaceMode.Front);
+            if (CullMode == CullMode.FRONT_AND_BACK)
+                GL.CullFace(CullFaceMode.FrontAndBack);
+            if (CullMode == CullMode.NONE)
+                GL.Disable(EnableCap.CullFace);
+
         }
 
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
