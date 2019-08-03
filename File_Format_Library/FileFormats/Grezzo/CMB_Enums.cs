@@ -37,10 +37,10 @@ namespace Grezzo.CmbEnums
 
     public enum CullMode : byte
     {
-        FRONT_AND_BACK,
+        NONE,
         BACK,
         FRONT,
-        NONE,
+        FRONT_AND_BACK,
     }
 
     public enum SkinningMode : ushort

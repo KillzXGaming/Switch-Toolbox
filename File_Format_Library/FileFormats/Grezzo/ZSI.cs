@@ -86,6 +86,8 @@ namespace FirstPlugin
 
                 string CodeName = reader.ReadString(0x0C);
 
+                Console.WriteLine("Version " + Version);
+
                 var Rooms = ReadRoomHeaders(reader, Version);
                 foreach (var room in Rooms)
                     LoadRooms(room, this);

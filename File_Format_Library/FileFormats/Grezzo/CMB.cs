@@ -838,7 +838,7 @@ namespace FirstPlugin
                 for (int i = 0; i < meshCount; i++)
                 {
                     if (header.Version == CMBVersion.OOT3DS)
-                        reader.SeekBegin(meshPos + (i * 0x04));
+                        reader.SeekBegin(meshPos + (i * 4));
                     else if (header.Version == CMBVersion.MM3DS)
                         reader.SeekBegin(meshPos + (i * 0x0C));
                     else if (header.Version >= CMBVersion.LM3DS)
@@ -848,6 +848,9 @@ namespace FirstPlugin
                     mesh.SepdIndex = reader.ReadUInt16();
                     mesh.MaterialIndex = reader.ReadByte();
                     Meshes.Add(mesh);
+
+                    Console.WriteLine($"SepdIndex {mesh.SepdIndex}");
+                    Console.WriteLine($"MaterialIndex { mesh.MaterialIndex}");
                 }
             }
 
@@ -933,6 +936,8 @@ namespace FirstPlugin
                     reader.SeekBegin(pos + 0x3C);
                 else
                     reader.SeekBegin(pos + 0x24);
+
+                Console.WriteLine("sepd count " + count);
 
                 Position = ReadVertexAttrib(reader);
                 Normal = ReadVertexAttrib(reader);
