@@ -425,7 +425,7 @@ namespace Toolbox.Library.Rendering
                     SetVertexAttributes(m, shader);
                     SetTextureUniforms(Material, m, shader);
 
-                    if (m.IsSelected)
+                    if (m.IsSelected || m.GetMaterial().IsSelected)
                     {
                         DrawModelSelection(group, shader);
                     }

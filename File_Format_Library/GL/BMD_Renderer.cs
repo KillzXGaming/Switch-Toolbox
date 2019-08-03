@@ -19,7 +19,10 @@ namespace FirstPlugin
 
         public override void OnRender(GLControl control)
         {
-         
+            GL.Enable(EnableCap.AlphaTest);
+            GL.AlphaFunc(AlphaFunction.Gequal, 0.1f);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         }
 
         public override void DrawModels(ShaderProgram shader, GL_ControlModern control)
@@ -53,12 +56,14 @@ namespace FirstPlugin
         {
             var bmdMaterial = (BMDMaterialWrapper)mat;
 
+            //This is only for translucency
+            //Todo figure out how bmd determines transparent materials
             shader.SetBoolToInt("isTransparent", bmdMaterial.isTransparent);
 
             GXToOpenGL.SetBlendState(bmdMaterial.Material.BMode);
             GXToOpenGL.SetCullState(bmdMaterial.Material.CullMode);
-            GXToOpenGL.SetDepthState(bmdMaterial.Material.ZMode, false);
-            GXToOpenGL.SetDitherEnabled(bmdMaterial.Material.Dither);
+          //  GXToOpenGL.SetDepthState(bmdMaterial.Material.ZMode, false);
+           // GXToOpenGL.SetDitherEnabled(bmdMaterial.Material.Dither);
         }
 
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)

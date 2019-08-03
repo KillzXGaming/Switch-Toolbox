@@ -67,7 +67,7 @@ uniform samplerCube irradianceMap;
 uniform samplerCube specularIbl;
 uniform sampler2D brdfLUT;
 
-int isTransparent;
+uniform int isTransparent;
 
 out vec4 fragColor;
 
@@ -142,6 +142,7 @@ void main()
      // Global brightness adjustment.
 	// fragColor.rgb *= 1.5;
 
+    fragColor.a = 1;
 	if (isTransparent == 1)
 	{
 	    fragColor.a = alpha;

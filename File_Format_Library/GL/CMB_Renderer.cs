@@ -52,18 +52,49 @@ namespace FirstPlugin
 
         public override void OnRender(GLControl control)
         {
-           
+            GL.Enable(EnableCap.AlphaTest);
+            GL.AlphaFunc(AlphaFunction.Gequal, 0.1f);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        }
+
+        public override void DrawModels(ShaderProgram shader, GL_ControlModern control)
+        {
+            shader.EnableVertexAttributes();
+
+            List<STGenericObject> opaque = new List<STGenericObject>();
+            List<STGenericObject> transparent = new List<STGenericObject>();
+
+            for (int m = 0; m < Meshes.Count; m++)
+            {
+                if (((CMB.CMBMaterialWrapper)Meshes[m].GetMaterial()).Material.IsTransparent)
+                    transparent.Add(Meshes[m]);
+                else
+                    opaque.Add(Meshes[m]);
+            }
+
+            for (int m = 0; m < transparent.Count; m++)
+            {
+                DrawModel(control, Skeleton, transparent[m].GetMaterial(), transparent[m], shader);
+            }
+
+            for (int m = 0; m < opaque.Count; m++)
+            {
+                DrawModel(control, Skeleton, opaque[m].GetMaterial(), opaque[m], shader);
+            }
+
+            shader.DisableVertexAttributes();
         }
 
         public override void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
         {
             var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).Material;
 
-            shader.SetBoolToInt("isTransparent", cmbMaterial.IsTransparent);
+            shader.SetBoolToInt("isTransparent", cmbMaterial.BlendEnaled);
 
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(cmbMaterial.BlendingFactorSrcAlpha, cmbMaterial.BlendingFactorDestAlpha);
-            GL.BlendColor(cmbMaterial.BlendColorR, cmbMaterial.BlendColorG, cmbMaterial.BlendColorB, cmbMaterial.BlendColorA);
+            GL.BlendColor(1.0f, 1.0f, 1.0f, cmbMaterial.BlendColorA);
             if (cmbMaterial.AlphaTestEnable)
                 GL.Enable(EnableCap.AlphaTest);
             else

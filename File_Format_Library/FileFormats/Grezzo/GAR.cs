@@ -10,7 +10,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class ZAR : IArchiveFile, IFileFormat
+    public class GAR : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -76,8 +76,8 @@ namespace FirstPlugin
             public uint DataOffset;
             public string Codename;
 
-            public List<FileGroup> FileGroups = new List<FileGroup>();
-            public List<GarFileInfo> GarFileInfos = new List<GarFileInfo>();
+            public List<IFileGroup> FileGroups = new List<IFileGroup>();
+            public List<IFileInfo> GarFileInfos = new List<IFileInfo>();
 
             public void Read(FileReader reader, List<FileEntry> files)
             {
@@ -112,16 +112,45 @@ namespace FirstPlugin
                         break;
                     case "agora\0\0\0":
                     case "SYSTEM\0\0":
-                        ReadGrezzoArchive(reader, files);
+                        ReadSystemGrezzoArchive(reader, files);
                         break;
                     default:
                         throw new Exception($"Unexpected codename! {Codename}");
                 }
             }
 
-            private void ReadGrezzoArchive(FileReader reader, List<FileEntry> files)
+            private void ReadSystemGrezzoArchive(FileReader reader, List<FileEntry> files)
             {
-              
+                reader.SeekBegin(FileGroupOffset);
+                for (int i = 0; i < FileGroupCount; i++)
+                {
+                    FileGroups.Add(new SystemFileGroup(reader));
+                    reader.Align(0x20);
+                }
+
+                reader.BaseStream.Position = FileGroups.Min(x => ((SystemFileGroup)x).SubTableOffset);
+                byte[] entries = reader.ReadBytes((int)FileInfoOffset - (int)reader.BaseStream.Position);
+
+                reader.SeekBegin(FileInfoOffset);
+                for (int i = 0; i < FileGroupCount; i++)
+                {
+                    for (int f = 0; f < ((SystemFileGroup)FileGroups[i]).FileCount; f++)
+                    {
+                        GarFileInfos.Add(new SystemGarFileInfo(reader));
+                        ((SystemGarFileInfo)GarFileInfos.Last()).ext = ((SystemFileGroup)FileGroups[i]).Name;
+                    }
+                }
+
+                reader.SeekBegin(DataOffset);
+                for (int i = 0; i < GarFileInfos.Count; i++)
+                {
+                    var info = (SystemGarFileInfo)GarFileInfos[i];
+                    files.Add(new FileEntry()
+                    {
+                        FileName = $"{info.Name}.{info.ext}",
+                        FileData = reader.getSection(info.FileOffset, info.FileSize)
+                    });
+                }
             }
 
             private void ReadZeldaArchive(FileReader reader, List<FileEntry> files)
@@ -131,14 +160,16 @@ namespace FirstPlugin
                     FileGroups.Add(new FileGroup(reader));
 
                 for (int i = 0; i < FileGroupCount; i++)
-                    FileGroups[i].Ids = reader.ReadInt32s((int)FileGroups[i].FileCount);
+                    ((FileGroup)FileGroups[i]).Ids = reader.ReadInt32s((int)((FileGroup)FileGroups[i]).FileCount);
 
 
                 reader.SeekBegin(FileInfoOffset);
                 for (int i = 0; i < FileGroupCount; i++)
                 {
-                    for (int f = 0; f < FileGroups[i].FileCount; f++)
+                    for (int f = 0; f < ((FileGroup)FileGroups[i]).FileCount; f++)
+                    {
                         GarFileInfos.Add(new GarFileInfo(reader));
+                    }
                 }
 
                 reader.SeekBegin(DataOffset);
@@ -147,13 +178,23 @@ namespace FirstPlugin
                 {
                     files.Add(new FileEntry()
                     {
-                        FileName = GarFileInfos[i].FileName,
-                        FileData = reader.getSection(Offsets[i], GarFileInfos[i].FileSize)
+                        FileName = ((GarFileInfo)GarFileInfos[i]).FileName,
+                        FileData = reader.getSection(Offsets[i], ((GarFileInfo)GarFileInfos[i]).FileSize)
                     });
                 }
             }
 
-            public class FileGroup
+            public interface IFileGroup
+            {
+
+            }
+
+            public interface IFileInfo
+            {
+
+            }
+
+            public class FileGroup : IFileGroup
             {
                 public uint FileCount;
                 public uint DataOffset;
@@ -166,11 +207,31 @@ namespace FirstPlugin
                     FileCount = reader.ReadUInt32();
                     DataOffset = reader.ReadUInt32();
                     InfoOffset = reader.ReadUInt32();
-                    reader.ReadUInt32();
+                    reader.ReadUInt32(); //padding
                 }
             }
 
-            public class ZarFileInfo
+            public class SystemFileGroup : IFileGroup
+            {
+                public uint FileCount;
+                public uint Unknown;
+                public uint InfoOffset;
+                public string Name;
+                public uint SubTableOffset;
+
+                public int[] Ids;
+
+                public SystemFileGroup(FileReader reader)
+                {
+                    FileCount = reader.ReadUInt32();
+                    Unknown = reader.ReadUInt32();
+                    InfoOffset = reader.ReadUInt32();
+                    Name = reader.LoadString(false, typeof(uint));
+                    SubTableOffset = reader.ReadUInt32();
+                }
+            }
+
+            public class ZarFileInfo : IFileInfo
             {
                 public uint FileSize;
                 public string FileName;
@@ -182,7 +243,7 @@ namespace FirstPlugin
                 }
             }
 
-            public class GarFileInfo
+            public class GarFileInfo : IFileInfo
             {
                 public uint FileSize;
                 public string FileName;
@@ -193,6 +254,23 @@ namespace FirstPlugin
                     FileSize = reader.ReadUInt32();
                     Name = reader.LoadString(false, typeof(uint));
                     FileName = reader.LoadString(false, typeof(uint));
+                }
+            }
+
+            public class SystemGarFileInfo : IFileInfo
+            {
+                public uint FileSize;
+                public uint FileOffset;
+                public string FileName;
+                public string Name;
+                public string ext;
+
+                public SystemGarFileInfo(FileReader reader)
+                {
+                    FileSize = reader.ReadUInt32();
+                    FileOffset = reader.ReadUInt32();
+                    Name = reader.LoadString(false, typeof(uint));
+                    reader.ReadUInt32();//padding
                 }
             }
         }

@@ -212,6 +212,12 @@ namespace FirstPlugin
                                 if (index == 0)
                                     matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
 
+                                if (tex.TextureIndex < Renderer.TextureList.Count && tex.TextureIndex > 0)
+                                {
+                                    matTexture.Name = Renderer.TextureList[tex.TextureIndex].Text;
+                                    material.Nodes.Add(matTexture.Name);
+                                }
+
                                 index++;
                             }
                         }
@@ -300,7 +306,7 @@ namespace FirstPlugin
 
                                 bool HasWeights = shape.Primatives[0].SkinningMode == SkinningMode.SMOOTH_SKINNING;
 
-                            /*   if (shape.BoneIndices.VertexData != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
+                           /*    if (shape.BoneIndices.VertexData != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
                                 {
                                     var BoneIndices = shape.BoneIndices.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
@@ -1203,6 +1209,8 @@ namespace FirstPlugin
                 {
                     reader.SeekBegin(pos + 0xC + (i * materialSize));
 
+                    Console.WriteLine("MAT " + i);
+
                     Material mat = new Material();
                     mat.Read(reader, header, this);
                     Materials.Add(mat);
@@ -1376,7 +1384,7 @@ namespace FirstPlugin
 
                 reader.SeekBegin(pos + 0x130);
                 AlphaTestEnable = reader.ReadBoolean();
-                AlphaTestReference = reader.ReadByte() / 255.0f;
+                AlphaTestReference = reader.ReadByte() / 0xFF;
                 AlphaTestFunction = (AlphaFunction)reader.ReadUInt16();
 
                 DepthTestEnable = reader.ReadBoolean();
@@ -1399,13 +1407,13 @@ namespace FirstPlugin
 
                 reader.SeekBegin(pos + 0x13C);
 
-                BlendingFactorSrcRGB = (BlendingFactor)reader.ReadUInt16();
-                BlendingFactorDestRGB = (BlendingFactor)reader.ReadUInt16();
+                BlendingFactorSrcAlpha = (BlendingFactor)reader.ReadUInt16();
+                BlendingFactorDestAlpha = (BlendingFactor)reader.ReadUInt16();
 
                 reader.SeekBegin(pos + 0x144);
 
-                BlendingFactorSrcAlpha = (BlendingFactor)reader.ReadUInt16();
-                BlendingFactorDestAlpha = (BlendingFactor)reader.ReadUInt16();
+                BlendingFactorSrcRGB = (BlendingFactor)reader.ReadUInt16();
+                BlendingFactorDestRGB = (BlendingFactor)reader.ReadUInt16();
 
                 //  BlendingFunctionAlpha = (AlphaFunction)reader.ReadUInt16();
 
@@ -1417,6 +1425,27 @@ namespace FirstPlugin
                 BlendColorA = reader.ReadSingle();
 
                 IsTransparent = BlendEnaled;
+
+                Console.WriteLine(ToString());
+            }
+
+            public override string ToString()
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append($"----------------------------------------------------\n");
+                sb.Append($"AlphaTest {AlphaTestEnable} {AlphaTestFunction} {AlphaTestReference}\n");
+                sb.Append($"DepthTest {DepthTestEnable} {DepthTestFunction} DepthWrite {DepthTestFunction}\n");
+
+                sb.Append($"BlendingFactorSrcRGB {BlendingFactorSrcRGB}\n");
+                sb.Append($"BlendingFactorDestRGB {BlendingFactorDestRGB}\n");
+                sb.Append($"BlendingFactorSrcAlpha {BlendingFactorSrcAlpha}\n");
+                sb.Append($"BlendingFactorDestAlpha {BlendingFactorDestAlpha}\n");
+                sb.Append($"BlendEnaled {BlendEnaled}\n");
+                sb.Append($"----------------------------------------------------\n");
+
+                sb.AppendLine();
+
+                return sb.ToString();
             }
         }
 

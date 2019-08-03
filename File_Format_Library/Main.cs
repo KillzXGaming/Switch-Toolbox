@@ -352,7 +352,7 @@ namespace FirstPlugin
             Formats.Add(typeof(BFTTF));
             Formats.Add(typeof(PACx30XL));
             Formats.Add(typeof(BinGzArchive));
-            Formats.Add(typeof(ZAR));
+            Formats.Add(typeof(GAR));
             Formats.Add(typeof(CTXB));
             Formats.Add(typeof(G1T));
             Formats.Add(typeof(BFLYT));
