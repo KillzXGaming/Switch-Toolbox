@@ -21,6 +21,8 @@ namespace Toolbox.Library
     {
         public virtual float PreviewScale { get; set; } = 1.0f;
 
+        public virtual float BonePointScale { get; set; } = 1.0f;
+
         public Vector3 position = new Vector3(0, 0, 0);
 
         protected bool Selected = false;
@@ -221,7 +223,7 @@ namespace Toolbox.Library
                     continue;
 
                 shader.SetVector4("boneColor", ColorUtility.ToVector4(boneColor));
-                shader.SetFloat("scale", Runtime.bonePointSize);
+                shader.SetFloat("scale", Runtime.bonePointSize * BonePointScale);
                 shader.SetMatrix4x4("ModelMatrix", ref bn.ModelMatrix);
 
                 

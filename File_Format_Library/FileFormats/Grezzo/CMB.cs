@@ -88,17 +88,20 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             Renderer = new CMB_Renderer();
-            DrawableContainer.Name = FileName;
             DrawableContainer.Drawables.Add(Renderer);
             Skeleton = new STSkeleton();
             //These models/skeletons come out massive so scale them with an overridden scale
             Skeleton.PreviewScale = Renderer.PreviewScale;
+            Skeleton.BonePointScale = 40;
+           
             DrawableContainer.Drawables.Add(Skeleton);
 
             header = new Header();
             header.Read(new FileReader(stream));
 
             Text = header.Name;
+
+            DrawableContainer.Name = Text;
 
             //Load textures
             if (header.SectionData.TextureChunk != null)
@@ -243,7 +246,7 @@ namespace FirstPlugin
                                     shape.Position.VertexData[v].Y,
                                     shape.Position.VertexData[v].Z);
 
-                                if (shape.Normal.VertexData != null)
+                                if (shape.Normal.VertexData != null && shape.Normal.VertexData.Length > v)
                                 {
                                     vert.nrm = new OpenTK.Vector3(
                                     shape.Normal.VertexData[v].X,
@@ -251,7 +254,7 @@ namespace FirstPlugin
                                     shape.Normal.VertexData[v].Z).Normalized();
                                 }
 
-                                if (shape.Color.VertexData != null)
+                                if (shape.Color.VertexData != null && shape.Color.VertexData.Length > v)
                                 {
                                     vert.col = new OpenTK.Vector4(
                                     shape.Color.VertexData[v].X,
@@ -260,7 +263,7 @@ namespace FirstPlugin
                                     shape.Color.VertexData[v].W).Normalized();
                                 }
 
-                                if (shape.TexCoord0.VertexData != null)
+                                if (shape.TexCoord0.VertexData != null && shape.TexCoord0.VertexData.Length > v)
                                 {
                                     vert.uv0 = new OpenTK.Vector2(
                                     shape.TexCoord0.VertexData[v].X,

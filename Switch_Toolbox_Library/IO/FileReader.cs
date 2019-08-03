@@ -58,6 +58,28 @@ namespace Toolbox.Library.IO
             return signature == Identifier;
         }
 
+        public int ReadInt32(int position)
+        {
+            long origin = this.Position;
+
+            SeekBegin(position);
+            int value = ReadInt32();
+
+            SeekBegin(origin + sizeof(int));
+            return value;
+        }
+
+        public uint ReadUInt32(int position)
+        {
+            long origin = this.Position;
+
+            SeekBegin(position);
+            uint value = ReadUInt32();
+
+            SeekBegin(origin + sizeof(uint));
+            return value;
+        }
+
         public string ReadNameOffset(bool IsRelative, Type OffsetType, bool ReadNameLength = false, bool IsNameLengthShort = false)
         {
             long pos = Position;

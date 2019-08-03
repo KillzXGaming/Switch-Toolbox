@@ -357,6 +357,7 @@ namespace FirstPlugin
             Formats.Add(typeof(G1T));
             Formats.Add(typeof(BFLYT));
             Formats.Add(typeof(CMB));
+            Formats.Add(typeof(ZSI));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
@@ -367,7 +368,6 @@ namespace FirstPlugin
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));
                 Formats.Add(typeof(G1M));
-                Formats.Add(typeof(ZSI));
                 Formats.Add(typeof(MSBP));
             }
 
