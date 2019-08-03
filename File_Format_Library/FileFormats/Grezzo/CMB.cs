@@ -1220,6 +1220,8 @@ namespace FirstPlugin
         //https://github.com/magcius/noclip.website/blob/9270b9e5022c691703689990f9c536cd9058e5cd/src/oot3d/cmb.ts#L232
         public class Material
         {
+            public bool IsTransparent = false;
+
             public CullMode CullMode;
 
             public bool IsPolygonOffsetEnabled;
@@ -1242,6 +1244,19 @@ namespace FirstPlugin
             public AlphaFunction AlphaTestFunction;
 
             public DepthFunction DepthTestFunction;
+
+            public bool BlendEnaled;
+
+            public BlendingFactor BlendingFactorSrcRGB;
+            public BlendingFactor BlendingFactorDestRGB;
+
+            public BlendingFactor BlendingFactorSrcAlpha;
+            public BlendingFactor BlendingFactorDestAlpha;
+
+            public float BlendColorR;
+            public float BlendColorG;
+            public float BlendColorB;
+            public float BlendColorA;
 
             public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
@@ -1362,11 +1377,46 @@ namespace FirstPlugin
                 reader.SeekBegin(pos + 0x130);
                 AlphaTestEnable = reader.ReadBoolean();
                 AlphaTestReference = reader.ReadByte() / 255.0f;
-                AlphaTestFunction = reader.ReadEnum<AlphaFunction>(false);
+                AlphaTestFunction = (AlphaFunction)reader.ReadUInt16();
 
                 DepthTestEnable = reader.ReadBoolean();
                 DepthWriteEnable = reader.ReadBoolean();
-                DepthTestFunction = reader.ReadEnum<DepthFunction>(false);
+                DepthTestFunction = (DepthFunction)reader.ReadUInt16();
+
+                if (!AlphaTestEnable)
+                    AlphaTestFunction = AlphaFunction.Always;
+
+                if (!DepthTestEnable)
+                    DepthTestFunction = DepthFunction.Always;
+
+                reader.SeekBegin(pos + 0x138);
+                BlendEnaled = reader.ReadBoolean();
+                Console.WriteLine("BlendEnaled " + BlendEnaled);
+
+                //Unknown. 
+                reader.ReadByte();
+                reader.ReadUInt16();
+
+                reader.SeekBegin(pos + 0x13C);
+
+                BlendingFactorSrcRGB = (BlendingFactor)reader.ReadUInt16();
+                BlendingFactorDestRGB = (BlendingFactor)reader.ReadUInt16();
+
+                reader.SeekBegin(pos + 0x144);
+
+                BlendingFactorSrcAlpha = (BlendingFactor)reader.ReadUInt16();
+                BlendingFactorDestAlpha = (BlendingFactor)reader.ReadUInt16();
+
+                //  BlendingFunctionAlpha = (AlphaFunction)reader.ReadUInt16();
+
+                reader.SeekBegin(pos + 0x14C);
+
+                BlendColorR = reader.ReadSingle();
+                BlendColorG = reader.ReadSingle();
+                BlendColorB = reader.ReadSingle();
+                BlendColorA = reader.ReadSingle();
+
+                IsTransparent = BlendEnaled;
             }
         }
 

@@ -117,6 +117,7 @@ void main()
     }
 
 	vec3 albedo = vec3(0.5);
+	float alpha = 1.0f;
     if (HasDiffuse == 1)
 	{
 		vec4 DiffuseTex =  pow(texture(DiffuseMap, f_texcoord0).rgba, vec4(gamma));
@@ -125,6 +126,7 @@ void main()
 		albedo.r = GetComponent(RedChannel, DiffuseTex);
 		albedo.g = GetComponent(GreenChannel, DiffuseTex);
 		albedo.b = GetComponent(BlueChannel, DiffuseTex);
+	    alpha = GetComponent(AlphaChannel, DiffuseTex);
 	}
 
 	   // Diffuse lighting.
@@ -139,6 +141,11 @@ void main()
 
      // Global brightness adjustment.
 	// fragColor.rgb *= 1.5;
+
+	if (isTransparent == 1)
+	{
+	    fragColor.a = alpha;
+	}
 
 	 //Debug Shading
 	vec2 displayTexCoord =  f_texcoord0;

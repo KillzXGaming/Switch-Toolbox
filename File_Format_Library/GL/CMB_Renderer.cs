@@ -9,14 +9,46 @@ using GL_EditorFramework.Interfaces;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library;
+using Grezzo.CmbEnums;
 
 namespace FirstPlugin
 {
+    //Rendering methods based on noclip
+    //https://github.com/magcius/noclip.website/blob/master/src/oot3d/render.ts
     public class CMB_Renderer : GenericModelRenderer
     {
         public override float PreviewScale { get; set; } = 0.01f;
 
         public List<CTXB.TextureWrapper> TextureList = new List<CTXB.TextureWrapper>();
+
+        private string FragmentShader()
+        {
+            string frag = "";
+            return frag;
+        }
+
+        private string GenerateAlphaTestCompare(AlphaFunction compare, int reference)
+        {
+            float refSingle = (float)reference;
+            switch (compare)
+            {
+                case AlphaFunction.Never: return "false";
+                case AlphaFunction.Less: return $"t_CmbOut.a <  {refSingle}";
+                case AlphaFunction.Lequal: return $"t_CmbOut.a <= {refSingle}";
+                case AlphaFunction.Equal: return $"t_CmbOut.a == {refSingle}";
+                case AlphaFunction.Notequal: return $"t_CmbOut.a != {refSingle}";
+                case AlphaFunction.Greater: return $"t_CmbOut.a >  ${refSingle}";
+                case AlphaFunction.Gequal: return $"t_CmbOut.a >= ${refSingle}";
+                case AlphaFunction.Always: return "true";
+                default: throw new Exception("Unsupported alpha function");
+            }
+        }
+
+        private string GenerateTextureEnvironment()
+        {
+            string vale = $"";
+            return vale;
+        }
 
         public override void OnRender(GLControl control)
         {
@@ -27,8 +59,17 @@ namespace FirstPlugin
         {
             var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).Material;
 
+            shader.SetBoolToInt("isTransparent", cmbMaterial.IsTransparent);
 
-            //shader.SetBoolToInt("isTransparent", cmbMaterial.isTransparent);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(cmbMaterial.BlendingFactorSrcAlpha, cmbMaterial.BlendingFactorDestAlpha);
+            GL.BlendColor(cmbMaterial.BlendColorR, cmbMaterial.BlendColorG, cmbMaterial.BlendColorB, cmbMaterial.BlendColorA);
+            if (cmbMaterial.AlphaTestEnable)
+                GL.Enable(EnableCap.AlphaTest);
+            else
+                GL.Disable(EnableCap.AlphaTest);
+
+            GL.AlphaFunc(cmbMaterial.AlphaTestFunction, cmbMaterial.AlphaTestReference);
         }
 
         public override int BindTexture(STGenericMatTexture tex, ShaderProgram shader)
