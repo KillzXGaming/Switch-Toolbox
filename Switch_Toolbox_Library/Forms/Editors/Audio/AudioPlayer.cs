@@ -507,5 +507,16 @@ namespace Toolbox.Library.Forms
         {
 
         }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var channel = GetActiveAudio();
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "WAV |*.wav;";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                channel.audioStream.WriteToFile(ofd.FileName);
+            }
+        }
     }
 }

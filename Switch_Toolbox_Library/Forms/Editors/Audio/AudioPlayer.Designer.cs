@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.audioBarPanel = new Toolbox.Library.Forms.STPanel();
+            this.chkLoopPlayer = new Toolbox.Library.Forms.STCheckBox();
             this.trackbarVolume = new ColorSlider.ColorSlider();
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
             this.btnStop = new Toolbox.Library.Forms.STButton();
@@ -56,7 +57,7 @@
             this.loopingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.chkLoopPlayer = new Toolbox.Library.Forms.STCheckBox();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contentContainer.SuspendLayout();
             this.audioBarPanel.SuspendLayout();
             this.stPanel4.SuspendLayout();
@@ -90,6 +91,19 @@
             this.audioBarPanel.Name = "audioBarPanel";
             this.audioBarPanel.Size = new System.Drawing.Size(531, 68);
             this.audioBarPanel.TabIndex = 11;
+            // 
+            // chkLoopPlayer
+            // 
+            this.chkLoopPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkLoopPlayer.AutoSize = true;
+            this.chkLoopPlayer.Checked = true;
+            this.chkLoopPlayer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkLoopPlayer.Location = new System.Drawing.Point(400, 18);
+            this.chkLoopPlayer.Name = "chkLoopPlayer";
+            this.chkLoopPlayer.Size = new System.Drawing.Size(82, 17);
+            this.chkLoopPlayer.TabIndex = 13;
+            this.chkLoopPlayer.Text = "Loop Player";
+            this.chkLoopPlayer.UseVisualStyleBackColor = true;
             // 
             // trackbarVolume
             // 
@@ -346,9 +360,13 @@
             // audioDevice
             // 
             this.audioDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.audioDevice.BorderColor = System.Drawing.Color.Empty;
+            this.audioDevice.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.audioDevice.ButtonColor = System.Drawing.Color.Empty;
             this.audioDevice.FormattingEnabled = true;
             this.audioDevice.Location = new System.Drawing.Point(214, 3);
             this.audioDevice.Name = "audioDevice";
+            this.audioDevice.ReadOnly = true;
             this.audioDevice.Size = new System.Drawing.Size(151, 21);
             this.audioDevice.TabIndex = 20;
             this.audioDevice.SelectedIndexChanged += new System.EventHandler(this.audioDevice_SelectedIndexChanged);
@@ -356,9 +374,13 @@
             // channelCB
             // 
             this.channelCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.channelCB.BorderColor = System.Drawing.Color.Empty;
+            this.channelCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.channelCB.ButtonColor = System.Drawing.Color.Empty;
             this.channelCB.FormattingEnabled = true;
             this.channelCB.Location = new System.Drawing.Point(371, 3);
             this.channelCB.Name = "channelCB";
+            this.channelCB.ReadOnly = true;
             this.channelCB.Size = new System.Drawing.Size(151, 21);
             this.channelCB.TabIndex = 19;
             this.channelCB.SelectedIndexChanged += new System.EventHandler(this.channelCB_SelectedIndexChanged);
@@ -376,6 +398,8 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -412,18 +436,12 @@
             this.timer1.Interval = 40;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // chkLoopPlayer
+            // exportToolStripMenuItem
             // 
-            this.chkLoopPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkLoopPlayer.AutoSize = true;
-            this.chkLoopPlayer.Checked = true;
-            this.chkLoopPlayer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkLoopPlayer.Location = new System.Drawing.Point(400, 18);
-            this.chkLoopPlayer.Name = "chkLoopPlayer";
-            this.chkLoopPlayer.Size = new System.Drawing.Size(82, 17);
-            this.chkLoopPlayer.TabIndex = 13;
-            this.chkLoopPlayer.Text = "Loop Player";
-            this.chkLoopPlayer.UseVisualStyleBackColor = true;
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // AudioPlayer
             // 
@@ -479,5 +497,6 @@
         private System.Windows.Forms.ToolStripMenuItem loopingToolStripMenuItem;
         private STButton btnStop;
         private Toolbox.Library.Forms.STCheckBox chkLoopPlayer;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }

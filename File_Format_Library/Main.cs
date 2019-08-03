@@ -354,9 +354,10 @@ namespace FirstPlugin
             Formats.Add(typeof(BinGzArchive));
             Formats.Add(typeof(GAR));
             Formats.Add(typeof(CTXB));
+            Formats.Add(typeof(CSAB));
+            Formats.Add(typeof(CMB));
             Formats.Add(typeof(G1T));
             Formats.Add(typeof(BFLYT));
-            Formats.Add(typeof(CMB));
             Formats.Add(typeof(ZSI));
 
             //Unfinished wip formats not ready for use

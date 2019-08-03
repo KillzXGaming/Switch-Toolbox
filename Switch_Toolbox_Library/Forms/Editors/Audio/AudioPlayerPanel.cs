@@ -514,5 +514,19 @@ namespace Toolbox.Library.Forms
         {
 
         }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (selectedFile == null)
+                return;
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "WAV |*.wav;";
+            sfd.FileName = Path.GetFileNameWithoutExtension(selectedFile.Title) + ".wav";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                selectedFile.GetCurrentChannel().audioStream.WriteToFile(sfd.FileName);
+            }
+        }
     }
 }
