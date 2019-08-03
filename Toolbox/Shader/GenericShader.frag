@@ -69,6 +69,8 @@ uniform sampler2D brdfLUT;
 
 uniform int isTransparent;
 
+uniform int HasNoNormals;
+
 out vec4 fragColor;
 
 struct VertexAttributes {
@@ -130,8 +132,11 @@ void main()
 	}
 
 	   // Diffuse lighting.
-     float halfLambert = dot(difLightDirection, normal) * 0.5 + 0.5;
- 	 albedo *= halfLambert;
+	   if (HasNoNormals == 0)
+	   {
+	   	    float halfLambert = dot(difLightDirection, normal) * 0.5 + 0.5;
+ 	        albedo *= halfLambert;
+	   }
 
     fragColor.rgb += albedo.rgb;
     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
@@ -159,6 +164,13 @@ void main()
 		displayTexCoord =  f_texcoord2;
 
     vec3 displayNormal = (normal.xyz * 0.5) + 0.5;
+
+	// Diffuse lighting.
+	if (HasNoNormals == 1)
+	{
+	   	displayNormal = vec3(1);
+	}
+
     if (renderType == 1) // normals color
         fragColor = vec4(displayNormal.rgb,1);
 	else if (renderType == 2)

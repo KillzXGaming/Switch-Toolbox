@@ -19,7 +19,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "CMB" };
-        public string[] Extension { get; set; } = new string[] { "*.cmb" };
+        public string[] Extension { get; set; } = new string[] { "*CTR Model Binary" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }

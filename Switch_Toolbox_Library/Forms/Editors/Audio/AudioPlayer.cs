@@ -344,13 +344,15 @@ namespace Toolbox.Library.Forms
                     foreach (var device in mmdeviceCollection)
                     {
                         audioDevice.Items.Add(device);
+
+                        if (device.DeviceState == DeviceState.Active)
+                            audioDevice.SelectedIndex = audioDevice.Items.IndexOf(device);
                     }
                 }
             }
+
             if (audioDevice.Items.Count <= 0)
                 throw new Exception("No audio devices found!");
-
-            audioDevice.SelectedIndex = 0;
 
             activeDevice = (MMDevice)audioDevice.SelectedItem;
         }

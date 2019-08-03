@@ -26,6 +26,7 @@ namespace Toolbox.Library
         Graphic,
         Rom,
         Spreadsheet,
+        Animation,
     }
 
     public interface IFileFormat

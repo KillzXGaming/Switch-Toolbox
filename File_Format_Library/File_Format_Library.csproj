@@ -207,6 +207,7 @@
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\Grezzo\CMB_Enums.cs" />
+    <Compile Include="FileFormats\Grezzo\CSAB.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1T.cs" />
     <Compile Include="FileFormats\HyruleWarriors\HWBinGzResource.cs" />
     <Compile Include="FileFormats\Archives\IGA_PAK.cs" />

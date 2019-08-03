@@ -89,7 +89,11 @@ namespace FirstPlugin
         public override void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
         {
             var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).Material;
+            var cmbMesh = ((CMB.CmbMeshWrapper)m);
 
+            bool HasNoNormals = cmbMesh.Shape.Normal.VertexData == null || cmbMesh.Shape.Normal.VertexData.Length == 0;
+
+            shader.SetBoolToInt("HasNoNormals", HasNoNormals);
             shader.SetBoolToInt("isTransparent", cmbMaterial.BlendEnaled);
 
             SetGLCullMode(cmbMaterial.CullMode);
