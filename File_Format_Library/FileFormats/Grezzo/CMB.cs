@@ -383,6 +383,19 @@ namespace FirstPlugin
             {
                 Material = material;
             }
+
+            public override void OnClick(TreeView treeView)
+            {
+                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
+                if (editor == null)
+                {
+                    editor = new STPropertyGrid();
+                    LibraryGUI.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.Dock = DockStyle.Fill;
+                editor.LoadProperty(Material, null);
+            }
         }
 
         public class CMBTextureMapWrapper : STGenericMatTexture
@@ -395,15 +408,19 @@ namespace FirstPlugin
             {
                 TextureMapData = texMap;
 
+                //Linear filtering looks better according to noclip
+                if (TextureMapData.MinFiler == TextureFilter.LINEAR_MIPMAP_NEAREST)
+                    TextureMapData.MinFiler = TextureFilter.LINEAR_MIPMAP_LINEAR;
+
                  this.WrapModeS = ConvertWrapMode(TextureMapData.WrapS);
                  this.WrapModeT = ConvertWrapMode(TextureMapData.WrapT);
                  this.MinFilter = ConvertMinFilterMode(TextureMapData.MinFiler);
                  this.MagFilter = ConvertMagFilterMode(TextureMapData.MagFiler);
             }
 
-            private STTextureMinFilter ConvertMinFilterMode(ushort PicaFilterMode)
+            private STTextureMinFilter ConvertMinFilterMode(TextureFilter PicaFilterMode)
             {
-                switch ((TextureFilter)PicaFilterMode)
+                switch (PicaFilterMode)
                 {
                     case TextureFilter.LINEAR: return STTextureMinFilter.Linear;
                     case TextureFilter.LINEAR_MIPMAP_LINEAR: return  STTextureMinFilter.LinearMipMapNearest;
@@ -415,9 +432,9 @@ namespace FirstPlugin
                 }
             }
 
-            private STTextureMagFilter ConvertMagFilterMode(ushort PicaFilterMode)
+            private STTextureMagFilter ConvertMagFilterMode(TextureFilter PicaFilterMode)
             {
-                switch ((TextureFilter)PicaFilterMode)
+                switch (PicaFilterMode)
                 {
                     case TextureFilter.LINEAR: return STTextureMagFilter.Linear;
                     case TextureFilter.NEAREST: return STTextureMagFilter.Nearest;
@@ -425,9 +442,9 @@ namespace FirstPlugin
                 }
             }
 
-            private STTextureWrapMode ConvertWrapMode(ushort PicaWrapMode)
+            private STTextureWrapMode ConvertWrapMode(CMBTextureWrapMode PicaWrapMode)
             {
-                switch ((CMBTextureWrapMode)PicaWrapMode)
+                switch (PicaWrapMode)
                 {
                     case CMBTextureWrapMode.REPEAT: return STTextureWrapMode.Repeat;
                     case CMBTextureWrapMode.MIRRORED_REPEAT: return STTextureWrapMode.Mirror;
@@ -1277,46 +1294,47 @@ namespace FirstPlugin
         {
             public bool IsTransparent = false;
 
-            public CullMode CullMode;
+            public CullMode CullMode { get; set; }
 
-            public bool IsPolygonOffsetEnabled;
-            public uint PolygonOffset;
+            public bool IsPolygonOffsetEnabled { get; set; }
+            public uint PolygonOffset { get; set; }
 
-            public TextureMap[] TextureMaps;
-            public TextureMatrix[] TextureMaticies;
+            public TextureMap[] TextureMaps { get; set; }
+            public TextureMatrix[] TextureMaticies { get; set; }
 
-            public List<TextureCombiner> TextureCombiners = new List<TextureCombiner>();
+            public List<TextureCombiner> TextureCombiners { get; set; }
 
-            public STColor[] ConstantColors;
+            public STColor[] ConstantColors { get; set; }
 
-            public bool AlphaTestEnable;
-            public float AlphaTestReference;
+            public bool AlphaTestEnable { get; set; }
+            public float AlphaTestReference { get; set; }
 
-            public bool DepthTestEnable;
+            public bool DepthTestEnable { get; set; }
 
-            public bool DepthWriteEnable;
+            public bool DepthWriteEnable { get; set; }
 
-            public AlphaFunction AlphaTestFunction;
+            public AlphaFunction AlphaTestFunction { get; set; }
 
-            public DepthFunction DepthTestFunction;
+            public DepthFunction DepthTestFunction { get; set; }
 
-            public bool BlendEnaled;
+            public bool BlendEnaled { get; set; }
 
-            public BlendingFactor BlendingFactorSrcRGB;
-            public BlendingFactor BlendingFactorDestRGB;
+            public BlendingFactor BlendingFactorSrcRGB { get; set; }
+            public BlendingFactor BlendingFactorDestRGB { get; set; }
 
-            public BlendingFactor BlendingFactorSrcAlpha;
-            public BlendingFactor BlendingFactorDestAlpha;
+            public BlendingFactor BlendingFactorSrcAlpha { get; set; }
+            public BlendingFactor BlendingFactorDestAlpha { get; set; }
 
-            public float BlendColorR;
-            public float BlendColorG;
-            public float BlendColorB;
-            public float BlendColorA;
+            public float BlendColorR { get; set; }
+            public float BlendColorG { get; set; }
+            public float BlendColorB { get; set; }
+            public float BlendColorA { get; set; }
 
             public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
                 TextureMaps = new TextureMap[3];
                 TextureMaticies = new TextureMatrix[3];
+                TextureCombiners = new List<TextureCombiner>();
 
                 long pos = reader.Position;
 
@@ -1329,22 +1347,19 @@ namespace FirstPlugin
                 reader.SeekBegin(pos + 0x10);
                 for (int j = 0; j < 3; j++)
                 {
-                    long texPos = reader.Position;
-
                     TextureMaps[j] = new TextureMap();
                     TextureMaps[j].TextureIndex = reader.ReadInt16();
-                    TextureMaps[j].MinFiler = reader.ReadUInt16();
-                    TextureMaps[j].MagFiler = reader.ReadUInt16();
-                    TextureMaps[j].WrapS = reader.ReadUInt16();
-                    TextureMaps[j].WrapT = reader.ReadUInt16();
+                    reader.ReadInt16(); //padding
+                    TextureMaps[j].MinFiler = (TextureFilter)reader.ReadUInt16();
+                    TextureMaps[j].MagFiler = (TextureFilter)reader.ReadUInt16();
+                    TextureMaps[j].WrapS = (CMBTextureWrapMode)reader.ReadUInt16();
+                    TextureMaps[j].WrapT = (CMBTextureWrapMode)reader.ReadUInt16();
                     TextureMaps[j].MinLOD = reader.ReadSingle();
                     TextureMaps[j].LodBias = reader.ReadSingle();
                     TextureMaps[j].borderColorR = reader.ReadByte();
                     TextureMaps[j].borderColorG = reader.ReadByte();
                     TextureMaps[j].borderColorB = reader.ReadByte();
                     TextureMaps[j].borderColorA = reader.ReadByte();
-
-                    reader.SeekBegin(texPos + 0x18);
                 }
 
                 for (int j = 0; j < 3; j++)
@@ -1536,10 +1551,10 @@ namespace FirstPlugin
         public class TextureMap
         {
             public short TextureIndex { get; set; }
-            public ushort MinFiler { get; set; }
-            public ushort MagFiler { get; set; }
-            public ushort WrapS { get; set; }
-            public ushort WrapT { get; set; }
+            public TextureFilter MinFiler { get; set; }
+            public TextureFilter MagFiler { get; set; }
+            public CMBTextureWrapMode WrapS { get; set; }
+            public CMBTextureWrapMode WrapT { get; set; }
             public float MinLOD { get; set; }
             public float LodBias { get; set; }
             public byte borderColorR { get; set; }
