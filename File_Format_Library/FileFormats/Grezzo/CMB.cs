@@ -198,7 +198,7 @@ namespace FirstPlugin
                         materialFolder.Nodes.Add(material);
                         materials.Add(material);
 
-                        int index = 0;
+                        bool HasDiffuse = false;
                         foreach (var tex in mat.TextureMaps)
                         {
                             if (tex.TextureIndex != -1)
@@ -209,16 +209,17 @@ namespace FirstPlugin
                                 matTexture.wrapModeT = tex.WrapT;
                                 material.TextureMaps.Add(matTexture);
 
-                                if (index == 0)
-                                    matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
-
-                                if (tex.TextureIndex < Renderer.TextureList.Count && tex.TextureIndex > 0)
+                                if (tex.TextureIndex < Renderer.TextureList.Count && tex.TextureIndex >= 0)
                                 {
                                     matTexture.Name = Renderer.TextureList[tex.TextureIndex].Text;
                                     material.Nodes.Add(matTexture.Name);
                                 }
 
-                                index++;
+                                if (!HasDiffuse && matTexture.Name != "bg_syadowmap") //Quick hack till i do texture env stuff
+                                {
+                                    matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
+                                    HasDiffuse = true;
+                                }
                             }
                         }
                     }
@@ -1203,13 +1204,13 @@ namespace FirstPlugin
                 if (header.Version >= CMBVersion.MM3DS)
                     materialSize = 0x16C;
 
+                Console.WriteLine($"materialSize {materialSize.ToString("x")}");
+
                 textureCombinerSettingsTableOffs = (int)(pos + (count * materialSize));
 
                 for (int i = 0; i < count; i++)
                 {
                     reader.SeekBegin(pos + 0xC + (i * materialSize));
-
-                    Console.WriteLine("MAT " + i);
 
                     Material mat = new Material();
                     mat.Read(reader, header, this);
@@ -1282,6 +1283,8 @@ namespace FirstPlugin
                 reader.SeekBegin(pos + 0x10);
                 for (int j = 0; j < 3; j++)
                 {
+                    long texPos = reader.Position;
+
                     TextureMaps[j] = new TextureMap();
                     TextureMaps[j].TextureIndex = reader.ReadInt16();
                     TextureMaps[j].MinFiler = reader.ReadUInt16();
@@ -1294,6 +1297,8 @@ namespace FirstPlugin
                     TextureMaps[j].borderColorG = reader.ReadByte();
                     TextureMaps[j].borderColorB = reader.ReadByte();
                     TextureMaps[j].borderColorA = reader.ReadByte();
+
+                    reader.SeekBegin(texPos + 0x18);
                 }
 
                 for (int j = 0; j < 3; j++)
