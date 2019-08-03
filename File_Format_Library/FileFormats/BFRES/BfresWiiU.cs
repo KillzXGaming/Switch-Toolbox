@@ -474,9 +474,9 @@ namespace FirstPlugin
                 texture.MaxLod = mat.Samplers[id].TexSampler.MaxLod;
                 texture.BiasLod = mat.Samplers[id].TexSampler.LodBias;
 
-                texture.wrapModeS = (int)mat.Samplers[id].TexSampler.ClampX;
-                texture.wrapModeT = (int)mat.Samplers[id].TexSampler.ClampY;
-                texture.wrapModeW = (int)mat.Samplers[id].TexSampler.ClampZ;
+                texture.WrapModeS = (STTextureWrapMode)mat.Samplers[id].TexSampler.ClampX;
+                texture.WrapModeT = (STTextureWrapMode)mat.Samplers[id].TexSampler.ClampY;
+                texture.WrapModeW = (STTextureWrapMode)mat.Samplers[id].TexSampler.ClampZ;
                 mat.Samplers.TryGetKey(mat.Samplers[id], out texture.SamplerName);
 
                 string useSampler = texture.SamplerName;
@@ -487,13 +487,13 @@ namespace FirstPlugin
                 
 
                 if (mat.Samplers[id].TexSampler.MinFilter == GX2TexXYFilterType.Point)
-                    texture.minFilter = 1;
+                    texture.MinFilter = STTextureMinFilter.Nearest;
                 if (mat.Samplers[id].TexSampler.MagFilter == GX2TexXYFilterType.Point)
-                    texture.magFilter = 1;
+                    texture.MagFilter = STTextureMagFilter.Nearest;
                 if (mat.Samplers[id].TexSampler.MinFilter == GX2TexXYFilterType.Bilinear)
-                    texture.minFilter = 0;
+                    texture.MinFilter = STTextureMinFilter.Linear;
                 if (mat.Samplers[id].TexSampler.MagFilter == GX2TexXYFilterType.Bilinear)
-                    texture.magFilter = 0;
+                    texture.MagFilter = STTextureMagFilter.Linear;
 
                 if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
                 {

@@ -791,7 +791,7 @@ namespace Bfres.Structs
 
             texSampler.LodBias = matTex.BiasLod;
             texSampler.MaxLod = matTex.MaxLod;
-            texSampler.MinLod = matTex.minFilter;
+            texSampler.MinLod = matTex.MinLod;
 
             return texSampler;
         }

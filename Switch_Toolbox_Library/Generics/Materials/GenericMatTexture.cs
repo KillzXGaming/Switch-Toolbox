@@ -7,15 +7,38 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Toolbox.Library
 {
+    public enum STTextureWrapMode
+    {
+        Repeat,
+        Mirror,
+        Clamp,
+    }
+
+    public enum STTextureMagFilter
+    {
+        Nearest,
+        Linear,
+    }
+
+    public enum STTextureMinFilter
+    {
+        LinearMipMapNearest,
+        Nearest,
+        Linear,
+        NearestMipmapLinear,
+        NearestMipmapNearest,
+    }
+
     public class STGenericMatTexture
     {
         public int mapMode = 0;
-        public int wrapModeS = 1;
-        public int wrapModeT = 1;
-        public int wrapModeW = 1; //Used for 3D textures
-        public int minFilter = 3;
-        public int magFilter = 2;
-        public int mipDetail = 6;
+        public STTextureWrapMode WrapModeS = STTextureWrapMode.Repeat;
+        public STTextureWrapMode WrapModeT = STTextureWrapMode.Repeat;
+        public STTextureWrapMode WrapModeW = STTextureWrapMode.Clamp;
+
+        public STTextureMinFilter MinFilter = STTextureMinFilter.Linear;
+        public STTextureMagFilter MagFilter = STTextureMagFilter.Linear;
+
         public string Name;
         public string SamplerName;
         public int textureUnit;
@@ -56,24 +79,28 @@ namespace Toolbox.Library
             SubSurfaceScattering = 15,
         }
 
-        public static readonly Dictionary<int, TextureMinFilter> minfilter = new Dictionary<int, TextureMinFilter>()
+        public static readonly Dictionary<STTextureMinFilter, TextureMinFilter> minfilter = new Dictionary<STTextureMinFilter, TextureMinFilter>()
         {
-            { 0x00, TextureMinFilter.LinearMipmapLinear},
-            { 0x01, TextureMinFilter.Nearest},
-            { 0x02, TextureMinFilter.Linear},
-            { 0x03, TextureMinFilter.NearestMipmapLinear},
+            {  STTextureMinFilter.LinearMipMapNearest, TextureMinFilter.LinearMipmapLinear},
+            {  STTextureMinFilter.Nearest, TextureMinFilter.Nearest},
+            {  STTextureMinFilter.Linear, TextureMinFilter.Linear},
+            {  STTextureMinFilter.NearestMipmapLinear, TextureMinFilter.NearestMipmapLinear},
+            {  STTextureMinFilter.NearestMipmapNearest, TextureMinFilter.NearestMipmapNearest},
         };
-        public static readonly Dictionary<int, TextureMagFilter> magfilter = new Dictionary<int, TextureMagFilter>()
+        public static readonly Dictionary<STTextureMagFilter, TextureMagFilter> magfilter = new Dictionary<STTextureMagFilter, TextureMagFilter>()
         {
-            { 0x00, TextureMagFilter.Linear},
-            { 0x01, TextureMagFilter.Nearest},
-            { 0x02, TextureMagFilter.Linear}
+            { STTextureMagFilter.Linear, TextureMagFilter.Linear},
+            { STTextureMagFilter.Nearest, TextureMagFilter.Nearest},
+            { (STTextureMagFilter)3, TextureMagFilter.Linear},
         };
-        public static Dictionary<int, TextureWrapMode> wrapmode = new Dictionary<int, TextureWrapMode>(){
-                    { 0x00, TextureWrapMode.Repeat},
-                    { 0x01, TextureWrapMode.MirroredRepeat},
-                    { 0x02, TextureWrapMode.ClampToEdge},
-                    { 0x03, TextureWrapMode.MirroredRepeat},
+
+        public static Dictionary<STTextureWrapMode, TextureWrapMode> wrapmode = new Dictionary<STTextureWrapMode, TextureWrapMode>(){
+            { STTextureWrapMode.Repeat, TextureWrapMode.Repeat},
+            { STTextureWrapMode.Mirror, TextureWrapMode.MirroredRepeat},
+            { STTextureWrapMode.Clamp, TextureWrapMode.ClampToEdge},
+            { (STTextureWrapMode)3, TextureWrapMode.ClampToEdge},
+            { (STTextureWrapMode)4, TextureWrapMode.ClampToEdge},
+            { (STTextureWrapMode)5, TextureWrapMode.ClampToEdge},
         };
     }
 }

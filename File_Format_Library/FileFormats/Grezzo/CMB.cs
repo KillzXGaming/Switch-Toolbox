@@ -203,10 +203,8 @@ namespace FirstPlugin
                         {
                             if (tex.TextureIndex != -1)
                             {
-                                CMBTextureMapWrapper matTexture = new CMBTextureMapWrapper();
+                                CMBTextureMapWrapper matTexture = new CMBTextureMapWrapper(tex);
                                 matTexture.TextureIndex = tex.TextureIndex;
-                                matTexture.wrapModeS = tex.WrapS;
-                                matTexture.wrapModeT = tex.WrapT;
                                 material.TextureMaps.Add(matTexture);
 
                                 if (tex.TextureIndex < Renderer.TextureList.Count && tex.TextureIndex >= 0)
@@ -390,6 +388,54 @@ namespace FirstPlugin
         public class CMBTextureMapWrapper : STGenericMatTexture
         {
             public int TextureIndex { get; set; }
+
+            public TextureMap TextureMapData;
+
+            public CMBTextureMapWrapper(TextureMap texMap)
+            {
+                TextureMapData = texMap;
+
+                 this.WrapModeS = ConvertWrapMode(TextureMapData.WrapS);
+                 this.WrapModeT = ConvertWrapMode(TextureMapData.WrapT);
+                 this.MinFilter = ConvertMinFilterMode(TextureMapData.MinFiler);
+                 this.MagFilter = ConvertMagFilterMode(TextureMapData.MagFiler);
+            }
+
+            private STTextureMinFilter ConvertMinFilterMode(ushort PicaFilterMode)
+            {
+                switch ((TextureFilter)PicaFilterMode)
+                {
+                    case TextureFilter.LINEAR: return STTextureMinFilter.Linear;
+                    case TextureFilter.LINEAR_MIPMAP_LINEAR: return  STTextureMinFilter.LinearMipMapNearest;
+                    case TextureFilter.LINEAR_MIPMAP_NEAREST: return STTextureMinFilter.NearestMipmapLinear;
+                    case TextureFilter.NEAREST: return STTextureMinFilter.Nearest;
+                    case TextureFilter.NEAREST_MIPMAP_LINEAR: return STTextureMinFilter.NearestMipmapLinear;
+                    case TextureFilter.NEAREST_MIPMAP_NEAREST: return STTextureMinFilter.NearestMipmapNearest;
+                    default: return 0;
+                }
+            }
+
+            private STTextureMagFilter ConvertMagFilterMode(ushort PicaFilterMode)
+            {
+                switch ((TextureFilter)PicaFilterMode)
+                {
+                    case TextureFilter.LINEAR: return STTextureMagFilter.Linear;
+                    case TextureFilter.NEAREST: return STTextureMagFilter.Nearest;
+                    default: return 0;
+                }
+            }
+
+            private STTextureWrapMode ConvertWrapMode(ushort PicaWrapMode)
+            {
+                switch ((CMBTextureWrapMode)PicaWrapMode)
+                {
+                    case CMBTextureWrapMode.REPEAT: return STTextureWrapMode.Repeat;
+                    case CMBTextureWrapMode.MIRRORED_REPEAT: return STTextureWrapMode.Mirror;
+                    case CMBTextureWrapMode.CLAMP: return STTextureWrapMode.Clamp;
+                    case CMBTextureWrapMode.CLAMP_TO_EDGE: return STTextureWrapMode.Clamp;
+                    default: return STTextureWrapMode.Repeat;
+                }
+            }
         }
 
         public class CmbMeshWrapper : GenericRenderedObject

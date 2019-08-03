@@ -335,13 +335,13 @@ namespace Toolbox.Library.Forms.test
         private void DrawTexturedPlane(float scale, uint TextureWidth, uint TextureHeight)
         {
             //Draws a textured plan for our uvs to show on
-            GL.Enable(EnableCap.Texture2D);
+         /*   GL.Enable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, texid);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)STGenericMatTexture.wrapmode[activeTexture.wrapModeS]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)STGenericMatTexture.wrapmode[activeTexture.wrapModeT]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)STGenericMatTexture.minfilter[activeTexture.minFilter]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)STGenericMatTexture.magfilter[activeTexture.magFilter]);
-
+            */
 
             float HalfWidth = (float)gL_ControlLegacy2D1.Width / 2.0f;
             float HalfHeight = (float)gL_ControlLegacy2D1.Height / 2.0f;

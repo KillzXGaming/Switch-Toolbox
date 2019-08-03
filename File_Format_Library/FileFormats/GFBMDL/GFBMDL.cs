@@ -270,8 +270,8 @@ namespace FirstPlugin
                         STGenericMatTexture matTexture = new STGenericMatTexture();
                         matTexture.Name = textureMap.Name;
                         matTexture.textureUnit = textureUnit++;
-                        matTexture.wrapModeS = 1;
-                        matTexture.wrapModeT = 0;
+                        matTexture.WrapModeS = STTextureWrapMode.Mirror;
+                        matTexture.WrapModeT = STTextureWrapMode.Repeat;
 
                         if (textureMap.Effect == "Col0Tex")
                         {

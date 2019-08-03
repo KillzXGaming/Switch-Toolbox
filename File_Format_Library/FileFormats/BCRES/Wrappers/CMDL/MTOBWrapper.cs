@@ -85,43 +85,35 @@ namespace FirstPlugin
 
             switch (TextureMapInfo.WrapU)
             {
-                case PICATextureWrap.Repeat: tex1.wrapModeS = 0; break;
-                case PICATextureWrap.Mirror: tex1.wrapModeS = 1; break;
-                case PICATextureWrap.ClampToEdge: tex1.wrapModeS = 2; break;
-                case PICATextureWrap.ClampToBorder: tex1.wrapModeS = 2; break;
+                case PICATextureWrap.Repeat: tex1.WrapModeS = STTextureWrapMode.Repeat; break;
+                case PICATextureWrap.Mirror: tex1.WrapModeS = STTextureWrapMode.Mirror; break;
+                case PICATextureWrap.ClampToEdge: tex1.WrapModeS = STTextureWrapMode.Clamp; break;
+                case PICATextureWrap.ClampToBorder: tex1.WrapModeS = STTextureWrapMode.Clamp; break;
             }
             switch (TextureMapInfo.WrapV)
             {
-                case PICATextureWrap.Repeat: tex1.wrapModeT = 0; break;
-                case PICATextureWrap.Mirror: tex1.wrapModeT = 1; break;
-                case PICATextureWrap.ClampToEdge: tex1.wrapModeT = 2; break;
-                case PICATextureWrap.ClampToBorder: tex1.wrapModeT = 2; break;
+                case PICATextureWrap.Repeat: tex1.WrapModeT = STTextureWrapMode.Repeat; break;
+                case PICATextureWrap.Mirror: tex1.WrapModeT = STTextureWrapMode.Mirror; break;
+                case PICATextureWrap.ClampToEdge: tex1.WrapModeT = STTextureWrapMode.Clamp; break;
+                case PICATextureWrap.ClampToBorder: tex1.WrapModeT = STTextureWrapMode.Clamp; break;
             }
 
             switch (TextureMapInfo.MagFilter)
             {
-                case PICATextureFilter.Linear: tex1.magFilter = 0; break;
-                case PICATextureFilter.Nearest: tex1.magFilter = 1; break;
+                case PICATextureFilter.Linear: tex1.MagFilter = STTextureMagFilter.Linear; break;
+                case PICATextureFilter.Nearest: tex1.MagFilter = STTextureMagFilter.Nearest; break;
             }
 
             switch (TextureMapInfo.MinFilter)
             {
-                case PICATextureFilter.Linear: tex1.minFilter = 0; break;
-                case PICATextureFilter.Nearest: tex1.minFilter = 1; break;
+                case PICATextureFilter.Linear: tex1.MagFilter = STTextureMagFilter.Linear; break;
+                case PICATextureFilter.Nearest: tex1.MagFilter = STTextureMagFilter.Nearest; break;
             }
 
             switch (TextureMapInfo.MipFilter)
             {
-                case PICATextureFilter.Linear: tex1.mipDetail = 0; break;
-                case PICATextureFilter.Nearest: tex1.mipDetail = 1; break;
-            }
-
-            switch (TextureMapInfo.WrapV)
-            {
-                case PICATextureWrap.Repeat: tex1.wrapModeT = 0; break;
-                case PICATextureWrap.Mirror: tex1.wrapModeT = 1; break;
-                case PICATextureWrap.ClampToEdge: tex1.wrapModeT = 2; break;
-                case PICATextureWrap.ClampToBorder: tex1.wrapModeT = 2; break;
+                case PICATextureFilter.Linear: tex1.MagFilter = STTextureMagFilter.Linear; break;
+                case PICATextureFilter.Nearest: tex1.MagFilter = STTextureMagFilter.Nearest; break;
             }
 
 

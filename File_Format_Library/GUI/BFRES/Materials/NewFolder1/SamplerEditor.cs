@@ -417,9 +417,9 @@ namespace FirstPlugin.Forms
             tex.FragShaderSampler = "_a1";
             tex.Name = "Untitled";
             tex.Type = Toolbox.Library.STGenericMatTexture.TextureType.Unknown;
-            tex.wrapModeS = 0;
-            tex.wrapModeT = 0;
-            tex.wrapModeW = 2;
+            tex.WrapModeS = Toolbox.Library.STTextureWrapMode.Repeat;
+            tex.WrapModeT = Toolbox.Library.STTextureWrapMode.Repeat;
+            tex.WrapModeW = Toolbox.Library.STTextureWrapMode.Clamp;
 
             if (material.GetResFileU() != null)
             {

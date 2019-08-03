@@ -690,19 +690,19 @@ namespace FirstPlugin
                 MatTexture texture = new MatTexture();
                 texture.switchSampler = mat.Samplers[id];
 
-                texture.wrapModeS = (int)mat.Samplers[id].WrapModeU;
-                texture.wrapModeT = (int)mat.Samplers[id].WrapModeV;
-                texture.wrapModeW = (int)mat.Samplers[id].WrapModeW;
+                texture.WrapModeS = (STTextureWrapMode)mat.Samplers[id].WrapModeU;
+                texture.WrapModeT = (STTextureWrapMode)mat.Samplers[id].WrapModeV;
+                texture.WrapModeW = (STTextureWrapMode)mat.Samplers[id].WrapModeW;
                 texture.SamplerName = mat.SamplerDict.GetKey(id);
 
                 if (mat.Samplers[id].ShrinkXY == Sampler.ShrinkFilterModes.Points)
-                    texture.minFilter = 1;
+                    texture.MinFilter = STTextureMinFilter.Nearest;
                 else
-                    texture.minFilter = 0;
+                    texture.MinFilter = STTextureMinFilter.Linear;
                 if (mat.Samplers[id].ExpandXY == Sampler.ExpandFilterModes.Points)
-                    texture.magFilter = 1;
+                    texture.MagFilter = STTextureMagFilter.Nearest;
                 else
-                    texture.magFilter = 0;
+                    texture.MagFilter = STTextureMagFilter.Linear;
 
                 string useSampler = texture.SamplerName;
 

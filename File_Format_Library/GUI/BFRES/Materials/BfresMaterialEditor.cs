@@ -112,12 +112,10 @@ namespace FirstPlugin.Forms
                 TextureMap.UVScale = Utils.ToVec4(material.matparam["gsys_bake_st1"].ValueFloat).Xy;
                 TextureMap.UVTranslate = Utils.ToVec4(material.matparam["gsys_bake_st1"].ValueFloat).Zw;
             }
-            TextureMap.wrapModeS = texmap.wrapModeS;
-            TextureMap.wrapModeT = texmap.wrapModeT;
-            TextureMap.mipDetail = texmap.mipDetail;
-            TextureMap.minFilter = texmap.minFilter;
-            TextureMap.magFilter = texmap.mapMode;
-            TextureMap.mapMode = texmap.mapMode;
+            TextureMap.WrapModeS = texmap.WrapModeS;
+            TextureMap.WrapModeT = texmap.WrapModeT;
+            TextureMap.MinFilter = texmap.MinFilter;
+            TextureMap.MagFilter = texmap.MagFilter;
 
             TextureMap.texture = genericTexture;
             return TextureMap;

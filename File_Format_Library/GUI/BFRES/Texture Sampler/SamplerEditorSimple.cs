@@ -77,33 +77,34 @@ namespace FirstPlugin.Forms
         {
             if (ActiveMatTexture.wiiUSampler != null)
             {
-                ActiveMatTexture.wrapModeS = (int)ActiveMatTexture.wiiUSampler.ClampX;
-                ActiveMatTexture.wrapModeT = (int)ActiveMatTexture.wiiUSampler.ClampY;
-                ActiveMatTexture.wrapModeW = (int)ActiveMatTexture.wiiUSampler.ClampZ;
+                ActiveMatTexture.WrapModeS = (STTextureWrapMode)ActiveMatTexture.wiiUSampler.ClampX;
+                ActiveMatTexture.WrapModeT = (STTextureWrapMode)ActiveMatTexture.wiiUSampler.ClampY;
+                ActiveMatTexture.WrapModeW = (STTextureWrapMode)ActiveMatTexture.wiiUSampler.ClampZ;
 
                 if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Point)
-                    ActiveMatTexture.minFilter = 1;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Nearest;
                 if (ActiveMatTexture.wiiUSampler.MagFilter == ResUGX2.GX2TexXYFilterType.Point)
-                    ActiveMatTexture.magFilter = 1;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Nearest;
                 if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Bilinear)
-                    ActiveMatTexture.minFilter = 0;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Linear;
                 if (ActiveMatTexture.wiiUSampler.MagFilter == ResUGX2.GX2TexXYFilterType.Bilinear)
-                    ActiveMatTexture.magFilter = 0;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Linear;
             }
             else
             {
-                ActiveMatTexture.wrapModeS = (int)ActiveMatTexture.switchSampler.WrapModeU;
-                ActiveMatTexture.wrapModeT = (int)ActiveMatTexture.switchSampler.WrapModeV;
-                ActiveMatTexture.wrapModeW = (int)ActiveMatTexture.switchSampler.WrapModeW;
+                ActiveMatTexture.WrapModeS = (STTextureWrapMode)ActiveMatTexture.switchSampler.WrapModeU;
+                ActiveMatTexture.WrapModeT = (STTextureWrapMode)ActiveMatTexture.switchSampler.WrapModeV;
+                ActiveMatTexture.WrapModeW = (STTextureWrapMode)ActiveMatTexture.switchSampler.WrapModeW;
+
 
                 if (ActiveMatTexture.switchSampler.ShrinkXY == Sampler.ShrinkFilterModes.Points)
-                    ActiveMatTexture.minFilter = 1;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Nearest;
                 if (ActiveMatTexture.switchSampler.ExpandXY == Sampler.ExpandFilterModes.Points)
-                    ActiveMatTexture.magFilter = 1;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Nearest;
                 if (ActiveMatTexture.switchSampler.ShrinkXY == Sampler.ShrinkFilterModes.Linear)
-                    ActiveMatTexture.minFilter = 0;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Linear;
                 if (ActiveMatTexture.switchSampler.ExpandXY == Sampler.ExpandFilterModes.Linear)
-                    ActiveMatTexture.magFilter = 0;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Linear;
             }
 
             LibraryGUI.UpdateViewport();

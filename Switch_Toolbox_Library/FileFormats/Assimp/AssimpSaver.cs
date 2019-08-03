@@ -556,7 +556,7 @@ namespace Toolbox.Library
                         continue;
 
                     TextureSlot slot2 = new TextureSlot(path, ConvertToAssimpTextureType(tex.Type), 0, TextureMapping.FromUV,
-                            0, 1.0f, Assimp.TextureOperation.Add, ConvertToAssimpWrapType(tex.wrapModeS), ConvertToAssimpWrapType(tex.wrapModeT), 0);
+                            0, 1.0f, Assimp.TextureOperation.Add, ConvertToAssimpWrapType(tex.WrapModeS), ConvertToAssimpWrapType(tex.WrapModeT), 0);
 
                     material.AddMaterialTexture(ref slot2);
                 }
@@ -565,13 +565,13 @@ namespace Toolbox.Library
 
         }
 
-        private static Assimp.TextureWrapMode ConvertToAssimpWrapType(int  type)
+        private static Assimp.TextureWrapMode ConvertToAssimpWrapType(STTextureWrapMode  type)
         {
             switch (type)
             {
-                case 0: return TextureWrapMode.Wrap;
-                case 1: return TextureWrapMode.Mirror;
-                case 2: return TextureWrapMode.Clamp;
+                case STTextureWrapMode.Repeat: return TextureWrapMode.Wrap;
+                case STTextureWrapMode.Mirror: return TextureWrapMode.Mirror;
+                case STTextureWrapMode.Clamp: return TextureWrapMode.Clamp;
                 default:
                     return TextureWrapMode.Wrap;
             }

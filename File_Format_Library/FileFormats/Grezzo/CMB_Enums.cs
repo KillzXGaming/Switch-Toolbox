@@ -50,7 +50,7 @@ namespace Grezzo.CmbEnums
         SMOOTH_SKINNING = 0x02,
     }
 
-    public enum TextureWrapMode
+    public enum CMBTextureWrapMode
     {
         CLAMP = 0x2900,
         REPEAT = 0x2901,

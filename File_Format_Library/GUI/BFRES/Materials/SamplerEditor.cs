@@ -187,51 +187,51 @@ namespace FirstPlugin.Forms
 
             if (ActiveMatTexture.wiiUSampler != null)
             {
-                ActiveMatTexture.wrapModeS = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampX);
-                ActiveMatTexture.wrapModeT = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampY);
-                ActiveMatTexture.wrapModeW = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampZ);
+                ActiveMatTexture.WrapModeS = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampX);
+                ActiveMatTexture.WrapModeT = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampY);
+                ActiveMatTexture.WrapModeW = SetWrapMode((int)ActiveMatTexture.wiiUSampler.ClampZ);
 
                 if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Point)
-                    ActiveMatTexture.minFilter = 1;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Nearest;
                 if (ActiveMatTexture.wiiUSampler.MagFilter == ResUGX2.GX2TexXYFilterType.Point)
-                    ActiveMatTexture.magFilter = 1;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Nearest;
                 if (ActiveMatTexture.wiiUSampler.MinFilter == ResUGX2.GX2TexXYFilterType.Bilinear)
-                    ActiveMatTexture.minFilter = 0;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Linear;
                 if (ActiveMatTexture.wiiUSampler.MagFilter == ResUGX2.GX2TexXYFilterType.Bilinear)
-                    ActiveMatTexture.magFilter = 0;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Linear;
             }
             else
             {
-                ActiveMatTexture.wrapModeS = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeU);
-                ActiveMatTexture.wrapModeT = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeV);
-                ActiveMatTexture.wrapModeW = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeW);
+                ActiveMatTexture.WrapModeS = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeU);
+                ActiveMatTexture.WrapModeT = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeV);
+                ActiveMatTexture.WrapModeW = SetWrapMode((int)ActiveMatTexture.switchSampler.WrapModeW);
 
                 if (ActiveMatTexture.switchSampler.ShrinkXY == ResNX.Sampler.ShrinkFilterModes.Points)
-                    ActiveMatTexture.minFilter = 1;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Nearest;
                 if (ActiveMatTexture.switchSampler.ExpandXY == ResNX.Sampler.ExpandFilterModes.Points)
-                    ActiveMatTexture.magFilter = 1;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Nearest;
                 if (ActiveMatTexture.switchSampler.ShrinkXY == ResNX.Sampler.ShrinkFilterModes.Linear)
-                    ActiveMatTexture.minFilter = 0;
+                    ActiveMatTexture.MinFilter = STTextureMinFilter.Linear;
                 if (ActiveMatTexture.switchSampler.ExpandXY == ResNX.Sampler.ExpandFilterModes.Linear)
-                    ActiveMatTexture.magFilter = 0;
+                    ActiveMatTexture.MagFilter = STTextureMagFilter.Linear;
             }
 
             LibraryGUI.UpdateViewport();
         }
 
-        private int SetWrapMode(int wrapMode)
+        private STTextureWrapMode SetWrapMode(int wrapMode)
         {
             switch (wrapMode)
             {
                 case (int)ResNX.GFX.TexClamp.Repeat:
-                    return 0;
+                    return STTextureWrapMode.Repeat;
                 case (int)ResNX.GFX.TexClamp.Mirror:
-                    return 1;
+                    return STTextureWrapMode.Mirror;
                 case (int)ResNX.GFX.TexClamp.Clamp:
                 case (int)ResNX.GFX.TexClamp.ClampToEdge:
-                    return 2;
+                    return STTextureWrapMode.Clamp;
                 default:
-                    return 2;
+                    return STTextureWrapMode.Clamp;
             }
         }
 
@@ -368,9 +368,9 @@ namespace FirstPlugin.Forms
                 tex.FragShaderSampler = "_a0";
                 tex.Name = "Untitled";
                 tex.Type = Toolbox.Library.STGenericMatTexture.TextureType.Unknown;
-                tex.wrapModeS = 0;
-                tex.wrapModeT = 0;
-                tex.wrapModeW = 2;
+                tex.WrapModeS = STTextureWrapMode.Repeat;
+                tex.WrapModeT = STTextureWrapMode.Repeat;
+                tex.WrapModeW = STTextureWrapMode.Clamp;
 
                 if (material.GetResFileU() != null)
                 {

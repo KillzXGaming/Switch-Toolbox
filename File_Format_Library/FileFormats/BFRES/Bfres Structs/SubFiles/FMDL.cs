@@ -983,8 +983,8 @@ namespace Bfres.Structs
                                     //Note we can't add/remove samplers so we must fill these slots
                                     foreach (var t in fmat.TextureMaps)
                                     {
-                                        t.wrapModeS = 0;
-                                        t.wrapModeT = 0;
+                                        t.WrapModeS = STTextureWrapMode.Repeat;
+                                        t.WrapModeT = STTextureWrapMode.Repeat;
 
                                         switch (t.Type)
                                         {
@@ -1076,9 +1076,9 @@ namespace Bfres.Structs
                                         if (t.Type == tex.Type)
                                         {
                                             t.Name = tex.Name;
-                                            t.wrapModeS = tex.wrapModeS;
-                                            t.wrapModeT = tex.wrapModeT;
-                                            t.wrapModeW = tex.wrapModeW;
+                                            t.WrapModeS = tex.WrapModeS;
+                                            t.WrapModeT = tex.WrapModeT;
+                                            t.WrapModeW = tex.WrapModeW;
                                             t.Type = tex.Type;
                                         }
                                     }

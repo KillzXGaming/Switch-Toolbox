@@ -41,10 +41,10 @@ namespace FirstPlugin
                 matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                 matTexture.textureUnit = textureUnit++;
 
-                matTexture.wrapModeS = (int)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapS);
-                matTexture.wrapModeT = (int)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapT);
-                matTexture.minFilter = (int)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MinFilter);
-                matTexture.magFilter = (int)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MagFilter);
+                matTexture.WrapModeS = (STTextureWrapMode)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapS);
+                matTexture.WrapModeT = (STTextureWrapMode)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapT);
+                matTexture.MinFilter = (STTextureMinFilter)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MinFilter);
+                matTexture.MagFilter = (STTextureMagFilter)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MagFilter);
 
                 TextureMaps.Add(matTexture);
 

@@ -34,11 +34,14 @@ namespace Toolbox.Library.Forms
             public STGenericTexture texture;
             public int UvChannelIndex;
             public int mapMode = 0;
-            public int wrapModeS = 1;
-            public int wrapModeT = 1;
-            public int minFilter = 3;
-            public int magFilter = 2;
-            public int mipDetail = 6;
+
+            public STTextureWrapMode WrapModeS = STTextureWrapMode.Repeat;
+            public STTextureWrapMode WrapModeT = STTextureWrapMode.Repeat;
+            public STTextureWrapMode WrapModeW = STTextureWrapMode.Clamp;
+
+            public STTextureMinFilter MinFilter = STTextureMinFilter.Linear;
+            public STTextureMagFilter MagFilter = STTextureMagFilter.Linear;
+
             public uint texWidth = 0;
             public uint texHeight = 0;
         }
@@ -277,12 +280,12 @@ namespace Toolbox.Library.Forms
                 //Draws a textured plan for our uvs to show on
                 GL.Enable(EnableCap.Texture2D);
                 GL.BindTexture(TextureTarget.Texture2D, texid);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)STGenericMatTexture.wrapmode[activeTexture.wrapModeS]);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)STGenericMatTexture.wrapmode[activeTexture.wrapModeT]);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)STGenericMatTexture.wrapmode[activeTexture.WrapModeS]);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)STGenericMatTexture.wrapmode[activeTexture.WrapModeT]);
                 //     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)STGenericMatTexture.wrapmode[activeTexture.wrapModeS]);
                 //   GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)STGenericMatTexture.wrapmode[activeTexture.wrapModeT]);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)STGenericMatTexture.minfilter[activeTexture.minFilter]);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)STGenericMatTexture.magfilter[activeTexture.magFilter]);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)STGenericMatTexture.minfilter[activeTexture.MinFilter]);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)STGenericMatTexture.magfilter[activeTexture.MagFilter]);
 
             }
 

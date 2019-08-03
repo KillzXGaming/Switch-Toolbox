@@ -404,27 +404,27 @@ namespace Toolbox.Library
             }
 
             matTex.Name = System.IO.Path.GetFileNameWithoutExtension(tex.FilePath);
-            matTex.wrapModeS = SetWrapMode(tex.WrapModeU);
-            matTex.wrapModeT = SetWrapMode(tex.WrapModeV);
+            matTex.WrapModeS = SetWrapMode(tex.WrapModeU);
+            matTex.WrapModeT = SetWrapMode(tex.WrapModeV);
 
             STConsole.WriteLine($"Getting assimp texture slot {matTex.Name} Type {matTex.Type}");
 
             return matTex;
         }
-        private int SetWrapMode(TextureWrapMode wrap)
+        private STTextureWrapMode SetWrapMode(TextureWrapMode wrap)
         {
             switch (wrap)
             {
                 case TextureWrapMode.Wrap:
-                    return 0;
+                    return STTextureWrapMode.Repeat;
                 case TextureWrapMode.Mirror:
-                    return 1;
+                    return STTextureWrapMode.Mirror;
                 case TextureWrapMode.Clamp:
-                    return 2;
+                    return STTextureWrapMode.Clamp;
                 case TextureWrapMode.Decal:
-                    return 0;
+                    return STTextureWrapMode.Repeat;
                 default:
-                    return 0;
+                    return STTextureWrapMode.Repeat;
             }
         }
 
