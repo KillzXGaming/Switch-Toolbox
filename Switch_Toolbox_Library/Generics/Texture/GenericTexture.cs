@@ -98,7 +98,15 @@ namespace Toolbox.Library
 
         public abstract byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0);
 
-        public virtual byte[] GetPaletteData() { return new byte[0]; }
+        private byte[] paletteData = new byte[0];
+
+        public virtual byte[] GetPaletteData() { return paletteData; }
+
+        public virtual void SetPaletteData(byte[] data, PALETTE_FORMAT format)
+        {
+            paletteData = data;
+            PaletteFormat = format;
+        }
 
         //
         //Gets a list of surfaces given the start index of the array and the amount of arrays to obtain

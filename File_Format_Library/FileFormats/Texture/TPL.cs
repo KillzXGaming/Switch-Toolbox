@@ -91,15 +91,6 @@ namespace FirstPlugin
 
                         var GXFormat = (Decode_Gamecube.TextureFormats)format;
 
-                     /*   if (format == 12)
-                            GXFormat = Decode_Gamecube.TextureFormats.CMPR;
-                        if (format == 14)
-                            GXFormat = Decode_Gamecube.TextureFormats.RGB5A3;
-                        if (format == 26)
-                            GXFormat = Decode_Gamecube.TextureFormats.I8;
-                        */
-               
-
                         //Now create a wrapper
                         var texWrapper = new TplTextureWrapper();
                         texWrapper.Text = $"Texture {i}";
@@ -131,6 +122,23 @@ namespace FirstPlugin
                         image.Read(reader);
                         ImageHeaders.Add(image);
 
+                        var GXFormat = (Decode_Gamecube.TextureFormats)image.Format;
+
+                        Console.WriteLine($"ImageOffset {image.ImageOffset}");
+
+                        //Now create a wrapper
+                        var texWrapper = new TplTextureWrapper();
+                        texWrapper.Text = $"Texture {i}";
+                        texWrapper.ImageKey = "Texture";
+                        texWrapper.SelectedImageKey = "Texture";
+                        texWrapper.Format = Decode_Gamecube.ToGenericFormat(GXFormat);
+                        texWrapper.Width = image.Width;
+                        texWrapper.Height = image.Height;
+                        texWrapper.MipCount = 1;
+                        texWrapper.PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
+                        texWrapper.ImageData = reader.getSection(image.ImageOffset, 
+                            (uint)Decode_Gamecube.GetDataSize(GXFormat, (int)image.Width, (int)image.Height));
+
                         //Palette is sometimes unused to check
                         if (PaletteHeaderOffset != 0)
                         {
@@ -138,13 +146,13 @@ namespace FirstPlugin
                             var palette = new PaletteHeader();
                             palette.Read(reader);
                             PaletteHeaders.Add(palette);
+
+                            var GXPaletteFormat = (Decode_Gamecube.PaletteFormats)image.Format;
+
+                            texWrapper.SetPaletteData(palette.Data, Decode_Gamecube.ToGenericPaletteFormat(GXPaletteFormat));
                         }
 
-                        Console.WriteLine($"ImageOffset {image.ImageOffset}");
-
-                        //Now create a wrapper
-                        //  var texWrapper = new TplTextureWrapper();
-                        // texWrapper.ImageData = image.ImageOffset
+                        Nodes.Add(texWrapper);
                     }
                 }
             }
@@ -210,12 +218,19 @@ namespace FirstPlugin
             public uint PaletteFormat { get; set; }
             public uint PaletteDataOffset { get; set; }
 
+            public byte[] Data;
+
             public void Read(FileReader reader)
             {
                 EntryCount = reader.ReadUInt16();
                 Unpacked = reader.ReadByte();
                 PaletteFormat = reader.ReadUInt32();
                 PaletteDataOffset = reader.ReadUInt32();
+
+                using (reader.TemporarySeek(PaletteDataOffset, SeekOrigin.Begin))
+                {
+                    Data = reader.ReadBytes(EntryCount * 2);
+                }
             }
 
             public void Write(FileWriter writer)
