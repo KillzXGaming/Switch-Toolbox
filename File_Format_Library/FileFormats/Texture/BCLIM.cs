@@ -385,27 +385,27 @@ namespace FirstPlugin
                 var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
 
                 //Swizzle and create surface
-            /*    var surface = GX2.CreateGx2Texture(data, Text,
-                    (uint)image.TileMode,
-                    (uint)0,
-                    (uint)image.Width,
-                    (uint)image.Height,
-                    (uint)1,
-                    (uint)Gx2Format,
-                    (uint)0,
-                    (uint)1,
-                    (uint)MipCount
-                    );
+                /*    var surface = GX2.CreateGx2Texture(data, Text,
+                        (uint)image.TileMode,
+                        (uint)0,
+                        (uint)image.Width,
+                        (uint)image.Height,
+                        (uint)1,
+                        (uint)Gx2Format,
+                        (uint)0,
+                        (uint)1,
+                        (uint)MipCount
+                        );
 
-                image.Swizzle = (byte)surface.swizzle;
-                image.BCLIMFormat = ConvertFormatGenericToBflim(Format);
-                image.Height = (ushort)surface.height;
-                image.Width = (ushort)surface.width;*/
+                    image.Swizzle = (byte)surface.swizzle;
+                    image.BCLIMFormat = ConvertFormatGenericToBflim(Format);
+                    image.Height = (ushort)surface.height;
+                    image.Width = (ushort)surface.width;*/
 
                 Width = image.Width;
                 Height = image.Height;
 
-               // ImageData = surface.data;
+                // ImageData = surface.data;
 
                 IsEdited = true;
                 LoadOpenGLTexture();

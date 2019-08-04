@@ -43,16 +43,12 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
             stream.Seek((~(offset - 1) & (stream.Position + offset - 1)) - stream.Position);
         }
 
-        public void Load(System.IO.Stream stream)
+        private Texture Read(System.IO.Stream stream)
         {
-            //Set this if you want to save the file format
-            CanSave = true;
-
             //You can add a FileReader with Toolbox.Library.IO namespace
             using (var reader = new FileReader(stream))
             {
                 Texture tex = new Texture();
-                tex.CanEdit = false;
 
                 reader.SetByteOrder(true);
 
@@ -67,15 +63,26 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
                 tex.PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
 
                 int imageDataSize = reader.ReadInt32();
-
                 SkipPadding(reader, 0x20);
-
                 tex.ImageData = reader.ReadBytes(imageDataSize);
 
                 tex.Name = FileName;
-                tex.ToolTipText = "Binary Texture Image, used for 2D textures like fonts";
-                _ = Nodes.Add(tex);
+                return tex;
             }
+        }
+
+        public void Load(System.IO.Stream stream)
+        {
+            Text = FileName;
+            //Set this if you want to save the file format
+            CanSave = false;
+
+            Texture tex = Read(stream);
+
+            ImageKey = "Texture";
+            SelectedImageKey = "Texture";
+
+            Nodes.Add(tex);
         }
 
         public byte[] Save()
@@ -102,8 +109,8 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
                     {
                     TEX_FORMAT.I4,
                     TEX_FORMAT.I8,
-                    TEX_FORMAT.I4,
-                    TEX_FORMAT.I8,
+                    TEX_FORMAT.IA4,
+                    TEX_FORMAT.IA8,
                     TEX_FORMAT.RGB565,
                     TEX_FORMAT.RGB5A3,
                     TEX_FORMAT.RGBA32,
