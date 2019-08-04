@@ -40,11 +40,6 @@ namespace FirstPlugin
             }
         }
 
-        private void SkipPadding(FileReader stream, int offset)
-        {
-            stream.Seek((~(offset - 1) & (stream.Position + offset - 1)) - stream.Position);
-        }
-
         public static Dictionary<ushort, TEX_FORMAT> FormatsTXE = new Dictionary<ushort, TEX_FORMAT>()
         {
             [0] = TEX_FORMAT.RGB5A3,
@@ -56,7 +51,6 @@ namespace FirstPlugin
             [6] = TEX_FORMAT.IA8,
             [7] = TEX_FORMAT.RGBA32,
         };
-
 
         public void Load(System.IO.Stream stream)
         {
@@ -83,7 +77,6 @@ namespace FirstPlugin
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
 
                 int imageDataSize = reader.ReadInt32();
-                SkipPadding(reader, 0x20);
 
                 reader.SeekBegin(32);
 
