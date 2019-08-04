@@ -27,9 +27,9 @@ namespace Toolbox.Library
                 case TextureFormats.I8: return TEX_FORMAT.I8;
                 case TextureFormats.IA4: return TEX_FORMAT.IA4;
                 case TextureFormats.IA8: return TEX_FORMAT.IA8;
-                case TextureFormats.RGB565: return TEX_FORMAT.R5G5B5_UNORM;
-                case TextureFormats.RGB5A3: return TEX_FORMAT.R5G5B5A3_UNORM;
-                case TextureFormats.RGBA32: return TEX_FORMAT.R32G32B32A32_FLOAT;
+                case TextureFormats.RGB565: return TEX_FORMAT.RGB565;
+                case TextureFormats.RGB5A3: return TEX_FORMAT.RGB5A3;
+                case TextureFormats.RGBA32: return TEX_FORMAT.RGBA32;
                 default:
                     throw new Exception("Unknown Format " + Format);
             }
@@ -72,9 +72,9 @@ namespace Toolbox.Library
                 case TEX_FORMAT.I8: return TextureFormats.I8;
                 case TEX_FORMAT.IA4: return TextureFormats.IA4;
                 case TEX_FORMAT.IA8: return TextureFormats.IA8;
-                case TEX_FORMAT.R5G5B5_UNORM: return TextureFormats.RGB565;
-                case TEX_FORMAT.R5G5B5A3_UNORM: return TextureFormats.RGB5A3;
-                case TEX_FORMAT.R32G32B32A32_FLOAT: return TextureFormats.RGBA32;
+                case TEX_FORMAT.RGB565: return TextureFormats.RGB565;
+                case TEX_FORMAT.RGB5A3: return TextureFormats.RGB5A3;
+                case TEX_FORMAT.RGBA32: return TextureFormats.RGBA32;
                 default:
                     throw new Exception("Unknown Format " + Format);
             }

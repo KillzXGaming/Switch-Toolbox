@@ -188,5 +188,7 @@ namespace Toolbox.Library
         C8 = 247,
         C14X2 = 248,
         CMPR = 249,
+        RGB565 = 250,
+        RGB5A3 = 251
     }
 }

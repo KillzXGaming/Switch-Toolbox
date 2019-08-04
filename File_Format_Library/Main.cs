@@ -8,6 +8,8 @@ using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using FirstPlugin.Forms;
 using FirstPlugin.LuigisMansion.DarkMoon;
+using AmbrosiaPikmin1.FileFormats.BTI;
+using AmbrosiaPikmin1.FileFormats.TXE;
 
 namespace FirstPlugin
 {
@@ -287,6 +289,8 @@ namespace FirstPlugin
         private Type[] LoadFileFormats()
         {
             List<Type> Formats = new List<Type>();
+            Formats.Add(typeof(BTI));
+            Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
             Formats.Add(typeof(BFRES));
             Formats.Add(typeof(BCRES));
