@@ -75,22 +75,22 @@ namespace FirstPlugin
                 byte texFormat = reader.ReadByte();
                 Format = Decode_Gamecube.ToGenericFormat((Decode_Gamecube.TextureFormats)texFormat);
 
-                _ = reader.ReadByte(); // enable alpha
+                reader.ReadByte(); // enable alpha
                 Width = reader.ReadUInt16();
                 Height = reader.ReadUInt16();
-                _ = reader.ReadByte(); // wrap s
-                _ = reader.ReadByte(); // wrap t
+                reader.ReadByte(); // wrap s
+                reader.ReadByte(); // wrap t
                 PaletteFormat = (PALETTE_FORMAT)reader.ReadInt16();
-                _ = reader.ReadInt16(); // num of palette entries
-                _ = reader.ReadInt32(); // offset to palette data
-                _ = reader.ReadInt32(); // border colour
-                _ = reader.ReadByte(); // min filter type
-                _ = reader.ReadByte(); // mag filter type
-                _ = reader.ReadInt16();
+                reader.ReadInt16(); // num of palette entries
+                reader.ReadInt32(); // offset to palette data
+                reader.ReadInt32(); // border colour
+                reader.ReadByte(); // min filter type
+                reader.ReadByte(); // mag filter type
+                reader.ReadInt16();
 
                 MipCount = reader.ReadByte();
-                _ = reader.ReadByte();
-                _ = reader.ReadInt16();
+                reader.ReadByte();
+                reader.ReadInt16();
                 uint offsetToImageData = reader.ReadUInt32(); // offset to image data
 
                 //Lets set our method of decoding
