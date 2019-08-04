@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox;
@@ -86,10 +86,18 @@ namespace FirstPlugin
 
                 for (int i = 0; i < FileCount; i++)
                 {
-                    var file = new FileEntry(FilePath);
+                    var file = new FileEntry(FilePath, Version);
                     file.FileName = FileNames[i];
                     file.Read(reader);
                     files.Add(file);
+
+                    //Remove this stupid long pointless path
+                    file.FileName = file.FileName.Replace("temporary/octane/data/nx/output/", string.Empty);
+
+                   // if (file.FileOffset >= 0xff000000)
+                   //     file.FileOffset = 
+
+
                 }
             }
         }
@@ -119,22 +127,18 @@ namespace FirstPlugin
             //The archive file used to open the file
             public string SourceFile { get; set; }
 
-            public CompressionType FileCompressionType;
+            public uint Version { get; set; }
 
-            public enum CompressionType : int
-            {
-                None = -1,
-                LZMA = 536870957,
-                Deflate,
-            }
+            public int FileCompressionType;
 
-            public FileEntry(string ArchivePath)
+            public FileEntry(string ArchivePath, uint version)
             {
                 SourceFile = ArchivePath;
+                Version = version;
             }
 
-            private uint FileOffset;
-            private uint DecompressedFileSize;
+            public uint FileOffset;
+            public uint DecompressedFileSize;
 
             public override byte[] FileData
             {
@@ -142,17 +146,39 @@ namespace FirstPlugin
                 {
                     using (var reader = new FileReader(SourceFile))
                     {
-                        reader.Position = FileOffset;
-                        if (FileCompressionType == CompressionType.None)
+                        int size = 0;
+                        int offset = (int)FileOffset;
+                        uint compressedSize = 0;
+                        int def_block = 0x8000;
+
+                        if (FileCompressionType != -1)
                         {
-                            return reader.ReadBytes((int)DecompressedFileSize);
+                            MemoryStream output = new MemoryStream();
+
+                            reader.BaseStream.Seek(offset, SeekOrigin.Begin);
+
+                            if (Version <= 0x0B)
+                                compressedSize = reader.ReadUInt16();
+                            else
+                                compressedSize = reader.ReadUInt32();
+
+                            if (def_block > DecompressedFileSize - size) def_block = (int)DecompressedFileSize - size;
+
+
+                            var properties = reader.ReadBytes(5);
+                            var copressedBytes = reader.ReadBytes((int)compressedSize);
+
+                            SevenZip.Compression.LZMA.Decoder decode = new SevenZip.Compression.LZMA.Decoder();
+                            decode.SetDecoderProperties(properties);
+
+                            MemoryStream ms = new MemoryStream(copressedBytes);
+                            decode.Code(ms, output, compressedSize, def_block, null);
+
+                            return output.ToArray();
                         }
                         else
                         {
-                            uint FileSize = reader.ReadUInt32();
-
-                            reader.Position = FileOffset;
-                            return reader.ReadBytes((int)FileSize + 0x10);
+                            return reader.ReadBytes((int)DecompressedFileSize);
                         }
                     }
                 }
@@ -161,11 +187,9 @@ namespace FirstPlugin
             public void Read(FileReader reader)
             {
                 FileOffset = reader.ReadUInt32();
-                byte[] Unknown = reader.ReadBytes(4);
+                uint NameOffset = reader.ReadUInt32();
                 DecompressedFileSize = reader.ReadUInt32();
-                FileCompressionType = reader.ReadEnum<CompressionType>(false);
-
-              
+                FileCompressionType = reader.ReadInt32();
             }
         }
     }

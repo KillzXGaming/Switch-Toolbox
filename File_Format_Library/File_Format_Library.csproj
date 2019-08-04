@@ -275,6 +275,7 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
+    <Compile Include="FileFormats\IGZ\IGZ.cs" />
     <Compile Include="FileFormats\Texture\TXE.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
