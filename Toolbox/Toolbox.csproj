@@ -393,6 +393,9 @@
     <Content Include="Lib\LibTennis.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Lib\Licenses\7ZIP LZMA LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\Licenses\Assimp COPYRIGHT.txt" />
     <Content Include="Lib\Licenses\ImageBox COPYRIGHT.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
