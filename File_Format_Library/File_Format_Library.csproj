@@ -275,10 +275,12 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
+    <Compile Include="FileFormats\Texture\TXE.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
+    <Compile Include="FileFormats\Texture\BTI.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />

@@ -287,6 +287,8 @@ namespace FirstPlugin
         private Type[] LoadFileFormats()
         {
             List<Type> Formats = new List<Type>();
+            Formats.Add(typeof(BTI));
+            Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
             Formats.Add(typeof(BFRES));
             Formats.Add(typeof(BCRES));

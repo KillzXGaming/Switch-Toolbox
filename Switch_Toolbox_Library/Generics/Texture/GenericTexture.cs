@@ -103,7 +103,7 @@ namespace Toolbox.Library
         //
         //Gets a list of surfaces given the start index of the array and the amount of arrays to obtain
         //
-        public List<Surface> GetSurfaces(int ArrayIndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1 )
+        public List<Surface> GetSurfaces(int ArrayIndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1)
         {
             if (GetAllSurfaces)
                 GetSurfaceAmount = (int)ArrayCount;
@@ -146,7 +146,8 @@ namespace Toolbox.Library
         public uint MipCount
         {
             get { return mipCount; }
-            set {
+            set
+            {
                 if (value == 0)
                     mipCount = 1;
                 else if (value > 17)
@@ -184,7 +185,7 @@ namespace Toolbox.Library
 
         public RenderableTex RenderableTex { get; set; }
 
-        public abstract TEX_FORMAT[] SupportedFormats { get;}
+        public abstract TEX_FORMAT[] SupportedFormats { get; }
 
         public static uint GetBytesPerPixel(TEX_FORMAT Format)
         {
@@ -212,7 +213,7 @@ namespace Toolbox.Library
 
         private static readonly Dictionary<TEX_FORMAT, FormatInfo> FormatTable =
                          new Dictionary<TEX_FORMAT, FormatInfo>()
-        { 
+        {
             { TEX_FORMAT.R32G32B32A32_FLOAT,   new FormatInfo(16, 1,  1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.R32G32B32A32_SINT,    new FormatInfo(16, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R32G32B32A32_UINT,    new FormatInfo(16, 1,  1, 1,  TargetBuffer.Color) },
@@ -314,11 +315,24 @@ namespace Toolbox.Library
             { TEX_FORMAT.A4,                    new FormatInfo(4, 1,  1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.A8_UNORM,              new FormatInfo(8,  1,  1, 1,  TargetBuffer.Color) },
 
-            { TEX_FORMAT.D16_UNORM,            new FormatInfo(2, 1, 1, 1, TargetBuffer.Depth)        },
-            { TEX_FORMAT.D24_UNORM_S8_UINT,    new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)        },
-            { TEX_FORMAT.D32_FLOAT,            new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)        },
-            { TEX_FORMAT.D32_FLOAT_S8X24_UINT, new FormatInfo(8, 1, 1, 1,TargetBuffer.DepthStencil) }
-        }; 
+            { TEX_FORMAT.D16_UNORM,            new FormatInfo(2, 1, 1, 1, TargetBuffer.Depth)       },
+            { TEX_FORMAT.D24_UNORM_S8_UINT,    new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)       },
+            { TEX_FORMAT.D32_FLOAT,            new FormatInfo(4, 1, 1, 1, TargetBuffer.Depth)       },
+            { TEX_FORMAT.D32_FLOAT_S8X24_UINT, new FormatInfo(8, 1, 1, 1, TargetBuffer.DepthStencil)},
+
+            { TEX_FORMAT.I4,                   new FormatInfo(4,  8, 8, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.I8,                   new FormatInfo(8,  8, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.IA4,                  new FormatInfo(8,  8, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.IA8,                  new FormatInfo(16, 4, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.RGB565,               new FormatInfo(16, 4, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.RGB5A3,               new FormatInfo(16, 4, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.RGBA32,               new FormatInfo(32, 4, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.C4,                   new FormatInfo(4,  8, 8, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.C8,                   new FormatInfo(8,  8, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.C14X2,                new FormatInfo(16, 4, 4, 1, TargetBuffer.Color) },
+            { TEX_FORMAT.CMPR,                 new FormatInfo(4,  8, 8, 1, TargetBuffer.Color) }
+
+        };
 
         /// <summary>
         /// A Surface contains mip levels of compressed/uncompressed texture data
@@ -328,7 +342,7 @@ namespace Toolbox.Library
             public List<byte[]> mipmaps = new List<byte[]>();
         }
 
-        public void CreateGenericTexture(uint width, uint height, List<Surface> surfaces, TEX_FORMAT format )
+        public void CreateGenericTexture(uint width, uint height, List<Surface> surfaces, TEX_FORMAT format)
         {
             Width = width;
             Height = height;
@@ -383,15 +397,16 @@ namespace Toolbox.Library
             byte[] data = GetImageData(ArrayLevel, MipLevel);
             byte[] paletteData = GetPaletteData();
             if (data.Length == 0)
-                return new Bitmap(1,1);
+                return new Bitmap(1, 1);
 
             try
             {
                 if (data == null)
                     throw new Exception("Data is null!");
 
-                if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format)) {
-                    var Image =  BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
+                if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
+                {
+                    var Image = BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
                       (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     Image.RotateFlip(RotateFlipType.RotateNoneFlipY); //It's upside down for some reason so flip it
                     return Image;
@@ -506,11 +521,11 @@ namespace Toolbox.Library
         /// <returns>Returns a byte array of decoded data. </returns>
         public static byte[] DecodeBlock(byte[] data, uint Width, uint Height, TEX_FORMAT Format, byte[] paletteData, ImageParameters parameters, PALETTE_FORMAT PaletteFormat = PALETTE_FORMAT.None, PlatformSwizzle PlatformSwizzle = PlatformSwizzle.None)
         {
-            if (data == null)     throw new Exception($"Data is null!");
-            if (Format <= 0)      throw new Exception($"Invalid Format!");
+            if (data == null) throw new Exception($"Data is null!");
+            if (Format <= 0) throw new Exception($"Invalid Format!");
             if (data.Length <= 0) throw new Exception($"Data is empty!");
-            if (Width <= 0)       throw new Exception($"Invalid width size {Width}!");
-            if (Height <= 0)      throw new Exception($"Invalid height size {Height}!");
+            if (Width <= 0) throw new Exception($"Invalid width size {Width}!");
+            if (Height <= 0) throw new Exception($"Invalid height size {Height}!");
 
             byte[] imageData = new byte[0];
             bool DontSwapRG = false;
@@ -552,7 +567,7 @@ namespace Toolbox.Library
         public string DebugInfo()
         {
             return $"Texture Info:\n" +
-                   $"Name:               {Text}\n"  +
+                   $"Name:               {Text}\n" +
                    $"Format:             {Format}\n" +
                    $"Height:             {Height}\n" +
                    $"Width:              {Width}\n" +
@@ -566,7 +581,7 @@ namespace Toolbox.Library
 
         public uint GenerateMipCount(int Width, int Height)
         {
-           return GenerateMipCount((uint)Width, (uint)Height);
+            return GenerateMipCount((uint)Width, (uint)Height);
         }
 
         public uint GenerateMipCount(uint Width, uint Height)
@@ -686,7 +701,8 @@ namespace Toolbox.Library
             }
         }
 
-        public override void Export(string FileName) {
+        public override void Export(string FileName)
+        {
             Export(FileName);
         }
 
@@ -712,7 +728,7 @@ namespace Toolbox.Library
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Export(sfd.FileName, false, false, 0,0);
+                Export(sfd.FileName, false, false, 0, 0);
             }
         }
 
@@ -757,7 +773,7 @@ namespace Toolbox.Library
         public void SaveTGA(string FileName, bool ExportSurfaceLevel = false,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
-           
+
         }
         public void SaveBitMap(string FileName, bool ExportSurfaceLevel = false,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
@@ -773,7 +789,7 @@ namespace Toolbox.Library
             {
                 progressBar.Task = "Select dialog option... ";
 
-                var result = MessageBox.Show("Multiple image surfaces found! Would you like to export them all?", "Image Exporter", 
+                var result = MessageBox.Show("Multiple image surfaces found! Would you like to export them all?", "Image Exporter",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                 {
@@ -798,7 +814,7 @@ namespace Toolbox.Library
 
                     return;
                 }
-           }
+            }
 
             progressBar.Task = $"Decoding image {Text}... ";
             progressBar.Value = 20;
@@ -946,9 +962,9 @@ namespace Toolbox.Library
 
                 if (width > 1)
                     width /= 2;
-                
+
                 if (height > 1)
-                    height /= 2;    
+                    height /= 2;
             }
 
             return mipCount;
@@ -996,7 +1012,7 @@ namespace Toolbox.Library
                     int pixel = 0;
                     for (int i = 0; i < bpp; i += 1)
                         pixel |= bytes[pos + i] << (8 * i);
-                    
+
                     comp = GetComponentsFromPixel(Format, pixel, comp);
 
                     NewImageData[pos_ + 3] = comp[compSel[3]];
