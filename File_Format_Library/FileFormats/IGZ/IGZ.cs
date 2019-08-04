@@ -108,6 +108,7 @@ namespace FirstPlugin
 
                 //Now go to the first block. This is a list of section headers
                 //Each header follows the same structure, a signature, count, and size
+                reader.SeekBegin(offsets[0]);
                 for (int s = 0; s < SectionCount; s++)
                 {
                     long pos = reader.Position;
