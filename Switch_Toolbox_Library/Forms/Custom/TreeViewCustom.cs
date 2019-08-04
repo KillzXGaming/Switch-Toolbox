@@ -191,8 +191,13 @@ namespace Toolbox.Library
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
+            this.BeginUpdate();
+
             Thread = new Thread((ThreadStart)(() =>
             {
+                List<TreeNode> treeNodes = new List<TreeNode>();
+                List<Image> imageIcons = new List<Image>();
+
                 foreach (TreeNode node in textureIconList.IconTextureList)
                 {
                     if (node is STGenericTexture)
@@ -200,13 +205,42 @@ namespace Toolbox.Library
                         try
                         {
                             var image = ((STGenericTexture)node).GetBitmap();
-                            AddImageOnThread(image, node);
+                            treeNodes.Add(node);
+                            imageIcons.Add(image);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.ToString());
                         }
                     }
+                }
+
+
+                for (int i = 0; i < treeNodes.Count; i++)
+                {
+                    AddImageOnThread(i, treeNodes[i]);
+                }
+
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.ImageList.Images.AddRange(imageIcons.ToArray());
+                    });
+                }
+
+                for (int i = 0; i < treeNodes.Count; i++)
+                    imageIcons[i].Dispose();
+
+                imageIcons.Clear();
+                treeNodes.Clear();
+
+               if (this.InvokeRequired)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.EndUpdate();
+                    });
                 }
             }));
             Thread.Start();
@@ -222,10 +256,22 @@ namespace Toolbox.Library
                     node.ImageIndex = this.ImageList.Images.Count;
                     node.SelectedImageIndex = node.ImageIndex;
 
-                    this.ImageList.Images.Add(image);
-                    var dummy = this.ImageList.Handle;
+                    imgList.Images.Add(image);
 
                     image.Dispose();
+                });
+            }
+        }
+
+        public void AddImageOnThread(int index, TreeNode node)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate {
+                    // Running on the UI thread
+
+                    node.ImageIndex = this.ImageList.Images.Count + index;
+                    node.SelectedImageIndex = node.ImageIndex;
                 });
             }
         }
