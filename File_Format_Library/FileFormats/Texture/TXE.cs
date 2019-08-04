@@ -68,7 +68,7 @@ namespace FirstPlugin
 
                 Width = reader.ReadUInt16();
                 Height = reader.ReadUInt16();
-                _ = reader.ReadInt16();
+                reader.ReadInt16();
                 //Turn this format into a common format used by this tool
                 ushort texFormat = reader.ReadUInt16();
                 Format = FormatsTXE[texFormat];
