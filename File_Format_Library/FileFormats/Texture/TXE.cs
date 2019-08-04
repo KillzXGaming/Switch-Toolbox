@@ -5,10 +5,12 @@ using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 
-namespace AmbrosiaPikmin1.FileFormats.TXE
+namespace FirstPlugin
 {
-    class TXE : TreeNodeFile, IFileFormat
+    class TXE : STGenericTexture, IFileFormat, ISingleTextureIconLoader
     {
+        public STGenericTexture IconTexture { get { return this; } }
+
         public FileType FileType { get; set; } = FileType.Image;
 
         public bool CanSave { get; set; }
@@ -43,33 +45,18 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
             stream.Seek((~(offset - 1) & (stream.Position + offset - 1)) - stream.Position);
         }
 
-        private Texture Read(System.IO.Stream stream)
+        public static Dictionary<ushort, TEX_FORMAT> FormatsTXE = new Dictionary<ushort, TEX_FORMAT>()
         {
-            //You can add a FileReader with Toolbox.Library.IO namespace
-            using (var reader = new FileReader(stream))
-            {
-                Texture tex = new Texture();
+            [0] = TEX_FORMAT.RGB5A3,
+            [1] = TEX_FORMAT.CMPR,
+            [2] = TEX_FORMAT.RGB565,
+            [3] = TEX_FORMAT.I4,
+            [4] = TEX_FORMAT.I8,
+            [5] = TEX_FORMAT.IA4,
+            [6] = TEX_FORMAT.IA8,
+            [7] = TEX_FORMAT.RGBA32,
+        };
 
-                reader.SetByteOrder(true);
-
-                tex.Width = reader.ReadUInt16();
-                tex.Height = reader.ReadUInt16();
-                _ = reader.ReadInt16();
-                //Turn this format into a common format used by this tool
-                short texFormat = reader.ReadInt16();
-                tex.Format = Decode_Gamecube.ToGenericFormat((Decode_Gamecube.TextureFormats)texFormat);
-
-                //Lets set our method of decoding
-                tex.PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
-
-                int imageDataSize = reader.ReadInt32();
-                SkipPadding(reader, 0x20);
-                tex.ImageData = reader.ReadBytes(imageDataSize);
-
-                tex.Name = FileName;
-                return tex;
-            }
-        }
 
         public void Load(System.IO.Stream stream)
         {
@@ -77,12 +64,33 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
             //Set this if you want to save the file format
             CanSave = false;
 
-            Texture tex = Read(stream);
-
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
 
-            Nodes.Add(tex);
+            //You can add a FileReader with Toolbox.Library.IO namespace
+            using (var reader = new FileReader(stream))
+            {
+                reader.SetByteOrder(true);
+
+                Width = reader.ReadUInt16();
+                Height = reader.ReadUInt16();
+                _ = reader.ReadInt16();
+                //Turn this format into a common format used by this tool
+                ushort texFormat = reader.ReadUInt16();
+                Format = FormatsTXE[texFormat];
+
+                //Lets set our method of decoding
+                PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
+
+                int imageDataSize = reader.ReadInt32();
+                SkipPadding(reader, 0x20);
+
+                reader.SeekBegin(32);
+
+                ImageData = reader.ReadBytes(imageDataSize);
+
+                Text = FileName;
+            }
         }
 
         public byte[] Save()
@@ -95,18 +103,16 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
 
         }
 
-        public class Texture : STGenericTexture
-        {
-            public byte[] ImageData { get; set; }
+        public byte[] ImageData { get; set; }
 
-            //A list of supported formats
-            //This gets used in the re encode option
-            public override TEX_FORMAT[] SupportedFormats
+        //A list of supported formats
+        //This gets used in the re encode option
+        public override TEX_FORMAT[] SupportedFormats
+        {
+            get
             {
-                get
+                return new TEX_FORMAT[]
                 {
-                    return new TEX_FORMAT[]
-                    {
                     TEX_FORMAT.I4,
                     TEX_FORMAT.I8,
                     TEX_FORMAT.IA4,
@@ -118,46 +124,46 @@ namespace AmbrosiaPikmin1.FileFormats.TXE
                     TEX_FORMAT.C8,
                     TEX_FORMAT.C14X2,
                     TEX_FORMAT.CMPR,
-                    };
-                }
+                };
             }
+        }
 
-            public override bool CanEdit { get; set; } = false;
 
-            //This gets used in the image editor if the image gets edited
-            //This wll not be ran if "CanEdit" is set to false!
-            public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
+        public override bool CanEdit { get; set; } = false;
+
+        //This gets used in the image editor if the image gets edited
+        //This wll not be ran if "CanEdit" is set to false!
+        public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
+        {
+
+        }
+
+        //Gets the raw image data in bytes
+        //Gets decoded automatically
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        {
+            return ImageData;
+        }
+
+
+        //This is an event for when the tree is clicked on
+        //Load our editor
+        public override void OnClick(TreeView treeView)
+        {
+            //Here we check for an active editor and load a new one if not found
+            //This is used when a tree/object editor is used
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
             {
-
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.LoadEditor(editor);
             }
 
-            //Gets the raw image data in bytes
-            //Gets decoded automatically
-            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
-            {
-                return ImageData;
-            }
-
-
-            //This is an event for when the tree is clicked on
-            //Load our editor
-            public override void OnClick(TreeView treeView)
-            {
-                //Here we check for an active editor and load a new one if not found
-                //This is used when a tree/object editor is used
-                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
-                if (editor == null)
-                {
-                    editor = new ImageEditorBase();
-                    editor.Dock = DockStyle.Fill;
-                    LibraryGUI.LoadEditor(editor);
-                }
-
-                //Load our image and any properties
-                //If you don't make a class for properties you can use a generic class provided in STGenericTexture
-                editor.LoadProperties(GenericProperties);
-                editor.LoadImage(this);
-            }
+            //Load our image and any properties
+            //If you don't make a class for properties you can use a generic class provided in STGenericTexture
+            editor.LoadProperties(GenericProperties);
+            editor.LoadImage(this);
         }
     }
 }

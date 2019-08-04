@@ -8,8 +8,6 @@ using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using FirstPlugin.Forms;
 using FirstPlugin.LuigisMansion.DarkMoon;
-using AmbrosiaPikmin1.FileFormats.BTI;
-using AmbrosiaPikmin1.FileFormats.TXE;
 
 namespace FirstPlugin
 {
