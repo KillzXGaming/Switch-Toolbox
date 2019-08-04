@@ -260,8 +260,8 @@ namespace FirstPlugin
 
             public void Read(FileReader reader)
             {
-                Width = reader.ReadUInt16();
                 Height = reader.ReadUInt16();
+                Width = reader.ReadUInt16();
                 Format = reader.ReadUInt32();
                 ImageOffset = reader.ReadUInt32();
                 WrapS = reader.ReadUInt32();
