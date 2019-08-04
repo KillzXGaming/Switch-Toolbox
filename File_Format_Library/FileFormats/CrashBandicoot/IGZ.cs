@@ -40,23 +40,21 @@ namespace FirstPlugin
 
         public Dictionary<uint, FormatInfo> Formats = new Dictionary<uint, FormatInfo>()
         {
-            { 0xDE, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM) },
+        /*    { 0xDE, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM) },
             { 0x08, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM) },
             { 0x46, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM) },
             { 0x99, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM) },
 
-            { 0xCD, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
+          //  { 0xCD, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
             { 0x06, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
             { 0x3B, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
             { 0x9D, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
 
             { 0x51, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Switch) },
             { 0x28, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Switch) },
-            { 0x28, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Switch) },
             { 0x1B, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Switch) },
 
             { 0x39, new FormatInfo(TEX_FORMAT.BC3_UNORM) },
-            { 0x88, new FormatInfo(TEX_FORMAT.BC3_UNORM) },
             { 0x88, new FormatInfo(TEX_FORMAT.BC3_UNORM) },
             { 0xDA, new FormatInfo(TEX_FORMAT.BC3_UNORM) },
 
@@ -69,6 +67,20 @@ namespace FirstPlugin
             { 0x47, new FormatInfo(TEX_FORMAT.BC5_UNORM) },
             { 0xB9, new FormatInfo(TEX_FORMAT.BC5_UNORM) },
             { 0x78, new FormatInfo(TEX_FORMAT.BC5_UNORM) },
+            */
+            { 0x9D3B06CD, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
+            { 0xDA888839, new FormatInfo(TEX_FORMAT.BC3_UNORM) }, //PC
+            { 0x78B94718, new FormatInfo(TEX_FORMAT.BC5_UNORM) }, //PC
+            { 0x994608DE, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT) }, //PC
+            { 0x1B282851, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Switch) },
+            { 0x37456ECD, new FormatInfo(TEX_FORMAT.BC3_UNORM, PlatformSwizzle.Platform_Switch) },
+            { 0xD0124568, new FormatInfo(TEX_FORMAT.BC5_UNORM, PlatformSwizzle.Platform_Switch) },
+            { 0x8EBE8CF2, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, PlatformSwizzle.Platform_Switch) },
+            { 0xF8313483, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Ps4) },
+            { 0xF0B976CF, new FormatInfo(TEX_FORMAT.BC3_UNORM, PlatformSwizzle.Platform_Ps4) },
+            { 0x7D081E6A, new FormatInfo(TEX_FORMAT.BC5_UNORM, PlatformSwizzle.Platform_Ps4) },
+            { 0x9B54FB48, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, PlatformSwizzle.Platform_Ps4) },
+            { 0xEDF22608, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, PlatformSwizzle.Platform_Ps4) }, //Todo BGR32
         };
 
         public class FormatInfo
@@ -118,11 +130,13 @@ namespace FirstPlugin
                     uint sectioSize = reader.ReadUInt32();
                     uint dataOffset = reader.ReadUInt32(); //0x10. Relative to start of section
 
+                    Console.WriteLine($"{signature} {count} {sectioSize} {dataOffset}");
+
                     uint textureCount = 0;
                     List<string> TextureNames = new List<string>();
                     FormatInfo TextureFormat;
 
-                    reader.Seek(dataOffset);
+                    reader.Seek(pos + dataOffset);
                     switch (signature)
                     {
                         case "TSTR":
@@ -135,7 +149,7 @@ namespace FirstPlugin
                         case "MTSZ":
                             break;
                         case "EXID": //Texture Formats and maybe other formats
-                            reader.ReadUInt32(); //padding?
+                           // reader.ReadUInt32(); //padding?
 
                             //Seems only one code is used but why?
                             uint FormatCode = reader.ReadUInt32();

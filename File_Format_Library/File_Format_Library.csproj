@@ -310,7 +310,6 @@
     <Compile Include="GUI\BMD\BMDModelImportSettings.Designer.cs">
       <DependentUpon>BMDModelImportSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="libWiiSharp\TPL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL.cs" />
     <Compile Include="FileFormats\GFBMDL\GFBMDL_Wrappers.cs" />
     <Compile Include="FileFormats\GMX\GMX.cs" />

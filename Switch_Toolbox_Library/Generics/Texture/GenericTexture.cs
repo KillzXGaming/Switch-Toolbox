@@ -38,6 +38,10 @@ namespace Toolbox.Library
         Platform_Gamecube = 3,
         Platform_WiiU = 4,
         Platform_Switch = 5,
+        Platform_Ps4 = 6,
+        Platform_Ps3 = 7,
+        Platform_Ps2 = 8,
+        Platform_Ps1 = 9,
     }
 
     public class EditedBitmap
