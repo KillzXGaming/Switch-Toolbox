@@ -176,6 +176,25 @@ namespace Toolbox.Library
 
         #region Decoding
 
+        private static readonly int[] Bpp = { 4, 8, 8, 16, 16, 16, 32, 0, 4, 8, 16, 0, 0, 0, 4 };
+
+        public static int GetBpp(TextureFormats Format) { return Bpp[(uint)Format]; }
+
+        private static readonly int[] TileSizeW = { 8, 8, 8, 4, 4, 4, 4, 0, 8, 8, 4, 0, 0, 0, 8 };
+        private static readonly int[] TileSizeH = { 8, 4, 4, 4, 4, 4, 4, 0, 8, 4, 4, 0, 0, 0, 8 };
+
+        public static int GetDataSize(uint Format, uint Width, uint Height)
+        {
+            return GetDataSize((TextureFormats)Format, (int)Width, (int)Height);
+        }
+
+        public static int GetDataSize(TextureFormats Format, int Width, int Height)
+        {
+            while ((Width % TileSizeW[(uint)Format]) != 0) Width++;
+            while ((Height % TileSizeH[(uint)Format]) != 0) Height++;
+            return Width * Height * GetBpp(Format) / 8;
+        }
+
         public static byte[] DecodeData(byte[] ImageData, byte[] PaletteData, uint width, uint height, TEX_FORMAT format, PALETTE_FORMAT palleteFormat)
         {
             var FormatGC = FromGenericFormat(format);

@@ -11,7 +11,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class TPL : TreeNodeFile, IFileFormat
+    public class TPL : TreeNodeFile, IFileFormat, ITextureIconLoader
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -27,7 +27,7 @@ namespace FirstPlugin
             using (var reader = new FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                return reader.ReadUInt32() == 0x0020AF30;
+                return reader.ReadUInt32() == 0x0020AF30 || Utils.GetExtension(FileName) == ".tpl";
             }
         }
 
@@ -40,6 +40,19 @@ namespace FirstPlugin
             }
         }
 
+        public List<STGenericTexture> IconTextureList
+        {
+            get
+            {
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (STGenericTexture node in Nodes)
+                    textures.Add(node);
+
+                return textures;
+            }
+            set { }
+        }
+
         public List<ImageHeader> ImageHeaders = new List<ImageHeader>();
         public List<PaletteHeader> PaletteHeaders = new List<PaletteHeader>();
 
@@ -49,33 +62,144 @@ namespace FirstPlugin
 
             using (var reader = new FileReader(stream))
             {
+                reader.SetByteOrder(true);
+
                 uint Identifier = reader.ReadUInt32();
-                uint ImageCount = reader.ReadUInt32();
-                uint ImageOffsetTable = reader.ReadUInt32();
 
-                for (int i = 0; i < ImageCount; i++)
+                //TPL has multiple versions i assume? Some games like F Zero use a custom one so try that
+                if (Identifier != 0x0020AF30)
                 {
-                    reader.SeekBegin(ImageOffsetTable + (i * 8));
-
-                    uint ImageHeaderOffset = reader.ReadUInt32();
-                    uint PaletteHeaderOffset = reader.ReadUInt32();
-
-                    if (ImageHeaderOffset != 0)
+                    reader.Position = 0;
+                    uint ImageCount = reader.ReadUInt32();
+                    Console.WriteLine("ImageCount" + ImageCount);
+                    for (int i = 0; i < ImageCount; i++)
                     {
+                        reader.SeekBegin(4 + (i * 0x10));
+
+                        uint format = reader.ReadUInt32();
+                        uint offset = reader.ReadUInt32();
+                        uint width = reader.ReadUInt16();
+                        uint height = reader.ReadUInt16();
+                        uint mipCount = reader.ReadUInt16();
+                        ushort unknown = reader.ReadUInt16();
+
+                        if (format == 256)
+                            break;
+
+                        Console.WriteLine(offset);
+                        Console.WriteLine(format);
+
+                        var GXFormat = (Decode_Gamecube.TextureFormats)format;
+
+                     /*   if (format == 12)
+                            GXFormat = Decode_Gamecube.TextureFormats.CMPR;
+                        if (format == 14)
+                            GXFormat = Decode_Gamecube.TextureFormats.RGB5A3;
+                        if (format == 26)
+                            GXFormat = Decode_Gamecube.TextureFormats.I8;
+                        */
+               
+
+                        //Now create a wrapper
+                        var texWrapper = new TplTextureWrapper();
+                        texWrapper.Text = $"Texture {i}";
+                        texWrapper.ImageKey = "Texture";
+                        texWrapper.SelectedImageKey = "Texture";
+                        texWrapper.Format = Decode_Gamecube.ToGenericFormat(GXFormat);
+                        texWrapper.Width = width;
+                        texWrapper.Height = height;
+                        texWrapper.MipCount = mipCount;
+                        texWrapper.ImageData = reader.getSection(offset, (uint)Decode_Gamecube.GetDataSize(GXFormat, (int)width, (int)height));
+                        texWrapper.PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
+                        Nodes.Add(texWrapper);
+                    }
+                }
+                else
+                {
+                    uint ImageCount = reader.ReadUInt32();
+                    uint ImageOffsetTable = reader.ReadUInt32();
+
+                    for (int i = 0; i < ImageCount; i++)
+                    {
+                        reader.SeekBegin(ImageOffsetTable + (i * 8));
+
+                        uint ImageHeaderOffset = reader.ReadUInt32();
+                        uint PaletteHeaderOffset = reader.ReadUInt32();
+
                         reader.SeekBegin(ImageHeaderOffset);
                         var image = new ImageHeader();
                         image.Read(reader);
                         ImageHeaders.Add(image);
-                    }
 
-                    if (PaletteHeaderOffset != 0)
-                    {
-                        reader.SeekBegin(PaletteHeaderOffset);
-                        var palette = new PaletteHeader();
-                        palette.Read(reader);
-                        PaletteHeaders.Add(palette);
+                        //Palette is sometimes unused to check
+                        if (PaletteHeaderOffset != 0)
+                        {
+                            reader.SeekBegin(PaletteHeaderOffset);
+                            var palette = new PaletteHeader();
+                            palette.Read(reader);
+                            PaletteHeaders.Add(palette);
+                        }
+
+                        Console.WriteLine($"ImageOffset {image.ImageOffset}");
+
+                        //Now create a wrapper
+                        //  var texWrapper = new TplTextureWrapper();
+                        // texWrapper.ImageData = image.ImageOffset
                     }
                 }
+            }
+        }
+
+        public class TplTextureWrapper : STGenericTexture
+        {
+            public byte[] ImageData { get; set; }
+
+            public override TEX_FORMAT[] SupportedFormats
+            {
+                get
+                {
+                    return new TEX_FORMAT[]
+                    {
+                    TEX_FORMAT.I4,
+                    TEX_FORMAT.I8,
+                    TEX_FORMAT.IA4,
+                    TEX_FORMAT.IA8,
+                    TEX_FORMAT.RGB565,
+                    TEX_FORMAT.RGB5A3,
+                    TEX_FORMAT.RGBA32,
+                    TEX_FORMAT.C4,
+                    TEX_FORMAT.C8,
+                    TEX_FORMAT.C14X2,
+                    TEX_FORMAT.CMPR,
+                    };
+                }
+            }
+
+
+            public override bool CanEdit { get; set; } = false;
+
+            public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
+            {
+
+            }
+
+            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+            {
+                return ImageData;
+            }
+
+            public override void OnClick(TreeView treeView)
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+                if (editor == null)
+                {
+                    editor = new ImageEditorBase();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.LoadEditor(editor);
+                }
+
+                editor.LoadProperties(GenericProperties);
+                editor.LoadImage(this);
             }
         }
 
