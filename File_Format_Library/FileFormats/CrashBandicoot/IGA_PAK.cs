@@ -121,6 +121,10 @@ namespace FirstPlugin
 
         public void Write(FileWriter writer)
         {
+            //Save all the data for opened files first and compress if needed
+            for (int i = 0; i < files.Count; i++)
+                files[i].SaveOpenedFile();
+
             writer.WriteSignature("IGA\x01");
             writer.Write(Version);
             //total size of file info and hash section
@@ -157,7 +161,7 @@ namespace FirstPlugin
                     writer.Write((uint)dataPos);
                 }
 
-                writer.Write(files[i].FileData);
+                writer.Write(files[i].CompressedBytes);
                 writer.Align(2048);
             }
 
@@ -234,8 +238,39 @@ namespace FirstPlugin
                 Version = version;
             }
 
+            private byte[] _savedBytes { get; set; }
+
             public uint FileOffset;
             public uint DecompressedFileSize;
+
+            public byte[] CompressedBytes
+            {
+                get
+                {
+                    if (FileOffset == 0)
+                        return new byte[0];
+
+                    if (_savedBytes != null)
+                        return _savedBytes;
+
+                    using (var reader = new FileReader(SourceFile))
+                    {
+                        uint size = 0;
+                        reader.BaseStream.Seek(FileOffset, SeekOrigin.Begin);
+                        if (FileCompressionType != -1)
+                        {
+                            if (Version <= 0x0B)
+                                size = reader.ReadUInt16();
+                            else
+                                size = reader.ReadUInt32();
+                        }
+                        else
+                            size = DecompressedFileSize;
+
+                        return reader.ReadBytes((int)size);
+                    }
+                }
+            }
 
             public override byte[] FileData
             {
@@ -282,6 +317,28 @@ namespace FirstPlugin
                             return reader.ReadBytes((int)DecompressedFileSize);
                         }
                     }
+                }
+            }
+
+            public void SaveOpenedFile()
+            {
+                if (FileFormat != null)
+                {
+                    byte[] data = FileFormat.Save();
+                    DecompressedFileSize = (uint)data.Length;
+
+                    if (FileCompressionType != -1)
+                    {
+                        SevenZip.Compression.LZMA.Encoder encode = new SevenZip.Compression.LZMA.Encoder();
+                        MemoryStream ms = new MemoryStream(data);
+                        MemoryStream otuput = new MemoryStream(data);
+                        encode.Code(ms, otuput, -1, -1, null);
+                        _savedBytes = otuput.ToArray();
+                    }
+                    else
+                        _savedBytes = data;
+
+                    GC.Collect();
                 }
             }
 
