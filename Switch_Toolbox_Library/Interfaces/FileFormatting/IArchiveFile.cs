@@ -514,8 +514,6 @@ namespace Toolbox.Library
                                 parentNode.Nodes.Add(wrapperFile);
                                 parentNode = wrapperFile;
                                 AddFileNode(wrapperFile);
-
-                                if (node.OpenFileFormatOnLoad) wrapperFile.OpenFileFormat(null);
                             }
                             else
                             {
@@ -925,13 +923,21 @@ namespace Toolbox.Library
                 node.Nodes.Insert(index, NewNode);
             }
 
-
             NewNode.ImageKey = replaceNode.ImageKey;
             NewNode.SelectedImageKey = replaceNode.SelectedImageKey;
             NewNode.Text = replaceNode.Text;
 
             rootNode.FileNodes.RemoveAt(index);
             rootNode.FileNodes.Insert(index, Tuple.Create(fileInfo, NewNode));
+
+            if (NewNode is ISingleTextureIconLoader)
+            {
+                ObjectEditor editor = LibraryGUI.GetObjectEditor();
+                if (editor != null) //The editor isn't always in object editor so check
+                {
+                    editor.UpdateTextureIcon((ISingleTextureIconLoader)NewNode);
+                }
+            }
         }
 
         private void RenameAction(object sender, EventArgs args)

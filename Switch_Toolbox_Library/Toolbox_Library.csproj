@@ -242,6 +242,13 @@
     <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.Designer.cs">
       <DependentUpon>SearchNodeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\TextureImport\GenericTextureImporterList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\TextureImport\GenericTextureImporterList.Designer.cs">
+      <DependentUpon>GenericTextureImporterList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Editors\TextureImport\GenericTextureImporterSettings.cs" />
     <Compile Include="Forms\Editors\UV\UVEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -944,6 +951,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\Animation\TimeLine.resx">
       <DependentUpon>TimeLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\TextureImport\GenericTextureImporterList.resx">
+      <DependentUpon>GenericTextureImporterList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\TransformMeshTool.resx">
       <DependentUpon>TransformMeshTool.cs</DependentUpon>

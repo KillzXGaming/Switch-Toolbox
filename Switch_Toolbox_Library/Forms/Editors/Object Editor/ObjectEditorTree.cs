@@ -57,6 +57,15 @@ namespace Toolbox.Library.Forms
                 foreach (TreeNode n in ((TreeNode)FileFormat).Nodes)
                     FileRoot.Nodes.Add(n);
             }
+
+            for (int i = 0; i < FileRoot.FileNodes.Count; i++)
+            {
+                if (FileRoot.FileNodes[i].Item1.OpenFileFormatOnLoad)
+                {
+                    if (FileRoot.FileNodes[i].Item2 is ArchiveFileWrapper)
+                        ((ArchiveFileWrapper)FileRoot.FileNodes[i].Item2).OpenFileFormat(treeViewCustom1);
+                }
+            }
         }
 
         public void AddNodeCollection(TreeNodeCollection nodes, bool ClearNodes)

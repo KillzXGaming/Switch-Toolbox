@@ -69,6 +69,8 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
+            CanRename = true;
+            CanReplace = true;
 
             using (var reader = new FileReader(stream))
             {
@@ -113,6 +115,50 @@ namespace FirstPlugin
             }
         }
 
+        public override void Replace(string FileName)
+        {
+            GenericTextureImporterList importer = new GenericTextureImporterList(SupportedFormats);
+            GenericTextureImporterSettings settings = new GenericTextureImporterSettings();
+
+            importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
+
+            if (Utils.GetExtension(FileName) == ".dds" ||
+                Utils.GetExtension(FileName) == ".dds2")
+            {
+                settings.LoadDDS(FileName);
+                ApplySettings(settings);
+                UpdateEditor();
+            }
+            else
+            {
+                settings.LoadBitMap(FileName);
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                    {
+                        settings.DataBlockOutput.Clear();
+                        settings.DataBlockOutput.Add(settings.GenerateMips(importer.CompressionMode));
+                    }
+
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+            }
+        }
+
+        private void ApplySettings(GenericTextureImporterSettings settings)
+        {
+            //Combine all arrays
+            IGZStructure.TextureInfo.ImageData = Utils.CombineByteArray(
+                settings.DataBlockOutput.ToArray());
+
+            this.Width = settings.TexWidth;
+            this.Height = settings.TexHeight;
+            this.Format = settings.Format;
+            this.MipCount = settings.MipCount;
+            this.Depth = settings.Depth;
+            this.ArrayCount = (uint)settings.DataBlockOutput.Count;
+        }
 
         public override bool CanEdit { get; set; } = true;
 
@@ -130,7 +176,11 @@ namespace FirstPlugin
                 return IGZStructure.TextureInfo.ImageData;
         }
 
-        public override void OnClick(TreeView treeView)
+        public override void OnClick(TreeView treeView) {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
         {
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)

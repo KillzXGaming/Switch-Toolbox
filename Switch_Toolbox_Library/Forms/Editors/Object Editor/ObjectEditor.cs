@@ -105,6 +105,10 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public void UpdateTextureIcon(ISingleTextureIconLoader texturIcon) {
+            ObjectTree.LoadGenericTextureIcons(texturIcon);
+        }
+
         public void UpdateTextureIcon(ISingleTextureIconLoader texturIcon, Image image) {
             ObjectTree.UpdateTextureIcon(texturIcon,image );
         }
