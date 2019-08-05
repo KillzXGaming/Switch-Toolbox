@@ -7,11 +7,14 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class IGZ : IFileFormat
+    public class IGZ : STGenericTexture, IFileFormat, ISingleTextureIconLoader
     {
+        public STGenericTexture IconTexture { get { return this; } }
+
         public FileType FileType { get; set; } = FileType.Layout;
 
         public bool CanSave { get; set; }
@@ -118,6 +121,9 @@ namespace FirstPlugin
                     reader.Seek(8);
                 }
 
+                List<string> TextureNames = new List<string>();
+                FormatInfo TextureFormat = null;
+
                 //Now go to the first block. This is a list of section headers
                 //Each header follows the same structure, a signature, count, and size
                 reader.SeekBegin(offsets[0]);
@@ -132,17 +138,18 @@ namespace FirstPlugin
 
                     Console.WriteLine($"{signature} {count} {sectioSize} {dataOffset}");
 
-                    uint textureCount = 0;
-                    List<string> TextureNames = new List<string>();
-                    FormatInfo TextureFormat;
-
-                    reader.Seek(pos + dataOffset);
+                    reader.SeekBegin(pos + dataOffset);
                     switch (signature)
                     {
                         case "TSTR":
-                            textureCount = count;
                             for (int i = 0; i < count; i++)
                                 TextureNames.Add(reader.ReadZeroTerminatedString());
+
+                            if (count > 0)
+                                Text = TextureNames[0];
+
+                            foreach (string name in TextureNames)
+                                Console.WriteLine("tex " + name);
                             break;
                         case "TMET":
                             break;
@@ -177,7 +184,75 @@ namespace FirstPlugin
 
                     reader.SeekBegin(pos + sectioSize);
                 }
+
+                reader.SeekBegin(offsets[1] + 0x48);
+                ushort width = reader.ReadUInt16();
+                ushort height = reader.ReadUInt16();
+                ushort depth = reader.ReadUInt16();
+                ushort mipCount = reader.ReadUInt16();
+                ushort arrayCount = reader.ReadUInt16();
+                reader.Seek(10); //padding
+                uint unk = reader.ReadUInt32();
+                reader.Seek(8); //padding
+                uint ImageSize = reader.ReadUInt32();
+
+                //Seek to start of image block
+                reader.Seek(84);
+                ImageData = reader.ReadBytes((int)ImageSize);
+                Width = width;
+                Height = height;
+                Depth = depth;
+                ArrayCount = arrayCount;
+                Format = TextureFormat.Format;
+                PlatformSwizzle = TextureFormat.Platform;
             }
+        }
+
+        public byte[] ImageData { get; set; }
+
+        public override TEX_FORMAT[] SupportedFormats
+        {
+            get
+            {
+                return new TEX_FORMAT[]
+                {
+                    TEX_FORMAT.BC1_UNORM,
+                    TEX_FORMAT.BC3_UNORM,
+                    TEX_FORMAT.BC5_UNORM,
+                    TEX_FORMAT.R8G8B8A8_UNORM,
+                    TEX_FORMAT.R32G32B32A32_FLOAT,
+                };
+            }
+        }
+
+
+        public override bool CanEdit { get; set; } = false;
+
+        public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
+        {
+
+        }
+
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        {
+            if (PlatformSwizzle == PlatformSwizzle.Platform_Switch)
+                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
+            else
+                return ImageData;
+        }
+
+        public override void OnClick(TreeView treeView)
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
+            {
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.LoadEditor(editor);
+            }
+
+            editor.LoadProperties(GenericProperties);
+            editor.LoadImage(this);
         }
 
         public void Unload()
