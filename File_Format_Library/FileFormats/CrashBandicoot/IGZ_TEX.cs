@@ -76,6 +76,8 @@ namespace FirstPlugin
                 IGZStructure = new IGZ_Structure();
                 IGZStructure.Read(reader);
 
+                if (IGZStructure.TextureInfo == null) return;
+
                 //Set all the info from the parsed struct
                 var texInfo = IGZStructure.TextureInfo;
                 Width = texInfo.Width;

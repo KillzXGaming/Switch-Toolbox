@@ -146,8 +146,10 @@ namespace FirstPlugin
             for (int i = 0; i < files.Count; i++)
             {
                 writer.Write(uint.MaxValue); //FileOffset
-                writer.Write(uint.MaxValue); //NameOffset
+                writer.Write(files[i].Order1);
+                writer.Write(files[i].Order2);
                 writer.Write(files[i].DecompressedFileSize);
+                writer.Write(files[i].BlockOffset);
                 writer.Write(files[i].FileCompressionType);
             }
 
@@ -172,15 +174,7 @@ namespace FirstPlugin
 
             writer.WriteUint32Offset(_ofsNameTbl);
             for (int i = 0; i < files.Count; i++)
-            {
-                //Save the file entry name offset
-                long strOfsPos = writer.Position;
-                using (writer.TemporarySeek(fileInfoTbl + (i * 16) + 4, SeekOrigin.Begin)) {
-                    writer.Write((uint)(strOfsPos - nameOffsetTbl));
-                }
-
                 writer.Write(uint.MaxValue);
-            }
 
             long nameTablePos = writer.Position;
 
@@ -238,7 +232,7 @@ namespace FirstPlugin
 
             public uint Version { get; set; }
 
-            public int FileCompressionType;
+            public short FileCompressionType;
 
             public FileEntry(string ArchivePath, uint version)
             {
@@ -250,6 +244,10 @@ namespace FirstPlugin
 
             public uint FileOffset;
             public uint DecompressedFileSize;
+
+            public ushort Order1;
+            public ushort Order2;
+            public short BlockOffset;
 
             public byte[] CompressedBytes
             {
@@ -356,9 +354,11 @@ namespace FirstPlugin
             public void Read(FileReader reader)
             {
                 FileOffset = reader.ReadUInt32();
-                uint NameOffset = reader.ReadUInt32();
+                Order1 = reader.ReadUInt16();
+                Order2 = reader.ReadUInt16();
                 DecompressedFileSize = reader.ReadUInt32();
-                FileCompressionType = reader.ReadInt32();
+                BlockOffset = reader.ReadInt16();
+                FileCompressionType = reader.ReadInt16();
             }
         }
     }
