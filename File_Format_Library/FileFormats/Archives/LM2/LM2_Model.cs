@@ -25,7 +25,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new ToolStripMenuItem("Export", null, ExportModelAction, Keys.Control | Keys.E));
+            Items.Add(new ToolStripMenuItem("Export All", null, ExportModelAction, Keys.Control | Keys.E));
             return Items.ToArray();
         }
 
@@ -61,7 +61,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         }
     }
 
-    public class LM2_Model : TreeNodeCustom
+    public class LM2_Model : TreeNodeCustom, IContextMenuNode
     {
         public LM2_DICT DataDictionary;
         public LM2_ModelInfo ModelInfo;
@@ -70,6 +70,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
         public uint BufferStart;
         public uint BufferSize;
+
+        private List<RenderableMeshWrapper> RenderedMeshes = new List<RenderableMeshWrapper>();
 
         Viewport viewport
         {
@@ -101,6 +103,41 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 viewport.Text = Text;
             }
         }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Export All", null, ExportModelAction, Keys.Control | Keys.E));
+            return Items.ToArray();
+        }
+
+        private void ExportModelAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.dae;";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                ExportModel(sfd.FileName);
+            }
+        }
+
+        private void ExportModel(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+            //  foreach (var msh in DataDictionary.Renderer.Meshes)
+            //    Materials.Add(msh.GetMaterial());
+
+            var model = new STGenericModel();
+            model.Materials = Materials;
+            model.Objects = RenderedMeshes;
+
+            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+        }
+
+
         public LM2_Model(LM2_DICT dict)
         {
             DataDictionary = dict;
@@ -122,6 +159,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                     genericObj.Mesh = mesh;
                     genericObj.Text = $"Mesh {i}";
                     genericObj.SetMaterial(mesh.Material);
+                    RenderedMeshes.Add(genericObj);
 
                     Nodes.Add(genericObj);
                     DataDictionary.Renderer.Meshes.Add(genericObj);
