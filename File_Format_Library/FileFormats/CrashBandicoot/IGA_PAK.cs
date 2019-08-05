@@ -163,6 +163,8 @@ namespace FirstPlugin
 
                 writer.Write(files[i].CompressedBytes);
                 writer.Align(2048);
+
+                files[i].ResetData();
             }
 
             //Then write placeholder name offsets
@@ -192,6 +194,12 @@ namespace FirstPlugin
 
                 writer.WriteString(files[i].FullName);
             }
+
+            writer.Dispose();
+            writer.Close();
+
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
 
         private void WriteString(FileWriter writer, string name)
@@ -272,6 +280,11 @@ namespace FirstPlugin
                 }
             }
 
+            public void ResetData()
+            {
+                _savedBytes = null;
+            }
+
             public override byte[] FileData
             {
                 get
@@ -322,7 +335,7 @@ namespace FirstPlugin
 
             public void SaveOpenedFile()
             {
-                if (FileFormat != null)
+                if (FileFormat != null && FileFormat.CanSave)
                 {
                     byte[] data = FileFormat.Save();
                     DecompressedFileSize = (uint)data.Length;
@@ -337,8 +350,6 @@ namespace FirstPlugin
                     }
                     else
                         _savedBytes = data;
-
-                    GC.Collect();
                 }
             }
 
