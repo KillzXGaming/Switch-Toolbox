@@ -49,24 +49,32 @@ namespace FirstPlugin
 
         public void ClearFiles() { files.Clear(); }
 
+        public uint Version;
+        public uint Unknown2;
+        public uint Alignment;
+        public uint[] Unknowns3;
+        public uint[] Hashes;
+
         public void Load(System.IO.Stream stream)
         {
             using (var reader = new FileReader(stream))
             {
+                CanSave = true;
+
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
                 uint Singnature = reader.ReadUInt32(); //IGAx01
-                uint Version = reader.ReadUInt32(); //13
+                Version = reader.ReadUInt32(); //13
                 uint FileSectionSize = reader.ReadUInt32(); //Total size of file entires that point to file data
                 uint FileCount = reader.ReadUInt32();
-                uint ChunkSize = reader.ReadUInt32();
+                Alignment = reader.ReadUInt32();
 
                 //Skip some unknowns for now
-                reader.Seek(20, System.IO.SeekOrigin.Current);
+                Unknowns3 = reader.ReadUInt32s(5);
                 uint NameTableOffset = reader.ReadUInt32();
                 uint Padding = reader.ReadUInt32();
                 uint NameTableSize = reader.ReadUInt32();
-                uint Unknown2 = reader.ReadUInt32(); //Always 1?
-                uint[] Hashes = reader.ReadUInt32s((int)FileCount);
+                Unknown2 = reader.ReadUInt32(); //Always 1?
+                Hashes = reader.ReadUInt32s((int)FileCount);
 
                 //Read the filenames first
                 long pos = reader.Position;
@@ -91,7 +99,9 @@ namespace FirstPlugin
                     file.Read(reader);
                     files.Add(file);
 
-                   // if (Utils.GetExtension(file.FileName) == ".igz")
+                    file.FullName = FileNames[i]; 
+
+                    // if (Utils.GetExtension(file.FileName) == ".igz")
                     //    file.OpenFileFormatOnLoad = true;
 
                     //Remove this stupid long pointless path
@@ -109,6 +119,82 @@ namespace FirstPlugin
             }
         }
 
+        public void Write(FileWriter writer)
+        {
+            writer.WriteSignature("IGA\x01");
+            writer.Write(Version);
+            //total size of file info and hash section
+            //16 size of info, 4 for size of hash
+            writer.Write(files.Count * 20); 
+            writer.Write(files.Count);
+            writer.Write(Alignment);
+            writer.Write(Unknowns3);
+
+            long _ofsNameTbl = writer.Position;
+            writer.Write(uint.MaxValue); //NameTableOffset
+            writer.Write(0);
+            writer.Write(202518);
+            writer.Write(1);
+            writer.Write(Hashes);
+
+            //Now after are file entries
+            long fileInfoTbl = writer.Position;
+            for (int i = 0; i < files.Count; i++)
+            {
+                writer.Write(uint.MaxValue); //FileOffset
+                writer.Write(uint.MaxValue); //NameOffset
+                writer.Write(files[i].DecompressedFileSize);
+                writer.Write(files[i].FileCompressionType);
+            }
+
+            writer.Align(128);
+
+            //Now save the file data
+            for (int i = 0; i < files.Count; i++)
+            {
+                long dataPos = writer.Position;
+                using (writer.TemporarySeek(fileInfoTbl + (i * 16), SeekOrigin.Begin)) {
+                    writer.Write((uint)dataPos);
+                }
+
+                writer.Write(files[i].FileData);
+                writer.Align(2048);
+            }
+
+            //Then write placeholder name offsets
+            long nameOffsetTbl = writer.Position;
+
+            writer.WriteUint32Offset(_ofsNameTbl);
+            for (int i = 0; i < files.Count; i++)
+            {
+                //Save the file entry name offset
+                long strOfsPos = writer.Position;
+                using (writer.TemporarySeek(fileInfoTbl + (i * 16) + 4, SeekOrigin.Begin)) {
+                    writer.Write((uint)(strOfsPos - nameOffsetTbl));
+                }
+
+                writer.Write(uint.MaxValue);
+            }
+
+            long nameTablePos = writer.Position;
+
+            //Now write each string and name offset
+            for (int i = 0; i < files.Count; i++)
+            {
+                long strPos = writer.Position;
+                using (writer.TemporarySeek(nameOffsetTbl + (i * sizeof(uint)), SeekOrigin.Begin)) {
+                    writer.Write((uint)(strPos - nameOffsetTbl));
+                }
+
+                writer.WriteString(files[i].FullName);
+            }
+        }
+
+        private void WriteString(FileWriter writer, string name)
+        {
+
+        }
+
         public void Unload()
         {
 
@@ -116,7 +202,9 @@ namespace FirstPlugin
 
         public byte[] Save()
         {
-            return null;
+            var mem = new System.IO.MemoryStream();
+            Write(new FileWriter(mem));
+            return mem.ToArray();
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -131,6 +219,8 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            public string FullName { get; set; }
+
             //The archive file used to open the file
             public string SourceFile { get; set; }
 

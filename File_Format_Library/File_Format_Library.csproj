@@ -206,6 +206,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\CrashBandicoot\IGZ_Structure.cs" />
     <Compile Include="FileFormats\Grezzo\CMB_Enums.cs" />
     <Compile Include="FileFormats\Grezzo\CSAB.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1T.cs" />
@@ -275,8 +276,8 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
-    <Compile Include="FileFormats\CrashBandicoot\IGZ.cs" />
-    <Compile Include="FileFormats\Texture\TXE.cs" />
+    <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
+    <Compile Include="FileFormats\Pikmin\TXE.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
