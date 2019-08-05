@@ -26,7 +26,7 @@ namespace Toolbox.Library.Rendering
     }
 
     public class Vertex
-    {
+    {   
         public Vector3 pos = new Vector3(0);
         public Vector3 nrm = new Vector3(0);
         public Vector4 col = new Vector4(1);

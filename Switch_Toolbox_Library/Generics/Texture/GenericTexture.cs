@@ -229,6 +229,7 @@ namespace Toolbox.Library
             { TEX_FORMAT.R32G32B32A32_FLOAT,   new FormatInfo(16, 1,  1, 1, TargetBuffer.Color) },
             { TEX_FORMAT.R32G32B32A32_SINT,    new FormatInfo(16, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R32G32B32A32_UINT,    new FormatInfo(16, 1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.R32G32B32_FLOAT,      new FormatInfo(8, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R16G16B16A16_FLOAT,   new FormatInfo(8,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R16G16B16A16_SINT,    new FormatInfo(8,  1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R16G16B16A16_SNORM,   new FormatInfo(8,  1,  1, 1,  TargetBuffer.Color) },

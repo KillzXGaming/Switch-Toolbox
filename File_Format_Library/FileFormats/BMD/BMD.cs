@@ -18,7 +18,7 @@ using OpenTK;
 
 namespace FirstPlugin
 {
-    public class BMD : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer
+    public class BMD : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -63,8 +63,6 @@ namespace FirstPlugin
                 editor.LoadViewport(value);
             }
         }
-
-        public Dictionary<string, STGenericTexture> Textures { get; set; }
 
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
@@ -113,10 +111,6 @@ namespace FirstPlugin
             DrawableContainer.Name = FileName;
             DrawableContainer.Drawables.Add(Renderer);
             DrawableContainer.Drawables.Add(Skeleton);
-
-            Textures = new Dictionary<string, STGenericTexture>();
-
-            BMD_Renderer.TextureContainers.Add(this);
 
             BMDFile = Model.Load(stream);
             LoadBMD(BMDFile);

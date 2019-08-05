@@ -96,9 +96,13 @@ namespace FirstPlugin
 
                     //Remove this stupid long pointless path
                     file.FileName = file.FileName.Replace("temporary/octane/data/nx/output/", string.Empty);
+                    file.FileName = file.FileName.Replace("temporary/mack/data/win64/output/", string.Empty);
+                    file.FileName = file.FileName.Replace("temporary/mack/data/nx/output/", string.Empty);
 
-                   // if (file.FileOffset >= 0xff000000)
-                   //     file.FileOffset = 
+
+
+                    // if (file.FileOffset >= 0xff000000)
+                    //     file.FileOffset = 
 
 
                 }
@@ -147,6 +151,9 @@ namespace FirstPlugin
             {
                 get
                 {
+                    if (FileOffset == 0)
+                        return new byte[0];
+
                     using (var reader = new FileReader(SourceFile))
                     {
                         int size = 0;
@@ -181,6 +188,7 @@ namespace FirstPlugin
                         }
                         else
                         {
+                            reader.BaseStream.Seek(offset, SeekOrigin.Begin);
                             return reader.ReadBytes((int)DecompressedFileSize);
                         }
                     }
