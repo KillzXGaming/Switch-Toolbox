@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Toolbox.Library.Forms
@@ -104,7 +104,18 @@ namespace Toolbox.Library.Forms
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(tbDetails.Text);
+            string text = tbDetails.Text;
+
+            Thread STAThread = new Thread(
+           delegate ()
+           {
+                  // Use a fully qualified name for Clipboard otherwise it
+                  // will end up calling itself.
+                  System.Windows.Forms.Clipboard.SetText(text);
+           });
+            STAThread.SetApartmentState(ApartmentState.STA);
+            STAThread.Start();
+            STAThread.Join();
         }
     }
 }

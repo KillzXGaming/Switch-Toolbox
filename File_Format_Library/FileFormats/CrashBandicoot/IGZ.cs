@@ -77,7 +77,7 @@ namespace FirstPlugin
             { 0x994608DE, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT) }, //PC
             { 0x1B282851, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Switch) },
             { 0x37456ECD, new FormatInfo(TEX_FORMAT.BC3_UNORM, PlatformSwizzle.Platform_Switch) },
-            { 0xD0124568, new FormatInfo(TEX_FORMAT.BC5_UNORM, PlatformSwizzle.Platform_Switch) },
+            { 0xD0124568, new FormatInfo(TEX_FORMAT.BC3_UNORM, PlatformSwizzle.Platform_Switch) },
             { 0x8EBE8CF2, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, PlatformSwizzle.Platform_Switch) },
             { 0xF8313483, new FormatInfo(TEX_FORMAT.BC1_UNORM, PlatformSwizzle.Platform_Ps4) },
             { 0xF0B976CF, new FormatInfo(TEX_FORMAT.BC3_UNORM, PlatformSwizzle.Platform_Ps4) },
@@ -164,6 +164,8 @@ namespace FirstPlugin
                                 TextureFormat = Formats[FormatCode];
                             else
                                 throw new Exception("Unsupported format code!" + FormatCode.ToString("X"));
+
+                            Console.WriteLine($"TextureFormat {FormatCode.ToString("X")}");
                             break;
                         case "RVTB":
                             break;
@@ -198,13 +200,18 @@ namespace FirstPlugin
 
                 //Seek to start of image block
                 reader.Seek(84);
-                ImageData = reader.ReadBytes((int)ImageSize);
+                long dataPos = reader.Position;
+                long ImageSizeReal = reader.BaseStream.Length - dataPos;
+
+                ImageData = reader.ReadBytes((int)ImageSizeReal);
                 Width = width;
                 Height = height;
                 Depth = depth;
                 ArrayCount = arrayCount;
                 Format = TextureFormat.Format;
-                PlatformSwizzle = TextureFormat.Platform;
+             //   PlatformSwizzle = TextureFormat.Platform;
+
+                Console.WriteLine($"PlatformSwizzle " + PlatformSwizzle);
             }
         }
 

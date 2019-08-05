@@ -91,6 +91,9 @@ namespace FirstPlugin
                     file.Read(reader);
                     files.Add(file);
 
+                   // if (Utils.GetExtension(file.FileName) == ".igz")
+                    //    file.OpenFileFormatOnLoad = true;
+
                     //Remove this stupid long pointless path
                     file.FileName = file.FileName.Replace("temporary/octane/data/nx/output/", string.Empty);
 
