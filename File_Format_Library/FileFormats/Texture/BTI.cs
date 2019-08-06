@@ -80,6 +80,7 @@ namespace FirstPlugin
                 Height = reader.ReadUInt16();
                 reader.ReadByte(); // wrap s
                 reader.ReadByte(); // wrap t
+                reader.ReadByte(); // unknown
                 var paletteFormat = (Decode_Gamecube.PaletteFormats)reader.ReadByte();
                 var paletteEntryCount = reader.ReadInt16(); // num of palette entries
                 uint paletteOffset = reader.ReadUInt32(); // offset to palette data
@@ -88,26 +89,28 @@ namespace FirstPlugin
                 reader.ReadByte(); // mag filter type
                 reader.ReadInt16();
 
+                Console.WriteLine("Format " + Format);
+                Console.WriteLine("texFormat " + (Decode_Gamecube.TextureFormats)texFormat);
 
+                Console.WriteLine($"paletteOffset {paletteOffset} paletteEntryCount {paletteEntryCount} paletteFormat {paletteFormat}");
 
                 MipCount = reader.ReadByte();
                 reader.ReadByte();
-                reader.ReadInt16();
+                short LODBias = reader.ReadInt16();
                 uint offsetToImageData = reader.ReadUInt32(); // offset to image data
 
                 //Lets set our method of decoding
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
 
                 reader.SeekBegin(offsetToImageData);
-                int imageDataSize = RoundWidth((int)Width, (int)GetBlockWidth(Format)) * 
-                    RoundHeight((int)Height, (int)GetBlockHeight(Format)) * (int)GetBytesPerPixel(Format) >> 3;
+                int imageDataSize = Decode_Gamecube.GetDataSize(texFormat, Width,Height);
 
+                ImageData = reader.ReadBytes(imageDataSize);
 
                 reader.SeekBegin(paletteOffset);
                 byte[] PaletteData = reader.ReadBytes((int)paletteEntryCount * 2);
-                SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat)); ;
+                SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat));
 
-                ImageData = reader.ReadBytes(imageDataSize);
             }
         }
 

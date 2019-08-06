@@ -202,6 +202,8 @@ namespace Toolbox.Library
             Palette Palette = new Palette();
             Palette.Load(PaletteData);
 
+            System.IO.File.WriteAllBytes("PaletteData.bin", PaletteData);
+
             Console.WriteLine($"Decoding GC {FormatGC}");
 
             return DecodeData(new FileReader(ImageData), width, height, FormatGC, Palette, PalleteFormatGC);

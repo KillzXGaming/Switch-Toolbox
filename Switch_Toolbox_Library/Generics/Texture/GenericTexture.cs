@@ -409,8 +409,6 @@ namespace Toolbox.Library
             uint height = Math.Max(1, Height >> MipLevel);
             byte[] data = GetImageData(ArrayLevel, MipLevel);
             byte[] paletteData = GetPaletteData();
-            if (data.Length == 0)
-                return new Bitmap(1, 1);
 
             try
             {
