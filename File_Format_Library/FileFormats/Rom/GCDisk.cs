@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using Toolbox.Library;
 using LibHac.IO;
 using Toolbox.Library.IO;
@@ -52,7 +52,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = false;
+            CanSave = true;
 
             using (var reader = new FileReader(stream))
             {
@@ -149,9 +149,10 @@ namespace FirstPlugin
 
                 SetFileNames(reader, Entires, 1, Entires.Count, "", stringTableOffset);
 
+
+
                 for (int i = 0; i < Entires.Count - 1; i++)
                 {
-
                     if (!Entires[i].IsDirectory)
                     {
                         var fileEntry = new FileEntry(Entires[i]);
@@ -190,6 +191,13 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, List<FileEntry> Files)
             {
+                STProgressBar progressBar = new STProgressBar();
+                progressBar.Task = "Writing File Tree...";
+                progressBar.Value = 0;
+                progressBar.StartPosition = FormStartPosition.CenterScreen;
+                progressBar.Show();
+                progressBar.Refresh();
+
                 long pos = writer.Position;
 
                 //reserve space
@@ -208,6 +216,10 @@ namespace FirstPlugin
 
                 for (int i = 0; i < Files.Count; i++)
                 {
+                    progressBar.Value = (i * 100) / Files.Count;
+                    progressBar.Task = $"Packing {Files[i].FileName}";
+                    progressBar.Refresh();
+
                     writer.WriteUint32Offset(pos + (i * 12) + 4);
 
                     //More simple to get the size this way than getting file data over and over
@@ -221,6 +233,9 @@ namespace FirstPlugin
                         writer.Write((uint)(_fileEnd - _fileStart));
                     }*/
                 }
+
+                progressBar.Close();
+                progressBar.Dispose();
             }
         }
 

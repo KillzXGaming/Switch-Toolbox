@@ -26,6 +26,9 @@ namespace FirstPlugin
         public bool CanReplaceFiles { get; set; }
         public bool CanDeleteFiles { get; set; }
 
+        private readonly uint BEMagic = 0x55AA382D;
+        private readonly uint LEMagic = 0x2D38AA55;
+
         public bool Identify(System.IO.Stream stream)
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
@@ -34,7 +37,7 @@ namespace FirstPlugin
 
                 uint signature = reader.ReadUInt32();
                 reader.Position = 0;
-                return signature == 0x55AA382D;
+                return signature == BEMagic || signature == LEMagic;
             }
         }
 
@@ -60,7 +63,8 @@ namespace FirstPlugin
             set { FileName = value; }
         }
 
-        private readonly uint Magic = 0x55AA382D;
+
+        private bool IsBigEndian = false;
 
         public void Load(System.IO.Stream stream)
         {
@@ -69,6 +73,9 @@ namespace FirstPlugin
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
                 uint Signature = reader.ReadUInt32();
+                IsBigEndian = Signature == BEMagic;
+
+                reader.SetByteOrder(IsBigEndian);
                 uint FirstNodeOffset = reader.ReadUInt32();
                 uint NodeSectionSize = reader.ReadUInt32();
                 uint FileDataOffset = reader.ReadUInt32();
@@ -80,13 +87,10 @@ namespace FirstPlugin
                 var RootNode = new NodeEntry();
                 RootNode.Read(reader);
 
-                DirectoryEntry dirRoot = new DirectoryEntry();
-                dirRoot.Name = "ROOT";
-                dirRoot.nodeEntry = RootNode;
-
                 //Root has total number of nodes 
                 uint TotalNodeCount = RootNode.Setting2;
 
+                //Read all our entries
                 List<NodeEntry> entries = new List<NodeEntry>();
                 entries.Add(RootNode);
                 for (int i = 0; i < TotalNodeCount - 1; i++)
@@ -96,20 +100,37 @@ namespace FirstPlugin
                     entries.Add(node);
                 }
 
-                var directroyEntries = entries.Where(i => i.nodeType == NodeEntry.NodeType.Directory).ToArray();
-                DirectoryEntry[] dirs = new DirectoryEntry[directroyEntries.Length];
+                //Read string pool
+                uint stringPoolPos = 0;
+                Dictionary<uint, string> StringTable = new Dictionary<uint, string>();
+                for (int i = 0; i < TotalNodeCount; i++)
+                {
+                    string str = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated, Encoding.ASCII);
+                    StringTable.Add(stringPoolPos, str);
+                    stringPoolPos += (uint)str.Length + 1;
+                }
+
+                //Set the strings
+                for (int i = 0; i < TotalNodeCount; i++)
+                {
+                    entries[i].Name = StringTable[entries[i].StringPoolOffset];
+                }
+
+                //Setup our directory entries for loading to the tree
+                DirectoryEntry[] dirs = new DirectoryEntry[TotalNodeCount];
                 for (int i = 0; i < dirs.Length; i++)
                     dirs[i] = new DirectoryEntry();
 
-                DirectoryEntry currentDir = dirRoot;
-                nodes.Add(currentDir);
+                DirectoryEntry currentDir = dirs[0];
 
                 for (int i = 0; i < TotalNodeCount; i++)
                 {
                     var node = entries[i];
+                    Console.WriteLine($"node " + node.Name + " " + node.nodeType);
                     if (node.nodeType == NodeEntry.NodeType.Directory)
                     {
                         DirectoryEntry dir = new DirectoryEntry();
+                        dir.Name = node.Name;
                         dir.nodeEntry = node;
                         dirs[node.Setting1].AddNode(dir);
                         currentDir = dir;
@@ -117,48 +138,26 @@ namespace FirstPlugin
                     else
                     {
                         FileEntry entry = new FileEntry();
+                        entry.FileName = node.Name;
+                        entry.Name = node.Name;
                         entry.nodeEntry = node;
                         currentDir.nodes.Add(entry);
+
+                        reader.SeekBegin(entry.nodeEntry.Setting1);
+                        entry.FileData = reader.ReadBytes((int)entry.nodeEntry.Setting2);
                     }
                 }
 
-                long stringPoolPos = reader.Position;
-                for (int i = 0; i < dirRoot.nodes.Count; i++)
-                {
-
-                    if (dirRoot.nodes[i] is FileEntry)
-                    {
-                        var file = dirRoot.nodes[i] as FileEntry;
-                        reader.SeekBegin(stringPoolPos + file.nodeEntry.StringPoolOffset);
-                        file.FileName = reader.ReadZeroTerminatedString();
-                    }
-                    else
-                    {
-                        var dir = dirRoot.nodes[i] as DirectoryEntry;
-                        reader.SeekBegin(stringPoolPos + dir.nodeEntry.StringPoolOffset);
-                        dir.Name = reader.ReadZeroTerminatedString();
-                    }
-                }
-
-                for (int i = 0; i < dirRoot.nodes.Count; i++)
-                {
-                    if (dirRoot.nodes[i] is FileEntry)
-                    {
-                        var file = dirRoot.nodes[i] as FileEntry;
-                        reader.SeekBegin(file.nodeEntry.Setting1);
-                        file.FileData = reader.ReadBytes((int)file.nodeEntry.Setting2);
-                    }
-                }
+                nodes.Add(currentDir);
             }
         }
 
-
         public void SaveFile(FileWriter writer)
         {
-            long pos = writer.Position;
+            writer.SetByteOrder(IsBigEndian);
 
-            writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-            writer.Write(Magic);
+            long pos = writer.Position;
+            writer.Write(BEMagic);
         
         }
 
