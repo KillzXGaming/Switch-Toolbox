@@ -38,9 +38,12 @@ Can Edit Formats
 - BYAML/BYML (Wii U, 3DS, and Switch)
 - PTCL (Wii U, 3DS, and Switch)
 - TMPK
+- PAK/IGA (Crash Bandicoot/Crash Team Racing)
+- IGZ Textures (Crash Bandicoot/Crash Team Racing)
+- BFFNT (Textures only)
 
 Can Preview
-- BFFNT (Textures only)
+
 - BCRES
    - Models, materials, and textures.
 - BFSHA
@@ -75,7 +78,18 @@ Can Preview
 - MKAGPDX Model .bin files
 - MKAGPDX Archive .pac files
 - ME01 and SA01 archives. 
-
+- Luigi's Mansion 2 Dark Moon (archives, models, and textures)
+- TPL
+- TXE
+- BTI
+- G1T
+- CMB (OOT3D, MM3D, LM3DS)
+- CTXB (OOT3D, MM3D, LM3DS)
+- GAR (OOT3D, MM3D, LM3DS)
+- ZSI (OOT3D, MM3D)
+- BinGZ (Hyrule Warriors)
+- PAC (Sonic Forces)
+- Gamecube ISOs (file system)
 
 
 ## Tutorials
@@ -103,6 +117,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - MelonSpeedruns for logo.
 - BrawlBox team for brawl libaries used for brres parsing.
 - Sage of Mirrors for SuperBMDLib. 
+- Ambrosia for BTI and TXE support.
 
 ##  Resources
 - [Treeview Icons by icons8](https://icons8.com/)
