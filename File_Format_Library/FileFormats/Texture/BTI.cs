@@ -80,13 +80,15 @@ namespace FirstPlugin
                 Height = reader.ReadUInt16();
                 reader.ReadByte(); // wrap s
                 reader.ReadByte(); // wrap t
-                PaletteFormat = (PALETTE_FORMAT)reader.ReadInt16();
-                reader.ReadInt16(); // num of palette entries
-                reader.ReadInt32(); // offset to palette data
+                var paletteFormat = (Decode_Gamecube.PaletteFormats)reader.ReadByte();
+                var paletteEntryCount = reader.ReadInt16(); // num of palette entries
+                uint paletteOffset = reader.ReadUInt32(); // offset to palette data
                 reader.ReadInt32(); // border colour
                 reader.ReadByte(); // min filter type
                 reader.ReadByte(); // mag filter type
                 reader.ReadInt16();
+
+
 
                 MipCount = reader.ReadByte();
                 reader.ReadByte();
@@ -96,9 +98,14 @@ namespace FirstPlugin
                 //Lets set our method of decoding
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
 
-                reader.Seek(offsetToImageData, System.IO.SeekOrigin.Begin);
+                reader.SeekBegin(offsetToImageData);
                 int imageDataSize = RoundWidth((int)Width, (int)GetBlockWidth(Format)) * 
                     RoundHeight((int)Height, (int)GetBlockHeight(Format)) * (int)GetBytesPerPixel(Format) >> 3;
+
+
+                reader.SeekBegin(paletteOffset);
+                byte[] PaletteData = reader.ReadBytes((int)paletteEntryCount * 2);
+                SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat)); ;
 
                 ImageData = reader.ReadBytes(imageDataSize);
             }
