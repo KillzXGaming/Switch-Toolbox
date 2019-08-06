@@ -879,10 +879,8 @@ namespace FirstPlugin
             GC.SuppressFinalize(this);
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-
             var Models = GetModels();
             if (Models != null)
             {
@@ -897,11 +895,9 @@ namespace FirstPlugin
 
 
             if (IsWiiU)
-                SaveWiiU(mem);
+                SaveWiiU(stream);
             else
-                SaveSwitch(mem);
-
-            return mem.ToArray();
+                SaveSwitch(stream);
         }
 
         public TreeNodeCollection GetModels()
@@ -1433,7 +1429,7 @@ namespace FirstPlugin
         {
             Unload();
         }
-        private void SaveSwitch(MemoryStream mem)
+        private void SaveSwitch(Stream stream)
         {
             var resFile = BFRESRender.ResFileNode.resFile;
 
@@ -1469,7 +1465,10 @@ namespace FirstPlugin
 
                     if (((BNTX)node).Textures.Count > 0)
                     {
-                        resFile.ExternalFiles.Add(new ExternalFile() { Data = ((BNTX)node).Save() });
+                        var mem = new System.IO.MemoryStream();
+                        ((BNTX)node).Save(mem);
+
+                        resFile.ExternalFiles.Add(new ExternalFile() { Data = mem.ToArray() });
                         resFile.ExternalFileDict.Add("textures.bntx");
                     }
                 }
@@ -1477,7 +1476,7 @@ namespace FirstPlugin
 
             ErrorCheck();
 
-            resFile.Save(mem);
+            resFile.Save(stream);
         }
 
         private void RemoveUnusedTextures(BFRESGroupNode ftexGroup)
@@ -1625,7 +1624,13 @@ namespace FirstPlugin
                         }
                         else if (ext is TreeNodeFile)
                         {
-                            resFile.ExternalFiles.Add(new ExternalFile() { Data = ((IFileFormat)ext).Save() });
+                            var mem = new System.IO.MemoryStream();
+                            ((IFileFormat)ext).Save(mem);
+
+                            resFile.ExternalFiles.Add(new ExternalFile()
+                            {
+                                Data = mem.ToArray(),
+                            });
                             resFile.ExternalFileDict.Add(((TreeNodeFile)ext).Text);
                         }
 
@@ -1640,7 +1645,7 @@ namespace FirstPlugin
         }
             
 
-        private void SaveWiiU(MemoryStream mem)
+        private void SaveWiiU(Stream mem)
         {
             var resFileU = BFRESRender.ResFileNode.resFileU;
 

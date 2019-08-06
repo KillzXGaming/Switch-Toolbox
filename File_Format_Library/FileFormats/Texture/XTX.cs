@@ -68,11 +68,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            SaveFile(new FileWriter(mem));
-            return mem.ToArray();
+            SaveFile(new FileWriter(stream, true));
         }
 
         public class XTXFormats

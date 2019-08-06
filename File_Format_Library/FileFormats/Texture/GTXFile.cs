@@ -159,16 +159,12 @@ namespace FirstPlugin
 
         public void Unload()
         {
-        }
-        public byte[] Save()
-        {
-            //Get each block type for saving except alignment
-      //      var TextureInfoBlocks = blocks.Where(i => i.BlockType == BlockType.ImageInfo);
-      //      var TextureDataBlocks = blocks.Where(i => i.BlockType == BlockType.ImageData);
-      //      var TextureMipDataBlocks = blocks.Where(i => i.BlockType == BlockType.MipData);
 
-            System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            using (FileWriter writer = new FileWriter(mem))
+        }
+
+        public void Save(System.IO.Stream stream)
+        {
+            using (FileWriter writer = new FileWriter(stream, true))
             {
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 header.Write(writer);
@@ -246,7 +242,6 @@ namespace FirstPlugin
                     }
                 }
             }
-            return mem.ToArray();
         }
 
         private static uint GetAlignBlockSize(uint DataOffset, uint Alignment)

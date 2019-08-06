@@ -151,10 +151,15 @@ namespace FirstPlugin
         {
             ObjectEditor.RemoveContainer(DrawableContainer);
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return data;
+            using (var writer = new FileWriter(stream))
+            {
+                writer.Write(data);
+            }
         }
+
         public enum GameSet : ushort
         {
             MarioOdyssey = 0x0,

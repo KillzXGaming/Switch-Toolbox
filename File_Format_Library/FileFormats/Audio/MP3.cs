@@ -75,13 +75,14 @@ namespace FirstPlugin
 
             mp3Struct = CSCore.Tags.ID3.ID3v1.FromStream(stream);
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
     }
 }

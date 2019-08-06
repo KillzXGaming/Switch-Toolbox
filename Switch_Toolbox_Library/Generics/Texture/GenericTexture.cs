@@ -779,7 +779,8 @@ namespace Toolbox.Library
             atsc.BlockDimY = (byte)GetBlockHeight(Format);
             atsc.BlockDimZ = (byte)GetBlockDepth(Format);
             atsc.DataBlock = Utils.CombineByteArray(surfaces[0].mipmaps.ToArray());
-            File.WriteAllBytes(FileName, atsc.Save());
+
+            atsc.Save(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite));
         }
         public void SaveTGA(string FileName, bool ExportSurfaceLevel = false,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)

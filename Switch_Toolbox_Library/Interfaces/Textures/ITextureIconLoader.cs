@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    //A texture list to display icons on a treeview
-    //Note these will load and attach an icon when the parent treenode is expanded!
+    /// <summary>
+    /// A texture list to display icons on a treeview
+    /// Note these will load and attach an icon when the parent treenode is expanded!
+    /// </summary>
     public interface ITextureIconLoader
     {
         List<STGenericTexture> IconTextureList { get; set; }
     }
 
-    //Reprenets a single texture that loads an icon. 
-    //These will check both on expand, and on root
+    /// <summary>
+    /// Reprenets a single texture that loads an icon. 
+    /// These will check both on expand, and on root
+    /// </summary>
     public interface ISingleTextureIconLoader
     {
         STGenericTexture IconTexture { get;}

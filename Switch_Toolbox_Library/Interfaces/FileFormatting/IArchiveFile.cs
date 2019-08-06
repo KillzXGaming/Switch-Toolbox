@@ -20,6 +20,9 @@ namespace Toolbox.Library
         Deleted = 16
     }
 
+    /// <summary>
+    /// A common archive format interface used to edit archive file formats
+    /// </summary>
     public interface IArchiveFile
     {
         bool CanAddFiles { get; } 
@@ -159,7 +162,9 @@ namespace Toolbox.Library
         {
             if (FileFormat != null && FileFormat.CanSave)
             {
-                FileData = STLibraryCompression.CompressFile(FileFormat.Save(), FileFormat);
+                var mem = new System.IO.MemoryStream();
+                FileFormat.Save(mem);
+                FileData = STLibraryCompression.CompressFile(mem.ToArray(), FileFormat);
             }
         }
 

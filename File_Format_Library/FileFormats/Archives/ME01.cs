@@ -113,10 +113,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            using (var writer = new FileWriter(mem))
+            using (var writer = new FileWriter(stream, true))
             {
                 if (IsSA01)
                     writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -167,8 +166,6 @@ namespace FirstPlugin
                 writer.Seek(12, System.IO.SeekOrigin.Begin);
                 writer.Write(Offsets);
             }
-
-            return mem.ToArray();
         }
 
         private void Align(FileWriter writer, int alignment)

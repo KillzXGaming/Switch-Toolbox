@@ -38,13 +38,14 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
     }
 }

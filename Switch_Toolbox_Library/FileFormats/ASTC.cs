@@ -172,10 +172,9 @@ namespace Toolbox.Library
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            using (FileWriter writer = new FileWriter(mem))
+            using (FileWriter writer = new FileWriter(stream, true))
             {
                 if (Depth == 0)
                     Depth = 1;
@@ -190,8 +189,6 @@ namespace Toolbox.Library
                 writer.Write(IntTo3Bytes((int)Depth));
                 writer.Write(DataBlock);
             }
-
-            return mem.ToArray();
         }
 
         private static byte[] IntTo3Bytes(int value)

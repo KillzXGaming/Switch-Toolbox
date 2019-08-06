@@ -146,15 +146,15 @@ namespace FirstPlugin
                 }
             }
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            GMXHeader.Write(new FileWriter(mem));
-            return mem.ToArray();
+            GMXHeader.Write(new FileWriter(stream));
         }
 
         public class Header

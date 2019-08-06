@@ -408,11 +408,11 @@ namespace Toolbox.Library.Forms
                 LoadChannelEditor(image);
             }
 
-            if (ActiveTexture.Parameters.FlipY)
-                image.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
             if (image != null)
             {
+                if (ActiveTexture.Parameters.FlipY)
+                    image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
                 if (ChannelIndex == 1)
                     BitmapExtension.SetChannel(image, STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.One);
                 else if (ChannelIndex == 2)

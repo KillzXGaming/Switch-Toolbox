@@ -8,13 +8,19 @@ using System.Windows.Forms;
 
 namespace Toolbox.Library
 {
-    //Based on Exelix's menu ext
+    /// <summary>
+    /// Represets a set of menu extensions to load within the main menu toolbar.
+    /// </summary>
     public interface IMenuExtension
     {
         STToolStripItem[] FileMenuExtensions { get; }
         STToolStripItem[] ToolsMenuExtensions { get; }
         STToolStripItem[] TitleBarExtensions { get; }
     }
+
+    /// <summary>
+    /// Represets a set of menu extensions to load within the main file menu toolbar.
+    /// </summary>
     public interface IFileMenuExtension
     {
         STToolStripItem[] NewFileMenuExtensions { get; }

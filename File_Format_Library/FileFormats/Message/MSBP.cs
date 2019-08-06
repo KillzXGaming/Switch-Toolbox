@@ -68,11 +68,9 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            header.Write(new FileWriter(mem));
-            return mem.ToArray();
+            header.Write(new FileWriter(stream));
         }
 
         public class Header

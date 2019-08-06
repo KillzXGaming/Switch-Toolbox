@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    //Check if the opened file stream should be disposed after loading 
+    /// <summary>
+    /// Allows an <see cref="IFileFormat"/> to keep it's stream open after being loaded
+    /// </summary>
     public interface ILeaveOpenOnLoad
     {
     }

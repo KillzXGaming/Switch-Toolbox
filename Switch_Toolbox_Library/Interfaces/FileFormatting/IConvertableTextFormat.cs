@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
+    /// <summary>
+    /// A list of supported formatting types for how to syntax the text editor
+    /// </summary>
     public enum TextFileType
     {
         Normal,
@@ -18,8 +21,10 @@ namespace Toolbox.Library
         Glsl,
     }
 
-    //Represets a text format which can be converted to and from a string based file
-    //This can be used for formats to be used as yaml, xml, etc
+    /// <summary>
+    /// Represets a text format which can be converted to and from a string based file
+    /// This can be used for formats to be converted as yaml, xml, etc.
+    /// </summary>
     public interface IConvertableTextFormat
     {
         TextFileType TextFileType { get; }

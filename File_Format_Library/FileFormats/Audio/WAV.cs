@@ -77,15 +77,18 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var writer = new BCFstmWriter(NwTarget.Ctr);
-            writer.Configuration = new BxstmConfiguration()
+            var audioWriter = new BCFstmWriter(NwTarget.Ctr);
+            audioWriter.Configuration = new BxstmConfiguration()
             {
                 Endianness = VGAudio.Utilities.Endianness.LittleEndian,
             };
 
-            return writer.GetFile(audioData, writer.Configuration);
+            using (var writer = new Toolbox.Library.IO.FileWriter(stream, true))
+            {
+                writer.Write(audioWriter.GetFile(audioData, audioWriter.Configuration));
+            }
         }
     }
 }

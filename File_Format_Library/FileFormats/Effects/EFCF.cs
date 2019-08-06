@@ -69,15 +69,15 @@ namespace FirstPlugin
             EfcHeader = new Header();
             EfcHeader.Read(new FileReader(stream));
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            EfcHeader.Write(new FileWriter(mem));
-            return mem.ToArray();
+            EfcHeader.Write(new FileWriter(stream));
         }
 
         public class Header

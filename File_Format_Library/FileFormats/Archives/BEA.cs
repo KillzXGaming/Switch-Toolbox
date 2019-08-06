@@ -162,7 +162,7 @@ namespace FirstPlugin
             }
             GC.Collect();
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
             beaFile.FileList.Clear();
             beaFile.FileDictionary.Clear();
@@ -181,9 +181,7 @@ namespace FirstPlugin
                 beaFile.FileDictionary.Add(asset.FileName);
             }
 
-            MemoryStream mem = new MemoryStream();
-            beaFile.Save(mem);
-            return mem.ToArray();
+            beaFile.Save(stream);
         }
     
 

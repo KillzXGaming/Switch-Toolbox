@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    //Represents a node from an IArchive file
+    /// <summary>
+    /// Represets a node from an <see cref="IArchiveFile"/>
+    /// </summary>
     public interface INode
     {
         string Name { get; set; }

@@ -106,7 +106,7 @@ namespace FirstPlugin.Forms
             SaveFileDialog sav = new SaveFileDialog() { FileName = AampFile.FileName, Filter = "Parameter Archive | *.aamp" };
             if (sav.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sav.FileName, AampFile.Save());
+                Toolbox.Library.IO.STFileSaver.SaveFileFormat(AampFile, sav.FileName);
             }
         }
 

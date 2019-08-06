@@ -63,7 +63,9 @@ namespace Toolbox.Library.Forms
                 if (FileRoot.FileNodes[i].Item1.OpenFileFormatOnLoad)
                 {
                     if (FileRoot.FileNodes[i].Item2 is ArchiveFileWrapper)
+                    {
                         ((ArchiveFileWrapper)FileRoot.FileNodes[i].Item2).OpenFileFormat(treeViewCustom1);
+                    }
                 }
             }
         }
@@ -672,6 +674,21 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public void LoadGenericTextureIcons(TreeNodeCollection nodes) {
+            List<ISingleTextureIconLoader> texIcons = new List<ISingleTextureIconLoader>();
+            foreach (var node in nodes)
+            {
+                if (node is ISingleTextureIconLoader)
+                {
+                    treeViewCustom1.SingleTextureIcons.Add((ISingleTextureIconLoader)node);
+                    texIcons.Add((ISingleTextureIconLoader)node);
+                }
+            }
+
+            if (texIcons.Count > 0)
+                treeViewCustom1.ReloadTextureIcons(texIcons, false);
+        }
+
         public void LoadGenericTextureIcons(ITextureIconLoader iconList) {
             treeViewCustom1.TextureIcons.Add(iconList);
             treeViewCustom1.ReloadTextureIcons(iconList);
@@ -714,6 +731,10 @@ namespace Toolbox.Library.Forms
             }
             if (e.Node != null && e.Node is ISingleTextureIconLoader) {
                 LoadGenericTextureIcons((ISingleTextureIconLoader)e.Node);
+            }
+
+            if (e.Node != null && e.Node is ArchiveFolderNodeWrapper) {
+                LoadGenericTextureIcons(e.Node.Nodes);
             }
         }
     }

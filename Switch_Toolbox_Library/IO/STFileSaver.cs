@@ -27,24 +27,60 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.WaitCursor;
             FileFormat.FilePath = FileName;
 
-            byte[] data = FileFormat.Save();
-            FileFormat.IFileInfo.DecompressedSize = (uint)data.Length;
+            if (FileFormat.IFileInfo.FileIsCompressed || FileFormat.IFileInfo.InArchive)
+            {
+                //Todo find more optmial way to handle memory with files in archives
+                //Also make compression require streams
+                var mem = new System.IO.MemoryStream();
+                FileFormat.Save(mem);
 
-            data = CompressFileFormat(data,
-                FileFormat.IFileInfo.FileIsCompressed,
-                FileFormat.IFileInfo.Alignment, 
-                FileFormat.IFileInfo.CompressionType,
-                FileName,
-                EnableDialog);
+                byte[] data = mem.ToArray();
+                FileFormat.IFileInfo.DecompressedSize = (uint)data.Length;
 
-            FileFormat.IFileInfo.CompressedSize = (uint)data.Length;
+                data = CompressFileFormat(data,
+                    FileFormat.IFileInfo.FileIsCompressed,
+                    FileFormat.IFileInfo.Alignment,
+                    FileFormat.IFileInfo.CompressionType,
+                    FileName,
+                    EnableDialog);
 
-            File.WriteAllBytes(FileName, data);
+                FileFormat.IFileInfo.CompressedSize = (uint)data.Length;
 
-            DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, data,
-                FileFormat.IFileInfo.DecompressedSize,
-                FileFormat.IFileInfo.CompressedSize,
-                FileFormat.IFileInfo.FileIsCompressed);
+                File.WriteAllBytes(FileName, data);
+
+                DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, data,
+                                    FileFormat.IFileInfo.DecompressedSize,
+                                    FileFormat.IFileInfo.CompressedSize,
+                                    FileFormat.IFileInfo.FileIsCompressed);
+            }
+            else
+            {
+                //Check if a stream is active and the file is beinng saved to the same opened file
+                if (FileFormat is ISaveOpenedFileStream && FileFormat.FilePath == FileName && File.Exists(FileName))
+                {
+                    string savedPath = Path.GetDirectoryName(FileName);
+                    string tempPath = Path.Combine(savedPath, "tempST.bin");
+
+                    //Save a temporary file first to not disturb the opened file
+                    using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        FileFormat.Save(fileStream);
+
+                        //After saving is done remove the existing file
+                        File.Delete(FileName);
+
+                        //Now move and rename our temp file to the new file path
+                        File.Move(tempPath, FileName);
+                    }
+                }
+                else
+                {
+                    using (var fileStream = new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        FileFormat.Save(fileStream);
+                    }
+                }
+            }
 
             MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
 

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    public  interface IViewportContainer
+    /// <summary>
+    /// Represets a container for a viewport.
+    /// This is used to search for the viewport when it needs updating.
+    /// </summary>
+    public interface IViewportContainer
     {
         void UpdateViewport();
         Viewport GetViewport();

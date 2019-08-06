@@ -73,9 +73,9 @@ namespace Toolbox.Library
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
         public bool UseCompressedSizes = false;

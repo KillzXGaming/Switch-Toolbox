@@ -28,8 +28,8 @@ namespace Toolbox.Library.Forms
             treeView = tree;
             treeView.HideSelection = false;
 
-            listViewCustom1.SmallImageList = TreeViewCustom.imgList;
-            listViewCustom1.LargeImageList = TreeViewCustom.imgList;
+            listViewCustom1.SmallImageList = tree.ImageList;
+            listViewCustom1.LargeImageList = tree.ImageList;
 
             listViewCustom1.View = View.List;
             chkSearchSubNodes.Checked = true;
@@ -85,7 +85,23 @@ namespace Toolbox.Library.Forms
 
             if (HasText)
             {
-                listViewCustom1.Items.Add(parentNode.Text, parentNode.ImageKey);
+                if (parentNode.ImageKey != null && parentNode.ImageKey != string.Empty)
+                {
+                    listViewCustom1.Items.Add(new ListViewItem()
+                    {
+                        Text = parentNode.Text,
+                        ImageKey = parentNode.ImageKey,
+                    });
+                }
+                else
+                {
+                    listViewCustom1.Items.Add(new ListViewItem()
+                    {
+                        Text = parentNode.Text,
+                        ImageIndex = parentNode.ImageIndex,
+                    });
+                }
+
                 TreenodeLookup.Add(parentNode);
             }
 

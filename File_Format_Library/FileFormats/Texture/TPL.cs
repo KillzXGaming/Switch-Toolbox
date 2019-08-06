@@ -298,10 +298,8 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            return mem.ToArray();
         }
     }
 }

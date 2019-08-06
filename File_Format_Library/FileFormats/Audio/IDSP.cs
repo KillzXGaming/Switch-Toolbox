@@ -59,13 +59,15 @@ namespace FirstPlugin
             CanSave = true;
             LoadAudio(stream, this);
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return SaveAudio();
+            SaveAudio(stream);
         }
     }
 }

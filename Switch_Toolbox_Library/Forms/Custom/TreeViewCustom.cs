@@ -111,25 +111,91 @@ namespace Toolbox.Library
 
             Thread = new Thread((ThreadStart)(() =>
             {
-                foreach (var textureIconList in TextureIcons)
+                for (int i = 0; i < TextureIcons.Count; i++)
                 {
-                    foreach (TreeNode node in textureIconList.IconTextureList)
+                    foreach (TreeNode node in TextureIcons[i].IconTextureList)
                     {
                         if (node is STGenericTexture)
                         {
                             var image = ((STGenericTexture)node).GetBitmap();
-                            AddImageOnThread(image, node);
+                            if (image != null)
+                                AddImageOnThread(image, node);
                         }
                     }
                 }
 
-                foreach (var texIcon in SingleTextureIcons)
+                for (int i = 0; i < SingleTextureIcons.Count; i++)
                 {
-                    if (texIcon == null || texIcon.IconTexture == null)
+                    if (SingleTextureIcons[i] == null || SingleTextureIcons[i].IconTexture == null)
                         continue;
 
-                    var image = texIcon.IconTexture.GetBitmap();
-                    AddImageOnThread(image, texIcon.IconTexture);
+                    var image = SingleTextureIcons[i].IconTexture.GetBitmap();
+                    if (image != null)
+                        AddImageOnThread(image, SingleTextureIcons[i].IconTexture);
+                }
+            }));
+            Thread.Start();
+        }
+
+        public void ReloadTextureIcons(List<ISingleTextureIconLoader> textureIcons, bool CanAbortThread)
+        {
+            if (Thread != null && Thread.IsAlive && CanAbortThread)
+                Thread.Abort();
+
+            this.BeginUpdate();
+
+            Thread = new Thread((ThreadStart)(() =>
+            {
+                List<TreeNode> treeNodes = new List<TreeNode>();
+                List<Image> imageIcons = new List<Image>();
+
+                foreach (TreeNode node in textureIcons)
+                {
+                    if (node is STGenericTexture)
+                    {
+                        try
+                        {
+                            var image = ((STGenericTexture)node).GetBitmap();
+                            if (image != null)
+                            {
+                                imageIcons.Add(image);
+                                treeNodes.Add(node);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                    }
+                }
+
+
+                for (int i = 0; i < treeNodes.Count; i++)
+                {
+                    AddImageOnThread(i, treeNodes[i]);
+                }
+
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.ImageList.Images.AddRange(imageIcons.ToArray());
+                    });
+                }
+
+                for (int i = 0; i < treeNodes.Count; i++)
+                    imageIcons[i].Dispose();
+
+                imageIcons.Clear();
+                treeNodes.Clear();
+                textureIcons.Clear();
+
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.EndUpdate();
+                    });
                 }
             }));
             Thread.Start();
@@ -205,8 +271,11 @@ namespace Toolbox.Library
                         try
                         {
                             var image = ((STGenericTexture)node).GetBitmap();
-                            treeNodes.Add(node);
-                            imageIcons.Add(image);
+                            if (image != null)
+                            {
+                                treeNodes.Add(node);
+                                imageIcons.Add(image);
+                            }
                         }
                         catch (Exception ex)
                         {

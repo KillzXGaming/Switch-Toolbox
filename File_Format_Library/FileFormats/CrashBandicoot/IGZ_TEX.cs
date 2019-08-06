@@ -78,7 +78,11 @@ namespace FirstPlugin
                 IGZStructure = new IGZ_Structure();
                 IGZStructure.Read(reader);
 
-                if (IGZStructure.TextureInfo == null) return;
+                if (IGZStructure.TextureInfo == null)
+                {
+                    CanSave = false;
+                    return;
+                }
 
                 //Set all the info from the parsed struct
                 var texInfo = IGZStructure.TextureInfo;
@@ -97,6 +101,8 @@ namespace FirstPlugin
                     Text = IGZStructure.StringTable[0];
                 else
                     Text = FileName;
+
+                Parameters.FlipY = true;
             }
         }
 
@@ -198,7 +204,8 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
             //Apply the image info block from this image
             IGZStructure.TextureInfo.Width = (ushort)this.Width;
@@ -210,9 +217,7 @@ namespace FirstPlugin
             IGZStructure.TextureInfo.FormatInfo.Platform = this.PlatformFormat;
             IGZStructure.StringTable[0] = this.Text;
 
-            var mem = new System.IO.MemoryStream();
-            IGZStructure.Write(new FileWriter(mem));
-            return mem.ToArray();
+            IGZStructure.Write(new FileWriter(stream));
         }
     }
 }

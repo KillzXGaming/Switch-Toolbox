@@ -10,7 +10,7 @@ using LibHac;
 
 namespace FirstPlugin
 {
-    public class GCDisk : IArchiveFile, IFileFormat
+    public class GCDisk : IArchiveFile, IFileFormat, ISaveOpenedFileStream
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -52,6 +52,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            CanSave = false;
+
             using (var reader = new FileReader(stream))
             {
                 Header = new DiskHeader();
@@ -99,6 +101,21 @@ namespace FirstPlugin
                 reader.SeekBegin(FstOffset);
                 FileTable = new FileSystemTable();
                 FileTable.Read(reader, disk.files, disk.FilePath);
+            }
+
+            public void Write(FileWriter writer, GCDisk disk)
+            {
+                writer.Write(GameCode);
+                writer.Write(DiskID);
+                writer.Write(Version);
+                writer.Write(AudioStreaming);
+                writer.Write(StreamBufferSize);
+                writer.Seek(0x12);
+                writer.Write(1033843650);
+
+
+
+                FileTable.Write(writer, disk.files);
             }
         }
 
@@ -170,6 +187,41 @@ namespace FirstPlugin
 
                 return currentIndex;
             }
+
+            public void Write(FileWriter writer, List<FileEntry> Files)
+            {
+                long pos = writer.Position;
+
+                //reserve space
+                for (int i = 0; i < Files.Count; i++)
+                {
+                    writer.Write(uint.MaxValue);
+                    writer.Write(uint.MaxValue);
+                    writer.Write(uint.MaxValue);
+                }
+
+                for (int i = 0; i < Files.Count; i++)
+                {
+                    writer.WriteUint32Offset(pos + (i * 12));
+                    writer.Write(Files[i].FileName);
+                }
+
+                for (int i = 0; i < Files.Count; i++)
+                {
+                    writer.WriteUint32Offset(pos + (i * 12) + 4);
+
+                    //More simple to get the size this way than getting file data over and over
+                    //Also we don't need to store the bytes in memory
+                //    long _fileStart = writer.Position;
+                    writer.Write(Files[i].FileData);
+                 //   long _fileEnd = writer.Position;
+
+                 /*   using (writer.TemporarySeek(pos + (i * 12) + 8, System.IO.SeekOrigin.Begin))
+                    {
+                        writer.Write((uint)(_fileEnd - _fileStart));
+                    }*/
+                }
+            }
         }
 
 
@@ -178,9 +230,10 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
+            Header.Write(new FileWriter(stream), this);
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)

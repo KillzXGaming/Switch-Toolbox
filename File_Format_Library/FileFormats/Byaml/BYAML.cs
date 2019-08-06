@@ -189,18 +189,15 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            ByamlFile.SaveN(mem, new BymlFileData
+            ByamlFile.SaveN(stream, new BymlFileData
             {
                 Version = data.Version,
                 byteOrder = data.byteOrder,
                 SupportPaths = data.SupportPaths,
                 RootNode = data.RootNode
             });
-
-            return mem.ToArray();
         }   
     }
 }

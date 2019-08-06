@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    //A simple interface for updating a form
+    /// <summary>
+    /// Represets a simple interface for updating a form.
+    /// </summary>
     public interface IUpdateForm
     {
         void UpdateForm();

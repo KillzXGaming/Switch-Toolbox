@@ -101,9 +101,9 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
     }
 }

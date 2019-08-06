@@ -198,9 +198,9 @@ namespace FirstPlugin
             Nodes.Clear();
             header = null;
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
         Viewport viewport

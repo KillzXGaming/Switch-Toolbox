@@ -19,7 +19,7 @@ namespace Toolbox.Library.IO
         }
 
         public FileReader(string fileName)
-             : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+             : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
         {
             this.Position = 0;
         }

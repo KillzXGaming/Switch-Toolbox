@@ -175,9 +175,8 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
         //EFE for REing format https://github.com/Gericom/EveryFileExplorer/blob/f9f00d193c9608d71c9a23d9f3ab7e752f4ada2a/NDS/NitroSystem/FND/NARC.cs

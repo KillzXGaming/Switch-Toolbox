@@ -105,17 +105,14 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
             if (Is3DS)
-                header3DS.Write(new FileWriter(mem), this);
+                header3DS.Write(new FileWriter(stream), this);
             else if (IsWiiU)
-                headerU.Write(new FileWriter(mem), this);
+                headerU.Write(new FileWriter(stream), this);
             else
-                header.Write(new FileWriter(mem));
-
-            return mem.ToArray();
+                header.Write(new FileWriter(stream));
         }
         private void Save(object sender, EventArgs args)
         {
@@ -646,7 +643,9 @@ namespace FirstPlugin
                           SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "GRTF":
-                        SaveHeader(writer, header, ((BNTX)BinaryData).Save(), 4096);
+                        var mem = new System.IO.MemoryStream();
+                        ((BNTX)BinaryData).Save(mem);
+                        SaveHeader(writer, header, mem.ToArray(), 4096);
                        //  SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "PRIM":

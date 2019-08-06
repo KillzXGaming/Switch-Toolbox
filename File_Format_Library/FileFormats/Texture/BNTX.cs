@@ -269,16 +269,18 @@ namespace FirstPlugin
             IsLoadingArray = false;
         }
 
-        private static void SaveBNTXArray(MemoryStream mem, List<BNTX> Containers)
+        private static void SaveBNTXArray(Stream stream, List<BNTX> Containers)
         {
             IsSavingArray = true;
 
             int Alignment = 4096;
-            using (var saver = new FileWriter(mem))
+            using (var saver = new FileWriter(stream, true))
             {
                 foreach (var container in Containers)
                 {
-                    saver.Write(container.Save());
+                    var mem = new System.IO.MemoryStream();
+                    container.Save(mem);
+                    saver.Write(mem.ToArray());
                     saver.Align(Alignment);
                 }
             }
@@ -892,13 +894,12 @@ namespace FirstPlugin
         private void SortTextures(object sender, EventArgs args)
         {
         }
-        public byte[] Save()
-        {
-            MemoryStream mem = new MemoryStream();
 
+        public void Save(System.IO.Stream stream)
+        {
             if (ContainerArray.Count > 0 && !IsSavingArray)
             {
-                SaveBNTXArray(mem, ContainerArray);
+                SaveBNTXArray(stream, ContainerArray);
             }
             else
             {
@@ -923,10 +924,8 @@ namespace FirstPlugin
                     BinaryTexFile.TextureDict.Add(tex.Text);
                 }
 
-                BinaryTexFile.Save(mem);
+                BinaryTexFile.Save(stream);
             }
-
-            return mem.ToArray();
         }
 
         public class PropertieGridData

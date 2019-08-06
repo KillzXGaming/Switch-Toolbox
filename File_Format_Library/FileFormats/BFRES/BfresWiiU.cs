@@ -1074,7 +1074,11 @@ namespace FirstPlugin
                 {
                     ExternalFile ext = new ExternalFile();
                     if (node is BNTX)
-                        ext.Data = ((BNTX)node).Save();
+                    {
+                        var mem = new System.IO.MemoryStream();
+                        ((BNTX)node).Save(mem);
+                        ext.Data = mem.ToArray();
+                    }
                     else
                         ext.Data = ((ExternalFileData)node).Data;
 

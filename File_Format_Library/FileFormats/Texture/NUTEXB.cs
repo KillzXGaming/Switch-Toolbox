@@ -626,11 +626,10 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            System.IO.MemoryStream mem = new System.IO.MemoryStream();
-            Write(new FileWriter(mem));
-            return mem.ToArray();
+            Write(new FileWriter(stream));
         }
     }
 }

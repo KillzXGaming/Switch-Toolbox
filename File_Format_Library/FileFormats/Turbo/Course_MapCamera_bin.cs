@@ -55,16 +55,15 @@ namespace FirstPlugin.Turbo
 
             Read(new FileReader(stream));
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
-        {
-            MemoryStream mem = new MemoryStream();
-            Write(new FileWriter(mem));
 
-            return mem.ToArray();
+        public void Save(System.IO.Stream stream)
+        {
+            Write(new FileWriter(stream));
         }
 
         public CameraData cameraData;

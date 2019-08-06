@@ -301,11 +301,9 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(mem))
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(stream))
             {
                 foreach (STGenericObject obj in objects)
                 {
@@ -342,9 +340,6 @@ namespace FirstPlugin
                 }
                 file.Close();
             }
-
-
-            return mem.ToArray();
         }
     }
 }

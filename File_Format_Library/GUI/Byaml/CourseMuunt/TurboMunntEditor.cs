@@ -206,7 +206,7 @@ namespace FirstPlugin.Forms
                 SaveFileDialog sfd = new SaveFileDialog();
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllBytes(sfd.FileName, CameraFile.Save());
+                    STFileSaver.SaveFileFormat(CameraFile, sfd.FileName);
                 }
             }
         }

@@ -85,7 +85,9 @@ namespace Bfres.Structs
             {
                 if (fileFormat.CanSave)
                 {
-                    ArchiveFileInfo.FileData = fileFormat.Save();
+                    var mem = new System.IO.MemoryStream();
+                    fileFormat.Save(mem);
+                    ArchiveFileInfo.FileData = mem.ToArray();
                     UpdateEditor();
                 }
             }

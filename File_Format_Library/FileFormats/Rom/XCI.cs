@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Library;
+using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
@@ -39,9 +40,9 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
     }
 }

@@ -121,10 +121,9 @@ namespace FirstPlugin
             }
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            using (var writer = new FileWriter(mem))
+            using (var writer = new FileWriter(stream, true))
             {
                 writer.Write(Width);
                 writer.Write(Height);
@@ -136,9 +135,6 @@ namespace FirstPlugin
                 writer.Position = 0x80;
                 writer.Write(ImageData);
             }
-
-
-            return mem.ToArray();
         }
 
         public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)

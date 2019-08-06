@@ -10,6 +10,7 @@ using VGAudio.Containers.NintendoWare;
 using VGAudio.Containers.Wave;
 using VGAudio.Formats;
 using VGAudio.Utilities;
+using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
@@ -81,6 +82,14 @@ namespace Toolbox.Library
                         throw new Exception("Unsupported Extension " + ext);
                 }
                 audioData = audioWithConfig.Audio;
+            }
+        }
+
+        public void SaveAudio(Stream stream)
+        {
+            using (var writer = new FileWriter(stream, true))
+            {
+                writer.Write(SaveAudio());
             }
         }
 

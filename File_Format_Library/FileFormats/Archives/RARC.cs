@@ -197,7 +197,7 @@ namespace FirstPlugin
         //It's a good idea, and i don't want to deal with offset linking
         private List<char> _exportStringTable;
         private List<byte[]> _savedFileData;
-        public void SaveFile(FileWriter writer)
+        private void SaveFile(FileWriter writer)
         {
             _savedFiles.Clear();
             _exportStringTable = new List<char>();
@@ -444,11 +444,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            SaveFile(new FileWriter(mem));
-            return mem.ToArray();
+            SaveFile(new FileWriter(stream));
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)

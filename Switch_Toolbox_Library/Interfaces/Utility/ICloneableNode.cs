@@ -7,7 +7,10 @@ using System.Windows.Forms;
 
 namespace Toolbox.Library
 {
-    //A custom clonable treenode
+    /// <summary>
+    /// Reprenets a clonable tree node.
+    /// This is currently not used, but was planned for the search feature
+    /// </summary>
     public interface ICloneableNode
     {
         TreeNode CloneNode();

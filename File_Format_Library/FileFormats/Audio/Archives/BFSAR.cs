@@ -50,13 +50,14 @@ namespace FirstPlugin
             Nodes.Add("Group List");
             Nodes.Add("Players List");
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
         private static uint FileSizeOffset;

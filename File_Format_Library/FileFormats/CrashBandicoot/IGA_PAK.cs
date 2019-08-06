@@ -10,7 +10,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class IGA_PAK : IArchiveFile, IFileFormat
+    public class IGA_PAK : IArchiveFile, IFileFormat, ISaveOpenedFileStream
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -109,8 +109,6 @@ namespace FirstPlugin
                     file.FileName = file.FileName.Replace("temporary/mack/data/win64/output/", string.Empty);
                     file.FileName = file.FileName.Replace("temporary/mack/data/nx/output/", string.Empty);
 
-
-
                     // if (file.FileOffset >= 0xff000000)
                     //     file.FileOffset = 
 
@@ -206,11 +204,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            Write(new FileWriter(mem));
-            return mem.ToArray();
+            Write(new FileWriter(stream));
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -335,7 +331,9 @@ namespace FirstPlugin
             {
                 if (FileFormat != null && FileFormat.CanSave)
                 {
-                    byte[] data = FileFormat.Save();
+                    var mem = new System.IO.MemoryStream();
+                    FileFormat.Save(mem);
+                    byte[] data = mem.ToArray();
                     DecompressedFileSize = (uint)data.Length;
 
                     if (FileCompressionType != -1)

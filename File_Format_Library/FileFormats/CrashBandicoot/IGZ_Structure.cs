@@ -39,16 +39,16 @@ namespace FirstPlugin
             { 0x9D3B06CD, new FormatInfo(TEX_FORMAT.BC1_UNORM) },
             { 0xDA888839, new FormatInfo(TEX_FORMAT.BC3_UNORM) }, //PC
             { 0x78B94718, new FormatInfo(TEX_FORMAT.BC5_UNORM) }, //PC
-            { 0x994608DE, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT) }, //PC
+            { 0x994608DE, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM) }, //PC
             { 0x1B282851, new FormatInfo(TEX_FORMAT.BC1_UNORM, Platform.Switch) },
             { 0x37456ECD, new FormatInfo(TEX_FORMAT.BC3_UNORM, Platform.Switch) },
             { 0xD0124568, new FormatInfo(TEX_FORMAT.BC3_UNORM, Platform.Switch) },
-            { 0x8EBE8CF2, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, Platform.Switch) },
+            { 0x8EBE8CF2, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM, Platform.Switch) },
             { 0xF8313483, new FormatInfo(TEX_FORMAT.BC1_UNORM, Platform.Ps4) },
             { 0xF0B976CF, new FormatInfo(TEX_FORMAT.BC3_UNORM, Platform.Ps4) },
             { 0x7D081E6A, new FormatInfo(TEX_FORMAT.BC5_UNORM, Platform.Ps4) },
-            { 0x9B54FB48, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, Platform.Ps4) },
-            { 0xEDF22608, new FormatInfo(TEX_FORMAT.R32G32B32_FLOAT, Platform.Ps4) }, //Todo BGR32
+            { 0x9B54FB48, new FormatInfo(TEX_FORMAT.R8G8B8A8_UNORM, Platform.Ps4) },
+            { 0xEDF22608, new FormatInfo(TEX_FORMAT.B8G8R8A8_UNORM, Platform.Ps4) },
         };
 
         public class FormatInfo

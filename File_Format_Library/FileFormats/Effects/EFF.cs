@@ -50,13 +50,14 @@ namespace FirstPlugin
             PTCL.Header Header = new PTCL.Header();
             Header.Read(reader, pctl);
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
     }
 }

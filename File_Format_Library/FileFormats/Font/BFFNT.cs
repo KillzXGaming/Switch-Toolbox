@@ -112,11 +112,10 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            bffnt.Write(new FileWriter(mem));
-            return mem.ToArray();
+            bffnt.Write(new FileWriter(stream));
         }
 
 
@@ -852,7 +851,11 @@ namespace FirstPlugin
                 writer.Align(8192);
 
             if (BinaryTextureFile != null)
-                SheetDataList[0] = BinaryTextureFile.Save();
+            {
+                var mem = new System.IO.MemoryStream();
+                BinaryTextureFile.Save(mem);
+                SheetDataList[0] = mem.ToArray();
+            }
 
             long DataPosition = writer.Position;
             using (writer.TemporarySeek(_ofsSheetBlocks, SeekOrigin.Begin))

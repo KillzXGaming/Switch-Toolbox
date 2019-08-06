@@ -299,11 +299,10 @@ namespace FirstPlugin
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            bars.Save(mem);
-            return mem.ToArray();
+            bars.Save(stream);
         }
     }
 }

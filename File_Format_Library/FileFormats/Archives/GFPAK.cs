@@ -108,15 +108,15 @@ namespace FirstPlugin
 
             Read(new FileReader(stream));
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            Write(new FileWriter(mem));
-            return mem.ToArray();
+            Write(new FileWriter(stream));
         }
 
         private void Save(object sender, EventArgs args)

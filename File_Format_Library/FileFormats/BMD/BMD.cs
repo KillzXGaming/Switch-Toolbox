@@ -317,7 +317,7 @@ namespace FirstPlugin
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
             Items.Add(new STToolStripSeparator());
             Items.Add(new STToolStipMenuItem("Export", null, ExportAction, Keys.Control | Keys.E) { Enabled = false});
-            Items.Add(new STToolStipMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R) { Enabled = false });
+            Items.Add(new STToolStipMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R) { Enabled = false});
             return Items.ToArray();
         }
 
@@ -368,11 +368,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            BMDFile.ExportBMD(mem);
-            return mem.ToArray();
+            BMDFile.ExportBMD(stream);
         }
     }
 }

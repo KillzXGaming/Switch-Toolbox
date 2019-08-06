@@ -426,10 +426,9 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-            using (var writer = new FileWriter(mem))
+            using (var writer = new FileWriter(stream, true))
             {
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
@@ -444,7 +443,6 @@ namespace FirstPlugin
                 writer.Seek(headerPos + 0x0C, SeekOrigin.Begin);
                 writer.Write((uint)writer.BaseStream.Length);
             }
-            return mem.ToArray();
         }
 
         public class Header

@@ -29,6 +29,9 @@ namespace Toolbox.Library
         Animation,
     }
 
+    /// <summary>
+    /// A common file format interface used to load, edit and save file formats
+    /// </summary>
     public interface IFileFormat
     {
         FileType FileType { get; set; }
@@ -46,9 +49,9 @@ namespace Toolbox.Library
 
         bool Identify(System.IO.Stream stream);
         void Load(System.IO.Stream stream);
+        void Save(System.IO.Stream stream);
 
         void Unload();
-        byte[] Save();
         IFileInfo IFileInfo { get; set; }
     }
     public class IFileInfo

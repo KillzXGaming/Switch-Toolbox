@@ -88,10 +88,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            using (var writer = new FileWriter(mem))
+            using (var writer = new FileWriter(stream, true))
             {
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
 
@@ -120,8 +119,6 @@ namespace FirstPlugin
                     writer.Write(files[i].FileData.Length);
                 */
             }
-
-            return mem.ToArray();
         }
 
         private void Align(FileWriter writer, int alignment)

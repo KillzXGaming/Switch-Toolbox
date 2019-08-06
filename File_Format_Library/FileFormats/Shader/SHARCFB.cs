@@ -91,13 +91,14 @@ namespace FirstPlugin
                 }
             }
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
         //Docs https://github.com/Kinnay/Wii-U-File-Formats/wiki/SHARCFB-File-Format

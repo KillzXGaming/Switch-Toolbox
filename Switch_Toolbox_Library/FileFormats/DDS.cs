@@ -122,13 +122,14 @@ namespace Toolbox.Library
             reader.ByteOrder = ByteOrder.LittleEndian;
             Load(reader);
         }
+
         public void Unload()
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
 

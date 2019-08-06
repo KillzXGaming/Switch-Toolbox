@@ -152,6 +152,7 @@ namespace FirstPlugin
             }
         }
 
+
         public void SaveFile(FileWriter writer)
         {
             long pos = writer.Position;
@@ -219,11 +220,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            SaveFile(new FileWriter(mem));
-            return mem.ToArray();
+            SaveFile(new FileWriter(stream));
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)

@@ -86,6 +86,7 @@
     </Reference>
     <Reference Include="Gl_EditorFramework">
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="KCLExt">
       <HintPath>..\Toolbox\Lib\KCLExt.dll</HintPath>
@@ -223,7 +224,6 @@
     <Compile Include="FileFormats\Archives\NXARC.cs" />
     <Compile Include="FileFormats\Archives\Sonic Forces\PACx30XL.cs" />
     <Compile Include="FileFormats\Archives\RARC.cs" />
-    <Compile Include="FileFormats\Archives\SARC_OLD.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\GameDataToc.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\SPC.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\SWU.cs" />
@@ -277,6 +277,7 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
+    <Compile Include="FileFormats\MOD.cs" />
     <Compile Include="FileFormats\Pikmin\TXE.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />

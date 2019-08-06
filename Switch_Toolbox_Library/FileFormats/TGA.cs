@@ -95,9 +95,8 @@ namespace Toolbox.Library
             TargaImage.Dispose();
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            return null;
         }
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)

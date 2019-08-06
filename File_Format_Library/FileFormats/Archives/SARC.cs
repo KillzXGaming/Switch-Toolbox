@@ -258,7 +258,7 @@ namespace FirstPlugin
             return result;
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
             sarcData.Files.Clear();
             foreach (var file in files)
@@ -290,7 +290,10 @@ namespace FirstPlugin
             Tuple<int, byte[]> sarc = SARCExt.SARC.PackN(sarcData);
 
             IFileInfo.Alignment = sarc.Item1;
-            return sarc.Item2;
+
+            using (var writer = new FileWriter(stream)) {
+                writer.Write(sarc.Item2);
+            }
         }
 
         public class SarcEntry : ArchiveFileInfo

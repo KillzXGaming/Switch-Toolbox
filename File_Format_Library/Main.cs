@@ -362,6 +362,8 @@ namespace FirstPlugin
             Formats.Add(typeof(BFLYT));
             Formats.Add(typeof(ZSI));
             Formats.Add(typeof(IGZ_TEX));
+            Formats.Add(typeof(MOD));
+            Formats.Add(typeof(U8));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

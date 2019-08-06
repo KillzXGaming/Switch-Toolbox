@@ -241,16 +241,13 @@ namespace FirstPlugin
         {
 
         }
-        public byte[] Save()
+
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new MemoryStream();
-
             if (aampFileV1 != null)
-                aampFileV1.Save(mem);
+                aampFileV1.Save(stream);
             else
-                aampFileV2.Save(mem);
-
-            return mem.ToArray();
+                aampFileV2.Save(stream);
         }
     }
 }

@@ -133,11 +133,9 @@ namespace FirstPlugin
 
         }
 
-        public byte[] Save()
+        public void Save(System.IO.Stream stream)
         {
-            var mem = new System.IO.MemoryStream();
-            header.Write(new FileWriter(mem));
-            return mem.ToArray();
+            header.Write(new FileWriter(stream));
         }
 
         //Todo replace tedius offset handling with a class to store necessary data and methods to execute
