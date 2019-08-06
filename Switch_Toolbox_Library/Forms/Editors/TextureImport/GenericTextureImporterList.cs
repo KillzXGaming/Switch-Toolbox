@@ -7,10 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Toolbox.Library;
-using Toolbox.Library.Forms;
 
-namespace FirstPlugin
+namespace Toolbox.Library.Forms
 {
     public partial class GenericTextureImporterList : STForm
     {

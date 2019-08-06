@@ -1,4 +1,4 @@
-﻿namespace FirstPlugin
+﻿namespace Toolbox.Library.Forms
 {
     partial class GenericTextureImporterList
     {

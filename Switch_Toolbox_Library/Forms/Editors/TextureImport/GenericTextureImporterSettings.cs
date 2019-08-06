@@ -7,7 +7,7 @@ using System.Linq;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 
-namespace FirstPlugin
+namespace Toolbox.Library.Forms
 {
     public class GenericTextureImporterSettings
     {

@@ -89,11 +89,6 @@ namespace FirstPlugin
                 reader.ReadByte(); // mag filter type
                 reader.ReadInt16();
 
-                Console.WriteLine("Format " + Format);
-                Console.WriteLine("texFormat " + (Decode_Gamecube.TextureFormats)texFormat);
-
-                Console.WriteLine($"paletteOffset {paletteOffset} paletteEntryCount {paletteEntryCount} paletteFormat {paletteFormat}");
-
                 MipCount = reader.ReadByte();
                 reader.ReadByte();
                 short LODBias = reader.ReadInt16();
@@ -110,7 +105,6 @@ namespace FirstPlugin
                 reader.SeekBegin(paletteOffset);
                 byte[] PaletteData = reader.ReadBytes((int)paletteEntryCount * 2);
                 SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat));
-
             }
         }
 

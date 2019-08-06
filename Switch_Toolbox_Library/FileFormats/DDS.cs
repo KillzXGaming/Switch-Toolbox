@@ -18,8 +18,10 @@ using OpenTK.Graphics.OpenGL;
 namespace Toolbox.Library
 {
     //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
-    public class DDS : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
+    public class DDS : STGenericTexture, IFileFormat, ISingleTextureIconLoader, IContextMenuNode
     {
+        public STGenericTexture IconTexture { get { return this; } }
+
         public FileType FileType { get; set; } = FileType.Image;
 
         public override TEX_FORMAT[] SupportedFormats
@@ -53,6 +55,26 @@ namespace Toolbox.Library
             }
         }
 
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.AddRange(base.GetContextMenuItems());
+            return Items.ToArray();
+        }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(this);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
+        }
+
         public Type[] Types
         {
             get
@@ -66,6 +88,7 @@ namespace Toolbox.Library
         {
             IsActive = true;
             CanSave = true;
+            CanReplace = true;
 
             FileReader reader = new FileReader(stream);
             reader.ByteOrder = ByteOrder.LittleEndian;
@@ -421,24 +444,6 @@ namespace Toolbox.Library
             DXGI_FORMAT_FORCE_UINT = 0xFFFFFFFF
         }
 
-        public ImageEditorBase OpenForm()
-        {
-            bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
-
-            ImageEditorBase form = new ImageEditorBase();
-            form.Text = Text;
-            form.Dock = DockStyle.Fill;
-            form.LoadImage(this);
-            form.LoadProperties(GenericProperties);
-            return form;
-        }
-
-        public void FillEditor(UserControl control)
-        {
-            ((ImageEditorBase)control).LoadImage(this);
-            ((ImageEditorBase)control).LoadProperties(GenericProperties);
-        }
-
         public enum DXGI_ASTC_FORMAT
         {
           
@@ -462,6 +467,8 @@ namespace Toolbox.Library
         }
         public void Load(BinaryDataReader reader)
         {
+            Text = FileName;
+
             reader.Seek(0);
             string Magic = reader.ReadString(4);
             Console.WriteLine(Magic);
@@ -1026,6 +1033,7 @@ namespace Toolbox.Library
                 return Surfaces;
             }
         }
+
         public TEX_FORMAT GetFormat()
         {
             if (DX10header != null)
@@ -1187,6 +1195,7 @@ namespace Toolbox.Library
                 }
             }
         }
+
         public void Save(DDS dds, string FileName, List<Surface> data = null)
         {
             FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
@@ -1237,6 +1246,7 @@ namespace Toolbox.Library
             writer.Close();
             writer.Dispose();
         }
+
         private void WriteDX10Header(BinaryDataWriter writer)
         {
             if (DX10header == null)
@@ -1248,12 +1258,75 @@ namespace Toolbox.Library
             writer.Write(DX10header.arrayFlag);
             writer.Write(DX10header.miscFlags2);
         }
+
+        public override void Replace(string FileName)
+        {
+            GenericTextureImporterList importer = new GenericTextureImporterList(SupportedFormats);
+            GenericTextureImporterSettings settings = new GenericTextureImporterSettings();
+
+            importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
+
+            if (Utils.GetExtension(FileName) == ".dds" ||
+                Utils.GetExtension(FileName) == ".dds2")
+            {
+                settings.LoadDDS(FileName);
+                ApplySettings(settings);
+                UpdateEditor();
+            }
+            else
+            {
+                settings.LoadBitMap(FileName);
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                    {
+                        settings.DataBlockOutput.Clear();
+                        settings.DataBlockOutput.Add(settings.GenerateMips(importer.CompressionMode));
+                    }
+
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+            }
+        }
+
+        public override void OnClick(TreeView treeView) {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
+            {
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.LoadEditor(editor);
+            }
+
+            editor.LoadProperties(GenericProperties);
+            editor.LoadImage(this);
+        }
+
+        private void ApplySettings(GenericTextureImporterSettings settings)
+        {
+            //Combine all arrays
+            this.bdata = Utils.CombineByteArray( settings.DataBlockOutput.ToArray());
+            this.Width = settings.TexWidth;
+            this.Height = settings.TexHeight;
+            this.Format = settings.Format;
+            this.MipCount = settings.MipCount;
+            this.Depth = settings.Depth;
+            this.ArrayCount = (uint)settings.DataBlockOutput.Count;
+        }
+
         public static byte[] CompressBC1Block(byte[] data, int Width, int Height)
         {
             byte[] image = new byte[0];
 
             return image;
         }
+
         public static void ToRGBA(byte[] data, int Width, int Height, int bpp, int compSel)
         {
             int Size = Width * Height * 4;
@@ -1268,8 +1341,6 @@ namespace Toolbox.Library
                     int pos_ = (Y * Width + X) * 4;
 
                     int pixel = 0;
-
-
                 }
             }
         }
