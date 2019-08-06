@@ -606,8 +606,14 @@ namespace Toolbox.Library
             {
                 orbitToolStripMenuItem.Checked = true;
                 walkToolStripMenuItem.Checked = false;
+
                 Runtime.cameraMovement = Runtime.CameraMovement.Inspect;
             }
+
+            if (GL_ControlModern != null)
+                GL_ControlModern.ResetCamera(Runtime.FrameCamera);
+            else
+                GL_ControlModern.ResetCamera(Runtime.FrameCamera);
 
             LoadViewportRuntimeValues();
             UpdateViewport();
