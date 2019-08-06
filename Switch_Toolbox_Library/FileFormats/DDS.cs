@@ -1318,6 +1318,17 @@ namespace Toolbox.Library
             this.MipCount = settings.MipCount;
             this.Depth = settings.Depth;
             this.ArrayCount = (uint)settings.DataBlockOutput.Count;
+
+            this.header.width = Width;
+            this.header.height = Height;
+            this.header.depth = Depth;
+            this.header.mipmapCount = (uint)MipCount;
+            this.header.pitchOrLinearSize = (uint)bdata.Length / ArrayCount;
+
+            if (this.ArrayCount > 0) //Use DX10 format for array surfaces as it can do custom amounts
+                this.SetFlags((DDS.DXGI_FORMAT)Format, true);
+            else
+                this.SetFlags((DDS.DXGI_FORMAT)Format);
         }
 
         public static byte[] CompressBC1Block(byte[] data, int Width, int Height)
