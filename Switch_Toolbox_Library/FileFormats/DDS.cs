@@ -28,7 +28,35 @@ namespace Toolbox.Library
         {
             get
             {
-                return Enum.GetValues(typeof(TEX_FORMAT)).Cast<TEX_FORMAT>().ToArray();
+                return new TEX_FORMAT[]
+               {
+                    TEX_FORMAT.BC1_UNORM,
+                    TEX_FORMAT.BC1_UNORM_SRGB,
+                    TEX_FORMAT.BC2_UNORM,
+                    TEX_FORMAT.BC2_UNORM_SRGB,
+                    TEX_FORMAT.BC3_UNORM,
+                    TEX_FORMAT.BC3_UNORM_SRGB,
+                    TEX_FORMAT.BC4_UNORM,
+                    TEX_FORMAT.BC4_SNORM,
+                    TEX_FORMAT.BC5_UNORM,
+                    TEX_FORMAT.BC5_SNORM,
+                    TEX_FORMAT.BC6H_UF16,
+                    TEX_FORMAT.BC6H_SF16,
+                    TEX_FORMAT.BC7_UNORM,
+                    TEX_FORMAT.BC7_UNORM_SRGB,
+                    TEX_FORMAT.B5G5R5A1_UNORM,
+                    TEX_FORMAT.B5G6R5_UNORM,
+                    TEX_FORMAT.B8G8R8A8_UNORM_SRGB,
+                    TEX_FORMAT.B8G8R8A8_UNORM,
+                    TEX_FORMAT.R10G10B10A2_UNORM,
+                    TEX_FORMAT.R16_UNORM,
+                    TEX_FORMAT.B4G4R4A4_UNORM,
+                    TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
+                    TEX_FORMAT.R8G8B8A8_UNORM,
+                    TEX_FORMAT.R8_UNORM,
+                    TEX_FORMAT.R8G8_UNORM,
+                    TEX_FORMAT.R32G8X24_FLOAT,
+                 };
             }
         }
 
