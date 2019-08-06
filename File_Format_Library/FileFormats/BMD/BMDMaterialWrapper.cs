@@ -41,10 +41,10 @@ namespace FirstPlugin
                 matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                 matTexture.textureUnit = textureUnit++;
 
-                matTexture.WrapModeS = (STTextureWrapMode)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapS);
-                matTexture.WrapModeT = (STTextureWrapMode)GXToOpenGL.GetWrapMode(ParentModel.Textures[texIndex].WrapT);
-                matTexture.MinFilter = (STTextureMinFilter)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MinFilter);
-                matTexture.MagFilter = (STTextureMagFilter)GXToOpenGL.GetMinFilter(ParentModel.Textures[texIndex].MagFilter);
+                matTexture.WrapModeS = ConvertWrapMode(ParentModel.Textures[texIndex].WrapS);
+                matTexture.WrapModeT = ConvertWrapMode(ParentModel.Textures[texIndex].WrapT);
+                matTexture.MinFilter = ConvertMinFilter(ParentModel.Textures[texIndex].MinFilter);
+                matTexture.MagFilter = ConvertMagFilter(ParentModel.Textures[texIndex].MagFilter);
 
                 TextureMaps.Add(matTexture);
 
@@ -53,6 +53,48 @@ namespace FirstPlugin
                     if (textureIndex != -1)
                         Nodes.Add(ParentModel.Textures[textureIndex].Name);
                 }
+            }
+        }
+
+        private STTextureWrapMode ConvertWrapMode(BinaryTextureImage.WrapModes wrapMode)
+        {
+            switch (wrapMode)
+            {
+                case BinaryTextureImage.WrapModes.Repeat: return STTextureWrapMode.Repeat;
+                case BinaryTextureImage.WrapModes.MirroredRepeat: return STTextureWrapMode.Mirror;
+                case BinaryTextureImage.WrapModes.ClampToEdge: return STTextureWrapMode.Clamp;
+                default:
+                    return STTextureWrapMode.Repeat;
+            }
+        }
+
+        private STTextureMinFilter ConvertMinFilter(BinaryTextureImage.FilterMode filterMode)
+        {
+            switch (filterMode)
+            {
+                case BinaryTextureImage.FilterMode.Linear: return STTextureMinFilter.Linear;
+                case BinaryTextureImage.FilterMode.LinearMipmapLinear: return STTextureMinFilter.Linear;
+                case BinaryTextureImage.FilterMode.LinearMipmapNearest: return STTextureMinFilter.LinearMipMapNearest;
+                case BinaryTextureImage.FilterMode.Nearest: return STTextureMinFilter.Nearest;
+                case BinaryTextureImage.FilterMode.NearestMipmapLinear: return STTextureMinFilter.NearestMipmapLinear;
+                case BinaryTextureImage.FilterMode.NearestMipmapNearest: return STTextureMinFilter.NearestMipmapNearest;
+                default:
+                    return STTextureMinFilter.Linear;
+            }
+        }
+
+        private STTextureMagFilter ConvertMagFilter(BinaryTextureImage.FilterMode filterMode)
+        {
+            switch (filterMode)
+            {
+                case BinaryTextureImage.FilterMode.Linear: return STTextureMagFilter.Linear;
+                case BinaryTextureImage.FilterMode.LinearMipmapLinear: return STTextureMagFilter.Linear;
+                case BinaryTextureImage.FilterMode.LinearMipmapNearest: return STTextureMagFilter.Linear;
+                case BinaryTextureImage.FilterMode.Nearest: return STTextureMagFilter.Nearest;
+                case BinaryTextureImage.FilterMode.NearestMipmapLinear: return STTextureMagFilter.Nearest;
+                case BinaryTextureImage.FilterMode.NearestMipmapNearest: return STTextureMagFilter.Nearest;
+                default:
+                    return STTextureMagFilter.Linear;
             }
         }
 
