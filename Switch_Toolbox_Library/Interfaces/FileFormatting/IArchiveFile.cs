@@ -205,7 +205,7 @@ namespace Toolbox.Library
         {
             Text = text;
 
-            PropertyDisplay = new GenericArchiveProperties(archiveFile, text);
+            PropertyDisplay = new GenericArchiveProperties(archiveFile, text, this);
         }
 
         public void AddFileNode(ArchiveFileWrapper fileWrapper)
@@ -420,6 +420,8 @@ namespace Toolbox.Library
 
         public class GenericArchiveProperties
         {
+            private ArchiveRootNodeWrapper rootNode;
+
             private IArchiveFile ArchiveFile;
 
             [Category("Archive Properties")]
@@ -429,12 +431,16 @@ namespace Toolbox.Library
             [DisplayName("File Count")]
             public int FileCount
             {
-                get { return ArchiveFile.Files.ToList().Count; }
+                get
+                {
+                    return rootNode.FileNodes != null ? rootNode.FileNodes.Count : 0;
+                }
             }
 
-            public GenericArchiveProperties(IArchiveFile archiveFile, string text) {
+            public GenericArchiveProperties(IArchiveFile archiveFile, string text, ArchiveRootNodeWrapper root) {
                 ArchiveFile = archiveFile;
                 Name = text;
+                rootNode = root;
             }
         }
 
