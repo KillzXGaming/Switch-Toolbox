@@ -42,13 +42,15 @@ namespace Toolbox.Library
             return datas;
         }
 
-        public static Bitmap Resize(Image original, Size size)
-        {
+        public static Bitmap Resize(Image original, Size size) {
             return ResizeImage(original, size.Width, size.Height);
         }
 
-        public static Bitmap Resize(Image original, int width, int height)
-        {
+        public static Bitmap Resize(Image original, uint width, uint height) {
+            return ResizeImage(original, (int)width, (int)height);
+        }
+
+        public static Bitmap Resize(Image original, int width, int height) {
             return ResizeImage(original, width, height);
         }
 

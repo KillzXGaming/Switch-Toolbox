@@ -11,7 +11,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class TEX3DS : STGenericTexture, IEditor<ImageEditorBase>, IFileFormat
+    public class TEX3DS : STGenericTexture, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -62,28 +62,44 @@ namespace FirstPlugin
 
         public byte[] ImageData;
 
-        public ImageEditorBase OpenForm()
+
+        public override void OnClick(TreeView treeView)
         {
-            bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
+            UpdateEditor();
+        }
 
-            Properties prop = new Properties();
-            prop.Width = Width;
-            prop.Height = Height;
-            prop.Depth = Depth;
-            prop.MipCount = MipCount;
-            prop.ArrayCount = ArrayCount;
-            prop.ImageSize = (uint)ImageData.Length;
-            prop.Format = Format;
+        private void UpdateEditor()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+            if (editor == null)
+            {
+                editor = new ImageEditorBase();
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.LoadEditor(editor);
+            }
 
-            ImageEditorBase form = new ImageEditorBase();
-            form.Text = Text;
-            form.Dock = DockStyle.Fill;
-       //    form.editorBase.AddFileContextEvent("Save", Save);
-        //    form.editorBase.AddFileContextEvent("Replace", Replace);
-            form.LoadProperties(prop);
-            form.LoadImage(this);
+            editor.LoadProperties(GenericProperties);
+            editor.LoadImage(this);
+        }
 
-            return form;
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.AddRange(base.GetContextMenuItems());
+            return Items.ToArray();
+        }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(this);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
         }
 
         public void FillEditor(UserControl control)
@@ -105,6 +121,7 @@ namespace FirstPlugin
         {
             PlatformSwizzle = PlatformSwizzle.Platform_3DS;
             CanSave = true;
+            CanReplace = true;
 
             using (var reader = new FileReader(stream))
             {
@@ -135,6 +152,50 @@ namespace FirstPlugin
                 writer.Position = 0x80;
                 writer.Write(ImageData);
             }
+        }
+
+        public override void Replace(string FileName)
+        {
+            CTR_3DSTextureImporter importer = new CTR_3DSTextureImporter();
+            CTR_3DSImporterSettings settings = new CTR_3DSImporterSettings();
+
+            if (Utils.GetExtension(FileName) == ".dds" ||
+                Utils.GetExtension(FileName) == ".dds2")
+            {
+                settings.LoadDDS(FileName);
+                importer.LoadSettings(new List<CTR_3DSImporterSettings>() { settings, });
+
+                ApplySettings(settings);
+                UpdateEditor();
+            }
+            else
+            {
+                settings.LoadBitMap(FileName);
+                importer.LoadSettings(new List<CTR_3DSImporterSettings>() { settings, });
+
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                    {
+                        settings.DataBlockOutput.Clear();
+                        settings.DataBlockOutput.Add(settings.GenerateMips());
+                    }
+
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+            }
+        }
+
+        private void ApplySettings(CTR_3DSImporterSettings settings)
+        {
+            this.ImageData = settings.DataBlockOutput[0];
+            this.Width = settings.TexWidth;
+            this.Height = settings.TexHeight;
+            this.Format = settings.GenericFormat;
+            this.MipCount = settings.MipCount;
+            this.Depth = settings.Depth;
+            this.ArrayCount = (uint)settings.DataBlockOutput.Count;
         }
 
         public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)

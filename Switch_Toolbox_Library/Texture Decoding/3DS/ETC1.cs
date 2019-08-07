@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
@@ -66,6 +67,39 @@ namespace Toolbox.Library
 
                 return Output;
             }
+        }
+
+        public static byte[] ETC1Encode(byte[] Input, int Width, int Height, bool Alpha)
+        {
+            long OOffset = 0;
+            int IOffset = 0;
+
+            var mem = new System.IO.MemoryStream();
+            using (var writer = new FileWriter(mem))
+            {
+                for (int TY = 0; TY < Height; TY += 8)
+                {
+                    for (int TX = 0; TX < Width; TX += 8)
+                    {
+                        for (int i = 0; i < 8; i += 4)
+                        {
+                            for (int j = 0; j < 8; j += 4)
+                            {
+                                EncodeETC1Block(writer, TX + j, TY + i, Input, IOffset,  OOffset, Alpha);
+                                OOffset += Alpha ? 16 : 8;
+                                IOffset += 4;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return mem.ToArray();
+        }
+
+        public static void EncodeETC1Block(FileWriter writer, int blockX, int blockY, byte[] Input, long IOffset, long OOffset, bool Alpha)
+        {
+
         }
 
         private static byte[] ETC1Tile(ulong Block)

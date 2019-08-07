@@ -522,4 +522,3 @@
         private System.Windows.Forms.ToolStripMenuItem tutorialToolStripMenuItem;
     }
 }
-

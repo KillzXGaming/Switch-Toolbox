@@ -13,7 +13,6 @@ using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using GL_EditorFramework.EditorDrawables;
 using FirstPlugin.Forms;
-using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace FirstPlugin
 {
@@ -314,7 +313,7 @@ namespace FirstPlugin
             }
         }
 
-        public KCLRendering Renderer;
+        public KCLRendering Renderer = null ;
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
@@ -457,8 +456,8 @@ namespace FirstPlugin
             protected bool Selected = false;
             protected bool Hovered = false;
 
-           // public override bool IsSelected() => Selected;
-          //  public override bool IsSelected(int partIndex) => Selected;
+            // public override bool IsSelected() => Selected;
+            //  public override bool IsSelected(int partIndex) => Selected;
 
             public bool IsHovered() => Selected;
 
@@ -587,7 +586,7 @@ namespace FirstPlugin
 
             public override void Prepare(GL_ControlLegacy control)
             {
-        
+
             }
 
             private void CheckBuffers()
@@ -747,103 +746,103 @@ namespace FirstPlugin
                 GL.Uniform1(shader["colorOverride"], 0);
             }
 
-       /*     public override BoundingBox GetSelectionBox()
-            {
-                Vector3 Min = new Vector3(0);
-                Vector3 Max = new Vector3(0);
+            /*     public override BoundingBox GetSelectionBox()
+                 {
+                     Vector3 Min = new Vector3(0);
+                     Vector3 Max = new Vector3(0);
 
-                foreach (var model in models)
-                {
-                    foreach (var vertex in model.vertices)
-                    {
-                        Min.X = Math.Min(Min.X, vertex.pos.X);
-                        Min.Y = Math.Min(Min.Y, vertex.pos.Y);
-                        Min.Z = Math.Min(Min.Z, vertex.pos.Z);
-                        Max.X = Math.Max(Max.X, vertex.pos.X);
-                        Max.Y = Math.Max(Max.Y, vertex.pos.Y);
-                        Max.Z = Math.Max(Max.Z, vertex.pos.Z);
-                    }
-                }
+                     foreach (var model in models)
+                     {
+                         foreach (var vertex in model.vertices)
+                         {
+                             Min.X = Math.Min(Min.X, vertex.pos.X);
+                             Min.Y = Math.Min(Min.Y, vertex.pos.Y);
+                             Min.Z = Math.Min(Min.Z, vertex.pos.Z);
+                             Max.X = Math.Max(Max.X, vertex.pos.X);
+                             Max.Y = Math.Max(Max.Y, vertex.pos.Y);
+                             Max.Z = Math.Max(Max.Z, vertex.pos.Z);
+                         }
+                     }
 
-                return new BoundingBox()
-                {
-                    minX = Min.X,
-                    minY = Min.Y,
-                    minZ = Min.Z,
-                    maxX = Max.X,
-                    maxY = Max.Y,
-                    maxZ = Max.Z,
-                };
-            }
+                     return new BoundingBox()
+                     {
+                         minX = Min.X,
+                         minY = Min.Y,
+                         minZ = Min.Z,
+                         maxX = Max.X,
+                         maxY = Max.Y,
+                         maxZ = Max.Z,
+                     };
+                 }
 
-            public override LocalOrientation GetLocalOrientation(int partIndex)
-            {
-                return new LocalOrientation(position);
-            }
+                 public override LocalOrientation GetLocalOrientation(int partIndex)
+                 {
+                     return new LocalOrientation(position);
+                 }
 
-            public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
-            {
-                localOrientation = new LocalOrientation(position);
-                dragExclusively = false;
-                return Selected;
-            }
+                 public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
+                 {
+                     localOrientation = new LocalOrientation(position);
+                     dragExclusively = false;
+                     return Selected;
+                 }
 
-            public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
-            {
-                range = 20000; //Make the range large for now. Todo go back to this
+                 public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
+                 {
+                     range = 20000; //Make the range large for now. Todo go back to this
 
-                BoundingBox box = GetSelectionBox();
+                     BoundingBox box = GetSelectionBox();
 
-                if (pos.X < box.maxX + range && pos.X > box.minX - range &&
-                  pos.Y < box.maxY + range && pos.Y > box.minY - range &&
-                  pos.Z < box.maxZ + range && pos.Z > box.minZ - range)
-                    return true;
+                     if (pos.X < box.maxX + range && pos.X > box.minX - range &&
+                       pos.Y < box.maxY + range && pos.Y > box.minY - range &&
+                       pos.Z < box.maxZ + range && pos.Z > box.minZ - range)
+                         return true;
 
-                return false;
-            }
+                     return false;
+                 }
 
 
-            public override uint SelectAll(GL_ControlBase control)
-            {
-                Selected = true;
-                return REDRAW;
-            }
+                 public override uint SelectAll(GL_ControlBase control)
+                 {
+                     Selected = true;
+                     return REDRAW;
+                 }
 
-            public override uint SelectDefault(GL_ControlBase control)
-            {
-                Selected = true;
-                return REDRAW;
-            }
+                 public override uint SelectDefault(GL_ControlBase control)
+                 {
+                     Selected = true;
+                     return REDRAW;
+                 }
 
-            public override uint Select(int partIndex, GL_ControlBase control)
-            {
-                Selected = true;
-                return REDRAW;
-            }
+                 public override uint Select(int partIndex, GL_ControlBase control)
+                 {
+                     Selected = true;
+                     return REDRAW;
+                 }
 
-            public override uint Deselect(int partIndex, GL_ControlBase control)
-            {
-                Selected = false;
-                return REDRAW;
-            }
+                 public override uint Deselect(int partIndex, GL_ControlBase control)
+                 {
+                     Selected = false;
+                     return REDRAW;
+                 }
 
-            public override uint DeselectAll(GL_ControlBase control)
-            {
-                Selected = false;
-                return REDRAW;
-            }
+                 public override uint DeselectAll(GL_ControlBase control)
+                 {
+                     Selected = false;
+                     return REDRAW;
+                 }
 
-            public override Vector3 Position
-            {
-                get
-                {
-                    return position;
-                }
-                set
-                {
-                    position = value;
-                }
-            }*/
+                 public override Vector3 Position
+                 {
+                     get
+                     {
+                         return position;
+                     }
+                     set
+                     {
+                         position = value;
+                     }
+                 }*/
         }
 
         //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods

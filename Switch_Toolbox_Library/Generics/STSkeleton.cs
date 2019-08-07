@@ -35,7 +35,7 @@ namespace Toolbox.Library
 
         public override void Prepare(GL_ControlModern control)
         {
-      
+
         }
         public override void Prepare(GL_ControlLegacy control)
         {
@@ -226,7 +226,7 @@ namespace Toolbox.Library
                 shader.SetFloat("scale", Runtime.bonePointSize * BonePointScale);
                 shader.SetMatrix4x4("ModelMatrix", ref bn.ModelMatrix);
 
-                
+
                 Matrix4 transform = bn.Transform;
 
                 shader.SetMatrix4x4("bone", ref transform);
