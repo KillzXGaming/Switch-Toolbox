@@ -194,8 +194,6 @@ namespace Toolbox.Library.Forms
 
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
-            Console.WriteLine("generating mips CTR");
-
             List<byte[]> mipmaps = new List<byte[]>();
             mipmaps.Add(CTR_3DS.EncodeBlock(DecompressedData[SurfaceLevel],
                 (int)TexWidth, (int)TexHeight, Format));

@@ -364,6 +364,7 @@ namespace FirstPlugin
             Formats.Add(typeof(IGZ_TEX));
             Formats.Add(typeof(MOD));
             Formats.Add(typeof(U8));
+            Formats.Add(typeof(CTPK));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

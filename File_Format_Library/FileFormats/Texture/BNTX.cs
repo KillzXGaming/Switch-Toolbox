@@ -1367,7 +1367,10 @@ namespace FirstPlugin
 
             var ImageDataCached = new List<List<byte[]>>();
             if (Texture != null && Texture.TextureData != null)
-                ImageDataCached = Texture.TextureData;
+            {
+                foreach (var sliceData in Texture.TextureData)
+                    ImageDataCached.Add(sliceData);
+            }
 
             switch (ext)
             {

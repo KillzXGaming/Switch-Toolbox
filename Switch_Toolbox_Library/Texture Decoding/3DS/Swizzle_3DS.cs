@@ -110,7 +110,6 @@ namespace Toolbox.Library
             if (Increment == 0) Increment = 1;
 
             int IOffset = 0;
-
             for (int TY = 0; TY < Height; TY += 8)
             {
                 for (int TX = 0; TX < Width; TX += 8)
