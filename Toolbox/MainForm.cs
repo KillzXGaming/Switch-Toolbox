@@ -25,8 +25,8 @@ namespace Toolbox
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
 
-        IFileFormat[] SupportedFormats;
-        IFileMenuExtension[] FileMenuExtensions;
+        IFileFormat[] SupportedFormats { get { return FileManager.GetFileFormats(); } }
+        IFileMenuExtension[] FileMenuExtensions { get { return FileManager.GetMenuExtensions(); } }
 
         public void AddChildContainer(Form form)
         {
@@ -62,12 +62,6 @@ namespace Toolbox
                 var activeFile = ((ObjectEditor)ActiveMdiChild).GetActiveFile();
                 SetFormatSettings(activeFile);
             }
-        }
-
-        public void Reload()
-        {
-            SupportedFormats = FileManager.GetFileFormats();
-            FileMenuExtensions = FileManager.GetMenuExtensions();
         }
 
         //Use for files opened with program
@@ -122,7 +116,6 @@ namespace Toolbox
 
             LoadPLugins();
             UpdateToolbar(HasVersionFile);
-            Reload();
             LoadConfig();
             LoadMDITheme();
             LoadRecentList();
@@ -247,8 +240,6 @@ namespace Toolbox
 
         public void OpenFile(string FileName, bool InActiveEditor = false)
         {
-            Reload();
-
             if (File.Exists(FileName))
                 SaveRecentFile(FileName);
 

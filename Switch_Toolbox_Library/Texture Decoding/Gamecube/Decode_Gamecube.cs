@@ -744,7 +744,7 @@ namespace Toolbox.Library
 
         private static byte[] DecodeRgb5A3(FileReader stream, uint width, uint height)
         {
-     uint numBlocksW = width / 4; //4 byte block width
+            uint numBlocksW = width / 4; //4 byte block width
             uint numBlocksH = height / 4; //4 byte block height 
 
             byte[] decodedData = new byte[width * height * 4];

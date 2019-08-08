@@ -77,7 +77,7 @@ namespace FirstPlugin
                 //Lets set our method of decoding
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
 
-                int imageDataSize = reader.ReadInt32();
+                int imageDataSize = (int)reader.BaseStream.Length - 32;
 
                 reader.SeekBegin(32);
 

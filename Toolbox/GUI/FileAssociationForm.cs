@@ -29,8 +29,9 @@ namespace Toolbox
         {
             listViewCustom1.Items.Clear();
 
-            foreach (var item in FileManager.GetFileFormats())
+            foreach (Type t in FileManager.GetFileFormats())
             {
+                dynamic item = new StaticDynamic(t);
                 for (int i = 0; i < item.Extension.Length; i++)
                 {
                     string Extension;

@@ -295,6 +295,7 @@
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
     <Compile Include="Security\Cryptography\crc32.cs" />
     <Compile Include="DrawableContainer.cs" />
+    <Compile Include="StaticDynamic.cs" />
     <Compile Include="Texture Decoding\3DS\ETC1.cs" />
     <Compile Include="FileFormats\Animation\SMD.cs" />
     <Compile Include="FileFormats\APNG\APNG.cs" />
