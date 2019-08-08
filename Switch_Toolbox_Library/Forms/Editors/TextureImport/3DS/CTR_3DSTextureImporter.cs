@@ -14,7 +14,7 @@ namespace Toolbox.Library.Forms
         public int SelectedIndex = -1;
 
         public bool OverrideMipCounter = false;
-
+        private STLabel dataSizeLbl;
         bool IsLoaded = false;
         public CTR_3DSTextureImporter()
         {
@@ -126,15 +126,18 @@ namespace Toolbox.Library.Forms
 
                 bitmap = CTR_3DS.DecodeBlockToBitmap(mips[0], (int)SelectedTexSettings.TexWidth, (int)SelectedTexSettings.TexHeight, SelectedTexSettings.Format);
 
-                mips.Clear();
-
                 if (pictureBox1.InvokeRequired)
                 {
                     pictureBox1.Invoke((MethodInvoker)delegate {
                         pictureBox1.Image = bitmap;
                         pictureBox1.Refresh();
+
+                        int size = Utils.GetSizeInBytes(mips);
+                        dataSizeLbl.Text = $"Data Size: {STMath.GetFileSize(size, 5)}";
                     });
                 }
+
+                mips.Clear();
             }));
             Thread.Start();
         }
@@ -211,7 +214,6 @@ namespace Toolbox.Library.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CTR_3DSTextureImporter));
             this.ImgDimComb = new Toolbox.Library.Forms.STComboBox();
             this.label3 = new Toolbox.Library.Forms.STLabel();
             this.label2 = new Toolbox.Library.Forms.STLabel();
@@ -226,6 +228,7 @@ namespace Toolbox.Library.Forms
             this.button2 = new Toolbox.Library.Forms.STButton();
             this.button1 = new Toolbox.Library.Forms.STButton();
             this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -233,6 +236,7 @@ namespace Toolbox.Library.Forms
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.ImgDimComb);
             this.contentContainer.Controls.Add(this.label3);
             this.contentContainer.Controls.Add(this.label2);
@@ -258,6 +262,7 @@ namespace Toolbox.Library.Forms
             this.contentContainer.Controls.SetChildIndex(this.label2, 0);
             this.contentContainer.Controls.SetChildIndex(this.label3, 0);
             this.contentContainer.Controls.SetChildIndex(this.ImgDimComb, 0);
+            this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             // 
             // ImgDimComb
             // 
@@ -393,7 +398,7 @@ namespace Toolbox.Library.Forms
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImage = global::Toolbox.Library.Properties.Resources.CheckerBackground;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Location = new System.Drawing.Point(200, 25);
             this.pictureBox1.Name = "pictureBox1";
@@ -401,6 +406,15 @@ namespace Toolbox.Library.Forms
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 33;
             this.pictureBox1.TabStop = false;
+            // 
+            // dataSizeLbl
+            // 
+            this.dataSizeLbl.AutoSize = true;
+            this.dataSizeLbl.Location = new System.Drawing.Point(667, 217);
+            this.dataSizeLbl.Name = "dataSizeLbl";
+            this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
+            this.dataSizeLbl.TabIndex = 41;
+            this.dataSizeLbl.Text = "Data Size:";
             // 
             // CTR_3DSTextureImporter
             // 

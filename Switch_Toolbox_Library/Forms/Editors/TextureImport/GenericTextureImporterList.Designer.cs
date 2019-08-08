@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenericTextureImporterSettings));
             this.button2 = new Toolbox.Library.Forms.STButton();
             this.button1 = new Toolbox.Library.Forms.STButton();
             this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
@@ -43,6 +42,7 @@
             this.formatComboBox = new Toolbox.Library.Forms.STComboBox();
             this.compressionModeCB = new Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -50,6 +50,7 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.compressionModeCB);
             this.contentContainer.Controls.Add(this.stLabel1);
             this.contentContainer.Controls.Add(this.label2);
@@ -75,6 +76,7 @@
             this.contentContainer.Controls.SetChildIndex(this.label2, 0);
             this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
             this.contentContainer.Controls.SetChildIndex(this.compressionModeCB, 0);
+            this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             // 
             // button2
             // 
@@ -128,7 +130,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(756, 42);
+            this.label2.Location = new System.Drawing.Point(757, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 22;
@@ -137,15 +139,15 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(757, 109);
+            this.label1.Location = new System.Drawing.Point(757, 96);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 21;
-            this.label1.Text = "Number MipMaps";
+            this.label1.Text = "Mip Count:";
             // 
             // MipmapNum
             // 
-            this.MipmapNum.Location = new System.Drawing.Point(854, 107);
+            this.MipmapNum.Location = new System.Drawing.Point(854, 94);
             this.MipmapNum.Name = "MipmapNum";
             this.MipmapNum.Size = new System.Drawing.Size(130, 20);
             this.MipmapNum.TabIndex = 20;
@@ -154,7 +156,7 @@
             // WidthLabel
             // 
             this.WidthLabel.AutoSize = true;
-            this.WidthLabel.Location = new System.Drawing.Point(757, 173);
+            this.WidthLabel.Location = new System.Drawing.Point(760, 175);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(35, 13);
             this.WidthLabel.TabIndex = 19;
@@ -163,7 +165,7 @@
             // HeightLabel
             // 
             this.HeightLabel.AutoSize = true;
-            this.HeightLabel.Location = new System.Drawing.Point(757, 142);
+            this.HeightLabel.Location = new System.Drawing.Point(757, 138);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(38, 13);
             this.HeightLabel.TabIndex = 18;
@@ -172,7 +174,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BackgroundImage = Toolbox.Library.Properties.Resources.CheckerBackground;
+            this.pictureBox1.BackgroundImage = global::Toolbox.Library.Properties.Resources.CheckerBackground;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Location = new System.Drawing.Point(237, 25);
             this.pictureBox1.Name = "pictureBox1";
@@ -187,7 +189,7 @@
             this.formatComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.formatComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.formatComboBox.FormattingEnabled = true;
-            this.formatComboBox.Location = new System.Drawing.Point(853, 39);
+            this.formatComboBox.Location = new System.Drawing.Point(854, 58);
             this.formatComboBox.Name = "formatComboBox";
             this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(233, 21);
@@ -200,7 +202,7 @@
             this.compressionModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.compressionModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.compressionModeCB.FormattingEnabled = true;
-            this.compressionModeCB.Location = new System.Drawing.Point(854, 72);
+            this.compressionModeCB.Location = new System.Drawing.Point(854, 31);
             this.compressionModeCB.Name = "compressionModeCB";
             this.compressionModeCB.ReadOnly = true;
             this.compressionModeCB.Size = new System.Drawing.Size(233, 21);
@@ -210,13 +212,23 @@
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(757, 75);
+            this.stLabel1.Location = new System.Drawing.Point(757, 34);
             this.stLabel1.Name = "stLabel1";
             this.stLabel1.Size = new System.Drawing.Size(100, 13);
             this.stLabel1.TabIndex = 29;
             this.stLabel1.Text = "Compression Mode:";
+            this.stLabel1.Click += new System.EventHandler(this.stLabel1_Click);
             // 
-            // BinaryTextureImporterList
+            // dataSizeLbl
+            // 
+            this.dataSizeLbl.AutoSize = true;
+            this.dataSizeLbl.Location = new System.Drawing.Point(760, 214);
+            this.dataSizeLbl.Name = "dataSizeLbl";
+            this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
+            this.dataSizeLbl.TabIndex = 31;
+            this.dataSizeLbl.Text = "Data Size:";
+            // 
+            // GenericTextureImporterList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -248,5 +260,6 @@
         private System.Windows.Forms.ColumnHeader Format;
         private Toolbox.Library.Forms.STComboBox compressionModeCB;
         private Toolbox.Library.Forms.STLabel stLabel1;
+        private STLabel dataSizeLbl;
     }
 }

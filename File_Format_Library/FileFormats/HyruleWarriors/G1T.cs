@@ -332,6 +332,22 @@ namespace FirstPlugin
                 return ImageData;
             }
         }
+
+        private void GetMipmaps(STGenericTexture tex, byte[] ImageData)
+        {
+            uint width = 0;
+            uint height = 0;
+
+            for (int a = 0; a < tex.ArrayCount; a++)
+            {
+                for (int m = 0; m < tex.MipCount; m++)
+                {
+                    width = (uint)Math.Max(1, tex.Width >> m);
+                    Height = (uint)Math.Max(1, tex.Height >> m);
+                 
+                }
+            }
+        }
     }
 
 }

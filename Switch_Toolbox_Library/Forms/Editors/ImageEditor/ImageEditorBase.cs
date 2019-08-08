@@ -1266,9 +1266,9 @@ namespace Toolbox.Library.Forms
             if (pictureBoxCustom1.Image != null)
             {
                 if (Runtime.ImageEditor.EnableImageZoom)
-                    bottomLabel.Text = $"Zoom: {pictureBoxCustom1.Zoom}% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height}";
+                    bottomLabel.Text = $"Zoom: {pictureBoxCustom1.Zoom}% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height} Data Size: {ActiveTexture.DataSize}";
                 else
-                    bottomLabel.Text = $"Zoom: 100% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height}";
+                    bottomLabel.Text = $"Zoom: 100% Image {pictureBoxCustom1.Image.Width} x {pictureBoxCustom1.Image.Height} Data Size: {ActiveTexture.DataSize}";
             }
         }
 

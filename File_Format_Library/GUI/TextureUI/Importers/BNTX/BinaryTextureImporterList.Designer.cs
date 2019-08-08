@@ -48,7 +48,8 @@
             this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
             this.formatComboBox = new Toolbox.Library.Forms.STComboBox();
             this.compressionModeCB = new Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.compModeLbl = new Toolbox.Library.Forms.STLabel();
+            this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -57,8 +58,9 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.compressionModeCB);
-            this.contentContainer.Controls.Add(this.stLabel1);
+            this.contentContainer.Controls.Add(this.compModeLbl);
             this.contentContainer.Controls.Add(this.SwizzleNum);
             this.contentContainer.Controls.Add(this.label5);
             this.contentContainer.Controls.Add(this.tileModeCB);
@@ -92,8 +94,9 @@
             this.contentContainer.Controls.SetChildIndex(this.tileModeCB, 0);
             this.contentContainer.Controls.SetChildIndex(this.label5, 0);
             this.contentContainer.Controls.SetChildIndex(this.SwizzleNum, 0);
-            this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
+            this.contentContainer.Controls.SetChildIndex(this.compModeLbl, 0);
             this.contentContainer.Controls.SetChildIndex(this.compressionModeCB, 0);
+            this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             // 
             // button2
             // 
@@ -146,7 +149,7 @@
             // 
             // SwizzleNum
             // 
-            this.SwizzleNum.Location = new System.Drawing.Point(853, 239);
+            this.SwizzleNum.Location = new System.Drawing.Point(851, 182);
             this.SwizzleNum.Name = "SwizzleNum";
             this.SwizzleNum.Size = new System.Drawing.Size(130, 20);
             this.SwizzleNum.TabIndex = 28;
@@ -154,11 +157,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(756, 239);
+            this.label5.Location = new System.Drawing.Point(754, 184);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 27;
-            this.label5.Text = "Swizzle";
+            this.label5.Text = "Swizzle:";
             // 
             // tileModeCB
             // 
@@ -166,20 +169,20 @@
             this.tileModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.tileModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.tileModeCB.FormattingEnabled = true;
-            this.tileModeCB.Location = new System.Drawing.Point(853, 166);
+            this.tileModeCB.Location = new System.Drawing.Point(851, 114);
             this.tileModeCB.Name = "tileModeCB";
             this.tileModeCB.ReadOnly = true;
-            this.tileModeCB.Size = new System.Drawing.Size(232, 21);
+            this.tileModeCB.Size = new System.Drawing.Size(230, 21);
             this.tileModeCB.TabIndex = 26;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(756, 169);
+            this.label4.Location = new System.Drawing.Point(754, 117);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 25;
-            this.label4.Text = "Tile Mode";
+            this.label4.Text = "Tile Mode:";
             // 
             // ImgDimComb
             // 
@@ -187,43 +190,43 @@
             this.ImgDimComb.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.ImgDimComb.ButtonColor = System.Drawing.Color.Empty;
             this.ImgDimComb.FormattingEnabled = true;
-            this.ImgDimComb.Location = new System.Drawing.Point(853, 133);
+            this.ImgDimComb.Location = new System.Drawing.Point(851, 87);
             this.ImgDimComb.Name = "ImgDimComb";
             this.ImgDimComb.ReadOnly = true;
-            this.ImgDimComb.Size = new System.Drawing.Size(230, 21);
+            this.ImgDimComb.Size = new System.Drawing.Size(232, 21);
             this.ImgDimComb.TabIndex = 24;
             this.ImgDimComb.SelectedIndexChanged += new System.EventHandler(this.ImgDimComb_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(756, 136);
+            this.label3.Location = new System.Drawing.Point(754, 90);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(96, 13);
             this.label3.TabIndex = 23;
-            this.label3.Text = "Surface Dimension";
+            this.label3.Text = "Surface Dimension:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(756, 42);
+            this.label2.Location = new System.Drawing.Point(754, 63);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 22;
-            this.label2.Text = "Format";
+            this.label2.Text = "Format:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(756, 204);
+            this.label1.Location = new System.Drawing.Point(754, 158);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 21;
-            this.label1.Text = "Number MipMaps";
+            this.label1.Text = "Mip Count:";
             // 
             // MipmapNum
             // 
-            this.MipmapNum.Location = new System.Drawing.Point(853, 202);
+            this.MipmapNum.Location = new System.Drawing.Point(851, 156);
             this.MipmapNum.Name = "MipmapNum";
             this.MipmapNum.Size = new System.Drawing.Size(130, 20);
             this.MipmapNum.TabIndex = 20;
@@ -232,20 +235,20 @@
             // WidthLabel
             // 
             this.WidthLabel.AutoSize = true;
-            this.WidthLabel.Location = new System.Drawing.Point(756, 298);
+            this.WidthLabel.Location = new System.Drawing.Point(754, 260);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(35, 13);
             this.WidthLabel.TabIndex = 19;
-            this.WidthLabel.Text = "Width";
+            this.WidthLabel.Text = "Width:";
             // 
             // HeightLabel
             // 
             this.HeightLabel.AutoSize = true;
-            this.HeightLabel.Location = new System.Drawing.Point(756, 267);
+            this.HeightLabel.Location = new System.Drawing.Point(754, 224);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(38, 13);
             this.HeightLabel.TabIndex = 18;
-            this.HeightLabel.Text = "Height";
+            this.HeightLabel.Text = "Height:";
             // 
             // pictureBox1
             // 
@@ -265,7 +268,7 @@
             this.formatComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.formatComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.formatComboBox.FormattingEnabled = true;
-            this.formatComboBox.Location = new System.Drawing.Point(853, 39);
+            this.formatComboBox.Location = new System.Drawing.Point(851, 60);
             this.formatComboBox.Name = "formatComboBox";
             this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(233, 21);
@@ -278,21 +281,30 @@
             this.compressionModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.compressionModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.compressionModeCB.FormattingEnabled = true;
-            this.compressionModeCB.Location = new System.Drawing.Point(854, 72);
+            this.compressionModeCB.Location = new System.Drawing.Point(851, 33);
             this.compressionModeCB.Name = "compressionModeCB";
             this.compressionModeCB.ReadOnly = true;
-            this.compressionModeCB.Size = new System.Drawing.Size(233, 21);
+            this.compressionModeCB.Size = new System.Drawing.Size(232, 21);
             this.compressionModeCB.TabIndex = 30;
             this.compressionModeCB.SelectedIndexChanged += new System.EventHandler(this.compressionModeCB_SelectedIndexChanged);
             // 
-            // stLabel1
+            // compModeLbl
             // 
-            this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(757, 75);
-            this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(100, 13);
-            this.stLabel1.TabIndex = 29;
-            this.stLabel1.Text = "Compression Mode:";
+            this.compModeLbl.AutoSize = true;
+            this.compModeLbl.Location = new System.Drawing.Point(751, 36);
+            this.compModeLbl.Name = "compModeLbl";
+            this.compModeLbl.Size = new System.Drawing.Size(100, 13);
+            this.compModeLbl.TabIndex = 29;
+            this.compModeLbl.Text = "Compression Mode:";
+            // 
+            // dataSizeLbl
+            // 
+            this.dataSizeLbl.AutoSize = true;
+            this.dataSizeLbl.Location = new System.Drawing.Point(754, 295);
+            this.dataSizeLbl.Name = "dataSizeLbl";
+            this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
+            this.dataSizeLbl.TabIndex = 31;
+            this.dataSizeLbl.Text = "Data Size:";
             // 
             // BinaryTextureImporterList
             // 
@@ -332,6 +344,7 @@
         private System.Windows.Forms.ColumnHeader Name;
         private System.Windows.Forms.ColumnHeader Format;
         private Toolbox.Library.Forms.STComboBox compressionModeCB;
-        private Toolbox.Library.Forms.STLabel stLabel1;
+        private Toolbox.Library.Forms.STLabel dataSizeLbl;
+        private Toolbox.Library.Forms.STLabel compModeLbl;
     }
 }

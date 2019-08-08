@@ -15,7 +15,7 @@ namespace FirstPlugin
         public int SelectedIndex = -1;
 
         public bool OverrideMipCounter = false;
-
+        private STLabel dataSizeLbl;
         bool IsLoaded = false;
         public GTXTextureImporter()
         {
@@ -166,6 +166,8 @@ namespace FirstPlugin
 
             Bitmap bitmap = Toolbox.Library.Imaging.GetLoadingImage();
 
+            pictureBox1.Image = bitmap;
+
             Thread = new Thread((ThreadStart)(() =>
             {
                 SelectedTexSettings.IsFinishedCompressing = false;
@@ -177,15 +179,24 @@ namespace FirstPlugin
 
                 ToggleOkButton(true);
 
-                pictureBox1.Image = bitmap;
                 SelectedTexSettings.Compress();
 
                 bitmap = FTEX.DecodeBlockGetBitmap(mips[0], SelectedTexSettings.
                 TexWidth, SelectedTexSettings.TexHeight, FTEX.ConvertFromGx2Format(
                     (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)SelectedTexSettings.Format), new byte[0]);
 
-                pictureBox1.Image = bitmap;
+                if (pictureBox1.InvokeRequired)
+                {
+                    pictureBox1.Invoke((MethodInvoker)delegate {
+                        pictureBox1.Image = bitmap;
+                        pictureBox1.Refresh();
 
+                        int size = Utils.GetSizeInBytes(mips);
+                        dataSizeLbl.Text = $"Data Size: {STMath.GetFileSize(size, 5)}";
+                    });
+                }
+
+                mips.Clear();
             }));
             Thread.Start();
         }
@@ -318,6 +329,7 @@ namespace FirstPlugin
             this.button2 = new Toolbox.Library.Forms.STButton();
             this.button1 = new Toolbox.Library.Forms.STButton();
             this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -326,6 +338,7 @@ namespace FirstPlugin
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.SwizzleNum);
             this.contentContainer.Controls.Add(this.label5);
             this.contentContainer.Controls.Add(this.tileModeCB);
@@ -359,10 +372,11 @@ namespace FirstPlugin
             this.contentContainer.Controls.SetChildIndex(this.tileModeCB, 0);
             this.contentContainer.Controls.SetChildIndex(this.label5, 0);
             this.contentContainer.Controls.SetChildIndex(this.SwizzleNum, 0);
+            this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             // 
             // SwizzleNum
             // 
-            this.SwizzleNum.Location = new System.Drawing.Point(774, 167);
+            this.SwizzleNum.Location = new System.Drawing.Point(772, 148);
             this.SwizzleNum.Maximum = new decimal(new int[] {
             7,
             0,
@@ -376,7 +390,7 @@ namespace FirstPlugin
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(666, 167);
+            this.label5.Location = new System.Drawing.Point(664, 148);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(82, 13);
             this.label5.TabIndex = 43;
@@ -388,7 +402,7 @@ namespace FirstPlugin
             this.tileModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.tileModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.tileModeCB.FormattingEnabled = true;
-            this.tileModeCB.Location = new System.Drawing.Point(774, 94);
+            this.tileModeCB.Location = new System.Drawing.Point(772, 85);
             this.tileModeCB.Name = "tileModeCB";
             this.tileModeCB.ReadOnly = true;
             this.tileModeCB.Size = new System.Drawing.Size(172, 21);
@@ -398,7 +412,7 @@ namespace FirstPlugin
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(666, 97);
+            this.label4.Location = new System.Drawing.Point(664, 88);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 41;
@@ -410,7 +424,7 @@ namespace FirstPlugin
             this.ImgDimComb.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.ImgDimComb.ButtonColor = System.Drawing.Color.Empty;
             this.ImgDimComb.FormattingEnabled = true;
-            this.ImgDimComb.Location = new System.Drawing.Point(772, 61);
+            this.ImgDimComb.Location = new System.Drawing.Point(772, 58);
             this.ImgDimComb.Name = "ImgDimComb";
             this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(172, 21);
@@ -419,7 +433,7 @@ namespace FirstPlugin
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(666, 64);
+            this.label3.Location = new System.Drawing.Point(666, 61);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 13);
             this.label3.TabIndex = 39;
@@ -437,15 +451,15 @@ namespace FirstPlugin
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(666, 132);
+            this.label1.Location = new System.Drawing.Point(664, 124);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 37;
-            this.label1.Text = "Number MipMaps";
+            this.label1.Text = "Mip Count:";
             // 
             // MipmapNum
             // 
-            this.MipmapNum.Location = new System.Drawing.Point(774, 130);
+            this.MipmapNum.Location = new System.Drawing.Point(772, 122);
             this.MipmapNum.Maximum = new decimal(new int[] {
             13,
             0,
@@ -459,7 +473,7 @@ namespace FirstPlugin
             // WidthLabel
             // 
             this.WidthLabel.AutoSize = true;
-            this.WidthLabel.Location = new System.Drawing.Point(666, 235);
+            this.WidthLabel.Location = new System.Drawing.Point(664, 225);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(35, 13);
             this.WidthLabel.TabIndex = 35;
@@ -468,7 +482,7 @@ namespace FirstPlugin
             // HeightLabel
             // 
             this.HeightLabel.AutoSize = true;
-            this.HeightLabel.Location = new System.Drawing.Point(666, 200);
+            this.HeightLabel.Location = new System.Drawing.Point(664, 188);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(38, 13);
             this.HeightLabel.TabIndex = 34;
@@ -546,6 +560,15 @@ namespace FirstPlugin
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 33;
             this.pictureBox1.TabStop = false;
+            // 
+            // dataSizeLbl
+            // 
+            this.dataSizeLbl.AutoSize = true;
+            this.dataSizeLbl.Location = new System.Drawing.Point(664, 262);
+            this.dataSizeLbl.Name = "dataSizeLbl";
+            this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
+            this.dataSizeLbl.TabIndex = 45;
+            this.dataSizeLbl.Text = "Data Size:";
             // 
             // GTXTextureImporter
             // 

@@ -88,6 +88,7 @@ namespace FirstPlugin
 
             compressionModeCB.SelectedIndex = 0;
             compressionModeCB.Visible = false;
+            compModeLbl.Visible = false;
 
             foreach (SurfaceDim dim in (SurfaceDim[])Enum.GetValues(typeof(SurfaceDim)))
             {
@@ -132,8 +133,8 @@ namespace FirstPlugin
                 return;
 
 
-            WidthLabel.Text = $"Width {SelectedTexSettings.TexWidth}";
-            HeightLabel.Text = $"Height {SelectedTexSettings.TexHeight}";
+            WidthLabel.Text = $"Width: {SelectedTexSettings.TexWidth}";
+            HeightLabel.Text = $"Height: {SelectedTexSettings.TexHeight}";
 
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
@@ -153,10 +154,12 @@ namespace FirstPlugin
                 SelectedTexSettings.Format == SurfaceFormat.BC7_SRGB)
             {
                 compressionModeCB.Visible = true;
+                compModeLbl.Visible = true;
             }
             else
             {
                 compressionModeCB.Visible = false;
+                compModeLbl.Visible = false;
             }
 
             Bitmap bitmap = Toolbox.Library.Imaging.GetLoadingImage();
@@ -193,15 +196,18 @@ namespace FirstPlugin
                     }
                 }
 
-                mips.Clear();
-
                 if (pictureBox1.InvokeRequired)
                 {
                     pictureBox1.Invoke((MethodInvoker)delegate {
                         pictureBox1.Image = bitmap;
                         pictureBox1.Refresh();
+
+                        int size = Utils.GetSizeInBytes(mips);
+                        dataSizeLbl.Text = $"Data Size: {STMath.GetFileSize(size, 5)}";
                     });
                 }
+
+                mips.Clear();
             }));
             Thread.Start();
 

@@ -116,7 +116,6 @@ namespace FirstPlugin
                     TEX_FORMAT.BC3_UNORM,
                     TEX_FORMAT.BC5_UNORM,
                     TEX_FORMAT.R8G8B8A8_UNORM,
-                    TEX_FORMAT.R32G32B32A32_FLOAT,
                 };
             }
         }
@@ -126,18 +125,19 @@ namespace FirstPlugin
             GenericTextureImporterList importer = new GenericTextureImporterList(SupportedFormats);
             GenericTextureImporterSettings settings = new GenericTextureImporterSettings();
 
-            importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
-
             if (Utils.GetExtension(FileName) == ".dds" ||
                 Utils.GetExtension(FileName) == ".dds2")
             {
                 settings.LoadDDS(FileName);
+                importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
                 ApplySettings(settings);
                 UpdateEditor();
             }
             else
             {
                 settings.LoadBitMap(FileName);
+                importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
+
                 if (importer.ShowDialog() == DialogResult.OK)
                 {
                     if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)

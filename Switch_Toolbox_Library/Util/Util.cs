@@ -23,6 +23,14 @@ namespace Toolbox.Library
             }
         }
 
+        public static int GetSizeInBytes(List<byte[]> bytes)
+        {
+            int length = 0;
+            for (int i = 0; i < bytes.Count; i++)
+                length += bytes[i].Length;
+            return length;
+        }
+
         public static bool HasInterface(Type objectType, Type interfaceType)
         {
             foreach (var inter in objectType.GetInterfaces())

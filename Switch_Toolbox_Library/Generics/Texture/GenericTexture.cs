@@ -100,6 +100,77 @@ namespace Toolbox.Library
         public STChannelType BlueChannel;
         public STChannelType AlphaChannel;
 
+        /// <summary>
+        /// The total length of all the bytes given from GetImageData.
+        /// </summary>
+        public long DataSizeInBytes
+        {
+            get
+            {
+                long totalSize = 0;
+
+                if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)
+                {
+                    for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
+                    {
+                        for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                        {
+                            uint width = (uint)Math.Max(1, Width >> mipLevel);
+                            uint height = (uint)Math.Max(1, Height >> mipLevel);
+
+                            totalSize += CTR_3DS.CalculateLength((int)width, (int)height, CTR_3DS.ConvertToPICAFormat(Format));
+                        }
+                    }
+
+                    return totalSize;
+                }
+
+                if (PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
+                {
+                    for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
+                    {
+                        for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                        {
+                            uint width = (uint)Math.Max(1, Width >> mipLevel);
+                            uint height = (uint)Math.Max(1, Height >> mipLevel);
+
+                            totalSize += Decode_Gamecube.GetDataSize((uint)Decode_Gamecube.FromGenericFormat(Format), width, height);
+                        }
+                    }
+
+                    return totalSize;
+                }
+
+                if (FormatTable.ContainsKey(Format))
+                {
+                    uint bpp = GetBytesPerPixel(Format); 
+
+                    for (int arrayLevel = 0; arrayLevel < ArrayCount; arrayLevel++)
+                    {
+                        for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                        {
+                            uint width = (uint)Math.Max(1, Width >> mipLevel);
+                            uint height = (uint)Math.Max(1, Height >> mipLevel);
+
+                            uint size = width * height * bpp;
+                            if (IsCompressed(Format))
+                            {
+                                size = ((width + 3) >> 2) * ((Height + 3) >> 2) * bpp;
+                                if (size < bpp)
+                                    size = bpp;
+                            }
+
+                            totalSize += size;
+                        }
+                    }
+                }
+
+                return totalSize;
+            }
+        }
+
+        public string DataSize { get { return STMath.GetFileSize(DataSizeInBytes, 5); } }
+
         public abstract byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0);
 
         private byte[] paletteData = new byte[0];

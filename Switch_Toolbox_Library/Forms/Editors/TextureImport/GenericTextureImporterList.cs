@@ -146,15 +146,18 @@ namespace Toolbox.Library.Forms
                     }
                 }
 
-                mips.Clear();
-
                 if (pictureBox1.InvokeRequired)
                 {
                     pictureBox1.Invoke((MethodInvoker)delegate {
                         pictureBox1.Image = bitmap;
                         pictureBox1.Refresh();
+
+                        int size = Utils.GetSizeInBytes(mips);
+                        dataSizeLbl.Text = $"Data Size: {STMath.GetFileSize(size, 5)}";
                     });
                 }
+
+                mips.Clear();
             }));
             Thread.Start();
 
@@ -259,6 +262,11 @@ namespace Toolbox.Library.Forms
         }
 
         private void ImgDimComb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void stLabel1_Click(object sender, EventArgs e)
         {
 
         }

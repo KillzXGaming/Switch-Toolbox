@@ -278,7 +278,7 @@
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />
-    <Compile Include="FileFormats\Pikmin\TXE.cs" />
+    <Compile Include="FileFormats\Pikmin1\TXE.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />

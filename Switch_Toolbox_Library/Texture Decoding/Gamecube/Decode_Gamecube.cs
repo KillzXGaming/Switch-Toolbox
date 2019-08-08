@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Toolbox.Library.IO;
 using Chadsoft.CTools.Image;
 using SuperBMDLib.Util;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace Toolbox.Library
 {
@@ -154,6 +157,17 @@ namespace Toolbox.Library
                 _paletteData = paletteData;
             }
 
+            public void Load(ushort[] paletteData)
+            {
+                var mem = new System.IO.MemoryStream();
+                using (var writer = new FileWriter(mem))
+                {
+                    writer.Write(paletteData);
+                }
+
+                _paletteData = mem.ToArray();
+            }
+
             public void Load(FileReader reader, uint paletteEntryCount)
             {
                 //Files that don't have palettes have an entry count of zero.
@@ -195,18 +209,39 @@ namespace Toolbox.Library
             return Width * Height * GetBpp(Format) / 8;
         }
 
-        public static byte[] DecodeData(byte[] ImageData, byte[] PaletteData, uint width, uint height, TEX_FORMAT format, PALETTE_FORMAT palleteFormat)
+        public static System.Drawing.Bitmap DecodeDataToBitmap(byte[] ImageData, ushort[] PaletteData, uint width, uint height, TextureFormats format, PaletteFormats palleteFormat)
+        {
+            return BitmapExtension.GetBitmap(DecodeData(ImageData, PaletteData, width, height, format, palleteFormat),
+               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        }
+
+        public static System.Drawing.Bitmap DecodeDataToBitmap(byte[] ImageData, byte[] PaletteData, uint width, uint height, TEX_FORMAT format, PALETTE_FORMAT palleteFormat)
         {
             var FormatGC = FromGenericFormat(format);
             var PalleteFormatGC = FromGenericPaletteFormat(palleteFormat);
+            return BitmapExtension.GetBitmap(DecodeData(ImageData, PaletteData, width, height, FormatGC, PalleteFormatGC),
+               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        }
+
+        public static byte[] DecodeData(byte[] ImageData, byte[] PaletteData, uint width, uint height, TEX_FORMAT format, PALETTE_FORMAT palleteFormat) {
+            var FormatGC = FromGenericFormat(format);
+            var PalleteFormatGC = FromGenericPaletteFormat(palleteFormat);
+            return DecodeData(ImageData, PaletteData, width, height, FormatGC, PalleteFormatGC);
+        }
+
+        public static byte[] DecodeData(byte[] ImageData, ushort[] PaletteData, uint width, uint height, TextureFormats format, PaletteFormats palleteFormat) {
             Palette Palette = new Palette();
             Palette.Load(PaletteData);
 
-            System.IO.File.WriteAllBytes("PaletteData.bin", PaletteData);
+            return DecodeData(new FileReader(ImageData), width, height, format, Palette, palleteFormat);
+        }
 
-            Console.WriteLine($"Decoding GC {FormatGC}");
+        public static byte[] DecodeData(byte[] ImageData, byte[] PaletteData, uint width, uint height, TextureFormats format, PaletteFormats palleteFormat)
+        {
+            Palette Palette = new Palette();
+            Palette.Load(PaletteData);
 
-            return DecodeData(new FileReader(ImageData), width, height, FormatGC, Palette, PalleteFormatGC);
+            return DecodeData(new FileReader(ImageData), width, height, format, Palette, palleteFormat);
         }
 
         private static byte[] DecodeData(FileReader stream, uint width, uint height, TextureFormats format, Palette imagePalette, PaletteFormats paletteFormat)
@@ -830,6 +865,21 @@ namespace Toolbox.Library
             dest[destOffset + 3] = a;
         }
         #endregion
+
+        public static Tuple<byte[], ushort[]> EncodeFromBitmap(System.Drawing.Bitmap bitmap, TextureFormats Format, PaletteFormats PaletteFormat)
+        {
+            byte[] m_rgbaImageData = new byte[bitmap.Width * bitmap.Height * 4];
+
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+
+            BitmapData dat = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            Marshal.Copy(dat.Scan0, m_rgbaImageData, 0, m_rgbaImageData.Length);
+            bitmap.UnlockBits(dat);
+            bitmap.Dispose();
+
+            return EncodeData(m_rgbaImageData, Format, PaletteFormat, width, height);
+        }
 
         #region Encoding
         public static Tuple<byte[], ushort[]> EncodeData(byte[] m_rgbaImageData, TextureFormats Format, PaletteFormats PaletteFormat, int Width, int Height)

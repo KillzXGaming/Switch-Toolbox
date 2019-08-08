@@ -92,7 +92,7 @@ namespace Toolbox.Library
         public static System.Drawing.Bitmap DecodeBlockToBitmap(byte[] Input, int Width, int Height, PICASurfaceFormat picaFormat)
         {
             return BitmapExtension.GetBitmap(DecodeBlock(Input, Width, Height, picaFormat),
-                  Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+                  Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
         }
 
         public static byte[] DecodeBlock(byte[] Input, int Width, int Height, TEX_FORMAT Format) {
