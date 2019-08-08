@@ -1407,15 +1407,16 @@ namespace FirstPlugin
                     break;
             }
 
-            //After image data is replaced, use original and swap the specific array index
-            for (int i = 0; i < ImageDataCached.Count; i++)
-            {
-                if (i == ArrayIndex)
-                    ImageDataCached[i] = Texture.TextureData[0]; 
-            }
-
             if (ImageDataCached.Count > 0)
-                Texture.TextureData = ImageDataCached;
+            {
+                //After image data is replaced, use original and swap the specific array index
+                ImageDataCached[(int)ArrayIndex] = Texture.TextureData[0];
+
+                Texture.TextureData.Clear();
+
+                for (int i = 0; i < ImageDataCached.Count; i++)
+                    Texture.TextureData.Add(ImageDataCached[i]);
+            }
         }
         public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
         {

@@ -140,7 +140,7 @@ namespace Toolbox.Library
         public IFileFormat FileFormat = null; //Format attached for saving
 
         [Browsable(false)]
-        protected byte[] _fileData = null;
+        private byte[] _fileData = null;
 
         //Full File Name
         private string _fileName = string.Empty;

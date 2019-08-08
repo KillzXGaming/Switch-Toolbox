@@ -829,6 +829,13 @@ namespace FirstPlugin
         {
             long pos = writer.Position;
 
+            if (BinaryTextureFile != null)
+            {
+                var mem = new System.IO.MemoryStream();
+                BinaryTextureFile.Save(mem);
+                SheetDataList[0] = mem.ToArray();
+            }
+
             writer.WriteSignature("TGLP");
             writer.Write(uint.MaxValue);
             writer.Write(CellWidth);
@@ -849,13 +856,6 @@ namespace FirstPlugin
                 writer.Align(4096);
             else
                 writer.Align(8192);
-
-            if (BinaryTextureFile != null)
-            {
-                var mem = new System.IO.MemoryStream();
-                BinaryTextureFile.Save(mem);
-                SheetDataList[0] = mem.ToArray();
-            }
 
             long DataPosition = writer.Position;
             using (writer.TemporarySeek(_ofsSheetBlocks, SeekOrigin.Begin))
