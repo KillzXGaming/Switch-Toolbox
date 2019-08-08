@@ -143,11 +143,18 @@ namespace FirstPlugin.Forms
                 form.editorBase.Text = Text;
                 form.editorBase.Dock = DockStyle.Fill;
 
+                image.Parameters.FlipY = true;
+
                 if (IsBntx)
+                {
                     form.editorBase.LoadProperties(((TextureData)image).Texture);
+                    form.editorBase.LoadImage(image, ImageIndex);
+                }
                 else
+                {
                     form.editorBase.LoadProperties(image.GenericProperties);
-                form.editorBase.LoadImage(image);
+                    form.editorBase.LoadImage(image);
+                }
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {

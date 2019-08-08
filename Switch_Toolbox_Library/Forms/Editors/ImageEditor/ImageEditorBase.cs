@@ -267,7 +267,7 @@ namespace Toolbox.Library.Forms
 
         public void LoadProperties(object prop, Action OnPropertyChanged = null) => propertiesEditor.LoadProperties(prop, OnPropertyChanged);
 
-        public void LoadImage(STGenericTexture texture)
+        public void LoadImage(STGenericTexture texture, int arrayLevel = 0)
         {
             editBtn.Enabled = false;
 
@@ -275,10 +275,10 @@ namespace Toolbox.Library.Forms
             FileWatcher.EnableRaisingEvents = false;
             FileWatcher.Filter = "";
 
-            UpdateImage(texture);
+            UpdateImage(texture, arrayLevel);
         }
 
-        private void UpdateImage(STGenericTexture texture)
+        private void UpdateImage(STGenericTexture texture, int arrayLevel = 0)
         {
             ResetChannelEditor();
 
@@ -303,7 +303,7 @@ namespace Toolbox.Library.Forms
             }
 
             CurMipDisplayLevel = 0;
-            CurArrayDisplayLevel = 0;
+            CurArrayDisplayLevel = arrayLevel;
             hasBeenEdited = false;
 
             UpdateMipDisplay();
