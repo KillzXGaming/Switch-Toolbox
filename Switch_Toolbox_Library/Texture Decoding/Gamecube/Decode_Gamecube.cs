@@ -188,6 +188,29 @@ namespace Toolbox.Library
         }
         #endregion
 
+        #region MethodsHelpers
+
+        public static byte[] GetMipLevel(byte[] ImageData, uint Width, uint Height, uint MipCount, uint MipLevel, TextureFormats format)
+        {
+            uint offset = 0;
+            for (int m = 0; m < MipCount; m++)
+            {
+                uint width = (uint)Math.Max(1, Width >> m);
+                uint height = (uint)Math.Max(1, Height >> m);
+
+                uint size = (uint)Decode_Gamecube.GetDataSize(format, (int)width, (int)height);
+
+                if (MipLevel == m)
+                    return Utils.SubArray(ImageData, offset, size);
+
+                offset += size;
+            }
+
+            return ImageData;
+        }
+
+        #endregion
+
         #region Decoding
 
         private static readonly int[] Bpp = { 4, 8, 8, 16, 16, 16, 32, 0, 4, 8, 16, 0, 0, 0, 4 };

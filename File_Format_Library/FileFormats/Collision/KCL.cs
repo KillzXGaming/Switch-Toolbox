@@ -13,6 +13,7 @@ using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using GL_EditorFramework.EditorDrawables;
 using FirstPlugin.Forms;
+using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 
 namespace FirstPlugin
 {
@@ -313,7 +314,7 @@ namespace FirstPlugin
             }
         }
 
-        public KCLRendering Renderer = null ;
+        public KCLRendering Renderer;
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {

@@ -113,12 +113,14 @@ namespace FirstPlugin
                     TEX_FORMAT.RGB565,
                     TEX_FORMAT.RGB5A3,
                     TEX_FORMAT.RGBA32,
-                    TEX_FORMAT.C4,
-                    TEX_FORMAT.C8,
-                    TEX_FORMAT.C14X2,
                     TEX_FORMAT.CMPR,
                 };
             }
+        }
+
+        public Decode_Gamecube.TextureFormats DolphinTextureFormat
+        {
+            get { return Decode_Gamecube.FromGenericFormat(Format); }
         }
 
 
@@ -135,7 +137,7 @@ namespace FirstPlugin
         //Gets decoded automatically
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
-            return ImageData;
+            return Decode_Gamecube.GetMipLevel(ImageData, Width, Height, MipCount, (uint)MipLevel, DolphinTextureFormat);
         }
 
 
