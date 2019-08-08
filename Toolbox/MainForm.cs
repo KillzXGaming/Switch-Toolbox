@@ -100,7 +100,7 @@ namespace Toolbox
 
             Application.Idle += Application_Idle;
 
-            if (Runtime.UseOpenGL)
+         /*   if (Runtime.UseOpenGL)
             {
                 ShaderTools.executableDir = Runtime.ExecutableDir;
 
@@ -112,7 +112,7 @@ namespace Toolbox
                 Runtime.openGLVersion = GL.GetString(StringName.Version);
                 Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
                 ParseGLVersion();
-            }
+            }*/
 
             LoadPLugins();
             UpdateToolbar(HasVersionFile);

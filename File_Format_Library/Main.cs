@@ -274,7 +274,7 @@ namespace FirstPlugin
         private Type[] LoadMenus()
         {
             List<Type> MenuItems = new List<Type>();
-            MenuItems.Add(typeof(MenuExt));
+           // MenuItems.Add(typeof(MenuExt));
             return MenuItems.ToArray();
         }
 
@@ -287,22 +287,22 @@ namespace FirstPlugin
         private Type[] LoadFileFormats()
         {
             List<Type> Formats = new List<Type>();
+            Formats.Add(typeof(BFRES));
             Formats.Add(typeof(BTI));
             Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
-            Formats.Add(typeof(BFRES));
             Formats.Add(typeof(BCRES));
             Formats.Add(typeof(BNTX));
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));
             Formats.Add(typeof(XTX));
-            Formats.Add(typeof(KCL));
             Formats.Add(typeof(BFFNT));
             Formats.Add(typeof(MSBT));
             Formats.Add(typeof(BARS));
             Formats.Add(typeof(GFPAK));
             Formats.Add(typeof(NUTEXB));
             Formats.Add(typeof(NUT));
+            Formats.Add(typeof(KCL));
             Formats.Add(typeof(GTXFile));
             Formats.Add(typeof(AAMP));
             Formats.Add(typeof(PTCL));

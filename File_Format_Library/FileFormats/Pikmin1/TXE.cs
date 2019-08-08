@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
+using System.Linq;
 
 namespace FirstPlugin
 {
@@ -52,11 +53,13 @@ namespace FirstPlugin
             [7] = TEX_FORMAT.RGBA32,
         };
 
+        public short Unknown;
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
             //Set this if you want to save the file format
-            CanSave = false;
+            CanSave = true;
             CanReplace = true;
 
             ImageKey = "Texture";
@@ -69,7 +72,7 @@ namespace FirstPlugin
 
                 Width = reader.ReadUInt16();
                 Height = reader.ReadUInt16();
-                reader.ReadInt16();
+                Unknown = reader.ReadInt16();
                 //Turn this format into a common format used by this tool
                 ushort texFormat = reader.ReadUInt16();
                 Format = FormatsTXE[texFormat];
@@ -89,6 +92,17 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream))
+            {
+                writer.Write((ushort)Width);
+                writer.Write((ushort)Height);
+                writer.Write(Unknown);
+                writer.Write(Unknown);
+                ushort format = FormatsTXE.FirstOrDefault(x => x.Value == Format).Key;
+                writer.Write(format);
+                writer.SeekBegin(32);
+                writer.Write(ImageData);
+            }
         }
 
         public void Unload()
@@ -123,21 +137,23 @@ namespace FirstPlugin
             get { return Decode_Gamecube.FromGenericFormat(Format); }
         }
 
-
-        public override bool CanEdit { get; set; } = false;
+        public override bool CanEdit { get; set; } = true;
 
         //This gets used in the image editor if the image gets edited
         //This wll not be ran if "CanEdit" is set to false!
         public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
         {
+            this.Width = (ushort)bitmap.Width;
+            this.Height = (ushort)bitmap.Height;
 
+            this.ImageData = Decode_Gamecube.EncodeFromBitmap(bitmap, DolphinTextureFormat).Item1;
         }
 
         //Gets the raw image data in bytes
         //Gets decoded automatically
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
-            return Decode_Gamecube.GetMipLevel(ImageData, Width, Height, MipCount, (uint)MipLevel, DolphinTextureFormat);
+            return Decode_Gamecube.GetMipLevel(ImageData, Width, Height, MipCount, (uint)MipLevel, Format);
         }
 
 
@@ -170,6 +186,9 @@ namespace FirstPlugin
             GamecubeTextureImporterList importer = new GamecubeTextureImporterList(SupportedFormats);
             GameCubeTextureImporterSettings settings = new GameCubeTextureImporterSettings();
 
+            importer.ForceMipCount = true;
+            importer.SelectedMipCount = 1;
+
             if (Utils.GetExtension(FileName) == ".dds" ||
                 Utils.GetExtension(FileName) == ".dds2")
             {
@@ -201,7 +220,7 @@ namespace FirstPlugin
             this.Width = settings.TexWidth;
             this.Height = settings.TexHeight;
             this.Format = settings.GenericFormat;
-            this.MipCount = settings.MipCount;
+            this.MipCount = 1; //Always 1
             this.Depth = settings.Depth;
             this.ArrayCount = (uint)settings.DataBlockOutput.Count;
         }

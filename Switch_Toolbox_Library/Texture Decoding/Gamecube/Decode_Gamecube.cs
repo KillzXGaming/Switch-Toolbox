@@ -190,6 +190,11 @@ namespace Toolbox.Library
 
         #region MethodsHelpers
 
+        public static byte[] GetMipLevel(byte[] ImageData, uint Width, uint Height, uint MipCount, uint MipLevel, TEX_FORMAT format)
+        {
+            return GetMipLevel(ImageData, Width, Height, MipCount, MipLevel, FromGenericFormat(format));
+        }
+
         public static byte[] GetMipLevel(byte[] ImageData, uint Width, uint Height, uint MipCount, uint MipLevel, TextureFormats format)
         {
             uint offset = 0;
@@ -219,6 +224,25 @@ namespace Toolbox.Library
 
         private static readonly int[] TileSizeW = { 8, 8, 8, 4, 4, 4, 4, 0, 8, 8, 4, 0, 0, 0, 8 };
         private static readonly int[] TileSizeH = { 8, 4, 4, 4, 4, 4, 4, 0, 8, 4, 4, 0, 0, 0, 8 };
+
+        public static int GetDataSizeWithMips(TextureFormats format, uint Width, uint Height, uint MipCount)
+        {
+            return GetDataSizeWithMips((uint)format, Width, Height, MipCount);
+        }
+
+        public static int GetDataSizeWithMips(uint format, uint Width, uint Height, uint MipCount)
+        {
+            int size = 0;
+            for (int m = 0; m < MipCount; m++)
+            {
+                uint width = (uint)Math.Max(1, Width >> m);
+                uint height = (uint)Math.Max(1, Height >> m);
+
+                size =+ Decode_Gamecube.GetDataSize(format, width, height);
+            }
+
+            return size;
+        }
 
         public static int GetDataSize(uint Format, uint Width, uint Height)
         {
@@ -889,7 +913,7 @@ namespace Toolbox.Library
         }
         #endregion
 
-        public static Tuple<byte[], ushort[]> EncodeFromBitmap(System.Drawing.Bitmap bitmap, TextureFormats Format, PaletteFormats PaletteFormat)
+        public static Tuple<byte[], ushort[]> EncodeFromBitmap(System.Drawing.Bitmap bitmap, TextureFormats Format, PaletteFormats PaletteFormat = PaletteFormats.RGB565)
         {
             byte[] m_rgbaImageData = new byte[bitmap.Width * bitmap.Height * 4];
 

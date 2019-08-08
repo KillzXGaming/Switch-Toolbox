@@ -193,7 +193,7 @@ namespace FirstPlugin
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
-                return ImageData;
+                return Decode_Gamecube.GetMipLevel(ImageData, Width, Height, MipCount, (uint)MipLevel, Format);
             }
 
             public override void OnClick(TreeView treeView)

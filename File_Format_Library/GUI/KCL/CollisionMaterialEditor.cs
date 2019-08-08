@@ -27,9 +27,9 @@ namespace FirstPlugin.Forms
             public string Type { get; set; }
         }
 
-        KCL.KCLRendering Render;
+        KCLRendering Render;
 
-        public void LoadCollisionValues(MarioKart.MK7.KCL kcl, KCL.KCLRendering renderer)
+        public void LoadCollisionValues(MarioKart.MK7.KCL kcl, KCLRendering renderer)
         {
             Render = renderer;
 
