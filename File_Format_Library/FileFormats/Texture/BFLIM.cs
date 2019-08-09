@@ -191,6 +191,8 @@ namespace FirstPlugin
                                 if (FileFormat is SARC)
                                 {
                                     string ArchiveFilePath = Path.Combine(folderDialog.SelectedPath, Path.GetFileNameWithoutExtension(file));
+                                    ArchiveFilePath = Path.GetDirectoryName(ArchiveFilePath);
+
                                     if (!Directory.Exists(ArchiveFilePath))
                                         Directory.CreateDirectory(ArchiveFilePath);
 
