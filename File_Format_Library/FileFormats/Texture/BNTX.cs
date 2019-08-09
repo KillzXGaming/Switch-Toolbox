@@ -163,7 +163,7 @@ namespace FirstPlugin
                 if (FileFormat is BNTX)
                 {
                     foreach (var texture in ((BNTX)FileFormat).Textures.Values)
-                        texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+                        texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
                 }
                 if (FileFormat is BFRES)
                 {
@@ -171,7 +171,7 @@ namespace FirstPlugin
                     if(bntx != null)
                     {
                         foreach (var texture in bntx.Textures.Values)
-                            texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+                            texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
 
                         bntx.Unload();
                     }
@@ -182,7 +182,7 @@ namespace FirstPlugin
                     if (bntx != null)
                     {
                         foreach (var texture in bntx.Textures.Values)
-                            texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+                            texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
 
                         bntx.Unload();
                     }
@@ -193,7 +193,7 @@ namespace FirstPlugin
                     if (bntx != null)
                     {
                         foreach (var texture in bntx.Textures.Values)
-                            texture.Export(Path.Combine(Folder, $"{FileFormat.FileName}_{texture.Text}{Extension}"));
+                            texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
 
                         bntx.Unload();
                     }
