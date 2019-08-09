@@ -105,6 +105,8 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public void SelectFirstNode() { if (ObjectTree != null) ObjectTree.SelectFirstNode(); }
+
         public void UpdateTextureIcon(ISingleTextureIconLoader texturIcon) {
             ObjectTree.LoadGenericTextureIcons(texturIcon);
         }

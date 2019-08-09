@@ -105,6 +105,8 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public void SelectFirstNode() { treeViewCustom1.SelectedNode = treeViewCustom1.Nodes[0]; }
+
         private void AddNodes(TreeNode node, bool ClearAllNodes = false)
         {
             treeViewCustom1.BeginUpdate(); // No visual updates until we say 

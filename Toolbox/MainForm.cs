@@ -25,8 +25,8 @@ namespace Toolbox
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }
 
-        IFileFormat[] SupportedFormats { get { return FileManager.GetFileFormats(); } }
-        IFileMenuExtension[] FileMenuExtensions { get { return FileManager.GetMenuExtensions(); } }
+        IFileFormat[] SupportedFormats;
+        IFileMenuExtension[] FileMenuExtensions;
 
         public void AddChildContainer(Form form)
         {
@@ -100,7 +100,7 @@ namespace Toolbox
 
             Application.Idle += Application_Idle;
 
-         /*   if (Runtime.UseOpenGL)
+            if (Runtime.UseOpenGL)
             {
                 ShaderTools.executableDir = Runtime.ExecutableDir;
 
@@ -112,13 +112,14 @@ namespace Toolbox
                 Runtime.openGLVersion = GL.GetString(StringName.Version);
                 Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
                 ParseGLVersion();
-            }*/
+            }
 
             LoadPLugins();
             UpdateToolbar(HasVersionFile);
             LoadConfig();
             LoadMDITheme();
             LoadRecentList();
+            ReloadFiles();
             LoadPluginFileContextMenus();
 
             foreach (string file in openedFiles)
@@ -134,6 +135,12 @@ namespace Toolbox
                 AppDomain currentDomain = AppDomain.CurrentDomain;
                 currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
             }
+        }
+
+        private void ReloadFiles()
+        {
+            SupportedFormats = FileManager.GetFileFormats();
+            FileMenuExtensions = FileManager.GetMenuExtensions(); 
         }
 
         static void MyHandler(object sender, UnhandledExceptionEventArgs args)
@@ -317,6 +324,8 @@ namespace Toolbox
             }
 
             SetFormatSettings(GetActiveIFileFormat());
+
+            ((ObjectEditor)editor).SelectFirstNode();
         }
 
         private void AddObjectEditorFile(TreeNode file, ObjectEditor editor, bool ClearFiles)
