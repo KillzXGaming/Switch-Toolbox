@@ -5,11 +5,89 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Toolbox.Library.Security.Cryptography;
+using System.Runtime.InteropServices;
+using Syroot.BinaryData;
+using System.Linq;
 
 namespace Toolbox.Library.IO
 {
     public static class IOExtensions
     {
+        //From https://github.com/IcySon55/Kuriimu/blob/master/src/Kontract/IO/Extensions.cs
+        //Read
+        public static unsafe T BytesToStruct<T>(this byte[] buffer, bool isBigEndian = false, int offset = 0)
+        {
+            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
+
+            AdjustBigEndianByteOrder(typeof(T), buffer, isBigEndian);
+
+            fixed (byte* pBuffer = buffer) 
+                return Marshal.PtrToStructure<T>((IntPtr)pBuffer + offset);
+        }
+
+        // Write
+        public static unsafe byte[] StructToBytes<T>(this T item, bool isBigEndian)
+        {
+            var buffer = new byte[Marshal.SizeOf(typeof(T))];
+
+            fixed (byte* pBuffer = buffer)
+                Marshal.StructureToPtr(item, (IntPtr)pBuffer, false);
+
+            AdjustBigEndianByteOrder(typeof(T), buffer, isBigEndian);
+
+            return buffer;
+        }
+
+        //Adjust byte order for big endian
+        private static void AdjustBigEndianByteOrder(Type type, byte[] buffer, bool isBigEndian, int startOffset = 0)
+        {
+            if (!isBigEndian)
+                return;
+
+            if (type.IsPrimitive)
+            {
+                if (type == typeof(short) || type == typeof(ushort) ||
+                 type == typeof(int) || type == typeof(uint) ||
+                 type == typeof(long) || type == typeof(ulong))
+                {
+                    Array.Reverse(buffer);
+                    return;
+                }
+            }
+
+            foreach (var field in type.GetFields())
+            {
+                var fieldType = field.FieldType;
+
+                // Ignore static fields
+                if (field.IsStatic) continue;
+
+                if (fieldType.BaseType == typeof(Enum) && fieldType != typeof(ByteOrder))
+                    fieldType = fieldType.GetFields()[0].FieldType;
+
+                // Swap bytes only for the following types (incomplete just like BinaryReaderX is)
+                if (fieldType == typeof(short) || fieldType == typeof(ushort) ||
+                    fieldType == typeof(int) || fieldType == typeof(uint) ||
+                    fieldType == typeof(long) || fieldType == typeof(ulong))
+                {
+                    var offset = Marshal.OffsetOf(type, field.Name).ToInt32();
+
+                    // Enums
+                    if (fieldType.IsEnum)
+                        fieldType = Enum.GetUnderlyingType(fieldType);
+
+                    // Check for sub-fields to recurse if necessary
+                    var subFields = fieldType.GetFields().Where(subField => subField.IsStatic == false).ToArray();
+                    var effectiveOffset = startOffset + offset;
+
+                    if (subFields.Length == 0)
+                        Array.Reverse(buffer, effectiveOffset, Marshal.SizeOf(fieldType));
+                    else
+                        AdjustBigEndianByteOrder(fieldType, buffer, isBigEndian, effectiveOffset);
+                }
+            }
+        }
+
         //https://github.com/exelix11/EditorCore/blob/872d210f85ec0409f8a6ac3a12fc162aaf4cd90c/EditorCoreCommon/CustomClasses.cs#L367
         public static bool Matches(this byte[] arr, string magic) =>
                     arr.Matches(0, magic.ToCharArray());

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
+using System.Runtime.InteropServices;
 
 namespace FirstPlugin
 {
@@ -40,25 +41,19 @@ namespace FirstPlugin
             }
         }
 
-        private int RoundWidth(int width, int BlockWidth)
-        {
-            return width + ((BlockWidth - (width % BlockWidth)) % BlockWidth);
-        }
-        private int RoundHeight(int height, int BlockHeight)
-        {
-            return height + ((BlockHeight - (height % BlockHeight)) % BlockHeight);
-        }
-
         private void Read(System.IO.Stream stream)
         {
             
         }
 
+        public Header header;
+
         public void Load(System.IO.Stream stream)
         {
             //Set this if you want to save the file format
             CanSave = true;
-            CanEdit = false;
+            CanEdit = true;
+            CanReplace = true;
 
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
@@ -67,49 +62,75 @@ namespace FirstPlugin
             //You can add a FileReader with Toolbox.Library.IO namespace
             using (var reader = new FileReader(stream))
             {
-                CanEdit = false;
-
                 reader.SetByteOrder(true);
 
+                reader.Position = 0;
+                header = reader.ReadStruct<Header>();
+
                 //Turn this format into a common format used by this tool
-                byte texFormat = reader.ReadByte();
-                Format = Decode_Gamecube.ToGenericFormat((Decode_Gamecube.TextureFormats)texFormat);
+                Format = Decode_Gamecube.ToGenericFormat((Decode_Gamecube.TextureFormats)header.Format);
+                Width = header.Width;
+                Height = header.Height;
+                MipCount = header.MipCount;
+                var paletteFormat = (Decode_Gamecube.PaletteFormats)header.PaletteFormat;
 
-                reader.ReadByte(); // enable alpha
-                Width = reader.ReadUInt16();
-                Height = reader.ReadUInt16();
-                reader.ReadByte(); // wrap s
-                reader.ReadByte(); // wrap t
-                reader.ReadByte(); // unknown
-                var paletteFormat = (Decode_Gamecube.PaletteFormats)reader.ReadByte();
-                var paletteEntryCount = reader.ReadInt16(); // num of palette entries
-                uint paletteOffset = reader.ReadUInt32(); // offset to palette data
-                reader.ReadInt32(); // border colour
-                reader.ReadByte(); // min filter type
-                reader.ReadByte(); // mag filter type
-                reader.ReadInt16();
+                reader.SeekBegin(header.DataOffset);
+                uint imageDataSize = header.PaletteOffset - 32;
 
-                MipCount = reader.ReadByte();
-                reader.ReadByte();
-                short LODBias = reader.ReadInt16();
-                uint offsetToImageData = reader.ReadUInt32(); // offset to image data
+                ImageData = reader.ReadBytes((int)imageDataSize);
+
+                reader.SeekBegin(header.PaletteOffset);
+                byte[] PaletteData = reader.ReadBytes((int)header.PaletteEntryCount * 2);
+                SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat));
 
                 //Lets set our method of decoding
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
-
-                reader.SeekBegin(offsetToImageData);
-                int imageDataSize = Decode_Gamecube.GetDataSize(texFormat, Width,Height);
-
-                ImageData = reader.ReadBytes(imageDataSize);
-
-                reader.SeekBegin(paletteOffset);
-                byte[] PaletteData = reader.ReadBytes((int)paletteEntryCount * 2);
-                SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat));
             }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public class Header
+        {
+            public byte Format;
+            public byte AlphaEnabled;
+            public ushort Width;
+            public ushort Height;
+            public byte WrapS;
+            public byte WrapT;
+            public byte Unknown;
+            public byte PaletteFormat;
+            public ushort PaletteEntryCount;
+            public uint PaletteOffset;
+            public uint BorderColor;
+            public byte MinFilter;
+            public byte MagFilter;
+            public short Unknown2;
+            public byte MipCount;
+            public byte Unknown3;
+            public short LodBias;
+            public uint DataOffset = 32;
         }
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream))
+            {
+                //After header and image data
+                header.PaletteOffset = (uint)(32 + ImageData.Length);
+
+                //Convert current header format and set the generic properties
+                header.Format = (byte)Decode_Gamecube.FromGenericFormat(Format);
+                header.PaletteFormat = (byte)Decode_Gamecube.FromGenericPaletteFormat(PaletteFormat);
+                header.Width = (ushort)Width;
+                header.Height = (ushort)Height;
+                header.PaletteEntryCount = (ushort)(GetPaletteData().Length / 2);
+
+
+                writer.SetByteOrder(true);
+                writer.WriteStruct(header);
+                writer.Write(ImageData);
+                writer.Write(GetPaletteData());
+            }
         }
 
         public void Unload()
@@ -163,6 +184,11 @@ namespace FirstPlugin
         //Load our editor
         public override void OnClick(TreeView treeView)
         {
+            UpdateEditor();
+        }
+
+        public void UpdateEditor()
+        {
             //Here we check for an active editor and load a new one if not found
             //This is used when a tree/object editor is used
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
@@ -177,6 +203,50 @@ namespace FirstPlugin
             //If you don't make a class for properties you can use a generic class provided in STGenericTexture
             editor.LoadProperties(GenericProperties);
             editor.LoadImage(this);
+        }
+
+        public override void Replace(string FileName)
+        {
+            GamecubeTextureImporterList importer = new GamecubeTextureImporterList(SupportedFormats);
+            GameCubeTextureImporterSettings settings = new GameCubeTextureImporterSettings();
+
+            importer.ForceMipCount = true;
+            importer.SelectedMipCount = 1;
+
+            if (Utils.GetExtension(FileName) == ".dds" ||
+                Utils.GetExtension(FileName) == ".dds2")
+            {
+                settings.LoadDDS(FileName);
+                importer.LoadSettings(new List<GameCubeTextureImporterSettings>() { settings, });
+
+                ApplySettings(settings);
+                UpdateEditor();
+            }
+            else
+            {
+                settings.LoadBitMap(FileName);
+                importer.LoadSettings(new List<GameCubeTextureImporterSettings>() { settings, });
+
+                if (importer.ShowDialog() == DialogResult.OK)
+                {
+                    if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                        settings.Compress();
+
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+            }
+        }
+
+        private void ApplySettings(GameCubeTextureImporterSettings settings)
+        {
+            this.ImageData = settings.DataBlockOutput[0];
+            this.Width = settings.TexWidth;
+            this.Height = settings.TexHeight;
+            this.Format = settings.GenericFormat;
+            this.MipCount = 1; //Always 1
+            this.Depth = 1;
+            this.ArrayCount = (uint)settings.DataBlockOutput.Count;
         }
     }
 }

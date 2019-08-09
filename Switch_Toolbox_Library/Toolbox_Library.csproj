@@ -282,6 +282,7 @@
     <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Generics\Texture\STTextureFolder.cs" />
     <Compile Include="Interfaces\FileFormatting\ILeaveOpenOnLoad.cs" />
+    <Compile Include="Interfaces\FileFormatting\IPropertyContainer.cs" />
     <Compile Include="Interfaces\FileFormatting\ISaveOpenedFileStream.cs" />
     <Compile Include="Interfaces\Textures\ITextureIconLoader.cs" />
     <Compile Include="Interfaces\Utility\ICloneableNode.cs" />
@@ -290,7 +291,9 @@
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
+    <Compile Include="IO\IOComoon.cs" />
     <Compile Include="IO\STColor.cs" />
+    <Compile Include="IO\SubStream.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
     <Compile Include="Security\Cryptography\crc32.cs" />

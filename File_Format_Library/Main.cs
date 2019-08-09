@@ -365,6 +365,10 @@ namespace FirstPlugin
             Formats.Add(typeof(MOD));
             Formats.Add(typeof(U8));
             Formats.Add(typeof(CTPK));
+            Formats.Add(typeof(LINKDATA));
+            Formats.Add(typeof(NCCH));
+            Formats.Add(typeof(NCSD));
+            Formats.Add(typeof(CTR.NCCH.RomFS));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

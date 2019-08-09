@@ -118,6 +118,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - BrawlBox team for brawl libaries used for brres parsing.
 - Sage of Mirrors for SuperBMDLib. 
 - Ambrosia for BTI and TXE support.
+- Kuriimu for some IO and file parsing help
 
 ##  Resources
 - [Treeview Icons by icons8](https://icons8.com/)
@@ -148,6 +149,9 @@ In the event that the tool cannot compile, check references. All the libraries a
 - [Syroot Maths](https://gitlab.com/Syroot/Maths)
 - [Syroot Bfres Library (Wii U)](https://gitlab.com/Syroot/NintenTools.Bfres)
 - [LibHac](https://github.com/Thealexbarney/LibHac)
+
+## Helpful Tools
+-  https://github.com/IcySon55/Kuriimu
 
 License
  in Switch_Toolbox\Lib\Licenses

@@ -7,6 +7,7 @@ using Syroot.BinaryData;
 using System.IO;
 using System.IO.Compression;
 using OpenTK;
+using System.Runtime.InteropServices;
 
 namespace Toolbox.Library.IO
 {
@@ -43,6 +44,10 @@ namespace Toolbox.Library.IO
 
             return signature == Identifier;
         }
+
+        //From kuriimu https://github.com/IcySon55/Kuriimu/blob/master/src/Kontract/IO/BinaryReaderX.cs#L40
+        public T ReadStruct<T>() => ReadBytes(Marshal.SizeOf<T>()).BytesToStruct<T>(ByteOrder == ByteOrder.BigEndian);
+        public List<T> ReadMultipleStructs<T>(int count) => Enumerable.Range(0, count).Select(_ => ReadStruct<T>()).ToList();
 
         public bool CheckSignature(uint Identifier, long position = 0)
         {

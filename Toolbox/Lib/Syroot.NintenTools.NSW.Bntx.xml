@@ -2451,5 +2451,33 @@
             Represents the desired tiling modes for a surface.
             </summary>
         </member>
+        <member name="T:System.Security.Cryptography.Crc32">
+            <summary>
+            Computes a CRC32 checksum.
+            </summary>
+            <remarks>Based on <see cref="!:http://sanity-free.org/12/crc32_implementation_in_csharp.html"/></remarks>
+        </member>
+        <member name="M:System.Security.Cryptography.Crc32.Compute(System.String)">
+            <summary>
+            Compute the checksum of a UTF8 text.
+            </summary>
+            <param name="text">Text to calculate</param>
+            <returns>Checksum</returns>
+        </member>
+        <member name="M:System.Security.Cryptography.Crc32.Compute(System.String,System.Text.Encoding)">
+            <summary>
+            Compute the checksum of a text using a specific encoding.
+            </summary>
+            <param name="text">Text to calculate</param>
+            <param name="encoding">Text encoding</param>
+            <returns>Checksum</returns>
+        </member>
+        <member name="M:System.Security.Cryptography.Crc32.Compute(System.Byte[])">
+            <summary>
+            Compute the checksum of a binary buffer.
+            </summary>
+            <param name="bytes">Buffer to calculate</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

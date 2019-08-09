@@ -23,21 +23,25 @@ namespace Toolbox.Library.IO
              : this(new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
         {
         }
+
         public FileWriter(byte[] data)
              : this(new MemoryStream(data))
         {
         }
+
         public void Write(Syroot.Maths.Vector2F v)
         {
             Write(v.X);
             Write(v.Y);
         }
+
         public void Write(Syroot.Maths.Vector3F v)
         {
             Write(v.X);
             Write(v.Y);
             Write(v.Z);
         }
+
         public void Write(Syroot.Maths.Vector4F v)
         {
             Write(v.X);
@@ -45,14 +49,19 @@ namespace Toolbox.Library.IO
             Write(v.Z);
             Write(v.W);
         }
+
+        public void WriteStruct<T>(T item) => Write(item.StructToBytes(ByteOrder == ByteOrder.BigEndian));
+
         public void WriteSignature(string value)
         {
             Write(Encoding.ASCII.GetBytes(value));
         }
+
         public void WriteString(string value)
         {
             Write(value, BinaryStringFormat.ZeroTerminated);
         }
+
         public void WriteUint64Offset(long target)
         {
             long pos = Position;

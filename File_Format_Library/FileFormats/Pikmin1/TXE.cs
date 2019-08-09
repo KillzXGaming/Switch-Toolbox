@@ -5,6 +5,7 @@ using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace FirstPlugin
 {
@@ -76,15 +77,18 @@ namespace FirstPlugin
                 //Turn this format into a common format used by this tool
                 ushort texFormat = reader.ReadUInt16();
                 Format = FormatsTXE[texFormat];
+                int ImageSize = reader.ReadInt32(); //Unsure
 
                 //Lets set our method of decoding
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
 
-                int imageDataSize = (int)reader.BaseStream.Length - 32;
+                reader.Align(32);
 
-                reader.SeekBegin(32);
+                //Calculate size automatically if ImageSize is 0
+                if (ImageSize == 0)
+                    ImageSize = (int)reader.BaseStream.Length - (int)reader.Position;
 
-                ImageData = reader.ReadBytes(imageDataSize);
+                ImageData = reader.ReadBytes(ImageSize);
 
                 Text = FileName;
             }
@@ -97,10 +101,10 @@ namespace FirstPlugin
                 writer.Write((ushort)Width);
                 writer.Write((ushort)Height);
                 writer.Write(Unknown);
-                writer.Write(Unknown);
                 ushort format = FormatsTXE.FirstOrDefault(x => x.Value == Format).Key;
                 writer.Write(format);
-                writer.SeekBegin(32);
+                writer.Write(ImageData.Length);
+                writer.Align(32);
                 writer.Write(ImageData);
             }
         }

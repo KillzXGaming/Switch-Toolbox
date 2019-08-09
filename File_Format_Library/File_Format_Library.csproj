@@ -275,10 +275,17 @@
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />
     <Compile Include="FileFormats\Pikmin1\TXE.cs" />
+    <Compile Include="FileFormats\Rom\3DS\NCSDStructs.cs" />
+    <Compile Include="FileFormats\Rom\3DS\NCSD.cs" />
+    <Compile Include="FileFormats\Rom\3DS\RomFS.cs" />
+    <Compile Include="FileFormats\Rom\3DS\NCCH.cs" />
+    <Compile Include="FileFormats\Rom\3DS\NCCHStructs.cs" />
+    <Compile Include="FileFormats\Rom\3DS\RomFSStructure.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />

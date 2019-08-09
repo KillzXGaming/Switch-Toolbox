@@ -102,6 +102,7 @@ namespace Toolbox.Library
             }
         }
 
+        [Browsable(false)]
         public virtual Dictionary<string, string> ExtensionImageKeyLookup { get; }
 
         public virtual void Replace()
@@ -178,6 +179,18 @@ namespace Toolbox.Library
             set { _fileData = value; }
         }
 
+        public virtual Stream FileDataStream
+        {
+            get
+            {
+                _fileStream.Position = 0;
+                return _fileStream;
+            }
+            set { _fileStream = value; }
+        }
+
+        protected Stream _fileStream = null;
+
         [Browsable(false)]
         public ArchiveFileState State { get; set; } = ArchiveFileState.Empty;
     }
@@ -205,7 +218,10 @@ namespace Toolbox.Library
         {
             Text = text;
 
-            PropertyDisplay = new GenericArchiveProperties(archiveFile, text, this);
+            if (archiveFile is IPropertyContainer)
+                PropertyDisplay = ((IPropertyContainer)archiveFile).Property;
+            else
+                PropertyDisplay = new GenericArchiveProperties(archiveFile, text, this);
         }
 
         public void AddFileNode(ArchiveFileWrapper fileWrapper)
