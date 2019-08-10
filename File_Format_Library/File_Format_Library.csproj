@@ -211,6 +211,10 @@
     <Compile Include="FileFormats\CrashBandicoot\IGZ_Structure.cs" />
     <Compile Include="FileFormats\Grezzo\CMB_Enums.cs" />
     <Compile Include="FileFormats\Grezzo\CSAB.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\G1MChunkCommon.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\G1MEnums.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\G1MG.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\G1MS.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1T.cs" />
     <Compile Include="FileFormats\HyruleWarriors\HWBinGzResource.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGA_PAK.cs" />
@@ -275,7 +279,7 @@
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
-    <Compile Include="FileFormats\HyruleWarriors\G1M.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />

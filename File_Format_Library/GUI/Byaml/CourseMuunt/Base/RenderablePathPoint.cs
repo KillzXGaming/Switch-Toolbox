@@ -6,6 +6,7 @@ using Toolbox.Library.IO;
 using static GL_EditorFramework.EditorDrawables.EditorSceneBase;
 using FirstPlugin.Turbo.CourseMuuntStructs;
 using FirstPlugin.Turbo;
+using System.Collections.Generic;
 
 namespace GL_EditorFramework.EditorDrawables
 {
@@ -32,14 +33,19 @@ namespace GL_EditorFramework.EditorDrawables
 
         public Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
 
-        public RenderablePathPoint(Vector4 color, Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject) {
+        public Vector3 Position;
+        public Vector3 Scale;
+
+        public RenderablePathPoint(Vector4 color, Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject)
+        {
             NodeObject = nodeObject;
 
             Color = color;
             UpdateTransform(pos, rot, sca);
         }
 
-        public RenderablePathPoint(Vector3 pos, Vector3 normal, Vector3 tangent, Vector3 sca) {
+        public RenderablePathPoint(Vector3 pos, Vector3 normal, Vector3 tangent, Vector3 sca)
+        {
             UpdateTransform(pos, normal, tangent, sca);
         }
 
@@ -168,46 +174,43 @@ namespace GL_EditorFramework.EditorDrawables
         public virtual void Translate(Vector3 lastPos, Vector3 translate, int subObj)
         {
             position = lastPos + translate;
-            UpdateNodePosition();
         }
 
-        public virtual void UpdatePosition(int subObj) {
+        public virtual void UpdatePosition(int subObj)
+        {
         }
 
-        public override BoundingBox GetSelectionBox() => new BoundingBox(
-            position.X - scale.X,
-            position.X + scale.X,
-            position.Y - scale.Y,
-            position.Y + scale.Y,
-            position.Z - scale.Z,
-            position.Z + scale.Z
-            );
+        public override void GetSelectionBox(ref BoundingBox boundingBox)
+        {
 
-        public override uint SelectAll(GL_ControlBase control)
+        }
+
+
+        public override uint SelectAll(GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = true;
             return REDRAW;
         }
 
-        public override uint SelectDefault(GL_ControlBase control)
+        public override uint SelectDefault(GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = true;
             return REDRAW;
         }
 
-        public override uint Select(int partIndex, GL_ControlBase control)
+        public override uint Select(int partIndex, GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = true;
             return REDRAW;
         }
 
-        public override uint Deselect(int partIndex, GL_ControlBase control)
+        public override uint Deselect(int partIndex, GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = false;
             return REDRAW;
         }
 
-        public override uint DeselectAll(GL_ControlBase control)
+        public override uint DeselectAll(GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = false;
             return REDRAW;
@@ -227,7 +230,7 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
         {
-            return (pos - position).LengthSquared < rangeSquared;
+            return true;
         }
 
         private void UpdateNodePosition()
@@ -255,18 +258,6 @@ namespace GL_EditorFramework.EditorDrawables
                     ((Course_MapCamera_bin)NodeObject).cameraData.TargetY = position.Y;
                     ((Course_MapCamera_bin)NodeObject).cameraData.TargetZ = position.Z;
                 }
-            }
-        }
-
-        public override Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
             }
         }
     }

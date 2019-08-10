@@ -13,8 +13,6 @@ namespace FirstPlugin
 {
     public class FirstPlugin : IPlugin
     {
-        
-
         private static FirstPlugin _instance;
         public static FirstPlugin Instance { get { return _instance == null ? _instance = new FirstPlugin() : _instance; } }
         public static string executableDir;
@@ -92,7 +90,7 @@ namespace FirstPlugin
             public STToolStripItem[] ToolsMenuExtensions => toolsExt;
             public STToolStripItem[] TitleBarExtensions => null;
 
-            readonly STToolStripItem[] toolsExt = new STToolStripItem[2];
+            readonly STToolStripItem[] toolsExt = new STToolStripItem[3];
             public MenuExt()
             {
                 toolsExt[0] = new STToolStripItem("Super Mario Odyssey");
@@ -103,8 +101,8 @@ namespace FirstPlugin
                 toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
 
 
-             //   toolsExt[2] = new STToolStripItem("Breath Of The Wild");
-              //  toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
+                toolsExt[2] = new STToolStripItem("Breath Of The Wild");
+                toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
             }
 
             private void ActorEditor(object sender, EventArgs args)
@@ -387,7 +385,7 @@ namespace FirstPlugin
                 Formats.Add(typeof(XLINK));
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));
-                Formats.Add(typeof(G1M));
+                Formats.Add(typeof(HyruleWarriors.G1M.G1M));
                 Formats.Add(typeof(MSBP));
             }
 

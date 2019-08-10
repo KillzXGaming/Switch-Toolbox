@@ -36,6 +36,8 @@ namespace FirstPlugin.Forms
 
         public void LoadMSBT(MSBT msbt)
         {
+            listViewCustom1.Items.Clear();
+
             activeMessageFile = msbt;
 
             if (msbt.header.Text2 != null)

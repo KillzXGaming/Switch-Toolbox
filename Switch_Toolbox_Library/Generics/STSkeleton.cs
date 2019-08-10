@@ -172,13 +172,13 @@ namespace Toolbox.Library
 
         private void DrawBoundingBoxes()
         {
-            var boundings = GetSelectionBox();
+         /*   var boundings = GetSelectionBox();
 
             DrawableBoundingBox.DrawBoundingBox(
                 new Vector3(boundings.minX, boundings.minY, boundings.minZ),
                 new Vector3(boundings.maxX, boundings.maxY, boundings.maxZ),
                 new Vector3(0)
-                );
+                );*/
 
             return;
         }
@@ -427,17 +427,13 @@ namespace Toolbox.Library
             }
         }
 
-        public override BoundingBox GetSelectionBox()
+        public override void GetSelectionBox(ref BoundingBox boundingBox)
         {
-            BoundingBox box = BoundingBox.Default;
-
             for (int i = 1; i < bones.Count; i++)
             {
-                box.Include(bones[i - 1].pos);
-                box.Include(bones[i].pos);
+                boundingBox.Include(bones[i - 1].pos);
+                boundingBox.Include(bones[i].pos);
             }
-
-            return box;
         }
 
         public override LocalOrientation GetLocalOrientation(int partIndex)
@@ -471,46 +467,34 @@ namespace Toolbox.Library
             return false;
         }
 
-        public override uint SelectAll(GL_ControlBase control)
+        public override uint SelectAll(GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = true;
             return REDRAW;
         }
 
-        public override uint SelectDefault(GL_ControlBase control)
+        public override uint SelectDefault(GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = true;
             return REDRAW;
         }
 
-        public override uint Select(int partIndex, GL_ControlBase control)
+        public override uint Select(int partIndex, GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = true;
             return REDRAW;
         }
 
-        public override uint Deselect(int partIndex, GL_ControlBase control)
+        public override uint Deselect(int partIndex, GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = false;
             return REDRAW;
         }
 
-        public override uint DeselectAll(GL_ControlBase control)
+        public override uint DeselectAll(GL_ControlBase control, ISet<object> selectedObjects)
         {
             Selected = false;
             return REDRAW;
-        }
-
-        public override Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
-            }
         }
     }
 }

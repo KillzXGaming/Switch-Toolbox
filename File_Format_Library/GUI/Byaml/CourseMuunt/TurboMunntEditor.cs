@@ -534,7 +534,9 @@ namespace FirstPlugin.Forms
 
             if (newSelection.Count > 0)
             {
-                viewport.scene.SelectedObjects = newSelection;
+                foreach (var ob in newSelection)
+                    viewport.scene.ToogleSelected(ob, true);
+
                 viewport.UpdateViewport();
             }
         }

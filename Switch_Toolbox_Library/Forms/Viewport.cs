@@ -128,7 +128,13 @@ namespace Toolbox.Library
 
         public bool ContainsDrawable(AbstractGlDrawable Drawable)
         {
-            return scene.staticObjects.Contains(Drawable) || scene.objects.Contains(Drawable);
+            if (Drawable is GL_EditorFramework.EditorDrawables.IEditableObject)
+            {
+                return scene.staticObjects.Contains(Drawable) || 
+                       scene.objects.Contains((GL_EditorFramework.EditorDrawables.IEditableObject)Drawable);
+            }
+            else
+                return scene.staticObjects.Contains(Drawable);
         }
 
         private void shadingToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
