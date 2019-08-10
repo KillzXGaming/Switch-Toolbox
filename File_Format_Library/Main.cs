@@ -101,6 +101,15 @@ namespace FirstPlugin
 
                 toolsExt[1] = new STToolStripItem("Mario Kart 8");
                 toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
+
+
+             //   toolsExt[2] = new STToolStripItem("Breath Of The Wild");
+              //  toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
+            }
+
+            private void ActorEditor(object sender, EventArgs args)
+            {
+                BotwActorLoader actorEditor = new BotwActorLoader();
             }
 
             private void OpenKingdomSelector(object sender, EventArgs args)
@@ -274,7 +283,7 @@ namespace FirstPlugin
         private Type[] LoadMenus()
         {
             List<Type> MenuItems = new List<Type>();
-           // MenuItems.Add(typeof(MenuExt));
+            MenuItems.Add(typeof(MenuExt));
             return MenuItems.ToArray();
         }
 

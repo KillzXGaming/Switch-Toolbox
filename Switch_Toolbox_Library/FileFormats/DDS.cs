@@ -18,7 +18,7 @@ using OpenTK.Graphics.OpenGL;
 namespace Toolbox.Library
 {
     //Data from https://github.com/jam1garner/Smash-Forge/blob/master/Smash%20Forge/Filetypes/Textures/DDS.cs
-    public class DDS : STGenericTexture, IFileFormat, ISingleTextureIconLoader, IContextMenuNode
+    public class DDS : STGenericTexture, IFileFormat, IContextMenuNode
     {
         public STGenericTexture IconTexture { get { return this; } }
 

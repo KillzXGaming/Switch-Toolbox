@@ -201,6 +201,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\BotwActorLoader.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FileFormats\AAMP\AAMP.cs" />
     <Compile Include="FileFormats\Archives\APAK.cs" />
@@ -296,6 +297,12 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\ActorEditorBotw.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\ActorEditorBotw.Designer.cs">
+      <DependentUpon>ActorEditorBotw.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFFNT\BffntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
