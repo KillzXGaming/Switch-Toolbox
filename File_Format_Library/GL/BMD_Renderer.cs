@@ -15,6 +15,8 @@ namespace FirstPlugin
 {
     public class BMD_Renderer : GenericModelRenderer
     {
+        public override float PreviewScale { get; set; } = 0.02f;
+
         public List<BMDTextureWrapper> TextureList = new List<BMDTextureWrapper>();
 
         public override void OnRender(GLControl control)
