@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
+using System.Runtime.InteropServices;
 
 namespace FirstPlugin
 {
@@ -91,7 +92,7 @@ namespace FirstPlugin
                 Text = tex.Name;
                 Format = CTR_3DS.ConvertPICAToGenericFormat(tex.PicaFormat);
 
-                Parameters.FlipY = true;
+                PlatformSwizzle = PlatformSwizzle.Platform_3DS;
             }
 
             public override bool CanEdit { get; set; } = false;
@@ -181,11 +182,7 @@ namespace FirstPlugin
 
                 reader.SeekBegin(conversionInfoOffset);
                 for (int i = 0; i < numTextures; i++)
-                {
-                    ConversionInfo conversionInfo = new ConversionInfo();
-                    conversionInfo.Read(reader);
-                    ConversionInfos.Add(conversionInfo);
-                }
+                    ConversionInfos.Add(reader.ReadStruct<ConversionInfo>());
 
                 for (int i = 0; i < numTextures; i++)
                 {
@@ -241,28 +238,13 @@ namespace FirstPlugin
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public class ConversionInfo
         {
             public byte TextureFormat { get; set; }
             public byte Unknown { get; set; }
             public bool Compressed { get; set; }
             public byte Etc1Quality { get; set; }
-
-            public void Read(FileReader reader)
-            {
-                TextureFormat = reader.ReadByte();
-                Unknown = reader.ReadByte();
-                Compressed = reader.ReadBoolean();
-                Etc1Quality = reader.ReadByte();
-            }
-
-            public void Write(FileWriter writer)
-            {
-                writer.Write(TextureFormat);
-                writer.Write(Unknown);
-                writer.Write(Compressed);
-                writer.Write(Etc1Quality);
-            }
         }
     }
 }

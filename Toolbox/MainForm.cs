@@ -314,7 +314,6 @@ namespace Toolbox
             if (!useActiveEditor || !IsEditorActive)
             {
                 editor = new ObjectEditor(((IFileFormat)file));
-
                 editor.MdiParent = this;
                 editor.Text = CheckTabDupes(((IFileFormat)file).FileName);
                 editor.Show();
@@ -323,6 +322,8 @@ namespace Toolbox
                 {
                     ((TreeNodeFile)file).OnAfterAdded();
                 }
+
+                ((ObjectEditor)editor).SelectFirstNode();
             }
             else
             {

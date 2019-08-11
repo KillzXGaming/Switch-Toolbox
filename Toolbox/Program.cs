@@ -62,6 +62,17 @@ namespace Toolbox
             }
         }
 
+        [ComVisible(true), ComImport, Guid("000214eb-0000-0000-c000-000000000046"),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IExtractIcon
+        {
+            [PreserveSig]
+            uint GetIconLocation(int uFlags, IntPtr szIconFile, int cchMax, IntPtr piIndex, UIntPtr pwFlags);
+
+            [PreserveSig]
+            uint Extract(string pszFile, uint nIconIndex, ref IntPtr phiconLarge, ref IntPtr phiconSmall, uint nIconSize);
+        }
+
         public class SingleInstanceController : WindowsFormsApplicationBase
         {
             public SingleInstanceController()
