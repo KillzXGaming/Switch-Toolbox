@@ -150,6 +150,13 @@ namespace FirstPlugin
                         reader.ReadByte();
                     }
                 }
+
+                //Setup labels to text properly
+                if (Label1 != null && Text2 != null)
+                {
+                    foreach (var label in Label1.Labels)
+                        label.String = Text2.TextData[(int)label.Index];
+                }
             }
 
             public void Write(FileWriter writer)
@@ -488,6 +495,8 @@ namespace FirstPlugin
                         entry.Index = reader.ReadUInt32();
                         entry.Checksum = (uint)Groups.IndexOf(group);
                         Labels.Add(entry);
+
+                        Console.WriteLine("label entry " + entry.Name);
                     }
                 }
 

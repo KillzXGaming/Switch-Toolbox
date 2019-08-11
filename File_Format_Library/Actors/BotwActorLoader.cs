@@ -7,8 +7,9 @@ using Toolbox.Library;
 using Toolbox.Library.Forms;
 using System.IO;
 using OpenTK;
+using FirstPlugin;
 
-namespace FirstPlugin
+namespace UKing.Actors
 {
     /// <summary>
     /// A class that holds methods to load actor data for botw.
@@ -19,6 +20,34 @@ namespace FirstPlugin
         private static string CachedActorsPath = $"/Pack/";
 
         private static string ActorInfoTable = $"/Actor/ActorInfo.product.sbyml";
+
+        //MSBT stores certain properties and helps define our actor names
+        private string ActorMessageData
+        {
+            get { return $"/Pack/Bootup_{MessageRegion}{MessageLanguage}.pack"; }
+        }
+
+        public Language MessageLanguage = Language.en;
+        public Region MessageRegion = Region.US;
+
+        public enum Region
+        {
+            US,
+            EU,
+            JP,
+        }
+
+        public enum Language
+        {
+            en, //English
+            de, //German
+            es, //Spanish
+            fr, //Frence
+            it, //Italian
+            nl, //
+            ru, //Russian
+            ja, //Japanese
+        }
 
         public enum ActorCategory
         {
@@ -46,6 +75,10 @@ namespace FirstPlugin
             private const string N_bfres = "bfres";
             private const string N_aabbMin = "aabbMin";
             private const string N_aabbMax = "aabbMax";
+
+            public string MessageName = "";
+            public string MessageDescription = "";
+            public string MessageFile = "";
 
             public string Name
             {
@@ -121,32 +154,6 @@ namespace FirstPlugin
             }
         }
 
-        public static Dictionary<string, ActorDefineInfo> ArmorActorDefine = new Dictionary<string, ActorDefineInfo>()
-        {
-            {"001", new ActorDefineInfo("Hylian Tunic Set") },
-            {"002",new ActorDefineInfo("Hylian Tunic Set Upgraded") },
-            {"003",new ActorDefineInfo("Hylian Tunic Set Upgraded 2") },
-            {"004",new ActorDefineInfo("Hylian Tunic Set Upgraded 3") },
-            {"005",new ActorDefineInfo("Tunic of the Wild Set") },
-            {"006",new ActorDefineInfo("Zora Set") },
-            {"007",new ActorDefineInfo("Zora Set Upgraded") },
-            {"008",new ActorDefineInfo("Desert Voe Set") },
-            {"009",new ActorDefineInfo("Snowquill Set" )},
-            {"011",new ActorDefineInfo("Flamebreaker Set") },
-            {"012",new ActorDefineInfo("Stealth Set" )},
-            {"014",new ActorDefineInfo("Climbing Gear Set" )},
-            {"017",new ActorDefineInfo("Radiant  Set" )},
-            {"020",new ActorDefineInfo("Soldier's Armor  Set" )},
-            {"021",new ActorDefineInfo("Ancient Set") },
-            {"022",new ActorDefineInfo("Bokoblin Mask") },
-            {"024",new ActorDefineInfo("Diamond Circlet") },
-            {"025",new ActorDefineInfo("Ruby Circlet") },
-            {"026",new ActorDefineInfo("Sapphire Circlet") },
-            {"027",new ActorDefineInfo("Topaz Circlet") },
-            {"028",new ActorDefineInfo("Opal Circlet") },
-            {"029",new ActorDefineInfo("Amber Circlet") },
-        };
-
         private ObjectEditor editor;
 
         public BotwActorLoader()
@@ -154,6 +161,7 @@ namespace FirstPlugin
             editor = new ObjectEditor();
             editor.Text = "Actor Editor BOTW";
             LibraryGUI.CreateMdiWindow(editor);
+            editor.SortTreeAscending();
 
             LoadActors();
         }
@@ -194,52 +202,90 @@ namespace FirstPlugin
                 }
             }
 
-            foreach (var info in Actors)
+            //Parse message data for our actor names, and additional info to add to the editor
+
+            Console.WriteLine("msbtEXT " + File.Exists($"{Runtime.BotwGamePath}{ActorMessageData}"));
+            Console.WriteLine($"{Runtime.BotwGamePath}{ActorMessageData}");
+
+            if (File.Exists($"{Runtime.BotwGamePath}{ActorMessageData}"))
             {
-                ActorEntry entry = new ActorEntry();
-                entry.Text = info.Key;
-                ArmourFolder.Nodes.Add(entry);
-            }
+                var msgPack = SARCExt.SARC.UnpackRamN(File.Open($"{Runtime.BotwGamePath}{ActorMessageData}", FileMode.Open));
 
-          /*  //Load all our actors into a class
-            foreach (var file in Directory.GetFiles($"{Runtime.BotwGamePath}{ActorPath}"))
-            {
-                string name = Path.GetFileNameWithoutExtension(file);
-
-                var actorType = name.Split('_').First();
-                var actorID = name.Split('_').Skip(1).FirstOrDefault();
-                var actorProperty = name.Split('_').Last();
-
-                if (actorType == "Armor")
+                //Get the other sarc inside
+                foreach (var pack in msgPack.Files)
                 {
-                    if (ArmorActorDefine.ContainsKey(actorID))
-                    {
-                        ActorDefineInfo info = ArmorActorDefine[actorID];
+                    var msgProductPack = SARCExt.SARC.UnpackRamN(EveryFileExplorer.YAZ0.Decompress(pack.Value));
 
-                    
+                    //Folders are setup with actors
+                    foreach (var msbtFile in msgProductPack.Files)
+                    {
+                        using (var stream = new MemoryStream(msbtFile.Value))
+                        {
+                            MSBT msbt = new MSBT();
+                            if (!msbt.Identify(stream))
+                                continue;
+
+                            msbt.Load(new MemoryStream(msbtFile.Value));
+
+
+                            //Get our labels and match up with our actors
+                            if (msbt.header.Label1 != null)
+                            {
+                                for (int i = 0; i < msbt.header.Label1.Labels.Count; i++)
+                                {
+                                    var lbl = msbt.header.Label1.Labels[i];
+
+                                    if (lbl.Name.Contains("_Name"))
+                                    {
+                                        string actorName = lbl.Name.Replace("_Name", string.Empty);
+                                        if (Actors.ContainsKey(actorName))
+                                        {
+                                            Actors[actorName].MessageFile = Path.GetFileNameWithoutExtension(msbtFile.Key);
+                                            Actors[actorName].MessageName = lbl.String.GetText(msbt.header.StringEncoding);
+                                        }
+                                    }
+                                    if (lbl.Name.Contains("_Desc"))
+                                    {
+                                        string actorName = lbl.Name.Replace("_Desc", string.Empty);
+                                        if (Actors.ContainsKey(actorName))
+                                        {
+                                            Actors[actorName].MessageFile = Path.GetFileNameWithoutExtension(msbtFile.Key);
+                                            Actors[actorName].MessageDescription = lbl.String.GetText(msbt.header.StringEncoding);
+                                        }
+                                    }
+                                }
+                            }
+
+                            msbt.Unload();
+                        }
                     }
                 }
-                else if (actorType == "Animal")
+            }
+
+            Dictionary<string, TreeNode> Categories = new Dictionary<string, TreeNode>();
+
+            foreach (var info in Actors)
+            {
+                if (info.Value.MessageName != string.Empty)
                 {
+                    //Temp atm. Use message file name for organing
+                    string catgeory = info.Value.MessageFile;
 
+                    if (!Categories.ContainsKey(catgeory))
+                    {
+                        TreeNode node = new TreeNode(catgeory);
+                        editor.AddNode(node);
+                        Categories.Add(catgeory, node);
+                    }
+
+                    ActorEntry entry = new ActorEntry();
+                    entry.Text = info.Value.MessageName;
+                    Categories[catgeory].Nodes.Add(entry);
                 }
-                else if (actorType == "Npc")
-                {
+            }
 
-                }
-            }*/
-
-            //The game also caches certain actors to the pack folder at boot
-
-
-            if (ArmourFolder.Nodes.Count != 0)
-                editor.AddNode(ArmourFolder);
-            if (EnemyFolder.Nodes.Count != 0)
-                editor.AddNode(EnemyFolder);
-            if (ItemsFolder.Nodes.Count != 0)
-                editor.AddNode(ItemsFolder);
-            if (WeaponsFolder.Nodes.Count != 0)
-                editor.AddNode(WeaponsFolder);
+            Categories.Clear();
+            GC.Collect();
         }
 
         private bool NotifySetGamePath()
@@ -254,7 +300,7 @@ namespace FirstPlugin
                 {
                     dir = folderSelect.SelectedPath;
                     Runtime.BotwGamePath = dir;
-                    Config.Save();
+                    Toolbox.Library.Config.Save();
                 }
             }
 

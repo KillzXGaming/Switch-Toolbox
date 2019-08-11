@@ -558,6 +558,11 @@ namespace Toolbox.Library.Forms
             treeViewCustom1.Sort();
         }
 
+        public void SortTreeAscending()
+        {
+            treeViewCustom1.Sort();
+        }
+
         private void splitter1_Resize(object sender, EventArgs e)
         {
         }

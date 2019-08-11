@@ -107,7 +107,7 @@ namespace FirstPlugin
 
             private void ActorEditor(object sender, EventArgs args)
             {
-                BotwActorLoader actorEditor = new BotwActorLoader();
+                UKing.Actors.BotwActorLoader actorEditor = new UKing.Actors.BotwActorLoader();
             }
 
             private void OpenKingdomSelector(object sender, EventArgs args)

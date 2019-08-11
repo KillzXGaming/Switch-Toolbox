@@ -107,6 +107,8 @@ namespace Toolbox.Library.Forms
 
         public void SelectFirstNode() { if (ObjectTree != null) ObjectTree.SelectFirstNode(); }
 
+        public void SortTreeAscending() { if (ObjectTree != null) ObjectTree.SortTreeAscending(); }
+
         public void UpdateTextureIcon(ISingleTextureIconLoader texturIcon) {
             ObjectTree.LoadGenericTextureIcons(texturIcon);
         }
