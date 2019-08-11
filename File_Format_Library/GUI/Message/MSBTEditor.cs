@@ -45,10 +45,12 @@ namespace FirstPlugin.Forms
             {
                 if (ShowLabels)
                 {
-                    foreach (var text in msbt.header.Label1.Labels)
+                    foreach (var lbl in msbt.header.Label1.Labels)
                     {
-                        string listText = text.Name;
-                        listViewCustom1.Items.Add(listText);
+                        ListViewItem item = new ListViewItem();
+                        item.Text = lbl.Name;
+                        item.Tag = msbt.header.Text2.TextData[(int)lbl.Index];
+                        listViewCustom1.Items.Add(item);
                     }
                     listViewCustom1.Sorting = SortOrder.Ascending;
                     listViewCustom1.Sort();
@@ -57,12 +59,15 @@ namespace FirstPlugin.Forms
                 {
                     foreach (var text in msbt.header.Text2.TextData)
                     {
+                        ListViewItem item = new ListViewItem();
                         string listText = text.GetTextLabel(ShowPreviewText, msbt.header.StringEncoding);
 
                         if (listText.Length > 25)
                             listText = $"{listText.Substring(0, 25)}......";
 
-                        listViewCustom1.Items.Add(listText);
+                        item.Text = listText;
+                        item.Tag = text;
+                        listViewCustom1.Items.Add(item);
                     }
                 }
             }
@@ -75,17 +80,14 @@ namespace FirstPlugin.Forms
 
             if (listViewCustom1.SelectedItems.Count > 0)
             {
-                int index = listViewCustom1.SelectedIndices[0];
-                if (ShowLabels)
+                var item = listViewCustom1.SelectedItems[0];
+                if (item.Tag is MSBT.StringEntry)
                 {
-                    index = (int)activeMessageFile.header.Label1.Labels[index].Index;
-                }
-                var textSection = activeMessageFile.header.Text2;
-                if (textSection != null)
-                {
-                    editTextTB.Text = textSection.TextData[index].GetText(activeMessageFile.header.StringEncoding);
-                    originalTextTB.Text = textSection.OriginalTextData[index].GetText(activeMessageFile.header.StringEncoding);
-                    hexEditor1.LoadData(textSection.TextData[index].Data);
+                    var msbtString = (MSBT.StringEntry)item.Tag;
+
+                    editTextTB.Text = msbtString.GetText(activeMessageFile.header.StringEncoding);
+                    originalTextTB.Text = msbtString.GetText(activeMessageFile.header.StringEncoding);
+                    hexEditor1.LoadData(msbtString.Data);
                 }
             }
         }

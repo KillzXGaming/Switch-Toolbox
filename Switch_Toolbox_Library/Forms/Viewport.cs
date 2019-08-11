@@ -161,6 +161,18 @@ namespace Toolbox.Library
             }
         }
 
+        public Bitmap CaptureScreenshot(int width, int height, bool enableAlpha)
+        {
+            GLControl control = null;
+            if (GL_ControlModern != null)
+                control = GL_ControlModern;
+            else
+                control = GL_ControlLegacy;
+
+            Bitmap bitmap = new Bitmap(width, height);
+            return bitmap;
+        }
+
         public void LoadCustomMenuItem(ToolStripMenuItem menu)
         {
             foreach (ToolStripMenuItem item in stContextMenuStrip1.Items)
