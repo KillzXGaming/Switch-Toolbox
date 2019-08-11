@@ -8,6 +8,7 @@ using Toolbox.Library.Forms;
 using System.IO;
 using OpenTK;
 using FirstPlugin;
+using UKing.Actors.Forms;
 
 namespace UKing.Actors
 {
@@ -279,6 +280,7 @@ namespace UKing.Actors
                     }
 
                     ActorEntry entry = new ActorEntry();
+                    entry.Info = info.Value;
                     entry.Text = info.Value.MessageName;
                     Categories[catgeory].Nodes.Add(entry);
                 }
@@ -332,6 +334,8 @@ namespace UKing.Actors
             public ActorModel Models { get; set; }
             public ActorTextures Textures { get; set; }
 
+            public ActorInfo Info { get; set; }
+
             public void ReloadActorProperties()
             {
                 Textures = new ActorTextures();
@@ -344,7 +348,20 @@ namespace UKing.Actors
 
             public override void OnClick(TreeView treeview)
             {
+                UpdateEditor();
+            }
+            public void UpdateEditor()
+            {
+                BotwActorEditorControl editor = (BotwActorEditorControl)LibraryGUI.GetActiveContent(typeof(BotwActorEditorControl));
+                if (editor == null)
+                {
+                    editor = new BotwActorEditorControl();
+                    editor.Dock = DockStyle.Fill;
 
+                    LibraryGUI.LoadEditor(editor);
+                }
+                editor.Text = Text;
+                editor.LoadActor(this);
             }
         }
 

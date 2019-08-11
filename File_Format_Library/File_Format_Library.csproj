@@ -301,11 +301,11 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
-    <Compile Include="GUI\ActorEditorBotw.cs">
+    <Compile Include="GUI\BotwActorEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\ActorEditorBotw.Designer.cs">
-      <DependentUpon>ActorEditorBotw.cs</DependentUpon>
+    <Compile Include="GUI\BotwActorEditorControl.Designer.cs">
+      <DependentUpon>BotwActorEditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFFNT\BffntEditor.cs">
       <SubType>UserControl</SubType>
@@ -1193,6 +1193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BMD\BMDModelImportSettings.resx">
       <DependentUpon>BMDModelImportSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BotwActorEditorControl.resx">
+      <DependentUpon>BotwActorEditorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.resx">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
