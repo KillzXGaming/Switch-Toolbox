@@ -106,6 +106,7 @@ namespace Toolbox.Library.Forms
         }
 
         public void SelectFirstNode() { if (ObjectTree != null) ObjectTree.SelectFirstNode(); }
+        public void SelectNode(TreeNode node) { if (ObjectTree != null) ObjectTree.SelectNode(node); }
 
         public void SortTreeAscending() { if (ObjectTree != null) ObjectTree.SortTreeAscending(); }
 

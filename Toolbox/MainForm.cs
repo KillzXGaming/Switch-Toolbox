@@ -51,8 +51,6 @@ namespace Toolbox
             FormThemes.ActivePreset = FormThemes.Preset.Dark;
 
             InitializeComponent();
-
-            LoadConfig();
         }
 
         public void UpdateForm()
@@ -65,7 +63,7 @@ namespace Toolbox
         }
 
         //Use for files opened with program
-        public List<string> openedFiles = new List<string>();
+        public List<string> OpenedFiles = new List<string>();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -122,19 +120,30 @@ namespace Toolbox
             ReloadFiles();
             LoadPluginFileContextMenus();
 
-            foreach (string file in openedFiles)
+            foreach (string file in OpenedFiles)
             {
                 if (File.Exists(file))
                     OpenFile(file);
             }
 
-            openedFiles.Clear();
+            OpenedFiles.Clear();
 
             if (Runtime.UseDebugDomainExceptionHandler)
             {
                 AppDomain currentDomain = AppDomain.CurrentDomain;
                 currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
             }
+        }
+
+        public void OpenFiles()
+        {
+            foreach (string file in OpenedFiles)
+            {
+                if (File.Exists(file))
+                    OpenFile(file);
+            }
+
+            OpenedFiles.Clear();
         }
 
         private void ReloadFiles()
@@ -324,8 +333,6 @@ namespace Toolbox
             }
 
             SetFormatSettings(GetActiveIFileFormat());
-
-            ((ObjectEditor)editor).SelectFirstNode();
         }
 
         private void AddObjectEditorFile(TreeNode file, ObjectEditor editor, bool ClearFiles)
@@ -333,6 +340,7 @@ namespace Toolbox
             TabDupeIndex = 0;
             editor.MdiParent = this;
             editor.AddNode(file, ClearFiles);
+            editor.SelectNode(file);
 
             if (file is TreeNodeFile)
             {
@@ -558,7 +566,7 @@ namespace Toolbox
 
         #region Form Settings and plugin menus
 
-        private void LoadConfig()
+        public static void LoadConfig()
         {
             try
             {

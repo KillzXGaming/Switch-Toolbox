@@ -244,6 +244,9 @@ namespace Toolbox.Library
                     case "CustomPicureBoxBGColor":
                         TryParseHexColor(node, ref Runtime.CustomPicureBoxBGColor);
                         break;
+                    case "UseSingleInstance":
+                        bool.TryParse(node.InnerText, out Runtime.UseSingleInstance);
+                        break;
                 }
             }
 
@@ -368,6 +371,8 @@ namespace Toolbox.Library
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
 
+            
+            mainSettingsNode.AppendChild(createNode(doc, "UseSingleInstance", Runtime.UseSingleInstance.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDirectXTexDecoder", Runtime.UseDirectXTexDecoder.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "AlwaysCompressOnSave", Runtime.AlwaysCompressOnSave.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));

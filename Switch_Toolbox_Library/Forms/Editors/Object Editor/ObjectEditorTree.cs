@@ -58,6 +58,8 @@ namespace Toolbox.Library.Forms
                     FileRoot.Nodes.Add(n);
             }
 
+            SelectNode(FileRoot);
+
             for (int i = 0; i < FileRoot.FileNodes.Count; i++)
             {
                 if (FileRoot.FileNodes[i].Item1.OpenFileFormatOnLoad)
@@ -561,6 +563,11 @@ namespace Toolbox.Library.Forms
         public void SortTreeAscending()
         {
             treeViewCustom1.Sort();
+        }
+
+        public void SelectNode(TreeNode node)
+        {
+            treeViewCustom1.SelectedNode = node;
         }
 
         private void splitter1_Resize(object sender, EventArgs e)

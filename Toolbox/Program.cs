@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace Toolbox
 {
@@ -35,23 +36,62 @@ namespace Toolbox
             var domain = AppDomain.CurrentDomain;
             domain.AssemblyResolve += LoadAssembly;
 
-            MainForm form = new MainForm();
-            form.openedFiles = Files;
-
-
             bool LoadedDX = TryLoadDirectXTex();
             if (!LoadedDX && !Toolbox.Library.Runtime.UseDirectXTexDecoder)
             {
-               var result = MessageBox.Show("Direct X Tex Failed to load! Make sure to install Visual C++ and Direct X Tex. Do you want to go to the install sites?", "", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show("Direct X Tex Failed to load! Make sure to install Visual C++ and Direct X Tex. Do you want to go to the install sites?", "", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     System.Diagnostics.Process.Start("https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads");
                     System.Diagnostics.Process.Start("https://www.microsoft.com/en-us/download/details.aspx?id=35");
                 }
             }
-            Toolbox.Library.Runtime.UseDirectXTexDecoder= LoadedDX;
 
-            Application.Run(form);
+            MainForm.LoadConfig();
+
+            if (Toolbox.Library.Runtime.UseSingleInstance)
+            {
+                SingleInstanceController controller = new SingleInstanceController();
+                controller.Run(args);
+            }
+            else
+            {
+                MainForm form = new MainForm();
+                form.OpenedFiles = Files;
+                Application.Run(form);
+            }
+        }
+
+        public class SingleInstanceController : WindowsFormsApplicationBase
+        {
+            public SingleInstanceController()
+            {
+                IsSingleInstance = true;
+                Startup += OnStart;
+                StartupNextInstance += Program_StartupNextInstance;
+            }
+
+            private void OnStart(object sender, StartupEventArgs e)
+            {
+                List<string> args = new List<string>();
+                foreach (string arg in e.CommandLine)
+                    args.Add(arg);
+
+                Toolbox.MainForm.Instance.OpenedFiles = args;
+            }
+
+            void Program_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
+            {
+                e.BringToForeground = true;
+                MainForm form = MainForm as MainForm;
+                form.OpenedFiles = e.CommandLine.ToList();
+                form.OpenFiles();
+            }
+
+            protected override void OnCreateMainForm()
+            {
+                MainForm = new MainForm();
+            }
         }
 
         private static bool TryLoadZSTD()

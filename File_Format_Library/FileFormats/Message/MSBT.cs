@@ -460,7 +460,7 @@ namespace FirstPlugin
                 for (int i = 0; i < Entries.Count; i++)
                 {
                    writer.Write(Entries[i].Item1); //MessageID
-                    writer.Write(Entries[i].Item2); //MessageIndex
+                   writer.Write(Entries[i].Item2); //MessageIndex
                 }
             }
         }
