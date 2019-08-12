@@ -304,8 +304,17 @@ namespace Toolbox.Library.Animations
 
         private static void writeKey(StreamWriter file, Animation.KeyGroup keys, Animation.KeyNode rt, int size, string type)
         {
+            bool isAngular = type == "rotateX" || type == "rotateY" || type == "rotateZ";
 
-            file.WriteLine("animData {\n input time;\n output linear;\n weighted 1;\n preInfinity constant;\n postInfinity constant;\n keys {");
+            string interp = isAngular ? "angular" : "linear";
+
+            file.WriteLine("animData {");
+            file.WriteLine("  input time;");
+            file.WriteLine($"  output {interp};");
+            file.WriteLine("  weighted 0;");
+            file.WriteLine("  preInfinity constant;");
+            file.WriteLine("  postInfinity constant;");
+            file.WriteLine("  keys {");
 
             if (((Animation.KeyFrame)keys.Keys[0]).InterType == InterpolationType.CONSTANT)
                 size = 1;
@@ -368,7 +377,7 @@ namespace Toolbox.Library.Animations
                         break;
                 }
 
-                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} linear linear 1 1 0 " + key.In * scale + " 1 " + (key.Out != -1 ? key.Out : key.In) * scale + " 1;", v);
+                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} auto 1 1 0 ", v);
             }
 
             file.WriteLine(" }");
