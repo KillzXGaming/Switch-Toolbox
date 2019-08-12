@@ -45,10 +45,6 @@ namespace Toolbox.Library.Rendering
                 GraphicsContext.ShareContexts = true;
                 var control = new OpenTK.GLControl();
                 control.MakeCurrent();
-              //  dummyResourceWindow = CreateGameWindowContext();
-
-                if (Runtime.enableOpenTKDebugOutput)
-                    EnableOpenTKDebugOutput();
 
                 RenderTools.LoadTextures();
                 GetOpenGLSystemInfo();
@@ -61,24 +57,6 @@ namespace Toolbox.Library.Rendering
                 // Context creation failed.
                 setupStatus = SharedResourceStatus.Failed;
             }
-        }
-
-        public static void EnableOpenTKDebugOutput()
-        {
-#if DEBUG
-            /*// This isn't free, so skip this step when not debugging.
-            // TODO: Only works with Intel integrated.
-            if (SFGraphics.Tools.OpenGLExtensions.IsAvailable("GL_KHR_debug"))
-            {
-                GL.Enable(EnableCap.DebugOutput);
-                GL.Enable(EnableCap.DebugOutputSynchronous);
-                debugProc = DebugCallback;
-                GL.DebugMessageCallback(debugProc, IntPtr.Zero);
-                int[] ids = { };
-                GL.DebugMessageControl(DebugSourceControl.DontCare, DebugTypeControl.DontCare,
-                    DebugSeverityControl.DontCare, 0, ids, true);
-            }*/
-#endif
         }
 
         private static void DebugCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)

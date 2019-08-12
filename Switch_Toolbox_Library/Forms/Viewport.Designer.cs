@@ -61,6 +61,7 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uVViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -186,7 +187,8 @@
             this.resetCameraToolStripMenuItem,
             this.modeToolStripMenuItem1,
             this.projectionToolStripMenuItem,
-            this.orientationToolStripMenuItem});
+            this.orientationToolStripMenuItem,
+            this.createScreenshotToolStripMenuItem});
             this.cameraToolStripMenuItem1.Name = "cameraToolStripMenuItem1";
             this.cameraToolStripMenuItem1.Size = new System.Drawing.Size(60, 20);
             this.cameraToolStripMenuItem1.Text = "Camera";
@@ -226,14 +228,14 @@
             // orbitToolStripMenuItem
             // 
             this.orbitToolStripMenuItem.Name = "orbitToolStripMenuItem";
-            this.orbitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.orbitToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.orbitToolStripMenuItem.Text = "Orbit";
             this.orbitToolStripMenuItem.Click += new System.EventHandler(this.orbitToolStripMenuItem_Click);
             // 
             // walkToolStripMenuItem
             // 
             this.walkToolStripMenuItem.Name = "walkToolStripMenuItem";
-            this.walkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.walkToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.walkToolStripMenuItem.Text = "Walk";
             this.walkToolStripMenuItem.Click += new System.EventHandler(this.walkToolStripMenuItem_Click);
             // 
@@ -249,14 +251,14 @@
             // orthographicToolStripMenuItem
             // 
             this.orthographicToolStripMenuItem.Name = "orthographicToolStripMenuItem";
-            this.orthographicToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.orthographicToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.orthographicToolStripMenuItem.Text = "Orthographic";
             this.orthographicToolStripMenuItem.Click += new System.EventHandler(this.orthographicToolStripMenuItem_Click);
             // 
             // perspectiveToolStripMenuItem
             // 
             this.perspectiveToolStripMenuItem.Name = "perspectiveToolStripMenuItem";
-            this.perspectiveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.perspectiveToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.perspectiveToolStripMenuItem.Text = "Perspective";
             this.perspectiveToolStripMenuItem.Click += new System.EventHandler(this.perspectiveToolStripMenuItem_Click);
             // 
@@ -344,6 +346,13 @@
             this.uVViewerToolStripMenuItem.Text = "UV Viewer";
             this.uVViewerToolStripMenuItem.Click += new System.EventHandler(this.uVViewerToolStripMenuItem_Click);
             // 
+            // createScreenshotToolStripMenuItem
+            // 
+            this.createScreenshotToolStripMenuItem.Name = "createScreenshotToolStripMenuItem";
+            this.createScreenshotToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createScreenshotToolStripMenuItem.Text = "Create Screenshot";
+            this.createScreenshotToolStripMenuItem.Click += new System.EventHandler(this.createScreenshotToolStripMenuItem_Click);
+            // 
             // Viewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -398,5 +407,6 @@
         private System.Windows.Forms.ToolStripMenuItem walkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem walkToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem createScreenshotToolStripMenuItem;
     }
 }

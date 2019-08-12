@@ -99,12 +99,14 @@ namespace Toolbox
 
                 OpenTKSharedResources.InitializeSharedResources();
 
-                Runtime.OpenTKInitialized = true;
-
-                Runtime.renderer = GL.GetString(StringName.Renderer);
-                Runtime.openGLVersion = GL.GetString(StringName.Version);
-                Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
-                ParseGLVersion();
+                if (OpenTKSharedResources.SetupStatus == OpenTKSharedResources.SharedResourceStatus.Initialized)
+                {
+                    Runtime.OpenTKInitialized = true;
+                    Runtime.renderer = GL.GetString(StringName.Renderer);
+                    Runtime.openGLVersion = GL.GetString(StringName.Version);
+                    Runtime.GLSLVersion = GL.GetString(StringName.ShadingLanguageVersion);
+                    ParseGLVersion();
+                }
             }
 
             LoadPLugins();

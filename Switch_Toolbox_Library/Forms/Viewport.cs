@@ -613,6 +613,39 @@ namespace Toolbox.Library
             }
         }
 
+        public GLControl GetActiveControl()
+        {
+            if (GL_ControlModern != null)
+                return GL_ControlModern;
+            else
+                return GL_ControlLegacy;
+        }
+
+        public void SaveScreenshot()
+        {
+            var control = GetActiveControl();
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = BitmapExtension.FileFilter;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                CreateScreenshot(control.Width, control.Height, false).Save(sfd.FileName);
+            }
+        }
+
+        public Bitmap CreateScreenshot(int width, int height, bool useAlpha = false)
+        {
+            int imageSize = width * height * 4;
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            byte[] output = new byte[imageSize];
+            GL.ReadPixels(0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, output);
+
+            var bitmap = BitmapExtension.GetBitmap(output, width, height);
+            bitmap.RotateFlip(System.Drawing.RotateFlipType.RotateNoneFlipY);
+            return bitmap;
+        }
+
         private void UpdateCameraMovement()
         {
             if (orbitToolStripMenuItem.Checked)
@@ -645,6 +678,10 @@ namespace Toolbox.Library
 
         private void orbitToolStripMenuItem_Click(object sender, EventArgs e) {
             UpdateCameraMovement();
+        }
+
+        private void createScreenshotToolStripMenuItem_Click(object sender, EventArgs e) {
+            SaveScreenshot();
         }
     }
 }

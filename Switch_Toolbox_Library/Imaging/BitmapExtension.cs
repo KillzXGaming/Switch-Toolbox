@@ -29,6 +29,19 @@ namespace Toolbox.Library
             return Bmp;
         }
 
+        public static string FileFilter
+        {
+            get
+            {
+               return "Supported Formats|*.png;*.tga;*.jpg;*.tiff|" +
+                      "Portable Network Graphics |*.png|" +
+                      "Joint Photographic Experts Group |*.jpg|" +
+                      "Bitmap Image |*.bmp|" +
+                      "Tagged Image File Format |*.tiff|" +
+                      "All files(*.*)|*.*";
+            }
+        }
+
         public static List<byte[]> GenerateMipMaps(Bitmap bitmap)
         {
             List<byte[]> datas = new List<byte[]>();
