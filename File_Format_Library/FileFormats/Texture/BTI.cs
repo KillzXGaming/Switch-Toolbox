@@ -75,15 +75,20 @@ namespace FirstPlugin
                 var paletteFormat = (Decode_Gamecube.PaletteFormats)header.PaletteFormat;
 
                 reader.SeekBegin(header.DataOffset);
-                uint imageDataSize = header.PaletteOffset - 32;
+                uint imageDataSize = header.PaletteOffset - header.DataOffset;
                 if (header.PaletteOffset == 0)
-                    imageDataSize = (uint)reader.BaseStream.Length - 32;
+                    imageDataSize = (uint)reader.BaseStream.Length - header.DataOffset;
 
                 ImageData = reader.ReadBytes((int)imageDataSize);
 
-                reader.SeekBegin(header.PaletteOffset);
-                byte[] PaletteData = reader.ReadBytes((int)header.PaletteEntryCount * 2);
-                SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat));
+                if (header.PaletteOffset != 0)
+                {
+                    reader.SeekBegin(header.PaletteOffset);
+                    byte[] PaletteData = reader.ReadBytes((int)header.PaletteEntryCount * 2);
+                    SetPaletteData(PaletteData, Decode_Gamecube.ToGenericPaletteFormat(paletteFormat));
+                }
+                else
+                    SetPaletteData(new byte[0], PALETTE_FORMAT.RGB565);
 
                 //Lets set our method of decoding
                 PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
@@ -117,21 +122,22 @@ namespace FirstPlugin
         {
             using (var writer = new FileWriter(stream))
             {
-                //After header and image data
-                header.PaletteOffset = (uint)(32 + ImageData.Length);
+                byte[] paletteData = GetPaletteData() != null ? GetPaletteData() : new byte[0];
 
                 //Convert current header format and set the generic properties
                 header.Format = (byte)Decode_Gamecube.FromGenericFormat(Format);
                 header.PaletteFormat = (byte)Decode_Gamecube.FromGenericPaletteFormat(PaletteFormat);
                 header.Width = (ushort)Width;
                 header.Height = (ushort)Height;
-                header.PaletteEntryCount = (ushort)(GetPaletteData().Length / 2);
+                header.PaletteEntryCount = (ushort)(paletteData.Length / 2);
 
+                //After header and image data
+                header.PaletteOffset = header.PaletteEntryCount != 0 ? (uint)(32 + ImageData.Length) : 0;
 
                 writer.SetByteOrder(true);
                 writer.WriteStruct(header);
                 writer.Write(ImageData);
-                writer.Write(GetPaletteData());
+                writer.Write(paletteData);
             }
         }
 
