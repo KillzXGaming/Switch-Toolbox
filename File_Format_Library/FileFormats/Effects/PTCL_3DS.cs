@@ -88,7 +88,7 @@ namespace FirstPlugin
             }
             public void Write(FileWriter writer, PTCL ptcl)
             {
-                writer.ByteOrder = ByteOrder.BigEndian;
+                writer.ByteOrder = ByteOrder.LittleEndian;
                 writer.Write(ptcl.data.ToArray());
 
                 foreach (TextureInfo tex in ptcl.header3DS.Textures)
