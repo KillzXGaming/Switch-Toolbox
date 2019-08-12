@@ -76,6 +76,8 @@ namespace FirstPlugin
 
                 reader.SeekBegin(header.DataOffset);
                 uint imageDataSize = header.PaletteOffset - 32;
+                if (header.PaletteOffset == 0)
+                    imageDataSize = (uint)reader.BaseStream.Length - 32;
 
                 ImageData = reader.ReadBytes((int)imageDataSize);
 
