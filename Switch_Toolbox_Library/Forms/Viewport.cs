@@ -92,12 +92,16 @@ namespace Toolbox.Library
             }
         }
 
-        public DrawableContainer GetActiveContainer()
+        public List<DrawableContainer> GetActiveContainers()
         {
-            if (drawContainersCB.SelectedIndex - 1 < 0)
+            if (drawContainersCB.SelectedIndex < 0)
                 return null;
 
-            return DrawableContainers[drawContainersCB.SelectedIndex - 1];
+            if (drawContainersCB.SelectedIndex == 0 || DisplayAll)
+                return DrawableContainers;
+
+            return new List<DrawableContainer>()
+            { DrawableContainers[drawContainersCB.SelectedIndex - 1], };
         }
 
         //Reloads drawable containers with the active container selected
@@ -590,20 +594,21 @@ namespace Toolbox.Library
             if (!Runtime.UseOpenGL)
                 return;
 
-            var container = GetActiveContainer();
-            if (container == null) return;
+            var containers = GetActiveContainers();
+            if (containers.Count == 0) return;
 
             List<STGenericObject> meshes = new List<STGenericObject>();
-            for (int i = 0; i < container.Drawables.Count; i++)
+            foreach (var container in containers)
             {
-                if (container.Drawables[i] is IMeshContainer && container.Drawables[i].Visible)
+                for (int i = 0; i < container.Drawables.Count; i++)
                 {
-                    for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
-                        meshes.Add(((IMeshContainer)container.Drawables[i]).Meshes[m]);
+                    if (container.Drawables[i] is IMeshContainer && container.Drawables[i].Visible)
+                    {
+                        for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
+                            meshes.Add(((IMeshContainer)container.Drawables[i]).Meshes[m]);
+                    }
                 }
             }
-
-            Console.WriteLine($"MeshCount " + meshes.Count);
 
             if (meshes.Count > 0)
             {
