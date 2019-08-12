@@ -31,9 +31,8 @@ namespace Toolbox.Library.Forms
             public Vector2 UVScale = new Vector2(1);
             public Vector2 UVTranslate = new Vector2(0);
             public float UVRotate = 0;
-            public STGenericTexture texture;
             public int UvChannelIndex;
-            public int mapMode = 0;
+            public int TextureIndex = -1;
 
             public STTextureWrapMode WrapModeS = STTextureWrapMode.Repeat;
             public STTextureWrapMode WrapModeT = STTextureWrapMode.Repeat;
@@ -42,18 +41,37 @@ namespace Toolbox.Library.Forms
             public STTextureMinFilter MinFilter = STTextureMinFilter.Linear;
             public STTextureMagFilter MagFilter = STTextureMagFilter.Linear;
 
-            public uint texWidth = 0;
-            public uint texHeight = 0;
+            public uint Width = 0;
+            public uint Height = 0;
         }
         public ActiveTexture activeTexture = new ActiveTexture();
 
         public float brightness = 0.5f; //To see uv maps easier
         public int UvChannelIndex = 0;
 
-        public List<STGenericObject> ActiveObjects = new List<STGenericObject>();
-        public List<STGenericMaterial> ActiveMaterials = new List<STGenericMaterial>();
+        public List<STGenericObject> Objects = new List<STGenericObject>();
 
-        public List<ActiveTexture> Textures = new List<ActiveTexture>();
+        public List<STGenericObject> ActiveObjects
+        {
+            get
+            {
+                List<STGenericObject> objects = new List<STGenericObject>();
+                for (int i = 0; i < Objects.Count; i++)
+                {
+                    if (Objects[i].GetMaterial() == ActiveMaterial)
+                        objects.Add(Objects[i]);
+                }
+
+                return objects;
+            }
+        }
+
+        public List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+        public List<STGenericTexture> Textures = new List<STGenericTexture>();
+
+        public List<ActiveTexture> ChannelTextures = new List<ActiveTexture>();
+
+        public STGenericMaterial ActiveMaterial;
 
         bool IsSRTLoaded = false;
         public void Reset()
@@ -67,16 +85,18 @@ namespace Toolbox.Library.Forms
 
             IsSRTLoaded = false;
 
-            comboBox2.Items.Clear();
+            stComboBox1.Items.Clear();
 
             if (RenderTools.defaultTex != null)
                 texid = RenderTools.defaultTex.RenderableTex.TexID;
 
-            foreach (var item in Textures)
-                comboBox2.Items.Add(item.texture.Text);
+            foreach (var mat in Materials)
+            {
+                stComboBox1.Items.Add(mat.Text);
+            }
 
-            if (comboBox2.Items.Count > 0)
-                comboBox2.SelectedIndex = 0;
+            if (stComboBox1.Items.Count > 0)
+                stComboBox1.SelectedIndex = 0;
         }
 
         public int texid;
@@ -262,10 +282,10 @@ namespace Toolbox.Library.Forms
             float PlaneScaleX = 0.5f;
             float PlaneScaleY = 0.5f;
 
-            if (activeTexture.texWidth != 0 && activeTexture.texHeight != 0)
+            if (activeTexture.Width != 0 && activeTexture.Height != 0)
             {
-                PlaneScaleX = (float)gL_ControlLegacy2D1.Width / (float)activeTexture.texWidth;
-                PlaneScaleY = (float)gL_ControlLegacy2D1.Height / (float)activeTexture.texHeight;
+                PlaneScaleX = (float)gL_ControlLegacy2D1.Width / (float)activeTexture.Width;
+                PlaneScaleY = (float)gL_ControlLegacy2D1.Height / (float)activeTexture.Height;
             }
 
 
@@ -275,7 +295,7 @@ namespace Toolbox.Library.Forms
             GL.Scale(PlaneScaleY * ZoomValue, -PlaneScaleX * ZoomValue, 1);
             GL.Translate(PosX, PosY, 0);
 
-            if (activeTexture.texture != null)
+            if (activeTexture.TextureIndex != -1)
             {
                 //Draws a textured plan for our uvs to show on
                 GL.Enable(EnableCap.Texture2D);
@@ -324,8 +344,6 @@ namespace Toolbox.Library.Forms
             Positions[1] = Positions[1] * scale;
             Positions[2] = Positions[2] * scale;
             Positions[3] = Positions[3] * scale;
-
-            int brightnessScale = (int)(brightness * 255);
 
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(brightness, brightness, brightness);
@@ -390,7 +408,7 @@ namespace Toolbox.Library.Forms
         {
             if (comboBox2.SelectedIndex >= 0)
             {
-                activeTexture = Textures[comboBox2.SelectedIndex];
+                activeTexture = ChannelTextures[comboBox2.SelectedIndex];
                 UvChannelIndex = activeTexture.UvChannelIndex;
 
                 scaleXUD.Value = (decimal)activeTexture.UVScale.X;
@@ -398,14 +416,14 @@ namespace Toolbox.Library.Forms
                 transXUD.Value = (decimal)activeTexture.UVTranslate.X;
                 transYUD.Value = (decimal)activeTexture.UVTranslate.Y;
 
-                var texture = activeTexture.texture;
+                var texture = Textures[activeTexture.TextureIndex];
 
                 if (texture.RenderableTex == null)
                     texture.LoadOpenGLTexture();
 
                 texid = texture.RenderableTex.TexID;
-                activeTexture.texWidth = texture.Width;
-                activeTexture.texHeight = texture.Height;
+                activeTexture.Width = texture.Width;
+                activeTexture.Height = texture.Height;
 
                 gL_ControlLegacy2D1.Invalidate();
 
@@ -459,6 +477,49 @@ namespace Toolbox.Library.Forms
         private void gL_ControlLegacy2D1_Resize(object sender, EventArgs e)
         {
             gL_ControlLegacy2D1.Invalidate();
+        }
+
+        private void stComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (stComboBox1.SelectedIndex >= 0)
+            {
+                ActiveMaterial = Materials[stComboBox1.SelectedIndex];
+
+                ChannelTextures.Clear();
+                Textures.Clear();
+                comboBox2.Items.Clear();
+
+                foreach (var texMap in ActiveMaterial.TextureMaps)
+                {
+                    var texture = texMap.GetTexture();
+                    if (texture != null && !Textures.Contains(texture))
+                    {
+                        comboBox2.Items.Add(texture.Text);
+
+                        Textures.Add(texture);
+                        ActiveTexture tex = new ActiveTexture();
+                        tex.TextureIndex = Textures.IndexOf(texture);
+                        tex.Width = texture.Width;
+                        tex.Height = texture.Height;
+                        tex.MagFilter = texMap.MagFilter;
+                        tex.MinFilter = texMap.MinFilter;
+                        tex.UvChannelIndex = 0;
+                        ChannelTextures.Add(tex);
+                    }
+                }
+
+                comboBox2.SelectedIndex = 0;
+            }
+        }
+
+        private void barSlider1_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void stButton1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

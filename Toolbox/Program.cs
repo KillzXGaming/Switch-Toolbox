@@ -101,7 +101,7 @@ namespace Toolbox
 
             protected override void OnCreateMainForm()
             {
-                MainForm = new MainForm();
+                MainForm = Toolbox.MainForm.Instance;
             }
         }
 

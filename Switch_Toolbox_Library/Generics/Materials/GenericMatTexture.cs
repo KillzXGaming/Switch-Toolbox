@@ -55,6 +55,16 @@ namespace Toolbox.Library
             Replaced,
         }
 
+        /// <summary>
+        /// Gets the texture that links to this material texture map
+        /// Used for UV editor
+        /// </summary>
+        /// <returns></returns>
+        public virtual STGenericTexture GetTexture()
+        {
+            return null;
+        }
+
         public TextureType Type;
 
         //An enum for the assumed texture type by sampler

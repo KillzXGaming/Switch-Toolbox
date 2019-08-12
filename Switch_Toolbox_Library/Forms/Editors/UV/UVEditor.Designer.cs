@@ -36,17 +36,17 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.scaleXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.btnApplyTransform = new Toolbox.Library.Forms.STButton();
+            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.barSlider1 = new ColorSlider.ColorSlider();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.comboBox2 = new Toolbox.Library.Forms.STComboBox();
             this.comboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.btnApplyTransform = new Toolbox.Library.Forms.STButton();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
-            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
-            this.stButton1 = new Toolbox.Library.Forms.STButton();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transXUD)).BeginInit();
@@ -199,16 +199,20 @@
             this.stPanel1.Size = new System.Drawing.Size(605, 70);
             this.stPanel1.TabIndex = 1;
             // 
-            // btnApplyTransform
+            // stComboBox1
             // 
-            this.btnApplyTransform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyTransform.Location = new System.Drawing.Point(3, 138);
-            this.btnApplyTransform.Name = "btnApplyTransform";
-            this.btnApplyTransform.Size = new System.Drawing.Size(119, 23);
-            this.btnApplyTransform.TabIndex = 9;
-            this.btnApplyTransform.Text = "Apply Transform";
-            this.btnApplyTransform.UseVisualStyleBackColor = false;
-            this.btnApplyTransform.Click += new System.EventHandler(this.btnApplyTransform_Click);
+            this.stComboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stComboBox1.BorderColor = System.Drawing.Color.Empty;
+            this.stComboBox1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.stComboBox1.ButtonColor = System.Drawing.Color.Empty;
+            this.stComboBox1.FormattingEnabled = true;
+            this.stComboBox1.Location = new System.Drawing.Point(290, 7);
+            this.stComboBox1.Name = "stComboBox1";
+            this.stComboBox1.ReadOnly = true;
+            this.stComboBox1.Size = new System.Drawing.Size(166, 21);
+            this.stComboBox1.TabIndex = 19;
+            this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);
             // 
             // barSlider1
             // 
@@ -292,6 +296,17 @@
             this.stLabel1.TabIndex = 4;
             this.stLabel1.Text = "Active Channel:";
             // 
+            // btnApplyTransform
+            // 
+            this.btnApplyTransform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyTransform.Location = new System.Drawing.Point(3, 138);
+            this.btnApplyTransform.Name = "btnApplyTransform";
+            this.btnApplyTransform.Size = new System.Drawing.Size(119, 23);
+            this.btnApplyTransform.TabIndex = 9;
+            this.btnApplyTransform.Text = "Apply Transform";
+            this.btnApplyTransform.UseVisualStyleBackColor = false;
+            this.btnApplyTransform.Click += new System.EventHandler(this.btnApplyTransform_Click);
+            // 
             // stPanel2
             // 
             this.stPanel2.Controls.Add(this.stButton1);
@@ -308,19 +323,16 @@
             this.stPanel2.Size = new System.Drawing.Size(159, 454);
             this.stPanel2.TabIndex = 3;
             // 
-            // stComboBox1
+            // stButton1
             // 
-            this.stComboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stComboBox1.BorderColor = System.Drawing.Color.Empty;
-            this.stComboBox1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.stComboBox1.ButtonColor = System.Drawing.Color.Empty;
-            this.stComboBox1.FormattingEnabled = true;
-            this.stComboBox1.Location = new System.Drawing.Point(290, 7);
-            this.stComboBox1.Name = "stComboBox1";
-            this.stComboBox1.ReadOnly = true;
-            this.stComboBox1.Size = new System.Drawing.Size(166, 21);
-            this.stComboBox1.TabIndex = 19;
+            this.stButton1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stButton1.Location = new System.Drawing.Point(145, 0);
+            this.stButton1.Name = "stButton1";
+            this.stButton1.Size = new System.Drawing.Size(14, 454);
+            this.stButton1.TabIndex = 10;
+            this.stButton1.UseVisualStyleBackColor = false;
+            this.stButton1.Click += new System.EventHandler(this.stButton1_Click);
             // 
             // splitter1
             // 
@@ -338,16 +350,6 @@
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(443, 454);
             this.stPanel3.TabIndex = 5;
-            // 
-            // stButton1
-            // 
-            this.stButton1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(145, 0);
-            this.stButton1.Name = "stButton1";
-            this.stButton1.Size = new System.Drawing.Size(14, 454);
-            this.stButton1.TabIndex = 10;
-            this.stButton1.UseVisualStyleBackColor = false;
             // 
             // UVEditor
             // 

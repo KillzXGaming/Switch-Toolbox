@@ -228,7 +228,12 @@ namespace Bfres.Structs
            return ((FMDL)Parent.Parent);
         }
 
-        public FMAT GetMaterial()
+        public FMAT GetFMAT()
+        {
+            return (FMAT)GetMaterial();
+        }
+
+        public override STGenericMaterial GetMaterial()
         {
             if (Parent == null)
                 STErrorDialog.Show($"Error! Shape {Text} has no parent node!", "GetMaterial", "");
@@ -611,7 +616,7 @@ namespace Bfres.Structs
 
                     //check second UV layer
                     if (Parent != null) {
-                        UseUVLayer2 = GetMaterial().IsNormalMapTexCoord2();
+                        UseUVLayer2 = GetFMAT().IsNormalMapTexCoord2();
                     }
 
                     CalculateTangentBitangent(UseUVLayer2);
@@ -720,9 +725,9 @@ namespace Bfres.Structs
             bool UseUVLayer2 = false;
 
             //for BOTW if it uses UV layer 2 for normal maps use second UV map
-            if (GetMaterial().shaderassign.options.ContainsKey("uking_texture2_texcoord"))
+            if (GetFMAT().shaderassign.options.ContainsKey("uking_texture2_texcoord"))
             {
-                float value = float.Parse(GetMaterial().shaderassign.options["uking_texture2_texcoord"]);
+                float value = float.Parse(GetFMAT().shaderassign.options["uking_texture2_texcoord"]);
 
                 if (value == 1)
                     UseUVLayer2 = true;
@@ -778,7 +783,7 @@ namespace Bfres.Structs
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                GetMaterial().Material.Export(sfd.FileName, GetResFile());
+                GetFMAT().Material.Export(sfd.FileName, GetResFile());
             }
         }
         public void ReplaceMaterials(object sender, EventArgs args)
@@ -790,7 +795,7 @@ namespace Bfres.Structs
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                GetMaterial().Material.Import(ofd.FileName);
+                GetFMAT().Material.Import(ofd.FileName);
             }
         }
         public void Export(object sender, EventArgs args)
@@ -909,7 +914,7 @@ namespace Bfres.Structs
                                 CreateIndexList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
                                 BoneIndices = GetIndices(GetParentModel().Skeleton);
 
-                                ApplyImportSettings(settings, GetMaterial());
+                                ApplyImportSettings(settings, GetFMAT());
 
                                 OptmizeAttributeFormats();
                                 SaveShape(IsWiiU);

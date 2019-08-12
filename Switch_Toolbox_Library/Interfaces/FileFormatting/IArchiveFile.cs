@@ -849,14 +849,15 @@ namespace Toolbox.Library
             if (file == null) //Format not supported so return
                 return;
 
-            ArchiveFileInfo.FileFormat = file;
-
             if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)))
             {
                 OpenFormDialog(file);
             }
             else if (file is IArchiveFile)
             {
+                if (ArchiveFileInfo.FileFormat != null)
+                    ArchiveFileInfo.FileFormat.Unload();
+
                 var FileRoot = new ArchiveRootNodeWrapper(file.FileName, (IArchiveFile)file);
                 FileRoot.FillTreeNodes();
 
@@ -869,7 +870,16 @@ namespace Toolbox.Library
                 ReplaceNode(this.Parent, treeview, this, FileRoot, RootNode);
             }
             else if (file is TreeNode)
+            {
+                if (ArchiveFileInfo.FileFormat != null)
+                    ArchiveFileInfo.FileFormat.Unload();
+
                 ReplaceNode(this.Parent, treeview, this, (TreeNode)file, RootNode);
+            }
+
+            ArchiveFileInfo.FileFormat = file;
+
+            Console.WriteLine("replacedFileFormat ");
         }
 
         private void OpenFormDialog(IFileFormat fileFormat)

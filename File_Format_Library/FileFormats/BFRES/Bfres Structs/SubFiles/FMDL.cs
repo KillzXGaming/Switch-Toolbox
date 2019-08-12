@@ -384,8 +384,8 @@ namespace Bfres.Structs
                 bool UseUVLayer2 = false;
 
                 //for BOTW if it uses UV layer 2 for normal maps use second UV map
-                if (shp.GetMaterial().shaderassign.options.ContainsKey("uking_texture2_texcoord")) {
-                    float value = float.Parse(shp.GetMaterial().shaderassign.options["uking_texture2_texcoord"]);
+                if (shp.GetFMAT().shaderassign.options.ContainsKey("uking_texture2_texcoord")) {
+                    float value = float.Parse(shp.GetFMAT().shaderassign.options["uking_texture2_texcoord"]);
 
                     if (value == 1)
                         UseUVLayer2 = true;

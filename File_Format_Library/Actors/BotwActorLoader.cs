@@ -283,6 +283,7 @@ namespace UKing.Actors
                     entry.Info = info.Value;
                     entry.Text = info.Value.MessageName;
                     Categories[catgeory].Nodes.Add(entry);
+                    entry.ReloadActorProperties();
                 }
             }
 
@@ -342,7 +343,30 @@ namespace UKing.Actors
                 Models = new ActorModel();
                 Parameters = new ActorParameters();
 
+                string bfresName = Info.BfresName;
+
                 //Load our texture paths if they exist
+                string texPathNX = $"{Runtime.BotwGamePath}/Model/{bfresName}.Tex.sbfres";
+                string tex1Path =  $"{Runtime.BotwGamePath}/Model/{bfresName}.Tex1.sbfres";
+                string tex2Path =  $"{Runtime.BotwGamePath}/Model/{bfresName}.Tex2.sbfres";
+
+                if (File.Exists(texPathNX))
+                    Textures.FilePathTex1 = texPathNX;
+                if (File.Exists(tex1Path))
+                    Textures.FilePathTex1 = tex1Path;
+                if (File.Exists(tex2Path))
+                    Textures.FilePathTex2 = tex2Path;
+
+                //Load model and animation paths if they exist
+                string modelPath = $"{Runtime.BotwGamePath}/Model/{bfresName}.sbfres";
+                string animationPath = $"{Runtime.BotwGamePath}/Model/{bfresName}_Animation.sbfres";
+
+                if (File.Exists(modelPath))
+                    Models.FilePathModel = modelPath;
+                if (File.Exists(animationPath))
+                    Models.FilePathAnimation = animationPath;
+
+                //Load any cached paths
 
             }
 

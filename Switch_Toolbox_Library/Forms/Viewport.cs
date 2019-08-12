@@ -398,6 +398,8 @@ namespace Toolbox.Library
             {
                 if (animationPanel1.CurrentAnimation != null)
                     animationPanel1.ResetModels();
+
+                UpdateViewport();
             }
         }
 
@@ -594,7 +596,7 @@ namespace Toolbox.Library
             List<STGenericObject> meshes = new List<STGenericObject>();
             for (int i = 0; i < container.Drawables.Count; i++)
             {
-                if (container.Drawables[i] is IMeshContainer)
+                if (container.Drawables[i] is IMeshContainer && container.Drawables[i].Visible)
                 {
                     for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
                         meshes.Add(((IMeshContainer)container.Drawables[i]).Meshes[m]);
@@ -607,7 +609,7 @@ namespace Toolbox.Library
             {
                 UVEditorForm uvEditor1 = new UVEditorForm();
                 uvEditor1.LoadEditor(meshes);
-                uvEditor1.Show();
+                uvEditor1.Show(this);
             }
         }
 

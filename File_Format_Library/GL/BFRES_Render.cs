@@ -332,7 +332,7 @@ namespace FirstPlugin
             {
                 if (models[0].shapes.Count > 0)
                 {
-                    if (models[0].shapes[0].GetMaterial().shaderassign.ShaderModel == "uking_mat")
+                    if (models[0].shapes[0].GetFMAT().shaderassign.ShaderModel == "uking_mat")
                     {
                         shader = OpenTKSharedResources.shaders["BFRES_Botw"];
 
@@ -424,7 +424,7 @@ namespace FirstPlugin
 
                     for (int shp = 0; shp < models[m].shapes.Count; shp++)
                     {
-                        if (models[m].shapes[shp].GetMaterial().isTransparent)
+                        if (models[m].shapes[shp].GetFMAT().isTransparent)
                             transparent.Add(models[m].shapes[shp]);
                         else
                             opaque.Add(models[m].shapes[shp]);
@@ -715,7 +715,7 @@ namespace FirstPlugin
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
-            var mat = m.GetMaterial();
+            var mat = m.GetFMAT();
 
             if (shader != OpenTKSharedResources.shaders["BFRES_Normals"])
             {
@@ -832,7 +832,7 @@ namespace FirstPlugin
                 for (int shp = 0; shp < models[m].shapes.Count; shp++)
                 {
                     //Update render pass aswell
-                    CheckRenderPass(models[m].shapes[shp].GetMaterial());
+                    CheckRenderPass(models[m].shapes[shp].GetFMAT());
 
                     models[m].shapes[shp].Offset = poffset * 4;
                     List<DisplayVertex> pv = models[m].shapes[shp].CreateDisplayVertices(models[m]);

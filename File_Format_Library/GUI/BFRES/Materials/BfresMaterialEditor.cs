@@ -118,7 +118,6 @@ namespace FirstPlugin.Forms
             TextureMap.MinFilter = texmap.MinFilter;
             TextureMap.MagFilter = texmap.MagFilter;
 
-            TextureMap.texture = genericTexture;
             return TextureMap;
         }
         private void SetActiveGameByShader(string ShaderName, string ShaderMdlName)

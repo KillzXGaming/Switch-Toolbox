@@ -736,6 +736,19 @@ namespace Bfres.Structs
         public float MaxLod;
         public float BiasLod;
 
+        public override STGenericTexture GetTexture()
+        {
+            foreach (var bntx in PluginRuntime.bntxContainers)
+                if (bntx.Textures.ContainsKey(this.Name))
+                    return bntx.Textures[this.Name];
+
+            foreach (var ftexCont in PluginRuntime.ftexContainers)
+                if (ftexCont.ResourceNodes.ContainsKey(this.Name))
+                    return (FTEX)ftexCont.ResourceNodes[this.Name];
+
+            return null;
+        }
+
         public MatTexture()
         {
 

@@ -19,18 +19,23 @@ namespace Toolbox.Library.Forms
 
         public void LoadEditor(List<STGenericObject> Meshes)
         {
-            List<STGenericMaterial> materials = new List<STGenericMaterial>();
-            for (int i =0; i < Meshes.Count; i++)
+            uvEditor1.Materials.Clear();
+            uvEditor1.Textures.Clear();
+            uvEditor1.Objects.Clear();
+
+            for (int i = 0; i < Meshes.Count; i++)
             {
                 if (Meshes[i].GetMaterial() != null)
                 {
-                    materials.Add(Meshes[i].GetMaterial());
+                    var mat = Meshes[i].GetMaterial();
+                    if (!uvEditor1.Materials.Contains(mat))
+                    {
+                        uvEditor1.Materials.Add(mat);
+                    }
                 }
             }
 
-            uvEditor1.ActiveObjects = Meshes;
-            uvEditor1.ActiveMaterials = materials;
-            uvEditor1.Textures.Clear();
+            uvEditor1.Objects = Meshes;
             uvEditor1.Reset();
             uvEditor1.Refresh();
         }

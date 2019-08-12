@@ -769,7 +769,6 @@ namespace FirstPlugin
                 reader.Position = 0;
             }
 
-
             LoadMenus(IsWiiU);
 
        
@@ -1783,7 +1782,7 @@ namespace FirstPlugin
 
         public static void SetShaderAssignAttributes(FSHP shape)
         {
-            var shd = shape.GetMaterial().shaderassign;
+            var shd = shape.GetFMAT().shaderassign;
 
             foreach (var att in shape.vertexAttributes)
             {
@@ -1913,7 +1912,7 @@ namespace FirstPlugin
                         if (!IsWiiU)
                         {
                             Syroot.NintenTools.NSW.Bfres.VertexBuffer vtx = shp.VertexBuffer;
-                            Syroot.NintenTools.NSW.Bfres.Material mat = shp.GetMaterial().Material;
+                            Syroot.NintenTools.NSW.Bfres.Material mat = shp.GetFMAT().Material;
                             Syroot.NintenTools.NSW.Bfres.ShaderAssign shdr = mat.ShaderAssign;
 
                             for (int att = 0; att < vtx.Attributes.Count; att++)
@@ -1930,7 +1929,7 @@ namespace FirstPlugin
                         else
                         {
                             Syroot.NintenTools.Bfres.VertexBuffer vtx = shp.VertexBufferU;
-                            Syroot.NintenTools.Bfres.Material mat = shp.GetMaterial().MaterialU;
+                            Syroot.NintenTools.Bfres.Material mat = shp.GetFMAT().MaterialU;
                             Syroot.NintenTools.Bfres.ShaderAssign shdr = mat.ShaderAssign;
 
                             for (int att = 0; att < vtx.Attributes.Count; att++)

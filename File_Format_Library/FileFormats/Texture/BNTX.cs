@@ -238,7 +238,8 @@ namespace FirstPlugin
             if (ContainerArray.Count == 0)
                 LoadFile(stream, Name);
 
-            PluginRuntime.bntxContainers.Add(this);
+            if (!PluginRuntime.bntxContainers.Contains(this))
+                PluginRuntime.bntxContainers.Add(this);
         }
 
         static bool IsLoadingArray = false;
@@ -492,11 +493,20 @@ namespace FirstPlugin
             BinaryTexFile = new BntxFile(stream);
             Text = BinaryTexFile.Name;
 
+            //Dispose previous entries if bntx is being replaced or reloaded
+            foreach (var tex in Textures.Values)
+            {
+                tex.Texture.TextureData.Clear();
+                tex.Texture = null;
+                tex.DisposeRenderable();
+            }
+
+            Nodes.Clear();
+            Textures.Clear();
 
             foreach (Texture tex in BinaryTexFile.Textures)
             {
                 TextureData texData = new TextureData(tex, BinaryTexFile);
-
                 Nodes.Add(texData);
                 Textures.Add(tex.Name, texData);
             }
@@ -768,8 +778,16 @@ namespace FirstPlugin
 
             if (result == DialogResult.Yes)
             {
-                Nodes.Clear();
+                foreach (var tex in Textures.Values)
+                {
+                    tex.DisposeRenderable();
+                    tex.Texture.TextureData.Clear();
+                    tex.Texture = null;
+                }
+
                 Textures.Clear();
+                Nodes.Clear();
+
                 GC.Collect();
             }
         }
@@ -976,6 +994,7 @@ namespace FirstPlugin
         private void Import(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "BNTX |*.bntx;";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
