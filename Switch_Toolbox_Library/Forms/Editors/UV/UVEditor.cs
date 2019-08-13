@@ -50,6 +50,7 @@ namespace Toolbox.Library.Forms
         public int UvChannelIndex = 0;
 
         public List<STGenericObject> Objects = new List<STGenericObject>();
+        public List<DrawableContainer> Containers = new List<DrawableContainer>();
 
         public List<STGenericObject> ActiveObjects
         {
@@ -73,6 +74,16 @@ namespace Toolbox.Library.Forms
 
         public STGenericMaterial ActiveMaterial;
 
+        public void ResetContainerList()
+        {
+            for (int i =0; i < Containers.Count; i++)
+            {
+                drawableContainerCB.Items.Add(Containers[i].Name);
+            }
+
+            drawableContainerCB.SelectedIndex = 0;
+        }
+
         bool IsSRTLoaded = false;
         public void Reset()
         {
@@ -85,18 +96,18 @@ namespace Toolbox.Library.Forms
 
             IsSRTLoaded = false;
 
-            stComboBox1.Items.Clear();
+            meshesCB.Items.Clear();
 
             if (RenderTools.defaultTex != null)
                 texid = RenderTools.defaultTex.RenderableTex.TexID;
 
             foreach (var mat in Materials)
             {
-                stComboBox1.Items.Add(mat.Text);
+                meshesCB.Items.Add(mat.Text);
             }
 
-            if (stComboBox1.Items.Count > 0)
-                stComboBox1.SelectedIndex = 0;
+            if (meshesCB.Items.Count > 0)
+                meshesCB.SelectedIndex = 0;
         }
 
         public int texid;
@@ -279,16 +290,14 @@ namespace Toolbox.Library.Forms
             //This usually won't be seen unless the textures aren't repeating much
             DrawBackdrop();
 
-            float PlaneScaleX = 0.5f;
-            float PlaneScaleY = 0.5f;
+            float PlaneScaleX = gL_ControlLegacy2D1.Width / 512;
+            float PlaneScaleY = gL_ControlLegacy2D1.Height / 512;
 
             if (activeTexture.Width != 0 && activeTexture.Height != 0)
             {
                 PlaneScaleX = (float)gL_ControlLegacy2D1.Width / (float)activeTexture.Width;
                 PlaneScaleY = (float)gL_ControlLegacy2D1.Height / (float)activeTexture.Height;
             }
-
-
 
             //Now do the plane with uvs
             GL.PushMatrix();
@@ -315,6 +324,7 @@ namespace Toolbox.Library.Forms
             if (ActiveObjects.Count > 0)
                 DrawUVs(ActiveObjects);
 
+            GL.UseProgram(0);
             GL.PopMatrix();
 
             gL_ControlLegacy2D1.SwapBuffers();
@@ -355,6 +365,7 @@ namespace Toolbox.Library.Forms
             GL.Vertex2(Positions[2]);
             GL.TexCoord2(TexCoords[3]);
             GL.Vertex2(Positions[3]);
+            GL.End();
         }
         private void DrawBackdrop()
         {
@@ -406,9 +417,9 @@ namespace Toolbox.Library.Forms
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox2.SelectedIndex >= 0)
+            if (textureCB.SelectedIndex >= 0)
             {
-                activeTexture = ChannelTextures[comboBox2.SelectedIndex];
+                activeTexture = ChannelTextures[textureCB.SelectedIndex];
                 UvChannelIndex = activeTexture.UvChannelIndex;
 
                 scaleXUD.Value = (decimal)activeTexture.UVScale.X;
@@ -479,22 +490,22 @@ namespace Toolbox.Library.Forms
             gL_ControlLegacy2D1.Invalidate();
         }
 
-        private void stComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void meshesCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (stComboBox1.SelectedIndex >= 0)
+            if (meshesCB.SelectedIndex >= 0)
             {
-                ActiveMaterial = Materials[stComboBox1.SelectedIndex];
+                ActiveMaterial = Materials[meshesCB.SelectedIndex];
 
                 ChannelTextures.Clear();
                 Textures.Clear();
-                comboBox2.Items.Clear();
+                textureCB.Items.Clear();
 
                 foreach (var texMap in ActiveMaterial.TextureMaps)
                 {
                     var texture = texMap.GetTexture();
                     if (texture != null && !Textures.Contains(texture))
                     {
-                        comboBox2.Items.Add(texture.Text);
+                        textureCB.Items.Add(texture.Text);
 
                         Textures.Add(texture);
                         ActiveTexture tex = new ActiveTexture();
@@ -508,7 +519,7 @@ namespace Toolbox.Library.Forms
                     }
                 }
 
-                comboBox2.SelectedIndex = 0;
+                textureCB.SelectedIndex = 0;
             }
         }
 
@@ -520,6 +531,43 @@ namespace Toolbox.Library.Forms
         private void stButton1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void drawableContainerCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (drawableContainerCB.SelectedIndex >= 0)
+            {
+                int index = drawableContainerCB.SelectedIndex;
+                DrawableContainer container = Containers[index];
+
+                Materials.Clear();
+                Textures.Clear();
+                Objects.Clear();
+
+                for (int i = 0; i < container.Drawables.Count; i++)
+                {
+                    if (container.Drawables[i] is IMeshContainer && container.Drawables[i].Visible)
+                    {
+                        for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
+                        {
+                            var mesh = ((IMeshContainer)container.Drawables[i]).Meshes[m];
+                            if (mesh.GetMaterial() != null)
+                            {
+                                Objects.Add(mesh);
+                                var mat = mesh.GetMaterial();
+                                if (!Materials.Contains(mat))
+                                {
+                                    Materials.Add(mat);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Reset();
+                Refresh();
+                gL_ControlLegacy2D1.Invalidate();
+            }
         }
     }
 }

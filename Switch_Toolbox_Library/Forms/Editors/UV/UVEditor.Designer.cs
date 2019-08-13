@@ -36,10 +36,11 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.scaleXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.drawableContainerCB = new Toolbox.Library.Forms.STComboBox();
+            this.meshesCB = new Toolbox.Library.Forms.STComboBox();
             this.barSlider1 = new ColorSlider.ColorSlider();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
-            this.comboBox2 = new Toolbox.Library.Forms.STComboBox();
+            this.textureCB = new Toolbox.Library.Forms.STComboBox();
             this.comboBox1 = new Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.btnApplyTransform = new Toolbox.Library.Forms.STButton();
@@ -187,10 +188,11 @@
             // 
             // stPanel1
             // 
-            this.stPanel1.Controls.Add(this.stComboBox1);
+            this.stPanel1.Controls.Add(this.drawableContainerCB);
+            this.stPanel1.Controls.Add(this.meshesCB);
             this.stPanel1.Controls.Add(this.barSlider1);
             this.stPanel1.Controls.Add(this.stLabel2);
-            this.stPanel1.Controls.Add(this.comboBox2);
+            this.stPanel1.Controls.Add(this.textureCB);
             this.stPanel1.Controls.Add(this.comboBox1);
             this.stPanel1.Controls.Add(this.stLabel1);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -199,20 +201,35 @@
             this.stPanel1.Size = new System.Drawing.Size(605, 70);
             this.stPanel1.TabIndex = 1;
             // 
-            // stComboBox1
+            // drawableContainerCB
             // 
-            this.stComboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.drawableContainerCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.stComboBox1.BorderColor = System.Drawing.Color.Empty;
-            this.stComboBox1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.stComboBox1.ButtonColor = System.Drawing.Color.Empty;
-            this.stComboBox1.FormattingEnabled = true;
-            this.stComboBox1.Location = new System.Drawing.Point(290, 7);
-            this.stComboBox1.Name = "stComboBox1";
-            this.stComboBox1.ReadOnly = true;
-            this.stComboBox1.Size = new System.Drawing.Size(166, 21);
-            this.stComboBox1.TabIndex = 19;
-            this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);
+            this.drawableContainerCB.BorderColor = System.Drawing.Color.Empty;
+            this.drawableContainerCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.drawableContainerCB.ButtonColor = System.Drawing.Color.Empty;
+            this.drawableContainerCB.FormattingEnabled = true;
+            this.drawableContainerCB.Location = new System.Drawing.Point(294, 7);
+            this.drawableContainerCB.Name = "drawableContainerCB";
+            this.drawableContainerCB.ReadOnly = true;
+            this.drawableContainerCB.Size = new System.Drawing.Size(146, 21);
+            this.drawableContainerCB.TabIndex = 20;
+            this.drawableContainerCB.SelectedIndexChanged += new System.EventHandler(this.drawableContainerCB_SelectedIndexChanged);
+            // 
+            // meshesCB
+            // 
+            this.meshesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.meshesCB.BorderColor = System.Drawing.Color.Empty;
+            this.meshesCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.meshesCB.ButtonColor = System.Drawing.Color.Empty;
+            this.meshesCB.FormattingEnabled = true;
+            this.meshesCB.Location = new System.Drawing.Point(294, 34);
+            this.meshesCB.Name = "meshesCB";
+            this.meshesCB.ReadOnly = true;
+            this.meshesCB.Size = new System.Drawing.Size(146, 21);
+            this.meshesCB.TabIndex = 19;
+            this.meshesCB.SelectedIndexChanged += new System.EventHandler(this.meshesCB_SelectedIndexChanged);
             // 
             // barSlider1
             // 
@@ -257,20 +274,20 @@
             this.stLabel2.TabIndex = 2;
             this.stLabel2.Text = "Brightness";
             // 
-            // comboBox2
+            // textureCB
             // 
-            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textureCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox2.BorderColor = System.Drawing.Color.Empty;
-            this.comboBox2.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.comboBox2.ButtonColor = System.Drawing.Color.Empty;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(290, 34);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.ReadOnly = true;
-            this.comboBox2.Size = new System.Drawing.Size(166, 21);
-            this.comboBox2.TabIndex = 5;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            this.textureCB.BorderColor = System.Drawing.Color.Empty;
+            this.textureCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.textureCB.ButtonColor = System.Drawing.Color.Empty;
+            this.textureCB.FormattingEnabled = true;
+            this.textureCB.Location = new System.Drawing.Point(446, 34);
+            this.textureCB.Name = "textureCB";
+            this.textureCB.ReadOnly = true;
+            this.textureCB.Size = new System.Drawing.Size(156, 21);
+            this.textureCB.TabIndex = 5;
+            this.textureCB.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // comboBox1
             // 
@@ -379,7 +396,7 @@
         private STLabel stLabel1;
         private Toolbox.Library.Forms.STComboBox comboBox1;
         private OpenTK.GLControl gL_ControlLegacy2D1;
-        private Toolbox.Library.Forms.STComboBox comboBox2;
+        private Toolbox.Library.Forms.STComboBox textureCB;
         private STLabel stLabel2;
         private NumericUpDownFloat scaleXUD;
         private STLabel stLabel3;
@@ -390,9 +407,10 @@
         private ColorSlider.ColorSlider barSlider1;
         private STButton btnApplyTransform;
         private STPanel stPanel2;
-        private STComboBox stComboBox1;
+        private STComboBox meshesCB;
         private System.Windows.Forms.Splitter splitter1;
         private STPanel stPanel3;
         private STButton stButton1;
+        private STComboBox drawableContainerCB;
     }
 }

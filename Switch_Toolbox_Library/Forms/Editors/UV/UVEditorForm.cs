@@ -17,27 +17,15 @@ namespace Toolbox.Library.Forms
             InitializeComponent();
         }
 
-        public void LoadEditor(List<STGenericObject> Meshes)
+        public void LoadEditor(List<DrawableContainer> Drawables)
         {
             uvEditor1.Materials.Clear();
             uvEditor1.Textures.Clear();
             uvEditor1.Objects.Clear();
+            uvEditor1.Containers.Clear();
 
-            for (int i = 0; i < Meshes.Count; i++)
-            {
-                if (Meshes[i].GetMaterial() != null)
-                {
-                    var mat = Meshes[i].GetMaterial();
-                    if (!uvEditor1.Materials.Contains(mat))
-                    {
-                        uvEditor1.Materials.Add(mat);
-                    }
-                }
-            }
-
-            uvEditor1.Objects = Meshes;
-            uvEditor1.Reset();
-            uvEditor1.Refresh();
+            uvEditor1.Containers.AddRange(Drawables);
+            uvEditor1.ResetContainerList();
         }
     }
 }

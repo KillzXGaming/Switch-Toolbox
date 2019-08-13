@@ -597,25 +597,9 @@ namespace Toolbox.Library
             var containers = GetActiveContainers();
             if (containers.Count == 0) return;
 
-            List<STGenericObject> meshes = new List<STGenericObject>();
-            foreach (var container in containers)
-            {
-                for (int i = 0; i < container.Drawables.Count; i++)
-                {
-                    if (container.Drawables[i] is IMeshContainer && container.Drawables[i].Visible)
-                    {
-                        for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
-                            meshes.Add(((IMeshContainer)container.Drawables[i]).Meshes[m]);
-                    }
-                }
-            }
-
-            if (meshes.Count > 0)
-            {
-                UVEditorForm uvEditor1 = new UVEditorForm();
-                uvEditor1.LoadEditor(meshes);
-                uvEditor1.Show(this);
-            }
+            UVEditorForm uvEditor1 = new UVEditorForm();
+            uvEditor1.LoadEditor(containers);
+            uvEditor1.Show(this);
         }
 
         public GLControl GetActiveControl()
