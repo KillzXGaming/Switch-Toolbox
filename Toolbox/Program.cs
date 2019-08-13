@@ -88,6 +88,8 @@ namespace Toolbox
                 foreach (string arg in e.CommandLine)
                     args.Add(arg);
 
+                args.RemoveAt(0);
+
                 Toolbox.MainForm.Instance.OpenedFiles = args;
             }
 
