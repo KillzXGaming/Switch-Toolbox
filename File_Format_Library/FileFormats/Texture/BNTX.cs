@@ -60,7 +60,7 @@ namespace FirstPlugin
         class MenuExt : IFileMenuExtension
         {
             public STToolStripItem[] NewFileMenuExtensions => newFileExt;
-            public STToolStripItem[] NewFromFileMenuExtensions => null;
+            public STToolStripItem[] NewFromFileMenuExtensions => newFromFileExt;
             public STToolStripItem[] ToolsMenuExtensions => toolExt;
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
@@ -70,6 +70,7 @@ namespace FirstPlugin
 
             STToolStripItem[] toolExt = new STToolStripItem[1];
             STToolStripItem[] newFileExt = new STToolStripItem[1];
+            STToolStripItem[] newFromFileExt = new STToolStripItem[1];
 
             public MenuExt()
             {
@@ -78,7 +79,11 @@ namespace FirstPlugin
 
                 newFileExt[0] = new STToolStripItem("BNTX");
                 newFileExt[0].Click += New;
+
+                newFromFileExt[0] = new STToolStripItem("BNTX From Image");
+                newFromFileExt[0].Click += NewFromFile;
             }
+
             private void New(object sender, EventArgs args)
             {
                 BNTX bntx = new BNTX();
@@ -89,6 +94,46 @@ namespace FirstPlugin
                 ObjectEditor editor = new ObjectEditor(bntx);
                 editor.Text = "Untitled-" + 0;
                 LibraryGUI.CreateMdiWindow(editor);
+            }
+
+            private void NewFromFile(object sender, EventArgs args)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Multiselect = true;
+                ofd.Filter = FileFilters.BNTX_TEX;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    //Create a quick one to load all the textures imported in
+                    BNTX tempBntx = new BNTX();
+                    tempBntx.IFileInfo = new IFileInfo();
+                    tempBntx.Load(new MemoryStream(CreateNewBNTX("textures.bntx")));
+                    tempBntx.ImportTexture(ofd.FileNames);
+
+                    string folder = Path.GetDirectoryName(ofd.FileNames[0]);
+
+                    foreach (var tex in tempBntx.Textures.Values)
+                    {
+                        //Now make one for each texture and import each
+                        var bntx = new BntxFile();
+                        bntx.Target = new char[] { 'N', 'X', ' ', ' ' };
+                        bntx.Name = tex.Text;
+                        bntx.Alignment = 0xC;
+                        bntx.TargetAddressSize = 0x40;
+                        bntx.VersionMajor = 0;
+                        bntx.VersionMajor2 = 4;
+                        bntx.VersionMinor = 0;
+                        bntx.VersionMinor2 = 0;
+                        bntx.Textures = new List<Texture>();
+                        bntx.TextureDict = new ResDict();
+                        bntx.RelocationTable = new RelocationTable();
+                        bntx.Flag = 0;
+                        bntx.Textures.Add(tex.Texture);
+                        bntx.Save($"{Path.Combine(folder, tex.Text)}.bntx");
+                    }
+
+                    tempBntx.Unload();
+                }
             }
 
             private void Export(object sender, EventArgs args)

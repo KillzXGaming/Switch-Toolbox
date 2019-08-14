@@ -837,6 +837,7 @@ namespace Toolbox.Library
         private void ReplaceAction(object sender, EventArgs args)
         {
             ArchiveFileInfo.Replace();
+            UpdateEditor();
         }
 
         public override void OnDoubleMouseClick(TreeView treeview) {

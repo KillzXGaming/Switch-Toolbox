@@ -70,58 +70,69 @@ namespace Toolbox.Library
         }
 
 
-        public static void ExtractAllFiles(string ParentPath, TreeNodeCollection Nodes)
+        public static string[] ExtractAllFiles(string ParentPath, TreeNodeCollection Nodes, string overridePath = "")
         {
-            FolderSelectDialog folderDialog = new FolderSelectDialog();
-            if (folderDialog.ShowDialog() == DialogResult.OK)
+            List<string> filesExtracted = new List<string>();
+
+            if (overridePath == string.Empty)
             {
-                STProgressBar progressBar = new STProgressBar();
-                progressBar.Task = "Extracing Files...";
-                progressBar.Refresh();
-                progressBar.Value = 0;
-                progressBar.StartPosition = FormStartPosition.CenterScreen;
-                progressBar.Show();
+                FolderSelectDialog folderDialog = new FolderSelectDialog();
+                if (folderDialog.ShowDialog() != DialogResult.OK)
+                    return new string[0];
 
-                var Collection = TreeViewExtensions.Collect(Nodes);
+                overridePath = folderDialog.SelectedPath;
+            }
 
-                int Curfile = 0;
-                foreach (TreeNode file in Collection)
+            STProgressBar progressBar = new STProgressBar();
+            progressBar.Task = "Extracing Files...";
+            progressBar.Refresh();
+            progressBar.Value = 0;
+            progressBar.StartPosition = FormStartPosition.CenterScreen;
+            progressBar.Show();
+
+            var Collection = TreeViewExtensions.Collect(Nodes);
+
+            int Curfile = 0;
+            foreach (TreeNode file in Collection)
+            {
+                if (file is ArchiveFileWrapper)
                 {
+                    string FilePath = ((ArchiveFileWrapper)file).ArchiveFileInfo.FileName;
+                    string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
+                    string FolderPathDir = Path.Combine(overridePath, FolderPath);
+
+                    if (!Directory.Exists(FolderPathDir))
+                        Directory.CreateDirectory(FolderPathDir);
+
+                    string FileName = file.Text.RemoveIllegaleFileNameCharacters();
+
+                    FilePath = Path.Combine(FolderPath, FileName);
+
+                    if (ParentPath != string.Empty)
+                        FilePath = FilePath.Replace(ParentPath, string.Empty);
+
+                    var path = Path.Combine(overridePath, FilePath);
+
+                    progressBar.Task = $"Extracting File {file}";
+                    progressBar.Value = (Curfile++ * 100) / Collection.Count();
+                    progressBar.Refresh();
+                    CreateDirectoryIfExists($"{path}");
+
                     if (file is ArchiveFileWrapper)
                     {
-                        string FilePath = ((ArchiveFileWrapper)file).ArchiveFileInfo.FileName;
-                        string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
-                        string FolderPathDir = Path.Combine(folderDialog.SelectedPath, FolderPath);
+                        filesExtracted.Add($"{path}");
 
-                        if (!Directory.Exists(FolderPathDir))
-                            Directory.CreateDirectory(FolderPathDir);
-
-                        string FileName = file.Text.RemoveIllegaleFileNameCharacters();
-
-                        FilePath = Path.Combine(FolderPath, FileName);
-
-                        if (ParentPath != string.Empty)
-                            FilePath = FilePath.Replace(ParentPath, string.Empty);
-
-                        var path = Path.Combine(folderDialog.SelectedPath, FilePath);
-
-                        progressBar.Task = $"Extracting File {file}";
-                        progressBar.Value = (Curfile++ * 100) / Collection.Count();
-                        progressBar.Refresh();
-                        CreateDirectoryIfExists($"{path}");
-
-                        if (file is ArchiveFileWrapper)
-                        {
-                            File.WriteAllBytes($"{path}",
-                                ((ArchiveFileWrapper)file).ArchiveFileInfo.FileData);
-                        }
+                        File.WriteAllBytes($"{path}",
+                            ((ArchiveFileWrapper)file).ArchiveFileInfo.FileData);
                     }
                 }
-
-                progressBar.Value = 100;
-                progressBar.Refresh();
-                progressBar.Close();
             }
+
+            progressBar.Value = 100;
+            progressBar.Refresh();
+            progressBar.Close();
+
+            return filesExtracted.ToArray();
         }
 
         public static List<Tuple<string, string>> ReadFiles(string directory)

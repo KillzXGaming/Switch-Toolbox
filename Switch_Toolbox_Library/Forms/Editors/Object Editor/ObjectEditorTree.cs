@@ -601,7 +601,9 @@ namespace Toolbox.Library.Forms
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var node = treeViewCustom1.SelectedNode;
-            if (node != null && node is ArchiveFileWrapper)
+            if (node == null) return;
+
+            if (node is ArchiveFileWrapper)
             {
                 string fullPath = Write2TempAndGetFullPath(((ArchiveFileWrapper)node).ArchiveFileInfo);
 
@@ -609,6 +611,25 @@ namespace Toolbox.Library.Forms
                 dragObj.SetFileDropList(new System.Collections.Specialized.StringCollection() { fullPath });
                 treeViewCustom1.DoDragDrop(dragObj, DragDropEffects.Copy);
             }
+            else if (node is ArchiveFolderNodeWrapper || node is ArchiveRootNodeWrapper)
+            {
+                string[] fullPaths = Write2TempAndGetFullPath(node);
+
+                DataObject dragObj = new DataObject();
+                var collection = new System.Collections.Specialized.StringCollection();
+                collection.AddRange(fullPaths);
+                dragObj.SetFileDropList(collection);
+                treeViewCustom1.DoDragDrop(dragObj, DragDropEffects.Copy);
+            }
+        }
+
+        private string[] Write2TempAndGetFullPath(TreeNode folder)
+        {
+            var ParentPath = string.Empty;
+            if (folder.Parent != null)
+                ParentPath = folder.Parent.FullPath;
+
+            return TreeHelper.ExtractAllFiles(ParentPath, folder.Nodes, System.IO.Path.GetTempPath());
         }
 
         private string Write2TempAndGetFullPath(ArchiveFileInfo file)
