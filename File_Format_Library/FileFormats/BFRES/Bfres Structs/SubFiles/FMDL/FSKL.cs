@@ -707,7 +707,7 @@ namespace Bfres.Structs
 
         public void SetTransforms()
         {
-            if (BoneU != null)
+           /* if (BoneU != null)
             {
                 BoneU.TransformRotateZero = BoneU.Rotation == Syroot.Maths.Vector4F.Zero;
                 BoneU.TransformScaleOne = BoneU.Scale == Syroot.Maths.Vector3F.One;
@@ -718,7 +718,7 @@ namespace Bfres.Structs
                 Bone.TransformRotateZero = Bone.Rotation == Syroot.Maths.Vector4F.Zero;
                 Bone.TransformScaleOne = Bone.Scale == Syroot.Maths.Vector3F.One;
                 Bone.TransformTranslateZero = Bone.Position == Syroot.Maths.Vector3F.Zero;
-            }
+            }*/
         }
 
         public ResFile GetResFile()

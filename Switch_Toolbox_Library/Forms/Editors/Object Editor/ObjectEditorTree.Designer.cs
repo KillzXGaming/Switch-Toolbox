@@ -133,6 +133,7 @@
             // 
             // treeViewCustom1
             // 
+            this.treeViewCustom1.AllowDrop = true;
             this.treeViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeViewCustom1.CheckBoxes = true;
             this.treeViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -146,10 +147,14 @@
             this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
             this.treeViewCustom1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewCustom1_BeforeExpand);
             this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
+            this.treeViewCustom1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView_ItemDrag);
             this.treeViewCustom1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterSelect);
             this.treeViewCustom1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewCustom1_MouseClick);
             this.treeViewCustom1.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragDrop);
+            this.treeViewCustom1.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragEnter);
             this.treeViewCustom1.DragOver += new System.Windows.Forms.DragEventHandler(this.treeViewCustom1_DragOver);
+            this.treeViewCustom1.DragLeave += new System.EventHandler(this.treeViewCustom1_DragLeave);
+            this.treeViewCustom1.GiveFeedback += new System.Windows.Forms.GiveFeedbackEventHandler(this.treeViewCustom1_GiveFeedback);
             this.treeViewCustom1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewCustom1_KeyPress);
             this.treeViewCustom1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewCustom1_DoubleClick);
             // 

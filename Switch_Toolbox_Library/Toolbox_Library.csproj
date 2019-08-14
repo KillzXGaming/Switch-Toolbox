@@ -281,9 +281,11 @@
     </Compile>
     <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Generics\Texture\STTextureFolder.cs" />
+    <Compile Include="Helpers\DragHelper.cs" />
     <Compile Include="Interfaces\FileFormatting\ILeaveOpenOnLoad.cs" />
     <Compile Include="Interfaces\FileFormatting\IPropertyContainer.cs" />
     <Compile Include="Interfaces\FileFormatting\ISaveOpenedFileStream.cs" />
+    <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\Textures\ITextureIconLoader.cs" />
     <Compile Include="Interfaces\Utility\ICloneableNode.cs" />
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />

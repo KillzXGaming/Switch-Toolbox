@@ -20,7 +20,7 @@ using Toolbox.Library.Rendering;
 
 namespace Toolbox
 {
-    public partial class MainForm : Form, IMdiContainer, IUpdateForm
+    public partial class MainForm : Form, IMdiContainer, IUpdateForm, IMainForm
     {
         private static MainForm _instance;
         public static MainForm Instance { get { return _instance == null ? _instance = new MainForm() : _instance; } }

@@ -214,9 +214,11 @@ namespace Toolbox.Library
 
 
                 bool HasAddedFile = archiveFile.AddFile(File.ArchiveFileInfo);
-
                 if (HasAddedFile)
                 {
+                    //Re apply the newly added archive info
+                    File.ArchiveFileInfo = archiveFile.Files.LastOrDefault();
+
                     parentNode.Nodes.Add(File);
 
                     if (parentNode is ArchiveRootNodeWrapper)
