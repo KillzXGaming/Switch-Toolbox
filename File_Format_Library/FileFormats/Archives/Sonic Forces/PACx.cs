@@ -148,7 +148,7 @@ namespace FirstPlugin
                         entry.SplitUncompressedSize = reader.ReadUInt32();
                         entry.SplitOffset = reader.ReadUInt32();
                         entry.SplitChunkCount = reader.ReadUInt32();
-                        entry.SplitChunksOffset = reader.ReadUInt32();
+                        entry.SplitChunksOffset = reader.ReadUInt64();
 
                         using (reader.TemporarySeek((long)entry.SplitNameOffset, System.IO.SeekOrigin.Begin))
                         {
@@ -159,6 +159,8 @@ namespace FirstPlugin
                             entry.Chunks = reader.ReadMultipleStructs<Chunk>(entry.SplitChunkCount);
                         }
 
+                        SplitEntries.Add(entry);
+
 
                         Console.WriteLine("SplitName " + entry.Name);
                         Console.WriteLine("SplitCompressedSize " + entry.SplitCompressedSize);
@@ -166,8 +168,6 @@ namespace FirstPlugin
                         Console.WriteLine("SplitOffset " + entry.SplitOffset);
                         Console.WriteLine("SplitChunkCount " + entry.SplitChunkCount);
                         Console.WriteLine("SplitChunksOffset " + entry.SplitChunksOffset);
-
-                        SplitEntries.Add(entry);
                     }
                 }
             }
@@ -333,9 +333,6 @@ namespace FirstPlugin
                 Console.WriteLine($"dataIndex {dataIndex}");
                 Console.WriteLine($"childCount {childCount}");
                 Console.WriteLine($"HasData {HasData}");
-
-                if (nameOffset == 5490503897632162128)
-                    return;
 
                 if (nameOffset != 0)
                 {
