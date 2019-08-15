@@ -5,7 +5,10 @@ A tool to edit many formats of Nintendo Switch and Wii U.
 https://docs.google.com/spreadsheets/d/16JLhGBJL5U5hpKWspL-pzYIaRL23X1YKEmia6pbsGbc/edit#gid=1386834576
 
 ## Releases
-https://github.com/KillzXGaming/Switch-Toolbox/releases
+https:/c/github.com/KillzXGaming/Switch-Toolbox/releases
+
+## Discord
+https://discord.gg/eyvGXWP
 
 ## Features
 
