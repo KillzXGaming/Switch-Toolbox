@@ -208,6 +208,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\Archives\Sonic Forces\PACx.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_Structure.cs" />
     <Compile Include="FileFormats\Grezzo\CMB_Enums.cs" />
     <Compile Include="FileFormats\Grezzo\CSAB.cs" />
@@ -227,7 +228,6 @@
     <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
     <Compile Include="FileFormats\Archives\NXARC.cs" />
-    <Compile Include="FileFormats\Archives\Sonic Forces\PACx30XL.cs" />
     <Compile Include="FileFormats\Archives\RARC.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\GameDataToc.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\SPC.cs" />

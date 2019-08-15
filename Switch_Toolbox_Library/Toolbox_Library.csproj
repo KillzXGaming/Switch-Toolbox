@@ -812,7 +812,6 @@
     <Compile Include="Texture Decoding\Wii U\GX2.cs" />
     <Compile Include="Texture Decoding\Switch\TegraX1Swizzle.cs" />
     <Compile Include="ThemeConfig.cs" />
-    <Compile Include="UpdateProgram.cs" />
     <Compile Include="Util\ColorUtility.cs" />
     <Compile Include="Util\ImageUtilty.cs" />
     <Compile Include="Util\OpenGLUtils.cs" />

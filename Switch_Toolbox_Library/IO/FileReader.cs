@@ -48,6 +48,7 @@ namespace Toolbox.Library.IO
         //From kuriimu https://github.com/IcySon55/Kuriimu/blob/master/src/Kontract/IO/BinaryReaderX.cs#L40
         public T ReadStruct<T>() => ReadBytes(Marshal.SizeOf<T>()).BytesToStruct<T>(ByteOrder == ByteOrder.BigEndian);
         public List<T> ReadMultipleStructs<T>(int count) => Enumerable.Range(0, count).Select(_ => ReadStruct<T>()).ToList();
+        public List<T> ReadMultipleStructs<T>(uint count) => Enumerable.Range(0, (int)count).Select(_ => ReadStruct<T>()).ToList();
 
         public bool CheckSignature(uint Identifier, long position = 0)
         {
@@ -223,6 +224,7 @@ namespace Toolbox.Library.IO
         public void SeekBegin(uint Offset) { Seek(Offset, SeekOrigin.Begin); }
         public void SeekBegin(int Offset)  { Seek(Offset, SeekOrigin.Begin); }
         public void SeekBegin(long Offset) { Seek(Offset, SeekOrigin.Begin); }
+        public void SeekBegin(ulong Offset) { Seek((long)Offset, SeekOrigin.Begin); }
 
         public long ReadOffset(bool IsRelative, Type OffsetType)
         {
