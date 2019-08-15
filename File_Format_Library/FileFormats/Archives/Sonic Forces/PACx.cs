@@ -249,10 +249,12 @@ namespace FirstPlugin
 
         public void LoadTree(PacNode node, string fullPath = "")
         {
-            if (node.HasData && node.Data != null)
+            bool IsFile = node.HasData && node.Data != null;
+
+            if (IsFile)
             {
                 FileEntry newNode = new FileEntry(node);
-                newNode.FileName = $"{fullPath}/{newNode.Name}";
+                newNode.FileName = $"{fullPath}.{newNode.Name}";
                 files.Add(newNode);
             }
 
