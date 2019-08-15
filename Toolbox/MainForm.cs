@@ -92,6 +92,11 @@ namespace Toolbox
                 version.SaveVersionInfo();
             }
 
+            ThreadStart t = new ThreadStart(UpdateProgram.CheckLatest);
+            Thread thread = new Thread(t);
+            thread.Start();
+
+            Application.Idle += Application_Idle;
 
             if (Runtime.UseOpenGL)
             {

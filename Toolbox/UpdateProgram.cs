@@ -12,7 +12,7 @@ namespace Toolbox
 {
     public class UpdateProgram
     {
-        static List<Release> Releases;
+        static Release[] releases;
         public static bool CanUpdate = false;
         public static bool Downloaded = false;
         public static Release LatestRelease;
@@ -28,7 +28,7 @@ namespace Toolbox
                 GetReleases(client).Wait();
                 GetCommits(client).Wait();
 
-                foreach (Release latest in Releases)
+                foreach (Release latest in releases)
                 {
                     Console.WriteLine(
                         "The latest release is tagged at {0} and is named {1} commit {2} date {3}",
@@ -43,23 +43,19 @@ namespace Toolbox
                         LatestRelease = latest;
                         CanUpdate = true;
 
-                      /*  DownloadRelease();
-                        if (CanUpdate)
-                        {
-                            LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
-                            LatestRelease = latest;
-                        }
-                        else
-                        {
-                            
-                        }*/
+                        /*  DownloadRelease();
+                          if (CanUpdate)
+                          {
+                              LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
+                              LatestRelease = latest;
+                          }
+                          else
+                          {
+
+                          }*/
                     }
                     break;
                 }
-
-                Releases.Clear();
-                CommitList.Clear();
-                client = null;
             }
             catch (Exception ex)
             {
@@ -102,7 +98,7 @@ namespace Toolbox
             DateTimeOffset CurrentRelease;
             bool IsValidTime = DateTimeOffset.TryParse(Runtime.CompileDate, out CurrentRelease);
 
-            foreach (GitHubCommit c in await client.Repository.Commit.GetAll("KillzXGaming", "Switch-Toolbox",  options))
+            foreach (GitHubCommit c in await client.Repository.Commit.GetAll("KillzXGaming", "Switch-Toolbox", options))
             {
                 if (IsValidTime)
                 {
@@ -121,9 +117,10 @@ namespace Toolbox
 
         static async Task GetReleases(GitHubClient client)
         {
-            Releases.Clear();
+            List<Release> Releases = new List<Release>();
             foreach (Release r in await client.Repository.Release.GetAll("KillzXGaming", "Switch-Toolbox"))
                 Releases.Add(r);
+            releases = Releases.ToArray();
         }
     }
 }
