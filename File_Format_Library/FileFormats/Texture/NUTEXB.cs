@@ -577,8 +577,8 @@ namespace FirstPlugin
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
         }
-        ToolStripMenuItem save = new ToolStripMenuItem("Save");
-        ToolStripMenuItem useSizeRestrictions = new ToolStripMenuItem("UseSizeRestrictions");
+
+        STToolStripItem useSizeRestrictions = new STToolStripItem("UseSizeRestrictions");
 
         public void Load(System.IO.Stream stream)
         {
@@ -595,8 +595,6 @@ namespace FirstPlugin
 
             useSizeRestrictions.Checked = true;
             useSizeRestrictions.Click += UseSizeRestrictionsAction;
-
-            save.Click += SaveAction;
         }
 
         public ToolStripItem[] GetContextMenuItems()
