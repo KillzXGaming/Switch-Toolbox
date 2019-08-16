@@ -121,6 +121,7 @@ namespace Toolbox
             LoadRecentList();
             ReloadFiles();
             LoadPluginFileContextMenus();
+            WindowsExplorer.ExplorerContextMenu.LoadMenus();
 
             foreach (string file in OpenedFiles)
             {
@@ -224,7 +225,11 @@ namespace Toolbox
 
         #region OpenFile
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileSelect();
+        }
+
+        private void OpenFileSelect()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = Utils.GetAllFilters(SupportedFormats);
@@ -822,11 +827,27 @@ namespace Toolbox
         #region Events
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.S) // Ctrl + S Save
+            if (e.Control && e.KeyCode == Keys.O) // Ctrl + O Open
             {
                 e.SuppressKeyPress = true;
-
+                OpenFileSelect();
+            }
+            else if (e.Control && e.Alt && e.KeyCode == Keys.S) // Ctrl + Alt + S Save As
+            {
+                e.SuppressKeyPress = true;
+                SaveActiveFile(true);
+            }
+            else if(e.Control && e.KeyCode == Keys.S) // Ctrl + S Save
+            {
+                e.SuppressKeyPress = true;
                 SaveActiveFile(false);
+            }
+            else if (e.Control && e.KeyCode == Keys.W) // Ctrl + W Exit
+            {
+                e.SuppressKeyPress = true;
+                var notify = MessageBox.Show("Are you sure you want to exit the application?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (notify == DialogResult.OK)
+                    Application.Exit();
             }
         }
 

@@ -359,7 +359,7 @@ namespace FirstPlugin
             Formats.Add(typeof(GCDisk));
             Formats.Add(typeof(TPL));
             Formats.Add(typeof(BFTTF));
-            Formats.Add(typeof(PACx));
+            Formats.Add(typeof(HedgehogLibrary.PACx));
             Formats.Add(typeof(BinGzArchive));
             Formats.Add(typeof(GAR));
             Formats.Add(typeof(CTXB));

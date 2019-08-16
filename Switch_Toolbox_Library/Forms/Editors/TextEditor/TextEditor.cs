@@ -203,7 +203,11 @@ namespace Toolbox.Library.Forms
         }
         private void UpdateLineNumbers(int startingAtLine)
         {
-            scintilla1.Margins[0].Width = scintilla1.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + 2;
+            for (int i = startingAtLine; i < scintilla1.Lines.Count; i++)
+            {
+                scintilla1.Lines[i].MarginStyle = Style.LineNumber;
+                scintilla1.Lines[i].MarginText = i.ToString();
+            }
         }
 
 
