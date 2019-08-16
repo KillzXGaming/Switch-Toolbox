@@ -311,7 +311,7 @@ namespace Toolbox.Library.Forms
                     {
                         foreach (var item in ((IContextMenuNode)e.Node).GetContextMenuItems())
                         {
-                            if (item.Text != "Delete" || item.Text != "Remove")
+                            if (item.Text != "Delete" && item.Text != "Remove")
                                 treeNodeContextMenu.Items.Add(item);
                         }
                         treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));

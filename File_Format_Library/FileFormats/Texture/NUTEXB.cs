@@ -173,7 +173,7 @@ namespace FirstPlugin
             editor.LoadImage(this);
         }
 
-        private void UseSizeRestrictions(object sender, EventArgs args)
+        private void UseSizeRestrictionsAction(object sender, EventArgs args)
         {
             if (sender is STToolStripItem)
             {
@@ -313,70 +313,57 @@ namespace FirstPlugin
         public override string ExportFilter => FileFilters.NUTEXB;
         public override string ReplaceFilter => FileFilters.NUTEXB;
 
-        private void Replace(object sender, EventArgs args)
+        public override void Replace(string FileName)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = FileFilters.NUTEXB;
+            var bntxFile = new BNTX();
+            var tex = new TextureData();
+            tex.Replace(FileName, MipCount, 0, Format);
 
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
+            //If it's null, the operation is cancelled
+            if (tex.Texture == null)
+                return;
+
+            var surfacesNew = tex.GetSurfaces();
+            var surfaces = GetSurfaces();
+
+            if (LimitFileSize)
             {
-                var bntxFile = new BNTX();
-                var tex = new TextureData();
-                tex.Replace(ofd.FileName, MipCount,0, Format);
+                if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
+                    throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
 
-                //If it's null, the operation is cancelled
-                if (tex.Texture == null)
-                    return;
+                if (mipSizes[0].Length != surfacesNew[0].mipmaps.Count)
+                    throw new Exception($"Mip map count must be the same! {mipSizes[0].Length}");
 
-                var surfacesNew = tex.GetSurfaces();
-                var surfaces = GetSurfaces();
+                if (Width != tex.Texture.Width || Height != tex.Texture.Height)
+                    throw new Exception("Image size must be the same!");
 
-                if (LimitFileSize)
-                {
-                    if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
-                        throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
+                ImageData = tex.Texture.TextureData[0][0];
 
-                    if (mipSizes[0].Length != surfacesNew[0].mipmaps.Count)
-                        throw new Exception($"Mip map count must be the same! {mipSizes[0].Length}");
-
-                    if (Width != tex.Texture.Width || Height != tex.Texture.Height)
-                        throw new Exception("Image size must be the same!");
-
-                    ImageData = tex.Texture.TextureData[0][0];
-
-                    Width = tex.Texture.Width;
-                    Height = tex.Texture.Height;
-                    MipCount = tex.Texture.MipCount;
-                }
-                else
-                {
-                    ImageData = tex.Texture.TextureData[0][0];
-
-                    Width = tex.Texture.Width;
-                    Height = tex.Texture.Height;
-                    MipCount = tex.Texture.MipCount;
-
-                    Format = tex.Format;
-                    NutFormat = ConvertGenericToNutFormat(tex.Format);
-
-                    mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
-                }
-                
-                surfacesNew.Clear();
-                surfaces.Clear();
-
-                UpdateEditor();
+                Width = tex.Texture.Width;
+                Height = tex.Texture.Height;
+                MipCount = tex.Texture.MipCount;
             }
+            else
+            {
+                ImageData = tex.Texture.TextureData[0][0];
+
+                Width = tex.Texture.Width;
+                Height = tex.Texture.Height;
+                MipCount = tex.Texture.MipCount;
+
+                Format = tex.Format;
+                NutFormat = ConvertGenericToNutFormat(tex.Format);
+
+                mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
+            }
+
+            surfacesNew.Clear();
+            surfaces.Clear();
+
+            UpdateEditor();
         }
 
-      
-
-        private void Export(object sender, EventArgs args)
-        {
-            ExportImage();
-        }
-        private void Save(object sender, EventArgs args)
+        private void SaveAction(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = Utils.GetAllFilters(this);
@@ -591,14 +578,15 @@ namespace FirstPlugin
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
         }
         ToolStripMenuItem save = new ToolStripMenuItem("Save");
-        ToolStripMenuItem export = new ToolStripMenuItem("Export");
-        ToolStripMenuItem replace = new ToolStripMenuItem("Replace");
         ToolStripMenuItem useSizeRestrictions = new ToolStripMenuItem("UseSizeRestrictions");
 
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
             CanSave = true;
+            CanReplace = true;
+            CanRename = true;
+            CanDelete = true;
 
             Read(new FileReader(stream));
 
@@ -607,18 +595,15 @@ namespace FirstPlugin
 
             useSizeRestrictions.Checked = true;
 
-            save.Click += Save;
-            replace.Click += Replace;
-            export.Click += Export;
+            save.Click += SaveAction;
         }
 
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(save);
             Items.Add(useSizeRestrictions);
-            Items.Add(export);
-            Items.Add(replace);
+            Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.AddRange(base.GetContextMenuItems());
             return Items.ToArray();
         }
 
