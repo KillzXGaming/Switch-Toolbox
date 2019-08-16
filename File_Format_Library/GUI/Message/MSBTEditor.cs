@@ -37,6 +37,7 @@ namespace FirstPlugin.Forms
 
         public void LoadMSBT(MSBT msbt)
         {
+            listViewCustom1.BeginUpdate();
             listViewCustom1.Items.Clear();
 
             activeMessageFile = msbt;
@@ -71,6 +72,8 @@ namespace FirstPlugin.Forms
                     }
                 }
             }
+
+            listViewCustom1.EndUpdate();
         }
 
         private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e)

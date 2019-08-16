@@ -58,7 +58,7 @@ namespace DKCTF
 
                     reader.SeekBegin(startPos + (int)chunk.DataOffset);
                     byte[] chunkData = reader.ReadBytes((int)chunk.DataSize);
-                    Nodes.Add(new MessageEntry(chunkData, index++));
+                    Nodes.Add(new MessageEntry(chunkData, index++, chunk.ChunkType));
                 }
             }
         }
@@ -71,9 +71,9 @@ namespace DKCTF
         {
             FirstPlugin.MSBT msbt;
 
-            public MessageEntry(byte[] data, int index)
+            public MessageEntry(byte[] data, int index, string type)
             {
-                Text = $"Message Entry {index}";
+                Text = $"Message Entry ({type}) {index}";
 
                 var chunkFile = STFileLoader.OpenFileFormat(Text, data);
                 if (chunkFile != null && chunkFile is FirstPlugin.MSBT)
