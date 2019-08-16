@@ -594,6 +594,7 @@ namespace FirstPlugin
             SelectedImageKey = "Texture";
 
             useSizeRestrictions.Checked = true;
+            useSizeRestrictions.Click += UseSizeRestrictionsAction;
 
             save.Click += SaveAction;
         }
