@@ -376,6 +376,7 @@ namespace FirstPlugin
             Formats.Add(typeof(NCCH));
             Formats.Add(typeof(NCSD));
             Formats.Add(typeof(CTR.NCCH.RomFS));
+            Formats.Add(typeof(DKCTF.MSBT));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

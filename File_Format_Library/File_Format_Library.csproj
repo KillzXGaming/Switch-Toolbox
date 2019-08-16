@@ -208,6 +208,9 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\DKCTF\Common.cs" />
+    <Compile Include="FileFormats\DKCTF\MSBT.cs" />
+    <Compile Include="FileFormats\DKCTF\PAK.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
     <Compile Include="FileFormats\HedgehogEngine\PACx.cs" />
