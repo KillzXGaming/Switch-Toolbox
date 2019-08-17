@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace FirstPlugin
 {
-    public class EFF : TreeNodeFile,IFileFormat, IContextMenuNode
+    public class EFF : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Effect;
 

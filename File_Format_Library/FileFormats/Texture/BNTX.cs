@@ -23,8 +23,6 @@ namespace FirstPlugin
 {
     public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode
     {
-        public List<STGenericTexture> IconTextureList { get; set; }
-
         public FileType FileType { get; set; } = FileType.Image;
 
         public bool CanSave { get; set; }
@@ -57,6 +55,20 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
+
+        public List<STGenericTexture> IconTextureList
+        {
+            get
+            {
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (STGenericTexture node in Nodes)
+                    textures.Add(node);
+
+                return textures;
+            }
+            set { }
+        }
+
         class MenuExt : IFileMenuExtension
         {
             public STToolStripItem[] NewFileMenuExtensions => newFileExt;

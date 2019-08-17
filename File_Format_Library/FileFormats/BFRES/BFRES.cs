@@ -1232,6 +1232,13 @@ namespace FirstPlugin
 
                     string Name = resFile.ExternalFileDict.GetKey(index++);
 
+                    //Bfsha changes versioons alot so ignore these for now
+                    if (Utils.GetExtension(Name) == ".bfsha")
+                    {
+                        externalFilesFolder.AddNode(new ExternalFileData(Name, anim.Data));
+                        continue;
+                    }
+
                     var file = STFileLoader.OpenFileFormat(Name, anim.Data, false, true);
 
                     //Only do once. There's usually one bntx embedded but incase there are multiple

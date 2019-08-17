@@ -51,7 +51,10 @@ namespace FirstPlugin
                     alphaControl.AlphaFunction = ParseAlphaFunction(renderInfo.ValueString);
                     break;
                 case "gsys_alpha_test_value":
-                    alphaControl.AlphaTestRef = renderInfo.ValueFloat[0];
+                    if (renderInfo.ValueFloat != null)
+                        alphaControl.AlphaTestRef = renderInfo.ValueFloat[0];
+                    if (renderInfo.ValueString != null)
+                        float.TryParse(renderInfo.ValueString[0], out alphaControl.AlphaTestRef);
                     break;
                 case "gsys_color_blend_alpha_dst_func":
                     break; 

@@ -194,15 +194,32 @@ namespace FirstPlugin
                 ColorDialog dialog = new ColorDialog();
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (button.Name.Contains("color0"))
-                        ActiveEmitter.Color0Array[index].Color = dialog.Color;
-                    else
-                        ActiveEmitter.Color1Array[index].Color = dialog.Color;
+                    Color output;
 
-                    button.Color = dialog.Color;
+                    if (button.Name.Contains("color0"))
+                        output = SetColor(ActiveEmitter.Color0Array[index].Color, dialog.Color);
+                    else
+                        output = SetColor(ActiveEmitter.Color1Array[index].Color, dialog.Color);
+
+                    SetEmitterColor(output, index, button.Name.Contains("color0"));
+
+                    button.Color = output;
                     RefreshColorBoxes();
                 }
             }
+        }
+
+        private void SetEmitterColor(Color color, int index, bool IsColor0)
+        {
+            if (IsColor0)
+                ActiveEmitter.Color0Array[index].Color = color;
+            else
+                ActiveEmitter.Color1Array[index].Color = color;
+        }
+
+        public Color SetColor(Color input, Color output)
+        {
+            return Color.FromArgb(input.A, output.R, output.G, output.B);
         }
 
         private void hexTB_TextChanged(object sender, EventArgs e)

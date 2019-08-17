@@ -278,7 +278,7 @@ namespace FirstPlugin
                 }
             }
 
-            public class TextureFolder : TreeNodeCustom, IContextMenuNode
+            public class TextureFolder : TreeNodeCustom, IContextMenuNode, ITextureIconLoader
             {
                 public TextureFolder(string text)
                 {
@@ -291,6 +291,19 @@ namespace FirstPlugin
                     {
                         new ToolStripMenuItem("Export All Textures", null, ExportAll, Keys.Control | Keys.A),
                     };
+                }
+
+                public List<STGenericTexture> IconTextureList
+                {
+                    get
+                    {
+                        List<STGenericTexture> textures = new List<STGenericTexture>();
+                        foreach (STGenericTexture node in Nodes)
+                            textures.Add(node);
+
+                        return textures;
+                    }
+                    set { }
                 }
 
                 private void ExportAll(object sender, EventArgs args)
