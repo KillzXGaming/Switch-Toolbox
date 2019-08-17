@@ -256,8 +256,6 @@ namespace FirstPlugin
 
         public static byte[] GetASSTData(FileEntry entry)
         {
-            return entry.CompressedData;
-
             if (entry.IsCompressed)
             {
                 return STLibraryCompression.ZSTD.Decompress(entry.CompressedData);
