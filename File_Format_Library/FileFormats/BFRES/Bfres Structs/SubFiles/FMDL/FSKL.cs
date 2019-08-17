@@ -436,7 +436,7 @@ namespace Bfres.Structs
 
                     if (extension == ".bfbon")
                     {
-                        BfresBone bn = new BfresBone();
+                        BfresBone bn = new BfresBone(fskl);
 
                         if (SkeletonU != null)
                         {
