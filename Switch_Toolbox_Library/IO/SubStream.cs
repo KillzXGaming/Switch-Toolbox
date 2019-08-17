@@ -27,6 +27,22 @@ namespace Toolbox.Library.IO
             this.length = length;
             baseOffset = offset;
         }
+
+        public SubStream(Stream baseStream, long offset)
+        {
+            long length = baseStream.Length - offset;
+
+            if (baseStream == null) throw new ArgumentNullException("baseStream");
+            if (!baseStream.CanRead) throw new ArgumentException("baseStream.CanRead is false");
+            if (!baseStream.CanSeek) throw new ArgumentException("baseStream.CanSeek is false");
+            if (offset < 0) throw new ArgumentOutOfRangeException("offset");
+            if (offset + length > baseStream.Length) throw new ArgumentOutOfRangeException("length");
+
+            this.baseStream = baseStream;
+            this.length = length;
+            baseOffset = offset;
+        }
+
         public override int Read(byte[] buffer, int offset, int count)
         {
             baseStream.Position = baseOffset + offset + Position;

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
+using System.IO;
 using System.Windows.Forms;
 using FirstPlugin.Forms;
 
 namespace DKCTF
 {
-    public class MSBT : TreeNodeFile, IFileFormat
+    public class MSBT : TreeNodeFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -42,12 +44,16 @@ namespace DKCTF
             }
         }
 
+        private Stream _stream;
         public void Load(System.IO.Stream stream)
         {
-            using (var reader = new Toolbox.Library.IO.FileReader(stream))
+            _stream = stream;
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 reader.SetByteOrder(true);
                 var header = reader.ReadStruct<MSBTHeader>();
+
+                Text = FileName;
 
                 //parse the data 
                 int index = 0;
@@ -57,8 +63,10 @@ namespace DKCTF
                     long startPos = reader.Position;
 
                     reader.SeekBegin(startPos + (int)chunk.DataOffset);
-                    byte[] chunkData = reader.ReadBytes((int)chunk.DataSize);
-                    Nodes.Add(new MessageEntry(chunkData, index++, chunk.ChunkType));
+                    var subStream = new SubStream(_stream, reader.Position, (long)chunk.DataSize);
+                    Nodes.Add(new MessageEntry(subStream, index++, chunk.ChunkType));
+
+                    reader.SeekBegin(startPos + (int)chunk.DataOffset + (int)chunk.DataSize);
                 }
             }
         }
@@ -67,17 +75,38 @@ namespace DKCTF
 
         }
 
-        public class MessageEntry : TreeNodeCustom
+        public class MessageEntry : TreeNodeCustom, IContextMenuNode
         {
             FirstPlugin.MSBT msbt;
 
-            public MessageEntry(byte[] data, int index, string type)
+            private Stream stream;
+            public MessageEntry(Stream data, int index, string type)
             {
-                Text = $"Message Entry ({type}) {index}";
+                stream = data;
 
-                var chunkFile = STFileLoader.OpenFileFormat(Text, data);
+                Text = $"{type}.msbt";
+
+                var chunkFile = STFileLoader.OpenFileFormat(data, Text);
                 if (chunkFile != null && chunkFile is FirstPlugin.MSBT)
                     msbt = (FirstPlugin.MSBT)chunkFile;
+            }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new STToolStipMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+                return Items.ToArray();
+            }
+
+            private void ExportAction(object sender, EventArgs args)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = Utils.GetAllFilters(typeof(MSBT));
+                sfd.FileName = Text;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    stream.ExportToFile(sfd.FileName);
+                }
             }
 
             public override void OnClick(TreeView treeview)

@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
 using Toolbox.Library;
+using System.Windows.Forms;
 
 namespace FirstPlugin
 {
-    public class EFF : TreeNodeFile,IFileFormat
+    public class EFF : TreeNodeFile,IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Effect;
 
@@ -36,19 +37,54 @@ namespace FirstPlugin
             }
         }
 
+        private PTCL ptcl;
+        private byte[] DataStart;
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
+            CanSave = true;
 
             FileReader reader = new FileReader(stream);
-            reader.Seek(4096, System.IO.SeekOrigin.Begin);
+            int SectionSize = 0;
+            while (true)
+            {
+                string magicCheck = reader.ReadString(4, Encoding.ASCII);
+                if (magicCheck == "VFXB")
+                {
+                    reader.Seek(-4);
+                    break;
+                }
 
-            PTCL pctl = new PTCL();
-            pctl.Text = "Output.pctl";
-            Nodes.Add(pctl);
+                SectionSize += 4;
+            }
 
-            PTCL.Header Header = new PTCL.Header();
-            Header.Read(reader, pctl);
+            DataStart = reader.getSection(0, SectionSize);
+
+            Text = FileName;
+            ptcl = new PTCL();
+            ptcl.IFileInfo = new IFileInfo();
+            ptcl.FileName = "Output.pctl";
+            Nodes.Add(ptcl);
+
+            ptcl.Load(new SubStream(stream, reader.Position));
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            return new ToolStripItem[]
+            {
+                 new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S),
+            };
+        }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(typeof(EFF));
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
         }
 
         public void Unload()
@@ -58,6 +94,13 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream))
+            {
+                writer.Write(DataStart);
+                var mem = new System.IO.MemoryStream();
+                ptcl.Save(mem);
+                writer.Write(mem.ToArray());
+            }
         }
     }
 }

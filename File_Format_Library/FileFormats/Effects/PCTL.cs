@@ -64,38 +64,39 @@ namespace FirstPlugin
             Text = FileName;
             CanSave = true;
 
-            FileReader reader = new FileReader(new MemoryStream(data));
-
-            reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-            string Signature = reader.ReadString(4, Encoding.ASCII);
-
-            byte VersionNum = reader.ReadByte();
-            if (VersionNum != 0 && Signature == "SPBD")
-                Is3DS = true;
-
-            reader.Position = 0;
-            if (Is3DS)
+            using (var reader = new FileReader(stream))
             {
-                reader.ByteOrder = ByteOrder.LittleEndian;
-                header3DS = new PTCL_3DS.Header();
-                header3DS.Read(reader, this);
-            }
-            else if (Signature == "EFTF" || Signature == "SPBD")
-            {
-                IsWiiU = true;
-                headerU = new PTCL_WiiU.Header();
-                headerU.Read(reader, this);
-            }
-            else
-            {
-                header = new Header();
-                header.Read(reader, this);
-            }
+                reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                string Signature = reader.ReadString(4, Encoding.ASCII);
 
-            reader.Close();
-            reader.Dispose();
-            stream.Close();
-            stream.Dispose();
+                byte VersionNum = reader.ReadByte();
+                if (VersionNum != 0 && Signature == "SPBD")
+                    Is3DS = true;
+
+                reader.Position = 0;
+                if (Is3DS)
+                {
+                    reader.ByteOrder = ByteOrder.LittleEndian;
+                    header3DS = new PTCL_3DS.Header();
+                    header3DS.Read(reader, this);
+                }
+                else if (Signature == "EFTF" || Signature == "SPBD")
+                {
+                    IsWiiU = true;
+                    headerU = new PTCL_WiiU.Header();
+                    headerU.Read(reader, this);
+                }
+                else
+                {
+                    header = new Header();
+                    header.Read(reader, this);
+                }
+
+                reader.Close();
+                reader.Dispose();
+                stream.Close();
+                stream.Dispose();
+            }
 
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S));
@@ -116,11 +117,8 @@ namespace FirstPlugin
         }
         private void Save(object sender, EventArgs args)
         {
-            List<IFileFormat> formats = new List<IFileFormat>();
-            formats.Add(this);
-
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = Utils.GetAllFilters(formats);
+            sfd.Filter = Utils.GetAllFilters(typeof(PTCL));
             sfd.FileName = FileName;
 
             if (sfd.ShowDialog() == DialogResult.OK)

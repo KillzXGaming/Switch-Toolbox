@@ -291,6 +291,7 @@
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
     <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
+    <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
     <Compile Include="IO\IOComoon.cs" />
