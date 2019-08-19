@@ -57,6 +57,8 @@ namespace Toolbox.Library.Forms
             InitializeComponent();
         }
 
+        private bool IsTextReadOnly = true;
+
         public void SetAsReadOnly()
         {
             IsReadOnly = true;
@@ -225,7 +227,7 @@ namespace Toolbox.Library.Forms
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (_readOnly)
+            if (_readOnly || IsTextReadOnly)
             {
                 switch (e.KeyCode)
                 {
@@ -240,7 +242,7 @@ namespace Toolbox.Library.Forms
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (_readOnly)
+            if (_readOnly ||  IsTextReadOnly)
             {
                 e.Handled = true;
                 return;
