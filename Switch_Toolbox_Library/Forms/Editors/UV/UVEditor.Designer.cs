@@ -211,7 +211,6 @@
             this.drawableContainerCB.FormattingEnabled = true;
             this.drawableContainerCB.Location = new System.Drawing.Point(294, 7);
             this.drawableContainerCB.Name = "drawableContainerCB";
-            this.drawableContainerCB.ReadOnly = true;
             this.drawableContainerCB.Size = new System.Drawing.Size(146, 21);
             this.drawableContainerCB.TabIndex = 20;
             this.drawableContainerCB.SelectedIndexChanged += new System.EventHandler(this.drawableContainerCB_SelectedIndexChanged);
@@ -226,7 +225,6 @@
             this.meshesCB.FormattingEnabled = true;
             this.meshesCB.Location = new System.Drawing.Point(294, 34);
             this.meshesCB.Name = "meshesCB";
-            this.meshesCB.ReadOnly = true;
             this.meshesCB.Size = new System.Drawing.Size(146, 21);
             this.meshesCB.TabIndex = 19;
             this.meshesCB.SelectedIndexChanged += new System.EventHandler(this.meshesCB_SelectedIndexChanged);
@@ -284,7 +282,6 @@
             this.textureCB.FormattingEnabled = true;
             this.textureCB.Location = new System.Drawing.Point(446, 34);
             this.textureCB.Name = "textureCB";
-            this.textureCB.ReadOnly = true;
             this.textureCB.Size = new System.Drawing.Size(156, 21);
             this.textureCB.TabIndex = 5;
             this.textureCB.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
@@ -298,7 +295,6 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(550, 7);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.ReadOnly = true;
             this.comboBox1.Size = new System.Drawing.Size(52, 21);
             this.comboBox1.TabIndex = 3;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);

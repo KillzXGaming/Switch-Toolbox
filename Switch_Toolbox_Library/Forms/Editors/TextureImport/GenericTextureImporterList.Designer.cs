@@ -191,7 +191,6 @@
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(854, 58);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(233, 21);
             this.formatComboBox.TabIndex = 16;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
@@ -204,7 +203,6 @@
             this.compressionModeCB.FormattingEnabled = true;
             this.compressionModeCB.Location = new System.Drawing.Point(854, 31);
             this.compressionModeCB.Name = "compressionModeCB";
-            this.compressionModeCB.ReadOnly = true;
             this.compressionModeCB.Size = new System.Drawing.Size(233, 21);
             this.compressionModeCB.TabIndex = 30;
             this.compressionModeCB.SelectedIndexChanged += new System.EventHandler(this.compressionModeCB_SelectedIndexChanged);

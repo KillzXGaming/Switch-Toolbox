@@ -258,7 +258,6 @@
             this.rotModeCB.FormattingEnabled = true;
             this.rotModeCB.Location = new System.Drawing.Point(94, 5);
             this.rotModeCB.Name = "rotModeCB";
-            this.rotModeCB.ReadOnly = true;
             this.rotModeCB.Size = new System.Drawing.Size(121, 21);
             this.rotModeCB.TabIndex = 35;
             this.rotModeCB.SelectedIndexChanged += new System.EventHandler(this.rotModeCB_SelectedIndexChanged);
@@ -692,7 +691,6 @@
             this.billboardModeCB.FormattingEnabled = true;
             this.billboardModeCB.Location = new System.Drawing.Point(93, 7);
             this.billboardModeCB.Name = "billboardModeCB";
-            this.billboardModeCB.ReadOnly = true;
             this.billboardModeCB.Size = new System.Drawing.Size(144, 21);
             this.billboardModeCB.TabIndex = 0;
             this.billboardModeCB.SelectedIndexChanged += new System.EventHandler(this.billboardModeCB_SelectedIndexChanged);

@@ -151,7 +151,6 @@
             this.comboBoxFormatPositions.FormattingEnabled = true;
             this.comboBoxFormatPositions.Location = new System.Drawing.Point(50, 37);
             this.comboBoxFormatPositions.Name = "comboBoxFormatPositions";
-            this.comboBoxFormatPositions.ReadOnly = true;
             this.comboBoxFormatPositions.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatPositions.TabIndex = 1;
             // 
@@ -191,7 +190,6 @@
             this.comboBoxFormatNormals.FormattingEnabled = true;
             this.comboBoxFormatNormals.Location = new System.Drawing.Point(53, 34);
             this.comboBoxFormatNormals.Name = "comboBoxFormatNormals";
-            this.comboBoxFormatNormals.ReadOnly = true;
             this.comboBoxFormatNormals.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatNormals.TabIndex = 1;
             // 
@@ -231,7 +229,6 @@
             this.comboBoxFormatUvs.FormattingEnabled = true;
             this.comboBoxFormatUvs.Location = new System.Drawing.Point(53, 26);
             this.comboBoxFormatUvs.Name = "comboBoxFormatUvs";
-            this.comboBoxFormatUvs.ReadOnly = true;
             this.comboBoxFormatUvs.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatUvs.TabIndex = 1;
             // 
@@ -272,7 +269,6 @@
             this.comboBoxFormatVertexColors.FormattingEnabled = true;
             this.comboBoxFormatVertexColors.Location = new System.Drawing.Point(53, 33);
             this.comboBoxFormatVertexColors.Name = "comboBoxFormatVertexColors";
-            this.comboBoxFormatVertexColors.ReadOnly = true;
             this.comboBoxFormatVertexColors.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatVertexColors.TabIndex = 1;
             // 
@@ -312,7 +308,6 @@
             this.comboBoxFormatTangents.FormattingEnabled = true;
             this.comboBoxFormatTangents.Location = new System.Drawing.Point(60, 37);
             this.comboBoxFormatTangents.Name = "comboBoxFormatTangents";
-            this.comboBoxFormatTangents.ReadOnly = true;
             this.comboBoxFormatTangents.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatTangents.TabIndex = 1;
             // 
@@ -352,7 +347,6 @@
             this.comboBoxFormatBitans.FormattingEnabled = true;
             this.comboBoxFormatBitans.Location = new System.Drawing.Point(51, 34);
             this.comboBoxFormatBitans.Name = "comboBoxFormatBitans";
-            this.comboBoxFormatBitans.ReadOnly = true;
             this.comboBoxFormatBitans.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatBitans.TabIndex = 1;
             // 
@@ -385,7 +379,6 @@
             this.comboBoxFormatIndices.FormattingEnabled = true;
             this.comboBoxFormatIndices.Location = new System.Drawing.Point(92, 60);
             this.comboBoxFormatIndices.Name = "comboBoxFormatIndices";
-            this.comboBoxFormatIndices.ReadOnly = true;
             this.comboBoxFormatIndices.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatIndices.TabIndex = 5;
             // 
@@ -416,7 +409,6 @@
             this.comboBoxFormatWeights.FormattingEnabled = true;
             this.comboBoxFormatWeights.Location = new System.Drawing.Point(92, 30);
             this.comboBoxFormatWeights.Name = "comboBoxFormatWeights";
-            this.comboBoxFormatWeights.ReadOnly = true;
             this.comboBoxFormatWeights.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatWeights.TabIndex = 1;
             // 
@@ -718,7 +710,6 @@
             this.comboBoxFormatFaces.FormattingEnabled = true;
             this.comboBoxFormatFaces.Location = new System.Drawing.Point(102, 7);
             this.comboBoxFormatFaces.Name = "comboBoxFormatFaces";
-            this.comboBoxFormatFaces.ReadOnly = true;
             this.comboBoxFormatFaces.Size = new System.Drawing.Size(157, 21);
             this.comboBoxFormatFaces.TabIndex = 5;
             // 

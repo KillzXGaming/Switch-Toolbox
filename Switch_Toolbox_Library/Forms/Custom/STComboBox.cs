@@ -54,19 +54,18 @@ namespace Toolbox.Library.Forms
             if (FormThemes.ActivePreset == FormThemes.Preset.White)
                 DropDownStyle = ComboBoxStyle.DropDownList;
 
-
-
-            ReadOnly = true;
-
-           /* Resize += (s, e) =>
-            {
-                if (!IsHandleCreated)
-                    return;
-
-                SelectionLength = 0;
-            };*/
-
             InitializeComponent();
+        }
+
+        public void SetAsReadOnly()
+        {
+            IsReadOnly = true;
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            if (IsReadOnly)
+                ((HandledMouseEventArgs)e).Handled = true;
         }
 
         private dynamic value;
@@ -169,7 +168,6 @@ namespace Toolbox.Library.Forms
             e.Graphics.FillRectangle(backBrush, this.ClientRectangle);
 
             e.Graphics.DrawString(this.Text, this.Font, foreBrush, this.Location);
-
         }
 
         protected override void OnLostFocus(System.EventArgs e)
@@ -217,10 +215,9 @@ namespace Toolbox.Library.Forms
 
         }
 
-        private bool _readOnly;
+        private bool _readOnly = false;
 
-
-        public bool ReadOnly
+        public bool IsReadOnly
         {
             get { return _readOnly; }
             set { _readOnly = value; }
@@ -268,6 +265,36 @@ namespace Toolbox.Library.Forms
             {
                 value = SelectedItem;
             }
+        }
+
+        protected override void OnDropDown(EventArgs e)
+        {
+            if (_readOnly)
+            {
+                DropDownHeight = 1;
+                var t = new Thread(CloseDropDown);
+                t.Start();
+                return;
+            }
+            base.OnDropDown(e);
+        }
+
+        private delegate void CloseDropDownDelegate();
+        private void WaitForDropDown()
+        {
+            if (InvokeRequired)
+            {
+                var d = new CloseDropDownDelegate(WaitForDropDown);
+                Invoke(d);
+            }
+            else
+            {
+                DroppedDown = false;
+            }
+        }
+        private void CloseDropDown()
+        {
+            WaitForDropDown();
         }
     }
 }

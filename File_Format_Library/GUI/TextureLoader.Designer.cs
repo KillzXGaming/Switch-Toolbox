@@ -49,7 +49,6 @@
             this.stComboBox1.FormattingEnabled = true;
             this.stComboBox1.Location = new System.Drawing.Point(3, 3);
             this.stComboBox1.Name = "stComboBox1";
-            this.stComboBox1.ReadOnly = true;
             this.stComboBox1.Size = new System.Drawing.Size(158, 21);
             this.stComboBox1.TabIndex = 12;
             this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);

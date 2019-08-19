@@ -32,7 +32,7 @@ namespace FirstPlugin
                 if (reader.CheckSignature(4, "VFXB") ||
                     reader.CheckSignature(4, "SPBD") ||
                     reader.CheckSignature(4, "EFTF") ||
-                    reader.CheckSignature(4, "EFTB")) 
+                    reader.CheckSignature(4, "EFTB"))
                     return true;
                 else
                     return false;
@@ -51,7 +51,7 @@ namespace FirstPlugin
         public Header header;
         public PTCL_WiiU.Header headerU;
         public PTCL_3DS.Header header3DS;
-        
+
         public byte[] data;
 
         bool IsWiiU = false;
@@ -222,7 +222,11 @@ namespace FirstPlugin
                         botwTex.Add((TEXR)((SectionBase)node).BinaryData);
                 }
 
-                ptcl.header.BinaryTextureFile = bntx;
+                if (bntx != null)
+                {
+                    bntx.LoadIcons = true;
+                    ptcl.header.BinaryTextureFile = bntx;
+                }
 
                 int index = 0;
                 if (botwTex.Count > 0)
@@ -411,15 +415,15 @@ namespace FirstPlugin
             {
                 get
                 {
-                 /*   if (BinaryData == null)
-                        return binaryDataBytes;
-                    else if (BinaryData is BFRES)
-                        return (((BFRES)BinaryData).Save());
-                    else if (BinaryData is BNTX)
-                        return (((BNTX)BinaryData).Save());
-                    else*/
+                    /*   if (BinaryData == null)
+                           return binaryDataBytes;
+                       else if (BinaryData is BFRES)
+                           return (((BFRES)BinaryData).Save());
+                       else if (BinaryData is BNTX)
+                           return (((BNTX)BinaryData).Save());
+                       else*/
 
-                        return binaryDataBytes;
+                    return binaryDataBytes;
                 }
                 set
                 {
@@ -434,10 +438,10 @@ namespace FirstPlugin
             {
                 if (BinaryData is Emitter || Signature == "EMTR")
                 {
-                    EmitterEditor editor = (EmitterEditor)LibraryGUI.GetActiveContent(typeof(EmitterEditor));
+                    EmitterEditorNX editor = (EmitterEditorNX)LibraryGUI.GetActiveContent(typeof(EmitterEditorNX));
                     if (editor == null)
                     {
-                        editor = new EmitterEditor();
+                        editor = new EmitterEditorNX();
                         LibraryGUI.LoadEditor(editor);
                     }
                     editor.Text = Text;
@@ -572,8 +576,11 @@ namespace FirstPlugin
                     case "GRTF":
                         if (section.BinaryDataOffset != NullOffset)
                         {
+                            section.Text = "Textures";
+
                             reader.Seek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin);
                             BinaryData = new BNTX();
+                            ((BNTX)BinaryData).LoadIcons = true;
                             ((BNTX)BinaryData).FileName = "textures.bntx";
                             ((BNTX)BinaryData).Load(new MemoryStream(reader.ReadBytes((int)section.SectionSize)));
                             ((BNTX)BinaryData).IFileInfo.InArchive = true;
@@ -589,7 +596,7 @@ namespace FirstPlugin
                         break;
                     case "GRSN":
                         section.Text = "Shaders";
-                        
+
                         if (section.BinaryDataOffset != NullOffset)
                         {
                             reader.Seek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin);
@@ -603,10 +610,12 @@ namespace FirstPlugin
                             reader.Seek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin);
                             BinaryData = reader.ReadBytes((int)section.SectionSize);
                         }
-                        break;  
+                        break;
                     case "G3PR":
                         if (section.BinaryDataOffset != NullOffset)
                         {
+                            section.Text = "Models";
+
                             reader.Seek(section.BinaryDataOffset + section.Position, SeekOrigin.Begin);
                             BinaryData = new BFRES();
                             ((BFRES)BinaryData).FileName = "model.bfres";
@@ -650,14 +659,14 @@ namespace FirstPlugin
                         SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "G3PR":
-                      //   SaveHeader(writer, header, ((BFRES)BinaryData).Save(), 4096);
-                          SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        //   SaveHeader(writer, header, ((BFRES)BinaryData).Save(), 4096);
+                        SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "GRTF":
                         var mem = new System.IO.MemoryStream();
                         ((BNTX)BinaryData).Save(mem);
                         SaveHeader(writer, header, mem.ToArray(), 4096);
-                       //  SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        //  SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "PRIM":
                         SaveHeader(writer, header, BinaryDataBytes);
@@ -671,7 +680,7 @@ namespace FirstPlugin
                             child.Write(writer, header);
                         }
 
-                        using (writer.TemporarySeek(_emitterPos + BinaryDataOffset +16 + 64, SeekOrigin.Begin))
+                        using (writer.TemporarySeek(_emitterPos + BinaryDataOffset + 16 + 64, SeekOrigin.Begin))
                         {
                             ((Emitter)BinaryData).Write(writer, header);
                         }
@@ -704,7 +713,7 @@ namespace FirstPlugin
 
             public List<BinarySavedEntry> BinariesSaved = new List<BinarySavedEntry>();
 
-            private void SaveHeader(FileWriter writer,Header header, byte[] BinaryFile, int BinaryAlignment = 0)
+            private void SaveHeader(FileWriter writer, Header header, byte[] BinaryFile, int BinaryAlignment = 0)
             {
                 if (Signature != "PRIM")
                     writer.Align(16);
@@ -777,7 +786,7 @@ namespace FirstPlugin
                 {
                     if (Signature != "PRIM")
                         writer.Align(16);
-                        
+
                     writer.WriteUint32Offset(_ofsNextPos, BasePosition);
                 }
             }
@@ -874,7 +883,7 @@ namespace FirstPlugin
 
             public void Replace(string FileName)
             {
-             
+
             }
             public static GTXImporterSettings SetImporterSettings(string name)
             {
@@ -912,7 +921,7 @@ namespace FirstPlugin
                 byte unk5 = reader.ReadByte();
                 short unk6 = reader.ReadInt16();
                 uint unk7 = reader.ReadUInt32();
-              
+
             }
 
             public override void SetImageData(Bitmap bitmap, int ArrayLevel)
@@ -1027,16 +1036,132 @@ namespace FirstPlugin
         {
             public List<STGenericTexture> DrawableTex = new List<STGenericTexture>();
             public List<SamplerInfo> Samplers = new List<SamplerInfo>();
+
+            public STColor ConstantColor0;
+            public STColor ConstantColor1;
+
             public STColor[] Color0Array = new STColor[8];
             public STColor[] Color1Array = new STColor[8];
 
+            public STColor[] Color0AlphaArray = new STColor[8];
+            public STColor[] Color1AlphaArray = new STColor[8];
+
+            public STColor ConstantAlpha0
+            {
+                get
+                {
+                    return new STColor()
+                    {
+                        R = ConstantColor0.A,
+                        G = ConstantColor0.A,
+                        B = ConstantColor0.A,
+                    };
+                }
+            }
+
+            public STColor ConstantAlpha1
+            {
+                get
+                {
+                    return new STColor()
+                    {
+                        R = ConstantColor1.A,
+                        G = ConstantColor1.A,
+                        B = ConstantColor1.A,
+                    };
+                }
+            }
+
+            public enum ColorType
+            {
+                Constant,
+                Random,
+                Animated8Key,
+            }
+
+            public ColorType Color0Type;
+            public ColorType Alpha0Type;
+            public ColorType Color1Type;
+            public ColorType Alpha1Type;
+
+            private bool HasTime(STColor[] colors)
+            {
+                for (int i = 0; i < colors.Length; i++)
+                    if (colors[i].Time != 0) return true;
+
+                return false;
+            }
+
+            private void SetType(bool HasKeys, STColor[] colors, int type, bool isAlpha)
+            {
+                if (HasKeys)
+                {
+                    if (HasTime(colors))
+                        SetType(type, isAlpha, ColorType.Animated8Key);
+                    else
+                        SetType(type, isAlpha, ColorType.Random);
+                }
+                else
+                    SetType(type, isAlpha, ColorType.Constant);
+            }
+
+            private void SetType(int type, bool isAlpha, ColorType colorType)
+            {
+                if (type == 0)
+                {
+                    if (!isAlpha)
+                        Color0Type = colorType;
+                    else
+                        Alpha0Type = colorType;
+                }
+                if (type == 1)
+                {
+                    if (!isAlpha)
+                        Color1Type = colorType;
+                    else
+                        Alpha1Type = colorType;
+                }
+            }
+
+            public uint Color0KeyCount;
+            public uint Alpha0KeyCount;
+            public uint Color1KeyCount;
+            public uint Alpha1KeyCount;
+
             public void Read(FileReader reader, Header ptclHeader)
             {
-                uint Position = (uint)reader.Position; 
+                uint Position = (uint)reader.Position;
 
                 Color0Array = new STColor[8];
                 Color1Array = new STColor[8];
+                Color0AlphaArray = new STColor[8];
+                Color1AlphaArray = new STColor[8];
+                ConstantColor0 = new STColor();
+                ConstantColor1 = new STColor();
 
+                reader.ReadBytes(16); //Unknown padding
+                Color0KeyCount = reader.ReadUInt32();
+                Alpha0KeyCount = reader.ReadUInt32();
+                Color1KeyCount = reader.ReadUInt32();
+                Alpha1KeyCount = reader.ReadUInt32();
+                uint scaleKeyCount = reader.ReadUInt32();
+
+                //Seek to the contant colors
+                reader.Seek(Position + 2384, SeekOrigin.Begin);
+
+                ConstantColor0 = new STColor();
+                ConstantColor0.R = reader.ReadSingle();
+                ConstantColor0.G = reader.ReadSingle();
+                ConstantColor0.B = reader.ReadSingle();
+                ConstantColor0.A = reader.ReadSingle();
+
+                ConstantColor1 = new STColor();
+                ConstantColor1.R = reader.ReadSingle();
+                ConstantColor1.G = reader.ReadSingle();
+                ConstantColor1.B = reader.ReadSingle();
+                ConstantColor1.A = reader.ReadSingle();
+
+                //Seek to the random and animated color table
                 reader.Seek(Position + 880, SeekOrigin.Begin);
                 for (int i = 0; i < 8; i++)
                 {
@@ -1044,37 +1169,42 @@ namespace FirstPlugin
                     Color0Array[i].R = reader.ReadSingle();
                     Color0Array[i].G = reader.ReadSingle();
                     Color0Array[i].B = reader.ReadSingle();
-                    float time       = reader.ReadSingle();
+                    Color0Array[i].Time = reader.ReadSingle();
                 }
+
                 for (int i = 0; i < 8; i++)
                 {
-                    Color0Array[i].A = reader.ReadSingle();
-                    float padding = reader.ReadSingle();
-                    float padding2 = reader.ReadSingle();
-                    float time    = reader.ReadSingle();
+                    Color0AlphaArray[i] = new STColor();
+                    Color0AlphaArray[i].R = reader.ReadSingle();
+                    Color0AlphaArray[i].G = reader.ReadSingle();
+                    Color0AlphaArray[i].B = reader.ReadSingle();
+                    Color0AlphaArray[i].Time = reader.ReadSingle();
                 }
+
                 for (int i = 0; i < 8; i++)
                 {
                     Color1Array[i] = new STColor();
                     Color1Array[i].R = reader.ReadSingle();
                     Color1Array[i].G = reader.ReadSingle();
                     Color1Array[i].B = reader.ReadSingle();
-                    float time = reader.ReadSingle();
+                    Color1Array[i].Time = reader.ReadSingle();
                 }
+
                 for (int i = 0; i < 8; i++)
                 {
-                    Color1Array[i].A = reader.ReadSingle();
-                    float padding = reader.ReadSingle();
-                    float padding2 = reader.ReadSingle();
-                    float time = reader.ReadSingle();
+                    Color1AlphaArray[i] = new STColor();
+                    Color1AlphaArray[i].R = reader.ReadSingle();
+                    Color1AlphaArray[i].G = reader.ReadSingle();
+                    Color1AlphaArray[i].B = reader.ReadSingle();
+                    Color1AlphaArray[i].Time = reader.ReadSingle();
 
                     int alpha = Utils.FloatToIntClamp(Color1Array[i].A);
                 }
 
-                if (ptclHeader.VFXVersion >= 22)
-                    reader.Seek(Position + 2464, SeekOrigin.Begin);
-                else
-                    reader.Seek(Position + 2472, SeekOrigin.Begin);
+                SetType(Color0KeyCount != 0, Color0Array, 0, false);
+                SetType(Alpha0KeyCount != 0, Color0AlphaArray, 0, true);
+                SetType(Color1KeyCount != 0, Color1Array, 1, false);
+                SetType(Alpha1KeyCount != 0, Color1AlphaArray, 1, true);
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -1088,30 +1218,45 @@ namespace FirstPlugin
             {
                 uint Position = (uint)writer.Position;
 
+                //Seek to the contant colors
+                writer.Seek(Position + 2384, SeekOrigin.Begin);
+                writer.Write(ConstantColor0.R);
+                writer.Write(ConstantColor0.G);
+                writer.Write(ConstantColor0.B);
+                writer.Write(ConstantAlpha0.R);
+                writer.Write(ConstantColor1.R);
+                writer.Write(ConstantColor1.G);
+                writer.Write(ConstantColor1.B);
+                writer.Write(ConstantAlpha1.R);
+
                 writer.Seek(Position + 880, SeekOrigin.Begin);
                 for (int i = 0; i < 8; i++)
                 {
                     writer.Write(Color0Array[i].R);
                     writer.Write(Color0Array[i].G);
                     writer.Write(Color0Array[i].B);
-                    writer.Seek(4, SeekOrigin.Current);
+                    writer.Write(Color0Array[i].Time);
                 }
                 for (int i = 0; i < 8; i++)
                 {
-                    writer.Write(Color0Array[i].A);
-                    writer.Seek(12, SeekOrigin.Current);
+                    writer.Write(Color0AlphaArray[i].R);
+                    writer.Write(Color0AlphaArray[i].G);
+                    writer.Write(Color0AlphaArray[i].B);
+                    writer.Write(Color0AlphaArray[i].Time);
                 }
                 for (int i = 0; i < 8; i++)
                 {
                     writer.Write(Color1Array[i].R);
                     writer.Write(Color1Array[i].G);
                     writer.Write(Color1Array[i].B);
-                    writer.Seek(4, SeekOrigin.Current);
+                    writer.Write(Color1Array[i].Time);
                 }
                 for (int i = 0; i < 8; i++)
                 {
-                    writer.Write(Color1Array[i].A);
-                    writer.Seek(12, SeekOrigin.Current);
+                    writer.Write(Color1AlphaArray[i].R);
+                    writer.Write(Color1AlphaArray[i].G);
+                    writer.Write(Color1AlphaArray[i].B);
+                    writer.Write(Color1AlphaArray[i].Time);
                 }
             }
 
@@ -1181,9 +1326,9 @@ namespace FirstPlugin
             {
                 uint Position = (uint)reader.Position; //Offsets are relative to this
 
-                TextureID                = reader.ReadUInt64();
+                TextureID = reader.ReadUInt64();
                 uint NextDesriptorOffset = reader.ReadUInt32();
-                uint StringLength        = reader.ReadUInt32();
+                uint StringLength = reader.ReadUInt32();
                 TexName = reader.ReadString(BinaryStringFormat.ZeroTerminated);
 
                 Text = TexName + " " + TextureID.ToString("x");

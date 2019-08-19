@@ -237,6 +237,9 @@
     <Compile Include="Forms\ColorAlphaBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\ColorSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -291,9 +294,11 @@
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
     <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
+    <Compile Include="IO\Extensions\ColorExtensions.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
+    <Compile Include="IO\HSVPixel.cs" />
     <Compile Include="IO\IOComoon.cs" />
     <Compile Include="IO\STColor.cs" />
     <Compile Include="IO\SubStream.cs" />
@@ -828,6 +833,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchFormatExport.resx">
       <DependentUpon>BatchFormatExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ColorSelector.resx">
+      <DependentUpon>ColorSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\ColorSlider.resx" />
     <EmbeddedResource Include="Forms\Custom\DropdownPanel\STCollapsePanelButton.resx">

@@ -192,7 +192,6 @@
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(841, 64);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(133, 21);
             this.formatComboBox.TabIndex = 16;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
@@ -241,7 +240,6 @@
             this.paletteFormatCB.FormattingEnabled = true;
             this.paletteFormatCB.Location = new System.Drawing.Point(844, 165);
             this.paletteFormatCB.Name = "paletteFormatCB";
-            this.paletteFormatCB.ReadOnly = true;
             this.paletteFormatCB.Size = new System.Drawing.Size(130, 21);
             this.paletteFormatCB.TabIndex = 34;
             this.paletteFormatCB.SelectedIndexChanged += new System.EventHandler(this.paletteFormatCB_SelectedIndexChanged);
@@ -279,7 +277,6 @@
             this.paletteAlgorithmCB.FormattingEnabled = true;
             this.paletteAlgorithmCB.Location = new System.Drawing.Point(844, 239);
             this.paletteAlgorithmCB.Name = "paletteAlgorithmCB";
-            this.paletteAlgorithmCB.ReadOnly = true;
             this.paletteAlgorithmCB.Size = new System.Drawing.Size(133, 21);
             this.paletteAlgorithmCB.TabIndex = 38;
             // 

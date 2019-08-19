@@ -95,7 +95,7 @@ namespace FirstPlugin
         {
             set
             {
-                tileModeCB.ReadOnly = value;
+                tileModeCB.IsReadOnly = value;
             }
         }
 
@@ -103,7 +103,7 @@ namespace FirstPlugin
         {
             set
             {
-                formatComboBox.ReadOnly = value;
+                formatComboBox.IsReadOnly = value;
             }
         }
 
@@ -404,7 +404,6 @@ namespace FirstPlugin
             this.tileModeCB.FormattingEnabled = true;
             this.tileModeCB.Location = new System.Drawing.Point(772, 85);
             this.tileModeCB.Name = "tileModeCB";
-            this.tileModeCB.ReadOnly = true;
             this.tileModeCB.Size = new System.Drawing.Size(172, 21);
             this.tileModeCB.TabIndex = 42;
             this.tileModeCB.SelectedIndexChanged += new System.EventHandler(this.tileModeCB_SelectedIndexChanged);
@@ -426,7 +425,6 @@ namespace FirstPlugin
             this.ImgDimComb.FormattingEnabled = true;
             this.ImgDimComb.Location = new System.Drawing.Point(772, 58);
             this.ImgDimComb.Name = "ImgDimComb";
-            this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(172, 21);
             this.ImgDimComb.TabIndex = 40;
             // 
@@ -496,7 +494,6 @@ namespace FirstPlugin
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(772, 31);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(172, 21);
             this.formatComboBox.TabIndex = 32;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);

@@ -141,7 +141,6 @@
             this.resampleCB.FormattingEnabled = true;
             this.resampleCB.Location = new System.Drawing.Point(564, 52);
             this.resampleCB.Name = "resampleCB";
-            this.resampleCB.ReadOnly = true;
             this.resampleCB.Size = new System.Drawing.Size(149, 21);
             this.resampleCB.TabIndex = 16;
             this.resampleCB.SelectedIndexChanged += new System.EventHandler(this.resampleCB_SelectedIndexChanged);

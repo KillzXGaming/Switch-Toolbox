@@ -125,7 +125,6 @@
             this.samplerCB.FormattingEnabled = true;
             this.samplerCB.Location = new System.Drawing.Point(66, 77);
             this.samplerCB.Name = "samplerCB";
-            this.samplerCB.ReadOnly = true;
             this.samplerCB.Size = new System.Drawing.Size(206, 21);
             this.samplerCB.TabIndex = 4;
             // 

@@ -381,7 +381,6 @@
             this.activeAnimCB.FormattingEnabled = true;
             this.activeAnimCB.Location = new System.Drawing.Point(233, 31);
             this.activeAnimCB.Name = "activeAnimCB";
-            this.activeAnimCB.ReadOnly = true;
             this.activeAnimCB.Size = new System.Drawing.Size(220, 21);
             this.activeAnimCB.TabIndex = 7;
             this.activeAnimCB.SelectedIndexChanged += new System.EventHandler(this.activeAnimCB_SelectedIndexChanged);
@@ -410,7 +409,6 @@
             this.backgroundCB.FormattingEnabled = true;
             this.backgroundCB.Location = new System.Drawing.Point(233, 3);
             this.backgroundCB.Name = "backgroundCB";
-            this.backgroundCB.ReadOnly = true;
             this.backgroundCB.Size = new System.Drawing.Size(144, 21);
             this.backgroundCB.TabIndex = 4;
             this.backgroundCB.SelectedIndexChanged += new System.EventHandler(this.backgroundCB_SelectedIndexChanged);

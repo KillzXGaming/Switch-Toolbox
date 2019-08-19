@@ -88,7 +88,6 @@
             this.scalingModeCB.FormattingEnabled = true;
             this.scalingModeCB.Location = new System.Drawing.Point(114, 64);
             this.scalingModeCB.Name = "scalingModeCB";
-            this.scalingModeCB.ReadOnly = true;
             this.scalingModeCB.Size = new System.Drawing.Size(172, 21);
             this.scalingModeCB.TabIndex = 4;
             this.scalingModeCB.SelectedIndexChanged += new System.EventHandler(this.ModeCB_SelectedIndexChanged);
@@ -110,7 +109,6 @@
             this.rotationModeCB.FormattingEnabled = true;
             this.rotationModeCB.Location = new System.Drawing.Point(114, 37);
             this.rotationModeCB.Name = "rotationModeCB";
-            this.rotationModeCB.ReadOnly = true;
             this.rotationModeCB.Size = new System.Drawing.Size(172, 21);
             this.rotationModeCB.TabIndex = 2;
             this.rotationModeCB.SelectedIndexChanged += new System.EventHandler(this.ModeCB_SelectedIndexChanged);

@@ -269,7 +269,6 @@
             "Quaternion"});
             this.lodDisplayCB.Location = new System.Drawing.Point(83, 89);
             this.lodDisplayCB.Name = "lodDisplayCB";
-            this.lodDisplayCB.ReadOnly = true;
             this.lodDisplayCB.Size = new System.Drawing.Size(121, 21);
             this.lodDisplayCB.TabIndex = 38;
             this.lodDisplayCB.SelectedIndexChanged += new System.EventHandler(this.lodDisplayCB_SelectedIndexChanged);
@@ -404,7 +403,6 @@
             "Radians"});
             this.measureCB.Location = new System.Drawing.Point(305, 5);
             this.measureCB.Name = "measureCB";
-            this.measureCB.ReadOnly = true;
             this.measureCB.Size = new System.Drawing.Size(121, 21);
             this.measureCB.TabIndex = 37;
             // 
@@ -428,7 +426,6 @@
             "Quaternion"});
             this.rotModeCB.Location = new System.Drawing.Point(77, 5);
             this.rotModeCB.Name = "rotModeCB";
-            this.rotModeCB.ReadOnly = true;
             this.rotModeCB.Size = new System.Drawing.Size(121, 21);
             this.rotModeCB.TabIndex = 35;
             this.rotModeCB.SelectedIndexChanged += new System.EventHandler(this.rotModeCB_SelectedIndexChanged);
@@ -868,7 +865,6 @@
             this.materialComboBox1.FormattingEnabled = true;
             this.materialComboBox1.Location = new System.Drawing.Point(77, 7);
             this.materialComboBox1.Name = "materialComboBox1";
-            this.materialComboBox1.ReadOnly = true;
             this.materialComboBox1.Size = new System.Drawing.Size(227, 21);
             this.materialComboBox1.TabIndex = 0;
             this.materialComboBox1.SelectedIndexChanged += new System.EventHandler(this.materialComboBox1_SelectedIndexChanged);
@@ -933,7 +929,6 @@
             this.bonesCB.FormattingEnabled = true;
             this.bonesCB.Location = new System.Drawing.Point(77, 6);
             this.bonesCB.Name = "bonesCB";
-            this.bonesCB.ReadOnly = true;
             this.bonesCB.Size = new System.Drawing.Size(227, 21);
             this.bonesCB.TabIndex = 16;
             this.bonesCB.SelectedIndexChanged += new System.EventHandler(this.bonesCB_SelectedIndexChanged);
@@ -1216,7 +1211,6 @@
             this.lodPrimativeTypeCB.FormattingEnabled = true;
             this.lodPrimativeTypeCB.Location = new System.Drawing.Point(101, 35);
             this.lodPrimativeTypeCB.Name = "lodPrimativeTypeCB";
-            this.lodPrimativeTypeCB.ReadOnly = true;
             this.lodPrimativeTypeCB.Size = new System.Drawing.Size(137, 21);
             this.lodPrimativeTypeCB.TabIndex = 36;
             // 
@@ -1230,7 +1224,6 @@
             this.lodFormatCB.FormattingEnabled = true;
             this.lodFormatCB.Location = new System.Drawing.Point(101, 5);
             this.lodFormatCB.Name = "lodFormatCB";
-            this.lodFormatCB.ReadOnly = true;
             this.lodFormatCB.Size = new System.Drawing.Size(137, 21);
             this.lodFormatCB.TabIndex = 30;
             // 

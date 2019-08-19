@@ -171,7 +171,6 @@
             this.tileModeCB.FormattingEnabled = true;
             this.tileModeCB.Location = new System.Drawing.Point(851, 114);
             this.tileModeCB.Name = "tileModeCB";
-            this.tileModeCB.ReadOnly = true;
             this.tileModeCB.Size = new System.Drawing.Size(230, 21);
             this.tileModeCB.TabIndex = 26;
             // 
@@ -192,7 +191,6 @@
             this.ImgDimComb.FormattingEnabled = true;
             this.ImgDimComb.Location = new System.Drawing.Point(851, 87);
             this.ImgDimComb.Name = "ImgDimComb";
-            this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(232, 21);
             this.ImgDimComb.TabIndex = 24;
             this.ImgDimComb.SelectedIndexChanged += new System.EventHandler(this.ImgDimComb_SelectedIndexChanged);
@@ -270,7 +268,6 @@
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(851, 60);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(233, 21);
             this.formatComboBox.TabIndex = 16;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
@@ -283,7 +280,6 @@
             this.compressionModeCB.FormattingEnabled = true;
             this.compressionModeCB.Location = new System.Drawing.Point(851, 33);
             this.compressionModeCB.Name = "compressionModeCB";
-            this.compressionModeCB.ReadOnly = true;
             this.compressionModeCB.Size = new System.Drawing.Size(232, 21);
             this.compressionModeCB.TabIndex = 30;
             this.compressionModeCB.SelectedIndexChanged += new System.EventHandler(this.compressionModeCB_SelectedIndexChanged);

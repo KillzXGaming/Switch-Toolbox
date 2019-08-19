@@ -21,8 +21,10 @@ using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
-    public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode
+    public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureIconLoader
     {
+        public bool LoadIcons = false;
+
         public FileType FileType { get; set; } = FileType.Image;
 
         public bool CanSave { get; set; }
@@ -60,6 +62,9 @@ namespace FirstPlugin
         {
             get
             {
+                if (!LoadIcons)
+                    return new List<STGenericTexture>();
+
                 List<STGenericTexture> textures = new List<STGenericTexture>();
                 foreach (STGenericTexture node in Nodes)
                     textures.Add(node);

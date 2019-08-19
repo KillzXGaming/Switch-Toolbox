@@ -61,7 +61,6 @@
             this.sourceCB.FormattingEnabled = true;
             this.sourceCB.Location = new System.Drawing.Point(54, 31);
             this.sourceCB.Name = "sourceCB";
-            this.sourceCB.ReadOnly = true;
             this.sourceCB.Size = new System.Drawing.Size(121, 21);
             this.sourceCB.TabIndex = 0;
             this.sourceCB.SelectedIndexChanged += new System.EventHandler(this.sourceCB_SelectedIndexChanged);
@@ -92,7 +91,6 @@
             this.destCB.FormattingEnabled = true;
             this.destCB.Location = new System.Drawing.Point(258, 31);
             this.destCB.Name = "destCB";
-            this.destCB.ReadOnly = true;
             this.destCB.Size = new System.Drawing.Size(121, 21);
             this.destCB.TabIndex = 3;
             this.destCB.SelectedIndexChanged += new System.EventHandler(this.destCB_SelectedIndexChanged);

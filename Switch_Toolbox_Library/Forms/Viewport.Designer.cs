@@ -137,7 +137,6 @@
             this.drawContainersCB.FormattingEnabled = true;
             this.drawContainersCB.Location = new System.Drawing.Point(93, 0);
             this.drawContainersCB.Name = "drawContainersCB";
-            this.drawContainersCB.ReadOnly = true;
             this.drawContainersCB.Size = new System.Drawing.Size(183, 21);
             this.drawContainersCB.TabIndex = 0;
             this.drawContainersCB.SelectedIndexChanged += new System.EventHandler(this.drawContainersCB_SelectedIndexChanged);

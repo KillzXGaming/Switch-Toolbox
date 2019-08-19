@@ -14,5 +14,14 @@ namespace Toolbox.Library.Forms
             ForeColor = FormThemes.BaseTheme.FormForeColor;
             BackColor = FormThemes.BaseTheme.FormBackColor;
         }
+
+        public void SetDoubleBuffer()
+        {
+            this.SetStyle(
+             ControlStyles.AllPaintingInWmPaint |
+             ControlStyles.UserPaint |
+             ControlStyles.DoubleBuffer,
+             true);
+        }
     }
 }

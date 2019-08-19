@@ -61,7 +61,6 @@
             this.formatCB.FormattingEnabled = true;
             this.formatCB.Location = new System.Drawing.Point(64, 68);
             this.formatCB.Name = "formatCB";
-            this.formatCB.ReadOnly = true;
             this.formatCB.Size = new System.Drawing.Size(198, 21);
             this.formatCB.TabIndex = 0;
             this.formatCB.SelectedIndexChanged += new System.EventHandler(this.formatCB_SelectedIndexChanged);

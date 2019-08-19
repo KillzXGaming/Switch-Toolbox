@@ -328,7 +328,6 @@
             this.imageBGComboBox.FormattingEnabled = true;
             this.imageBGComboBox.Location = new System.Drawing.Point(262, 2);
             this.imageBGComboBox.Name = "imageBGComboBox";
-            this.imageBGComboBox.ReadOnly = true;
             this.imageBGComboBox.Size = new System.Drawing.Size(95, 21);
             this.imageBGComboBox.TabIndex = 2;
             this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);

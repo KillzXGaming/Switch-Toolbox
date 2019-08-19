@@ -158,6 +158,8 @@ namespace Toolbox.Library
                             var image = ((STGenericTexture)node).GetBitmap();
                             if (image != null)
                             {
+                                image = ((STGenericTexture)node).GetComponentBitmap(image);
+
                                 imageIcons.Add(image);
                                 treeNodes.Add(node);
                             }
@@ -242,6 +244,7 @@ namespace Toolbox.Library
                 try
                 {
                     var image = textureIcon.IconTexture.GetBitmap();
+                    image = textureIcon.IconTexture.GetComponentBitmap(image);
                     AddImageOnThread(image, textureIcon.IconTexture);
                 }
                 catch (Exception ex)
@@ -273,6 +276,7 @@ namespace Toolbox.Library
                             var image = ((STGenericTexture)node).GetBitmap();
                             if (image != null)
                             {
+                                image = ((STGenericTexture)node).GetComponentBitmap(image);
                                 treeNodes.Add(node);
                                 imageIcons.Add(image);
                             }

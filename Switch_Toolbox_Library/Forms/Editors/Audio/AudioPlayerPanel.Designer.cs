@@ -357,7 +357,6 @@
             this.audioDevice.FormattingEnabled = true;
             this.audioDevice.Location = new System.Drawing.Point(220, 3);
             this.audioDevice.Name = "audioDevice";
-            this.audioDevice.ReadOnly = true;
             this.audioDevice.Size = new System.Drawing.Size(151, 21);
             this.audioDevice.TabIndex = 20;
             this.audioDevice.SelectedIndexChanged += new System.EventHandler(this.audioDevice_SelectedIndexChanged);
@@ -371,7 +370,6 @@
             this.channelCB.FormattingEnabled = true;
             this.channelCB.Location = new System.Drawing.Point(377, 3);
             this.channelCB.Name = "channelCB";
-            this.channelCB.ReadOnly = true;
             this.channelCB.Size = new System.Drawing.Size(151, 21);
             this.channelCB.TabIndex = 19;
             this.channelCB.SelectedIndexChanged += new System.EventHandler(this.channelCB_SelectedIndexChanged);

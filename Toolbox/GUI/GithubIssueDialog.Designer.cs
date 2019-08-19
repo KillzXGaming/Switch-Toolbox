@@ -109,7 +109,6 @@
             this.typeCB.FormattingEnabled = true;
             this.typeCB.Location = new System.Drawing.Point(11, 19);
             this.typeCB.Name = "typeCB";
-            this.typeCB.ReadOnly = true;
             this.typeCB.Size = new System.Drawing.Size(159, 21);
             this.typeCB.TabIndex = 3;
             // 

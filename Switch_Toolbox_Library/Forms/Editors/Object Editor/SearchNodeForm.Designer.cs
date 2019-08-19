@@ -134,7 +134,6 @@
             this.listViewModeCB.FormattingEnabled = true;
             this.listViewModeCB.Location = new System.Drawing.Point(5, 346);
             this.listViewModeCB.Name = "listViewModeCB";
-            this.listViewModeCB.ReadOnly = true;
             this.listViewModeCB.Size = new System.Drawing.Size(143, 21);
             this.listViewModeCB.TabIndex = 18;
             this.listViewModeCB.SelectedIndexChanged += new System.EventHandler(this.listViewModeCB_SelectedIndexChanged);

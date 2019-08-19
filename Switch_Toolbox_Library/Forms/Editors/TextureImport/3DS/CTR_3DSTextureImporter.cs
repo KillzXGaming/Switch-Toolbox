@@ -47,7 +47,7 @@ namespace Toolbox.Library.Forms
         {
             set
             {
-                formatComboBox.ReadOnly = value;
+                formatComboBox.IsReadOnly = value;
             }
         }
 
@@ -272,7 +272,6 @@ namespace Toolbox.Library.Forms
             this.ImgDimComb.FormattingEnabled = true;
             this.ImgDimComb.Location = new System.Drawing.Point(772, 61);
             this.ImgDimComb.Name = "ImgDimComb";
-            this.ImgDimComb.ReadOnly = true;
             this.ImgDimComb.Size = new System.Drawing.Size(172, 21);
             this.ImgDimComb.TabIndex = 40;
             // 
@@ -342,7 +341,6 @@ namespace Toolbox.Library.Forms
             this.formatComboBox.FormattingEnabled = true;
             this.formatComboBox.Location = new System.Drawing.Point(772, 31);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.ReadOnly = true;
             this.formatComboBox.Size = new System.Drawing.Size(172, 21);
             this.formatComboBox.TabIndex = 32;
             this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);

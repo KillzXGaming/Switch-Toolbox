@@ -1060,6 +1060,26 @@ namespace Toolbox.Library
             return FileName.Substring(0, FileName.Length - extension.Length);
         }
 
+        public Bitmap GetComponentBitmap(Bitmap image)
+        {
+            //Check if it's RGBA to save time editing the image
+            if (UseRGBA())
+                return image;
+            else
+                return BitmapExtension.SetChannel(image, RedChannel, GreenChannel, BlueChannel, AlphaChannel);
+        }
+
+        private bool UseRGBA()
+        {
+            if (RedChannel == STChannelType.Red &&
+                GreenChannel == STChannelType.Green &&
+                BlueChannel == STChannelType.Blue &&
+                AlphaChannel == STChannelType.Alpha)
+                return true;
+            else
+                return false;
+        }
+
         private static byte[] ConvertBgraToRgba(byte[] bytes)
         {
             if (bytes == null)

@@ -30,7 +30,7 @@ namespace Toolbox.Library
             scene.RootNode = new Node("RootNode");
 
             progressBar = new STProgressBar();
-            progressBar.Task = "Exorting Skeleton...";
+            progressBar.Task = "Exporting Skeleton...";
             progressBar.Value = 0;
             progressBar.StartPosition = FormStartPosition.CenterScreen;
             progressBar.Show();
@@ -39,7 +39,7 @@ namespace Toolbox.Library
             SaveSkeleton(skeleton, scene.RootNode);
             SaveMaterials(scene, Materials, FileName, Textures);
 
-            progressBar.Task = "Exorting Meshes...";
+            progressBar.Task = "Exporting Meshes...";
             progressBar.Value = 50;
 
             SaveMeshes(scene, Meshes, skeleton, FileName, NodeArray);
@@ -519,7 +519,7 @@ namespace Toolbox.Library
                 {
                     ExtractedTextures.Add(path);
 
-                    progressBar.Task = $"Exorting Texture {Textures[i].Text}";
+                    progressBar.Task = $"Exporting Texture {Textures[i].Text}";
                     progressBar.Value = ((i * 100) / Textures.Count);
                     progressBar.Refresh();
 

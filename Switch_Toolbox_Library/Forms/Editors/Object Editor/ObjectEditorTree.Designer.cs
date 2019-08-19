@@ -100,7 +100,6 @@
             this.nodeSizeCB.FormattingEnabled = true;
             this.nodeSizeCB.Location = new System.Drawing.Point(172, 29);
             this.nodeSizeCB.Name = "nodeSizeCB";
-            this.nodeSizeCB.ReadOnly = true;
             this.nodeSizeCB.Size = new System.Drawing.Size(136, 21);
             this.nodeSizeCB.TabIndex = 5;
             this.nodeSizeCB.SelectedIndexChanged += new System.EventHandler(this.nodeSizeCB_SelectedIndexChanged);

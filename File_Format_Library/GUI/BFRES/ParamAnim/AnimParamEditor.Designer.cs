@@ -98,7 +98,6 @@
             this.materialCB.FormattingEnabled = true;
             this.materialCB.Location = new System.Drawing.Point(136, 6);
             this.materialCB.Name = "materialCB";
-            this.materialCB.ReadOnly = true;
             this.materialCB.Size = new System.Drawing.Size(203, 21);
             this.materialCB.TabIndex = 18;
             this.materialCB.SelectedIndexChanged += new System.EventHandler(this.materialCB_SelectedIndexChanged);
@@ -111,7 +110,6 @@
             this.paramCB.FormattingEnabled = true;
             this.paramCB.Location = new System.Drawing.Point(136, 35);
             this.paramCB.Name = "paramCB";
-            this.paramCB.ReadOnly = true;
             this.paramCB.Size = new System.Drawing.Size(203, 21);
             this.paramCB.TabIndex = 16;
             this.paramCB.SelectedIndexChanged += new System.EventHandler(this.paramCB_SelectedIndexChanged);

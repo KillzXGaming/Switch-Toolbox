@@ -85,7 +85,6 @@
             this.boneListCB.FormattingEnabled = true;
             this.boneListCB.Location = new System.Drawing.Point(12, 56);
             this.boneListCB.Name = "boneListCB";
-            this.boneListCB.ReadOnly = true;
             this.boneListCB.Size = new System.Drawing.Size(132, 21);
             this.boneListCB.TabIndex = 13;
             this.boneListCB.SelectedIndexChanged += new System.EventHandler(this.boneListCB_SelectedIndexChanged);

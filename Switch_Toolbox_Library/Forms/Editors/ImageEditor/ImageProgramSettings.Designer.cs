@@ -70,7 +70,6 @@
             this.textureImageFormatCB.FormattingEnabled = true;
             this.textureImageFormatCB.Location = new System.Drawing.Point(148, 64);
             this.textureImageFormatCB.Name = "textureImageFormatCB";
-            this.textureImageFormatCB.ReadOnly = true;
             this.textureImageFormatCB.Size = new System.Drawing.Size(236, 21);
             this.textureImageFormatCB.TabIndex = 12;
             // 
@@ -82,7 +81,6 @@
             this.textureFileFormatCB.FormattingEnabled = true;
             this.textureFileFormatCB.Location = new System.Drawing.Point(147, 38);
             this.textureFileFormatCB.Name = "textureFileFormatCB";
-            this.textureFileFormatCB.ReadOnly = true;
             this.textureFileFormatCB.Size = new System.Drawing.Size(236, 21);
             this.textureFileFormatCB.TabIndex = 14;
             // 

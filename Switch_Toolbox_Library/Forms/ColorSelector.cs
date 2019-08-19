@@ -1,0 +1,291 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using Toolbox.Library.IO;
+
+namespace Toolbox.Library.Forms
+{
+    //Based on this, very good color slider
+    //https://github.com/libertyernie/brawltools/blob/40d7431b1a01ef4a0411cd69e51411bd581e93e2/BrawlLib/System/Windows/Controls/GoodColorControl.cs#L394
+    //Slimmed down a bit to be more simple
+
+    /// <summary>
+    /// A panel which can select and pick colors
+    /// </summary>
+    public class ColorSelector : STUserControl
+    {
+        private Color _color;
+
+        private HSVPixel _hsv = new HSVPixel(0, 100, 100);
+
+        /// <summary>
+        /// The color the dialog gets and sets.
+        /// </summary>
+        public Color Color
+        {
+            get { return _color; }
+            set
+            {
+                _color = value;
+                OnColorChanged(false);
+            }
+        }
+        private LinearGradientBrush _hueBrush;
+        private STPanel colorSquare;
+        private STPanel huePanel;
+        private PathGradientBrush _mainBrush;
+
+        public ColorSelector()
+        {
+            InitializeComponent();
+
+            this.SetStyle(
+               ControlStyles.AllPaintingInWmPaint |
+               ControlStyles.UserPaint |
+               ControlStyles.DoubleBuffer,
+               true);
+
+            colorSquare.SetDoubleBuffer();
+            huePanel.SetDoubleBuffer();
+        }
+
+        private Point CursorPoint = new Point(0,0);
+
+        public event EventHandler ColorChanged;
+
+        private void InitializeComponent()
+        {
+            this.colorSquare = new Toolbox.Library.Forms.STPanel();
+            this.huePanel = new Toolbox.Library.Forms.STPanel();
+            this.SuspendLayout();
+            // 
+            // colorSquare
+            // 
+            this.colorSquare.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.colorSquare.Location = new System.Drawing.Point(3, 3);
+            this.colorSquare.Name = "colorSquare";
+            this.colorSquare.Size = new System.Drawing.Size(180, 180);
+            this.colorSquare.TabIndex = 0;
+            this.colorSquare.Paint += new System.Windows.Forms.PaintEventHandler(this.colorSquare_Paint);
+            this.colorSquare.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSquare_MouseDown);
+            this.colorSquare.MouseMove += new System.Windows.Forms.MouseEventHandler(this.colorSquare_MouseMove);
+            this.colorSquare.MouseUp += new System.Windows.Forms.MouseEventHandler(this.colorSquare_MouseUp);
+            // 
+            // huePanel
+            // 
+            this.huePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.huePanel.Location = new System.Drawing.Point(189, 3);
+            this.huePanel.Name = "huePanel";
+            this.huePanel.Size = new System.Drawing.Size(16, 180);
+            this.huePanel.TabIndex = 1;
+            this.huePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.huePanel_Paint);
+            this.huePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.huePanel_MouseDown);
+            this.huePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.huePanel_MouseMove);
+            this.huePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.huePanel_MouseUp);
+            // 
+            // ColorSelector
+            // 
+            this.Controls.Add(this.huePanel);
+            this.Controls.Add(this.colorSquare);
+            this.MaximumSize = new System.Drawing.Size(212, 188);
+            this.MinimumSize = new System.Drawing.Size(212, 188);
+            this.Name = "ColorSelector";
+            this.Size = new System.Drawing.Size(212, 188);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ColorSelector_MouseMove);
+            this.ResumeLayout(false);
+
+        }
+
+        private void ColorSelector_MouseMove(object sender, MouseEventArgs e)
+        {
+            CursorPoint = e.Location;
+            this.Invalidate();
+        }
+
+
+        #region HueBar
+
+        private bool _hueSelected = false;
+        private void huePanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _hueSelected = true;
+                huePanel_MouseMove(sender, e);
+            }
+        }
+
+        private void huePanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                _hueSelected = false;
+        }
+
+        private int hueY;
+        private void huePanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_hueSelected)
+            {
+                int y = Math.Max(Math.Min(e.Y, (huePanel.Height - 1)), 0);
+                if (y != hueY)
+                {
+                    hueY = y;
+
+                    _hsv.H = (ushort)((float)y / (huePanel.Height - 1) * 360);
+
+                    OnColorChanged(true);
+                }
+            }
+        }
+
+        private void huePanel_Paint(object sender, PaintEventArgs e)
+        {
+            const float numHueColors = 6.0f;
+
+            Rectangle r = colorSquare.ClientRectangle;
+
+            //Split the hue colors
+            float p = r.Height / numHueColors / r.Height;
+
+            //Draw the hue slider
+            var g = e.Graphics;
+
+            _hueBrush = new LinearGradientBrush(new Rectangle(0, 0, r.Width, r.Height), Color.Red, Color.Red, LinearGradientMode.Vertical);
+
+            //Create the hue list
+            ColorBlend blend = new ColorBlend();
+            blend.Colors = new Color[]
+            {
+                Color.Red,
+                Color.Yellow,
+                Color.Lime,
+                Color.Cyan,
+                Color.Blue,
+                Color.Magenta,
+                Color.Red
+            };
+
+            blend.Positions = new float[] { 0, p, p * 2, p * 3, p * 4, p * 5, 1.0f };
+            _hueBrush.InterpolationColors = blend;
+
+            g.FillRectangle(_hueBrush, r);
+
+            Color pixel = new HSVPixel(_hsv.H, 100, 100).ToRGBA().Inverse();
+
+            int y = (int)(_hsv.H / 360.0f * (huePanel.Height - 1));
+            Rectangle c = new Rectangle(-1, y - 2, huePanel.Width + 1, 4);
+
+            using (Pen pen = new Pen(pixel))
+                g.DrawRectangle(pen, c);
+
+            c.Y += 1;
+            c.Height -= 2;
+            pixel = pixel.Lighten(64);
+
+            using (Pen pen = new Pen(pixel))
+                g.DrawRectangle(pen, c);
+        }
+
+        #endregion
+
+        private Color[] _boxColors = new Color[] { Color.Black, Color.White, Color.Black, Color.Black, Color.Black };
+        private void colorSquare_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+
+            Rectangle r = colorSquare.ClientRectangle;
+            float p = r.Height / 6.0f / r.Height;
+
+            _mainBrush = new PathGradientBrush(new PointF[] {
+                new PointF(r.Width, 0),
+                new PointF(r.Width, r.Height),
+                new PointF(0, r.Height),
+                new PointF(0,0),
+                new PointF(r.Width, 0)});
+
+            _boxColors[0] = _boxColors[4] = new HSVPixel(_hsv.H, 100, 100).ToRGBA();
+            _mainBrush.SurroundColors = _boxColors;
+            _mainBrush.CenterColor = new HSVPixel(_hsv.H, 50, 50).ToRGBA(); 
+            _mainBrush.CenterPoint = new PointF(r.Width / 2, r.Height / 2);
+           
+            g.FillRectangle(_mainBrush, r);
+
+
+            //Draw indicator
+            int x = (int)(_hsv.V / 100.0f * colorSquare.Width);
+            int y = (int)((100 - _hsv.S) / 100.0f * colorSquare.Height);
+
+            Rectangle c = new Rectangle(x - 3, y - 3, 6, 6);
+
+            Color pixel = _color.Inverse();
+            pixel.WhiteAlpha();
+
+            using (Pen pen = new Pen(pixel))
+                g.DrawEllipse(pen, c);
+
+            c.X -= 1;
+            c.Y -= 1;
+            c.Width += 2;
+            c.Height += 2;
+
+            pixel = pixel.Lighten(64);
+
+            using (Pen pen = new Pen(pixel))
+                g.DrawEllipse(pen, c);
+        }
+
+        protected virtual void OnColorChanged(bool hsvToRgb)
+        {
+            colorSquare.Invalidate();
+            huePanel.Invalidate();
+
+            if (hsvToRgb)
+                _color = _hsv.ToRGBA();
+            else
+                _hsv = HSVPixel.FromRGBA(_color);
+
+            if (ColorChanged != null)
+                ColorChanged(this, null);
+        }
+
+        private int _squareX, _squareY;
+        private bool _squareSelected = false;
+        private void colorSquare_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _squareSelected = true;
+                colorSquare_MouseMove(sender, e);
+            }
+        }
+
+        private void colorSquare_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                _squareSelected = false;
+        }
+
+        private void colorSquare_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_squareSelected)
+            {
+                int x = Math.Min(Math.Max(e.X, 0), colorSquare.Width);
+                int y = Math.Min(Math.Max(e.Y, 0), colorSquare.Height);
+                if ((x != _squareX) || (y != _squareY))
+                {
+                    _hsv.V = (byte)((float)x / colorSquare.Width * 100);
+                    _hsv.S = (byte)((float)(colorSquare.Height - y) / colorSquare.Height * 100);
+
+                    OnColorChanged(true);
+                }
+            }
+        }
+    }
+}

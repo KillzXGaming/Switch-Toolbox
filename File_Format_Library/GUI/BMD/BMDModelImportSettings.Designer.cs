@@ -113,7 +113,6 @@
             "static"});
             this.stComboBox1.Location = new System.Drawing.Point(22, 56);
             this.stComboBox1.Name = "stComboBox1";
-            this.stComboBox1.ReadOnly = true;
             this.stComboBox1.Size = new System.Drawing.Size(121, 21);
             this.stComboBox1.TabIndex = 17;
             // 

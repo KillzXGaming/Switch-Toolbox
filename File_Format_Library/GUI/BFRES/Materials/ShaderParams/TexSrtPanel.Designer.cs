@@ -49,7 +49,6 @@
             this.scalingModeCN.FormattingEnabled = true;
             this.scalingModeCN.Location = new System.Drawing.Point(214, 33);
             this.scalingModeCN.Name = "scalingModeCN";
-            this.scalingModeCN.ReadOnly = true;
             this.scalingModeCN.Size = new System.Drawing.Size(121, 21);
             this.scalingModeCN.TabIndex = 0;
             this.scalingModeCN.SelectedIndexChanged += new System.EventHandler(this.barSlider_ValueChanged);

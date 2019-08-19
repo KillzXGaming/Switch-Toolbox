@@ -394,6 +394,31 @@
     <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Editors\PTCL\Color8KeySlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\Color8KeySlider.Designer.cs">
+      <DependentUpon>Color8KeySlider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorConstantPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorConstantPanel.Designer.cs">
+      <DependentUpon>ColorConstantPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\IColorPanelCommon.cs" />
+    <Compile Include="GUI\Editors\PTCL\ColorRandomPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorRandomPanel.Designer.cs">
+      <DependentUpon>ColorRandomPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditorNX.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditorNX.Designer.cs">
+      <DependentUpon>EmitterEditorNX.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\TextureUI\Importers\BNTX\BinaryTextureImporterList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1216,6 +1241,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.resx">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\Color8KeySlider.resx">
+      <DependentUpon>Color8KeySlider.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\ColorConstantPanel.resx">
+      <DependentUpon>ColorConstantPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\ColorRandomPanel.resx">
+      <DependentUpon>ColorRandomPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditorNX.resx">
+      <DependentUpon>EmitterEditorNX.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditor.resx">
       <DependentUpon>EmitterEditor.cs</DependentUpon>

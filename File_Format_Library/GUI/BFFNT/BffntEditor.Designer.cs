@@ -144,7 +144,6 @@
             this.fontTypeCB.FormattingEnabled = true;
             this.fontTypeCB.Location = new System.Drawing.Point(87, 42);
             this.fontTypeCB.Name = "fontTypeCB";
-            this.fontTypeCB.ReadOnly = true;
             this.fontTypeCB.Size = new System.Drawing.Size(108, 21);
             this.fontTypeCB.TabIndex = 17;
             // 
@@ -156,7 +155,6 @@
             this.encodingTypeCB.FormattingEnabled = true;
             this.encodingTypeCB.Location = new System.Drawing.Point(87, 73);
             this.encodingTypeCB.Name = "encodingTypeCB";
-            this.encodingTypeCB.ReadOnly = true;
             this.encodingTypeCB.Size = new System.Drawing.Size(108, 21);
             this.encodingTypeCB.TabIndex = 16;
             // 
@@ -420,7 +418,6 @@
             this.characterCodeCB.FormattingEnabled = true;
             this.characterCodeCB.Location = new System.Drawing.Point(103, 27);
             this.characterCodeCB.Name = "characterCodeCB";
-            this.characterCodeCB.ReadOnly = true;
             this.characterCodeCB.Size = new System.Drawing.Size(72, 39);
             this.characterCodeCB.TabIndex = 2;
             // 
@@ -485,7 +482,6 @@
             this.imagesCB.FormattingEnabled = true;
             this.imagesCB.Location = new System.Drawing.Point(82, 6);
             this.imagesCB.Name = "imagesCB";
-            this.imagesCB.ReadOnly = true;
             this.imagesCB.Size = new System.Drawing.Size(213, 21);
             this.imagesCB.TabIndex = 1;
             this.imagesCB.SelectedIndexChanged += new System.EventHandler(this.imagesCB_SelectedIndexChanged);
