@@ -774,7 +774,12 @@ namespace FirstPlugin
                 }
 
                 if (NextSectionOffset != NullOffset)
+                {
+                    if (Signature != "PRIM")
+                        writer.Align(16);
+                        
                     writer.WriteUint32Offset(_ofsNextPos, BasePosition);
+                }
             }
         }
 
