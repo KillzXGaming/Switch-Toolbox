@@ -257,20 +257,26 @@ namespace FirstPlugin
             }
         }
 
+        private bool _UpdateSelector = true;
         private void colorSelector1_ColorChanged(object sender, EventArgs e)
         {
             if (!IsColorsLoaded)
                 return;
+
+            _UpdateSelector = false;
 
             hexTB.Text = Utils.ColorToHex(colorSelector1.Color);
             pictureBox4.BackColor = colorSelector1.Color;
 
             if (ActivePanel != null)
                 ActivePanel.SetColor(colorSelector1.Color);
+
+            _UpdateSelector = true;
         }
 
         private void UpdateColorSelector(Color color) {
-            colorSelector1.Color = color;
+            if (_UpdateSelector)
+                colorSelector1.Color = color;
         }
     }
 }
