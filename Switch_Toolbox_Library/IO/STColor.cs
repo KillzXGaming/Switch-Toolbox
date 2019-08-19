@@ -15,6 +15,8 @@ namespace Toolbox.Library
         public float B { get; set; }
         public float A { get; set; }
 
+        public float Time { get; set; }
+
         public Color Color
         {
             get

@@ -96,6 +96,13 @@ namespace Toolbox.Library.Rendering
 
             width = (int)GenericTexture.Width;
             height = (int)GenericTexture.Height;
+
+            if (Runtime.DisableLoadingGLHighResTextures)
+            {
+                if (width >= 3000 || height >= 3000)
+                    return;
+            }
+
             if (GenericTexture.ArrayCount == 0)
                 GenericTexture.ArrayCount = 1;
 

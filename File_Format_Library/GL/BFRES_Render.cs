@@ -514,8 +514,6 @@ namespace FirstPlugin
 
         private static void SetTextureUniforms(FMAT mat, FSHP m, SF.Shader shader)
         {
-            SetDefaultTextureAttributes(mat, shader);
-
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
@@ -549,34 +547,36 @@ namespace FirstPlugin
                 MatTexture matex = (MatTexture)mat.TextureMaps[t];
 
                 if (matex.Type == MatTexture.TextureType.Diffuse)
-                    TextureUniform(shader, mat, mat.HasDiffuseMap, "DiffuseMap", matex);
+                    mat.HasDiffuseMap = TextureUniform(shader, mat, "DiffuseMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Normal)
-                    TextureUniform(shader, mat, mat.HasNormalMap, "NormalMap", matex);
+                    mat.HasNormalMap = TextureUniform(shader, mat, "NormalMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Emission)
-                    TextureUniform(shader, mat, mat.HasEmissionMap, "EmissionMap", matex);
+                    mat.HasEmissionMap = TextureUniform(shader, mat, "EmissionMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Specular)
-                    TextureUniform(shader, mat, mat.HasSpecularMap, "SpecularMap", matex);
+                    mat.HasSpecularMap = TextureUniform(shader, mat, "SpecularMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Shadow)
-                    TextureUniform(shader, mat, mat.HasShadowMap, "BakeShadowMap", matex);
+                    mat.HasShadowMap = TextureUniform(shader, mat, "BakeShadowMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Light)
-                    TextureUniform(shader, mat, mat.HasLightMap, "BakeLightMap", matex);
+                    mat.HasLightMap = TextureUniform(shader, mat, "BakeLightMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Metalness)
-                    TextureUniform(shader, mat, mat.HasMetalnessMap, "MetalnessMap", matex);
+                    mat.HasMetalnessMap = TextureUniform(shader, mat, "MetalnessMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Roughness)
-                    TextureUniform(shader, mat, mat.HasRoughnessMap, "RoughnessMap", matex);
+                    mat.HasRoughnessMap = TextureUniform(shader, mat, "RoughnessMap", matex);
                 else if (matex.Type == MatTexture.TextureType.TeamColor)
-                    TextureUniform(shader, mat, mat.HasTeamColorMap, "TeamColorMap", matex);
+                    mat.HasTeamColorMap = TextureUniform(shader, mat, "TeamColorMap", matex);
                 else if (matex.Type == MatTexture.TextureType.Transparency)
-                    TextureUniform(shader, mat, mat.HasTransparencyMap, "TransparencyMap", matex);
+                    mat.HasTransparencyMap =  TextureUniform(shader, mat,  "TransparencyMap", matex);
                 else if (matex.Type == MatTexture.TextureType.DiffuseLayer2)
-                    TextureUniform(shader, mat, mat.HasDiffuseLayer, "DiffuseLayer", matex);
+                    mat.HasDiffuseLayer = TextureUniform(shader, mat, "DiffuseLayer", matex);
                 else if (matex.Type == MatTexture.TextureType.SphereMap)
-                    TextureUniform(shader, mat, mat.HasSphereMap, "SphereMap", matex);
+                    mat.HasSphereMap =  mat.HasSphereMap = TextureUniform(shader, mat, "SphereMap", matex);
                 else if (matex.Type == MatTexture.TextureType.SubSurfaceScattering)
-                    TextureUniform(shader, mat, mat.HasSubSurfaceScatteringMap, "SubSurfaceScatteringMap", matex);
+                    mat.HasSubSurfaceScatteringMap = TextureUniform(shader, mat, "SubSurfaceScatteringMap", matex);
                 else if (matex.Type == MatTexture.TextureType.MRA)
-                    TextureUniform(shader, mat, mat.HasMRA, "MRA", matex);
+                    mat.HasMRA = TextureUniform(shader, mat, "MRA", matex);
             }
+
+            SetDefaultTextureAttributes(mat, shader);
         }
 
         private static void LoadPBRMaps(SF.Shader shader)
@@ -597,18 +597,23 @@ namespace FirstPlugin
             GL.Uniform1(shader.GetUniformLocation("brdfLUT"), 27);
         }
 
-        private static void TextureUniform(SF.Shader shader, FMAT mat, bool hasTex, string name, MatTexture mattex)
+        private static bool TextureUniform(SF.Shader shader, FMAT mat, string name, MatTexture mattex)
         {
             if (mattex.textureState == STGenericMatTexture.TextureState.Binded)
-                return;
+                return true;
 
             // Bind the texture and create the uniform if the material has the right textures. 
-            if (hasTex)
-            {
-                GL.Uniform1(shader.GetUniformLocation(name), BindTexture(mattex, mat, shader, mat.GetResFileU() != null));
-            }
+            bool IsBound = BindTexture(mattex, mat, shader, mat.GetResFileU() != null);
+            int texId = mattex.textureUnit + 1;
+
+            if (IsBound)
+                GL.Uniform1(shader.GetUniformLocation(name), texId);
+            else
+                return false;
+
+            return true;
         }
-        public static int BindTexture(MatTexture tex, FMAT material, SF.Shader shader, bool IsWiiU)
+        public static bool BindTexture(MatTexture tex, FMAT material, SF.Shader shader, bool IsWiiU)
         {
             BFRES bfres = (BFRES)material.Parent.Parent.Parent.Parent;
 
@@ -628,8 +633,7 @@ namespace FirstPlugin
                     {
                         if (ftexCont.ResourceNodes.ContainsKey(activeTex))
                         {
-                            BindFTEX(ftexCont, tex, shader, activeTex);
-                            return tex.textureUnit + 1;
+                            return BindFTEX(ftexCont, tex, shader, activeTex);
                         }
                     }
                 }
@@ -638,8 +642,7 @@ namespace FirstPlugin
                 {
                     if (ftexContainer.ResourceNodes.ContainsKey(activeTex))
                     {
-                        BindFTEX(ftexContainer, tex, shader, activeTex);
-                        return tex.textureUnit + 1;
+                        return BindFTEX(ftexContainer, tex, shader, activeTex);
                     }
                 }
             }
@@ -652,8 +655,7 @@ namespace FirstPlugin
                     {
                         if (bntx.Textures.ContainsKey(activeTex))
                         {
-                            BindBNTX(bntx, tex, shader, activeTex);
-                            return tex.textureUnit + 1;
+                            return BindBNTX(bntx, tex, shader, activeTex);
                         }
                     }
                 }
@@ -662,15 +664,15 @@ namespace FirstPlugin
                 {
                     if (bntx.Textures.ContainsKey(activeTex))
                     {
-                        BindBNTX(bntx, tex, shader, activeTex);
-                        return tex.textureUnit + 1;
+                        return BindBNTX(bntx, tex, shader, activeTex);
                     }
                 }
             }
-            return tex.textureUnit + 1;
+
+            return true;
         }
 
-        private static void BindFTEX(BFRESGroupNode ftexContainer, MatTexture tex, SF.Shader shader, string activeTex)
+        private static bool BindFTEX(BFRESGroupNode ftexContainer, MatTexture tex, SF.Shader shader, string activeTex)
         {
             FTEX ftex = (FTEX)ftexContainer.ResourceNodes[activeTex];
 
@@ -678,9 +680,11 @@ namespace FirstPlugin
                 ftex.LoadOpenGLTexture();
 
             BindGLTexture(tex, shader, ftex);
+
+            return ftex.RenderableTex.GLInitialized;
         }
 
-        private static void BindBNTX(BNTX bntx, MatTexture tex, SF.Shader shader, string activeTex)
+        private static bool BindBNTX(BNTX bntx, MatTexture tex, SF.Shader shader, string activeTex)
         {
             if (bntx.Textures[activeTex].RenderableTex == null ||
                      !bntx.Textures[activeTex].RenderableTex.GLInitialized)
@@ -689,10 +693,16 @@ namespace FirstPlugin
             }
 
             BindGLTexture(tex, shader, bntx.Textures[activeTex]);
+
+            return bntx.Textures[activeTex].RenderableTex.GLInitialized;
         }
-            
+
         private static void BindGLTexture(MatTexture tex, SF.Shader shader, STGenericTexture texture)
         {
+            //If the texture is still not initialized then return
+            if (!texture.RenderableTex.GLInitialized)
+                return;
+
             if (tex.Type == STGenericMatTexture.TextureType.Diffuse)
             {
                 shader.SetInt("RedChannel", (int)texture.RedChannel);

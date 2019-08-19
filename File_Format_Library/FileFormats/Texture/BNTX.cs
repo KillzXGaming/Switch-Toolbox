@@ -1601,6 +1601,12 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             int target = 1;
+            if (Parent != null && Parent is BNTX)
+            {
+                bool IsNX = ((BNTX)Parent).BinaryTexFile.PlatformTarget == "NX  ";
+                if (!IsNX)
+                    target = 0;
+            }
 
             try
             {
