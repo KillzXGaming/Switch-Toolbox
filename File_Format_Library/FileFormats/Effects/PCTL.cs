@@ -1206,6 +1206,8 @@ namespace FirstPlugin
                 SetType(Color1KeyCount != 0, Color1Array, 1, false);
                 SetType(Alpha1KeyCount != 0, Color1AlphaArray, 1, true);
 
+                reader.Seek(Position + 2464, SeekOrigin.Begin);
+
                 for (int i = 0; i < 3; i++)
                 {
                     SamplerInfo samplerInfo = new SamplerInfo();
