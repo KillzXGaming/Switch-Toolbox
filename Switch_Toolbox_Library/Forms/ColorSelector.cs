@@ -28,16 +28,58 @@ namespace Toolbox.Library.Forms
         /// </summary>
         public Color Color
         {
-            get { return _color; }
+            get
+            {
+                if (DisplayColor)
+                    return _color;
+                else
+                    return Color.FromArgb(Alpha, Alpha, Alpha);
+            }
             set
             {
                 _color = value;
                 OnColorChanged(false);
             }
         }
+
+        private int _alpha;
+        public int Alpha
+        {
+            get { return _alpha; }
+            set
+            {
+                _alpha = value;
+                alphaPanel.Invalidate();
+                OnColorChanged(false);
+            }
+        }
+
+        private bool displayAlpha = true;
+        public bool DisplayAlpha
+        {
+            get { return displayAlpha; }
+            set
+            {
+                displayAlpha = value;
+                alphaPanel.Enabled = displayAlpha;
+            }
+        }
+
+        private bool displayColor = true;
+        public bool DisplayColor
+        {
+            get { return displayColor; }
+            set
+            {
+                displayColor = value;
+                huePanel.Enabled = displayColor;
+            }
+        }
+
         private LinearGradientBrush _hueBrush;
         private STPanel colorSquare;
         private STPanel huePanel;
+        private STPanel alphaPanel;
         private PathGradientBrush _mainBrush;
 
         public ColorSelector()
@@ -52,6 +94,7 @@ namespace Toolbox.Library.Forms
 
             colorSquare.SetDoubleBuffer();
             huePanel.SetDoubleBuffer();
+            alphaPanel.SetDoubleBuffer();
         }
 
         private Point CursorPoint = new Point(0,0);
@@ -62,6 +105,7 @@ namespace Toolbox.Library.Forms
         {
             this.colorSquare = new Toolbox.Library.Forms.STPanel();
             this.huePanel = new Toolbox.Library.Forms.STPanel();
+            this.alphaPanel = new Toolbox.Library.Forms.STPanel();
             this.SuspendLayout();
             // 
             // colorSquare
@@ -90,14 +134,26 @@ namespace Toolbox.Library.Forms
             this.huePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.huePanel_MouseMove);
             this.huePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.huePanel_MouseUp);
             // 
+            // alphaPanel
+            // 
+            this.alphaPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.alphaPanel.Location = new System.Drawing.Point(208, 3);
+            this.alphaPanel.Name = "alphaPanel";
+            this.alphaPanel.Size = new System.Drawing.Size(16, 180);
+            this.alphaPanel.TabIndex = 2;
+            this.alphaPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.alphaPanel_Paint);
+            this.alphaPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.alphaPanel_MouseDown);
+            this.alphaPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.alphaPanel_MouseMove);
+            this.alphaPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.alphaPanel_MouseUp);
+            // 
             // ColorSelector
             // 
+            this.Controls.Add(this.alphaPanel);
             this.Controls.Add(this.huePanel);
             this.Controls.Add(this.colorSquare);
-            this.MaximumSize = new System.Drawing.Size(212, 188);
-            this.MinimumSize = new System.Drawing.Size(212, 188);
             this.Name = "ColorSelector";
-            this.Size = new System.Drawing.Size(212, 188);
+            this.Size = new System.Drawing.Size(227, 188);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ColorSelector_MouseMove);
             this.ResumeLayout(false);
 
@@ -151,11 +207,11 @@ namespace Toolbox.Library.Forms
 
             Rectangle r = colorSquare.ClientRectangle;
 
-            //Split the hue colors
-            float p = r.Height / numHueColors / r.Height;
-
             //Draw the hue slider
             var g = e.Graphics;
+
+            //Split the hue colors
+            float p = r.Height / numHueColors / r.Height;
 
             _hueBrush = new LinearGradientBrush(new Rectangle(0, 0, r.Width, r.Height), Color.Red, Color.Red, LinearGradientMode.Vertical);
 
@@ -172,8 +228,16 @@ namespace Toolbox.Library.Forms
                 Color.Red
             };
 
+            if (!huePanel.Enabled)
+            {
+                for (int i = 0; i < blend.Colors.Length; i++)
+                    blend.Colors[i] = blend.Colors[i].Darken(190);
+            }
+
             blend.Positions = new float[] { 0, p, p * 2, p * 3, p * 4, p * 5, 1.0f };
             _hueBrush.InterpolationColors = blend;
+
+
 
             g.FillRectangle(_hueBrush, r);
 
@@ -214,7 +278,13 @@ namespace Toolbox.Library.Forms
             _mainBrush.SurroundColors = _boxColors;
             _mainBrush.CenterColor = new HSVPixel(_hsv.H, 50, 50).ToRGBA(); 
             _mainBrush.CenterPoint = new PointF(r.Width / 2, r.Height / 2);
-           
+
+            if (!huePanel.Enabled)
+            {
+                for (int i = 0; i < _mainBrush.SurroundColors.Length; i++)
+                    _mainBrush.SurroundColors[i] = _mainBrush.SurroundColors[i].Darken(190);
+            }
+
             g.FillRectangle(_mainBrush, r);
 
 
@@ -272,12 +342,82 @@ namespace Toolbox.Library.Forms
                 _squareSelected = false;
         }
 
+        private bool _alphaBarSelected = false;
+        private int alphaY;
+
+        private void alphaPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _alphaBarSelected = true;
+                alphaPanel_MouseMove(sender, e);
+            }
+        }
+
+        private void alphaPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                _alphaBarSelected = false;
+        }
+
+        private void alphaPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_alphaBarSelected)
+            {
+                int y = Math.Max(Math.Min(e.Y, (alphaPanel.Height - 1)), 0);
+                if (y != alphaY)
+                {
+                    alphaY = y;
+                    Alpha = (byte)(255 - ((float)y / (alphaPanel.Height - 1) * 255));
+
+                    if (ColorChanged != null)
+                        ColorChanged(this, null);
+                }
+            }
+        }
+
+        private void alphaPanel_Paint(object sender, PaintEventArgs e)
+        {
+            var alphaBrush = new LinearGradientBrush(new Rectangle(0, 0, alphaPanel.Width, alphaPanel.Height), Color.White, Color.Black, LinearGradientMode.Vertical);
+
+            Graphics g = e.Graphics;
+
+            if (!alphaPanel.Enabled)
+            {
+                for (int i = 0; i < alphaBrush.LinearColors.Length; i++)
+                    alphaBrush.LinearColors[i] = alphaBrush.LinearColors[i].Darken(190);
+            }
+
+            //Draw bar
+            g.FillRectangle(alphaBrush, alphaPanel.ClientRectangle);
+
+            //Draw indicator
+            byte col = (byte)(255 - Alpha);
+            Color p = Color.FromArgb(255, col, col, col);
+            int y = (int)(col / 255.0f * (alphaPanel.Height - 1));
+            Rectangle r = new Rectangle(-1, y - 2, alphaPanel.Width + 1, 4);
+
+            using (Pen pen = new Pen(p))
+                g.DrawRectangle(pen, r);
+
+            p.Lighten(64);
+
+            r.Y += 1;
+            r.Height -= 2;
+
+            using (Pen pen = new Pen(p))
+                g.DrawRectangle(pen, r);
+        }
+
         private void colorSquare_MouseMove(object sender, MouseEventArgs e)
         {
             if (_squareSelected)
             {
                 int x = Math.Min(Math.Max(e.X, 0), colorSquare.Width);
                 int y = Math.Min(Math.Max(e.Y, 0), colorSquare.Height);
+                if (!DisplayColor)
+                    y = colorSquare.Height;
+
                 if ((x != _squareX) || (y != _squareY))
                 {
                     _hsv.V = (byte)((float)x / colorSquare.Width * 100);

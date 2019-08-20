@@ -14,6 +14,8 @@ namespace FirstPlugin.Forms
 {
     public partial class Color8KeySlider : STPanel, IColorPanelCommon
     {
+        public bool IsAlpha { get; set; }
+
         private int SelectedIndex = 0;
         public Color GetColor()
         {

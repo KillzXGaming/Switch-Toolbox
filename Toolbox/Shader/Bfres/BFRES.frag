@@ -32,9 +32,10 @@ uniform sampler2D SphereMap;
 uniform sampler2D SubSurfaceScatteringMap;
 
 // Viewport Camera/Lighting
-uniform vec3 difLightDirection;
 uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
+
+uniform vec3 cameraPosition;
 
 // Viewport Settings
 uniform int uvChannel;
@@ -173,9 +174,6 @@ void main()
         return;
     }
 
-	    // Calculate shading vectors.
-    vec3 I = vec3(0,0,-1) * mat3(mtxCam);
-
 	int NormalMapUVIndex = 0;
 
 	if (uking_texture2_texcoord == 1 || cIsEnableNormalMap == 1)
@@ -185,13 +183,17 @@ void main()
 	if (HasNormalMap == 1 && useNormalMap == 1)
 		N = CalcBumpedNormal(normal, NormalMap, vert, NormalMapUVIndex);
 
+    // Calculate shading vectors.
+    vec3 I = vec3(0,0,-1) * mat3(mtxCam);
+    vec3 V = normalize(I); // view
+    vec3 R = reflect(-I, N); // reflection
+
+    float light = max(dot(N, V), 0.0);
+
     // Light Map
     vec4 LightMapColor = texture(BakeLightMap, f_texcoord2);
 
     BakedData ShadowBake = ShadowMapBaked(BakeShadowMap,BakeLightMap, f_texcoord1, f_texcoord2, int(bake_shadow_type),int(bake_light_type), int(bake_calc_type), N );
-
-   // Diffuse lighting.
-    float halfLambert = dot(difLightDirection, N) * 0.5 + 0.5;
 
 	vec4 diffuseMapColor = vec4(texture(DiffuseMap, f_texcoord0).rgba);
 	vec4 albedo = vec4(0);
@@ -218,7 +220,7 @@ void main()
         alpha *= 0.5;
     }
 
-	albedo *= halfLambert;
+	albedo *= light;
 
 	vec3 LightingDiffuse = vec3(0);
 	if (HasLightMap == 1)

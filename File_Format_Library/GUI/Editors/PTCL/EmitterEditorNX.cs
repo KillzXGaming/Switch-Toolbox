@@ -60,6 +60,7 @@ namespace FirstPlugin
                 colorSlider.Dock = DockStyle.Fill;
                 colorSlider.ColorSelected += ColorPanelSelected;
                 panel.Controls.Add(colorSlider);
+                colorSlider.IsAlpha = (type == 2 || type == 3);
 
                 if (type == 0)
                     colorSlider.LoadColors(colors, (int)ActiveEmitter.Color0KeyCount);
@@ -75,6 +76,7 @@ namespace FirstPlugin
                 ColorRandomPanel colorRandomPnl = new ColorRandomPanel();
                 colorRandomPnl.ColorSelected += ColorPanelSelected;
                 panel.Controls.Add(colorRandomPnl);
+                colorRandomPnl.IsAlpha = (type == 2 || type == 3);
 
                 colorRandomPnl.LoadColors(colors);
             }
@@ -83,6 +85,7 @@ namespace FirstPlugin
                 ColorConstantPanel colorConstantPnl = new ColorConstantPanel();
                 colorConstantPnl.ColorSelected += ColorPanelSelected;
                 panel.Controls.Add(colorConstantPnl);
+                colorConstantPnl.IsAlpha = (type == 2 || type == 3);
 
                 if (type == 0)
                     colorConstantPnl.LoadColor(ActiveEmitter.ConstantColor0);
@@ -103,7 +106,20 @@ namespace FirstPlugin
                 hexTB.Text = "";
 
                 ActivePanel = panel;
+                if (ActivePanel.IsAlpha)
+                {
+                    colorSelector1.DisplayColor = false;
+                    colorSelector1.DisplayAlpha = true;
+                    colorSelector1.Alpha = panel.GetColor().R;
+                }
+                else
+                {
+                    colorSelector1.DisplayColor = true;
+                    colorSelector1.DisplayAlpha = false;
+                }
+
                 UpdateColorSelector(panel.GetColor());
+
                 if (panel is Color8KeySlider)
                     UpdateTimeDisplay(((Color8KeySlider)panel).GetTime());
             }
@@ -242,6 +258,11 @@ namespace FirstPlugin
         private void UpdateColorSelector(Color color) {
             if (_UpdateSelector)
                 colorSelector1.Color = color;
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

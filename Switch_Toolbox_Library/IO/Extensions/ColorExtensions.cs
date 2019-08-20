@@ -23,5 +23,10 @@ namespace Toolbox.Library.IO
         {
             return Color.FromArgb(color.A, (byte)Math.Min(color.R + amount, 255), (byte)Math.Min(color.G + amount, 255), (byte)Math.Min(color.B + amount, 255));
         }
+
+        public static Color Darken(this Color color, int amount)
+        {
+            return Color.FromArgb(color.A, (byte)Math.Max(color.R - amount, 0), (byte)Math.Max(color.G - amount, 0), (byte)Math.Max(color.B - amount, 0));
+        }
     }
 }

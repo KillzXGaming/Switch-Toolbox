@@ -18,8 +18,6 @@ in vec3 boneWeightsColored;
 uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
 
-uniform vec3 specLightDirection;
-uniform vec3 difLightDirection;
 uniform mat4 projMatrix;
 uniform mat4 normalMatrix;
 uniform mat4 modelViewMatrix;
@@ -308,8 +306,8 @@ void main()
 		N = CalcBumpedNormal(normal, NormalMap, vert, 0);
 
     vec3 V = normalize(I); // view
-	vec3 L = normalize(specLightDirection); // Light
-	vec3 H = normalize(specLightDirection + I); // half angle
+	vec3 L = normalize(objectPosition - I); // Light
+	vec3 H = normalize(objectPosition + I); // half angle
     vec3 R = reflect(-I, N); // reflection
 
     vec3 f0 = mix(vec3(0.04), albedo, metallic); // dialectric

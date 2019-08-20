@@ -90,7 +90,7 @@
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
             this.stTabControl1.Name = "stTabControl1";
             this.stTabControl1.SelectedIndex = 0;
-            this.stTabControl1.Size = new System.Drawing.Size(555, 561);
+            this.stTabControl1.Size = new System.Drawing.Size(576, 561);
             this.stTabControl1.TabIndex = 38;
             // 
             // tabPageData
@@ -99,7 +99,7 @@
             this.tabPageData.Location = new System.Drawing.Point(4, 25);
             this.tabPageData.Name = "tabPageData";
             this.tabPageData.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageData.Size = new System.Drawing.Size(547, 532);
+            this.tabPageData.Size = new System.Drawing.Size(568, 532);
             this.tabPageData.TabIndex = 0;
             this.tabPageData.Text = "Emitter Data";
             this.tabPageData.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@
             this.stPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel2.Location = new System.Drawing.Point(3, 3);
             this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(541, 526);
+            this.stPanel2.Size = new System.Drawing.Size(562, 526);
             this.stPanel2.TabIndex = 0;
             // 
             // emitterTexturePanel1
@@ -144,6 +144,7 @@
             this.pictureBox4.Size = new System.Drawing.Size(40, 40);
             this.pictureBox4.TabIndex = 45;
             this.pictureBox4.TabStop = false;
+            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // timeTB
             // 
@@ -155,12 +156,13 @@
             // 
             // colorSelector1
             // 
+            this.colorSelector1.Alpha = 0;
             this.colorSelector1.Color = System.Drawing.Color.Empty;
+            this.colorSelector1.DisplayAlpha = true;
+            this.colorSelector1.DisplayColor = true;
             this.colorSelector1.Location = new System.Drawing.Point(316, 44);
-            this.colorSelector1.MaximumSize = new System.Drawing.Size(212, 188);
-            this.colorSelector1.MinimumSize = new System.Drawing.Size(212, 188);
             this.colorSelector1.Name = "colorSelector1";
-            this.colorSelector1.Size = new System.Drawing.Size(212, 188);
+            this.colorSelector1.Size = new System.Drawing.Size(233, 188);
             this.colorSelector1.TabIndex = 44;
             this.colorSelector1.ColorChanged += new System.EventHandler(this.colorSelector1_ColorChanged);
             // 
@@ -273,7 +275,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.stTabControl1);
             this.Name = "EmitterEditorNX";
-            this.Size = new System.Drawing.Size(555, 561);
+            this.Size = new System.Drawing.Size(576, 561);
             this.stTabControl1.ResumeLayout(false);
             this.tabPageData.ResumeLayout(false);
             this.stPanel2.ResumeLayout(false);

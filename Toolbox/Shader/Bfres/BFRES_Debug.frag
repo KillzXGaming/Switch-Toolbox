@@ -19,8 +19,6 @@ in vec3 boneWeightsColored;
 uniform mat4 mtxMdl;
 uniform mat4 mtxCam;
 
-uniform vec3 specLightDirection;
-uniform vec3 difLightDirection;
 uniform mat4 projMatrix;
 uniform mat4 normalMatrix;
 uniform mat4 modelViewMatrix;
@@ -230,8 +228,10 @@ void main()
     }
     else if (renderType == 2) // Lighting
     {
-        float halfLambert = dot(difLightDirection, N) * 0.5 + 0.5;
-        fragColor = vec4(vec3(halfLambert), 1);
+        vec3 I = vec3(0,0,-1) * mat3(mtxCam);
+        vec3 V = normalize(I); // view
+    	float light = max(dot(N, V), 0.0);
+        fragColor = vec4(vec3(light), 1);
     }
 	else if (renderType == 4) //Display Normal
 	{

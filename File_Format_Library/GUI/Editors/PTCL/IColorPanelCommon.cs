@@ -14,5 +14,6 @@ namespace FirstPlugin.Forms
         event EventHandler ColorSelected;
         void SelectPanel();
         void DeselectPanel();
+        bool IsAlpha { get; set; }
     }
 }

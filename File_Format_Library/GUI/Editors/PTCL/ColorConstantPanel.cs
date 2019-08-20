@@ -13,6 +13,8 @@ namespace FirstPlugin.Forms
 {
     public partial class ColorConstantPanel : UserControl, IColorPanelCommon
     {
+        public bool IsAlpha { get; set; }
+
         public ColorConstantPanel()
         {
             InitializeComponent();

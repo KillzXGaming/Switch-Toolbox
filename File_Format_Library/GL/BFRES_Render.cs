@@ -227,7 +227,7 @@ namespace FirstPlugin
                 invertedCamera = mvpMat.Inverted();
 
             Vector3 lightDirection = new Vector3(0f, 0f, -1f);
-            Vector3  difLightDirection  = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
+            Vector3 difLightDirection  = Vector3.TransformNormal(lightDirection, invertedCamera).Normalized();
 
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.DepthTest);
@@ -359,14 +359,19 @@ namespace FirstPlugin
 
             Matrix4 sphereMatrix = mvpMat;
 
-            if (sphereMatrix.Determinant != 0)
-                sphereMatrix.Invert();
+            Matrix4 invertedCamera = Matrix4.Identity;
+         //   invertedCamera = mvpMat.Inverted();
+          //  if (invertedCamera.Determinant == 0)
+          //      invertedCamera = Matrix4.Identity;
 
+            sphereMatrix = invertedCamera;
             sphereMatrix.Transpose();
+
             shader.SetMatrix4x4("sphereMatrix", ref sphereMatrix);
 
             shader.SetMatrix4x4("mtxCam", ref computedCamMtx);
             shader.SetMatrix4x4("mtxMdl", ref mdlMat);
+            shader.SetVector3("cameraPosition", control.CameraPosition);
 
             SetRenderSettings(shader);
 
@@ -375,16 +380,8 @@ namespace FirstPlugin
             shader.SetVector3("difLightColor", new Vector3(1));
             shader.SetVector3("ambLightColor", new Vector3(1));
 
-            Matrix4 invertedCamera = Matrix4.Identity;
-            if (invertedCamera.Determinant != 0)
-                invertedCamera = mvpMat.Inverted();
 
             Vector3 lightDirection = new Vector3(0f, 0f, -1f);
-
-            //Todo. Maybe change direction via AAMP file (configs shader data)
-            shader.SetVector3("specLightDirection", Vector3.TransformNormal(lightDirection, invertedCamera).Normalized());
-            shader.SetVector3("difLightDirection", Vector3.TransformNormal(lightDirection, invertedCamera).Normalized());
-
 
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Gequal, 0.1f);
