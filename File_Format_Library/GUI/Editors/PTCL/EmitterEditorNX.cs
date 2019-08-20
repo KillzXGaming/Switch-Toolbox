@@ -108,17 +108,20 @@ namespace FirstPlugin
                 ActivePanel = panel;
                 if (ActivePanel.IsAlpha)
                 {
+                    int alpha = panel.GetColor().R;
+
                     colorSelector1.DisplayColor = false;
                     colorSelector1.DisplayAlpha = true;
-                    colorSelector1.Alpha = panel.GetColor().R;
+                    colorSelector1.Alpha = alpha;
+                    UpdateColorSelector(Color.FromArgb(alpha, alpha, alpha));
                 }
                 else
                 {
                     colorSelector1.DisplayColor = true;
                     colorSelector1.DisplayAlpha = false;
+                    UpdateColorSelector(panel.GetColor());
                 }
 
-                UpdateColorSelector(panel.GetColor());
 
                 if (panel is Color8KeySlider)
                     UpdateTimeDisplay(((Color8KeySlider)panel).GetTime());

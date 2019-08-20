@@ -30,10 +30,7 @@ namespace Toolbox.Library.Forms
         {
             get
             {
-                if (DisplayColor)
-                    return _color;
-                else
-                    return Color.FromArgb(Alpha, Alpha, Alpha);
+                return _color;
             }
             set
             {
@@ -61,7 +58,7 @@ namespace Toolbox.Library.Forms
             set
             {
                 displayAlpha = value;
-                alphaPanel.Enabled = displayAlpha;
+                alphaPanel.Visible = displayAlpha;
             }
         }
 
@@ -370,6 +367,9 @@ namespace Toolbox.Library.Forms
                     alphaY = y;
                     Alpha = (byte)(255 - ((float)y / (alphaPanel.Height - 1) * 255));
 
+                    if (!huePanel.Enabled)
+                        _color = Color.FromArgb(Alpha, Alpha, Alpha); 
+
                     if (ColorChanged != null)
                         ColorChanged(this, null);
                 }
@@ -415,7 +415,7 @@ namespace Toolbox.Library.Forms
             {
                 int x = Math.Min(Math.Max(e.X, 0), colorSquare.Width);
                 int y = Math.Min(Math.Max(e.Y, 0), colorSquare.Height);
-                if (!DisplayColor)
+                if (!huePanel.Enabled)
                     y = colorSquare.Height;
 
                 if ((x != _squareX) || (y != _squareY))
@@ -424,6 +424,11 @@ namespace Toolbox.Library.Forms
                     _hsv.S = (byte)((float)(colorSquare.Height - y) / colorSquare.Height * 100);
 
                     OnColorChanged(true);
+
+                    if (!huePanel.Enabled) {
+                        Alpha = _color.R;
+                        alphaPanel.Invalidate();
+                    }
                 }
             }
         }
