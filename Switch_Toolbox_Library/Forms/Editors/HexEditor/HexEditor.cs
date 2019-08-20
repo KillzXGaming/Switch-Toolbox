@@ -34,7 +34,7 @@ namespace Toolbox.Library.Forms
 
         private void Cleanup()
         {
-            if (hexBox1.ByteProvider != null)
+            if (hexBox1.ByteProvider != null && !isStream)
             {
                 hexBox1.ByteProvider.DeleteBytes(0, hexBox1.ByteProvider.Length);
 
@@ -60,8 +60,20 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        private bool isStream = false;
+
+        public void LoadData(System.IO.Stream data)
+        {
+            isStream = true;
+
+            IByteProvider provider = new DynamicFileByteProvider(data);
+            hexBox1.ByteProvider = provider;
+        }
+
         public void LoadData(byte[] data)
         {
+            isStream = false;
+
             Cleanup();
 
             IByteProvider provider = new DynamicByteProvider(data);

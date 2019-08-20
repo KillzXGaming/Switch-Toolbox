@@ -25,9 +25,9 @@ namespace DKCTF
     public class CChunkDescriptor
     {
         public Magic ChunkType;
-        public ulong DataSize;
+        public long DataSize;
         public uint Unknown;
-        public ulong DataOffset;
+        public long DataOffset;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -50,6 +50,38 @@ namespace DKCTF
         public float Field10;
         public float Field14;
         public float Field18;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class CObjectTag
+    {
+        public Magic Type;
+        public CGuid Objectid;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class CObjectId
+    {
+        public CGuid Guid;
+
+        public override string ToString()
+        {
+            return Guid.ToString();
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class CGuid
+    {
+        public uint Part1;
+        public ushort Part2;
+        public ushort Part3;
+        public ulong Part4;
+
+        public override string ToString()
+        {
+            return $"{Part1}|{Part2}|{Part3}|{Part4}";
+        }
     }
 
     public enum ETangentType

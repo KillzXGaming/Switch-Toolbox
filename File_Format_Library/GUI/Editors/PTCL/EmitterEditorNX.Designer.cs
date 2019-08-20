@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmitterEditorNX));
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.hexTB = new Toolbox.Library.Forms.STTextBox();
             this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
-            this.tabPageColors = new System.Windows.Forms.TabPage();
+            this.tabPageData = new System.Windows.Forms.TabPage();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.emitterTexturePanel1 = new Forms.EmitterTexturePanel();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.timeTB = new Toolbox.Library.Forms.STTextBox();
             this.colorSelector1 = new Toolbox.Library.Forms.ColorSelector();
@@ -49,23 +49,10 @@
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.color1TypeCB = new Toolbox.Library.Forms.STComboBox();
             this.color0TypeCB = new Toolbox.Library.Forms.STComboBox();
-            this.tabPageTextures = new System.Windows.Forms.TabPage();
-            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.TBTexture0 = new Toolbox.Library.Forms.STTextBox();
-            this.TBTexture2 = new Toolbox.Library.Forms.STTextBox();
-            this.pictureBox3 = new Toolbox.Library.Forms.PictureBoxCustom();
-            this.TBTexture1 = new Toolbox.Library.Forms.STTextBox();
-            this.pictureBox2 = new Toolbox.Library.Forms.PictureBoxCustom();
-            this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
             this.stTabControl1.SuspendLayout();
-            this.tabPageColors.SuspendLayout();
+            this.tabPageData.SuspendLayout();
             this.stPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.tabPageTextures.SuspendLayout();
-            this.stPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // stLabel1
@@ -97,8 +84,7 @@
             // 
             // stTabControl1
             // 
-            this.stTabControl1.Controls.Add(this.tabPageColors);
-            this.stTabControl1.Controls.Add(this.tabPageTextures);
+            this.stTabControl1.Controls.Add(this.tabPageData);
             this.stTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stTabControl1.Location = new System.Drawing.Point(0, 0);
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
@@ -107,19 +93,20 @@
             this.stTabControl1.Size = new System.Drawing.Size(555, 561);
             this.stTabControl1.TabIndex = 38;
             // 
-            // tabPageColors
+            // tabPageData
             // 
-            this.tabPageColors.Controls.Add(this.stPanel2);
-            this.tabPageColors.Location = new System.Drawing.Point(4, 25);
-            this.tabPageColors.Name = "tabPageColors";
-            this.tabPageColors.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageColors.Size = new System.Drawing.Size(547, 532);
-            this.tabPageColors.TabIndex = 0;
-            this.tabPageColors.Text = "Colors";
-            this.tabPageColors.UseVisualStyleBackColor = true;
+            this.tabPageData.Controls.Add(this.stPanel2);
+            this.tabPageData.Location = new System.Drawing.Point(4, 25);
+            this.tabPageData.Name = "tabPageData";
+            this.tabPageData.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageData.Size = new System.Drawing.Size(547, 532);
+            this.tabPageData.TabIndex = 0;
+            this.tabPageData.Text = "Emitter Data";
+            this.tabPageData.UseVisualStyleBackColor = true;
             // 
             // stPanel2
             // 
+            this.stPanel2.Controls.Add(this.emitterTexturePanel1);
             this.stPanel2.Controls.Add(this.pictureBox4);
             this.stPanel2.Controls.Add(this.timeTB);
             this.stPanel2.Controls.Add(this.colorSelector1);
@@ -142,6 +129,13 @@
             this.stPanel2.Name = "stPanel2";
             this.stPanel2.Size = new System.Drawing.Size(541, 526);
             this.stPanel2.TabIndex = 0;
+            // 
+            // emitterTexturePanel1
+            // 
+            this.emitterTexturePanel1.Location = new System.Drawing.Point(6, 290);
+            this.emitterTexturePanel1.Name = "emitterTexturePanel1";
+            this.emitterTexturePanel1.Size = new System.Drawing.Size(255, 112);
+            this.emitterTexturePanel1.TabIndex = 46;
             // 
             // pictureBox4
             // 
@@ -213,6 +207,7 @@
             this.alpha1TypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.alpha1TypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.alpha1TypeCB.FormattingEnabled = true;
+            this.alpha1TypeCB.IsReadOnly = false;
             this.alpha1TypeCB.Location = new System.Drawing.Point(175, 215);
             this.alpha1TypeCB.Name = "alpha1TypeCB";
             this.alpha1TypeCB.Size = new System.Drawing.Size(135, 21);
@@ -224,6 +219,7 @@
             this.alpha0TypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.alpha0TypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.alpha0TypeCB.FormattingEnabled = true;
+            this.alpha0TypeCB.IsReadOnly = false;
             this.alpha0TypeCB.Location = new System.Drawing.Point(175, 149);
             this.alpha0TypeCB.Name = "alpha0TypeCB";
             this.alpha0TypeCB.Size = new System.Drawing.Size(135, 21);
@@ -253,6 +249,7 @@
             this.color1TypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.color1TypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.color1TypeCB.FormattingEnabled = true;
+            this.color1TypeCB.IsReadOnly = false;
             this.color1TypeCB.Location = new System.Drawing.Point(175, 83);
             this.color1TypeCB.Name = "color1TypeCB";
             this.color1TypeCB.Size = new System.Drawing.Size(135, 21);
@@ -264,92 +261,11 @@
             this.color0TypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.color0TypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.color0TypeCB.FormattingEnabled = true;
+            this.color0TypeCB.IsReadOnly = false;
             this.color0TypeCB.Location = new System.Drawing.Point(175, 17);
             this.color0TypeCB.Name = "color0TypeCB";
             this.color0TypeCB.Size = new System.Drawing.Size(135, 21);
             this.color0TypeCB.TabIndex = 29;
-            // 
-            // tabPageTextures
-            // 
-            this.tabPageTextures.Controls.Add(this.stPanel1);
-            this.tabPageTextures.Location = new System.Drawing.Point(4, 25);
-            this.tabPageTextures.Name = "tabPageTextures";
-            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTextures.Size = new System.Drawing.Size(547, 532);
-            this.tabPageTextures.TabIndex = 1;
-            this.tabPageTextures.Text = "Textures";
-            this.tabPageTextures.UseVisualStyleBackColor = true;
-            // 
-            // stPanel1
-            // 
-            this.stPanel1.Controls.Add(this.TBTexture0);
-            this.stPanel1.Controls.Add(this.TBTexture2);
-            this.stPanel1.Controls.Add(this.pictureBox3);
-            this.stPanel1.Controls.Add(this.TBTexture1);
-            this.stPanel1.Controls.Add(this.pictureBox2);
-            this.stPanel1.Controls.Add(this.pictureBox1);
-            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stPanel1.Location = new System.Drawing.Point(3, 3);
-            this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(541, 526);
-            this.stPanel1.TabIndex = 41;
-            // 
-            // TBTexture0
-            // 
-            this.TBTexture0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TBTexture0.Location = new System.Drawing.Point(14, 15);
-            this.TBTexture0.Name = "TBTexture0";
-            this.TBTexture0.Size = new System.Drawing.Size(150, 20);
-            this.TBTexture0.TabIndex = 38;
-            // 
-            // TBTexture2
-            // 
-            this.TBTexture2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TBTexture2.Location = new System.Drawing.Point(14, 335);
-            this.TBTexture2.Name = "TBTexture2";
-            this.TBTexture2.Size = new System.Drawing.Size(150, 20);
-            this.TBTexture2.TabIndex = 40;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
-            this.pictureBox3.Location = new System.Drawing.Point(14, 361);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(150, 134);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 37;
-            this.pictureBox3.TabStop = false;
-            // 
-            // TBTexture1
-            // 
-            this.TBTexture1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TBTexture1.Location = new System.Drawing.Point(14, 166);
-            this.TBTexture1.Name = "TBTexture1";
-            this.TBTexture1.Size = new System.Drawing.Size(150, 20);
-            this.TBTexture1.TabIndex = 39;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
-            this.pictureBox2.Location = new System.Drawing.Point(14, 192);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(150, 134);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 36;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(14, 41);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(150, 120);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // EmitterEditorNX
             // 
@@ -359,16 +275,10 @@
             this.Name = "EmitterEditorNX";
             this.Size = new System.Drawing.Size(555, 561);
             this.stTabControl1.ResumeLayout(false);
-            this.tabPageColors.ResumeLayout(false);
+            this.tabPageData.ResumeLayout(false);
             this.stPanel2.ResumeLayout(false);
             this.stPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.tabPageTextures.ResumeLayout(false);
-            this.stPanel1.ResumeLayout(false);
-            this.stPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -378,17 +288,9 @@
         private Toolbox.Library.Forms.STLabel stLabel1;
         private Toolbox.Library.Forms.STLabel stLabel2;
         private Toolbox.Library.Forms.STTextBox hexTB;
-        private Toolbox.Library.Forms.PictureBoxCustom pictureBox2;
-        private Toolbox.Library.Forms.PictureBoxCustom pictureBox3;
-        private Toolbox.Library.Forms.PictureBoxCustom pictureBox1;
         private Toolbox.Library.Forms.STTabControl stTabControl1;
-        private System.Windows.Forms.TabPage tabPageColors;
-        private System.Windows.Forms.TabPage tabPageTextures;
-        private Toolbox.Library.Forms.STTextBox TBTexture2;
-        private Toolbox.Library.Forms.STTextBox TBTexture1;
-        private Toolbox.Library.Forms.STTextBox TBTexture0;
+        private System.Windows.Forms.TabPage tabPageData;
         private Toolbox.Library.Forms.STPanel stPanel2;
-        private Toolbox.Library.Forms.STPanel stPanel1;
         private Toolbox.Library.Forms.STComboBox color1TypeCB;
         private Toolbox.Library.Forms.STComboBox color0TypeCB;
         private Toolbox.Library.Forms.STComboBox alpha1TypeCB;
@@ -403,5 +305,6 @@
         private Toolbox.Library.Forms.ColorSelector colorSelector1;
         private Toolbox.Library.Forms.STTextBox timeTB;
         private System.Windows.Forms.PictureBox pictureBox4;
+        private Forms.EmitterTexturePanel emitterTexturePanel1;
     }
 }

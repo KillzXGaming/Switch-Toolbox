@@ -31,7 +31,10 @@ namespace DKCTF
 
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "MSBT", 20);
+                bool IsForm = reader.CheckSignature(4, "RFRM");
+                bool FormType = reader.CheckSignature(4, "MSBT", 20);
+
+                return IsForm && FormType;
             }
         }
 

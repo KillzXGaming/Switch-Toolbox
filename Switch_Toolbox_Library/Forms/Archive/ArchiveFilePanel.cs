@@ -203,8 +203,12 @@ namespace Toolbox.Library.Forms
             editor.Text = Text;
             byte[] Data = ArchiveFileInfo.FileData;
 
-            //Only load a certain about of bytes to prevent memory dispose issues
-            editor.LoadData(Utils.SubArray(Data, 0, 3000));
+            if (ArchiveFileInfo.FileDataStream != null)
+                editor.LoadData(ArchiveFileInfo.FileDataStream);
+
+            else
+                //Only load a certain about of bytes to prevent memory dispose issues
+                editor.LoadData(Utils.SubArray(Data, 0, 3000));
         }
 
 

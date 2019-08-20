@@ -77,6 +77,9 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
+            if (stream.Length < 0x40)
+                return false;
+
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 return reader.CheckSignature(4, "CLIM", reader.BaseStream.Length - 0x28);

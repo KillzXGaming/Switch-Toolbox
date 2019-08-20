@@ -406,6 +406,12 @@
     <Compile Include="GUI\Editors\PTCL\ColorConstantPanel.Designer.cs">
       <DependentUpon>ColorConstantPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterTexturePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterTexturePanel.Designer.cs">
+      <DependentUpon>EmitterTexturePanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Editors\PTCL\IColorPanelCommon.cs" />
     <Compile Include="GUI\Editors\PTCL\ColorRandomPanel.cs">
       <SubType>UserControl</SubType>
@@ -1283,6 +1289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Scene\SceneAnimEditor.resx">
       <DependentUpon>SceneAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterTexturePanel.resx">
+      <DependentUpon>EmitterTexturePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\ShaderBinaryDisplay.resx">
       <DependentUpon>ShaderBinaryDisplay.cs</DependentUpon>

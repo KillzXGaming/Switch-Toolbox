@@ -78,8 +78,16 @@ namespace Toolbox.Library
         [Browsable(false)]
         public virtual IFileFormat OpenFile()
         {
-            return STFileLoader.OpenFileFormat(
+            if (FileDataStream != null)
+            {
+                return STFileLoader.OpenFileFormat(FileDataStream,
+                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), null, true);
+            }
+            else
+            {
+                return STFileLoader.OpenFileFormat(
                 IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
+            }
         }
 
         [Browsable(false)]
@@ -131,7 +139,10 @@ namespace Toolbox.Library
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sfd.FileName, FileData);
+                if (FileDataStream != null)
+                    FileDataStream.ExportToFile(sfd.FileName);
+                else
+                    File.WriteAllBytes(sfd.FileName, FileData);
             }
         }
 
@@ -163,9 +174,20 @@ namespace Toolbox.Library
         {
             if (FileFormat != null && FileFormat.CanSave)
             {
-                var mem = new System.IO.MemoryStream();
-                FileFormat.Save(mem);
-                FileData = STLibraryCompression.CompressFile(mem.ToArray(), FileFormat);
+                if (FileDataStream != null)
+                {
+                    var mem = new System.IO.MemoryStream();
+                    FileFormat.Save(mem);
+                    FileDataStream = mem;
+                    //Reload file data
+                    FileFormat.Load(FileDataStream);
+                }
+                else
+                {
+                    var mem = new System.IO.MemoryStream();
+                    FileFormat.Save(mem);
+                    FileData = STLibraryCompression.CompressFile(mem.ToArray(), FileFormat);
+                }
             }
         }
 
@@ -183,7 +205,9 @@ namespace Toolbox.Library
         {
             get
             {
-                _fileStream.Position = 0;
+                if (_fileStream != null)
+                    _fileStream.Position = 0;
+
                 return _fileStream;
             }
             set { _fileStream = value; }
@@ -819,8 +843,14 @@ namespace Toolbox.Library
 
         private void ExportToFileLocAction(object sender, EventArgs args)
         {
+            string filePath = $"{Path.GetDirectoryName(((IFileFormat)ArchiveFile).FilePath)}/{Text}";
+
             Cursor.Current = Cursors.WaitCursor;
-            File.WriteAllBytes($"{Path.GetDirectoryName(((IFileFormat)ArchiveFile).FilePath)}/{Text}", ArchiveFileInfo.FileData);
+            if (ArchiveFileInfo.FileDataStream != null)
+                ArchiveFileInfo.FileDataStream.ExportToFile(filePath);
+            else
+                File.WriteAllBytes(filePath, ArchiveFileInfo.FileData);
+
             Cursor.Current = Cursors.Default;
         }
 

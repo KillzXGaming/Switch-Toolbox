@@ -19,7 +19,7 @@ namespace FirstPlugin
         {
             InitializeComponent();
             stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
-            tabPageColors.BackColor = FormThemes.BaseTheme.TabPageActive;
+            tabPageData.BackColor = FormThemes.BaseTheme.TabPageActive;
 
             foreach (PTCL.Emitter.ColorType format in (PTCL.Emitter.ColorType[])Enum.GetValues(typeof(PTCL.Emitter.ColorType)))
             {
@@ -33,16 +33,6 @@ namespace FirstPlugin
             color1TypeCB.SetAsReadOnly();
             alpha0TypeCB.SetAsReadOnly();
             alpha1TypeCB.SetAsReadOnly();
-        }
-
-        private void Reset()
-        {
-            pictureBox1.Image = null;
-            pictureBox2.Image = null;
-            pictureBox3.Image = null;
-            TBTexture0.Text = "";
-            TBTexture1.Text = "";
-            TBTexture2.Text = "";
         }
 
         private Thread Thread;
@@ -130,9 +120,6 @@ namespace FirstPlugin
 
             ActiveEmitter = Emitter;
 
-
-            Reset();
-
             color0TypeCB.SelectedItem = Emitter.Color0Type;
             color1TypeCB.SelectedItem = Emitter.Color1Type;
             alpha0TypeCB.SelectedItem = Emitter.Alpha0Type;
@@ -152,34 +139,12 @@ namespace FirstPlugin
 
             IsColorsLoaded = true;
 
+            Console.WriteLine("DrawableTex " + Emitter.DrawableTex.Count);
+
             if (Emitter.DrawableTex.Count <= 0)
                 return;
 
-            if (Emitter.DrawableTex[0].MipCount > 0)
-            {
-                pictureBox1.Image = Imaging.GetLoadingImage();
-                pictureBox1.Image = Emitter.DrawableTex[0].GetBitmap();
-
-                TBTexture0.Text = Emitter.DrawableTex[0].Text;
-            }
-            if (Emitter.DrawableTex.Count < 2)
-                return;
-
-            if (Emitter.DrawableTex[1].MipCount > 0)
-            {
-                pictureBox2.Image = Imaging.GetLoadingImage();
-                pictureBox2.Image = Emitter.DrawableTex[1].GetBitmap();
-                TBTexture1.Text = Emitter.DrawableTex[1].Text;
-            }
-            if (Emitter.DrawableTex.Count < 3)
-                return;
-
-            if (Emitter.DrawableTex[2].MipCount > 0)
-            {
-                pictureBox3.Image = Imaging.GetLoadingImage();
-                pictureBox3.Image = Emitter.DrawableTex[2].GetBitmap();
-                TBTexture2.Text = Emitter.DrawableTex[2].Text;
-            }
+            emitterTexturePanel1.LoadTextures(Emitter);
         }
 
         bool IsColorsLoaded = false;

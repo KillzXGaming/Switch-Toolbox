@@ -33,7 +33,7 @@ namespace Toolbox.Library.IO
         //Checks signature (no stream advancement)
         public bool CheckSignature(int length, string Identifier, long position = 0)
         {
-            if (Position + length >= BaseStream.Length || position < 0)
+            if (Position + length + position >= BaseStream.Length || position < 0)
                 return false;
 
             Position = position;

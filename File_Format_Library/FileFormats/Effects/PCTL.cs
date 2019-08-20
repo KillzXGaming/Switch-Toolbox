@@ -207,7 +207,7 @@ namespace FirstPlugin
             {
                 List<TextureDescriptor> texDescp = new List<TextureDescriptor>();
                 List<Emitter> emitters = new List<Emitter>();
-                BNTX bntx = null;
+                BNTX bntx = ptcl.header.BinaryTextureFile;
                 List<TEXR> botwTex = new List<TEXR>(); //Used for BOTW
 
                 foreach (var node in TreeViewExtensions.Collect(ptcl.Nodes))
@@ -216,16 +216,8 @@ namespace FirstPlugin
                         texDescp.Add((TextureDescriptor)node);
                     if (node is SectionBase && ((SectionBase)node).BinaryData is Emitter)
                         emitters.Add((Emitter)((SectionBase)node).BinaryData);
-                    if (node is BNTX)
-                        bntx = (BNTX)node;
                     if (node is SectionBase && ((SectionBase)node).BinaryData is TEXR)
                         botwTex.Add((TEXR)((SectionBase)node).BinaryData);
-                }
-
-                if (bntx != null)
-                {
-                    bntx.LoadIcons = true;
-                    ptcl.header.BinaryTextureFile = bntx;
                 }
 
                 int index = 0;
@@ -584,6 +576,7 @@ namespace FirstPlugin
                             ((BNTX)BinaryData).FileName = "textures.bntx";
                             ((BNTX)BinaryData).Load(new MemoryStream(reader.ReadBytes((int)section.SectionSize)));
                             ((BNTX)BinaryData).IFileInfo.InArchive = true;
+                            ptclHeader.BinaryTextureFile = ((BNTX)BinaryData);
                             Nodes.Add(((BNTX)BinaryData));
                         }
                         break;
@@ -1147,7 +1140,12 @@ namespace FirstPlugin
                 uint scaleKeyCount = reader.ReadUInt32();
 
                 //Seek to the contant colors
-                reader.Seek(Position + 2384, SeekOrigin.Begin);
+                if (ptclHeader.VFXVersion >= 37)
+                    reader.Seek(Position + 2392, SeekOrigin.Begin);
+                else if (ptclHeader.VFXVersion > 21)
+                    reader.Seek(Position + 2384, SeekOrigin.Begin);
+                else
+                    reader.Seek(Position + 2392, SeekOrigin.Begin);
 
                 ConstantColor0 = new STColor();
                 ConstantColor0.R = reader.ReadSingle();
@@ -1206,7 +1204,12 @@ namespace FirstPlugin
                 SetType(Color1KeyCount != 0, Color1Array, 1, false);
                 SetType(Alpha1KeyCount != 0, Color1AlphaArray, 1, true);
 
-                reader.Seek(Position + 2464, SeekOrigin.Begin);
+                if (ptclHeader.VFXVersion >= 37)
+                    reader.Seek(Position + 2472, SeekOrigin.Begin);
+                else if (ptclHeader.VFXVersion > 21)
+                    reader.Seek(Position + 2464, SeekOrigin.Begin);
+                else
+                    reader.Seek(Position + 2472, SeekOrigin.Begin);
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -1221,7 +1224,13 @@ namespace FirstPlugin
                 uint Position = (uint)writer.Position;
 
                 //Seek to the contant colors
-                writer.Seek(Position + 2384, SeekOrigin.Begin);
+                if (header.VFXVersion >= 37)
+                    writer.Seek(Position + 2376, SeekOrigin.Begin);
+                else if (header.VFXVersion > 21)
+                    writer.Seek(Position + 2384, SeekOrigin.Begin);
+                else
+                    writer.Seek(Position + 2376, SeekOrigin.Begin);
+
                 writer.Write(ConstantColor0.R);
                 writer.Write(ConstantColor0.G);
                 writer.Write(ConstantColor0.B);
