@@ -519,7 +519,8 @@ namespace Toolbox.Library.Forms
                     }
                 }
 
-                textureCB.SelectedIndex = 0;
+                if (textureCB.Items.Count > 0)
+                    textureCB.SelectedIndex = 0;
             }
         }
 

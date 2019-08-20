@@ -14,8 +14,8 @@ namespace DKCTF
         public FileType FileType { get; set; } = FileType.Layout;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Cafe Layout Animation (GUI)" };
-        public string[] Extension { get; set; } = new string[] { "*.bflan" };
+        public string[] Description { get; set; } = new string[] { "DKCTF Archive" };
+        public string[] Extension { get; set; } = new string[] { "*.pak" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }

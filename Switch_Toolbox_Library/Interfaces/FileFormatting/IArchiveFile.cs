@@ -36,6 +36,7 @@ namespace Toolbox.Library
         bool AddFile(ArchiveFileInfo archiveFileInfo);
         bool DeleteFile(ArchiveFileInfo archiveFileInfo);
     }
+
     public class ArchiveFileInfo : INode
     {
         // Opens the file format automatically (may take longer to open the archive file)
@@ -909,8 +910,6 @@ namespace Toolbox.Library
             }
 
             ArchiveFileInfo.FileFormat = file;
-
-            Console.WriteLine("replacedFileFormat ");
         }
 
         private void OpenFormDialog(IFileFormat fileFormat)
@@ -994,6 +993,7 @@ namespace Toolbox.Library
             NewNode.ImageKey = replaceNode.ImageKey;
             NewNode.SelectedImageKey = replaceNode.SelectedImageKey;
             NewNode.Text = replaceNode.Text;
+            NewNode.Tag = fileInfo;
 
             rootNode.FileNodes.RemoveAt(index);
             rootNode.FileNodes.Insert(index, Tuple.Create(fileInfo, NewNode));

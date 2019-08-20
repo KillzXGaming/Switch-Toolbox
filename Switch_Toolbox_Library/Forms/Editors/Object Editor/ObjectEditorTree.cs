@@ -298,6 +298,11 @@ namespace Toolbox.Library.Forms
             ClearNodes();
         }
 
+        private void GetArchiveMenus(TreeNode node, ArchiveFileInfo info)
+        {
+
+        }
+
         private void treeViewCustom1_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -307,6 +312,14 @@ namespace Toolbox.Library.Forms
                     bool IsRoot = e.Node.Parent == null;
 
                     treeNodeContextMenu.Items.Clear();
+                    if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
+                    {
+                        //The tag gets set when an archive is replaced by a treenode
+                        //Todo store this in a better place as devs could possiblly replace this
+                        //Create menus when an archive node is replaced
+                        GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag);
+                    }
+
                     if (IsRoot)
                     {
                         foreach (var item in ((IContextMenuNode)e.Node).GetContextMenuItems())
