@@ -96,19 +96,19 @@ namespace FirstPlugin
                     foreach (EmitterU emitter in emitterSets.Nodes)
                     {
                         writer.Seek(((EmitterU)emitter).ColorPosition, SeekOrigin.Begin);
-                        foreach (var color0 in emitter.Color0Array)
+                        for (int i = 0; i < emitter.Color0Array.Length; i++)
                         {
-                            writer.Write(color0.R);
-                            writer.Write(color0.G);
-                            writer.Write(color0.B);
-                            writer.Write(color0.A);
+                            writer.Write(emitter.Color0Array[i].R);
+                            writer.Write(emitter.Color0Array[i].G);
+                            writer.Write(emitter.Color0Array[i].B);
+                            writer.Write(emitter.Color0AlphaArray[i].R);
                         }
-                        foreach (var color1 in emitter.Color1Array)
+                        for (int i = 0; i < emitter.Color1Array.Length; i++)
                         {
-                            writer.Write(color1.R);
-                            writer.Write(color1.G);
-                            writer.Write(color1.B);
-                            writer.Write(color1.A);
+                            writer.Write(emitter.Color1Array[i].R);
+                            writer.Write(emitter.Color1Array[i].G);
+                            writer.Write(emitter.Color1Array[i].B);
+                            writer.Write(emitter.Color1AlphaArray[i].R);
                         }
                     }
                 }
@@ -208,10 +208,10 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-                EmitterEditor editor = (EmitterEditor)LibraryGUI.GetActiveContent(typeof(EmitterEditor));
+                EmitterEditorNX editor = (EmitterEditorNX)LibraryGUI.GetActiveContent(typeof(EmitterEditorNX));
                 if (editor == null)
                 {
-                    editor = new EmitterEditor();
+                    editor = new EmitterEditorNX();
                     LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
@@ -221,6 +221,23 @@ namespace FirstPlugin
 
             public void Read(FileReader reader, Header header)
             {
+                Color0Array = new STColor[8];
+                Color1Array = new STColor[8];
+                Color0AlphaArray = new STColor[8];
+                Color1AlphaArray = new STColor[8];
+                ConstantColor0 = new STColor();
+                ConstantColor1 = new STColor();
+
+                Color0KeyCount = 8;
+                Alpha0KeyCount = 8;
+                Color1KeyCount = 8;
+                Alpha1KeyCount = 8;
+
+                Color0Type = ColorType.Random;
+                Color1Type = ColorType.Random;
+                Alpha0Type = ColorType.Random;
+                Alpha1Type = ColorType.Random;
+
                 long pos = reader.Position;
 
                 reader.Seek(56);
@@ -266,8 +283,13 @@ namespace FirstPlugin
                     clr.R = reader.ReadSingle();
                     clr.G = reader.ReadSingle();
                     clr.B = reader.ReadSingle();
-                    clr.A = reader.ReadSingle();
+                    float A = reader.ReadSingle();
+                    STColor alpha = new STColor();
+                    alpha.R = A;
+                    alpha.G = A;
+                    alpha.B = A;
                     Color0Array[i] = clr;
+                    Color0AlphaArray[i] = alpha;
                 }
                 for (int i = 0; i < 8; i++)
                 {
@@ -275,8 +297,15 @@ namespace FirstPlugin
                     clr.R = reader.ReadSingle();
                     clr.G = reader.ReadSingle();
                     clr.B = reader.ReadSingle();
-                    clr.A = reader.ReadSingle();
+                    float A = reader.ReadSingle();
+
+                    STColor alpha = new STColor();
+                    alpha.R = A;
+                    alpha.G = A;
+                    alpha.B = A;
+
                     Color1Array[i] = clr;
+                    Color1AlphaArray[i] = alpha;
                 }
             }
 
