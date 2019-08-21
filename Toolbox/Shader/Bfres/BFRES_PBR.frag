@@ -379,6 +379,9 @@ void main()
 		 fragColor.a = alpha;
 	 }
 
+    if (renderVertColor == 1)
+        fragColor *= min(vert.vertexColor, vec4(1));
+
 	if (RenderAsLighting)
 	{
 	    diffuseIblColor = texture(irradianceMap, N).rgb;

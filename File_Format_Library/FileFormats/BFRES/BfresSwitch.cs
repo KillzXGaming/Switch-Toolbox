@@ -707,8 +707,8 @@ namespace FirstPlugin
                 string useSampler = texture.SamplerName;
 
                 //Use the fragment sampler in the shader assign section. It's usually more accurate this way
-                if (m.shaderassign.samplers.ContainsKey(texture.SamplerName))
-                    useSampler = m.shaderassign.samplers[texture.SamplerName];
+                if (m.shaderassign.samplers.ContainsValue(texture.SamplerName))
+                    useSampler = m.shaderassign.samplers.FirstOrDefault(x => x.Value == texture.SamplerName).Key;
 
                 bool IsAlbedo = Misc.HackyTextureList.Any(TextureName.Contains);
 
@@ -763,6 +763,35 @@ namespace FirstPlugin
                     {
                         m.HasShadowMap = true;
                         texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                }
+                else if (Runtime.activeGame == Runtime.ActiveGame.Bezel)
+                {
+                    bool IsAlbedo0 = useSampler == "_a0";
+                    bool IsNormal = useSampler == "_n0";
+                    bool IsRoughness = useSampler == "_r0";
+                    bool IsMetalness = useSampler == "_m0";
+                    bool IsEmissive = useSampler == "_e0";
+
+                    if (IsAlbedo0) {
+                        m.HasDiffuseMap = true;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    if (IsNormal) {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    if (IsRoughness) {
+                        m.HasRoughnessMap = true;
+                        texture.Type = MatTexture.TextureType.Roughness;
+                    }
+                    if (IsMetalness) {
+                        m.HasMetalnessMap = true;
+                        texture.Type = MatTexture.TextureType.Metalness;
+                    }
+                    if (IsEmissive) {
+                        m.HasEmissionMap = true;
+                        texture.Type = MatTexture.TextureType.Emission;
                     }
                 }
                 else if (Runtime.activeGame == Runtime.ActiveGame.Splatoon2)

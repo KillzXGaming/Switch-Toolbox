@@ -219,6 +219,7 @@ namespace Toolbox.Library
             Splatoon2,
             BOTW,
             KSA,
+            Bezel,
         }
 
         public enum PictureBoxBG
