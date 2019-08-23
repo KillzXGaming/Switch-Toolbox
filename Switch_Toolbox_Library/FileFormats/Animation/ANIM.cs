@@ -11,6 +11,9 @@ namespace Toolbox.Library.Animations
     //https://github.com/jam1garner/Smash-Forge/blob/3a5b770a96b2ba7e67ff3912ca23941851f6d9eb/Smash%20Forge/Filetypes/Animation/ANIM.cs
     public class ANIM
 	{
+        static float Deg2Rad = (float)(Math.PI / 180f);
+        static float Rad2Deg = (float)(180f / Math.PI);
+
         private class AnimHeader
         {
             public string animVersion;
@@ -137,14 +140,14 @@ namespace Toolbox.Library.Animations
 						k.Value = float.Parse (args [1]);
                         if (type.Contains("rotate"))
                         {
-                            k.Value *= (float)(Math.PI / 180f);
+                            k.Value *= Deg2Rad;
                         }
                             //k.intan = (args [2]);
                             //k.outtan = (args [3]);
                         if (args.Length > 7 && att.Weighted)
                         {
-                            k.In = float.Parse(args[7]) * (float)(Math.PI / 180f);
-                            k.Out = float.Parse(args[8]) * (float)(Math.PI / 180f);
+                            k.In = float.Parse(args[7]) * Deg2Rad;
+                            k.Out = float.Parse(args[8]) * Deg2Rad;
                         }
                     }
 
@@ -216,10 +219,10 @@ namespace Toolbox.Library.Animations
                 file.WriteLine("startTime " + 1 + ";");
                 file.WriteLine("endTime " + a.FrameCount + ";");
 
-         //       a.SetFrame(a.FrameCount - 1); //from last frame
-         //       for (int li = 0; li < a.FrameCount; ++li) //go through each frame with nextFrame
-           //         a.NextFrame(vbn);
-            //    a.NextFrame(vbn, false);  //go on first frame
+                a.SetFrame(a.FrameCount - 1); //from last frame
+                for (int li = 0; li < a.FrameCount; ++li) //go through each frame with nextFrame
+                    a.NextFrame(vbn, false, true);
+                a.NextFrame(vbn, false, true);  //go on first frame
 
                 int i = 0;
 
@@ -311,7 +314,7 @@ namespace Toolbox.Library.Animations
             file.WriteLine("animData {");
             file.WriteLine("  input time;");
             file.WriteLine($"  output {interp};");
-            file.WriteLine("  weighted 0;");
+            file.WriteLine("  weighted 1;");
             file.WriteLine("  preInfinity constant;");
             file.WriteLine("  postInfinity constant;");
             file.WriteLine("  keys {");
@@ -338,33 +341,30 @@ namespace Toolbox.Library.Animations
                         break;
                     case "rotateX":
                         if (rt.RotType == Animation.RotationType.EULER)
-                            v = key.Value * (float)(180f / Math.PI);
+                            v = key.Value * Rad2Deg;
                         if (rt.RotType == Animation.RotationType.QUATERNION)
                         {
                             Quaternion q = new Quaternion(rt.XROT.GetValue(key.Frame), rt.YROT.GetValue(key.Frame), rt.ZROT.GetValue(key.Frame), rt.WROT.GetValue(key.Frame));
-                            v = quattoeul(q).X * (float)(180f / Math.PI);
+                            v = quattoeul(q).X * Rad2Deg;
                         }
-                        scale = (float)(180f / Math.PI);
                         break;
                     case "rotateY":
                         if (rt.RotType == Animation.RotationType.EULER)
-                            v = key.Value * (float)(180f / Math.PI);
+                            v = key.Value * Rad2Deg;
                         if (rt.RotType == Animation.RotationType.QUATERNION)
                         {
                             Quaternion q = new Quaternion(rt.XROT.GetValue(key.Frame), rt.YROT.GetValue(key.Frame), rt.ZROT.GetValue(key.Frame), rt.WROT.GetValue(key.Frame));
-                            v = quattoeul(q).Y * (float)(180f / Math.PI);
+                            v = quattoeul(q).Y * Rad2Deg;
                         }
-                        scale = (float)(180f / Math.PI);
                         break;
                     case "rotateZ":
                         if (rt.RotType == Animation.RotationType.EULER)
-                            v = key.Value * (float)(180f / Math.PI);
+                            v = key.Value * Rad2Deg;
                         if (rt.RotType == Animation.RotationType.QUATERNION)
                         {
                             Quaternion q = new Quaternion(rt.XROT.GetValue(key.Frame), rt.YROT.GetValue(key.Frame), rt.ZROT.GetValue(key.Frame), rt.WROT.GetValue(key.Frame));
-                            v = quattoeul(q).Z * (float)(180f / Math.PI);
+                            v = quattoeul(q).Z * Rad2Deg;
                         }
-                        scale = (float)(180f / Math.PI);
                         break;
                     case "scaleX":
                         v = key.Value;
@@ -377,7 +377,7 @@ namespace Toolbox.Library.Animations
                         break;
                 }
 
-                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} auto 1 1 0 ", v);
+                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} fixed fixed 1 1 0 0 1 0 1;", v);
             }
 
             file.WriteLine(" }");
