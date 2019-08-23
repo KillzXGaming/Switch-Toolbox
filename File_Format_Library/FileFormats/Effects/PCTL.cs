@@ -1225,11 +1225,11 @@ namespace FirstPlugin
 
                 //Seek to the contant colors
                 if (header.VFXVersion >= 37)
-                    writer.Seek(Position + 2376, SeekOrigin.Begin);
+                    writer.Seek(Position + 2392, SeekOrigin.Begin);
                 else if (header.VFXVersion > 21)
                     writer.Seek(Position + 2384, SeekOrigin.Begin);
                 else
-                    writer.Seek(Position + 2376, SeekOrigin.Begin);
+                    writer.Seek(Position + 2392, SeekOrigin.Begin);
 
                 writer.Write(ConstantColor0.R);
                 writer.Write(ConstantColor0.G);
