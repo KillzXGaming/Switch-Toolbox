@@ -1192,7 +1192,6 @@ namespace Bfres.Structs
         public int[] display;
          
         public int DisplayId;
-        public int VertexBufferIndex;
         public int TargetAttribCount;
 
         public List<float> boundingRadius = new List<float>();
@@ -1202,7 +1201,6 @@ namespace Bfres.Structs
             public Vector3 Center;
             public Vector3 Extend;
         }
-        public int DisplayLODIndex = 0;
 
         public List<VertexAttribute> vertexAttributes = new List<VertexAttribute>();
         public class VertexAttribute

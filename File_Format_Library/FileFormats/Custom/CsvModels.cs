@@ -7,6 +7,7 @@ using Toolbox.Library;
 using Toolbox.Library.Rendering;
 using System.Windows.Forms;
 using OpenTK;
+using System.Linq;
 
 namespace FirstPlugin
 {
@@ -87,7 +88,6 @@ namespace FirstPlugin
             Vertex vtx = new Vertex();
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             int Index = 0;
-            int ww = 0;
             while (true)
             {
                 line = csv.ReadLine();
@@ -277,6 +277,7 @@ namespace FirstPlugin
                     foreach (float f in obj.weightsT[v])
                         obj.vertices[v].boneWeights.Add(f);
                 }
+                obj.VertexSkinCount = (byte)obj.vertices.Max(v => v.boneNames.Count);
 
                 int vID = 0;
                 foreach (Vertex v in obj.vertices)
