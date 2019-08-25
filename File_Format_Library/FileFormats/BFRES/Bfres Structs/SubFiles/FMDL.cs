@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Syroot.NintenTools.NSW.Bfres;
@@ -697,33 +697,30 @@ namespace Bfres.Structs
                     csvsettings.SetModelAttributes(csvModel.objects[0]);
                     if (csvsettings.ShowDialog() == DialogResult.OK)
                     {
-                        if (csvsettings.LimitSkinCount) {
+                        if (csvsettings.LimitSkinCount ||
+                            csvsettings.MapOriginalMaterials ||
+                            csvsettings.UseOriginalAttributes) {
                             for (int i = 0; i < csvModel.objects.Count; i++)
                             {
-                                List<FSHP> Matches = shapes.Where(p => String.Equals(p.Text,
-                                    csvModel.objects[i].ObjectName, StringComparison.CurrentCulture)).ToList();
+                                //Only one match should be found as shapes can't have duped names
+                                FSHP match = shapes.Where(p => string.Equals(p.Text,
+                                    csvModel.objects[i].ObjectName, StringComparison.CurrentCulture)).FirstOrDefault();
 
-                                if (Matches != null && Matches.Count > 0)
+                                if (csvsettings.LimitSkinCount)
                                 {
                                     //Match the skin count setting if names match
-                                    //Only one match should be found as shapes can't have duped names
-                                    csvModel.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
-
-                                    if (csvsettings.MapOriginalMaterials)
-                                        csvModel.objects[i].MaterialIndex = ((FSHP)Matches[0]).MaterialIndex;
-
-                                    if (csvsettings.LimitSkinCount)
-                                        csvModel.objects[i].VertexSkinCount = ((FSHP)Matches[0]).VertexSkinCount;
-
-                                    if (csvsettings.UseOriginalAttributes)
-                                    {
-                                        AttributeMatcher.Add(csvModel.objects[i].ObjectName, Matches[0].vertexAttributes);
-                                    }
-                                }
-                                else
-                                {
                                     //Else just match the first object
-                                    csvModel.objects[i].VertexSkinCount = shapes[0].VertexSkinCount;
+                                    csvModel.objects[i].VertexSkinCount = (match ?? shapes.First()).VertexSkinCount;
+                                }
+
+                                if (csvsettings.MapOriginalMaterials && match != null)
+                                    {
+                                    csvModel.objects[i].MaterialIndex = match.MaterialIndex;
+                                }
+
+                                if (csvsettings.UseOriginalAttributes && match != null)
+                                {
+                                    AttributeMatcher.Add(csvModel.objects[i].ObjectName, match.vertexAttributes);
                                 }
                             }
                         }
@@ -761,7 +758,7 @@ namespace Bfres.Structs
 
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
-                            shape.MaterialIndex = 0;
+                            shape.MaterialIndex = obj.MaterialIndex;
 
                             if (AttributeMatcher.ContainsKey(obj.ObjectName))
                                 shape.vertexAttributes = csvsettings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);

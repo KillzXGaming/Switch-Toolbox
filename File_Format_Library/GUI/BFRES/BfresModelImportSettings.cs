@@ -60,7 +60,7 @@ namespace FirstPlugin
         {
             get
             {
-               return chkMapOriginalMaterials.Checked && chkBoxImportMat.Checked;
+               return chkMapOriginalMaterials.Checked && !chkBoxImportMat.Checked;
             }
         }
 
