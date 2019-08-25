@@ -77,7 +77,7 @@ namespace Bfres.Structs
             Nodes.Add(new FSKL.fsklNode());
         }
 
-        public ToolStripItem[] GetContextMenuItems()
+        public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.AddRange(base.GetContextMenuItems());
