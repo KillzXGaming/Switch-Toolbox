@@ -530,6 +530,8 @@ namespace FirstPlugin
             MipCount = 1;
             var Gx2Format = FTEX.ConvertToGx2Format(Format);
 
+            uint swizzle = (image.Swizzle >> 8) & 7;
+
             try
             {
                 //Create image block from bitmap first
@@ -543,7 +545,7 @@ namespace FirstPlugin
                     (uint)image.Height,
                     (uint)1,
                     (uint)Gx2Format,
-                    (uint)0,
+                    (uint)swizzle,
                     (uint)1,
                     (uint)MipCount
                     );
