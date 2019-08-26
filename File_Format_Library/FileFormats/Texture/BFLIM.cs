@@ -268,7 +268,7 @@ namespace FirstPlugin
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, bflim.SupportedFormats, true, true, false);
+                ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, 0, bflim.SupportedFormats, false, true, false);
                 if (ftex.texture != null)
                 {
                     bflim.Text = ftex.texture.Name;
@@ -310,11 +310,13 @@ namespace FirstPlugin
 
         public override void Replace(string FileName)
         {
+            uint swizzle = (image.Swizzle >> 8) & 7;
+
             FTEX ftex = new FTEX();
-            ftex.ReplaceTexture(FileName, Format, 1, SupportedFormats, true, true, false);
+            ftex.ReplaceTexture(FileName, Format, 1, swizzle, SupportedFormats, true, true, false);
             if (ftex.texture != null)
             {
-                image.Swizzle = (byte)ftex.texture.Swizzle;
+                image.Swizzle = ftex.texture.Swizzle;
                 image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;
                 image.Height = (ushort)ftex.texture.Height;
                 image.Width = (ushort)ftex.texture.Width;

@@ -459,6 +459,10 @@ namespace Toolbox.Library
             else
                 s = 0xd0000 | swizzle << 8;
 
+            s = 0xd0000 | swizzle << 8;
+
+            Console.WriteLine("swizzle " + s);
+
             uint blkWidth, blkHeight;
             if (GX2.IsFormatBCN((GX2SurfaceFormat)Format))
             {
@@ -537,10 +541,12 @@ namespace Toolbox.Library
                     tiling1dLevel += 1;
             }
 
-         //   if (tiling1dLevelSet)
-          //      s |= (uint)(tiling1dLevel << 16);
-        //    else
-           //     s |= (uint)(13 << 16);
+            if (tiling1dLevelSet)
+                s |= (uint)(tiling1dLevel << 16);
+            else
+                s |= (uint)(13 << 16);
+
+            Console.WriteLine("swizzle " + s);
 
             GX2.GX2Surface surf = new GX2.GX2Surface();
             surf.depth = Depth;
