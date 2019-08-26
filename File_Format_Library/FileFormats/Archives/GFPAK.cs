@@ -198,9 +198,6 @@ namespace FirstPlugin
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
                 files.Add(fileEntry);
             }
-
-            reader.Close();
-            reader.Dispose();
         }
 
         private string GetString(ulong Hash, byte[] Data)

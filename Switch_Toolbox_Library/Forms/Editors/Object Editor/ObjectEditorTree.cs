@@ -818,23 +818,46 @@ namespace Toolbox.Library.Forms
                         break;
                 }
 
+                treeViewCustom1.BeginUpdate();
                 treeViewCustom1.ItemHeight = Size;
                 treeViewCustom1.ReloadImages(Size, Size);
                 treeViewCustom1.ReloadTextureIcons(true);
+                treeViewCustom1.EndUpdate();
             }
         }
 
         private void treeViewCustom1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node != null && e.Node is ITextureIconLoader) {
+            if (e.Node == null) return;
+
+            else if (e.Node is ITextureIconLoader) {
+                treeViewCustom1.BeginUpdate();
                 LoadGenericTextureIcons((ITextureIconLoader)e.Node);
+                treeViewCustom1.EndUpdate();
             }
-            if (e.Node != null && e.Node is ISingleTextureIconLoader) {
+            else if (e.Node is ISingleTextureIconLoader) {
                 LoadGenericTextureIcons((ISingleTextureIconLoader)e.Node);
             }
-
-            if (e.Node != null && e.Node is ArchiveFolderNodeWrapper) {
+            else if (e.Node is ArchiveFolderNodeWrapper) {
                 LoadGenericTextureIcons(e.Node.Nodes);
+            }
+            else if (e.Node is ExplorerFolder)
+            {
+                treeViewCustom1.BeginUpdate();
+                ((ExplorerFolder)e.Node).OnBeforeExpand();
+                treeViewCustom1.EndUpdate();
+            }
+        }
+
+        private void treeViewCustom1_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node == null) return;
+
+            if (e.Node is ExplorerFolder)
+            {
+                treeViewCustom1.BeginUpdate();
+                ((ExplorerFolder)e.Node).OnAfterCollapse();
+                treeViewCustom1.EndUpdate();
             }
         }
     }

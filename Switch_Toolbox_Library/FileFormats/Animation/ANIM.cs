@@ -278,19 +278,19 @@ namespace Toolbox.Library.Animations
                         if (n.XSCA.HasAnimation())
                         {
                             file.WriteLine("anim scale.scaleX scaleX " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.XSCA, n, a.Size(), "scaleX");
+                            writeKey(file, n.XSCA, n, a.Size(), "scaleX", n.UseSegmentScaleCompensate);
                             file.WriteLine("}");
                         }
                         if (n.YSCA.HasAnimation())
                         {
                             file.WriteLine("anim scale.scaleY scaleY " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.YSCA, n, a.Size(), "scaleY");
+                            writeKey(file, n.YSCA, n, a.Size(), "scaleY", n.UseSegmentScaleCompensate);
                             file.WriteLine("}");
                         }
                         if (n.ZSCA.HasAnimation())
                         {
                             file.WriteLine("anim scale.scaleZ scaleZ " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.ZSCA, n, a.Size(), "scaleZ");
+                            writeKey(file, n.ZSCA, n, a.Size(), "scaleZ", n.UseSegmentScaleCompensate);
                             file.WriteLine("}");
                         }
 
@@ -305,12 +305,12 @@ namespace Toolbox.Library.Animations
             }
         }
 
-        private static void writeKey(StreamWriter file, Animation.KeyGroup keys, Animation.KeyNode rt, int size, string type)
+        private static void writeKey(StreamWriter file, Animation.KeyGroup keys, Animation.KeyNode rt, int size, string type, bool useSegmentCompenseateScale = false)
         {
             bool isAngular = type == "rotateX" || type == "rotateY" || type == "rotateZ";
 
             //    string interp = isAngular ? "angular" : "linear";
-               string interp = "linear";
+            string interp = "linear";
 
             file.WriteLine("animData {");
             file.WriteLine("  input time;");
@@ -328,15 +328,10 @@ namespace Toolbox.Library.Animations
             {
                 float v = 0;
 
-                float scale = 1;
                 switch (type)
                 {
                     case "translateX":
-                        v = key.Value;
-                        break;
                     case "translateY":
-                        v = key.Value;
-                        break;
                     case "translateZ":
                         v = key.Value;
                         break;
@@ -368,13 +363,12 @@ namespace Toolbox.Library.Animations
                         }
                         break;
                     case "scaleX":
-                        v = key.Value;
-                        break;
                     case "scaleY":
-                        v = key.Value;
-                        break;
                     case "scaleZ":
-                        v = key.Value;
+                        if (useSegmentCompenseateScale)
+                        v = 1f / key.Value;
+                        else
+                            v = key.Value;
                         break;
                 }
 

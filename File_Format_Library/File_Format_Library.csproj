@@ -208,6 +208,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
     <Compile Include="FileFormats\DKCTF\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
@@ -922,12 +923,6 @@
     <Compile Include="GUI\Editors\MK8TrackEditor\MK8MapCameraEditor.Designer.cs">
       <DependentUpon>MK8MapCameraEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Editors\PTCL\EmitterEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\Editors\PTCL\EmitterEditor.Designer.cs">
-      <DependentUpon>EmitterEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\BFRES\BfresModelImportSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1259,9 +1254,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditorNX.resx">
       <DependentUpon>EmitterEditorNX.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditor.resx">
-      <DependentUpon>EmitterEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresModelImportSettings.resx">
       <DependentUpon>BfresModelImportSettings.cs</DependentUpon>

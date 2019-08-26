@@ -189,11 +189,15 @@ namespace Bfres.Structs
 
         public override void Replace(string FileName) {
 
+            uint swizzlePattern = 0;
+            if (texture != null)
+                swizzlePattern = (texture.Swizzle >> 8) & 7;
+
             //If the mipcount is originally 1 it's probably important so set it as default
             if (texture != null && texture.MipCount == 1)
                 ReplaceTexture(FileName, Format, texture.MipCount);
             else
-                ReplaceTexture(FileName, Format, 0,0, null, false, false, false);
+                ReplaceTexture(FileName, Format, 0, swizzlePattern, null, false, false, false);
         }
 
         public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, uint swizzlePattern = 0, TEX_FORMAT[] SupportedFormats = null,
@@ -460,6 +464,7 @@ namespace Bfres.Structs
             texture.Format = ConvertToGx2Format(Format);
             texture.Width = (uint)bitmap.Width;
             texture.Height = (uint)bitmap.Height;
+            uint swizzle = (texture.Swizzle >> 8) & 7;
 
             if (MipCount != 1)
             {
@@ -486,7 +491,7 @@ namespace Bfres.Structs
                     (uint)texture.Height,
                     (uint)texture.Depth,
                     (uint)texture.Format,
-                    (uint)texture.Swizzle,
+                    (uint)swizzle,
                     (uint)texture.Dim,
                     (uint)texture.MipCount
                     );

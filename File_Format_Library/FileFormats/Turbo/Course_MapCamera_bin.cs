@@ -117,9 +117,6 @@ namespace FirstPlugin.Turbo
             cameraData.BoundingWidth = reader.ReadSingle();
             cameraData.BoundingHeight = reader.ReadSingle();
             cameraData.Unk6 = reader.ReadByte();
-
-            reader.Close();
-            reader.Dispose();
         }
         public void Write(FileWriter writer)
         {

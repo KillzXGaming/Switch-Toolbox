@@ -137,9 +137,6 @@ namespace FirstPlugin
             }
 
             sarcData.Files.Clear();
-
-        //    stream.Close();
-         //   stream.Dispose();
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -205,13 +202,12 @@ namespace FirstPlugin
 
         public Syroot.BinaryData.ByteOrder GetByteOrder(System.IO.Stream data)
         {
-            using (FileReader reader = new FileReader(data))
+            using (FileReader reader = new FileReader(data, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 reader.Seek(6);
                 ushort bom = reader.ReadUInt16();
-                reader.Close();
-                reader.Dispose();
+                reader.Position = 0;
 
                 if (bom == 0xFFFE)
                     return Syroot.BinaryData.ByteOrder.LittleEndian;

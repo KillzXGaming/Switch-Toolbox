@@ -91,11 +91,6 @@ namespace FirstPlugin
                     header = new Header();
                     header.Read(reader, this);
                 }
-
-                reader.Close();
-                reader.Dispose();
-                stream.Close();
-                stream.Dispose();
             }
 
             ContextMenuStrip = new STContextMenuStrip();

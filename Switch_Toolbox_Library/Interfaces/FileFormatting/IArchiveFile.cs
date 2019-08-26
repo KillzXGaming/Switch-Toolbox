@@ -82,12 +82,12 @@ namespace Toolbox.Library
             if (FileDataStream != null)
             {
                 return STFileLoader.OpenFileFormat(FileDataStream,
-                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), null, true);
+                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), null, true, true);
             }
             else
             {
                 return STFileLoader.OpenFileFormat(
-                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, true);
+                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), FileData, false, true);
             }
         }
 

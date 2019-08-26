@@ -243,12 +243,6 @@ namespace FirstPlugin
 
                 reader.SeekBegin(BlockStart + BlockSize);
             }
-
-
-
-
-            reader.Close();
-            reader.Dispose();
         }
 
         internal int BlockCounter = 0;

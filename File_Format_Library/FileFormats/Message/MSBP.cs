@@ -48,10 +48,15 @@ namespace FirstPlugin
             header = new Header();
             header.Read(new FileReader(stream));
 
+            TreeNode clr1Node = new TreeNode("Colors");
+            TreeNode ati2Node = new TreeNode("Attributes");
+            TreeNode tgg2Node = new TreeNode("Tag Groups");
+            TreeNode syl3Node = new TreeNode("Styles");
+            TreeNode cti1Node = new TreeNode("Project Contents");
+
             for (int i = 0; i < header.entries.Count; i++)
             {
                 var node = new TreeNode(header.entries[i].Signature);
-                Nodes.Add(node);
 
                 if (header.entries[i] is CTI1)
                 {
@@ -59,10 +64,18 @@ namespace FirstPlugin
 
                     for (int t = 0; t < cti1.TextEntries.Count; t++)
                     {
-                        node.Nodes.Add(cti1.TextEntries[t]);
+                        cti1Node.Nodes.Add(cti1.TextEntries[t]);
                     }
                 }
+                else
+                    Nodes.Add(node);
             }
+
+            if (clr1Node.Nodes.Count > 0) Nodes.Add(clr1Node);
+            if (ati2Node.Nodes.Count > 0) Nodes.Add(ati2Node);
+            if (tgg2Node.Nodes.Count > 0) Nodes.Add(tgg2Node);
+            if (syl3Node.Nodes.Count > 0) Nodes.Add(syl3Node);
+            if (cti1Node.Nodes.Count > 0) Nodes.Add(cti1Node);
         }
         public void Unload()
         {
@@ -97,6 +110,8 @@ namespace FirstPlugin
                 reader.ReadBytes(10);  //Reserved
 
                 StringEncoding = (encoding == 0x01 ? Encoding.BigEndianUnicode : Encoding.UTF8);
+
+
 
                 for (int i = 0; i < SectionCount; i++)
                 {

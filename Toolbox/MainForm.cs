@@ -17,6 +17,7 @@ using System.Reflection;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
+using Toolbox.Library.Forms;
 
 namespace Toolbox
 {
@@ -227,6 +228,19 @@ namespace Toolbox
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e) {
             OpenFileSelect();
+        }
+
+        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e) {
+            FolderSelectDialog dlg = new FolderSelectDialog();
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                var root = new ExplorerFolder(dlg.SelectedPath);
+                ObjectEditor editor = new ObjectEditor();
+                editor.MdiParent = this;
+                editor.Text = CheckTabDupes(root.Text);
+                editor.AddNode(root);
+                editor.Show();
+            }
         }
 
         private void OpenFileSelect()

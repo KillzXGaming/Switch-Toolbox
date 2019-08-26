@@ -423,10 +423,6 @@ namespace FirstPlugin
             }
             reader.Seek(0, System.IO.SeekOrigin.Begin);
             ImageData = reader.ReadBytes(imagesize);
-
-            reader.Dispose();
-            reader.Close();
-            reader = null;
         }
 
         public static NUTEXImageFormat ConvertGenericToNutFormat(TEX_FORMAT nutFormat)

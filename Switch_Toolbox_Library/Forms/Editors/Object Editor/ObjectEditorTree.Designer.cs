@@ -98,6 +98,7 @@
             this.nodeSizeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.nodeSizeCB.ButtonColor = System.Drawing.Color.Empty;
             this.nodeSizeCB.FormattingEnabled = true;
+            this.nodeSizeCB.IsReadOnly = false;
             this.nodeSizeCB.Location = new System.Drawing.Point(172, 29);
             this.nodeSizeCB.Name = "nodeSizeCB";
             this.nodeSizeCB.Size = new System.Drawing.Size(136, 21);
@@ -144,6 +145,7 @@
             this.treeViewCustom1.Size = new System.Drawing.Size(305, 485);
             this.treeViewCustom1.TabIndex = 0;
             this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
+            this.treeViewCustom1.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCollapse);
             this.treeViewCustom1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewCustom1_BeforeExpand);
             this.treeViewCustom1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewCustom1_DrawNode);
             this.treeViewCustom1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView_ItemDrag);

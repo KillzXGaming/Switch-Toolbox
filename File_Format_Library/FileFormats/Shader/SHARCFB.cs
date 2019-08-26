@@ -161,9 +161,6 @@ namespace FirstPlugin
                     program.Read(reader);
                     ShaderPrograms.Add(program);
                 }
-
-                reader.Close();
-                reader.Dispose();
             }
             public void Write(FileWriter reader)
             {

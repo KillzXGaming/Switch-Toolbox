@@ -112,9 +112,6 @@ namespace FirstPlugin
                     source.Read(reader);
                     SourceDatas.Add(source);
                 }
-
-                reader.Close();
-                reader.Dispose();
             }
             public void Write(FileWriter reader)
             {

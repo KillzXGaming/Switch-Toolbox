@@ -153,7 +153,6 @@ namespace FirstPlugin
                         $" This will be filtered out to prevent slow booting. {ExtsToString(FilteredExtensions.ToArray())}");
                 }
                 //Remove unused data
-                reader.Dispose();
                 startId = null;
                 FilteredExtensions.Clear();
                 Extensions.Clear();

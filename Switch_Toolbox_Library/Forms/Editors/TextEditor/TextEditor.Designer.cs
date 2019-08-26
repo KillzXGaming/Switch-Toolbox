@@ -31,11 +31,12 @@
             this.scintilla1 = new ScintillaNET.Scintilla();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.encodingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +60,8 @@
             // 
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.searchToolStripMenuItem});
+            this.searchToolStripMenuItem,
+            this.encodingToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
             this.stContextMenuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -73,6 +75,13 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // searchToolStripMenuItem
             // 
@@ -108,12 +117,11 @@
             this.splitter1.TabIndex = 5;
             this.splitter1.TabStop = false;
             // 
-            // saveToolStripMenuItem
+            // encodingToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.encodingToolStripMenuItem.Name = "encodingToolStripMenuItem";
+            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.encodingToolStripMenuItem.Text = "Encoding";
             // 
             // TextEditor
             // 
@@ -142,5 +150,6 @@
         private ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel findAllResultsPanel1;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem encodingToolStripMenuItem;
     }
 }

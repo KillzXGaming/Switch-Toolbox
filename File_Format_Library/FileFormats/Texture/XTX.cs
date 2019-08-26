@@ -207,9 +207,6 @@ namespace FirstPlugin
                 }
             }
 
-            reader.Close();
-            reader.Dispose();
-
             int curTex = 0;
 
             foreach (var tex in TextureInfos) {

@@ -82,9 +82,6 @@ namespace FirstPlugin
                     tex.Text = $"Texture{index++}";
                     textureFolder.Nodes.Add(tex);
                 }
-
-                reader.Dispose();
-                reader.Close();
             }
             public void Write(FileWriter writer, PTCL ptcl)
             {

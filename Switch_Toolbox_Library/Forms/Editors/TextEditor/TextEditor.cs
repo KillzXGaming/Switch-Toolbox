@@ -144,6 +144,8 @@ namespace Toolbox.Library.Forms
             findAllResultsPanel1.ForeColor = FormThemes.BaseTheme.TextForeColor;
             findAllResultsPanel1.Scintilla.SetWhitespaceBackColor(true, Color.FromArgb(50, 50, 50));
 
+         //   foreach (var encoding in Encoding.GetEncodings())
+              //  encodingToolStripMenuItem.DropDownItems.Add(encoding.DisplayName);
 
             FillEditor("");
         }
@@ -153,6 +155,12 @@ namespace Toolbox.Library.Forms
         public string GetText()
         {
             return scintilla1.Text;
+        }
+
+        public void FillEditor(System.IO.Stream data)
+        {
+            using (var stringReader = new System.IO.StreamReader(data, true))
+                FillEditor(stringReader.ReadToEnd());
         }
 
         public void FillEditor(byte[] Data)

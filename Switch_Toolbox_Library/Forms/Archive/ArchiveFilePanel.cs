@@ -113,6 +113,7 @@ namespace Toolbox.Library.Forms
                     Editor = ActiveEditor;
 
                 ((TreeNodeFile)fileFormat).FillEditor(Editor);
+                return;
             }
 
             Type objectType = fileFormat.GetType();
@@ -157,7 +158,9 @@ namespace Toolbox.Library.Forms
                 if (((IConvertableTextFormat)File).TextFileType == TextFileType.Yaml)
                     editor.IsYAML = true;
             }
-            else
+            else if (ArchiveFileInfo.FileDataStream != null)
+                editor.FillEditor(ArchiveFileInfo.FileDataStream);
+            else if (ArchiveFileInfo.FileData != null)
                 editor.FillEditor(ArchiveFileInfo.FileData);
 
             ArchiveFileInfo.FileFormat = File;

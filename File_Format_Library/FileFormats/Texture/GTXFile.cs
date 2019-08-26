@@ -391,8 +391,6 @@ namespace FirstPlugin
                     curTex++;
                 }
             }
-            reader.Close();
-            reader.Dispose();
         }
 
         public class BlockDisplay : TreeNodeCustom

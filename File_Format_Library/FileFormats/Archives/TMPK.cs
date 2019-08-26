@@ -79,9 +79,6 @@ namespace FirstPlugin
                     var info = new FileInfo(reader);
                     files.Add(info);
                 }
-
-                reader.Close();
-                reader.Dispose();
             }
         }
 

@@ -110,9 +110,6 @@ namespace FirstPlugin
                         FILE.Read(reader, INFO);
                     }
                 }
-
-                reader.Close();
-                reader.Dispose();
             }
             public void Write(FileWriter writer)
             {

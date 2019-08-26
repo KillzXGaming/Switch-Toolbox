@@ -108,9 +108,6 @@ namespace FirstPlugin
                     ShaderVariations.Add(var);
                     node.Nodes.Add(var);
                 }
-
-                reader.Close();
-                reader.Dispose();
             }
         }
         public class ShaderVariation : TreeNodeCustom
