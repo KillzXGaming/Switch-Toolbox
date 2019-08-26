@@ -55,7 +55,7 @@ namespace FirstPlugin
                                 AnimConstant constant = mat.Constants[paramInfo.BeginConstant + i];
                                 ConstantConfig ConstantValue = new ConstantConfig();
                                 ConstantValue.Offset = ConvertParamOffset(constant.AnimDataOffset, isColorParam);
-                                ConstantValue.Value = constant.AnimDataOffset;
+                                ConstantValue.Value = constant.Value;
 
                                 paramCfg.Constants.Add(ConstantValue);
                             }
