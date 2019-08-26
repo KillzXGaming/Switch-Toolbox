@@ -720,7 +720,7 @@ namespace Bfres.Structs
             }
             else if (ext == ".yaml")
             {
-               System.IO.File.WriteAllText(FileName, YamlFmaa.ToYaml(FileName, MaterialAnim, AnimType == AnimationType.Color));
+               System.IO.File.WriteAllText(FileName, YamlFmaa.ToYaml(FileName, MaterialAnim, AnimType));
             }
         }
         public override void Replace(string FileName)

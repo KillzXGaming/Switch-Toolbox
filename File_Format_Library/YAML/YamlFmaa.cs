@@ -25,7 +25,7 @@ namespace FirstPlugin
 
             public List<MatAnimConfig> MaterialAnimConfigs { get; set; }
 
-            public void ToYaml(MaterialAnim materialAnim, bool isColorParam)
+            public void ToYaml(MaterialAnim materialAnim, FMAA.AnimationType animType)
             {
                 MaterialAnimConfigs = new List<MatAnimConfig>();
 
@@ -54,7 +54,7 @@ namespace FirstPlugin
                             {
                                 AnimConstant constant = mat.Constants[paramInfo.BeginConstant + i];
                                 ConstantConfig ConstantValue = new ConstantConfig();
-                                ConstantValue.Offset = ConvertParamOffset(constant.AnimDataOffset, isColorParam);
+                                ConstantValue.Offset = ConvertParamOffset(constant.AnimDataOffset, animType);
                                 ConstantValue.Value = constant.Value;
 
                                 paramCfg.Constants.Add(ConstantValue);
@@ -68,7 +68,7 @@ namespace FirstPlugin
                             {
                                 var curve = mat.Curves[(int)paramInfo.BeginCurve + i];
                                 var CurveCfg = new CurveConfig();
-                                CurveCfg.Offset = ConvertParamOffset(curve.AnimDataOffset, isColorParam);
+                                CurveCfg.Offset = ConvertParamOffset(curve.AnimDataOffset, animType);
 
                                 if (curve.Scale == 0)
                                     curve.Scale = 1;
@@ -136,9 +136,9 @@ namespace FirstPlugin
             }
 
 
-            private string ConvertParamOffset(uint offset, bool isColorParam)
+            private string ConvertParamOffset(uint offset, FMAA.AnimationType animType)
             {
-                if (isColorParam)
+                if (animType== FMAA.AnimationType.Color)
                 {
                     switch (offset)
                     {
@@ -146,6 +146,23 @@ namespace FirstPlugin
                         case 4: return "G";
                         case 8: return "B";
                         case 12: return "A";
+                        default:
+                            return offset.ToString();
+                    }
+                }
+                else if (animType == FMAA.AnimationType.TextureSrt)
+                {
+                    switch (offset)
+                    {
+                        case 0: return "Scale X";
+                        case 4: return "Scale Y";
+                        case 8: return "Scale Z";
+                        case 12: return "Rotate X";
+                        case 16: return "Rotate Y";
+                        case 20: return "Rotate Z";
+                        case 24: return "Translate X";
+                        case 28: return "Translate Y";
+                        case 32: return "Translate Z";
                         default:
                             return offset.ToString();
                     }
@@ -340,8 +357,10 @@ namespace FirstPlugin
                                     curve.Delta = values[values.Count - 1] - values[0];
                                 }
 
+                                curve.KeyType = AnimCurveKeyType.Single;
+                                curve.FrameType = AnimCurveFrameType.Single;
 
-                                if (MaxFrame < byte.MaxValue)
+                            /*    if (MaxFrame < byte.MaxValue)
                                     curve.FrameType = AnimCurveFrameType.Byte;
                                 else if (MaxFrame < ushort.MaxValue)
                                     curve.FrameType = AnimCurveFrameType.Decimal10x5;
@@ -353,7 +372,7 @@ namespace FirstPlugin
                                 else if (MaxValue < ushort.MaxValue)
                                     curve.KeyType = AnimCurveKeyType.Int16;
                                 else
-                                    curve.KeyType = AnimCurveKeyType.Single;
+                                    curve.KeyType = AnimCurveKeyType.Single;*/
                             }
                         }
                     }
@@ -477,7 +496,7 @@ namespace FirstPlugin
             return config.FromYaml();
         }
 
-        public static string ToYaml(string Name, MaterialAnim MatAnim, bool isColorParam)
+        public static string ToYaml(string Name, MaterialAnim MatAnim, FMAA.AnimationType animType)
         {
             var serializerSettings = new SerializerSettings()
             {
@@ -489,7 +508,7 @@ namespace FirstPlugin
             serializerSettings.RegisterTagMapping("AnimConfig", typeof(AnimConfig));
 
             var config = new AnimConfig();
-            config.ToYaml(MatAnim, isColorParam);
+            config.ToYaml(MatAnim, animType);
 
             var serializer = new Serializer(serializerSettings);
             string yaml = serializer.Serialize(config, typeof(AnimConfig));
