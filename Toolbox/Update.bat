@@ -1,0 +1,1 @@
+Updater.exe -d -i -b
