@@ -276,9 +276,10 @@ namespace FirstPlugin
 
                         if (paramCfg.Constants != null && paramCfg.Constants.Count > 0)
                         {
-                            paramInfo.BeginConstant = BeginConstantIndex++;
+                            paramInfo.BeginConstant = BeginConstantIndex;
                             paramInfo.ConstantCount = (ushort)paramCfg.Constants.Count;
 
+                            BeginConstantIndex += (ushort)paramCfg.Constants.Count;
                             foreach (var constantCfg in paramCfg.Constants)
                             {
                                 AnimConstant constant = new AnimConstant();
@@ -292,9 +293,10 @@ namespace FirstPlugin
                         }
                         if (paramCfg.CurveData != null && paramCfg.CurveData.Count > 0)
                         {
-                            paramInfo.BeginCurve = CurveIndex++;
+                            paramInfo.BeginCurve = CurveIndex;
                             paramInfo.FloatCurveCount = (ushort)paramCfg.CurveData.Count;
 
+                            CurveIndex += (ushort)paramCfg.CurveData.Count;
                             foreach (var curveCfg in paramCfg.CurveData)
                             {
                                 AnimCurve curve = new AnimCurve();
