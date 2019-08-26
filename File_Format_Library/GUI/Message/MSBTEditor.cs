@@ -44,7 +44,7 @@ namespace FirstPlugin.Forms
 
             if (msbt.header.Text2 != null)
             {
-                if (ShowLabels)
+                if (ShowLabels && msbt.HasLabels)
                 {
                     foreach (var lbl in msbt.header.Label1.Labels)
                     {

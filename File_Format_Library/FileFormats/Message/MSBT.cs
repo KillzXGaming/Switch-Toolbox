@@ -72,6 +72,11 @@ namespace FirstPlugin
             header.Write(new FileWriter(stream));
         }
 
+        public bool HasLabels
+        {
+            get { return header.Label1.Labels.Count > 0; }
+        }
+
         public class Header
         {
             public ushort ByteOrderMark;
@@ -90,6 +95,10 @@ namespace FirstPlugin
 
             public void Read(FileReader reader)
             {
+                Label1 = new LBL1();
+                NLI1 = new NLI1();
+                Text2 = new TXT2();
+
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 reader.ReadSignature(8, "MsgStdBn");
                 ByteOrderMark = reader.ReadUInt16();

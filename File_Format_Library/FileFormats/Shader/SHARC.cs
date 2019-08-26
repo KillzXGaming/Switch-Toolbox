@@ -258,7 +258,7 @@ namespace FirstPlugin
                 Text = reader.ReadString((int)FileNameLength);
              //   Code = reader.ReadString((int)CodeLength, Encoding.UTF32);
                 byte[] CodeData = reader.ReadBytes((int)CodeLength);
-               Code = Encoding.Unicode.GetString(Encoding.Convert(Encoding.Default, Encoding.Unicode, CodeData));
+                Code = Encoding.GetEncoding(932).GetString(CodeData);
 
                 reader.Seek(SectioSize + pos, System.IO.SeekOrigin.Begin);
             }

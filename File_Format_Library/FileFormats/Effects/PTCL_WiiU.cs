@@ -342,7 +342,7 @@ namespace FirstPlugin
                 int size = data.Length;
 
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(FileName, Format, MipCount, SupportedFormats, true, true, true);
+                ftex.ReplaceTexture(FileName, Format, MipCount,0, SupportedFormats, true, true, true);
                 if (ftex.texture != null)
                 {
                     byte[] ImageData = ftex.texture.Data;

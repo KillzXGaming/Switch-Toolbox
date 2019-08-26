@@ -158,7 +158,7 @@ namespace FirstPlugin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, Format, 1, SupportedFormats, true, true, false);
+                ftex.ReplaceTexture(ofd.FileName, Format, 1, 0, SupportedFormats, true, true, false);
                 if (ftex.texture != null)
                 {
                     image.BCLIMFormat = ConvertFormatGenericToBflim(ftex.Format);

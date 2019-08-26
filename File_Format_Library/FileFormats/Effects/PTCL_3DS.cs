@@ -215,10 +215,10 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-                EmitterEditor editor = (EmitterEditor)LibraryGUI.GetActiveContent(typeof(EmitterEditor));
+                EmitterEditorNX editor = (EmitterEditorNX)LibraryGUI.GetActiveContent(typeof(EmitterEditorNX));
                 if (editor == null)
                 {
-                    editor = new EmitterEditor();
+                    editor = new EmitterEditorNX();
                     LibraryGUI.LoadEditor(editor);
                 }
                 editor.Text = Text;
@@ -280,6 +280,21 @@ namespace FirstPlugin
                     reader.Seek(pos + 1072, SeekOrigin.Begin);
                 }
 
+                Color0KeyCount = 8;
+                Alpha0KeyCount = 8;
+                Color1KeyCount = 8;
+                Alpha1KeyCount = 8;
+
+                Color0Type = ColorType.Random;
+                Color1Type = ColorType.Random;
+                Alpha0Type = ColorType.Random;
+                Alpha1Type = ColorType.Random;
+
+                Color0Array = new STColor[8];
+                Color1Array = new STColor[8];
+                Color0AlphaArray = new STColor[8];
+                Color1AlphaArray = new STColor[8];
+
                 ColorPosition = reader.Position;
                 for (int i = 0; i < 8; i++)
                 {
@@ -287,7 +302,12 @@ namespace FirstPlugin
                     clr.R = reader.ReadSingle();
                     clr.G = reader.ReadSingle();
                     clr.B = reader.ReadSingle();
-                    clr.A = reader.ReadSingle();
+                    float A = reader.ReadSingle();
+                    STColor alpha = new STColor();
+                    alpha.R = A;
+                    alpha.G = A;
+                    alpha.B = A;
+                    Color0AlphaArray[i] = alpha;
                     Color0Array[i] = clr;
                 }
                 for (int i = 0; i < 8; i++)
@@ -296,7 +316,12 @@ namespace FirstPlugin
                     clr.R = reader.ReadSingle();
                     clr.G = reader.ReadSingle();
                     clr.B = reader.ReadSingle();
-                    clr.A = reader.ReadSingle();
+                    float A = reader.ReadSingle();
+                    STColor alpha = new STColor();
+                    alpha.R = A;
+                    alpha.G = A;
+                    alpha.B = A;
+                    Color1AlphaArray[i] = alpha;
                     Color1Array[i] = clr;
                 }
             }
@@ -334,7 +359,7 @@ namespace FirstPlugin
                 int size = data.Length;
 
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(FileName, Format, MipCount, SupportedFormats, true, true, true);
+                ftex.ReplaceTexture(FileName, Format, MipCount, 0, SupportedFormats, true, true, true);
                 if (ftex.texture != null)
                 {
                     byte[] ImageData = ftex.texture.Data;

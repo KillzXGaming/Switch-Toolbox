@@ -8,11 +8,37 @@ using Toolbox.Library.Security.Cryptography;
 using System.Runtime.InteropServices;
 using Syroot.BinaryData;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace Toolbox.Library.IO
 {
     public static class IOExtensions
     {
+        public static byte[] DeserializeToBytes<T>(this T structure) where T : struct
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(stream, structure);
+
+                stream.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+                return stream.ToArray();
+            }
+        }
+
+        public static T SerializeToStruct<T>(this byte[] buffer) where T : struct
+        {
+            using (MemoryStream stream = new MemoryStream(buffer))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                var data = bf.Deserialize(stream);
+                return (T)data;
+            }
+        }
+
+        //Structs can be a bit faster and more memory efficent
         //From https://github.com/IcySon55/Kuriimu/blob/master/src/Kontract/IO/Extensions.cs
         //Read
         public static unsafe T BytesToStruct<T>(this byte[] buffer, bool isBigEndian = false, int offset = 0)
