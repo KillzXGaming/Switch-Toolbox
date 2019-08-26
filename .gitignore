@@ -1,13 +1,12 @@
-
-.vs/Switch_Toolbox/v15/Server/sqlite3/db.lock
+.vs/
+bin/
+obj/
 *NodeEditorWinforms-master
 *GL_EditorFramework-master
 *SuperBMD-master
 *SuperBMD-link
 *Assimp
 *.resources
-Debug/
-Release/
 BrawlboxHelper/BrawlHelperTest2.cs
 BrawlboxHelper/BrawlHelperTest2.zip
 Switch_Toolbox_StreamOverhaul.zip

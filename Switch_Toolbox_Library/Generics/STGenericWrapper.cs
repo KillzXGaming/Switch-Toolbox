@@ -57,7 +57,7 @@ namespace Toolbox.Library.NodeWrappers
             CanDelete = false;
         }
 
-        public ToolStripItem[] GetContextMenuItems()
+        public virtual ToolStripItem[] GetContextMenuItems()
         {
             if (IsFolder)
             {
