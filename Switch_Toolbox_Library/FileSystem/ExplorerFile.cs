@@ -29,8 +29,6 @@ namespace Toolbox.Library
 
         public override void OnClick(TreeView treeview)
         {
-            return;
-
             ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.GetActiveContent(typeof(ArchiveFilePanel));
             if (editor == null)
             {
@@ -106,6 +104,16 @@ namespace Toolbox.Library
 
         private bool CheckSupport()
         {
+            string ext = Utils.GetExtension(filePath);
+            foreach (var format in FileManager.GetFileFormats())
+            {
+                for (int i = 0; i < format.Extension.Length; i++)
+                    if (format.Extension[i].Contains(ext))
+                        return true;
+            }
+
+            return false;
+
                 /*    using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                  {
                      if (fileStream.Length < 10)
@@ -119,9 +127,9 @@ namespace Toolbox.Library
                                   return true;
                           }
                       }*/
-            
 
-            return false;
+
+                return false;
         }
     }
 }
