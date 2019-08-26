@@ -459,8 +459,6 @@ namespace Toolbox.Library
             else
                 s = 0xd0000 | swizzle << 8;
 
-            s = 0xd0000 | swizzle << 8;
-
             Console.WriteLine("swizzle " + s);
 
             uint blkWidth, blkHeight;

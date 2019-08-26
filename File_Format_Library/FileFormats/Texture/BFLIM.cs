@@ -550,7 +550,7 @@ namespace FirstPlugin
                     (uint)MipCount
                     );
 
-                image.Swizzle = (byte)surface.swizzle;
+                image.Swizzle = surface.swizzle;
                 image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == Format).Key;
                 image.Height = (ushort)surface.height;
                 image.Width = (ushort)surface.width;
