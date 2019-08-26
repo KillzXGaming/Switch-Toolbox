@@ -68,6 +68,7 @@ namespace FirstPlugin
                             {
                                 var curve = mat.Curves[(int)paramInfo.BeginCurve + i];
                                 var CurveCfg = new CurveConfig();
+                                CurveCfg.Offset = ConvertParamOffset(curve.AnimDataOffset, isColorParam);
 
                                 if (curve.Scale == 0)
                                     curve.Scale = 1;
@@ -116,6 +117,24 @@ namespace FirstPlugin
                     }
                 }
             }
+
+            private uint ConvertParamOffset(string offset)
+            {
+                uint val = 0;
+                switch (offset)
+                {
+                    case "R": return 0;
+                    case "G": return 4;
+                    case "B": return 8;
+                    case "A": return 12;
+                    default:
+                        uint.TryParse(offset, out val);
+                        break;
+                }
+
+                return val;
+            }
+
 
             private string ConvertParamOffset(uint offset, bool isColorParam)
             {
@@ -251,7 +270,90 @@ namespace FirstPlugin
 
                     foreach (var paramCfg in matCfg.ParamInfos)
                     {
+                        ParamAnimInfo paramInfo = new ParamAnimInfo();
+                        paramInfo.Name = paramCfg.Name;
+                        matAnimData.ParamAnimInfos.Add(paramInfo);
 
+                        if (paramCfg.Constants != null && paramCfg.Constants.Count > 0)
+                        {
+                            paramInfo.BeginConstant = BeginConstantIndex++;
+                            paramInfo.ConstantCount = (ushort)paramCfg.Constants.Count;
+
+                            foreach (var constantCfg in paramCfg.Constants)
+                            {
+                                AnimConstant constant = new AnimConstant();
+                                constant.AnimDataOffset = ConvertParamOffset(constantCfg.Offset);
+                                constant.Value = constantCfg.Value;
+                                matAnimData.Constants.Add(constant);
+                            }
+
+                            matAnimData.VisualConstantIndex = 0;
+                            matAnimData.BeginVisalConstantIndex = 0;
+                        }
+                        if (paramCfg.CurveData != null && paramCfg.CurveData.Count > 0)
+                        {
+                            paramInfo.BeginCurve = CurveIndex++;
+                            paramInfo.FloatCurveCount = (ushort)paramCfg.CurveData.Count;
+
+                            foreach (var curveCfg in paramCfg.CurveData)
+                            {
+                                AnimCurve curve = new AnimCurve();
+                                matAnimData.Curves.Add(curve);
+                                curve.Offset = 0;
+                                curve.AnimDataOffset = ConvertParamOffset(curveCfg.Offset);
+                                curve.Scale = 1;
+                                curve.CurveType = AnimCurveType.Linear;
+                                curve.StartFrame = 0;
+
+                                int MaxFrame = 0;
+                                float MaxValue = 0;
+
+                                int FrameCount = curveCfg.KeyFrames.Count;
+                                curve.Frames = new float[FrameCount];
+                                curve.Keys = new float[FrameCount, 2];
+
+                                int i = 0;
+                                var values = curveCfg.KeyFrames.Values.ToList();
+                                foreach (var KeyFrame in curveCfg.KeyFrames)
+                                {
+                                    curve.Frames[i] = KeyFrame.Key;
+                                    curve.Keys[i, 0] = KeyFrame.Value;
+
+                                    //Calculate delta
+                                    float Delta = 0;
+                                    if (i < values.Count - 1)
+                                        Delta = values[i + 1] - values[i];
+
+                                    curve.Keys[i, 1] = Delta;
+
+                                    MaxFrame = Math.Max(MaxFrame, KeyFrame.Key);
+                                    MaxValue = Math.Max(MaxValue, KeyFrame.Value);
+                                    i++;
+                                }
+
+                                curve.EndFrame = curve.Frames.Max();
+
+                                if (curve.Keys.Length > 1)
+                                {
+                                    curve.Delta = values[values.Count - 1] - values[0];
+                                }
+
+
+                                if (MaxFrame < byte.MaxValue)
+                                    curve.FrameType = AnimCurveFrameType.Byte;
+                                else if (MaxFrame < ushort.MaxValue)
+                                    curve.FrameType = AnimCurveFrameType.Decimal10x5;
+                                else
+                                    curve.FrameType = AnimCurveFrameType.Single;
+
+                                if (MaxValue < byte.MaxValue)
+                                    curve.KeyType = AnimCurveKeyType.SByte;
+                                else if (MaxValue < ushort.MaxValue)
+                                    curve.KeyType = AnimCurveKeyType.Int16;
+                                else
+                                    curve.KeyType = AnimCurveKeyType.Single;
+                            }
+                        }
                     }
 
                     TexturePatternCurveIndex += matAnimData.TexturePatternAnimInfos.Where(item => item.CurveIndex != uint.MaxValue).ToList().Count;
