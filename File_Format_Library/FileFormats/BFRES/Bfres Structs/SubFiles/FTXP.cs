@@ -240,7 +240,7 @@ namespace Bfres.Structs
             }
             else if (ext == ".yaml")
             {
-                var yaml = YamlFmaa.ToYaml(FileName, BfresPlatformConverter.FTXPConvertWiiUToSwitch(TexPatternAnim));
+                var yaml = YamlFmaa.ToYaml(FileName, BfresPlatformConverter.FTXPConvertWiiUToSwitch(TexPatternAnim), false);
                 System.IO.File.WriteAllText(FileName, yaml);
             }
         }

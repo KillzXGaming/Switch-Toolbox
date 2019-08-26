@@ -25,7 +25,7 @@ namespace FirstPlugin
 
             public List<MatAnimConfig> MaterialAnimConfigs { get; set; }
 
-            public void ToYaml(MaterialAnim materialAnim)
+            public void ToYaml(MaterialAnim materialAnim, bool isColorParam)
             {
                 MaterialAnimConfigs = new List<MatAnimConfig>();
 
@@ -44,15 +44,42 @@ namespace FirstPlugin
                     {
                         ParamInfo paramCfg = new ParamInfo();
                         paramCfg.Name = paramInfo.Name;
-                        paramCfg.IsConstant = paramInfo.BeginConstant != ushort.MaxValue;
+                        paramCfg.IsConstant = paramInfo.ConstantCount != 0;
                         matConfig.ParamInfos.Add(paramCfg);
+
+                        if (paramInfo.ConstantCount != 0)
+                        {
+                            paramCfg.Constants = new List<ConstantConfig>();
+                            for (int i = 0; i < paramInfo.ConstantCount; i++)
+                            {
+                                AnimConstant constant = mat.Constants[paramInfo.BeginConstant + i];
+                                ConstantConfig ConstantValue = new ConstantConfig();
+                                ConstantValue.Offset = ConvertParamOffset(constant.AnimDataOffset, isColorParam);
+                                ConstantValue.Value = constant.AnimDataOffset;
+
+                                paramCfg.Constants.Add(ConstantValue);
+                            }
+                        }
 
                         if (paramInfo.BeginCurve != ushort.MaxValue)
                         {
-                            var curve = mat.Curves[(int)paramInfo.BeginCurve];
+                            paramCfg.CurveData = new List<CurveConfig>();
                             for (int i = 0; i < paramInfo.IntCurveCount + paramInfo.FloatCurveCount; i++)
                             {
+                                var curve = mat.Curves[(int)paramInfo.BeginCurve + i];
+                                var CurveCfg = new CurveConfig();
 
+                                if (curve.Scale == 0)
+                                    curve.Scale = 1;
+
+                                for (int f = 0; f < curve.Frames.Length; f++)
+                                {
+                                    int frame = (int)curve.Frames[f];
+                                    float Value = curve.Offset + curve.Keys[f, 0] * curve.Scale;
+                                    CurveCfg.KeyFrames.Add(frame, Value);
+                                }
+
+                                paramCfg.CurveData.Add(CurveCfg);
                             }
                         }
                     }
@@ -88,6 +115,24 @@ namespace FirstPlugin
                         }
                     }
                 }
+            }
+
+            private string ConvertParamOffset(uint offset, bool isColorParam)
+            {
+                if (isColorParam)
+                {
+                    switch (offset)
+                    {
+                        case 0: return "R";
+                        case 4: return "G";
+                        case 8: return "B";
+                        case 12: return "A";
+                        default:
+                            return offset.ToString();
+                    }
+                }
+
+                return offset.ToString();
             }
 
             public MaterialAnim FromYaml()
@@ -242,9 +287,27 @@ namespace FirstPlugin
             }
         }
 
+        public class ConstantConfig
+        {
+            public string Offset { get; set; }
+            public float Value { get; set; }
+        }
+
         public class ConstantTPConfig
         {
             public string Texture { get; set; }
+        }
+
+        public class CurveConfig
+        {
+            public Dictionary<int, float> KeyFrames { get; set; }
+
+            public string Offset;
+
+            public CurveConfig()
+            {
+                KeyFrames = new Dictionary<int, float>();
+            }
         }
 
         public class CurveTPConfig
@@ -277,7 +340,9 @@ namespace FirstPlugin
 
             public bool IsConstant { get; set; }
 
-            public AnimCurve Curve { get; set; }
+            public List<ConstantConfig> Constants { get; set; }
+
+            public List<CurveConfig> CurveData { get; set; }
         }
 
         public class PatternInfo
@@ -308,7 +373,7 @@ namespace FirstPlugin
             return config.FromYaml();
         }
 
-        public static string ToYaml(string Name, MaterialAnim MatAnim)
+        public static string ToYaml(string Name, MaterialAnim MatAnim, bool isColorParam)
         {
             var serializerSettings = new SerializerSettings()
             {
@@ -320,7 +385,7 @@ namespace FirstPlugin
             serializerSettings.RegisterTagMapping("AnimConfig", typeof(AnimConfig));
 
             var config = new AnimConfig();
-            config.ToYaml(MatAnim);
+            config.ToYaml(MatAnim, isColorParam);
 
             var serializer = new Serializer(serializerSettings);
             string yaml = serializer.Serialize(config, typeof(AnimConfig));
