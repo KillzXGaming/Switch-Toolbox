@@ -1,4 +1,4 @@
-﻿namespace FirstPlugin.LayoutEditor
+﻿namespace FirstPlugin.Forms
 {
     partial class LayoutEditor
     {
@@ -28,9 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutEditor));
             this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.stMenuStrip1.SuspendLayout();
+            this.stToolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // stMenuStrip1
@@ -49,15 +53,37 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
             // 
+            // stToolStrip1
+            // 
+            this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1});
+            this.stToolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.stToolStrip1.Name = "stToolStrip1";
+            this.stToolStrip1.Size = new System.Drawing.Size(836, 25);
+            this.stToolStrip1.TabIndex = 3;
+            this.stToolStrip1.Text = "stToolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            // 
             // LayoutEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.stToolStrip1);
             this.Controls.Add(this.stMenuStrip1);
             this.Name = "LayoutEditor";
             this.Size = new System.Drawing.Size(836, 518);
             this.stMenuStrip1.ResumeLayout(false);
             this.stMenuStrip1.PerformLayout();
+            this.stToolStrip1.ResumeLayout(false);
+            this.stToolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -67,5 +93,7 @@
 
         private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private Toolbox.Library.Forms.STToolStrip stToolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

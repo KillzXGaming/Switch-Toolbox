@@ -8,13 +8,37 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FirstPlugin.LayoutEditor
+namespace FirstPlugin.Forms
 {
     public partial class LayoutEditor : UserControl
     {
+        public List<BFLYT.Header> LayoutFiles = new List<BFLYT.Header>();
+
+        public enum DockLayout
+        {
+            Default,
+            Animation,
+        }
+
         public LayoutEditor()
         {
             InitializeComponent();
+        }
+
+        public void LoadBflyt(BFLYT.Header header, string fileName)
+        {
+            LayoutViewer viewer = new LayoutViewer();
+            this.Controls.Add(viewer);
+        }
+
+        public void LoadBflan()
+        {
+
+        }
+
+        public void InitalizeEditors()
+        {
+
         }
     }
 }

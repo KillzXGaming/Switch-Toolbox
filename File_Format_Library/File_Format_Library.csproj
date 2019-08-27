@@ -307,6 +307,12 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\BFLYT\LayoutViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
+      <DependentUpon>LayoutViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BotwActorEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1068,6 +1074,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutEditor.resx">
       <DependentUpon>LayoutEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutViewer.resx">
+      <DependentUpon>LayoutViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BatchEditBaseAnimDataForm.resx">
       <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>

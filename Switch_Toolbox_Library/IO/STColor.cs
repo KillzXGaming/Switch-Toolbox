@@ -57,6 +57,25 @@ namespace Toolbox.Library
             A = 1;
         }
 
+        public STColor(float r, float g, float b, float a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
+
+        public byte[] ToBytes()
+        {
+            return new byte[]
+            {
+                 (byte)Utils.FloatToIntClamp(R),
+                 (byte)Utils.FloatToIntClamp(G),
+                 (byte)Utils.FloatToIntClamp(B),
+                 (byte)Utils.FloatToIntClamp(A),
+            };
+        }
+
         public override string ToString()
         {
             return String.Format("R:{0} G:{1} B:{2} A:{3}", R, G, B, A);
@@ -65,6 +84,11 @@ namespace Toolbox.Library
         public string ToHexString()
         {
             return String.Format("R:{0:X2} G:{1:X2} B:{2:X2} A:{3:X2}", R, G, B, A);
+        }
+
+        public static STColor White
+        {
+            get { return new STColor(1, 1, 1, 1); }
         }
     }
 }

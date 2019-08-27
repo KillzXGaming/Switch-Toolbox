@@ -378,8 +378,9 @@ namespace FirstPlugin
             Formats.Add(typeof(CTR.NCCH.RomFS));
             Formats.Add(typeof(DKCTF.MSBT));
             Formats.Add(typeof(DKCTF.PAK));
-         //   Formats.Add(typeof(MSBP));
-         //   Formats.Add(typeof(BFGRP));
+
+            //   Formats.Add(typeof(MSBP));
+            //   Formats.Add(typeof(BFGRP));
 
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)

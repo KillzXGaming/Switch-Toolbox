@@ -302,6 +302,17 @@ namespace Toolbox
 
                     HasEditorActive = true;
                 }
+                else if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditorForm<>))
+                {
+                    MethodInfo method = objectType.GetMethod("OpenForm");
+                    var form = (Form)method.Invoke(file, new object[0]);
+                    TabDupeIndex = 0;
+                    form.Text = CheckTabDupes(((IFileFormat)file).FileName);
+                    form.MdiParent = this;
+                    form.Show();
+
+                    HasEditorActive = true;
+                }
             }
 
             bool IsTreeNode = file is TreeNode;
