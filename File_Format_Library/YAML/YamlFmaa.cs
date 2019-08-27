@@ -304,12 +304,12 @@ namespace FirstPlugin
                                 constant.Value = constantCfg.Value;
                                 matAnimData.Constants.Add(constant);
                             }
-
-                            matAnimData.VisualConstantIndex = 0;
-                            matAnimData.BeginVisalConstantIndex = 0;
                         }
+
                         if (paramCfg.CurveData != null && paramCfg.CurveData.Count > 0)
                         {
+                            matAnimData.ShaderParamCurveIndex = ShaderParamCurveIndex;
+
                             paramInfo.BeginCurve = CurveIndex;
                             paramInfo.FloatCurveCount = (ushort)paramCfg.CurveData.Count;
 
@@ -378,7 +378,7 @@ namespace FirstPlugin
                     }
 
                     TexturePatternCurveIndex += matAnimData.TexturePatternAnimInfos.Where(item => item.CurveIndex != uint.MaxValue).ToList().Count;
-                    ShaderParamCurveIndex += matAnimData.ParamAnimInfos.Where(item => item.BeginCurve != ushort.MaxValue).ToList().Count;
+                    ShaderParamCurveIndex += CurveIndex;
                 }
 
                 return matAnim;
