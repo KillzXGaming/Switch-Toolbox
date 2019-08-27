@@ -321,7 +321,7 @@ namespace FirstPlugin
 
             public OriginX HorizontalAlignment
             {
-                get => (OriginX)((TextAlignment >> 2) & 0x3);
+                get { return (OriginX)((TextAlignment >> 2) & 0x3); }
                 set
                 {
                     TextAlignment &= unchecked((byte)(~0xC));
@@ -331,7 +331,7 @@ namespace FirstPlugin
 
             public OriginX VerticalAlignment
             {
-                get => (OriginX)((TextAlignment) & 0x3);
+                get { return (OriginX)((TextAlignment) & 0x3); }
                 set
                 {
                     TextAlignment &= unchecked((byte)(~0x3));
@@ -624,7 +624,7 @@ namespace FirstPlugin
 
             public OriginX originX
             {
-                get => (OriginX)((_flags2 & 0xC0) >> 6);
+                get { return (OriginX)((_flags2 & 0xC0) >> 6); }
                 set
                 {
                     _flags2 &= unchecked((byte)(~0xC0));
@@ -634,7 +634,7 @@ namespace FirstPlugin
 
             public OriginY originY
             {
-                get => (OriginY)((_flags2 & 0x30) >> 4);
+                get { return (OriginY)((_flags2 & 0x30) >> 4); }
                 set
                 {
                     _flags2 &= unchecked((byte)(~0x30));
@@ -644,7 +644,7 @@ namespace FirstPlugin
 
             public OriginX ParentOriginX
             {
-                get => (OriginX)((_flags2 & 0xC) >> 2);
+                get { return (OriginX)((_flags2 & 0xC) >> 2); }
                 set
                 {
                     _flags2 &= unchecked((byte)(~0xC));
@@ -654,7 +654,7 @@ namespace FirstPlugin
 
             public OriginY ParentOriginY
             {
-                get => (OriginY)((_flags2 & 0x3));
+                get { return (OriginY)((_flags2 & 0x3)); }
                 set
                 {
                     _flags2 &= unchecked((byte)(~0x3));
