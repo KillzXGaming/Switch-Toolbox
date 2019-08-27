@@ -128,13 +128,21 @@ namespace FirstPlugin
             matAnim.FrameCount = ShaderAnim.FrameCount;
             matAnim.BindIndices = ShaderAnim.BindIndices;
             matAnim.BakedSize = ShaderAnim.BakedSize;
-            matAnim.Loop = ShaderAnim.Flags.HasFlag(ResU.TexPatternAnimFlags.Looping);
+            matAnim.Loop = ShaderAnim.Flags.HasFlag(ResU.ShaderParamAnimFlags.Looping);
 
             int CurveIndex = 0;
             for (int m = 0; m < ShaderAnim.ShaderParamMatAnims.Count; m++)
             {
                 ResNX.MaterialAnimData matAnimData = new ResNX.MaterialAnimData();
                 matAnimData.Name = ShaderAnim.ShaderParamMatAnims[m].Name;
+
+                foreach (var constantU in ShaderAnim.ShaderParamMatAnims[m].Constants)
+                {
+                    ResNX.AnimConstant constantNX = new ResNX.AnimConstant();
+                    constantNX.AnimDataOffset = constantU.AnimDataOffset;
+                    constantNX.Value = (float)constantU.Value;
+                    matAnimData.Constants.Add(constantNX);
+                }
 
                 foreach (var paramU in ShaderAnim.ShaderParamMatAnims[m].ParamAnimInfos)
                 {
