@@ -26,12 +26,12 @@ namespace FirstPlugin
 
         public static string FMAA = GetFilter(".bfmaa",".yaml", ".gif");
 
-        public static string FSHU_REPLACE_PARAM = GetFilter(".bfmaa", ".bfshu");
-        public static string FSHU_REPLACE_SRT = GetFilter(".bfmaa", ".bftsh");
-        public static string FSHU_REPLACE_COLOR = GetFilter(".bfmaa", ".bfcsh", ".clr0");
-        public static string FSHU_EXPORT_PARAM = GetFilter(".bfmaa", ".bfshu");
-        public static string FSHU_EXPORT_SRT = GetFilter(".bfmaa", ".bftsh");
-        public static string FSHU_EXPORT_COLOR = GetFilter(".bfmaa", ".bfcsh");
+        public static string FSHU_REPLACE_PARAM = GetFilter(".bfmaa", ".bfshu", ".yaml");
+        public static string FSHU_REPLACE_SRT = GetFilter(".bfmaa", ".bftsh", ".yaml");
+        public static string FSHU_REPLACE_COLOR = GetFilter(".bfmaa", ".bfcsh", ".yaml", ".clr0");
+        public static string FSHU_EXPORT_PARAM = GetFilter(".bfmaa", ".bfshu", ".yaml");
+        public static string FSHU_EXPORT_SRT = GetFilter(".bfmaa", ".bftsh", ".yaml");
+        public static string FSHU_EXPORT_COLOR = GetFilter(".bfmaa", ".bfcsh", ".yaml");
 
         public static string FCLH = GetFilter(".bfcsh");
         public static string FSTH = GetFilter(".bfsth");

@@ -72,6 +72,53 @@ namespace FirstPlugin
 
             return matAnim;
         }
+        
+        public static ResU.ShaderParamAnim FSHUConvertSwitchToWiiU(ResNX.MaterialAnim materialAnim)
+        {
+            var shaderParamAnim = new ResU.ShaderParamAnim();
+            shaderParamAnim.Name = materialAnim.Name;
+            shaderParamAnim.Path = materialAnim.Path;
+            shaderParamAnim.BindIndices = materialAnim.BindIndices;
+            shaderParamAnim.FrameCount = materialAnim.FrameCount;
+            if (materialAnim.Loop)
+                shaderParamAnim.Flags |= ResU.ShaderParamAnimFlags.Looping;
+
+            for (int m = 0; m < materialAnim.MaterialAnimDataList.Count; m++)
+            {
+                if (materialAnim.MaterialAnimDataList[m].Constants == null)
+                    materialAnim.MaterialAnimDataList[m].Constants = new List<ResNX.AnimConstant>();
+                if (materialAnim.MaterialAnimDataList[m].Curves == null)
+                    materialAnim.MaterialAnimDataList[m].Curves = new List<ResNX.AnimCurve>();
+
+                ResU.ShaderParamMatAnim matAnimData = new ResU.ShaderParamMatAnim();
+                shaderParamAnim.ShaderParamMatAnims.Add(matAnimData);
+                matAnimData.Name = materialAnim.MaterialAnimDataList[m].Name;
+                matAnimData.Curves = ConvertAnimCurveSwitchToWiiU(materialAnim.MaterialAnimDataList[m].Curves);
+
+                foreach (var constants in materialAnim.MaterialAnimDataList[m].Constants)
+                {
+                    matAnimData.Constants.Add(new ResU.AnimConstant()
+                    {
+                        AnimDataOffset = constants.AnimDataOffset,
+                        Value = (float)constants.Value,
+                    });
+                }
+
+                foreach (var paramInfoNX in materialAnim.MaterialAnimDataList[m].ParamAnimInfos)
+                {
+                    var paramInfoU = new ResU.ParamAnimInfo();
+                    paramInfoU.Name = paramInfoNX.Name;
+                    paramInfoU.BeginCurve = paramInfoNX.BeginCurve;
+                    paramInfoU.BeginConstant = paramInfoNX.BeginConstant;
+                    paramInfoU.FloatCurveCount = paramInfoNX.FloatCurveCount;
+                    paramInfoU.IntCurveCount = paramInfoNX.IntCurveCount;
+                    paramInfoU.SubBindIndex = paramInfoNX.SubBindIndex;
+                    matAnimData.ParamAnimInfos.Add(paramInfoU);
+                }
+            }
+
+            return shaderParamAnim;
+        }
 
         public static ResNX.MaterialAnim FSHUConvertWiiUToSwitch(ResU.ShaderParamAnim ShaderAnim)
         {

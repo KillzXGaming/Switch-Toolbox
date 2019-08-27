@@ -62,19 +62,35 @@ namespace Bfres.Structs
                 ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
             }
-            if (ext == ".bfcsh")
+            else if (ext == ".bfcsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.Color);
                 ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.Color);
             }
-            if (ext == ".bftsh")
+            else if (ext == ".bftsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.TextureSRT);
                 ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.TexturePattern);
             }
-            if (ext == ".clr0")
+            else if (ext == ".bfmaa")
+            {
+                var fmaa = new Syroot.NintenTools.NSW.Bfres.MaterialAnim(); ;
+                fmaa.Import(FileName);
+                ShaderParamAnim = BfresPlatformConverter.FSHUConvertSwitchToWiiU(fmaa);
+                ShaderParamAnim.Name = Text;
+                LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
+            }
+            else if (ext == ".yaml")
+            {
+                var fmaa = new Syroot.NintenTools.NSW.Bfres.MaterialAnim();
+                fmaa = YamlFmaa.FromYaml(FileName);
+                ShaderParamAnim = BfresPlatformConverter.FSHUConvertSwitchToWiiU(fmaa);
+                ShaderParamAnim.Name = Text;
+                LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
+            }
+            else if (ext == ".clr0")
             {
                 ShaderParamAnim = BrawlboxHelper.FSHUConverter.Clr02Fshu(FileName);
                 ShaderParamAnim.Name = Text;
@@ -101,15 +117,25 @@ namespace Bfres.Structs
             {
                 ShaderParamAnim.Export(FileName, GetResFile(), ShaderParamAnimType.ShaderParameter);
             }
-            if (ext == ".bfcsh")
+            else if (ext == ".bfcsh")
             {
                 ShaderParamAnim.Export(FileName, GetResFile(), ShaderParamAnimType.Color);
             }
-            if (ext == ".bftsh")
+            else if (ext == ".bftsh")
             {
                 ShaderParamAnim.Export(FileName, GetResFile(), ShaderParamAnimType.TextureSRT);
             }
-            if (ext == ".clr0")
+            else if (ext == ".bfmaa")
+            {
+                var fmaa = BfresPlatformConverter.FSHUConvertWiiUToSwitch(ShaderParamAnim);
+                fmaa.Export(FileName, new Syroot.NintenTools.NSW.Bfres.ResFile());
+            }
+            else if (ext == ".yaml")
+            {
+                var yaml = YamlFmaa.ToYaml(FileName, BfresPlatformConverter.FSHUConvertWiiUToSwitch(ShaderParamAnim), AnimationType.ShaderParam);
+                System.IO.File.WriteAllText(FileName, yaml);
+            }
+            else if (ext == ".clr0")
             {
             }
         }
