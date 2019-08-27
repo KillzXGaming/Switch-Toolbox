@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
@@ -14,7 +15,7 @@ namespace Toolbox.Library.Rendering
         public int width, height;
         public int TexID;
         public PixelInternalFormat pixelInternalFormat;
-        public PixelFormat pixelFormat;
+        public OpenTK.Graphics.OpenGL.PixelFormat pixelFormat;
         public PixelType pixelType = PixelType.UnsignedByte;
         public TextureTarget TextureTarget = TextureTarget.Texture2D;
         public bool GLInitialized = false;
@@ -86,6 +87,23 @@ namespace Toolbox.Library.Rendering
         {
             Bind();
             GL.TexParameter(TextureTarget, param, value);
+        }
+
+        public static RenderableTex FromBitmap(Bitmap bitmap)
+        {
+            RenderableTex tex = new RenderableTex();
+            tex.TextureTarget = TextureTarget.Texture2D;
+            tex.TextureWrapS = TextureWrapMode.Repeat;
+            tex.TextureWrapT = TextureWrapMode.Repeat;
+            tex.TextureMinFilter = TextureMinFilter.Linear;
+            tex.TextureMagFilter = TextureMagFilter.Linear;
+            tex.width = bitmap.Width;
+            tex.height = bitmap.Height;
+            tex.pixelInternalFormat = PixelInternalFormat.Rgb8;
+            tex.pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+            tex.GLInitialized = true;
+            tex.TexID = GenerateOpenGLTexture(tex, bitmap);
+            return tex;
         }
 
         private bool UseMipmaps = false;
@@ -266,6 +284,27 @@ namespace Toolbox.Library.Rendering
                     else
                         return ImageData;
             }
+        }
+
+        public static int GenerateOpenGLTexture(RenderableTex t, Bitmap bitmap, bool generateMips = false)
+        {
+            if (!t.GLInitialized)
+                return -1;
+
+            int texID = GL.GenTexture();
+            GL.BindTexture(t.TextureTarget, texID);
+
+            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
+            OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+            bitmap.UnlockBits(data);
+
+            if (generateMips)
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+            return texID;
         }
 
         public static int GenerateOpenGLTexture(RenderableTex t, List<STGenericTexture.Surface> ImageData)

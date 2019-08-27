@@ -28,6 +28,7 @@ namespace FirstPlugin.Forms
         public void LoadBflyt(BFLYT.Header header, string fileName)
         {
             LayoutViewer viewer = new LayoutViewer();
+            viewer.Dock = DockStyle.Fill;
             this.Controls.Add(viewer);
         }
 

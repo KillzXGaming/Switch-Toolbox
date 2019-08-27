@@ -127,31 +127,31 @@ namespace FirstPlugin
         }
 
         private Thread Thread;
-        public void SetupSettings()
+        public void SetupSettings(TextureImporterSettings setting)
         {
-            if (SelectedTexSettings.Format == SurfaceFormat.Invalid || SelectedIndex == -1)
+            if (setting.Format == SurfaceFormat.Invalid || SelectedIndex == -1)
                 return;
 
 
-            WidthLabel.Text = $"Width: {SelectedTexSettings.TexWidth}";
-            HeightLabel.Text = $"Height: {SelectedTexSettings.TexHeight}";
+            WidthLabel.Text = $"Width: {setting.TexWidth}";
+            HeightLabel.Text = $"Height: {setting.TexHeight}";
 
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
             if (formatComboBox.SelectedItem is SurfaceDim)
-                SelectedTexSettings.SurfaceDim = (SurfaceDim)formatComboBox.SelectedItem;
+                setting.SurfaceDim = (SurfaceDim)formatComboBox.SelectedItem;
 
 
            if (formatComboBox.SelectedItem is SurfaceFormat)
             {
-                SelectedTexSettings.Format = (SurfaceFormat)formatComboBox.SelectedItem;
+                setting.Format = (SurfaceFormat)formatComboBox.SelectedItem;
 
-                listViewCustom1.Items[SelectedIndex].SubItems[1].Text = SelectedTexSettings.Format.ToString();
+                listViewCustom1.Items[SelectedIndex].SubItems[1].Text = setting.Format.ToString();
             }
 
-            if (SelectedTexSettings.Format == SurfaceFormat.BC7_UNORM ||
-                SelectedTexSettings.Format == SurfaceFormat.BC7_SRGB)
+            if (setting.Format == SurfaceFormat.BC7_UNORM ||
+                setting.Format == SurfaceFormat.BC7_SRGB)
             {
                 compressionModeCB.Visible = true;
                 compModeLbl.Visible = true;
@@ -171,28 +171,28 @@ namespace FirstPlugin
 
             Thread = new Thread((ThreadStart)(() =>
             {
-                SelectedTexSettings.IsFinishedCompressing = false;
+                setting.IsFinishedCompressing = false;
                 ToggleOkButton(false);
 
                 pictureBox1.Image = bitmap;
 
-                var mips = SelectedTexSettings.GenerateMipList(CompressionMode);
-                SelectedTexSettings.DataBlockOutput.Clear();
-                SelectedTexSettings.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
+                var mips = setting.GenerateMipList(CompressionMode);
+                setting.DataBlockOutput.Clear();
+                setting.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 
                 ToggleOkButton(true);
-                SelectedTexSettings.IsFinishedCompressing = true;
+                setting.IsFinishedCompressing = true;
 
-                if (SelectedTexSettings.DataBlockOutput.Count > 0) {
-                    if (SelectedTexSettings.Format == SurfaceFormat.BC5_SNORM)
+                if (setting.DataBlockOutput.Count > 0) {
+                    if (setting.Format == SurfaceFormat.BC5_SNORM)
                     {
                         bitmap = DDSCompressor.DecompressBC5(mips[0],
-                    (int)SelectedTexSettings.TexWidth, (int)SelectedTexSettings.TexHeight, true);
+                    (int)setting.TexWidth, (int)setting.TexHeight, true);
                     }
                     else
                     {
                         bitmap = STGenericTexture.DecodeBlockGetBitmap(mips[0],
-                        SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight, TextureData.ConvertFormat(SelectedTexSettings.Format), new byte[0]);
+                        setting.TexWidth, setting.TexHeight, TextureData.ConvertFormat(setting.Format), new byte[0]);
                     }
                 }
 
@@ -243,11 +243,11 @@ namespace FirstPlugin
                     }
                 }
 
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
             }
             else if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
             {
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
             }
 
         }
@@ -263,7 +263,7 @@ namespace FirstPlugin
                 ImgDimComb.SelectedItem = SelectedTexSettings.SurfaceDim;
 
 
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
 
                 if (ForceMipCount)
                     MipmapNum.Maximum = SelectedTexSettings.MipCount;
@@ -286,12 +286,15 @@ namespace FirstPlugin
             if (!IsLoaded)
                 return;
 
-            if (MipmapNum.Value > 0)
-                SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
-            else
-                SelectedTexSettings.MipCount = 1;
+            foreach (int index in listViewCustom1.SelectedIndices)
+            {
+                if (MipmapNum.Value > 0)
+                    settings[index].MipCount = (uint)MipmapNum.Value;
+                else
+                    settings[index].MipCount = 1;
 
-            SetupSettings();
+                SetupSettings(settings[index]);
+            }
         }
 
         private void BinaryTextureImporterList_KeyDown(object sender, KeyEventArgs e)
@@ -309,7 +312,7 @@ namespace FirstPlugin
         {
             if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
             {
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
             }
         }
 
@@ -317,7 +320,7 @@ namespace FirstPlugin
         {
             if (ImgDimComb.SelectedIndex > -1 && SelectedTexSettings != null)
             {
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
             }
         }
     }

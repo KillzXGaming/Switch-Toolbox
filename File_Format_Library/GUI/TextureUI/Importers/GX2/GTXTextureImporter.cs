@@ -147,9 +147,9 @@ namespace FirstPlugin
 
         private Thread Thread;
 
-        public void SetupSettings()
+        public void SetupSettings(GTXImporterSettings setting)
         {
-            if (SelectedTexSettings.Format == GX2.GX2SurfaceFormat.INVALID || SelectedIndex == -1)
+            if (setting.Format == GX2.GX2SurfaceFormat.INVALID || SelectedIndex == -1)
                 return;
 
             if (Thread != null && Thread.IsAlive)
@@ -157,12 +157,12 @@ namespace FirstPlugin
 
             if (formatComboBox.SelectedItem is GX2.GX2SurfaceFormat)
             {
-                SelectedTexSettings.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
+                setting.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
 
-                listViewCustom1.Items[SelectedIndex].SubItems[1].Text = SelectedTexSettings.Format.ToString();
+                listViewCustom1.Items[SelectedIndex].SubItems[1].Text = setting.Format.ToString();
             }
-            HeightLabel.Text = $"Height: {SelectedTexSettings.TexHeight}";
-            WidthLabel.Text = $"Width: {SelectedTexSettings.TexWidth}";
+            HeightLabel.Text = $"Height: {setting.TexHeight}";
+            WidthLabel.Text = $"Width: {setting.TexWidth}";
 
             Bitmap bitmap = Toolbox.Library.Imaging.GetLoadingImage();
 
@@ -170,20 +170,20 @@ namespace FirstPlugin
 
             Thread = new Thread((ThreadStart)(() =>
             {
-                SelectedTexSettings.IsFinishedCompressing = false;
+                setting.IsFinishedCompressing = false;
                 ToggleOkButton(false);
 
-                var mips = SelectedTexSettings.GenerateMipList();
-                SelectedTexSettings.DataBlockOutput.Clear();
-                SelectedTexSettings.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
+                var mips = setting.GenerateMipList();
+                setting.DataBlockOutput.Clear();
+                setting.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 
                 ToggleOkButton(true);
 
-                SelectedTexSettings.Compress();
+                setting.Compress();
 
-                bitmap = FTEX.DecodeBlockGetBitmap(mips[0], SelectedTexSettings.
-                TexWidth, SelectedTexSettings.TexHeight, FTEX.ConvertFromGx2Format(
-                    (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)SelectedTexSettings.Format), new byte[0]);
+                bitmap = FTEX.DecodeBlockGetBitmap(mips[0], setting.
+                TexWidth, setting.TexHeight, FTEX.ConvertFromGx2Format(
+                    (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)setting.Format), new byte[0]);
 
                 if (pictureBox1.InvokeRequired)
                 {
@@ -243,11 +243,11 @@ namespace FirstPlugin
                     }
                 }
 
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
             }
             else if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
             {
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
             }
         }
 
@@ -260,7 +260,7 @@ namespace FirstPlugin
                 SelectedTexSettings = settings[listViewCustom1.SelectedIndices[0]];
                 formatComboBox.SelectedItem = SelectedTexSettings.Format;
 
-                SetupSettings();
+                SetupSettings(SelectedTexSettings);
 
                 MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
                     SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
@@ -605,14 +605,14 @@ namespace FirstPlugin
             if (!IsLoaded)
                 return;
 
-            if (SelectedTexSettings != null)
+            foreach (int index in listViewCustom1.SelectedIndices)
             {
                 if (MipmapNum.Value > 0)
-                    SelectedTexSettings.MipCount = (uint)MipmapNum.Value;
+                    settings[index].MipCount = (uint)MipmapNum.Value;
                 else
-                    SelectedTexSettings.MipCount = 1;
+                    settings[index].MipCount = 1;
 
-                SetupSettings();
+                SetupSettings(settings[index]);
             }
         }
     }

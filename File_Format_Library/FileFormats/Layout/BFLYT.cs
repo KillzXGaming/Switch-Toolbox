@@ -43,7 +43,7 @@ namespace FirstPlugin
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Xml;
-        public bool CanConvertBack => true;
+        public bool CanConvertBack => false;
 
         public string ConvertToString()
         {
@@ -82,7 +82,7 @@ namespace FirstPlugin
         private Header header;
         public void Load(System.IO.Stream stream)
         {
-            CanSave = true;
+            CanSave = false;
 
             header = new Header();
             header.Read(new FileReader(stream), FileName);
