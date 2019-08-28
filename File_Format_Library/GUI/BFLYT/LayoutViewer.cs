@@ -13,7 +13,7 @@ using Toolbox.Library.Rendering;
 
 namespace FirstPlugin.Forms
 {
-    public partial class LayoutViewer : UserControl
+    public partial class LayoutViewer : Form
     {
         private RenderableTex backgroundTex;
 

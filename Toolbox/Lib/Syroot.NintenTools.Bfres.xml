@@ -5580,6 +5580,11 @@
             Gets or sets the pixel swizzling stride.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.Bfres.Texture.UseSRGB">
+            <summary>
+            Gets or sets the desired texture data buffer format.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.Bfres.Texture.Format">
             <summary>
             Gets or sets the desired texture data buffer format.

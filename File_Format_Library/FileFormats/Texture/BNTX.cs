@@ -522,7 +522,11 @@ namespace FirstPlugin
             ((STPropertyGrid)control).LoadProperty(BinaryTexFile, OnPropertyChanged);
         }
 
-        public override void OnClick(TreeView treeView)
+        public override void OnClick(TreeView treeView) {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
         {
             if (Parent != null && Parent is BFRES)
             {
@@ -540,7 +544,7 @@ namespace FirstPlugin
             editor.Dock = DockStyle.Fill;
 
             if (ContainerArray.Count > 0)
-            editor.LoadProperty(ContainerArray[0].BinaryTexFile, OnPropertyChanged);
+                editor.LoadProperty(ContainerArray[0].BinaryTexFile, OnPropertyChanged);
             else
                 editor.LoadProperty(BinaryTexFile, OnPropertyChanged);
         }
@@ -849,6 +853,8 @@ namespace FirstPlugin
 
                 Textures.Clear();
                 Nodes.Clear();
+
+                UpdateEditor();
 
                 GC.Collect();
             }

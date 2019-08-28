@@ -307,8 +307,14 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\BFLYT\LayoutTextureList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutTextureList.Designer.cs">
+      <DependentUpon>LayoutTextureList.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
@@ -1074,6 +1080,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutEditor.resx">
       <DependentUpon>LayoutEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutTextureList.resx">
+      <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutViewer.resx">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
