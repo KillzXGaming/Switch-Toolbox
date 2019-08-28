@@ -15,7 +15,6 @@ using System.ComponentModel;
 
 namespace FirstPlugin
 {
-
     public class NSP : IArchiveFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Rom;
@@ -115,15 +114,12 @@ namespace FirstPlugin
             public override object DisplayProperties => this;
 
             public override string FileSize => STMath.GetFileSize(File.DataLength, 4);
-            
-            [Browsable(false)]
-            public override byte[] FileData
+
+            public override Stream FileDataStream
             {
                 get
                 {
-                    var mem = new MemoryStream();
-                    ParentROMFS.OpenFile(File).CopyToStream(mem);
-                    return mem.ToArray();
+                    return ParentROMFS.OpenFile(File).AsStream(); 
                 }
             }
 

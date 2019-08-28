@@ -274,8 +274,10 @@ namespace BrawlboxHelper
 
         public static void Fska2Chr0(SkeletalAnim fska, string FileName)
         {
-
+            Console.WriteLine("Making CHR0Node");
             CHR0Node chr0 = new CHR0Node();
+            Console.WriteLine("Created CHR0Node");
+
             chr0.FrameCount = fska.FrameCount;
             chr0.Name = fska.Name;
             chr0.OriginalPath = fska.Path;
@@ -284,6 +286,8 @@ namespace BrawlboxHelper
 
             foreach (var entry in fska.BoneAnims)
                 BoneAnim2Chr0Entry(entry, chr0);
+
+            Console.WriteLine("Exporting CHR0Node");
 
             chr0.Export(FileName);
         }

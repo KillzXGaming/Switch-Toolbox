@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Toolbox\bin\Debug\Lib\</OutputPath>
+    <OutputPath>.\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,14 +40,6 @@
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
-    </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\Toolbox\Lib\Syroot.BinaryData.dll</HintPath>
       <Private>False</Private>
@@ -56,9 +48,9 @@
       <HintPath>..\Toolbox\Lib\Syroot.Maths.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Syroot.NintenTools.Bfres">
+    <Reference Include="Syroot.NintenTools.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,12 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Switch_Toolbox_Library\Toolbox_Library.csproj">
       <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
       <Name>Toolbox_Library</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
