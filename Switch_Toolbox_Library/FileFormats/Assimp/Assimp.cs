@@ -471,7 +471,11 @@ namespace Toolbox.Library
 
             bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
                           Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
-                          Name.Contains("skl_root") || Name.Contains("_root") || Name.Contains("Root");
+                          Name.Contains("skl_root") || Name.Contains("all_root") || Name.Contains("_root") || Name.Contains("Root");
+
+            //Root set saved by this tool
+            //Get our root manually as it's a child to this
+            bool IsRootSkeleton = Name == "skeleton_root";
 
             short SmoothIndex = 0;
             short RigidIndex = -1;
@@ -481,6 +485,11 @@ namespace Toolbox.Library
             {
                 var idenity = Matrix4x4.Identity;
                 CreateByNode(node, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
+            }
+            else if (IsRootSkeleton && node.HasChildren)
+            {
+                var idenity = Matrix4x4.Identity;
+                CreateByNode(node.Children[0], skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
             }
             else
             {
