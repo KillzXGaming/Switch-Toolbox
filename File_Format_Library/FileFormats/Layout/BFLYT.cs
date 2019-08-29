@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
+using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using FirstPlugin.Forms;
 using Syroot.Maths;
@@ -38,7 +39,34 @@ namespace LayoutBXLYT
             get
             {
                 List<Type> types = new List<Type>();
+                types.Add(typeof(MenuExt));
                 return types.ToArray();
+            }
+        }
+
+        class MenuExt : IFileMenuExtension
+        {
+            public STToolStripItem[] NewFileMenuExtensions => newFileExt;
+            public STToolStripItem[] NewFromFileMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => null;
+            public STToolStripItem[] TitleBarExtensions => null;
+            public STToolStripItem[] CompressionMenuExtensions => null;
+            public STToolStripItem[] ExperimentalMenuExtensions => null;
+            public STToolStripItem[] EditMenuExtensions => null;
+            public ToolStripButton[] IconButtonMenuExtensions => null;
+
+            STToolStripItem[] newFileExt = new STToolStripItem[1];
+
+            public MenuExt()
+            {
+                newFileExt[0] = new STToolStripItem("Layout Editor");
+                newFileExt[0].Click += LoadNewLayoutEditor;
+            }
+
+            private void LoadNewLayoutEditor(object sender, EventArgs e)
+            {
+                LayoutEditor editor = new LayoutEditor();
+                editor.Show();
             }
         }
 

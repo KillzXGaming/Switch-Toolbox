@@ -19,6 +19,8 @@ namespace LayoutBXLYT
         {
             InitializeComponent();
 
+            listViewCustom1.Sorting = SortOrder.Ascending;
+
             listViewCustom1.MultiSelect = true;
         }
 
@@ -36,6 +38,8 @@ namespace LayoutBXLYT
             listViewCustom1.BeginUpdate();
             foreach (var file in layoutFiles)
                 listViewCustom1.Items.Add(file.FileName);
+
+            listViewCustom1.Sort();
             listViewCustom1.EndUpdate();
         }
 
