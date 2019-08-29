@@ -248,17 +248,13 @@ namespace LayoutBXLYT
 
         private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
-            var dockContent = dockPanel1.ActiveDocument as DockContent;
-            if (dockContent != null && dockContent.Controls.Count > 0)
+            var dockContent = dockPanel1.ActiveDocument as LayoutViewer;
+            if (dockContent != null)
             {
-                var control = dockContent.Controls[0];
-                if (control is LayoutViewer)
-                {
-                    var file = ((LayoutViewer)control).LayoutFile;
-                    ReloadEditors(file);
+                var file = (dockContent).LayoutFile;
+                ReloadEditors(file);
 
-                    ((LayoutViewer)control).UpdateViewport();
-                }
+                dockContent.UpdateViewport();
             }
         }
 
@@ -283,7 +279,25 @@ namespace LayoutBXLYT
             if (file is BFLYT)
                 LoadBflyt(((BFLYT)file).header, file.FileName);
             else if (file is IArchiveFile)
-                SearchLayoutFiles((IArchiveFile)file);
+            {
+                var layouts = SearchLayoutFiles((IArchiveFile)file);
+                if (layouts.Count > 1)
+                {
+                    var form = new FileSelector();
+                    form.LoadLayoutFiles(layouts);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (var index in form.SelectedIndices())
+                        {
+                            LoadBflyt(layouts[index].header, file.FileName);
+                        }
+                    }                    
+                }
+                else if (layouts.Count > 0)
+                {
+                    LoadBflyt(layouts[0].header, file.FileName);
+                }
+            }
             else if (file is BFLAN)
             {
 
@@ -294,8 +308,10 @@ namespace LayoutBXLYT
             }
         }
 
-        private void SearchLayoutFiles(IArchiveFile archiveFile)
+        private List<BFLYT> SearchLayoutFiles(IArchiveFile archiveFile)
         {
+            List<BFLYT> layouts = new List<BFLYT>();
+
             foreach (var file in archiveFile.Files)
             {
                 var fileFormat = STFileLoader.OpenFileFormat(file.FileName,
@@ -304,9 +320,7 @@ namespace LayoutBXLYT
                 if (fileFormat is BFLYT)
                 {
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
-
-                    if (fileFormat is BFLYT)
-                        LoadBflyt(((BFLYT)fileFormat).header, file.FileName);
+                    layouts.Add((BFLYT)fileFormat);
                 }
                 else if (Utils.GetExtension(file.FileName) == ".bntx")
                 {
@@ -321,9 +335,11 @@ namespace LayoutBXLYT
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
 
                     if (fileFormat is IArchiveFile)
-                        SearchLayoutFiles((IArchiveFile)fileFormat);
+                        return SearchLayoutFiles((IArchiveFile)fileFormat);
                 }
             }
+
+            return layouts;
         }
 
         private void LayoutEditor_DragEnter(object sender, DragEventArgs e)

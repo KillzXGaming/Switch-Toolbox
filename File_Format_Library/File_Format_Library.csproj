@@ -315,6 +315,12 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\BFLYT\FileSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\FileSelector.Designer.cs">
+      <DependentUpon>FileSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\LayoutHierarchy.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1098,6 +1104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
       <DependentUpon>BffntEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\FileSelector.resx">
+      <DependentUpon>FileSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutEditor.resx">
       <DependentUpon>LayoutEditor.cs</DependentUpon>
