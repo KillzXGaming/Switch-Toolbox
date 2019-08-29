@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 using Syroot.Maths;
 using Toolbox.Library.IO;
 using Toolbox.Library;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace LayoutBXLYT
 {
+    public class LayoutDocked : DockContent
+    {
+
+    }
+
     public class BasePane : SectionCommon
     {
         public bool DisplayInEditor { get; set; } = true;
@@ -109,8 +115,10 @@ namespace LayoutBXLYT
         Bottom = 2
     };
 
-    public class BxlytHeader
+    public class BxlytHeader : IDisposable
     {
+        internal IFileFormat FileInfo;
+
         public BasePane RootPane { get; set; }
 
         public BasePane RootGroup { get; set; }
@@ -151,6 +159,11 @@ namespace LayoutBXLYT
         public uint VersionMicro2
         {
             get { return Version & 0xFF; }
+        }
+
+        public void Dispose()
+        {
+            FileInfo.Unload();
         }
     }
 

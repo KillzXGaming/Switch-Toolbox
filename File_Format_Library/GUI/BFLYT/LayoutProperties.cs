@@ -11,13 +11,18 @@ using Toolbox.Library.Forms;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutProperties : UserControl
+    public partial class LayoutProperties : LayoutDocked
     {
         public LayoutProperties()
         {
             InitializeComponent();
 
             stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
+        }
+
+        public void Reset()
+        {
+            stTabControl1.Controls.Clear();
         }
 
         public void LoadProperties(BasePane prop, Action propChanged)

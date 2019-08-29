@@ -12,7 +12,7 @@ using Toolbox.Library.Forms;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutHierarchy : UserControl
+    public partial class LayoutHierarchy : LayoutDocked
     {
         public LayoutHierarchy()
         {
@@ -45,6 +45,12 @@ namespace LayoutBXLYT
             LoadPane(bflyt.RootPane);
 
             isLoaded = true;
+        }
+
+        public void Reset()
+        {
+            treeView1.Nodes.Clear();
+            isLoaded = false;
         }
 
         private void LoadPane(BasePane pane, TreeNode parent = null)

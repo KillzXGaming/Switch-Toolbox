@@ -192,10 +192,8 @@ namespace LayoutBXLYT
 
         //Thanks to SwitchThemes for flags, and enums
         //https://github.com/FuryBaguette/SwitchLayoutEditor/tree/master/SwitchThemesCommon
-        public class Header : BxlytHeader
+        public class Header : BxlytHeader, IDisposable
         {
-            internal BFLYT FileInfo;
-
             public string FileName
             {
                 get { return FileInfo.FileName; }
@@ -220,9 +218,8 @@ namespace LayoutBXLYT
 
             public override Dictionary<string, STGenericTexture> GetTextures
             {
-                get { return FileInfo.GetTextures(); }
+                get { return ((BFLYT)FileInfo).GetTextures(); }
             }
-
 
             public void Read(FileReader reader, BFLYT bflyt)
             {

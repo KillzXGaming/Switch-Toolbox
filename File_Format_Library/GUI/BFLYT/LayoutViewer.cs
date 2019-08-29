@@ -15,7 +15,7 @@ using Toolbox.Library.IO;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutViewer : UserControl
+    public partial class LayoutViewer : LayoutDocked
     {
         public List<BasePane> SelectedPanes = new List<BasePane>();
 
@@ -37,10 +37,22 @@ namespace LayoutBXLYT
         {
             InitializeComponent();
             LayoutFile = bflyt;
+            Text = bflyt.FileName;
 
             Textures = new Dictionary<string, STGenericTexture>();
             if (bflyt.TextureList.Textures.Count > 0)
-                Textures = bflyt.FileInfo.GetTextures();
+                Textures = ((BFLYT)bflyt.FileInfo).GetTextures();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to close this file? You will lose any unsaved progress!", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes)
+                e.Cancel = true;
+            else
+                LayoutFile.Dispose();
+
+            base.OnFormClosing(e);
         }
 
         public void UpdateViewport()

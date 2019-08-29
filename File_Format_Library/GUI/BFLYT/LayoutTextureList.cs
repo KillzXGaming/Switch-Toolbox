@@ -15,7 +15,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutTextureList : UserControl
+    public partial class LayoutTextureList : LayoutDocked
     {
         ImageList imgList = new ImageList();
         public LayoutTextureList()
@@ -35,6 +35,20 @@ namespace LayoutBXLYT
                 ColorDepth = ColorDepth.Depth32Bit,
                 ImageSize = new Size(30, 30),
             };
+        }
+
+        public void Reset()
+        {
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
+            for (int i = 0; i < imgList.Images.Count; i++)
+                imgList.Images[i].Dispose();
+
+            imgList.Images.Clear();
+            listViewCustom1.Items.Clear();
+
+            isLoaded = false;
         }
 
         private bool isLoaded = false;

@@ -48,15 +48,11 @@ namespace LayoutBXLYT
             ObjectChanged += OnObjectChanged;
         }
 
-        private DockContent TextureListDock;
-        private DockContent PaneTreeDock;
-        private DockContent ColorDock;
-        private DockContent PropertiesDock;
-
         private List<LayoutViewer> Viewports = new List<LayoutViewer>();
         private LayoutViewer ActiveViewport;
         private LayoutHierarchy LayoutHierarchy;
         private LayoutTextureList LayoutTextureList;
+        private LayoutProperties LayoutProperties;
 
         private bool isLoaded = false;
         public void LoadBflyt(BFLYT.Header header, string fileName)
@@ -66,7 +62,8 @@ namespace LayoutBXLYT
 
             LayoutViewer Viewport = new LayoutViewer(header);
             Viewport.Dock = DockStyle.Fill;
-            DockShow(Viewport, fileName, DockState.Document);
+            Viewport.Show(dockPanel1, DockState.Document);
+            Viewport.DockHandler.AllowEndUserDocking = false;
             Viewports.Add(Viewport);
             ActiveViewport = Viewport;
 
@@ -81,12 +78,25 @@ namespace LayoutBXLYT
             ShowTextureList();
             ShowPaneHierarchy();
             ShowPropertiesPanel();
-
             UpdateBackColor();
+        }
+
+        private void ResetEditors()
+        {
+            if (LayoutHierarchy != null)
+                LayoutHierarchy.Reset();
+            if (LayoutTextureList != null)
+                LayoutTextureList.Reset();
+            if (LayoutProperties != null)
+                LayoutProperties.Reset();
         }
 
         private void ReloadEditors(BxlytHeader activeLayout)
         {
+            if (!isLoaded) return;
+
+            if (LayoutProperties != null)
+                LayoutProperties.Reset();
             if (LayoutHierarchy != null)
                 LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
             if (LayoutTextureList != null)
@@ -111,13 +121,13 @@ namespace LayoutBXLYT
 
             ActiveViewport.SelectedPanes.Clear();
 
-            if (PropertiesDock != null && (string)sender == "Select")
+            if (LayoutProperties != null && (string)sender == "Select")
             {
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
                     var pane = (BasePane)node.Tag;
 
-                    ((LayoutProperties)PropertiesDock.Controls[0]).LoadProperties(pane, OnProperyChanged);
+                    LayoutProperties.LoadProperties(pane, OnProperyChanged);
 
                     ActiveViewport.SelectedPanes.Add(pane);
                 }
@@ -145,29 +155,6 @@ namespace LayoutBXLYT
                 ToggleChildern(child, isChecked);
         }
 
-        private DockContent DockShow(UserControl control, string text, DockAlignment dockState, DockContent dockSide = null, float Alignment = 0)
-        {
-            DockContent content = CreateContent(control, text);
-            content.Show(dockSide.Pane, dockState, Alignment);
-            return content;
-        }
-
-        private DockContent DockShow(UserControl control, string text, DockState dockState)
-        {
-            DockContent content = CreateContent(control, text);
-            content.Show(dockPanel1, dockState);
-            return content;
-        }
-
-        private DockContent CreateContent(UserControl control, string text)
-        {
-            DockContent content = new DockContent();
-            content.Text = text;
-            control.Dock = DockStyle.Fill;
-            content.Controls.Add(control);
-            return content;
-        }
-
         public void LoadBflan()
         {
 
@@ -189,22 +176,25 @@ namespace LayoutBXLYT
 
         private void ShowPropertiesPanel()
         {
-            LayoutProperties properties = new LayoutProperties();
-            PropertiesDock = DockShow(properties, "Properties", DockAlignment.Top, TextureListDock, 0.5f);
+            LayoutProperties = new LayoutProperties();
+            LayoutProperties.Text = "Properties";
+            LayoutProperties.Show(dockPanel1, DockState.DockRight);
         }
 
         private void ShowPaneHierarchy()
         {
             LayoutHierarchy = new LayoutHierarchy();
+            LayoutHierarchy.Text = "Hierarchy";
             LayoutHierarchy.LoadLayout(ActiveLayout, ObjectSelected);
-            PaneTreeDock = DockShow(LayoutHierarchy, "Panes", DockAlignment.Top, TextureListDock, 0.5f);
+            LayoutHierarchy.Show(dockPanel1, DockState.DockLeft);
         }
 
         private void ShowTextureList()
         {
             LayoutTextureList = new LayoutTextureList();
+            LayoutTextureList.Text = "Texture List";
             LayoutTextureList.LoadTextures(ActiveLayout);
-            TextureListDock = DockShow(LayoutTextureList, "Texture List", DockState.DockRight);
+            LayoutTextureList.Show(dockPanel1, DockState.DockRight);
         }
 
         private void stComboBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -308,9 +298,11 @@ namespace LayoutBXLYT
         {
             foreach (var file in archiveFile.Files)
             {
-                if (Utils.GetExtension(file.FileName) == ".bflyt")
+                var fileFormat = STFileLoader.OpenFileFormat(file.FileName,
+                    new Type[] { typeof(BFLYT), typeof(SARC) }, file.FileData);
+
+                if (fileFormat is BFLYT)
                 {
-                    var fileFormat = file.OpenFile();
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
 
                     if (fileFormat is BFLYT)
@@ -324,9 +316,8 @@ namespace LayoutBXLYT
                 {
 
                 }
-                else if (Utils.GetExtension(file.FileName) == ".lyarc")
+                else if (fileFormat is SARC)
                 {
-                    var fileFormat = file.OpenFile();
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
 
                     if (fileFormat is IArchiveFile)
@@ -343,6 +334,25 @@ namespace LayoutBXLYT
             {
                 String[] strGetFormats = e.Data.GetFormats();
                 e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void clearWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < dockPanel1.DocumentsCount; i++)
+                dockPanel1.Documents.ElementAt(i).DockHandler.DockPanel = null;
+
+            ResetEditors();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string filename in ofd.FileNames)
+                    OpenFile(filename);
             }
         }
     }
