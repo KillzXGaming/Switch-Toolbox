@@ -136,6 +136,7 @@
             // 
             // LayoutEditor
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 398);
@@ -146,6 +147,8 @@
             this.Controls.Add(this.stMenuStrip1);
             this.IsMdiContainer = true;
             this.Name = "LayoutEditor";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LayoutEditor_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LayoutEditor_DragEnter);
             this.ParentChanged += new System.EventHandler(this.LayoutEditor_ParentChanged);
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).EndInit();
             this.stToolStrip1.ResumeLayout(false);

@@ -12,6 +12,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using WeifenLuo.WinFormsUI.ThemeVS2015;
 using Toolbox.Library.IO;
 using Toolbox.Library;
+using FirstPlugin;
 
 namespace LayoutBXLYT
 {
@@ -55,6 +56,7 @@ namespace LayoutBXLYT
         private List<LayoutViewer> Viewports = new List<LayoutViewer>();
         private LayoutViewer ActiveViewport;
         private LayoutHierarchy LayoutHierarchy;
+        private LayoutTextureList LayoutTextureList;
 
         private bool isLoaded = false;
         public void LoadBflyt(BFLYT.Header header, string fileName)
@@ -87,8 +89,8 @@ namespace LayoutBXLYT
         {
             if (LayoutHierarchy != null)
                 LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
-            if (LayoutHierarchy != null)
-                LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
+            if (LayoutTextureList != null)
+                LayoutTextureList.LoadTextures(activeLayout);
         }
 
         private void OnObjectChanged(object sender, EventArgs e)
@@ -200,9 +202,9 @@ namespace LayoutBXLYT
 
         private void ShowTextureList()
         {
-            LayoutTextureList textureListForm = new LayoutTextureList();
-            textureListForm.LoadTextures(ActiveLayout);
-            TextureListDock = DockShow(textureListForm, "Texture List", DockState.DockRight);
+            LayoutTextureList = new LayoutTextureList();
+            LayoutTextureList.LoadTextures(ActiveLayout);
+            TextureListDock = DockShow(LayoutTextureList, "Texture List", DockState.DockRight);
         }
 
         private void stComboBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -267,6 +269,80 @@ namespace LayoutBXLYT
 
                     ((LayoutViewer)control).UpdateViewport();
                 }
+            }
+        }
+
+        private void LayoutEditor_DragDrop(object sender, DragEventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string filename in files)
+                OpenFile(filename);
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void OpenFile(string fileName)
+        {
+            //Todo if an image is dropped, we should make a picture pane if a viewer is active
+
+            var file = STFileLoader.OpenFileFormat(fileName);
+            if (file == null) return;
+
+            if (file is BFLYT)
+                LoadBflyt(((BFLYT)file).header, file.FileName);
+            else if (file is IArchiveFile)
+                SearchLayoutFiles((IArchiveFile)file);
+            else if (file is BFLAN)
+            {
+
+            }
+            else if (file is BNTX)
+            {
+
+            }
+        }
+
+        private void SearchLayoutFiles(IArchiveFile archiveFile)
+        {
+            foreach (var file in archiveFile.Files)
+            {
+                if (Utils.GetExtension(file.FileName) == ".bflyt")
+                {
+                    var fileFormat = file.OpenFile();
+                    fileFormat.IFileInfo.ArchiveParent = archiveFile;
+
+                    if (fileFormat is BFLYT)
+                        LoadBflyt(((BFLYT)fileFormat).header, file.FileName);
+                }
+                else if (Utils.GetExtension(file.FileName) == ".bntx")
+                {
+                   
+                }
+                else if (Utils.GetExtension(file.FileName) == ".bflim")
+                {
+
+                }
+                else if (Utils.GetExtension(file.FileName) == ".lyarc")
+                {
+                    var fileFormat = file.OpenFile();
+                    fileFormat.IFileInfo.ArchiveParent = archiveFile;
+
+                    if (fileFormat is IArchiveFile)
+                        SearchLayoutFiles((IArchiveFile)fileFormat);
+                }
+            }
+        }
+
+        private void LayoutEditor_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+            {
+                String[] strGetFormats = e.Data.GetFormats();
+                e.Effect = DragDropEffects.None;
             }
         }
     }

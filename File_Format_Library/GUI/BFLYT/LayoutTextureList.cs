@@ -38,6 +38,7 @@ namespace LayoutBXLYT
         }
 
         private bool isLoaded = false;
+        private Thread Thread;
         public void LoadTextures(BxlytHeader header)
         {
             listViewCustom1.Items.Clear();
@@ -60,23 +61,22 @@ namespace LayoutBXLYT
 
             //Load textures after on a seperate thread
 
-            Thread Thread = new Thread((ThreadStart)(() =>
+            if (Thread != null && Thread.IsAlive)
+                Thread.Abort();
+
+            Thread = new Thread((ThreadStart)(() =>
             {
-                foreach (ListViewItem item in listViewCustom1.Items)
+                int index = 0;
+                foreach (var texture in header.Textures)
                 {
-                    if (textureList.ContainsKey(item.Text))
+                    if (textureList.ContainsKey(texture))
                     {
-                        LoadTextureIcon(item, textureList[item.Text]);
+                        LoadTextureIcon(index, textureList[texture]);
                     }
+                    index++;
                 }
             }));
             Thread.Start();
-
-            foreach (ListViewItem item in listViewCustom1.Items)
-            {
-                if (textureList.ContainsKey(item.Text))
-                    LoadTextureIcon(item, textureList[item.Text]);
-            }
 
             listViewCustom1.EndUpdate();
 
@@ -88,7 +88,7 @@ namespace LayoutBXLYT
                 listViewCustom1.View = (View)listViewTpyeCB.SelectedItem;
         }
 
-        private void LoadTextureIcon(ListViewItem item, STGenericTexture texture)
+        private void LoadTextureIcon(int index, STGenericTexture texture)
         {
             Bitmap temp = texture.GetBitmap();
             temp = texture.GetComponentBitmap(temp, true);
@@ -96,6 +96,7 @@ namespace LayoutBXLYT
             if (listViewCustom1.InvokeRequired)
             {
                 listViewCustom1.Invoke((MethodInvoker)delegate {
+                    var item = listViewCustom1.Items[index];
                     item.ImageIndex = imgList.Images.Count;
                     item.SubItems.Add(texture.Format.ToString());
                     item.SubItems.Add(texture.Width.ToString());

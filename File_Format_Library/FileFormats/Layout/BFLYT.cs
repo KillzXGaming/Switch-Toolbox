@@ -80,7 +80,7 @@ namespace LayoutBXLYT
             ((LayoutEditor)control).LoadBflyt(header, FileName);
         }
 
-        private Header header;
+        public Header header;
         public void Load(System.IO.Stream stream)
         {
             CanSave = false;
