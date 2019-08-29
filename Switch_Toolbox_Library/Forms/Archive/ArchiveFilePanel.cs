@@ -15,6 +15,7 @@ namespace Toolbox.Library.Forms
     public partial class ArchiveFilePanel : UserControl
     {
         ArchiveFileInfo ArchiveFileInfo;
+        IArchiveFile ArchiveFile;
 
         private bool _IsLoaded = false;
 
@@ -25,6 +26,12 @@ namespace Toolbox.Library.Forms
             ReloadEditors();
             _IsLoaded = true;
             saveBtn.Visible = false;
+        }
+
+        public void LoadFile(ArchiveFileInfo archiveFileInfo, IArchiveFile archiveFile)
+        {
+            ArchiveFileInfo = archiveFileInfo;
+            ArchiveFile = archiveFile;
         }
 
         public void LoadFile(ArchiveFileInfo archiveFileInfo)
@@ -88,6 +95,9 @@ namespace Toolbox.Library.Forms
                 AddControl(new STUserControl());
                 return;
             }
+
+            if (File.IFileInfo != null && ArchiveFile != null)
+                File.IFileInfo.ArchiveParent = ArchiveFile;
 
             ArchiveFileInfo.FileFormat = File;
             SetEditorForm(File);

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutTextureList));
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -39,34 +38,24 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contentContainer.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contentContainer
-            // 
-            this.contentContainer.Controls.Add(this.listViewCustom1);
-            this.contentContainer.Controls.Add(this.listViewTpyeCB);
-            this.contentContainer.Controls.Add(this.stToolStrip1);
-            this.contentContainer.Controls.SetChildIndex(this.stToolStrip1, 0);
-            this.contentContainer.Controls.SetChildIndex(this.listViewTpyeCB, 0);
-            this.contentContainer.Controls.SetChildIndex(this.listViewCustom1, 0);
             // 
             // stToolStrip1
             // 
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripButton2});
-            this.stToolStrip1.Location = new System.Drawing.Point(0, 25);
+            this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.stToolStrip1.Name = "stToolStrip1";
-            this.stToolStrip1.Size = new System.Drawing.Size(543, 25);
+            this.stToolStrip1.Size = new System.Drawing.Size(549, 25);
             this.stToolStrip1.TabIndex = 11;
             this.stToolStrip1.Text = "stToolStrip1";
             // 
             // toolStripButton1
             // 
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.Image = global::FirstPlugin.Properties.Resources.AddIcon;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
@@ -75,7 +64,7 @@
             // toolStripButton2
             // 
             this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.Image = global::FirstPlugin.Properties.Resources.RemoveIcon;
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
@@ -88,7 +77,7 @@
             this.listViewTpyeCB.ButtonColor = System.Drawing.Color.Empty;
             this.listViewTpyeCB.FormattingEnabled = true;
             this.listViewTpyeCB.IsReadOnly = false;
-            this.listViewTpyeCB.Location = new System.Drawing.Point(139, 27);
+            this.listViewTpyeCB.Location = new System.Drawing.Point(117, 2);
             this.listViewTpyeCB.Name = "listViewTpyeCB";
             this.listViewTpyeCB.Size = new System.Drawing.Size(146, 21);
             this.listViewTpyeCB.TabIndex = 12;
@@ -96,6 +85,7 @@
             // 
             // listViewCustom1
             // 
+            this.listViewCustom1.AllowDrop = true;
             this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -104,21 +94,24 @@
             this.columnHeader4,
             this.columnHeader5});
             this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewCustom1.Location = new System.Drawing.Point(0, 50);
+            this.listViewCustom1.Location = new System.Drawing.Point(0, 25);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(543, 343);
+            this.listViewCustom1.Size = new System.Drawing.Size(549, 373);
             this.listViewCustom1.TabIndex = 13;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
+            this.listViewCustom1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewCustom1_DragEnter);
             // 
             // columnHeader1
             // 
             this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 118;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Format";
+            this.columnHeader2.Width = 101;
             // 
             // columnHeader3
             // 
@@ -131,19 +124,22 @@
             // columnHeader5
             // 
             this.columnHeader5.Text = "Size";
+            this.columnHeader5.Width = 210;
             // 
             // LayoutTextureList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 398);
+            this.Controls.Add(this.listViewCustom1);
+            this.Controls.Add(this.listViewTpyeCB);
+            this.Controls.Add(this.stToolStrip1);
             this.Name = "LayoutTextureList";
-            this.Text = "LayoutTextureList";
-            this.contentContainer.ResumeLayout(false);
-            this.contentContainer.PerformLayout();
+            this.Size = new System.Drawing.Size(549, 398);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LayoutTextureList_DragDrop);
             this.stToolStrip1.ResumeLayout(false);
             this.stToolStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

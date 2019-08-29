@@ -399,6 +399,7 @@ namespace Bfres.Structs
                     Textures.Add(name);
             }
 
+            Materials.Clear();
             foreach (var matanim in anim.MaterialAnimDataList)
             {
                 var mat = new MaterialAnimEntry(matanim.Name);

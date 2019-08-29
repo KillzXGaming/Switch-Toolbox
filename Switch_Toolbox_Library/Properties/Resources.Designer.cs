@@ -105,17 +105,7 @@ namespace Toolbox.Library.Properties {
         /// </summary>
         public static System.Drawing.Bitmap Antu_edit_find_mail_svg {
             get {
-                object obj = ResourceManager.GetObject("Antu_edit-find-mail.svg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Antu_edit_find_mail1 {
-            get {
-                object obj = ResourceManager.GetObject("Antu_edit-find-mail1", resourceCulture);
+                object obj = ResourceManager.GetObject("Antu_edit_find_mail_svg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +123,9 @@ namespace Toolbox.Library.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap arrowMinimize_ {
+        public static System.Drawing.Bitmap arrowMinimize {
             get {
-                object obj = ResourceManager.GetObject("arrowMinimize ", resourceCulture);
+                object obj = ResourceManager.GetObject("arrowMinimize", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

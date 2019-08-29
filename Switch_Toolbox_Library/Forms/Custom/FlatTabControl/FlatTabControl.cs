@@ -399,6 +399,18 @@ namespace FlatTabControl
 
 		private void FlatTabControl_SelectedIndexChanged(object sender, EventArgs e)
 		{
+  foreach (TabPage tpCheck in TabPages)
+            {
+                tpCheck.BackColor = FormThemes.BaseTheme.TabPageInactive;
+                tpCheck.ForeColor = FormThemes.BaseTheme.DisabledItemColor;
+            }
+
+            if (SelectedTab != null)
+            {
+                SelectedTab.BackColor = FormThemes.BaseTheme.TabPageActive;
+                SelectedTab.ForeColor = FormThemes.BaseTheme.TextForeColor;
+            }
+
 			UpdateUpDown();
 			Invalidate();	// we need to update border and background colors
 		}

@@ -503,6 +503,9 @@
     <Content Include="Lib\WeifenLuo.WinFormsUI.Docking.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Lib\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="LZ4.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

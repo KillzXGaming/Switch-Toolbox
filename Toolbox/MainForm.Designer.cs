@@ -35,6 +35,7 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +71,6 @@
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.updateToolstrip = new System.Windows.Forms.ToolStripButton();
-            this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.tabControlContextMenuStrip.SuspendLayout();
@@ -119,33 +119,40 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // newFromFileToolStripMenuItem
             // 
             this.newFromFileToolStripMenuItem.Name = "newFromFileToolStripMenuItem";
-            this.newFromFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newFromFileToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.newFromFileToolStripMenuItem.Text = "New From File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // openFolderToolStripMenuItem
+            // 
+            this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.openFolderToolStripMenuItem.Text = "Open (Folder)";
+            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
             // 
             // recentToolStripMenuItem
             // 
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
-            this.recentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.recentToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.recentToolStripMenuItem.Text = "Recent";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Enabled = false;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -153,14 +160,14 @@
             // 
             this.saveAsToolStripMenuItem.Enabled = false;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -328,7 +335,7 @@
             // tabForms
             // 
             this.tabForms.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabForms.Location = new System.Drawing.Point(0, 55);
+            this.tabForms.Location = new System.Drawing.Point(0, 49);
             this.tabForms.myBackColor = System.Drawing.Color.Empty;
             this.tabForms.Name = "tabForms";
             this.tabForms.SelectedIndex = 0;
@@ -361,7 +368,7 @@
             this.stPanel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.stPanel2.Location = new System.Drawing.Point(0, 25);
             this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(1108, 30);
+            this.stPanel2.Size = new System.Drawing.Size(1108, 24);
             this.stPanel2.TabIndex = 7;
             // 
             // BtnMdiMinimize
@@ -371,7 +378,7 @@
             this.BtnMdiMinimize.Image = ((System.Drawing.Image)(resources.GetObject("BtnMdiMinimize.Image")));
             this.BtnMdiMinimize.Location = new System.Drawing.Point(991, 2);
             this.BtnMdiMinimize.Name = "BtnMdiMinimize";
-            this.BtnMdiMinimize.Size = new System.Drawing.Size(38, 25);
+            this.BtnMdiMinimize.Size = new System.Drawing.Size(38, 22);
             this.BtnMdiMinimize.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.BtnMdiMinimize.TabIndex = 6;
             this.BtnMdiMinimize.TabStop = false;
@@ -386,7 +393,7 @@
             this.BtnMdiMinMax.Image = ((System.Drawing.Image)(resources.GetObject("BtnMdiMinMax.Image")));
             this.BtnMdiMinMax.Location = new System.Drawing.Point(1029, 2);
             this.BtnMdiMinMax.Name = "BtnMdiMinMax";
-            this.BtnMdiMinMax.Size = new System.Drawing.Size(38, 25);
+            this.BtnMdiMinMax.Size = new System.Drawing.Size(38, 22);
             this.BtnMdiMinMax.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.BtnMdiMinMax.TabIndex = 5;
             this.BtnMdiMinMax.TabStop = false;
@@ -401,7 +408,7 @@
             this.BtnMdiClose.Image = ((System.Drawing.Image)(resources.GetObject("BtnMdiClose.Image")));
             this.BtnMdiClose.Location = new System.Drawing.Point(1067, 2);
             this.BtnMdiClose.Name = "BtnMdiClose";
-            this.BtnMdiClose.Size = new System.Drawing.Size(38, 25);
+            this.BtnMdiClose.Size = new System.Drawing.Size(38, 22);
             this.BtnMdiClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.BtnMdiClose.TabIndex = 4;
             this.BtnMdiClose.TabStop = false;
@@ -417,7 +424,7 @@
             this.updateToolstrip});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.stToolStrip1.Name = "stToolStrip1";
-            this.stToolStrip1.Size = new System.Drawing.Size(1108, 30);
+            this.stToolStrip1.Size = new System.Drawing.Size(1108, 24);
             this.stToolStrip1.TabIndex = 0;
             this.stToolStrip1.Text = "stToolStrip1";
             // 
@@ -428,7 +435,7 @@
             this.saveToolStripButton.Image = global::Toolbox.Properties.Resources.Save;
             this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripButton.Name = "saveToolStripButton";
-            this.saveToolStripButton.Size = new System.Drawing.Size(23, 27);
+            this.saveToolStripButton.Size = new System.Drawing.Size(23, 21);
             this.saveToolStripButton.Text = "saveToolStripButton1";
             this.saveToolStripButton.ToolTipText = "Save File";
             this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripButton_Click);
@@ -440,17 +447,10 @@
             this.updateToolstrip.Image = global::Toolbox.Properties.Resources.UpdateIcon;
             this.updateToolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.updateToolstrip.Name = "updateToolstrip";
-            this.updateToolstrip.Size = new System.Drawing.Size(23, 27);
+            this.updateToolstrip.Size = new System.Drawing.Size(23, 21);
             this.updateToolstrip.Text = "toolStripButton1";
             this.updateToolstrip.ToolTipText = "Update Tool";
             this.updateToolstrip.Click += new System.EventHandler(this.updateToolstrip_Click);
-            // 
-            // openFolderToolStripMenuItem
-            // 
-            this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openFolderToolStripMenuItem.Text = "Open (Folder)";
-            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
             // 
             // MainForm
             // 

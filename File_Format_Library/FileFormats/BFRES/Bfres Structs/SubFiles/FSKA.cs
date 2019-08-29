@@ -133,17 +133,10 @@ namespace Bfres.Structs
             {
                 STSkeleton skeleton = GetActiveSkeleton();
 
-                for (int i = 0; i <= FrameCount; i++)
-                {
-
-                }
-
                 if (SkeletalAnimU != null)
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FileName);
                 else
                     BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
-
-                //  BrawlboxHelper.FSKAConverter.Fska2Chr0(this, skeleton, FileName);
             }
             else if (ext == ".smd")
             {

@@ -211,9 +211,6 @@
   <data name="maximize1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\maximize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Antu_edit-find-mail.svg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Antu_edit-find-mail.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="CheckClicked" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CheckBox\CheckClicked.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -316,9 +313,6 @@
   <data name="LoadingImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LoadingImage.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Antu_edit-find-mail1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Antu_edit-find-mail.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="InjectTexErrored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\InjectTexErrored.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -352,9 +346,6 @@
   <data name="materialSphereTransparent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\materialSphereTransparent.tif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="arrowMinimize " type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrowMinimize .png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="UVPattern" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UVPattern.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -384,5 +375,11 @@
   </data>
   <data name="AddIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AddIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Antu_edit_find_mail_svg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Antu_edit-find-mail.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrowMinimize" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrowMinimize .png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

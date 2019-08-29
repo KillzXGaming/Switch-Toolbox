@@ -154,6 +154,8 @@ namespace Bfres.Structs
 
             FrameCount = anim.FrameCount;
             ShaderParamAnim = anim;
+
+            Materials.Clear();
             foreach (ShaderParamMatAnim matAnim in anim.ShaderParamMatAnims)
             {
                 MaterialAnimEntry matNode = new MaterialAnimEntry(matAnim.Name);

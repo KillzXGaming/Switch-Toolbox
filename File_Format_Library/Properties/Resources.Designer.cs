@@ -73,6 +73,16 @@ namespace FirstPlugin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AlignmentPane {
+            get {
+                object obj = ResourceManager.GetObject("AlignmentPane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ArrowIcon {
             get {
                 object obj = ResourceManager.GetObject("ArrowIcon", resourceCulture);
@@ -153,6 +163,16 @@ namespace FirstPlugin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BoundryPane {
+            get {
+                object obj = ResourceManager.GetObject("BoundryPane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap GridBackground {
             get {
                 object obj = ResourceManager.GetObject("GridBackground", resourceCulture);
@@ -173,9 +193,49 @@ namespace FirstPlugin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NullPane {
+            get {
+                object obj = ResourceManager.GetObject("NullPane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PicturePane {
+            get {
+                object obj = ResourceManager.GetObject("PicturePane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RemoveIcon {
             get {
                 object obj = ResourceManager.GetObject("RemoveIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ScissorPane {
+            get {
+                object obj = ResourceManager.GetObject("ScissorPane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TextPane {
+            get {
+                object obj = ResourceManager.GetObject("TextPane", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -217,6 +277,16 @@ namespace FirstPlugin.Properties {
             get {
                 object obj = ResourceManager.GetObject("White", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap WindowPane {
+            get {
+                object obj = ResourceManager.GetObject("WindowPane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

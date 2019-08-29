@@ -308,7 +308,6 @@ namespace Toolbox
                     var form = (Form)method.Invoke(file, new object[0]);
                     TabDupeIndex = 0;
                     form.Text = CheckTabDupes(((IFileFormat)file).FileName);
-                    form.MdiParent = this;
                     form.Show();
 
                     HasEditorActive = true;

@@ -79,6 +79,9 @@ namespace Toolbox.Library
         [Browsable(false)]
         public virtual IFileFormat OpenFile()
         {
+            if (FileFormat != null)
+                return FileFormat;
+
             if (FileDataStream != null)
             {
                 return STFileLoader.OpenFileFormat(FileDataStream,
@@ -881,10 +884,13 @@ namespace Toolbox.Library
             if (file == null) //Format not supported so return
                 return;
 
+            if (file.IFileInfo != null)
+                file.IFileInfo.ArchiveParent = ArchiveFile;
+
             if (Utils.HasInterface(file.GetType(), typeof(IEditor<>)))
-            {
+                OpenControlDialog(file);
+            else if (Utils.HasInterface(file.GetType(), typeof(IEditorForm<>)))
                 OpenFormDialog(file);
-            }
             else if (file is IArchiveFile)
             {
                 if (ArchiveFileInfo.FileFormat != null)
@@ -912,9 +918,35 @@ namespace Toolbox.Library
             ArchiveFileInfo.FileFormat = file;
         }
 
-        private void OpenFormDialog(IFileFormat fileFormat)
+        private static Form activeForm;
+        public void OpenFormDialog(IFileFormat fileFormat)
         {
-            UserControl form = GetEditorForm(fileFormat);
+            if (activeForm != null)
+            {
+                activeForm.Text = (((IFileFormat)fileFormat).FileName);
+                System.Reflection.MethodInfo methodFill = fileFormat.GetType().GetMethod("FillEditor");
+                methodFill.Invoke(fileFormat, new object[1] { activeForm });
+            }
+            else
+            {
+                activeForm = GetEditorForm(fileFormat);
+                activeForm.Text = (((IFileFormat)fileFormat).FileName);
+                activeForm.Show();
+            }
+
+          /*  if (form.ShowDialog() == DialogResult.OK)
+            {
+                if (fileFormat.CanSave)
+                {
+                    ArchiveFileInfo.SaveFileFormat();
+                    UpdateEditor();
+                }
+            }*/
+        }
+
+        private void OpenControlDialog(IFileFormat fileFormat)
+        {
+            UserControl form = GetEditorControl(fileFormat);
             form.Text = (((IFileFormat)fileFormat).FileName);
 
             var parentForm = LibraryGUI.GetActiveForm();
@@ -937,7 +969,21 @@ namespace Toolbox.Library
                 return;
         }
 
-        public UserControl GetEditorForm(IFileFormat fileFormat)
+        public Form GetEditorForm(IFileFormat fileFormat)
+        {
+            Type objectType = fileFormat.GetType();
+            foreach (var inter in objectType.GetInterfaces())
+            {
+                if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditorForm<>))
+                {
+                    System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
+                    return (Form)method.Invoke(fileFormat, new object[0]);
+                }
+            }
+            return null;
+        }
+
+        public UserControl GetEditorControl(IFileFormat fileFormat)
         {
             Type objectType = fileFormat.GetType();
             foreach (var inter in objectType.GetInterfaces())
@@ -965,7 +1011,7 @@ namespace Toolbox.Library
                 LibraryGUI.LoadEditor(editor);
             }
 
-            editor.LoadFile(ArchiveFileInfo);
+            editor.LoadFile(ArchiveFileInfo, ArchiveFile);
             editor.UpdateEditor();
         }
 

@@ -142,12 +142,14 @@ namespace Toolbox.Library.Forms
         {
             InitializeComponent();
 
+            btnPanelDisplay.ForeColor = FormThemes.BaseTheme.DisabledBorderColor;
+
             UpdateSearchPanelDockState();
 
             ObjectEditor = objectEditor;
 
             if (Runtime.ObjectEditor.ListPanelWidth > 0)
-                stPanel1.Width = Runtime.ObjectEditor.ListPanelWidth;
+                splitContainer1.Panel1.Width = Runtime.ObjectEditor.ListPanelWidth;
 
             treeViewCustom1.BackColor = FormThemes.BaseTheme.ObjectEditorBackColor;
 
@@ -589,11 +591,6 @@ namespace Toolbox.Library.Forms
         {
         }
 
-        private void stPanel1_Resize(object sender, EventArgs e)
-        {
-            Runtime.ObjectEditor.ListPanelWidth = stPanel1.Width;
-        }
-
         private void activeEditorChkBox_CheckedChanged(object sender, EventArgs e)
         {
             AddFilesToActiveEditor = activeEditorChkBox.Checked;
@@ -859,6 +856,27 @@ namespace Toolbox.Library.Forms
                 ((ExplorerFolder)e.Node).OnAfterCollapse();
                 treeViewCustom1.EndUpdate();
             }
+        }
+
+        private bool DisplayEditor = true;
+        private void btnPanelDisplay_Click(object sender, EventArgs e)
+        {
+            if (DisplayEditor) {
+                splitContainer2.Panel1Collapsed = true;
+                splitContainer2.Panel1.Hide();
+                DisplayEditor = false;
+                btnPanelDisplay.Text = ">";
+            }
+            else {
+                splitContainer2.Panel1Collapsed = false;
+                splitContainer2.Panel1.Show();
+                DisplayEditor = true;
+                btnPanelDisplay.Text = "<";
+            }
+        }
+
+        private void splitContainer1_Panel1_Resize(object sender, EventArgs e) {
+            Runtime.ObjectEditor.ListPanelWidth = splitContainer1.Panel1.Width;
         }
     }
 }

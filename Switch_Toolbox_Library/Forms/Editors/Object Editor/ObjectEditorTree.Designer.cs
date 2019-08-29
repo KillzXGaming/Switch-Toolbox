@@ -29,28 +29,31 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.splitter1 = new System.Windows.Forms.Splitter();
-            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
-            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.stPanel5 = new Toolbox.Library.Forms.STPanel();
             this.nodeSizeCB = new Toolbox.Library.Forms.STComboBox();
-            this.stPanel4 = new Toolbox.Library.Forms.STPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeViewCustom1 = new Toolbox.Library.TreeViewCustom();
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.searchFormToolStrip = new System.Windows.Forms.ToolStripButton();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
-            this.searchImgPB = new System.Windows.Forms.PictureBox();
             this.activeEditorChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.searchImgPB = new System.Windows.Forms.PictureBox();
             this.objectEditorMenu = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockSearchListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.btnPanelDisplay = new Toolbox.Library.Forms.STButton();
             this.treeNodeContextMenu = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.stPanel1.SuspendLayout();
-            this.stPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.stPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -60,36 +63,36 @@
             this.objectEditorMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitter1
+            // splitContainer2
             // 
-            this.splitter1.Location = new System.Drawing.Point(314, 0);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 542);
-            this.splitter1.TabIndex = 13;
-            this.splitter1.TabStop = false;
-            this.splitter1.LocationChanged += new System.EventHandler(this.splitter1_LocationChanged);
-            this.splitter1.Resize += new System.EventHandler(this.splitter1_Resize);
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
             // 
-            // stPanel2
+            // splitContainer2.Panel1
             // 
-            this.stPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stPanel2.Location = new System.Drawing.Point(314, 0);
-            this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(593, 542);
-            this.stPanel2.TabIndex = 12;
+            this.splitContainer2.Panel1.Controls.Add(this.stPanel5);
             // 
-            // stPanel1
+            // splitContainer2.Panel2
             // 
-            this.stPanel1.Controls.Add(this.nodeSizeCB);
-            this.stPanel1.Controls.Add(this.stPanel4);
-            this.stPanel1.Controls.Add(this.stToolStrip1);
-            this.stPanel1.Controls.Add(this.stPanel3);
-            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.stPanel1.Location = new System.Drawing.Point(0, 0);
-            this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(314, 542);
-            this.stPanel1.TabIndex = 11;
-            this.stPanel1.Resize += new System.EventHandler(this.stPanel1_Resize);
+            this.splitContainer2.Panel2.Controls.Add(this.stPanel2);
+            this.splitContainer2.Panel2.Controls.Add(this.btnPanelDisplay);
+            this.splitContainer2.Size = new System.Drawing.Size(907, 542);
+            this.splitContainer2.SplitterDistance = 302;
+            this.splitContainer2.TabIndex = 14;
+            // 
+            // stPanel5
+            // 
+            this.stPanel5.Controls.Add(this.nodeSizeCB);
+            this.stPanel5.Controls.Add(this.splitContainer1);
+            this.stPanel5.Controls.Add(this.stToolStrip1);
+            this.stPanel5.Controls.Add(this.stPanel3);
+            this.stPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel5.Location = new System.Drawing.Point(0, 0);
+            this.stPanel5.Name = "stPanel5";
+            this.stPanel5.Size = new System.Drawing.Size(302, 542);
+            this.stPanel5.TabIndex = 2;
             // 
             // nodeSizeCB
             // 
@@ -99,35 +102,28 @@
             this.nodeSizeCB.ButtonColor = System.Drawing.Color.Empty;
             this.nodeSizeCB.FormattingEnabled = true;
             this.nodeSizeCB.IsReadOnly = false;
-            this.nodeSizeCB.Location = new System.Drawing.Point(172, 29);
+            this.nodeSizeCB.Location = new System.Drawing.Point(138, 26);
             this.nodeSizeCB.Name = "nodeSizeCB";
-            this.nodeSizeCB.Size = new System.Drawing.Size(136, 21);
+            this.nodeSizeCB.Size = new System.Drawing.Size(144, 21);
             this.nodeSizeCB.TabIndex = 5;
             this.nodeSizeCB.SelectedIndexChanged += new System.EventHandler(this.nodeSizeCB_SelectedIndexChanged);
-            // 
-            // stPanel4
-            // 
-            this.stPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stPanel4.Controls.Add(this.splitContainer1);
-            this.stPanel4.Location = new System.Drawing.Point(3, 54);
-            this.stPanel4.Name = "stPanel4";
-            this.stPanel4.Size = new System.Drawing.Size(305, 485);
-            this.stPanel4.TabIndex = 4;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 51);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Resize += new System.EventHandler(this.splitContainer1_Panel1_Resize);
             this.splitContainer1.Panel1Collapsed = true;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.treeViewCustom1);
-            this.splitContainer1.Size = new System.Drawing.Size(305, 485);
+            this.splitContainer1.Size = new System.Drawing.Size(302, 491);
             this.splitContainer1.SplitterDistance = 201;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -142,7 +138,7 @@
             this.treeViewCustom1.Location = new System.Drawing.Point(0, 0);
             this.treeViewCustom1.Name = "treeViewCustom1";
             this.treeViewCustom1.SelectedImageIndex = 0;
-            this.treeViewCustom1.Size = new System.Drawing.Size(305, 485);
+            this.treeViewCustom1.Size = new System.Drawing.Size(302, 491);
             this.treeViewCustom1.TabIndex = 0;
             this.treeViewCustom1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCheck);
             this.treeViewCustom1.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCustom1_AfterCollapse);
@@ -166,7 +162,7 @@
             this.searchFormToolStrip});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 26);
             this.stToolStrip1.Name = "stToolStrip1";
-            this.stToolStrip1.Size = new System.Drawing.Size(314, 25);
+            this.stToolStrip1.Size = new System.Drawing.Size(302, 25);
             this.stToolStrip1.TabIndex = 3;
             this.stToolStrip1.Text = "stToolStrip1";
             // 
@@ -183,7 +179,7 @@
             // searchFormToolStrip
             // 
             this.searchFormToolStrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.searchFormToolStrip.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail1;
+            this.searchFormToolStrip.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
             this.searchFormToolStrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchFormToolStrip.Name = "searchFormToolStrip";
             this.searchFormToolStrip.Size = new System.Drawing.Size(23, 22);
@@ -192,37 +188,38 @@
             // 
             // stPanel3
             // 
-            this.stPanel3.Controls.Add(this.searchImgPB);
             this.stPanel3.Controls.Add(this.activeEditorChkBox);
+            this.stPanel3.Controls.Add(this.searchImgPB);
             this.stPanel3.Controls.Add(this.objectEditorMenu);
             this.stPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.stPanel3.Location = new System.Drawing.Point(0, 0);
             this.stPanel3.Name = "stPanel3";
-            this.stPanel3.Size = new System.Drawing.Size(314, 26);
+            this.stPanel3.Size = new System.Drawing.Size(302, 26);
             this.stPanel3.TabIndex = 2;
-            // 
-            // searchImgPB
-            // 
-            this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
-            this.searchImgPB.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
-            this.searchImgPB.Location = new System.Drawing.Point(-654, 5);
-            this.searchImgPB.Name = "searchImgPB";
-            this.searchImgPB.Size = new System.Drawing.Size(22, 17);
-            this.searchImgPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.searchImgPB.TabIndex = 1;
-            this.searchImgPB.TabStop = false;
             // 
             // activeEditorChkBox
             // 
+            this.activeEditorChkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.activeEditorChkBox.AutoSize = true;
-            this.activeEditorChkBox.Location = new System.Drawing.Point(137, 6);
+            this.activeEditorChkBox.Location = new System.Drawing.Point(138, 3);
             this.activeEditorChkBox.Name = "activeEditorChkBox";
             this.activeEditorChkBox.Size = new System.Drawing.Size(144, 17);
             this.activeEditorChkBox.TabIndex = 3;
             this.activeEditorChkBox.Text = "Add Files to Active Editor";
             this.activeEditorChkBox.UseVisualStyleBackColor = true;
             this.activeEditorChkBox.CheckedChanged += new System.EventHandler(this.activeEditorChkBox_CheckedChanged);
+            // 
+            // searchImgPB
+            // 
+            this.searchImgPB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchImgPB.BackColor = System.Drawing.Color.Transparent;
+            this.searchImgPB.Image = global::Toolbox.Library.Properties.Resources.Antu_edit_find_mail_svg;
+            this.searchImgPB.Location = new System.Drawing.Point(-666, 5);
+            this.searchImgPB.Name = "searchImgPB";
+            this.searchImgPB.Size = new System.Drawing.Size(22, 17);
+            this.searchImgPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.searchImgPB.TabIndex = 1;
+            this.searchImgPB.TabStop = false;
             // 
             // objectEditorMenu
             // 
@@ -232,7 +229,7 @@
             this.viewToolStripMenuItem});
             this.objectEditorMenu.Location = new System.Drawing.Point(0, 0);
             this.objectEditorMenu.Name = "objectEditorMenu";
-            this.objectEditorMenu.Size = new System.Drawing.Size(314, 26);
+            this.objectEditorMenu.Size = new System.Drawing.Size(302, 26);
             this.objectEditorMenu.TabIndex = 1;
             this.objectEditorMenu.Text = "stContextMenuStrip1";
             // 
@@ -275,6 +272,26 @@
             this.dockSearchListToolStripMenuItem.Text = "Dock Search List";
             this.dockSearchListToolStripMenuItem.Click += new System.EventHandler(this.dockSearchListToolStripMenuItem_Click);
             // 
+            // stPanel2
+            // 
+            this.stPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel2.Location = new System.Drawing.Point(14, 0);
+            this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Size = new System.Drawing.Size(587, 542);
+            this.stPanel2.TabIndex = 12;
+            // 
+            // btnPanelDisplay
+            // 
+            this.btnPanelDisplay.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnPanelDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPanelDisplay.Location = new System.Drawing.Point(0, 0);
+            this.btnPanelDisplay.Name = "btnPanelDisplay";
+            this.btnPanelDisplay.Size = new System.Drawing.Size(14, 542);
+            this.btnPanelDisplay.TabIndex = 3;
+            this.btnPanelDisplay.Text = "<";
+            this.btnPanelDisplay.UseVisualStyleBackColor = false;
+            this.btnPanelDisplay.Click += new System.EventHandler(this.btnPanelDisplay_Click);
+            // 
             // treeNodeContextMenu
             // 
             this.treeNodeContextMenu.Name = "treeNodeContextMenu";
@@ -282,14 +299,15 @@
             // 
             // ObjectEditorTree
             // 
-            this.Controls.Add(this.splitter1);
-            this.Controls.Add(this.stPanel2);
-            this.Controls.Add(this.stPanel1);
+            this.Controls.Add(this.splitContainer2);
             this.Name = "ObjectEditorTree";
             this.Size = new System.Drawing.Size(907, 542);
-            this.stPanel1.ResumeLayout(false);
-            this.stPanel1.PerformLayout();
-            this.stPanel4.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.stPanel5.ResumeLayout(false);
+            this.stPanel5.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -305,10 +323,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Splitter splitter1;
         public STPanel stPanel2;
-        private STPanel stPanel1;
         private STPanel stPanel3;
         private TreeViewCustom treeViewCustom1;
         private System.Windows.Forms.PictureBox searchImgPB;
@@ -322,9 +337,11 @@
         private STToolStrip stToolStrip1;
         private System.Windows.Forms.ToolStripButton searchFormToolStrip;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private STPanel stPanel4;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem dockSearchListToolStripMenuItem;
         private STComboBox nodeSizeCB;
+        private STPanel stPanel5;
+        private STButton btnPanelDisplay;
+        private System.Windows.Forms.SplitContainer splitContainer2;
     }
 }

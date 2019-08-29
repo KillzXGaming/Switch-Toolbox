@@ -13,7 +13,7 @@ using SharpYaml.Serialization;
 
 namespace FirstPlugin
 {
-    public class BFLYT : IFileFormat, IEditor<LayoutEditor>, IConvertableTextFormat
+    public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -75,7 +75,7 @@ namespace FirstPlugin
             return editor;
         }
 
-        public void FillEditor(UserControl control) {
+        public void FillEditor(Form control) {
             ((LayoutEditor)control).LoadBflyt(header, FileName);
         }
 
@@ -85,7 +85,101 @@ namespace FirstPlugin
             CanSave = false;
 
             header = new Header();
-            header.Read(new FileReader(stream), FileName);
+            header.Read(new FileReader(stream), this);
+        }
+
+        public List<GTXFile> GetShadersGTX()
+        {
+            List<GTXFile> shaders = new List<GTXFile>();
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    if (Utils.GetExtension(file.FileName) == ".gsh")
+                    {
+                        GTXFile bnsh = (GTXFile)file.OpenFile();
+                        shaders.Add(bnsh);
+                    }
+                }
+            }
+            return shaders;
+        }
+
+        public List<BNSH> GetShadersNX()
+        {
+            List<BNSH> shaders = new List<BNSH>();
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    if (Utils.GetExtension(file.FileName) == ".bnsh")
+                    {
+                        BNSH bnsh = (BNSH)file.OpenFile();
+                        shaders.Add(bnsh);
+                    }
+                }
+            }
+            return shaders;
+        }
+
+        public List<BFLYT> GetLayouts()
+        {
+            List<BFLYT> animations = new List<BFLYT>();
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    if (Utils.GetExtension(file.FileName) == ".bflyt")
+                    {
+                        BFLYT bflyt = (BFLYT)file.OpenFile();
+                        animations.Add(bflyt);
+                    }
+                }
+            }
+            return animations;
+        }
+
+        public List<BFLAN> GetAnimations()
+        {
+            List<BFLAN> animations = new List<BFLAN>();
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    if (Utils.GetExtension(file.FileName) == ".bflan")
+                    {
+                        BFLAN bflan = (BFLAN)file.OpenFile();
+                        animations.Add(bflan);
+                    }
+                }
+            }
+            return animations;
+        }
+
+        public Dictionary<string, STGenericTexture> GetTextures()
+        {
+            Console.WriteLine($"ArchiveParent {IFileInfo.ArchiveParent != null}");
+
+            Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    if (Utils.GetExtension(file.FileName) == ".bntx")
+                    {
+                        BNTX bntx = (BNTX)file.OpenFile();
+                        foreach (var tex in bntx.Textures)
+                            textures.Add(tex.Key, tex.Value);
+                    }
+                    else if (Utils.GetExtension(file.FileName) == ".bflim")
+                    {
+                        BFLIM bflim = (BFLIM)file.OpenFile();
+                        textures.Add(bflim.FileName, bflim);
+                    }
+                }
+            }
+
+            return textures;
         }
 
         public void Unload()
@@ -101,7 +195,12 @@ namespace FirstPlugin
         //https://github.com/FuryBaguette/SwitchLayoutEditor/tree/master/SwitchThemesCommon
         public class Header
         {
-            public string FileName { get; set; }
+            internal BFLYT FileInfo;
+
+            public string FileName
+            {
+                get { return FileInfo.FileName; }
+            }
 
             private const string Magic = "FLYT";
 
@@ -122,7 +221,25 @@ namespace FirstPlugin
                 }
             }
 
+            public uint VersionMajor
+            {
+                get { return Version >> 24; }
+            }
 
+            public uint VersionMinor
+            {
+                get { return Version >> 16 & 0xFF; }
+            }
+
+            public uint VersionMicro
+            {
+                get { return Version >> 8 & 0xFF; }
+            }
+
+            public uint VersionMicro2
+            {
+                get { return Version & 0xFF; }
+            }
 
             public LYT1 LayoutInfo { get; set; }
             public TXL1 TextureList { get; set; }
@@ -136,9 +253,16 @@ namespace FirstPlugin
 
           //  public List<PAN1> Panes = new List<PAN1>();
 
-            public void Read(FileReader reader, string fileName)
+            public void Read(FileReader reader, BFLYT bflyt)
             {
-                FileName = fileName;
+                LayoutInfo = new LYT1();
+                TextureList = new TXL1();
+                MaterialList = new MAT1();
+                FontList = new FNL1();
+                RootPane = new PAN1();
+                RootGroup = new GRP1();
+
+                FileInfo = bflyt;
 
                 reader.SetByteOrder(true);
                 reader.ReadSignature(4, Magic);
@@ -164,10 +288,7 @@ namespace FirstPlugin
                     string Signature = reader.ReadString(4, Encoding.ASCII);
                     uint SectionSize = reader.ReadUInt32();
 
-                    Console.WriteLine($"{Signature} {SectionSize}");
-
                     SectionCommon section = new SectionCommon();
-
                     switch (Signature)
                     {
                         case "lyt1":
@@ -194,7 +315,7 @@ namespace FirstPlugin
                             currentPane = panel;
                             break;
                         case "pic1":
-                            var picturePanel = new PIC1(reader);
+                            var picturePanel = new PIC1(reader, this);
 
                             SetPane(picturePanel, parentPane);
                             currentPane = picturePanel;
@@ -218,8 +339,7 @@ namespace FirstPlugin
                             currentPane = partsPanel;
                             break;
                         case "wnd1":
-                            var windowPanel = new PRT1(reader);
-
+                            var windowPanel = new WND1(reader);
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
                             break;
@@ -273,6 +393,8 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
+                Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
+
                 writer.WriteSignature(Magic);
                 writer.Write(ByteOrderMark);
                 writer.Write(HeaderSize);
@@ -291,9 +413,24 @@ namespace FirstPlugin
 
         public class BasePane : SectionCommon
         {
+            public bool DisplayInEditor { get; set; } = true;
+
+            public string Name { get; set; }
+
+            public Vector3F Translate { get; set; }
+            public Vector3F Rotate { get; set; }
+            public Vector2F Scale { get; set; }
+            public float Width { get; set; }
+            public float Height { get; set; }
+
             public BasePane Parent { get; set; }
 
             public List<BasePane> Childern { get; set; } = new List<BasePane>();
+
+            public bool HasChildern
+            {
+                get { return Childern.Count > 0; }
+            }
         }
 
         public class TexCoord
@@ -339,10 +476,10 @@ namespace FirstPlugin
                 }
             }
 
-            public ushort TextLength;
-            public ushort MaxTextLength;
-            public ushort MaterialIndex;
-            public ushort FontIndex;
+            public ushort TextLength { get; set; }
+            public ushort MaxTextLength { get; set; }
+            public ushort MaterialIndex { get; set; }
+            public ushort FontIndex { get; set; }
 
             public byte TextAlignment { get; set; }
             public LineAlign LineAlignment { get; set; }
@@ -483,10 +620,24 @@ namespace FirstPlugin
             }
         }
 
+        public class CustomRectangle
+        {
+            public int LeftPoint;
+            public int RightPoint;
+            public int TopPoint;
+            public int BottomPoint;
+
+            public CustomRectangle(int left, int right, int top, int bottom)
+            {
+                LeftPoint = left;
+                RightPoint = right;
+                TopPoint = top;
+                BottomPoint = bottom;
+            }
+        }
+
         public class GRP1 : BasePane
         {
-            public string Name { get; set; }
-
             public List<string> Panes { get; set; } = new List<string>();
 
             public GRP1() : base()
@@ -497,7 +648,7 @@ namespace FirstPlugin
             public GRP1(FileReader reader, Header header)
             {
                 ushort numNodes = 0;
-                if (header.Version >= 0x05020000)
+                if (header.VersionMajor >= 5)
                 {
                     Name = reader.ReadString(34).Replace("\0", string.Empty);
                     numNodes = reader.ReadUInt16();
@@ -561,6 +712,13 @@ namespace FirstPlugin
 
             public ushort MaterialIndex { get; set; }
 
+            public Material GetMaterial()
+            {
+                return ParentLayout.MaterialList.Materials[MaterialIndex];
+            }
+
+            private BFLYT.Header ParentLayout;
+
             public PIC1() : base() {
                 ColorTopLeft = STColor8.White;
                 ColorTopRight = STColor8.White;
@@ -571,8 +729,10 @@ namespace FirstPlugin
                 TexCoords[0] = new TexCoord();
             }
 
-            public PIC1(FileReader reader) : base(reader)
+            public PIC1(FileReader reader, BFLYT.Header header) : base(reader)
             {
+                ParentLayout = header;
+
                 ColorTopLeft = STColor8.FromBytes(reader.ReadBytes(4));
                 ColorTopRight = STColor8.FromBytes(reader.ReadBytes(4));
                 ColorBottomLeft = STColor8.FromBytes(reader.ReadBytes(4));
@@ -580,6 +740,18 @@ namespace FirstPlugin
                 MaterialIndex = reader.ReadUInt16();
                 byte numUVs = reader.ReadByte();
                 reader.Seek(1); //padding
+
+                TexCoords = new TexCoord[numUVs];
+                for (int i = 0; i < numUVs; i++)
+                {
+                    TexCoords[i] = new TexCoord()
+                    {
+                        TopLeft = reader.ReadVec2SY(),
+                        TopRight = reader.ReadVec2SY(),
+                        BottomLeft = reader.ReadVec2SY(),
+                        BottomRight = reader.ReadVec2SY(),
+                    };
+                }
             }
 
             public override void Write(FileWriter writer, Header header)
@@ -665,14 +837,7 @@ namespace FirstPlugin
             public byte Alpha { get; set; }
             public byte Unknown { get; set; }
 
-            public string Name { get; set; }
             public string UserDataInfo { get; set; }
-
-            public Vector3F Translate;
-            public Vector3F Rotate;
-            public Vector2F Scale;
-            public float Width;
-            public float Height;
 
             public PAN1() : base()
             {
@@ -686,7 +851,7 @@ namespace FirstPlugin
                 Alpha = reader.ReadByte();
                 Unknown = reader.ReadByte();
                 Name = reader.ReadString(0x18).Replace("\0", string.Empty);
-                UserDataInfo = reader.ReadString(0x18).Replace("\0", string.Empty);
+                UserDataInfo = reader.ReadString(0x8).Replace("\0", string.Empty);
                 Translate = reader.ReadVec3SY();
                 Rotate = reader.ReadVec3SY();
                 Scale = reader.ReadVec2SY();
@@ -701,7 +866,7 @@ namespace FirstPlugin
                 writer.Write(Alpha);
                 writer.Write(Unknown);
                 writer.WriteString(Name, 0x18);
-                writer.WriteString(UserDataInfo, 0x18);
+                writer.WriteString(UserDataInfo, 0x8);
                 writer.Write(Translate);
                 writer.Write(Rotate);
                 writer.Write(Scale);
@@ -722,6 +887,82 @@ namespace FirstPlugin
                 Top = 1,
                 Bottom = 2
             };
+
+
+            public BFLYT.CustomRectangle CreateRectangle()
+            {
+                int left = 0;
+                int right = 0;
+                int top = 0;
+                int bottom = 0;
+
+
+                //Do origin transforms
+                var transformed = TransformOrientation((int)Width, (int)Height);
+
+                //Now do parent transforms
+
+                Vector2 ParentWH = new Vector2(0,0);
+                if (Parent != null && Parent is BasePane)
+                    ParentWH = new Vector2((int)Parent.Width, (int)Parent.Height);
+
+                var transformedParent = TransformOrientation(ParentWH.X, ParentWH.Y);
+
+              //  if (Parent != null)
+              //      transformed -= transformedParent;
+
+                return new CustomRectangle(
+                    transformed.X,
+                    transformed.Y,
+                    transformed.Z,
+                    transformed.W);
+            }
+
+            private Vector4 TransformOrientation(int Width, int Height)
+            {
+                int left = 0;
+                int right = 0;
+                int top = 0;
+                int bottom = 0;
+
+                if (originX == OriginX.Left)
+                    right = Width;
+                else if (originX == OriginX.Right)
+                    left = -Width;
+                else //To center
+                {
+                    left = -Width / 2;
+                    right = Width / 2;
+                }
+
+                if (originY == OriginY.Top)
+                    bottom = Height;
+                else if (originY == OriginY.Bottom)
+                    top = -Height;
+                else //To center
+                {
+                    top = -Height / 2;
+                    bottom = Height / 2;
+                }
+
+                return new Vector4(left, right, top, bottom);
+            }
+
+            public bool ParentVisibility
+            {
+                get
+                {
+                    if (Scale.X == 0 || Scale.Y == 0)
+                        return false;
+                    if (!Visible)
+                        return false;
+                    if (Parent != null && Parent is PAN1)
+                    {
+                        return ((PAN1)Parent).ParentVisibility && Visible;
+                    }
+                    return true;
+                }
+            }
         }
 
         public class MAT1 : SectionCommon
@@ -766,7 +1007,7 @@ namespace FirstPlugin
             public List<TextureRef> TextureMaps { get; set; }
             public List<TextureTransform> TextureTransforms { get; set; }
 
-            private int flags;
+            private uint flags;
             private int unknown;
 
             public Material()
@@ -781,9 +1022,9 @@ namespace FirstPlugin
                 TextureTransforms = new List<TextureTransform>();
 
                 Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
-                if (header.Version == 0x8030000)
+                if (header.VersionMajor == 8)
                 {
-                    flags = reader.ReadInt32();
+                    flags = reader.ReadUInt32();
                     unknown = reader.ReadInt32();
                     ForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                     BackColor = STColor8.FromBytes(reader.ReadBytes(4));
@@ -792,11 +1033,11 @@ namespace FirstPlugin
                 {
                     ForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                     BackColor = STColor8.FromBytes(reader.ReadBytes(4));
-                    flags = reader.ReadInt32();
+                    flags = reader.ReadUInt32();
                 }
 
-                int texCount = flags & 3;
-                int mtxCount = (flags & 0xC) >> 2;
+                uint texCount = Convert.ToUInt32(flags & 3);
+                uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
                 for (int i = 0; i < texCount; i++)
                     TextureMaps.Add(new TextureRef(reader));
 
@@ -855,22 +1096,55 @@ namespace FirstPlugin
         public class TextureRef
         {
             public ushort ID;
-            public byte WrapS;
-            public byte WrapT;
+            byte flag1;
+            byte flag2;
+
+            public WrapMode WrapModeU
+            {
+                get { return (WrapMode)(flag1 & 0x3); }
+            }
+
+            public WrapMode WrapModeV
+            {
+                get { return (WrapMode)(flag2 & 0x3); }
+            }
+
+            public FilterMode MinFilterMode
+            {
+                get { return (FilterMode)((flag1 >> 2) & 0x3); }
+            }
+
+            public FilterMode MaxFilterMode
+            {
+                get { return (FilterMode)((flag2 >> 2) & 0x3); }
+            }
 
             public TextureRef() {}
 
             public TextureRef(FileReader reader) {
                 ID = reader.ReadUInt16();
-                WrapS = reader.ReadByte();
-                WrapT = reader.ReadByte();
+                flag1 = reader.ReadByte();
+                flag2 = reader.ReadByte();
             }
 
             public void Write(FileWriter writer)
             {
                 writer.Write(ID);
-                writer.Write(WrapS);
-                writer.Write(WrapT);
+                writer.Write(flag1);
+                writer.Write(flag2);
+            }
+
+            public enum FilterMode
+            {
+                Near = 0,
+                Linear = 1
+            }
+
+            public enum WrapMode
+            {
+                Clamp = 0,
+                Repeat = 1,
+                Mirror = 2
             }
         }
 
@@ -939,6 +1213,7 @@ namespace FirstPlugin
                 for (int i = 0; i < offsets.Length; i++)
                 {
                     reader.SeekBegin(offsets[i] + pos);
+                    Textures.Add(reader.ReadZeroTerminatedString());
                 }
             }
 

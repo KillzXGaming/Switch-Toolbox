@@ -1317,6 +1317,27 @@
   <ItemGroup>
     <None Include="Resources\AddIcon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\AlignmentPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\BoundryPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\NullPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\PicturePane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\ScissorPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\TextPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\WindowPane.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

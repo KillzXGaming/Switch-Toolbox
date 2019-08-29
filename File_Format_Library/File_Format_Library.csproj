@@ -199,6 +199,12 @@
       <HintPath>..\Toolbox\Lib\VGAudio.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actors\BotwActorLoader.cs" />
@@ -287,6 +293,7 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
+    <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />
@@ -307,14 +314,26 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\BFLYT\LayoutHierarchy.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutHierarchy.Designer.cs">
+      <DependentUpon>LayoutHierarchy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutProperties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutProperties.Designer.cs">
+      <DependentUpon>LayoutProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.Designer.cs">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
@@ -332,7 +351,7 @@
       <DependentUpon>BffntEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutEditor.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutEditor.Designer.cs">
       <DependentUpon>LayoutEditor.cs</DependentUpon>
@@ -1056,6 +1075,7 @@
     <Compile Include="YAML\YamlFska.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\InjectTexErrored.dds" />
   </ItemGroup>
   <ItemGroup>
@@ -1080,6 +1100,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutEditor.resx">
       <DependentUpon>LayoutEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutHierarchy.resx">
+      <DependentUpon>LayoutHierarchy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutProperties.resx">
+      <DependentUpon>LayoutProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutTextureList.resx">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
@@ -1366,7 +1392,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrawlboxHelper\BrawlboxHelper.csproj">
@@ -1448,6 +1473,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\MetaInfo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\AlignmentPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\BoundryPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\NullPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\PicturePane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\ScissorPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\TextPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\WindowPane.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

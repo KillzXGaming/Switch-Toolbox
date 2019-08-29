@@ -166,4 +166,25 @@
   <data name="ArrowIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ArrowIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="AlignmentPane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\AlignmentPane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BoundryPane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\BoundryPane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NullPane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\NullPane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PicturePane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\PicturePane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ScissorPane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\ScissorPane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TextPane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\TextPane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WindowPane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Layout\WindowPane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

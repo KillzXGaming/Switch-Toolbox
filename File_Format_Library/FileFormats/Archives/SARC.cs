@@ -226,24 +226,6 @@ namespace FirstPlugin
             GC.SuppressFinalize(this);
         }
 
-        IEnumerable<TreeNode> Collect(TreeNodeCollection nodes)
-        {
-            foreach (TreeNode node in nodes)
-            {
-                yield return node;
-
-                bool IsNodeFile = node is IFileFormat;
-
-                if (!IsNodeFile)
-                {
-                    //We don't need to save the child of IFIleFormats
-                    //If opened the file should save it's own children
-                    foreach (var child in Collect(node.Nodes))
-                        yield return child;
-                }
-            }
-        }
-
         static uint NameHash(string name)
         {
             uint result = 0;

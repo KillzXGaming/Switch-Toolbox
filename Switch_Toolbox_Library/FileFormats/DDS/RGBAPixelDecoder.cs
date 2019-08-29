@@ -47,12 +47,18 @@ namespace Toolbox.Library
             uint bpp = STGenericTexture.GetBytesPerPixel(format);
             int size = width * height * 4;
 
+            bpp = (uint)(data.Length / (width * height));
+
             byte[] output = new byte[size];
 
             int inPos = 0;
             int outPos = 0;
 
             byte[] compSel = new byte[4] {0,1,2,3 };
+
+            if (format == TEX_FORMAT.L8 || format == TEX_FORMAT.LA8)
+                compSel = new byte[4] { 0, 0, 0, 1 };
+
 
             for (int Y = 0; Y < height; Y++)
             {

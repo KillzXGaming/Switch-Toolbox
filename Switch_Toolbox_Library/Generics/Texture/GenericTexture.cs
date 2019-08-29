@@ -486,6 +486,8 @@ namespace Toolbox.Library
                 if (data == null)
                     throw new Exception("Data is null!");
 
+                Console.WriteLine("Decoding " + Format + " " + Runtime.UseDirectXTexDecoder);
+
                 if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
                 {
                     var Image = BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
@@ -513,12 +515,13 @@ namespace Toolbox.Library
                     case TEX_FORMAT.ETC1_A4:
                         return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, true),
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    case TEX_FORMAT.L8:
+                        return BitmapExtension.GetBitmap(RGBAPixelDecoder.Decode(data, (int)width, (int)height, Format),
+                              (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     case TEX_FORMAT.LA8:
                         return BitmapExtension.GetBitmap(RGBAPixelDecoder.Decode(data, (int)width, (int)height, Format),
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
-
-                Console.WriteLine("Decoding " + Format + " " + Runtime.UseDirectXTexDecoder);
 
                 if (Runtime.UseDirectXTexDecoder)
                 {
@@ -626,6 +629,11 @@ namespace Toolbox.Library
 
                 if (Format == TEX_FORMAT.BC5_SNORM)
                     imageData = DDSCompressor.DecompressBC5(data, (int)Width, (int)Height, true, true);
+
+                if (Format == TEX_FORMAT.L8)
+                    return RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
+                if (Format == TEX_FORMAT.LA8)
+                    return RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
 
                 if (IsCompressed(Format))
                     imageData = DDSCompressor.DecompressBlock(data, (int)Width, (int)Height, (DDS.DXGI_FORMAT)Format);

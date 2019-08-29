@@ -45,12 +45,14 @@ namespace Toolbox.Library.IO
             foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
             {
                 fileFormat.FileName = Path.GetFileName(FileName);
-                fileFormat.IFileInfo = new IFileInfo();
 
                 foreach (Type type in FileTypes)
                 {
                     if (fileFormat.Identify(stream) && fileFormat.GetType() == type)
+                    {
+                        fileFormat.IFileInfo = new IFileInfo();
                         return OpenFileFormat(FileName, data);
+                    }
                 }
             }
             
@@ -335,10 +337,10 @@ namespace Toolbox.Library.IO
                 //Most is by magic but some can be extension or name.
 
                 fileFormat.FileName = Path.GetFileName(FileName);
-                fileFormat.IFileInfo = new IFileInfo();
 
                 if (fileFormat.Identify(stream))
                 {
+                    fileFormat.IFileInfo = new IFileInfo();
                     fileFormat.IFileInfo.DecompressedSize = DecompressedFileSize;
                     fileFormat.IFileInfo.CompressedSize = CompressedFileSize;
                     return SetFileFormat(fileFormat, FileName, stream, LeaveStreamOpen, InArchive, archiveNode, Compressed, CompType);

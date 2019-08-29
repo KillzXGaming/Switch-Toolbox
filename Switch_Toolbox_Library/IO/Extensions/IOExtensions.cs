@@ -15,6 +15,18 @@ namespace Toolbox.Library.IO
 {
     public static class IOExtensions
     {
+        public static OpenTK.Vector2 ToTKVector2(this Syroot.Maths.Vector2F vec2) {
+            return new OpenTK.Vector2(vec2.X, vec2.Y);
+        }
+
+        public static OpenTK.Vector3 ToTKVector3(this Syroot.Maths.Vector3F vec3) {
+            return new OpenTK.Vector3(vec3.X, vec3.Y, vec3.Z);
+        }
+
+        public static OpenTK.Vector4 ToTKVector4(this Syroot.Maths.Vector4F vec4) {
+            return new OpenTK.Vector4(vec4.X, vec4.Y, vec4.Z, vec4.W);
+        }
+
         public static byte[] DeserializeToBytes<T>(this T structure) where T : struct
         {
             using (MemoryStream stream = new MemoryStream())

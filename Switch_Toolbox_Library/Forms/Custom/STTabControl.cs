@@ -10,10 +10,9 @@ namespace Toolbox.Library.Forms
 {
     public class STTabControl : FlatTabControl.FlatTabControl
     {
-        public STTabControl()
+        public STTabControl() : base()
         {
             myBackColor = FormThemes.BaseTheme.FormBackColor;
-
             InitializeComponent();
         }
 
