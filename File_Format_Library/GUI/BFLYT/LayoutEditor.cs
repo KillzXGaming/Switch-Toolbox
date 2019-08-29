@@ -287,9 +287,9 @@ namespace LayoutBXLYT
                     form.LoadLayoutFiles(layouts);
                     if (form.ShowDialog() == DialogResult.OK)
                     {
-                        foreach (var index in form.SelectedIndices())
+                        foreach (var layout in form.SelectedLayouts())
                         {
-                            LoadBflyt(layouts[index].header, file.FileName);
+                            LoadBflyt(layout.header, file.FileName);
                         }
                     }                    
                 }

@@ -24,20 +24,28 @@ namespace LayoutBXLYT
             listViewCustom1.MultiSelect = true;
         }
 
-        public List<int> SelectedIndices()
+        public List<BFLYT> SelectedLayouts()
         {
-            List<int> indices = new List<int>();
-            foreach (int index in listViewCustom1.SelectedIndices)
-                indices.Add(index);
+            List<BFLYT> layouts = new List<BFLYT>();
+            foreach (ListViewItem item in listViewCustom1.SelectedItems)
+                layouts.Add((BFLYT)item.Tag);
 
-            return indices;
+            listViewCustom1.Items.Clear();
+
+            return layouts;
         }
 
         public void LoadLayoutFiles(List<BFLYT> layoutFiles)
         {
             listViewCustom1.BeginUpdate();
             foreach (var file in layoutFiles)
-                listViewCustom1.Items.Add(file.FileName);
+            {
+                listViewCustom1.Items.Add(new ListViewItem()
+                {
+                    Text = file.FileName,
+                    Tag = file,
+                });
+            }
 
             listViewCustom1.Sort();
             listViewCustom1.EndUpdate();
