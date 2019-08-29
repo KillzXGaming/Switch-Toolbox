@@ -159,8 +159,6 @@ namespace LayoutBXLYT
 
         public Dictionary<string, STGenericTexture> GetTextures()
         {
-            Console.WriteLine($"ArchiveParent {IFileInfo.ArchiveParent != null}");
-
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
             if (IFileInfo.ArchiveParent != null)
             {
@@ -212,12 +210,19 @@ namespace LayoutBXLYT
             public TXL1 TextureList { get; set; }
             public MAT1 MaterialList { get; set; }
             public FNL1 FontList { get; set; }
-
             //   private List<SectionCommon> Sections;
+            //  public List<PAN1> Panes = new List<PAN1>();
 
-            public GRP1 RootGroup { get; set; }
+            public override List<string> Textures
+            {
+                get { return TextureList.Textures; }
+            }
 
-          //  public List<PAN1> Panes = new List<PAN1>();
+            public override Dictionary<string, STGenericTexture> GetTextures
+            {
+                get { return FileInfo.GetTextures(); }
+            }
+
 
             public void Read(FileReader reader, BFLYT bflyt)
             {
@@ -873,7 +878,10 @@ namespace LayoutBXLYT
             private BFLYT.Header ParentLayout;
             public string GetTexture(int index)
             {
-                return ParentLayout.TextureList.Textures[TextureMaps[index].ID];
+                if (TextureMaps[index].ID != -1)
+                    return ParentLayout.TextureList.Textures[TextureMaps[index].ID];
+                else
+                    return "";
             }
 
             public Material()
@@ -963,7 +971,7 @@ namespace LayoutBXLYT
 
         public class TextureRef
         {
-            public ushort ID;
+            public short ID;
             byte flag1;
             byte flag2;
 
@@ -990,7 +998,7 @@ namespace LayoutBXLYT
             public TextureRef() {}
 
             public TextureRef(FileReader reader) {
-                ID = reader.ReadUInt16();
+                ID = reader.ReadInt16();
                 flag1 = reader.ReadByte();
                 flag2 = reader.ReadByte();
             }

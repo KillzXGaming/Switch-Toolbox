@@ -17,9 +17,9 @@ namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
-        public List<BFLYT.Header> LayoutFiles = new List<BFLYT.Header>();
+        public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
 
-        private BFLYT.Header ActiveLayout;
+        private BxlytHeader ActiveLayout;
 
         public enum DockLayout
         {
@@ -48,13 +48,13 @@ namespace LayoutBXLYT
         }
 
         private DockContent TextureListDock;
-        private DockContent GroupTreeDock;
         private DockContent PaneTreeDock;
         private DockContent ColorDock;
         private DockContent PropertiesDock;
 
         private List<LayoutViewer> Viewports = new List<LayoutViewer>();
         private LayoutViewer ActiveViewport;
+        private LayoutHierarchy LayoutHierarchy;
 
         private bool isLoaded = false;
         public void LoadBflyt(BFLYT.Header header, string fileName)
@@ -78,11 +78,17 @@ namespace LayoutBXLYT
         {
             ShowTextureList();
             ShowPaneHierarchy();
-            ShowGroupsHierarchy();
             ShowPropertiesPanel();
 
             UpdateBackColor();
+        }
 
+        private void ReloadEditors(BxlytHeader activeLayout)
+        {
+            if (LayoutHierarchy != null)
+                LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
+            if (LayoutHierarchy != null)
+                LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
         }
 
         private void OnObjectChanged(object sender, EventArgs e)
@@ -179,16 +185,6 @@ namespace LayoutBXLYT
             ShowTextureList();
         }
 
-        private void ShowGroupsHierarchy()
-        {
-            dockPanel1.GetContainerControl();
-
-            LayoutHierarchy hierarchyList = new LayoutHierarchy();
-            hierarchyList.LoadLayout(ActiveLayout,ObjectSelected,  true);
-            GroupTreeDock = DockShow(hierarchyList, "Groups", DockAlignment.Top, TextureListDock, 0.5f);
-
-        }
-
         private void ShowPropertiesPanel()
         {
             LayoutProperties properties = new LayoutProperties();
@@ -197,9 +193,9 @@ namespace LayoutBXLYT
 
         private void ShowPaneHierarchy()
         {
-            LayoutHierarchy hierarchyList = new LayoutHierarchy();
-            hierarchyList.LoadLayout(ActiveLayout, ObjectSelected);
-            PaneTreeDock = DockShow(hierarchyList, "Panes", DockAlignment.Top, TextureListDock, 0.5f);
+            LayoutHierarchy = new LayoutHierarchy();
+            LayoutHierarchy.LoadLayout(ActiveLayout, ObjectSelected);
+            PaneTreeDock = DockShow(LayoutHierarchy, "Panes", DockAlignment.Top, TextureListDock, 0.5f);
         }
 
         private void ShowTextureList()
@@ -256,6 +252,22 @@ namespace LayoutBXLYT
             }
 
             isBGUpdating = false;
+        }
+
+        private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
+        {
+            var dockContent = dockPanel1.ActiveDocument as DockContent;
+            if (dockContent != null && dockContent.Controls.Count > 0)
+            {
+                var control = dockContent.Controls[0];
+                if (control is LayoutViewer)
+                {
+                    var file = ((LayoutViewer)control).LayoutFile;
+                    ReloadEditors(file);
+
+                    ((LayoutViewer)control).UpdateViewport();
+                }
+            }
         }
     }
 }

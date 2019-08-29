@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Syroot.Maths;
 using Toolbox.Library.IO;
+using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
@@ -111,6 +112,12 @@ namespace LayoutBXLYT
     public class BxlytHeader
     {
         public BasePane RootPane { get; set; }
+
+        public BasePane RootGroup { get; set; }
+
+        public virtual Dictionary<string, STGenericTexture> GetTextures { get; }
+
+        public virtual List<string> Textures { get; }
 
         internal uint Version;
 

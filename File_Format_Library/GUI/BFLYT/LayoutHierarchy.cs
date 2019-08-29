@@ -34,15 +34,15 @@ namespace LayoutBXLYT
 
         private bool isLoaded = false;
         private EventHandler OnProperySelected;
-        public void LoadLayout(BFLYT.Header bflyt, EventHandler onPropertySelected, bool useGroup = false)
+        public void LoadLayout(BxlytHeader bflyt, EventHandler onPropertySelected)
         {
             isLoaded = false;
             OnProperySelected = onPropertySelected;
 
-            if (useGroup)
-                LoadPane(bflyt.RootGroup);
-            else
-                LoadPane(bflyt.RootPane);
+            treeView1.Nodes.Clear();
+
+            LoadPane(bflyt.RootGroup);
+            LoadPane(bflyt.RootPane);
 
             isLoaded = true;
         }

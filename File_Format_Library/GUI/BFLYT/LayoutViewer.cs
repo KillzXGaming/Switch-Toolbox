@@ -29,7 +29,7 @@ namespace LayoutBXLYT
 
         private RenderableTex backgroundTex;
 
-        private BxlytHeader LayoutFile;
+        public BxlytHeader LayoutFile;
 
         private static Dictionary<string, STGenericTexture> Textures;
 

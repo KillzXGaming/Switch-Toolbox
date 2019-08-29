@@ -38,7 +38,7 @@ namespace LayoutBXLYT
         }
 
         private bool isLoaded = false;
-        public void LoadTextures(BFLYT.Header header)
+        public void LoadTextures(BxlytHeader header)
         {
             listViewCustom1.Items.Clear();
             imgList.Images.Clear();
@@ -47,18 +47,16 @@ namespace LayoutBXLYT
             listViewCustom1.LargeImageList = imgList;
             listViewCustom1.SmallImageList = imgList;
 
-            var textureList = header.FileInfo.GetTextures();
+            var textureList = header.GetTextures;
 
             listViewCustom1.BeginUpdate();
-            foreach (var texture in header.TextureList.Textures)
+            foreach (var texture in header.Textures)
             {
                 ListViewItem item = new ListViewItem();
                 item.Text = texture;
                 item.ImageIndex = 0;
                 listViewCustom1.Items.Add(item);
             }
-
-            Console.WriteLine($"textureList " + textureList.Count);
 
             //Load textures after on a seperate thread
 
