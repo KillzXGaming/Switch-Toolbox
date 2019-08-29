@@ -96,6 +96,8 @@ namespace Bfres.Structs
                 ShaderParamAnim.Name = Text;
                 LoadAnim(ShaderParamAnim, AnimationType.Color);
             }
+
+            UpdateEditor();
         }
 
         public void SaveAnimData()

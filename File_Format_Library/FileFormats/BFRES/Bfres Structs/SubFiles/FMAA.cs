@@ -747,6 +747,8 @@ namespace Bfres.Structs
                 MaterialAnim.Name = Text + GetTypeExtension();
                 LoadAnim(MaterialAnim);
             }
+
+            UpdateEditor();
         }
     }
 }
