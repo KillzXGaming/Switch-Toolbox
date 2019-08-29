@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
 
-namespace FirstPlugin.Forms
+namespace LayoutBXLYT
 {
     public partial class LayoutProperties : UserControl
     {
@@ -20,7 +20,7 @@ namespace FirstPlugin.Forms
             stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
         }
 
-        public void LoadProperties(BFLYT.BasePane prop, Action propChanged)
+        public void LoadProperties(BasePane prop, Action propChanged)
         {
             stTabControl1.Controls.Clear();
 

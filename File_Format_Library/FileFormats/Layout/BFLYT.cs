@@ -10,8 +10,9 @@ using Toolbox.Library.IO;
 using FirstPlugin.Forms;
 using Syroot.Maths;
 using SharpYaml.Serialization;
+using FirstPlugin;
 
-namespace FirstPlugin
+namespace LayoutBXLYT
 {
     public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
     {
@@ -193,7 +194,7 @@ namespace FirstPlugin
 
         //Thanks to SwitchThemes for flags, and enums
         //https://github.com/FuryBaguette/SwitchLayoutEditor/tree/master/SwitchThemesCommon
-        public class Header
+        public class Header : BxlytHeader
         {
             internal BFLYT FileInfo;
 
@@ -207,40 +208,6 @@ namespace FirstPlugin
             private ushort ByteOrderMark;
             private ushort HeaderSize;
 
-            internal uint Version;
-
-            public string VersionFull
-            {
-                get
-                {
-                    var major = Version >> 24;
-                    var minor = Version >> 16 & 0xFF;
-                    var micro = Version >> 8 & 0xFF;
-                    var micro2 = Version & 0xFF;
-                    return $"{major} {minor} {micro} {micro2}";
-                }
-            }
-
-            public uint VersionMajor
-            {
-                get { return Version >> 24; }
-            }
-
-            public uint VersionMinor
-            {
-                get { return Version >> 16 & 0xFF; }
-            }
-
-            public uint VersionMicro
-            {
-                get { return Version >> 8 & 0xFF; }
-            }
-
-            public uint VersionMicro2
-            {
-                get { return Version & 0xFF; }
-            }
-
             public LYT1 LayoutInfo { get; set; }
             public TXL1 TextureList { get; set; }
             public MAT1 MaterialList { get; set; }
@@ -248,7 +215,6 @@ namespace FirstPlugin
 
             //   private List<SectionCommon> Sections;
 
-            public PAN1 RootPane { get; set; }
             public GRP1 RootGroup { get; set; }
 
           //  public List<PAN1> Panes = new List<PAN1>();
@@ -411,28 +377,6 @@ namespace FirstPlugin
             }
         }
 
-        public class BasePane : SectionCommon
-        {
-            public bool DisplayInEditor { get; set; } = true;
-
-            public string Name { get; set; }
-
-            public Vector3F Translate { get; set; }
-            public Vector3F Rotate { get; set; }
-            public Vector2F Scale { get; set; }
-            public float Width { get; set; }
-            public float Height { get; set; }
-
-            public BasePane Parent { get; set; }
-
-            public List<BasePane> Childern { get; set; } = new List<BasePane>();
-
-            public bool HasChildern
-            {
-                get { return Childern.Count > 0; }
-            }
-        }
-
         public class TexCoord
         {
             public Vector2F TopLeft { get; set; }
@@ -543,7 +487,7 @@ namespace FirstPlugin
                 ShadowItalic = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 base.Write(writer, header);
                 writer.Write(TextLength);
@@ -596,7 +540,7 @@ namespace FirstPlugin
 
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 base.Write(writer, header);
             }
@@ -614,25 +558,9 @@ namespace FirstPlugin
 
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 base.Write(writer, header);
-            }
-        }
-
-        public class CustomRectangle
-        {
-            public int LeftPoint;
-            public int RightPoint;
-            public int TopPoint;
-            public int BottomPoint;
-
-            public CustomRectangle(int left, int right, int top, int bottom)
-            {
-                LeftPoint = left;
-                RightPoint = right;
-                TopPoint = top;
-                BottomPoint = bottom;
             }
         }
 
@@ -664,7 +592,7 @@ namespace FirstPlugin
                     Panes.Add(reader.ReadString(24));
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 if (header.Version >= 0x05020000)
                 {
@@ -695,7 +623,7 @@ namespace FirstPlugin
 
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 base.Write(writer, header);
             }
@@ -715,6 +643,12 @@ namespace FirstPlugin
             public Material GetMaterial()
             {
                 return ParentLayout.MaterialList.Materials[MaterialIndex];
+            }
+
+            public string GetTexture(int index)
+            {
+                var mat = GetMaterial();
+                return ParentLayout.TextureList.Textures[mat.TextureMaps[index].ID];
             }
 
             private BFLYT.Header ParentLayout;
@@ -754,7 +688,7 @@ namespace FirstPlugin
                 }
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 base.Write(writer, header);
                 writer.Write(ColorTopLeft.ToBytes());
@@ -859,7 +793,7 @@ namespace FirstPlugin
                 Height = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write(_flags1);
                 writer.Write(_flags2);
@@ -872,80 +806,6 @@ namespace FirstPlugin
                 writer.Write(Scale);
                 writer.Write(Width);
                 writer.Write(Height);
-            }
-
-            public enum OriginX : byte
-            {
-                Center = 0,
-                Left = 1,
-                Right = 2
-            };
-
-            public enum OriginY : byte
-            {
-                Center = 0,
-                Top = 1,
-                Bottom = 2
-            };
-
-
-            public BFLYT.CustomRectangle CreateRectangle()
-            {
-                int left = 0;
-                int right = 0;
-                int top = 0;
-                int bottom = 0;
-
-
-                //Do origin transforms
-                var transformed = TransformOrientation((int)Width, (int)Height);
-
-                //Now do parent transforms
-
-                Vector2 ParentWH = new Vector2(0,0);
-                if (Parent != null && Parent is BasePane)
-                    ParentWH = new Vector2((int)Parent.Width, (int)Parent.Height);
-
-                var transformedParent = TransformOrientation(ParentWH.X, ParentWH.Y);
-
-              //  if (Parent != null)
-              //      transformed -= transformedParent;
-
-                return new CustomRectangle(
-                    transformed.X,
-                    transformed.Y,
-                    transformed.Z,
-                    transformed.W);
-            }
-
-            private Vector4 TransformOrientation(int Width, int Height)
-            {
-                int left = 0;
-                int right = 0;
-                int top = 0;
-                int bottom = 0;
-
-                if (originX == OriginX.Left)
-                    right = Width;
-                else if (originX == OriginX.Right)
-                    left = -Width;
-                else //To center
-                {
-                    left = -Width / 2;
-                    right = Width / 2;
-                }
-
-                if (originY == OriginY.Top)
-                    bottom = Height;
-                else if (originY == OriginY.Bottom)
-                    top = -Height;
-                else //To center
-                {
-                    top = -Height / 2;
-                    bottom = Height / 2;
-                }
-
-                return new Vector4(left, right, top, bottom);
             }
 
             public bool ParentVisibility
@@ -990,7 +850,7 @@ namespace FirstPlugin
                 }
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write((ushort)Materials.Count);
                 writer.Seek(2);
@@ -1010,6 +870,12 @@ namespace FirstPlugin
             private uint flags;
             private int unknown;
 
+            private BFLYT.Header ParentLayout;
+            public string GetTexture(int index)
+            {
+                return ParentLayout.TextureList.Textures[TextureMaps[index].ID];
+            }
+
             public Material()
             {
                 TextureMaps = new List<TextureRef>();
@@ -1018,6 +884,8 @@ namespace FirstPlugin
 
             public Material(FileReader reader, Header header) : base()
             {
+                ParentLayout = header;
+
                 TextureMaps = new List<TextureRef>();
                 TextureTransforms = new List<TextureTransform>();
 
@@ -1173,7 +1041,7 @@ namespace FirstPlugin
                 }
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write((ushort)Fonts.Count);
                 writer.Seek(2);
@@ -1217,7 +1085,7 @@ namespace FirstPlugin
                 }
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write((ushort)Textures.Count);
                 writer.Seek(2);
@@ -1267,7 +1135,7 @@ namespace FirstPlugin
                 Name = reader.ReadZeroTerminatedString();
             }
 
-            public override void Write(FileWriter writer, Header header)
+            public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write(DrawFromCenter);
                 writer.Seek(3);
@@ -1276,24 +1144,6 @@ namespace FirstPlugin
                 writer.Write(MaxPartsWidth);
                 writer.Write(MaxPartsHeight);
                 writer.Write(Name);
-            }
-        }
-
-        public class SectionCommon
-        {
-            internal string Signature { get; set; }
-            internal uint SectionSize { get; set; }
-
-            internal byte[] Data { get; set; }
-
-            public virtual void Write(FileWriter writer, Header header)
-            {
-                writer.WriteSignature(Signature);
-                if (Data != null)
-                {
-                    writer.Write(Data.Length);
-                    writer.Write(Data);
-                }
             }
         }
     }

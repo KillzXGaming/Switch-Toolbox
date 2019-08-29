@@ -13,7 +13,7 @@ using WeifenLuo.WinFormsUI.ThemeVS2015;
 using Toolbox.Library.IO;
 using Toolbox.Library;
 
-namespace FirstPlugin.Forms
+namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
@@ -107,7 +107,7 @@ namespace FirstPlugin.Forms
             {
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
-                    var pane = (BFLYT.BasePane)node.Tag;
+                    var pane = (BasePane)node.Tag;
 
                     ((LayoutProperties)PropertiesDock.Controls[0]).LoadProperties(pane, OnProperyChanged);
 
@@ -129,8 +129,8 @@ namespace FirstPlugin.Forms
 
         private void ToggleChildern(TreeNode node, bool isChecked)
         {
-            if (node.Tag is BFLYT.BasePane)
-                ((BFLYT.BasePane)node.Tag).DisplayInEditor = isChecked;
+            if (node.Tag is BasePane)
+                ((BasePane)node.Tag).DisplayInEditor = isChecked;
 
             node.Checked = isChecked;
             foreach (TreeNode child in node.Nodes)

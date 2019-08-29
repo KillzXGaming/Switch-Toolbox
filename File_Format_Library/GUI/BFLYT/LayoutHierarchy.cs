@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using FirstPlugin;
 using Toolbox.Library.Forms;
 
-namespace FirstPlugin.Forms
+namespace LayoutBXLYT
 {
     public partial class LayoutHierarchy : UserControl
     {
@@ -22,12 +22,12 @@ namespace FirstPlugin.Forms
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
             var imgList = new ImageList();
-            imgList.Images.Add("AlignmentPane", Properties.Resources.AlignmentPane);
-            imgList.Images.Add("WindowPane", Properties.Resources.WindowPane);
-            imgList.Images.Add("ScissorPane", Properties.Resources.ScissorPane);
-            imgList.Images.Add("BoundryPane", Properties.Resources.BoundryPane);
-            imgList.Images.Add("NullPane", Properties.Resources.NullPane);
-            imgList.Images.Add("PicturePane", Properties.Resources.PicturePane);
+            imgList.Images.Add("AlignmentPane", FirstPlugin.Properties.Resources.AlignmentPane);
+            imgList.Images.Add("WindowPane", FirstPlugin.Properties.Resources.WindowPane);
+            imgList.Images.Add("ScissorPane", FirstPlugin.Properties.Resources.ScissorPane);
+            imgList.Images.Add("BoundryPane", FirstPlugin.Properties.Resources.BoundryPane);
+            imgList.Images.Add("NullPane", FirstPlugin.Properties.Resources.NullPane);
+            imgList.Images.Add("PicturePane", FirstPlugin.Properties.Resources.PicturePane);
             imgList.ImageSize = new Size(22,22);
             treeView1.ImageList = imgList;
         }
@@ -47,7 +47,7 @@ namespace FirstPlugin.Forms
             isLoaded = true;
         }
 
-        private void LoadPane(BFLYT.BasePane pane, TreeNode parent = null)
+        private void LoadPane(BasePane pane, TreeNode parent = null)
         {
             PaneTreeWrapper paneNode = new PaneTreeWrapper();
             paneNode.Checked = true;

@@ -13,11 +13,11 @@ using Toolbox.Library;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.IO;
 
-namespace FirstPlugin.Forms
+namespace LayoutBXLYT
 {
     public partial class LayoutViewer : UserControl
     {
-        public List<BFLYT.BasePane> SelectedPanes = new List<BFLYT.BasePane>();
+        public List<BasePane> SelectedPanes = new List<BasePane>();
 
         public Camera2D Camera = new Camera2D();
 
@@ -29,7 +29,7 @@ namespace FirstPlugin.Forms
 
         private RenderableTex backgroundTex;
 
-        private BFLYT.Header LayoutFile;
+        private BxlytHeader LayoutFile;
 
         private static Dictionary<string, STGenericTexture> Textures;
 
@@ -89,7 +89,7 @@ namespace FirstPlugin.Forms
             glControl1.SwapBuffers();
         }
 
-        private void RenderPanes(BFLYT.BasePane pane, bool isRoot)
+        private void RenderPanes(BasePane pane, bool isRoot)
         {
             if (!pane.DisplayInEditor)
                 return;
@@ -102,9 +102,9 @@ namespace FirstPlugin.Forms
             if (!isRoot)
             {
                 if (pane is BFLYT.PIC1)
-                    DrawPicturePane(LayoutFile, (BFLYT.PIC1)pane);
+                    DrawPicturePane((BFLYT.PIC1)pane);
                 else if (pane is BFLYT.PAN1)
-                    DrawDefaultPane(LayoutFile, (BFLYT.PAN1)pane);
+                    DrawDefaultPane((BFLYT.PAN1)pane);
             }
             else
                 isRoot = false;
@@ -115,7 +115,7 @@ namespace FirstPlugin.Forms
             GL.PopMatrix();
         }
 
-        private void DrawRootPane(BFLYT.PAN1 pane)
+        private void DrawRootPane(BasePane pane)
         {
             GL.LoadIdentity();
             GL.PushMatrix();
@@ -127,7 +127,7 @@ namespace FirstPlugin.Forms
             if (SelectedPanes.Contains(pane))
                 color = Color.Red;
 
-            BFLYT.CustomRectangle rect = pane.CreateRectangle();
+            CustomRectangle rect = pane.CreateRectangle();
 
             //Draw a quad which is the backcolor but lighter
             GL.Begin(PrimitiveType.Quads);
@@ -152,7 +152,7 @@ namespace FirstPlugin.Forms
             GL.PopMatrix();
         }
 
-        private void DrawDefaultPane(BFLYT.Header bflyt, BFLYT.PAN1 pane)
+        private void DrawDefaultPane(BFLYT.PAN1 pane)
         {
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -175,7 +175,7 @@ namespace FirstPlugin.Forms
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
         }
 
-        private void DrawPicturePane(BFLYT.Header bflyt, BFLYT.PIC1 pane)
+        private void DrawPicturePane(BFLYT.PIC1 pane)
         {
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -195,10 +195,10 @@ namespace FirstPlugin.Forms
 
             if (pane.TexCoords.Length > 0)
             {
-                var mat = bflyt.MaterialList.Materials[pane.MaterialIndex];
+                var mat = pane.GetMaterial();
                 string textureMap0 = "";
                 if (mat.TextureMaps.Count > 0)
-                    textureMap0 = bflyt.TextureList.Textures[mat.TextureMaps[0].ID];
+                    textureMap0 = mat.GetTexture(0);
 
                 if (Textures.ContainsKey(textureMap0))
                     BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
@@ -216,7 +216,7 @@ namespace FirstPlugin.Forms
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        public void DrawRectangle(BFLYT.CustomRectangle rect, Vector2[] texCoords, Color[] colors, bool useLines = true)
+        public void DrawRectangle(CustomRectangle rect, Vector2[] texCoords, Color[] colors, bool useLines = true)
         {
             if (useLines)
             {

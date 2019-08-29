@@ -921,7 +921,7 @@ namespace Toolbox.Library
         private static Form activeForm;
         public void OpenFormDialog(IFileFormat fileFormat)
         {
-            if (activeForm != null)
+            if (activeForm != null && !activeForm.IsDisposed && !activeForm.Disposing)
             {
                 activeForm.Text = (((IFileFormat)fileFormat).FileName);
                 System.Reflection.MethodInfo methodFill = fileFormat.GetType().GetMethod("FillEditor");

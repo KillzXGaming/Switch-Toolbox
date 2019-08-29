@@ -1,4 +1,4 @@
-﻿namespace FirstPlugin.Forms
+﻿namespace LayoutBXLYT
 {
     partial class LayoutViewer
     {

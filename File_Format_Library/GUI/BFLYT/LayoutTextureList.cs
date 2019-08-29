@@ -13,7 +13,7 @@ using Toolbox.Library;
 using System.Threading;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace FirstPlugin.Forms
+namespace LayoutBXLYT
 {
     public partial class LayoutTextureList : UserControl
     {
@@ -93,6 +93,7 @@ namespace FirstPlugin.Forms
         private void LoadTextureIcon(ListViewItem item, STGenericTexture texture)
         {
             Bitmap temp = texture.GetBitmap();
+            temp = texture.GetComponentBitmap(temp, true);
 
             if (listViewCustom1.InvokeRequired)
             {

@@ -7,7 +7,7 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 
-namespace FirstPlugin
+namespace LayoutBXLYT
 {
     public class BFLAN : IFileFormat
     {

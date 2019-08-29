@@ -366,7 +366,7 @@ namespace FirstPlugin
             Formats.Add(typeof(CSAB));
             Formats.Add(typeof(CMB));
             Formats.Add(typeof(G1T));
-            Formats.Add(typeof(BFLYT));
+            Formats.Add(typeof(LayoutBXLYT.BFLYT));
             Formats.Add(typeof(ZSI));
             Formats.Add(typeof(IGZ_TEX));
             Formats.Add(typeof(MOD));
@@ -386,7 +386,7 @@ namespace FirstPlugin
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
                 Formats.Add(typeof(XCI));
-                Formats.Add(typeof(BFLAN));
+                Formats.Add(typeof(LayoutBXLYT.BFLAN));
                 Formats.Add(typeof(XLINK));
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));

@@ -294,6 +294,7 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
+    <Compile Include="FileFormats\Layout\Common.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />
