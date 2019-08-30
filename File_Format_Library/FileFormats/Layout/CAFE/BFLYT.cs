@@ -635,9 +635,14 @@ namespace LayoutBXLYT
             public byte FrameCount;
             private byte _flag;
 
+
+            public WindowContent Content { get; set; }
+
+            public List<WindowFrame> WindowFrames = new List<WindowFrame>();
+
             public WND1(FileReader reader) : base(reader)
             {
-                long pos = reader.Position;
+                long pos = reader.Position - 0x54;
 
                 StretchLeft = reader.ReadUInt16();
                 StretchRight = reader.ReadUInt16();
@@ -653,6 +658,15 @@ namespace LayoutBXLYT
                 uint contentOffset = reader.ReadUInt32();
                 uint frameOffsetTbl = reader.ReadUInt32();
 
+                reader.SeekBegin(pos + contentOffset);
+                Content = new WindowContent(reader);
+
+                var offsets = reader.ReadUInt32s(FrameCount);
+                foreach (int offset in offsets)
+                {
+                    reader.SeekBegin(pos + offset);
+                    WindowFrames.Add(new WindowFrame(reader));
+                }
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -677,7 +691,77 @@ namespace LayoutBXLYT
                 writer.Write(0);
 
                 writer.WriteUint32Offset(_ofsContentPos, pos);
+                Content.Write(writer);
+            }
 
+            public class WindowContent
+            {
+                public STColor8 TopLeftColor { get; set; }
+                public STColor8 TopRightColor { get; set; }
+                public STColor8 BottomLeftColor { get; set; }
+                public STColor8 BottomRightColor { get; set; }
+
+                public ushort MaterialIndex { get; set; }
+
+                public List<TexCoord> TexCoords = new List<TexCoord>();
+
+                public WindowContent(FileReader reader)
+                {
+                    TopLeftColor = reader.ReadColor8RGBA();
+                    TopRightColor = reader.ReadColor8RGBA();
+                    BottomLeftColor = reader.ReadColor8RGBA();
+                    BottomRightColor = reader.ReadColor8RGBA();
+                    MaterialIndex = reader.ReadUInt16();
+                    byte UVCount = reader.ReadByte();
+                    reader.ReadByte(); //padding
+
+                    for (int i = 0; i < UVCount; i++)
+                        TexCoords.Add(new TexCoord()
+                        {
+                            TopLeft = reader.ReadVec2SY(),
+                            TopRight = reader.ReadVec2SY(),
+                            BottomLeft = reader.ReadVec2SY(),
+                            BottomRight = reader.ReadVec2SY(),
+                        });
+                }
+
+                public void Write(FileWriter writer)
+                {
+                    writer.Write(TopLeftColor);
+                    writer.Write(TopRightColor);
+                    writer.Write(BottomLeftColor);
+                    writer.Write(BottomRightColor);
+                    writer.Write(MaterialIndex);
+                    writer.Write((byte)TexCoords.Count);
+                    writer.Write((byte)0);
+                    foreach (var texCoord in TexCoords)
+                    {
+                        writer.Write(texCoord.TopLeft);
+                        writer.Write(texCoord.TopRight);
+                        writer.Write(texCoord.BottomLeft);
+                        writer.Write(texCoord.BottomRight);
+                    }
+                }
+            }
+
+            public class WindowFrame
+            {
+                public ushort MaterialIndex;
+                public byte Flip;
+
+                public WindowFrame(FileReader reader)
+                {
+                    MaterialIndex = reader.ReadUInt16();
+                    Flip = reader.ReadByte();
+                    reader.ReadByte(); //padding
+                }
+
+                public void Write(FileWriter writer)
+                {
+                    writer.Write(MaterialIndex);
+                    writer.Write(Flip);
+                    writer.Write((byte)0);
+                }
             }
         }
 
@@ -1028,7 +1112,7 @@ namespace LayoutBXLYT
                 TextureTransforms = new List<TextureTransform>();
 
                 Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
-                if (header.VersionMajor == 8)
+                if (header.VersionMajor >= 8)
                 {
                     flags = reader.ReadUInt32();
                     unknown = reader.ReadInt32();
@@ -1041,6 +1125,8 @@ namespace LayoutBXLYT
                     BackColor = STColor8.FromBytes(reader.ReadBytes(4));
                     flags = reader.ReadUInt32();
                 }
+
+                Console.WriteLine($"VersionMajor " + header.VersionMajor);
 
                 uint texCount = Convert.ToUInt32(flags & 3);
                 uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
