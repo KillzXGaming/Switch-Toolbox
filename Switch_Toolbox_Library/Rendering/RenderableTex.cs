@@ -272,14 +272,15 @@ namespace Toolbox.Library.Rendering
                 default:
                     if (Runtime.UseDirectXTexDecoder)
                     {
-                        return STGenericTexture.DecodeBlock(ImageData,
+                        return STGenericTexture.ConvertBgraToRgba(
+                            STGenericTexture.DecodeBlock(ImageData,
                         width,
                         height,
                         GenericTexture.Format,
                         new byte[0],
                         GenericTexture.Parameters,
                         PALETTE_FORMAT.None,
-                        GenericTexture.PlatformSwizzle);
+                        GenericTexture.PlatformSwizzle));
                     }
                     else
                         return ImageData;

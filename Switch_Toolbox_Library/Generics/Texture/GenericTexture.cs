@@ -1090,7 +1090,7 @@ namespace Toolbox.Library
                 return false;
         }
 
-        private static byte[] ConvertBgraToRgba(byte[] bytes)
+        public static byte[] ConvertBgraToRgba(byte[] bytes)
         {
             if (bytes == null)
                 throw new Exception("Data block returned null. Make sure the parameters and image properties are correct!");
