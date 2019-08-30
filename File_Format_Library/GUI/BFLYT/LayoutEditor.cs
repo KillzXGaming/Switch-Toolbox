@@ -355,10 +355,13 @@ namespace LayoutBXLYT
 
         private void clearWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < dockPanel1.DocumentsCount; i++)
-                dockPanel1.Documents.ElementAt(i).DockHandler.DockPanel = null;
+            var docs = dockPanel1.DocumentsToArray();
+            for (int i = 0; i < docs.Length; i++)
+                docs[i].DockHandler.DockPanel = null;
 
             ResetEditors();
+
+            GC.Collect();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)

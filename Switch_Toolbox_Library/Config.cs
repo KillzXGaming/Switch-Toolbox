@@ -247,6 +247,9 @@ namespace Toolbox.Library
                     case "UseSingleInstance":
                         bool.TryParse(node.InnerText, out Runtime.UseSingleInstance);
                         break;
+                    case "LayoutBackgroundColor":
+                        TryParseHexColor(node, ref Runtime.LayoutEditor.BackgroundColor);
+                        break;
                 }
             }
 
@@ -353,11 +356,18 @@ namespace Toolbox.Library
             AppenPBRSettings(doc, mainNode);
             AppendResourceTableSettings(doc, mainNode);
             AppendDeveloperSettings(doc, mainNode);
+            AppendLayoutEditorSettings(doc, mainNode);
 
             return doc;
         }
 
         
+        private static void AppendLayoutEditorSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode layoutSettingsNode = doc.CreateElement("LAYOUT_EDITOR");
+            parentNode.AppendChild(layoutSettingsNode);
+            layoutSettingsNode.AppendChild(createNode(doc, "LayoutBackgroundColor", ColorTranslator.ToHtml(Runtime.LayoutEditor.BackgroundColor)));
+        }
 
         private static void AppendDeveloperSettings(XmlDocument doc, XmlNode parentNode)
         {

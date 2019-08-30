@@ -69,7 +69,7 @@ namespace LayoutBXLYT
             OnRender();
         }
 
-        private Color BackgroundColor = Color.FromArgb(130, 130, 130);
+        private Color BackgroundColor => Runtime.LayoutEditor.BackgroundColor;
         private void OnRender()
         {
             if (LayoutFile == null) return;
@@ -367,8 +367,9 @@ namespace LayoutBXLYT
 
         public void UpdateBackgroundColor(Color color)
         {
-            BackgroundColor = color;
+            Runtime.LayoutEditor.BackgroundColor = color;
             glControl1.Invalidate();
+            Config.Save();
         }
 
         private void DrawXyLines()

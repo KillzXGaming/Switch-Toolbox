@@ -652,9 +652,13 @@ namespace FirstPlugin
                         break;
                     case "GRTF":
                         var mem = new System.IO.MemoryStream();
-                        ((BNTX)BinaryData).Save(mem);
-                        SaveHeader(writer, header, mem.ToArray(), 4096);
-                        //  SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        if (BinaryData != null)
+                        {
+                            ((BNTX)BinaryData).Save(mem);
+                            SaveHeader(writer, header, mem.ToArray(), 4096);
+                        }
+                        else
+                            SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "PRIM":
                         SaveHeader(writer, header, BinaryDataBytes);

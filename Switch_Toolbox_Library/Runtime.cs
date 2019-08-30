@@ -35,6 +35,11 @@ namespace Toolbox.Library
         public static string TpGamePath = "";
         public static string BotwGamePath = "";
 
+        public class LayoutEditor
+        {
+            public static Color BackgroundColor = Color.FromArgb(130, 130, 130);
+        }
+
         public class ImageEditor
         {
             public static bool ShowPropertiesPanel = true;
@@ -47,6 +52,7 @@ namespace Toolbox.Library
             public static bool EnableImageZoom = true;
             public static bool EnablePixelGrid = false;
         }
+
         public class ObjectEditor
         {
             public static bool OpenModelsOnOpen = false;
