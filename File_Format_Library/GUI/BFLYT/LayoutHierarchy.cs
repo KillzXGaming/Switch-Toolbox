@@ -34,15 +34,15 @@ namespace LayoutBXLYT
 
         private bool isLoaded = false;
         private EventHandler OnProperySelected;
-        public void LoadLayout(BxlytHeader bflyt, EventHandler onPropertySelected)
+        public void LoadLayout(BxlytHeader bxlyt, EventHandler onPropertySelected)
         {
             isLoaded = false;
             OnProperySelected = onPropertySelected;
 
             treeView1.Nodes.Clear();
 
-            LoadPane(bflyt.RootGroup);
-            LoadPane(bflyt.RootPane);
+            LoadPane(bxlyt.RootGroup);
+            LoadPane(bxlyt.RootPane);
 
             isLoaded = true;
         }
@@ -64,6 +64,9 @@ namespace LayoutBXLYT
             if (pane is BFLYT.WND1) imageKey = "WindowPane";
             else if (pane is BFLYT.PIC1) imageKey = "PicturePane";
             else if (pane is BFLYT.BND1) imageKey = "BoundryPane";
+            else if (pane is BCLYT.WND1) imageKey = "WindowPane";
+            else if (pane is BCLYT.BND1) imageKey = "BoundryPane";
+            else if (pane is BCLYT.PIC1) imageKey = "PicturePane";
             else imageKey = "NullPane";
 
             paneNode.ImageKey = imageKey;

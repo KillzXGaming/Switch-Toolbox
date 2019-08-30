@@ -148,6 +148,8 @@ namespace FirstPlugin
             //For saving
             public List<SectionBase> Sections = new List<SectionBase>();
 
+            private string UnknownString;
+
             public void Read(FileReader reader, PTCL ptcl)
             {
                 uint Position = (uint)reader.Position; //Offsets are relative to this
@@ -174,6 +176,7 @@ namespace FirstPlugin
                     BlockOffset = reader.ReadUInt16();
                     uint padding2 = reader.ReadUInt32();
                     uint FileSize = reader.ReadUInt32();
+
                     reader.Seek(Position + BlockOffset, SeekOrigin.Begin);
                 }
                 else

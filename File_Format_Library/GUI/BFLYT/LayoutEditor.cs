@@ -18,6 +18,8 @@ namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
+        private Dictionary<string, STGenericTexture> Textures;
+
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
 
         private BxlytHeader ActiveLayout;
@@ -34,6 +36,8 @@ namespace LayoutBXLYT
         public LayoutEditor()
         {
             InitializeComponent();
+
+            Textures = new Dictionary<string, STGenericTexture>();
 
             var theme = new VS2015DarkTheme();
             this.dockPanel1.Theme = theme;
@@ -53,14 +57,15 @@ namespace LayoutBXLYT
         private LayoutHierarchy LayoutHierarchy;
         private LayoutTextureList LayoutTextureList;
         private LayoutProperties LayoutProperties;
+        private LayoutTextDocked TextConverter;
 
         private bool isLoaded = false;
-        public void LoadBflyt(BFLYT.Header header, string fileName)
+        public void LoadBxlyt(BxlytHeader header, string fileName)
         {
             LayoutFiles.Add(header);
             ActiveLayout = header;
 
-            LayoutViewer Viewport = new LayoutViewer(header);
+            LayoutViewer Viewport = new LayoutViewer(header, Textures);
             Viewport.Dock = DockStyle.Fill;
             Viewport.Show(dockPanel1, DockState.Document);
             Viewport.DockHandler.AllowEndUserDocking = false;
@@ -89,6 +94,8 @@ namespace LayoutBXLYT
                 LayoutTextureList.Reset();
             if (LayoutProperties != null)
                 LayoutProperties.Reset();
+            if (TextConverter != null)
+                TextConverter.Reset();
         }
 
         private void ReloadEditors(BxlytHeader activeLayout)
@@ -101,6 +108,11 @@ namespace LayoutBXLYT
                 LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
             if (LayoutTextureList != null)
                 LayoutTextureList.LoadTextures(activeLayout);
+            if (TextConverter != null)
+            {
+                if (ActiveLayout.FileInfo is BFLYT)
+                    TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
+            }
         }
 
         private void OnObjectChanged(object sender, EventArgs e)
@@ -277,7 +289,9 @@ namespace LayoutBXLYT
             if (file == null) return;
 
             if (file is BFLYT)
-                LoadBflyt(((BFLYT)file).header, file.FileName);
+                LoadBxlyt(((BFLYT)file).header, file.FileName);
+            else if (file is BCLYT)
+                LoadBxlyt(((BCLYT)file).header, file.FileName);
             else if (file is IArchiveFile)
             {
                 var layouts = SearchLayoutFiles((IArchiveFile)file);
@@ -289,13 +303,19 @@ namespace LayoutBXLYT
                     {
                         foreach (var layout in form.SelectedLayouts())
                         {
-                            LoadBflyt(layout.header, file.FileName);
+                            if (layout is BFLYT)
+                                LoadBxlyt(((BFLYT)layout).header, file.FileName);
+                            if (layout is BCLYT)
+                                LoadBxlyt(((BCLYT)layout).header, file.FileName);
                         }
                     }                    
                 }
                 else if (layouts.Count > 0)
                 {
-                    LoadBflyt(layouts[0].header, file.FileName);
+                    if (layouts[0] is BFLYT)
+                        LoadBxlyt(((BFLYT)layouts[0]).header, file.FileName);
+                    if (layouts[0] is BCLYT)
+                        LoadBxlyt(((BCLYT)layouts[0]).header, file.FileName);
                 }
             }
             else if (file is BFLAN)
@@ -308,19 +328,24 @@ namespace LayoutBXLYT
             }
         }
 
-        private List<BFLYT> SearchLayoutFiles(IArchiveFile archiveFile)
+        private List<IFileFormat> SearchLayoutFiles(IArchiveFile archiveFile)
         {
-            List<BFLYT> layouts = new List<BFLYT>();
+            List<IFileFormat> layouts = new List<IFileFormat>();
 
             foreach (var file in archiveFile.Files)
             {
                 var fileFormat = STFileLoader.OpenFileFormat(file.FileName,
-                    new Type[] { typeof(BFLYT), typeof(SARC) }, file.FileData);
+                    new Type[] { typeof(BFLYT), typeof(BCLYT), typeof(SARC) }, file.FileData);
 
                 if (fileFormat is BFLYT)
                 {
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
-                    layouts.Add((BFLYT)fileFormat);
+                    layouts.Add(fileFormat);
+                }
+                else if (fileFormat is BCLYT)
+                {
+                    fileFormat.IFileInfo.ArchiveParent = archiveFile;
+                    layouts.Add(fileFormat);
                 }
                 else if (Utils.GetExtension(file.FileName) == ".bntx")
                 {
@@ -372,6 +397,16 @@ namespace LayoutBXLYT
             {
                 foreach (string filename in ofd.FileNames)
                     OpenFile(filename);
+            }
+        }
+
+        private void textConverterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveLayout.FileInfo is BFLYT)
+            {
+                TextConverter = new LayoutTextDocked();
+                TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
+                TextConverter.Show(dockPanel1, DockState.DockLeft);
             }
         }
     }

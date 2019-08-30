@@ -24,18 +24,18 @@ namespace LayoutBXLYT
             listViewCustom1.MultiSelect = true;
         }
 
-        public List<BFLYT> SelectedLayouts()
+        public List<IFileFormat> SelectedLayouts()
         {
-            List<BFLYT> layouts = new List<BFLYT>();
+            List<IFileFormat> layouts = new List<IFileFormat>();
             foreach (ListViewItem item in listViewCustom1.SelectedItems)
-                layouts.Add((BFLYT)item.Tag);
+                layouts.Add((IFileFormat)item.Tag);
 
             listViewCustom1.Items.Clear();
 
             return layouts;
         }
 
-        public void LoadLayoutFiles(List<BFLYT> layoutFiles)
+        public void LoadLayoutFiles(List<IFileFormat> layoutFiles)
         {
             listViewCustom1.BeginUpdate();
             foreach (var file in layoutFiles)

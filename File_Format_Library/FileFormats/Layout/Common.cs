@@ -10,11 +10,6 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace LayoutBXLYT
 {
-    public class LayoutDocked : DockContent
-    {
-
-    }
-
     public class BasePane : SectionCommon
     {
         public bool DisplayInEditor { get; set; } = true;
@@ -41,6 +36,13 @@ namespace LayoutBXLYT
             get { return Childern.Count > 0; }
         }
 
+        public BasePane()
+        {
+            originX = OriginX.Center;
+            originY = OriginY.Center;
+            ParentOriginX = OriginX.Center;
+            ParentOriginY = OriginY.Center;
+        }
 
         public CustomRectangle CreateRectangle()
         {
@@ -117,6 +119,11 @@ namespace LayoutBXLYT
 
     public class BxlytHeader : IDisposable
     {
+        public string FileName
+        {
+            get { return FileInfo.FileName; }
+        }
+
         internal IFileFormat FileInfo;
 
         public BasePane RootPane { get; set; }
@@ -199,5 +206,10 @@ namespace LayoutBXLYT
             TopPoint = top;
             BottomPoint = bottom;
         }
+    }
+
+    public class LayoutDocked : DockContent
+    {
+
     }
 }

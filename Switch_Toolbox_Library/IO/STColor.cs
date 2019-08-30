@@ -45,7 +45,16 @@ namespace Toolbox.Library
             col.G = color[1] / 255f;
             col.B = color[2] / 255f;
             col.A = color[3] / 255f;
+            return col;
+        }
 
+        public static STColor FromFloats(float[] color)
+        {
+            STColor col = new STColor();
+            col.R = color[0];
+            col.G = color[1];
+            col.B = color[2];
+            col.A = color[3];
             return col;
         }
 

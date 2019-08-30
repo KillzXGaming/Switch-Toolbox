@@ -31,17 +31,22 @@ namespace LayoutBXLYT
 
         public BxlytHeader LayoutFile;
 
-        private static Dictionary<string, STGenericTexture> Textures;
+        private Dictionary<string, STGenericTexture> Textures;
 
-        public LayoutViewer(BFLYT.Header bflyt)
+        public LayoutViewer(BxlytHeader bxlyt, Dictionary<string, STGenericTexture> textures)
         {
             InitializeComponent();
-            LayoutFile = bflyt;
-            Text = bflyt.FileName;
+            LayoutFile = bxlyt;
+            Text = bxlyt.FileName;
 
-            Textures = new Dictionary<string, STGenericTexture>();
-            if (bflyt.TextureList.Textures.Count > 0)
-                Textures = ((BFLYT)bflyt.FileInfo).GetTextures();
+            Textures = textures;
+            if (bxlyt.Textures.Count > 0)
+            {
+                if (bxlyt.FileInfo is BFLYT)
+                    Textures = ((BFLYT)bxlyt.FileInfo).GetTextures();
+                else if (bxlyt.FileInfo is BCLYT)
+                    Textures = ((BCLYT)bxlyt.FileInfo).GetTextures();
+            }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -115,8 +120,12 @@ namespace LayoutBXLYT
             {
                 if (pane is BFLYT.PIC1)
                     DrawPicturePane((BFLYT.PIC1)pane);
+                else if (pane is BCLYT.PIC1)
+                    DrawDefaultPane((BCLYT.PIC1)pane);
                 else if (pane is BFLYT.PAN1)
                     DrawDefaultPane((BFLYT.PAN1)pane);
+                else if (pane is BCLYT.PAN1)
+                    DrawDefaultPane((BCLYT.PAN1)pane);
             }
             else
                 isRoot = false;
@@ -164,7 +173,7 @@ namespace LayoutBXLYT
             GL.PopMatrix();
         }
 
-        private void DrawDefaultPane(BFLYT.PAN1 pane)
+        private void DrawDefaultPane(BasePane pane)
         {
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -185,6 +194,47 @@ namespace LayoutBXLYT
                 };
 
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
+        }
+
+        private void DrawPicturePane(BCLYT.PIC1 pane)
+        {
+                  Vector2[] TexCoords = new Vector2[] {
+                new Vector2(1,1),
+                new Vector2(0,1),
+                new Vector2(0,0),
+                new Vector2(1,0)
+                };
+
+            Color[] Colors = new Color[] {
+                pane.ColorTopLeft.Color,
+                pane.ColorTopRight.Color,
+                pane.ColorBottomRight.Color,
+                pane.ColorBottomLeft.Color,
+                };
+
+            GL.Enable(EnableCap.Texture2D);
+
+            if (pane.TexCoords.Length > 0)
+            {
+                var mat = pane.GetMaterial();
+                string textureMap0 = "";
+                if (mat.TextureMaps.Count > 0)
+                    textureMap0 = mat.GetTexture(0);
+
+              //  if (Textures.ContainsKey(textureMap0))
+                  //  BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
+
+                TexCoords = new Vector2[] {
+                        pane.TexCoords[0].TopLeft.ToTKVector2(),
+                        pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pane.TexCoords[0].BottomRight.ToTKVector2(),
+                        pane.TexCoords[0].BottomLeft.ToTKVector2(),
+                   };
+            }
+
+            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         private void DrawPicturePane(BFLYT.PIC1 pane)
@@ -470,6 +520,18 @@ namespace LayoutBXLYT
                 originMouse = e.Location;
 
                 glControl1.Invalidate();
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            foreach (var tex in LayoutFile.Textures)
+            {
+                if (Textures.ContainsKey(tex))
+                {
+                    Textures[tex].DisposeRenderable();
+                    Textures.Remove(tex);
+                }
             }
         }
 

@@ -277,7 +277,7 @@ namespace FirstPlugin
         {
             get
             {
-                if (Textures.Any(item => item.Value.RenderableTex.GLInitialized == false))
+                if (Textures.Any(item => item.Value.RenderableTex == null || item.Value.RenderableTex.GLInitialized == false))
                     return false;
                 else
                     return true;

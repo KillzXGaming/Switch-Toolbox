@@ -367,6 +367,7 @@ namespace FirstPlugin
             Formats.Add(typeof(CMB));
             Formats.Add(typeof(G1T));
             Formats.Add(typeof(LayoutBXLYT.BFLYT));
+            Formats.Add(typeof(LayoutBXLYT.BCLYT));
             Formats.Add(typeof(ZSI));
             Formats.Add(typeof(IGZ_TEX));
             Formats.Add(typeof(MOD));

@@ -58,6 +58,12 @@ namespace Toolbox.Library.IO
             Write(color.ToBytes());
         }
 
+        public void Write(STColor8[] colors)
+        {
+            foreach (var color in colors)
+                Write(color.ToBytes());
+        }
+
         public void WriteStruct<T>(T item) => Write(item.StructToBytes(ByteOrder == ByteOrder.BigEndian));
 
         public void WriteSignature(string value)

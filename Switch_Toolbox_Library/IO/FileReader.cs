@@ -281,6 +281,35 @@ namespace Toolbox.Library.IO
                 return ReadString(BinaryStringFormat.ZeroTerminated, encoding);
             }
         }
+
+        public STColor8[] ReadColor8sRGBA(int count)
+        {
+            STColor8[] colors = new STColor8[count];
+            for (int i = 0; i < count; i++)
+                colors[i] = STColor8.FromBytes(ReadBytes(4));
+
+            return colors;
+        }
+
+        public STColor8 ReadColor8RGBA()
+        {
+            return STColor8.FromBytes(ReadBytes(4));
+        }
+
+        public STColor[] ReadColorsRGBA(int count)
+        {
+            STColor[] colors = new STColor[count];
+            for (int i = 0; i < count; i++)
+                colors[i] =  STColor.FromFloats(ReadSingles(4));
+
+            return colors;
+        }
+
+        public STColor ReadColorRGBA()
+        {
+            return STColor.FromFloats(ReadSingles(4));
+        }
+
         public static byte[] DeflateZLIB(byte[] i)
         {
             MemoryStream output = new MemoryStream();

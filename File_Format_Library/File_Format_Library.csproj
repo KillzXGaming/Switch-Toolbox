@@ -293,6 +293,8 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
+    <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
@@ -322,25 +324,31 @@
       <DependentUpon>FileSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutHierarchy.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutHierarchy.Designer.cs">
       <DependentUpon>LayoutHierarchy.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutProperties.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutProperties.Designer.cs">
       <DependentUpon>LayoutProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFLYT\LayoutTextDocked.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutTextDocked.Designer.cs">
+      <DependentUpon>LayoutTextDocked.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.Designer.cs">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
@@ -388,8 +396,8 @@
     <Compile Include="FileFormats\Shader\SHARCFBNX.cs" />
     <Compile Include="FileFormats\Texture\BCLIM.cs" />
     <Compile Include="FileFormats\Texture\BFLIM.cs" />
-    <Compile Include="FileFormats\Layout\BFLAN.cs" />
-    <Compile Include="FileFormats\Layout\BFLYT.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\BFLAN.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\BFLYT.cs" />
     <Compile Include="FileFormats\BFRES\Bfres Structs\CurveHelper.cs" />
     <Compile Include="FileFormats\BFRES\BFRES.cs" />
     <Compile Include="FileFormats\Texture\NUT.cs" />

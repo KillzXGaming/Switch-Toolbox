@@ -31,6 +31,31 @@ namespace Toolbox.Library.IO
                 return null;
         }
 
+        public static Type CheckFileFormatType(string FileName, Type[] FileTypes, byte[] data = null)
+        {
+            //Todo. Create a compression list like IFileFormat to decompress via an Identiy method
+            data = CheckCompression(FileName, data);
+
+            Stream stream;
+            if (data != null)
+                stream = new MemoryStream(data);
+            else
+                stream = File.OpenRead(FileName);
+
+            foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
+            {
+                fileFormat.FileName = Path.GetFileName(FileName);
+
+                foreach (Type type in FileTypes)
+                {
+                    if (fileFormat.Identify(stream) && fileFormat.GetType() == type)
+                        return type;
+                }
+            }
+
+            return typeof(IFileFormat);
+        }
+
         public static IFileFormat OpenFileFormat(string FileName, Type[] FileTypes, byte[] data = null)
         {
             //Todo. Create a compression list like IFileFormat to decompress via an Identiy method
