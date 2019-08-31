@@ -94,6 +94,9 @@ namespace LayoutBXLYT
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
             DrawRootPane(LayoutFile.RootPane);
             DrawGrid();
             DrawXyLines();
@@ -196,6 +199,7 @@ namespace LayoutBXLYT
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
         }
 
+        int texId = 1;
         private void DrawPicturePane(BCLYT.PIC1 pane)
         {
                   Vector2[] TexCoords = new Vector2[] {
@@ -211,8 +215,6 @@ namespace LayoutBXLYT
                 pane.ColorBottomRight.Color,
                 pane.ColorBottomLeft.Color,
                 };
-
-            GL.Enable(EnableCap.Texture2D);
 
             if (pane.TexCoords.Length > 0)
             {
@@ -253,17 +255,17 @@ namespace LayoutBXLYT
                 pane.ColorBottomLeft.Color,
                 };
 
-            GL.Enable(EnableCap.Texture2D);
-
             if (pane.TexCoords.Length > 0)
             {
-                var mat = pane.GetMaterial();
+                var mat = pane.Material;
                 string textureMap0 = "";
-                if (mat.TextureMaps.Count > 0)
+                if (mat.TextureMaps.Length > 0)
                     textureMap0 = mat.GetTexture(0);
 
                 if (Textures.ContainsKey(textureMap0))
+                {
                     BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
+                }
 
                 TexCoords = new Vector2[] {
                         pane.TexCoords[0].TopLeft.ToTKVector2(),
@@ -275,7 +277,7 @@ namespace LayoutBXLYT
 
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
 
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.BindTexture(TextureTarget.Texture2D,  0);
         }
 
         public void DrawRectangle(CustomRectangle rect, Vector2[] texCoords, Color[] colors, bool useLines = true)
@@ -318,13 +320,11 @@ namespace LayoutBXLYT
             if (!texture.RenderableTex.GLInitialized)
                 return;
 
-            //     GL.ActiveTexture(TextureUnit.Texture0 + texid);
             GL.BindTexture(TextureTarget.Texture2D, texture.RenderableTex.TexID);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(tex.WrapModeU));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(tex.WrapModeV));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(tex.MaxFilterMode));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(tex.MinFilterMode));
-            GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 0.0f);
         }
 
         private static int ConvertTextureWrap(BFLYT.TextureRef.WrapMode wrapMode)
@@ -484,7 +484,6 @@ namespace LayoutBXLYT
             GL.End();
             GL.Color3(Color.Transparent);
             GL.PopAttrib();
-            GL.Enable(EnableCap.Texture2D);
             GL.PopMatrix();
         }
 

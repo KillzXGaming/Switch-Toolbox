@@ -188,6 +188,8 @@ namespace Toolbox.Library
         //
         public List<Surface> GetSurfaces(int ArrayIndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1)
         {
+
+
             if (GetAllSurfaces)
                 GetSurfaceAmount = (int)ArrayCount;
 
@@ -858,6 +860,8 @@ namespace Toolbox.Library
             atsc.BlockDimY = (byte)GetBlockHeight(Format);
             atsc.BlockDimZ = (byte)GetBlockDepth(Format);
             atsc.DataBlock = Utils.CombineByteArray(surfaces[0].mipmaps.ToArray());
+
+            Console.WriteLine("DataBlock " + atsc.DataBlock.Length);
 
             atsc.Save(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite));
         }

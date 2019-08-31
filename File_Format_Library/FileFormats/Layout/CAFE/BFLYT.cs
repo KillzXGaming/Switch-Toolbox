@@ -12,6 +12,7 @@ using FirstPlugin.Forms;
 using Syroot.Maths;
 using SharpYaml.Serialization;
 using FirstPlugin;
+using System.ComponentModel;
 
 namespace LayoutBXLYT
 {
@@ -859,15 +860,18 @@ namespace LayoutBXLYT
 
             public ushort MaterialIndex { get; set; }
 
-            public Material GetMaterial()
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public Material Material
             {
-                return ParentLayout.MaterialList.Materials[MaterialIndex];
+                get
+                {
+                    return ParentLayout.MaterialList.Materials[MaterialIndex];
+                }
             }
 
             public string GetTexture(int index)
             {
-                var mat = GetMaterial();
-                return ParentLayout.TextureList.Textures[mat.TextureMaps[index].ID];
+                return ParentLayout.TextureList.Textures[Material.TextureMaps[index].ID];
             }
 
             private BFLYT.Header ParentLayout;
@@ -924,6 +928,7 @@ namespace LayoutBXLYT
             private byte _flags1;
             private byte _flags2;
 
+            [DisplayName("Is Visable"), CategoryAttribute("Flags")]
             public bool Visible
             {
                 get { return (_flags1 & 0x1) == 0x1; }
@@ -935,6 +940,7 @@ namespace LayoutBXLYT
                 }
             }
 
+            [DisplayName("Influence Alpha"), CategoryAttribute("Alpha")]
             public bool InfluenceAlpha
             {
                 get { return (_flags1 & 0x2) == 0x2; }
@@ -947,6 +953,10 @@ namespace LayoutBXLYT
                 }
             }
 
+            [DisplayName("Alpha"), CategoryAttribute("Alpha")]
+            public byte Alpha { get; set; }
+
+            [DisplayName("Origin X"), CategoryAttribute("Origin")]
             public OriginX originX
             {
                 get { return (OriginX)((_flags2 & 0xC0) >> 6); }
@@ -957,6 +967,7 @@ namespace LayoutBXLYT
                 }
             }
 
+            [DisplayName("Origin Y"), CategoryAttribute("Origin")]
             public OriginY originY
             {
                 get { return (OriginY)((_flags2 & 0x30) >> 4); }
@@ -967,6 +978,7 @@ namespace LayoutBXLYT
                 }
             }
 
+            [Browsable(false)]
             public OriginX ParentOriginX
             {
                 get { return (OriginX)((_flags2 & 0xC) >> 2); }
@@ -977,6 +989,7 @@ namespace LayoutBXLYT
                 }
             }
 
+            [Browsable(false)]
             public OriginY ParentOriginY
             {
                 get { return (OriginY)((_flags2 & 0x3)); }
@@ -987,9 +1000,10 @@ namespace LayoutBXLYT
                 }
             }
 
-            public byte Alpha { get; set; }
+            [DisplayName("Parts Flag"), CategoryAttribute("Flags")]
             public byte PaneMagFlags { get; set; }
 
+            [DisplayName("User Data"), CategoryAttribute("User Data")]
             public string UserDataInfo { get; set; }
 
             public PAN1() : base()
@@ -1027,6 +1041,7 @@ namespace LayoutBXLYT
                 writer.Write(Height);
             }
 
+            [Browsable(false)]
             public bool ParentVisibility
             {
                 get
@@ -1078,13 +1093,20 @@ namespace LayoutBXLYT
 
         public class Material
         {
+            [DisplayName("Name"), CategoryAttribute("General")]
             public string Name { get; set; }
 
+            [DisplayName("Fore Color"), CategoryAttribute("Color")]
             public STColor8 ForeColor { get; set; }
+
+            [DisplayName("Back Color"), CategoryAttribute("Color")]
             public STColor8 BackColor { get; set; }
 
-            public List<TextureRef> TextureMaps { get; set; }
-            public List<TextureTransform> TextureTransforms { get; set; }
+            [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
+            public TextureRef[] TextureMaps { get; set; }
+
+            [DisplayName("Texture Transforms"), CategoryAttribute("Texture")]
+            public TextureTransform[] TextureTransforms { get; set; }
 
             private uint flags;
             private int unknown;
@@ -1100,16 +1122,13 @@ namespace LayoutBXLYT
 
             public Material()
             {
-                TextureMaps = new List<TextureRef>();
-                TextureTransforms = new List<TextureTransform>();
+                TextureMaps = new TextureRef[0];
+                TextureTransforms = new TextureTransform[0];
             }
 
             public Material(FileReader reader, Header header) : base()
             {
                 ParentLayout = header;
-
-                TextureMaps = new List<TextureRef>();
-                TextureTransforms = new List<TextureTransform>();
 
                 Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
                 if (header.VersionMajor >= 8)
@@ -1126,15 +1145,16 @@ namespace LayoutBXLYT
                     flags = reader.ReadUInt32();
                 }
 
-                Console.WriteLine($"VersionMajor " + header.VersionMajor);
-
                 uint texCount = Convert.ToUInt32(flags & 3);
                 uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
-                for (int i = 0; i < texCount; i++)
-                    TextureMaps.Add(new TextureRef(reader));
 
+                TextureMaps = new TextureRef[texCount];
+                for (int i = 0; i < texCount; i++)
+                    TextureMaps[i] = new TextureRef(reader, header);
+
+                TextureTransforms = new TextureTransform[mtxCount];
                 for (int i = 0; i < mtxCount; i++)
-                    TextureTransforms.Add(new TextureTransform(reader));
+                    TextureTransforms[i] = new TextureTransform(reader);
             }
 
             public void Write(FileWriter writer, Header header)
@@ -1154,10 +1174,10 @@ namespace LayoutBXLYT
                     writer.Write(flags);
                 }
 
-                for (int i = 0; i < TextureMaps.Count; i++)
+                for (int i = 0; i < TextureMaps.Length; i++)
                     TextureMaps[i].Write(writer);
 
-                for (int i = 0; i < TextureTransforms.Count; i++)
+                for (int i = 0; i < TextureTransforms.Length; i++)
                     TextureTransforms[i].Write(writer);
             }
         }
@@ -1187,6 +1207,7 @@ namespace LayoutBXLYT
 
         public class TextureRef
         {
+            public string Name { get; set; }
             public short ID;
             byte flag1;
             byte flag2;
@@ -1213,10 +1234,13 @@ namespace LayoutBXLYT
 
             public TextureRef() {}
 
-            public TextureRef(FileReader reader) {
+            public TextureRef(FileReader reader, BFLYT.Header header) {
                 ID = reader.ReadInt16();
                 flag1 = reader.ReadByte();
                 flag2 = reader.ReadByte();
+
+                if (header.Textures.Count > 0 && ID != -1)
+                    Name = header.Textures[ID];
             }
 
             public void Write(FileWriter writer)
@@ -1331,11 +1355,19 @@ namespace LayoutBXLYT
         {
             public bool DrawFromCenter { get; set; }
 
+            [DisplayName("Canvas Width"), CategoryAttribute("Layout")]
             public float Width { get; set; }
+
+            [DisplayName("Canvas Height"), CategoryAttribute("Layout")]
             public float Height { get; set; }
 
+            [DisplayName("Max Parts Width"), CategoryAttribute("Layout")]
             public float MaxPartsWidth { get; set; }
+
+            [DisplayName("Max Parts Height"), CategoryAttribute("Layout")]
             public float MaxPartsHeight { get; set; }
+
+            [DisplayName("Layout Name"), CategoryAttribute("Layout")]
             public string Name { get; set; }
 
             public LYT1()

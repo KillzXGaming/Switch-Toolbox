@@ -312,6 +312,7 @@
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="FileFormats\Texture\BTI.cs" />
+    <Compile Include="FileFormats\Texture\WTB.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />

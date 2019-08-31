@@ -379,6 +379,7 @@ namespace FirstPlugin
             Formats.Add(typeof(CTR.NCCH.RomFS));
             Formats.Add(typeof(DKCTF.MSBT));
             Formats.Add(typeof(DKCTF.PAK));
+            Formats.Add(typeof(WTB));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));

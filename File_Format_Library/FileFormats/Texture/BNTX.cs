@@ -1273,6 +1273,10 @@ namespace FirstPlugin
                     throw new Exception($"Cannot convert format {texFormat}");
             }
         }
+        public static TEX_FORMAT ConvertFormat(uint surfaceFormat)
+        {
+            return ConvertFormat((SurfaceFormat)surfaceFormat);
+        }
 
         public static TEX_FORMAT ConvertFormat(SurfaceFormat surfaceFormat)
         {
@@ -1340,6 +1344,7 @@ namespace FirstPlugin
                 case SurfaceFormat.ASTC_8x6_UNORM: return TEX_FORMAT.ASTC_8x6_UNORM;
                 case SurfaceFormat.ASTC_8x8_SRGB: return TEX_FORMAT.ASTC_8x8_SRGB;
                 case SurfaceFormat.ASTC_8x8_UNORM: return TEX_FORMAT.ASTC_8x8_UNORM;
+
                 case SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
                     throw new Exception($"Cannot convert format {surfaceFormat}");

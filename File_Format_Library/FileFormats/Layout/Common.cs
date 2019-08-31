@@ -7,30 +7,52 @@ using Syroot.Maths;
 using Toolbox.Library.IO;
 using Toolbox.Library;
 using WeifenLuo.WinFormsUI.Docking;
+using System.ComponentModel;
 
 namespace LayoutBXLYT
 {
     public class BasePane : SectionCommon
     {
+        [Browsable(false)]
         public bool DisplayInEditor { get; set; } = true;
 
+        [DisplayName("Name"), CategoryAttribute("Pane")]
         public string Name { get; set; }
 
+        [DisplayName("Translate"), CategoryAttribute("Pane")]
         public Vector3F Translate { get; set; }
+
+        [DisplayName("Rotate"), CategoryAttribute("Pane")]
         public Vector3F Rotate { get; set; }
+
+        [DisplayName("Scale"), CategoryAttribute("Pane")]
         public Vector2F Scale { get; set; }
+
+        [DisplayName("Width"), CategoryAttribute("Pane")]
         public float Width { get; set; }
+
+        [DisplayName("Width"), CategoryAttribute("Pane")]
         public float Height { get; set; }
 
+        [DisplayName("Origin X"), CategoryAttribute("Origin")]
         public virtual OriginX originX { get; set; }
+
+        [DisplayName("Origin X"), CategoryAttribute("Origin")]
         public virtual OriginY originY { get; set; }
+
+        [Browsable(false)]
         public virtual OriginX ParentOriginX { get; set; }
+
+        [Browsable(false)]
         public virtual OriginY ParentOriginY { get; set; }
 
+        [Browsable(false)]
         public BasePane Parent { get; set; }
 
+        [Browsable(false)]
         public List<BasePane> Childern { get; set; } = new List<BasePane>();
 
+        [Browsable(false)]
         public bool HasChildern
         {
             get { return Childern.Count > 0; }
