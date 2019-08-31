@@ -124,11 +124,15 @@ namespace LayoutBXLYT
                 if (pane is BFLYT.PIC1)
                     DrawPicturePane((BFLYT.PIC1)pane);
                 else if (pane is BCLYT.PIC1)
-                    DrawDefaultPane((BCLYT.PIC1)pane);
+                    DrawPicturePane((BCLYT.PIC1)pane);
+                else if (pane is BRLYT.PIC1)
+                    DrawPicturePane((BRLYT.PIC1)pane);
                 else if (pane is BFLYT.PAN1)
                     DrawDefaultPane((BFLYT.PAN1)pane);
                 else if (pane is BCLYT.PAN1)
                     DrawDefaultPane((BCLYT.PAN1)pane);
+                else if (pane is BRLYT.PAN1)
+                    DrawDefaultPane((BRLYT.PAN1)pane);
             }
             else
                 isRoot = false;
@@ -199,7 +203,6 @@ namespace LayoutBXLYT
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
         }
 
-        int texId = 1;
         private void DrawPicturePane(BCLYT.PIC1 pane)
         {
                   Vector2[] TexCoords = new Vector2[] {
@@ -225,6 +228,46 @@ namespace LayoutBXLYT
 
               //  if (Textures.ContainsKey(textureMap0))
                   //  BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
+
+                TexCoords = new Vector2[] {
+                        pane.TexCoords[0].TopLeft.ToTKVector2(),
+                        pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pane.TexCoords[0].BottomRight.ToTKVector2(),
+                        pane.TexCoords[0].BottomLeft.ToTKVector2(),
+                   };
+            }
+
+            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        private void DrawPicturePane(BRLYT.PIC1 pane)
+        {
+            Vector2[] TexCoords = new Vector2[] {
+                new Vector2(1,1),
+                new Vector2(0,1),
+                new Vector2(0,0),
+                new Vector2(1,0)
+                };
+
+            Color[] Colors = new Color[] {
+                pane.ColorTopLeft.Color,
+                pane.ColorTopRight.Color,
+                pane.ColorBottomRight.Color,
+                pane.ColorBottomLeft.Color,
+                };
+
+            if (pane.TexCoords.Length > 0)
+            {
+                var mat = pane.GetMaterial();
+                string textureMap0 = "";
+                if (mat.TextureMaps.Count > 0)
+                    textureMap0 = mat.GetTexture(0);
+
+                //  if (Textures.ContainsKey(textureMap0))
+                //  BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
+                GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
                 TexCoords = new Vector2[] {
                         pane.TexCoords[0].TopLeft.ToTKVector2(),

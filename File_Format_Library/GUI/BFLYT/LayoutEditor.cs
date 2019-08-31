@@ -292,6 +292,8 @@ namespace LayoutBXLYT
                 LoadBxlyt(((BFLYT)file).header, file.FileName);
             else if (file is BCLYT)
                 LoadBxlyt(((BCLYT)file).header, file.FileName);
+            else if (file is BRLYT)
+                LoadBxlyt(((BRLYT)file).header, file.FileName);
             else if (file is IArchiveFile)
             {
                 var layouts = SearchLayoutFiles((IArchiveFile)file);
@@ -307,6 +309,8 @@ namespace LayoutBXLYT
                                 LoadBxlyt(((BFLYT)layout).header, file.FileName);
                             if (layout is BCLYT)
                                 LoadBxlyt(((BCLYT)layout).header, file.FileName);
+                            if (layout is BRLYT)
+                                LoadBxlyt(((BRLYT)layout).header, file.FileName);
                         }
                     }                    
                 }
@@ -316,6 +320,8 @@ namespace LayoutBXLYT
                         LoadBxlyt(((BFLYT)layouts[0]).header, file.FileName);
                     if (layouts[0] is BCLYT)
                         LoadBxlyt(((BCLYT)layouts[0]).header, file.FileName);
+                    if (layouts[0] is BRLYT)
+                        LoadBxlyt(((BRLYT)layouts[0]).header, file.FileName);
                 }
             }
             else if (file is BFLAN)
@@ -335,7 +341,7 @@ namespace LayoutBXLYT
             foreach (var file in archiveFile.Files)
             {
                 var fileFormat = STFileLoader.OpenFileFormat(file.FileName,
-                    new Type[] { typeof(BFLYT), typeof(BCLYT), typeof(SARC) }, file.FileData);
+                    new Type[] { typeof(BFLYT), typeof(BCLYT), typeof(BRLYT), typeof(SARC) }, file.FileData);
 
                 if (fileFormat is BFLYT)
                 {
@@ -405,6 +411,7 @@ namespace LayoutBXLYT
             if (ActiveLayout.FileInfo is BFLYT)
             {
                 TextConverter = new LayoutTextDocked();
+                TextConverter.Text = "Text Converter";
                 TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
                 TextConverter.Show(dockPanel1, DockState.DockLeft);
             }

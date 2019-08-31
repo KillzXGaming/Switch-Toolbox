@@ -296,6 +296,20 @@ namespace Toolbox.Library.IO
             return STColor8.FromBytes(ReadBytes(4));
         }
 
+        public STColor16[] ReadColor16sRGBA(int count)
+        {
+            STColor16[] colors = new STColor16[count];
+            for (int i = 0; i < count; i++)
+                colors[i] = STColor16.FromShorts(ReadUInt16s(4));
+
+            return colors;
+        }
+
+        public STColor16 ReadColor16RGBA()
+        {
+            return STColor16.FromShorts(ReadUInt16s(4));
+        }
+
         public STColor[] ReadColorsRGBA(int count)
         {
             STColor[] colors = new STColor[count];

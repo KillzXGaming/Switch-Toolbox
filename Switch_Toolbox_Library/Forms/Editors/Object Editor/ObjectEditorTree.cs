@@ -599,6 +599,8 @@ namespace Toolbox.Library.Forms
 
         private void treeViewCustom1_DragEnter(object sender, DragEventArgs e)
         {
+            if (!Runtime.EnableDragDrop) return;
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.All;
             else
@@ -615,14 +617,32 @@ namespace Toolbox.Library.Forms
 
             if (node is ArchiveFileWrapper)
             {
+                treeViewCustom1.DoDragDrop("dummy", DragDropEffects.Copy);
+            }
+            else if (node is ArchiveFolderNodeWrapper || node is ArchiveRootNodeWrapper)
+            {
+                treeViewCustom1.DoDragDrop("dummy", DragDropEffects.Copy);
+            }
+        }
+
+        private void DropFileOutsideApplication(TreeNode node)
+        {
+            if (node is ArchiveFileWrapper)
+            {
+                Runtime.EnableDragDrop = false;
+
                 string fullPath = Write2TempAndGetFullPath(((ArchiveFileWrapper)node).ArchiveFileInfo);
 
                 DataObject dragObj = new DataObject();
                 dragObj.SetFileDropList(new System.Collections.Specialized.StringCollection() { fullPath });
                 treeViewCustom1.DoDragDrop(dragObj, DragDropEffects.Copy);
+
+                Runtime.EnableDragDrop = true;
             }
             else if (node is ArchiveFolderNodeWrapper || node is ArchiveRootNodeWrapper)
             {
+                Runtime.EnableDragDrop = false;
+
                 string[] fullPaths = Write2TempAndGetFullPath(node);
 
                 DataObject dragObj = new DataObject();
@@ -630,6 +650,8 @@ namespace Toolbox.Library.Forms
                 collection.AddRange(fullPaths);
                 dragObj.SetFileDropList(collection);
                 treeViewCustom1.DoDragDrop(dragObj, DragDropEffects.Copy);
+
+                Runtime.EnableDragDrop = true;
             }
         }
 
@@ -670,39 +692,52 @@ namespace Toolbox.Library.Forms
 
         private void treeViewCustom1_DragDrop(object sender, DragEventArgs e)
         {
-            Point pt = treeViewCustom1.PointToClient(new Point(e.X, e.Y));
-            var node = treeViewCustom1.GetNodeAt(pt.X, pt.Y);
+            if (!Runtime.EnableDragDrop) return;
 
-            if (node != null)
+            Console.WriteLine("test");
+
+            if (e.Effect == DragDropEffects.Copy)
             {
-                treeViewCustom1.SelectedNode = node;
+                Console.WriteLine("drop");
 
-                bool IsRoot = node is ArchiveRootNodeWrapper;
-                bool IsFolder = node is ArchiveFolderNodeWrapper;
-                bool IsFile = node is ArchiveFileWrapper && node.Parent != null;
-
-                if (IsRoot || IsFolder || IsFile)
-                {
-                    var archiveFile = GetActiveArchive();
-
-                    //Use the parent folder for files if it has any
-                    if (IsFile)
-                        TreeHelper.AddFiles(treeViewCustom1.SelectedNode.Parent, archiveFile, e.Data.GetData(DataFormats.FileDrop) as string[]);
-                    else
-                        TreeHelper.AddFiles(treeViewCustom1.SelectedNode, archiveFile, e.Data.GetData(DataFormats.FileDrop) as string[]);
-                }
+                DropFileOutsideApplication(treeViewCustom1.SelectedNode);
             }
-            else
+            else if (e.Effect == DragDropEffects.All)
             {
-                Cursor.Current = Cursors.WaitCursor;
+                Point pt = treeViewCustom1.PointToClient(new Point(e.X, e.Y));
+                var node = treeViewCustom1.GetNodeAt(pt.X, pt.Y);
 
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                foreach (string filename in files)
+                if (node != null)
                 {
-                    ((IMainForm)Runtime.MainForm).OpenFile(filename, Runtime.ObjectEditor.OpenModelsOnOpen);
-                }
+                    treeViewCustom1.SelectedNode = node;
 
-                Cursor.Current = Cursors.Default;
+                    bool IsRoot = node is ArchiveRootNodeWrapper;
+                    bool IsFolder = node is ArchiveFolderNodeWrapper;
+                    bool IsFile = node is ArchiveFileWrapper && node.Parent != null;
+
+                    if (IsRoot || IsFolder || IsFile)
+                    {
+                        var archiveFile = GetActiveArchive();
+
+                        //Use the parent folder for files if it has any
+                        if (IsFile)
+                            TreeHelper.AddFiles(treeViewCustom1.SelectedNode.Parent, archiveFile, e.Data.GetData(DataFormats.FileDrop) as string[]);
+                        else
+                            TreeHelper.AddFiles(treeViewCustom1.SelectedNode, archiveFile, e.Data.GetData(DataFormats.FileDrop) as string[]);
+                    }
+                }
+                else
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    foreach (string filename in files)
+                    {
+                        ((IMainForm)Runtime.MainForm).OpenFile(filename, Runtime.ObjectEditor.OpenModelsOnOpen);
+                    }
+
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 

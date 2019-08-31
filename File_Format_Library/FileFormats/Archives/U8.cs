@@ -121,19 +121,24 @@ namespace FirstPlugin
                 for (int i = 0; i < dirs.Length; i++)
                     dirs[i] = new DirectoryEntry();
 
-                DirectoryEntry currentDir = dirs[0];
+                DirectoryEntry currentDir = dirs[1];
+                nodes.Add(currentDir);
 
+                //Skip root so start index at 1
+                int dirIndex = 1;
                 for (int i = 0; i < TotalNodeCount; i++)
                 {
                     var node = entries[i];
-                    Console.WriteLine($"node " + node.Name + " " + node.nodeType);
+                    if (node.Name == string.Empty)
+                        continue;
+
                     if (node.nodeType == NodeEntry.NodeType.Directory)
                     {
-                        DirectoryEntry dir = new DirectoryEntry();
-                        dir.Name = node.Name;
-                        dir.nodeEntry = node;
-                        dirs[node.Setting1].AddNode(dir);
-                        currentDir = dir;
+                        dirs[i].Name = node.Name;
+                        dirs[i].nodeEntry = node;
+                        dirs[node.Setting1].AddNode(dirs[i]);
+
+                        currentDir =  dirs[i];
                     }
                     else
                     {
@@ -147,8 +152,6 @@ namespace FirstPlugin
                         entry.FileData = reader.ReadBytes((int)entry.nodeEntry.Setting2);
                     }
                 }
-
-                nodes.Add(currentDir);
             }
         }
 

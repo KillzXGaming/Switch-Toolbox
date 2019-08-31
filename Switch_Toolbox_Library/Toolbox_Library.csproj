@@ -300,14 +300,15 @@
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
     <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
+    <Compile Include="IO\Colors\STColor16.cs" />
     <Compile Include="IO\Extensions\ColorExtensions.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
     <Compile Include="IO\HSVPixel.cs" />
     <Compile Include="IO\IOComoon.cs" />
-    <Compile Include="IO\STColor.cs" />
-    <Compile Include="IO\STColor8.cs" />
+    <Compile Include="IO\Colors\STColor.cs" />
+    <Compile Include="IO\Colors\STColor8.cs" />
     <Compile Include="IO\SubStream.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />

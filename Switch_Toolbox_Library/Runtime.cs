@@ -18,6 +18,8 @@ namespace Toolbox.Library
         //Disable loading 3k and higher texture res to prevent slowdown and memory issues
         public static bool DisableLoadingGLHighResTextures = true;
 
+        public static bool EnableDragDrop = true;
+
         public static bool UseSingleInstance = true;
         public static bool UseDirectXTexDecoder = true;
         public static bool DEVELOPER_DEBUG_MODE = false;

@@ -980,6 +980,8 @@ namespace Toolbox
 
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
+            if (!Runtime.EnableDragDrop) return;
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.All;
             else
@@ -991,6 +993,8 @@ namespace Toolbox
 
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
+            if (!Runtime.EnableDragDrop) return;
+
             Cursor.Current = Cursors.WaitCursor;
 
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);

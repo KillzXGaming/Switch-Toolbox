@@ -297,6 +297,7 @@
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
+    <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />

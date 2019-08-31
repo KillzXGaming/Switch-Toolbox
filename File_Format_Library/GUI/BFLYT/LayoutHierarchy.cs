@@ -62,11 +62,14 @@ namespace LayoutBXLYT
 
             string imageKey = "";
             if (pane is BFLYT.WND1) imageKey = "WindowPane";
-            else if (pane is BFLYT.PIC1) imageKey = "PicturePane";
-            else if (pane is BFLYT.BND1) imageKey = "BoundryPane";
             else if (pane is BCLYT.WND1) imageKey = "WindowPane";
-            else if (pane is BCLYT.BND1) imageKey = "BoundryPane";
+            else if (pane is BRLYT.WND1) imageKey = "WindowPane";
+            else if (pane is BFLYT.PIC1) imageKey = "PicturePane";
             else if (pane is BCLYT.PIC1) imageKey = "PicturePane";
+            else if (pane is BRLYT.PIC1) imageKey = "PicturePane";
+            else if (pane is BFLYT.BND1) imageKey = "BoundryPane";
+            else if (pane is BCLYT.BND1) imageKey = "BoundryPane";
+            else if (pane is BRLYT.BND1) imageKey = "BoundryPane";
             else imageKey = "NullPane";
 
             paneNode.ImageKey = imageKey;

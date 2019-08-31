@@ -68,7 +68,7 @@ namespace Toolbox.Library
             return MipMapSizes;
         }
 
-        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int target = 1)
+        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int target = 1, bool LinearTileMode = false)
         {
             uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
@@ -81,6 +81,8 @@ namespace Toolbox.Library
             uint Pitch = 0;
             uint DataAlignment = 512;
             uint TileMode = 0;
+            if (LinearTileMode)
+                TileMode = 1;
 
             int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
 
@@ -99,6 +101,8 @@ namespace Toolbox.Library
                     uint depth = (uint)Math.Max(1, texture.Depth >> mipLevel);
 
                     uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+
+                    Console.WriteLine($"size " + size);
 
                     if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                         blockHeightShift += 1;
@@ -122,7 +126,6 @@ namespace Toolbox.Library
                         Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
                         SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
 
-                        Console.WriteLine($"{width} {height} {blkWidth} {blkHeight} {target} {bpp} {TileMode} {(int)Math.Max(0, BlockHeightLog2 - blockHeightShift)} {data_.Length}");
                         byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
                         //Create a copy and use that to remove uneeded data
                         byte[] result_ = new byte[size];

@@ -71,6 +71,8 @@ namespace FirstPlugin
                 uint unk2Table = reader.ReadUInt32();
                 uint textureInfoTable = reader.ReadUInt32();
 
+                bool UseExternalBinary = true;
+
                 List<TextureEntry> entries = new List<TextureEntry>();
                 for (int i = 0; i < numTextures; i++)
                 {
@@ -79,6 +81,9 @@ namespace FirstPlugin
                     //Get data offset
                     reader.SeekBegin(dataOffsetTable + (i * 4));
                     tex.DataOffset = reader.ReadUInt32();
+
+                    if (i == 0 && tex.DataOffset != 0)
+                        UseExternalBinary = false;
 
                     //Get data size
                     reader.SeekBegin(dataSizeTable + (i * 4));
@@ -91,16 +96,27 @@ namespace FirstPlugin
                     Nodes.Add(new TextureWrapper(tex) { Text = $"Texture {i}" });
                 }
 
-                string fileData = FilePath.Replace("wta", "wtp");
-                if (System.IO.File.Exists(fileData))
+                if (UseExternalBinary)
                 {
-                    using (var readerData = new FileReader(fileData))
+                    string fileData = FilePath.Replace("wta", "wtp");
+                    if (System.IO.File.Exists(fileData))
                     {
-                        for (int i = 0; i < numTextures; i++)
+                        using (var readerData = new FileReader(fileData))
                         {
-                            readerData.SeekBegin(entries[i].DataOffset);
-                            entries[i].ImageData = readerData.ReadBytes((int)entries[i].DataSize);
+                            for (int i = 0; i < numTextures; i++)
+                            {
+                                readerData.SeekBegin(entries[i].DataOffset);
+                                entries[i].ImageData = readerData.ReadBytes((int)entries[i].DataSize);
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < numTextures; i++)
+                    {
+                        reader.SeekBegin(entries[i].DataOffset);
+                        entries[i].ImageData = reader.ReadBytes((int)entries[i].DataSize);
                     }
                 }
             }
@@ -221,6 +237,8 @@ namespace FirstPlugin
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
+                Console.WriteLine($" Texture.ImageData " + Texture.ImageData.Length);
+
                 return TegraX1Swizzle.GetImageData(this, Texture.ImageData, ArrayLevel, MipLevel, 1);
             }
 
