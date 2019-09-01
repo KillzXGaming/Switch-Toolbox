@@ -195,7 +195,10 @@ namespace LayoutBXLYT
         {
             LayoutProperties = new LayoutProperties();
             LayoutProperties.Text = "Properties";
-            LayoutProperties.Show(dockPanel1, DockState.DockRight);
+            if (LayoutHierarchy != null)
+                LayoutProperties.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
+            else
+                LayoutProperties.Show(dockPanel1, DockState.DockRight);
         }
 
         private void ShowPaneHierarchy()

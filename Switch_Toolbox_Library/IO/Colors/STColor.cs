@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace Toolbox.Library
 {
     //Class that contains colors and useful color related methods
-    public class STColor
+    [Editor(typeof(Toolbox.Library.IO.ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
+    public class STColor 
     {
         public float R { get; set; }
         public float G { get; set; }

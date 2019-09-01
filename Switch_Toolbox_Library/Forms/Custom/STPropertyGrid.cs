@@ -60,8 +60,8 @@ namespace Toolbox.Library.Forms
 
         private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            if (OnPropertyChanged != null) OnPropertyChanged();
-            if (OnPropertyChanged2 != null) OnPropertyChanged2();
+            OnPropertyChanged?.Invoke();
+            OnPropertyChanged2?.Invoke();
         }
     }
 }

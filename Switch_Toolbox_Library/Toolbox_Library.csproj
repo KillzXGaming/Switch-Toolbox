@@ -240,6 +240,12 @@
     <Compile Include="Forms\ColorSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\Dialogs\STColorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\STColorDialog.Designer.cs">
+      <DependentUpon>STColorDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -301,6 +307,7 @@
     <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
     <Compile Include="IO\Bits\Bit.cs" />
+    <Compile Include="IO\Colors\ColorEditor.cs" />
     <Compile Include="IO\Colors\STColor16.cs" />
     <Compile Include="IO\Extensions\ColorExtensions.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />
@@ -886,6 +893,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\ExportModelSettings.resx">
       <DependentUpon>ExportModelSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\STColorDialog.resx">
+      <DependentUpon>STColorDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\STSaveLogDialog.resx">
       <DependentUpon>STSaveLogDialog.cs</DependentUpon>
