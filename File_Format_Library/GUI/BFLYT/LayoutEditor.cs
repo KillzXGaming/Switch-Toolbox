@@ -13,6 +13,7 @@ using WeifenLuo.WinFormsUI.ThemeVS2015;
 using Toolbox.Library.IO;
 using Toolbox.Library;
 using FirstPlugin;
+using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
@@ -414,6 +415,21 @@ namespace LayoutBXLYT
                 TextConverter.Text = "Text Converter";
                 TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
                 TextConverter.Show(dockPanel1, DockState.DockLeft);
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveLayout != null && ActiveLayout.FileInfo.CanSave)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = Utils.GetAllFilters(ActiveLayout.FileInfo);
+                sfd.FileName = ActiveLayout.FileInfo.FileName;
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, sfd.FileName);
+                }
             }
         }
     }

@@ -114,11 +114,15 @@ namespace LayoutBXLYT
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".bclim")
+                    if (Utils.GetExtension(file.FileName) == ".tpl")
                     {
-                        BCLIM bclim = (BCLIM)file.OpenFile();
-                        file.FileFormat = bclim;
-                        textures.Add(bclim.FileName, bclim);
+                        TPL tpl = (TPL)file.OpenFile();
+                        file.FileFormat = tpl;
+                        foreach (var tex in tpl.IconTextureList)
+                        {
+                            if (!textures.ContainsKey(tex.Text))
+                                textures.Add(tex.Text, tex);
+                        }
                     }
                 }
             }
@@ -204,6 +208,8 @@ namespace LayoutBXLYT
 
             public void Read(FileReader reader, BRLYT brlyt)
             {
+                IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
                 MaterialList = new MAT1();
@@ -333,7 +339,6 @@ namespace LayoutBXLYT
                             break;
                     }
 
-                    section.Signature = Signature;
                     section.SectionSize = SectionSize;
 
                     reader.SeekBegin(pos + SectionSize);
@@ -351,6 +356,7 @@ namespace LayoutBXLYT
 
             public void Write(FileWriter writer)
             {
+                writer.SetByteOrder(IsBigEndian);
                 writer.WriteSignature(Magic);
                 writer.Write(ByteOrderMark);
                 writer.Write(HeaderSize);

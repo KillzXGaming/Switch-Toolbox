@@ -12,6 +12,7 @@ using OpenTK;
 using Toolbox.Library;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.IO;
+using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
@@ -306,9 +307,9 @@ namespace LayoutBXLYT
                     textureMap0 = mat.GetTexture(0);
 
                 if (Textures.ContainsKey(textureMap0))
-                {
                     BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
-                }
+                else
+                    GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
                 TexCoords = new Vector2[] {
                         pane.TexCoords[0].TopLeft.ToTKVector2(),
@@ -354,7 +355,7 @@ namespace LayoutBXLYT
             }
         }
 
-        private static void BindGLTexture(BFLYT.TextureRef tex, STGenericTexture texture)
+        private static void BindGLTexture(TextureRef tex, STGenericTexture texture)
         {
             if (texture.RenderableTex == null || !texture.RenderableTex.GLInitialized)
                 texture.LoadOpenGLTexture();
@@ -370,34 +371,34 @@ namespace LayoutBXLYT
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(tex.MinFilterMode));
         }
 
-        private static int ConvertTextureWrap(BFLYT.TextureRef.WrapMode wrapMode)
+        private static int ConvertTextureWrap(TextureRef.WrapMode wrapMode)
         {
             switch (wrapMode)
             {
-                case BFLYT.TextureRef.WrapMode.Clamp: return (int)TextureWrapMode.Clamp;
-                case BFLYT.TextureRef.WrapMode.Mirror: return (int)TextureWrapMode.MirroredRepeat;
-                case BFLYT.TextureRef.WrapMode.Repeat: return (int)TextureWrapMode.Repeat;
+                case TextureRef.WrapMode.Clamp: return (int)TextureWrapMode.Clamp;
+                case TextureRef.WrapMode.Mirror: return (int)TextureWrapMode.MirroredRepeat;
+                case TextureRef.WrapMode.Repeat: return (int)TextureWrapMode.Repeat;
                 default: return (int)TextureWrapMode.Clamp;
             }
         }
 
-        private static int ConvertMagFilterMode(BFLYT.TextureRef.FilterMode filterMode)
+        private static int ConvertMagFilterMode(TextureRef.FilterMode filterMode)
         {
             switch (filterMode)
             {
-                case BFLYT.TextureRef.FilterMode.Linear: return (int)TextureMagFilter.Linear;
-                case BFLYT.TextureRef.FilterMode.Near: return (int)TextureMagFilter.Nearest;
-                default: return (int)BFLYT.TextureRef.FilterMode.Linear;
+                case TextureRef.FilterMode.Linear: return (int)TextureMagFilter.Linear;
+                case TextureRef.FilterMode.Near: return (int)TextureMagFilter.Nearest;
+                default: return (int)TextureRef.FilterMode.Linear;
             }
         }
 
-        private static int ConvertMinFilterMode(BFLYT.TextureRef.FilterMode filterMode)
+        private static int ConvertMinFilterMode(TextureRef.FilterMode filterMode)
         {
             switch (filterMode)
             {
-                case BFLYT.TextureRef.FilterMode.Linear: return (int)TextureMinFilter.Linear;
-                case BFLYT.TextureRef.FilterMode.Near: return (int)TextureMinFilter.Nearest;
-                default: return (int)BFLYT.TextureRef.FilterMode.Linear;
+                case TextureRef.FilterMode.Linear: return (int)TextureMinFilter.Linear;
+                case TextureRef.FilterMode.Near: return (int)TextureMinFilter.Nearest;
+                default: return (int)TextureRef.FilterMode.Linear;
             }
         }
 

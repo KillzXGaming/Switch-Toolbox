@@ -203,6 +203,8 @@ namespace LayoutBXLYT
 
             public void Read(FileReader reader, BCLYT bclyt)
             {
+                IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
                 MaterialList = new MAT1();
@@ -332,7 +334,6 @@ namespace LayoutBXLYT
                             break;
                     }
 
-                    section.Signature = Signature;
                     section.SectionSize = SectionSize;
 
                     reader.SeekBegin(pos + SectionSize);
@@ -352,6 +353,7 @@ namespace LayoutBXLYT
             {
                 Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
 
+                writer.SetByteOrder(IsBigEndian);
                 writer.WriteSignature(Magic);
                 writer.Write(ByteOrderMark);
                 writer.Write(HeaderSize);

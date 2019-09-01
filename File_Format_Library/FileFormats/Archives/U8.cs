@@ -51,8 +51,9 @@ namespace FirstPlugin
         }
 
         public List<INode> nodes = new List<INode>();
+        public List<FileEntry> files = new List<FileEntry>();
 
-        public IEnumerable<ArchiveFileInfo> Files => null;
+        public IEnumerable<ArchiveFileInfo> Files => files;
         public IEnumerable<INode> Nodes => nodes;
 
         public void ClearFiles() { nodes.Clear(); }
@@ -150,6 +151,7 @@ namespace FirstPlugin
 
                         reader.SeekBegin(entry.nodeEntry.Setting1);
                         entry.FileData = reader.ReadBytes((int)entry.nodeEntry.Setting2);
+                        files.Add(entry);
                     }
                 }
             }
@@ -166,6 +168,11 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            public override bool OpenFileFormatOnLoad
+            {
+                get { return true; }
+            }
+
             public NodeEntry nodeEntry;
         }
 

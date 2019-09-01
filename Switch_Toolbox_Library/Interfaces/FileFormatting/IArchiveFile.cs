@@ -41,7 +41,7 @@ namespace Toolbox.Library
     {
         // Opens the file format automatically (may take longer to open the archive file)
         [Browsable(false)]
-        public bool OpenFileFormatOnLoad { get; set; }
+        public virtual bool OpenFileFormatOnLoad { get; set; }
 
         [Browsable(false)]
         // The source file. If an archive is in another archive, this is necessary to get the original path

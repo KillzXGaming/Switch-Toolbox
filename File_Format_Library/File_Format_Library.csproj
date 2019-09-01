@@ -293,6 +293,15 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\AlphaCompare.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\BlendMode.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\FontShadowParameter.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\IndirectParameter.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\ProjectionTexGenParam.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TevStage.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TexCoordGen.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TextureRef.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />

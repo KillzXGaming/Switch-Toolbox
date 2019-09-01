@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
+using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {

@@ -366,7 +366,7 @@ namespace FirstPlugin
             Formats.Add(typeof(CSAB));
             Formats.Add(typeof(CMB));
             Formats.Add(typeof(G1T));
-            Formats.Add(typeof(LayoutBXLYT.BFLYT));
+            Formats.Add(typeof(LayoutBXLYT.Cafe.BFLYT));
             Formats.Add(typeof(LayoutBXLYT.BCLYT));
             Formats.Add(typeof(LayoutBXLYT.BRLYT));
             Formats.Add(typeof(ZSI));

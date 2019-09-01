@@ -146,6 +146,8 @@ namespace LayoutBXLYT
             get { return FileInfo.FileName; }
         }
 
+        public bool IsBigEndian { get; set; }
+
         internal IFileFormat FileInfo;
 
         public BasePane RootPane { get; set; }
@@ -196,10 +198,11 @@ namespace LayoutBXLYT
         }
     }
 
-    public class SectionCommon
+    public class SectionCommon 
     {
-        internal string Signature { get; set; }
-        internal uint SectionSize { get; set; }
+        public virtual string Signature { get; }
+        public uint SectionSize { get; set; }
+        public long StartPosition { get; set; }
 
         internal byte[] Data { get; set; }
 
@@ -208,7 +211,7 @@ namespace LayoutBXLYT
             writer.WriteSignature(Signature);
             if (Data != null)
             {
-                writer.Write(Data.Length);
+                writer.Write(Data.Length + 8);
                 writer.Write(Data);
             }
         }

@@ -300,6 +300,7 @@
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
     <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
+    <Compile Include="IO\Bits\Bit.cs" />
     <Compile Include="IO\Colors\STColor16.cs" />
     <Compile Include="IO\Extensions\ColorExtensions.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />

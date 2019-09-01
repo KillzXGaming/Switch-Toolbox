@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FirstPlugin;
 using Toolbox.Library.Forms;
+using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {

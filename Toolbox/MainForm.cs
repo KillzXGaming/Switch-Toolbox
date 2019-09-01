@@ -993,7 +993,7 @@ namespace Toolbox
 
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
-            if (!Runtime.EnableDragDrop) return;
+                        if (!Runtime.EnableDragDrop) return;
 
             Cursor.Current = Cursors.WaitCursor;
 

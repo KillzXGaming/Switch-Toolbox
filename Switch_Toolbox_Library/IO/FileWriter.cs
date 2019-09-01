@@ -97,7 +97,7 @@ namespace Toolbox.Library.IO
         {
             long pos = Position;
             WriteString(text);
-            Seek(pos + fixedSize);
+            SeekBegin(pos + fixedSize);
         }
 
         //Writes the total size of a section as a uint. 
@@ -117,7 +117,7 @@ namespace Toolbox.Library.IO
             long pos = Position;
             using (TemporarySeek(target, SeekOrigin.Begin))
             {
-                Write((uint)pos - (uint)RelativeOffsetPosition);
+                Write((uint)(pos - RelativeOffsetPosition));
             }
         }
 

@@ -374,6 +374,7 @@ namespace FirstPlugin
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
         }
+
         public void Read(FileReader reader)
         {
             ImageKey = "Texture";

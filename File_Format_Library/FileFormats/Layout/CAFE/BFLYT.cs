@@ -14,7 +14,7 @@ using SharpYaml.Serialization;
 using FirstPlugin;
 using System.ComponentModel;
 
-namespace LayoutBXLYT
+namespace LayoutBXLYT.Cafe
 {
     public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
     {
@@ -305,6 +305,8 @@ namespace LayoutBXLYT
                 ushort sectionCount = reader.ReadUInt16();
                 reader.ReadUInt16(); //Padding
 
+                IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+
                 bool setRoot = false;
                 bool setGroupRoot = false;
 
@@ -411,11 +413,17 @@ namespace LayoutBXLYT
                             break;
                         //If the section is not supported store the raw bytes
                         default:
-                            section.Data = reader.ReadBytes((int)SectionSize);
+                            section.Data = reader.ReadBytes((int)SectionSize - 8);
                             break;
                     }
+                    //Check if we reached the end or not
+                    long endPos = reader.Position;
+                    if (reader.Position < pos + SectionSize)
+                    {
+                        int size = (int)(endPos - pos);
+                        section.Data = reader.ReadBytes(size);
+                    }
 
-                    section.Signature = Signature;
                     section.SectionSize = SectionSize;
 
                     reader.SeekBegin(pos + SectionSize);
@@ -435,13 +443,44 @@ namespace LayoutBXLYT
             {
                 Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
 
+                writer.SetByteOrder(true);
                 writer.WriteSignature(Magic);
                 writer.Write(ByteOrderMark);
+                writer.SetByteOrder(IsBigEndian);
                 writer.Write(HeaderSize);
                 writer.Write(Version);
                 writer.Write(uint.MaxValue); //Reserve space for file size later
                 writer.Write(ushort.MaxValue); //Reserve space for section count later
                 writer.Seek(2); //padding
+
+                int sectionCount = 1;
+
+                WriteSection(writer, "lyt1", LayoutInfo,() => LayoutInfo.Write(writer, this));
+
+                if (TextureList != null && TextureList.Textures.Count > 0)
+                {
+                    WriteSection(writer, "txl1", TextureList,() => TextureList.Write(writer, this));
+                    sectionCount++;
+                }
+                if (FontList != null && FontList.Fonts.Count > 0)
+                {
+                    WriteSection(writer, "fnl1", FontList,() => FontList.Write(writer, this));
+                    sectionCount++;
+                }
+                if (MaterialList != null && MaterialList.Materials.Count > 0)
+                {
+                    WriteSection(writer, "mat1", MaterialList,() => MaterialList.Write(writer, this));
+                    sectionCount++;
+                }
+
+                WritePanes(writer, RootPane, this, ref sectionCount);
+                WriteGroupPanes(writer, RootGroup, this, ref sectionCount);
+
+                //Write the total section count
+                using (writer.TemporarySeek(0x10, System.IO.SeekOrigin.Begin))
+                {
+                    writer.Write((ushort)sectionCount);
+                }
 
                 //Write the total file size
                 using (writer.TemporarySeek(0x0C, System.IO.SeekOrigin.Begin))
@@ -449,7 +488,66 @@ namespace LayoutBXLYT
                     writer.Write((uint)writer.BaseStream.Length);
                 }
             }
+
+            private void WritePanes(FileWriter writer, BasePane pane, BxlytHeader header, ref int sectionCount)
+            {
+                WriteSection(writer, pane.Signature, pane,() => pane.Write(writer, header));
+                sectionCount++;
+
+                if (pane.HasChildern)
+                {
+                    sectionCount += 2;
+
+                    //Write start of children section
+                    WriteSection(writer, "pas1", null);
+
+                    foreach (var child in pane.Childern)
+                        WritePanes(writer, child, header, ref sectionCount);
+
+                    //Write pae1 of children section
+                    WriteSection(writer, "pae1", null);
+                }
+            }
+
+            private void WriteGroupPanes(FileWriter writer, BasePane pane, BxlytHeader header, ref int sectionCount)
+            {
+                WriteSection(writer, pane.Signature, pane, () => pane.Write(writer, header));
+                sectionCount++;
+
+                if (pane.HasChildern)
+                {
+                    sectionCount += 2;
+
+                    //Write start of children section
+                    WriteSection(writer, "grs1", null);
+
+                    foreach (var child in pane.Childern)
+                        WriteGroupPanes(writer, child, header, ref sectionCount);
+
+                    //Write pae1 of children section
+                    WriteSection(writer, "gre1", null);
+                }
+            }
+
+            private void WriteSection(FileWriter writer, string magic, SectionCommon section, Action WriteMethod = null)
+            {
+                long startPos = writer.Position;
+                writer.WriteSignature(magic);
+                writer.Write(uint.MaxValue);
+                WriteMethod?.Invoke();
+                if (section != null && section.Data != null)
+                    writer.Write(section.Data);
+
+                long endPos = writer.Position;
+
+                using (writer.TemporarySeek(startPos + 4, System.IO.SeekOrigin.Begin))
+                {
+                    writer.Write((uint)(endPos - startPos));
+                }
+
+            }
         }
+
 
         public class TexCoord
         {
@@ -469,6 +567,8 @@ namespace LayoutBXLYT
 
         public class TXT1 : PAN1
         {
+            public override string Signature { get; } = "txt1";
+
             public TXT1() : base()
             {
          
@@ -570,7 +670,7 @@ namespace LayoutBXLYT
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
-                long pos = writer.Position;
+                long pos = writer.Position - 8;
 
                 base.Write(writer, header);
                 writer.Write(TextLength);
@@ -620,6 +720,8 @@ namespace LayoutBXLYT
 
         public class WND1 : PAN1
         {
+            public override string Signature { get; } = "wnd1";
+
             public WND1() : base()
             {
 
@@ -662,6 +764,8 @@ namespace LayoutBXLYT
                 reader.SeekBegin(pos + contentOffset);
                 Content = new WindowContent(reader);
 
+                reader.SeekBegin(pos + frameOffsetTbl);
+
                 var offsets = reader.ReadUInt32s(FrameCount);
                 foreach (int offset in offsets)
                 {
@@ -672,7 +776,7 @@ namespace LayoutBXLYT
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
-                long pos = writer.Position;
+                long pos = writer.Position - 8;
 
                 base.Write(writer, header);
                 writer.Write(StretchLeft);
@@ -685,7 +789,7 @@ namespace LayoutBXLYT
                 writer.Write(FrameElementBottm);
                 writer.Write(FrameCount);
                 writer.Write(_flag);
-                writer.Seek(2);
+                writer.Write((ushort)0);
 
                 long _ofsContentPos = writer.Position;
                 writer.Write(0);
@@ -693,6 +797,19 @@ namespace LayoutBXLYT
 
                 writer.WriteUint32Offset(_ofsContentPos, pos);
                 Content.Write(writer);
+
+                if (WindowFrames.Count > 0)
+                {
+                    writer.WriteUint32Offset(_ofsContentPos + 4, pos);
+                    //Reserve space for frame offsets
+                    long _ofsFramePos = writer.Position;
+                    writer.Write(new uint[WindowFrames.Count]);
+                    for (int i = 0; i < WindowFrames.Count; i++)
+                    {
+                        writer.WriteUint32Offset(_ofsFramePos + (i * 4), pos);
+                        WindowFrames[i].Write(writer);
+                    }
+                }
             }
 
             public class WindowContent
@@ -768,6 +885,8 @@ namespace LayoutBXLYT
 
         public class BND1 : PAN1
         {
+            public override string Signature { get; } = "bnd1";
+
             public BND1() : base()
             {
 
@@ -786,6 +905,8 @@ namespace LayoutBXLYT
 
         public class GRP1 : BasePane
         {
+            public override string Signature { get; } = "grp1";
+ 
             public List<string> Panes { get; set; } = new List<string>();
 
             public GRP1() : base()
@@ -833,6 +954,8 @@ namespace LayoutBXLYT
 
         public class PRT1 : PAN1
         {
+            public override string Signature { get; } = "prt1";
+
             public PRT1() : base()
             {
 
@@ -851,6 +974,8 @@ namespace LayoutBXLYT
 
         public class PIC1 : PAN1
         {
+            public override string Signature { get; } = "pic1";
+
             public TexCoord[] TexCoords { get; set; }
 
             public STColor8 ColorTopLeft { get; set; }
@@ -890,10 +1015,10 @@ namespace LayoutBXLYT
             {
                 ParentLayout = header;
 
-                ColorTopLeft = STColor8.FromBytes(reader.ReadBytes(4));
-                ColorTopRight = STColor8.FromBytes(reader.ReadBytes(4));
-                ColorBottomLeft = STColor8.FromBytes(reader.ReadBytes(4));
-                ColorBottomRight = STColor8.FromBytes(reader.ReadBytes(4));
+                ColorTopLeft = reader.ReadColor8RGBA();
+                ColorTopRight = reader.ReadColor8RGBA();
+                ColorBottomLeft = reader.ReadColor8RGBA();
+                ColorBottomRight = reader.ReadColor8RGBA();
                 MaterialIndex = reader.ReadUInt16();
                 byte numUVs = reader.ReadByte();
                 reader.Seek(1); //padding
@@ -914,17 +1039,28 @@ namespace LayoutBXLYT
             public override void Write(FileWriter writer, BxlytHeader header)
             {
                 base.Write(writer, header);
-                writer.Write(ColorTopLeft.ToBytes());
-                writer.Write(ColorTopRight.ToBytes());
-                writer.Write(ColorBottomLeft.ToBytes());
-                writer.Write(ColorBottomRight.ToBytes());
+                writer.Write(ColorTopLeft);
+                writer.Write(ColorTopRight);
+                writer.Write(ColorBottomLeft);
+                writer.Write(ColorBottomRight);
                 writer.Write(MaterialIndex);
-                writer.Write(TexCoords != null ? TexCoords.Length : 0);
+                writer.Write((byte)TexCoords.Length);
+                writer.Write((byte)0);
+
+                for (int i = 0; i < TexCoords.Length; i++)
+                {
+                    writer.Write(TexCoords[i].TopLeft);
+                    writer.Write(TexCoords[i].TopRight);
+                    writer.Write(TexCoords[i].BottomLeft);
+                    writer.Write(TexCoords[i].BottomRight);
+                }
             }
         }
 
         public class PAN1 : BasePane
         {
+            public override string Signature { get; } = "pan1";
+
             private byte _flags1;
             private byte _flags2;
 
@@ -1086,27 +1222,67 @@ namespace LayoutBXLYT
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
+                long pos = writer.Position - 8;
+
                 writer.Write((ushort)Materials.Count);
                 writer.Seek(2);
+
+                long _ofsPos = writer.Position;
+                //Fill empty spaces for offsets later
+                writer.Write(new uint[Materials.Count]);
+
+                //Save offsets and strings
+                for (int i = 0; i < Materials.Count; i++)
+                {
+                    writer.WriteUint32Offset(_ofsPos + (i * 4), pos);
+                    Materials[i].Write(writer, header);
+                    writer.Align(4);
+                }
             }
         }
 
+        //Thanks to shibbs for the material info
+        //https://github.com/shibbo/flyte/blob/master/flyte/lyt/common/MAT1.cs
         public class Material
         {
             [DisplayName("Name"), CategoryAttribute("General")]
             public string Name { get; set; }
 
-            [DisplayName("Fore Color"), CategoryAttribute("Color")]
-            public STColor8 ForeColor { get; set; }
+            [DisplayName("Black Color"), CategoryAttribute("Color")]
+            public STColor8 BlackColor { get; set; }
 
-            [DisplayName("Back Color"), CategoryAttribute("Color")]
-            public STColor8 BackColor { get; set; }
+            [DisplayName("White Color"), CategoryAttribute("Color")]
+            public STColor8 WhiteColor { get; set; }
 
             [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
             public TextureRef[] TextureMaps { get; set; }
 
             [DisplayName("Texture Transforms"), CategoryAttribute("Texture")]
             public TextureTransform[] TextureTransforms { get; set; }
+
+            [DisplayName("Texture Coordinate Params"), CategoryAttribute("Texture")]
+            public TexCoordGen[] TexCoords { get; set; }
+
+            [DisplayName("Tev Stages"), CategoryAttribute("Tev")]
+            public TevStage[] TevStages { get; set; }
+
+            [DisplayName("Alpha Compare"), CategoryAttribute("Alpha")]
+            public AlphaCompare AlphaCompare { get; set; }
+
+            [DisplayName("Blend Mode"), CategoryAttribute("Blend")]
+            public BlendMode BlendMode { get; set; }
+
+            [DisplayName("Blend Mode Logic"), CategoryAttribute("Blend")]
+            public BlendMode BlendModeLogic { get; set; }
+
+            [DisplayName("Indirect Parameter"), CategoryAttribute("Texture")]
+            public IndirectParameter IndParameter { get; set; }
+
+            [DisplayName("Projection Texture Coord Parameters"), CategoryAttribute("Texture")]
+            public ProjectionTexGenParam[] ProjTexGenParams { get; set; }
+
+            [DisplayName("Font Shadow Parameters"), CategoryAttribute("Font")]
+            public FontShadowParameter FontShadowParameter { get; set; }
 
             private uint flags;
             private int unknown;
@@ -1135,42 +1311,77 @@ namespace LayoutBXLYT
                 {
                     flags = reader.ReadUInt32();
                     unknown = reader.ReadInt32();
-                    ForeColor = STColor8.FromBytes(reader.ReadBytes(4));
-                    BackColor = STColor8.FromBytes(reader.ReadBytes(4));
+                    BlackColor = STColor8.FromBytes(reader.ReadBytes(4));
+                    WhiteColor = STColor8.FromBytes(reader.ReadBytes(4));
                 }
                 else
                 {
-                    ForeColor = STColor8.FromBytes(reader.ReadBytes(4));
-                    BackColor = STColor8.FromBytes(reader.ReadBytes(4));
+                    BlackColor = STColor8.FromBytes(reader.ReadBytes(4));
+                    WhiteColor = STColor8.FromBytes(reader.ReadBytes(4));
                     flags = reader.ReadUInt32();
                 }
 
                 uint texCount = Convert.ToUInt32(flags & 3);
                 uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
+                uint texCoordGenCount = Convert.ToUInt32(flags >> 4) & 3;
+                uint tevStageCount = Convert.ToUInt32(flags >> 6) & 0x7;
+                var hasAlphaCompare = Convert.ToBoolean((flags >> 9) & 0x1);
+                var hasBlendMode = Convert.ToBoolean((flags >> 10) & 0x1);
+                var useTextureOnly = Convert.ToBoolean((flags >> 11) & 0x1);
+                var seperateBlendMode = Convert.ToBoolean((flags >> 12) & 0x1);
+                var hasIndParam = Convert.ToBoolean((flags >> 14) & 0x1);
+                var projTexGenParamCount = Convert.ToUInt32((flags >> 15) & 0x3);
+                var hasFontShadowParam = Convert.ToBoolean((flags >> 17) & 0x1);
+                var thresholdingAlphaInterpolation = Convert.ToBoolean((flags >> 18) & 0x1);
 
                 TextureMaps = new TextureRef[texCount];
+                TextureTransforms = new TextureTransform[mtxCount];
+                TexCoords = new TexCoordGen[texCoordGenCount];
+                TevStages = new TevStage[tevStageCount];
+                ProjTexGenParams = new ProjectionTexGenParam[projTexGenParamCount];
+
                 for (int i = 0; i < texCount; i++)
                     TextureMaps[i] = new TextureRef(reader, header);
 
-                TextureTransforms = new TextureTransform[mtxCount];
                 for (int i = 0; i < mtxCount; i++)
                     TextureTransforms[i] = new TextureTransform(reader);
+
+                for (int i = 0; i < texCoordGenCount; i++)
+                    TexCoords[i] = new TexCoordGen(reader, header);
+
+                for (int i = 0; i < tevStageCount; i++)
+                    TevStages[i] = new TevStage(reader, header);
+
+                if (hasAlphaCompare)
+                    AlphaCompare = new AlphaCompare(reader, header);
+                if (hasBlendMode)
+                    BlendMode = new BlendMode(reader, header);
+                if (seperateBlendMode)
+                    BlendModeLogic = new BlendMode(reader, header);
+                if (hasIndParam)
+                    IndParameter = new IndirectParameter(reader, header);
+
+                for (int i = 0; i < projTexGenParamCount; i++)
+                    ProjTexGenParams[i] = new ProjectionTexGenParam(reader, header);
+
+                if (hasFontShadowParam)
+                    FontShadowParameter = new FontShadowParameter(reader, header);
             }
 
-            public void Write(FileWriter writer, Header header)
+            public void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.WriteString(Name, 0x1C);
-                if (header.Version == 0x8030000)
+                if (header.VersionMajor >= 8)
                 {
                     writer.Write(flags);
                     writer.Write(unknown);
-                    writer.Write(ForeColor);
-                    writer.Write(BackColor);
+                    writer.Write(BlackColor);
+                    writer.Write(WhiteColor);
                 }
                 else
                 {
-                    writer.Write(ForeColor);
-                    writer.Write(BackColor);
+                    writer.Write(BlackColor);
+                    writer.Write(WhiteColor);
                     writer.Write(flags);
                 }
 
@@ -1179,88 +1390,27 @@ namespace LayoutBXLYT
 
                 for (int i = 0; i < TextureTransforms.Length; i++)
                     TextureTransforms[i].Write(writer);
-            }
-        }
 
-        public class TextureTransform
-        {
-            public Vector2F Translate;
-            public float Rotate;
-            public Vector2F Scale;
+                for (int i = 0; i < TexCoords.Length; i++)
+                    TexCoords[i].Write(writer);
 
-            public TextureTransform() { }
+                for (int i = 0; i < TevStages.Length; i++)
+                    TevStages[i].Write(writer);
 
-            public TextureTransform(FileReader reader)
-            {
-                Translate = reader.ReadVec2SY();
-                Rotate = reader.ReadSingle();
-                Scale = reader.ReadVec2SY();
-            }
+                if (AlphaCompare != null)
+                    AlphaCompare.Write(writer);
+                if (BlendMode != null)
+                    BlendMode.Write(writer);
+                if (BlendModeLogic != null)
+                    BlendModeLogic.Write(writer);
+                if (IndParameter != null)
+                    IndParameter.Write(writer);
 
-            public void Write(FileWriter writer)
-            {
-                writer.Write(Translate);
-                writer.Write(Rotate);
-                writer.Write(Scale);
-            }
-        }
+                for (int i = 0; i < ProjTexGenParams.Length; i++)
+                    ProjTexGenParams[i].Write(writer);
 
-        public class TextureRef
-        {
-            public string Name { get; set; }
-            public short ID;
-            byte flag1;
-            byte flag2;
-
-            public WrapMode WrapModeU
-            {
-                get { return (WrapMode)(flag1 & 0x3); }
-            }
-
-            public WrapMode WrapModeV
-            {
-                get { return (WrapMode)(flag2 & 0x3); }
-            }
-
-            public FilterMode MinFilterMode
-            {
-                get { return (FilterMode)((flag1 >> 2) & 0x3); }
-            }
-
-            public FilterMode MaxFilterMode
-            {
-                get { return (FilterMode)((flag2 >> 2) & 0x3); }
-            }
-
-            public TextureRef() {}
-
-            public TextureRef(FileReader reader, BFLYT.Header header) {
-                ID = reader.ReadInt16();
-                flag1 = reader.ReadByte();
-                flag2 = reader.ReadByte();
-
-                if (header.Textures.Count > 0 && ID != -1)
-                    Name = header.Textures[ID];
-            }
-
-            public void Write(FileWriter writer)
-            {
-                writer.Write(ID);
-                writer.Write(flag1);
-                writer.Write(flag2);
-            }
-
-            public enum FilterMode
-            {
-                Near = 0,
-                Linear = 1
-            }
-
-            public enum WrapMode
-            {
-                Clamp = 0,
-                Repeat = 1,
-                Mirror = 2
+                if (FontShadowParameter != null)
+                    FontShadowParameter.Write(writer);
             }
         }
 
@@ -1399,7 +1549,8 @@ namespace LayoutBXLYT
                 writer.Write(Height);
                 writer.Write(MaxPartsWidth);
                 writer.Write(MaxPartsHeight);
-                writer.Write(Name);
+                writer.WriteString(Name);
+                writer.Align(4);
             }
         }
     }
