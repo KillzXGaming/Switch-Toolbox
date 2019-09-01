@@ -421,7 +421,10 @@ namespace LayoutBXLYT
                 TextConverter = new LayoutTextDocked();
                 TextConverter.Text = "Text Converter";
                 TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
-                TextConverter.Show(dockPanel1, DockState.DockLeft);
+                if (ActiveViewport != null)
+                    TextConverter.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.4);
+                else
+                    TextConverter.Show(dockPanel1, DockState.DockLeft);
             }
         }
 

@@ -357,25 +357,25 @@ namespace LayoutBXLYT.Cafe
                             currentPane = picturePanel;
                             break;
                         case "txt1":
-                            var textPanel = new TXT1(reader);
+                            var textPanel = new TXT1(reader, this);
 
                             SetPane(textPanel, parentPane);
                             currentPane = textPanel;
                             break;
                         case "bnd1":
-                            var boundsPanel = new BND1(reader);
+                            var boundsPanel = new BND1(reader, this);
 
                             SetPane(boundsPanel, parentPane);
                             currentPane = boundsPanel;
                             break;
                         case "prt1":
-                            var partsPanel = new PRT1(reader);
+                            var partsPanel = new PRT1(reader, this);
 
                             SetPane(partsPanel, parentPane);
                             currentPane = partsPanel;
                             break;
                         case "wnd1":
-                            var windowPanel = new WND1(reader);
+                            var windowPanel = new WND1(reader, this);
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
                             break;
@@ -639,7 +639,7 @@ namespace LayoutBXLYT.Cafe
 
             private byte _flags;
 
-            public TXT1(FileReader reader) : base(reader)
+            public TXT1(FileReader reader, Header header) : base(reader)
             {
                 TextLength = reader.ReadUInt16();
                 MaxTextLength = reader.ReadUInt16();
@@ -743,7 +743,7 @@ namespace LayoutBXLYT.Cafe
 
             public List<WindowFrame> WindowFrames = new List<WindowFrame>();
 
-            public WND1(FileReader reader) : base(reader)
+            public WND1(FileReader reader, Header header) : base(reader)
             {
                 long pos = reader.Position - 0x54;
 
@@ -892,7 +892,7 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public BND1(FileReader reader) : base(reader)
+            public BND1(FileReader reader, Header header) : base(reader)
             {
 
             }
@@ -961,14 +961,111 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public PRT1(FileReader reader) : base(reader)
-            {
+            public float MagnifyX { get; set; }
+            public float MagnifyY { get; set; }
 
+            public List<PartProperty> Properties = new List<PartProperty>();
+
+            public PRT1(FileReader reader, Header header) : base(reader)
+            {
+                uint properyCount = reader.ReadUInt32();
+                MagnifyX = reader.ReadSingle();
+                MagnifyY = reader.ReadSingle();
+                for (int i = 0; i < properyCount; i++)
+                    Properties.Add(new PartProperty(reader, header, this));
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
+                long startPos = writer.Position;
                 base.Write(writer, header);
+                writer.Write(Properties.Count);
+                writer.Write(MagnifyX);
+                writer.Write(MagnifyY);
+
+                for (int i = 0; i < Properties.Count; i++)
+                    Properties[i].Write(writer, header, startPos);
+            }
+        }
+
+        public class PartProperty
+        {
+            public string Name { get; set; }
+
+            public byte UsageFlag { get; set; }
+            public byte BasicUsageFlag { get; set; }
+            public byte MaterialUsageFlag { get; set; }
+
+            public BasePane Property { get; set; }
+
+            public PartProperty(FileReader reader, Header header, PRT1 prt1)
+            {
+                Name = reader.ReadString(0x18).Replace("\0", string.Empty);
+                UsageFlag = reader.ReadByte();
+                BasicUsageFlag = reader.ReadByte();
+                MaterialUsageFlag = reader.ReadByte();
+                reader.ReadByte(); //padding
+                uint propertyOffset = reader.ReadUInt32();
+                uint userDataOffset = reader.ReadUInt32();
+                uint panelInfoOffset = reader.ReadUInt32();
+
+                if (propertyOffset != 0)
+                {
+                    reader.SeekBegin(prt1.StartPosition + propertyOffset);
+
+                    long startPos = reader.Position;
+                    string signtature = reader.ReadString(4, Encoding.ASCII);
+                    uint sectionSize = reader.ReadUInt32();
+
+                    switch (signtature)
+                    {
+                        case "pic1":
+                            Property = new PIC1(reader,header);
+                            break;
+                        case "txt1":
+                            Property = new TXT1(reader, header);
+                            break;
+                        case "wnd1":
+                            Property = new WND1(reader, header);
+                            break;
+                        case "bnd1":
+                            Property = new BND1(reader, header);
+                            break;
+                        case "prt1":
+                            Property = new PRT1(reader, header);
+                            break;
+                    }
+                }
+                if (userDataOffset != 0)
+                {
+                    reader.SeekBegin(prt1.StartPosition + userDataOffset);
+
+                }
+                if (panelInfoOffset != 0)
+                {
+                    reader.SeekBegin(prt1.StartPosition + panelInfoOffset);
+
+                }
+            }
+
+            public void Write(FileWriter writer, BxlytHeader header, long startPos)
+            {
+                writer.WriteString(Name, 0x18);
+                writer.Write(UsageFlag);
+                writer.Write(BasicUsageFlag);
+                writer.Write(MaterialUsageFlag);
+                writer.Write((byte)0);
+                //Reserve offset spaces
+                long _ofsPos = writer.Position;
+                writer.Write(0); //Property Offset
+                writer.Write(0); //External User Data
+                writer.Write(0); //Panel Info Offset
+
+                if (Property != null)
+                {
+                    writer.WriteUint32Offset(_ofsPos);
+                    Property.Write(writer, header);
+                }
             }
         }
 
@@ -976,13 +1073,19 @@ namespace LayoutBXLYT.Cafe
         {
             public override string Signature { get; } = "pic1";
 
+            [DisplayName("Texture Coordinates"), CategoryAttribute("Texture")]
             public TexCoord[] TexCoords { get; set; }
 
+            [DisplayName("Vertex Color (Top Left)"), CategoryAttribute("Color")]
             public STColor8 ColorTopLeft { get; set; }
+            [DisplayName("Vertex Color (Top Right)"), CategoryAttribute("Color")]
             public STColor8 ColorTopRight { get; set; }
+            [DisplayName("Vertex Color (Bottom Left)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomLeft { get; set; }
+            [DisplayName("Vertex Color (Bottom Right)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomRight { get; set; }
 
+            [Browsable(false)]
             public ushort MaterialIndex { get; set; }
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -994,6 +1097,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
+            [Browsable(false)]
             public string GetTexture(int index)
             {
                 return ParentLayout.TextureList.Textures[Material.TextureMaps[index].ID];
@@ -1064,7 +1168,7 @@ namespace LayoutBXLYT.Cafe
             private byte _flags1;
             private byte _flags2;
 
-            [DisplayName("Is Visable"), CategoryAttribute("Flags")]
+            [DisplayName("Is Visible"), CategoryAttribute("Flags")]
             public bool Visible
             {
                 get { return (_flags1 & 0x1) == 0x1; }
