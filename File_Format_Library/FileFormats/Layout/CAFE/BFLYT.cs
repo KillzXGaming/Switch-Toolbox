@@ -236,8 +236,11 @@ namespace LayoutBXLYT.Cafe
             public TXL1 TextureList { get; set; }
             public MAT1 MaterialList { get; set; }
             public FNL1 FontList { get; set; }
-            //   private List<SectionCommon> Sections;
-            //  public List<PAN1> Panes = new List<PAN1>();
+            public CNT1 Container { get; set; }
+            public USD1 UserData { get; set; }
+
+            //As of now this should be empty but just for future proofing
+            private List<SectionCommon> UnknownSections = new List<SectionCommon>();
 
             public int TotalPaneCount()
             {
@@ -324,7 +327,7 @@ namespace LayoutBXLYT.Cafe
                     string Signature = reader.ReadString(4, Encoding.ASCII);
                     uint SectionSize = reader.ReadUInt32();
 
-                    SectionCommon section = new SectionCommon();
+                    SectionCommon section = new SectionCommon(Signature);
                     switch (Signature)
                     {
                         case "lyt1":
@@ -379,8 +382,6 @@ namespace LayoutBXLYT.Cafe
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
                             break;
-                        case "cnt1":
-                            break;
                         case "pas1":
                             if (currentPane != null)
                                 parentPane = currentPane;
@@ -409,23 +410,20 @@ namespace LayoutBXLYT.Cafe
                             currentGroupPane = parentGroupPane;
                             parentGroupPane = currentGroupPane.Parent;
                             break;
+                     /*   case "cnt1":
+                            Container = new CNT1(reader, this);
+                            break;*/
                         case "usd1":
+                            UserData = new USD1(reader, this);
                             break;
                         //If the section is not supported store the raw bytes
                         default:
                             section.Data = reader.ReadBytes((int)SectionSize - 8);
+                            UnknownSections.Add(section);
                             break;
-                    }
-                    //Check if we reached the end or not
-                    long endPos = reader.Position;
-                    if (reader.Position < pos + SectionSize)
-                    {
-                        int size = (int)(endPos - pos);
-                        section.Data = reader.ReadBytes(size);
                     }
 
                     section.SectionSize = SectionSize;
-
                     reader.SeekBegin(pos + SectionSize);
                 }
             }
@@ -475,6 +473,18 @@ namespace LayoutBXLYT.Cafe
 
                 WritePanes(writer, RootPane, this, ref sectionCount);
                 WriteGroupPanes(writer, RootGroup, this, ref sectionCount);
+
+                if (UserData != null)
+                {
+                    WriteSection(writer, "usd1", UserData, () => UserData.Write(writer, this));
+                    sectionCount++;
+                }
+
+                foreach (var section in UnknownSections)
+                {
+                    WriteSection(writer, section.Signature, section, () => section.Write(writer, this));
+                    sectionCount++;
+                }
 
                 //Write the total section count
                 using (writer.TemporarySeek(0x10, System.IO.SeekOrigin.Begin))
@@ -535,8 +545,6 @@ namespace LayoutBXLYT.Cafe
                 writer.WriteSignature(magic);
                 writer.Write(uint.MaxValue);
                 WriteMethod?.Invoke();
-                if (section != null && section.Data != null)
-                    writer.Write(section.Data);
 
                 long endPos = writer.Position;
 
@@ -548,6 +556,18 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
+        public class CNT1 : SectionCommon
+        {
+            public CNT1(FileReader reader, Header header)
+            {
+
+            }
+
+            public override void Write(FileWriter writer, BxlytHeader header)
+            {
+
+            }
+        }
 
         public class TexCoord
         {
@@ -1066,6 +1086,150 @@ namespace LayoutBXLYT.Cafe
                     writer.WriteUint32Offset(_ofsPos);
                     Property.Write(writer, header);
                 }
+            }
+        }
+
+        public class USD1 : SectionCommon
+        {
+            public List<UserDataEntry> Entries = new List<UserDataEntry>();
+
+            public USD1(FileReader reader, Header header)
+            {
+                long startPos = reader.Position - 8;
+
+                ushort numEntries = reader.ReadUInt16();
+                reader.ReadUInt16(); //padding
+
+                for (int i = 0; i < numEntries; i++)
+                    Entries.Add(new UserDataEntry(reader, startPos, header));
+            }
+
+            public override void Write(FileWriter writer, BxlytHeader header)
+            {
+                long startPos = writer.Position - 8;
+
+                writer.Write((ushort)Entries.Count);
+                writer.Write((ushort)0);
+
+                for (int i = 0; i < Entries.Count; i++)
+                    Entries[i].Write(writer, startPos, header);
+            }
+        }
+
+        public class UserDataEntry
+        {
+            public string Name { get; set; }
+            public DataType Type { get; private set; }
+            public byte Unknown { get; set; }
+
+            private object data;
+
+            public string GetString()
+            {
+                return (string)data;
+            }
+
+            public float[] GetFloats()
+            {
+                return (float[])data;
+            }
+
+            public int[] GetInts()
+            {
+                return (int[])data;
+            }
+
+            public void SetStrings(string[] value)
+            {
+                data = value;
+                Type = DataType.String;
+            }
+
+            public void GetFloats(float [] value)
+            {
+                data = value;
+                Type = DataType.Float;
+            }
+
+            public void GetInts(int[] value)
+            {
+                data = value;
+                Type = DataType.Int;
+            }
+
+            public UserDataEntry(FileReader reader, long startPos, Header header)
+            {
+                long pos = reader.Position;
+
+                uint nameOffset = reader.ReadUInt32();
+                uint dataOffset = reader.ReadUInt32();
+                uint dataLength = reader.ReadUInt16();
+                Type = reader.ReadEnum<DataType>(false);
+                Unknown = reader.ReadByte();
+
+                reader.SeekBegin(pos + nameOffset);
+                Name = reader.ReadZeroTerminatedString();
+
+                reader.SeekBegin(pos + dataOffset);
+                switch (Type)
+                {
+                    case DataType.String:
+                        data = reader.ReadString((int)dataLength);
+                        break;
+                    case DataType.Int:
+                        data = reader.ReadInt32s((int)dataLength);
+                        break;
+                    case DataType.Float:
+                        data = reader.ReadSingles((int)dataLength);
+                        break;
+                }
+            }
+
+            public void Write(FileWriter writer, long startPos, BxlytHeader header)
+            {
+                long pos = writer.Position;
+
+                writer.Write(0); //nameOffset
+                writer.Write(0); //dataOffset
+                writer.Write(GetDataLength());
+                writer.Write(Type, false);
+                writer.Write(Unknown);
+
+                writer.WriteUint32Offset(pos + 4, pos);
+                switch (Type)
+                {
+                    case DataType.String:
+                        writer.Write((string)data);
+                        break;
+                    case DataType.Int:
+                        writer.Write((int[])data);
+                        break;
+                    case DataType.Float:
+                        writer.Write((float[])data);
+                        break;
+                }
+
+                writer.WriteUint32Offset(pos, pos);
+                writer.WriteString(Name);
+                writer.Align(4);
+            }
+
+            private int GetDataLength()
+            {
+                if (data is string)
+                    return ((string)data).Length;
+                else if (data is int[])
+                    return ((int[])data).Length;
+                else if (data is float[])
+                    return ((float[])data).Length;
+                return 0;
+            }
+
+            public enum DataType : byte
+            {
+                String,
+                Int,
+                Float,
             }
         }
 

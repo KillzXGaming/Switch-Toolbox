@@ -206,14 +206,20 @@ namespace LayoutBXLYT
 
         internal byte[] Data { get; set; }
 
+        public SectionCommon()
+        {
+
+        }
+
+        public SectionCommon(string signature)
+        {
+            Signature = signature;
+        }
+
         public virtual void Write(FileWriter writer, BxlytHeader header)
         {
-            writer.WriteSignature(Signature);
             if (Data != null)
-            {
-                writer.Write(Data.Length + 8);
                 writer.Write(Data);
-            }
         }
     }
 
