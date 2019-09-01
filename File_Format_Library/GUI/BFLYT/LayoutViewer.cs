@@ -52,6 +52,12 @@ namespace LayoutBXLYT
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            if (LayoutEditor.IsSaving)
+            {
+                base.OnFormClosing(e);
+                return;
+            }
+
             var result = MessageBox.Show("Are you sure you want to close this file? You will lose any unsaved progress!", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
                 e.Cancel = true;

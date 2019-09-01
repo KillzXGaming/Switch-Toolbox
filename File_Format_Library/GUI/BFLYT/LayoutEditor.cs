@@ -19,6 +19,8 @@ namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
+        public static bool IsSaving = false;
+
         private Dictionary<string, STGenericTexture> Textures;
 
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
@@ -36,6 +38,8 @@ namespace LayoutBXLYT
 
         public LayoutEditor()
         {
+            IsSaving = false;
+
             InitializeComponent();
 
             Textures = new Dictionary<string, STGenericTexture>();
@@ -313,7 +317,7 @@ namespace LayoutBXLYT
                             if (layout is BRLYT)
                                 LoadBxlyt(((BRLYT)layout).header, file.FileName);
                         }
-                    }                    
+                    }
                 }
                 else if (layouts.Count > 0)
                 {
@@ -356,7 +360,7 @@ namespace LayoutBXLYT
                 }
                 else if (Utils.GetExtension(file.FileName) == ".bntx")
                 {
-                   
+
                 }
                 else if (Utils.GetExtension(file.FileName) == ".bflim")
                 {
@@ -431,6 +435,47 @@ namespace LayoutBXLYT
                     STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, sfd.FileName);
                 }
             }
+        }
+
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e) {
+            SaveActiveFile();
+        }
+
+        private void SaveActiveFile(bool ForceDialog = false)
+        {
+            if (ActiveLayout != null && ActiveLayout.FileInfo.CanSave)
+            {
+                var fileFormat = ActiveLayout.FileInfo;
+                if (fileFormat.IFileInfo.ArchiveParent != null && !ForceDialog)
+                {
+                    this.DialogResult = DialogResult.OK;
+                    IsSaving = true;
+                    this.Close();
+                }
+                else
+                {
+                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, fileFormat.FileName);
+                }
+            }
+        }
+
+        private void LayoutEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.Alt && e.KeyCode == Keys.S) // Ctrl + Alt + S Save As
+            {
+                e.SuppressKeyPress = true;
+                SaveActiveFile(true);
+            }
+            else if (e.Control && e.KeyCode == Keys.S) // Ctrl + S Save
+            {
+                e.SuppressKeyPress = true;
+                SaveActiveFile(false);
+            }
+        }
+
+        private void stToolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            SaveActiveFile(false);
         }
     }
 }

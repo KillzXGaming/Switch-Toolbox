@@ -931,17 +931,23 @@ namespace Toolbox.Library
             {
                 activeForm = GetEditorForm(fileFormat);
                 activeForm.Text = (((IFileFormat)fileFormat).FileName);
+                activeForm.FormClosed += OnFormClosed;
                 activeForm.Show();
             }
+        }
 
-          /*  if (form.ShowDialog() == DialogResult.OK)
+        private void OnFormClosed(object sender, EventArgs args)
+        {
+            if (ArchiveFileInfo.FileFormat == null) return;
+
+            if (activeForm.DialogResult == DialogResult.OK)
             {
-                if (fileFormat.CanSave)
+                if (ArchiveFileInfo.FileFormat.CanSave)
                 {
                     ArchiveFileInfo.SaveFileFormat();
                     UpdateEditor();
                 }
-            }*/
+            }
         }
 
         private void OpenControlDialog(IFileFormat fileFormat)
