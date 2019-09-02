@@ -1250,26 +1250,39 @@ namespace LayoutBXLYT.Cafe
 
                 uint nameOffset = reader.ReadUInt32();
                 uint dataOffset = reader.ReadUInt32();
-                uint dataLength = reader.ReadUInt16();
+                ushort dataLength = reader.ReadUInt16();
                 Type = reader.ReadEnum<DataType>(false);
                 Unknown = reader.ReadByte();
 
-                reader.SeekBegin(pos + nameOffset);
-                Name = reader.ReadZeroTerminatedString();
+                long datapos = reader.Position;
 
-                reader.SeekBegin(pos + dataOffset);
-                switch (Type)
+                if (nameOffset != 0)
                 {
-                    case DataType.String:
-                        data = reader.ReadString((int)dataLength);
-                        break;
-                    case DataType.Int:
-                        data = reader.ReadInt32s((int)dataLength);
-                        break;
-                    case DataType.Float:
-                        data = reader.ReadSingles((int)dataLength);
-                        break;
+                    reader.SeekBegin(pos + nameOffset);
+                    Name = reader.ReadZeroTerminatedString();
                 }
+
+                if (dataOffset != 0)
+                {
+                    reader.SeekBegin(pos + dataOffset);
+                    switch (Type)
+                    {
+                        case DataType.String:
+                            if (dataLength != 0)
+                                data = reader.ReadString((int)dataLength);
+                            else
+                                data = reader.ReadZeroTerminatedString();
+                            break;
+                        case DataType.Int:
+                            data = reader.ReadInt32s((int)dataLength);
+                            break;
+                        case DataType.Float:
+                            data = reader.ReadSingles((int)dataLength);
+                            break;
+                    }
+                }
+
+                reader.SeekBegin(datapos);
             }
 
             public void Write(FileWriter writer, long startPos, BxlytHeader header)
