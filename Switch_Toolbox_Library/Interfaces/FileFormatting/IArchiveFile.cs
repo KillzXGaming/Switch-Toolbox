@@ -871,6 +871,7 @@ namespace Toolbox.Library
         private void ReplaceAction(object sender, EventArgs args)
         {
             ArchiveFileInfo.Replace();
+            ArchiveFileInfo.FileFormat = null;
             UpdateEditor();
         }
 

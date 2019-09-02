@@ -23,12 +23,15 @@ namespace LayoutBXLYT
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
             var imgList = new ImageList();
+            imgList.Images.Add("folder", Toolbox.Library.Properties.Resources.Folder);
             imgList.Images.Add("AlignmentPane", FirstPlugin.Properties.Resources.AlignmentPane);
             imgList.Images.Add("WindowPane", FirstPlugin.Properties.Resources.WindowPane);
             imgList.Images.Add("ScissorPane", FirstPlugin.Properties.Resources.ScissorPane);
             imgList.Images.Add("BoundryPane", FirstPlugin.Properties.Resources.BoundryPane);
             imgList.Images.Add("NullPane", FirstPlugin.Properties.Resources.NullPane);
             imgList.Images.Add("PicturePane", FirstPlugin.Properties.Resources.PicturePane);
+            imgList.Images.Add("QuickAcess", FirstPlugin.Properties.Resources.QuickAccess);
+
             imgList.ImageSize = new Size(22,22);
             treeView1.ImageList = imgList;
         }
@@ -40,10 +43,14 @@ namespace LayoutBXLYT
             isLoaded = false;
             OnProperySelected = onPropertySelected;
 
+            treeView1.BeginUpdate();
             treeView1.Nodes.Clear();
 
+            CreateQuickAccess(bxlyt);
             LoadPane(bxlyt.RootGroup);
             LoadPane(bxlyt.RootPane);
+
+            treeView1.EndUpdate();
 
             isLoaded = true;
         }
@@ -54,7 +61,72 @@ namespace LayoutBXLYT
             isLoaded = false;
         }
 
-        private void LoadPane(BasePane pane, TreeNode parent = null)
+        private void CreateQuickAccess(BxlytHeader bxlyt)
+        {
+            var panes = new List<BasePane>();
+            var groupPanes = new List<BasePane>();
+            GetPanes(bxlyt.RootPane,ref panes);
+            GetGroupPanes(bxlyt.RootGroup,ref groupPanes);
+
+            TreeNode node = new TreeNode("Quick Access");
+            node.ImageKey = "QuickAcess";
+            node.SelectedImageKey = "QuickAcess";
+            treeView1.Nodes.Add(node);
+
+            TreeNode nullFolder = new TreeNode("Null Panes");
+            TreeNode windowFolder = new TreeNode("Window Panes");
+            TreeNode pictureFolder = new TreeNode("Picture Panes");
+            TreeNode boundryFolder = new TreeNode("Boundry Panes");
+            TreeNode partsFolder = new TreeNode("Part Panes");
+            TreeNode groupFolder = new TreeNode("Groups");
+
+            node.Nodes.Add(nullFolder);
+            node.Nodes.Add(windowFolder);
+            node.Nodes.Add(pictureFolder);
+            node.Nodes.Add(boundryFolder);
+            node.Nodes.Add(partsFolder);
+            node.Nodes.Add(groupFolder);
+
+            for (int i = 0; i < panes.Count; i++)
+            {
+                var paneNode = CreatePaneWrapper(panes[i]);
+                if (panes[i] is BFLYT.WND1) windowFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BCLYT.WND1) windowFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BRLYT.WND1) windowFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BFLYT.PIC1) pictureFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BCLYT.PIC1) pictureFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BRLYT.PIC1) pictureFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BFLYT.BND1) boundryFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BCLYT.BND1) boundryFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BRLYT.BND1) boundryFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BCLYT.PRT1) partsFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BFLYT.PRT1) partsFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BRLYT.PRT1) partsFolder.Nodes.Add(paneNode);
+                else nullFolder.Nodes.Add(paneNode);
+            }
+
+            for (int i = 0; i < groupPanes.Count; i++)
+            {
+                var paneNode = CreatePaneWrapper(groupPanes[i]);
+                groupFolder.Nodes.Add(paneNode);
+            }
+        }
+
+        private void GetPanes(BasePane pane, ref List<BasePane> panes)
+        {
+            panes.Add(pane);
+            foreach (var childPane in pane.Childern)
+                  GetPanes(childPane,ref panes);
+        }
+
+        private void GetGroupPanes(BasePane pane, ref List<BasePane> panes)
+        {
+            panes.Add(pane);
+            foreach (var childPane in pane.Childern)
+                GetPanes(childPane,ref panes);
+        }
+
+        private PaneTreeWrapper CreatePaneWrapper(BasePane pane)
         {
             PaneTreeWrapper paneNode = new PaneTreeWrapper();
             paneNode.Checked = true;
@@ -76,6 +148,12 @@ namespace LayoutBXLYT
             paneNode.ImageKey = imageKey;
             paneNode.SelectedImageKey = imageKey;
 
+            return paneNode;
+        }
+
+        private void LoadPane(BasePane pane, TreeNode parent = null)
+        {
+            var paneNode = CreatePaneWrapper(pane);
             if (parent == null)
                 treeView1.Nodes.Add(paneNode);
             else
