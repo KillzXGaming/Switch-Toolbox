@@ -875,9 +875,7 @@ namespace FirstPlugin
 
                     string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
 
-                    string ext = Utils.GetExtension(FileName);
-
-                    Console.WriteLine(ext);
+                    string ext = Utils.GetExtension(file);
 
                     foreach (TextureData node in Textures.Values)
                     {
@@ -888,16 +886,17 @@ namespace FirstPlugin
                             switch (ext)
                             {
                                 case ".bftex":
-                                    node.Texture.Import(FileName);
+                                    node.Texture.Import(file);
                                     node.Texture.Name = Text;
                                     node.LoadOpenGLTexture();
                                     break;
                                 case ".dds":
-                                    setting.LoadDDS(FileName, null, node);
+                                case ".dds2":
+                                    setting.LoadDDS(file, null, node);
                                     node.ApplyImportSettings(setting, STCompressionMode.Normal);
                                     break;
                                 case ".astc":
-                                    setting.LoadASTC(FileName);
+                                    setting.LoadASTC(file);
                                     node.ApplyImportSettings(setting, STCompressionMode.Normal);
                                     break;
                                 case ".png":
@@ -907,7 +906,7 @@ namespace FirstPlugin
                                 case ".jpg":
                                 case ".jpeg":
                                     TexturesForImportSettings.Add(node);
-                                    setting.LoadBitMap(FileName);
+                                    setting.LoadBitMap(file);
                                     importer.LoadSetting(setting);
                                     if (!STGenericTexture.IsAtscFormat(DefaultFormat))
                                         setting.Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);

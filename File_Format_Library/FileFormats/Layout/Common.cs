@@ -72,6 +72,21 @@ namespace LayoutBXLYT
             ParentOriginY = OriginY.Center;
         }
 
+        private CustomRectangle rectangle;
+        public CustomRectangle Rectangle
+        {
+            get
+            {
+                if (rectangle == null)
+                    UpdateRectangle();
+                return rectangle;
+            }
+        }
+
+        private void UpdateRectangle() {
+            rectangle = CreateRectangle();
+        }
+
         public CustomRectangle CreateRectangle()
         {
             //Do origin transforms
@@ -122,6 +137,15 @@ namespace LayoutBXLYT
             }
 
             return new Vector4(left, right, top, bottom);
+        }
+
+        public bool IsHit(int X, int Y)
+        {
+            if ((X > Rectangle.X) && (X < Rectangle.X + Rectangle.Width) &&
+                (Y > Rectangle.Y) && (Y < Rectangle.Y + Rectangle.Height))
+                return true;
+            else
+                return false;
         }
     }
 
@@ -236,6 +260,26 @@ namespace LayoutBXLYT
             RightPoint = right;
             TopPoint = top;
             BottomPoint = bottom;
+        }
+
+        public float X
+        {
+            get { return Width / 2; }
+        }
+
+        public float Y
+        {
+            get { return Height / 2; }
+        }
+
+        public float Width
+        {
+            get { return LeftPoint - RightPoint; }
+        }
+
+        public float Height
+        {
+            get { return TopPoint - BottomPoint; }
         }
     }
 

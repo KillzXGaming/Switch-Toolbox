@@ -101,6 +101,7 @@ namespace LayoutBXLYT
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
+            GL.Enable(EnableCap.ColorMaterial);
             GL.Enable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
@@ -564,15 +565,48 @@ namespace LayoutBXLYT
         }
 
         private bool mouseHeldDown = false;
+        private bool isPicked = false;
         private Point originMouse;
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            //Pick an object for moving
+            if (Control.ModifierKeys == Keys.Alt && e.Button == MouseButtons.Left)
+            {
+                var hitPane = SearchHit(LayoutFile.RootPane, e.X, e.Y);
+                if (hitPane != null)
+                {
+                    SelectedPanes.Add(hitPane);
+                    UpdateViewport();
+
+                    isPicked = true;
+                }
+            }
+            else if (e.Button == MouseButtons.Left)
             {
                 mouseHeldDown = true;
                 originMouse = e.Location;
+
+                var hitPane = SearchHit(LayoutFile.RootPane, e.X, e.Y);
+                Console.WriteLine($"Has Hit " + hitPane != null);
+                if (hitPane != null)
+                {
+                    SelectedPanes.Add(hitPane);
+                    UpdateViewport();
+                }
+
                 glControl1.Invalidate();
             }
+        }
+
+        private BasePane SearchHit(BasePane pane, int X, int Y)
+        {
+            if (pane.IsHit(X, Y))
+                return pane;
+
+            foreach (var childPane in pane.Childern)
+                return SearchHit(childPane, X, Y);
+
+            return null;
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)
@@ -580,6 +614,7 @@ namespace LayoutBXLYT
             if (e.Button == MouseButtons.Left)
             {
                 mouseHeldDown = false;
+                isPicked = false;
                 glControl1.Invalidate();
             }
         }

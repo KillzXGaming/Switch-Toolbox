@@ -170,6 +170,9 @@ namespace Toolbox.Library.Forms
 
         public void FillEditor(string Text)
         {
+            if (scintilla1 == null || scintilla1.IsDisposed || scintilla1.Disposing)
+                return;
+
             InitSyntaxColoring();
 
             scintilla1.Text = Text;
@@ -186,9 +189,6 @@ namespace Toolbox.Library.Forms
         }
 
         private void InitSyntaxColoring() {
-            if (scintilla1 == null || scintilla1.IsDisposed || scintilla1.Disposing)
-                return;
-
             scintilla1.StyleResetDefault();
             scintilla1.Styles[Style.Default].Font = "Consolas";
             scintilla1.Styles[Style.Default].Size = 10;

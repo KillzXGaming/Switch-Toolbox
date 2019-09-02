@@ -1043,15 +1043,22 @@ namespace LayoutBXLYT.Cafe
 
             }
 
+            [DisplayName("Magnify X"), CategoryAttribute("Parts")]
             public float MagnifyX { get; set; }
+
+            [DisplayName("Magnify Y"), CategoryAttribute("Parts")]
             public float MagnifyY { get; set; }
 
-            public List<PartProperty> Properties = new List<PartProperty>();
+            [DisplayName("Properties"), CategoryAttribute("Parts")]
+            public List<PartProperty> Properties { get; set; }
 
-            private string PropertyName;
+            [DisplayName("External Layout File"), CategoryAttribute("Parts")]
+            public string LayoutFile { get; set; }
 
             public PRT1(FileReader reader, Header header) : base(reader)
             {
+                Properties = new List<PartProperty>();
+
                 StartPosition = reader.Position - 84;
 
                 uint properyCount = reader.ReadUInt32();
@@ -1060,7 +1067,7 @@ namespace LayoutBXLYT.Cafe
                 for (int i = 0; i < properyCount; i++)
                     Properties.Add(new PartProperty(reader, header, StartPosition));
 
-                PropertyName = reader.ReadZeroTerminatedString();
+                LayoutFile = reader.ReadZeroTerminatedString();
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -1074,7 +1081,7 @@ namespace LayoutBXLYT.Cafe
                 for (int i = 0; i < Properties.Count; i++)
                     Properties[i].Write(writer, header, startPos);
 
-                writer.WriteString(PropertyName);
+                writer.WriteString(LayoutFile);
                 writer.Align(4);
 
                 for (int i = 0; i < Properties.Count; i++)

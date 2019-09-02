@@ -343,6 +343,8 @@ namespace Toolbox.Library.IO
                 }
                 if (Path.GetExtension(FileName) == ".cmp" && CompType == CompressionType.None)
                 {
+                    if (stream != null)
+                        data = stream.ToArray();
                     if (data == null)
                         data = File.ReadAllBytes(FileName);
 
