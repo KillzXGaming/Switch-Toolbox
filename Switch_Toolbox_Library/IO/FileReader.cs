@@ -132,9 +132,26 @@ namespace Toolbox.Library.IO
             return Names;
         }
 
-        public string ReadZeroTerminatedString()
+        public string ReadZeroTerminatedString(Encoding encoding = null)
         {
-            return ReadString(BinaryStringFormat.ZeroTerminated);
+            return ReadString(BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);
+        }
+
+        public string ReadUTF16String()
+        {
+            List<byte> chars = new List<byte>();
+
+            while (true)
+            {
+                ushort val = ReadUInt16();
+
+                if (val == 0)
+                {
+                    return Encoding.ASCII.GetString(chars.ToArray());
+                }
+                else
+                    chars.Add((byte)val); // casting to byte will remove the period, which is a part of UTF-16
+            }
         }
 
         /// <summary>

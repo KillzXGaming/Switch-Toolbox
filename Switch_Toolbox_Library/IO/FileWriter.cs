@@ -71,9 +71,9 @@ namespace Toolbox.Library.IO
             Write(Encoding.ASCII.GetBytes(value));
         }
 
-        public void WriteString(string value)
+        public void WriteString(string value, Encoding encoding = null)
         {
-            Write(value, BinaryStringFormat.ZeroTerminated);
+            Write(value, BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);
         }
 
         public void WriteUint64Offset(long target)
@@ -93,10 +93,10 @@ namespace Toolbox.Library.IO
                 ByteOrder = ByteOrder.LittleEndian;
         }
 
-        public void WriteString(string text, uint fixedSize)
+        public void WriteString(string text, uint fixedSize, Encoding encoding = null)
         {
             long pos = Position;
-            WriteString(text);
+            WriteString(text, encoding);
             SeekBegin(pos + fixedSize);
         }
 

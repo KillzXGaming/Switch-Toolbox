@@ -539,12 +539,13 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            private void WriteSection(FileWriter writer, string magic, SectionCommon section, Action WriteMethod = null)
+            internal static void WriteSection(FileWriter writer, string magic, SectionCommon section, Action WriteMethod = null)
             {
                 long startPos = writer.Position;
                 writer.WriteSignature(magic);
                 writer.Write(uint.MaxValue);
                 WriteMethod?.Invoke();
+                writer.Align(4);
 
                 long endPos = writer.Position;
 
@@ -558,8 +559,35 @@ namespace LayoutBXLYT.Cafe
 
         public class CNT1 : SectionCommon
         {
+            public string Name { get; set; }
+
             public CNT1(FileReader reader, Header header)
             {
+                uint paneNamesOffset = 0;
+                uint paneCount = 0;
+                uint animCount = 0;
+                uint controlUserNameOffset = 0;
+                uint paneParamNamesOffset = 0;
+                uint animParamNamesOffset = 0;
+
+                if (header.VersionMajor < 3)
+                {
+                    paneNamesOffset = reader.ReadUInt32();
+                    paneCount = reader.ReadUInt32();
+                    animCount = reader.ReadUInt32();
+                }
+                else
+                {
+                    controlUserNameOffset = reader.ReadUInt32();
+                    paneNamesOffset = reader.ReadUInt32();
+                    paneCount = reader.ReadUInt16();
+                    animCount = reader.ReadUInt16();
+                    paneParamNamesOffset = reader.ReadUInt32();
+                    animParamNamesOffset = reader.ReadUInt32();
+                }
+
+                Name = reader.ReadZeroTerminatedString();
+
 
             }
 
@@ -641,6 +669,8 @@ namespace LayoutBXLYT.Cafe
 
             public float ShadowItalic { get; set; }
 
+            public string TextBoxName { get; set; }
+
             public bool PerCharTransform
             {
                 get { return (_flags & 0x10) != 0; }
@@ -657,10 +687,14 @@ namespace LayoutBXLYT.Cafe
                 set { _flags = value ? (byte)(_flags | 1) : unchecked((byte)(_flags & (~1))); }
             }
 
+            public string FontName { get; set; }
+
             private byte _flags;
 
             public TXT1(FileReader reader, Header header) : base(reader)
             {
+                long startPos = reader.Position - 84;
+
                 TextLength = reader.ReadUInt16();
                 MaxTextLength = reader.ReadUInt16();
                 MaterialIndex = reader.ReadUInt16();
@@ -676,16 +710,31 @@ namespace LayoutBXLYT.Cafe
                 FontSize = reader.ReadVec2SY();
                 CharacterSpace = reader.ReadSingle();
                 LineSpace = reader.ReadSingle();
+                uint nameOffset = reader.ReadUInt32();
                 ShadowXY = reader.ReadVec2SY();
                 ShadowXYSize = reader.ReadVec2SY();
                 ShadowForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowBackColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowItalic = reader.ReadSingle();
 
-                if (RestrictedTextLengthEnabled)
-                    Text = reader.ReadString(MaxTextLength);
-                else
-                    Text = reader.ReadString(TextLength);
+                if (FontIndex != ushort.MaxValue && header.FontList.Fonts.Count > 0)
+                    FontName = header.FontList.Fonts[FontIndex];
+
+                if (textOffset != 0)
+                {
+                    reader.SeekBegin(startPos + textOffset);
+
+                    if (RestrictedTextLengthEnabled)
+                        Text = reader.ReadZeroTerminatedString(Encoding.Unicode);
+                    else
+                        Text = reader.ReadZeroTerminatedString(Encoding.Unicode);
+                }
+
+                if (nameOffset != 0)
+                {
+                    reader.SeekBegin(startPos + nameOffset);
+                    TextBoxName = reader.ReadZeroTerminatedString();
+                }
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -709,17 +758,30 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(FontSize);
                 writer.Write(CharacterSpace);
                 writer.Write(LineSpace);
+                long _ofsNamePos = writer.Position;
+                writer.Write(0);
                 writer.Write(ShadowXY);
                 writer.Write(ShadowXYSize);
                 writer.Write(ShadowForeColor.ToBytes());
                 writer.Write(ShadowBackColor.ToBytes());
                 writer.Write(ShadowItalic);
 
-                writer.WriteUint32Offset(_ofsTextPos, pos);
-                if (RestrictedTextLengthEnabled)
-                    writer.WriteString(Text, MaxTextLength);
-                else
-                    writer.WriteString(Text, TextLength);
+                if (Text != null)
+                {
+                    writer.WriteUint32Offset(_ofsTextPos, pos);
+                    if (RestrictedTextLengthEnabled)
+                        writer.WriteString(Text, MaxTextLength, Encoding.BigEndianUnicode);
+                    else
+                        writer.WriteString(Text, TextLength, Encoding.BigEndianUnicode);
+
+                    writer.Align(4);
+                }
+
+                if (TextBoxName != null)
+                {
+                    writer.WriteUint32Offset(_ofsNamePos, pos);
+                    writer.WriteString(TextBoxName);
+                }
             }
 
             public enum BorderType : byte
@@ -988,6 +1050,8 @@ namespace LayoutBXLYT.Cafe
 
             public PRT1(FileReader reader, Header header) : base(reader)
             {
+                StartPosition = reader.Position - 8;
+
                 uint properyCount = reader.ReadUInt32();
                 MagnifyX = reader.ReadSingle();
                 MagnifyY = reader.ReadSingle();
@@ -1029,6 +1093,8 @@ namespace LayoutBXLYT.Cafe
                 uint userDataOffset = reader.ReadUInt32();
                 uint panelInfoOffset = reader.ReadUInt32();
 
+                long pos = reader.Position;
+
                 if (propertyOffset != 0)
                 {
                     reader.SeekBegin(prt1.StartPosition + propertyOffset);
@@ -1066,6 +1132,8 @@ namespace LayoutBXLYT.Cafe
                     reader.SeekBegin(prt1.StartPosition + panelInfoOffset);
 
                 }
+
+                reader.SeekBegin(pos);
             }
 
             public void Write(FileWriter writer, BxlytHeader header, long startPos)
@@ -1084,7 +1152,7 @@ namespace LayoutBXLYT.Cafe
                 if (Property != null)
                 {
                     writer.WriteUint32Offset(_ofsPos);
-                    Property.Write(writer, header);
+                    Header.WriteSection(writer, Property.Signature, Property, () => Property.Write(writer, header));
                 }
             }
         }
@@ -1211,7 +1279,6 @@ namespace LayoutBXLYT.Cafe
 
                 writer.WriteUint32Offset(pos, pos);
                 writer.WriteString(Name);
-                writer.Align(4);
             }
 
             private int GetDataLength()
@@ -1704,13 +1771,14 @@ namespace LayoutBXLYT.Cafe
                 for (int i = 0; i < offsets.Length; i++)
                 {
                     reader.SeekBegin(offsets[i] + pos);
+                    Fonts.Add(reader.ReadZeroTerminatedString());
                 }
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write((ushort)Fonts.Count);
-                writer.Seek(2);
+                writer.Write((ushort)0);
 
                 //Fill empty spaces for offsets later
                 long pos = writer.Position;
@@ -1754,7 +1822,7 @@ namespace LayoutBXLYT.Cafe
             public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write((ushort)Textures.Count);
-                writer.Seek(2);
+                writer.Write((ushort)0);
 
                 //Fill empty spaces for offsets later
                 long pos = writer.Position;
@@ -1818,7 +1886,6 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(MaxPartsWidth);
                 writer.Write(MaxPartsHeight);
                 writer.WriteString(Name);
-                writer.Align(4);
             }
         }
     }
