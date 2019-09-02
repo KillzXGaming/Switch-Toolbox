@@ -51,6 +51,14 @@ namespace Toolbox.Library
             A = 255;
         }
 
+        public STColor16(Color color)
+        {
+            R = color.R;
+            G = color.G;
+            B = color.B;
+            A = color.A;
+        }
+
         public STColor16(ushort r, ushort g, ushort b, ushort a)
         {
             R = r;

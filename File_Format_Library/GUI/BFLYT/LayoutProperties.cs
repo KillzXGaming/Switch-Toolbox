@@ -23,6 +23,11 @@ namespace LayoutBXLYT
             stPropertyGrid1.LoadProperty(null);
         }
 
+        public void UpdateProperties()
+        {
+            stPropertyGrid1.UpdateProperties();
+        }
+
         public void LoadProperties(BasePane prop, Action propChanged)
         {
             LoadPropertyTab("Pane", prop, propChanged);

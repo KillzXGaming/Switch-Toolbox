@@ -52,6 +52,14 @@ namespace Toolbox.Library
             A = 255;
         }
 
+        public STColor8(Color color)
+        {
+            R = color.R;
+            G = color.G;
+            B = color.B;
+            A = color.A;
+        }
+
         public STColor8(byte r, byte g, byte b, byte a)
         {
             R = r;

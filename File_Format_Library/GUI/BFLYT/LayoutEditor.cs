@@ -127,6 +127,11 @@ namespace LayoutBXLYT
 
         private void OnProperyChanged()
         {
+            Console.WriteLine("UpdateProperties");
+
+            if (LayoutProperties != null)
+                LayoutProperties.UpdateProperties();
+
             if (ActiveViewport != null)
                 ActiveViewport.UpdateViewport();
         }
@@ -416,15 +421,26 @@ namespace LayoutBXLYT
 
         private void textConverterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveLayout.FileInfo is BFLYT)
+            if (!textConverterToolStripMenuItem.Checked)
             {
-                TextConverter = new LayoutTextDocked();
-                TextConverter.Text = "Text Converter";
-                TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
-                if (ActiveViewport != null)
-                    TextConverter.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.4);
-                else
-                    TextConverter.Show(dockPanel1, DockState.DockLeft);
+                if (ActiveLayout.FileInfo is BFLYT)
+                {
+                    if (TextConverter == null)
+                        TextConverter = new LayoutTextDocked();
+                    TextConverter.Text = "Text Converter";
+                    TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
+                    if (ActiveViewport != null)
+                        TextConverter.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.4);
+                    else
+                        TextConverter.Show(dockPanel1, DockState.DockLeft);
+                }
+
+                textConverterToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                textConverterToolStripMenuItem.Checked = false;
+                TextConverter.Hide();
             }
         }
 

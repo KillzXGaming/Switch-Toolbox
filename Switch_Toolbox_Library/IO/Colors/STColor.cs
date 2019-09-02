@@ -60,6 +60,14 @@ namespace Toolbox.Library
             return col;
         }
 
+        public STColor(Color color)
+        {
+            R = color.R / 255f;
+            G = color.G / 255f;
+            B = color.B / 255f;
+            A = color.A / 255f;
+        }
+
         public STColor()
         {
             R = 1;

@@ -186,6 +186,8 @@ namespace Toolbox.Library.Forms
         }
 
         private void InitSyntaxColoring() {
+            if (scintilla1 == null || scintilla1.IsDisposed || scintilla1.Disposing)
+                return;
 
             scintilla1.StyleResetDefault();
             scintilla1.Styles[Style.Default].Font = "Consolas";

@@ -23,6 +23,16 @@ namespace Toolbox.Library.Forms
 
         private HSVPixel _hsv = new HSVPixel(0, 100, 100);
 
+        public Color NewColor
+        {
+            get
+            {
+                return Color.FromArgb(Alpha, Color);
+            }
+        }
+
+        public STColor8 Color8 { get; set; }
+
         /// <summary>
         /// The color the dialog gets and sets.
         /// </summary>
@@ -36,6 +46,14 @@ namespace Toolbox.Library.Forms
             {
                 _color = value;
                 OnColorChanged(false);
+            }
+        }
+
+        public Color AlphaColor
+        {
+            get
+            {
+                return Color.FromArgb(Alpha, Alpha, Alpha);
             }
         }
 
@@ -111,7 +129,7 @@ namespace Toolbox.Library.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.colorSquare.Location = new System.Drawing.Point(3, 3);
             this.colorSquare.Name = "colorSquare";
-            this.colorSquare.Size = new System.Drawing.Size(180, 180);
+            this.colorSquare.Size = new System.Drawing.Size(180, 235);
             this.colorSquare.TabIndex = 0;
             this.colorSquare.Paint += new System.Windows.Forms.PaintEventHandler(this.colorSquare_Paint);
             this.colorSquare.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSquare_MouseDown);
@@ -124,7 +142,7 @@ namespace Toolbox.Library.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.huePanel.Location = new System.Drawing.Point(189, 3);
             this.huePanel.Name = "huePanel";
-            this.huePanel.Size = new System.Drawing.Size(16, 180);
+            this.huePanel.Size = new System.Drawing.Size(24, 235);
             this.huePanel.TabIndex = 1;
             this.huePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.huePanel_Paint);
             this.huePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.huePanel_MouseDown);
@@ -135,9 +153,9 @@ namespace Toolbox.Library.Forms
             // 
             this.alphaPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.alphaPanel.Location = new System.Drawing.Point(208, 3);
+            this.alphaPanel.Location = new System.Drawing.Point(219, 3);
             this.alphaPanel.Name = "alphaPanel";
-            this.alphaPanel.Size = new System.Drawing.Size(16, 180);
+            this.alphaPanel.Size = new System.Drawing.Size(24, 235);
             this.alphaPanel.TabIndex = 2;
             this.alphaPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.alphaPanel_Paint);
             this.alphaPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.alphaPanel_MouseDown);
@@ -150,7 +168,7 @@ namespace Toolbox.Library.Forms
             this.Controls.Add(this.huePanel);
             this.Controls.Add(this.colorSquare);
             this.Name = "ColorSelector";
-            this.Size = new System.Drawing.Size(227, 188);
+            this.Size = new System.Drawing.Size(245, 243);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ColorSelector_MouseMove);
             this.ResumeLayout(false);
 
@@ -310,6 +328,8 @@ namespace Toolbox.Library.Forms
 
         protected virtual void OnColorChanged(bool hsvToRgb)
         {
+            Color8 = new STColor8(NewColor);
+
             colorSquare.Invalidate();
             huePanel.Invalidate();
 

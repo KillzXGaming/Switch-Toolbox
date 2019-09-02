@@ -58,8 +58,15 @@ namespace Toolbox.Library.Forms
             propertyGrid1.SelectedObject = selectedObject;
         }
 
+        public void UpdateProperties()
+        {
+            propertyGrid1.Invalidate();
+        }
+
         private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
+            Console.WriteLine("PropertyValueChanged");
+
             OnPropertyChanged?.Invoke();
             OnPropertyChanged2?.Invoke();
         }

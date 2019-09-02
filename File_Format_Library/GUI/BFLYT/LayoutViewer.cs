@@ -226,9 +226,9 @@ namespace LayoutBXLYT
                 pane.ColorBottomLeft.Color,
                 };
 
+            var mat = pane.GetMaterial();
             if (pane.TexCoords.Length > 0)
             {
-                var mat = pane.GetMaterial();
                 string textureMap0 = "";
                 if (mat.TextureMaps.Count > 0)
                     textureMap0 = mat.GetTexture(0);
@@ -305,17 +305,18 @@ namespace LayoutBXLYT
                 pane.ColorBottomLeft.Color,
                 };
 
+            var mat = pane.Material;
+
             if (pane.TexCoords.Length > 0)
             {
-                var mat = pane.Material;
                 string textureMap0 = "";
                 if (mat.TextureMaps.Length > 0)
                     textureMap0 = mat.GetTexture(0);
 
                 if (Textures.ContainsKey(textureMap0))
                     BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
-                else
-                    GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
+            //    else
+              //      GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
                 TexCoords = new Vector2[] {
                         pane.TexCoords[0].TopLeft.ToTKVector2(),
@@ -335,7 +336,7 @@ namespace LayoutBXLYT
             if (useLines)
             {
                 GL.Begin(PrimitiveType.LineLoop);
-                GL.Color3(colors[0]);
+                GL.Color4(colors[0]);
                 GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
                 GL.Vertex2(rect.RightPoint, rect.BottomPoint);
                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
@@ -345,16 +346,16 @@ namespace LayoutBXLYT
             else
             {
                 GL.Begin(PrimitiveType.Quads);
-                GL.Color3(colors[0]);
+                GL.Color4(colors[0]);
                 GL.TexCoord2(texCoords[0]);
                 GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                GL.Color3(colors[1]);
+                GL.Color4(colors[1]);
                 GL.TexCoord2(texCoords[1]);
                 GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                GL.Color3(colors[2]);
+                GL.Color4(colors[2]);
                 GL.TexCoord2(texCoords[2]);
                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                GL.Color3(colors[3]);
+                GL.Color4(colors[3]);
                 GL.TexCoord2(texCoords[3]);
                 GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                 GL.End();
