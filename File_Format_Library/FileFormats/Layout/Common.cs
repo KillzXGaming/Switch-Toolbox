@@ -13,6 +13,12 @@ namespace LayoutBXLYT
 {
     public class BasePane : SectionCommon
     {
+        [DisplayName("Alpha"), CategoryAttribute("Alpha")]
+        public byte Alpha { get; set; }
+
+        [DisplayName("Influence Alpha"), CategoryAttribute("Alpha")]
+        public virtual bool InfluenceAlpha { get; set; }
+
         [Browsable(false)]
         public bool DisplayInEditor { get; set; } = true;
 
@@ -68,16 +74,10 @@ namespace LayoutBXLYT
 
         public CustomRectangle CreateRectangle()
         {
-            int left = 0;
-            int right = 0;
-            int top = 0;
-            int bottom = 0;
-
             //Do origin transforms
             var transformed = TransformOrientation((int)Width, (int)Height);
 
             //Now do parent transforms
-
             Vector2 ParentWH = new Vector2(0, 0);
             if (Parent != null && Parent is BasePane)
                 ParentWH = new Vector2((int)Parent.Width, (int)Parent.Height);

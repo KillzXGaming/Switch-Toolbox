@@ -1444,7 +1444,7 @@ namespace LayoutBXLYT.Cafe
             }
 
             [DisplayName("Influence Alpha"), CategoryAttribute("Alpha")]
-            public bool InfluenceAlpha
+            public override bool InfluenceAlpha
             {
                 get { return (_flags1 & 0x2) == 0x2; }
                 set
@@ -1455,9 +1455,6 @@ namespace LayoutBXLYT.Cafe
                         _flags1 &= 0xFD;
                 }
             }
-
-            [DisplayName("Alpha"), CategoryAttribute("Alpha")]
-            public byte Alpha { get; set; }
 
             [DisplayName("Origin X"), CategoryAttribute("Origin")]
             public OriginX originX

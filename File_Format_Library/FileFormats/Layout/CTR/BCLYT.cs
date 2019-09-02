@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
-using FirstPlugin.Forms;
+using System.ComponentModel;
 using Syroot.Maths;
 using SharpYaml.Serialization;
 using FirstPlugin;
@@ -631,24 +631,34 @@ namespace LayoutBXLYT
 
         public class PIC1 : PAN1
         {
+            [DisplayName("Texture Coordinates"), CategoryAttribute("Texture")]
             public TexCoord[] TexCoords { get; set; }
 
+            [DisplayName("Vertex Color (Top Left)"), CategoryAttribute("Color")]
             public STColor8 ColorTopLeft { get; set; }
+            [DisplayName("Vertex Color (Top Right)"), CategoryAttribute("Color")]
             public STColor8 ColorTopRight { get; set; }
+            [DisplayName("Vertex Color (Bottom Left)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomLeft { get; set; }
+            [DisplayName("Vertex Color (Bottom Right)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomRight { get; set; }
 
+            [Browsable(false)]
             public ushort MaterialIndex { get; set; }
 
-            public Material GetMaterial()
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public Material Material
             {
-                return ParentLayout.MaterialList.Materials[MaterialIndex];
+                get
+                {
+                    return ParentLayout.MaterialList.Materials[MaterialIndex];
+                }
             }
 
+            [Browsable(false)]
             public string GetTexture(int index)
             {
-                var mat = GetMaterial();
-                return ParentLayout.TextureList.Textures[mat.TextureMaps[index].ID];
+                return ParentLayout.TextureList.Textures[Material.TextureMaps[index].ID];
             }
 
             private BCLYT.Header ParentLayout;

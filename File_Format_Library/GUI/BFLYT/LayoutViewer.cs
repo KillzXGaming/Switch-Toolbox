@@ -111,12 +111,12 @@ namespace LayoutBXLYT
             GL.Scale(1 * Camera.Zoom, -1 * Camera.Zoom, 1);
             GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
 
-            RenderPanes(LayoutFile.RootPane, true);
+            RenderPanes(LayoutFile.RootPane, true, 255);
 
             glControl1.SwapBuffers();
         }
 
-        private void RenderPanes(BasePane pane, bool isRoot)
+        private void RenderPanes(BasePane pane, bool isRoot, byte parentAlpha)
         {
             if (!pane.DisplayInEditor)
                 return;
@@ -126,14 +126,16 @@ namespace LayoutBXLYT
             GL.Rotate(pane.Rotate.Z, pane.Rotate.X, pane.Rotate.Y, pane.Rotate.Z);
             GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
 
+            byte effectiveAlpha = (byte)(parentAlpha == 255 ? pane.Alpha : pane.Alpha / 255);
+
             if (!isRoot)
             {
                 if (pane is BFLYT.PIC1)
-                    DrawPicturePane((BFLYT.PIC1)pane);
+                    DrawPicturePane((BFLYT.PIC1)pane, effectiveAlpha);
                 else if (pane is BCLYT.PIC1)
-                    DrawPicturePane((BCLYT.PIC1)pane);
+                    DrawPicturePane((BCLYT.PIC1)pane, effectiveAlpha);
                 else if (pane is BRLYT.PIC1)
-                    DrawPicturePane((BRLYT.PIC1)pane);
+                    DrawPicturePane((BRLYT.PIC1)pane, effectiveAlpha);
                 else if (pane is BFLYT.PAN1)
                     DrawDefaultPane((BFLYT.PAN1)pane);
                 else if (pane is BCLYT.PAN1)
@@ -144,8 +146,9 @@ namespace LayoutBXLYT
             else
                 isRoot = false;
 
+            byte childAlpha = pane.InfluenceAlpha ? effectiveAlpha : byte.MaxValue;
             foreach (var childPane in pane.Childern)
-                RenderPanes(childPane, isRoot);
+                RenderPanes(childPane, isRoot, childAlpha);
 
             GL.PopMatrix();
         }
@@ -210,7 +213,7 @@ namespace LayoutBXLYT
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
         }
 
-        private void DrawPicturePane(BCLYT.PIC1 pane)
+        private void DrawPicturePane(BCLYT.PIC1 pane, byte effectiveAlpha)
         {
                   Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -226,7 +229,7 @@ namespace LayoutBXLYT
                 pane.ColorBottomLeft.Color,
                 };
 
-            var mat = pane.GetMaterial();
+            var mat = pane.Material;
             if (pane.TexCoords.Length > 0)
             {
                 string textureMap0 = "";
@@ -244,12 +247,12 @@ namespace LayoutBXLYT
                    };
             }
 
-            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
+            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false, effectiveAlpha);
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        private void DrawPicturePane(BRLYT.PIC1 pane)
+        private void DrawPicturePane(BRLYT.PIC1 pane, byte effectiveAlpha)
         {
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -289,7 +292,7 @@ namespace LayoutBXLYT
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        private void DrawPicturePane(BFLYT.PIC1 pane)
+        private void DrawPicturePane(BFLYT.PIC1 pane, byte effectiveAlpha)
         {
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -315,8 +318,27 @@ namespace LayoutBXLYT
 
                 if (Textures.ContainsKey(textureMap0))
                     BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
-            //    else
-              //      GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
+                else if (mat.TextureMaps.Length > 0)
+                {
+                    GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(mat.TextureMaps[0].WrapModeU));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(mat.TextureMaps[0].WrapModeV));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(mat.TextureMaps[0].MaxFilterMode));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(mat.TextureMaps[0].MinFilterMode));
+                }
+
+                if (mat.TextureTransforms.Length > 0)
+                {
+                    GL.MatrixMode(MatrixMode.Texture);
+                    GL.LoadIdentity();
+
+                    var transform = mat.TextureTransforms[0];
+                    GL.Scale(transform.Scale.X, transform.Scale.Y, 1);
+                    GL.Rotate(transform.Rotate, 1, 0,0);
+                    GL.Translate(transform.Translate.X, transform.Translate.Y, 1);
+
+                    GL.MatrixMode(MatrixMode.Modelview);
+                }
 
                 TexCoords = new Vector2[] {
                         pane.TexCoords[0].TopLeft.ToTKVector2(),
@@ -331,8 +353,11 @@ namespace LayoutBXLYT
             GL.BindTexture(TextureTarget.Texture2D,  0);
         }
 
-        public void DrawRectangle(CustomRectangle rect, Vector2[] texCoords, Color[] colors, bool useLines = true)
+        public void DrawRectangle(CustomRectangle rect, Vector2[] texCoords, Color[] colors, bool useLines = true, byte alpha = 255)
         {
+            for (int i = 0; i < colors.Length; i++)
+                colors[i] = Color.FromArgb((colors[i].A * alpha) / 255, colors[i]);
+
             if (useLines)
             {
                 GL.Begin(PrimitiveType.LineLoop);
