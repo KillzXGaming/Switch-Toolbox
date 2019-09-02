@@ -1048,20 +1048,24 @@ namespace LayoutBXLYT.Cafe
 
             public List<PartProperty> Properties = new List<PartProperty>();
 
+            private string PropertyName;
+
             public PRT1(FileReader reader, Header header) : base(reader)
             {
-                StartPosition = reader.Position - 8;
+                StartPosition = reader.Position - 84;
 
                 uint properyCount = reader.ReadUInt32();
                 MagnifyX = reader.ReadSingle();
                 MagnifyY = reader.ReadSingle();
                 for (int i = 0; i < properyCount; i++)
-                    Properties.Add(new PartProperty(reader, header, this));
+                    Properties.Add(new PartProperty(reader, header, StartPosition));
+
+                PropertyName = reader.ReadZeroTerminatedString();
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
-                long startPos = writer.Position;
+                long startPos = writer.Position - 8;
                 base.Write(writer, header);
                 writer.Write(Properties.Count);
                 writer.Write(MagnifyX);
@@ -1069,6 +1073,12 @@ namespace LayoutBXLYT.Cafe
 
                 for (int i = 0; i < Properties.Count; i++)
                     Properties[i].Write(writer, header, startPos);
+
+                writer.WriteString(PropertyName);
+                writer.Align(4);
+
+                for (int i = 0; i < Properties.Count; i++)
+                    Properties[i].WriteProperties(writer, header, startPos);
             }
         }
 
@@ -1082,7 +1092,7 @@ namespace LayoutBXLYT.Cafe
 
             public BasePane Property { get; set; }
 
-            public PartProperty(FileReader reader, Header header, PRT1 prt1)
+            public PartProperty(FileReader reader, Header header, long StartPosition)
             {
                 Name = reader.ReadString(0x18).Replace("\0", string.Empty);
                 UsageFlag = reader.ReadByte();
@@ -1097,11 +1107,13 @@ namespace LayoutBXLYT.Cafe
 
                 if (propertyOffset != 0)
                 {
-                    reader.SeekBegin(prt1.StartPosition + propertyOffset);
+                    reader.SeekBegin(StartPosition + propertyOffset);
 
                     long startPos = reader.Position;
                     string signtature = reader.ReadString(4, Encoding.ASCII);
                     uint sectionSize = reader.ReadUInt32();
+
+                    Console.WriteLine($"signtature " + signtature);
 
                     switch (signtature)
                     {
@@ -1120,22 +1132,26 @@ namespace LayoutBXLYT.Cafe
                         case "prt1":
                             Property = new PRT1(reader, header);
                             break;
+                        default:
+                            Console.WriteLine("Unknown section! " + signtature);
+                            break;
                     }
                 }
                 if (userDataOffset != 0)
                 {
-                    reader.SeekBegin(prt1.StartPosition + userDataOffset);
+                    reader.SeekBegin(StartPosition + userDataOffset);
 
                 }
                 if (panelInfoOffset != 0)
                 {
-                    reader.SeekBegin(prt1.StartPosition + panelInfoOffset);
+                    reader.SeekBegin(StartPosition + panelInfoOffset);
 
                 }
 
                 reader.SeekBegin(pos);
             }
 
+            private long _ofsPos;
             public void Write(FileWriter writer, BxlytHeader header, long startPos)
             {
                 writer.WriteString(Name, 0x18);
@@ -1144,14 +1160,17 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(MaterialUsageFlag);
                 writer.Write((byte)0);
                 //Reserve offset spaces
-                long _ofsPos = writer.Position;
+                _ofsPos = writer.Position;
                 writer.Write(0); //Property Offset
                 writer.Write(0); //External User Data
                 writer.Write(0); //Panel Info Offset
+            }
 
+            public void WriteProperties(FileWriter writer, BxlytHeader header, long startPos)
+            {
                 if (Property != null)
                 {
-                    writer.WriteUint32Offset(_ofsPos);
+                    writer.WriteUint32Offset(_ofsPos, startPos);
                     Header.WriteSection(writer, Property.Signature, Property, () => Property.Write(writer, header));
                 }
             }
