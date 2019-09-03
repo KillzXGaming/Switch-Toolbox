@@ -237,7 +237,6 @@ namespace LayoutBXLYT.Cafe
             public MAT1 MaterialList { get; set; }
             public FNL1 FontList { get; set; }
             public CNT1 Container { get; set; }
-            public USD1 UserData { get; set; }
 
             //As of now this should be empty but just for future proofing
             private List<SectionCommon> UnknownSections = new List<SectionCommon>();
@@ -414,7 +413,7 @@ namespace LayoutBXLYT.Cafe
                             Container = new CNT1(reader, this);
                             break;*/
                         case "usd1":
-                            UserData = new USD1(reader, this);
+                            ((PAN1)currentPane).UserData = new USD1(reader, this);
                             break;
                         //If the section is not supported store the raw bytes
                         default:
@@ -474,12 +473,6 @@ namespace LayoutBXLYT.Cafe
                 WritePanes(writer, RootPane, this, ref sectionCount);
                 WriteGroupPanes(writer, RootGroup, this, ref sectionCount);
 
-                if (UserData != null)
-                {
-                    WriteSection(writer, "usd1", UserData, () => UserData.Write(writer, this));
-                    sectionCount++;
-                }
-
                 foreach (var section in UnknownSections)
                 {
                     WriteSection(writer, section.Signature, section, () => section.Write(writer, this));
@@ -503,6 +496,13 @@ namespace LayoutBXLYT.Cafe
             {
                 WriteSection(writer, pane.Signature, pane,() => pane.Write(writer, header));
                 sectionCount++;
+
+                if (pane is IUserDataContainer && ((IUserDataContainer)pane).UserData != null)
+                {
+                    var userData = ((IUserDataContainer)pane).UserData;
+                    WriteSection(writer, "usd1", userData, () => userData.Write(writer, this));
+                    sectionCount++;
+                }
 
                 if (pane.HasChildern)
                 {
@@ -1183,11 +1183,9 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class USD1 : SectionCommon
+        public class USD1 : UserData
         {
-            public List<UserDataEntry> Entries = new List<UserDataEntry>();
-
-            public USD1(FileReader reader, Header header)
+            public USD1(FileReader reader, Header header) : base()
             {
                 long startPos = reader.Position - 8;
 
@@ -1195,7 +1193,7 @@ namespace LayoutBXLYT.Cafe
                 reader.ReadUInt16(); //padding
 
                 for (int i = 0; i < numEntries; i++)
-                    Entries.Add(new UserDataEntry(reader, startPos, header));
+                    Entries.Add(new USD1Entry(reader, startPos, header));
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -1205,60 +1203,42 @@ namespace LayoutBXLYT.Cafe
                 writer.Write((ushort)Entries.Count);
                 writer.Write((ushort)0);
 
+                long enryPos = writer.Position;
                 for (int i = 0; i < Entries.Count; i++)
-                    Entries[i].Write(writer, startPos, header);
+                    ((USD1Entry)Entries[i]).Write(writer, header);
+
+                for (int i = 0; i < Entries.Count; i++)
+                {
+                    writer.WriteUint32Offset(Entries[i]._pos + 4, Entries[i]._pos);
+                    switch (Entries[i].Type)
+                    {
+                        case UserDataType.String:
+                            writer.WriteString(Entries[i].GetString());
+                            break;
+                        case UserDataType.Int:
+                            writer.Write(Entries[i].GetInts());
+                            break;
+                        case UserDataType.Float:
+                            writer.Write(Entries[i].GetFloats());
+                            break;
+                    }
+
+                    writer.WriteUint32Offset(Entries[i]._pos, Entries[i]._pos);
+                    writer.WriteString(Entries[i].Name);
+                }
             }
         }
 
-        public class UserDataEntry
+        public class USD1Entry : UserDataEntry
         {
-            public string Name { get; set; }
-            public DataType Type { get; private set; }
-            public byte Unknown { get; set; }
-
-            private object data;
-
-            public string GetString()
-            {
-                return (string)data;
-            }
-
-            public float[] GetFloats()
-            {
-                return (float[])data;
-            }
-
-            public int[] GetInts()
-            {
-                return (int[])data;
-            }
-
-            public void SetStrings(string[] value)
-            {
-                data = value;
-                Type = DataType.String;
-            }
-
-            public void GetFloats(float [] value)
-            {
-                data = value;
-                Type = DataType.Float;
-            }
-
-            public void GetInts(int[] value)
-            {
-                data = value;
-                Type = DataType.Int;
-            }
-
-            public UserDataEntry(FileReader reader, long startPos, Header header)
+            public USD1Entry(FileReader reader, long startPos, Header header)
             {
                 long pos = reader.Position;
 
                 uint nameOffset = reader.ReadUInt32();
                 uint dataOffset = reader.ReadUInt32();
                 ushort dataLength = reader.ReadUInt16();
-                Type = reader.ReadEnum<DataType>(false);
+                Type = reader.ReadEnum<UserDataType>(false);
                 Unknown = reader.ReadByte();
 
                 long datapos = reader.Position;
@@ -1274,16 +1254,16 @@ namespace LayoutBXLYT.Cafe
                     reader.SeekBegin(pos + dataOffset);
                     switch (Type)
                     {
-                        case DataType.String:
+                        case UserDataType.String:
                             if (dataLength != 0)
                                 data = reader.ReadString((int)dataLength);
                             else
                                 data = reader.ReadZeroTerminatedString();
                             break;
-                        case DataType.Int:
+                        case UserDataType.Int:
                             data = reader.ReadInt32s((int)dataLength);
                             break;
-                        case DataType.Float:
+                        case UserDataType.Float:
                             data = reader.ReadSingles((int)dataLength);
                             break;
                     }
@@ -1292,32 +1272,15 @@ namespace LayoutBXLYT.Cafe
                 reader.SeekBegin(datapos);
             }
 
-            public void Write(FileWriter writer, long startPos, BxlytHeader header)
+            public void Write(FileWriter writer, BxlytHeader header)
             {
-                long pos = writer.Position;
+                _pos = writer.Position;
 
                 writer.Write(0); //nameOffset
                 writer.Write(0); //dataOffset
-                writer.Write(GetDataLength());
+                writer.Write((ushort)GetDataLength());
                 writer.Write(Type, false);
                 writer.Write(Unknown);
-
-                writer.WriteUint32Offset(pos + 4, pos);
-                switch (Type)
-                {
-                    case DataType.String:
-                        writer.Write((string)data);
-                        break;
-                    case DataType.Int:
-                        writer.Write((int[])data);
-                        break;
-                    case DataType.Float:
-                        writer.Write((float[])data);
-                        break;
-                }
-
-                writer.WriteUint32Offset(pos, pos);
-                writer.WriteString(Name);
             }
 
             private int GetDataLength()
@@ -1329,13 +1292,6 @@ namespace LayoutBXLYT.Cafe
                 else if (data is float[])
                     return ((float[])data).Length;
                 return 0;
-            }
-
-            public enum DataType : byte
-            {
-                String,
-                Int,
-                Float,
             }
         }
 
@@ -1431,7 +1387,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class PAN1 : BasePane
+        public class PAN1 : BasePane, IUserDataContainer
         {
             public override string Signature { get; } = "pan1";
 
@@ -1510,8 +1466,11 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Parts Flag"), CategoryAttribute("Flags")]
             public byte PaneMagFlags { get; set; }
 
-            [DisplayName("User Data"), CategoryAttribute("User Data")]
+            [DisplayName("User Data Info"), CategoryAttribute("User Data")]
             public string UserDataInfo { get; set; }
+
+            [DisplayName("User Data"), CategoryAttribute("User Data")]
+            public UserData UserData { get; set; }
 
             public PAN1() : base()
             {

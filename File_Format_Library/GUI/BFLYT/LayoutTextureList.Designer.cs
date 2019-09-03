@@ -48,7 +48,7 @@
             this.toolStripButton2});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.stToolStrip1.Name = "stToolStrip1";
-            this.stToolStrip1.Size = new System.Drawing.Size(549, 25);
+            this.stToolStrip1.Size = new System.Drawing.Size(533, 25);
             this.stToolStrip1.TabIndex = 11;
             this.stToolStrip1.Text = "stToolStrip1";
             // 
@@ -97,11 +97,12 @@
             this.listViewCustom1.Location = new System.Drawing.Point(0, 25);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(549, 373);
+            this.listViewCustom1.Size = new System.Drawing.Size(533, 334);
             this.listViewCustom1.TabIndex = 13;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
             this.listViewCustom1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewCustom1_DragEnter);
+            this.listViewCustom1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewCustom1_MouseClick);
             // 
             // columnHeader1
             // 
@@ -124,17 +125,17 @@
             // columnHeader5
             // 
             this.columnHeader5.Text = "Size";
-            this.columnHeader5.Width = 210;
+            this.columnHeader5.Width = 194;
             // 
             // LayoutTextureList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(533, 359);
             this.Controls.Add(this.listViewCustom1);
             this.Controls.Add(this.listViewTpyeCB);
             this.Controls.Add(this.stToolStrip1);
             this.Name = "LayoutTextureList";
-            this.Size = new System.Drawing.Size(549, 398);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LayoutTextureList_DragDrop);
             this.stToolStrip1.ResumeLayout(false);
             this.stToolStrip1.PerformLayout();

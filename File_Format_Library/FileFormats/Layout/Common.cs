@@ -141,8 +141,8 @@ namespace LayoutBXLYT
 
         public bool IsHit(int X, int Y)
         {
-            if ((X > Rectangle.X) && (X < Rectangle.X + Rectangle.Width) &&
-                (Y > Rectangle.Y) && (Y < Rectangle.Y + Rectangle.Height))
+            if ((X > Translate.X) && (X < Translate.X + Width) &&
+                (Y > Translate.Y) && (Y < Translate.Y + Height))
                 return true;
             else
                 return false;
@@ -162,6 +162,76 @@ namespace LayoutBXLYT
         Top = 1,
         Bottom = 2
     };
+
+    public interface IUserDataContainer
+    {
+        UserData UserData { get; set; }
+    }
+
+    public class UserData : SectionCommon
+    {
+        public List<UserDataEntry> Entries { get; set; }
+
+        public UserData()
+        {
+            Entries = new List<UserDataEntry>();
+        }
+
+        public override void Write(FileWriter writer, BxlytHeader header)
+        {
+        }
+    }
+
+    public class UserDataEntry
+    {
+        public string Name { get; set; }
+        public UserDataType Type { get; set; }
+        public byte Unknown { get; set; }
+
+        public object data;
+
+        public string GetString()
+        {
+            return (string)data;
+        }
+
+        public float[] GetFloats()
+        {
+            return (float[])data;
+        }
+
+        public int[] GetInts()
+        {
+            return (int[])data;
+        }
+
+        public void SetValue(string[] value)
+        {
+            data = value;
+            Type = UserDataType.String;
+        }
+
+        public void SetValue(float[] value)
+        {
+            data = value;
+            Type = UserDataType.Float;
+        }
+
+        public void SetValue(int[] value)
+        {
+            data = value;
+            Type = UserDataType.Int;
+        }
+
+        internal long _pos;
+    }
+
+    public enum UserDataType : byte
+    {
+        String,
+        Int,
+        Float,
+    }
 
     public class BxlytHeader : IDisposable
     {
@@ -260,16 +330,6 @@ namespace LayoutBXLYT
             RightPoint = right;
             TopPoint = top;
             BottomPoint = bottom;
-        }
-
-        public float X
-        {
-            get { return Width / 2; }
-        }
-
-        public float Y
-        {
-            get { return Height / 2; }
         }
 
         public float Width

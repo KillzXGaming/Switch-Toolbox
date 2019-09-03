@@ -31,6 +31,7 @@ namespace LayoutBXLYT
             imgList.Images.Add("NullPane", FirstPlugin.Properties.Resources.NullPane);
             imgList.Images.Add("PicturePane", FirstPlugin.Properties.Resources.PicturePane);
             imgList.Images.Add("QuickAcess", FirstPlugin.Properties.Resources.QuickAccess);
+            imgList.Images.Add("TextPane", FirstPlugin.Properties.Resources.TextPane);
 
             imgList.ImageSize = new Size(22,22);
             treeView1.ImageList = imgList;
@@ -74,6 +75,7 @@ namespace LayoutBXLYT
             treeView1.Nodes.Add(node);
 
             TreeNode nullFolder = new TreeNode("Null Panes");
+            TreeNode textFolder = new TreeNode("Text Boxes");
             TreeNode windowFolder = new TreeNode("Window Panes");
             TreeNode pictureFolder = new TreeNode("Picture Panes");
             TreeNode boundryFolder = new TreeNode("Boundry Panes");
@@ -81,6 +83,7 @@ namespace LayoutBXLYT
             TreeNode groupFolder = new TreeNode("Groups");
 
             node.Nodes.Add(nullFolder);
+            node.Nodes.Add(textFolder);
             node.Nodes.Add(windowFolder);
             node.Nodes.Add(pictureFolder);
             node.Nodes.Add(boundryFolder);
@@ -102,6 +105,9 @@ namespace LayoutBXLYT
                 else if (panes[i] is BCLYT.PRT1) partsFolder.Nodes.Add(paneNode);
                 else if (panes[i] is BFLYT.PRT1) partsFolder.Nodes.Add(paneNode);
                 else if (panes[i] is BRLYT.PRT1) partsFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BRLYT.TXT1) textFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BCLYT.TXT1) textFolder.Nodes.Add(paneNode);
+                else if (panes[i] is BFLYT.TXT1) textFolder.Nodes.Add(paneNode);
                 else nullFolder.Nodes.Add(paneNode);
             }
 
@@ -143,6 +149,9 @@ namespace LayoutBXLYT
             else if (pane is BFLYT.BND1) imageKey = "BoundryPane";
             else if (pane is BCLYT.BND1) imageKey = "BoundryPane";
             else if (pane is BRLYT.BND1) imageKey = "BoundryPane";
+            else if (pane is BFLYT.TXT1) imageKey = "TextPane";
+            else if (pane is BCLYT.TXT1) imageKey = "TextPane";
+            else if (pane is BRLYT.TXT1) imageKey = "TextPane";
             else imageKey = "NullPane";
 
             paneNode.ImageKey = imageKey;

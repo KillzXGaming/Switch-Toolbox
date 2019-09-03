@@ -13,7 +13,10 @@ namespace LayoutBXLYT.Cafe
         {
             GenType = reader.ReadEnum<MatrixType>(false);
             Source = reader.ReadEnum<TextureGenerationType>(false);
-            unkData = reader.ReadBytes(6);
+            if (header.VersionMajor >= 8)
+                unkData = reader.ReadBytes(0xE);
+            else
+                unkData = reader.ReadBytes(6);
         }
 
         public void Write(FileWriter writer)

@@ -388,6 +388,16 @@ namespace LayoutBXLYT
             }
         }
 
+        enum TextureSwizzle
+        {
+            Zero = All.Zero,
+            One = All.One,
+            Red = All.Red,
+            Green = All.Green,
+            Blue = All.Blue,
+            Alpha = All.Alpha,
+        }
+
         private static void BindGLTexture(TextureRef tex, STGenericTexture texture)
         {
             if (texture.RenderableTex == null || !texture.RenderableTex.GLInitialized)
@@ -398,13 +408,31 @@ namespace LayoutBXLYT
                 return;
 
             GL.BindTexture(TextureTarget.Texture2D, texture.RenderableTex.TexID);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleR, ConvertChannel(texture.RedChannel));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleG, ConvertChannel(texture.GreenChannel));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleB, ConvertChannel(texture.BlueChannel));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleA, ConvertChannel(texture.AlphaChannel));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(tex.WrapModeU));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(tex.WrapModeV));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(tex.MaxFilterMode));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(tex.MinFilterMode));
         }
 
-        private static int ConvertTextureWrap(TextureRef.WrapMode wrapMode)
+        private static int ConvertChannel(STChannelType type)
+        {
+            switch (type)
+            {
+                case STChannelType.Red: return (int)TextureSwizzle.Red;
+                case STChannelType.Green: return (int)TextureSwizzle.Green;
+                case STChannelType.Blue: return (int)TextureSwizzle.Blue;
+                case STChannelType.Alpha: return (int)TextureSwizzle.Alpha;
+                case STChannelType.Zero: return (int)TextureSwizzle.Zero;
+                case STChannelType.One: return (int)TextureSwizzle.One;
+                default: return 0;
+            }
+        }
+
+            private static int ConvertTextureWrap(TextureRef.WrapMode wrapMode)
         {
             switch (wrapMode)
             {
@@ -569,10 +597,13 @@ namespace LayoutBXLYT
         private Point originMouse;
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
+            SelectedPanes.Clear();
+
             //Pick an object for moving
             if (Control.ModifierKeys == Keys.Alt && e.Button == MouseButtons.Left)
             {
-                var hitPane = SearchHit(LayoutFile.RootPane, e.X, e.Y);
+                BasePane hitPane = null;
+                SearchHit(LayoutFile.RootPane, e.X, e.Y, ref hitPane);
                 if (hitPane != null)
                 {
                     SelectedPanes.Add(hitPane);
@@ -586,7 +617,9 @@ namespace LayoutBXLYT
                 mouseHeldDown = true;
                 originMouse = e.Location;
 
-                var hitPane = SearchHit(LayoutFile.RootPane, e.X, e.Y);
+                BasePane hitPane = null;
+                foreach (var child in LayoutFile.RootPane.Childern)
+                    SearchHit(child, e.X, e.Y, ref hitPane);
                 Console.WriteLine($"Has Hit " + hitPane != null);
                 if (hitPane != null)
                 {
@@ -596,17 +629,19 @@ namespace LayoutBXLYT
 
                 glControl1.Invalidate();
             }
+
+            Console.WriteLine("SelectedPanes " + SelectedPanes.Count);
         }
 
-        private BasePane SearchHit(BasePane pane, int X, int Y)
+        private void SearchHit(BasePane pane, int X, int Y, ref BasePane SelectedPane)
         {
-            if (pane.IsHit(X, Y))
-                return pane;
+            if (pane.IsHit(X, Y)){
+                SelectedPane = pane;
+                return;
+            }
 
             foreach (var childPane in pane.Childern)
-                return SearchHit(childPane, X, Y);
-
-            return null;
+                 SearchHit(childPane, X, Y, ref SelectedPane);
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)

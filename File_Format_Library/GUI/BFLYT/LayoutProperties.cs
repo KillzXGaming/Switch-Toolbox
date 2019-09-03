@@ -13,9 +13,16 @@ namespace LayoutBXLYT
 {
     public partial class LayoutProperties : LayoutDocked
     {
+        private UserDataEditor userDataEditor;
+
         public LayoutProperties()
         {
             InitializeComponent();
+            stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
+
+            userDataEditor = new UserDataEditor();
+            userDataEditor.Dock = DockStyle.Fill;
+            tabPage2.Controls.Add(userDataEditor);
         }
 
         public void Reset()
@@ -35,10 +42,20 @@ namespace LayoutBXLYT
 
         private void LoadPropertyTab(string text, object prop, Action propChanged)
         {
+            userDataEditor.Reset();
+            if (prop is IUserDataContainer)
+                LoadUserData((IUserDataContainer)prop);
+
             DoubleBufferedTabPage page = new DoubleBufferedTabPage();
             page.Enabled = false;
             page.Text = text;
             stPropertyGrid1.LoadProperty(prop, propChanged);
+        }
+
+        private void LoadUserData(IUserDataContainer container)
+        {
+            if (container.UserData != null && container.UserData.Entries != null)
+                userDataEditor.LoadUserData(container.UserData.Entries);
         }
 
         class DoubleBufferedTabPage : System.Windows.Forms.TabPage

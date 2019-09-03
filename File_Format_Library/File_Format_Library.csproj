@@ -328,6 +328,7 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\BFLYT\BflytShader.cs" />
     <Compile Include="GUI\BFLYT\FileSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -363,6 +364,18 @@
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataEditor.Designer.cs">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataParser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataParser.Designer.cs">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BotwActorEditorControl.cs">
       <SubType>UserControl</SubType>
@@ -1141,6 +1154,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutViewer.resx">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\UserDataEditor.resx">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\UserDataParser.resx">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BatchEditBaseAnimDataForm.resx">
       <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>
