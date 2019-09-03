@@ -65,7 +65,7 @@ namespace FirstPlugin
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 uint unk = reader.ReadUInt32();
-                if (unk == 65536)
+                 try
                 {
                     uint chunkCount = reader.ReadUInt32();
                     uint unk2 = reader.ReadUInt32();
@@ -98,6 +98,10 @@ namespace FirstPlugin
                     //Return the decompressed stream with all chunks combined
                     return new MemoryStream(Utils.CombineByteArray(DecompressedChunks.ToArray()));
                 }
+                catch
+                {
+
+                }
             }
             return stream;
         }
@@ -105,9 +109,12 @@ namespace FirstPlugin
         public void Load(Stream stream)
         {
             stream = CheckCompression(stream);
+            stream.ExportToFile(FilePath + ".dec");
+
             using (var reader = new FileReader(stream))
             {
                 CheckEndianness(reader);
+                reader.SetByteOrder(true);
 
                 uint Count = reader.ReadUInt32();
 
