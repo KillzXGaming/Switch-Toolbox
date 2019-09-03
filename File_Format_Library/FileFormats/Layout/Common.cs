@@ -205,7 +205,7 @@ namespace LayoutBXLYT
             return (int[])data;
         }
 
-        public void SetValue(string[] value)
+        public void SetValue(string value)
         {
             data = value;
             Type = UserDataType.String;

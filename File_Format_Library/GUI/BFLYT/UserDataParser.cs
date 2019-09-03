@@ -20,11 +20,9 @@ namespace LayoutBXLYT
             valueTB.BackColor = FormThemes.BaseTheme.FormBackColor;
             valueTB.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
-            typeCB.Items.Add("WString");
-            typeCB.Items.Add("String");
-            typeCB.Items.Add("Single");
-            typeCB.Items.Add("Int32");
-            typeCB.Items.Add("Byte");
+            typeCB.Items.Add(UserDataType.String);
+            typeCB.Items.Add(UserDataType.Float);
+            typeCB.Items.Add(UserDataType.Int);
         }
 
         public string UserDataName
@@ -37,7 +35,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public string Type
+        public UserDataType Type
         {
             set
             {
@@ -45,28 +43,28 @@ namespace LayoutBXLYT
             }
             get
             {
-                return typeCB.GetItemText(typeCB.SelectedItem);
+                return (UserDataType)typeCB.SelectedItem;
             }
         }
 
         public void LoadValues(string strings)
         {
             valueTB.Text += $"{strings}";
+            typeCB.SelectedItem = UserDataType.String;
         }
         public void LoadValues(float[] floats)
         {
             foreach (var str in floats)
                 valueTB.Text += $"{str}\n";
+
+            typeCB.SelectedItem = UserDataType.Float;
         }
         public void LoadValues(int[] ints)
         {
             foreach (var str in ints)
                 valueTB.Text += $"{str}\n";
-        }
-        public void LoadValues(byte[] bytes)
-        {
-            foreach (var str in bytes)
-                valueTB.Text += $"{str}\n";
+
+            typeCB.SelectedItem = UserDataType.Int;
         }
 
         public float[] GetFloats()
@@ -167,9 +165,9 @@ namespace LayoutBXLYT
             return values.ToArray();
         }
 
-        public string[] GetStringASCII()
+        public string GetStringASCII()
         {
-            List<string> values = new List<string>();
+            string values = "";
 
             int curLine = 0;
             foreach (string line in valueTB.Lines)
@@ -177,14 +175,11 @@ namespace LayoutBXLYT
                 if (line == string.Empty)
                     continue;
 
-                values.Add(line);
-
+                values += line;
                 curLine++;
             }
-            if (values.Count == 0)
-                values.Add("");
 
-            return values.ToArray();
+            return values;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -219,11 +214,7 @@ namespace LayoutBXLYT
             {
                 bool Success = true;
 
-                if (Type == "WString")
-                {
-
-                }
-                else if (Type == "String")
+                if (Type == UserDataType.String)
                 {
 
                 }
@@ -231,13 +222,10 @@ namespace LayoutBXLYT
                 {
 
                 }
-                else if (Type == "Single")
+                else if (Type == UserDataType.Float)
                     Success = float.TryParse(line, out valSingle);
-                else if (Type == "Int32")
+                else if (Type == UserDataType.Int)
                     Success = int.TryParse(line, out valInt);
-                else if (Type == "Byte")
-                    Success = byte.TryParse(line, out valByte);
-                
 
                 if (!Success)
                 {

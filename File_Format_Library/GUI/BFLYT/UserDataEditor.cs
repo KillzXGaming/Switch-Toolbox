@@ -30,7 +30,6 @@ namespace LayoutBXLYT
             listViewCustom1.Items.Clear();
         }
 
-        bool IsWiiU = false;
         public void LoadUserData(List<UserDataEntry> UserDataList)
         {
             listViewCustom1.Items.Clear();
@@ -85,8 +84,7 @@ namespace LayoutBXLYT
                 btnEdit.Enabled = true;
                 btnRemove.Enabled = true;
 
-                if (IsWiiU)
-                    SelectedEntry = ActiveUserData[listViewCustom1.SelectedIndices[0]];
+                SelectedEntry = ActiveUserData[listViewCustom1.SelectedIndices[0]];
             }
             else
             {
@@ -121,7 +119,7 @@ namespace LayoutBXLYT
             {
                 UserDataParser parser = new UserDataParser();
                 parser.UserDataName = SelectedEntry.Name;
-                parser.Type = SelectedEntry.Type.ToString();
+                parser.Type = SelectedEntry.Type;
 
                 switch (SelectedEntry.Type)
                 {
@@ -142,11 +140,11 @@ namespace LayoutBXLYT
                 {
                     SelectedEntry.Name = parser.UserDataName;
 
-                    if (parser.Type == "Single")
+                    if (parser.Type == UserDataType.Float)
                         SelectedEntry.SetValue(parser.GetFloats());
-                    if (parser.Type == "Int32")
+                    if (parser.Type == UserDataType.Int)
                         SelectedEntry.SetValue(parser.GetInts());
-                    if (parser.Type == "String")
+                    if (parser.Type == UserDataType.String)
                         SelectedEntry.SetValue(parser.GetStringASCII());
 
                     LoadUserData(ActiveUserData);
