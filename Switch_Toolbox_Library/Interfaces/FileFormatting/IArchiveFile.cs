@@ -79,7 +79,9 @@ namespace Toolbox.Library
         [Browsable(false)]
         public virtual IFileFormat OpenFile()
         {
-            if (FileFormat != null)
+            if (FileFormat != null && 
+                FileFormat.IFileInfo != null && 
+                FileFormat.IFileInfo.ArchiveParent != null)
                 return FileFormat;
 
             if (FileDataStream != null)
@@ -171,6 +173,27 @@ namespace Toolbox.Library
             set
             {
                 _fileName = value;
+            }
+        }
+
+        public static void SaveFileFormat(ArchiveFileInfo archiveFile, IFileFormat fileFormat)
+        {
+            if (fileFormat != null && fileFormat.CanSave)
+            {
+                if (archiveFile.FileDataStream != null)
+                {
+                    var mem = new System.IO.MemoryStream();
+                    fileFormat.Save(mem);
+                    archiveFile.FileDataStream = mem;
+                    //Reload file data
+                    fileFormat.Load(archiveFile.FileDataStream);
+                }
+                else
+                {
+                    var mem = new System.IO.MemoryStream();
+                    fileFormat.Save(mem);
+                    archiveFile.FileData = STLibraryCompression.CompressFile(mem.ToArray(), fileFormat);
+                }
             }
         }
 
@@ -894,9 +917,6 @@ namespace Toolbox.Library
                 OpenFormDialog(file);
             else if (file is IArchiveFile)
             {
-                if (ArchiveFileInfo.FileFormat != null)
-                    ArchiveFileInfo.FileFormat.Unload();
-
                 var FileRoot = new ArchiveRootNodeWrapper(file.FileName, (IArchiveFile)file);
                 FileRoot.FillTreeNodes();
 
@@ -910,9 +930,6 @@ namespace Toolbox.Library
             }
             else if (file is TreeNode)
             {
-                if (ArchiveFileInfo.FileFormat != null)
-                    ArchiveFileInfo.FileFormat.Unload();
-
                 ReplaceNode(this.Parent, treeview, this, (TreeNode)file, RootNode);
             }
 
