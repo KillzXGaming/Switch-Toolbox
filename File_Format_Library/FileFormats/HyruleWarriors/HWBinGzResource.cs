@@ -109,7 +109,6 @@ namespace FirstPlugin
         public void Load(Stream stream)
         {
             stream = CheckCompression(stream);
-            stream.ExportToFile(FilePath + ".dec");
 
             using (var reader = new FileReader(stream))
             {

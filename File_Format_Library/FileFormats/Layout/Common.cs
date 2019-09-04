@@ -235,55 +235,63 @@ namespace LayoutBXLYT
 
     public class BxlytHeader : IDisposable
     {
+        [Browsable(false)]
         public string FileName
         {
             get { return FileInfo.FileName; }
         }
 
+        [DisplayName("Use Big Endian"), CategoryAttribute("File Settings")]
         public bool IsBigEndian { get; set; }
 
+        [Browsable(false)]
         internal IFileFormat FileInfo;
 
+        [Browsable(false)]
         public BasePane RootPane { get; set; }
 
+        [Browsable(false)]
         public BasePane RootGroup { get; set; }
 
+        [Browsable(false)]
         public virtual Dictionary<string, STGenericTexture> GetTextures { get; }
 
+        [Browsable(false)]
         public virtual List<string> Textures { get; }
 
+        [Browsable(false)]
         internal uint Version;
 
+        [DisplayName("Version"), CategoryAttribute("File Settings")]
         public string VersionFull
         {
             get
             {
-                var major = Version >> 24;
-                var minor = Version >> 16 & 0xFF;
-                var micro = Version >> 8 & 0xFF;
-                var micro2 = Version & 0xFF;
-                return $"{major} {minor} {micro} {micro2}";
+                return $"{VersionMajor},{VersionMinor},{VersionMicro},{VersionMicro2}";
             }
         }
 
-        public uint VersionMajor
+
+        [RefreshProperties(RefreshProperties.All)]
+        public uint VersionMajor { get; set; }
+        [RefreshProperties(RefreshProperties.All)]
+        public uint VersionMinor { get; set; }
+        [RefreshProperties(RefreshProperties.All)]
+        public uint VersionMicro { get; set; }
+        [RefreshProperties(RefreshProperties.All)]
+        public uint VersionMicro2 { get; set; }
+
+        internal void SetVersionInfo()
         {
-            get { return Version >> 24; }
+            VersionMajor = Version >> 24;
+            VersionMinor = Version >> 16 & 0xFF;
+            VersionMicro = Version >> 8 & 0xFF;
+            VersionMicro2 = Version & 0xFF;
         }
 
-        public uint VersionMinor
+        internal uint SaveVersion()
         {
-            get { return Version >> 16 & 0xFF; }
-        }
-
-        public uint VersionMicro
-        {
-            get { return Version >> 8 & 0xFF; }
-        }
-
-        public uint VersionMicro2
-        {
-            get { return Version & 0xFF; }
+            return VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
         }
 
         public void Dispose()

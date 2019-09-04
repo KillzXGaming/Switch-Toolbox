@@ -34,6 +34,12 @@ namespace LayoutBXLYT
 
         private Dictionary<string, STGenericTexture> Textures;
 
+        public void ResetLayout(BxlytHeader bxlyt)
+        {
+            LayoutFile = bxlyt;
+            UpdateViewport();
+        }
+
         public LayoutViewer(BxlytHeader bxlyt, Dictionary<string, STGenericTexture> textures)
         {
             InitializeComponent();

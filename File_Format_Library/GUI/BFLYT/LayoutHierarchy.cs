@@ -47,6 +47,8 @@ namespace LayoutBXLYT
             treeView1.BeginUpdate();
             treeView1.Nodes.Clear();
 
+            treeView1.Nodes.Add(new TreeNode("File Settings") {Tag = bxlyt });
+
             CreateQuickAccess(bxlyt);
             LoadPane(bxlyt.RootGroup);
             LoadPane(bxlyt.RootPane);

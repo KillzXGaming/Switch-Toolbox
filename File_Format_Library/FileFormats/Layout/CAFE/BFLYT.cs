@@ -73,7 +73,7 @@ namespace LayoutBXLYT.Cafe
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Xml;
-        public bool CanConvertBack => false;
+        public bool CanConvertBack => true;
 
         public string ConvertToString()
         {
@@ -95,6 +95,8 @@ namespace LayoutBXLYT.Cafe
 
         public void ConvertFromString(string text)
         {
+            header = FLYT.FromXml(text);
+            header.FileInfo = this;
         }
 
         #endregion
@@ -228,19 +230,24 @@ namespace LayoutBXLYT.Cafe
         public class Header : BxlytHeader, IDisposable
         {
             private const string Magic = "FLYT";
-
             private ushort ByteOrderMark;
             private ushort HeaderSize;
 
+            [Browsable(false)]
             public LYT1 LayoutInfo { get; set; }
+            [Browsable(false)]
             public TXL1 TextureList { get; set; }
+            [Browsable(false)]
             public MAT1 MaterialList { get; set; }
+            [Browsable(false)]
             public FNL1 FontList { get; set; }
+            [Browsable(false)]
             public CNT1 Container { get; set; }
 
             //As of now this should be empty but just for future proofing
             private List<SectionCommon> UnknownSections = new List<SectionCommon>();
 
+            [Browsable(false)]
             public int TotalPaneCount()
             {
                 int panes = GetPanes().Count;
@@ -248,16 +255,19 @@ namespace LayoutBXLYT.Cafe
                 return panes + grpPanes;
             }
 
+            [Browsable(false)]
             public override List<string> Textures
             {
                 get { return TextureList.Textures; }
             }
 
+            [Browsable(false)]
             public override Dictionary<string, STGenericTexture> GetTextures
             {
                 get { return ((BFLYT)FileInfo).GetTextures(); }
             }
 
+            [Browsable(false)]
             public List<PAN1> GetPanes()
             {
                 List<PAN1> panes = new List<PAN1>();
@@ -265,6 +275,7 @@ namespace LayoutBXLYT.Cafe
                 return panes;
             }
 
+            [Browsable(false)]
             public List<GRP1> GetGroupPanes()
             {
                 List<GRP1> panes = new List<GRP1>();
@@ -286,7 +297,7 @@ namespace LayoutBXLYT.Cafe
                     GetGroupChildren(panes, (GRP1)pane);
             }
 
-            public void Read(FileReader reader, BFLYT bflyt)
+            public Header()
             {
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
@@ -295,6 +306,20 @@ namespace LayoutBXLYT.Cafe
                 RootPane = new PAN1();
                 RootGroup = new GRP1();
 
+                VersionMajor = 8;
+                VersionMinor = 0;
+                VersionMicro = 0;
+                VersionMicro2 = 0;
+            }
+
+            public void Read(FileReader reader, BFLYT bflyt)
+            {
+                LayoutInfo = new LYT1();
+                TextureList = new TXL1();
+                MaterialList = new MAT1();
+                FontList = new FNL1();
+                RootPane = new PAN1();
+                RootGroup = new GRP1();
                 FileInfo = bflyt;
 
                 reader.SetByteOrder(true);
@@ -303,6 +328,7 @@ namespace LayoutBXLYT.Cafe
                 reader.CheckByteOrderMark(ByteOrderMark);
                 HeaderSize = reader.ReadUInt16();
                 Version = reader.ReadUInt32();
+                SetVersionInfo();
                 uint FileSize = reader.ReadUInt32();
                 ushort sectionCount = reader.ReadUInt16();
                 reader.ReadUInt16(); //Padding
@@ -1331,7 +1357,9 @@ namespace LayoutBXLYT.Cafe
 
             private BFLYT.Header ParentLayout;
 
-            public PIC1() : base() {
+            public PIC1(BFLYT.Header header) : base() {
+                ParentLayout = header;
+
                 ColorTopLeft = STColor8.White;
                 ColorTopRight = STColor8.White;
                 ColorBottomLeft = STColor8.White;
@@ -1474,7 +1502,23 @@ namespace LayoutBXLYT.Cafe
 
             public PAN1() : base()
             {
+                Alpha = 255;
+                PaneMagFlags = 0;
+                Name = "";
+                Translate = new Vector3F(0,0,0);
+                Rotate = new Vector3F(0,0,0);
+                Scale = new Vector2F(1,1);
+                Width = 0;
+                Height = 0;
+                UserDataInfo = "";
+                UserData = new UserData();
 
+                originX = OriginX.Center;
+                originY = OriginY.Center;
+                ParentOriginX = OriginX.Center;
+                ParentOriginY = OriginY.Center;
+                InfluenceAlpha = false;
+                Visible = true;
             }
 
             public PAN1(FileReader reader) : base()
@@ -1637,6 +1681,9 @@ namespace LayoutBXLYT.Cafe
                 ParentLayout = header;
 
                 Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
+                Name = Name.Replace("\x01", string.Empty);
+                Name = Name.Replace("\x04", string.Empty);
+
                 if (header.VersionMajor >= 8)
                 {
                     flags = reader.ReadUInt32();

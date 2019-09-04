@@ -147,11 +147,15 @@ namespace LayoutBXLYT
             {
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
-                    var pane = (BasePane)node.Tag;
 
-                    LayoutProperties.LoadProperties(pane, OnProperyChanged);
-
-                    ActiveViewport.SelectedPanes.Add(pane);
+                    if (node.Tag is BasePane)
+                    {
+                        var pane = node.Tag as BasePane;
+                        LayoutProperties.LoadProperties(pane, OnProperyChanged);
+                        ActiveViewport.SelectedPanes.Add(pane);
+                    }
+                    else
+                        LayoutProperties.LoadProperties(node.Tag, OnProperyChanged);
                 }
             }
             if (ActiveViewport != null)
@@ -428,6 +432,7 @@ namespace LayoutBXLYT
                     if (TextConverter == null)
                         TextConverter = new LayoutTextDocked();
                     TextConverter.Text = "Text Converter";
+                    TextConverter.TextCompiled += OnTextCompiled;
                     TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
                     if (ActiveViewport != null)
                         TextConverter.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.4);
@@ -442,6 +447,16 @@ namespace LayoutBXLYT
                 textConverterToolStripMenuItem.Checked = false;
                 TextConverter.Hide();
             }
+        }
+
+        private void OnTextCompiled(object sender, EventArgs e)
+        {
+            var layout = TextConverter.GetLayout();
+            ActiveLayout = layout.header;
+            ReloadEditors(layout.header);
+
+            if (ActiveViewport != null)
+                ActiveViewport.ResetLayout(ActiveLayout);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
