@@ -23,6 +23,9 @@ namespace LayoutBXLYT
             userDataEditor = new UserDataEditor();
             userDataEditor.Dock = DockStyle.Fill;
             tabPage2.Controls.Add(userDataEditor);
+
+            BackColor = FormThemes.BaseTheme.FormBackColor;
+            ForeColor = FormThemes.BaseTheme.FormForeColor;
         }
 
         public void Reset()

@@ -199,7 +199,7 @@ namespace FirstPlugin
                 {0x35, TEX_FORMAT.ASTC_10x5_UNORM},
                 {0x36, TEX_FORMAT.ASTC_10x6_UNORM},
                 {0x37, TEX_FORMAT.ASTC_10x8_UNORM},
-                {0x38, TEX_FORMAT.ASTC_10x10_UNORM},
+                {0x38, TEX_FORMAT.ASTC_8x8_UNORM},
                 {0x39, TEX_FORMAT.ASTC_12x10_UNORM},
                 {0x3a, TEX_FORMAT.ASTC_12x12_UNORM},
                 {0x3b, TEX_FORMAT.B5G5R5A1_UNORM},

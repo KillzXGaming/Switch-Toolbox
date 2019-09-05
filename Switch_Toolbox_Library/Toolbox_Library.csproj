@@ -240,6 +240,12 @@
     <Compile Include="Forms\ColorSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\Dialogs\ColorSelectorDropdown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ColorSelectorDropdown.Designer.cs">
+      <DependentUpon>ColorSelectorDropdown.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Dialogs\STColorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -891,6 +897,9 @@
     <EmbeddedResource Include="Forms\Custom\STTextBox.resx">
       <DependentUpon>STTextBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\ColorSelectorDropdown.resx">
+      <DependentUpon>ColorSelectorDropdown.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\ExportModelSettings.resx">
       <DependentUpon>ExportModelSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -1277,6 +1286,7 @@
   <ItemGroup>
     <Folder Include="FileFormats\Compression\" />
     <Folder Include="FileFormats\DAE\COLLADA\" />
+    <Folder Include="FileFormats\DAE\Custom\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\boneWeightGradient.png" />
@@ -1349,6 +1359,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Layout\WindowPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Font.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

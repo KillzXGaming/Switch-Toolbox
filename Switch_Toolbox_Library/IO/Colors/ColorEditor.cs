@@ -29,7 +29,7 @@ namespace Toolbox.Library.IO
             if (frmsvr == null)
                 return null;
 
-            var control = new ColorSelector();
+            var control = new ColorSelectorDropdown();
 
             Color color = Color.White;
             if (value is STColor8)

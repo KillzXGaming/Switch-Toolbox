@@ -63,6 +63,7 @@ namespace LayoutBXLYT
         private LayoutTextureList LayoutTextureList;
         private LayoutProperties LayoutProperties;
         private LayoutTextDocked TextConverter;
+        private LayoutPartsEditor LayoutPartsEditor;
 
         private bool isLoaded = false;
         public void LoadBxlyt(BxlytHeader header, string fileName)
@@ -86,6 +87,7 @@ namespace LayoutBXLYT
         private void InitializeDockPanels()
         {
             ShowTextureList();
+            ShowPartsEditor();
             ShowPaneHierarchy();
             ShowPropertiesPanel();
             UpdateBackColor();
@@ -141,10 +143,10 @@ namespace LayoutBXLYT
         {
             if (isChecked) return;
 
-            ActiveViewport.SelectedPanes.Clear();
-
             if (LayoutProperties != null && (string)sender == "Select")
             {
+                ActiveViewport.SelectedPanes.Clear();
+
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
 
@@ -198,6 +200,13 @@ namespace LayoutBXLYT
 
         private void textureListToolStripMenuItem_Click(object sender, EventArgs e) {
             ShowTextureList();
+        }
+
+        private void ShowPartsEditor()
+        {
+            LayoutPartsEditor = new LayoutPartsEditor();
+            LayoutPartsEditor.Text = "Parts Editor";
+            LayoutPartsEditor.Show(dockPanel1, DockState.DockLeft);
         }
 
         private void ShowPropertiesPanel()

@@ -160,7 +160,9 @@ namespace Toolbox.Library
                     }
                 }
 
-                FileList.Add(Tuple.Create(tempf, $"{targetDirectory}/{fileName}"));
+                Console.WriteLine($"{tempf} {targetDirectory} {fileName}");
+
+                FileList.Add(Tuple.Create(fileName, $"{targetDirectory}/{fileName}"));
             }
 
             string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);

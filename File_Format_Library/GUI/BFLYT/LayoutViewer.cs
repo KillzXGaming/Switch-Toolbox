@@ -95,7 +95,7 @@ namespace LayoutBXLYT
             GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(0, glControl1.Width, glControl1.Height, 0, -1, 1);
+            GL.Ortho(0, glControl1.Width, glControl1.Height, 0, -1, 100);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
@@ -123,17 +123,31 @@ namespace LayoutBXLYT
             glControl1.SwapBuffers();
         }
 
-        private void RenderPanes(BasePane pane, bool isRoot, byte parentAlpha)
+        private void RenderPanes(BasePane pane, bool isRoot, byte parentAlpha, BasePane partPane = null)
         {
             if (!pane.DisplayInEditor)
                 return;
 
             GL.PushMatrix();
-            GL.Translate(pane.Translate.X, pane.Translate.Y, 0);
-            GL.Rotate(pane.Rotate.Z, pane.Rotate.X, pane.Rotate.Y, pane.Rotate.Z);
-            GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
 
-            byte effectiveAlpha = (byte)(parentAlpha == 255 ? pane.Alpha : pane.Alpha / 255);
+            if (partPane != null)
+            {
+                var translate = partPane.Translate + pane.Translate;
+                var scale = partPane.Scale * pane.Scale;
+                var rotate = partPane.Rotate + pane.Rotate;
+
+                GL.Translate(translate.X + translate.X, translate.Y, 0);
+                GL.Rotate(rotate.Z, rotate.X, rotate.Y, rotate.Z);
+                GL.Scale(scale.X, scale.Y, 1);
+            }
+            else
+            {
+                GL.Translate(pane.Translate.X, pane.Translate.Y, 0);
+                GL.Rotate(pane.Rotate.Z, pane.Rotate.X, pane.Rotate.Y, pane.Rotate.Z);
+                GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
+            }
+
+            byte effectiveAlpha = (byte)(parentAlpha == 255 ? pane.Alpha : (pane.Alpha * parentAlpha) / 255);
 
             if (!isRoot)
             {
@@ -143,19 +157,24 @@ namespace LayoutBXLYT
                     DrawPicturePane((BCLYT.PIC1)pane, effectiveAlpha);
                 else if (pane is BRLYT.PIC1)
                     DrawPicturePane((BRLYT.PIC1)pane, effectiveAlpha);
+                else if (pane is BFLYT.PRT1)
+                    DrawPartsPane((BFLYT.PRT1)pane, effectiveAlpha);
                 else if (pane is BFLYT.PAN1)
                     DrawDefaultPane((BFLYT.PAN1)pane);
                 else if (pane is BCLYT.PAN1)
                     DrawDefaultPane((BCLYT.PAN1)pane);
                 else if (pane is BRLYT.PAN1)
                     DrawDefaultPane((BRLYT.PAN1)pane);
+
+                //   else if (pane is BFLYT.WND1)
+                //      DrawWindowPane((BFLYT.WND1)pane, effectiveAlpha);
             }
             else
                 isRoot = false;
 
             byte childAlpha = pane.InfluenceAlpha ? effectiveAlpha : byte.MaxValue;
             foreach (var childPane in pane.Childern)
-                RenderPanes(childPane, isRoot, childAlpha);
+                RenderPanes(childPane, isRoot, childAlpha, partPane);
 
             GL.PopMatrix();
         }
@@ -218,6 +237,47 @@ namespace LayoutBXLYT
                 };
 
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
+        }
+
+        private void DrawPartsPane(BFLYT.PRT1 pane, byte effectiveAlpha)
+        {
+            pane.UpdateTextureData(this.Textures);
+            var partPane = pane.GetExternalPane();
+            if (partPane != null)
+            {
+                RenderPanes(partPane, false, effectiveAlpha);
+            }
+            else
+                DrawDefaultPane(pane);
+
+            if (pane.Properties != null)
+            {
+                foreach (var prop in pane.Properties)
+                {
+                    if (prop.Property != null)
+                        RenderPanes(prop.Property, false, effectiveAlpha);
+                }
+            }
+        }
+
+        private void DrawWindowPane(BFLYT.WND1 pane, byte effectiveAlpha)
+        {
+            float frameLeft = 0;
+            float frameTop = 0;
+            float frameRight = 0;
+            float frameBottom = 0;
+            if (pane.FrameCount == 1)
+            {
+
+            }
+            else if (pane.FrameCount == 4)
+            {
+
+            }
+            else if (pane.FrameCount == 8)
+            {
+
+            }
         }
 
         private void DrawPicturePane(BCLYT.PIC1 pane, byte effectiveAlpha)
@@ -389,6 +449,16 @@ namespace LayoutBXLYT
                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
                 GL.Color4(colors[3]);
                 GL.TexCoord2(texCoords[3]);
+                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                GL.End();
+
+                //Draw outline
+                GL.Begin(PrimitiveType.LineLoop);
+                GL.LineWidth(3);
+                GL.Color4(colors[0]);
+                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                GL.Vertex2(rect.RightPoint, rect.TopPoint);
                 GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                 GL.End();
             }

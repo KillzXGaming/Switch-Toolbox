@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
@@ -202,13 +202,15 @@ namespace LayoutBXLYT.Cafe
                         BNTX bntx = (BNTX)file.OpenFile();
                         file.FileFormat = bntx;
                         foreach (var tex in bntx.Textures)
-                            textures.Add(tex.Key, tex.Value);
+                            if (!textures.ContainsKey(tex.Key))
+                                textures.Add(tex.Key, tex.Value);
                     }
                     else if (Utils.GetExtension(file.FileName) == ".bflim")
                     {
                         BFLIM bflim = (BFLIM)file.OpenFile();
                         file.FileFormat = bflim;
-                        textures.Add(bflim.FileName, bflim);
+                        if (!textures.ContainsKey(bflim.FileName))
+                            textures.Add(bflim.FileName, bflim);
                     }
                 }
             }
@@ -232,6 +234,9 @@ namespace LayoutBXLYT.Cafe
             private const string Magic = "FLYT";
             private ushort ByteOrderMark;
             private ushort HeaderSize;
+
+            [Browsable(false)]
+            public Dictionary<string, BasePane> PaneLookup = new Dictionary<string, BasePane>();
 
             [Browsable(false)]
             public LYT1 LayoutInfo { get; set; }
@@ -262,6 +267,12 @@ namespace LayoutBXLYT.Cafe
             }
 
             [Browsable(false)]
+            public override List<string> Fonts
+            {
+                get { return FontList.Fonts; }
+            }
+
+            [Browsable(false)]
             public override Dictionary<string, STGenericTexture> GetTextures
             {
                 get { return ((BFLYT)FileInfo).GetTextures(); }
@@ -281,6 +292,17 @@ namespace LayoutBXLYT.Cafe
                 List<GRP1> panes = new List<GRP1>();
                 GetGroupChildren(panes, (GRP1)RootGroup);
                 return panes;
+            }
+
+            public override List<BxlytMaterial> GetMaterials()
+            {
+                List<BxlytMaterial> materials = new List<BxlytMaterial>();
+                if (MaterialList != null && MaterialList.Materials != null)
+                {
+                    for (int i = 0; i < MaterialList.Materials.Count; i++)
+                        materials.Add(MaterialList.Materials[i]);
+                }
+                return materials;
             }
 
             private void GetPaneChildren(List<PAN1> panes, PAN1 root)
@@ -369,6 +391,7 @@ namespace LayoutBXLYT.Cafe
                             break;
                         case "pan1":
                             var panel = new PAN1(reader);
+                            AddPaneToTable(panel);
                             if (!setRoot)
                             {
                                 RootPane = panel;
@@ -380,30 +403,36 @@ namespace LayoutBXLYT.Cafe
                             break;
                         case "pic1":
                             var picturePanel = new PIC1(reader, this);
+                            AddPaneToTable(picturePanel);
 
                             SetPane(picturePanel, parentPane);
                             currentPane = picturePanel;
                             break;
                         case "txt1":
                             var textPanel = new TXT1(reader, this);
+                            AddPaneToTable(textPanel);
 
                             SetPane(textPanel, parentPane);
                             currentPane = textPanel;
                             break;
                         case "bnd1":
                             var boundsPanel = new BND1(reader, this);
+                            AddPaneToTable(boundsPanel);
 
                             SetPane(boundsPanel, parentPane);
                             currentPane = boundsPanel;
                             break;
                         case "prt1":
                             var partsPanel = new PRT1(reader, this);
+                            AddPaneToTable(partsPanel);
 
                             SetPane(partsPanel, parentPane);
                             currentPane = partsPanel;
                             break;
                         case "wnd1":
                             var windowPanel = new WND1(reader, this);
+                            AddPaneToTable(windowPanel);
+
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
                             break;
@@ -439,7 +468,8 @@ namespace LayoutBXLYT.Cafe
                             Container = new CNT1(reader, this);
                             break;*/
                         case "usd1":
-                            ((PAN1)currentPane).UserData = new USD1(reader, this);
+                            if (currentPane != null)
+                                ((PAN1)currentPane).UserData = new USD1(reader, this);
                             break;
                         //If the section is not supported store the raw bytes
                         default:
@@ -451,6 +481,12 @@ namespace LayoutBXLYT.Cafe
                     section.SectionSize = SectionSize;
                     reader.SeekBegin(pos + SectionSize);
                 }
+            }
+
+            private void AddPaneToTable(BasePane pane)
+            {
+                if (!PaneLookup.ContainsKey(pane.Name))
+                    PaneLookup.Add(pane.Name, pane);
             }
 
             private void SetPane(BasePane pane, BasePane parentPane)
@@ -1013,9 +1049,35 @@ namespace LayoutBXLYT.Cafe
 
         public class GRP1 : BasePane
         {
+            private Header LayoutFile;
+
             public override string Signature { get; } = "grp1";
  
             public List<string> Panes { get; set; } = new List<string>();
+
+            private bool displayInEditor = true;
+            public override bool DisplayInEditor
+            {
+                get { return displayInEditor; }
+                set
+                {
+                    displayInEditor = value;
+                    for (int i = 0; i < Panes.Count; i++)
+                    {
+                        var pane = SearchPane(Panes[i]);
+                        Console.WriteLine($"searching {Panes[i]} {pane != null}");
+                        if (pane != null)
+                            pane.DisplayInEditor = value;
+                    }
+                }
+            }
+
+            private BasePane SearchPane(string name)
+            {
+                if (LayoutFile.PaneLookup.ContainsKey(name))
+                    return LayoutFile.PaneLookup[name];
+                return null;
+            }
 
             public GRP1() : base()
             {
@@ -1024,6 +1086,8 @@ namespace LayoutBXLYT.Cafe
 
             public GRP1(FileReader reader, Header header)
             {
+                LayoutFile = header;
+
                 ushort numNodes = 0;
                 if (header.VersionMajor >= 5)
                 {
@@ -1038,7 +1102,7 @@ namespace LayoutBXLYT.Cafe
                 }
 
                 for (int i = 0; i < numNodes; i++)
-                    Panes.Add(reader.ReadString(24));
+                    Panes.Add(reader.ReadString(24).Replace("\0", string.Empty));
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -1081,10 +1145,95 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("External Layout File"), CategoryAttribute("Parts")]
             public string LayoutFile { get; set; }
 
+            private BFLYT ExternalLayout;
+
+            public BasePane GetExternalPane()
+            {
+                if (ExternalLayout == null)
+                    ExternalLayout = SearchExternalFile();
+
+                if (ExternalLayout == null)
+                    return null;
+
+                return ExternalLayout.header.RootPane;
+            }
+
+            //Get textures if possible from the external parts file
+            public void UpdateTextureData(Dictionary<string, STGenericTexture> textures)
+            {
+                if (ExternalLayout == null)
+                {
+                    ExternalLayout = SearchExternalFile();
+                    if (ExternalLayout == null)
+                        return;
+
+                    var textureList = ExternalLayout.GetTextures();
+                    foreach (var tex in textureList)
+                        if (!textures.ContainsKey(tex.Key))
+                            textures.Add(tex.Key, tex.Value);
+
+                    textureList.Clear();
+                }
+            }
+
+            private BFLYT SearchExternalFile()
+            {
+                var fileFormat = layoutFile.FileInfo;
+
+                //File is outside an archive so check the contents it is in
+                if (File.Exists(fileFormat.FileName))
+                {
+                    string folder = Path.GetDirectoryName(fileFormat.FileName);
+                    foreach (var file in Directory.GetFiles(folder))
+                    {
+                        if (file.Contains(LayoutFile))
+                        {
+                            var bflyt = STFileLoader.OpenFileFormat(file) as BFLYT;
+                            if (bflyt == null)
+                                continue;
+
+                            bflyt.IFileInfo = new IFileInfo();
+                            bflyt.IFileInfo.ArchiveParent = fileFormat.IFileInfo.ArchiveParent;
+                            return bflyt;
+                        }
+                    }
+                }
+                else if (fileFormat.IFileInfo.ArchiveParent != null)
+                {
+                    BFLYT bflyt = null;
+                    SearchArchive(fileFormat.IFileInfo.ArchiveParent, ref bflyt);
+                    return bflyt;
+                }
+
+                return null;
+            }
+
+            private void SearchArchive(IArchiveFile archiveFile, ref BFLYT layoutFile)
+            {
+                layoutFile = null;
+
+                foreach (var file in archiveFile.Files)
+                    if (file.FileName.Contains(LayoutFile))
+                    {
+                        var openedFile = file.OpenFile();
+                        if (openedFile is IArchiveFile)
+                            SearchArchive((IArchiveFile)openedFile, ref layoutFile);
+                        else if (openedFile is BFLYT)
+                        {
+                            layoutFile = openedFile as BFLYT;
+                            layoutFile.IFileInfo = new IFileInfo();
+                            layoutFile.IFileInfo.ArchiveParent = layoutFile.IFileInfo.ArchiveParent;
+                            return;
+                        }
+                    }
+            }
+
+            private Header layoutFile;
             public PRT1(FileReader reader, Header header) : base(reader)
             {
-                Properties = new List<PartProperty>();
+                layoutFile = header;
 
+                Properties = new List<PartProperty>();
                 StartPosition = reader.Position - 84;
 
                 uint properyCount = reader.ReadUInt32();
@@ -1617,10 +1766,10 @@ namespace LayoutBXLYT.Cafe
 
         //Thanks to shibbs for the material info
         //https://github.com/shibbo/flyte/blob/master/flyte/lyt/common/MAT1.cs
-        public class Material
+        public class Material : BxlytMaterial
         {
             [DisplayName("Name"), CategoryAttribute("General")]
-            public string Name { get; set; }
+            public override string Name { get; set; }
 
             [DisplayName("Black Color"), CategoryAttribute("Color")]
             public STColor8 BlackColor { get; set; }

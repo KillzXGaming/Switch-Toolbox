@@ -79,9 +79,7 @@ namespace Toolbox.Library
         [Browsable(false)]
         public virtual IFileFormat OpenFile()
         {
-            if (FileFormat != null && 
-                FileFormat.IFileInfo != null && 
-                FileFormat.IFileInfo.ArchiveParent != null)
+            if (FileFormat != null)
                 return FileFormat;
 
             if (FileDataStream != null)

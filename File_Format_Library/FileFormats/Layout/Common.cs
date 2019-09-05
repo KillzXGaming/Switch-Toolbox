@@ -20,7 +20,7 @@ namespace LayoutBXLYT
         public virtual bool InfluenceAlpha { get; set; }
 
         [Browsable(false)]
-        public bool DisplayInEditor { get; set; } = true;
+        public virtual bool DisplayInEditor { get; set; } = true;
 
         [DisplayName("Name"), CategoryAttribute("Pane")]
         public string Name { get; set; }
@@ -260,6 +260,9 @@ namespace LayoutBXLYT
         public virtual List<string> Textures { get; }
 
         [Browsable(false)]
+        public virtual List<string> Fonts { get; }
+
+        [Browsable(false)]
         internal uint Version;
 
         [DisplayName("Version"), CategoryAttribute("File Settings")]
@@ -271,6 +274,11 @@ namespace LayoutBXLYT
             }
         }
 
+        [Browsable(false)]
+        public virtual List<BxlytMaterial> GetMaterials()
+        {
+            return new List<BxlytMaterial>();
+        }
 
         [RefreshProperties(RefreshProperties.All)]
         public uint VersionMajor { get; set; }
@@ -298,6 +306,12 @@ namespace LayoutBXLYT
         {
             FileInfo.Unload();
         }
+    }
+
+    public class BxlytMaterial
+    {
+        [DisplayName("Name"), CategoryAttribute("General")]
+        public virtual string Name { get; set; }
     }
 
     public class SectionCommon 

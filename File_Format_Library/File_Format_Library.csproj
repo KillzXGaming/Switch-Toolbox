@@ -304,6 +304,7 @@
     <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
+    <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
@@ -341,6 +342,12 @@
     <Compile Include="GUI\BFLYT\LayoutHierarchy.Designer.cs">
       <DependentUpon>LayoutHierarchy.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFLYT\LayoutPartsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutPartsEditor.Designer.cs">
+      <DependentUpon>LayoutPartsEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\LayoutProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -365,6 +372,7 @@
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFLYT\Textbox.cs" />
     <Compile Include="GUI\BFLYT\UserDataEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1146,8 +1154,14 @@
     <EmbeddedResource Include="GUI\BFLYT\LayoutHierarchy.resx">
       <DependentUpon>LayoutHierarchy.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutPartsEditor.resx">
+      <DependentUpon>LayoutPartsEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutProperties.resx">
       <DependentUpon>LayoutProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutTextDocked.resx">
+      <DependentUpon>LayoutTextDocked.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutTextureList.resx">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
