@@ -216,6 +216,8 @@ namespace FirstPlugin
 
             control.CurrentShader = defaultShaderProgram;
 
+            GL.LoadIdentity();
+
             control.UpdateModelMatrix(
             Matrix4.CreateScale(Runtime.previewScale));
 
