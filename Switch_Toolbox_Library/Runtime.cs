@@ -40,6 +40,17 @@ namespace Toolbox.Library
         public class LayoutEditor
         {
             public static Color BackgroundColor = Color.FromArgb(130, 130, 130);
+
+            public static DebugShading Shading = DebugShading.Default;
+
+            public enum DebugShading
+            {
+                Default,
+                VertexColor,
+                WhiteColor,
+                BlackColor,
+                UVTestPattern,
+            }
         }
 
         public class ImageEditor

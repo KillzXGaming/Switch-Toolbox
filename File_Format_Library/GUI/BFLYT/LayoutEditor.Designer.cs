@@ -44,6 +44,8 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugShading = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -60,7 +62,7 @@
             // 
             // backColorDisplay
             // 
-            this.backColorDisplay.Location = new System.Drawing.Point(319, 25);
+            this.backColorDisplay.Location = new System.Drawing.Point(253, 25);
             this.backColorDisplay.Name = "backColorDisplay";
             this.backColorDisplay.Size = new System.Drawing.Size(21, 21);
             this.backColorDisplay.TabIndex = 10;
@@ -74,7 +76,7 @@
             this.viewportBackColorCB.ButtonColor = System.Drawing.Color.Empty;
             this.viewportBackColorCB.FormattingEnabled = true;
             this.viewportBackColorCB.IsReadOnly = false;
-            this.viewportBackColorCB.Location = new System.Drawing.Point(167, 25);
+            this.viewportBackColorCB.Location = new System.Drawing.Point(101, 25);
             this.viewportBackColorCB.Name = "viewportBackColorCB";
             this.viewportBackColorCB.Size = new System.Drawing.Size(146, 21);
             this.viewportBackColorCB.TabIndex = 9;
@@ -170,16 +172,38 @@
             // textureListToolStripMenuItem
             // 
             this.textureListToolStripMenuItem.Name = "textureListToolStripMenuItem";
-            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.textureListToolStripMenuItem.Text = "Texture List";
             this.textureListToolStripMenuItem.Click += new System.EventHandler(this.textureListToolStripMenuItem_Click);
             // 
             // textConverterToolStripMenuItem
             // 
             this.textConverterToolStripMenuItem.Name = "textConverterToolStripMenuItem";
-            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.textConverterToolStripMenuItem.Text = "Text Converter";
             this.textConverterToolStripMenuItem.Click += new System.EventHandler(this.textConverterToolStripMenuItem_Click);
+            // 
+            // debugShading
+            // 
+            this.debugShading.BorderColor = System.Drawing.Color.Empty;
+            this.debugShading.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.debugShading.ButtonColor = System.Drawing.Color.Empty;
+            this.debugShading.FormattingEnabled = true;
+            this.debugShading.IsReadOnly = false;
+            this.debugShading.Location = new System.Drawing.Point(391, 25);
+            this.debugShading.Name = "debugShading";
+            this.debugShading.Size = new System.Drawing.Size(146, 21);
+            this.debugShading.TabIndex = 13;
+            this.debugShading.SelectedIndexChanged += new System.EventHandler(this.debugShading_SelectedIndexChanged);
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(301, 28);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(84, 13);
+            this.stLabel1.TabIndex = 14;
+            this.stLabel1.Text = "Debug Shading:";
             // 
             // LayoutEditor
             // 
@@ -187,6 +211,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 398);
+            this.Controls.Add(this.stLabel1);
+            this.Controls.Add(this.debugShading);
             this.Controls.Add(this.backColorDisplay);
             this.Controls.Add(this.viewportBackColorCB);
             this.Controls.Add(this.dockPanel1);
@@ -225,5 +251,7 @@
         private System.Windows.Forms.ToolStripMenuItem textConverterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
+        private Toolbox.Library.Forms.STComboBox debugShading;
+        private Toolbox.Library.Forms.STLabel stLabel1;
     }
 }

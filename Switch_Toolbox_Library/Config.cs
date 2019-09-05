@@ -250,6 +250,11 @@ namespace Toolbox.Library
                     case "LayoutBackgroundColor":
                         TryParseHexColor(node, ref Runtime.LayoutEditor.BackgroundColor);
                         break;
+                    case "LayoutShadingMode":
+                        Runtime.LayoutEditor.DebugShading shadingMode;
+                        Enum.TryParse(node.InnerText, out shadingMode);
+                        Runtime.LayoutEditor.Shading = shadingMode;
+                        break;
                 }
             }
 
@@ -366,6 +371,8 @@ namespace Toolbox.Library
         {
             XmlNode layoutSettingsNode = doc.CreateElement("LAYOUT_EDITOR");
             parentNode.AppendChild(layoutSettingsNode);
+
+            layoutSettingsNode.AppendChild(createNode(doc, "LayoutShadingMode", Runtime.LayoutEditor.Shading.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "LayoutBackgroundColor", ColorTranslator.ToHtml(Runtime.LayoutEditor.BackgroundColor)));
         }
 

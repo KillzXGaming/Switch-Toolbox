@@ -53,6 +53,11 @@ namespace LayoutBXLYT
             viewportBackColorCB.Items.Add("Back Color : Custom");
             viewportBackColorCB.SelectedIndex = 0;
 
+            foreach (var type in Enum.GetValues(typeof(Runtime.LayoutEditor.DebugShading)).Cast<Runtime.LayoutEditor.DebugShading>())
+                debugShading.Items.Add(type);
+
+            debugShading.SelectedItem = Runtime.LayoutEditor.Shading;
+
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
         }
@@ -522,6 +527,15 @@ namespace LayoutBXLYT
         private void stToolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             SaveActiveFile(false);
+        }
+
+        private void debugShading_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (debugShading.SelectedIndex < 0) return;
+
+            Runtime.LayoutEditor.Shading = (Runtime.LayoutEditor.DebugShading)debugShading.SelectedItem;
+            if (ActiveViewport != null)
+                ActiveViewport.UpdateViewport();
         }
     }
 }

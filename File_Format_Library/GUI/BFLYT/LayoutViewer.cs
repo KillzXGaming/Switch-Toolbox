@@ -344,7 +344,8 @@ namespace LayoutBXLYT
 
                 //  if (Textures.ContainsKey(textureMap0))
                 //  BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
-                GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
+                if (Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.UVTestPattern)
+                    GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
                 TexCoords = new Vector2[] {
                         pane.TexCoords[0].TopLeft.ToTKVector2(),
@@ -377,7 +378,9 @@ namespace LayoutBXLYT
 
             var mat = pane.Material;
 
-            if (pane.TexCoords.Length > 0)
+            bool defaultShading = Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.Default;
+
+            if (pane.TexCoords.Length > 0 && defaultShading)
             {
                 string textureMap0 = "";
                 if (mat.TextureMaps.Length > 0)
@@ -387,11 +390,6 @@ namespace LayoutBXLYT
                     BindGLTexture(mat.TextureMaps[0], Textures[textureMap0]);
                 else if (mat.TextureMaps.Length > 0)
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(mat.TextureMaps[0].WrapModeU));
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(mat.TextureMaps[0].WrapModeV));
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(mat.TextureMaps[0].MaxFilterMode));
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(mat.TextureMaps[0].MinFilterMode));
                 }
 
                 if (mat.TextureTransforms.Length > 0)
@@ -413,6 +411,27 @@ namespace LayoutBXLYT
                         pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pane.TexCoords[0].BottomLeft.ToTKVector2(),
                    };
+            }
+
+            if (pane.TexCoords.Length > 0 && Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.UVTestPattern)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(mat.TextureMaps[0].WrapModeU));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(mat.TextureMaps[0].WrapModeV));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(mat.TextureMaps[0].MaxFilterMode));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(mat.TextureMaps[0].MinFilterMode));
+            }
+
+            if (Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.BlackColor)
+            {
+                for (int i = 0; i < Colors.Length; i++)
+                    Colors[i] = pane.Material.BlackColor.Color;
+            }
+
+            if (Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.WhiteColor)
+            {
+                for (int i = 0; i < Colors.Length; i++)
+                    Colors[i] = pane.Material.WhiteColor.Color;
             }
 
             DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
