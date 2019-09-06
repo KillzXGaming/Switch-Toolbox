@@ -381,6 +381,7 @@ namespace FirstPlugin
             Formats.Add(typeof(DKCTF.MSBT));
             Formats.Add(typeof(DKCTF.PAK));
             Formats.Add(typeof(WTB));
+            Formats.Add(typeof(PKZ));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));

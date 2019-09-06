@@ -214,6 +214,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\Archives\PKZ.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
     <Compile Include="FileFormats\DKCTF\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />

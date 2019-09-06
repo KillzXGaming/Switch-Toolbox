@@ -9,6 +9,20 @@ namespace Toolbox.Library.IO
 {
     public static class StreamExport
     {
+        public static byte[] ToBytes(this Stream stream)
+        {
+            using (var reader = new FileReader(stream, true))
+            {
+                return reader.ReadBytes((int)stream.Length);
+            }
+
+            using (var memStream = new MemoryStream())
+            {
+                stream.CopyTo(memStream);
+                return memStream.ToArray();
+            }
+        }
+
         public static void ExportToFile(this Stream stream, string fileName)
         {
             using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Write))

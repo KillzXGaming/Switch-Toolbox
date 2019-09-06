@@ -129,10 +129,10 @@ namespace FirstPlugin
             public uint unknown;
             public uint ImageSize;
             public uint Padding;
-            public uint Format;
-            public uint MipCount;
             public uint unknown2;
+            public uint MipCount;
             public uint unknown3;
+            public uint Format;
             public uint Width;
             public uint Height;
             public uint Depth;
@@ -175,13 +175,27 @@ namespace FirstPlugin
                 Depth = tex.Info.Depth;
                 ArrayCount = 1; 
                 MipCount = tex.Info.MipCount;
+               // Format = TextureData.ConvertFormat(tex.Info.Format);
                 if (Formats.ContainsKey(tex.Info.Format))
                     Format = Formats[tex.Info.Format];
             }
 
             private Dictionary<uint, TEX_FORMAT> Formats = new Dictionary<uint, TEX_FORMAT>()
             {
-                {0x01, TEX_FORMAT.R8G8_UNORM},
+                {0x42 , TEX_FORMAT.BC1_UNORM},
+                {0x43, TEX_FORMAT.BC2_UNORM},
+                {0x44, TEX_FORMAT.BC3_UNORM},
+                {0x45, TEX_FORMAT.BC4_UNORM},
+                {0x46 , TEX_FORMAT.BC1_UNORM_SRGB},
+                {0x47 , TEX_FORMAT.BC2_UNORM_SRGB},
+                {0x48 , TEX_FORMAT.BC3_UNORM_SRGB},
+                {0x49, TEX_FORMAT.BC4_SNORM},
+                {0x79, TEX_FORMAT.ASTC_4x4_UNORM},
+                {0x80, TEX_FORMAT.ASTC_8x8_UNORM},
+                {0x87, TEX_FORMAT.ASTC_4x4_SRGB},
+                {0x8E, TEX_FORMAT.ASTC_8x8_SRGB},
+
+             /*   {0x01, TEX_FORMAT.R8G8_UNORM},
                 {0x0d, TEX_FORMAT.R9G9B9E5_SHAREDEXP},
                 {0x1a, TEX_FORMAT.BC1_UNORM},
                 {0x1b, TEX_FORMAT.BC2_UNORM},
@@ -202,7 +216,7 @@ namespace FirstPlugin
                 {0x38, TEX_FORMAT.ASTC_8x8_UNORM},
                 {0x39, TEX_FORMAT.ASTC_12x10_UNORM},
                 {0x3a, TEX_FORMAT.ASTC_12x12_UNORM},
-                {0x3b, TEX_FORMAT.B5G5R5A1_UNORM},
+                {0x3b, TEX_FORMAT.B5G5R5A1_UNORM},*/
 
             };
 
