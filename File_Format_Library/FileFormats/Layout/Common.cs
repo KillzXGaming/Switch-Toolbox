@@ -13,6 +13,13 @@ namespace LayoutBXLYT
 {
     public class BasePane : SectionCommon
     {
+        public bool IsRoot = false;
+
+        public bool ParentIsRoot
+        {
+            get { return Parent != null && Parent.IsRoot; }
+        }
+
         [DisplayName("Alpha"), CategoryAttribute("Alpha")]
         public byte Alpha { get; set; }
 
@@ -46,10 +53,10 @@ namespace LayoutBXLYT
         [DisplayName("Origin X"), CategoryAttribute("Origin")]
         public virtual OriginY originY { get; set; }
 
-        [Browsable(false)]
+        [DisplayName("Parent Origin X"), CategoryAttribute("Origin")]
         public virtual OriginX ParentOriginX { get; set; }
 
-        [Browsable(false)]
+        [DisplayName("Parent Origin Y"), CategoryAttribute("Origin")]
         public virtual OriginY ParentOriginY { get; set; }
 
         [Browsable(false)]
@@ -77,8 +84,7 @@ namespace LayoutBXLYT
         {
             get
             {
-                if (rectangle == null)
-                    UpdateRectangle();
+                UpdateRectangle();
                 return rectangle;
             }
         }
@@ -90,26 +96,60 @@ namespace LayoutBXLYT
         public CustomRectangle CreateRectangle()
         {
             //Do origin transforms
-            var transformed = TransformOrientation((int)Width, (int)Height);
-
-            //Now do parent transforms
-            Vector2 ParentWH = new Vector2(0, 0);
-            if (Parent != null && Parent is BasePane)
-                ParentWH = new Vector2((int)Parent.Width, (int)Parent.Height);
-
-            var transformedParent = TransformOrientation(ParentWH.X, ParentWH.Y);
-
-            //  if (Parent != null)
-            //      transformed -= transformedParent;
+            var transformed = TransformOrientation((int)Width, (int)Height, originX, originY);
+            var parentTransform = ParentOriginTransform(transformed);
 
             return new CustomRectangle(
-                transformed.X,
-                transformed.Y,
-                transformed.Z,
-                transformed.W);
+                parentTransform.X,
+                parentTransform.Y,
+                parentTransform.Z,
+                parentTransform.W);
         }
 
-        private Vector4 TransformOrientation(int Width, int Height)
+        //Get the previous transform from the parent origin
+        private Vector4 ParentOriginTransform(Vector4 points)
+        {
+            //Dont shift the root or the first child of the root
+            //The parent setting shouldn't be set, but it doesn't hurt to do this
+            if (IsRoot || ParentIsRoot || Parent == null)
+                return points;
+
+            var transformedPosition = TransformOrientationPosition((int)Parent.Width, (int)Parent.Height, ParentOriginX, ParentOriginY);
+            var transformed = ShiftRectangle(transformedPosition, points);
+            if (Parent != null)
+                return Parent.ParentOriginTransform(transformed);
+
+            return transformed;
+        }
+
+        private static Vector4 ShiftRectangle(Vector2 position, Vector4 points)
+        {
+            int left = points[0] + position.X;
+            int right = points[1] + position.X;
+            int top = points[2] + position.Y;
+            int bottom = points[3] + position.Y;
+            return new Vector4(left, right, top, bottom);
+        }
+
+        private static Vector2 TransformOrientationPosition(int Width, int Height, OriginX originX, OriginY originY)
+        {
+            int x = 0;
+            int y = 0;
+
+            if (originX == OriginX.Left)
+                x = -(Width / 2);
+            else if (originX == OriginX.Right)
+                x = (Width / 2);
+
+            if (originY == OriginY.Top)
+                y = Height / 2;
+            else if (originY == OriginY.Bottom)
+                y = -(Height / 2);
+
+            return new Vector2(x,y);
+        }
+
+        private static Vector4 TransformOrientation(int Width, int Height, OriginX originX, OriginY originY)
         {
             int left = 0;
             int right = 0;

@@ -34,6 +34,11 @@ namespace LayoutBXLYT
 
         private Dictionary<string, STGenericTexture> Textures;
 
+        public void ResetCamera()
+        {
+            Camera = new Camera2D();
+        }
+
         public void ResetLayout(BxlytHeader bxlyt)
         {
             LayoutFile = bxlyt;
@@ -87,6 +92,7 @@ namespace LayoutBXLYT
             OnRender();
         }
 
+        public bool UseOrtho = true;
         private Color BackgroundColor => Runtime.LayoutEditor.BackgroundColor;
         private void OnRender()
         {
@@ -95,9 +101,19 @@ namespace LayoutBXLYT
             GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(0, glControl1.Width, glControl1.Height, 0, -1, 100);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            if (UseOrtho)
+            {
+                GL.Ortho(-(glControl1.Width / 2.0f), glControl1.Width / 2.0f, glControl1.Height / 2.0f, -(glControl1.Height / 2.0f), -10000, 10000);
+                GL.MatrixMode(MatrixMode.Modelview);
+                GL.LoadIdentity();
+            }
+            else
+            {
+                var cameraPosition = new Vector3(Camera.Position.X, Camera.Position.Y, -(Camera.Zoom * 500));
+                var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / (float)glControl1.Height, 0.01f, 100000);
+                GL.LoadMatrix(ref perspectiveMatrix);
+                GL.MatrixMode(MatrixMode.Modelview);
+            }
 
             GL.ClearColor(BackgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -111,24 +127,49 @@ namespace LayoutBXLYT
             GL.Enable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
+            if (UseOrtho)
+            {
+                GL.PushMatrix();
+                GL.Scale(1 * Camera.Zoom, -1 * Camera.Zoom, 1);
+                GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
+            }
+
             DrawRootPane(LayoutFile.RootPane);
             DrawGrid();
             DrawXyLines();
+            RenderPanes(LayoutFile.RootPane, true, 255, false);
 
-            GL.Scale(1 * Camera.Zoom, -1 * Camera.Zoom, 1);
-            GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
-
-            RenderPanes(LayoutFile.RootPane, true, 255);
+            if (UseOrtho)
+                GL.PopMatrix();
 
             glControl1.SwapBuffers();
         }
 
-        private void RenderPanes(BasePane pane, bool isRoot, byte parentAlpha, BasePane partPane = null)
+        private void RenderPanes(BasePane pane, bool isRoot, byte parentAlpha, bool parentAlphaInfluence, BasePane partPane = null)
         {
             if (!pane.DisplayInEditor)
                 return;
 
             GL.PushMatrix();
+
+            //Check XY rotation and draw the pane before it was rotated
+            bool isRotatedXY = pane.Rotate.X != 0 || pane.Rotate.Y != 0;
+            if (isRotatedXY && SelectedPanes.Contains(pane))
+            {
+                GL.PushMatrix();
+                GL.Translate(pane.Translate.X, pane.Translate.Y, 0);
+                GL.Rotate(pane.Rotate.Z, 0, 0, 1);
+                GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
+
+                if (pane is BFLYT.PAN1)
+                    DrawDefaultPane((BFLYT.PAN1)pane);
+                else if (pane is BCLYT.PAN1)
+                    DrawDefaultPane((BCLYT.PAN1)pane);
+                else if (pane is BRLYT.PAN1)
+                    DrawDefaultPane((BRLYT.PAN1)pane);
+
+                GL.PopMatrix();
+            }
 
             if (partPane != null)
             {
@@ -137,17 +178,22 @@ namespace LayoutBXLYT
                 var rotate = partPane.Rotate + pane.Rotate;
 
                 GL.Translate(translate.X + translate.X, translate.Y, 0);
-                GL.Rotate(rotate.Z, rotate.X, rotate.Y, rotate.Z);
+                GL.Rotate(rotate.X, 1,0,0);
+                GL.Rotate(rotate.Y, 0, 1, 0);
+                GL.Rotate(rotate.Z, 0, 0, 1);
                 GL.Scale(scale.X, scale.Y, 1);
             }
             else
             {
                 GL.Translate(pane.Translate.X, pane.Translate.Y, 0);
-                GL.Rotate(pane.Rotate.Z, pane.Rotate.X, pane.Rotate.Y, pane.Rotate.Z);
+                GL.Rotate(pane.Rotate.X, 1, 0, 0);
+                GL.Rotate(pane.Rotate.Y, 0, 1, 0);
+                GL.Rotate(pane.Rotate.Z, 0, 0, 1);
                 GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
             }
 
             byte effectiveAlpha = (byte)(parentAlpha == 255 ? pane.Alpha : (pane.Alpha * parentAlpha) / 255);
+            parentAlphaInfluence = parentAlphaInfluence || pane.InfluenceAlpha;
 
             if (!isRoot)
             {
@@ -158,7 +204,7 @@ namespace LayoutBXLYT
                 else if (pane is BRLYT.PIC1)
                     DrawPicturePane((BRLYT.PIC1)pane, effectiveAlpha);
                 else if (pane is BFLYT.PRT1)
-                    DrawPartsPane((BFLYT.PRT1)pane, effectiveAlpha);
+                    DrawPartsPane((BFLYT.PRT1)pane, effectiveAlpha, parentAlphaInfluence);
                 else if (pane is BFLYT.PAN1)
                     DrawDefaultPane((BFLYT.PAN1)pane);
                 else if (pane is BCLYT.PAN1)
@@ -172,21 +218,15 @@ namespace LayoutBXLYT
             else
                 isRoot = false;
 
-            byte childAlpha = pane.InfluenceAlpha ? effectiveAlpha : byte.MaxValue;
+            byte childAlpha = pane.InfluenceAlpha || parentAlphaInfluence ? effectiveAlpha : byte.MaxValue;
             foreach (var childPane in pane.Childern)
-                RenderPanes(childPane, isRoot, childAlpha, partPane);
+                RenderPanes(childPane, isRoot, childAlpha, parentAlphaInfluence, partPane);
 
             GL.PopMatrix();
         }
 
         private void DrawRootPane(BasePane pane)
         {
-            GL.LoadIdentity();
-            GL.PushMatrix();
-            GL.Scale(pane.Scale.X * Camera.Zoom, -pane.Scale.Y * Camera.Zoom, 1);
-            GL.Rotate(pane.Rotate.Z, pane.Rotate.X, pane.Rotate.Y, pane.Rotate.Z);
-            GL.Translate(pane.Translate.X + Camera.Position.X, pane.Translate.Y + Camera.Position.Y, 0);
-
             Color color = Color.Black;
             if (SelectedPanes.Contains(pane))
                 color = Color.Red;
@@ -212,8 +252,6 @@ namespace LayoutBXLYT
             GL.Vertex2(rect.RightPoint, rect.BottomPoint);
             GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
             GL.End();
-
-            GL.PopMatrix();
         }
 
         private void DrawDefaultPane(BasePane pane)
@@ -236,16 +274,16 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors);
+            DrawRectangle(pane.Rectangle, TexCoords, Colors);
         }
 
-        private void DrawPartsPane(BFLYT.PRT1 pane, byte effectiveAlpha)
+        private void DrawPartsPane(BFLYT.PRT1 pane, byte effectiveAlpha, bool parentInfluenceAlpha)
         {
             pane.UpdateTextureData(this.Textures);
             var partPane = pane.GetExternalPane();
             if (partPane != null)
             {
-                RenderPanes(partPane, false, effectiveAlpha);
+                RenderPanes(partPane, false, effectiveAlpha, parentInfluenceAlpha);
             }
             else
                 DrawDefaultPane(pane);
@@ -255,7 +293,7 @@ namespace LayoutBXLYT
                 foreach (var prop in pane.Properties)
                 {
                     if (prop.Property != null)
-                        RenderPanes(prop.Property, false, effectiveAlpha);
+                        RenderPanes(prop.Property, false, effectiveAlpha, parentInfluenceAlpha || pane.InfluenceAlpha);
                 }
             }
         }
@@ -314,7 +352,7 @@ namespace LayoutBXLYT
                    };
             }
 
-            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false, effectiveAlpha);
+            DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
@@ -355,7 +393,7 @@ namespace LayoutBXLYT
                    };
             }
 
-            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
+            DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
@@ -380,6 +418,7 @@ namespace LayoutBXLYT
 
             bool defaultShading = Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.Default;
 
+            SetBlending(mat.BlackColor.Color, mat.WhiteColor.Color);
             if (pane.TexCoords.Length > 0 && defaultShading)
             {
                 string textureMap0 = "";
@@ -416,10 +455,13 @@ namespace LayoutBXLYT
             if (pane.TexCoords.Length > 0 && Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.UVTestPattern)
             {
                 GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(mat.TextureMaps[0].WrapModeU));
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(mat.TextureMaps[0].WrapModeV));
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(mat.TextureMaps[0].MaxFilterMode));
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(mat.TextureMaps[0].MinFilterMode));
+                if (mat.TextureMaps.Length > 0)
+                {
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ConvertTextureWrap(mat.TextureMaps[0].WrapModeU));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ConvertTextureWrap(mat.TextureMaps[0].WrapModeV));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ConvertMagFilterMode(mat.TextureMaps[0].MaxFilterMode));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ConvertMinFilterMode(mat.TextureMaps[0].MinFilterMode));
+                }
             }
 
             if (Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.BlackColor)
@@ -434,15 +476,39 @@ namespace LayoutBXLYT
                     Colors[i] = pane.Material.WhiteColor.Color;
             }
 
-            DrawRectangle(pane.CreateRectangle(), TexCoords, Colors, false);
+            DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
             GL.BindTexture(TextureTarget.Texture2D,  0);
+
+         //   GL.PopAttrib();
+        //    GL.PopAttrib();
         }
 
-        public void DrawRectangle(CustomRectangle rect, Vector2[] texCoords, Color[] colors, bool useLines = true, byte alpha = 255)
+        private void SetBlending(Color blackColor, Color whiteColor)
+        {
+            /*     GL.PushAttrib(AttribMask.AllAttribBits);
+                GL.Enable(EnableCap.Blend);
+               GL.BlendFunc(BlendingFactor.ConstantColor, BlendingFactor.Zero);
+                GL.BlendEquation(BlendEquationMode.FuncAdd);
+                GL.BlendColor(Color.FromArgb(255, blackColor));
+                GL.Enable(EnableCap.Blend);*/
+
+            /*     GL.PushAttrib(AttribMask.AllAttribBits);
+                 GL.Enable(EnableCap.Blend);
+                 GL.BlendFunc(BlendingFactor.ConstantColor, BlendingFactor.OneMinusSrcColor);
+                 GL.BlendEquation(BlendEquationMode.FuncAdd);
+                 GL.BlendColor(whiteColor);
+                 GL.Enable(EnableCap.Blend);*/
+        }
+
+        public void DrawRectangle(CustomRectangle rect, Vector2[] texCoords,
+            Color[] colors, bool useLines = true, byte alpha = 255)
         {
             for (int i = 0; i < colors.Length; i++)
-                colors[i] = Color.FromArgb((colors[i].A * alpha) / 255, colors[i]);
+            {
+                uint setalpha = (uint)((colors[i].A * alpha) / 255);
+                colors[i] = Color.FromArgb((int)setalpha, colors[i]);
+            }
 
             if (useLines)
             {
@@ -624,11 +690,6 @@ namespace LayoutBXLYT
 
         private void DrawXyLines()
         {
-            GL.LoadIdentity();
-            GL.PushMatrix();
-            GL.Scale(1 * Camera.Zoom, -1 * Camera.Zoom, 1);
-            GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
-
             int lineLength = 20;
 
             GL.Color3(Color.Green);
@@ -642,20 +703,12 @@ namespace LayoutBXLYT
             GL.Vertex2(0, 0);
             GL.Vertex2(lineLength, 0);
             GL.End();
-
-            GL.PopMatrix();
         }
 
         private void DrawGrid()
         {
             var size = 40;
             var amount = 300;
-
-            GL.LoadIdentity();
-            GL.PushMatrix();
-            GL.Scale(1 * Camera.Zoom, -1 * Camera.Zoom, 1);
-            GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
-            GL.Rotate(90, new Vector3(1,0,0));
 
             GL.LineWidth(0.001f);
             GL.Color3(BackgroundColor.Darken(20));
@@ -674,17 +727,16 @@ namespace LayoutBXLYT
                     GL.LineWidth(0.001f);
                 }
 
-                GL.Vertex3(new Vector3(-amount * size, 0f, i * size));
-                GL.Vertex3(new Vector3(amount * size, 0f, i * size));
-                GL.Vertex3(new Vector3(i * size, 0f, -amount * size));
-                GL.Vertex3(new Vector3(i * size, 0f, amount * size));
+                GL.Vertex2(new Vector2(-amount * size, i * size));
+                GL.Vertex2(new Vector2(amount * size, i * size));
+                GL.Vertex2(new Vector2(i * size, -amount * size));
+                GL.Vertex2(new Vector2(i * size, amount * size));
 
                 squareGridCounter++;
             }
             GL.End();
             GL.Color3(Color.Transparent);
             GL.PopAttrib();
-            GL.PopMatrix();
         }
 
         private bool mouseHeldDown = false;
@@ -778,10 +830,20 @@ namespace LayoutBXLYT
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-            if (e.Delta > 0 && Camera.Zoom > 0)
-                Camera.Zoom += 0.1f;
-            if (e.Delta < 0 && Camera.Zoom < 10 && Camera.Zoom > 0.1)
-                Camera.Zoom -= 0.1f;
+            if (UseOrtho)
+            {
+                if (e.Delta > 0 && Camera.Zoom > 0)
+                    Camera.Zoom += 0.1f;
+                if (e.Delta < 0 && Camera.Zoom < 100 && Camera.Zoom > 0.1)
+                    Camera.Zoom -= 0.1f;
+            }
+            else
+            {
+                if (e.Delta > 0 && Camera.Zoom > 0.1)
+                    Camera.Zoom -= 0.1f;
+                if (e.Delta < 0 && Camera.Zoom < 100 && Camera.Zoom > 0)
+                    Camera.Zoom += 0.1f;
+            }
 
             glControl1.Invalidate();
         }

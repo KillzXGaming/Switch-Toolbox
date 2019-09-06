@@ -203,6 +203,16 @@ namespace FirstPlugin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap OrthoView {
+            get {
+                object obj = ResourceManager.GetObject("OrthoView", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PicturePane {
             get {
                 object obj = ResourceManager.GetObject("PicturePane", resourceCulture);

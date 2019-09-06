@@ -1561,5 +1561,8 @@
   <ItemGroup>
     <None Include="Resources\Layout\QuickAccess.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\OrthoView.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

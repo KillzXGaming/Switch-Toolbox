@@ -52,6 +52,7 @@ namespace LayoutBXLYT
             viewportBackColorCB.Items.Add("Back Color : Default");
             viewportBackColorCB.Items.Add("Back Color : Custom");
             viewportBackColorCB.SelectedIndex = 0;
+            orthographicViewToolStripMenuItem.Checked = true;
 
             foreach (var type in Enum.GetValues(typeof(Runtime.LayoutEditor.DebugShading)).Cast<Runtime.LayoutEditor.DebugShading>())
                 debugShading.Items.Add(type);
@@ -82,6 +83,7 @@ namespace LayoutBXLYT
             Viewport.DockHandler.AllowEndUserDocking = false;
             Viewports.Add(Viewport);
             ActiveViewport = Viewport;
+            ActiveViewport.UseOrtho = orthographicViewToolStripMenuItem.Checked;
 
             if (!isLoaded)
                 InitializeDockPanels();
@@ -296,6 +298,7 @@ namespace LayoutBXLYT
             {
                 var file = (dockContent).LayoutFile;
                 ReloadEditors(file);
+                ActiveViewport = dockContent;
 
                 dockContent.UpdateViewport();
             }
@@ -524,11 +527,6 @@ namespace LayoutBXLYT
             }
         }
 
-        private void stToolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            SaveActiveFile(false);
-        }
-
         private void debugShading_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (debugShading.SelectedIndex < 0) return;
@@ -536,6 +534,38 @@ namespace LayoutBXLYT
             Runtime.LayoutEditor.Shading = (Runtime.LayoutEditor.DebugShading)debugShading.SelectedItem;
             if (ActiveViewport != null)
                 ActiveViewport.UpdateViewport();
+        }
+
+        private void orthographicViewToolStripMenuItem_Click(object sender, EventArgs e) {
+            ToggleOrthMode();
+        }
+
+        private void toolstripOrthoBtn_Click(object sender, EventArgs e) {
+            if (orthographicViewToolStripMenuItem.Checked)
+                orthographicViewToolStripMenuItem.Checked = false;
+            else
+                orthographicViewToolStripMenuItem.Checked = true;
+            
+            ToggleOrthMode();
+        }
+
+        private void ToggleOrthMode()
+        {
+            if (ActiveViewport != null)
+            {
+                if (orthographicViewToolStripMenuItem.Checked)
+                    toolstripOrthoBtn.Image = BitmapExtension.GrayScale(FirstPlugin.Properties.Resources.OrthoView);
+                else
+                    toolstripOrthoBtn.Image = FirstPlugin.Properties.Resources.OrthoView;
+
+                ActiveViewport.UseOrtho = orthographicViewToolStripMenuItem.Checked;
+                ActiveViewport.ResetCamera();
+                ActiveViewport.UpdateViewport();
+            }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e) {
+            SaveActiveFile(false);
         }
     }
 }

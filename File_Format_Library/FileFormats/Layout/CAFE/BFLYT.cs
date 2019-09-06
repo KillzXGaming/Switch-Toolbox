@@ -192,6 +192,8 @@ namespace LayoutBXLYT.Cafe
 
         public Dictionary<string, STGenericTexture> GetTextures()
         {
+            BFLIM test = new BFLIM();
+
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
             if (IFileInfo.ArchiveParent != null)
             {
@@ -205,7 +207,7 @@ namespace LayoutBXLYT.Cafe
                             if (!textures.ContainsKey(tex.Key))
                                 textures.Add(tex.Key, tex.Value);
                     }
-                    else if (Utils.GetExtension(file.FileName) == ".bflim")
+                    else if (test.Identify(new MemoryStream(file.FileData)))
                     {
                         BFLIM bflim = (BFLIM)file.OpenFile();
                         file.FileFormat = bflim;
@@ -394,6 +396,7 @@ namespace LayoutBXLYT.Cafe
                             AddPaneToTable(panel);
                             if (!setRoot)
                             {
+                                panel.IsRoot = true;
                                 RootPane = panel;
                                 setRoot = true;
                             }
@@ -1569,7 +1572,7 @@ namespace LayoutBXLYT.Cafe
             public override string Signature { get; } = "pan1";
 
             private byte _flags1;
-            private byte _flags2;
+            private byte origin;
 
             [DisplayName("Is Visible"), CategoryAttribute("Flags")]
             public bool Visible
@@ -1597,46 +1600,46 @@ namespace LayoutBXLYT.Cafe
             }
 
             [DisplayName("Origin X"), CategoryAttribute("Origin")]
-            public OriginX originX
+            public override OriginX originX
             {
-                get { return (OriginX)((_flags2 & 0xC0) >> 6); }
+                get { return (OriginX)(origin & 3); }
                 set
                 {
-                    _flags2 &= unchecked((byte)(~0xC0));
-                    _flags2 |= (byte)((byte)value << 6);
+                    origin &= unchecked((byte)(~3));
+                    origin |= (byte)value;
                 }
             }
 
             [DisplayName("Origin Y"), CategoryAttribute("Origin")]
-            public OriginY originY
+            public override OriginY originY
             {
-                get { return (OriginY)((_flags2 & 0x30) >> 4); }
+                get { return (OriginY)((origin >> 2) & 3); }
                 set
                 {
-                    _flags2 &= unchecked((byte)(~0x30));
-                    _flags2 |= (byte)((byte)value << 4);
+                    origin |= (byte)((byte)value << 2);
+                    origin &= unchecked((byte)(~3));
                 }
             }
 
-            [Browsable(false)]
-            public OriginX ParentOriginX
+            [DisplayName("Parent Origin X"), CategoryAttribute("Origin")]
+            public override OriginX ParentOriginX
             {
-                get { return (OriginX)((_flags2 & 0xC) >> 2); }
+                get { return (OriginX)((origin >> 4) & 3); }
                 set
                 {
-                    _flags2 &= unchecked((byte)(~0xC));
-                    _flags2 |= (byte)((byte)value << 2);
+                    origin |= (byte)((byte)value << 4);
+                    origin &= unchecked((byte)(~3));
                 }
             }
 
-            [Browsable(false)]
-            public OriginY ParentOriginY
+            [DisplayName("Parent Origin Y"), CategoryAttribute("Origin")]
+            public override OriginY ParentOriginY
             {
-                get { return (OriginY)((_flags2 & 0x3)); }
+                get { return (OriginY)((origin >> 6) & 3); }
                 set
                 {
-                    _flags2 &= unchecked((byte)(~0x3));
-                    _flags2 |= (byte)value;
+                    origin |= (byte)((byte)value << 6);
+                    origin &= unchecked((byte)(~3));
                 }
             }
 
@@ -1673,7 +1676,7 @@ namespace LayoutBXLYT.Cafe
             public PAN1(FileReader reader) : base()
             {
                 _flags1 = reader.ReadByte();
-                _flags2 = reader.ReadByte();
+                origin = reader.ReadByte();
                 Alpha = reader.ReadByte();
                 PaneMagFlags = reader.ReadByte();
                 Name = reader.ReadString(0x18).Replace("\0", string.Empty);
@@ -1688,7 +1691,7 @@ namespace LayoutBXLYT.Cafe
             public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write(_flags1);
-                writer.Write(_flags2);
+                writer.Write(origin);
                 writer.Write(Alpha);
                 writer.Write(PaneMagFlags);
                 writer.WriteString(Name, 0x18);
