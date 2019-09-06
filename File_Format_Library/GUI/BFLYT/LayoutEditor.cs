@@ -505,7 +505,7 @@ namespace LayoutBXLYT
                 }
                 else
                 {
-                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, fileFormat.FileName);
+                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, fileFormat.FilePath);
                 }
             }
         }
