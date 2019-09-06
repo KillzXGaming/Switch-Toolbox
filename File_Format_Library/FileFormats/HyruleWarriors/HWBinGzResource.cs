@@ -48,6 +48,8 @@ namespace FirstPlugin
 
         private void CheckEndianness(FileReader reader)
         {
+            reader.SetByteOrder(false);
+
             uint Count = reader.ReadUInt32();
             uint FirstOffset = reader.ReadUInt32();
 
@@ -113,7 +115,6 @@ namespace FirstPlugin
             using (var reader = new FileReader(stream))
             {
                 CheckEndianness(reader);
-                reader.SetByteOrder(true);
 
                 uint Count = reader.ReadUInt32();
 
