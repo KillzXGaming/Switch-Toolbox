@@ -31,8 +31,7 @@ namespace FirstPlugin
             {
                 if (reader.CheckSignature(4, "VFXB") ||
                     reader.CheckSignature(4, "SPBD") ||
-                    reader.CheckSignature(4, "EFTF") ||
-                    reader.CheckSignature(4, "EFTB"))
+                    reader.CheckSignature(4, "EFTF"))
                     return true;
                 else
                     return false;
@@ -1144,7 +1143,7 @@ namespace FirstPlugin
                 else if (ptclHeader.VFXVersion > 21)
                     reader.Seek(Position + 2384, SeekOrigin.Begin);
                 else
-                    reader.Seek(Position + 2392, SeekOrigin.Begin);
+                    reader.Seek(Position + 2392, SeekOrigin.Begin); // 0x150 + 0x958 = aa8
 
                 ConstantColor0 = new STColor();
                 ConstantColor0.R = reader.ReadSingle();
@@ -1159,7 +1158,7 @@ namespace FirstPlugin
                 ConstantColor1.A = reader.ReadSingle();
 
                 //Seek to the random and animated color table
-                reader.Seek(Position + 880, SeekOrigin.Begin);
+                reader.Seek(Position + 880, SeekOrigin.Begin); // 0x150 + 0x370 = 4c0
                 for (int i = 0; i < 8; i++)
                 {
                     Color0Array[i] = new STColor();
@@ -1208,7 +1207,7 @@ namespace FirstPlugin
                 else if (ptclHeader.VFXVersion > 21)
                     reader.Seek(Position + 2464, SeekOrigin.Begin);
                 else
-                    reader.Seek(Position + 2472, SeekOrigin.Begin);
+                    reader.Seek(Position + 2472, SeekOrigin.Begin); // 0x150 + 0x9a8 = af8
 
                 for (int i = 0; i < 3; i++)
                 {

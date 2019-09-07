@@ -49,15 +49,11 @@ namespace Toolbox.Library
             return col;
         }
 
-        public STColor()
+        public STColor() : this(1, 1, 1)
         {
-            R = 1;
-            G = 1;
-            B = 1;
-            A = 1;
         }
 
-        public STColor(float r, float g, float b, float a)
+        public STColor(float r, float g, float b, float a = 1)
         {
             R = r;
             G = g;

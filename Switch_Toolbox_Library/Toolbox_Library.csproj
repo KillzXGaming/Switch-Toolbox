@@ -246,6 +246,12 @@
     <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.Designer.cs">
       <DependentUpon>SearchNodeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\STColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\STColorEditor.Designer.cs">
+      <DependentUpon>STColorEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\TextureImport\3DS\CTR_3DSImporterSettings.cs" />
     <Compile Include="Forms\Editors\TextureImport\3DS\CTR_3DSTextureImporter.cs">
       <SubType>Form</SubType>
@@ -977,6 +983,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\STUserControl.resx">
       <DependentUpon>STUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\STColorEditor.resx">
+      <DependentUpon>STColorEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\TextEditor\TextEditor.resx">
       <DependentUpon>TextEditor.cs</DependentUpon>

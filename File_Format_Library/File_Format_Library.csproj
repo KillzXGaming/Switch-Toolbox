@@ -218,6 +218,7 @@
     <Compile Include="FileFormats\DKCTF\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
+    <Compile Include="FileFormats\Effects\EFTB.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
     <Compile Include="FileFormats\HedgehogEngine\PACx.cs" />
@@ -294,7 +295,9 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
-    <Compile Include="FileFormats\Layout\Common.cs" />
+    <Compile Include="FileFormats\Layout\Common.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />
@@ -322,7 +325,7 @@
       <DependentUpon>FileSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutHierarchy.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutHierarchy.Designer.cs">
       <DependentUpon>LayoutHierarchy.cs</DependentUpon>
@@ -334,13 +337,13 @@
       <DependentUpon>LayoutProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.Designer.cs">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
@@ -444,6 +447,18 @@
     </Compile>
     <Compile Include="GUI\Editors\PTCL\ColorConstantPanel.Designer.cs">
       <DependentUpon>ColorConstantPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorArrayEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorArrayEditor.Designer.cs">
+      <DependentUpon>ColorArrayEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditor.Designer.cs">
+      <DependentUpon>EmitterEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Editors\PTCL\EmitterTexturePanel.cs">
       <SubType>UserControl</SubType>
@@ -1303,8 +1318,14 @@
     <EmbeddedResource Include="GUI\Editors\PTCL\ColorConstantPanel.resx">
       <DependentUpon>ColorConstantPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\ColorArrayEditor.resx">
+      <DependentUpon>ColorArrayEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\ColorRandomPanel.resx">
       <DependentUpon>ColorRandomPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditor.resx">
+      <DependentUpon>EmitterEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditorNX.resx">
       <DependentUpon>EmitterEditorNX.cs</DependentUpon>
