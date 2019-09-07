@@ -30,20 +30,27 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutEditor));
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.backColorDisplay = new System.Windows.Forms.PictureBox();
             this.viewportBackColorCB = new Toolbox.Library.Forms.STComboBox();
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearWorkspaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
+            this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugShading = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.backColorDisplay = new System.Windows.Forms.PictureBox();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolstripOrthoBtn = new System.Windows.Forms.ToolStripButton();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.SuspendLayout();
             // 
             // dockPanel1
@@ -55,15 +62,6 @@
             this.dockPanel1.TabIndex = 6;
             this.dockPanel1.ActiveDocumentChanged += new System.EventHandler(this.dockPanel1_ActiveDocumentChanged);
             // 
-            // backColorDisplay
-            // 
-            this.backColorDisplay.Location = new System.Drawing.Point(319, 25);
-            this.backColorDisplay.Name = "backColorDisplay";
-            this.backColorDisplay.Size = new System.Drawing.Size(21, 21);
-            this.backColorDisplay.TabIndex = 10;
-            this.backColorDisplay.TabStop = false;
-            this.backColorDisplay.Click += new System.EventHandler(this.backColorDisplay_Click);
-            // 
             // viewportBackColorCB
             // 
             this.viewportBackColorCB.BorderColor = System.Drawing.Color.Empty;
@@ -71,7 +69,7 @@
             this.viewportBackColorCB.ButtonColor = System.Drawing.Color.Empty;
             this.viewportBackColorCB.FormattingEnabled = true;
             this.viewportBackColorCB.IsReadOnly = false;
-            this.viewportBackColorCB.Location = new System.Drawing.Point(167, 25);
+            this.viewportBackColorCB.Location = new System.Drawing.Point(101, 25);
             this.viewportBackColorCB.Name = "viewportBackColorCB";
             this.viewportBackColorCB.Size = new System.Drawing.Size(146, 21);
             this.viewportBackColorCB.TabIndex = 9;
@@ -81,21 +79,13 @@
             // stToolStrip1
             // 
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolstripOrthoBtn});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 24);
             this.stToolStrip1.Name = "stToolStrip1";
             this.stToolStrip1.Size = new System.Drawing.Size(549, 25);
             this.stToolStrip1.TabIndex = 3;
             this.stToolStrip1.Text = "stToolStrip1";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // stMenuStrip1
             // 
@@ -113,17 +103,40 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.clearWorkspaceToolStripMenuItem});
+            this.clearWorkspaceToolStripMenuItem,
+            this.saveToolStripMenuItem1,
+            this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
             // clearWorkspaceToolStripMenuItem
             // 
             this.clearWorkspaceToolStripMenuItem.Name = "clearWorkspaceToolStripMenuItem";
-            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.clearWorkspaceToolStripMenuItem.Text = "Clear Files";
             this.clearWorkspaceToolStripMenuItem.Click += new System.EventHandler(this.clearWorkspaceToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem1
+            // 
+            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.saveToolStripMenuItem1.Text = "Save";
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.saveToolStripMenuItem.Text = "Save As";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -134,7 +147,9 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.textureListToolStripMenuItem});
+            this.textureListToolStripMenuItem,
+            this.textConverterToolStripMenuItem,
+            this.orthographicViewToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -142,16 +157,75 @@
             // textureListToolStripMenuItem
             // 
             this.textureListToolStripMenuItem.Name = "textureListToolStripMenuItem";
-            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.textureListToolStripMenuItem.Text = "Texture List";
             this.textureListToolStripMenuItem.Click += new System.EventHandler(this.textureListToolStripMenuItem_Click);
             // 
-            // openToolStripMenuItem
+            // textConverterToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.textConverterToolStripMenuItem.Name = "textConverterToolStripMenuItem";
+            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.textConverterToolStripMenuItem.Text = "Text Converter";
+            this.textConverterToolStripMenuItem.Click += new System.EventHandler(this.textConverterToolStripMenuItem_Click);
+            // 
+            // orthographicViewToolStripMenuItem
+            // 
+            this.orthographicViewToolStripMenuItem.CheckOnClick = true;
+            this.orthographicViewToolStripMenuItem.Name = "orthographicViewToolStripMenuItem";
+            this.orthographicViewToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.orthographicViewToolStripMenuItem.Text = "Orthographic View";
+            this.orthographicViewToolStripMenuItem.Click += new System.EventHandler(this.orthographicViewToolStripMenuItem_Click);
+            // 
+            // debugShading
+            // 
+            this.debugShading.BorderColor = System.Drawing.Color.Empty;
+            this.debugShading.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.debugShading.ButtonColor = System.Drawing.Color.Empty;
+            this.debugShading.FormattingEnabled = true;
+            this.debugShading.IsReadOnly = false;
+            this.debugShading.Location = new System.Drawing.Point(391, 25);
+            this.debugShading.Name = "debugShading";
+            this.debugShading.Size = new System.Drawing.Size(146, 21);
+            this.debugShading.TabIndex = 13;
+            this.debugShading.SelectedIndexChanged += new System.EventHandler(this.debugShading_SelectedIndexChanged);
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(301, 28);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(84, 13);
+            this.stLabel1.TabIndex = 14;
+            this.stLabel1.Text = "Debug Shading:";
+            // 
+            // backColorDisplay
+            // 
+            this.backColorDisplay.Location = new System.Drawing.Point(253, 25);
+            this.backColorDisplay.Name = "backColorDisplay";
+            this.backColorDisplay.Size = new System.Drawing.Size(21, 21);
+            this.backColorDisplay.TabIndex = 10;
+            this.backColorDisplay.TabStop = false;
+            this.backColorDisplay.Click += new System.EventHandler(this.backColorDisplay_Click);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolstripOrthoBtn
+            // 
+            this.toolstripOrthoBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolstripOrthoBtn.Image = global::FirstPlugin.Properties.Resources.OrthoView;
+            this.toolstripOrthoBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolstripOrthoBtn.Name = "toolstripOrthoBtn";
+            this.toolstripOrthoBtn.Size = new System.Drawing.Size(23, 22);
+            this.toolstripOrthoBtn.Text = "Toggle Orthographic";
+            this.toolstripOrthoBtn.Click += new System.EventHandler(this.toolstripOrthoBtn_Click);
             // 
             // LayoutEditor
             // 
@@ -159,6 +233,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 398);
+            this.Controls.Add(this.stLabel1);
+            this.Controls.Add(this.debugShading);
             this.Controls.Add(this.backColorDisplay);
             this.Controls.Add(this.viewportBackColorCB);
             this.Controls.Add(this.dockPanel1);
@@ -168,12 +244,13 @@
             this.Name = "LayoutEditor";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LayoutEditor_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LayoutEditor_DragEnter);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LayoutEditor_KeyDown);
             this.ParentChanged += new System.EventHandler(this.LayoutEditor_ParentChanged);
-            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).EndInit();
             this.stToolStrip1.ResumeLayout(false);
             this.stToolStrip1.PerformLayout();
             this.stMenuStrip1.ResumeLayout(false);
             this.stMenuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,5 +270,12 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearWorkspaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem textConverterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
+        private Toolbox.Library.Forms.STComboBox debugShading;
+        private Toolbox.Library.Forms.STLabel stLabel1;
+        private System.Windows.Forms.ToolStripMenuItem orthographicViewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolstripOrthoBtn;
     }
 }

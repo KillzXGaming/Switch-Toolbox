@@ -240,6 +240,18 @@
     <Compile Include="Forms\ColorSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\Dialogs\ColorSelectorDropdown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ColorSelectorDropdown.Designer.cs">
+      <DependentUpon>ColorSelectorDropdown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\STColorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\STColorDialog.Designer.cs">
+      <DependentUpon>STColorDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -306,14 +318,17 @@
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
     <Compile Include="Interfaces\Textures\ITextureContainer.cs" />
     <Compile Include="Interfaces\Forms\IUpdateForm.cs" />
+    <Compile Include="IO\Bits\Bit.cs" />
+    <Compile Include="IO\Colors\ColorEditor.cs" />
+    <Compile Include="IO\Colors\STColor16.cs" />
     <Compile Include="IO\Extensions\ColorExtensions.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
     <Compile Include="IO\HSVPixel.cs" />
     <Compile Include="IO\IOComoon.cs" />
-    <Compile Include="IO\STColor.cs" />
-    <Compile Include="IO\STColor8.cs" />
+    <Compile Include="IO\Colors\STColor.cs" />
+    <Compile Include="IO\Colors\STColor8.cs" />
     <Compile Include="IO\SubStream.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
@@ -888,8 +903,14 @@
     <EmbeddedResource Include="Forms\Custom\STTextBox.resx">
       <DependentUpon>STTextBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\ColorSelectorDropdown.resx">
+      <DependentUpon>ColorSelectorDropdown.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\ExportModelSettings.resx">
       <DependentUpon>ExportModelSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\STColorDialog.resx">
+      <DependentUpon>STColorDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\STSaveLogDialog.resx">
       <DependentUpon>STSaveLogDialog.cs</DependentUpon>
@@ -1274,6 +1295,7 @@
   <ItemGroup>
     <Folder Include="FileFormats\Compression\" />
     <Folder Include="FileFormats\DAE\COLLADA\" />
+    <Folder Include="FileFormats\DAE\Custom\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\boneWeightGradient.png" />
@@ -1346,6 +1368,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Layout\WindowPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Font.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -188,6 +188,9 @@ namespace Toolbox.Library
                 writer.Write(IntTo3Bytes((int)Height));
                 writer.Write(IntTo3Bytes((int)Depth));
                 writer.Write(DataBlock);
+
+                writer.Close();
+                writer.Dispose();
             }
         }
 

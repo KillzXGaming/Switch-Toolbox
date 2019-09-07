@@ -149,8 +149,18 @@ namespace Toolbox.Library.Forms
 
             FillEditor("");
         }
+
         private Color BACK_COLOR = Color.FromArgb(30, 30, 30);
         private Color FORE_COLOR = Color.White;
+
+        public void AddContextMenu(string text, EventHandler handler)
+        {
+            foreach (ToolStripItem item in stContextMenuStrip1.Items)
+                if (item.Text == text)
+                    return;
+
+            stContextMenuStrip1.Items.Add(text, null, handler);
+        }
 
         public string GetText()
         {
@@ -170,6 +180,9 @@ namespace Toolbox.Library.Forms
 
         public void FillEditor(string Text)
         {
+            if (scintilla1 == null || scintilla1.IsDisposed || scintilla1.Disposing)
+                return;
+
             InitSyntaxColoring();
 
             scintilla1.Text = Text;
@@ -186,7 +199,6 @@ namespace Toolbox.Library.Forms
         }
 
         private void InitSyntaxColoring() {
-
             scintilla1.StyleResetDefault();
             scintilla1.Styles[Style.Default].Font = "Consolas";
             scintilla1.Styles[Style.Default].Size = 10;

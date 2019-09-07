@@ -277,7 +277,7 @@ namespace FirstPlugin
         {
             get
             {
-                if (Textures.Any(item => item.Value.RenderableTex.GLInitialized == false))
+                if (Textures.Any(item => item.Value.RenderableTex == null || item.Value.RenderableTex.GLInitialized == false))
                     return false;
                 else
                     return true;
@@ -875,9 +875,7 @@ namespace FirstPlugin
 
                     string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
 
-                    string ext = Utils.GetExtension(FileName);
-
-                    Console.WriteLine(ext);
+                    string ext = Utils.GetExtension(file);
 
                     foreach (TextureData node in Textures.Values)
                     {
@@ -888,16 +886,17 @@ namespace FirstPlugin
                             switch (ext)
                             {
                                 case ".bftex":
-                                    node.Texture.Import(FileName);
+                                    node.Texture.Import(file);
                                     node.Texture.Name = Text;
                                     node.LoadOpenGLTexture();
                                     break;
                                 case ".dds":
-                                    setting.LoadDDS(FileName, null, node);
+                                case ".dds2":
+                                    setting.LoadDDS(file, null, node);
                                     node.ApplyImportSettings(setting, STCompressionMode.Normal);
                                     break;
                                 case ".astc":
-                                    setting.LoadASTC(FileName);
+                                    setting.LoadASTC(file);
                                     node.ApplyImportSettings(setting, STCompressionMode.Normal);
                                     break;
                                 case ".png":
@@ -907,7 +906,7 @@ namespace FirstPlugin
                                 case ".jpg":
                                 case ".jpeg":
                                     TexturesForImportSettings.Add(node);
-                                    setting.LoadBitMap(FileName);
+                                    setting.LoadBitMap(file);
                                     importer.LoadSetting(setting);
                                     if (!STGenericTexture.IsAtscFormat(DefaultFormat))
                                         setting.Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);
@@ -1273,6 +1272,10 @@ namespace FirstPlugin
                     throw new Exception($"Cannot convert format {texFormat}");
             }
         }
+        public static TEX_FORMAT ConvertFormat(uint surfaceFormat)
+        {
+            return ConvertFormat((SurfaceFormat)surfaceFormat);
+        }
 
         public static TEX_FORMAT ConvertFormat(SurfaceFormat surfaceFormat)
         {
@@ -1340,6 +1343,7 @@ namespace FirstPlugin
                 case SurfaceFormat.ASTC_8x6_UNORM: return TEX_FORMAT.ASTC_8x6_UNORM;
                 case SurfaceFormat.ASTC_8x8_SRGB: return TEX_FORMAT.ASTC_8x8_SRGB;
                 case SurfaceFormat.ASTC_8x8_UNORM: return TEX_FORMAT.ASTC_8x8_UNORM;
+
                 case SurfaceFormat.Invalid: throw new Exception("Invalid Format");
                 default:
                     throw new Exception($"Cannot convert format {surfaceFormat}");

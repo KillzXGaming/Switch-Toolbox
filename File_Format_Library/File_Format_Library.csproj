@@ -214,6 +214,7 @@
     <Compile Include="FileFormats\Archives\ARC.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\Archives\PKZ.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
     <Compile Include="FileFormats\DKCTF\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
@@ -294,10 +295,21 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\AlphaCompare.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\BlendMode.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\FontShadowParameter.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\IndirectParameter.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\ProjectionTexGenParam.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TevStage.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TexCoordGen.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TextureRef.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
+    <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
+    <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
-    <Compile Include="FileFormats\Layout\Common.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FileFormats\Layout\Common.cs" />
+    <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\MOD.cs" />
@@ -313,11 +325,13 @@
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="FileFormats\Texture\BTI.cs" />
+    <Compile Include="FileFormats\Texture\WTB.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
+    <Compile Include="GUI\BFLYT\BflytShader.cs" />
     <Compile Include="GUI\BFLYT\FileSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -330,11 +344,23 @@
     <Compile Include="GUI\BFLYT\LayoutHierarchy.Designer.cs">
       <DependentUpon>LayoutHierarchy.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFLYT\LayoutPartsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutPartsEditor.Designer.cs">
+      <DependentUpon>LayoutPartsEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\LayoutProperties.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutProperties.Designer.cs">
       <DependentUpon>LayoutProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutTextDocked.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutTextDocked.Designer.cs">
+      <DependentUpon>LayoutTextDocked.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextureList.cs">
       <SubType>Form</SubType>
@@ -347,6 +373,19 @@
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Textbox.cs" />
+    <Compile Include="GUI\BFLYT\UserDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataEditor.Designer.cs">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataParser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\UserDataParser.Designer.cs">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BotwActorEditorControl.cs">
       <SubType>UserControl</SubType>
@@ -391,8 +430,8 @@
     <Compile Include="FileFormats\Shader\SHARCFBNX.cs" />
     <Compile Include="FileFormats\Texture\BCLIM.cs" />
     <Compile Include="FileFormats\Texture\BFLIM.cs" />
-    <Compile Include="FileFormats\Layout\BFLAN.cs" />
-    <Compile Include="FileFormats\Layout\BFLYT.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\BFLAN.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\BFLYT.cs" />
     <Compile Include="FileFormats\BFRES\Bfres Structs\CurveHelper.cs" />
     <Compile Include="FileFormats\BFRES\BFRES.cs" />
     <Compile Include="FileFormats\Texture\NUT.cs" />
@@ -1129,14 +1168,26 @@
     <EmbeddedResource Include="GUI\BFLYT\LayoutHierarchy.resx">
       <DependentUpon>LayoutHierarchy.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutPartsEditor.resx">
+      <DependentUpon>LayoutPartsEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutProperties.resx">
       <DependentUpon>LayoutProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutTextDocked.resx">
+      <DependentUpon>LayoutTextDocked.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutTextureList.resx">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutViewer.resx">
       <DependentUpon>LayoutViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\UserDataEditor.resx">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\UserDataParser.resx">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BatchEditBaseAnimDataForm.resx">
       <DependentUpon>BatchEditBaseAnimDataForm.cs</DependentUpon>
@@ -1525,6 +1576,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Layout\WindowPane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\QuickAccess.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layout\OrthoView.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

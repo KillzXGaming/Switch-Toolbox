@@ -188,6 +188,8 @@ namespace Toolbox.Library
         //
         public List<Surface> GetSurfaces(int ArrayIndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1)
         {
+
+
             if (GetAllSurfaces)
                 GetSurfaceAmount = (int)ArrayCount;
 
@@ -859,6 +861,8 @@ namespace Toolbox.Library
             atsc.BlockDimZ = (byte)GetBlockDepth(Format);
             atsc.DataBlock = Utils.CombineByteArray(surfaces[0].mipmaps.ToArray());
 
+            Console.WriteLine("DataBlock " + atsc.DataBlock.Length);
+
             atsc.Save(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite));
         }
         public void SaveTGA(string FileName, bool ExportSurfaceLevel = false,
@@ -1090,7 +1094,7 @@ namespace Toolbox.Library
                 return false;
         }
 
-        private static byte[] ConvertBgraToRgba(byte[] bytes)
+        public static byte[] ConvertBgraToRgba(byte[] bytes)
         {
             if (bytes == null)
                 throw new Exception("Data block returned null. Make sure the parameters and image properties are correct!");

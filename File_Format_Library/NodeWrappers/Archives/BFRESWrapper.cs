@@ -33,7 +33,10 @@ namespace FirstPlugin.NodeWrappers
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.AddRange(base.GetContextMenuItems());
             SettingsToolStrip = new ToolStripMenuItem("Settings", null);
-            SettingsToolStrip.DropDownItems.Add(new ToolStripMenuItem("Remove Unused Textures on Save", null, SettingBooleanAction));
+            SettingsToolStrip.DropDownItems.Add(new ToolStripMenuItem("Remove Unused Textures on Save", null, SettingBooleanAction)
+            {
+                Checked = SettingRemoveUnusedTextures,
+            });
             Items.Add(SettingsToolStrip);
             return Items.ToArray();
         }
@@ -43,9 +46,9 @@ namespace FirstPlugin.NodeWrappers
             if (sender is ToolStripMenuItem)
             {
                 if (((ToolStripMenuItem)sender).Checked)
-                    ((ToolStripMenuItem)sender).Checked = false;
+                    SettingRemoveUnusedTextures = false;
                 else
-                    ((ToolStripMenuItem)sender).Checked = true;
+                    SettingRemoveUnusedTextures = true;
             }
         }
     

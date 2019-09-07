@@ -13,11 +13,16 @@ using WeifenLuo.WinFormsUI.ThemeVS2015;
 using Toolbox.Library.IO;
 using Toolbox.Library;
 using FirstPlugin;
+using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
+        public static bool IsSaving = false;
+
+        private Dictionary<string, STGenericTexture> Textures;
+
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
 
         private BxlytHeader ActiveLayout;
@@ -33,7 +38,11 @@ namespace LayoutBXLYT
 
         public LayoutEditor()
         {
+            IsSaving = false;
+
             InitializeComponent();
+
+            Textures = new Dictionary<string, STGenericTexture>();
 
             var theme = new VS2015DarkTheme();
             this.dockPanel1.Theme = theme;
@@ -43,6 +52,12 @@ namespace LayoutBXLYT
             viewportBackColorCB.Items.Add("Back Color : Default");
             viewportBackColorCB.Items.Add("Back Color : Custom");
             viewportBackColorCB.SelectedIndex = 0;
+            orthographicViewToolStripMenuItem.Checked = true;
+
+            foreach (var type in Enum.GetValues(typeof(Runtime.LayoutEditor.DebugShading)).Cast<Runtime.LayoutEditor.DebugShading>())
+                debugShading.Items.Add(type);
+
+            debugShading.SelectedItem = Runtime.LayoutEditor.Shading;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
@@ -53,19 +68,22 @@ namespace LayoutBXLYT
         private LayoutHierarchy LayoutHierarchy;
         private LayoutTextureList LayoutTextureList;
         private LayoutProperties LayoutProperties;
+        private LayoutTextDocked TextConverter;
+        private LayoutPartsEditor LayoutPartsEditor;
 
         private bool isLoaded = false;
-        public void LoadBflyt(BFLYT.Header header, string fileName)
+        public void LoadBxlyt(BxlytHeader header, string fileName)
         {
             LayoutFiles.Add(header);
             ActiveLayout = header;
 
-            LayoutViewer Viewport = new LayoutViewer(header);
+            LayoutViewer Viewport = new LayoutViewer(header, Textures);
             Viewport.Dock = DockStyle.Fill;
             Viewport.Show(dockPanel1, DockState.Document);
             Viewport.DockHandler.AllowEndUserDocking = false;
             Viewports.Add(Viewport);
             ActiveViewport = Viewport;
+            ActiveViewport.UseOrtho = orthographicViewToolStripMenuItem.Checked;
 
             if (!isLoaded)
                 InitializeDockPanels();
@@ -76,6 +94,7 @@ namespace LayoutBXLYT
         private void InitializeDockPanels()
         {
             ShowTextureList();
+            ShowPartsEditor();
             ShowPaneHierarchy();
             ShowPropertiesPanel();
             UpdateBackColor();
@@ -89,6 +108,8 @@ namespace LayoutBXLYT
                 LayoutTextureList.Reset();
             if (LayoutProperties != null)
                 LayoutProperties.Reset();
+            if (TextConverter != null)
+                TextConverter.Reset();
         }
 
         private void ReloadEditors(BxlytHeader activeLayout)
@@ -101,6 +122,11 @@ namespace LayoutBXLYT
                 LayoutHierarchy.LoadLayout(activeLayout, ObjectSelected);
             if (LayoutTextureList != null)
                 LayoutTextureList.LoadTextures(activeLayout);
+            if (TextConverter != null)
+            {
+                if (ActiveLayout.FileInfo is BFLYT)
+                    TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
+            }
         }
 
         private void OnObjectChanged(object sender, EventArgs e)
@@ -110,6 +136,11 @@ namespace LayoutBXLYT
 
         private void OnProperyChanged()
         {
+            Console.WriteLine("UpdateProperties");
+
+            if (LayoutProperties != null)
+                LayoutProperties.UpdateProperties();
+
             if (ActiveViewport != null)
                 ActiveViewport.UpdateViewport();
         }
@@ -119,17 +150,21 @@ namespace LayoutBXLYT
         {
             if (isChecked) return;
 
-            ActiveViewport.SelectedPanes.Clear();
-
             if (LayoutProperties != null && (string)sender == "Select")
             {
+                ActiveViewport.SelectedPanes.Clear();
+
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
-                    var pane = (BasePane)node.Tag;
 
-                    LayoutProperties.LoadProperties(pane, OnProperyChanged);
-
-                    ActiveViewport.SelectedPanes.Add(pane);
+                    if (node.Tag is BasePane)
+                    {
+                        var pane = node.Tag as BasePane;
+                        LayoutProperties.LoadProperties(pane, OnProperyChanged);
+                        ActiveViewport.SelectedPanes.Add(pane);
+                    }
+                    else
+                        LayoutProperties.LoadProperties(node.Tag, OnProperyChanged);
                 }
             }
             if (ActiveViewport != null)
@@ -174,11 +209,21 @@ namespace LayoutBXLYT
             ShowTextureList();
         }
 
+        private void ShowPartsEditor()
+        {
+            LayoutPartsEditor = new LayoutPartsEditor();
+            LayoutPartsEditor.Text = "Parts Editor";
+            LayoutPartsEditor.Show(dockPanel1, DockState.DockLeft);
+        }
+
         private void ShowPropertiesPanel()
         {
             LayoutProperties = new LayoutProperties();
             LayoutProperties.Text = "Properties";
-            LayoutProperties.Show(dockPanel1, DockState.DockRight);
+            if (LayoutHierarchy != null)
+                LayoutProperties.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
+            else
+                LayoutProperties.Show(dockPanel1, DockState.DockRight);
         }
 
         private void ShowPaneHierarchy()
@@ -253,6 +298,7 @@ namespace LayoutBXLYT
             {
                 var file = (dockContent).LayoutFile;
                 ReloadEditors(file);
+                ActiveViewport = dockContent;
 
                 dockContent.UpdateViewport();
             }
@@ -277,7 +323,11 @@ namespace LayoutBXLYT
             if (file == null) return;
 
             if (file is BFLYT)
-                LoadBflyt(((BFLYT)file).header, file.FileName);
+                LoadBxlyt(((BFLYT)file).header, file.FileName);
+            else if (file is BCLYT)
+                LoadBxlyt(((BCLYT)file).header, file.FileName);
+            else if (file is BRLYT)
+                LoadBxlyt(((BRLYT)file).header, file.FileName);
             else if (file is IArchiveFile)
             {
                 var layouts = SearchLayoutFiles((IArchiveFile)file);
@@ -289,13 +339,23 @@ namespace LayoutBXLYT
                     {
                         foreach (var layout in form.SelectedLayouts())
                         {
-                            LoadBflyt(layout.header, file.FileName);
+                            if (layout is BFLYT)
+                                LoadBxlyt(((BFLYT)layout).header, file.FileName);
+                            if (layout is BCLYT)
+                                LoadBxlyt(((BCLYT)layout).header, file.FileName);
+                            if (layout is BRLYT)
+                                LoadBxlyt(((BRLYT)layout).header, file.FileName);
                         }
-                    }                    
+                    }
                 }
                 else if (layouts.Count > 0)
                 {
-                    LoadBflyt(layouts[0].header, file.FileName);
+                    if (layouts[0] is BFLYT)
+                        LoadBxlyt(((BFLYT)layouts[0]).header, file.FileName);
+                    if (layouts[0] is BCLYT)
+                        LoadBxlyt(((BCLYT)layouts[0]).header, file.FileName);
+                    if (layouts[0] is BRLYT)
+                        LoadBxlyt(((BRLYT)layouts[0]).header, file.FileName);
                 }
             }
             else if (file is BFLAN)
@@ -308,23 +368,28 @@ namespace LayoutBXLYT
             }
         }
 
-        private List<BFLYT> SearchLayoutFiles(IArchiveFile archiveFile)
+        private List<IFileFormat> SearchLayoutFiles(IArchiveFile archiveFile)
         {
-            List<BFLYT> layouts = new List<BFLYT>();
+            List<IFileFormat> layouts = new List<IFileFormat>();
 
             foreach (var file in archiveFile.Files)
             {
                 var fileFormat = STFileLoader.OpenFileFormat(file.FileName,
-                    new Type[] { typeof(BFLYT), typeof(SARC) }, file.FileData);
+                    new Type[] { typeof(BFLYT), typeof(BCLYT), typeof(BRLYT), typeof(SARC) }, file.FileData);
 
                 if (fileFormat is BFLYT)
                 {
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
-                    layouts.Add((BFLYT)fileFormat);
+                    layouts.Add(fileFormat);
+                }
+                else if (fileFormat is BCLYT)
+                {
+                    fileFormat.IFileInfo.ArchiveParent = archiveFile;
+                    layouts.Add(fileFormat);
                 }
                 else if (Utils.GetExtension(file.FileName) == ".bntx")
                 {
-                   
+
                 }
                 else if (Utils.GetExtension(file.FileName) == ".bflim")
                 {
@@ -373,6 +438,134 @@ namespace LayoutBXLYT
                 foreach (string filename in ofd.FileNames)
                     OpenFile(filename);
             }
+        }
+
+        private void textConverterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!textConverterToolStripMenuItem.Checked)
+            {
+                if (ActiveLayout.FileInfo is BFLYT)
+                {
+                    if (TextConverter == null)
+                        TextConverter = new LayoutTextDocked();
+                    TextConverter.Text = "Text Converter";
+                    TextConverter.TextCompiled += OnTextCompiled;
+                    TextConverter.LoadLayout((BFLYT)ActiveLayout.FileInfo);
+                    if (ActiveViewport != null)
+                        TextConverter.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.4);
+                    else
+                        TextConverter.Show(dockPanel1, DockState.DockLeft);
+                }
+
+                textConverterToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                textConverterToolStripMenuItem.Checked = false;
+                TextConverter.Hide();
+            }
+        }
+
+        private void OnTextCompiled(object sender, EventArgs e)
+        {
+            var layout = TextConverter.GetLayout();
+            ActiveLayout = layout.header;
+            ReloadEditors(layout.header);
+
+            if (ActiveViewport != null)
+                ActiveViewport.ResetLayout(ActiveLayout);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveLayout != null && ActiveLayout.FileInfo.CanSave)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = Utils.GetAllFilters(ActiveLayout.FileInfo);
+                sfd.FileName = ActiveLayout.FileInfo.FileName;
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, sfd.FileName);
+                }
+            }
+        }
+
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e) {
+            SaveActiveFile();
+        }
+
+        private void SaveActiveFile(bool ForceDialog = false)
+        {
+            if (ActiveLayout != null && ActiveLayout.FileInfo.CanSave)
+            {
+                var fileFormat = ActiveLayout.FileInfo;
+                if (fileFormat.IFileInfo.ArchiveParent != null && !ForceDialog)
+                {
+                    this.DialogResult = DialogResult.OK;
+                    IsSaving = true;
+                    this.Close();
+                }
+                else
+                {
+                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, fileFormat.FilePath);
+                }
+            }
+        }
+
+        private void LayoutEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.Alt && e.KeyCode == Keys.S) // Ctrl + Alt + S Save As
+            {
+                e.SuppressKeyPress = true;
+                SaveActiveFile(true);
+            }
+            else if (e.Control && e.KeyCode == Keys.S) // Ctrl + S Save
+            {
+                e.SuppressKeyPress = true;
+                SaveActiveFile(false);
+            }
+        }
+
+        private void debugShading_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (debugShading.SelectedIndex < 0) return;
+
+            Runtime.LayoutEditor.Shading = (Runtime.LayoutEditor.DebugShading)debugShading.SelectedItem;
+            if (ActiveViewport != null)
+                ActiveViewport.UpdateViewport();
+        }
+
+        private void orthographicViewToolStripMenuItem_Click(object sender, EventArgs e) {
+            ToggleOrthMode();
+        }
+
+        private void toolstripOrthoBtn_Click(object sender, EventArgs e) {
+            if (orthographicViewToolStripMenuItem.Checked)
+                orthographicViewToolStripMenuItem.Checked = false;
+            else
+                orthographicViewToolStripMenuItem.Checked = true;
+            
+            ToggleOrthMode();
+        }
+
+        private void ToggleOrthMode()
+        {
+            if (ActiveViewport != null)
+            {
+                if (orthographicViewToolStripMenuItem.Checked)
+                    toolstripOrthoBtn.Image = BitmapExtension.GrayScale(FirstPlugin.Properties.Resources.OrthoView);
+                else
+                    toolstripOrthoBtn.Image = FirstPlugin.Properties.Resources.OrthoView;
+
+                ActiveViewport.UseOrtho = orthographicViewToolStripMenuItem.Checked;
+                ActiveViewport.ResetCamera();
+                ActiveViewport.UpdateViewport();
+            }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e) {
+            SaveActiveFile(false);
         }
     }
 }

@@ -132,9 +132,26 @@ namespace Toolbox.Library.IO
             return Names;
         }
 
-        public string ReadZeroTerminatedString()
+        public string ReadZeroTerminatedString(Encoding encoding = null)
         {
-            return ReadString(BinaryStringFormat.ZeroTerminated);
+            return ReadString(BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);
+        }
+
+        public string ReadUTF16String()
+        {
+            List<byte> chars = new List<byte>();
+
+            while (true)
+            {
+                ushort val = ReadUInt16();
+
+                if (val == 0)
+                {
+                    return Encoding.ASCII.GetString(chars.ToArray());
+                }
+                else
+                    chars.Add((byte)val); // casting to byte will remove the period, which is a part of UTF-16
+            }
         }
 
         /// <summary>
@@ -281,6 +298,49 @@ namespace Toolbox.Library.IO
                 return ReadString(BinaryStringFormat.ZeroTerminated, encoding);
             }
         }
+
+        public STColor8[] ReadColor8sRGBA(int count)
+        {
+            STColor8[] colors = new STColor8[count];
+            for (int i = 0; i < count; i++)
+                colors[i] = STColor8.FromBytes(ReadBytes(4));
+
+            return colors;
+        }
+
+        public STColor8 ReadColor8RGBA()
+        {
+            return STColor8.FromBytes(ReadBytes(4));
+        }
+
+        public STColor16[] ReadColor16sRGBA(int count)
+        {
+            STColor16[] colors = new STColor16[count];
+            for (int i = 0; i < count; i++)
+                colors[i] = STColor16.FromShorts(ReadUInt16s(4));
+
+            return colors;
+        }
+
+        public STColor16 ReadColor16RGBA()
+        {
+            return STColor16.FromShorts(ReadUInt16s(4));
+        }
+
+        public STColor[] ReadColorsRGBA(int count)
+        {
+            STColor[] colors = new STColor[count];
+            for (int i = 0; i < count; i++)
+                colors[i] =  STColor.FromFloats(ReadSingles(4));
+
+            return colors;
+        }
+
+        public STColor ReadColorRGBA()
+        {
+            return STColor.FromFloats(ReadSingles(4));
+        }
+
         public static byte[] DeflateZLIB(byte[] i)
         {
             MemoryStream output = new MemoryStream();

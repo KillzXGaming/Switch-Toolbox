@@ -8,20 +8,20 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
-using FirstPlugin.Forms;
+using System.ComponentModel;
 using Syroot.Maths;
 using SharpYaml.Serialization;
 using FirstPlugin;
 
 namespace LayoutBXLYT
 {
-    public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
+    public class BCLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Cafe Layout (GUI)" };
-        public string[] Extension { get; set; } = new string[] { "*.bflyt" };
+        public string[] Description { get; set; } = new string[] { "CTR Layout (GUI)" };
+        public string[] Extension { get; set; } = new string[] { "*.bclyt" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -30,7 +30,7 @@ namespace LayoutBXLYT
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "FLYT");
+                return reader.CheckSignature(4, "CLYT");
             }
         }
 
@@ -39,34 +39,7 @@ namespace LayoutBXLYT
             get
             {
                 List<Type> types = new List<Type>();
-                types.Add(typeof(MenuExt));
                 return types.ToArray();
-            }
-        }
-
-        class MenuExt : IFileMenuExtension
-        {
-            public STToolStripItem[] NewFileMenuExtensions => newFileExt;
-            public STToolStripItem[] NewFromFileMenuExtensions => null;
-            public STToolStripItem[] ToolsMenuExtensions => null;
-            public STToolStripItem[] TitleBarExtensions => null;
-            public STToolStripItem[] CompressionMenuExtensions => null;
-            public STToolStripItem[] ExperimentalMenuExtensions => null;
-            public STToolStripItem[] EditMenuExtensions => null;
-            public ToolStripButton[] IconButtonMenuExtensions => null;
-
-            STToolStripItem[] newFileExt = new STToolStripItem[1];
-
-            public MenuExt()
-            {
-                newFileExt[0] = new STToolStripItem("Layout Editor");
-                newFileExt[0].Click += LoadNewLayoutEditor;
-            }
-
-            private void LoadNewLayoutEditor(object sender, EventArgs e)
-            {
-                LayoutEditor editor = new LayoutEditor();
-                editor.Show();
             }
         }
 
@@ -100,85 +73,34 @@ namespace LayoutBXLYT
         {
             LayoutEditor editor = new LayoutEditor();
             editor.Dock = DockStyle.Fill;
-            editor.LoadBflyt(header, FileName);
+            editor.LoadBxlyt(header, FileName);
             return editor;
         }
 
         public void FillEditor(Form control) {
-            ((LayoutEditor)control).LoadBflyt(header, FileName);
+            ((LayoutEditor)control).LoadBxlyt(header, FileName);
         }
 
         public Header header;
         public void Load(System.IO.Stream stream)
         {
-            CanSave = false;
+            CanSave = true;
 
             header = new Header();
             header.Read(new FileReader(stream), this);
         }
 
-        public List<GTXFile> GetShadersGTX()
+        public List<BCLYT> GetLayouts()
         {
-            List<GTXFile> shaders = new List<GTXFile>();
+            List<BCLYT> animations = new List<BCLYT>();
             if (IFileInfo.ArchiveParent != null)
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".gsh")
+                    if (Utils.GetExtension(file.FileName) == ".bclyt")
                     {
-                        GTXFile bnsh = (GTXFile)file.OpenFile();
-                        shaders.Add(bnsh);
-                    }
-                }
-            }
-            return shaders;
-        }
-
-        public List<BNSH> GetShadersNX()
-        {
-            List<BNSH> shaders = new List<BNSH>();
-            if (IFileInfo.ArchiveParent != null)
-            {
-                foreach (var file in IFileInfo.ArchiveParent.Files)
-                {
-                    if (Utils.GetExtension(file.FileName) == ".bnsh")
-                    {
-                        BNSH bnsh = (BNSH)file.OpenFile();
-                        shaders.Add(bnsh);
-                    }
-                }
-            }
-            return shaders;
-        }
-
-        public List<BFLYT> GetLayouts()
-        {
-            List<BFLYT> animations = new List<BFLYT>();
-            if (IFileInfo.ArchiveParent != null)
-            {
-                foreach (var file in IFileInfo.ArchiveParent.Files)
-                {
-                    if (Utils.GetExtension(file.FileName) == ".bflyt")
-                    {
-                        BFLYT bflyt = (BFLYT)file.OpenFile();
-                        animations.Add(bflyt);
-                    }
-                }
-            }
-            return animations;
-        }
-
-        public List<BFLAN> GetAnimations()
-        {
-            List<BFLAN> animations = new List<BFLAN>();
-            if (IFileInfo.ArchiveParent != null)
-            {
-                foreach (var file in IFileInfo.ArchiveParent.Files)
-                {
-                    if (Utils.GetExtension(file.FileName) == ".bflan")
-                    {
-                        BFLAN bflan = (BFLAN)file.OpenFile();
-                        animations.Add(bflan);
+                        BCLYT bclyt = (BCLYT)file.OpenFile();
+                        animations.Add(bclyt);
                     }
                 }
             }
@@ -192,16 +114,11 @@ namespace LayoutBXLYT
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".bntx")
+                    if (Utils.GetExtension(file.FileName) == ".bclim")
                     {
-                        BNTX bntx = (BNTX)file.OpenFile();
-                        foreach (var tex in bntx.Textures)
-                            textures.Add(tex.Key, tex.Value);
-                    }
-                    else if (Utils.GetExtension(file.FileName) == ".bflim")
-                    {
-                        BFLIM bflim = (BFLIM)file.OpenFile();
-                        textures.Add(bflim.FileName, bflim);
+                        BCLIM bclim = (BCLIM)file.OpenFile();
+                        file.FileFormat = bclim;
+                        textures.Add(bclim.FileName, bclim);
                     }
                 }
             }
@@ -227,7 +144,7 @@ namespace LayoutBXLYT
                 get { return FileInfo.FileName; }
             }
 
-            private const string Magic = "FLYT";
+            private const string Magic = "CLYT";
 
             private ushort ByteOrderMark;
             private ushort HeaderSize;
@@ -239,6 +156,13 @@ namespace LayoutBXLYT
             //   private List<SectionCommon> Sections;
             //  public List<PAN1> Panes = new List<PAN1>();
 
+            public int TotalPaneCount()
+            {
+                int panes = GetPanes().Count;
+                int grpPanes = GetGroupPanes().Count;
+                return panes + grpPanes;
+            }
+
             public override List<string> Textures
             {
                 get { return TextureList.Textures; }
@@ -246,11 +170,41 @@ namespace LayoutBXLYT
 
             public override Dictionary<string, STGenericTexture> GetTextures
             {
-                get { return ((BFLYT)FileInfo).GetTextures(); }
+                get { return ((BCLYT)FileInfo).GetTextures(); }
             }
 
-            public void Read(FileReader reader, BFLYT bflyt)
+            public List<PAN1> GetPanes()
             {
+                List<PAN1> panes = new List<PAN1>();
+                GetPaneChildren(panes, (PAN1)RootPane);
+                return panes;
+            }
+
+            public List<GRP1> GetGroupPanes()
+            {
+                List<GRP1> panes = new List<GRP1>();
+                GetGroupChildren(panes, (GRP1)RootGroup);
+                return panes;
+            }
+
+            private void GetPaneChildren(List<PAN1> panes, PAN1 root)
+            {
+                panes.Add(root);
+                foreach (var pane in root.Childern)
+                    GetPaneChildren(panes, (PAN1)pane);
+            }
+
+            private void GetGroupChildren(List<GRP1> panes, GRP1 root)
+            {
+                panes.Add(root);
+                foreach (var pane in root.Childern)
+                    GetGroupChildren(panes, (GRP1)pane);
+            }
+
+            public void Read(FileReader reader, BCLYT bclyt)
+            {
+                IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
                 MaterialList = new MAT1();
@@ -258,7 +212,7 @@ namespace LayoutBXLYT
                 RootPane = new PAN1();
                 RootGroup = new GRP1();
 
-                FileInfo = bflyt;
+                FileInfo = bclyt;
 
                 reader.SetByteOrder(true);
                 reader.ReadSignature(4, Magic);
@@ -275,6 +229,9 @@ namespace LayoutBXLYT
 
                 BasePane currentPane = null;
                 BasePane parentPane = null;
+
+                BasePane currentGroupPane = null;
+                BasePane parentGroupPane = null;
 
                 reader.SeekBegin(HeaderSize);
                 for (int i = 0; i < sectionCount; i++)
@@ -358,10 +315,16 @@ namespace LayoutBXLYT
                                 setGroupRoot = true;
                             }
 
+                            SetPane(groupPanel, parentGroupPane);
+                            currentGroupPane = groupPanel;
                             break;
                         case "grs1":
+                            if (currentGroupPane != null)
+                                parentGroupPane = currentGroupPane;
                             break;
                         case "gre1":
+                            currentGroupPane = parentGroupPane;
+                            parentGroupPane = currentGroupPane.Parent;
                             break;
                         case "usd1":
                             break;
@@ -371,7 +334,6 @@ namespace LayoutBXLYT
                             break;
                     }
 
-                    section.Signature = Signature;
                     section.SectionSize = SectionSize;
 
                     reader.SeekBegin(pos + SectionSize);
@@ -391,6 +353,7 @@ namespace LayoutBXLYT
             {
                 Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
 
+                writer.SetByteOrder(IsBigEndian);
                 writer.WriteSignature(Magic);
                 writer.Write(ByteOrderMark);
                 writer.Write(HeaderSize);
@@ -429,6 +392,8 @@ namespace LayoutBXLYT
             {
          
             }
+
+            public string Text { get; set; }
 
             public OriginX HorizontalAlignment
             {
@@ -515,10 +480,17 @@ namespace LayoutBXLYT
                 ShadowForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowBackColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowItalic = reader.ReadSingle();
+
+                if (RestrictedTextLengthEnabled)
+                    Text = reader.ReadString(MaxTextLength);
+                else
+                    Text = reader.ReadString(TextLength);
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
             {
+                long pos = writer.Position;
+
                 base.Write(writer, header);
                 writer.Write(TextLength);
                 writer.Write(MaxTextLength);
@@ -529,6 +501,7 @@ namespace LayoutBXLYT
                 writer.Write(_flags);
                 writer.Seek(1);
                 writer.Write(ItalicTilt);
+                long _ofsTextPos = writer.Position;
                 writer.Write(0); //text offset
                 writer.Write(FontForeColor.ToBytes());
                 writer.Write(FontBackColor.ToBytes());
@@ -540,6 +513,12 @@ namespace LayoutBXLYT
                 writer.Write(ShadowForeColor.ToBytes());
                 writer.Write(ShadowBackColor.ToBytes());
                 writer.Write(ShadowItalic);
+
+                writer.WriteUint32Offset(_ofsTextPos, pos);
+                if (RestrictedTextLengthEnabled)
+                    writer.WriteString(Text, MaxTextLength);
+                else
+                    writer.WriteString(Text, TextLength);
             }
 
             public enum BorderType : byte
@@ -605,21 +584,12 @@ namespace LayoutBXLYT
 
             public GRP1(FileReader reader, Header header)
             {
-                ushort numNodes = 0;
-                if (header.VersionMajor >= 5)
-                {
-                    Name = reader.ReadString(34).Replace("\0", string.Empty);
-                    numNodes = reader.ReadUInt16();
-                }
-                else
-                {
-                    Name = reader.ReadString(24).Replace("\0", string.Empty);
-                    numNodes = reader.ReadUInt16();
-                    reader.Seek(2); //padding
-                }
+                Name = reader.ReadString(0x10).Replace("\0", string.Empty);
+                ushort numNodes = reader.ReadUInt16();
+                reader.ReadUInt16();//padding
 
                 for (int i = 0; i < numNodes; i++)
-                    Panes.Add(reader.ReadString(24));
+                    Panes.Add(reader.ReadString(0x10));
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -661,27 +631,37 @@ namespace LayoutBXLYT
 
         public class PIC1 : PAN1
         {
+            [DisplayName("Texture Coordinates"), CategoryAttribute("Texture")]
             public TexCoord[] TexCoords { get; set; }
 
+            [DisplayName("Vertex Color (Top Left)"), CategoryAttribute("Color")]
             public STColor8 ColorTopLeft { get; set; }
+            [DisplayName("Vertex Color (Top Right)"), CategoryAttribute("Color")]
             public STColor8 ColorTopRight { get; set; }
+            [DisplayName("Vertex Color (Bottom Left)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomLeft { get; set; }
+            [DisplayName("Vertex Color (Bottom Right)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomRight { get; set; }
 
+            [Browsable(false)]
             public ushort MaterialIndex { get; set; }
 
-            public Material GetMaterial()
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public Material Material
             {
-                return ParentLayout.MaterialList.Materials[MaterialIndex];
+                get
+                {
+                    return ParentLayout.MaterialList.Materials[MaterialIndex];
+                }
             }
 
+            [Browsable(false)]
             public string GetTexture(int index)
             {
-                var mat = GetMaterial();
-                return ParentLayout.TextureList.Textures[mat.TextureMaps[index].ID];
+                return ParentLayout.TextureList.Textures[Material.TextureMaps[index].ID];
             }
 
-            private BFLYT.Header ParentLayout;
+            private BCLYT.Header ParentLayout;
 
             public PIC1() : base() {
                 ColorTopLeft = STColor8.White;
@@ -693,7 +673,7 @@ namespace LayoutBXLYT
                 TexCoords[0] = new TexCoord();
             }
 
-            public PIC1(FileReader reader, BFLYT.Header header) : base(reader)
+            public PIC1(FileReader reader, BCLYT.Header header) : base(reader)
             {
                 ParentLayout = header;
 
@@ -733,7 +713,6 @@ namespace LayoutBXLYT
         public class PAN1 : BasePane
         {
             private byte _flags1;
-            private byte _flags2;
 
             public bool Visible
             {
@@ -758,48 +737,13 @@ namespace LayoutBXLYT
                 }
             }
 
-            public OriginX originX
-            {
-                get { return (OriginX)((_flags2 & 0xC0) >> 6); }
-                set
-                {
-                    _flags2 &= unchecked((byte)(~0xC0));
-                    _flags2 |= (byte)((byte)value << 6);
-                }
-            }
-
-            public OriginY originY
-            {
-                get { return (OriginY)((_flags2 & 0x30) >> 4); }
-                set
-                {
-                    _flags2 &= unchecked((byte)(~0x30));
-                    _flags2 |= (byte)((byte)value << 4);
-                }
-            }
-
-            public OriginX ParentOriginX
-            {
-                get { return (OriginX)((_flags2 & 0xC) >> 2); }
-                set
-                {
-                    _flags2 &= unchecked((byte)(~0xC));
-                    _flags2 |= (byte)((byte)value << 2);
-                }
-            }
-
-            public OriginY ParentOriginY
-            {
-                get { return (OriginY)((_flags2 & 0x3)); }
-                set
-                {
-                    _flags2 &= unchecked((byte)(~0x3));
-                    _flags2 |= (byte)value;
-                }
-            }
+            public byte Origin { get; set; }
 
             public byte Alpha { get; set; }
-            public byte Unknown { get; set; }
+
+            public byte PartsScale { get; set; }
+
+            public byte PaneMagFlags { get; set; }
 
             public string UserDataInfo { get; set; }
 
@@ -808,14 +752,55 @@ namespace LayoutBXLYT
 
             }
 
+            enum BCLYTOriginX : byte
+            {
+                Left = 0,
+                Center = 1,
+                Right = 2
+            };
+
+            enum BCLYTOriginY : byte
+            {
+                Top = 0,
+                Center = 1,
+                Bottom = 2
+            };
+
+            public override OriginX originX
+            {
+                get
+                {
+                    var bclytOriginX = (BCLYTOriginX)(Origin % 3);
+                    if (bclytOriginX == BCLYTOriginX.Center)
+                        return OriginX.Center;
+                    else if (bclytOriginX == BCLYTOriginX.Left)
+                        return OriginX.Left;
+                    else
+                        return OriginX.Right;
+                }
+            }
+
+            public override OriginY originY
+            {
+                get
+                {
+                    var bclytOriginY = (BCLYTOriginY)(Origin / 3);
+                    if (bclytOriginY == BCLYTOriginY.Center)
+                        return OriginY.Center;
+                    else if (bclytOriginY == BCLYTOriginY.Top)
+                        return OriginY.Top;
+                    else
+                        return OriginY.Bottom;
+                }
+            }
+
             public PAN1(FileReader reader) : base()
             {
                 _flags1 = reader.ReadByte();
-                _flags2 = reader.ReadByte();
+                Origin = reader.ReadByte();
                 Alpha = reader.ReadByte();
-                Unknown = reader.ReadByte();
+                PaneMagFlags = reader.ReadByte();
                 Name = reader.ReadString(0x18).Replace("\0", string.Empty);
-                UserDataInfo = reader.ReadString(0x8).Replace("\0", string.Empty);
                 Translate = reader.ReadVec3SY();
                 Rotate = reader.ReadVec3SY();
                 Scale = reader.ReadVec2SY();
@@ -826,11 +811,9 @@ namespace LayoutBXLYT
             public override void Write(FileWriter writer, BxlytHeader header)
             {
                 writer.Write(_flags1);
-                writer.Write(_flags2);
                 writer.Write(Alpha);
-                writer.Write(Unknown);
+                writer.Write(PaneMagFlags);
                 writer.WriteString(Name, 0x18);
-                writer.WriteString(UserDataInfo, 0x8);
                 writer.Write(Translate);
                 writer.Write(Rotate);
                 writer.Write(Scale);
@@ -891,8 +874,8 @@ namespace LayoutBXLYT
         {
             public string Name { get; set; }
 
-            public STColor8 ForeColor { get; set; }
-            public STColor8 BackColor { get; set; }
+            public STColor8 TevColor { get; set; }
+            public STColor8[] TevConstantColors { get; set; }
 
             public List<TextureRef> TextureMaps { get; set; }
             public List<TextureTransform> TextureTransforms { get; set; }
@@ -900,7 +883,7 @@ namespace LayoutBXLYT
             private uint flags;
             private int unknown;
 
-            private BFLYT.Header ParentLayout;
+            private BCLYT.Header ParentLayout;
             public string GetTexture(int index)
             {
                 if (TextureMaps[index].ID != -1)
@@ -923,19 +906,9 @@ namespace LayoutBXLYT
                 TextureTransforms = new List<TextureTransform>();
 
                 Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
-                if (header.VersionMajor == 8)
-                {
-                    flags = reader.ReadUInt32();
-                    unknown = reader.ReadInt32();
-                    ForeColor = STColor8.FromBytes(reader.ReadBytes(4));
-                    BackColor = STColor8.FromBytes(reader.ReadBytes(4));
-                }
-                else
-                {
-                    ForeColor = STColor8.FromBytes(reader.ReadBytes(4));
-                    BackColor = STColor8.FromBytes(reader.ReadBytes(4));
-                    flags = reader.ReadUInt32();
-                }
+                TevColor = reader.ReadColor8RGBA();
+                TevConstantColors = reader.ReadColor8sRGBA(8);
+                flags = reader.ReadUInt32();
 
                 uint texCount = Convert.ToUInt32(flags & 3);
                 uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
@@ -949,19 +922,9 @@ namespace LayoutBXLYT
             public void Write(FileWriter writer, Header header)
             {
                 writer.WriteString(Name, 0x1C);
-                if (header.Version == 0x8030000)
-                {
-                    writer.Write(flags);
-                    writer.Write(unknown);
-                    writer.Write(ForeColor);
-                    writer.Write(BackColor);
-                }
-                else
-                {
-                    writer.Write(ForeColor);
-                    writer.Write(BackColor);
-                    writer.Write(flags);
-                }
+                writer.Write(TevColor);
+                writer.Write(TevConstantColors);
+                writer.Write(flags);
 
                 for (int i = 0; i < TextureMaps.Count; i++)
                     TextureMaps[i].Write(writer);
@@ -1143,18 +1106,11 @@ namespace LayoutBXLYT
             public float Width { get; set; }
             public float Height { get; set; }
 
-            public float MaxPartsWidth { get; set; }
-            public float MaxPartsHeight { get; set; }
-            public string Name { get; set; }
-
             public LYT1()
             {
                 DrawFromCenter = false;
                 Width = 0;
                 Height = 0;
-                MaxPartsWidth = 0;
-                MaxPartsHeight = 0;
-                Name = "";
             }
 
             public LYT1(FileReader reader)
@@ -1163,9 +1119,6 @@ namespace LayoutBXLYT
                 reader.Seek(3); //padding
                 Width = reader.ReadSingle();
                 Height = reader.ReadSingle();
-                MaxPartsWidth = reader.ReadSingle();
-                MaxPartsHeight = reader.ReadSingle();
-                Name = reader.ReadZeroTerminatedString();
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -1174,9 +1127,6 @@ namespace LayoutBXLYT
                 writer.Seek(3);
                 writer.Write(Width);
                 writer.Write(Height);
-                writer.Write(MaxPartsWidth);
-                writer.Write(MaxPartsHeight);
-                writer.Write(Name);
             }
         }
     }

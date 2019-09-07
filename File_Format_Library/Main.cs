@@ -367,7 +367,9 @@ namespace FirstPlugin
             Formats.Add(typeof(CSAB));
             Formats.Add(typeof(CMB));
             Formats.Add(typeof(G1T));
-            Formats.Add(typeof(LayoutBXLYT.BFLYT));
+            Formats.Add(typeof(LayoutBXLYT.Cafe.BFLYT));
+            Formats.Add(typeof(LayoutBXLYT.BCLYT));
+            Formats.Add(typeof(LayoutBXLYT.BRLYT));
             Formats.Add(typeof(ZSI));
             Formats.Add(typeof(IGZ_TEX));
             Formats.Add(typeof(MOD));
@@ -379,6 +381,8 @@ namespace FirstPlugin
             Formats.Add(typeof(CTR.NCCH.RomFS));
             Formats.Add(typeof(DKCTF.MSBT));
             Formats.Add(typeof(DKCTF.PAK));
+            Formats.Add(typeof(WTB));
+            Formats.Add(typeof(PKZ));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));

@@ -41,7 +41,7 @@ namespace Toolbox.Library
     {
         // Opens the file format automatically (may take longer to open the archive file)
         [Browsable(false)]
-        public bool OpenFileFormatOnLoad { get; set; }
+        public virtual bool OpenFileFormatOnLoad { get; set; }
 
         [Browsable(false)]
         // The source file. If an archive is in another archive, this is necessary to get the original path
@@ -171,6 +171,27 @@ namespace Toolbox.Library
             set
             {
                 _fileName = value;
+            }
+        }
+
+        public static void SaveFileFormat(ArchiveFileInfo archiveFile, IFileFormat fileFormat)
+        {
+            if (fileFormat != null && fileFormat.CanSave)
+            {
+                if (archiveFile.FileDataStream != null)
+                {
+                    var mem = new System.IO.MemoryStream();
+                    fileFormat.Save(mem);
+                    archiveFile.FileDataStream = mem;
+                    //Reload file data
+                    fileFormat.Load(archiveFile.FileDataStream);
+                }
+                else
+                {
+                    var mem = new System.IO.MemoryStream();
+                    fileFormat.Save(mem);
+                    archiveFile.FileData = STLibraryCompression.CompressFile(mem.ToArray(), fileFormat);
+                }
             }
         }
 
@@ -871,6 +892,7 @@ namespace Toolbox.Library
         private void ReplaceAction(object sender, EventArgs args)
         {
             ArchiveFileInfo.Replace();
+            ArchiveFileInfo.FileFormat = null;
             UpdateEditor();
         }
 
@@ -893,9 +915,6 @@ namespace Toolbox.Library
                 OpenFormDialog(file);
             else if (file is IArchiveFile)
             {
-                if (ArchiveFileInfo.FileFormat != null)
-                    ArchiveFileInfo.FileFormat.Unload();
-
                 var FileRoot = new ArchiveRootNodeWrapper(file.FileName, (IArchiveFile)file);
                 FileRoot.FillTreeNodes();
 
@@ -909,9 +928,6 @@ namespace Toolbox.Library
             }
             else if (file is TreeNode)
             {
-                if (ArchiveFileInfo.FileFormat != null)
-                    ArchiveFileInfo.FileFormat.Unload();
-
                 ReplaceNode(this.Parent, treeview, this, (TreeNode)file, RootNode);
             }
 
@@ -931,17 +947,23 @@ namespace Toolbox.Library
             {
                 activeForm = GetEditorForm(fileFormat);
                 activeForm.Text = (((IFileFormat)fileFormat).FileName);
+                activeForm.FormClosed += OnFormClosed;
                 activeForm.Show();
             }
+        }
 
-          /*  if (form.ShowDialog() == DialogResult.OK)
+        private void OnFormClosed(object sender, EventArgs args)
+        {
+            if (ArchiveFileInfo.FileFormat == null) return;
+
+            if (activeForm.DialogResult == DialogResult.OK)
             {
-                if (fileFormat.CanSave)
+                if (ArchiveFileInfo.FileFormat.CanSave)
                 {
                     ArchiveFileInfo.SaveFileFormat();
                     UpdateEditor();
                 }
-            }*/
+            }
         }
 
         private void OpenControlDialog(IFileFormat fileFormat)

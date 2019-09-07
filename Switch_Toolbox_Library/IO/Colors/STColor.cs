@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace Toolbox.Library
 {
     //Class that contains colors and useful color related methods
-    public class STColor
+    [Editor(typeof(Toolbox.Library.IO.ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
+    public class STColor 
     {
         public float R { get; set; }
         public float G { get; set; }
@@ -45,8 +47,25 @@ namespace Toolbox.Library
             col.G = color[1] / 255f;
             col.B = color[2] / 255f;
             col.A = color[3] / 255f;
-
             return col;
+        }
+
+        public static STColor FromFloats(float[] color)
+        {
+            STColor col = new STColor();
+            col.R = color[0];
+            col.G = color[1];
+            col.B = color[2];
+            col.A = color[3];
+            return col;
+        }
+
+        public STColor(Color color)
+        {
+            R = color.R / 255f;
+            G = color.G / 255f;
+            B = color.B / 255f;
+            A = color.A / 255f;
         }
 
         public STColor() : this(1, 1, 1)

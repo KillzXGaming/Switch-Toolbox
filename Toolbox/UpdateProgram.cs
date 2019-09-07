@@ -12,7 +12,7 @@ namespace Toolbox
 {
     public class UpdateProgram
     {
-        static Release[] releases;
+        static List<Release> Releases = new List<Release>();
         public static bool CanUpdate = false;
         public static bool Downloaded = false;
         public static Release LatestRelease;
@@ -28,7 +28,7 @@ namespace Toolbox
                 GetReleases(client).Wait();
                 GetCommits(client).Wait();
 
-                foreach (Release latest in releases)
+                foreach (Release latest in Releases)
                 {
                     Console.WriteLine(
                         "The latest release is tagged at {0} and is named {1} commit {2} date {3}",
@@ -56,6 +56,8 @@ namespace Toolbox
                     }
                     break;
                 }
+
+                Releases.Clear();
             }
             catch (Exception ex)
             {
@@ -117,10 +119,9 @@ namespace Toolbox
 
         static async Task GetReleases(GitHubClient client)
         {
-            List<Release> Releases = new List<Release>();
+            Releases = new List<Release>();
             foreach (Release r in await client.Repository.Release.GetAll("KillzXGaming", "Switch-Toolbox"))
                 Releases.Add(r);
-            releases = Releases.ToArray();
         }
     }
 }

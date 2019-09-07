@@ -58,6 +58,12 @@ namespace Toolbox.Library.IO
             Write(color.ToBytes());
         }
 
+        public void Write(STColor8[] colors)
+        {
+            foreach (var color in colors)
+                Write(color.ToBytes());
+        }
+
         public void WriteStruct<T>(T item) => Write(item.StructToBytes(ByteOrder == ByteOrder.BigEndian));
 
         public void WriteSignature(string value)
@@ -65,9 +71,9 @@ namespace Toolbox.Library.IO
             Write(Encoding.ASCII.GetBytes(value));
         }
 
-        public void WriteString(string value)
+        public void WriteString(string value, Encoding encoding = null)
         {
-            Write(value, BinaryStringFormat.ZeroTerminated);
+            Write(value, BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);
         }
 
         public void WriteUint64Offset(long target)
@@ -87,11 +93,11 @@ namespace Toolbox.Library.IO
                 ByteOrder = ByteOrder.LittleEndian;
         }
 
-        public void WriteString(string text, uint fixedSize)
+        public void WriteString(string text, uint fixedSize, Encoding encoding = null)
         {
             long pos = Position;
-            WriteString(text);
-            Seek(pos + fixedSize);
+            WriteString(text, encoding);
+            SeekBegin(pos + fixedSize);
         }
 
         //Writes the total size of a section as a uint. 
@@ -111,7 +117,7 @@ namespace Toolbox.Library.IO
             long pos = Position;
             using (TemporarySeek(target, SeekOrigin.Begin))
             {
-                Write((uint)pos - (uint)RelativeOffsetPosition);
+                Write((uint)(pos - RelativeOffsetPosition));
             }
         }
 

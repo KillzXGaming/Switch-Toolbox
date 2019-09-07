@@ -18,6 +18,8 @@ namespace Toolbox.Library
         //Disable loading 3k and higher texture res to prevent slowdown and memory issues
         public static bool DisableLoadingGLHighResTextures = true;
 
+        public static bool EnableDragDrop = true;
+
         public static bool UseSingleInstance = true;
         public static bool UseDirectXTexDecoder = true;
         public static bool DEVELOPER_DEBUG_MODE = false;
@@ -38,6 +40,17 @@ namespace Toolbox.Library
         public class LayoutEditor
         {
             public static Color BackgroundColor = Color.FromArgb(130, 130, 130);
+
+            public static DebugShading Shading = DebugShading.Default;
+
+            public enum DebugShading
+            {
+                Default,
+                VertexColor,
+                WhiteColor,
+                BlackColor,
+                UVTestPattern,
+            }
         }
 
         public class ImageEditor

@@ -124,8 +124,8 @@ namespace Ryujinx.Graphics.Gal.Texture
                 throw new ASTCDecoderException("Invalid block mode");
             }
 
-            Console.WriteLine($"BlockWidth {BlockWidth} {BlockHeight} BlockHeight");
-            Console.WriteLine($"TexelParams {TexelParams.Width} X {TexelParams.Height}");
+          //  Console.WriteLine($"BlockWidth {BlockWidth} {BlockHeight} BlockHeight");
+          //  Console.WriteLine($"TexelParams {TexelParams.Width} X {TexelParams.Height}");
 
             if (TexelParams.VoidExtentLDR)
             {

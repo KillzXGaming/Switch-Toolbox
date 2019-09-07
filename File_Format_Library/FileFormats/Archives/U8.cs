@@ -51,8 +51,9 @@ namespace FirstPlugin
         }
 
         public List<INode> nodes = new List<INode>();
+        public List<FileEntry> files = new List<FileEntry>();
 
-        public IEnumerable<ArchiveFileInfo> Files => null;
+        public IEnumerable<ArchiveFileInfo> Files => files;
         public IEnumerable<INode> Nodes => nodes;
 
         public void ClearFiles() { nodes.Clear(); }
@@ -121,19 +122,24 @@ namespace FirstPlugin
                 for (int i = 0; i < dirs.Length; i++)
                     dirs[i] = new DirectoryEntry();
 
-                DirectoryEntry currentDir = dirs[0];
+                DirectoryEntry currentDir = dirs[1];
+                nodes.Add(currentDir);
 
+                //Skip root so start index at 1
+                int dirIndex = 1;
                 for (int i = 0; i < TotalNodeCount; i++)
                 {
                     var node = entries[i];
-                    Console.WriteLine($"node " + node.Name + " " + node.nodeType);
+                    if (node.Name == string.Empty)
+                        continue;
+
                     if (node.nodeType == NodeEntry.NodeType.Directory)
                     {
-                        DirectoryEntry dir = new DirectoryEntry();
-                        dir.Name = node.Name;
-                        dir.nodeEntry = node;
-                        dirs[node.Setting1].AddNode(dir);
-                        currentDir = dir;
+                        dirs[i].Name = node.Name;
+                        dirs[i].nodeEntry = node;
+                        dirs[node.Setting1].AddNode(dirs[i]);
+
+                        currentDir =  dirs[i];
                     }
                     else
                     {
@@ -145,10 +151,9 @@ namespace FirstPlugin
 
                         reader.SeekBegin(entry.nodeEntry.Setting1);
                         entry.FileData = reader.ReadBytes((int)entry.nodeEntry.Setting2);
+                        files.Add(entry);
                     }
                 }
-
-                nodes.Add(currentDir);
             }
         }
 
@@ -163,6 +168,11 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            public override bool OpenFileFormatOnLoad
+            {
+                get { return true; }
+            }
+
             public NodeEntry nodeEntry;
         }
 

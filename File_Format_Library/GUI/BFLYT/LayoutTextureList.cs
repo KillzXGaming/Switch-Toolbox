@@ -116,7 +116,7 @@ namespace LayoutBXLYT
                     item.SubItems.Add(texture.Width.ToString());
                     item.SubItems.Add(texture.Height.ToString());
                     item.SubItems.Add(texture.DataSize);
-
+                   
                     // Running on the UI thread
                     imgList.Images.Add(temp);
                     var dummy = imgList.Handle;
@@ -150,6 +150,18 @@ namespace LayoutBXLYT
             {
                 String[] strGetFormats = e.Data.GetFormats();
                 e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void listViewCustom1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count == 0)
+                return;
+
+            var item = listViewCustom1.SelectedItems[0];
+            if (e.Button == MouseButtons.Right)
+            {
+                
             }
         }
     }
