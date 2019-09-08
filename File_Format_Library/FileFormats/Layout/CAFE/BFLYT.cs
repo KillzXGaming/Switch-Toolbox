@@ -921,10 +921,13 @@ namespace LayoutBXLYT.Cafe
             [TypeConverter(typeof(ExpandableObjectConverter))]
             public WindowContent Content { get; set; }
 
-            public List<WindowFrame> WindowFrames = new List<WindowFrame>();
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public List<WindowFrame> WindowFrames { get; set; }
 
             public WND1(FileReader reader, Header header) : base(reader)
             {
+                WindowFrames = new List<WindowFrame>();
+
                 long pos = reader.Position - 0x54;
 
                 StretchLeft = reader.ReadUInt16();
@@ -950,7 +953,7 @@ namespace LayoutBXLYT.Cafe
                 foreach (int offset in offsets)
                 {
                     reader.SeekBegin(pos + offset);
-                    WindowFrames.Add(new WindowFrame(reader));
+                    WindowFrames.Add(new WindowFrame(reader, header));
                 }
             }
 
@@ -1054,20 +1057,24 @@ namespace LayoutBXLYT.Cafe
 
             public class WindowFrame
             {
-                public ushort MaterialIndex;
-                public byte Flip;
+                public Material material { get; set; }
 
-                public WindowFrame(FileReader reader)
+                public ushort MaterialIndex;
+                public byte TextureFlip;
+
+                public WindowFrame(FileReader reader, Header header)
                 {
                     MaterialIndex = reader.ReadUInt16();
-                    Flip = reader.ReadByte();
+                    TextureFlip = reader.ReadByte();
                     reader.ReadByte(); //padding
+
+                    material = header.MaterialList.Materials[MaterialIndex];
                 }
 
                 public void Write(FileWriter writer)
                 {
                     writer.Write(MaterialIndex);
-                    writer.Write(Flip);
+                    writer.Write(TextureFlip);
                     writer.Write((byte)0);
                 }
             }

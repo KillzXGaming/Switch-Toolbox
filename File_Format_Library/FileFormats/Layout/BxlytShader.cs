@@ -118,7 +118,8 @@ namespace LayoutBXLYT
             for (int i = 0; i < activeAttributeCount; i++)
             {
                 int size = 0;
-                string name = GL.GetActiveAttrib(program, i, out size, out ActiveAttribType type);
+                ActiveAttribType type;
+                string name = GL.GetActiveAttrib(program, i, out size, out type);
                 int location = GL.GetAttribLocation(program, name);
 
                 // Overwrite existing vertex attributes.
@@ -134,7 +135,8 @@ namespace LayoutBXLYT
             for (int i = 0; i < activeAttributeCount; i++)
             {
                 int size = 0;
-                string name = GL.GetActiveUniform(program, i, out size, out ActiveUniformType type);
+                ActiveUniformType type;
+                string name = GL.GetActiveUniform(program, i, out size, out type);
                 int location = GL.GetUniformLocation(program, name);
 
                 // Overwrite existing vertex attributes.
