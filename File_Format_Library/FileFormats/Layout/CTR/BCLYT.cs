@@ -139,11 +139,6 @@ namespace LayoutBXLYT
         //https://github.com/FuryBaguette/SwitchLayoutEditor/tree/master/SwitchThemesCommon
         public class Header : BxlytHeader, IDisposable
         {
-            public string FileName
-            {
-                get { return FileInfo.FileName; }
-            }
-
             private const string Magic = "CLYT";
 
             private ushort ByteOrderMark;
@@ -168,6 +163,11 @@ namespace LayoutBXLYT
                 get { return TextureList.Textures; }
             }
 
+            public override List<string> Fonts
+            {
+                get { return FontList.Fonts; }
+            }
+
             public override Dictionary<string, STGenericTexture> GetTextures
             {
                 get { return ((BCLYT)FileInfo).GetTextures(); }
@@ -185,6 +185,17 @@ namespace LayoutBXLYT
                 List<GRP1> panes = new List<GRP1>();
                 GetGroupChildren(panes, (GRP1)RootGroup);
                 return panes;
+            }
+
+            public override List<BxlytMaterial> GetMaterials()
+            {
+                List<BxlytMaterial> materials = new List<BxlytMaterial>();
+                if (MaterialList != null && MaterialList.Materials != null)
+                {
+                    for (int i = 0; i < MaterialList.Materials.Count; i++)
+                        materials.Add(MaterialList.Materials[i]);
+                }
+                return materials;
             }
 
             private void GetPaneChildren(List<PAN1> panes, PAN1 root)
@@ -584,12 +595,12 @@ namespace LayoutBXLYT
 
             public GRP1(FileReader reader, Header header)
             {
-                Name = reader.ReadString(0x10).Replace("\0", string.Empty);
+                Name = reader.ReadString(0x10, true);
                 ushort numNodes = reader.ReadUInt16();
                 reader.ReadUInt16();//padding
 
                 for (int i = 0; i < numNodes; i++)
-                    Panes.Add(reader.ReadString(0x10));
+                    Panes.Add(reader.ReadString(0x10, true));
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -800,7 +811,7 @@ namespace LayoutBXLYT
                 Origin = reader.ReadByte();
                 Alpha = reader.ReadByte();
                 PaneMagFlags = reader.ReadByte();
-                Name = reader.ReadString(0x18).Replace("\0", string.Empty);
+                Name = reader.ReadString(0x18, true);
                 Translate = reader.ReadVec3SY();
                 Rotate = reader.ReadVec3SY();
                 Scale = reader.ReadVec2SY();
@@ -870,10 +881,8 @@ namespace LayoutBXLYT
             }
         }
 
-        public class Material
+        public class Material : BxlytMaterial
         {
-            public string Name { get; set; }
-
             public STColor8 TevColor { get; set; }
             public STColor8[] TevConstantColors { get; set; }
 
@@ -881,7 +890,6 @@ namespace LayoutBXLYT
             public List<TextureTransform> TextureTransforms { get; set; }
 
             private uint flags;
-            private int unknown;
 
             private BCLYT.Header ParentLayout;
             public string GetTexture(int index)
@@ -905,7 +913,7 @@ namespace LayoutBXLYT
                 TextureMaps = new List<TextureRef>();
                 TextureTransforms = new List<TextureTransform>();
 
-                Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
+                Name = reader.ReadString(0x1C, true);
                 TevColor = reader.ReadColor8RGBA();
                 TevConstantColors = reader.ReadColor8sRGBA(8);
                 flags = reader.ReadUInt32();

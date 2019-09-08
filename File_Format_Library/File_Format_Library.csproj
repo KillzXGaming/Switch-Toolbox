@@ -294,6 +294,7 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
+    <Compile Include="FileFormats\Layout\BxlytShader.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\AlphaCompare.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\BlendMode.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\FontShadowParameter.cs" />
@@ -330,7 +331,7 @@
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
-    <Compile Include="GUI\BFLYT\BflytShader.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\BflytShader.cs" />
     <Compile Include="GUI\BFLYT\FileSelector.cs">
       <SubType>Form</SubType>
     </Compile>

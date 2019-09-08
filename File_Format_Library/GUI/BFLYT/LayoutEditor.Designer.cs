@@ -30,8 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutEditor));
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.backColorDisplay = new System.Windows.Forms.PictureBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.debugShading = new Toolbox.Library.Forms.STComboBox();
             this.viewportBackColorCB = new Toolbox.Library.Forms.STComboBox();
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolstripOrthoBtn = new System.Windows.Forms.ToolStripButton();
             this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,14 +48,9 @@
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugShading = new Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
-            this.backColorDisplay = new System.Windows.Forms.PictureBox();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolstripOrthoBtn = new System.Windows.Forms.ToolStripButton();
+            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.SuspendLayout();
             // 
             // dockPanel1
@@ -61,6 +61,37 @@
             this.dockPanel1.Size = new System.Drawing.Size(549, 349);
             this.dockPanel1.TabIndex = 6;
             this.dockPanel1.ActiveDocumentChanged += new System.EventHandler(this.dockPanel1_ActiveDocumentChanged);
+            // 
+            // backColorDisplay
+            // 
+            this.backColorDisplay.Location = new System.Drawing.Point(253, 25);
+            this.backColorDisplay.Name = "backColorDisplay";
+            this.backColorDisplay.Size = new System.Drawing.Size(21, 21);
+            this.backColorDisplay.TabIndex = 10;
+            this.backColorDisplay.TabStop = false;
+            this.backColorDisplay.Click += new System.EventHandler(this.backColorDisplay_Click);
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(301, 28);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(84, 13);
+            this.stLabel1.TabIndex = 14;
+            this.stLabel1.Text = "Debug Shading:";
+            // 
+            // debugShading
+            // 
+            this.debugShading.BorderColor = System.Drawing.Color.Empty;
+            this.debugShading.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.debugShading.ButtonColor = System.Drawing.Color.Empty;
+            this.debugShading.FormattingEnabled = true;
+            this.debugShading.IsReadOnly = false;
+            this.debugShading.Location = new System.Drawing.Point(391, 25);
+            this.debugShading.Name = "debugShading";
+            this.debugShading.Size = new System.Drawing.Size(146, 21);
+            this.debugShading.TabIndex = 13;
+            this.debugShading.SelectedIndexChanged += new System.EventHandler(this.debugShading_SelectedIndexChanged);
             // 
             // viewportBackColorCB
             // 
@@ -86,6 +117,26 @@
             this.stToolStrip1.Size = new System.Drawing.Size(549, 25);
             this.stToolStrip1.TabIndex = 3;
             this.stToolStrip1.Text = "stToolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolstripOrthoBtn
+            // 
+            this.toolstripOrthoBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolstripOrthoBtn.Image = global::FirstPlugin.Properties.Resources.OrthoView;
+            this.toolstripOrthoBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolstripOrthoBtn.Name = "toolstripOrthoBtn";
+            this.toolstripOrthoBtn.Size = new System.Drawing.Size(23, 22);
+            this.toolstripOrthoBtn.Text = "Toggle Orthographic";
+            this.toolstripOrthoBtn.Click += new System.EventHandler(this.toolstripOrthoBtn_Click);
             // 
             // stMenuStrip1
             // 
@@ -113,28 +164,28 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // clearWorkspaceToolStripMenuItem
             // 
             this.clearWorkspaceToolStripMenuItem.Name = "clearWorkspaceToolStripMenuItem";
-            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.clearWorkspaceToolStripMenuItem.Text = "Clear Files";
             this.clearWorkspaceToolStripMenuItem.Click += new System.EventHandler(this.clearWorkspaceToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem1
             // 
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem1.Text = "Save";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save As";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -176,57 +227,6 @@
             this.orthographicViewToolStripMenuItem.Text = "Orthographic View";
             this.orthographicViewToolStripMenuItem.Click += new System.EventHandler(this.orthographicViewToolStripMenuItem_Click);
             // 
-            // debugShading
-            // 
-            this.debugShading.BorderColor = System.Drawing.Color.Empty;
-            this.debugShading.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.debugShading.ButtonColor = System.Drawing.Color.Empty;
-            this.debugShading.FormattingEnabled = true;
-            this.debugShading.IsReadOnly = false;
-            this.debugShading.Location = new System.Drawing.Point(391, 25);
-            this.debugShading.Name = "debugShading";
-            this.debugShading.Size = new System.Drawing.Size(146, 21);
-            this.debugShading.TabIndex = 13;
-            this.debugShading.SelectedIndexChanged += new System.EventHandler(this.debugShading_SelectedIndexChanged);
-            // 
-            // stLabel1
-            // 
-            this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(301, 28);
-            this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(84, 13);
-            this.stLabel1.TabIndex = 14;
-            this.stLabel1.Text = "Debug Shading:";
-            // 
-            // backColorDisplay
-            // 
-            this.backColorDisplay.Location = new System.Drawing.Point(253, 25);
-            this.backColorDisplay.Name = "backColorDisplay";
-            this.backColorDisplay.Size = new System.Drawing.Size(21, 21);
-            this.backColorDisplay.TabIndex = 10;
-            this.backColorDisplay.TabStop = false;
-            this.backColorDisplay.Click += new System.EventHandler(this.backColorDisplay_Click);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolstripOrthoBtn
-            // 
-            this.toolstripOrthoBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolstripOrthoBtn.Image = global::FirstPlugin.Properties.Resources.OrthoView;
-            this.toolstripOrthoBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolstripOrthoBtn.Name = "toolstripOrthoBtn";
-            this.toolstripOrthoBtn.Size = new System.Drawing.Size(23, 22);
-            this.toolstripOrthoBtn.Text = "Toggle Orthographic";
-            this.toolstripOrthoBtn.Click += new System.EventHandler(this.toolstripOrthoBtn_Click);
-            // 
             // LayoutEditor
             // 
             this.AllowDrop = true;
@@ -246,11 +246,11 @@
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LayoutEditor_DragEnter);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LayoutEditor_KeyDown);
             this.ParentChanged += new System.EventHandler(this.LayoutEditor_ParentChanged);
+            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).EndInit();
             this.stToolStrip1.ResumeLayout(false);
             this.stToolStrip1.PerformLayout();
             this.stMenuStrip1.ResumeLayout(false);
             this.stMenuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

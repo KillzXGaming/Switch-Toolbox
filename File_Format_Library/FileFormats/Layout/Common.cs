@@ -44,7 +44,7 @@ namespace LayoutBXLYT
         [DisplayName("Width"), CategoryAttribute("Pane")]
         public float Width { get; set; }
 
-        [DisplayName("Width"), CategoryAttribute("Pane")]
+        [DisplayName("Height"), CategoryAttribute("Pane")]
         public float Height { get; set; }
 
         [DisplayName("Origin X"), CategoryAttribute("Origin")]
@@ -80,6 +80,8 @@ namespace LayoutBXLYT
         }
 
         private CustomRectangle rectangle;
+
+        [Browsable(false)]
         public CustomRectangle Rectangle
         {
             get
@@ -167,9 +169,9 @@ namespace LayoutBXLYT
             }
 
             if (originY == OriginY.Top)
-                bottom = Height;
+                bottom = -Height;
             else if (originY == OriginY.Bottom)
-                top = -Height;
+                top = Height;
             else //To center
             {
                 top = -Height / 2;
@@ -352,14 +354,18 @@ namespace LayoutBXLYT
     {
         [DisplayName("Name"), CategoryAttribute("General")]
         public virtual string Name { get; set; }
+
+        [Browsable(false)]
+        public virtual BxlytShader Shader { get; set; }
     }
 
     public class SectionCommon 
     {
+        [Browsable(false)]
         public virtual string Signature { get; }
-        public uint SectionSize { get; set; }
-        public long StartPosition { get; set; }
 
+        internal uint SectionSize { get; set; }
+        internal long StartPosition { get; set; }
         internal byte[] Data { get; set; }
 
         public SectionCommon()

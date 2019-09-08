@@ -57,7 +57,7 @@ namespace Toolbox.Library
             byte[] compSel = new byte[4] {0,1,2,3 };
 
             if (format == TEX_FORMAT.L8 || format == TEX_FORMAT.LA8)
-                compSel = new byte[4] { 0, 0, 0, 1 };
+                compSel = new byte[4] { 2, 2, 2, 3 };
 
 
             for (int Y = 0; Y < height; Y++)
@@ -74,9 +74,9 @@ namespace Toolbox.Library
                     byte[] comp = GetComponentsFromPixel(format, pixel);
 
                     output[outPos + 3] = comp[compSel[3]];
-                    output[outPos + 2] = comp[compSel[0]];
+                    output[outPos + 2] = comp[compSel[2]];
                     output[outPos + 1] = comp[compSel[1]];
-                    output[outPos + 0] = comp[compSel[2]];
+                    output[outPos + 0] = comp[compSel[0]];
                 }
             }
 

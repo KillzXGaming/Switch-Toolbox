@@ -107,6 +107,7 @@ namespace Toolbox.Library.Rendering
         }
 
         private bool UseMipmaps = false;
+        private bool UseOpenGLDecoder = true;
         public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0, bool LoadArrayLevels = false)
         {
             if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
@@ -161,7 +162,46 @@ namespace Toolbox.Library.Rendering
                 TextureMagFilter = TextureMagFilter.Linear;
             }
 
-            switch (GenericTexture.Format)
+            //Force RGBA and use ST for decoding for weird width/heights
+            //Open GL decoder has issues with certain width/heights
+
+            Console.WriteLine($"width pow {width} {IsPow2(width)}");
+            Console.WriteLine($"height pow {height} {IsPow2(height)}");
+
+            if (!IsPow2(width) || !IsPow2(height))
+                UseOpenGLDecoder = false;
+
+            pixelInternalFormat = PixelInternalFormat.Rgba;
+            pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+
+            if (UseOpenGLDecoder)
+                  SetPixelFormats(GenericTexture.Format);
+ 
+            GLInitialized = true;
+            for (int i = 0; i < Surfaces.Count; i++)
+            {
+                for (int MipLevel = 0; MipLevel < Surfaces[i].mipmaps.Count; MipLevel++)
+                {
+                    uint width = Math.Max(1, GenericTexture.Width >> MipLevel);
+                    uint height = Math.Max(1, GenericTexture.Height >> MipLevel);
+
+                    Surfaces[i].mipmaps[MipLevel] = DecodeWithoutOpenGLDecoder(Surfaces[i].mipmaps[MipLevel], width, height, GenericTexture);
+                }
+            }
+
+            TexID = GenerateOpenGLTexture(this, Surfaces);
+
+            Surfaces.Clear();
+        }
+
+        static bool IsPow2(int Value)
+        {
+            return Value != 0 && (Value & (Value - 1)) == 0;
+        }
+
+        private void SetPixelFormats(TEX_FORMAT Format)
+        {
+            switch (Format)
             {
                 case TEX_FORMAT.BC1_UNORM:
                     pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
@@ -231,25 +271,23 @@ namespace Toolbox.Library.Rendering
                     }
                     break;
             }
-            GLInitialized = true;
-            for (int i = 0; i < Surfaces.Count; i++)
-            {
-                for (int MipLevel = 0; MipLevel < Surfaces[i].mipmaps.Count; MipLevel++)
-                {
-                    uint width = Math.Max(1, GenericTexture.Width >> MipLevel);
-                    uint height = Math.Max(1, GenericTexture.Height >> MipLevel);
-
-                    Surfaces[i].mipmaps[MipLevel] = DecodeWithoutOpenGLDecoder(Surfaces[i].mipmaps[MipLevel], width, height, GenericTexture);
-                }
-            }
-
-            TexID = GenerateOpenGLTexture(this, Surfaces);
-
-            Surfaces.Clear();
         }
 
         private byte[] DecodeWithoutOpenGLDecoder(byte[] ImageData, uint width, uint height, STGenericTexture GenericTexture)
         {
+            if (!UseOpenGLDecoder)
+            {
+                return STGenericTexture.ConvertBgraToRgba(
+                     STGenericTexture.DecodeBlock(ImageData,
+                 width,
+                 height,
+                 GenericTexture.Format,
+                 new byte[0],
+                 GenericTexture.Parameters,
+                 PALETTE_FORMAT.None,
+                 GenericTexture.PlatformSwizzle));
+            }
+
             switch (GenericTexture.Format)
             {
                 case TEX_FORMAT.BC1_UNORM:

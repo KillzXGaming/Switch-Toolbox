@@ -193,11 +193,11 @@ namespace LayoutBXLYT.Cafe
         public Dictionary<string, STGenericTexture> GetTextures()
         {
             BFLIM test = new BFLIM();
-
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
-            if (IFileInfo.ArchiveParent != null)
+
+            foreach (var archive in PluginRuntime.SarcArchives)
             {
-                foreach (var file in IFileInfo.ArchiveParent.Files)
+                foreach (var file in archive.Files)
                 {
                     if (Utils.GetExtension(file.FileName) == ".bntx")
                     {
@@ -222,7 +222,14 @@ namespace LayoutBXLYT.Cafe
 
         public void Unload()
         {
-
+            if (header != null)
+            {
+                foreach (var mat in header.GetMaterials())
+                {
+                    if (mat.Shader != null)
+                        mat.Shader.Dispose();
+                }
+            }
         }
 
         public void Save(System.IO.Stream stream) {
@@ -830,6 +837,11 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(ShadowForeColor.ToBytes());
                 writer.Write(ShadowBackColor.ToBytes());
                 writer.Write(ShadowItalic);
+                if (header.VersionMajor == 9)
+                {
+                    writer.Write(0);
+                    writer.Write(0);
+                }
 
                 if (Text != null)
                 {
@@ -886,6 +898,7 @@ namespace LayoutBXLYT.Cafe
             private byte _flag;
 
 
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             public WindowContent Content { get; set; }
 
             public List<WindowFrame> WindowFrames = new List<WindowFrame>();
@@ -909,7 +922,7 @@ namespace LayoutBXLYT.Cafe
                 uint frameOffsetTbl = reader.ReadUInt32();
 
                 reader.SeekBegin(pos + contentOffset);
-                Content = new WindowContent(reader);
+                Content = new WindowContent(reader, header);
 
                 reader.SeekBegin(pos + frameOffsetTbl);
 
@@ -961,21 +974,31 @@ namespace LayoutBXLYT.Cafe
 
             public class WindowContent
             {
-                public STColor8 TopLeftColor { get; set; }
-                public STColor8 TopRightColor { get; set; }
-                public STColor8 BottomLeftColor { get; set; }
-                public STColor8 BottomRightColor { get; set; }
+                private Header LayoutFile;
+
+                public STColor8 ColorTopLeft { get; set; }
+                public STColor8 ColorTopRight { get; set; }
+                public STColor8 ColorBottomLeft { get; set; }
+                public STColor8 ColorBottomRight { get; set; }
 
                 public ushort MaterialIndex { get; set; }
 
                 public List<TexCoord> TexCoords = new List<TexCoord>();
 
-                public WindowContent(FileReader reader)
+                [TypeConverter(typeof(ExpandableObjectConverter))]
+                public Material Material
                 {
-                    TopLeftColor = reader.ReadColor8RGBA();
-                    TopRightColor = reader.ReadColor8RGBA();
-                    BottomLeftColor = reader.ReadColor8RGBA();
-                    BottomRightColor = reader.ReadColor8RGBA();
+                    get { return LayoutFile.MaterialList.Materials[MaterialIndex]; }
+                }
+
+                public WindowContent(FileReader reader, Header header)
+                {
+                    LayoutFile = header;
+
+                    ColorTopLeft = reader.ReadColor8RGBA();
+                    ColorTopRight = reader.ReadColor8RGBA();
+                    ColorBottomLeft = reader.ReadColor8RGBA();
+                    ColorBottomRight = reader.ReadColor8RGBA();
                     MaterialIndex = reader.ReadUInt16();
                     byte UVCount = reader.ReadByte();
                     reader.ReadByte(); //padding
@@ -992,10 +1015,10 @@ namespace LayoutBXLYT.Cafe
 
                 public void Write(FileWriter writer)
                 {
-                    writer.Write(TopLeftColor);
-                    writer.Write(TopRightColor);
-                    writer.Write(BottomLeftColor);
-                    writer.Write(BottomRightColor);
+                    writer.Write(ColorTopLeft);
+                    writer.Write(ColorTopRight);
+                    writer.Write(ColorBottomLeft);
+                    writer.Write(ColorBottomRight);
                     writer.Write(MaterialIndex);
                     writer.Write((byte)TexCoords.Count);
                     writer.Write((byte)0);
@@ -1094,18 +1117,18 @@ namespace LayoutBXLYT.Cafe
                 ushort numNodes = 0;
                 if (header.VersionMajor >= 5)
                 {
-                    Name = reader.ReadString(34).Replace("\0", string.Empty);
+                    Name = reader.ReadString(34, true);
                     numNodes = reader.ReadUInt16();
                 }
                 else
                 {
-                    Name = reader.ReadString(24).Replace("\0", string.Empty);
+                    Name = reader.ReadString(24, true);;
                     numNodes = reader.ReadUInt16();
                     reader.Seek(2); //padding
                 }
 
                 for (int i = 0; i < numNodes; i++)
-                    Panes.Add(reader.ReadString(24).Replace("\0", string.Empty));
+                    Panes.Add(reader.ReadString(24, true));
             }
 
             public override void Write(FileWriter writer, BxlytHeader header)
@@ -1183,10 +1206,12 @@ namespace LayoutBXLYT.Cafe
             {
                 var fileFormat = layoutFile.FileInfo;
 
+                Console.WriteLine("Searching parts");
+
                 //File is outside an archive so check the contents it is in
-                if (File.Exists(fileFormat.FileName))
+                if (File.Exists(fileFormat.FilePath))
                 {
-                    string folder = Path.GetDirectoryName(fileFormat.FileName);
+                    string folder = Path.GetDirectoryName(fileFormat.FilePath);
                     foreach (var file in Directory.GetFiles(folder))
                     {
                         if (file.Contains(LayoutFile))
@@ -1201,11 +1226,15 @@ namespace LayoutBXLYT.Cafe
                         }
                     }
                 }
-                else if (fileFormat.IFileInfo.ArchiveParent != null)
+
+                foreach (var archive in PluginRuntime.SarcArchives)
                 {
+                    Console.WriteLine("Searching archive! " + archive.FileName);
+
                     BFLYT bflyt = null;
-                    SearchArchive(fileFormat.IFileInfo.ArchiveParent, ref bflyt);
-                    return bflyt;
+                    SearchArchive(archive, ref bflyt);
+                    if (bflyt != null)
+                        return bflyt;
                 }
 
                 return null;
@@ -1216,8 +1245,11 @@ namespace LayoutBXLYT.Cafe
                 layoutFile = null;
 
                 foreach (var file in archiveFile.Files)
+                {
                     if (file.FileName.Contains(LayoutFile))
                     {
+                        Console.WriteLine("Part found! " + file.FileName);
+
                         var openedFile = file.OpenFile();
                         if (openedFile is IArchiveFile)
                             SearchArchive((IArchiveFile)openedFile, ref layoutFile);
@@ -1229,6 +1261,7 @@ namespace LayoutBXLYT.Cafe
                             return;
                         }
                     }
+                }
             }
 
             private Header layoutFile;
@@ -1279,7 +1312,7 @@ namespace LayoutBXLYT.Cafe
 
             public PartProperty(FileReader reader, Header header, long StartPosition)
             {
-                Name = reader.ReadString(0x18).Replace("\0", string.Empty);
+                Name = reader.ReadString(0x18, true);
                 UsageFlag = reader.ReadByte();
                 BasicUsageFlag = reader.ReadByte();
                 MaterialUsageFlag = reader.ReadByte();
@@ -1679,8 +1712,8 @@ namespace LayoutBXLYT.Cafe
                 origin = reader.ReadByte();
                 Alpha = reader.ReadByte();
                 PaneMagFlags = reader.ReadByte();
-                Name = reader.ReadString(0x18).Replace("\0", string.Empty);
-                UserDataInfo = reader.ReadString(0x8).Replace("\0", string.Empty);
+                Name = reader.ReadString(0x18, true);
+                UserDataInfo = reader.ReadString(0x8, true);
                 Translate = reader.ReadVec3SY();
                 Rotate = reader.ReadVec3SY();
                 Scale = reader.ReadVec2SY();
@@ -1832,7 +1865,7 @@ namespace LayoutBXLYT.Cafe
             {
                 ParentLayout = header;
 
-                Name = reader.ReadString(0x1C).Replace("\0", string.Empty);
+                Name = reader.ReadString(0x1C, true);
                 Name = Name.Replace("\x01", string.Empty);
                 Name = Name.Replace("\x04", string.Empty);
 

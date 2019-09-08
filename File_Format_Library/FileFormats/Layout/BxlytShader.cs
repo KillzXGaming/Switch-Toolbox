@@ -1,0 +1,179 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text;
+using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL;
+using OpenTK;
+
+namespace LayoutBXLYT
+{
+    public class BxlytShader : IDisposable
+    {
+        public int program;
+        private int vertexShader;
+        private int fragmentShader;
+
+        private Dictionary<string, int> attributes = new Dictionary<string, int>();
+        private Dictionary<string, int> uniforms = new Dictionary<string, int>();
+        private int activeAttributeCount;
+
+        public void LoadShaders()
+        {
+            program = CompileShaders();
+        }
+
+        public void Enable()
+        {
+            GL.UseProgram(program);
+        }
+
+        public void Disable()
+        {
+            GL.UseProgram(0);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteProgram(program);
+        }
+
+        public virtual string VertexShader
+        {
+            get
+            {
+                StringBuilder vert = new StringBuilder();
+                vert.AppendLine("uniform mat4 globalTransform;");
+                vert.AppendLine("void main()");
+                vert.AppendLine("{");
+                {
+                    vert.AppendLine("gl_FrontColor = gl_Color;");
+                    vert.AppendLine("gl_Position = gl_ModelViewProjectionMatrix * globalTransform * gl_Vertex;");
+                }
+                vert.AppendLine("}");
+                return vert.ToString();
+            }
+        }
+        public virtual string FragmentShader
+        {
+            get
+            {
+                StringBuilder vert = new StringBuilder();
+                vert.AppendLine("void main()");
+                vert.AppendLine("{");
+                {
+                    vert.AppendLine("gl_FragColor = gl_Color;");
+                }
+                vert.AppendLine("}");
+                return vert.ToString();
+            }
+        }
+
+        public void SetVec4(string name, Vector4 value)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.Uniform4(uniforms[name], value);
+        }
+
+        public void SetVec2(string name, Vector2 value)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.Uniform2(uniforms[name], value);
+        }
+
+        public void SetFloat(string name, float value)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.Uniform1(uniforms[name], value);
+        }
+
+        public void SetInt(string name, int value)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.Uniform1(uniforms[name], value);
+        }
+
+        public void SetColor(string name, Color color)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.Uniform4(uniforms[name], color);
+        }
+
+        public void SetMatrix(string name, ref Matrix4 value)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.UniformMatrix4(uniforms[name], false, ref value);
+        }
+
+        public int this[string name]
+        {
+            get => uniforms[name];
+        }
+
+        private void LoadAttributes(int program)
+        {
+            attributes.Clear();
+
+            GL.GetProgram(program, GetProgramParameterName.ActiveAttributes, out activeAttributeCount);
+            for (int i = 0; i < activeAttributeCount; i++)
+            {
+                string name = GL.GetActiveAttrib(program, i, out int size, out ActiveAttribType type);
+                int location = GL.GetAttribLocation(program, name);
+
+                // Overwrite existing vertex attributes.
+                attributes[name] = location;
+            }
+        }
+
+        private void LoadUniorms(int program)
+        {
+            uniforms.Clear();
+
+            GL.GetProgram(program, GetProgramParameterName.ActiveUniforms, out activeAttributeCount);
+            for (int i = 0; i < activeAttributeCount; i++)
+            {
+                string name = GL.GetActiveUniform(program, i, out int size, out ActiveUniformType type);
+                int location = GL.GetUniformLocation(program, name);
+
+                // Overwrite existing vertex attributes.
+                uniforms[name] = location;
+            }
+        }
+
+        public void Compile()
+        {
+            program = CompileShaders();
+
+            LoadUniorms(program);
+            OnCompiled();
+        }
+
+        public virtual void OnCompiled() { }
+
+        private int CompileShaders()
+        {
+            vertexShader = GL.CreateShader(ShaderType.VertexShader);
+            GL.ShaderSource(vertexShader, VertexShader);
+            GL.CompileShader(vertexShader);
+
+            fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+            GL.ShaderSource(fragmentShader, FragmentShader);
+            GL.CompileShader(fragmentShader);
+
+            var program = GL.CreateProgram();
+            GL.AttachShader(program, vertexShader);
+            GL.AttachShader(program, fragmentShader);
+            GL.LinkProgram(program);
+
+            var info = GL.GetProgramInfoLog(program);
+            if (!string.IsNullOrWhiteSpace(info))
+                Console.WriteLine($"GL.LinkProgram had info log: {info}");
+
+            GL.DetachShader(program, vertexShader);
+            GL.DetachShader(program, fragmentShader);
+            GL.DeleteShader(vertexShader);
+            GL.DeleteShader(fragmentShader);
+            return program;
+        }
+    }
+}
