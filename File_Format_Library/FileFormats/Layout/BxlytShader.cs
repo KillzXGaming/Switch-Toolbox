@@ -107,7 +107,7 @@ namespace LayoutBXLYT
 
         public int this[string name]
         {
-            get => uniforms[name];
+            get { return uniforms[name]; }
         }
 
         private void LoadAttributes(int program)
@@ -117,7 +117,8 @@ namespace LayoutBXLYT
             GL.GetProgram(program, GetProgramParameterName.ActiveAttributes, out activeAttributeCount);
             for (int i = 0; i < activeAttributeCount; i++)
             {
-                string name = GL.GetActiveAttrib(program, i, out int size, out ActiveAttribType type);
+                int size = 0;
+                string name = GL.GetActiveAttrib(program, i, out size, out ActiveAttribType type);
                 int location = GL.GetAttribLocation(program, name);
 
                 // Overwrite existing vertex attributes.
@@ -132,7 +133,8 @@ namespace LayoutBXLYT
             GL.GetProgram(program, GetProgramParameterName.ActiveUniforms, out activeAttributeCount);
             for (int i = 0; i < activeAttributeCount; i++)
             {
-                string name = GL.GetActiveUniform(program, i, out int size, out ActiveUniformType type);
+                int size = 0;
+                string name = GL.GetActiveUniform(program, i, out size, out ActiveUniformType type);
                 int location = GL.GetUniformLocation(program, name);
 
                 // Overwrite existing vertex attributes.
