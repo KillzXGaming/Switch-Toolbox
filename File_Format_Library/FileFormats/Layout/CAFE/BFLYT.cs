@@ -886,6 +886,26 @@ namespace LayoutBXLYT.Cafe
 
             }
 
+            public bool UseOneMaterialForAll
+            {
+                get { return Convert.ToBoolean(_flag & 1); }
+            }
+
+            public bool UseVertexColorForAll
+            {
+                get { return Convert.ToBoolean((_flag >> 1) & 1); }
+            }
+
+            public bool WindowKind
+            {
+                get { return Convert.ToBoolean((_flag >> 2) & 3); }
+            }
+
+            public bool NotDrawnContent
+            {
+                get { return Convert.ToBoolean((_flag >> 4) & 1); }
+            }
+
             public ushort StretchLeft;
             public ushort StretchRight;
             public ushort StretchTop;

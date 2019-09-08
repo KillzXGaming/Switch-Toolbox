@@ -101,42 +101,8 @@ namespace LayoutBXLYT
         {
             get
             {
-                StringBuilder frag = new StringBuilder();
-                frag.AppendLine("uniform vec4 blackColor;");
-                frag.AppendLine("uniform vec4 whiteColor;");
-                frag.AppendLine("uniform int hasTexture0;");
-                frag.AppendLine("uniform int debugShading;");
-                frag.AppendLine("uniform int numTextureMaps;");
-                frag.AppendFormat("uniform sampler2D textures{0};\n", 0);
-                frag.AppendLine("uniform sampler2D uvTestPattern;");
-
-                frag.AppendLine("void main()");
-                frag.AppendLine("{");
-
-                frag.AppendLine("vec4 textureMap0 = vec4(1);");
-                frag.AppendLine("if (numTextureMaps > 0)");
-                frag.AppendLine("{");
-                frag.AppendLine("if (hasTexture0 == 1)");
-                frag.AppendLine("    textureMap0 = texture2D(textures0, gl_TexCoord[0].st);");
-                frag.AppendLine("}");
-                frag.AppendLine("if (debugShading == 0)");
-                frag.AppendLine("{");
-                frag.AppendLine("vec4 colorFrag = gl_Color * textureMap0;");
-                frag.AppendLine("vec4 colorBlend = colorFrag * whiteColor;");
-                frag.AppendLine("gl_FragColor = colorBlend;");
-
-                frag.AppendLine("}");
-                frag.AppendLine("else if (debugShading == 1)");
-                frag.AppendLine("    gl_FragColor = vec4(textureMap0.rgb, 1);");
-                frag.AppendLine("else if (debugShading == 2)");
-                frag.AppendLine("    gl_FragColor = whiteColor;");
-                frag.AppendLine("else if (debugShading == 3)");
-                frag.AppendLine("    gl_FragColor = blackColor;");
-                frag.AppendLine("else if (debugShading == 4)");
-                frag.AppendLine("    gl_FragColor = texture2D(uvTestPattern, gl_TexCoord[0].st);");
-                frag.AppendLine("}");
-
-                return frag.ToString();
+                string path = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Layout", "Bflyt.frag");
+                return System.IO.File.ReadAllText(path);
             }
         }
 
