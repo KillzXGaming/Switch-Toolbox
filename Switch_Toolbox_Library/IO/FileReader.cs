@@ -132,6 +132,11 @@ namespace Toolbox.Library.IO
             return Names;
         }
 
+        public string ReadString(int length, bool removeSpaces)
+        {
+            return ReadString(length).Replace("\0", string.Empty);
+        }
+
         public string ReadZeroTerminatedString(Encoding encoding = null)
         {
             return ReadString(BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);

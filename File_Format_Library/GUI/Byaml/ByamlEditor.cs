@@ -38,12 +38,33 @@ namespace FirstPlugin
         bool useMuunt = true;
 
         private TextEditor xmlEditor;
+
+        public ByamlEditor()
+        {
+            InitializeComponent();
+            Reload();
+        }
+
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
         {
             InitializeComponent();
+            Reload();
 
+            UpdateByaml(by, _pathSupport, _ver, defaultOrder, IsSaveDialog, byaml);
+        }
+
+        private void Reload()
+        {
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
+            treeView1.Nodes.Clear();
+        }
+
+        public void UpdateByaml(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
+        {
+            FileFormat = byaml;
+
+            treeView1.Nodes.Clear();
 
             stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
@@ -646,6 +667,9 @@ namespace FirstPlugin
                 byte[] TextData = Encoding.Unicode.GetBytes(xmlEditor.GetText());
                 StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
                 byml = XmlConverter.ToByml(t.ReadToEnd()).RootNode;
+
+                if (FileFormat != null)
+                    ((BYAML)FileFormat).UpdateByamlRoot(byml);
             }
             catch (Exception ex)
             {

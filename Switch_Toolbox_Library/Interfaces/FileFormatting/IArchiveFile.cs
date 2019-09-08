@@ -969,6 +969,7 @@ namespace Toolbox.Library
         private void OpenControlDialog(IFileFormat fileFormat)
         {
             UserControl form = GetEditorControl(fileFormat);
+            
             form.Text = (((IFileFormat)fileFormat).FileName);
 
             var parentForm = LibraryGUI.GetActiveForm();
@@ -1013,7 +1014,11 @@ namespace Toolbox.Library
                 if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                 {
                     System.Reflection.MethodInfo method = objectType.GetMethod("OpenForm");
-                    return (UserControl)method.Invoke(fileFormat, new object[0]);
+                    System.Reflection.MethodInfo methodFill = fileFormat.GetType().GetMethod("FillEditor");
+
+                    var control = (UserControl)method.Invoke(fileFormat, new object[0]);
+                    methodFill.Invoke(fileFormat, new object[1] { control });
+                    return control;
                 }
             }
             return null;

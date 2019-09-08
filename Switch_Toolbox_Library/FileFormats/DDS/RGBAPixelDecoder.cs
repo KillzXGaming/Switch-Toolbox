@@ -57,7 +57,7 @@ namespace Toolbox.Library
             byte[] compSel = new byte[4] {0,1,2,3 };
 
             if (format == TEX_FORMAT.L8 || format == TEX_FORMAT.LA8)
-                compSel = new byte[4] { 1, 1, 1, 3 };
+                compSel = new byte[4] { 0, 0, 0, 1 };
 
 
             for (int Y = 0; Y < height; Y++)

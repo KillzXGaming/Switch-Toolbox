@@ -9,6 +9,8 @@ namespace FirstPlugin
 {
     public class PluginRuntime
     {
+        public static List<SARC> SarcArchives = new List<SARC>();
+
         public class MaterialReplace
         {
             public static bool SwapShaderParams = true;

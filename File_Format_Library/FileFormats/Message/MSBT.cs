@@ -42,7 +42,6 @@ namespace FirstPlugin
         public MSBTEditor OpenForm()
         {
             MSBTEditor editor = new MSBTEditor();
-            editor.LoadMSBT(this);
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
             return editor;

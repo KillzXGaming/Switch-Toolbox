@@ -48,7 +48,6 @@ namespace FirstPlugin
             BffntEditor form = new BffntEditor();
             form.Text = "BFFNT Editor";
             form.Dock = DockStyle.Fill;
-            form.LoadFontFile(this);
             return form;
         }
 

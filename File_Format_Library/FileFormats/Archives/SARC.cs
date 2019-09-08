@@ -118,6 +118,8 @@ namespace FirstPlugin
             CanSave = true;
             IFileInfo.UseEditMenu = true;
 
+            PluginRuntime.SarcArchives.Add(this);
+
             var SzsFiles = SARCExt.SARC.UnpackRamN(stream);
             sarcData = new SarcData();
             sarcData.HashOnly = SzsFiles.HashOnly;
@@ -222,6 +224,9 @@ namespace FirstPlugin
                 file.FileData = null;
 
             files.Clear();
+
+            if (PluginRuntime.SarcArchives.Contains(this))
+                PluginRuntime.SarcArchives.Remove(this);
 
             GC.SuppressFinalize(this);
         }

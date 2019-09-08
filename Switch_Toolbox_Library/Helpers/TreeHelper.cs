@@ -122,8 +122,15 @@ namespace Toolbox.Library
                     {
                         filesExtracted.Add($"{path}");
 
-                        File.WriteAllBytes($"{path}",
+                        if (((ArchiveFileWrapper)file).ArchiveFileInfo.FileDataStream != null)
+                        {
+                            ((ArchiveFileWrapper)file).ArchiveFileInfo.FileDataStream.ExportToFile(path);
+                        }
+                        else
+                        {
+                            File.WriteAllBytes($"{path}",
                             ((ArchiveFileWrapper)file).ArchiveFileInfo.FileData);
+                        }
                     }
                 }
             }

@@ -162,15 +162,22 @@ namespace FirstPlugin
 
         public ByamlEditor OpenForm()
         {
-            ByamlEditor editor = new ByamlEditor(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, this);
+            ByamlEditor editor = new ByamlEditor();
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
             return editor;
         }
 
+        public void UpdateByamlRoot(dynamic root)
+        {
+            if (data != null)
+                data.RootNode = root;
+        }
+
         public void FillEditor(UserControl control)
         {
+            ((ByamlEditor)control).UpdateByaml(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, this);
         }
 
         public void Load(Stream stream)
