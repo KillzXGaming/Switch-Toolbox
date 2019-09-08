@@ -868,7 +868,9 @@ namespace Toolbox.Library
 
         private void ExportToFileLocAction(object sender, EventArgs args)
         {
-            string filePath = $"{Path.GetDirectoryName(((IFileFormat)ArchiveFile).FilePath)}/{Text}";
+            string path = FileManager.GetSourcePath(((IFileFormat)ArchiveFile));
+            string folder = Path.GetDirectoryName(path);
+            string filePath = Path.Combine(folder, Text);
 
             Cursor.Current = Cursors.WaitCursor;
             if (ArchiveFileInfo.FileDataStream != null)

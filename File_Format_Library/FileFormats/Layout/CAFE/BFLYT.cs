@@ -1233,23 +1233,30 @@ namespace LayoutBXLYT.Cafe
             {
                 var fileFormat = layoutFile.FileInfo;
 
-                Console.WriteLine("Searching parts");
-
+                string path = FileManager.GetSourcePath(fileFormat);
                 //File is outside an archive so check the contents it is in
-                if (File.Exists(fileFormat.FilePath))
+                if (File.Exists(path))
                 {
-                    string folder = Path.GetDirectoryName(fileFormat.FilePath);
+                    string folder = Path.GetDirectoryName(path);
                     foreach (var file in Directory.GetFiles(folder))
                     {
+                        Console.WriteLine("checking " + file.Contains(LayoutFile));
                         if (file.Contains(LayoutFile))
                         {
-                            var bflyt = STFileLoader.OpenFileFormat(file) as BFLYT;
-                            if (bflyt == null)
-                                continue;
-
-                            bflyt.IFileInfo = new IFileInfo();
-                            bflyt.IFileInfo.ArchiveParent = fileFormat.IFileInfo.ArchiveParent;
-                            return bflyt;
+                            var openedFile = STFileLoader.OpenFileFormat(file);
+                            if (openedFile is IArchiveFile)
+                            {
+                                var bflyt = new BFLYT();
+                                SearchArchive((IArchiveFile)openedFile, ref bflyt);
+                                if (bflyt != null)
+                                    return bflyt;
+                            }
+                            else if (openedFile is BFLYT)
+                            {
+                                openedFile.IFileInfo = new IFileInfo();
+                                openedFile.IFileInfo.ArchiveParent = fileFormat.IFileInfo.ArchiveParent;
+                                return (BFLYT)openedFile;
+                            }
                         }
                     }
                 }

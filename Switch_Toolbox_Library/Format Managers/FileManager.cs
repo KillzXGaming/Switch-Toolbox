@@ -13,6 +13,15 @@ namespace Toolbox.Library
 
         }
 
+        public static string GetSourcePath(IFileFormat fileFormat)
+        {
+            var info = fileFormat.IFileInfo;
+            if (info != null && info.ArchiveParent != null)
+                return GetSourcePath((IFileFormat)info.ArchiveParent);
+
+            return fileFormat.FilePath;
+        }
+
         public static IFileMenuExtension[] GetMenuExtensions()
         {
             //Add plugin and main application menu extensions
