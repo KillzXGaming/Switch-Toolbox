@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
@@ -12,6 +12,7 @@ using FirstPlugin.Forms;
 using Syroot.Maths;
 using SharpYaml.Serialization;
 using FirstPlugin;
+using static Toolbox.Library.IO.Bit;
 
 namespace LayoutBXLYT
 {
@@ -120,8 +121,9 @@ namespace LayoutBXLYT
                         file.FileFormat = tpl;
                         foreach (var tex in tpl.IconTextureList)
                         {
+                            //Only need the first texture
                             if (!textures.ContainsKey(tex.Text))
-                                textures.Add(tex.Text, tex);
+                                textures.Add(file.FileName, tex);
                         }
                     }
                 }
@@ -656,6 +658,12 @@ namespace LayoutBXLYT
                 return ParentLayout.TextureList.Textures[mat.TextureMaps[index].ID];
             }
 
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public Material Material
+            {
+                get { return ParentLayout.MaterialList.Materials[MaterialIndex]; }
+            }
+
             private BRLYT.Header ParentLayout;
 
             public PIC1() : base() {
@@ -720,7 +728,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public bool InfluenceAlpha
+            public override bool InfluenceAlpha
             {
                 get { return (_flags1 & 0x2) == 0x2; }
                 set
@@ -738,8 +746,6 @@ namespace LayoutBXLYT
             }
 
             public byte Origin { get; set; }
-
-            public byte Alpha { get; set; }
 
             public byte PartsScale { get; set; }
 
@@ -869,10 +875,8 @@ namespace LayoutBXLYT
 
         public class Material : BxlytMaterial
         {
-            public string Name { get; set; }
-
-            public STColor16 ForeColor { get; set; }
-            public STColor16 BackColor { get; set; }
+            public STColor16 WhiteColor { get; set; }
+            public STColor16 BlackColor { get; set; }
             public STColor16 ColorRegister3  { get; set; }
 
             public STColor8 TevColor1 { get; set; }
@@ -884,7 +888,6 @@ namespace LayoutBXLYT
             public List<TextureTransform> TextureTransforms { get; set; }
 
             private uint flags;
-            private int unknown;
 
             private BRLYT.Header ParentLayout;
             public string GetTexture(int index)
@@ -910,8 +913,8 @@ namespace LayoutBXLYT
 
                 Name = reader.ReadString(0x14, true);
 
-                ForeColor = reader.ReadColor16RGBA();
-                BackColor = reader.ReadColor16RGBA();
+                WhiteColor = reader.ReadColor16RGBA();
+                BlackColor = reader.ReadColor16RGBA();
                 ColorRegister3 = reader.ReadColor16RGBA();
                 TevColor1 = reader.ReadColor8RGBA();
                 TevColor2 = reader.ReadColor8RGBA();
@@ -919,10 +922,12 @@ namespace LayoutBXLYT
                 TevColor4 = reader.ReadColor8RGBA();
                 flags = reader.ReadUInt32();
 
-                uint texCount = Convert.ToUInt32(flags & 3);
-                uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
+                uint indSrtCount = ExtractBits(flags, 2, 17);
+                uint texCoordGenCount = ExtractBits(flags, 4, 20);
+                uint mtxCount = ExtractBits(flags, 4, 24);
+                uint texCount = ExtractBits(flags, 4, 28);
                 for (int i = 0; i < texCount; i++)
-                    TextureMaps.Add(new TextureRef(reader));
+                    TextureMaps.Add(new TextureRef(reader, header));
 
                 for (int i = 0; i < mtxCount; i++)
                     TextureTransforms.Add(new TextureTransform(reader));
@@ -966,35 +971,38 @@ namespace LayoutBXLYT
             }
         }
 
-        public class TextureRef
+        public class TextureRef : BxlytTextureRef
         {
             public short ID;
             byte flag1;
             byte flag2;
 
-            public WrapMode WrapModeU
+            public override WrapMode WrapModeU
             {
                 get { return (WrapMode)(flag1 & 0x3); }
             }
 
-            public WrapMode WrapModeV
+            public override WrapMode WrapModeV
             {
                 get { return (WrapMode)(flag2 & 0x3); }
             }
 
-            public FilterMode MinFilterMode
+            public override FilterMode MinFilterMode
             {
                 get { return (FilterMode)((flag1 >> 2) & 0x3); }
             }
 
-            public FilterMode MaxFilterMode
+            public override FilterMode MaxFilterMode
             {
                 get { return (FilterMode)((flag2 >> 2) & 0x3); }
             }
 
             public TextureRef() {}
 
-            public TextureRef(FileReader reader) {
+            public TextureRef(FileReader reader, Header header) {
+                if (header.Textures.Count > 0)
+                    Name = header.Textures[ID];
+
                 ID = reader.ReadInt16();
                 flag1 = reader.ReadByte();
                 flag2 = reader.ReadByte();
@@ -1005,19 +1013,6 @@ namespace LayoutBXLYT
                 writer.Write(ID);
                 writer.Write(flag1);
                 writer.Write(flag2);
-            }
-
-            public enum FilterMode
-            {
-                Near = 0,
-                Linear = 1
-            }
-
-            public enum WrapMode
-            {
-                Clamp = 0,
-                Repeat = 1,
-                Mirror = 2
             }
         }
 
@@ -1038,11 +1033,15 @@ namespace LayoutBXLYT
                 reader.Seek(2); //padding
 
                 long pos = reader.Position;
-
-                uint[] offsets = reader.ReadUInt32s(numFonts);
-                for (int i = 0; i < offsets.Length; i++)
+                for (int i = 0; i < numFonts; i++)
                 {
-                    reader.SeekBegin(offsets[i] + pos);
+                    uint offset = reader.ReadUInt32();
+                    reader.ReadUInt32();//padding
+
+                    using (reader.TemporarySeek(offset + pos, System.IO.SeekOrigin.Begin))
+                    {
+                        Fonts.Add(reader.ReadZeroTerminatedString());
+                    }
                 }
             }
 
@@ -1051,14 +1050,14 @@ namespace LayoutBXLYT
                 writer.Write((ushort)Fonts.Count);
                 writer.Seek(2);
 
-                //Fill empty spaces for offsets later
+                //Fill empty spaces for offsets later and also add padding
                 long pos = writer.Position;
-                writer.Write(new uint[Fonts.Count]);
+                writer.Write(new uint[Fonts.Count * 2]);
 
                 //Save offsets and strings
                 for (int i = 0; i < Fonts.Count; i++)
                 {
-                    writer.WriteUint32Offset(pos + (i * 4), pos);
+                    writer.WriteUint32Offset(pos + (i * 8), pos);
                     writer.WriteString(Fonts[i]);
                 }
             }
@@ -1081,12 +1080,14 @@ namespace LayoutBXLYT
                 reader.Seek(2); //padding
 
                 long pos = reader.Position;
-
-                uint[] offsets = reader.ReadUInt32s(numTextures);
-                for (int i = 0; i < offsets.Length; i++)
+                for (int i = 0; i < numTextures; i++)
                 {
-                    reader.SeekBegin(offsets[i] + pos);
-                    Textures.Add(reader.ReadZeroTerminatedString());
+                    uint offset = reader.ReadUInt32();
+                    reader.ReadUInt32();//padding
+
+                    using (reader.TemporarySeek(offset + pos, System.IO.SeekOrigin.Begin)) {
+                        Textures.Add(reader.ReadZeroTerminatedString());
+                    }
                 }
             }
 
@@ -1095,14 +1096,14 @@ namespace LayoutBXLYT
                 writer.Write((ushort)Textures.Count);
                 writer.Seek(2);
 
-                //Fill empty spaces for offsets later
+                //Fill empty spaces for offsets later and also add another for padding
                 long pos = writer.Position;
-                writer.Write(new uint[Textures.Count]);
+                writer.Write(new uint[Textures.Count * 2]);
 
                 //Save offsets and strings
                 for (int i = 0; i < Textures.Count; i++)
                 {
-                    writer.WriteUint32Offset(pos + (i * 4), pos);
+                    writer.WriteUint32Offset(pos + (i * 8), pos);
                     writer.WriteString(Textures[i]);
                 }
             }

@@ -191,6 +191,19 @@ namespace LayoutBXLYT
         }
     }
 
+    public enum FilterMode
+    {
+        Near = 0,
+        Linear = 1
+    }
+
+    public enum WrapMode
+    {
+        Clamp = 0,
+        Repeat = 1,
+        Mirror = 2
+    }
+
     public enum OriginX : byte
     {
         Center = 0,
@@ -208,6 +221,16 @@ namespace LayoutBXLYT
     public interface IUserDataContainer
     {
         UserData UserData { get; set; }
+    }
+
+    public class BxlytTextureRef
+    {
+        public string Name { get; set; }
+
+        public virtual WrapMode WrapModeU { get; set; }
+        public virtual WrapMode WrapModeV { get; set; }
+        public virtual FilterMode MinFilterMode { get; set; }
+        public virtual FilterMode MaxFilterMode { get; set; }
     }
 
     public class UserData : SectionCommon

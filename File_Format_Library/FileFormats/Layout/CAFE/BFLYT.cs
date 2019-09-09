@@ -1181,6 +1181,8 @@ namespace LayoutBXLYT.Cafe
         {
             public override string Signature { get; } = "prt1";
 
+            private bool hasSearchedParts = false;
+
             public PRT1() : base()
             {
 
@@ -1202,6 +1204,8 @@ namespace LayoutBXLYT.Cafe
 
             public BasePane GetExternalPane()
             {
+                if (hasSearchedParts) return null;
+
                 if (ExternalLayout == null)
                     ExternalLayout = SearchExternalFile();
 
@@ -1214,6 +1218,8 @@ namespace LayoutBXLYT.Cafe
             //Get textures if possible from the external parts file
             public void UpdateTextureData(Dictionary<string, STGenericTexture> textures)
             {
+                if (hasSearchedParts) return;
+
                 if (ExternalLayout == null)
                 {
                     ExternalLayout = SearchExternalFile();
@@ -1231,6 +1237,8 @@ namespace LayoutBXLYT.Cafe
 
             private BFLYT SearchExternalFile()
             {
+                hasSearchedParts = false;
+
                 var fileFormat = layoutFile.FileInfo;
 
                 string path = FileManager.GetSourcePath(fileFormat);
@@ -1240,13 +1248,12 @@ namespace LayoutBXLYT.Cafe
                     string folder = Path.GetDirectoryName(path);
                     foreach (var file in Directory.GetFiles(folder))
                     {
-                        Console.WriteLine("checking " + file.Contains(LayoutFile));
                         if (file.Contains(LayoutFile))
                         {
                             var openedFile = STFileLoader.OpenFileFormat(file);
                             if (openedFile is IArchiveFile)
                             {
-                                var bflyt = new BFLYT();
+                                BFLYT bflyt = null;
                                 SearchArchive((IArchiveFile)openedFile, ref bflyt);
                                 if (bflyt != null)
                                     return bflyt;
@@ -1280,15 +1287,21 @@ namespace LayoutBXLYT.Cafe
 
                 foreach (var file in archiveFile.Files)
                 {
-                    if (file.FileName.Contains(LayoutFile))
+                    if (file.FileName.Contains(".lyarc"))
                     {
-                        Console.WriteLine("Part found! " + file.FileName);
-
+                        var openedFile = file.OpenFile();
+                        if (openedFile is IArchiveFile)
+                            SearchArchive((IArchiveFile)openedFile, ref layoutFile);
+                    }
+                    else if (file.FileName.Contains(LayoutFile))
+                    {
                         var openedFile = file.OpenFile();
                         if (openedFile is IArchiveFile)
                             SearchArchive((IArchiveFile)openedFile, ref layoutFile);
                         else if (openedFile is BFLYT)
                         {
+                            Console.WriteLine("Part found! " + file.FileName);
+
                             layoutFile = openedFile as BFLYT;
                             layoutFile.IFileInfo = new IFileInfo();
                             layoutFile.IFileInfo.ArchiveParent = layoutFile.IFileInfo.ArchiveParent;

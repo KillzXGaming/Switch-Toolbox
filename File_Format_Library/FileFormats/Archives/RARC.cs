@@ -87,6 +87,8 @@ namespace FirstPlugin
             CanRenameFiles = true;
             CanReplaceFiles = true;
 
+            files.Clear();
+
             using (var reader = new FileReader(stream))
             {
                 _savedDirectories.Clear();
@@ -159,6 +161,7 @@ namespace FirstPlugin
                                 entry.FileData = reader.ReadBytes((int)entry.Size);
                             }
                             entry.FileName = entry.Name;
+                            files.Add(entry);
 
                             Directories[dir].AddNode(entry);
                         }

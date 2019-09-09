@@ -5,16 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
-using LayoutBXLYT.Cafe;
 using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
-    public class BflytShader : BxlytShader
+    public class BrlytShader : BxlytShader
     {
-        public BFLYT.Material material;
+        public BRLYT.Material material;
 
-        public BflytShader(BFLYT.Material mat) : base()
+        public BrlytShader(BRLYT.Material mat) : base()
         {
             material = mat;
             LoadShaders();
@@ -35,15 +34,15 @@ namespace LayoutBXLYT
 
         public void SetMaterials(Dictionary<string, STGenericTexture> textures)
         {
-            SetColor("whiteColor", material.WhiteColor.Color);
+            SetColor("whiteColor", Color.FromArgb(255, material.WhiteColor.Color));
             SetColor("blackColor", material.BlackColor.Color);
             SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
-            SetInt("numTextureMaps", material.TextureMaps.Length);
+            SetInt("numTextureMaps", material.TextureMaps.Count);
 
             BindTextureUniforms();
 
             string textureMap0 = "";
-            if (material.TextureMaps.Length > 0)
+            if (material.TextureMaps.Count > 0)
                 textureMap0 = material.GetTexture(0);
 
             if (textures.ContainsKey(textureMap0))
@@ -55,7 +54,7 @@ namespace LayoutBXLYT
                     SetInt("hasTexture0", 1);
             }
 
-            if (material.TextureTransforms.Length > 0)
+            if (material.TextureTransforms.Count > 0)
             {
                 var transform = material.TextureTransforms[0];
                 float shiftX = 0;
@@ -78,7 +77,7 @@ namespace LayoutBXLYT
             GL.Uniform1(GL.GetUniformLocation(program, "uvTestPattern"), 10);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
-            if (material.TextureMaps.Length > 0)
+            if (material.TextureMaps.Count > 0)
             {
                 var tex = material.TextureMaps[0];
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, BxlytToGL.ConvertTextureWrap(tex.WrapModeU));

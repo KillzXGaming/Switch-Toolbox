@@ -736,7 +736,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public bool InfluenceAlpha
+            public override bool InfluenceAlpha
             {
                 get { return (_flags1 & 0x2) == 0x2; }
                 set
@@ -749,8 +749,6 @@ namespace LayoutBXLYT
             }
 
             public byte Origin { get; set; }
-
-            public byte Alpha { get; set; }
 
             public byte PartsScale { get; set; }
 
@@ -921,7 +919,7 @@ namespace LayoutBXLYT
                 uint texCount = Convert.ToUInt32(flags & 3);
                 uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
                 for (int i = 0; i < texCount; i++)
-                    TextureMaps.Add(new TextureRef(reader));
+                    TextureMaps.Add(new TextureRef(reader, header));
 
                 for (int i = 0; i < mtxCount; i++)
                     TextureTransforms.Add(new TextureTransform(reader));
@@ -965,38 +963,41 @@ namespace LayoutBXLYT
             }
         }
 
-        public class TextureRef
+        public class TextureRef : BxlytTextureRef
         {
             public short ID;
             byte flag1;
             byte flag2;
 
-            public WrapMode WrapModeU
+            public override WrapMode WrapModeU
             {
                 get { return (WrapMode)(flag1 & 0x3); }
             }
 
-            public WrapMode WrapModeV
+            public override WrapMode WrapModeV
             {
                 get { return (WrapMode)(flag2 & 0x3); }
             }
 
-            public FilterMode MinFilterMode
+            public override FilterMode MinFilterMode
             {
                 get { return (FilterMode)((flag1 >> 2) & 0x3); }
             }
 
-            public FilterMode MaxFilterMode
+            public override FilterMode MaxFilterMode
             {
                 get { return (FilterMode)((flag2 >> 2) & 0x3); }
             }
 
             public TextureRef() {}
 
-            public TextureRef(FileReader reader) {
+            public TextureRef(FileReader reader, Header header) {
                 ID = reader.ReadInt16();
                 flag1 = reader.ReadByte();
                 flag2 = reader.ReadByte();
+
+                if (header.Textures.Count > 0)
+                    Name = header.Textures[ID];
             }
 
             public void Write(FileWriter writer)
@@ -1004,19 +1005,6 @@ namespace LayoutBXLYT
                 writer.Write(ID);
                 writer.Write(flag1);
                 writer.Write(flag2);
-            }
-
-            public enum FilterMode
-            {
-                Near = 0,
-                Linear = 1
-            }
-
-            public enum WrapMode
-            {
-                Clamp = 0,
-                Repeat = 1,
-                Mirror = 2
             }
         }
 

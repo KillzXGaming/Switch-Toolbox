@@ -295,6 +295,7 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
     <Compile Include="FileFormats\Layout\BxlytShader.cs" />
+    <Compile Include="FileFormats\Layout\BxlytToGL.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\AlphaCompare.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\BlendMode.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\FontShadowParameter.cs" />
@@ -306,9 +307,11 @@
     <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
+    <Compile Include="FileFormats\Layout\CTR\BrlytShader.cs" />
     <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
+    <Compile Include="FileFormats\Layout\Rev\BrlytShader.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
