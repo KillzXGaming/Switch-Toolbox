@@ -12,6 +12,7 @@ using System.ComponentModel;
 using Syroot.Maths;
 using SharpYaml.Serialization;
 using FirstPlugin;
+using static Toolbox.Library.IO.Bit;
 
 namespace LayoutBXLYT
 {
@@ -911,13 +912,13 @@ namespace LayoutBXLYT
                 TextureMaps = new List<TextureRef>();
                 TextureTransforms = new List<TextureTransform>();
 
-                Name = reader.ReadString(0x1C, true);
+                Name = reader.ReadString(0x14, true);
                 TevColor = reader.ReadColor8RGBA();
-                TevConstantColors = reader.ReadColor8sRGBA(8);
+                TevConstantColors = reader.ReadColor8sRGBA(0x6);
                 flags = reader.ReadUInt32();
 
-                uint texCount = Convert.ToUInt32(flags & 3);
-                uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
+                uint texCount = ExtractBits(flags, 2, 0);
+                uint mtxCount = ExtractBits(flags, 2, 2);
                 for (int i = 0; i < texCount; i++)
                     TextureMaps.Add(new TextureRef(reader, header));
 
