@@ -1,6 +1,7 @@
 ﻿using System;
 using Toolbox.Library.Forms;
 using Toolbox.Library;
+using System.Windows.Forms;
 
 namespace FirstPlugin.Forms
 {
@@ -35,6 +36,7 @@ namespace FirstPlugin.Forms
         public void LoadEmitter(EFTB.EMTR emitter)
         {
             colorEditor.Visible = false; // prevent editing unloaded color
+            while (stTabControl1.TabPages.Count > 1) stTabControl1.TabPages.RemoveAt(1);
             activeEmitter = emitter;
 
             color0ArrayEditor.LoadColorArray(emitter.Color0Array);
@@ -44,11 +46,97 @@ namespace FirstPlugin.Forms
             scaleArrayEditor.LoadColorArray(emitter.ScaleArray);
             constant0Panel.LoadColor(emitter.ConstantColor0);
             constant1Panel.LoadColor(emitter.ConstantColor1);
+            sizeUpDown.Value = (decimal)emitter.Radius;
+            blinkIntensity0UpDown.Value = (decimal)emitter.BlinkIntensity0;
+            blinkDuration0UpDown.Value = (decimal)emitter.BlinkDuration0;
+            blinkIntensity1UpDown.Value = (decimal)emitter.BlinkIntensity1;
+            blinkDuration1UpDown.Value = (decimal)emitter.BlinkDuration1;
+
+            foreach (var attribute in emitter.Attributes)
+            {
+                AddTab(attribute);
+            }
+
+            var unknownPanel = new FlowLayoutPanel();
+            unknownPanel.Dock = DockStyle.Fill;
+            unknownPanel.FlowDirection = FlowDirection.TopDown;
+            unknownPanel.WrapContents = false;
+            unknownPanel.AutoScroll = true;
+            unknownPanel.Controls.Add(CreateHexEditor(emitter.Unknown0, (object sender, byte[] data) => emitter.Unknown0 = data));
+            unknownPanel.Controls.Add(CreateHexEditor(emitter.Unknown1, (object sender, byte[] data) => emitter.Unknown1 = data));
+            unknownPanel.Controls.Add(CreateHexEditor(emitter.Unknown2, (object sender, byte[] data) => emitter.Unknown2 = data));
+            unknownPanel.Controls.Add(CreateHexEditor(emitter.Unknown3, (object sender, byte[] data) => emitter.Unknown3 = data));
+            unknownPanel.Controls.Add(CreateHexEditor(emitter.Unknown4, (object sender, byte[] data) => emitter.Unknown4 = data));
+            unknownPanel.Controls.Add(CreateHexEditor(emitter.Unknown5, (object sender, byte[] data) => emitter.Unknown5 = data));
+            var unknownTab = new TabPage("Unknown");
+            unknownTab.Controls.Add(unknownPanel);
+            stTabControl1.TabPages.Add(unknownTab);
 
             // TODO:
             // clamp edited time to surrounding keys
-            // select first color on load (or null selectedPanel on load) - prevent from editing previously unloaded stuff
-            // edit constant color
+        }
+
+        private HexEditor CreateHexEditor(byte[] data, EventHandler<byte[]> saveHandler)
+        {
+            var editor = new HexEditor();
+            editor.Width = 700;
+            editor.LoadData(data);
+            editor.SaveData += saveHandler;
+
+            return editor;
+        }
+
+        private void AddTab(EFTB.NodeBase node)
+        {
+            var tab = new TabPage(node.Signature);
+            if (node is EFTB.CADP)
+            {
+                tab.Controls.Add(CreateCADPEditor((EFTB.CADP)node));
+            }
+            else if (node.UnknownData != null && node.UnknownData.Length > 0)
+            {
+                var hexEditor = new HexEditor();
+                hexEditor.Dock = DockStyle.Fill;
+                hexEditor.LoadData(node.UnknownData);
+                tab.Controls.Add(hexEditor);
+            }
+            stTabControl1.TabPages.Add(tab);
+        }
+
+        private Control CreateCADPEditor(EFTB.CADP cadp)
+        {
+            var panel = new FlowLayoutPanel();
+            panel.Dock = DockStyle.Fill;
+            panel.FlowDirection = FlowDirection.TopDown;
+            var label = new Label();
+            label.Text = "Shape";
+            panel.Controls.Add(label);
+            foreach (EFTB.CADP.Shape flag in Enum.GetValues(typeof(EFTB.CADP.Shape)))
+            {
+                var checkbox = new CheckBox();
+                checkbox.Text = Enum.GetName(typeof(EFTB.CADP.Shape), flag);
+                checkbox.Checked = cadp.ShapeFlag.HasFlag(flag);
+                checkbox.CheckedChanged += (object sender, EventArgs e) =>
+                {
+                    if (checkbox.Checked)
+                    {
+                        cadp.ShapeFlag |= flag;
+                    }
+                    else
+                    {
+                        cadp.ShapeFlag &= ~flag;
+                    }
+                };
+                panel.Controls.Add(checkbox);
+            }
+            var hexEditor = new HexEditor();
+            hexEditor.Width = 700;
+            // hexEditor.Dock = DockStyle.Fill;
+            hexEditor.LoadData(cadp.UnknownData);
+            hexEditor.SaveData += (object sender, byte[] data) => cadp.UnknownData = data;
+            panel.Controls.Add(hexEditor);
+
+            return panel;
         }
 
         private void ColorArrayEditor_ColorSelected(object sender, EventArgs e)
@@ -110,6 +198,51 @@ namespace FirstPlugin.Forms
             if (sender == selectedColorArray)
             {
                 colorEditor.ShowTimeInput(selectedColorArray.ColorArray.Timed);
+            }
+        }
+
+        private void SizeUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            float value = (float)sizeUpDown.Value;
+            if (activeEmitter.Radius != value)
+            {
+                activeEmitter.Radius = value;
+            }
+        }
+
+        private void BlinkIntensity0UpDown_ValueChanged(object sender, EventArgs e)
+        {
+            float value = (float)blinkIntensity0UpDown.Value;
+            if (activeEmitter.BlinkIntensity0 != value)
+            {
+                activeEmitter.BlinkIntensity0 = value;
+            }
+        }
+
+        private void BlinkDuration0UpDown_ValueChanged(object sender, EventArgs e)
+        {
+            float value = (float)blinkDuration0UpDown.Value;
+            if (activeEmitter.BlinkDuration0 != value)
+            {
+                activeEmitter.BlinkDuration0 = value;
+            }
+        }
+
+        private void BlinkIntensity1UpDown_ValueChanged(object sender, EventArgs e)
+        {
+            float value = (float)blinkIntensity1UpDown.Value;
+            if (activeEmitter.BlinkIntensity1 != value)
+            {
+                activeEmitter.BlinkIntensity1 = value;
+            }
+        }
+
+        private void BlinkDuration1UpDown_ValueChanged(object sender, EventArgs e)
+        {
+            float value = (float)blinkDuration1UpDown.Value;
+            if (activeEmitter.BlinkDuration1 != value)
+            {
+                activeEmitter.BlinkDuration1 = value;
             }
         }
     }

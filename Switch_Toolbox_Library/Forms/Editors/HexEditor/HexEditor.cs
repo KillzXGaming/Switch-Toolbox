@@ -14,6 +14,7 @@ namespace Toolbox.Library.Forms
     public partial class HexEditor : STUserControl
     {
         FindOptions _findOptions = new FindOptions();
+        public event EventHandler<byte[]> SaveData;
 
         public HexEditor()
         {
@@ -25,6 +26,7 @@ namespace Toolbox.Library.Forms
             hexBox1.SelectionForeColor = FormThemes.BaseTheme.FormForeColor;
             fixedBytesToolStripMenuItem.Checked = true;
             hexBox1.UseFixedBytesPerLine = true;
+            hexBox1.ReadOnly = false;
         }
 
         public override void OnControlClosing()
@@ -78,6 +80,7 @@ namespace Toolbox.Library.Forms
 
             IByteProvider provider = new DynamicByteProvider(data);
             hexBox1.ByteProvider = provider;
+            provider.Changed += ByteProvider_Changed;
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
@@ -102,6 +105,21 @@ namespace Toolbox.Library.Forms
         private void fixedBytesToolStripMenuItem_Click(object sender, EventArgs e) {
             hexBox1.UseFixedBytesPerLine = fixedBytesToolStripMenuItem.Checked;
             hexBox1.Refresh();
+        }
+
+        private void ByteProvider_Changed(object sender, EventArgs e)
+        {
+            var provider = hexBox1.ByteProvider;
+            if (provider != null)
+            {
+                int length = (int)provider.Length;
+                var data = new byte[length];
+                for (var i = 0; i < length; ++i)
+                {
+                    data[i] = hexBox1.ByteProvider.ReadByte(i);
+                }
+                SaveData?.Invoke(this, data);
+            }
         }
     }
 }

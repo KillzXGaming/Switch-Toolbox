@@ -97,9 +97,10 @@ namespace FirstPlugin
         {
             public static readonly uint NULL_OFFSET = 0xffffffff;
             public string Signature => GetType().Name == typeof(NodeBase).Name ? Text : GetType().Name;
-            protected byte[] unknownHeader;
-            protected byte[] unknownData;
-            protected NodeBase[] attributes;
+            public byte[] UnknownHeader { get; protected set; }
+            public byte[] UnknownData { get; set; }
+            public List<NodeBase> Attributes { get; } = new List<NodeBase>();
+            public List<NodeBase> Children { get; } = new List<NodeBase>();
 
             public static NodeBase[] ReadNodes(FileReader reader, bool align = false)
             {
@@ -185,7 +186,7 @@ namespace FirstPlugin
 
             public override void OnClick(TreeView treeview)
             {
-                if (unknownData != null && unknownData.Length > 0)
+                if (UnknownData != null && UnknownData.Length > 0)
                 {
                     HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
                     if (editor == null)
@@ -195,7 +196,8 @@ namespace FirstPlugin
                     }
                     editor.Text = Text;
                     editor.Dock = DockStyle.Fill;
-                    editor.LoadData(unknownData);
+                    editor.LoadData(UnknownData);
+                    editor.SaveData += (object sender, byte[] data) => this.UnknownData = data;
                 }
             }
 
@@ -206,7 +208,7 @@ namespace FirstPlugin
                     // sometimes the header has more data
                     int extraHeaderSize = (int)(header.DataOffset - 0x20);
                     header.Extra = extraHeaderSize > 0 ? reader.ReadBytes(extraHeaderSize) : new byte[0];
-                    unknownHeader = header.Extra; // save it so it can be written verbatim
+                    UnknownHeader = header.Extra; // save it so it can be written verbatim
 
                     ReadBinaryData(reader, header);
                 }
@@ -215,7 +217,8 @@ namespace FirstPlugin
                 {
                     using (reader.TemporarySeek(header.AttributesOffset))
                     {
-                        attributes = ReadNodes(reader);
+                        var nodes = ReadNodes(reader);
+                        Attributes.AddRange(nodes);
                     }
                 }
 
@@ -223,7 +226,9 @@ namespace FirstPlugin
                 {
                     using (reader.TemporarySeek(header.ChildrenOffset))
                     {
-                        Nodes.AddRange(ReadNodes(reader));
+                        var nodes = ReadNodes(reader);
+                        Children.AddRange(nodes);
+                        Nodes.AddRange(nodes);
                     }
                 }
             }
@@ -235,7 +240,7 @@ namespace FirstPlugin
                    header.ChildrenOffset != NULL_OFFSET ? header.ChildrenOffset :
                    header.SiblingOffset != NULL_OFFSET ? header.SiblingOffset :
                    header.NodeSize);
-                unknownData = reader.ReadBytes((int)stop - (int)reader.Position);
+                UnknownData = reader.ReadBytes((int)stop - (int)reader.Position);
             }
 
             public virtual Offset[] WriteNode(FileWriter writer)
@@ -248,10 +253,10 @@ namespace FirstPlugin
                 WriteBinaryData(writer);
                 int dataEndOffset = (int)writer.Position - start;
 
-                if (attributes != null && attributes.Length > 0)
+                if (Attributes.Count > 0)
                 {
                     offsets[OffsetType.Attributes].Satisfy((int)writer.Position - start);
-                    WriteNodes(writer, attributes.GetEnumerator());
+                    WriteNodes(writer, Attributes.GetEnumerator());
                 }
                 else
                 {
@@ -259,10 +264,10 @@ namespace FirstPlugin
                 }
 
                 int childrenOffset = (int)writer.Position - start;
-                if (Nodes.Count > 0)
+                if (Children.Count > 0)
                 {
                     offsets[OffsetType.Children].Satisfy(childrenOffset);
-                    WriteNodes(writer, Nodes.GetEnumerator());
+                    WriteNodes(writer, Children.GetEnumerator());
                 }
                 else
                 {
@@ -279,16 +284,16 @@ namespace FirstPlugin
                 writer.WriteSignature(Signature);
                 var offsets = writer.ReserveOffset(5);
                 writer.Write(0);
-                writer.Write((ushort)Nodes.Count);
+                writer.Write((ushort)Children.Count);
                 writer.Write((ushort)1);
-                writer.Write(unknownHeader);
+                writer.Write(UnknownHeader);
 
                 return offsets;
             }
 
             protected virtual void WriteBinaryData(FileWriter writer)
             {
-                writer.Write(unknownData);
+                writer.Write(UnknownData);
             }
 
             protected virtual void WriteNodes(FileWriter writer, IEnumerator enumerator)
@@ -355,7 +360,7 @@ namespace FirstPlugin
         {
             protected override void ReadBinaryData(FileReader reader, Header header)
             {
-                unknownData = reader.ReadBytes((int)header.NodeSize);
+                UnknownData = reader.ReadBytes((int)header.NodeSize);
             }
 
             protected override int CalculateSize(int dataOffset, int dataEndOffset, int childrenOffset, int endOffset)
@@ -373,24 +378,25 @@ namespace FirstPlugin
         // Emitter SET
         public class ESET : NodeBase
         {
-            private byte[] unknown; // 16 bytes at the end, after the name. TODO I've seen variation at positions 0x03 and 0x0b
-
             protected override void ReadBinaryData(FileReader reader, Header header)
             {
                 ReadName(reader);
-                unknown = reader.ReadBytes(0x10);
+                UnknownData = reader.ReadBytes(0x10);
             }
 
             protected override void WriteBinaryData(FileWriter writer)
             {
                 WriteName(writer);
-                writer.Write(unknown);
+                // TODO first uint is total number of EMTR (including all descendents)
+                // 2nd is always 0, still don't know what 3 and 4 are (4 is almost always 0, sometimes 0x000000ff)
+                writer.Write(UnknownData);
             }
         }
 
         // EMiTteR
         public class EMTR : NodeBase
         {
+            public float Radius { get; set; }
             public STColorArray Color0Array { get; private set; }
             public STColorArray Color0AlphaArray { get; private set; } // TODO merge alpha into STColorArray type?
             public STColorArray Color1Array { get; private set; }
@@ -398,14 +404,19 @@ namespace FirstPlugin
             public STColorArray ScaleArray { get; private set; } // TODO what is this really?
             public STColor ConstantColor0 { get; private set; } // TODO merge this into STColorArray type if there's always either one or the other
             public STColor ConstantColor1 { get; private set; } // -- can choose whether to read/write const or anim based on key #
+            public float BlinkIntensity0 { get; set; }
+            public float BlinkDuration0 { get; set; }
+            public float BlinkIntensity1 { get; set; }
+            public float BlinkDuration1 { get; set; }
             public List<SamplerInfo> Samplers = new List<SamplerInfo>();
 
-            private uint unknownCount;
-            private byte[] unknown1;
-            private byte[] unknown2;
-            private byte[] unknown3;
-            private byte[] unknown4;
-            private byte[] unknown5;
+            public uint UnknownCount { get; set; }
+            public byte[] Unknown0 { get; set; }
+            public byte[] Unknown1 { get; set; }
+            public byte[] Unknown2 { get; set; }
+            public byte[] Unknown3 { get; set; }
+            public byte[] Unknown4 { get; set; }
+            public byte[] Unknown5 { get; set; }
 
             public override void OnClick(TreeView treeview)
             {
@@ -431,25 +442,36 @@ namespace FirstPlugin
                 Color1Array = new STColorArray(reader.ReadUInt32());
                 Color1AlphaArray = new STColorArray(reader.ReadUInt32(), true);
                 ScaleArray = new STColorArray(reader.ReadUInt32());
-                unknownCount = reader.ReadUInt32();
+                UnknownCount = reader.ReadUInt32();
+                reader.Seek(0x08); // 0-padding
 
-                unknown1 = reader.ReadBytes(0x370 - 0x28);
+                Unknown0 = reader.ReadBytes(0x60);
+
+                BlinkIntensity0 = reader.ReadSingle();
+                BlinkDuration0 = reader.ReadSingle();
+                BlinkIntensity1 = reader.ReadSingle();
+                BlinkDuration1 = reader.ReadSingle();
+
+                Unknown1 = reader.ReadBytes(0x2c0);
+
+                Radius = reader.ReadSingle();
+                reader.Seek(0x0c); // 0-padding
 
                 // random and animated color table
                 Color0Array.ReadColorData(reader);
                 Color0AlphaArray.ReadColorData(reader);
                 Color1Array.ReadColorData(reader);
                 Color1AlphaArray.ReadColorData(reader);
-                unknown2 = reader.ReadBytes(0x40);
+                Unknown2 = reader.ReadBytes(0x40);
                 ScaleArray.ReadColorData(reader);
 
-                unknown3 = reader.ReadBytes(0x328);
+                Unknown3 = reader.ReadBytes(0x328);
 
                 // constant colors
                 ConstantColor0 = new STColor(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 ConstantColor1 = new STColor(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-                unknown4 = reader.ReadBytes(0x30);
+                Unknown4 = reader.ReadBytes(0x30);
 
                 // samplers
                 for (int i = 0; i < 3; ++i)
@@ -459,7 +481,7 @@ namespace FirstPlugin
                     Samplers.Add(samplerInfo);
                 }
 
-                unknown5 = reader.ReadBytes(0x30);
+                Unknown5 = reader.ReadBytes(0x30);
             }
 
             protected override void WriteBinaryData(FileWriter writer)
@@ -471,15 +493,23 @@ namespace FirstPlugin
                 writer.Write(Color1Array.KeyCount);
                 writer.Write(Color1AlphaArray.KeyCount);
                 writer.Write(ScaleArray.KeyCount);
-                writer.Write(unknownCount);
-                writer.Write(unknown1);
+                writer.Write(UnknownCount);
+                writer.Seek(0x08); // 0-padding
+                writer.Write(Unknown0);
+                writer.Write(BlinkIntensity0);
+                writer.Write(BlinkDuration0);
+                writer.Write(BlinkIntensity1);
+                writer.Write(BlinkDuration1);
+                writer.Write(Unknown1);
+                writer.Write(Radius);
+                writer.Seek(0x0c); // 0-padding
                 Color0Array.WriteColorData(writer);
                 Color0AlphaArray.WriteColorData(writer);
                 Color1Array.WriteColorData(writer);
                 Color1AlphaArray.WriteColorData(writer);
-                writer.Write(unknown2);
+                writer.Write(Unknown2);
                 ScaleArray.WriteColorData(writer);
-                writer.Write(unknown3);
+                writer.Write(Unknown3);
                 writer.Write(ConstantColor0.R);
                 writer.Write(ConstantColor0.G);
                 writer.Write(ConstantColor0.B);
@@ -488,12 +518,12 @@ namespace FirstPlugin
                 writer.Write(ConstantColor1.G);
                 writer.Write(ConstantColor1.B);
                 writer.Write(ConstantColor1.A);
-                writer.Write(unknown4);
+                writer.Write(Unknown4);
                 foreach (var sampler in Samplers)
                 {
                     sampler.WriteSamplerData(writer);
                 }
-                writer.Write(unknown5);
+                writer.Write(Unknown5);
             }
 
             protected override int CalculateSize(int dataOffset, int dataEndOffset, int childrenOffset, int endOffset)
@@ -614,6 +644,36 @@ namespace FirstPlugin
                     writer.Write(TextureId);
                     writer.Write(unknown);
                 }
+            }
+        }
+
+        public class CADP : NodeBase
+        {
+            public Shape ShapeFlag { get; set; }
+
+            protected override void ReadBinaryData(FileReader reader, Header header)
+            {
+                ShapeFlag = (Shape)reader.ReadUInt32();
+                base.ReadBinaryData(reader, header);
+            }
+
+            protected override void WriteBinaryData(FileWriter writer)
+            {
+                writer.Write((int)ShapeFlag);
+                base.WriteBinaryData(writer);
+            }
+
+            [Flags]
+            public enum Shape
+            {
+                // Sphere = 0,
+                Rod = 1,
+                SidewaysRod = 2,
+                HollowRod = 4,
+                Cone = 8,
+                Square = 16,
+                Point = 32,
+                WidePoint = 64
             }
         }
 
