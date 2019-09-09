@@ -174,8 +174,8 @@ namespace LayoutBXLYT
                 top = Height;
             else //To center
             {
-                top = -Height / 2;
-                bottom = Height / 2;
+                top = Height / 2;
+                bottom = -Height / 2;
             }
 
             return new Vector4(left, right, top, bottom);
@@ -242,7 +242,7 @@ namespace LayoutBXLYT
             Entries = new List<UserDataEntry>();
         }
 
-        public override void Write(FileWriter writer, BxlytHeader header)
+        public override void Write(FileWriter writer, LayoutHeader header)
         {
         }
     }
@@ -298,7 +298,82 @@ namespace LayoutBXLYT
         Float,
     }
 
-    public class BxlytHeader : IDisposable
+    public enum AnimationTarget : byte
+    {
+        Pane = 0,
+        Material = 1
+    }
+
+    public enum KeyType : byte
+    {
+        Uin16 = 1,
+        Float = 2,
+    }
+
+    public enum LPATarget : byte
+    {
+        TranslateX = 0x00,
+        TranslateY = 0x01,
+        TranslateZ = 0x02,
+        RotateX = 0x03,
+        RotateY = 0x04,
+        RotateZ = 0x05,
+        ScaleX = 0x06,
+        ScaleY = 0x07,
+        SizeX = 0x08,
+        SizeZ = 0x09,
+    }
+
+    public enum LTSTarget : byte
+    {
+        TranslateS = 0x00,
+        TranslateT = 0x01,
+        Rotate = 0x02,
+        ScaleS = 0x03,
+        ScaleT = 0x04,
+    }
+
+    public enum LVITarget : byte
+    {
+        Visibility = 0x00,
+    }
+
+    public enum LVCTarget : byte
+    {
+        LeftTopRed = 0x00,
+        LeftTopGreen = 0x01,
+        LeftTopBlue = 0x02,
+        LeftTopAlpha = 0x03,
+
+        RightTopRed = 0x04,
+        RightTopGreen = 0x05,
+        RightTopBlue = 0x06,
+        RightTopAlpha = 0x07,
+
+        LeftBottomRed = 0x08,
+        LeftBottomGreen = 0x09,
+        LeftBottomBlue = 0x0A,
+        LeftBottomAlpha = 0x0B,
+
+        RightBottomRed = 0x0C,
+        RightBottomGreen = 0x0D,
+        RightBottomBlue = 0x0E,
+        RightBottomAlpha = 0x0F,
+
+        PaneAlpha = 0x10,
+    }
+
+    public enum LTPTarget : byte
+    {
+        Image = 0x00,
+    }
+
+    public enum LMCTarget : byte
+    {
+
+    }
+
+    public class LayoutHeader : IDisposable
     {
         [Browsable(false)]
         public string FileName
@@ -313,21 +388,6 @@ namespace LayoutBXLYT
         internal IFileFormat FileInfo;
 
         [Browsable(false)]
-        public BasePane RootPane { get; set; }
-
-        [Browsable(false)]
-        public BasePane RootGroup { get; set; }
-
-        [Browsable(false)]
-        public virtual Dictionary<string, STGenericTexture> GetTextures { get; }
-
-        [Browsable(false)]
-        public virtual List<string> Textures { get; }
-
-        [Browsable(false)]
-        public virtual List<string> Fonts { get; }
-
-        [Browsable(false)]
         internal uint Version;
 
         [DisplayName("Version"), CategoryAttribute("File Settings")]
@@ -337,12 +397,6 @@ namespace LayoutBXLYT
             {
                 return $"{VersionMajor},{VersionMinor},{VersionMicro},{VersionMicro2}";
             }
-        }
-
-        [Browsable(false)]
-        public virtual List<BxlytMaterial> GetMaterials()
-        {
-            return new List<BxlytMaterial>();
         }
 
         [RefreshProperties(RefreshProperties.All)]
@@ -367,9 +421,54 @@ namespace LayoutBXLYT
             return VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
         }
 
+        public static void WriteSection(FileWriter writer, string magic, SectionCommon section, Action WriteMethod = null)
+        {
+            long startPos = writer.Position;
+            writer.WriteSignature(magic);
+            writer.Write(uint.MaxValue);
+            WriteMethod?.Invoke();
+            writer.Align(4);
+
+            long endPos = writer.Position;
+
+            using (writer.TemporarySeek(startPos + 4, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)(endPos - startPos));
+            }
+        }
+
         public void Dispose()
         {
             FileInfo.Unload();
+        }
+    }
+
+    public class BxlanHeader : LayoutHeader
+    {
+    
+    }
+
+    public class BxlytHeader : LayoutHeader
+    {
+        [Browsable(false)]
+        public BasePane RootPane { get; set; }
+
+        [Browsable(false)]
+        public BasePane RootGroup { get; set; }
+
+        [Browsable(false)]
+        public virtual Dictionary<string, STGenericTexture> GetTextures { get; }
+
+        [Browsable(false)]
+        public virtual List<string> Textures { get; }
+
+        [Browsable(false)]
+        public virtual List<string> Fonts { get; }
+
+        [Browsable(false)]
+        public virtual List<BxlytMaterial> GetMaterials()
+        {
+            return new List<BxlytMaterial>();
         }
     }
 
@@ -401,7 +500,7 @@ namespace LayoutBXLYT
             Signature = signature;
         }
 
-        public virtual void Write(FileWriter writer, BxlytHeader header)
+        public virtual void Write(FileWriter writer, LayoutHeader header)
         {
             if (Data != null)
                 writer.Write(Data);
@@ -433,6 +532,8 @@ namespace LayoutBXLYT
             get { return TopPoint - BottomPoint; }
         }
     }
+
+
 
     public class LayoutDocked : DockContent
     {

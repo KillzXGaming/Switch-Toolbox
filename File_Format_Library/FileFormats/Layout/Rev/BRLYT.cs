@@ -74,12 +74,12 @@ namespace LayoutBXLYT
         {
             LayoutEditor editor = new LayoutEditor();
             editor.Dock = DockStyle.Fill;
-            editor.LoadBxlyt(header, FileName);
+            editor.LoadBxlyt(header);
             return editor;
         }
 
         public void FillEditor(Form control) {
-            ((LayoutEditor)control).LoadBxlyt(header, FileName);
+            ((LayoutEditor)control).LoadBxlyt(header);
         }
 
         public Header header;
@@ -502,7 +502,7 @@ namespace LayoutBXLYT
                     Text = reader.ReadString(TextLength);
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long pos = writer.Position;
 
@@ -564,7 +564,7 @@ namespace LayoutBXLYT
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -582,7 +582,7 @@ namespace LayoutBXLYT
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -607,7 +607,7 @@ namespace LayoutBXLYT
                     Panes.Add(reader.ReadString(0x10, true));
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.WriteString(Name, 24);
                 writer.Write((ushort)Panes.Count);
@@ -630,7 +630,7 @@ namespace LayoutBXLYT
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -701,7 +701,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
                 writer.Write(ColorTopLeft.ToBytes());
@@ -810,7 +810,7 @@ namespace LayoutBXLYT
                 Height = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write(_flags1);
                 writer.Write(Alpha);
@@ -866,7 +866,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Materials.Count);
                 writer.Seek(2);
@@ -1045,7 +1045,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Fonts.Count);
                 writer.Seek(2);
@@ -1091,7 +1091,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Textures.Count);
                 writer.Seek(2);
@@ -1131,7 +1131,7 @@ namespace LayoutBXLYT
                 Height = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write(DrawFromCenter);
                 writer.Seek(3);

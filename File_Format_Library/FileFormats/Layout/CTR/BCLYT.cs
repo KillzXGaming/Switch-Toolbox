@@ -74,12 +74,12 @@ namespace LayoutBXLYT
         {
             LayoutEditor editor = new LayoutEditor();
             editor.Dock = DockStyle.Fill;
-            editor.LoadBxlyt(header, FileName);
+            editor.LoadBxlyt(header);
             return editor;
         }
 
         public void FillEditor(Form control) {
-            ((LayoutEditor)control).LoadBxlyt(header, FileName);
+            ((LayoutEditor)control).LoadBxlyt(header);
         }
 
         public Header header;
@@ -499,7 +499,7 @@ namespace LayoutBXLYT
                     Text = reader.ReadString(TextLength);
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long pos = writer.Position;
 
@@ -561,7 +561,7 @@ namespace LayoutBXLYT
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -579,7 +579,7 @@ namespace LayoutBXLYT
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -604,7 +604,7 @@ namespace LayoutBXLYT
                     Panes.Add(reader.ReadString(0x10, true));
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 if (header.Version >= 0x05020000)
                 {
@@ -635,7 +635,7 @@ namespace LayoutBXLYT
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -710,7 +710,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
                 writer.Write(ColorTopLeft.ToBytes());
@@ -818,7 +818,7 @@ namespace LayoutBXLYT
                 Height = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write(_flags1);
                 writer.Write(Alpha);
@@ -873,7 +873,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Materials.Count);
                 writer.Seek(2);
@@ -912,13 +912,16 @@ namespace LayoutBXLYT
                 TextureMaps = new List<TextureRef>();
                 TextureTransforms = new List<TextureTransform>();
 
-                Name = reader.ReadString(0x14, true);
+                Name = reader.ReadString(20, true);
                 TevColor = reader.ReadColor8RGBA();
-                TevConstantColors = reader.ReadColor8sRGBA(0x6);
+                TevConstantColors = reader.ReadColor8sRGBA(6);
                 flags = reader.ReadUInt32();
 
-                uint texCount = ExtractBits(flags, 2, 0);
-                uint mtxCount = ExtractBits(flags, 2, 2);
+                uint texCount = flags & 3;
+                uint mtxCount = (flags >> 2) & 3;
+                uint texCoordGens = (flags >> 4) & 3;
+                uint tevStages = (flags >> 6) & 7;
+
                 for (int i = 0; i < texCount; i++)
                     TextureMaps.Add(new TextureRef(reader, header));
 
@@ -1034,7 +1037,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Fonts.Count);
                 writer.Seek(2);
@@ -1078,7 +1081,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Textures.Count);
                 writer.Seek(2);
@@ -1118,7 +1121,7 @@ namespace LayoutBXLYT
                 Height = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write(DrawFromCenter);
                 writer.Seek(3);

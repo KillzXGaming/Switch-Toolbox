@@ -16,7 +16,8 @@ using System.ComponentModel;
 
 namespace LayoutBXLYT.Cafe
 {
-    public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
+    public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>,
+        IEditorFormParameters, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -26,6 +27,9 @@ namespace LayoutBXLYT.Cafe
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
+
+        public bool KeepOpen { get; } = true;
+        public EventHandler OnSave { get; set; }
 
         public bool Identify(System.IO.Stream stream)
         {
@@ -105,12 +109,12 @@ namespace LayoutBXLYT.Cafe
         {
             LayoutEditor editor = new LayoutEditor();
             editor.Dock = DockStyle.Fill;
-            editor.LoadBxlyt(header, FileName);
+            editor.LoadBxlyt(header);
             return editor;
         }
 
         public void FillEditor(Form control) {
-            ((LayoutEditor)control).LoadBxlyt(header, FileName);
+            ((LayoutEditor)control).LoadBxlyt(header);
         }
 
         public Header header;
@@ -512,10 +516,9 @@ namespace LayoutBXLYT.Cafe
             {
                 Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
 
-                writer.SetByteOrder(true);
+                writer.SetByteOrder(IsBigEndian);
                 writer.WriteSignature(Magic);
                 writer.Write(ByteOrderMark);
-                writer.SetByteOrder(IsBigEndian);
                 writer.Write(HeaderSize);
                 writer.Write(Version);
                 writer.Write(uint.MaxValue); //Reserve space for file size later
@@ -564,7 +567,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            private void WritePanes(FileWriter writer, BasePane pane, BxlytHeader header, ref int sectionCount)
+            private void WritePanes(FileWriter writer, BasePane pane, LayoutHeader header, ref int sectionCount)
             {
                 WriteSection(writer, pane.Signature, pane,() => pane.Write(writer, header));
                 sectionCount++;
@@ -591,7 +594,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            private void WriteGroupPanes(FileWriter writer, BasePane pane, BxlytHeader header, ref int sectionCount)
+            private void WriteGroupPanes(FileWriter writer, BasePane pane, LayoutHeader header, ref int sectionCount)
             {
                 WriteSection(writer, pane.Signature, pane, () => pane.Write(writer, header));
                 sectionCount++;
@@ -609,23 +612,6 @@ namespace LayoutBXLYT.Cafe
                     //Write pae1 of children section
                     WriteSection(writer, "gre1", null);
                 }
-            }
-
-            internal static void WriteSection(FileWriter writer, string magic, SectionCommon section, Action WriteMethod = null)
-            {
-                long startPos = writer.Position;
-                writer.WriteSignature(magic);
-                writer.Write(uint.MaxValue);
-                WriteMethod?.Invoke();
-                writer.Align(4);
-
-                long endPos = writer.Position;
-
-                using (writer.TemporarySeek(startPos + 4, System.IO.SeekOrigin.Begin))
-                {
-                    writer.Write((uint)(endPos - startPos));
-                }
-
             }
         }
 
@@ -663,7 +649,7 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
 
             }
@@ -809,7 +795,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long pos = writer.Position - 8;
 
@@ -957,7 +943,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long pos = writer.Position - 8;
 
@@ -1094,7 +1080,7 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
             }
@@ -1158,7 +1144,7 @@ namespace LayoutBXLYT.Cafe
                     Panes.Add(reader.ReadString(24, true));
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 if (header.Version >= 0x05020000)
                 {
@@ -1328,7 +1314,7 @@ namespace LayoutBXLYT.Cafe
                 LayoutFile = reader.ReadZeroTerminatedString();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long startPos = writer.Position - 8;
                 base.Write(writer, header);
@@ -1417,7 +1403,7 @@ namespace LayoutBXLYT.Cafe
             }
 
             private long _ofsPos;
-            public void Write(FileWriter writer, BxlytHeader header, long startPos)
+            public void Write(FileWriter writer, LayoutHeader header, long startPos)
             {
                 writer.WriteString(Name, 0x18);
                 writer.Write(UsageFlag);
@@ -1431,7 +1417,7 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(0); //Panel Info Offset
             }
 
-            public void WriteProperties(FileWriter writer, BxlytHeader header, long startPos)
+            public void WriteProperties(FileWriter writer, LayoutHeader header, long startPos)
             {
                 if (Property != null)
                 {
@@ -1454,7 +1440,7 @@ namespace LayoutBXLYT.Cafe
                     Entries.Add(new USD1Entry(reader, startPos, header));
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long startPos = writer.Position - 8;
 
@@ -1530,7 +1516,7 @@ namespace LayoutBXLYT.Cafe
                 reader.SeekBegin(datapos);
             }
 
-            public void Write(FileWriter writer, BxlytHeader header)
+            public void Write(FileWriter writer, LayoutHeader header)
             {
                 _pos = writer.Position;
 
@@ -1626,7 +1612,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
                 writer.Write(ColorTopLeft);
@@ -1768,7 +1754,7 @@ namespace LayoutBXLYT.Cafe
                 Height = reader.ReadSingle();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write(_flags1);
                 writer.Write(origin);
@@ -1826,7 +1812,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 long pos = writer.Position - 8;
 
@@ -1977,7 +1963,7 @@ namespace LayoutBXLYT.Cafe
                     FontShadowParameter = new FontShadowParameter(reader, header);
             }
 
-            public void Write(FileWriter writer, BxlytHeader header)
+            public void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.WriteString(Name, 0x1C);
                 if (header.VersionMajor >= 8)
@@ -2049,7 +2035,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Fonts.Count);
                 writer.Write((ushort)0);
@@ -2093,7 +2079,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write((ushort)Textures.Count);
                 writer.Write((ushort)0);
@@ -2151,7 +2137,7 @@ namespace LayoutBXLYT.Cafe
                 Name = reader.ReadZeroTerminatedString();
             }
 
-            public override void Write(FileWriter writer, BxlytHeader header)
+            public override void Write(FileWriter writer, LayoutHeader header)
             {
                 writer.Write(DrawFromCenter);
                 writer.Seek(3);
