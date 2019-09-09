@@ -76,10 +76,10 @@ namespace LayoutBXLYT
                 if (pic1Pane.TexCoords.Length > 0)
                 {
                     TexCoords = new Vector2[] {
-                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pic1Pane.TexCoords[0].BottomLeft.ToTKVector2(),
-                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
+                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pic1Pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
                    };
                 }
 
@@ -95,10 +95,10 @@ namespace LayoutBXLYT
                 var pic1Pane = pane as BCLYT.PIC1;
 
                 Color[] Colors = new Color[] {
-                    pic1Pane.ColorBottomRight.Color,
                     pic1Pane.ColorBottomLeft.Color,
-                    pic1Pane.ColorTopLeft.Color,
+                    pic1Pane.ColorBottomRight.Color,
                     pic1Pane.ColorTopRight.Color,
+                    pic1Pane.ColorTopLeft.Color,
                 };
 
                 var mat = pic1Pane.Material;
@@ -114,10 +114,10 @@ namespace LayoutBXLYT
                 if (pic1Pane.TexCoords.Length > 0)
                 {
                     TexCoords = new Vector2[] {
-                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pic1Pane.TexCoords[0].BottomLeft.ToTKVector2(),
-                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
+                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pic1Pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
                    };
                 }
 
@@ -133,10 +133,10 @@ namespace LayoutBXLYT
                 var pic1Pane = pane as BRLYT.PIC1;
 
                 Color[] Colors = new Color[] {
-                    pic1Pane.ColorBottomRight.Color,
                     pic1Pane.ColorBottomLeft.Color,
-                    pic1Pane.ColorTopLeft.Color,
+                    pic1Pane.ColorBottomRight.Color,
                     pic1Pane.ColorTopRight.Color,
+                    pic1Pane.ColorTopLeft.Color,
                 };
 
                 var mat = pic1Pane.Material;
@@ -152,10 +152,10 @@ namespace LayoutBXLYT
                 if (pic1Pane.TexCoords.Length > 0)
                 {
                     TexCoords = new Vector2[] {
-                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pic1Pane.TexCoords[0].BottomLeft.ToTKVector2(),
-                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
+                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
                         pic1Pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
                    };
                 }
 
