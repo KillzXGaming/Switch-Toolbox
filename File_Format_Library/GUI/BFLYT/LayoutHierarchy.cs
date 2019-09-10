@@ -50,10 +50,13 @@ namespace LayoutBXLYT
 
         private bool isLoaded = false;
         private EventHandler OnProperySelected;
+        private BxlytHeader ActiveLayout;
         public void LoadLayout(BxlytHeader bxlyt, EventHandler onPropertySelected)
         {
             isLoaded = false;
             OnProperySelected = onPropertySelected;
+
+            ActiveLayout = bxlyt;
 
             treeView1.BeginUpdate();
             treeView1.Nodes.Clear();
@@ -71,10 +74,65 @@ namespace LayoutBXLYT
             isLoaded = true;
         }
 
+        public void LoadAnimation(BxlanHeader bxlan, EventHandler onPropertySelected)
+        {
+            isLoaded = false;
+            OnProperySelected = onPropertySelected;
+
+            treeView1.BeginUpdate();
+            treeView1.Nodes.Clear();
+            LoadAnimations(bxlan,new TreeNode(bxlan.FileName) { Tag = bxlan });
+            treeView1.EndUpdate();
+            isLoaded = true;
+        }
+
         public void Reset()
         {
             treeView1.Nodes.Clear();
             isLoaded = false;
+        }
+
+        private void LoadAnimations(BxlanHeader bxlan, TreeNode root)
+        {
+            treeView1.Nodes.Add(root);
+            if (bxlan is BFLAN.Header)
+            {
+                var header = bxlan as BFLAN.Header;
+                var pat1 = new TreeNode("Tag Info") { Tag = header.AnimationTag };
+                var pai1 = new TreeNode("Animation Info") { Tag = header.AnimationInfo };
+
+                for (int i = 0; i < header.AnimationInfo.Entries.Count; i++)
+                    LoadAnimationEntry(header.AnimationInfo.Entries[i], pai1);
+
+                root.Nodes.Add(pat1);
+                root.Nodes.Add(pai1);
+            }
+        }
+
+        private void LoadAnimationEntry(BFLAN.PaiEntry entry, TreeNode root)
+        {
+            var nodeEntry = new TreeNode(entry.Name) { Tag = entry };
+            root.Nodes.Add(nodeEntry);
+
+            for (int i = 0;i < entry.Tags.Count; i++)
+            {
+                var nodeTag = new TreeNode(entry.Tags[i].Type) { Tag = entry.Tags[i] };
+                nodeEntry.Nodes.Add(nodeTag);
+                for (int j = 0; j < entry.Tags[i].Entries.Count; j++)
+                    LoadTagEntry(entry.Tags[i].Entries[j], nodeTag, j);
+            }
+        }
+
+        private void LoadTagEntry(BFLAN.PaiTagEntry entry, TreeNode root, int index)
+        {
+            var nodeEntry = new TreeNode(entry.TargetName) { Tag = entry };
+            root.Nodes.Add(nodeEntry);
+
+            for (int i = 0; i < entry.KeyFrames.Count; i++)
+            {
+                var keyNode = new TreeNode($"Key Frame {i}") { Tag = entry.KeyFrames[i] };
+                nodeEntry.Nodes.Add(keyNode);
+            }
         }
 
         private void LoadTextures(List<string> textures)
@@ -84,9 +142,32 @@ namespace LayoutBXLYT
             for (int i = 0; i < textures.Count; i++)
             {
                 TreeNode matNode = new TreeNode(textures[i]);
+                matNode.Tag = i;
+                matNode.ContextMenuStrip = new ContextMenuStrip();
+                var menu = new STToolStipMenuItem("Rename");
+                menu.Click += RenameTextureAction;
+                matNode.ContextMenuStrip.Items.Add(menu);
                 matNode.ImageKey = "texture";
                 matNode.SelectedImageKey = "texture";
                 node.Nodes.Add(matNode);
+            }
+        }
+
+        private void RenameTextureAction(object sender, EventArgs e)
+        {
+            var selectedNode = treeView1.SelectedNode;
+            if (selectedNode == null) return;
+
+            int index = (int)selectedNode.Tag;
+            string activeTex = ActiveLayout.Textures[index];
+
+            RenameDialog dlg = new RenameDialog();
+            dlg.SetString(activeTex);
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                ActiveLayout.Textures[index] = dlg.textBox1.Text;
+                selectedNode.Text = dlg.textBox1.Text;
             }
         }
 

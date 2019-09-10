@@ -62,11 +62,8 @@ namespace LayoutBXLYT
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (LayoutEditor.IsSaving)
-            {
-                base.OnFormClosing(e);
-                return;
-            }
+            base.OnFormClosing(e);
+            return;
 
             var result = MessageBox.Show("Are you sure you want to close this file? You will lose any unsaved progress!", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
@@ -206,10 +203,10 @@ namespace LayoutBXLYT
             {
                 if (pane is BFLYT.PIC1 || pane is BCLYT.PIC1 || pane is BRLYT.PIC1)
                     BxlytToGL.DrawPictureBox(pane, effectiveAlpha, Textures);
+                else if (pane is IWindowPane)
+                    BxlytToGL.DrawWindowPane(pane, effectiveAlpha, Textures);
                 else if (pane is BFLYT.BND1 || pane is BCLYT.BND1 || pane is BRLYT.BND1)
                     BxlytToGL.DrawBoundryPane(pane, effectiveAlpha, SelectedPanes);
-                else if (pane is BFLYT.WND1)
-                    DrawWindowPane((BFLYT.WND1)pane, effectiveAlpha);
                 else if (pane is BFLYT.PRT1)
                     DrawPartsPane((BFLYT.PRT1)pane, effectiveAlpha, parentAlphaInfluence);
                 else
@@ -296,66 +293,6 @@ namespace LayoutBXLYT
                     }
                 }
             }
-        }
-
-        private void DrawWindowPane(BFLYT.WND1 pane, byte effectiveAlpha)
-        {
-            Vector2[] TexCoords = new Vector2[] {
-                new Vector2(1,1),
-                new Vector2(0,1),
-                new Vector2(0,0),
-                new Vector2(1,0)
-                };
-
-            Color[] Colors = new Color[] {
-                pane.Content.ColorTopLeft.Color,
-                pane.Content.ColorTopRight.Color,
-                pane.Content.ColorBottomRight.Color,
-                pane.Content.ColorBottomLeft.Color,
-                };
-
-
-            float frameLeft = 0;
-            float frameTop = 0;
-            float frameRight = 0;
-            float frameBottom = 0;
-            if (pane.FrameCount == 1)
-            {
-            }
-            else if (pane.FrameCount == 4)
-            {
-
-            }
-            else if (pane.FrameCount == 8)
-            {
-
-            }
-
-            var mat = pane.Content.Material;
-            if (mat.Shader == null)
-            {
-                mat.Shader = new BflytShader(mat);
-                mat.Shader.Compile();
-            }
-
-            mat.Shader.Enable();
-            ((BflytShader)mat.Shader).SetMaterials(Textures);
-            if (pane.Content.TexCoords.Count > 0)
-            {
-                TexCoords = new Vector2[] {
-                        pane.Content.TexCoords[0].TopLeft.ToTKVector2(),
-                        pane.Content.TexCoords[0].TopRight.ToTKVector2(),
-                        pane.Content.TexCoords[0].BottomRight.ToTKVector2(),
-                        pane.Content.TexCoords[0].BottomLeft.ToTKVector2(),
-                   };
-            }
-
-            BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
-
-            mat.Shader.Disable();
-
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-            GL.PopAttrib();
         }
 
         private void DrawPicturePane(BCLYT.PIC1 pane, byte effectiveAlpha)

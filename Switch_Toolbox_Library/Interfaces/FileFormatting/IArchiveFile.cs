@@ -949,8 +949,25 @@ namespace Toolbox.Library
             {
                 activeForm = GetEditorForm(fileFormat);
                 activeForm.Text = (((IFileFormat)fileFormat).FileName);
-                activeForm.FormClosed += OnFormClosed;
+                if (fileFormat is IEditorFormParameters)
+                {
+                    ((IEditorFormParameters)fileFormat).OnSave += OnFormSaved;
+                }
                 activeForm.Show();
+            }
+        }
+
+        private void OnFormSaved(object sender, EventArgs args)
+        {
+            if (ArchiveFileInfo.FileFormat == null) return;
+
+            Console.WriteLine("OnFormSaved");
+            if (ArchiveFileInfo.FileFormat.CanSave)
+            {
+                Console.WriteLine("SaveFileFormat");
+
+                ArchiveFileInfo.SaveFileFormat();
+                UpdateEditor();
             }
         }
 

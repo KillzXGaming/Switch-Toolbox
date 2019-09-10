@@ -19,13 +19,13 @@ namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
-        public static bool IsSaving = false;
-
         private Dictionary<string, STGenericTexture> Textures;
 
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
+        public List<BxlanHeader> AnimationFiles = new List<BxlanHeader>();
 
         private BxlytHeader ActiveLayout;
+        private BxlanHeader ActiveAnimation;
 
         public enum DockLayout
         {
@@ -38,8 +38,6 @@ namespace LayoutBXLYT
 
         public LayoutEditor()
         {
-            IsSaving = false;
-
             InitializeComponent();
 
             Textures = new Dictionary<string, STGenericTexture>();
@@ -72,7 +70,7 @@ namespace LayoutBXLYT
         private LayoutPartsEditor LayoutPartsEditor;
 
         private bool isLoaded = false;
-        public void LoadBxlyt(BxlytHeader header, string fileName)
+        public void LoadBxlyt(BxlytHeader header)
         {
             LayoutFiles.Add(header);
             ActiveLayout = header;
@@ -91,7 +89,18 @@ namespace LayoutBXLYT
             isLoaded = true;
         }
 
-        private void InitializeDockPanels()
+        public void LoadBxlan(BxlanHeader header)
+        {
+            AnimationFiles.Add(header);
+            ActiveAnimation = header;
+
+            ShowAnimationHierarchy();
+            ShowPropertiesPanel();
+
+            isLoaded = true;
+        }
+
+        private void InitializeDockPanels(bool isAnimation = false)
         {
             ShowTextureList();
             ShowPartsEditor();
@@ -152,7 +161,7 @@ namespace LayoutBXLYT
 
             if (LayoutProperties != null && (string)sender == "Select")
             {
-                ActiveViewport.SelectedPanes.Clear();
+                ActiveViewport?.SelectedPanes.Clear();
 
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
@@ -161,7 +170,7 @@ namespace LayoutBXLYT
                     {
                         var pane = node.Tag as BasePane;
                         LayoutProperties.LoadProperties(pane, OnProperyChanged);
-                        ActiveViewport.SelectedPanes.Add(pane);
+                        ActiveViewport?.SelectedPanes.Add(pane);
                     }
                     else
                         LayoutProperties.LoadProperties(node.Tag, OnProperyChanged);
@@ -188,11 +197,6 @@ namespace LayoutBXLYT
             node.Checked = isChecked;
             foreach (TreeNode child in node.Nodes)
                 ToggleChildern(child, isChecked);
-        }
-
-        public void LoadBflan()
-        {
-
         }
 
         public void InitalizeEditors()
@@ -224,6 +228,14 @@ namespace LayoutBXLYT
                 LayoutProperties.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
             else
                 LayoutProperties.Show(dockPanel1, DockState.DockRight);
+        }
+
+        public void ShowAnimationHierarchy()
+        {
+            LayoutHierarchy = new LayoutHierarchy();
+            LayoutHierarchy.Text = "Animation Hierarchy";
+            LayoutHierarchy.LoadAnimation(ActiveAnimation, ObjectSelected);
+            LayoutHierarchy.Show(dockPanel1, DockState.DockLeft);
         }
 
         private void ShowPaneHierarchy()
@@ -323,11 +335,11 @@ namespace LayoutBXLYT
             if (file == null) return;
 
             if (file is BFLYT)
-                LoadBxlyt(((BFLYT)file).header, file.FileName);
+                LoadBxlyt(((BFLYT)file).header);
             else if (file is BCLYT)
-                LoadBxlyt(((BCLYT)file).header, file.FileName);
+                LoadBxlyt(((BCLYT)file).header);
             else if (file is BRLYT)
-                LoadBxlyt(((BRLYT)file).header, file.FileName);
+                LoadBxlyt(((BRLYT)file).header);
             else if (file is IArchiveFile)
             {
                 var layouts = SearchLayoutFiles((IArchiveFile)file);
@@ -340,22 +352,22 @@ namespace LayoutBXLYT
                         foreach (var layout in form.SelectedLayouts())
                         {
                             if (layout is BFLYT)
-                                LoadBxlyt(((BFLYT)layout).header, file.FileName);
+                                LoadBxlyt(((BFLYT)layout).header);
                             if (layout is BCLYT)
-                                LoadBxlyt(((BCLYT)layout).header, file.FileName);
+                                LoadBxlyt(((BCLYT)layout).header);
                             if (layout is BRLYT)
-                                LoadBxlyt(((BRLYT)layout).header, file.FileName);
+                                LoadBxlyt(((BRLYT)layout).header);
                         }
                     }
                 }
                 else if (layouts.Count > 0)
                 {
                     if (layouts[0] is BFLYT)
-                        LoadBxlyt(((BFLYT)layouts[0]).header, file.FileName);
+                        LoadBxlyt(((BFLYT)layouts[0]).header);
                     if (layouts[0] is BCLYT)
-                        LoadBxlyt(((BCLYT)layouts[0]).header, file.FileName);
+                        LoadBxlyt(((BCLYT)layouts[0]).header);
                     if (layouts[0] is BRLYT)
-                        LoadBxlyt(((BRLYT)layouts[0]).header, file.FileName);
+                        LoadBxlyt(((BRLYT)layouts[0]).header);
                 }
             }
             else if (file is BFLAN)
@@ -492,23 +504,30 @@ namespace LayoutBXLYT
         }
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e) {
-            SaveActiveFile();
+            if (ActiveLayout != null)
+                SaveActiveFile(ActiveLayout.FileInfo);
         }
 
-        private void SaveActiveFile(bool ForceDialog = false)
+        private void saveAnimationToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (ActiveAnimation != null)
+                SaveActiveFile(ActiveAnimation.FileInfo);
+        }
+
+        private void SaveActiveFile(IFileFormat fileFormat, bool ForceDialog = false)
         {
-            if (ActiveLayout != null && ActiveLayout.FileInfo.CanSave)
+            if (fileFormat.CanSave)
             {
-                var fileFormat = ActiveLayout.FileInfo;
-                if (fileFormat.IFileInfo.ArchiveParent != null && !ForceDialog)
+                if (fileFormat.IFileInfo != null && 
+                    fileFormat.IFileInfo.ArchiveParent != null && !ForceDialog)
                 {
-                    this.DialogResult = DialogResult.OK;
-                    IsSaving = true;
-                    this.Close();
+                    if (fileFormat is IEditorFormParameters)
+                        ((IEditorFormParameters)fileFormat).OnSave.Invoke(fileFormat, new EventArgs());
+
+                    MessageBox.Show($"Saved {fileFormat.FileName} to archive!");
                 }
                 else
                 {
-                    STFileSaver.SaveFileFormat(ActiveLayout.FileInfo, fileFormat.FilePath);
+                    STFileSaver.SaveFileFormat(fileFormat, fileFormat.FilePath);
                 }
             }
         }
@@ -518,12 +537,18 @@ namespace LayoutBXLYT
             if (e.Control && e.Alt && e.KeyCode == Keys.S) // Ctrl + Alt + S Save As
             {
                 e.SuppressKeyPress = true;
-                SaveActiveFile(true);
+                if (ActiveLayout != null)
+                    SaveActiveFile(ActiveLayout.FileInfo, true);
+                if (ActiveAnimation != null)
+                    SaveActiveFile(ActiveAnimation.FileInfo, true);
             }
             else if (e.Control && e.KeyCode == Keys.S) // Ctrl + S Save
             {
                 e.SuppressKeyPress = true;
-                SaveActiveFile(false);
+                if (ActiveLayout != null)
+                    SaveActiveFile(ActiveLayout.FileInfo, false);
+                if (ActiveAnimation != null)
+                    SaveActiveFile(ActiveAnimation.FileInfo, false);
             }
         }
 
@@ -565,7 +590,10 @@ namespace LayoutBXLYT
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e) {
-            SaveActiveFile(false);
+            if (ActiveLayout != null)
+                SaveActiveFile(ActiveLayout.FileInfo, false);
+            if (ActiveAnimation != null)
+                SaveActiveFile(ActiveAnimation.FileInfo, false);
         }
     }
 }

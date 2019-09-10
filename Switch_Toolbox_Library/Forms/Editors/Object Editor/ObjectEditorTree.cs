@@ -292,7 +292,12 @@ namespace Toolbox.Library.Forms
 
             foreach (var node in TreeViewExtensions.Collect(treeViewCustom1.Nodes))
             {
-                if (node is IFileFormat)
+                if (node is ArchiveRootNodeWrapper)
+                {
+                    var file = ((ArchiveRootNodeWrapper)node).ArchiveFile;
+                    ((IFileFormat)file).Unload();
+                }
+                else if (node is IFileFormat)
                 {
                     ((IFileFormat)node).Unload();
                 }

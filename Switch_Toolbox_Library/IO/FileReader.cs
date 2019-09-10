@@ -142,6 +142,14 @@ namespace Toolbox.Library.IO
             return ReadString(BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);
         }
 
+        public string[] ReadZeroTerminatedStrings(uint count, Encoding encoding = null)
+        {
+            string[] str = new string[count];
+            for (int i = 0; i < count; i++)
+                str[i] = ReadString(BinaryStringFormat.ZeroTerminated, encoding ?? Encoding);
+            return str;
+        }
+
         public string ReadUTF16String()
         {
             List<byte> chars = new List<byte>();

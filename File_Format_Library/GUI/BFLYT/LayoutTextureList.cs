@@ -85,6 +85,13 @@ namespace LayoutBXLYT
                 {
                     if (textureList.ContainsKey(texture))
                     {
+                        if (header is BCLYT.Header)
+                        {
+                            //Skip certain formats like bcn ones
+                            if (STGenericTexture.IsCompressed(textureList[texture].Format))
+                                continue;
+                        }
+
                         LoadTextureIcon(index, textureList[texture]);
                     }
                     index++;

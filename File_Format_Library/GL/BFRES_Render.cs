@@ -899,7 +899,7 @@ namespace FirstPlugin
                 {
                     foreach (var tex in bntx.Textures)
                     {
-                        if (!tex.Value.RenderableTex.GLInitialized)
+                        if (tex.Value.RenderableTex != null && !tex.Value.RenderableTex.GLInitialized)
                             tex.Value.LoadOpenGLTexture();
                     }
                 }

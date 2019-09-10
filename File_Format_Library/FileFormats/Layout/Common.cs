@@ -95,6 +95,19 @@ namespace LayoutBXLYT
             rectangle = CreateRectangle();
         }
 
+        public CustomRectangle CreateRectangle(uint width, uint height)
+        {
+            //Do origin transforms
+            var transformed = TransformOrientation((int)width, (int)height, originX, originY);
+            var parentTransform = ParentOriginTransform(transformed);
+
+            return new CustomRectangle(
+                parentTransform.X,
+                parentTransform.Y,
+                parentTransform.Z,
+                parentTransform.W);
+        }
+
         public CustomRectangle CreateRectangle()
         {
             //Do origin transforms
@@ -225,6 +238,8 @@ namespace LayoutBXLYT
 
     public class BxlytTextureRef
     {
+        public short ID { get; set; }
+
         public string Name { get; set; }
 
         public virtual WrapMode WrapModeU { get; set; }
@@ -373,6 +388,84 @@ namespace LayoutBXLYT
 
     }
 
+    public enum WindowKind
+    {
+        Around = 0,
+        Horizontal = 1,
+        HorizontalNoContent = 2
+    }
+
+    public enum WindowFrameTexFlip : byte
+    {
+        None = 0,
+        FlipH = 1,
+        FlipV = 2,
+        Rotate90 = 3,
+        Rotate180 = 4,
+        Rotate270 = 5
+    }
+
+    public interface IWindowPane
+    {
+        bool UseOneMaterialForAll { get; set; }
+        bool UseVertexColorForAll { get; set; }
+        WindowKind WindowKind { get; set; }
+        bool NotDrawnContent { get; set; }
+        ushort StretchLeft { get; set; }
+        ushort StretchRight { get; set; }
+        ushort StretchTop { get; set; }
+        ushort StretchBottm { get; set; }
+        ushort FrameElementLeft { get; set; }
+        ushort FrameElementRight { get; set; }
+        ushort FrameElementTop { get; set; }
+        ushort FrameElementBottm { get; set; }
+        byte FrameCount { get; set; }
+
+        BxlytWindowContent Content { get; set; }
+
+        List<BxlytWindowFrame> WindowFrames { get; set; }
+    }
+
+    public class BxlytWindowContent
+    {
+        public STColor8 ColorTopLeft { get; set; }
+        public STColor8 ColorTopRight { get; set; }
+        public STColor8 ColorBottomLeft { get; set; }
+        public STColor8 ColorBottomRight { get; set; }
+
+        public ushort MaterialIndex { get; set; }
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public virtual BxlytMaterial Material { get; set; }
+
+        public List<TexCoord> TexCoords = new List<TexCoord>();
+    }
+
+    public class BxlytWindowFrame
+    {
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public BxlytMaterial Material { get; set; }
+
+        public ushort MaterialIndex;
+        public WindowFrameTexFlip TextureFlip;
+    }
+
+    public class TexCoord
+    {
+        public Vector2F TopLeft { get; set; }
+        public Vector2F TopRight { get; set; }
+        public Vector2F BottomLeft { get; set; }
+        public Vector2F BottomRight { get; set; }
+
+        public TexCoord()
+        {
+            TopLeft = new Vector2F(0, 0);
+            TopRight = new Vector2F(1, 0);
+            BottomLeft = new Vector2F(0, 1);
+            BottomRight = new Vector2F(1, 1);
+        }
+    }
+
     public class LayoutHeader : IDisposable
     {
         [Browsable(false)]
@@ -479,6 +572,9 @@ namespace LayoutBXLYT
 
         [Browsable(false)]
         public virtual BxlytShader Shader { get; set; }
+
+        [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
+        public BxlytTextureRef[] TextureMaps { get; set; }
     }
 
     public class SectionCommon 

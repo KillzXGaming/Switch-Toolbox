@@ -301,6 +301,7 @@
     <Compile Include="Helpers\ArchiveNodeMenuHelper.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\DragHelper.cs" />
+    <Compile Include="Interfaces\FileFormatting\IFormEditorParameters.cs" />
     <Compile Include="Interfaces\FileFormatting\ILeaveOpenOnLoad.cs" />
     <Compile Include="Interfaces\FileFormatting\IPropertyContainer.cs" />
     <Compile Include="Interfaces\FileFormatting\ISaveOpenedFileStream.cs" />

@@ -212,6 +212,8 @@
     <Compile Include="FileFormats\AAMP\AAMP.cs" />
     <Compile Include="FileFormats\Archives\APAK.cs" />
     <Compile Include="FileFormats\Archives\ARC.cs" />
+    <Compile Include="FileFormats\Archives\DARC.cs" />
+    <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\Archives\PKZ.cs" />
@@ -307,7 +309,7 @@
     <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
-    <Compile Include="FileFormats\Layout\CTR\BrlytShader.cs" />
+    <Compile Include="FileFormats\Layout\CTR\BclytShader.cs" />
     <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
@@ -358,6 +360,12 @@
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutProperties.Designer.cs">
       <DependentUpon>LayoutProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutSaveDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\LayoutSaveDialog.Designer.cs">
+      <DependentUpon>LayoutSaveDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutTextDocked.cs">
       <SubType>Form</SubType>
@@ -1164,6 +1172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutProperties.resx">
       <DependentUpon>LayoutProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\LayoutSaveDialog.resx">
+      <DependentUpon>LayoutSaveDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutTextDocked.resx">
       <DependentUpon>LayoutTextDocked.cs</DependentUpon>

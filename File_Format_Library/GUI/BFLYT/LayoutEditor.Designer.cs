@@ -48,6 +48,7 @@
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAnimationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -156,6 +157,7 @@
             this.openToolStripMenuItem,
             this.clearWorkspaceToolStripMenuItem,
             this.saveToolStripMenuItem1,
+            this.saveAnimationToolStripMenuItem,
             this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -179,7 +181,7 @@
             // 
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
             this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.saveToolStripMenuItem1.Text = "Save";
+            this.saveToolStripMenuItem1.Text = "Save Layout";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
             // 
             // saveToolStripMenuItem
@@ -226,6 +228,13 @@
             this.orthographicViewToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.orthographicViewToolStripMenuItem.Text = "Orthographic View";
             this.orthographicViewToolStripMenuItem.Click += new System.EventHandler(this.orthographicViewToolStripMenuItem_Click);
+            // 
+            // saveAnimationToolStripMenuItem
+            // 
+            this.saveAnimationToolStripMenuItem.Name = "saveAnimationToolStripMenuItem";
+            this.saveAnimationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAnimationToolStripMenuItem.Text = "Save Animation";
+            this.saveAnimationToolStripMenuItem.Click += new System.EventHandler(this.saveAnimationToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -277,5 +286,6 @@
         private Toolbox.Library.Forms.STLabel stLabel1;
         private System.Windows.Forms.ToolStripMenuItem orthographicViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolstripOrthoBtn;
+        private System.Windows.Forms.ToolStripMenuItem saveAnimationToolStripMenuItem;
     }
 }

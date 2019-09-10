@@ -4,7 +4,6 @@ namespace LayoutBXLYT.Cafe
 {
     public class TextureRef : BxlytTextureRef
     {
-        public short ID;
         byte flag1;
         byte flag2;
 

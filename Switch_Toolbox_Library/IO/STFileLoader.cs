@@ -224,10 +224,7 @@ namespace Toolbox.Library.IO
 
                 if (Magic == "Yaz0")
                 {
-                    if (data != null)
-                        data = EveryFileExplorer.YAZ0.Decompress(data);
-                    else
-                        data = EveryFileExplorer.YAZ0.Decompress(FileName);
+                    data = EveryFileExplorer.YAZ0.Decompress(stream.ToArray());
 
                     return OpenFileFormat(FileName, data, LeaveStreamOpen, InArchive, archiveNode, true,
                         CompressionType.Yaz0, DecompressedFileSize, CompressedFileSize);

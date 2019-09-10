@@ -193,6 +193,249 @@ namespace LayoutBXLYT
             BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
+        public static void DrawWindowPane(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
+        {
+            uint sizeX = (uint)pane.Width;
+            uint sizeY = (uint)pane.Height;
+
+            var window = (IWindowPane)pane;
+            switch (window.WindowKind)
+            {
+                case WindowKind.Around:
+                    if (window.FrameCount == 1) //1 texture for all
+                    {
+                        var mat = window.WindowFrames[0].Material;
+
+                        if (mat.TextureMaps.Length == 0)
+                            RenderWindowContent(pane, sizeX, sizeY, window.Content, effectiveAlpha, Textures);
+                        else
+                        {
+                            var texture = mat.TextureMaps[0].Name;
+                            if (!Textures.ContainsKey(texture))
+                            {
+                                RenderWindowContent(pane, sizeX, sizeY, window.Content, effectiveAlpha, Textures);
+                                break;
+                            }
+
+                            var image = Textures[texture];
+
+                            uint contentWidth = sizeX - (uint)window.FrameElementRight - (uint)window.FrameElementLeft;
+                            uint contentHeight = sizeY - (uint)window.FrameElementTop - (uint)window.FrameElementBottm;
+
+                            RenderWindowContent(pane,
+                                contentWidth,
+                                contentHeight,
+                                window.Content, effectiveAlpha, Textures);
+
+                            // _________
+                            //|______|  |
+                            //|  |   |  |
+                            //|  |___|__|
+                            //|__|______|
+
+
+                            //Top Left
+                            SetupShaders(mat, Textures);
+                            mat.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+
+                            CustomRectangle rect;
+
+                            GL.PushMatrix();
+                            {
+                                uint pieceWidth = sizeX - window.FrameElementRight;
+                                uint pieceHeight = window.FrameElementTop;
+                                int pieceX = (int)-(window.FrameElementRight / 2);
+                                int pieceY = (int)((sizeY / 2) - (pieceHeight / 2));
+
+                                GL.Translate(pieceX, pieceY, 0);
+                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
+                                GL.Begin(PrimitiveType.Quads);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 1);
+                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementRight, 1);
+                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementRight, 0);
+                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
+                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                                GL.End();
+                            }
+                            GL.PopMatrix();
+
+                            //Top Right
+                            GL.PushMatrix();
+                            {
+                                uint pieceWidth = window.FrameElementRight;
+                                uint pieceHeight = sizeY - window.FrameElementBottm;
+                                int pieceX = (int)((contentWidth / 2) + (pieceWidth / 2));
+                                int pieceY = (int)(window.FrameElementBottm / 2);
+
+                                GL.Translate(pieceX, pieceY, 0);
+                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
+                                GL.Begin(PrimitiveType.Quads);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / window.FrameElementBottm);
+                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / window.FrameElementBottm);
+                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
+                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, 0);
+                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                                GL.End();
+                            }
+                            GL.PopMatrix();
+
+                            //Bottom Right
+                            GL.PushMatrix();
+                            {
+                                uint pieceWidth = window.FrameElementLeft;
+                                uint pieceHeight = sizeY - window.FrameElementTop;
+                                int pieceX = (int)-((contentWidth / 2) + (pieceWidth / 2));
+                                int pieceY = (int)-(window.FrameElementTop / 2);
+
+                                GL.Translate(pieceX, pieceY, 0);
+                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
+                                GL.Begin(PrimitiveType.Quads);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
+                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, 0);
+                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / window.FrameElementTop);
+                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / window.FrameElementTop);
+                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                                GL.End();
+                            }
+                            GL.PopMatrix();
+
+                            //Bottom Right
+                            GL.PushMatrix();
+                            {
+                                uint pieceWidth = sizeX - window.FrameElementLeft;
+                                uint pieceHeight = window.FrameElementBottm;
+                                int pieceX = (int)(window.FrameElementLeft / 2);
+                                int pieceY = (int)(-(sizeY / 2) + (pieceHeight / 2));
+
+                                GL.Translate(pieceX, pieceY, 0);
+                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
+                                GL.Begin(PrimitiveType.Quads);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementLeft, 1);
+                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 1);
+                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
+                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementLeft, 0);
+                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                                GL.End();
+                            }
+                            GL.PopMatrix();
+                        }
+                    }
+                    else if (window.FrameCount == 4)
+                    {
+
+                    }
+                    break;
+                case WindowKind.Horizontal:
+                    break;
+                case WindowKind.HorizontalNoContent:
+                    break;
+            }
+
+            GL.UseProgram(0);
+        }
+
+        enum FrameType
+        {
+            LeftTop,
+            Left,
+            LeftBottom,
+            Top,
+            Bottom,
+            RightTop,
+            Right,
+            RightBottom,
+        }
+
+        private static Vector2 GetFramePosition(uint paneWidth, uint paneHeight, IWindowPane window, FrameType type)
+        {
+
+
+            Vector2 pos = new Vector2();
+            switch (type)
+            {
+                case FrameType.LeftTop:
+
+                    break;
+            }
+            return pos;
+        }
+
+        private static void SetupShaders(BxlytMaterial mat, Dictionary<string, STGenericTexture> textures)
+        {
+            if (mat.Shader == null)
+            {
+                if (mat is Cafe.BFLYT.Material)
+                {
+                    mat.Shader = new BflytShader((Cafe.BFLYT.Material)mat);
+                    mat.Shader.Compile();
+                }
+            }
+
+            mat.Shader.Enable();
+            if (mat is Cafe.BFLYT.Material)
+                ((BflytShader)mat.Shader).SetMaterials(textures);
+        }
+
+        private static void RenderWindowContent(BasePane pane, uint sizeX, uint sizeY, BxlytWindowContent content,
+            byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
+        {
+            var mat = content.Material;
+            var rect = pane.CreateRectangle(sizeX, sizeY);
+
+            SetupShaders(mat, Textures);
+
+            Vector2[] texCoords = new Vector2[] {
+                new Vector2(1,1),
+                new Vector2(0,1),
+                new Vector2(0,0),
+                new Vector2(1,0)
+                };
+
+            Color[] colors = new Color[] {
+                content.ColorTopLeft.Color,
+                content.ColorTopRight.Color,
+                content.ColorBottomRight.Color,
+                content.ColorBottomLeft.Color,
+                };
+
+            if (content.TexCoords.Count > 0)
+            {
+                texCoords = new Vector2[] {
+                        content.TexCoords[0].TopLeft.ToTKVector2(),
+                        content.TexCoords[0].TopRight.ToTKVector2(),
+                        content.TexCoords[0].BottomRight.ToTKVector2(),
+                        content.TexCoords[0].BottomLeft.ToTKVector2(),
+                   };
+            }
+
+            GL.Begin(PrimitiveType.Quads);
+            GL.Color4(colors[0]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
+            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+            GL.Color4(colors[1]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
+            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+            GL.Color4(colors[2]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
+            GL.Vertex2(rect.RightPoint, rect.TopPoint);
+            GL.Color4(colors[3]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
+            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+            GL.End();
+        }
+
         public static bool BindGLTexture(BxlytTextureRef tex, STGenericTexture texture)
         {
             if (texture.RenderableTex == null || !texture.RenderableTex.GLInitialized)
@@ -240,7 +483,7 @@ namespace LayoutBXLYT
         }
 
         public static void DrawRectangle(CustomRectangle rect, Vector2[] texCoords,
-    Color[] colors, bool useLines = true, byte alpha = 255)
+           Color[] colors, bool useLines = true, byte alpha = 255)
         {
             for (int i = 0; i < colors.Length; i++)
             {

@@ -38,6 +38,9 @@ namespace LayoutBXLYT
             SetColor("blackColor", Color.FromArgb(0, 0, 0, 0));
             SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
             SetInt("numTextureMaps", material.TextureMaps.Count);
+            SetVec2("uvScale0", new Vector2(1, 1));
+            SetFloat("uvRotate0", 0);
+            SetVec2("uvTranslate0", new Vector2(0, 0));
 
             BindTextureUniforms();
 
@@ -64,9 +67,9 @@ namespace LayoutBXLYT
                 if (transform.Scale.Y < 0)
                     shiftY = 1;
 
-                SetVec2("uvScale0",new Vector2(transform.Scale.X, transform.Scale.Y));
-                SetFloat("uvRotate0", transform.Rotate);
-                SetVec2("uvTranslate0",new Vector2(shiftX + transform.Translate.X, shiftY + transform.Translate.Y));
+                //SetVec2("uvScale0",new Vector2(transform.Scale.X, transform.Scale.Y));
+               // SetFloat("uvRotate0", transform.Rotate);
+               // SetVec2("uvTranslate0",new Vector2(shiftX + transform.Translate.X, shiftY + transform.Translate.Y));
             }
         }
 

@@ -385,22 +385,6 @@ namespace LayoutBXLYT
             }
         }
 
-        public class TexCoord
-        {
-            public Vector2F TopLeft { get; set; }
-            public Vector2F TopRight { get; set; }
-            public Vector2F BottomLeft { get; set; }
-            public Vector2F BottomRight { get; set; }
-
-            public TexCoord()
-            {
-                TopLeft = new Vector2F(0, 0);
-				TopRight = new Vector2F(1, 0);
-				BottomLeft = new Vector2F(0, 1);
-				BottomRight = new Vector2F(1, 1);
-            }
-        }
-
         public class TXT1 : PAN1
         {
             public TXT1() : base()

@@ -318,8 +318,6 @@ namespace FirstPlugin
             Formats.Add(typeof(NSP));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));
-            Formats.Add(typeof(BFLIM));
-            Formats.Add(typeof(BCLIM));
             Formats.Add(typeof(BFSTM));
             Formats.Add(typeof(BCSTM));
             Formats.Add(typeof(BRSTM));
@@ -382,6 +380,11 @@ namespace FirstPlugin
             Formats.Add(typeof(DKCTF.PAK));
             Formats.Add(typeof(WTB));
             Formats.Add(typeof(PKZ));
+            Formats.Add(typeof(DARC));
+            Formats.Add(typeof(BFLIM));
+            Formats.Add(typeof(BCLIM));
+            Formats.Add(typeof(LayoutBXLYT.BFLAN));
+            Formats.Add(typeof(DAT_Bayonetta));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));
@@ -390,7 +393,6 @@ namespace FirstPlugin
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
                 Formats.Add(typeof(XCI));
-                Formats.Add(typeof(LayoutBXLYT.BFLAN));
                 Formats.Add(typeof(XLINK));
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));

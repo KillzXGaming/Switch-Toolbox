@@ -199,6 +199,20 @@ namespace LayoutBXLYT.Cafe
             BFLIM test = new BFLIM();
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
 
+            if (File.Exists(FilePath))
+            {
+                string folder = Path.GetDirectoryName(FilePath);
+                foreach (var file in Directory.GetFiles(folder))
+                {
+                    if (Utils.GetExtension(file) == ".bflim")
+                    {
+                        BFLIM bflim = (BFLIM)STFileLoader.OpenFileFormat(file);
+                        if (!textures.ContainsKey(bflim.FileName))
+                            textures.Add(bflim.FileName, bflim);
+                    }
+                }
+            }
+
             foreach (var archive in PluginRuntime.SarcArchives)
             {
                 foreach (var file in archive.Files)
@@ -516,9 +530,13 @@ namespace LayoutBXLYT.Cafe
             {
                 Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
 
-                writer.SetByteOrder(IsBigEndian);
+                writer.SetByteOrder(true);
                 writer.WriteSignature(Magic);
-                writer.Write(ByteOrderMark);
+                if (!IsBigEndian)
+                    writer.Write((ushort)0xFFFE);
+                else
+                    writer.Write((ushort)0xFEFF);
+                writer.SetByteOrder(IsBigEndian);
                 writer.Write(HeaderSize);
                 writer.Write(Version);
                 writer.Write(uint.MaxValue); //Reserve space for file size later
@@ -652,22 +670,6 @@ namespace LayoutBXLYT.Cafe
             public override void Write(FileWriter writer, LayoutHeader header)
             {
 
-            }
-        }
-
-        public class TexCoord
-        {
-            public Vector2F TopLeft { get; set; }
-            public Vector2F TopRight { get; set; }
-            public Vector2F BottomLeft { get; set; }
-            public Vector2F BottomRight { get; set; }
-
-            public TexCoord()
-            {
-                TopLeft = new Vector2F(0, 0);
-				TopRight = new Vector2F(1, 0);
-				BottomLeft = new Vector2F(0, 1);
-				BottomRight = new Vector2F(1, 1);
             }
         }
 
@@ -863,7 +865,7 @@ namespace LayoutBXLYT.Cafe
             };
         }
 
-        public class WND1 : PAN1
+        public class WND1 : PAN1, IWindowPane
         {
             public override string Signature { get; } = "wnd1";
 
@@ -875,44 +877,48 @@ namespace LayoutBXLYT.Cafe
             public bool UseOneMaterialForAll
             {
                 get { return Convert.ToBoolean(_flag & 1); }
+                set { }
             }
 
             public bool UseVertexColorForAll
             {
                 get { return Convert.ToBoolean((_flag >> 1) & 1); }
+                set { }
             }
 
-            public bool WindowKind
+            public WindowKind WindowKind
             {
-                get { return Convert.ToBoolean((_flag >> 2) & 3); }
+                get { return (WindowKind)((_flag >> 2) & 3); }
+                set { }
             }
 
             public bool NotDrawnContent
             {
                 get { return Convert.ToBoolean((_flag >> 4) & 1); }
+                set { }
             }
 
-            public ushort StretchLeft;
-            public ushort StretchRight;
-            public ushort StretchTop;
-            public ushort StretchBottm;
-            public ushort FrameElementLeft;
-            public ushort FrameElementRight;
-            public ushort FrameElementTop;
-            public ushort FrameElementBottm;
-            public byte FrameCount;
+            public ushort StretchLeft { get; set; }
+            public ushort StretchRight { get; set; }
+            public ushort StretchTop { get; set; }
+            public ushort StretchBottm { get; set; }
+            public ushort FrameElementLeft { get; set; }
+            public ushort FrameElementRight { get; set; }
+            public ushort FrameElementTop { get; set; }
+            public ushort FrameElementBottm { get; set; }
+            public byte FrameCount { get; set; }
             private byte _flag;
 
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            public WindowContent Content { get; set; }
+            public BxlytWindowContent Content { get; set; }
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            public List<WindowFrame> WindowFrames { get; set; }
+            public List<BxlytWindowFrame> WindowFrames { get; set; }
 
             public WND1(FileReader reader, Header header) : base(reader)
             {
-                WindowFrames = new List<WindowFrame>();
+                WindowFrames = new List<BxlytWindowFrame>();
 
                 long pos = reader.Position - 0x54;
 
@@ -965,7 +971,7 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(0);
 
                 writer.WriteUint32Offset(_ofsContentPos, pos);
-                Content.Write(writer);
+                ((WindowContent)Content).Write(writer);
 
                 if (WindowFrames.Count > 0)
                 {
@@ -976,29 +982,14 @@ namespace LayoutBXLYT.Cafe
                     for (int i = 0; i < WindowFrames.Count; i++)
                     {
                         writer.WriteUint32Offset(_ofsFramePos + (i * 4), pos);
-                        WindowFrames[i].Write(writer);
+                        ((WindowFrame)WindowFrames[i]).Write(writer);
                     }
                 }
             }
 
-            public class WindowContent
+            public class WindowContent : BxlytWindowContent
             {
                 private Header LayoutFile;
-
-                public STColor8 ColorTopLeft { get; set; }
-                public STColor8 ColorTopRight { get; set; }
-                public STColor8 ColorBottomLeft { get; set; }
-                public STColor8 ColorBottomRight { get; set; }
-
-                public ushort MaterialIndex { get; set; }
-
-                public List<TexCoord> TexCoords = new List<TexCoord>();
-
-                [TypeConverter(typeof(ExpandableObjectConverter))]
-                public Material Material
-                {
-                    get { return LayoutFile.MaterialList.Materials[MaterialIndex]; }
-                }
 
                 public WindowContent(FileReader reader, Header header)
                 {
@@ -1020,6 +1011,8 @@ namespace LayoutBXLYT.Cafe
                             BottomLeft = reader.ReadVec2SY(),
                             BottomRight = reader.ReadVec2SY(),
                         });
+
+                    Material = LayoutFile.MaterialList.Materials[MaterialIndex];
                 }
 
                 public void Write(FileWriter writer)
@@ -1041,26 +1034,21 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            public class WindowFrame
+            public class WindowFrame : BxlytWindowFrame
             {
-                public Material material { get; set; }
-
-                public ushort MaterialIndex;
-                public byte TextureFlip;
-
                 public WindowFrame(FileReader reader, Header header)
                 {
                     MaterialIndex = reader.ReadUInt16();
-                    TextureFlip = reader.ReadByte();
+                    TextureFlip = (WindowFrameTexFlip)reader.ReadByte();
                     reader.ReadByte(); //padding
 
-                    material = header.MaterialList.Materials[MaterialIndex];
+                    Material = header.MaterialList.Materials[MaterialIndex];
                 }
 
                 public void Write(FileWriter writer)
                 {
                     writer.Write(MaterialIndex);
-                    writer.Write(TextureFlip);
+                    writer.Write(TextureFlip, false);
                     writer.Write((byte)0);
                 }
             }
@@ -1236,16 +1224,19 @@ namespace LayoutBXLYT.Cafe
                     {
                         if (file.Contains(LayoutFile))
                         {
-                            var openedFile = STFileLoader.OpenFileFormat(file);
-                            if (openedFile is IArchiveFile)
+                            if (Utils.GetExtension(file) == ".szs")
                             {
+                                var openedFile = STFileLoader.OpenFileFormat(file);
+
                                 BFLYT bflyt = null;
                                 SearchArchive((IArchiveFile)openedFile, ref bflyt);
                                 if (bflyt != null)
                                     return bflyt;
                             }
-                            else if (openedFile is BFLYT)
+                            else if (Utils.GetExtension(file) == ".bflyt")
                             {
+                                var openedFile = STFileLoader.OpenFileFormat(file);
+
                                 openedFile.IFileInfo = new IFileInfo();
                                 openedFile.IFileInfo.ArchiveParent = fileFormat.IFileInfo.ArchiveParent;
                                 return (BFLYT)openedFile;
@@ -1846,9 +1837,6 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("White Color"), CategoryAttribute("Color")]
             public STColor8 WhiteColor { get; set; }
 
-            [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
-            public TextureRef[] TextureMaps { get; set; }
-
             [DisplayName("Texture Transforms"), CategoryAttribute("Texture")]
             public TextureTransform[] TextureTransforms { get; set; }
 
@@ -1981,7 +1969,7 @@ namespace LayoutBXLYT.Cafe
                 }
 
                 for (int i = 0; i < TextureMaps.Length; i++)
-                    TextureMaps[i].Write(writer);
+                    ((TextureRef)TextureMaps[i]).Write(writer);
 
                 for (int i = 0; i < TextureTransforms.Length; i++)
                     TextureTransforms[i].Write(writer);
