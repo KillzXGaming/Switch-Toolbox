@@ -127,11 +127,10 @@ namespace FirstPlugin
         {
             public Magic Magic = "XT1 ";
             public uint unknown;
-            public uint ImageSize;
-            public uint Padding;
-            public uint unknown2;
+            public ulong ImageSize;
+            public uint HeaderSize;
             public uint MipCount;
-            public uint unknown3;
+            public uint Type;
             public uint Format;
             public uint Width;
             public uint Height;
@@ -139,6 +138,19 @@ namespace FirstPlugin
             public uint unknown4;
             public uint unknown5;
             public uint unknown6;
+        }
+
+        public enum SurfaceType
+        {
+            T_1D,
+            T_2D,
+            T_3D,
+            T_Cube,
+            T_1D_Array,
+            T_2D_Array,
+            T_2D_Mulitsample,
+            T_2D_Multisample_Array,
+            T_Cube_Array,
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -167,6 +179,10 @@ namespace FirstPlugin
         {
             public TextureEntry Texture;
 
+            public SurfaceType SurfaceType;
+            public uint HeaderSize;
+            public ulong ImageSize;
+
             public TextureWrapper(TextureEntry tex)
             {
                 Texture = tex;
@@ -175,13 +191,19 @@ namespace FirstPlugin
                 Depth = tex.Info.Depth;
                 ArrayCount = 1; 
                 MipCount = tex.Info.MipCount;
+
                // Format = TextureData.ConvertFormat(tex.Info.Format);
                 if (Formats.ContainsKey(tex.Info.Format))
                     Format = Formats[tex.Info.Format];
+
+                SurfaceType = (SurfaceType)tex.Info.Type;
+                ImageSize = tex.Info.ImageSize;
+                HeaderSize = tex.Info.HeaderSize;
             }
 
             private Dictionary<uint, TEX_FORMAT> Formats = new Dictionary<uint, TEX_FORMAT>()
             {
+                {0x25 , TEX_FORMAT.R8G8B8A8_UNORM},
                 {0x42 , TEX_FORMAT.BC1_UNORM},
                 {0x43, TEX_FORMAT.BC2_UNORM},
                 {0x44, TEX_FORMAT.BC3_UNORM},
@@ -190,6 +212,7 @@ namespace FirstPlugin
                 {0x47 , TEX_FORMAT.BC2_UNORM_SRGB},
                 {0x48 , TEX_FORMAT.BC3_UNORM_SRGB},
                 {0x49, TEX_FORMAT.BC4_SNORM},
+                {0x50, TEX_FORMAT.BC6H_UF16},
                 {0x79, TEX_FORMAT.ASTC_4x4_UNORM},
                 {0x80, TEX_FORMAT.ASTC_8x8_UNORM},
                 {0x87, TEX_FORMAT.ASTC_4x4_SRGB},
@@ -272,8 +295,32 @@ namespace FirstPlugin
                     LibraryGUI.LoadEditor(editor);
                 }
 
-                editor.LoadProperties(GenericProperties);
+                editor.LoadProperties(new WtaProperties(Format,
+                    Width, Height, Depth, SurfaceType, ImageSize, HeaderSize));
                 editor.LoadImage(this);
+            }
+        }
+
+        public class WtaProperties
+        {
+            public TEX_FORMAT Format { get; private set; }
+            public uint Width { get; private set; }
+            public uint Height { get; private set; }
+            public uint Depth { get; private set; }
+            public SurfaceType SurfaceType { get; private set; }
+            public ulong ImageSize { get; private set; }
+            public uint HeaderSize { get; private set; }
+
+            public WtaProperties(TEX_FORMAT format, uint width, uint height,
+                uint depth, SurfaceType type, ulong imageSize, uint headerSize)
+            {
+                Format = format;
+                Width = width;
+                Height = height;
+                Depth = depth;
+                SurfaceType = type;
+                ImageSize = imageSize;
+                HeaderSize = headerSize;
             }
         }
     }
