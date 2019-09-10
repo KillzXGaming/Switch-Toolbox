@@ -44,6 +44,20 @@ namespace Toolbox.Library
         Platform_Ps1 = 9,
     }
 
+    public enum STSurfaceType
+    {
+        Texture1D,
+        Texture2D,
+        Texture3D,
+        TextureCube,
+        Texture1D_Array,
+        Texture2D_Array,
+        Texture2D_Mulitsample,
+        Texture2D_Multisample_Array,
+        TextureCube_Array,
+    }
+
+
     public class EditedBitmap
     {
         public int ArrayLevel = 0;
@@ -73,6 +87,8 @@ namespace Toolbox.Library
                 return ArrayCount == 6 || ArrayCount % 6 == 0;
             }
         }
+
+        public STSurfaceType SurfaceType = STSurfaceType.Texture2D;
 
         /// <summary>
         /// The swizzle method to use when decoding or encoding back a texture.

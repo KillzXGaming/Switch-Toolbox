@@ -13,7 +13,7 @@ namespace Toolbox.Library.Rendering
     public class RenderableTex
     {
         public int width, height;
-        public int TexID;
+        public int TexID = -1;
         public PixelInternalFormat pixelInternalFormat;
         public OpenTK.Graphics.OpenGL.PixelFormat pixelFormat;
         public PixelType pixelType = PixelType.UnsignedByte;
@@ -80,7 +80,8 @@ namespace Toolbox.Library.Rendering
 
         public void Dispose()
         {
-            GL.DeleteTexture(TexID);
+            if (TexID != -1)
+                GL.DeleteTexture(TexID);
         }
 
         public void SetTextureParameter(TextureParameterName param, int value)
@@ -122,6 +123,34 @@ namespace Toolbox.Library.Rendering
                     return;
             }
 
+            switch (GenericTexture.SurfaceType)
+            {
+                case STSurfaceType.Texture1D:
+                    TextureTarget = TextureTarget.Texture1D;
+                    break;
+                case STSurfaceType.Texture2D:
+                    TextureTarget = TextureTarget.Texture2D;
+                    break;
+                case STSurfaceType.Texture2D_Array:
+                    TextureTarget = TextureTarget.Texture2DArray;
+                    break;
+                case STSurfaceType.Texture2D_Mulitsample:
+                    TextureTarget = TextureTarget.Texture2DMultisample;
+                    break;
+                case STSurfaceType.Texture2D_Multisample_Array:
+                    TextureTarget = TextureTarget.Texture2DMultisampleArray;
+                    break;
+                case STSurfaceType.Texture3D:
+                    TextureTarget = TextureTarget.Texture3D;
+                    break;
+                case STSurfaceType.TextureCube:
+                    TextureTarget = TextureTarget.TextureCubeMap;
+                    break;
+                case STSurfaceType.TextureCube_Array:
+                    TextureTarget = TextureTarget.TextureCubeMapArray;
+                    break;
+            }
+
             if (GenericTexture.ArrayCount == 0)
                 GenericTexture.ArrayCount = 1;
 
@@ -153,14 +182,7 @@ namespace Toolbox.Library.Rendering
             ImageSize = Surfaces[0].mipmaps[0].Length;
 
             if (IsCubeMap)
-            {
                 TextureTarget = TextureTarget.TextureCubeMap;
-                TextureWrapS = TextureWrapMode.Clamp;
-                TextureWrapT = TextureWrapMode.Clamp;
-                TextureWrapR = TextureWrapMode.Clamp;
-                TextureMinFilter = TextureMinFilter.LinearMipmapLinear;
-                TextureMagFilter = TextureMagFilter.Linear;
-            }
 
             //Force RGBA and use ST for decoding for weird width/heights
             //Open GL decoder has issues with certain width/heights
@@ -190,6 +212,15 @@ namespace Toolbox.Library.Rendering
             }
 
             TexID = GenerateOpenGLTexture(this, Surfaces);
+
+            if (IsCubeMap)
+            {
+                TextureWrapS = TextureWrapMode.Clamp;
+                TextureWrapT = TextureWrapMode.Clamp;
+                TextureWrapR = TextureWrapMode.Clamp;
+                TextureMinFilter = TextureMinFilter.LinearMipmapLinear;
+                TextureMagFilter = TextureMagFilter.Linear;
+            }
 
             Surfaces.Clear();
         }
@@ -352,7 +383,6 @@ namespace Toolbox.Library.Rendering
                 return -1;
 
             int texID = GL.GenTexture();
-
             GL.BindTexture(t.TextureTarget, texID);
             if (t.IsCubeMap)
             {
@@ -363,14 +393,10 @@ namespace Toolbox.Library.Rendering
                         int width = Math.Max(1, t.width >> mipLevel);
                         int height = Math.Max(1, t.height >> mipLevel);
 
-                        t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0], width, height, mipLevel);
-                        t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1], width, height, mipLevel);
+                        for (int i = 0; i < 6; i++)
+                            t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveX + i, ImageData[i], width, height, mipLevel);
 
-                        t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2], width, height, mipLevel);
-                        t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3], width, height, mipLevel);
-
-                        t.LoadCompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4], width, height, mipLevel);
-                        t.LoadCompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5], width, height, mipLevel);
+                        break;
                     }
                 }
                 else
@@ -380,19 +406,15 @@ namespace Toolbox.Library.Rendering
                         int width = Math.Max(1, t.width >> mipLevel);
                         int height = Math.Max(1, t.height >> mipLevel);
 
-                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveX, ImageData[0], width, height, mipLevel);
-                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeX, ImageData[1], width, height, mipLevel);
+                        for (int i = 0; i < 6; i++)
+                            t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveX + i, ImageData[i], width, height, mipLevel);
 
-                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveY, ImageData[2], width, height, mipLevel);
-                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeY, ImageData[3], width, height, mipLevel);
-
-                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapPositiveZ, ImageData[4], width, height, mipLevel);
-                        t.LoadUncompressedMips(TextureTarget.TextureCubeMapNegativeZ, ImageData[5],  width, height, mipLevel);
+                        break;
                     }
                 }
 
-                if (ImageData[0].mipmaps.Count == 1)
-                    GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
+                GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
+                //   if (ImageData[0].mipmaps.Count == 1)
             }
             else
             {
@@ -430,9 +452,18 @@ namespace Toolbox.Library.Rendering
          //  GL.GenerateMipmap((GenerateMipmapTarget)textureTarget);
         }
 
+        public void LoadParameters()
+        {
+
+        }
+
         public void Bind()
         {
+            if (TexID == -1) return;
+
             GL.BindTexture(TextureTarget, TexID);
+
+            Console.WriteLine($"binding {TextureTarget} {TexID}");
         }
 
         private static int getImageSize(RenderableTex t)

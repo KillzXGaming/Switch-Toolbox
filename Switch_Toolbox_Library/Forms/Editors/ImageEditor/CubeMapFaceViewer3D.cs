@@ -38,6 +38,7 @@ namespace Toolbox.Library.Forms
             ActiveTexture = texture;
 
             var skybox = new DrawableSkybox();
+            skybox.ForceDisplay = true;
             skybox.LoadCustomTexture(ActiveTexture);
 
             glControl.MainDrawable = skybox;

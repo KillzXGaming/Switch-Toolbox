@@ -14,15 +14,17 @@ namespace Toolbox.Library.Rendering
 {
     public class DrawableSkybox : AbstractGlDrawable
     {
+        public bool ForceDisplay = false;
+
         ShaderProgram defaultShaderProgram;
 
         private RenderableTex CustomCubemap = null;
         public void LoadCustomTexture(STGenericTexture GenericTexture)
         {
-            CustomCubemap = GenericTexture.RenderableTex;
-
-            if (CustomCubemap == null || !CustomCubemap.GLInitialized)
+            if (GenericTexture.RenderableTex == null || !GenericTexture.RenderableTex.GLInitialized)
                 GenericTexture.LoadOpenGLTexture();
+
+            CustomCubemap = GenericTexture.RenderableTex;
         }
 
         public override void Prepare(GL_ControlModern control)
@@ -56,7 +58,7 @@ namespace Toolbox.Library.Rendering
         SFGraphics.GLObjects.Textures.TextureCubeMap specularPbr;
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || !Runtime.PBR.UseSkybox || pass == Pass.TRANSPARENT)
+            if (!Runtime.OpenTKInitialized || (!Runtime.PBR.UseSkybox && !ForceDisplay) || pass == Pass.TRANSPARENT)
                 return;
 
             GL.Disable(EnableCap.CullFace);
@@ -94,7 +96,6 @@ namespace Toolbox.Library.Rendering
                     if (RenderTools.diffusePbr != null)
                     {
                         GL.ActiveTexture(TextureUnit.Texture0);
-
                         RenderTools.diffusePbr.Bind();
                     }
                 }
@@ -178,6 +179,8 @@ namespace Toolbox.Library.Rendering
             GL.BindVertexArray(0);
 
             GL.Enable(EnableCap.CullFace);
+
+            GL.BindTexture(TextureTarget.TextureCubeMap, 0);
         }
     }
 }
