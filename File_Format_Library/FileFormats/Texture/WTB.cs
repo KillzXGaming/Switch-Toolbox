@@ -77,6 +77,7 @@ namespace FirstPlugin
                 for (int i = 0; i < numTextures; i++)
                 {
                     TextureEntry tex = new TextureEntry();
+                    tex.ParentFile = this;
 
                     //Get data offset
                     reader.SeekBegin(dataOffsetTable + (i * 4));
@@ -156,6 +157,8 @@ namespace FirstPlugin
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public class TextureEntry
         {
+            public WTB ParentFile;
+
             public uint DataOffset;
             public uint DataSize;
 
@@ -163,7 +166,36 @@ namespace FirstPlugin
 
             public string SourceFile;
 
-            public byte[] ImageData;
+            private byte[] imageData;
+            public byte[] ImageData
+            {
+                get
+                {
+                    if (imageData == null)
+                    {
+                        //Search in archives for data
+                        if (ParentFile.IFileInfo.ArchiveParent != null)
+                        {
+                            foreach (var file in ParentFile.IFileInfo.ArchiveParent.Files)
+                            {
+                                if (file.FileName == ParentFile.FileName.Replace("wta", "wtp"))
+                                {
+                                    using (var readerData = new FileReader(file.FileDataStream)) {
+                                        readerData.SeekBegin(DataOffset);
+                                        imageData = readerData.ReadBytes((int)DataSize);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return imageData;
+                }
+                set
+                {
+                    imageData = value;
+                }
+            }
         }
 
         public void Unload()
@@ -199,6 +231,9 @@ namespace FirstPlugin
                 SurfaceType = (SurfaceType)tex.Info.Type;
                 ImageSize = tex.Info.ImageSize;
                 HeaderSize = tex.Info.HeaderSize;
+
+                if (SurfaceType == SurfaceType.T_Cube || SurfaceType == SurfaceType.T_Cube_Array)
+                    ArrayCount = 6;
             }
 
             private Dictionary<uint, TEX_FORMAT> Formats = new Dictionary<uint, TEX_FORMAT>()
@@ -272,8 +307,19 @@ namespace FirstPlugin
 
             }
 
+            private bool hasShownDialog = false;
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
+                if (Texture.ImageData == null)
+                {
+                    if (!hasShownDialog)
+                    {
+                        MessageBox.Show("No image data found! Put this next to it's data file (.wtp)");
+                        hasShownDialog = true;
+                    }
+                    return new byte[Texture.Info.ImageSize];
+                }
+
                 Console.WriteLine($" Texture.ImageData " + Texture.ImageData.Length);
 
                 return TegraX1Swizzle.GetImageData(this, Texture.ImageData, ArrayLevel, MipLevel, 1);
