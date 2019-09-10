@@ -117,13 +117,15 @@ namespace FirstPlugin
                     entries[i].Name = StringTable[entries[i].StringPoolOffset];
                 }
 
-                //Setup our directory entries for loading to the tree
-                DirectoryEntry[] dirs = new DirectoryEntry[TotalNodeCount];
+                entries[0].Name = "Root";
+
+               //Setup our directory entries for loading to the tree
+               DirectoryEntry[] dirs = new DirectoryEntry[TotalNodeCount];
                 for (int i = 0; i < dirs.Length; i++)
                     dirs[i] = new DirectoryEntry();
 
                 DirectoryEntry currentDir = dirs[1];
-                nodes.Add(currentDir);
+                nodes.Add(dirs[0]);
 
                 //Skip root so start index at 1
                 int dirIndex = 1;
@@ -133,13 +135,16 @@ namespace FirstPlugin
                     if (node.Name == string.Empty)
                         continue;
 
+                    Console.WriteLine($"{ node.Name} {i} {node.nodeType} {node.Setting1}");
+
                     if (node.nodeType == NodeEntry.NodeType.Directory)
                     {
                         dirs[i].Name = node.Name;
                         dirs[i].nodeEntry = node;
-                        dirs[node.Setting1].AddNode(dirs[i]);
+                        currentDir = dirs[i];
 
-                        currentDir =  dirs[i];
+                        if (i != 0)
+                            dirs[node.Setting1].AddNode(currentDir);
                     }
                     else
                     {
