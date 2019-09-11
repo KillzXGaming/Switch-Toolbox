@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
@@ -101,15 +101,24 @@ namespace FirstPlugin
 
         public override void OnClick(TreeView treeview)
         {
-            HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
-            if (editor == null)
-            {
-                editor = new HexEditor();
-                LibraryGUI.LoadEditor(editor);
-            }
+            System.Drawing.Text.PrivateFontCollection privateFonts = new System.Drawing.Text.PrivateFontCollection();
+
+            var fontDataPtr = Marshal.AllocCoTaskMem(DecryptedFont.Length);
+            Marshal.Copy(DecryptedFont, 0, fontDataPtr, DecryptedFont.Length);
+            privateFonts.AddMemoryFont(fontDataPtr, DecryptedFont.Length);
+
+            System.Drawing.Font font = new System.Drawing.Font(privateFonts.Families[0], 12);
+
+            var texbox = new STTextBox() { Multiline = true, Dock = DockStyle.Fill };
+          
+            UserControl editor = new UserControl();
+            editor.Controls.Add(texbox);
+            LibraryGUI.LoadEditor(editor);
+
             editor.Text = Text;
             editor.Dock = DockStyle.Fill;
-            editor.LoadData(DecryptedFont);
+            editor.Font = font;
+            texbox.Text = "Preview Text!";
         }
 
         private static UInt32 GetUInt32(byte[] data, int pos)

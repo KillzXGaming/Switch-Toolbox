@@ -196,7 +196,6 @@ namespace LayoutBXLYT.Cafe
 
         public Dictionary<string, STGenericTexture> GetTextures()
         {
-            BFLIM test = new BFLIM();
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
 
             if (File.Exists(FilePath))
@@ -225,7 +224,7 @@ namespace LayoutBXLYT.Cafe
                             if (!textures.ContainsKey(tex.Key))
                                 textures.Add(tex.Key, tex.Value);
                     }
-                    else if (test.Identify(new MemoryStream(file.FileData)))
+                    if (Utils.GetExtension(file.FileName) == ".bflim")
                     {
                         BFLIM bflim = (BFLIM)file.OpenFile();
                         file.FileFormat = bflim;
@@ -463,6 +462,20 @@ namespace LayoutBXLYT.Cafe
 
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
+                            break;
+                        case "scr1":
+                            var scissorPane = new SCR1(reader, this);
+                            AddPaneToTable(scissorPane);
+
+                            SetPane(scissorPane, parentPane);
+                            currentPane = scissorPane;
+                            break;
+                        case "ali1":
+                            var alignmentPane = new ALI1(reader, this);
+                            AddPaneToTable(alignmentPane);
+
+                            SetPane(alignmentPane, parentPane);
+                            currentPane = alignmentPane;
                             break;
                         case "pas1":
                             if (currentPane != null)
@@ -1051,6 +1064,46 @@ namespace LayoutBXLYT.Cafe
                     writer.Write(TextureFlip, false);
                     writer.Write((byte)0);
                 }
+            }
+        }
+
+        public class ALI1 : PAN1
+        {
+            public override string Signature { get; } = "ali1";
+
+            public ALI1() : base()
+            {
+
+            }
+
+            public ALI1(FileReader reader, Header header) : base(reader)
+            {
+
+            }
+
+            public override void Write(FileWriter writer, LayoutHeader header)
+            {
+                base.Write(writer, header);
+            }
+        }
+
+        public class SCR1 : PAN1
+        {
+            public override string Signature { get; } = "scr1";
+
+            public SCR1() : base()
+            {
+
+            }
+
+            public SCR1(FileReader reader, Header header) : base(reader)
+            {
+
+            }
+
+            public override void Write(FileWriter writer, LayoutHeader header)
+            {
+                base.Write(writer, header);
             }
         }
 

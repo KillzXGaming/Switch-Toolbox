@@ -768,10 +768,10 @@
     <Compile Include="Forms\Editors\AssimpMeshSelector.Designer.cs">
       <DependentUpon>AssimpMeshSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Custom\STProgressBar.cs">
+    <Compile Include="Forms\Custom\ProgressBar\STProgressBar.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Custom\STProgressBar.Designer.cs">
+    <Compile Include="Forms\Custom\ProgressBar\STProgressBar.Designer.cs">
       <DependentUpon>STProgressBar.cs</DependentUpon>
     </Compile>
     <Compile Include="Imaging.cs" />
@@ -989,7 +989,7 @@
     <EmbeddedResource Include="Forms\Editors\ObjectList.resx">
       <DependentUpon>ObjectList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Custom\STProgressBar.resx">
+    <EmbeddedResource Include="Forms\Custom\ProgressBar\STProgressBar.resx">
       <DependentUpon>STProgressBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\RenameDialog.resx">

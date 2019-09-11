@@ -28,7 +28,7 @@ namespace LayoutBXLYT
             SetInt("hasTexture0", 0);
             SetInt("numTextureMaps", 0);
             SetInt("flipTexture", 0);
-
+            
             SetVec2("uvScale0", new Vector2(1,1));
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
@@ -44,8 +44,6 @@ namespace LayoutBXLYT
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
             SetInt("flipTexture", 0);
-
-            Console.WriteLine("debugShading " + (int)Runtime.LayoutEditor.Shading);
 
             BindTextureUniforms();
 

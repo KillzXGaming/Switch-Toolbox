@@ -5,13 +5,15 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Toolbox.Library
 {
     public partial class STProgressBar : Form
     {
+        private Thread Thread;
+
         public STProgressBar()
         {
             InitializeComponent();
@@ -26,9 +28,10 @@ namespace Toolbox.Library
                 else
                     progressBar1.Value = value;
 
+                progressBar1.Refresh();
+
                 if (value >= 100)
                     Close();
-                progressBar1.Refresh();
             }
         }
 
@@ -59,9 +62,26 @@ namespace Toolbox.Library
             }
         }
 
-        private void ProgressBar_FormClosed(object sender, FormClosedEventArgs e)
+        /// <summary>
+        /// Runs an action on another thread. Runs unless the user cancels it or finishes
+        /// </summary>
+        /// <param name="action"></param>
+        public void RunAction(Action action)
         {
+            Thread = new Thread(
+            () =>
+            {
+                try { action();}
+                finally
+                {
+                    Value = 100;
+                }
+            }) { IsBackground = true };
+            Thread.Start();
+        }
 
+        private void ProgressBar_FormClosed(object sender, FormClosedEventArgs e) {
+            Thread?.Abort();
         }
 
         private void ProgressBarWindow_Load(object sender, EventArgs e)

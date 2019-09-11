@@ -193,6 +193,57 @@ namespace LayoutBXLYT
             BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
+
+        public static void DrawAlignmentPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        {
+            Vector2[] TexCoords = new Vector2[] {
+                new Vector2(1,1),
+                new Vector2(0,1),
+                new Vector2(0,0),
+                new Vector2(1,0)
+                };
+
+            Color color = Color.Orange;
+            if (SelectedPanes.Contains(pane))
+                color = Color.Red;
+
+            color = Color.FromArgb(70, color);
+
+            Color[] Colors = new Color[] {
+                color,
+                color,
+                color,
+                color,
+                };
+
+            BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+        }
+
+        public static void DrawScissorPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        {
+            Vector2[] TexCoords = new Vector2[] {
+                new Vector2(1,1),
+                new Vector2(0,1),
+                new Vector2(0,0),
+                new Vector2(1,0)
+                };
+
+            Color color = Color.Yellow;
+            if (SelectedPanes.Contains(pane))
+                color = Color.Red;
+
+            color = Color.FromArgb(70, color);
+
+            Color[] Colors = new Color[] {
+                color,
+                color,
+                color,
+                color,
+                };
+
+            BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+        }
+
         public static void DrawWindowPane(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
         {
             uint sizeX = (uint)pane.Width;
@@ -332,9 +383,26 @@ namespace LayoutBXLYT
                             GL.PopMatrix();
                         }
                     }
-                    else if (window.FrameCount == 4)
+                    else if (window.FrameCount == 4) //4 corners with specific texture mapping
                     {
+                        // _________
+                        //|______|  |
+                        //|  |   |  |
+                        //|  |___|__|
+                        //|__|______|
 
+                        var frame1 = window.WindowFrames[0];
+                        var frame2 = window.WindowFrames[0];
+                        var frame3 = window.WindowFrames[0];
+                        var frame4 = window.WindowFrames[0];
+
+                        uint contentWidth = sizeX - (uint)window.FrameElementRight - (uint)window.FrameElementLeft;
+                        uint contentHeight = sizeY - (uint)window.FrameElementTop - (uint)window.FrameElementBottm;
+
+                        RenderWindowContent(pane,
+                            contentWidth,
+                            contentHeight,
+                            window.Content, effectiveAlpha, Textures);
                     }
                     break;
                 case WindowKind.Horizontal:
@@ -404,19 +472,19 @@ namespace LayoutBXLYT
                 };
 
             Color[] colors = new Color[] {
-                content.ColorTopLeft.Color,
-                content.ColorTopRight.Color,
-                content.ColorBottomRight.Color,
                 content.ColorBottomLeft.Color,
+                content.ColorBottomRight.Color,
+                content.ColorTopRight.Color,
+                content.ColorTopLeft.Color,
                 };
 
             if (content.TexCoords.Count > 0)
             {
                 texCoords = new Vector2[] {
-                        content.TexCoords[0].TopLeft.ToTKVector2(),
-                        content.TexCoords[0].TopRight.ToTKVector2(),
-                        content.TexCoords[0].BottomRight.ToTKVector2(),
                         content.TexCoords[0].BottomLeft.ToTKVector2(),
+                        content.TexCoords[0].BottomRight.ToTKVector2(),
+                        content.TexCoords[0].TopRight.ToTKVector2(),
+                        content.TexCoords[0].TopLeft.ToTKVector2(),
                    };
             }
 
