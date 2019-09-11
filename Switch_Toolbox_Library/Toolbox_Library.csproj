@@ -233,6 +233,7 @@
     <Compile Include="Compression\Yaz0.cs" />
     <Compile Include="Compression\ZCMP.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Enums\CompressionType.cs" />
     <Compile Include="FileFormats\DDS\RGBAPixelDecoder.cs" />
     <Compile Include="Forms\ColorAlphaBox.cs">
       <SubType>Component</SubType>
@@ -301,6 +302,7 @@
     <Compile Include="Helpers\ArchiveNodeMenuHelper.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\DragHelper.cs" />
+    <Compile Include="Imaging\BitmapFont.cs" />
     <Compile Include="Interfaces\FileFormatting\IFormEditorParameters.cs" />
     <Compile Include="Interfaces\FileFormatting\ILeaveOpenOnLoad.cs" />
     <Compile Include="Interfaces\FileFormatting\IPropertyContainer.cs" />
@@ -812,7 +814,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PublicEnums.cs" />
     <Compile Include="Rendering\DrawableBackground.cs" />
     <Compile Include="Rendering\DrawableDividedCube.cs" />
     <Compile Include="Rendering\DrawableBoundingBox.cs" />

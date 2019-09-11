@@ -61,6 +61,88 @@ namespace Toolbox.Library.IO
 
         }
 
+        public class ZLIB_GZ
+        {
+            public static bool IsCompressed(Stream stream)
+            {
+                using (var reader = new FileReader(stream, true))
+                {
+                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                    uint chunkCount = reader.ReadUInt32();
+                    uint unk = reader.ReadUInt32();
+                    if (reader.BaseStream.Length > 4 + (chunkCount * 4))
+                    {
+                        uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
+                        reader.Align(128);
+
+                        while (!reader.EndOfStream)
+                        {
+                            uint size = reader.ReadUInt32();
+
+                            long pos = reader.Position;
+                            ushort magic = reader.ReadUInt16();
+
+                            reader.Position = 0;
+                            if (magic == 0x78da)
+                                return true;
+                        }
+                    }
+
+                    reader.Position = 0;
+                }
+
+                return false;
+            }
+
+            public static Stream Decompress(Stream stream)
+            {
+                using (var reader = new FileReader(stream, true))
+                {
+                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                    uint unk = reader.ReadUInt32();
+                    try
+                    {
+                        uint chunkCount = reader.ReadUInt32();
+                        uint unk2 = reader.ReadUInt32();
+                        uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
+
+                        reader.Align(128);
+
+                        List<byte[]> DecompressedChunks = new List<byte[]>();
+
+                        //Now search for zlibbed chunks
+                        while (!reader.EndOfStream)
+                        {
+                            uint size = reader.ReadUInt32();
+
+                            long pos = reader.Position;
+                            ushort magic = reader.ReadUInt16();
+
+                            ///Check zlib magic
+                            if (magic == 0x78da)
+                            {
+                                var data = STLibraryCompression.ZLIB.Decompress(reader.getSection((uint)pos, size));
+                                DecompressedChunks.Add(data);
+
+                                reader.SeekBegin(pos + size); //Seek the compressed size and align it to goto the next chunk
+                                reader.Align(128);
+                            }
+                            else //If the magic check fails, seek back 2. This shouldn't happen, but just incase
+                                reader.Seek(-2);
+                        }
+                        //Return the decompressed stream with all chunks combined
+                        return new MemoryStream(Utils.CombineByteArray(DecompressedChunks.ToArray()));
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                return null;
+            }
+        }
+
         public class ZLIB
         {
             public static byte[] Decompress(byte[] b)

@@ -15,6 +15,7 @@ namespace Toolbox.Library
         Lz4,
         Lz4f,
         Zstb,
+        ZlibGz,
         MarioTennisCustom,
     }
 }

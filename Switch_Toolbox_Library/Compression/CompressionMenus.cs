@@ -25,6 +25,7 @@ namespace Toolbox.Library.IO
             items.Add(new ToolStripMenuItem("lZ4F"));
             items.Add(new ToolStripMenuItem("ZSTD"));
             items.Add(new ToolStripMenuItem("ZLIB"));
+            items.Add(new ToolStripMenuItem("ZLIB_GZ (Hyrule Warriors)"));
 
             SetFunctions(items);
             return items;
@@ -74,6 +75,8 @@ namespace Toolbox.Library.IO
                 OpenFileForCompression(CompressionType.Zstb, Compress);
             else if (Name == "ZLIB")
                 OpenFileForCompression(CompressionType.Zlib, Compress);
+            else if (Name.Contains("ZLIB_GZ"))
+                OpenFileForCompression(CompressionType.ZlibGz, Compress);
             else throw new Exception("Unimplimented Type! " + Name);
         }
 
@@ -99,6 +102,7 @@ namespace Toolbox.Library.IO
                 case CompressionType.Lz4:
                     SaveFileForCompression(STLibraryCompression.Type_LZ4.Compress(data));
                     break;
+      
             }
         }
         public void DecompressData(CompressionType CompressionType, byte[] data)
@@ -131,6 +135,9 @@ namespace Toolbox.Library.IO
                     case CompressionType.Lz4:
                         SaveFileForCompression(STLibraryCompression.Type_LZ4.Decompress(data));
                         break;
+                    case CompressionType.ZlibGz:
+                        SaveFileForCompression(STLibraryCompression.ZLIB_GZ.Decompress(new MemoryStream(data)));
+                        break;
                 }
             }
             catch
@@ -155,6 +162,19 @@ namespace Toolbox.Library.IO
                     else
                         DecompressData(compressionType, File.ReadAllBytes(ofd.FileName));
                 }
+            }
+        }
+
+        private void SaveFileForCompression(Stream data)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "All files(*.*)|*.*";
+
+            Cursor.Current = Cursors.Default;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                data.ExportToFile(sfd.FileName);
+                MessageBox.Show($"File has been saved to {sfd.FileName}", "Save Notification");
             }
         }
 

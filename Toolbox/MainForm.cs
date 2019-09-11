@@ -293,7 +293,9 @@ namespace Toolbox
                 if (inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEditor<>))
                 {
                     MethodInfo method = objectType.GetMethod("OpenForm");
+                    MethodInfo methodFill = objectType.GetMethod("FillEditor");
                     var control = (UserControl)method.Invoke(file, new object[0]);
+                    methodFill.Invoke(file, new object[1] { control });
                     var form = new GenericEditorForm(false, control);
                     TabDupeIndex = 0;
                     form.Text = CheckTabDupes(((IFileFormat)file).FileName);
