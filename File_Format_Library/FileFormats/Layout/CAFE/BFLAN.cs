@@ -207,8 +207,6 @@ namespace LayoutBXLYT
 
                 AnimationOrder = reader.ReadUInt16();
                 ushort groupCount = reader.ReadUInt16();
-                if (groupCount != 1)
-                    throw new Exception("Unexpected group count! Expected 1!");
                 uint animNameOffset = reader.ReadUInt32();
                 uint groupNamesOffset = reader.ReadUInt32();
                 StartFrame = reader.ReadUInt16();
@@ -336,7 +334,7 @@ namespace LayoutBXLYT
             {
                 long startPos = reader.Position;
 
-                Name = reader.ReadString(28);
+                Name = reader.ReadString(28, true);
                 var numTags = reader.ReadByte();
                 Target = reader.ReadEnum<AnimationTarget>(false);
                 reader.ReadUInt16(); //padding
@@ -345,7 +343,7 @@ namespace LayoutBXLYT
                 for (int i = 0; i < numTags; i++)
                 {
                     reader.SeekBegin(startPos + offsets[i]);
-                    Tags.Add(new PaiTag(reader, header));
+                    Tags.Add(new PaiTag(reader, header, Target));
                 }
             }
 
@@ -363,7 +361,7 @@ namespace LayoutBXLYT
                     for (int i = 0; i < Tags.Count; i++)
                     {
                         writer.WriteUint32Offset(4 + (i * 4), startPos);
-                        Tags[i].Write(writer, header);
+                        Tags[i].Write(writer, header, Target);
                     }
                 }
             }
@@ -390,10 +388,14 @@ namespace LayoutBXLYT
                 {"FLTP","Texture Pattern" },
             };
 
-            public PaiTag(FileReader reader, Header header)
-            {
-                long startPos = reader.Position;
+            private uint Unknown {get;set;}
 
+            public PaiTag(FileReader reader, Header header, AnimationTarget target)
+            {
+                if ((byte)target == 2)
+                    Unknown = reader.ReadUInt32(); //This doesn't seem to be included in the offsets to the entries (?)
+
+                long startPos = reader.Position;
                 Tag = reader.ReadString(4, Encoding.ASCII);
                 var numEntries = reader.ReadByte();
                 reader.Seek(3);
@@ -428,8 +430,11 @@ namespace LayoutBXLYT
                 }
             }
 
-            public void Write(FileWriter writer, LayoutHeader header)
+            public void Write(FileWriter writer, LayoutHeader header, AnimationTarget target)
             {
+                if ((byte)target == 2)
+                    writer.Write(Unknown);
+
                 long startPos = writer.Position;
 
                 writer.WriteSignature(Tag);
