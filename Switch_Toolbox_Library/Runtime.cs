@@ -39,6 +39,14 @@ namespace Toolbox.Library
 
         public class LayoutEditor
         {
+            public static bool IsGamePreview = false;
+            public static bool DisplayNullPane = true;
+            public static bool DisplayBoundryPane = true;
+            public static bool DisplayPicturePane = true;
+            public static bool DisplayWindowPane = true;
+            public static bool DisplayAlignmentPane = true;
+            public static bool DisplayScissorPane = true;
+
             public static Color BackgroundColor = Color.FromArgb(130, 130, 130);
 
             public static DebugShading Shading = DebugShading.Default;

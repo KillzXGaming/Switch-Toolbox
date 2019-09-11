@@ -255,6 +255,21 @@ namespace Toolbox.Library
                         Enum.TryParse(node.InnerText, out shadingMode);
                         Runtime.LayoutEditor.Shading = shadingMode;
                         break;
+                    case "IsGamePreview":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.IsGamePreview);
+                        break;
+                    case "DisplayBoundryPane":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayBoundryPane);
+                        break;
+                    case "DisplayNullPane":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayNullPane);
+                        break;
+                    case "DisplayPicturePane":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayPicturePane);
+                        break;
+                    case "DisplayWindowPane":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayWindowPane);
+                        break;
                 }
             }
 
@@ -374,6 +389,11 @@ namespace Toolbox.Library
 
             layoutSettingsNode.AppendChild(createNode(doc, "LayoutShadingMode", Runtime.LayoutEditor.Shading.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "LayoutBackgroundColor", ColorTranslator.ToHtml(Runtime.LayoutEditor.BackgroundColor)));
+            layoutSettingsNode.AppendChild(createNode(doc, "IsGamePreview", Runtime.LayoutEditor.IsGamePreview.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "DisplayNullPane", Runtime.LayoutEditor.DisplayNullPane.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "DisplayBoundryPane", Runtime.LayoutEditor.DisplayBoundryPane.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "DisplayPicturePane", Runtime.LayoutEditor.DisplayPicturePane.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "DisplayWindowPane", Runtime.LayoutEditor.DisplayWindowPane.ToString()));
         }
 
         private static void AppendDeveloperSettings(XmlDocument doc, XmlNode parentNode)

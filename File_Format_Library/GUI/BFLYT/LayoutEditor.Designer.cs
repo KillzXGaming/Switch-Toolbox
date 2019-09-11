@@ -50,8 +50,8 @@
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayNullPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.displayWindowPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayyBoundryPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayWindowPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayPicturePanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
@@ -254,15 +254,7 @@
             this.displayNullPanesToolStripMenuItem.Name = "displayNullPanesToolStripMenuItem";
             this.displayNullPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.displayNullPanesToolStripMenuItem.Text = "Display Null Panes";
-            // 
-            // displayWindowPanesToolStripMenuItem
-            // 
-            this.displayWindowPanesToolStripMenuItem.Checked = true;
-            this.displayWindowPanesToolStripMenuItem.CheckOnClick = true;
-            this.displayWindowPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayWindowPanesToolStripMenuItem.Name = "displayWindowPanesToolStripMenuItem";
-            this.displayWindowPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.displayWindowPanesToolStripMenuItem.Text = "Display Window Panes";
+            this.displayNullPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
             // displayyBoundryPanesToolStripMenuItem
             // 
@@ -272,6 +264,17 @@
             this.displayyBoundryPanesToolStripMenuItem.Name = "displayyBoundryPanesToolStripMenuItem";
             this.displayyBoundryPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.displayyBoundryPanesToolStripMenuItem.Text = "Displayy Boundry Panes";
+            this.displayyBoundryPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
+            // 
+            // displayWindowPanesToolStripMenuItem
+            // 
+            this.displayWindowPanesToolStripMenuItem.Checked = true;
+            this.displayWindowPanesToolStripMenuItem.CheckOnClick = true;
+            this.displayWindowPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.displayWindowPanesToolStripMenuItem.Name = "displayWindowPanesToolStripMenuItem";
+            this.displayWindowPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.displayWindowPanesToolStripMenuItem.Text = "Display Window Panes";
+            this.displayWindowPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
             // displayPicturePanesToolStripMenuItem
             // 
@@ -281,6 +284,7 @@
             this.displayPicturePanesToolStripMenuItem.Name = "displayPicturePanesToolStripMenuItem";
             this.displayPicturePanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.displayPicturePanesToolStripMenuItem.Text = "Display Picture Panes";
+            this.displayPicturePanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 

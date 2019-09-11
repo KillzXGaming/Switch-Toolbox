@@ -56,6 +56,10 @@ namespace LayoutBXLYT
                 debugShading.Items.Add(type);
 
             debugShading.SelectedItem = Runtime.LayoutEditor.Shading;
+            displayNullPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayNullPane;
+            displayyBoundryPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayBoundryPane;
+            displayPicturePanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayPicturePane;
+            displayWindowPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayWindowPane;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
@@ -606,6 +610,17 @@ namespace LayoutBXLYT
                 SaveActiveFile(ActiveLayout.FileInfo, false);
             if (ActiveAnimation != null)
                 SaveActiveFile(ActiveAnimation.FileInfo, false);
+        }
+
+        private void displayPanesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Runtime.LayoutEditor.DisplayNullPane = displayNullPanesToolStripMenuItem.Checked;
+            Runtime.LayoutEditor.DisplayBoundryPane = displayyBoundryPanesToolStripMenuItem.Checked;
+            Runtime.LayoutEditor.DisplayPicturePane = displayPicturePanesToolStripMenuItem.Checked;
+            Runtime.LayoutEditor.DisplayWindowPane = displayWindowPanesToolStripMenuItem.Checked;
+
+            if (ActiveViewport != null)
+                ActiveViewport.UpdateViewport();
         }
     }
 }

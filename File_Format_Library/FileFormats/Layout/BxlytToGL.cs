@@ -45,6 +45,9 @@ namespace LayoutBXLYT
 
         public static void DrawPictureBox(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
         {
+            if (!Runtime.LayoutEditor.DisplayPicturePane)
+                return;
+
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
                 new Vector2(0,1),
@@ -170,6 +173,9 @@ namespace LayoutBXLYT
     
         public static void DrawBoundryPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
+            if (!Runtime.LayoutEditor.DisplayBoundryPane)
+                return;
+
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
                 new Vector2(0,1),
@@ -196,6 +202,10 @@ namespace LayoutBXLYT
 
         public static void DrawAlignmentPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
+            if (!Runtime.LayoutEditor.DisplayAlignmentPane)
+                return;
+
+
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
                 new Vector2(0,1),
@@ -221,6 +231,9 @@ namespace LayoutBXLYT
 
         public static void DrawScissorPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
+            if (!Runtime.LayoutEditor.DisplayScissorPane)
+                return;
+
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
                 new Vector2(0,1),
@@ -246,6 +259,9 @@ namespace LayoutBXLYT
 
         public static void DrawWindowPane(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
         {
+            if (!Runtime.LayoutEditor.DisplayWindowPane)
+                return;
+
             uint sizeX = (uint)pane.Width;
             uint sizeY = (uint)pane.Height;
 
