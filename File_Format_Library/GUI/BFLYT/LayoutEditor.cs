@@ -490,6 +490,18 @@ namespace LayoutBXLYT
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (ActiveAnimation != null && ActiveAnimation.FileInfo.CanSave)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = Utils.GetAllFilters(ActiveAnimation.FileInfo);
+                sfd.FileName = ActiveAnimation.FileInfo.FileName;
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    STFileSaver.SaveFileFormat(ActiveAnimation.FileInfo, sfd.FileName);
+                }
+            }
+
             if (ActiveLayout != null && ActiveLayout.FileInfo.CanSave)
             {
                 SaveFileDialog sfd = new SaveFileDialog();

@@ -131,7 +131,10 @@ namespace LayoutBXLYT
             {
                 writer.SetByteOrder(true);
                 writer.WriteSignature(Magic);
-                writer.Write(ByteOrderMark);
+                if (!IsBigEndian)
+                    writer.Write((ushort)0xFFFE);
+                else
+                    writer.Write((ushort)0xFEFF);
                 writer.SetByteOrder(IsBigEndian);
                 writer.Write(HeaderSize);
                 writer.Write(Version);
@@ -235,11 +238,11 @@ namespace LayoutBXLYT
                 writer.Write(ChildBinding);
                 writer.Write(UnknownData);
 
-                writer.WriteUint32Offset(4, startPos);
+                writer.WriteUint32Offset(startPos + 12, startPos);
                 writer.WriteString(Name);
                 writer.Align(4);
 
-                writer.WriteUint32Offset(8, startPos);
+                writer.WriteUint32Offset(startPos + 16, startPos);
                 for (int i = 0; i < Groups.Count; i++)
                     writer.WriteString(Groups[i], 0x24);
             }
@@ -291,29 +294,34 @@ namespace LayoutBXLYT
 
             public override void Write(FileWriter writer, LayoutHeader header)
             {
-                long startPos = writer.Position;
+                long startPos = writer.Position - 8;
 
                 writer.Write(FrameSize);
                 writer.Write(flags);
                 writer.Write((byte)0);
                 writer.Write((ushort)Textures.Count);
                 writer.Write((ushort)Entries.Count);
+                writer.Write(0);
 
                 if (Textures.Count > 0)
                 {
+                    long startOfsPos = writer.Position;
                     writer.Write(new uint[Textures.Count]);
                     for (int i = 0; i < Textures.Count; i++)
                     {
-                        writer.WriteUint32Offset(4 + (i * 4), startPos);
+                        writer.WriteUint32Offset(startOfsPos + (i * 4), startPos);
                         writer.WriteString(Textures[i]);
                     }
                 }
                 if (Entries.Count > 0)
                 {
+                    writer.WriteUint32Offset(startPos + 8, startPos);
+
+                    long startOfsPos = writer.Position;
                     writer.Write(new uint[Entries.Count]);
-                    for (int i = 0; i < Textures.Count; i++)
+                    for (int i = 0; i < Entries.Count; i++)
                     {
-                        writer.WriteUint32Offset(4 + (i * 4), startPos);
+                        writer.WriteUint32Offset(startOfsPos + (i * 4), startPos);
                         Entries[i].Write(writer, header);
                     }
                 }
@@ -353,14 +361,14 @@ namespace LayoutBXLYT
 
                 writer.WriteString(Name, 28);
                 writer.Write((byte)Tags.Count);
-                writer.Write(Target, true);
-                writer.Write((byte)0);
+                writer.Write(Target, false);
+                writer.Write((ushort)0);
                 if (Tags.Count > 0)
                 {
                     writer.Write(new uint[Tags.Count]);
                     for (int i = 0; i < Tags.Count; i++)
                     {
-                        writer.WriteUint32Offset(4 + (i * 4), startPos);
+                        writer.WriteUint32Offset(startPos + 4 + (i * 4), startPos);
                         Tags[i].Write(writer, header, Target);
                     }
                 }
@@ -443,7 +451,7 @@ namespace LayoutBXLYT
                 writer.Write(new uint[Entries.Count]);
                 for (int i = 0; i < Entries.Count; i++)
                 {
-                    writer.WriteUint32Offset(8 + (i * 4), startPos);
+                    writer.WriteUint32Offset(startPos + 8 + (i * 4), startPos);
                     Entries[i].Write(writer, header);
                 }
             }
@@ -500,7 +508,7 @@ namespace LayoutBXLYT
 
                 if (KeyFrames.Count > 0)
                 {
-                    writer.WriteUint32Offset(8, startPos);
+                    writer.WriteUint32Offset(startPos + 8, startPos);
                     for (int i = 0; i < KeyFrames.Count; i++)
                         KeyFrames[i].Write(writer, DataType);
                 }
