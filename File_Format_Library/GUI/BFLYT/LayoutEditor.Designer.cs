@@ -42,13 +42,17 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearWorkspaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAnimationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAnimationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayNullPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayWindowPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayyBoundryPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayPicturePanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -166,28 +170,35 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // clearWorkspaceToolStripMenuItem
             // 
             this.clearWorkspaceToolStripMenuItem.Name = "clearWorkspaceToolStripMenuItem";
-            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearWorkspaceToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.clearWorkspaceToolStripMenuItem.Text = "Clear Files";
             this.clearWorkspaceToolStripMenuItem.Click += new System.EventHandler(this.clearWorkspaceToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem1
             // 
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(157, 22);
             this.saveToolStripMenuItem1.Text = "Save Layout";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // saveAnimationToolStripMenuItem
+            // 
+            this.saveAnimationToolStripMenuItem.Name = "saveAnimationToolStripMenuItem";
+            this.saveAnimationToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveAnimationToolStripMenuItem.Text = "Save Animation";
+            this.saveAnimationToolStripMenuItem.Click += new System.EventHandler(this.saveAnimationToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveToolStripMenuItem.Text = "Save As";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -202,7 +213,11 @@
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.textureListToolStripMenuItem,
             this.textConverterToolStripMenuItem,
-            this.orthographicViewToolStripMenuItem});
+            this.orthographicViewToolStripMenuItem,
+            this.displayNullPanesToolStripMenuItem,
+            this.displayyBoundryPanesToolStripMenuItem,
+            this.displayWindowPanesToolStripMenuItem,
+            this.displayPicturePanesToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -210,31 +225,62 @@
             // textureListToolStripMenuItem
             // 
             this.textureListToolStripMenuItem.Name = "textureListToolStripMenuItem";
-            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.textureListToolStripMenuItem.Text = "Texture List";
             this.textureListToolStripMenuItem.Click += new System.EventHandler(this.textureListToolStripMenuItem_Click);
             // 
             // textConverterToolStripMenuItem
             // 
             this.textConverterToolStripMenuItem.Name = "textConverterToolStripMenuItem";
-            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.textConverterToolStripMenuItem.Text = "Text Converter";
             this.textConverterToolStripMenuItem.Click += new System.EventHandler(this.textConverterToolStripMenuItem_Click);
             // 
             // orthographicViewToolStripMenuItem
             // 
+            this.orthographicViewToolStripMenuItem.Checked = true;
             this.orthographicViewToolStripMenuItem.CheckOnClick = true;
+            this.orthographicViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.orthographicViewToolStripMenuItem.Name = "orthographicViewToolStripMenuItem";
-            this.orthographicViewToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.orthographicViewToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.orthographicViewToolStripMenuItem.Text = "Orthographic View";
             this.orthographicViewToolStripMenuItem.Click += new System.EventHandler(this.orthographicViewToolStripMenuItem_Click);
             // 
-            // saveAnimationToolStripMenuItem
+            // displayNullPanesToolStripMenuItem
             // 
-            this.saveAnimationToolStripMenuItem.Name = "saveAnimationToolStripMenuItem";
-            this.saveAnimationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.saveAnimationToolStripMenuItem.Text = "Save Animation";
-            this.saveAnimationToolStripMenuItem.Click += new System.EventHandler(this.saveAnimationToolStripMenuItem_Click);
+            this.displayNullPanesToolStripMenuItem.Checked = true;
+            this.displayNullPanesToolStripMenuItem.CheckOnClick = true;
+            this.displayNullPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.displayNullPanesToolStripMenuItem.Name = "displayNullPanesToolStripMenuItem";
+            this.displayNullPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.displayNullPanesToolStripMenuItem.Text = "Display Null Panes";
+            // 
+            // displayWindowPanesToolStripMenuItem
+            // 
+            this.displayWindowPanesToolStripMenuItem.Checked = true;
+            this.displayWindowPanesToolStripMenuItem.CheckOnClick = true;
+            this.displayWindowPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.displayWindowPanesToolStripMenuItem.Name = "displayWindowPanesToolStripMenuItem";
+            this.displayWindowPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.displayWindowPanesToolStripMenuItem.Text = "Display Window Panes";
+            // 
+            // displayyBoundryPanesToolStripMenuItem
+            // 
+            this.displayyBoundryPanesToolStripMenuItem.Checked = true;
+            this.displayyBoundryPanesToolStripMenuItem.CheckOnClick = true;
+            this.displayyBoundryPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.displayyBoundryPanesToolStripMenuItem.Name = "displayyBoundryPanesToolStripMenuItem";
+            this.displayyBoundryPanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.displayyBoundryPanesToolStripMenuItem.Text = "Displayy Boundry Panes";
+            // 
+            // displayPicturePanesToolStripMenuItem
+            // 
+            this.displayPicturePanesToolStripMenuItem.Checked = true;
+            this.displayPicturePanesToolStripMenuItem.CheckOnClick = true;
+            this.displayPicturePanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.displayPicturePanesToolStripMenuItem.Name = "displayPicturePanesToolStripMenuItem";
+            this.displayPicturePanesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.displayPicturePanesToolStripMenuItem.Text = "Display Picture Panes";
             // 
             // LayoutEditor
             // 
@@ -287,5 +333,9 @@
         private System.Windows.Forms.ToolStripMenuItem orthographicViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolstripOrthoBtn;
         private System.Windows.Forms.ToolStripMenuItem saveAnimationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayNullPanesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayyBoundryPanesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayWindowPanesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayPicturePanesToolStripMenuItem;
     }
 }

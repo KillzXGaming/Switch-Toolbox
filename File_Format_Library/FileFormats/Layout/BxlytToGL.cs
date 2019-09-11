@@ -250,6 +250,16 @@ namespace LayoutBXLYT
             uint sizeY = (uint)pane.Height;
 
             var window = (IWindowPane)pane;
+
+            ushort FrameRight = window.FrameElementRight;
+            ushort FrameLeft = window.FrameElementLeft;
+            ushort FrameBottom = window.FrameElementBottm;
+            ushort FrameTop = window.FrameElementTop;
+            if (FrameRight == 0) FrameRight = 1;
+            if (FrameLeft == 0) FrameLeft = 1;
+            if (FrameBottom == 0) FrameBottom = 1;
+            if (FrameTop == 0) FrameTop = 1;
+
             switch (window.WindowKind)
             {
                 case WindowKind.Around:
@@ -270,8 +280,13 @@ namespace LayoutBXLYT
 
                             var image = Textures[texture];
 
-                            uint contentWidth = sizeX - (uint)window.FrameElementRight - (uint)window.FrameElementLeft;
-                            uint contentHeight = sizeY - (uint)window.FrameElementTop - (uint)window.FrameElementBottm;
+                            FrameRight = (ushort)image.Width;
+                            FrameLeft = (ushort)image.Width;
+                            FrameTop = (ushort)image.Height;
+                            FrameBottom = (ushort)image.Height;
+
+                            uint contentWidth = sizeX - (uint)FrameRight - (uint)FrameLeft;
+                            uint contentHeight = sizeY - (uint)FrameTop - (uint)FrameBottom;
 
                             RenderWindowContent(pane,
                                 contentWidth,
@@ -293,9 +308,9 @@ namespace LayoutBXLYT
 
                             GL.PushMatrix();
                             {
-                                uint pieceWidth = sizeX - window.FrameElementRight;
-                                uint pieceHeight = window.FrameElementTop;
-                                int pieceX = (int)-(window.FrameElementRight / 2);
+                                uint pieceWidth = sizeX - FrameRight;
+                                uint pieceHeight = FrameTop;
+                                int pieceX = (int)-(FrameRight / 2);
                                 int pieceY = (int)((sizeY / 2) - (pieceHeight / 2));
 
                                 GL.Translate(pieceX, pieceY, 0);
@@ -303,9 +318,9 @@ namespace LayoutBXLYT
                                 GL.Begin(PrimitiveType.Quads);
                                 GL.MultiTexCoord2(TextureUnit.Texture0, 0, 1);
                                 GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementRight, 1);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameRight, 1);
                                 GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementRight, 0);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameRight, 0);
                                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
                                 GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
                                 GL.Vertex2(rect.LeftPoint, rect.TopPoint);
@@ -316,17 +331,17 @@ namespace LayoutBXLYT
                             //Top Right
                             GL.PushMatrix();
                             {
-                                uint pieceWidth = window.FrameElementRight;
-                                uint pieceHeight = sizeY - window.FrameElementBottm;
+                                uint pieceWidth = FrameRight;
+                                uint pieceHeight = sizeY - FrameBottom;
                                 int pieceX = (int)((contentWidth / 2) + (pieceWidth / 2));
-                                int pieceY = (int)(window.FrameElementBottm / 2);
+                                int pieceY = (int)(FrameBottom / 2);
 
                                 GL.Translate(pieceX, pieceY, 0);
                                 rect = pane.CreateRectangle(pieceWidth, pieceHeight);
                                 GL.Begin(PrimitiveType.Quads);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / window.FrameElementBottm);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / FrameBottom);
                                 GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / window.FrameElementBottm);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / FrameBottom);
                                 GL.Vertex2(rect.RightPoint, rect.BottomPoint);
                                 GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
                                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
@@ -339,10 +354,10 @@ namespace LayoutBXLYT
                             //Bottom Right
                             GL.PushMatrix();
                             {
-                                uint pieceWidth = window.FrameElementLeft;
-                                uint pieceHeight = sizeY - window.FrameElementTop;
+                                uint pieceWidth = FrameLeft;
+                                uint pieceHeight = sizeY - FrameTop;
                                 int pieceX = (int)-((contentWidth / 2) + (pieceWidth / 2));
-                                int pieceY = (int)-(window.FrameElementTop / 2);
+                                int pieceY = (int)-(FrameTop / 2);
 
                                 GL.Translate(pieceX, pieceY, 0);
                                 rect = pane.CreateRectangle(pieceWidth, pieceHeight);
@@ -351,9 +366,9 @@ namespace LayoutBXLYT
                                 GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
                                 GL.MultiTexCoord2(TextureUnit.Texture0, 1, 0);
                                 GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / window.FrameElementTop);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / FrameTop);
                                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / window.FrameElementTop);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / FrameTop);
                                 GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                                 GL.End();
                             }
@@ -362,21 +377,21 @@ namespace LayoutBXLYT
                             //Bottom Right
                             GL.PushMatrix();
                             {
-                                uint pieceWidth = sizeX - window.FrameElementLeft;
-                                uint pieceHeight = window.FrameElementBottm;
-                                int pieceX = (int)(window.FrameElementLeft / 2);
+                                uint pieceWidth = sizeX - FrameLeft;
+                                uint pieceHeight = FrameBottom;
+                                int pieceX = (int)(FrameLeft / 2);
                                 int pieceY = (int)(-(sizeY / 2) + (pieceHeight / 2));
 
                                 GL.Translate(pieceX, pieceY, 0);
                                 rect = pane.CreateRectangle(pieceWidth, pieceHeight);
                                 GL.Begin(PrimitiveType.Quads);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementLeft, 1);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameLeft, 1);
                                 GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
                                 GL.MultiTexCoord2(TextureUnit.Texture0, 0, 1);
                                 GL.Vertex2(rect.RightPoint, rect.BottomPoint);
                                 GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
                                 GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / window.FrameElementLeft, 0);
+                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameLeft, 0);
                                 GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                                 GL.End();
                             }
@@ -396,8 +411,8 @@ namespace LayoutBXLYT
                         var frame3 = window.WindowFrames[0];
                         var frame4 = window.WindowFrames[0];
 
-                        uint contentWidth = sizeX - (uint)window.FrameElementRight - (uint)window.FrameElementLeft;
-                        uint contentHeight = sizeY - (uint)window.FrameElementTop - (uint)window.FrameElementBottm;
+                        uint contentWidth = sizeX - (uint)FrameRight - (uint)FrameLeft;
+                        uint contentHeight = sizeY - (uint)FrameTop - (uint)FrameBottom;
 
                         RenderWindowContent(pane,
                             contentWidth,
