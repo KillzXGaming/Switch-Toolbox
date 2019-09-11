@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BffntEditor));
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.lineFeedUD = new Toolbox.Library.Forms.NumericUpDownUint();
             this.stLabel13 = new Toolbox.Library.Forms.STLabel();
@@ -63,6 +64,11 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pictureBoxCustom1 = new Toolbox.Library.Forms.PictureBoxCustom();
+            this.textPreviewTB = new Toolbox.Library.Forms.STTextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.imagePanel = new Forms.ImagePaenl();
             this.imagesCB = new Toolbox.Library.Forms.STComboBox();
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
@@ -83,7 +89,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).BeginInit();
             this.stPanel3.SuspendLayout();
-            this.imageMenuStrip.SuspendLayout();
+            this.stTabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.stPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -142,6 +151,7 @@
             this.fontTypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.fontTypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.fontTypeCB.FormattingEnabled = true;
+            this.fontTypeCB.IsReadOnly = false;
             this.fontTypeCB.Location = new System.Drawing.Point(87, 42);
             this.fontTypeCB.Name = "fontTypeCB";
             this.fontTypeCB.Size = new System.Drawing.Size(108, 21);
@@ -153,6 +163,7 @@
             this.encodingTypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.encodingTypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.encodingTypeCB.FormattingEnabled = true;
+            this.encodingTypeCB.IsReadOnly = false;
             this.encodingTypeCB.Location = new System.Drawing.Point(87, 73);
             this.encodingTypeCB.Name = "encodingTypeCB";
             this.encodingTypeCB.Size = new System.Drawing.Size(108, 21);
@@ -416,6 +427,7 @@
             this.characterCodeCB.ButtonColor = System.Drawing.Color.Empty;
             this.characterCodeCB.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.characterCodeCB.FormattingEnabled = true;
+            this.characterCodeCB.IsReadOnly = false;
             this.characterCodeCB.Location = new System.Drawing.Point(103, 27);
             this.characterCodeCB.Name = "characterCodeCB";
             this.characterCodeCB.Size = new System.Drawing.Size(72, 39);
@@ -449,7 +461,7 @@
             // 
             // stPanel3
             // 
-            this.stPanel3.Controls.Add(this.imagePanel);
+            this.stPanel3.Controls.Add(this.stTabControl1);
             this.stPanel3.Controls.Add(this.imagesCB);
             this.stPanel3.Controls.Add(this.stLabel3);
             this.stPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -458,21 +470,82 @@
             this.stPanel3.Size = new System.Drawing.Size(412, 438);
             this.stPanel3.TabIndex = 4;
             // 
-            // imagePanel
+            // stTabControl1
             // 
-            this.imagePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.imagePanel.Location = new System.Drawing.Point(6, 33);
+            this.stTabControl1.Controls.Add(this.tabPage1);
+            this.stTabControl1.Controls.Add(this.tabPage2);
+            this.stTabControl1.Location = new System.Drawing.Point(6, 45);
+            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
+            this.stTabControl1.Name = "stTabControl1";
+            this.stTabControl1.SelectedIndex = 0;
+            this.stTabControl1.Size = new System.Drawing.Size(400, 390);
+            this.stTabControl1.TabIndex = 3;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.pictureBoxCustom1);
+            this.tabPage1.Controls.Add(this.textPreviewTB);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(392, 361);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Preview";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBoxCustom1
+            // 
+            this.pictureBoxCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
+            this.pictureBoxCustom1.Location = new System.Drawing.Point(3, 0);
+            this.pictureBoxCustom1.Name = "pictureBoxCustom1";
+            this.pictureBoxCustom1.Size = new System.Drawing.Size(383, 232);
+            this.pictureBoxCustom1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxCustom1.TabIndex = 1;
+            this.pictureBoxCustom1.TabStop = false;
+            // 
+            // textPreviewTB
+            // 
+            this.textPreviewTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textPreviewTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textPreviewTB.Location = new System.Drawing.Point(6, 238);
+            this.textPreviewTB.Multiline = true;
+            this.textPreviewTB.Name = "textPreviewTB";
+            this.textPreviewTB.Size = new System.Drawing.Size(380, 120);
+            this.textPreviewTB.TabIndex = 0;
+            this.textPreviewTB.TextChanged += new System.EventHandler(this.textPreviewTB_TextChanged);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.imagePanel);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(392, 361);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Images";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // imagePanel
+            // 
+            this.imagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imagePanel.Location = new System.Drawing.Point(3, 3);
             this.imagePanel.Name = "imagePanel";
-            this.imagePanel.Size = new System.Drawing.Size(400, 402);
+            this.imagePanel.Size = new System.Drawing.Size(386, 355);
             this.imagePanel.TabIndex = 2;
             this.imagePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.imagePanel_Paint);
+            this.imagePanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseClick);
             this.imagePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseDown);
+            this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
             this.imagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseMove);
             this.imagePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseUp);
-            this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
-            this.imagePanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseClick);
             // 
             // imagesCB
             // 
@@ -480,6 +553,7 @@
             this.imagesCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.imagesCB.ButtonColor = System.Drawing.Color.Empty;
             this.imagesCB.FormattingEnabled = true;
+            this.imagesCB.IsReadOnly = false;
             this.imagesCB.Location = new System.Drawing.Point(82, 6);
             this.imagesCB.Name = "imagesCB";
             this.imagesCB.Size = new System.Drawing.Size(213, 21);
@@ -497,9 +571,18 @@
             // 
             // imageMenuStrip
             // 
-            this.imageMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {});
             this.imageMenuStrip.Name = "stContextMenuStrip1";
-            this.imageMenuStrip.Size = new System.Drawing.Size(108, 48);
+            this.imageMenuStrip.Size = new System.Drawing.Size(61, 4);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             // 
             // stPanel4
             // 
@@ -539,7 +622,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).EndInit();
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
-            this.imageMenuStrip.ResumeLayout(false);
+            this.stTabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();
+            this.tabPage2.ResumeLayout(false);
             this.stPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -588,5 +675,10 @@
         private Toolbox.Library.Forms.NumericUpDownUint numericUpDownUint1;
         private Toolbox.Library.Forms.STLabel stLabel15;
         private Forms.ImagePaenl imagePanel;
+        private Toolbox.Library.Forms.STTabControl stTabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private Toolbox.Library.Forms.PictureBoxCustom pictureBoxCustom1;
+        private Toolbox.Library.Forms.STTextBox textPreviewTB;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }

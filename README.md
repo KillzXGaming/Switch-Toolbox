@@ -112,7 +112,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - Assimp devs for their massive asset library!
 - Wexos (helped figure out a few things, ie format list to assign each attribute)
 - JuPaHe64 for the base 3D renderer.
-- Every File Explorer devs (Gericom) for Yaz0 stuff
+- Every File Explorer devs (Gericom) for Yaz0 and bitmap font stuff
 - Exelix for Byaml, Sarc and KCL library
 - Syroot for helpful IO extensions and libraries
 - GDKChan for PICA shaders stuff used with bcres, structs for bcres, and some DDS decode methods

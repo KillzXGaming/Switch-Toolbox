@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Toolbox.Library;
 using System.IO;
@@ -10,6 +10,8 @@ using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using System.Drawing;
 using FirstPlugin.Forms;
+using LibEveryFileExplorer.GFX;
+using System.Drawing.Imaging;
 
 namespace FirstPlugin
 {
@@ -283,6 +285,72 @@ namespace FirstPlugin
             string Signature = reader.ReadString(4, Encoding.ASCII);
             reader.Seek(-4, SeekOrigin.Current);
             return Signature;
+        }
+
+        public BitmapFont GetBitmapFont()
+        {
+            var FontInfo = FontSection;
+            var TextureGlyph = FontInfo.TextureGlyph;
+
+            BitmapFont f = new BitmapFont();
+            f.LineHeight = FontInfo.LineFeed;
+            Bitmap[] Chars = new Bitmap[TextureGlyph.LinesCount * TextureGlyph.RowCount * TextureGlyph.SheetCount];
+
+            float realcellwidth = TextureGlyph.CellWidth + 1;
+            float realcellheight = TextureGlyph.CellHeight + 1;
+
+            int j = 0;
+            for (int sheet = 0; sheet < TextureGlyph.SheetCount; sheet++)
+            {
+                Bitmap SheetBM = TextureGlyph.GetImageSheet(sheet).GetBitmap();
+                SheetBM.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                BitmapData bd = SheetBM.LockBits(new Rectangle(0, 0, SheetBM.Width, SheetBM.Height), 
+                    ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+                for (int y = 0; y < TextureGlyph.LinesCount; y++)
+                {
+                    for (int x = 0; x < TextureGlyph.RowCount; x++)
+                    {
+                        Bitmap b = new Bitmap(TextureGlyph.CellWidth, TextureGlyph.CellHeight);
+                        BitmapData bd2 = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), 
+                            ImageLockMode.WriteOnly,PixelFormat.Format32bppArgb);
+
+                        for (int y2 = 0; y2 < TextureGlyph.CellHeight; y2++)
+                        {
+                            for (int x2 = 0; x2 < TextureGlyph.CellWidth; x2++)
+                            {
+                                Marshal.WriteInt32(bd2.Scan0, y2 * bd2.Stride + x2 * 4,
+                                    Marshal.ReadInt32(bd.Scan0, (int)(y * realcellheight + y2 + 1) *
+                                    bd.Stride + (int)(x * realcellwidth + x2 + 1) * 4));
+                            }
+                        }
+                        b.UnlockBits(bd2);
+                        Chars[j++] = b;
+                    }
+                }
+                SheetBM.UnlockBits(bd);
+            }
+
+            foreach (var charMap in FontInfo.CodeMapDictionary)
+            {
+                var idx = charMap.Value;
+                if (idx == 0xFFFF) continue;
+                var info = GetCharWidthInfoByIndex(FontInfo, (ushort)idx);
+
+                f.Characters.Add(charMap.Key, new BitmapFont.Character(Chars[idx], info.Left, info.GlyphWidth, info.CharWidth));
+            }
+
+            return f;
+        }
+
+        private CharacterWidthEntry GetCharWidthInfoByIndex(FINF fontInfo, UInt16 Index)
+        {
+            foreach (var v in fontInfo.CharacterWidths)
+            {
+                if (Index < v.StartIndex || Index > v.EndIndex) continue;
+                return v.WidthEntries[Index - v.StartIndex];
+            }
+            return null;
         }
     }
 
@@ -784,8 +852,8 @@ namespace FirstPlugin
         public uint SheetSize { get; set; }
         public ushort BaseLinePos { get; set; }
         public ushort Format { get; set; }
-        public ushort ColumnCount { get; set; }
         public ushort RowCount { get; set; }
+        public ushort LinesCount { get; set; }
         public ushort SheetWidth { get; set; }
         public ushort SheetHeight { get; set; }
         public List<byte[]> SheetDataList = new List<byte[]>();
@@ -803,8 +871,8 @@ namespace FirstPlugin
             SheetSize = reader.ReadUInt32();
             BaseLinePos = reader.ReadUInt16();
             Format = reader.ReadUInt16();
-            ColumnCount = reader.ReadUInt16();
             RowCount = reader.ReadUInt16();
+            LinesCount = reader.ReadUInt16();
             SheetWidth = reader.ReadUInt16();
             SheetHeight = reader.ReadUInt16();
             uint sheetOffset = reader.ReadUInt32();
@@ -838,8 +906,8 @@ namespace FirstPlugin
             writer.Write(SheetDataList[0].Length);
             writer.Write(BaseLinePos);
             writer.Write(Format);
-            writer.Write(ColumnCount);
             writer.Write(RowCount);
+            writer.Write(LinesCount);
             writer.Write(SheetWidth);
             writer.Write(SheetHeight);
             long _ofsSheetBlocks = writer.Position;
@@ -915,6 +983,30 @@ namespace FirstPlugin
             Direct,
             Table,
             Scan,
+        }
+
+        public ushort GetIndexFromCode(ushort code)
+        {
+            if (code < CharacterCodeBegin || code > CharacterCodeEnd) return 0xFFFF;
+
+            switch (MappingMethod)
+            {
+                case Mapping.Direct:
+                    return (UInt16)(code - CharacterCodeBegin + ((CMAPDirect)MappingData).Offset);
+                case Mapping.Table:
+                    return (ushort)((CMAPIndexTable)MappingData).Table[code - CharacterCodeBegin];
+                case Mapping.Scan:
+                    if (!((CMAPScanMapping)MappingData).Codes.Contains(code)) return 0xFFFF;
+                    else
+                    {
+                        var codes = ((CMAPScanMapping)MappingData).Codes;
+                        var index = Array.FindIndex(codes, map => map == code);
+
+                        return (ushort)((CMAPScanMapping)MappingData).Indexes[index];
+                    }
+            }
+
+            return 0xFFFF;
         }
 
         public CMAP NextCodeMapSection { get; set; }
@@ -1148,9 +1240,9 @@ namespace FirstPlugin
             for (ushort i = StartIndex; i <= EndIndex; i++)
             {
                 var entry = new CharacterWidthEntry();
-                entry.LeftWidth = reader.ReadSByte();
+                entry.Left = reader.ReadSByte();
                 entry.GlyphWidth = reader.ReadByte();
-                entry.Width = reader.ReadByte();
+                entry.CharWidth = reader.ReadByte();
                 WidthEntries.Add(entry);
             }
 
@@ -1181,9 +1273,9 @@ namespace FirstPlugin
 
             for (int i = 0; i < WidthEntries.Count; i++)
             {
-                writer.Write(WidthEntries[i].LeftWidth);
+                writer.Write(WidthEntries[i].Left);
                 writer.Write(WidthEntries[i].GlyphWidth);
-                writer.Write(WidthEntries[i].Width);
+                writer.Write(WidthEntries[i].CharWidth);
             }
 
             writer.Align(4);
@@ -1205,8 +1297,8 @@ namespace FirstPlugin
 
     public class CharacterWidthEntry
     {
-        public sbyte LeftWidth { get; set; }
+        public sbyte Left { get; set; }
         public byte GlyphWidth { get; set; }
-        public byte Width { get; set; }
+        public byte CharWidth { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
 using Toolbox.Library;
+using LibEveryFileExplorer.GFX;
 
 namespace FirstPlugin.Forms
 {
@@ -17,6 +18,11 @@ namespace FirstPlugin.Forms
         public BffntEditor()
         {
             InitializeComponent();
+
+            stTabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
+
+            pictureBoxCustom1.BackColor = Color.Black;
+            pictureBoxCustom1.BackgroundImage = null;
         }
 
         public List<IFileFormat> GetFileFormats()
@@ -25,6 +31,7 @@ namespace FirstPlugin.Forms
         }
 
         private Image PanelImage { get; set; }
+        private BitmapFont bitmapFont;
 
         private FFNT ActiveFile;
         private BFFNT FileFormat;
@@ -50,6 +57,24 @@ namespace FirstPlugin.Forms
 
             ReloadCharacterCodes();
             ReloadTextures();
+
+            try {
+                bitmapFont = fontFile.bffnt.GetBitmapFont();
+            }
+            catch
+            {
+
+            }
+
+            textPreviewTB.Text = "This is a preview!";
+
+            if (bitmapFont != null)
+                pictureBoxCustom1.Image = bitmapFont.PrintToBitmap(textPreviewTB.Text, new BitmapFont.FontRenderSettings());
+        }
+
+        public override void OnControlClosing()
+        {
+            bitmapFont?.Dispose();
         }
 
         private void ReloadCharacterCodes()
@@ -245,18 +270,6 @@ namespace FirstPlugin.Forms
 
         private FontCell[] FontCells;
 
-        private void LoadGlyphs()
-        {
-            var textureGlyph = ActiveFile.FontSection.TextureGlyph;
-
-            for (int c = 0; c < (int)textureGlyph.ColumnCount; c++)
-            {
-                for (int r = 0; r < (int)textureGlyph.RowCount; r++)
-                {
-                }
-            }
-        }
-
         public GlyphImage[] GlyphImages;
 
         public class GlyphImage
@@ -274,14 +287,11 @@ namespace FirstPlugin.Forms
 
             PanelImage = BitmapExtension.Resize(PanelImage, textureGlyph.SheetWidth, textureGlyph.SheetHeight);
 
-            Console.WriteLine($"ColumnCount {textureGlyph.ColumnCount}");
-            Console.WriteLine($"RowCount {textureGlyph.RowCount}");
-
             int y = 0;
             for (int c = 0; c < (int)textureGlyph.RowCount; c++)
             {
                 int x = 0;
-                for (int r = 0; r < (int)textureGlyph.ColumnCount; r++)
+                for (int r = 0; r < (int)textureGlyph.LinesCount; r++)
                 {
                     var rect = new Rectangle(x, y, textureGlyph.CellWidth, textureGlyph.CellHeight);
 
@@ -317,6 +327,9 @@ namespace FirstPlugin.Forms
 
         private void imagePanel_Paint(object sender, PaintEventArgs e)
         {
+            if (PanelImage == null)
+                return;
+
             Graphics graphics = e.Graphics;
             graphics.DrawImage(PanelImage, 0.0f, 0.0f);
 
@@ -385,6 +398,12 @@ namespace FirstPlugin.Forms
 
                 imagePanel.Refresh();
             }
+        }
+
+        private void textPreviewTB_TextChanged(object sender, EventArgs e)
+        {
+            if (bitmapFont != null)
+                pictureBoxCustom1.Image = bitmapFont.PrintToBitmap(textPreviewTB.Text, new BitmapFont.FontRenderSettings());
         }
     }
 
