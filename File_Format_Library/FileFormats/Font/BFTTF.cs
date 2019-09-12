@@ -41,6 +41,9 @@ namespace FirstPlugin
             }
         }
 
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [In] ref uint pcFonts);
+
         public byte[] DecryptedFont { get; set; }
 
         //Decryption process from https://github.com/TheFearsomeDzeraora/BFTTFutil/blob/master/Program.cs
@@ -105,12 +108,19 @@ namespace FirstPlugin
 
             var fontDataPtr = Marshal.AllocCoTaskMem(DecryptedFont.Length);
             Marshal.Copy(DecryptedFont, 0, fontDataPtr, DecryptedFont.Length);
+
+            // We HAVE to do this to register the font to the system (Weird .NET bug !)
+            uint cFonts = 0;
+            AddFontMemResourceEx(fontDataPtr, (uint)DecryptedFont.Length, IntPtr.Zero, ref cFonts);
+
             privateFonts.AddMemoryFont(fontDataPtr, DecryptedFont.Length);
 
             System.Drawing.Font font = new System.Drawing.Font(privateFonts.Families[0], 12);
 
-            var texbox = new STTextBox() { Multiline = true, Dock = DockStyle.Fill };
-          
+            var texbox = new RichTextBox() { Multiline = true, BorderStyle = BorderStyle.None, Dock = DockStyle.Fill };
+            texbox.BackColor = FormThemes.BaseTheme.FormBackColor;
+            texbox.ForeColor = FormThemes.BaseTheme.FormForeColor;
+
             UserControl editor = new UserControl();
             editor.Controls.Add(texbox);
             LibraryGUI.LoadEditor(editor);
