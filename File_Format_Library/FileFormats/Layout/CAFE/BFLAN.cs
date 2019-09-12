@@ -210,10 +210,10 @@ namespace LayoutBXLYT
             public List<string> Groups { get; set; }
 
             [DisplayName("Start"), CategoryAttribute("Frames")]
-            public ushort StartFrame { get; set; }
+            public short StartFrame { get; set; }
 
             [DisplayName("End"), CategoryAttribute("Frames")]
-            public ushort EndFrame { get; set; }
+            public short EndFrame { get; set; }
 
             [DisplayName("Animation Order"), CategoryAttribute("Parameters")]
             public ushort AnimationOrder { get; set; }
@@ -245,8 +245,8 @@ namespace LayoutBXLYT
                 ushort groupCount = reader.ReadUInt16();
                 uint animNameOffset = reader.ReadUInt32();
                 uint groupNamesOffset = reader.ReadUInt32();
-                StartFrame = reader.ReadUInt16();
-                EndFrame = reader.ReadUInt16();
+                StartFrame = reader.ReadInt16();
+                EndFrame = reader.ReadInt16();
                 ChildBinding = reader.ReadBoolean();
                 UnknownData = reader.ReadBytes((int)(startPos + animNameOffset - reader.Position));
 

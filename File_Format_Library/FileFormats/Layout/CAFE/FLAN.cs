@@ -66,6 +66,7 @@ namespace LayoutBXLYT
 
             var bflanInfo = header.AnimationInfo;
             var animContent = new AnimContent();
+            animInfo.animContent = new AnimContent[1];
             animInfo.animContent[0] = animContent;
             animInfo.startFrame = bflanInfo.FrameSize;
 
