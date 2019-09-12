@@ -251,6 +251,12 @@
     <None Include="Shader\Layout\Bflyt.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Shader\Layout\Legacy\Bflyt.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shader\Layout\Legacy\Bflyt.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shader\Legacy\BFRES.frag" />
     <None Include="Shader\Legacy\BFRES.vert" />
     <None Include="Shader\Legacy\KCL.frag">

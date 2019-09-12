@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using OpenTK;
+using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
@@ -86,7 +87,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
 
@@ -124,7 +125,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
 
@@ -162,7 +163,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
 
@@ -170,7 +171,7 @@ namespace LayoutBXLYT
                 GL.PopAttrib();
             }
         }
-    
+
         public static void DrawBoundryPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
             if (!Runtime.LayoutEditor.DisplayBoundryPane)
@@ -196,7 +197,7 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
 
@@ -226,7 +227,7 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
         public static void DrawScissorPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
@@ -254,7 +255,7 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
         public static void DrawWindowPane(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
@@ -571,6 +572,66 @@ namespace LayoutBXLYT
             }
         }
 
+
+        private static BlendingFactor ConvertBlendFactor(BlendMode.GX2BlendFactor blendFactor)
+        {
+            switch (blendFactor)
+            {
+                case BlendMode.GX2BlendFactor.DestAlpha: return BlendingFactor.DstAlpha;
+                case BlendMode.GX2BlendFactor.DestColor: return BlendingFactor.DstColor;
+                case BlendMode.GX2BlendFactor.DestInvAlpha: return BlendingFactor.OneMinusDstAlpha;
+                case BlendMode.GX2BlendFactor.DestInvColor: return BlendingFactor.OneMinusDstColor;
+                case BlendMode.GX2BlendFactor.Factor0: return BlendingFactor.Zero;
+                case BlendMode.GX2BlendFactor.Factor1: return BlendingFactor.One;
+                case BlendMode.GX2BlendFactor.SourceAlpha: return BlendingFactor.SrcAlpha;
+                case BlendMode.GX2BlendFactor.SourceColor: return BlendingFactor.SrcColor;
+                case BlendMode.GX2BlendFactor.SourceInvAlpha: return BlendingFactor.OneMinusSrcAlpha;
+                case BlendMode.GX2BlendFactor.SourceInvColor: return BlendingFactor.OneMinusSrcColor;
+                default: return BlendingFactor.Zero;
+            }
+        }
+
+        private static LogicOp ConvertLogicOperation(BlendMode.GX2LogicOp blendOp)
+        {
+            switch (blendOp)
+            {
+                case BlendMode.GX2LogicOp.And: return LogicOp.And;
+                case BlendMode.GX2LogicOp.Clear: return LogicOp.Clear;
+                case BlendMode.GX2LogicOp.Copy: return LogicOp.Copy;
+                case BlendMode.GX2LogicOp.Equiv: return LogicOp.Equiv;
+                case BlendMode.GX2LogicOp.Inv: return LogicOp.Invert;
+                case BlendMode.GX2LogicOp.Nand: return LogicOp.Nand;
+                case BlendMode.GX2LogicOp.NoOp: return LogicOp.Noop;
+                case BlendMode.GX2LogicOp.Nor: return LogicOp.Nor;
+                case BlendMode.GX2LogicOp.Or: return LogicOp.Or;
+                case BlendMode.GX2LogicOp.RevAnd: return LogicOp.AndReverse;
+                case BlendMode.GX2LogicOp.RevOr: return LogicOp.OrReverse;
+                case BlendMode.GX2LogicOp.Set: return LogicOp.Set;
+                case BlendMode.GX2LogicOp.Xor: return LogicOp.Xor;
+                case BlendMode.GX2LogicOp.Disable:
+                    GL.Disable(EnableCap.ColorLogicOp);
+                    return LogicOp.Noop;
+                default: return LogicOp.Noop;
+
+            }
+        }
+
+        private static BlendEquationMode ConvertBlendOperation(BlendMode.GX2BlendOp blendOp)
+        {
+            switch (blendOp)
+            {
+                case BlendMode.GX2BlendOp.Add: return BlendEquationMode.FuncAdd;
+                case BlendMode.GX2BlendOp.ReverseSubtract: return BlendEquationMode.FuncReverseSubtract;
+                case BlendMode.GX2BlendOp.SelectMax: return BlendEquationMode.Max;
+                case BlendMode.GX2BlendOp.SelectMin: return BlendEquationMode.Min;
+                case BlendMode.GX2BlendOp.Subtract: return BlendEquationMode.FuncSubtract;
+                case BlendMode.GX2BlendOp.Disable:
+                    GL.Disable(EnableCap.Blend);
+                    return BlendEquationMode.FuncAdd;
+                default: return BlendEquationMode.FuncAdd;
+            }
+        }
+
         enum TextureSwizzle
         {
             Zero = All.Zero,
@@ -581,7 +642,7 @@ namespace LayoutBXLYT
             Alpha = All.Alpha,
         }
 
-        public static void DrawRectangle(CustomRectangle rect, Vector2[] texCoords,
+        public static void DrawRectangle(BasePane pane, CustomRectangle rect, Vector2[] texCoords,
            Color[] colors, bool useLines = true, byte alpha = 255)
         {
             for (int i = 0; i < colors.Length; i++)
@@ -590,42 +651,65 @@ namespace LayoutBXLYT
                 colors[i] = Color.FromArgb((int)setalpha, colors[i]);
             }
 
-            if (useLines)
+            if (LayoutEditor.UseLegacyGL)
             {
-                GL.Begin(PrimitiveType.LineLoop);
-                GL.Color4(colors[0]);
-                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                GL.End();
+                if (useLines)
+                {
+                    GL.Begin(PrimitiveType.LineLoop);
+                    GL.Color4(colors[0]);
+                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.End();
+                }
+                else
+                {
+                    GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+                    GL.Enable(EnableCap.LineSmooth);
+                    GL.LineWidth(1f);
+                    GL.PolygonOffset(1f, 1f);
+
+                    GL.Begin(PrimitiveType.Quads);
+                    GL.Color4(Color.Green);
+                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.End();
+
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                    GL.PolygonOffset(0f, 0f);
+
+                    GL.Begin(PrimitiveType.Quads);
+                    GL.Color4(colors[0]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
+                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                    GL.Color4(colors[1]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
+                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                    GL.Color4(colors[2]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
+                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                    GL.Color4(colors[3]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
+                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.End();
+                }
             }
             else
             {
-                GL.Begin(PrimitiveType.Quads);
-                GL.Color4(colors[0]);
-                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
-                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                GL.Color4(colors[1]);
-                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
-                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                GL.Color4(colors[2]);
-                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
-                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                GL.Color4(colors[3]);
-                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
-                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                GL.End();
+                if (pane.renderablePane == null)
+                    pane.renderablePane = new RenderablePane();
 
-                //Draw outline
-                GL.Begin(PrimitiveType.LineLoop);
-                GL.LineWidth(3);
-                GL.Color4(colors[0]);
-                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                GL.End();
+                Vector3[] vertices = new Vector3[4];
+                vertices[0] = new Vector3(rect.LeftPoint, rect.BottomPoint, 0);
+                vertices[1] = new Vector3(rect.RightPoint, rect.BottomPoint, 0);
+                vertices[2] = new Vector3(rect.RightPoint, rect.TopPoint, 0);
+                vertices[3] = new Vector3(rect.LeftPoint, rect.TopPoint, 0);
+                Vector4[] vertexColors = new Vector4[4];
+
+                pane.renderablePane.Render(vertices, vertexColors, texCoords);
             }
         }
     }

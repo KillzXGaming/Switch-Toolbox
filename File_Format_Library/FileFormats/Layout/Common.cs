@@ -20,6 +20,8 @@ namespace LayoutBXLYT
             get { return Parent != null && Parent.IsRoot; }
         }
 
+        internal RenderablePane renderablePane;
+
         [DisplayName("Alpha"), CategoryAttribute("Alpha")]
         public byte Alpha { get; set; }
 
@@ -385,7 +387,38 @@ namespace LayoutBXLYT
 
     public enum LMCTarget : byte
     {
+        BlackColorRed,
+        BlackColorGreen,
+        BlackColorBlue,
+        BlackColorAlpha,
+        WhiteColorRed,
+        WhiteColorGreen,
+        WhiteColorBlue,
+        WhiteColorAlpha,
+    }
 
+    public enum LFSTarget : byte
+    {
+        FontShadowBlackColorRed,
+        FontShadowBlackColorGreen,
+        FontShadowBlackColorBlue,
+        FontShadowBlackColorAlpha,
+        FontShadowWhiteColorRed,
+        FontShadowWhiteColorGreen,
+        FontShadowWhiteColorBlue,
+        FontShadowWhiteColorAlpha,
+    }
+
+    public enum LCTTarget : byte
+    {
+        FontShadowBlackColorRed,
+        FontShadowBlackColorGreen,
+        FontShadowBlackColorBlue,
+        FontShadowBlackColorAlpha,
+        FontShadowWhiteColorRed,
+        FontShadowWhiteColorGreen,
+        FontShadowWhiteColorBlue,
+        FontShadowWhiteColorAlpha,
     }
 
     public enum WindowKind

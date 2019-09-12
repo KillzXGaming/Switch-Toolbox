@@ -19,6 +19,12 @@ namespace LayoutBXLYT
 {
     public partial class LayoutEditor : Form
     {
+        /// <summary>
+        /// Enables or disables legacy opengl support
+        /// Modern support is not quite finished yet so keep enabled!
+        /// </summary>
+        public static bool UseLegacyGL = true;
+
         private Dictionary<string, STGenericTexture> Textures;
 
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
@@ -49,7 +55,6 @@ namespace LayoutBXLYT
 
             viewportBackColorCB.Items.Add("Back Color : Default");
             viewportBackColorCB.Items.Add("Back Color : Custom");
-            viewportBackColorCB.SelectedIndex = 0;
             orthographicViewToolStripMenuItem.Checked = true;
 
             foreach (var type in Enum.GetValues(typeof(Runtime.LayoutEditor.DebugShading)).Cast<Runtime.LayoutEditor.DebugShading>())
@@ -63,6 +68,11 @@ namespace LayoutBXLYT
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
+
+            if (Runtime.LayoutEditor.BackgroundColor != Color.FromArgb(130, 130, 130))
+                viewportBackColorCB.SelectedIndex = 1;
+            else
+                viewportBackColorCB.SelectedIndex = 0;
         }
 
         private List<LayoutViewer> Viewports = new List<LayoutViewer>();
@@ -276,6 +286,11 @@ namespace LayoutBXLYT
             {
                 ActiveViewport.UpdateBackgroundColor(Color.FromArgb(130, 130, 130));
                 backColorDisplay.BackColor = Color.FromArgb(130, 130, 130);
+            }
+            else if (!isLoaded)
+            {
+                ActiveViewport.UpdateBackgroundColor(Runtime.LayoutEditor.BackgroundColor);
+                backColorDisplay.BackColor = Runtime.LayoutEditor.BackgroundColor;
             }
             else
             {

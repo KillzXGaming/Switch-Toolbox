@@ -92,7 +92,12 @@ namespace LayoutBXLYT
             get
             {
                 string path = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Layout", "Bflyt.vert");
-                return System.IO.File.ReadAllText(path);
+                string legacyPath = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Layout", "Legacy", "Bflyt.vert");
+
+                if (LayoutEditor.UseLegacyGL)
+                    return System.IO.File.ReadAllText(legacyPath);
+                else
+                    return System.IO.File.ReadAllText(path);
             }
         }
 
@@ -101,7 +106,12 @@ namespace LayoutBXLYT
             get
             {
                 string path = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Layout", "Bflyt.frag");
-                return System.IO.File.ReadAllText(path);
+                string legacyPath = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Layout", "Legacy", "Bflyt.frag");
+
+                if (LayoutEditor.UseLegacyGL)
+                    return System.IO.File.ReadAllText(legacyPath);
+                else
+                    return System.IO.File.ReadAllText(path);
             }
         }
     }

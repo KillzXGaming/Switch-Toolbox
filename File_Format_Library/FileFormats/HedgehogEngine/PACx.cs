@@ -31,9 +31,7 @@ namespace HedgehogLibrary
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(8, "PACx301L") || 
-                       reader.CheckSignature(8, "PACx302L") ||
-                       reader.CheckSignature(8, "PACx402L");
+                return reader.CheckSignature(4, "PACx");
             }
         }
 
@@ -58,13 +56,29 @@ namespace HedgehogLibrary
 
         public static bool IsVersion4;
 
+        public bool IsBigEndian = false;
+
+        public ushort Version = 301;
+
         public List<SplitEntry> SplitEntries = new List<SplitEntry>();
         public void Load(System.IO.Stream stream)
         {
             using (var reader = new FileReader(stream))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-                IsVersion4 = reader.CheckSignature(8, "PACx402L");
+                string signature = reader.ReadString(4, Encoding.ASCII);
+                string version = reader.ReadString(3, Encoding.ASCII);
+                if (!ushort.TryParse(version, out Version)) {
+                }
+
+
+                char bom = reader.ReadChar();
+                IsBigEndian = bom == 'B';
+
+                reader.SetByteOrder(IsBigEndian);
+
+                reader.Position = 0;
+                IsVersion4 = Version > 400;
                 if (IsVersion4)
                 {
                     var header = reader.ReadStruct<HeaderV4>();
@@ -84,13 +98,42 @@ namespace HedgehogLibrary
                 }
                 else
                 {
-                    var header3 = reader.ReadStruct<HeaderV3>();
+                    if (Version > 300)
+                    {
+                        var header3 = reader.ReadStruct<HeaderV3>();
 
-                    PacNodeTree tree = new PacNodeTree();
-                    tree.Read(reader, header3);
+                        PacNodeTree tree = new PacNodeTree();
+                        tree.Read(reader, header3);
 
-                    var rootNode = tree.RootNode;
-                    LoadTree(rootNode);
+                        var rootNode = tree.RootNode;
+                        LoadTree(rootNode);
+                    }
+                    else
+                    {
+                        var header2 = reader.ReadStruct<HeaderV2>();
+
+                        for (int i = 0; i < header2.FileExtensions; i++)
+                        {
+                            reader.SeekBegin(header2.FileExtensionsTblOffset + (i * 8));
+                            uint offset = reader.ReadUInt32();
+
+                            if (offset != 0)
+                            {
+                                reader.SeekBegin(offset);
+                                uint fileExtOffset = reader.ReadUInt32();
+                                uint fileTblOffset = reader.ReadUInt32();
+
+                                reader.SeekBegin(fileExtOffset);
+                                string ext = reader.ReadZeroTerminatedString();
+
+                                reader.SeekBegin(fileTblOffset);
+                                uint fileCount = reader.ReadUInt32();
+
+                            }
+                        }
+
+                        reader.SeekBegin(header2.OffsetTableSize);
+                    }
                 }
             }
         }
@@ -215,6 +258,24 @@ namespace HedgehogLibrary
             public PacType Type = PacType.HasNoSplit;
             public ushort Constant = 0x108;
             public uint SplitCount;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public class HeaderV2
+        {
+            public Magic8 Magic;
+            public uint FileSize;
+            public uint Unknown;
+            public Magic DataMagic;
+            public uint NodesSize;
+            public uint DataEntriesSize;
+            public uint ExtensionTableSize;
+            public uint StringOffsetTableSize;
+            public uint StringTableSize;
+            public uint OffsetTableSize;
+            public uint Flag;
+            public uint FileExtensions;
+            public uint FileExtensionsTblOffset;
         }
 
         public class SplitEntry

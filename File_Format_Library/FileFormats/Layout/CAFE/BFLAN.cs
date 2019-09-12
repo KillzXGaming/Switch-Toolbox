@@ -7,10 +7,11 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using SharpYaml.Serialization;
 
 namespace LayoutBXLYT
 {
-    public class BFLAN : IEditorForm<LayoutEditor>, IFileFormat
+    public class BFLAN : IEditorForm<LayoutEditor>, IFileFormat, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -38,11 +39,41 @@ namespace LayoutBXLYT
             }
         }
 
+        #region Text Converter Interface
+        public TextFileType TextFileType => TextFileType.Xml;
+        public bool CanConvertBack => true;
+
+        public string ConvertToString()
+        {
+            var serializerSettings = new SerializerSettings()
+            {
+                //  EmitTags = false
+            };
+
+            serializerSettings.DefaultStyle = SharpYaml.YamlStyle.Any;
+            serializerSettings.ComparerForKeySorting = null;
+            serializerSettings.RegisterTagMapping("Header", typeof(Header));
+
+            return FLAN.ToXml(header);
+
+            var serializer = new Serializer(serializerSettings);
+            string yaml = serializer.Serialize(header, typeof(Header));
+            return yaml;
+        }
+
+        public void ConvertFromString(string text)
+        {
+            header = FLAN.FromXml(text);
+            header.FileInfo = this;
+        }
+
+        #endregion
+
         Header header;
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = false;
+            CanSave = true;
 
             header = new Header();
             header.Read(new FileReader(stream),this);
@@ -142,7 +173,7 @@ namespace LayoutBXLYT
                 writer.Write(ushort.MaxValue); //Reserve space for section count later
                 writer.Seek(2); //padding
 
-                int sectionCount = 1;
+                int sectionCount = 0;
 
                 WriteSection(writer, "pat1", AnimationTag, () => AnimationTag.Write(writer, this));
                 sectionCount++;
@@ -192,6 +223,8 @@ namespace LayoutBXLYT
 
             private byte[] UnknownData;
 
+            private byte flags;
+
             public PAT1()
             {
                 AnimationOrder = 2;
@@ -222,7 +255,7 @@ namespace LayoutBXLYT
 
                 reader.SeekBegin(startPos + groupNamesOffset);
                 for (int i = 0; i < groupCount; i++)
-                    Groups.Add(reader.ReadString(0x24, true));
+                    Groups.Add(reader.ReadString(28, true));
             }
 
             public override void Write(FileWriter writer, LayoutHeader header)
@@ -244,7 +277,7 @@ namespace LayoutBXLYT
 
                 writer.WriteUint32Offset(startPos + 16, startPos);
                 for (int i = 0; i < Groups.Count; i++)
-                    writer.WriteString(Groups[i], 0x24);
+                    writer.WriteString(Groups[i], 28);
             }
         }
 
@@ -252,10 +285,9 @@ namespace LayoutBXLYT
         {
             public ushort FrameSize;
 
-            private byte flags;
+            public bool Loop;
 
             public List<string> Textures { get; set; }
-
             public List<PaiEntry> Entries = new List<PaiEntry>();
 
             public PAI1()
@@ -270,7 +302,7 @@ namespace LayoutBXLYT
                 Textures = new List<string>();
 
                 FrameSize = reader.ReadUInt16();
-                flags = reader.ReadByte();
+                Loop = reader.ReadBoolean();
                 reader.ReadByte(); //padding
                 var numTextures = reader.ReadUInt16();
                 var numEntries = reader.ReadUInt16();
@@ -297,10 +329,11 @@ namespace LayoutBXLYT
                 long startPos = writer.Position - 8;
 
                 writer.Write(FrameSize);
-                writer.Write(flags);
+                writer.Write(Loop);
                 writer.Write((byte)0);
                 writer.Write((ushort)Textures.Count);
                 writer.Write((ushort)Entries.Count);
+                long entryOfsTblPos = writer.Position;
                 writer.Write(0);
 
                 if (Textures.Count > 0)
@@ -315,7 +348,7 @@ namespace LayoutBXLYT
                 }
                 if (Entries.Count > 0)
                 {
-                    writer.WriteUint32Offset(startPos + 8, startPos);
+                    writer.WriteUint32Offset(entryOfsTblPos, startPos);
 
                     long startOfsPos = writer.Position;
                     writer.Write(new uint[Entries.Count]);
@@ -368,7 +401,7 @@ namespace LayoutBXLYT
                     writer.Write(new uint[Tags.Count]);
                     for (int i = 0; i < Tags.Count; i++)
                     {
-                        writer.WriteUint32Offset(startPos + 4 + (i * 4), startPos);
+                        writer.WriteUint32Offset(startPos + 32 + (i * 4), startPos);
                         Tags[i].Write(writer, header, Target);
                     }
                 }
@@ -388,12 +421,16 @@ namespace LayoutBXLYT
 
             public Dictionary<string, string> TypeDefine = new Dictionary<string, string>()
             {
-                {"FLPA","Pane" },
-                {"FLTS","Pane Texture SRT" },
-                {"FLVI","Pane Visibilty" },
-                {"FLVC","Vertex Colors" },
-                {"FLMC","Material Colors" },
-                {"FLTP","Texture Pattern" },
+                {"FLPA","PaneSRT" },
+                {"FLVI","Visibility" },
+                {"FLTS","TextureSRT" },
+                {"FLVC","VertexColor" },
+                {"FLMC","MaterialColor" },
+                {"FLTP","TexturePattern" },
+                {"FLIM","IndTextureSRT" },
+                {"FLAC","AlphaTest" },
+                {"FLCT","FontShadow" },
+                {"FLCC","PerCharacterTransformCurve" },
             };
 
             private uint Unknown {get;set;}
