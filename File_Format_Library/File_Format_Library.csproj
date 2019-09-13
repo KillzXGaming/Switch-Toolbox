@@ -82,7 +82,6 @@
     </Reference>
     <Reference Include="EditorCoreCommon">
       <HintPath>..\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Gl_EditorFramework">
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
@@ -90,7 +89,6 @@
     </Reference>
     <Reference Include="KCLExt">
       <HintPath>..\Toolbox\Lib\KCLExt.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="LibHac">
       <HintPath>..\Toolbox\Lib\LibHac.dll</HintPath>

@@ -102,20 +102,25 @@ namespace FirstPlugin
             }
         }
 
-        public override void OnClick(TreeView treeview)
+        private System.Drawing.Font ToFont(int Size = 72)
         {
             System.Drawing.Text.PrivateFontCollection privateFonts = new System.Drawing.Text.PrivateFontCollection();
 
+            // We HAVE to do this to register the font to the system (Weird .NET bug !)
             var fontDataPtr = Marshal.AllocCoTaskMem(DecryptedFont.Length);
             Marshal.Copy(DecryptedFont, 0, fontDataPtr, DecryptedFont.Length);
 
-            // We HAVE to do this to register the font to the system (Weird .NET bug !)
             uint cFonts = 0;
             AddFontMemResourceEx(fontDataPtr, (uint)DecryptedFont.Length, IntPtr.Zero, ref cFonts);
 
             privateFonts.AddMemoryFont(fontDataPtr, DecryptedFont.Length);
 
-            System.Drawing.Font font = new System.Drawing.Font(privateFonts.Families[0], 12);
+            return new System.Drawing.Font(privateFonts.Families[0], Size);
+        }
+
+        public override void OnClick(TreeView treeview)
+        {
+            var font = ToFont();
 
             var texbox = new RichTextBox() { Multiline = true, BorderStyle = BorderStyle.None, Dock = DockStyle.Fill };
             texbox.BackColor = FormThemes.BaseTheme.FormBackColor;
