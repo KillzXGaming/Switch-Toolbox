@@ -41,6 +41,7 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -198,7 +199,8 @@
             // stMenuStrip1
             // 
             this.stMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.loadFontToolStripMenuItem});
             this.stMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stMenuStrip1.Name = "stMenuStrip1";
             this.stMenuStrip1.Size = new System.Drawing.Size(922, 24);
@@ -210,6 +212,13 @@
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
+            // 
+            // loadFontToolStripMenuItem
+            // 
+            this.loadFontToolStripMenuItem.Name = "loadFontToolStripMenuItem";
+            this.loadFontToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.loadFontToolStripMenuItem.Text = "Load Font";
+            this.loadFontToolStripMenuItem.Click += new System.EventHandler(this.loadFontToolStripMenuItem_Click);
             // 
             // MSBTEditor
             // 
@@ -256,5 +265,6 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadFontToolStripMenuItem;
     }
 }

@@ -102,7 +102,7 @@ namespace FirstPlugin
             }
         }
 
-        private System.Drawing.Font ToFont(int Size = 72)
+        public System.Drawing.Font ToFont(float Size = 72)
         {
             System.Drawing.Text.PrivateFontCollection privateFonts = new System.Drawing.Text.PrivateFontCollection();
 
@@ -151,7 +151,8 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            DecryptedFont = null;
+            GC.WaitForPendingFinalizers();
         }
 
         public void Save(System.IO.Stream stream)

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
 using Toolbox.Library;
+using Toolbox.Library.IO;
 
 namespace FirstPlugin.Forms
 {
@@ -91,6 +92,41 @@ namespace FirstPlugin.Forms
                     editTextTB.Text = msbtString.GetText(activeMessageFile.header.StringEncoding);
                     originalTextTB.Text = msbtString.GetText(activeMessageFile.header.StringEncoding);
                     hexEditor1.LoadData(msbtString.Data);
+                }
+            }
+        }
+
+        private void UpdateFont(Font font)
+        {
+            editTextTB.Font = font;
+            originalTextTB.Font = font;
+        }
+
+        private void loadFontToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Supported Formats|*.bfttf; *.ttf;*.otf|" +
+                         "Binary Cafe True Type Font |*.bfttf|" +
+                         "True Type Font |*.ttf|" +
+                         "Open Type Font |*.otf|" +
+                         "All files(*.*)|*.*";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                if (Utils.GetExtension(ofd.FileName) == ".bfttf")
+                {
+                    BFTTF bfttf = (BFTTF)STFileLoader.OpenFileFormat(ofd.FileName);
+                    var font = bfttf.ToFont(editTextTB.Font.Size);
+                    UpdateFont(font);
+                    bfttf.Unload();
+                }
+                else if (Utils.GetExtension(ofd.FileName) == ".ttf" ||
+                    Utils.GetExtension(ofd.FileName) == ".otf")
+                {
+                    PrivateFontCollection privateFonts = new PrivateFontCollection();
+                    privateFonts.AddFontFile(ofd.FileName);
+                    var font = privateFonts.Families[0];
+                    UpdateFont(new Font(privateFonts.Families[0], editTextTB.Font.Size));
                 }
             }
         }
