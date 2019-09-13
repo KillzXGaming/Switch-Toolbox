@@ -77,6 +77,10 @@ namespace Toolbox.Library
             AlphaChannel = STChannelType.Alpha;
         }
 
+        public virtual UserControl GetEditor() { return new UserControl(); }
+
+        public virtual void FillEditor(UserControl control) { }
+
         //A class that configs how the image should output (on display, and on export/replace)
         public ImageParameters Parameters = new ImageParameters();
 

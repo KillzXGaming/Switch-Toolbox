@@ -351,12 +351,12 @@ namespace Toolbox
                 editor.Text = CheckTabDupes(((IFileFormat)file).FileName);
                 editor.Show();
 
+                ((ObjectEditor)editor).SelectFirstNode();
+
                 if (file is TreeNodeFile)
                 {
                     ((TreeNodeFile)file).OnAfterAdded();
                 }
-
-                ((ObjectEditor)editor).SelectFirstNode();
             }
             else
             {

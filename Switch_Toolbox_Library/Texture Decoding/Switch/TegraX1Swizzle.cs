@@ -70,13 +70,20 @@ namespace Toolbox.Library
 
         public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int target = 1, bool LinearTileMode = false)
         {
+            uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
+            uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
+            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
+            uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
+            return GetImageData(texture, ImageData, ArrayLevel, MipLevel, BlockHeightLog2, target, LinearTileMode);
+        }
+
+        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, uint BlockHeightLog2, int target = 1, bool LinearTileMode = false)
+        {
             uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
-
             uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
-            uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
 
             uint Pitch = 0;
             uint DataAlignment = 512;

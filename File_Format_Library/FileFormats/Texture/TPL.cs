@@ -56,6 +56,12 @@ namespace FirstPlugin
         public List<ImageHeader> ImageHeaders = new List<ImageHeader>();
         public List<PaletteHeader> PaletteHeaders = new List<PaletteHeader>();
 
+        public override void OnAfterAdded()
+        {
+            if (Nodes.Count > 0 && this.TreeView != null)
+               this.TreeView.SelectedNode = Nodes[0];
+        }
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;

@@ -137,8 +137,8 @@ namespace FirstPlugin
             public uint Height;
             public uint Depth;
             public uint unknown4;
-            public uint unknown5;
-            public uint unknown6;
+            public uint textureLayout;
+            public uint textureLayout2;
         }
 
         public enum SurfaceType
@@ -322,7 +322,9 @@ namespace FirstPlugin
 
                 Console.WriteLine($" Texture.ImageData " + Texture.ImageData.Length);
 
-                return TegraX1Swizzle.GetImageData(this, Texture.ImageData, ArrayLevel, MipLevel, 1);
+                var BlockHeightLog2 = Texture.Info.textureLayout & 7;
+
+                 return TegraX1Swizzle.GetImageData(this, Texture.ImageData, ArrayLevel, MipLevel, BlockHeightLog2, 1);
             }
 
 

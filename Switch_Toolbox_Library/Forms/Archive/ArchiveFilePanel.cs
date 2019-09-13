@@ -111,18 +111,8 @@ namespace Toolbox.Library.Forms
         public void SetEditorForm(IFileFormat fileFormat)
         {
             if (fileFormat == null)
-                AddControl(new STUserControl() { Dock = DockStyle.Fill });
-
-            if (fileFormat is TreeNodeFile)
             {
-                var Editor = ((TreeNodeFile)fileFormat).GetEditor();
-                var ActiveEditor = GetActiveEditor(Editor.GetType());
-                if (ActiveEditor == null)
-                    AddControl(Editor);
-                else
-                    Editor = ActiveEditor;
-
-                ((TreeNodeFile)fileFormat).FillEditor(Editor);
+                AddControl(new STUserControl() { Dock = DockStyle.Fill });
                 return;
             }
 
@@ -142,7 +132,35 @@ namespace Toolbox.Library.Forms
                         Editor = ActiveEditor;
 
                     methodFill.Invoke(fileFormat, new object[1] { Editor });
+                    return;
                 }
+            }
+
+
+            if (fileFormat is STGenericTexture)
+            {
+                var Editor = ((STGenericTexture)fileFormat).GetEditor();
+                var ActiveEditor = GetActiveEditor(Editor.GetType());
+                if (ActiveEditor == null)
+                    AddControl(Editor);
+                else
+                    Editor = ActiveEditor;
+
+                ((STGenericTexture)fileFormat).FillEditor(Editor);
+                return;
+            }
+
+            if (fileFormat is TreeNodeFile)
+            {
+                var Editor = ((TreeNodeFile)fileFormat).GetEditor();
+                var ActiveEditor = GetActiveEditor(Editor.GetType());
+                if (ActiveEditor == null)
+                    AddControl(Editor);
+                else
+                    Editor = ActiveEditor;
+
+                ((TreeNodeFile)fileFormat).FillEditor(Editor);
+                return;
             }
         }
 

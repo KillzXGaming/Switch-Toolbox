@@ -494,6 +494,9 @@ namespace Toolbox.Library
 
             Load(reader);
         }
+
+
+
         public void Load(BinaryDataReader reader)
         {
             Text = FileName;
@@ -1336,6 +1339,20 @@ namespace Toolbox.Library
 
             editor.LoadProperties(GenericProperties);
             editor.LoadImage(this);
+        }
+
+        public override UserControl GetEditor()
+        {
+            ImageEditorBase editor = new ImageEditorBase();
+            editor.Text = Text;
+            editor.Dock = DockStyle.Fill;
+            return editor;
+        }
+
+        public override void FillEditor(UserControl control)
+        {
+            ((ImageEditorBase)control).LoadProperties(GenericProperties);
+            ((ImageEditorBase)control).LoadImage(this);
         }
 
         private void ApplySettings(GenericTextureImporterSettings settings)

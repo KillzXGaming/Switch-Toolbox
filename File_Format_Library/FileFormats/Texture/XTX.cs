@@ -68,6 +68,12 @@ namespace FirstPlugin
 
         }
 
+        public override void OnAfterAdded()
+        {
+            if (Nodes.Count > 0 && this.TreeView != null)
+                this.TreeView.SelectedNode = Nodes[0];
+        }
+
         public void Save(System.IO.Stream stream)
         {
             SaveFile(new FileWriter(stream, true));
