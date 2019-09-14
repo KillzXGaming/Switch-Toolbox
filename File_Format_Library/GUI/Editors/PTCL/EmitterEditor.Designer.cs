@@ -138,7 +138,7 @@
             // constant1Panel
             // 
             this.constant1Panel.IsAlpha = false;
-            this.constant1Panel.Location = new System.Drawing.Point(6, 397);
+            this.constant1Panel.Location = new System.Drawing.Point(3, 397);
             this.constant1Panel.Name = "constant1Panel";
             this.constant1Panel.Size = new System.Drawing.Size(291, 37);
             this.constant1Panel.TabIndex = 65;

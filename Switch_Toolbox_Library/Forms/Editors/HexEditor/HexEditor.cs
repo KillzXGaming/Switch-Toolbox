@@ -38,6 +38,7 @@ namespace Toolbox.Library.Forms
         {
             if (hexBox1.ByteProvider != null && !isStream)
             {
+                hexBox1.ByteProvider.Changed -= ByteProvider_Changed;
                 hexBox1.ByteProvider.DeleteBytes(0, hexBox1.ByteProvider.Length);
 
                 IDisposable byteProvider = hexBox1.ByteProvider as IDisposable;

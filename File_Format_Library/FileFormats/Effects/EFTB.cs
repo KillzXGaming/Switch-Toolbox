@@ -8,11 +8,13 @@ using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using Toolbox.Library;
 using System.Collections;
+using System.Drawing;
 
 namespace FirstPlugin
 {
     public class EFTB : TreeNodeFile, IFileFormat
     {
+        #region EFTB
         public static readonly string SIGNATURE = "EFTB";
 
         public FileType FileType { get; set; } = FileType.Effect;
@@ -90,46 +92,25 @@ namespace FirstPlugin
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
         }
 
-        #region Sections
+        #endregion
 
-        // TODO is this common accross several formats? can split it out of EFTB.
-        public class NodeBase : TreeNodeCustom
+        #region NodeBase
+
+        // holds data for EFTB node headers. this is tightly coupled to reading/writing the file and should not be persisted in application models.
+        public class Header
         {
             public static readonly uint NULL_OFFSET = 0xffffffff;
-            public string Signature => GetType().Name == typeof(NodeBase).Name ? Text : GetType().Name;
-            public byte[] UnknownHeader { get; protected set; }
-            public byte[] UnknownData { get; set; }
-            public List<NodeBase> Attributes { get; } = new List<NodeBase>();
-            public List<NodeBase> Children { get; } = new List<NodeBase>();
+            public long Position { get; set; } // not a part of the header, but describes where it's found in the stream
+            public string Signature { get; set; } // node signature/magic (4 bytes)
+            public uint NodeSize { get; set; } // size of the entire node including header, children, and attributes
+            public uint ChildrenOffset { get; set; } = NULL_OFFSET; // offset to the first child
+            public uint SiblingOffset { get; set; } = NULL_OFFSET; // offset to the next sibling node
+            public uint AttributesOffset { get; set; } = NULL_OFFSET; // offset to the first attribute
+            public uint DataOffset { get; set; } // offset to the start of binary data (i.e. size of the header)
+            public ushort ChildrenCount { get; set; } // usually number of children, but there are many exceptions
+            public byte[] Extra { get; set; } // extra header data past the standard 32 bytes
 
-            public static NodeBase[] ReadNodes(FileReader reader, bool align = false)
-            {
-                var nodes = new List<NodeBase>();
-                Header header;
-                while (true)
-                {
-                    if (align) reader.Align(16);
-                    using (reader.TemporarySeek())
-                    {
-                        header = ReadHeader(reader);
-                    }
-                    var node = Create(header.Signature);
-                    node.ReadNode(reader, header);
-                    nodes.Add(node);
-                    if (header.SiblingOffset != NULL_OFFSET)
-                    {
-                        reader.Seek(header.SiblingOffset);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                return nodes.ToArray();
-            }
-
-            private static Header ReadHeader(FileReader reader)
+            public static Header Read(FileReader reader)
             {
                 var header = new Header() { Position = reader.Position };
                 header.Signature = reader.ReadString(4, Encoding.ASCII);
@@ -143,6 +124,59 @@ namespace FirstPlugin
                 ushort unknown1 = reader.ReadUInt16();
 
                 return header;
+            }
+
+            public class OffsetType
+            {
+                public static readonly int Size = 0;
+                public static readonly int Children = 1;
+                public static readonly int Sibling = 2;
+                public static readonly int Attributes = 3;
+                public static readonly int Data = 4;
+            }
+        }
+
+        public interface IEFTBNode
+        {
+            string Signature { get; }
+            void ReadNode(FileReader reader, Header header);
+            Offset[] WriteNode(FileWriter writer);
+        }
+
+        // TODO is this common accross several formats? can split it out of EFTB.
+        public class NodeBase : TreeNodeCustom, IEFTBNode
+        {
+            public string Signature => GetType().Name == typeof(NodeBase).Name ? Text : GetType().Name;
+            public byte[] UnknownHeader { get; protected set; }
+            public byte[] UnknownData { get; set; }
+            public List<NodeBase> Attributes { get; } = new List<NodeBase>();
+            public List<IEFTBNode> Children { get; } = new List<IEFTBNode>();
+
+            public static NodeBase[] ReadNodes(FileReader reader, bool align = false)
+            {
+                var nodes = new List<NodeBase>();
+                Header header;
+                while (true)
+                {
+                    if (align) reader.Align(16);
+                    using (reader.TemporarySeek())
+                    {
+                        header = Header.Read(reader);
+                    }
+                    var node = Create(header.Signature);
+                    node.ReadNode(reader, header);
+                    nodes.Add(node);
+                    if (header.SiblingOffset != Header.NULL_OFFSET)
+                    {
+                        reader.Seek(header.SiblingOffset);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return nodes.ToArray();
             }
 
             public static NodeBase Create(string signature)
@@ -170,7 +204,7 @@ namespace FirstPlugin
                     Offset[] offsets = node.WriteNode(writer);
                     last = !enumerator.MoveNext();
                     if (!last) writer.Align(16);
-                    offsets[OffsetType.Sibling].Satisfy(last ? (int)NULL_OFFSET : (int)writer.Position - pos);
+                    offsets[Header.OffsetType.Sibling].Satisfy(last ? (int)Header.NULL_OFFSET : (int)writer.Position - pos);
                 }
             }
 
@@ -201,7 +235,7 @@ namespace FirstPlugin
                 }
             }
 
-            protected virtual void ReadNode(FileReader reader, Header header)
+            public virtual void ReadNode(FileReader reader, Header header)
             {
                 using (reader.TemporarySeek(0x20))
                 {
@@ -213,7 +247,7 @@ namespace FirstPlugin
                     ReadBinaryData(reader, header);
                 }
 
-                if (header.AttributesOffset != NULL_OFFSET)
+                if (header.AttributesOffset != Header.NULL_OFFSET)
                 {
                     using (reader.TemporarySeek(header.AttributesOffset))
                     {
@@ -222,7 +256,7 @@ namespace FirstPlugin
                     }
                 }
 
-                if (header.ChildrenOffset != NULL_OFFSET)
+                if (header.ChildrenOffset != Header.NULL_OFFSET)
                 {
                     using (reader.TemporarySeek(header.ChildrenOffset))
                     {
@@ -236,9 +270,9 @@ namespace FirstPlugin
             protected virtual void ReadBinaryData(FileReader reader, Header header)
             {
                 var stop = header.Position + (
-                   header.AttributesOffset != NULL_OFFSET ? header.AttributesOffset :
-                   header.ChildrenOffset != NULL_OFFSET ? header.ChildrenOffset :
-                   header.SiblingOffset != NULL_OFFSET ? header.SiblingOffset :
+                   header.AttributesOffset != Header.NULL_OFFSET ? header.AttributesOffset :
+                   header.ChildrenOffset != Header.NULL_OFFSET ? header.ChildrenOffset :
+                   header.SiblingOffset != Header.NULL_OFFSET ? header.SiblingOffset :
                    header.NodeSize);
                 UnknownData = reader.ReadBytes((int)stop - (int)reader.Position);
             }
@@ -249,32 +283,32 @@ namespace FirstPlugin
                 Offset[] offsets = WriteHeader(writer);
 
                 int dataOffset = (int)writer.Position - start;
-                offsets[OffsetType.Data].Satisfy(dataOffset);
+                offsets[Header.OffsetType.Data].Satisfy(dataOffset);
                 WriteBinaryData(writer);
                 int dataEndOffset = (int)writer.Position - start;
 
                 if (Attributes.Count > 0)
                 {
-                    offsets[OffsetType.Attributes].Satisfy((int)writer.Position - start);
+                    offsets[Header.OffsetType.Attributes].Satisfy((int)writer.Position - start);
                     WriteNodes(writer, Attributes.GetEnumerator());
                 }
                 else
                 {
-                    offsets[OffsetType.Attributes].Satisfy((int)NULL_OFFSET);
+                    offsets[Header.OffsetType.Attributes].Satisfy((int)Header.NULL_OFFSET);
                 }
 
                 int childrenOffset = (int)writer.Position - start;
                 if (Children.Count > 0)
                 {
-                    offsets[OffsetType.Children].Satisfy(childrenOffset);
+                    offsets[Header.OffsetType.Children].Satisfy(childrenOffset);
                     WriteNodes(writer, Children.GetEnumerator());
                 }
                 else
                 {
-                    offsets[OffsetType.Children].Satisfy((int)NULL_OFFSET);
+                    offsets[Header.OffsetType.Children].Satisfy((int)Header.NULL_OFFSET);
                 }
 
-                offsets[OffsetType.Size].Satisfy(CalculateSize(dataOffset, dataEndOffset, childrenOffset, (int)writer.Position - start));
+                offsets[Header.OffsetType.Size].Satisfy(CalculateSize(dataOffset, dataEndOffset, childrenOffset, (int)writer.Position - start));
 
                 return offsets; // leave it to caller to satisfy sibling offset
             }
@@ -302,10 +336,10 @@ namespace FirstPlugin
                 while (!last)
                 {
                     int pos = (int)writer.Position;
-                    NodeBase node = (NodeBase)enumerator.Current;
+                    IEFTBNode node = (IEFTBNode)enumerator.Current;
                     Offset[] offsets = node.WriteNode(writer);
                     last = !enumerator.MoveNext();
-                    offsets[OffsetType.Sibling].Satisfy(last ? (int)NULL_OFFSET : (int)writer.Position - pos);
+                    offsets[Header.OffsetType.Sibling].Satisfy(last ? (int)Header.NULL_OFFSET : (int)writer.Position - pos);
                 }
             }
 
@@ -331,29 +365,6 @@ namespace FirstPlugin
                 long length = writer.Position - start;
                 writer.Seek(0x40 - length);
             }
-
-            // holds data for EFTB node headers. this is tightly coupled to reading/writing the file and should not be persisted in application models.
-            protected class Header
-            {
-                public long Position { get; set; } // not a part of the header, but describes where it's found in the stream
-                public string Signature { get; set; } // node signature/magic (4 bytes)
-                public uint NodeSize { get; set; } // size of the entire node including header, children, and attributes
-                public uint ChildrenOffset { get; set; } = NULL_OFFSET; // offset to the first child
-                public uint SiblingOffset { get; set; } = NULL_OFFSET; // offset to the next sibling node
-                public uint AttributesOffset { get; set; } = NULL_OFFSET; // offset to the first attribute
-                public uint DataOffset { get; set; } // offset to the start of binary data (i.e. size of the header)
-                public ushort ChildrenCount { get; set; } // usually number of children, but there are many exceptions
-                public byte[] Extra { get; set; } // extra header data past the standard 32 bytes
-            }
-
-            protected class OffsetType
-            {
-                public static readonly int Size = 0;
-                public static readonly int Children = 1;
-                public static readonly int Sibling = 2;
-                public static readonly int Attributes = 3;
-                public static readonly int Data = 4;
-            }
         }
 
         public class NodeSpecial : NodeBase // TODO idk what's special about it except that it calculates size differently
@@ -368,6 +379,10 @@ namespace FirstPlugin
                 return dataEndOffset - dataOffset;
             }
         }
+
+        #endregion
+
+        #region ESTA
 
         // Emitter SeT Array
         public class ESTA : NodeBase
@@ -443,13 +458,14 @@ namespace FirstPlugin
                 Color1AlphaArray = new STColorArray(reader.ReadUInt32(), true);
                 ScaleArray = new STColorArray(reader.ReadUInt32());
                 UnknownCount = reader.ReadUInt32();
-                reader.Seek(0x08); // 0-padding
+                reader.Seek(0x38); // 0-padding
 
-                Unknown0 = reader.ReadBytes(0x60);
+                Unknown0 = reader.ReadBytes(0x30);
+
 
                 BlinkIntensity0 = reader.ReadSingle();
-                BlinkDuration0 = reader.ReadSingle();
                 BlinkIntensity1 = reader.ReadSingle();
+                BlinkDuration0 = reader.ReadSingle();
                 BlinkDuration1 = reader.ReadSingle();
 
                 Unknown1 = reader.ReadBytes(0x2c0);
@@ -494,11 +510,11 @@ namespace FirstPlugin
                 writer.Write(Color1AlphaArray.KeyCount);
                 writer.Write(ScaleArray.KeyCount);
                 writer.Write(UnknownCount);
-                writer.Seek(0x08); // 0-padding
+                writer.Seek(0x38); // 0-padding
                 writer.Write(Unknown0);
                 writer.Write(BlinkIntensity0);
-                writer.Write(BlinkDuration0);
                 writer.Write(BlinkIntensity1);
+                writer.Write(BlinkDuration0);
                 writer.Write(BlinkDuration1);
                 writer.Write(Unknown1);
                 writer.Write(Radius);
@@ -677,9 +693,55 @@ namespace FirstPlugin
             }
         }
 
+        #endregion
+
+        #region TEXA
+
         // TEXture Array?
         public class TEXA : NodeBase
         {
+            public TEXA()
+            {
+                Text = "Textures";
+            }
+
+            public override void ReadNode(FileReader reader, Header header)
+            {
+                // TODO make sure header.DataOffset is always 0x20 and header.AttributesOffset is always NULL_OFFSET
+                UnknownHeader = new byte[0];
+                UnknownData = new byte[0];
+
+                if (header.ChildrenOffset != Header.NULL_OFFSET)
+                {
+                    using (reader.TemporarySeek(header.ChildrenOffset))
+                    {
+                        var nodes = new List<TEXR>();
+                        Header texrHeader;
+                        while (true)
+                        {
+                            using (reader.TemporarySeek())
+                            {
+                                texrHeader = Header.Read(reader);
+                            }
+                            var node = new TEXR();
+                            node.ReadNode(reader, texrHeader);
+                            nodes.Add(node);
+                            if (texrHeader.SiblingOffset != Header.NULL_OFFSET)
+                            {
+                                reader.Seek(texrHeader.SiblingOffset);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        Children.AddRange(nodes);
+                        Nodes.AddRange(nodes.ToArray());
+                    }
+                }
+            }
+
             protected override void WriteNodes(FileWriter writer, IEnumerator enumerator)
             {
                 // first write all TEXR header + data
@@ -690,11 +752,11 @@ namespace FirstPlugin
                 {
                     int pos = (int)writer.Position;
                     texrPositions.Add(pos);
-                    NodeBase node = (NodeBase)enumerator.Current;
+                    IEFTBNode node = (IEFTBNode)enumerator.Current;
                     Offset[] offsets = node.WriteNode(writer);
                     texrOffsets.Add(offsets);
                     last = !enumerator.MoveNext();
-                    offsets[OffsetType.Sibling].Satisfy(last ? (int)NULL_OFFSET : (int)writer.Position - pos);
+                    offsets[Header.OffsetType.Sibling].Satisfy(last ? (int)Header.NULL_OFFSET : (int)writer.Position - pos);
                 }
 
                 // then write all their GX2B children
@@ -704,11 +766,11 @@ namespace FirstPlugin
                 while (!last)
                 {
                     int pos = (int)writer.Position;
-                    texrOffsets[i][OffsetType.Children].Satisfy(pos - texrPositions[i]);
-                    NodeBase node = (NodeBase)enumerator.Current;
+                    texrOffsets[i][Header.OffsetType.Children].Satisfy(pos - texrPositions[i]);
+                    IEFTBNode node = (IEFTBNode)enumerator.Current;
                     Offset[] offsets = ((TEXR)node).WriteGX2B(writer);
                     last = !enumerator.MoveNext();
-                    offsets[OffsetType.Sibling].Satisfy(last ? (int)NULL_OFFSET : (int)writer.Position - pos);
+                    offsets[Header.OffsetType.Sibling].Satisfy(last ? (int)Header.NULL_OFFSET : (int)writer.Position - pos);
                     ++i;
                 }
             }
@@ -719,45 +781,309 @@ namespace FirstPlugin
             }
         }
 
-        public class TEXR : NodeSpecial
+        public class TEXR : STGenericTexture, IEFTBNode
         {
+            public string Signature => "TEXR";
+
+            public override bool CanEdit { get; set; } = false;
+
+            public override TEX_FORMAT[] SupportedFormats
+            {
+                get
+                {
+                    return new TEX_FORMAT[]
+                    {
+                        TEX_FORMAT.BC1_UNORM,
+                        TEX_FORMAT.BC1_UNORM_SRGB,
+                        TEX_FORMAT.BC2_UNORM,
+                        TEX_FORMAT.BC2_UNORM_SRGB,
+                        TEX_FORMAT.BC3_UNORM,
+                        TEX_FORMAT.BC3_UNORM_SRGB,
+                        TEX_FORMAT.BC4_UNORM,
+                        TEX_FORMAT.BC4_SNORM,
+                        TEX_FORMAT.BC5_UNORM,
+                        TEX_FORMAT.BC5_SNORM,
+                        TEX_FORMAT.B5G6R5_UNORM,
+                        TEX_FORMAT.B8G8R8A8_UNORM_SRGB,
+                        TEX_FORMAT.B8G8R8A8_UNORM,
+                        TEX_FORMAT.B5G5R5A1_UNORM,
+                        TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
+                        TEX_FORMAT.R8G8B8A8_UNORM,
+                        TEX_FORMAT.R8_UNORM,
+                        TEX_FORMAT.R8G8_UNORM,
+                    };
+                }
+            }
+
             private int childrenCount;
+            private uint TileMode;
+            private uint Swizzle = 0;
+            private byte WrapMode = 11;
+            private byte Depth = 1;
+            private uint MipCount;
+            private uint CompSel;
+            private uint ImageSize;
+            private SurfaceFormat SurfFormat;
+            private byte[] data;
+            private uint TextureID;
+            private uint unknown1;
+            private uint unknown2;
+            private uint unknown3;
+            private uint unknown4;
+            private byte unknown5;
+            private short unknown6;
+            private uint unknown7;
+
+            public TEXR()
+            {
+                Text = Signature;
+                ImageKey = "Texture";
+                SelectedImageKey = "Texture";
+            }
+
+            public override void OnClick(TreeView treeView)
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+                if (editor == null)
+                {
+                    editor = new ImageEditorBase();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.LoadEditor(editor);
+                }
+
+                editor.Text = Text;
+                editor.LoadProperties(GenericProperties);
+                editor.LoadImage(this);
+            }
+
+            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+            {
+                uint GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
+
+                switch (SurfFormat)
+                {
+                    case SurfaceFormat.T_BC1_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC1_UNORM;
+                        Format = TEX_FORMAT.BC1_UNORM;
+                        break;
+                    case SurfaceFormat.T_BC1_SRGB:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC1_SRGB;
+                        Format = TEX_FORMAT.BC1_UNORM_SRGB;
+                        break;
+                    case SurfaceFormat.T_BC2_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC2_UNORM;
+                        Format = TEX_FORMAT.BC2_UNORM;
+                        break;
+                    case SurfaceFormat.T_BC2_SRGB:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC2_SRGB;
+                        Format = TEX_FORMAT.BC2_UNORM_SRGB;
+                        break;
+                    case SurfaceFormat.T_BC3_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC3_UNORM;
+                        Format = TEX_FORMAT.BC3_UNORM;
+                        break;
+                    case SurfaceFormat.T_BC3_SRGB:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC3_SRGB;
+                        Format = TEX_FORMAT.BC3_UNORM_SRGB;
+                        break;
+                    case SurfaceFormat.T_BC4_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC4_UNORM;
+                        Format = TEX_FORMAT.BC4_UNORM;
+                        break;
+                    case SurfaceFormat.T_BC4_SNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC4_SNORM;
+                        Format = TEX_FORMAT.BC4_SNORM;
+                        break;
+                    case SurfaceFormat.T_BC5_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_UNORM;
+                        Format = TEX_FORMAT.BC5_UNORM;
+                        break;
+                    case SurfaceFormat.T_BC5_SNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.T_BC5_SNORM;
+                        Format = TEX_FORMAT.BC5_SNORM;
+                        break;
+                    case SurfaceFormat.TC_R8_G8_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_G8_UNORM;
+                        Format = TEX_FORMAT.R8G8_UNORM;
+                        break;
+                    case SurfaceFormat.TCS_R8_G8_B8_A8_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                        Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                        break;
+                    case SurfaceFormat.TCS_R8_G8_B8_A8:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                        Format = TEX_FORMAT.R8G8B8A8_UNORM;
+                        break;
+                    case SurfaceFormat.TC_R8_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TC_R8_UNORM;
+                        Format = TEX_FORMAT.R8_UNORM;
+                        break;
+                    case SurfaceFormat.TCS_R5_G6_B5_UNORM:
+                        GX2Format = (uint)GX2.GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
+                        Format = TEX_FORMAT.B5G6R5_UNORM;
+                        break;
+                    default:
+                        throw new Exception("Format unsupported! " + SurfFormat);
+                }
+
+
+                int swizzle = (int)Swizzle;
+                int pitch = (int)0;
+                uint bpp = GX2.surfaceGetBitsPerPixel(GX2Format) >> 3;
+
+                GX2.GX2Surface surf = new GX2.GX2Surface();
+                surf.bpp = bpp;
+                surf.height = Height;
+                surf.width = Width;
+                surf.aa = (uint)0;
+                surf.alignment = 0;
+                surf.depth = Depth;
+                surf.dim = 0x1;
+                surf.format = GX2Format;
+                surf.use = 0x1;
+                surf.pitch = 0;
+                surf.data = data;
+                surf.numMips = 1;
+                surf.mipOffset = new uint[0];
+                surf.mipData = null;
+                surf.tileMode = TileMode;
+                surf.swizzle = Swizzle;
+                surf.imageSize = ImageSize;
+
+                return GX2.Decode(surf, ArrayLevel, MipLevel);
+            }
+
+            public override void SetImageData(Bitmap bitmap, int ArrayLevel)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReadNode(FileReader reader, Header header)
+            {
+                // TEXR tracks child count and sibling offsets like a standard tree, but each TEXR really only has one GX2B
+                childrenCount = header.ChildrenCount; // read the child count here so we can just write it back
+
+                using (reader.TemporarySeek(0x20))
+                {
+                    ReadBinaryData(reader);
+                }
+
+                if (header.ChildrenOffset != Header.NULL_OFFSET)
+                {
+                    using (reader.TemporarySeek(header.ChildrenOffset))
+                    {
+                        Header gx2bHeader;
+                        using (reader.TemporarySeek())
+                        {
+                            gx2bHeader = Header.Read(reader);
+                        }
+                        var gx2b = new GX2B();
+                        gx2b.ReadNode(reader, gx2bHeader);
+                        data = gx2b.UnknownData;
+                    }
+                }
+            }
+
+            private void ReadBinaryData(FileReader reader)
+            {
+                Width = reader.ReadUInt16();
+                Height = reader.ReadUInt16();
+                unknown1 = reader.ReadUInt32();
+                CompSel = reader.ReadUInt32();
+                MipCount = reader.ReadUInt32();
+                unknown2 = reader.ReadUInt32();
+                TileMode = reader.ReadUInt32();
+                unknown3 = reader.ReadUInt32();
+                ImageSize = reader.ReadUInt32();
+                unknown4 = reader.ReadUInt32();
+                TextureID = reader.ReadUInt32();
+                Text = TextureID.ToString("X8");
+                SurfFormat = reader.ReadEnum<SurfaceFormat>(false);
+                unknown5 = reader.ReadByte();
+                unknown6 = reader.ReadInt16();
+                unknown7 = reader.ReadUInt32();
+            }
+
+            public Offset[] WriteNode(FileWriter writer)
+            {
+                int start = (int)writer.Position;
+                Offset[] offsets = WriteHeader(writer);
+
+                int dataOffset = (int)writer.Position - start;
+                offsets[Header.OffsetType.Data].Satisfy(dataOffset);
+                WriteBinaryData(writer);
+                int dataEndOffset = (int)writer.Position - start;
+
+                offsets[Header.OffsetType.Attributes].Satisfy((int)Header.NULL_OFFSET);
+
+                offsets[Header.OffsetType.Size].Satisfy(dataEndOffset - dataOffset);
+
+                return offsets; // leave it to caller to satisfy sibling offset and children offset
+            }
+
+            protected Offset[] WriteHeader(FileWriter writer)
+            {
+                writer.WriteSignature(Signature);
+                var offsets = writer.ReserveOffset(5);
+                writer.Write(0);
+                writer.Write((ushort)childrenCount);
+                writer.Write((ushort)1);
+
+                return offsets;
+            }
+
+            private void WriteBinaryData(FileWriter writer)
+            {
+                writer.Write((ushort)Width);
+                writer.Write((ushort)Height);
+                writer.Write(unknown1);
+                writer.Write(CompSel);
+                writer.Write(MipCount);
+                writer.Write(unknown2);
+                writer.Write(TileMode);
+                writer.Write(unknown3);
+                writer.Write(ImageSize);
+                writer.Write(unknown4);
+                writer.Write(TextureID);
+                writer.Write((byte)SurfFormat);
+                writer.Write(unknown5);
+                writer.Write(unknown6);
+                writer.Write(unknown7);
+            }
 
             public Offset[] WriteGX2B(FileWriter writer)
             {
                 return ((GX2B)Nodes[0]).WriteNode(writer);
             }
 
-            protected override void ReadNode(FileReader reader, Header header)
+            public enum SurfaceFormat : byte
             {
-                // TEXR tracks child count and sibling offsets like a standard tree, but each TEXR really only has one GX2B
-                childrenCount = header.ChildrenCount; // read the child count here so we can just write it back
-                base.ReadNode(reader, header); // this will read all linked children
-                TreeNode node = Nodes[0];
-                Nodes.Clear(); // remove all except the first
-                Nodes.Add(node);
-            }
-
-            protected override Offset[] WriteHeader(FileWriter writer)
-            {
-                writer.WriteSignature(Signature);
-                var offsets = writer.ReserveOffset(5);
-                writer.Write(0);
-                writer.Write((ushort)childrenCount); // overriding just so we can set this
-                writer.Write((ushort)1);
-
-                return offsets;
-            }
-
-            protected override void WriteNodes(FileWriter writer, IEnumerator enumerator)
-            {
-                // do nothing. will write them later.
-            }
+                INVALID = 0x0,
+                TCS_R8_G8_B8_A8 = 2,
+                T_BC1_UNORM = 3,
+                T_BC1_SRGB = 4,
+                T_BC2_UNORM = 5,
+                T_BC2_SRGB = 6,
+                T_BC3_UNORM = 7,
+                T_BC3_SRGB = 8,
+                T_BC4_UNORM = 9,
+                T_BC4_SNORM = 10,
+                T_BC5_UNORM = 11,
+                T_BC5_SNORM = 12,
+                TC_R8_UNORM = 13,
+                TC_R8_G8_UNORM = 14,
+                TCS_R8_G8_B8_A8_UNORM = 15,
+                TCS_R5_G6_B5_UNORM = 25,
+            };
         }
 
         public class GX2B : NodeSpecial
         {
         }
+
+        #endregion
+
+        #region PRMA
 
         // P?R?M? Array?
         public class PRMA : NodeBase
@@ -767,7 +1093,7 @@ namespace FirstPlugin
                 Offset[] offsets = base.WriteNode(writer);
                 if (Nodes.Count == 0)
                 {
-                    offsets[OffsetType.Data].Satisfy((int)NULL_OFFSET); // empty PRMA has no binary data offset for some reason
+                    offsets[Header.OffsetType.Data].Satisfy((int)Header.NULL_OFFSET); // empty PRMA has no binary data offset for some reason
                 }
 
                 return offsets;
@@ -784,12 +1110,16 @@ namespace FirstPlugin
         {
         }
 
+        #endregion
+
+        #region SHDA
+
         // SHaDer Array
         public class SHDA : NodeBase
         {
             private ushort childrenCount;
 
-            protected override void ReadNode(FileReader reader, Header header)
+            public override void ReadNode(FileReader reader, Header header)
             {
                 header.DataOffset = SwapBytes(header.DataOffset);
                 childrenCount = header.ChildrenCount; // SHDA needs to keep track of this for writing because idk what it is (it's not actually child count)
@@ -799,7 +1129,7 @@ namespace FirstPlugin
             public override Offset[] WriteNode(FileWriter writer)
             {
                 Offset[] offsets = base.WriteNode(writer);
-                offsets[OffsetType.Data].Satisfy(0x20000000); // TODO don't hardcode this; determine the offset then flip the bytes.
+                offsets[Header.OffsetType.Data].Satisfy(0x20000000); // TODO don't hardcode this; determine the offset then flip the bytes.
 
                 return offsets;
             }
