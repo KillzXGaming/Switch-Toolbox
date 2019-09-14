@@ -2,6 +2,7 @@
 using Toolbox.Library.Forms;
 using Toolbox.Library;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace FirstPlugin.Forms
 {
@@ -51,6 +52,17 @@ namespace FirstPlugin.Forms
             blinkDuration0UpDown.Value = (decimal)emitter.BlinkDuration0;
             blinkIntensity1UpDown.Value = (decimal)emitter.BlinkIntensity1;
             blinkDuration1UpDown.Value = (decimal)emitter.BlinkDuration1;
+
+            // look for textures
+            var parent = emitter.Parent;
+            while (parent != null && !(parent is EFTB)) // emitters can be nested
+            {
+                parent = parent.Parent;
+            }
+            var texr = parent?.Nodes?.OfType<EFTB.TEXA>()?.FirstOrDefault()?.Nodes?.OfType<EFTB.TEXR>() ?? Enumerable.Empty<EFTB.TEXR>();
+            texture0Editor.LoadTexture(emitter.Samplers[0], texr);
+            texture1Editor.LoadTexture(emitter.Samplers[1], texr);
+            texture2Editor.LoadTexture(emitter.Samplers[2], texr);
 
             foreach (var attribute in emitter.Attributes)
             {

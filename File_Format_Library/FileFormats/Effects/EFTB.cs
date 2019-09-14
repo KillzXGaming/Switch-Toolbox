@@ -646,19 +646,45 @@ namespace FirstPlugin
 
             public class SamplerInfo
             {
-                public ulong TextureId { get; set; }
-                private byte[] unknown;
+                public bool Enabled { get; set; }
+                public uint TextureId { get; set; }
+                public byte[] Flags = new byte[8];
+                public float unknownFloat;
 
                 public void ReadSamplerData(FileReader reader)
                 {
-                    TextureId = reader.ReadUInt64();
-                    unknown = reader.ReadBytes(0x18);
+                    Enabled = reader.ReadUInt32() == 0; // disabled if NULL_OFFSET
+                    TextureId = reader.ReadUInt32();
+                    Flags[0] = reader.ReadByte(); // 0, 1, or 2
+                    Flags[1] = reader.ReadByte(); // 0, 1, or 2
+                    reader.Seek(0x01); // 0-padding
+                    Flags[2] = reader.ReadByte(); // 0 or 1
+                    unknownFloat = reader.ReadSingle(); // 2, 6 (rare), or 15.99
+                    reader.Seek(0x04); // 0-padding
+                    Flags[3] = reader.ReadByte(); // 0 or 1
+                    Flags[4] = reader.ReadByte(); // 0 or 1
+                    Flags[5] = reader.ReadByte(); // 0 or 1
+                    Flags[6] = reader.ReadByte(); // 0 or 1
+                    Flags[7] = reader.ReadByte(); // 0 or 1
+                    reader.Seek(0x07); // 0-padding
                 }
 
                 public void WriteSamplerData(FileWriter writer)
                 {
+                    writer.Write(Enabled ? 0 : Header.NULL_OFFSET);
                     writer.Write(TextureId);
-                    writer.Write(unknown);
+                    writer.Write(Flags[0]);
+                    writer.Write(Flags[1]);
+                    writer.Seek(0x01);
+                    writer.Write(Flags[2]);
+                    writer.Write(unknownFloat);
+                    writer.Seek(0x04); // 0-padding
+                    writer.Write(Flags[3]);
+                    writer.Write(Flags[4]);
+                    writer.Write(Flags[5]);
+                    writer.Write(Flags[6]);
+                    writer.Write(Flags[7]);
+                    writer.Seek(0x07); // 0-padding
                 }
             }
         }
@@ -786,6 +812,7 @@ namespace FirstPlugin
             public string Signature => "TEXR";
 
             public override bool CanEdit { get; set; } = false;
+            public uint TextureId { get; private set; }
 
             public override TEX_FORMAT[] SupportedFormats
             {
@@ -825,7 +852,6 @@ namespace FirstPlugin
             private uint ImageSize;
             private SurfaceFormat SurfFormat;
             private byte[] data;
-            private uint TextureID;
             private uint unknown1;
             private uint unknown2;
             private uint unknown3;
@@ -833,10 +859,10 @@ namespace FirstPlugin
             private byte unknown5;
             private short unknown6;
             private uint unknown7;
+            private GX2B gx2b;
 
             public TEXR()
             {
-                Text = Signature;
                 ImageKey = "Texture";
                 SelectedImageKey = "Texture";
             }
@@ -977,7 +1003,7 @@ namespace FirstPlugin
                         {
                             gx2bHeader = Header.Read(reader);
                         }
-                        var gx2b = new GX2B();
+                        gx2b = new GX2B();
                         gx2b.ReadNode(reader, gx2bHeader);
                         data = gx2b.UnknownData;
                     }
@@ -996,8 +1022,8 @@ namespace FirstPlugin
                 unknown3 = reader.ReadUInt32();
                 ImageSize = reader.ReadUInt32();
                 unknown4 = reader.ReadUInt32();
-                TextureID = reader.ReadUInt32();
-                Text = TextureID.ToString("X8");
+                TextureId = reader.ReadUInt32();
+                Text = TextureId.ToString("X8");
                 SurfFormat = reader.ReadEnum<SurfaceFormat>(false);
                 unknown5 = reader.ReadByte();
                 unknown6 = reader.ReadInt16();
@@ -1044,7 +1070,7 @@ namespace FirstPlugin
                 writer.Write(unknown3);
                 writer.Write(ImageSize);
                 writer.Write(unknown4);
-                writer.Write(TextureID);
+                writer.Write(TextureId);
                 writer.Write((byte)SurfFormat);
                 writer.Write(unknown5);
                 writer.Write(unknown6);
@@ -1053,7 +1079,7 @@ namespace FirstPlugin
 
             public Offset[] WriteGX2B(FileWriter writer)
             {
-                return ((GX2B)Nodes[0]).WriteNode(writer);
+                return gx2b.WriteNode(writer);
             }
 
             public enum SurfaceFormat : byte

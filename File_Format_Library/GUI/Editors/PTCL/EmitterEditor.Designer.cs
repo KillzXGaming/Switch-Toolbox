@@ -31,34 +31,38 @@
             this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPageData = new System.Windows.Forms.TabPage();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
-            this.constantsLabel = new System.Windows.Forms.Label();
-            this.colorEditor = new Toolbox.Library.Forms.Editors.STColorEditor();
-            this.scaleArrayEditor = new ColorArrayEditor();
-            this.constant1Panel = new ColorConstantPanel();
-            this.constant0Panel = new ColorConstantPanel();
-            this.alpha1ArrayEditor = new ColorArrayEditor();
-            this.color1ArrayEditor = new ColorArrayEditor();
-            this.alpha0ArrayEditor = new ColorArrayEditor();
-            this.color0ArrayEditor = new ColorArrayEditor();
-            this.label1 = new System.Windows.Forms.Label();
-            this.blinkIntensity0UpDown = new System.Windows.Forms.NumericUpDown();
-            this.blinkDuration0UpDown = new System.Windows.Forms.NumericUpDown();
-            this.blinkIntensity0Label = new System.Windows.Forms.Label();
-            this.blinkDuration0Label = new System.Windows.Forms.Label();
+            this.texturesLabel = new Toolbox.Library.Forms.STLabel();
+            this.texture2Editor = new EmitterTextureEditor();
+            this.texture1Editor = new EmitterTextureEditor();
+            this.texture0Editor = new EmitterTextureEditor();
+            this.sizeLabel = new System.Windows.Forms.Label();
+            this.sizeUpDown = new System.Windows.Forms.NumericUpDown();
             this.blinkDuration1Label = new System.Windows.Forms.Label();
             this.blinkIntensity1Label = new System.Windows.Forms.Label();
             this.blinkDuration1UpDown = new System.Windows.Forms.NumericUpDown();
             this.blinkIntensity1UpDown = new System.Windows.Forms.NumericUpDown();
-            this.sizeUpDown = new System.Windows.Forms.NumericUpDown();
-            this.sizeLabel = new System.Windows.Forms.Label();
+            this.blinkDuration0Label = new System.Windows.Forms.Label();
+            this.blinkIntensity0Label = new System.Windows.Forms.Label();
+            this.blinkDuration0UpDown = new System.Windows.Forms.NumericUpDown();
+            this.blinkIntensity0UpDown = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.constantsLabel = new System.Windows.Forms.Label();
+            this.scaleArrayEditor = new ColorArrayEditor();
+            this.constant1Panel = new ColorConstantPanel();
+            this.constant0Panel = new ColorConstantPanel();
+            this.colorEditor = new Toolbox.Library.Forms.Editors.STColorEditor();
+            this.alpha1ArrayEditor = new ColorArrayEditor();
+            this.color1ArrayEditor = new ColorArrayEditor();
+            this.alpha0ArrayEditor = new ColorArrayEditor();
+            this.color0ArrayEditor = new ColorArrayEditor();
             this.stTabControl1.SuspendLayout();
             this.tabPageData.SuspendLayout();
             this.stPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.blinkIntensity0UpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blinkDuration0UpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkDuration1UpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkIntensity1UpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sizeUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blinkDuration0UpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blinkIntensity0UpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // stTabControl1
@@ -85,6 +89,10 @@
             // 
             // stPanel2
             // 
+            this.stPanel2.Controls.Add(this.texturesLabel);
+            this.stPanel2.Controls.Add(this.texture2Editor);
+            this.stPanel2.Controls.Add(this.texture1Editor);
+            this.stPanel2.Controls.Add(this.texture0Editor);
             this.stPanel2.Controls.Add(this.sizeLabel);
             this.stPanel2.Controls.Add(this.sizeUpDown);
             this.stPanel2.Controls.Add(this.blinkDuration1Label);
@@ -111,152 +119,68 @@
             this.stPanel2.Size = new System.Drawing.Size(562, 526);
             this.stPanel2.TabIndex = 0;
             // 
-            // constantsLabel
+            // texturesLabel
             // 
-            this.constantsLabel.AutoSize = true;
-            this.constantsLabel.Location = new System.Drawing.Point(3, 325);
-            this.constantsLabel.Name = "constantsLabel";
-            this.constantsLabel.Size = new System.Drawing.Size(70, 13);
-            this.constantsLabel.TabIndex = 67;
-            this.constantsLabel.Text = "Const Color 0";
+            this.texturesLabel.AutoSize = true;
+            this.texturesLabel.Location = new System.Drawing.Point(317, 292);
+            this.texturesLabel.Name = "texturesLabel";
+            this.texturesLabel.Size = new System.Drawing.Size(48, 13);
+            this.texturesLabel.TabIndex = 82;
+            this.texturesLabel.Text = "Textures";
             // 
-            // colorEditor
+            // texture2Editor
             // 
-            this.colorEditor.Location = new System.Drawing.Point(317, 3);
-            this.colorEditor.Name = "colorEditor";
-            this.colorEditor.Size = new System.Drawing.Size(227, 226);
-            this.colorEditor.TabIndex = 63;
+            this.texture2Editor.Location = new System.Drawing.Point(481, 308);
+            this.texture2Editor.Name = "texture2Editor";
+            this.texture2Editor.Size = new System.Drawing.Size(76, 126);
+            this.texture2Editor.TabIndex = 81;
             // 
-            // scaleArrayEditor
+            // texture1Editor
             // 
-            this.scaleArrayEditor.Label = "Scale";
-            this.scaleArrayEditor.Location = new System.Drawing.Point(3, 263);
-            this.scaleArrayEditor.Name = "scaleArrayEditor";
-            this.scaleArrayEditor.Size = new System.Drawing.Size(308, 59);
-            this.scaleArrayEditor.TabIndex = 66;
+            this.texture1Editor.Location = new System.Drawing.Point(399, 308);
+            this.texture1Editor.Name = "texture1Editor";
+            this.texture1Editor.Size = new System.Drawing.Size(76, 126);
+            this.texture1Editor.TabIndex = 80;
             // 
-            // constant1Panel
+            // texture0Editor
             // 
-            this.constant1Panel.IsAlpha = false;
-            this.constant1Panel.Location = new System.Drawing.Point(3, 397);
-            this.constant1Panel.Name = "constant1Panel";
-            this.constant1Panel.Size = new System.Drawing.Size(291, 37);
-            this.constant1Panel.TabIndex = 65;
+            this.texture0Editor.Location = new System.Drawing.Point(317, 308);
+            this.texture0Editor.Name = "texture0Editor";
+            this.texture0Editor.Size = new System.Drawing.Size(76, 126);
+            this.texture0Editor.TabIndex = 79;
             // 
-            // constant0Panel
+            // sizeLabel
             // 
-            this.constant0Panel.IsAlpha = false;
-            this.constant0Panel.Location = new System.Drawing.Point(3, 341);
-            this.constant0Panel.Name = "constant0Panel";
-            this.constant0Panel.Size = new System.Drawing.Size(291, 37);
-            this.constant0Panel.TabIndex = 64;
+            this.sizeLabel.AutoSize = true;
+            this.sizeLabel.Location = new System.Drawing.Point(401, 265);
+            this.sizeLabel.Name = "sizeLabel";
+            this.sizeLabel.Size = new System.Drawing.Size(30, 13);
+            this.sizeLabel.TabIndex = 78;
+            this.sizeLabel.Text = "Size:";
             // 
-            // alpha1ArrayEditor
+            // sizeUpDown
             // 
-            this.alpha1ArrayEditor.Label = "Alpha 1";
-            this.alpha1ArrayEditor.Location = new System.Drawing.Point(3, 198);
-            this.alpha1ArrayEditor.Name = "alpha1ArrayEditor";
-            this.alpha1ArrayEditor.Size = new System.Drawing.Size(308, 59);
-            this.alpha1ArrayEditor.TabIndex = 62;
-            // 
-            // color1ArrayEditor
-            // 
-            this.color1ArrayEditor.Label = "Color 1";
-            this.color1ArrayEditor.Location = new System.Drawing.Point(3, 133);
-            this.color1ArrayEditor.Name = "color1ArrayEditor";
-            this.color1ArrayEditor.Size = new System.Drawing.Size(308, 59);
-            this.color1ArrayEditor.TabIndex = 61;
-            // 
-            // alpha0ArrayEditor
-            // 
-            this.alpha0ArrayEditor.Label = "Alpha 0";
-            this.alpha0ArrayEditor.Location = new System.Drawing.Point(3, 68);
-            this.alpha0ArrayEditor.Name = "alpha0ArrayEditor";
-            this.alpha0ArrayEditor.Size = new System.Drawing.Size(308, 59);
-            this.alpha0ArrayEditor.TabIndex = 60;
-            // 
-            // color0ArrayEditor
-            // 
-            this.color0ArrayEditor.Label = "Color 0";
-            this.color0ArrayEditor.Location = new System.Drawing.Point(3, 3);
-            this.color0ArrayEditor.Name = "color0ArrayEditor";
-            this.color0ArrayEditor.Size = new System.Drawing.Size(308, 59);
-            this.color0ArrayEditor.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 381);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
-            this.label1.TabIndex = 68;
-            this.label1.Text = "Const Color 1";
-            // 
-            // blinkIntensity0UpDown
-            // 
-            this.blinkIntensity0UpDown.DecimalPlaces = 5;
-            this.blinkIntensity0UpDown.Increment = new decimal(new int[] {
+            this.sizeUpDown.DecimalPlaces = 5;
+            this.sizeUpDown.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.blinkIntensity0UpDown.Location = new System.Drawing.Point(191, 333);
-            this.blinkIntensity0UpDown.Maximum = new decimal(new int[] {
+            this.sizeUpDown.Location = new System.Drawing.Point(437, 263);
+            this.sizeUpDown.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
-            this.blinkIntensity0UpDown.Minimum = new decimal(new int[] {
+            this.sizeUpDown.Minimum = new decimal(new int[] {
             100000000,
             0,
             0,
             -2147483648});
-            this.blinkIntensity0UpDown.Name = "blinkIntensity0UpDown";
-            this.blinkIntensity0UpDown.Size = new System.Drawing.Size(120, 20);
-            this.blinkIntensity0UpDown.TabIndex = 69;
-            this.blinkIntensity0UpDown.ValueChanged += new System.EventHandler(this.BlinkIntensity0UpDown_ValueChanged);
-            // 
-            // blinkDuration0UpDown
-            // 
-            this.blinkDuration0UpDown.DecimalPlaces = 5;
-            this.blinkDuration0UpDown.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.blinkDuration0UpDown.Location = new System.Drawing.Point(191, 358);
-            this.blinkDuration0UpDown.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.blinkDuration0UpDown.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.blinkDuration0UpDown.Name = "blinkDuration0UpDown";
-            this.blinkDuration0UpDown.Size = new System.Drawing.Size(120, 20);
-            this.blinkDuration0UpDown.TabIndex = 70;
-            this.blinkDuration0UpDown.ValueChanged += new System.EventHandler(this.BlinkDuration0UpDown_ValueChanged);
-            // 
-            // blinkIntensity0Label
-            // 
-            this.blinkIntensity0Label.AutoSize = true;
-            this.blinkIntensity0Label.Location = new System.Drawing.Point(109, 335);
-            this.blinkIntensity0Label.Name = "blinkIntensity0Label";
-            this.blinkIntensity0Label.Size = new System.Drawing.Size(75, 13);
-            this.blinkIntensity0Label.TabIndex = 71;
-            this.blinkIntensity0Label.Text = "Blink Intensity:";
-            // 
-            // blinkDuration0Label
-            // 
-            this.blinkDuration0Label.AutoSize = true;
-            this.blinkDuration0Label.Location = new System.Drawing.Point(109, 360);
-            this.blinkDuration0Label.Name = "blinkDuration0Label";
-            this.blinkDuration0Label.Size = new System.Drawing.Size(76, 13);
-            this.blinkDuration0Label.TabIndex = 72;
-            this.blinkDuration0Label.Text = "Blink Duration:";
+            this.sizeUpDown.Name = "sizeUpDown";
+            this.sizeUpDown.Size = new System.Drawing.Size(120, 20);
+            this.sizeUpDown.TabIndex = 77;
+            this.sizeUpDown.ValueChanged += new System.EventHandler(this.SizeUpDown_ValueChanged);
             // 
             // blinkDuration1Label
             // 
@@ -324,38 +248,152 @@
             this.blinkIntensity1UpDown.TabIndex = 73;
             this.blinkIntensity1UpDown.ValueChanged += new System.EventHandler(this.BlinkIntensity1UpDown_ValueChanged);
             // 
-            // sizeUpDown
+            // blinkDuration0Label
             // 
-            this.sizeUpDown.DecimalPlaces = 5;
-            this.sizeUpDown.Increment = new decimal(new int[] {
+            this.blinkDuration0Label.AutoSize = true;
+            this.blinkDuration0Label.Location = new System.Drawing.Point(109, 360);
+            this.blinkDuration0Label.Name = "blinkDuration0Label";
+            this.blinkDuration0Label.Size = new System.Drawing.Size(76, 13);
+            this.blinkDuration0Label.TabIndex = 72;
+            this.blinkDuration0Label.Text = "Blink Duration:";
+            // 
+            // blinkIntensity0Label
+            // 
+            this.blinkIntensity0Label.AutoSize = true;
+            this.blinkIntensity0Label.Location = new System.Drawing.Point(109, 335);
+            this.blinkIntensity0Label.Name = "blinkIntensity0Label";
+            this.blinkIntensity0Label.Size = new System.Drawing.Size(75, 13);
+            this.blinkIntensity0Label.TabIndex = 71;
+            this.blinkIntensity0Label.Text = "Blink Intensity:";
+            // 
+            // blinkDuration0UpDown
+            // 
+            this.blinkDuration0UpDown.DecimalPlaces = 5;
+            this.blinkDuration0UpDown.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.sizeUpDown.Location = new System.Drawing.Point(424, 263);
-            this.sizeUpDown.Maximum = new decimal(new int[] {
+            this.blinkDuration0UpDown.Location = new System.Drawing.Point(191, 358);
+            this.blinkDuration0UpDown.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
-            this.sizeUpDown.Minimum = new decimal(new int[] {
+            this.blinkDuration0UpDown.Minimum = new decimal(new int[] {
             100000000,
             0,
             0,
             -2147483648});
-            this.sizeUpDown.Name = "sizeUpDown";
-            this.sizeUpDown.Size = new System.Drawing.Size(120, 20);
-            this.sizeUpDown.TabIndex = 77;
-            this.sizeUpDown.ValueChanged += new System.EventHandler(this.SizeUpDown_ValueChanged);
+            this.blinkDuration0UpDown.Name = "blinkDuration0UpDown";
+            this.blinkDuration0UpDown.Size = new System.Drawing.Size(120, 20);
+            this.blinkDuration0UpDown.TabIndex = 70;
+            this.blinkDuration0UpDown.ValueChanged += new System.EventHandler(this.BlinkDuration0UpDown_ValueChanged);
             // 
-            // sizeLabel
+            // blinkIntensity0UpDown
             // 
-            this.sizeLabel.AutoSize = true;
-            this.sizeLabel.Location = new System.Drawing.Point(388, 265);
-            this.sizeLabel.Name = "sizeLabel";
-            this.sizeLabel.Size = new System.Drawing.Size(30, 13);
-            this.sizeLabel.TabIndex = 78;
-            this.sizeLabel.Text = "Size:";
+            this.blinkIntensity0UpDown.DecimalPlaces = 5;
+            this.blinkIntensity0UpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.blinkIntensity0UpDown.Location = new System.Drawing.Point(191, 333);
+            this.blinkIntensity0UpDown.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.blinkIntensity0UpDown.Minimum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            -2147483648});
+            this.blinkIntensity0UpDown.Name = "blinkIntensity0UpDown";
+            this.blinkIntensity0UpDown.Size = new System.Drawing.Size(120, 20);
+            this.blinkIntensity0UpDown.TabIndex = 69;
+            this.blinkIntensity0UpDown.ValueChanged += new System.EventHandler(this.BlinkIntensity0UpDown_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 381);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.TabIndex = 68;
+            this.label1.Text = "Const Color 1";
+            // 
+            // constantsLabel
+            // 
+            this.constantsLabel.AutoSize = true;
+            this.constantsLabel.Location = new System.Drawing.Point(3, 325);
+            this.constantsLabel.Name = "constantsLabel";
+            this.constantsLabel.Size = new System.Drawing.Size(70, 13);
+            this.constantsLabel.TabIndex = 67;
+            this.constantsLabel.Text = "Const Color 0";
+            // 
+            // scaleArrayEditor
+            // 
+            this.scaleArrayEditor.Label = "Scale";
+            this.scaleArrayEditor.Location = new System.Drawing.Point(3, 263);
+            this.scaleArrayEditor.Name = "scaleArrayEditor";
+            this.scaleArrayEditor.Size = new System.Drawing.Size(308, 59);
+            this.scaleArrayEditor.TabIndex = 66;
+            // 
+            // constant1Panel
+            // 
+            this.constant1Panel.IsAlpha = false;
+            this.constant1Panel.Location = new System.Drawing.Point(3, 397);
+            this.constant1Panel.Name = "constant1Panel";
+            this.constant1Panel.Size = new System.Drawing.Size(291, 37);
+            this.constant1Panel.TabIndex = 65;
+            // 
+            // constant0Panel
+            // 
+            this.constant0Panel.IsAlpha = false;
+            this.constant0Panel.Location = new System.Drawing.Point(3, 341);
+            this.constant0Panel.Name = "constant0Panel";
+            this.constant0Panel.Size = new System.Drawing.Size(291, 37);
+            this.constant0Panel.TabIndex = 64;
+            // 
+            // colorEditor
+            // 
+            this.colorEditor.Location = new System.Drawing.Point(317, 3);
+            this.colorEditor.Name = "colorEditor";
+            this.colorEditor.Size = new System.Drawing.Size(227, 226);
+            this.colorEditor.TabIndex = 63;
+            // 
+            // alpha1ArrayEditor
+            // 
+            this.alpha1ArrayEditor.Label = "Alpha 1";
+            this.alpha1ArrayEditor.Location = new System.Drawing.Point(3, 198);
+            this.alpha1ArrayEditor.Name = "alpha1ArrayEditor";
+            this.alpha1ArrayEditor.Size = new System.Drawing.Size(308, 59);
+            this.alpha1ArrayEditor.TabIndex = 62;
+            // 
+            // color1ArrayEditor
+            // 
+            this.color1ArrayEditor.Label = "Color 1";
+            this.color1ArrayEditor.Location = new System.Drawing.Point(3, 133);
+            this.color1ArrayEditor.Name = "color1ArrayEditor";
+            this.color1ArrayEditor.Size = new System.Drawing.Size(308, 59);
+            this.color1ArrayEditor.TabIndex = 61;
+            // 
+            // alpha0ArrayEditor
+            // 
+            this.alpha0ArrayEditor.Label = "Alpha 0";
+            this.alpha0ArrayEditor.Location = new System.Drawing.Point(3, 68);
+            this.alpha0ArrayEditor.Name = "alpha0ArrayEditor";
+            this.alpha0ArrayEditor.Size = new System.Drawing.Size(308, 59);
+            this.alpha0ArrayEditor.TabIndex = 60;
+            // 
+            // color0ArrayEditor
+            // 
+            this.color0ArrayEditor.Label = "Color 0";
+            this.color0ArrayEditor.Location = new System.Drawing.Point(3, 3);
+            this.color0ArrayEditor.Name = "color0ArrayEditor";
+            this.color0ArrayEditor.Size = new System.Drawing.Size(308, 59);
+            this.color0ArrayEditor.TabIndex = 0;
             // 
             // EmitterEditor
             // 
@@ -368,11 +406,11 @@
             this.tabPageData.ResumeLayout(false);
             this.stPanel2.ResumeLayout(false);
             this.stPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.blinkIntensity0UpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blinkDuration0UpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sizeUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkDuration1UpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkIntensity1UpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sizeUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blinkDuration0UpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blinkIntensity0UpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -401,5 +439,9 @@
         private System.Windows.Forms.NumericUpDown blinkIntensity1UpDown;
         private System.Windows.Forms.Label sizeLabel;
         private System.Windows.Forms.NumericUpDown sizeUpDown;
+        private Toolbox.Library.Forms.STLabel texturesLabel;
+        private EmitterTextureEditor texture2Editor;
+        private EmitterTextureEditor texture1Editor;
+        private EmitterTextureEditor texture0Editor;
     }
 }

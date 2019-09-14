@@ -499,6 +499,12 @@
     <Compile Include="GUI\Editors\PTCL\EmitterEditor.Designer.cs">
       <DependentUpon>EmitterEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterTextureEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterTextureEditor.Designer.cs">
+      <DependentUpon>EmitterTextureEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Editors\PTCL\EmitterTexturePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1407,6 +1413,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Scene\SceneAnimEditor.resx">
       <DependentUpon>SceneAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterTextureEditor.resx">
+      <DependentUpon>EmitterTextureEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\EmitterTexturePanel.resx">
       <DependentUpon>EmitterTexturePanel.cs</DependentUpon>
