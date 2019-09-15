@@ -493,7 +493,7 @@ namespace LayoutBXLYT
             else
             {
                 textConverterToolStripMenuItem.Checked = false;
-                TextConverter.Hide();
+                TextConverter?.Hide();
             }
         }
 
