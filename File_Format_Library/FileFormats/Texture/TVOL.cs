@@ -75,12 +75,14 @@ namespace FirstPlugin
                         entry.Text = reader.ReadZeroTerminatedString();
 
                         reader.SeekBegin(offset + 48);
-                        ulong unk = reader.ReadUInt64(); //20
-                        ulong unk2 = reader.ReadUInt64(); //36
+                        ulong unk = reader.ReadUInt64(); //Varies. Shifts like a offset or size
+                        ulong headerOffset = reader.ReadUInt64(); 
                         ulong sectionSize = reader.ReadUInt64();
                         ulong unk3 = reader.ReadUInt64(); //16
                         ulong unk4 = reader.ReadUInt64(); //4
 
+                        reader.SeekBegin(offset + 48 + headerOffset);
+                        reader.ReadUInt32(); //padding
                         uint unk5 = reader.ReadUInt32(); //C03F
                         ulong unk6 = reader.ReadUInt64(); //32
                         ulong unk7 = reader.ReadUInt64(); //24
@@ -90,7 +92,12 @@ namespace FirstPlugin
                         entry.Height = reader.ReadUInt32();
                         entry.Depth = reader.ReadUInt32();
                         entry.ArrayCount = reader.ReadUInt32();
-                        uint unk9 = reader.ReadUInt32(); //77
+                        uint Format = reader.ReadUInt32();
+                        if (Formats.ContainsKey(Format))
+                            entry.Format = Formats[Format];
+                        else
+                            Console.WriteLine("Unsupported format! " + Format.ToString("X"));
+
                         uint unk10 = reader.ReadUInt32(); //1
                         entry.ImageData = reader.ReadBytes((int)imageSize);
                         Nodes.Add(entry);
@@ -98,6 +105,12 @@ namespace FirstPlugin
                 }
             }
         }
+
+        private Dictionary<uint, TEX_FORMAT> Formats = new Dictionary<uint, TEX_FORMAT>()
+        {
+            {0x25 , TEX_FORMAT.R8G8B8A8_UNORM},
+            {0x4d , TEX_FORMAT.BC7_UNORM},
+        };
 
         public void Unload()
         {
@@ -115,24 +128,6 @@ namespace FirstPlugin
             public TextureWrapper()
             {
             }
-
-            private Dictionary<uint, TEX_FORMAT> Formats = new Dictionary<uint, TEX_FORMAT>()
-            {
-                {0x25 , TEX_FORMAT.R8G8B8A8_UNORM},
-                {0x42 , TEX_FORMAT.BC1_UNORM},
-                {0x43, TEX_FORMAT.BC2_UNORM},
-                {0x44, TEX_FORMAT.BC3_UNORM},
-                {0x45, TEX_FORMAT.BC4_UNORM},
-                {0x46 , TEX_FORMAT.BC1_UNORM_SRGB},
-                {0x47 , TEX_FORMAT.BC2_UNORM_SRGB},
-                {0x48 , TEX_FORMAT.BC3_UNORM_SRGB},
-                {0x49, TEX_FORMAT.BC4_SNORM},
-                {0x50, TEX_FORMAT.BC6H_UF16},
-                {0x79, TEX_FORMAT.ASTC_4x4_UNORM},
-                {0x80, TEX_FORMAT.ASTC_8x8_UNORM},
-                {0x87, TEX_FORMAT.ASTC_4x4_SRGB},
-                {0x8E, TEX_FORMAT.ASTC_8x8_SRGB},
-            };
 
             public override bool CanEdit { get; set; } = false;
 
