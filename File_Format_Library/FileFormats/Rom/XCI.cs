@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using LibHac;
+using LibHac.IO;
 
 namespace FirstPlugin
 {
-    public class XCI : IFileFormat, ILeaveOpenOnLoad
+    public class XCI : IFileFormat, IArchiveFile, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Rom;
 
@@ -33,16 +35,64 @@ namespace FirstPlugin
             return Utils.HasExtension(FileName, ".xci");
         }
 
+        public bool CanAddFiles { get; set; }
+        public bool CanRenameFiles { get; set; }
+        public bool CanReplaceFiles { get; set; }
+        public bool CanDeleteFiles { get; set; }
+
+        public List<NSP.FileEntry> files = new List<NSP.FileEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public void ClearFiles() { files.Clear(); }
+
+        Nca Control { get; set; }
+
         public void Load(System.IO.Stream stream)
         {
+            string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string KeyFile = Path.Combine(homeFolder, ".switch", "prod.keys");
+            string TitleKeyFile = Path.Combine(homeFolder, ".switch", "title.keys");
+
+            var Keys = ExternalKeys.ReadKeyFile(KeyFile, TitleKeyFile);
+
+            Xci xci = new Xci(Keys, stream.AsStorage());
+            var CnmtNca = new Nca(Keys, xci.SecurePartition.OpenFile(
+                xci.SecurePartition.Files.FirstOrDefault(s => s.Name.Contains(".cnmt.nca"))), false);
+            var CnmtPfs = new Pfs(CnmtNca.OpenSection(0, false, IntegrityCheckLevel.None, true));
+            var Cnmt = new Cnmt(CnmtPfs.OpenFile(CnmtPfs.Files[0]).AsStream());
+            var Program = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Program);
+            var CtrlEntry = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Control);
+            if (CtrlEntry != null)
+                Control = new Nca(Keys, xci.SecurePartition.OpenFile($"{CtrlEntry.NcaId.ToHexString().ToLower()}.nca"), false);
+            var Input = xci.SecurePartition.OpenFile($"{Program.NcaId.ToHexString().ToLower()}.nca").AsStream();
+
+            var Nca = new Nca(Keys, Input.AsStorage(), true);
+
+            Romfs romfs = new Romfs(
+                 Nca.OpenSection(Nca.Sections.FirstOrDefault
+                        (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
+                        .SectionNum, false, IntegrityCheckLevel.None, true));
+
+            for (int i = 0; i < romfs.Files.Count; i++)
+                files.Add(new NSP.FileEntry(romfs, romfs.Files[i]));
         }
         public void Unload()
         {
-
+            Control?.Dispose();
         }
 
         public void Save(System.IO.Stream stream)
         {
+        }
+
+        public bool AddFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
+        }
+
+        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
+        {
+            return false;
         }
     }
 }

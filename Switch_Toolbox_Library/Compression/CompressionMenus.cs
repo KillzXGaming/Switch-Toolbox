@@ -21,6 +21,7 @@ namespace Toolbox.Library.IO
 
             items.Add(new ToolStripMenuItem("Yaz0"));
             items.Add(new ToolStripMenuItem("Gzip"));
+            items.Add(new ToolStripMenuItem("lZMA"));
             items.Add(new ToolStripMenuItem("lZ4"));
             items.Add(new ToolStripMenuItem("lZ4F"));
             items.Add(new ToolStripMenuItem("ZSTD"));
@@ -64,89 +65,48 @@ namespace Toolbox.Library.IO
         private void SetToolStripFunctions(string Name, bool Compress)
         {
             if (Name == "Yaz0")
-                OpenFileForCompression(CompressionType.Yaz0, Compress);
+                OpenFileForCompression(new Yaz0(), Compress);
             else if (Name == "Gzip")
-                OpenFileForCompression(CompressionType.Gzip, Compress);
+                OpenFileForCompression(new Gzip(), Compress);
+            else if (Name == "lZMA")
+                OpenFileForCompression(new LZMA(), Compress);
             else if (Name == "lZ4")
-                OpenFileForCompression(CompressionType.Lz4, Compress);
+                OpenFileForCompression(new lz4(), Compress);
             else if (Name == "lZ4F")
-                OpenFileForCompression(CompressionType.Lz4f, Compress);
+                OpenFileForCompression(new LZ4F(), Compress);
             else if (Name == "ZSTD")
-                OpenFileForCompression(CompressionType.Zstb, Compress);
+                OpenFileForCompression(new Zstb(), Compress);
             else if (Name == "ZLIB")
-                OpenFileForCompression(CompressionType.Zlib, Compress);
+                OpenFileForCompression(new Zlib(), Compress);
             else if (Name.Contains("ZLIB_GZ"))
-                OpenFileForCompression(CompressionType.ZlibGz, Compress);
+                OpenFileForCompression(new ZlibGZ(), Compress);
             else throw new Exception("Unimplimented Type! " + Name);
         }
 
-        public void CompressData(CompressionType CompressionType, byte[] data)
-        {
-            switch (CompressionType)
-            {
-                case CompressionType.Yaz0:
-                    SaveFileForCompression(EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel));
-                    break;
-                case CompressionType.Zlib:
-                    SaveFileForCompression(STLibraryCompression.ZLIB.Compress(data));
-                    break;
-                case CompressionType.Gzip:
-                    SaveFileForCompression(STLibraryCompression.GZIP.Compress(data));
-                    break;
-                case CompressionType.Zstb:
-                    SaveFileForCompression(STLibraryCompression.ZSTD.Compress(data));
-                    break;
-                case CompressionType.Lz4f:
-                    SaveFileForCompression(STLibraryCompression.Type_LZ4F.Compress(data));
-                    break;
-                case CompressionType.Lz4:
-                    SaveFileForCompression(STLibraryCompression.Type_LZ4.Compress(data));
-                    break;
-      
-            }
-        }
-        public void DecompressData(CompressionType CompressionType, byte[] data)
+        public void CompressData(ICompressionFormat CompressionFormat, Stream data)
         {
             try
             {
-                switch (CompressionType)
-                {
-                    case CompressionType.Yaz0:
-                        SaveFileForCompression(EveryFileExplorer.YAZ0.Decompress(data));
-                        break;
-                    case CompressionType.Zlib:
-                        SaveFileForCompression(STLibraryCompression.ZLIB.Decompress(data));
-                        break;
-                    case CompressionType.Gzip:
-                        SaveFileForCompression(STLibraryCompression.GZIP.Decompress(data));
-                        break;
-                    case CompressionType.Zstb:
-                        SaveFileForCompression(STLibraryCompression.ZSTD.Decompress(data));
-                        break;
-                    case CompressionType.Lz4f:
-                        using (var reader = new FileReader(data))
-                        {
-                            reader.Position = 0;
-                            int OuSize = reader.ReadInt32();
-                            int InSize = data.Length - 4;
-                            SaveFileForCompression(STLibraryCompression.Type_LZ4F.Decompress(reader.getSection(4, InSize)));
-                        }
-                        break;
-                    case CompressionType.Lz4:
-                        SaveFileForCompression(STLibraryCompression.Type_LZ4.Decompress(data));
-                        break;
-                    case CompressionType.ZlibGz:
-                        SaveFileForCompression(STLibraryCompression.ZLIB_GZ.Decompress(new MemoryStream(data)));
-                        break;
-                }
+                SaveFileForCompression(true, data, CompressionFormat);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show($"File not compressed with {CompressionType} compression!");
+                MessageBox.Show($"File failed to compress with {CompressionFormat} compression! {ex.ToString()}");
+            }
+        }
+        public void DecompressData(ICompressionFormat CompressionFormat, Stream data)
+        {
+            try
+            {
+                SaveFileForCompression(false, data, CompressionFormat);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"File not compressed with {CompressionFormat} compression! {ex.ToString()}");
             }
         }
 
-        private void OpenFileForCompression(CompressionType compressionType, bool Compress)
+        private void OpenFileForCompression(ICompressionFormat compressionFormat, bool Compress)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "All files(*.*)|*.*";
@@ -158,14 +118,14 @@ namespace Toolbox.Library.IO
                 foreach (string file in ofd.FileNames)
                 {
                     if (Compress)
-                        CompressData(compressionType, File.ReadAllBytes(ofd.FileName));
+                        CompressData(compressionFormat, File.OpenRead(ofd.FileName));
                     else
-                        DecompressData(compressionType, File.ReadAllBytes(ofd.FileName));
+                        DecompressData(compressionFormat,  File.OpenRead(ofd.FileName));
                 }
             }
         }
 
-        private void SaveFileForCompression(Stream data)
+        private void SaveFileForCompression(bool Compress, Stream data, ICompressionFormat compressionFormat)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "All files(*.*)|*.*";
@@ -173,20 +133,12 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                data.ExportToFile(sfd.FileName);
+                if (Compress)
+                    compressionFormat.Compress(data).ExportToFile(sfd.FileName);
+                else
+                    compressionFormat.Decompress(data).ExportToFile(sfd.FileName);
+
                 MessageBox.Show($"File has been saved to {sfd.FileName}", "Save Notification");
-            }
-        }
-
-        private void SaveFileForCompression(byte[] data)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "All files(*.*)|*.*";
-
-            Cursor.Current = Cursors.Default;
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                STFileSaver.SaveFileFormat(data, true, 0, CompressionType.None, sfd.FileName, false);
             }
         }
     }

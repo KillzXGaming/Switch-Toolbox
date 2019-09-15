@@ -115,19 +115,21 @@ namespace FirstPlugin
                 else if (compType == 0x30 || compType == 0x20)
                 {
                     uint decompSize = reader.ReadUInt32();
-                    uint compSize = (uint)reader.BaseStream.Length - 14;
+                    uint compSize = (uint)reader.BaseStream.Length - 16;
 
-                    reader.SeekBegin(14);
-                    bool IsGZIP = reader.ReadUInt16() == 0x1F8B;
+                    reader.SeekBegin(16);
+                    ushort signature = reader.ReadUInt16();
+                    bool IsGZIP = signature == 0x1F8B;
+                    bool IsZLIB = signature == 0x789C || signature == 0x78DA;
 
-                    byte[] filedata = reader.getSection(14, (int)compSize);
+                    byte[] filedata = reader.getSection(16, (int)compSize);
                     reader.Close();
                     reader.Dispose();
 
                     if (IsGZIP)
                         data = STLibraryCompression.GZIP.Decompress(filedata);
-                    else
-                        data = STLibraryCompression.ZLIB.Decompress(filedata);
+                    else 
+                        data = STLibraryCompression.ZLIB.Decompress(filedata, false);
                 }
 
                 return data;

@@ -19,8 +19,8 @@ namespace Toolbox.Library.IO
             this.Position = 0;
         }
 
-        public FileReader(string fileName)
-             : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        public FileReader(string fileName, bool leaveOpen = false)
+             : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), leaveOpen)
         {
             this.Position = 0;
         }
@@ -29,6 +29,8 @@ namespace Toolbox.Library.IO
         {
             this.Position = 0;
         }
+
+        public bool IsBigEndian => ByteOrder == ByteOrder.BigEndian;
 
         //Checks signature (no stream advancement)
         public bool CheckSignature(int length, string Identifier, long position = 0)

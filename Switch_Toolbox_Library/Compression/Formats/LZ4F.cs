@@ -14,12 +14,14 @@ namespace Toolbox.Library
         public string[] Description { get; set; } = new string[] { "LZ4F Compression" };
         public string[] Extension { get; set; } = new string[] { "*.cmp", "*.lz4f" };
 
-        public bool Identify(Stream stream)
+        public override string ToString() { return "LZ4F"; }
+
+        public bool Identify(Stream stream, string fileName)
         {
             using (var reader = new FileReader(stream, true))
             {
                 uint DecompressedSize = reader.ReadUInt32();
-                uint magicCheck = reader.ReadUInt32(); 
+                uint magicCheck = reader.ReadUInt32();
 
                 bool LZ4FDefault = magicCheck == 0x184D2204;
 
@@ -31,29 +33,28 @@ namespace Toolbox.Library
 
         public Stream Decompress(Stream stream)
         {
-            using (MemoryStream mem = new MemoryStream())
+            using (var reader = new FileReader(stream, true))
             {
-                using (var source = LZ4Stream.Decode(stream))
-                {
-                    source.CopyTo(mem);
-                }
-                return mem;
+                reader.Position = 0;
+                int OuSize = reader.ReadInt32();
+                int InSize = (int)stream.Length - 4;
+                var dec = STLibraryCompression.Type_LZ4F.Decompress(reader.getSection(4, InSize));
+                return new MemoryStream(dec);
             }
         }
 
         public Stream Compress(Stream stream)
         {
             var mem = new MemoryStream();
-            using (var writer = new FileWriter(mem))
+            using (var writer = new FileWriter(mem, true))
             {
-                var data = stream.ToArray();
-                writer.Write(data.Length);
-                byte[] buffer = LZ4.Frame.LZ4Frame.Compress(new MemoryStream(data),
+                writer.Write((uint)stream.Length);
+                byte[] buffer = LZ4.Frame.LZ4Frame.Compress(stream,
                     LZ4.Frame.LZ4MaxBlockSize.MB1, true, true, false, true, false);
 
                 writer.Write(buffer, 0, buffer.Length);
             }
-            return stream;
+            return mem;
         }
     }
 }

@@ -33,25 +33,28 @@ namespace Toolbox.Library.IO
                 //Also make compression require streams
                 var mem = new System.IO.MemoryStream();
                 FileFormat.Save(mem);
+                mem =  new System.IO.MemoryStream(mem.ToArray());
 
-                byte[] data = mem.ToArray();
-                FileFormat.IFileInfo.DecompressedSize = (uint)data.Length;
+                FileFormat.IFileInfo.DecompressedSize = (uint)mem.Length;
 
-                data = CompressFileFormat(data,
+                var finalStream = CompressFileFormat(
+                    FileFormat.IFileInfo.FileCompression,
+                    mem,
                     FileFormat.IFileInfo.FileIsCompressed,
                     FileFormat.IFileInfo.Alignment,
-                    FileFormat.IFileInfo.CompressionType,
                     FileName,
                     EnableDialog);
 
-                FileFormat.IFileInfo.CompressedSize = (uint)data.Length;
+                FileFormat.IFileInfo.CompressedSize = (uint)finalStream.Length;
+                finalStream.ExportToFile(FileName);
 
-                File.WriteAllBytes(FileName, data);
-
-                DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, data,
+                DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, finalStream,
                                     FileFormat.IFileInfo.DecompressedSize,
                                     FileFormat.IFileInfo.CompressedSize,
                                     FileFormat.IFileInfo.FileIsCompressed);
+
+                finalStream.Flush();
+                finalStream.Close();
             }
             else
             {
@@ -88,7 +91,7 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
         }
 
-        private static string SatisfyFileTables(IFileFormat FileFormat, string FilePath, byte[] Data, uint DecompressedSize, uint CompressedSize, bool IsYaz0Compressed)
+        private static string SatisfyFileTables(IFileFormat FileFormat, string FilePath, Stream Data, uint DecompressedSize, uint CompressedSize, bool IsYaz0Compressed)
         {
             string FileLog = "";
 
@@ -210,21 +213,24 @@ namespace Toolbox.Library.IO
 
 
 
-        public static void SaveFileFormat(byte[] data, bool FileIsCompressed, int Alignment,
-            CompressionType CompressionType, string FileName, bool EnableDialog = true, string DetailsLog = "")
+        public static void SaveFileFormat(byte[] data, bool FileIsCompressed, ICompressionFormat CompressionFormat,
+            int Alignment, string FileName, bool EnableDialog = true, string DetailsLog = "")
         {
             uint DecompressedSize = (uint)data.Length;
 
             Cursor.Current = Cursors.WaitCursor;
-            byte[] FinalData = CompressFileFormat(data, FileIsCompressed, Alignment, CompressionType, FileName, EnableDialog);
-            File.WriteAllBytes(FileName, FinalData);
+            Stream FinalData = CompressFileFormat(CompressionFormat, new MemoryStream(data), FileIsCompressed, Alignment, FileName, EnableDialog);
+            FinalData.ExportToFile(FileName);
 
             uint CompressedSize = (uint)FinalData.Length;
 
-            DetailsLog += "\n" + SatisfyFileTables(null, FileName, data,
+            DetailsLog += "\n" + SatisfyFileTables(null, FileName, new MemoryStream(data),
                          DecompressedSize,
                          CompressedSize,
                          FileIsCompressed);
+
+            FinalData.Flush();
+            FinalData.Close();
 
             MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
 
@@ -232,16 +238,19 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
         }
 
-        private static byte[] CompressFileFormat(byte[] data, bool FileIsCompressed, int Alignment,
-            CompressionType CompressionType, string FileName, bool EnableDialog = true)
+        private static Stream CompressFileFormat(ICompressionFormat compressionFormat, Stream data, bool FileIsCompressed, int Alignment,
+              string FileName, bool EnableDialog = true)
         {
             string extension = Path.GetExtension(FileName);
 
             if (extension == ".szs" || extension == ".sbfres")
             {
                 FileIsCompressed = true;
-                CompressionType = CompressionType.Yaz0;
+                compressionFormat = new Yaz0();
             }
+
+            if (compressionFormat == null)
+                return data;
 
             bool CompressFile = false;
             if (EnableDialog && FileIsCompressed)
@@ -250,38 +259,17 @@ namespace Toolbox.Library.IO
                     CompressFile = true;
                 else
                 {
-                    DialogResult save = MessageBox.Show($"Compress file with {CompressionType}?", "File Save", MessageBoxButtons.YesNo);
+                    DialogResult save = MessageBox.Show($"Compress file with {compressionFormat}?", "File Save", MessageBoxButtons.YesNo);
                     CompressFile = (save == DialogResult.Yes);
                 }
             }
             else if (FileIsCompressed)
                 CompressFile = true;
 
-            Console.WriteLine($"FileIsCompressed {FileIsCompressed} CompressFile {CompressFile} CompressionType {CompressionType}");
+            Console.WriteLine($"FileIsCompressed {FileIsCompressed} CompressFile {CompressFile} CompressionType {compressionFormat}");
 
             if (CompressFile)
-            {
-                switch (CompressionType)
-                {
-                    case CompressionType.Yaz0:
-                        return EveryFileExplorer.YAZ0.Compress(data, Runtime.Yaz0CompressionLevel, (uint)Alignment);
-                    case CompressionType.Zstb:
-                        return STLibraryCompression.ZSTD.Compress(data);
-                    case CompressionType.Lz4:
-                        return STLibraryCompression.Type_LZ4.Compress(data);
-                    case CompressionType.Lz4f:
-                        return STLibraryCompression.Type_LZ4F.Compress(data);
-                    case CompressionType.Gzip:
-                        return STLibraryCompression.GZIP.Compress(data);
-                    case CompressionType.Zlib:
-                        return STLibraryCompression.ZLIB.Compress(data, 2);
-                    case CompressionType.None:
-                        return data;
-                    default:
-                        MessageBox.Show($"Compression Type {CompressionType} not supported!!");
-                        break;
-                }
-            }
+                return compressionFormat.Compress(data);
 
             return data;
         }

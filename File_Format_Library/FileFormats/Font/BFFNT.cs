@@ -85,7 +85,8 @@ namespace FirstPlugin
 
             if (tglp.SheetDataList.Count > 0)
             {
-                var bntx = STFileLoader.OpenFileFormat("Sheet_0", Utils.CombineByteArray(tglp.SheetDataList.ToArray()));
+                var bntx = STFileLoader.OpenFileFormat(
+                    new MemoryStream(Utils.CombineByteArray(tglp.SheetDataList.ToArray())), "Sheet_0");
                 if (bntx != null)
                 {
                     tglp.BinaryTextureFile = (BNTX)bntx;
@@ -286,6 +287,8 @@ namespace FirstPlugin
             reader.Seek(-4, SeekOrigin.Current);
             return Signature;
         }
+
+
 
         public BitmapFont GetBitmapFont()
         {

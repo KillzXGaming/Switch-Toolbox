@@ -39,7 +39,7 @@ namespace FirstPlugin
 
                         if (bfresData != null)
                         {
-                            BFRES bfresFile = (BFRES)STFileLoader.OpenFileFormat(ob.Name, bfresData);
+                            BFRES bfresFile = (BFRES)STFileLoader.OpenFileFormat(new MemoryStream(bfresData), ob.Name);
                             bfresFile.BFRESRender.ModelTransform = Transform;
 
                             editor.AddNode(bfresFile);

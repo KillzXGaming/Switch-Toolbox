@@ -100,6 +100,20 @@ namespace Toolbox.Library.IO
             SeekBegin(pos + fixedSize);
         }
 
+        public void Write(object value, long pos)
+        {
+            using (TemporarySeek(pos, SeekOrigin.Begin)) {
+                if (value is uint) Write((uint)value);
+                else if (value is int) Write((int)value);
+                else if (value is long) Write((long)value);
+                else if (value is ulong) Write((ulong)value);
+                else if (value is ushort) Write((ushort)value);
+                else if (value is short) Write((short)value);
+                else if (value is sbyte) Write((sbyte)value);
+                else if (value is byte) Write((byte)value);
+            }
+        }
+
         //Writes the total size of a section as a uint. 
         public void WriteSectionSizeU32(long position, long startPosition, long endPosition)
         {

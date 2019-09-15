@@ -226,6 +226,7 @@ namespace Toolbox.Library
                     v.uv2 = (v.uv2 * Scale) + Translate;
             }
         }
+
         public void CalculateTangentBitangent(bool UseUVLayer2)
         {
             if (vertices.Count < 3)

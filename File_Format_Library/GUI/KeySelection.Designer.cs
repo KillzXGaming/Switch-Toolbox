@@ -109,14 +109,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(415, 181);
-            this.Controls.Add(this.setProdKeyPath);
-            this.Controls.Add(this.setTitleKeyPath);
-            this.Controls.Add(this.btnOk);
-            this.Controls.Add(this.stLabel2);
-            this.Controls.Add(this.TextBoxTitleKey);
-            this.Controls.Add(this.stLabel1);
-            this.Controls.Add(this.TextBoxProdKeyPath);
+            this.contentContainer.Controls.Add(this.setProdKeyPath);
+            this.contentContainer.Controls.Add(this.setTitleKeyPath);
+            this.contentContainer.Controls.Add(this.btnOk);
+            this.contentContainer.Controls.Add(this.stLabel2);
+            this.contentContainer.Controls.Add(this.TextBoxTitleKey);
+            this.contentContainer.Controls.Add(this.stLabel1);
+            this.contentContainer.Controls.Add(this.TextBoxProdKeyPath);
             this.Name = "KeySelectionForm";
             this.Text = "Select Key Files";
             this.ResumeLayout(false);

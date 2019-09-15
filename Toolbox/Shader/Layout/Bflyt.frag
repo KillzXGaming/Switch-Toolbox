@@ -29,7 +29,6 @@ void main()
 	if (debugShading == 0)
 	{
 		vec4 colorBlend = textureMap0 * whiteColor;
-	    vec3 blackBlend = (vec3(1) - textureMap0.rgb) + blackColor.rgb;
 		fragColor = vertexColor0 * colorBlend;
 	}
 	else if (debugShading == 5)

@@ -1232,14 +1232,14 @@ namespace FirstPlugin
 
                     string Name = resFile.ExternalFileDict.GetKey(index++);
 
-                    //Bfsha changes versioons alot so ignore these for now
+                    //Bfsha changes versions alot so ignore these for now
                     if (Utils.GetExtension(Name) == ".bfsha")
                     {
                         externalFilesFolder.AddNode(new ExternalFileData(Name, anim.Data));
                         continue;
                     }
 
-                    var file = STFileLoader.OpenFileFormat(Name, anim.Data, false, true);
+                    var file = STFileLoader.OpenFileFormat(new MemoryStream(anim.Data), Name, false, true);
 
                     //Only do once. There's usually one bntx embedded but incase there are multiple
                     if (file is BNTX && !IsTexturesReplaced)
@@ -1305,7 +1305,7 @@ namespace FirstPlugin
                 sfd.Filter = Utils.GetAllFilters(formats);
 
                 if (sfd.ShowDialog() == DialogResult.OK)
-                    STFileSaver.SaveFileFormat(Tex2, true, 0, CompressionType.Yaz0, sfd.FileName);
+                    STFileSaver.SaveFileFormat(Tex2, true,new Yaz0(), 0, sfd.FileName);
             }
             else
                 STFileSaver.SaveFileFormat(this, FileName);
@@ -1419,7 +1419,7 @@ namespace FirstPlugin
             sfd.Filter = Utils.GetAllFilters(formats);
 
             if (sfd.ShowDialog() == DialogResult.OK)
-                STFileSaver.SaveFileFormat(mem2.ToArray(), Compressed, 0, CompressionType.Yaz0, sfd.FileName);
+                STFileSaver.SaveFileFormat(mem2.ToArray(), Compressed,new Yaz0(), 0, sfd.FileName);
         }
         private void Rename(object sender, EventArgs args)
         {

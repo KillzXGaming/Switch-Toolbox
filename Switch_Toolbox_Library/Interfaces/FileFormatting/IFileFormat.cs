@@ -56,7 +56,7 @@ namespace Toolbox.Library
     }
     public class IFileInfo
     {
-        public CompressionType CompressionType { get; set; }
+        public ICompressionFormat FileCompression { get; set; }
         public IArchiveFile ArchiveParent { get; set; }
         public bool FileIsCompressed { get; set; }
         public bool FileIsEdited { get; set; }

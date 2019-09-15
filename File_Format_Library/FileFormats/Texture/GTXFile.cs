@@ -79,7 +79,7 @@ namespace FirstPlugin
 
         public override void OnAfterAdded()
         {
-            if (textures.Count > 0)
+            if (textures.Count > 0 && this.TreeView != null)
                 this.TreeView.SelectedNode = textures[0];
         }
 

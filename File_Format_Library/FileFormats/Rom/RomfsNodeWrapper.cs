@@ -99,7 +99,7 @@ namespace FirstPlugin
                 var file = romfs.FileDict[$"/{filePath}"];
                 var stream = romfs.OpenFile(file).AsStream();
 
-                object fileFormat = STFileLoader.OpenFileFormat(text, stream.ToArray(), false, true);
+                object fileFormat = STFileLoader.OpenFileFormat(stream , text,  false, true);
 
                 if (fileFormat == null)
                     return;

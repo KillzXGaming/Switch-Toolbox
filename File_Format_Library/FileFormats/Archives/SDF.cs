@@ -207,7 +207,7 @@ namespace FirstPlugin
         {
             byte[] decomp = null;
             if (magic == 0xDFF25B82 || magic == 0xFD2FB528)
-                decomp = STLibraryCompression.ZSTD.Decompress(CompressedBlock);
+                decomp = Zstb.SDecompress(CompressedBlock);
             else if (magic == 0x184D2204 || header.Version >= 0x17)
                 decomp = STLibraryCompression.Type_LZ4.Decompress(CompressedBlock, 0, CompressedBlock.Length,(int)header.DecompressedSize);
             else
@@ -273,8 +273,8 @@ namespace FirstPlugin
             public override IFileFormat OpenFile()
             {
                 byte[] Data = FileData;
-                var FileFormat = STFileLoader.OpenFileFormat(
-                    IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), Data, true);
+                var FileFormat = STFileLoader.OpenFileFormat(new MemoryStream(Data),
+                    IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), true);
 
                 if (FileFormat is DDS)
                     ((DDS)FileFormat).SwitchSwizzle = IsSwizzled;
@@ -346,7 +346,7 @@ namespace FirstPlugin
                                 else
                                 {
                                     stream.Seek((int)Offset + CompOffset, SeekOrigin.Begin);
-                                    Data.Add(STLibraryCompression.ZSTD.Decompress(stream.ReadBytes((int)CompressedSizes[i])));
+                                    Data.Add(Zstb.SDecompress(stream.ReadBytes((int)CompressedSizes[i])));
                                 }
                                 DecompOffset += (int)decompSize;
                                 CompOffset += (int)CompressedSizes[i];

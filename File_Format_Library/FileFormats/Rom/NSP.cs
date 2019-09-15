@@ -88,7 +88,7 @@ namespace FirstPlugin
         {
             files.Clear();
 
-            Control = null;
+            Control?.Dispose();
         }
 
         public void Save(System.IO.Stream stream)

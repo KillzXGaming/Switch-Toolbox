@@ -119,7 +119,7 @@ namespace FirstPlugin
                 get
                 {
                     if (compressedSize != fileSize)
-                        return new MemoryStream(STLibraryCompression.ZSTD.Decompress(stream.ToBytes()));
+                        return new MemoryStream(Zstb.SDecompress(stream.ToBytes()));
                     else
                         return stream;
                 }

@@ -26,36 +26,93 @@ namespace Toolbox.Library
         Dictionary<string, Vertex> VertexSkinSources = new Dictionary<string, Vertex>();
         Dictionary<string, Matrix4> MatrixSkinSources = new Dictionary<string, Matrix4>();
 
+        private Matrix4 GlobalTransform = Matrix4.Identity;
         public bool LoadFile(string FileName)
         {
+            GlobalTransform = Matrix4.Identity;
+
             COLLADA collada = COLLADA.Load(FileName);
+        
+            //Check axis up
+            if (collada.asset != null)
+            {
+                switch (collada.asset.up_axis)
+                {
+                    case UpAxisType.X_UP:
+                        GlobalTransform = Matrix4.CreateRotationX(90);
+                        break;
+                    case UpAxisType.Y_UP:
+                        GlobalTransform = Matrix4.CreateRotationY(90);
+                        break;
+                    case UpAxisType.Z_UP:
+                        GlobalTransform = Matrix4.CreateRotationZ(90);
+                        break;
+                }
+
+                if (collada.asset.unit != null)
+                {
+                    var amount = collada.asset.unit.meter;
+                    var type = collada.asset.unit.name;
+                    if (type == "meter")
+                    {
+
+                    }
+                    else if (type == "centimeter")
+                    {
+
+                    }
+                }
+            }
 
             foreach (var item in collada.Items)
             {
                 if (item is library_geometries)
-                {
                     LoadGeometry((library_geometries)item);
-                }
+                if (item is library_images)
+                    LoadImages((library_images)item);
+                if (item is library_controllers)
+                    LoadControllers((library_controllers)item);
+                if (item is library_nodes)
+                    LoadNodes((library_nodes)item);
+                if (item is library_visual_scenes)
+                    LoadVisualScenes((library_visual_scenes)item);
             }
 
             return true;
         }
 
-        private void SetControllers(COLLADA collada)
+        private void LoadVisualScenes(library_visual_scenes nodes)
+        {
+
+        }
+
+        private void LoadNodes(library_nodes nodes)
+        {
+            
+        }
+
+        private void LoadControllers(library_controllers controllers)
         {
            
         }
 
-
-        private void LoadGeometry(library_geometries Geometries)
+        private void LoadMaterials(library_materials materials)
         {
-            foreach (var geom in Geometries.geometry)
+
+        }
+
+        private void LoadImages(library_images images)
+        {
+
+        }
+
+        private void LoadGeometry(library_geometries geometries)
+        {
+            foreach (var geom in geometries.geometry)
             {
                 var mesh = geom.Item as mesh;
                 if (mesh == null)
                     continue;
-
-                Console.WriteLine(geom.name);
 
                 foreach (var source in mesh.source)
                 {
@@ -69,6 +126,11 @@ namespace Toolbox.Library
                     Console.WriteLine();
                 }
             }
+        }
+
+        public bool ExportFile(string FileName, List<STGenericObject> meshes, STSkeleton skeleton = null)
+        {
+            return false;
         }
 
         private List<STGenericObject> CreateGenericObjects(string Name, library_geometries Geometries)

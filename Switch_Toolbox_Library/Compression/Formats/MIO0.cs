@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
 using System.Linq;
 using System.IO;
 using System.IO.Compression;
@@ -10,20 +8,20 @@ using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
-    public class YAY0 : ICompressionFormat
+    public class MIO0 : ICompressionFormat
     {
-        public string[] Description { get; set; } = new string[] { "Yay0" };
-        public string[] Extension { get; set; } = new string[] { "*.yay0" };
+        public string[] Description { get; set; } = new string[] { "MIO0" };
+        public string[] Extension { get; set; } = new string[] { "*.mio0" };
 
-        public bool Identify(Stream stream)
+        public bool Identify(Stream stream, string fileName)
         {
             using (var reader = new FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "Yay0");
+                return reader.CheckSignature(4, "MIO0");
             }
         }
 
-        public bool CanCompress { get; } = false;
+        public bool CanCompress { get; } = true;
 
         public Stream Decompress(Stream stream)
         {

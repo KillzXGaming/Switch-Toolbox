@@ -50,7 +50,7 @@ namespace Toolbox.Library
         private IFileFormat OpenFile()
         {
             return STFileLoader.OpenFileFormat(new FileStream(filePath, FileMode.Open, FileAccess.Read),
-              filePath, null, true);
+              filePath, true);
         }
 
         public override void OnDoubleMouseClick(TreeView treeview)

@@ -47,6 +47,8 @@ namespace FirstPlugin
 
         public void ClearFiles() { files.Clear(); }
 
+        private FileReader DataReader;
+
         public void Load(System.IO.Stream stream)
         {
             using (var reader = new FileReader(stream))
@@ -65,12 +67,34 @@ namespace FirstPlugin
                     if (entry.Size != 0 && entry.CompFlags == 0)
                         files.Add(entry);
                 }
+
+                DataReader = GetDataFile();
+                SearchData();
+            }
+        }
+
+        private void SearchData()
+        {
+            if (DataReader == null) return;
+
+            DataReader.Position = 0;
+            for (int i = 0; i < files.Count; i++)
+            {
+                DataReader.SeekBegin(files[i].Offset);
+                var magicCheck = DataReader.ReadString(4);
+                Console.WriteLine("MAGIC=" + magicCheck);
+                if (magicCheck == "SARC")
+                    files[i].FileName = $"Layout/{files[i].FileName}.szs";
+                else if (magicCheck == "SPKG")
+                    files[i].FileName = $"ShaderPackage/{files[i].FileName}.spkg";
+                else
+                    files[i].FileName = $"UnknownTypes/{files[i].FileName}.bin";
             }
         }
 
         public void Unload()
         {
-
+            DataReader?.Dispose();
         }
 
         public void Save(System.IO.Stream stream)
@@ -85,6 +109,35 @@ namespace FirstPlugin
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
             return false;
+        }
+
+        public FileReader GetDataFile()
+        {
+            if (DataReader != null) return DataReader;
+
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    if (file.FileName.Contains("DATA1.bin"))
+                        return new FileReader(file.FileDataStream, true);
+                }
+            }
+            else
+            {
+                string path = "";
+                if (FilePath.Contains("LINKDATA.IDX"))
+                    path = FilePath.Replace("IDX", "BIN");
+                if (FilePath.Contains("DATA1.bin"))
+                    path = FilePath.Replace("DATA0", "DATA1");
+
+                if (!System.IO.File.Exists(path))
+                    return null;
+
+                return new FileReader(path, true);
+            }
+
+            return null;
         }
 
         public class FileEntry : ArchiveFileInfo
@@ -103,6 +156,8 @@ namespace FirstPlugin
                 ParentFile = data;
             }
 
+            public FileType Type = FileType.Unknown;
+
             public void Read(FileReader reader)
             {
                 Offset = reader.ReadUInt64();
@@ -111,39 +166,18 @@ namespace FirstPlugin
                 CompFlags = reader.ReadUInt64();
             }
 
+            public enum FileType
+            {
+                Unknown,
+                Shader,
+                Texture,
+                Model,
+                Sarc,
+            }
+
             public override Stream FileDataStream
             {
-                get
-                {
-                    if (ParentFile.IFileInfo.ArchiveParent != null)
-                    {
-                        foreach (var file in ParentFile.IFileInfo.ArchiveParent.Files)
-                        {
-                            if (file.FileName.Contains("DATA1.bin"))
-                            {
-                                return GetData(new FileReader(file.FileDataStream, true));
-                            }
-                        }
-
-                        return new MemoryStream();
-                    }
-                    else
-                    {
-                        string path = "";
-                        if (SourcePath.Contains("LINKDATA.IDX"))
-                            path = SourcePath.Replace("IDX", "BIN");
-                        if (SourcePath.Contains("DATA1.bin"))
-                            path = SourcePath.Replace("DATA0", "DATA1");
-
-                        if (!System.IO.File.Exists(path))
-                            return new MemoryStream();
-
-                        using (var reader = new FileReader(path, true))
-                        {
-                            return GetData(reader);
-                        }
-                    }
-                }
+                get { return GetData(ParentFile.GetDataFile()); }
             }
 
             private Stream GetData(FileReader reader)

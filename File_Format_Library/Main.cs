@@ -238,7 +238,7 @@ namespace FirstPlugin
                         string ext = System.IO.Path.GetExtension(file.FileName);
                         if (ext == ".bfres")
                         {
-                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(file.FileName, file.FileData));
+                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(new System.IO.MemoryStream(file.FileData), file.FileName));
                         }
                     }
                 }
@@ -385,6 +385,8 @@ namespace FirstPlugin
             Formats.Add(typeof(BCLIM));
             Formats.Add(typeof(LayoutBXLYT.BFLAN));
             Formats.Add(typeof(DAT_Bayonetta));
+            Formats.Add(typeof(XCI));
+            Formats.Add(typeof(TVOL));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));
@@ -392,7 +394,6 @@ namespace FirstPlugin
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
-                Formats.Add(typeof(XCI));
                 Formats.Add(typeof(XLINK));
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));

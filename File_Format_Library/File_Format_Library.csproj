@@ -229,7 +229,8 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MEnums.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MG.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MS.cs" />
-    <Compile Include="FileFormats\HyruleWarriors\G1T.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1T\G1T.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1T\G1TFile.cs" />
     <Compile Include="FileFormats\HyruleWarriors\HWBinGzResource.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGA_PAK.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_ChunkTable.cs" />
@@ -327,6 +328,7 @@
     <Compile Include="FileFormats\Rom\3DS\RomFSStructure.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
+    <Compile Include="FileFormats\Texture\TVOL.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="FileFormats\Texture\BTI.cs" />

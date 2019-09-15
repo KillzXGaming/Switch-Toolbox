@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,6 +43,7 @@
             this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -220,6 +222,11 @@
             this.loadFontToolStripMenuItem.Text = "Load Font";
             this.loadFontToolStripMenuItem.Click += new System.EventHandler(this.loadFontToolStripMenuItem_Click);
             // 
+            // stContextMenuStrip1
+            // 
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // MSBTEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -266,5 +273,6 @@
         private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadFontToolStripMenuItem;
+        private Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
     }
 }

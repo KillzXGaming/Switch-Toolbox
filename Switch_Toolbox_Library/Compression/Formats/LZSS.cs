@@ -16,7 +16,7 @@ namespace Toolbox.Library
         public string[] Description { get; set; } = new string[] { "LZSS Compression" };
         public string[] Extension { get; set; } = new string[] { "*.lzs", "*.lzss" };
 
-        public bool Identify(Stream stream)
+        public bool Identify(Stream stream, string fileName)
         {
             using (var reader = new FileReader(stream, true))
             {

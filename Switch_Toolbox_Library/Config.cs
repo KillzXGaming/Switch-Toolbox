@@ -329,7 +329,6 @@ namespace Toolbox.Library
             }
             catch (Exception)
             {
-                // Invalid hex format.
                 return false;
             }
         }

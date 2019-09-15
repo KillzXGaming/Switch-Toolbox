@@ -22,7 +22,7 @@ namespace Toolbox.Library
         public Dictionary<string, uint> NameTables { get; set; }
         public Dictionary<uint, uint> Crc32Tables { get; set; }
 
-        private int ParseSize(string FilePath, byte[] Data = null, bool IsYaz0Compressed = false, bool Force = false)
+        private int ParseSize(string FilePath, System.IO.Stream Data = null, bool IsYaz0Compressed = false, bool Force = false)
         {
             var size = new RSTB.SizeCalculator().CalculateFileSize(FilePath, Data, IsWiiU, IsYaz0Compressed, Force);
             if (size == 0)
@@ -36,7 +36,7 @@ namespace Toolbox.Library
             return size;
         }
 
-        public void SetEntry(string FileName, byte[] Data = null, bool IsYaz0Compressed = false, bool Force = false)
+        public void SetEntry(string FileName, System.IO.Stream Data = null, bool IsYaz0Compressed = false, bool Force = false)
         {
             uint OldSize = GetSize(FileName);
             uint NewSize = (uint)ParseSize(FileName, Data, IsYaz0Compressed, Force) + 8192; //Add an additional set of bytes for some room
@@ -264,12 +264,12 @@ namespace Toolbox.Library
                 float.TryParse(value, out output);
             }
 
-            public int CalculateFileSize(string FileName, byte[] Data, bool IsWiiU, bool IsYaz0Compressed, bool Force)
+            public int CalculateFileSize(string FileName, System.IO.Stream Data, bool IsWiiU, bool IsYaz0Compressed, bool Force)
             {
                 return CalculateFileSizeByExtension(FileName, Data, IsWiiU, System.IO.Path.GetExtension(FileName), IsYaz0Compressed, Force);
             }
 
-            private int CalculateFileSizeByExtension(string FileName, byte[] Data, bool WiiU, string Ext, bool IsYaz0Compressed, bool Force = false)
+            private int CalculateFileSizeByExtension(string FileName, System.IO.Stream Data, bool WiiU, string Ext, bool IsYaz0Compressed, bool Force = false)
             {
                 int Size = 0;
                 if (System.IO.File.Exists(FileName))
@@ -292,7 +292,7 @@ namespace Toolbox.Library
                 {
                     if (IsYaz0Compressed)
                     {
-                        using (var reader = new FileReader(new System.IO.MemoryStream(Data)))
+                        using (var reader = new FileReader(Data, true))
                         {
                             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                             reader.Seek(4, System.IO.SeekOrigin.Begin);
@@ -301,11 +301,11 @@ namespace Toolbox.Library
                     }
                     else
                     {
-                        Size = Data.Length;
+                        Size = (int)Data.Length;
                     }
                 }
 
-                byte[] FileData = Data;
+                byte[] FileData = Data.ToBytes();
 
                 Size = (Size + 31) & -32;
                 string ActualExt = Ext.Replace(".s", ".").Remove(0,1);
@@ -317,7 +317,7 @@ namespace Toolbox.Library
                     if (System.IO.File.Exists(FileName))
                         FileData = EveryFileExplorer.YAZ0.Decompress(FileName);
                     else if (Data != null)
-                        FileData = EveryFileExplorer.YAZ0.Decompress(Data);
+                        FileData = EveryFileExplorer.YAZ0.Decompress(FileData);
                 }
 
                 if (WiiU)

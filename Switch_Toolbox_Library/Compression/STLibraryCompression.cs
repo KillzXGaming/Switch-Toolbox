@@ -20,44 +20,15 @@ namespace Toolbox.Library.IO
             if (format.IFileInfo != null)
                 Alignment = format.IFileInfo.Alignment;
 
-            switch (format.IFileInfo.CompressionType)
-            {
-                case CompressionType.Yaz0:
-                    return EveryFileExplorer.YAZ0.Compress(data, 3, (uint)Alignment);
-                case CompressionType.Zstb:
-                    return ZSTD.Compress(data);
-                case CompressionType.Zlib:
-                    return ZLIB.Compress(data);
-                case CompressionType.None:
-                    return data;
-                default:
-                    return data;
-            }
+            var FileCompression = format.IFileInfo.FileCompression;
+            if (FileCompression == null) return data;
+
+            return FileCompression.Compress(new MemoryStream(data)).ToArray();
         }
 
         public class ZSTD
         {
-            public static byte[] Decompress(byte[] b)
-            {
-                using (var decompressor = new ZstdNet.Decompressor())
-                {
-                    return decompressor.Unwrap(b);
-                }
-            }
-            public static byte[] Decompress(byte[] b, int MaxDecompressedSize)
-            {
-                using (var decompressor = new ZstdNet.Decompressor())
-                {
-                    return decompressor.Unwrap(b, MaxDecompressedSize);
-                }
-            }
-            public static byte[] Compress(byte[] b)
-            {
-                using (var compressor = new ZstdNet.Compressor())
-                {
-                    return compressor.Wrap(b);
-                }
-            }
+        
 
         }
 
@@ -65,27 +36,29 @@ namespace Toolbox.Library.IO
         {
             public static bool IsCompressed(Stream stream)
             {
+                if (stream.Length < 32) return false;
+
                 using (var reader = new FileReader(stream, true))
                 {
                     reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                    reader.Position = 0;
+                    uint chunkSize = reader.ReadUInt32();
                     uint chunkCount = reader.ReadUInt32();
-                    uint unk = reader.ReadUInt32();
-                    if (reader.BaseStream.Length > 4 + (chunkCount * 4))
+                    uint decompressedSize = reader.ReadUInt32();
+                    if (reader.BaseStream.Length > 8 + (chunkCount * 4) + 128)
                     {
-                        uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
+                        uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount);
                         reader.Align(128);
 
-                        while (!reader.EndOfStream)
-                        {
-                            uint size = reader.ReadUInt32();
+                        //Now search for zlibbed chunks
+                        uint size = reader.ReadUInt32();
+                        ushort magic = reader.ReadUInt16();
 
-                            long pos = reader.Position;
-                            ushort magic = reader.ReadUInt16();
-
-                            reader.Position = 0;
-                            if (magic == 0x78da)
-                                return true;
-                        }
+                        reader.Position = 0;
+                        if (magic == 0x78da)
+                            return true;
+                        else
+                            return false;
                     }
 
                     reader.Position = 0;
@@ -99,11 +72,11 @@ namespace Toolbox.Library.IO
                 using (var reader = new FileReader(stream, true))
                 {
                     reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                    uint unk = reader.ReadUInt32();
                     try
                     {
+                        uint chunkSize = reader.ReadUInt32();
                         uint chunkCount = reader.ReadUInt32();
-                        uint unk2 = reader.ReadUInt32();
+                        uint decompressedSize = reader.ReadUInt32();
                         uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
 
                         reader.Align(128);
@@ -141,11 +114,54 @@ namespace Toolbox.Library.IO
 
                 return null;
             }
+
+            public static Stream Compress(Stream stream, bool isBigEndian = true)
+            {
+                uint decompSize = (uint)stream.Length;
+                uint[] section_sizes;
+                uint sectionCount = 0;
+
+                var mem = new MemoryStream();
+                using (var reader = new FileReader(stream, true))
+                using (var writer = new FileWriter(mem, true))
+                {
+                    writer.SetByteOrder(isBigEndian);
+
+                    if (!(decompSize % 0x10000 != 0))
+                        sectionCount = decompSize / 0x10000;
+                    else
+                        sectionCount = (decompSize / 0x10000) + 1;
+
+                    writer.Write(0x10000);
+                    writer.Write(sectionCount);
+                    writer.Write(decompSize);
+                    writer.Write(new uint[sectionCount]);
+                    writer.Align(128);
+
+                    reader.SeekBegin(0);
+                    section_sizes = new uint[sectionCount];
+                    for (int i = 0; i < sectionCount; i++)
+                    {
+                        byte[] chunk = ZLIB.Compress(reader.ReadBytes(0x10000));
+
+                        section_sizes[i] = (uint)chunk.Length;
+
+                        writer.Write(chunk.Length);
+                        writer.Write(chunk);
+                        writer.Align(128);
+                    }
+
+                    writer.SeekBegin(12);
+                    for (int i = 0; i < sectionCount; i++)
+                        writer.Write(section_sizes[i] + 4);
+                }
+                return mem;
+            }
         }
 
         public class ZLIB
         {
-            public static byte[] Decompress(byte[] b)
+            public static byte[] Decompress(byte[] b, bool hasMagic = true)
             {
                 using (var br = new FileReader(new MemoryStream(b), true))
                 {
@@ -156,7 +172,8 @@ namespace Toolbox.Library.IO
                     else
                     {
                         var ms = new System.IO.MemoryStream();
-                        br.BaseStream.Position = 2;
+                        if (hasMagic)
+                            br.Position = 2;
                         using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 6)), CompressionMode.Decompress))
                             ds.CopyTo(ms);
                         return ms.ToArray();
@@ -231,8 +248,11 @@ namespace Toolbox.Library.IO
         //Mario Tennis Aces Custom compression
         public class MTA_CUSTOM
         {
-            [DllImport("Lib/LibTennis.dll", CallingConvention = CallingConvention.Cdecl)]
-            static extern void DecompressBuffer(IntPtr output, IntPtr input, uint len);
+            [DllImport("Lib/LibTennis32.dll", CallingConvention = CallingConvention.Cdecl)]
+            static extern void DecompressBuffer32(IntPtr output, IntPtr input, uint len);
+
+            [DllImport("Lib/LibTennis64.dll", CallingConvention = CallingConvention.Cdecl)]
+            static extern void DecompressBuffer64(IntPtr output, IntPtr input, uint len);
 
             public unsafe byte[] Decompress(byte[] input, uint decompressedLength)
             {
@@ -240,8 +260,10 @@ namespace Toolbox.Library.IO
                 {
                     fixed (byte* inputPtr = input)
                     {
-                        DecompressBuffer((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
-
+                        if (Environment.Is64BitProcess)
+                            DecompressBuffer64((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
+                        else
+                            DecompressBuffer32((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
                      //   Decompress(outputPtr, inputPtr, decompressedLength);
                     }
 
@@ -277,9 +299,7 @@ namespace Toolbox.Library.IO
                         for (int i = 0; i < 8; i++)
                             *output++ = *data++;
 
-                        var checkFinished = CheckFinished(data, end);
-                        data = checkFinished.data;
-                        end = checkFinished.end;
+                        CheckFinished(ref data, ref end);
                     }
 
                     flag |= 0x800000;
@@ -302,11 +322,7 @@ namespace Toolbox.Library.IO
                         flag <<= 1;
 
                         if (flag == 0)
-                        {
-                            var checkFinished2 = CheckFinished(data, end);
-                            data = checkFinished2.data;
-                            end = checkFinished2.end;
-                        }
+                            CheckFinished(ref data, ref end);
 
                         int op_ofs = (data[0] >> 4) | (data[1] << 4);
                         int op_len = data[0] & 0xF;
@@ -329,14 +345,7 @@ namespace Toolbox.Library.IO
                                 op_len = op_len_ext + add_len;
 
                                 if (op_ofs >= 2)
-                                {
-                                    var loop1Data = Loop1(flag, op_len, chunk, data, output);
-                                    flag = loop1Data.flag;
-                                    op_len = loop1Data.op_len;
-                                    chunk = loop1Data.chunk;
-                                    data = loop1Data.data;
-                                    output = loop1Data.output;
-                                }
+                                    Loop1(ref flag, ref op_len, ref chunk, ref data, ref output);
                             }
                             else
                             {
@@ -344,41 +353,19 @@ namespace Toolbox.Library.IO
                                 op_len = op_len_ext;
                                 if (op_ofs >= 2)
                                 {
-                                    var loop1Data = Loop1(flag, op_len, chunk, data, output);
-                                    flag = loop1Data.flag;
-                                    op_len = loop1Data.op_len;
-                                    chunk = loop1Data.chunk;
-                                    data = loop1Data.data;
-                                    output = loop1Data.output;
+                                     Loop1(ref flag, ref op_len, ref chunk, ref data, ref output);
                                 }
                             }
                         }
 
-                        var loop2Data2 = Loop2(flag, op_len, data, output, chunk);
-                        flag = loop2Data2.flag;
-                        op_len = loop2Data2.op_len;
-                        chunk = loop2Data2.chunk;
-                        data = loop2Data2.data;
-                        output = loop2Data2.output;
+                         Loop2(ref flag, ref op_len, ref data, ref output, ref chunk);
                     }
                 }
 
-                var endOp = EndOperation(data, end);
-                data = endOp.data;
-                end = endOp.end;
+                EndOperation(ref data, ref end);
             }
 
-            private unsafe class Data
-            {
-                public uint flag;
-                public int op_len;
-                public byte* chunk;
-                public byte* data;
-                public byte* output;
-                public byte* end;
-            }
-
-            unsafe Data Loop1(uint flag, int op_len, byte* chunk, byte* data, byte* output)
+            unsafe void Loop1(ref uint flag, ref int op_len, ref byte* chunk, ref byte* data, ref byte* output)
             {
                 if ((((byte)*chunk ^ (byte)*output) & 1) == 0)
                 {
@@ -436,10 +423,10 @@ namespace Toolbox.Library.IO
                     }
                 }
 
-                return Loop2(flag, op_len, data, output, chunk);
+                Loop2(ref flag, ref op_len, ref data, ref output, ref chunk);
             }
 
-            unsafe Data Loop2(uint flag, int op_len, byte* data, byte* output, byte* chunk)
+            unsafe void Loop2(ref uint flag, ref int op_len, ref byte* data, ref byte* output, ref byte* chunk)
             {
                 int masked_len = op_len & 7;
                 byte* out_ptr = output;
@@ -468,42 +455,21 @@ namespace Toolbox.Library.IO
                     flag <<= 1;
                     *output++ = *data++;
                 }
-
-                return new Data()
-                {
-                    flag = flag,
-                    op_len = op_len,
-                    data = data,
-                    output = output,
-                    chunk = chunk,
-                };
             }
 
-            unsafe Data CheckFinished(byte* data, byte* end)
+            unsafe void CheckFinished(ref byte* data, ref byte* end)
             {
                 if (data >= end)
-                    return EndOperation(data, end);
-
-                return new Data()
-                {
-                    data = data,
-                    end = end,
-                };
+                    EndOperation(ref data, ref end);
             }
 
-            unsafe Data EndOperation(byte* data, byte* end)
+            unsafe void EndOperation(ref byte* data, ref byte* end)
             {
                 byte* ext = end + 0x20;
                 if (data < ext)
                     do
                         *end-- = *--ext;
                     while (data < ext);
-
-                return new Data()
-                {
-                    data = data,
-                    end = end,
-                };
             }
         }
 

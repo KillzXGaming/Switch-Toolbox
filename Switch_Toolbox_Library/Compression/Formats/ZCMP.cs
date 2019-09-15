@@ -13,7 +13,7 @@ namespace Toolbox.Library
         public string[] Description { get; set; } = new string[] { "ZLIB Compression (ZCMP)" };
         public string[] Extension { get; set; } = new string[] { "*.cmp" };
 
-        public bool Identify(Stream stream)
+        public bool Identify(Stream stream, string fileName)
         {
             using (var reader = new FileReader(stream, true))
             {

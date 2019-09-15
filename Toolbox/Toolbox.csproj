@@ -406,7 +406,10 @@
     <Content Include="Lib\LibHac.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\LibTennis.dll">
+    <Content Include="Lib\LibTennis32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\LibTennis64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\Licenses\7ZIP LZMA LICENSE.txt">

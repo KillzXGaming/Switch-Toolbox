@@ -61,60 +61,16 @@ namespace FirstPlugin
             reader.Position = 0;
         }
 
-        private Stream CheckCompression(Stream stream)
-        {
-            using (var reader = new FileReader(stream, true))
-            {
-                reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                uint unk = reader.ReadUInt32();
-                 try
-                {
-                    uint chunkCount = reader.ReadUInt32();
-                    uint unk2 = reader.ReadUInt32();
-                    uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
-
-                    reader.Align(128);
-
-                    List<byte[]> DecompressedChunks = new List<byte[]>();
-
-                    //Now search for zlibbed chunks
-                    while (!reader.EndOfStream)
-                    {
-                        uint size = reader.ReadUInt32();
-
-                        long pos = reader.Position;
-                        ushort magic = reader.ReadUInt16();
-
-                        ///Check zlib magic
-                        if (magic == 0x78da)
-                        {
-                            var data = STLibraryCompression.ZLIB.Decompress(reader.getSection((uint)pos, size));
-                            DecompressedChunks.Add(data);
-
-                            reader.SeekBegin(pos + size); //Seek the compressed size and align it to goto the next chunk
-                            reader.Align(128);
-                        }
-                        else //If the magic check fails, seek back 2. This shouldn't happen, but just incase
-                            reader.Seek(-2);
-                    }
-                    //Return the decompressed stream with all chunks combined
-                    return new MemoryStream(Utils.CombineByteArray(DecompressedChunks.ToArray()));
-                }
-                catch
-                {
-
-                }
-            }
-            return stream;
-        }
+        public bool isBigEndian = true;
 
         public void Load(Stream stream)
         {
-            stream = CheckCompression(stream);
+            CanSave = true;
 
             using (var reader = new FileReader(stream))
             {
                 CheckEndianness(reader);
+                isBigEndian = reader.IsBigEndian;
 
                 uint Count = reader.ReadUInt32();
 
@@ -145,8 +101,9 @@ namespace FirstPlugin
                         case "G1TG": //Textures
                             G1T GITextureU = new G1T();
                             GITextureU.FileName = $"TextureContainer{i}.gt1";
-                            GITextureU.Read(new FileReader(fileEntry.FileData));
+                            GITextureU.Load(new MemoryStream(fileEntry.FileData));
                             Nodes.Add(GITextureU);
+                            fileEntry.FileFormat = GITextureU;
                             break;
                         default:
                             break;
@@ -164,6 +121,21 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream))
+            {
+                writer.SetByteOrder(isBigEndian);
+                writer.Write(files.Count);
+                long pos = writer.Position;
+                writer.Write(new uint[files.Count * 2]);
+                for (int i = 0; i < files.Count; i++)
+                {
+                    files[i].SaveFileFormat();
+
+                    writer.WriteUint32Offset(pos + (i * 8));
+                    writer.Write(files[i].FileData.Length, pos + 4 + (i * 8));
+                    writer.Write(files[i].FileData);
+                }
+            }
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)

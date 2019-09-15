@@ -153,7 +153,7 @@ namespace Bfres.Structs
                                 boneAnim.BaseData = baseData;
                             }
                         }
-                    }
+                       }
 
                     animation.OpenAnimationData();
                 }

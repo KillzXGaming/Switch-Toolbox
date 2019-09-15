@@ -12,7 +12,7 @@ namespace Toolbox.Library
         string[] Description { get; set; }
         string[] Extension { get; set; }
 
-        bool Identify(Stream stream);
+        bool Identify(Stream stream, string fileName);
         bool CanCompress { get; }
 
         Stream Decompress(Stream stream);

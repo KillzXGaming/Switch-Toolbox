@@ -258,7 +258,7 @@ namespace FirstPlugin
         {
             if (entry.IsCompressed)
             {
-                return STLibraryCompression.ZSTD.Decompress(entry.CompressedData);
+                return Zstb.SDecompress(entry.CompressedData);
             }
             else
                 return entry.CompressedData;
@@ -266,7 +266,7 @@ namespace FirstPlugin
         public static void SetASST(FileEntry fileEntry, byte[] data)
         {
             if (fileEntry.IsCompressed)
-                fileEntry.CompressedData = STLibraryCompression.ZSTD.Compress(data);
+                fileEntry.CompressedData = Zstb.SCompress(data);
             else
                 fileEntry.CompressedData = data;
         }

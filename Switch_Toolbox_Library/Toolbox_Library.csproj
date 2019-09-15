@@ -218,23 +218,31 @@
     <Compile Include="Compression\7ZIP\LZ\LzBinTree.cs" />
     <Compile Include="Compression\7ZIP\LZ\LzInWindow.cs" />
     <Compile Include="Compression\7ZIP\LZ\LzOutWindow.cs" />
-    <Compile Include="Compression\LZ4F.cs" />
+    <Compile Include="Compression\Formats\Gzip.cs" />
+    <Compile Include="Compression\Formats\lz4.cs" />
+    <Compile Include="Compression\Formats\LZ4F.cs" />
+    <Compile Include="Compression\Formats\LZMA.cs" />
+    <Compile Include="Compression\Formats\ZlibGZ.cs" />
+    <Compile Include="Compression\Formats\Zstb.cs" />
     <Compile Include="Compression\LZ77_WII.cs" />
     <Compile Include="Compression\7ZIP\LZMA\LzmaBase.cs" />
     <Compile Include="Compression\7ZIP\LZMA\LzmaDecoder.cs" />
     <Compile Include="Compression\7ZIP\LZMA\LzmaEncoder.cs" />
-    <Compile Include="Compression\LZSS.cs" />
-    <Compile Include="Compression\MIO0.cs" />
+    <Compile Include="Compression\Formats\LZSS.cs" />
+    <Compile Include="Compression\Formats\MIO0.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoder.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBit.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBitTree.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
-    <Compile Include="Compression\Yay0.cs" />
-    <Compile Include="Compression\Yaz0.cs" />
-    <Compile Include="Compression\ZCMP.cs" />
+    <Compile Include="Compression\Formats\Yay0.cs" />
+    <Compile Include="Compression\Formats\Yaz0.cs" />
+    <Compile Include="Compression\Formats\ZCMP.cs" />
+    <Compile Include="Compression\Formats\Zlib.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Enums\CompressionType.cs" />
     <Compile Include="FileFormats\DDS\RGBAPixelDecoder.cs" />
+    <Compile Include="FileSystem\VirtualFileTreeNode.cs" />
+    <Compile Include="FileSystem\VirtualTreeNode.cs" />
     <Compile Include="Forms\ColorAlphaBox.cs">
       <SubType>Component</SubType>
     </Compile>

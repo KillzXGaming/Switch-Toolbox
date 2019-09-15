@@ -23,7 +23,16 @@ namespace Toolbox.Library
         public static Type[] GetCompressionFormats()
         {
             List<Type> Formats = new List<Type>();
+            Formats.Add(typeof(Gzip));
+            Formats.Add(typeof(lz4));
+            Formats.Add(typeof(LZ4F));
             Formats.Add(typeof(LZSS));
+            Formats.Add(typeof(YAY0));
+            Formats.Add(typeof(Yaz0));
+            Formats.Add(typeof(Zlib));
+            Formats.Add(typeof(ZlibGZ));
+            Formats.Add(typeof(Zstb));
+
             return Formats.ToArray();
         }
     }

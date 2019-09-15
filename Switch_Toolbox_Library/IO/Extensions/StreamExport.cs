@@ -27,6 +27,7 @@ namespace Toolbox.Library.IO
         {
             using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Write))
             {
+                stream.Position = 0;
                 stream.CopyTo(fileStream);
             }
         }
