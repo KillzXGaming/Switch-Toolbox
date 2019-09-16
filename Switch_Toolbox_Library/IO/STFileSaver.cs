@@ -269,7 +269,12 @@ namespace Toolbox.Library.IO
             Console.WriteLine($"FileIsCompressed {FileIsCompressed} CompressFile {CompressFile} CompressionType {compressionFormat}");
 
             if (CompressFile)
+            {
+                if (compressionFormat is Yaz0)
+                    ((Yaz0)compressionFormat).Alignment = Alignment;
+
                 return compressionFormat.Compress(data);
+            }
 
             return data;
         }

@@ -10,6 +10,8 @@ namespace Toolbox.Library
 {
     public class Yaz0 : ICompressionFormat
     {
+        public int Alignment = 0;
+
         public string[] Description { get; set; } = new string[] { "Yaz0" };
         public string[] Extension { get; set; } = new string[] { "*.yaz0", "*.szs",};
 
@@ -32,7 +34,7 @@ namespace Toolbox.Library
 
         public Stream Compress(Stream stream)
         {
-            return new MemoryStream(EveryFileExplorer.YAZ0.Compress(stream.ToArray()));
+            return new MemoryStream(EveryFileExplorer.YAZ0.Compress(stream.ToArray(), Alignment, (uint)Runtime.Yaz0CompressionLevel));
         }
     }
 }
