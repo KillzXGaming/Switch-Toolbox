@@ -59,7 +59,6 @@ namespace Toolbox.Library
             if (format == TEX_FORMAT.L8 || format == TEX_FORMAT.LA8)
                 compSel = new byte[4] { 2, 2, 2, 3 };
 
-
             for (int Y = 0; Y < height; Y++)
             {
                 for (int X = 0; X < width; X++)

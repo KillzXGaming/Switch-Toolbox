@@ -4,8 +4,8 @@ namespace LayoutBXLYT.Cafe
 {
     public class AlphaCompare
     {
-        public byte CompareMode;
-        public uint Value;
+        public byte CompareMode { get; set; }
+        public uint Value { get; set; }
 
         public AlphaCompare(FileReader reader, BFLYT.Header header)
         {

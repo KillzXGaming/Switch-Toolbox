@@ -28,7 +28,10 @@ namespace LayoutBXLYT
             SetInt("hasTexture0", 0);
             SetInt("numTextureMaps", 0);
             SetInt("flipTexture", 0);
-            
+            SetInt("textures0", 0);
+            SetInt("textures1", 0);
+            SetInt("textures2", 0);
+
             SetVec2("uvScale0", new Vector2(1,1));
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
@@ -51,14 +54,18 @@ namespace LayoutBXLYT
             if (material.TextureMaps.Length > 0)
                 textureMap0 = material.GetTexture(0);
 
-            if (textures.ContainsKey(textureMap0))
+            for (int i = 0; i < material.TextureMaps.Length; i++)
             {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                SetInt("textures0", 0);
-                bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[0], textures[textureMap0]);
-                if (isBinded)
-                    SetInt("hasTexture0", 1);
+                if (textures.ContainsKey(material.TextureMaps[i].Name))
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0 + i);
+                    SetInt($"textures{i}", 0);
+                    bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[i], textures[textureMap0]);
+                    if (isBinded)
+                        SetInt($"hasTexture{i}", 1);
+                }
             }
+
 
             if (material.TextureTransforms.Length > 0)
             {

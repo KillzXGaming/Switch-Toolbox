@@ -4,8 +4,8 @@ namespace LayoutBXLYT.Cafe
 {
     public class TexCoordGen
     {
-        public MatrixType GenType;
-        public TextureGenerationType Source;
+        public MatrixType GenType { get; set; }
+        public TextureGenerationType Source { get; set; }
 
         byte[] unkData;
 

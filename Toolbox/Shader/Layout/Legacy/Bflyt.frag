@@ -1,10 +1,17 @@
 ﻿uniform vec4 blackColor;
 uniform vec4 whiteColor;
-uniform int hasTexture0;
+
 uniform int debugShading;
 uniform int numTextureMaps;
 
 uniform sampler2D textures0;
+uniform sampler2D textures1;
+uniform sampler2D textures2;
+
+uniform int hasTexture0;
+uniform int hasTexture1;
+uniform int hasTexture2;
+
 uniform sampler2D uvTestPattern;
 
 void main()

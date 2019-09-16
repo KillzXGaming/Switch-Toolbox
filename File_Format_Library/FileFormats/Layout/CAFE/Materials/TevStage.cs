@@ -4,9 +4,9 @@ namespace LayoutBXLYT.Cafe
 {
     public class TevStage
     {
-        byte RGBMode;
-        byte AlphaMode;
-        ushort unk;
+        public byte RGBMode { get; set; }
+        public byte AlphaMode { get; set; }
+        public ushort unk { get; set; }
 
         public TevStage(FileReader reader, BFLYT.Header header)
         {

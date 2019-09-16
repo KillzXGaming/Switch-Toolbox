@@ -74,27 +74,7 @@ namespace FirstPlugin
 
         public ImageEditorBase OpenForm()
         {
-            bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
-
-            Properties prop = new Properties();
-            prop.Width = Width;
-            prop.Height = Height;
-            prop.Depth = Depth;
-            prop.MipCount = MipCount;
-            prop.ArrayCount = ArrayCount;
-            prop.ImageSize = (uint)ImageData.Length;
-            prop.Format = Format;
-            prop.TileMode = image.TileMode;
-            prop.Swizzle = image.Swizzle;
-
             form = new ImageEditorBase();
-            form.Text = Text;
-            form.Dock = DockStyle.Fill;
-            form.AddFileContextEvent("Save", Save);
-            form.AddFileContextEvent("Replace", Replace);
-            form.LoadProperties(prop);
-            form.LoadImage(this);
-
             return form;
         }
 
@@ -107,8 +87,7 @@ namespace FirstPlugin
 
         public void FillEditor(UserControl control)
         {
-            form = (ImageEditorBase)control;
-            UpdateForm();
+            UpdateForm((ImageEditorBase)control);
         }
 
         private void UpdateForm(ImageEditorBase form)
@@ -125,7 +104,11 @@ namespace FirstPlugin
                 prop.Format = Format;
                 prop.TileMode = image.TileMode;
                 prop.Swizzle = image.Swizzle;
-           
+
+                form.Text = Text;
+                form.Dock = DockStyle.Fill;
+                form.AddFileContextEvent("Save", Save);
+                form.AddFileContextEvent("Replace", Replace);
                 form.LoadProperties(prop);
                 form.LoadImage(this);
             }
@@ -606,7 +589,6 @@ namespace FirstPlugin
 
         public void Unload()
         {
-            form.Dispose();
         }
 
         public void Save(System.IO.Stream stream)

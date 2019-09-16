@@ -17,7 +17,7 @@ namespace LayoutBXLYT
         {
             switch (wrapMode)
             {
-                case WrapMode.Clamp: return (int)TextureWrapMode.Clamp;
+                case WrapMode.Clamp: return (int)TextureWrapMode.ClampToEdge;
                 case WrapMode.Mirror: return (int)TextureWrapMode.MirroredRepeat;
                 case WrapMode.Repeat: return (int)TextureWrapMode.Repeat;
                 default: return (int)TextureWrapMode.Clamp;
@@ -258,192 +258,434 @@ namespace LayoutBXLYT
             BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
+        //Huge thanks to layout studio for the window pane rendering code
+        //https://github.com/Treeki/LayoutStudio/blob/master/layoutgl/widget.cpp
+        //Note i still need to fix UV coordinates being flips and transformed!
         public static void DrawWindowPane(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
         {
             if (!Runtime.LayoutEditor.DisplayWindowPane)
                 return;
 
-            uint sizeX = (uint)pane.Width;
-            uint sizeY = (uint)pane.Height;
-
             var window = (IWindowPane)pane;
 
-            ushort FrameRight = window.FrameElementRight;
-            ushort FrameLeft = window.FrameElementLeft;
-            ushort FrameBottom = window.FrameElementBottm;
-            ushort FrameTop = window.FrameElementTop;
-            if (FrameRight == 0) FrameRight = 1;
-            if (FrameLeft == 0) FrameLeft = 1;
-            if (FrameBottom == 0) FrameBottom = 1;
-            if (FrameTop == 0) FrameTop = 1;
+            float dX = DrawnVertexX(pane.Width, pane.originX);
+            float dY = DrawnVertexY(pane.Height, pane.originY);
 
-            switch (window.WindowKind)
+            float frameLeft = 0;
+            float frameRight = 0;
+            float frameTop = 0;
+            float frameBottom = 0;
+            switch (window.FrameCount)
             {
-                case WindowKind.Around:
-                    if (window.FrameCount == 1) //1 texture for all
-                    {
-                        var mat = window.WindowFrames[0].Material;
-
-                        if (mat.TextureMaps.Length == 0)
-                            RenderWindowContent(pane, sizeX, sizeY, window.Content, effectiveAlpha, Textures);
-                        else
-                        {
-                            var texture = mat.TextureMaps[0].Name;
-                            if (!Textures.ContainsKey(texture))
-                            {
-                                RenderWindowContent(pane, sizeX, sizeY, window.Content, effectiveAlpha, Textures);
-                                break;
-                            }
-
-                            var image = Textures[texture];
-
-                            FrameRight = (ushort)image.Width;
-                            FrameLeft = (ushort)image.Width;
-                            FrameTop = (ushort)image.Height;
-                            FrameBottom = (ushort)image.Height;
-
-                            uint contentWidth = sizeX - (uint)FrameRight - (uint)FrameLeft;
-                            uint contentHeight = sizeY - (uint)FrameTop - (uint)FrameBottom;
-
-                            RenderWindowContent(pane,
-                                contentWidth,
-                                contentHeight,
-                                window.Content, effectiveAlpha, Textures);
-
-                            // _________
-                            //|______|  |
-                            //|  |   |  |
-                            //|  |___|__|
-                            //|__|______|
-
-
-                            //Top Left
-                            SetupShaders(mat, Textures);
-                            mat.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
-
-                            CustomRectangle rect;
-
-                            GL.PushMatrix();
-                            {
-                                uint pieceWidth = sizeX - FrameRight;
-                                uint pieceHeight = FrameTop;
-                                int pieceX = (int)-(FrameRight / 2);
-                                int pieceY = (int)((sizeY / 2) - (pieceHeight / 2));
-
-                                GL.Translate(pieceX, pieceY, 0);
-                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
-                                GL.Begin(PrimitiveType.Quads);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 1);
-                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameRight, 1);
-                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameRight, 0);
-                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
-                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                                GL.End();
-                            }
-                            GL.PopMatrix();
-
-                            //Top Right
-                            GL.PushMatrix();
-                            {
-                                uint pieceWidth = FrameRight;
-                                uint pieceHeight = sizeY - FrameBottom;
-                                int pieceX = (int)((contentWidth / 2) + (pieceWidth / 2));
-                                int pieceY = (int)(FrameBottom / 2);
-
-                                GL.Translate(pieceX, pieceY, 0);
-                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
-                                GL.Begin(PrimitiveType.Quads);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / FrameBottom);
-                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / FrameBottom);
-                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
-                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, 0);
-                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                                GL.End();
-                            }
-                            GL.PopMatrix();
-
-                            //Bottom Right
-                            GL.PushMatrix();
-                            {
-                                uint pieceWidth = FrameLeft;
-                                uint pieceHeight = sizeY - FrameTop;
-                                int pieceX = (int)-((contentWidth / 2) + (pieceWidth / 2));
-                                int pieceY = (int)-(FrameTop / 2);
-
-                                GL.Translate(pieceX, pieceY, 0);
-                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
-                                GL.Begin(PrimitiveType.Quads);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
-                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, 0);
-                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 1, pieceHeight / FrameTop);
-                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, pieceHeight / FrameTop);
-                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                                GL.End();
-                            }
-                            GL.PopMatrix();
-
-                            //Bottom Right
-                            GL.PushMatrix();
-                            {
-                                uint pieceWidth = sizeX - FrameLeft;
-                                uint pieceHeight = FrameBottom;
-                                int pieceX = (int)(FrameLeft / 2);
-                                int pieceY = (int)(-(sizeY / 2) + (pieceHeight / 2));
-
-                                GL.Translate(pieceX, pieceY, 0);
-                                rect = pane.CreateRectangle(pieceWidth, pieceHeight);
-                                GL.Begin(PrimitiveType.Quads);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameLeft, 1);
-                                GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 1);
-                                GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, 0, 0);
-                                GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                                GL.MultiTexCoord2(TextureUnit.Texture0, pieceWidth / FrameLeft, 0);
-                                GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                                GL.End();
-                            }
-                            GL.PopMatrix();
-                        }
-                    }
-                    else if (window.FrameCount == 4) //4 corners with specific texture mapping
-                    {
-                        // _________
-                        //|______|  |
-                        //|  |   |  |
-                        //|  |___|__|
-                        //|__|______|
-
-                        var frame1 = window.WindowFrames[0];
-                        var frame2 = window.WindowFrames[0];
-                        var frame3 = window.WindowFrames[0];
-                        var frame4 = window.WindowFrames[0];
-
-                        uint contentWidth = sizeX - (uint)FrameRight - (uint)FrameLeft;
-                        uint contentHeight = sizeY - (uint)FrameTop - (uint)FrameBottom;
-
-                        RenderWindowContent(pane,
-                            contentWidth,
-                            contentHeight,
-                            window.Content, effectiveAlpha, Textures);
-                    }
+                case 1:
+                    float oneW, oneH;
+                    GetTextureSize(window.WindowFrames[0].Material, Textures, out oneW, out oneH);
+                    frameLeft = frameRight = oneW;
+                    frameTop = frameBottom = oneH;
                     break;
-                case WindowKind.Horizontal:
-                    break;
-                case WindowKind.HorizontalNoContent:
+                case 4:
+                case 8:
+                    GetTextureSize(window.WindowFrames[0].Material, Textures, out frameLeft, out frameTop);
+                    GetTextureSize(window.WindowFrames[3].Material, Textures, out frameRight, out frameBottom);
                     break;
             }
 
-            GL.UseProgram(0);
+            if (frameLeft == 0) frameLeft = window.FrameElementLeft;
+            if (frameRight == 0) frameRight = window.FrameElementRight;
+            if (frameTop == 0) frameTop = window.FrameElementTop;
+            if (frameBottom == 0) frameBottom = window.FrameElementBottm;
+
+            Vector2[] texCoords = new Vector2[] {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(1, 1),
+                new Vector2(0, 1),
+                };
+
+            if (window.Content.TexCoords.Count > 0)
+            {
+                texCoords = new Vector2[] {
+                        window.Content.TexCoords[0].BottomLeft.ToTKVector2(),
+                        window.Content.TexCoords[0].BottomRight.ToTKVector2(),
+                        window.Content.TexCoords[0].TopRight.ToTKVector2(),
+                        window.Content.TexCoords[0].TopLeft.ToTKVector2(),
+                   };
+            }
+
+            //Setup vertex colors
+            Color[] colors = new Color[] {
+                 window.Content.ColorBottomLeft.Color,
+                 window.Content.ColorBottomRight.Color,
+                 window.Content.ColorTopRight.Color,
+                 window.Content.ColorTopLeft.Color,
+                };
+
+            float contentWidth = ((window.StretchLeft + (pane.Width - frameLeft)) - frameRight) + window.StretchRight;
+            float contentHeight = ((window.StretchTop + (pane.Height - frameTop)) - frameBottom) + window.StretchBottm;
+
+            if (!window.NotDrawnContent)
+            {
+                SetupShaders(window.Content.Material, Textures);
+                DrawQuad(dX + frameLeft - window.StretchLeft,
+                          dY - frameTop + window.StretchTop,
+                          contentWidth,
+                          contentHeight,
+                          texCoords, colors);
+            }
+
+            //After the content is draw, check this
+            //If it's disabled, frames do not use vertex color
+            if (!window.UseVertexColorForAll)
+            {
+                colors = new Color[] {
+                    Color.White, Color.White,
+                    Color.White, Color.White,
+                };
+            }
+
+            //Apply pane alpha
+            for (int i = 0; i < colors.Length; i++)
+            {
+                uint setalpha = (uint)((colors[i].A * effectiveAlpha) / 255);
+                colors[i] = Color.FromArgb((int)setalpha, colors[i]);
+            }
+
+            switch (window.FrameCount)
+            {
+                case 1: //1 frame. 1 texture for corners (around) or sides (horizontal)
+                    {
+                        var windowFrame = window.WindowFrames[0];
+                        SetupShaders(windowFrame.Material, Textures);
+
+                        //2 sides, no corners
+                        if (window.WindowKind == WindowKind.Horizontal ||
+                            window.WindowKind == WindowKind.HorizontalNoContent)
+                        {
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(1, 0),
+                                new Vector2(0, 0),
+                                new Vector2(0, 1),
+                                new Vector2(1, 1),
+                            };
+
+                            DrawQuad(dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
+                            };
+
+                            DrawQuad(dX, dY, frameLeft, pane.Height, texCoords, colors);
+                        }
+                        else if (window.WindowKind == WindowKind.Around)
+                        {
+
+                            // top left
+                            float pieceWidth = pane.Width - frameRight;
+                            float pieceHeight = frameTop;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                            };
+
+                            DrawQuad(dX, dY, pieceWidth, pieceHeight, texCoords, colors);
+
+                            // top right
+                            pieceWidth = frameRight;
+                            pieceHeight = pane.Height - frameBottom;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(1, 0),
+                                new Vector2(0, 0),
+                                new Vector2(0,(pane.Height - frameTop) / frameTop),
+                                new Vector2(1,(pane.Height - frameTop) / frameTop),
+                            };
+
+                            DrawQuad(dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
+
+                            // bottom left
+                            pieceWidth = frameLeft;
+                            pieceHeight = pane.Height - frameTop;
+
+                            texCoords = new Vector2[]
+                           {
+                                new Vector2(0,(pane.Height - frameBottom) / frameBottom),
+                                new Vector2(1,(pane.Height - frameBottom) / frameBottom),
+                                new Vector2(1, 0),
+                                new Vector2(0, 0),
+                           };
+
+                            DrawQuad(dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
+
+                            // bottom right
+                            pieceWidth = pane.Width - frameLeft;
+                            pieceHeight = frameBottom;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                            };
+
+                            DrawQuad(dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
+                        }
+                    }
+                    break;
+                    //4 or more will always be around types
+                case 4: //4 each corner
+                    {
+                        var matTL = window.WindowFrames[0].Material;
+                        var matTR = window.WindowFrames[1].Material;
+                        var matBL = window.WindowFrames[2].Material;
+                        var matBR = window.WindowFrames[3].Material;
+
+                        if (matTL.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matTL, Textures);
+
+                            float pieceWidth = pane.Width - frameRight;
+                            float pieceHeight = frameTop;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                            };
+
+                            DrawQuad(dX, dY, pieceWidth, pieceHeight, texCoords, colors);
+                        }
+                        if (matTR.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matTR, Textures);
+
+                            float pieceWidth = frameRight;
+                            float pieceHeight = pane.Height - frameBottom;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(1, 0),
+                                new Vector2(0, 0),
+                                new Vector2(0,(pane.Height - frameTop) / frameTop),
+                                new Vector2(1,(pane.Height - frameTop) / frameTop),
+                            };
+
+                            DrawQuad(dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
+                        }
+                        if (matBL.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matBL, Textures);
+
+                            float pieceWidth = frameLeft;
+                            float pieceHeight = pane.Height - frameTop;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0,(pane.Height - frameBottom) / frameBottom),
+                                new Vector2(1,(pane.Height - frameBottom) / frameBottom),
+                                new Vector2(1, 0),
+                                new Vector2(0, 0),
+                            };
+
+                            DrawQuad(dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
+                        }
+                        if (matBR.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matBR, Textures);
+
+                            float pieceWidth = pane.Width - frameLeft;
+                            float pieceHeight = frameBottom;
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                            };
+
+                            DrawQuad(dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
+                        }
+                    }
+                    break;
+                case 8: //4 per corner, 4 per side
+                    {
+                        var matTL = window.WindowFrames[0].Material;
+                        var matTR = window.WindowFrames[1].Material;
+                        var matBL = window.WindowFrames[2].Material;
+                        var matBR = window.WindowFrames[3].Material;
+
+                        var matT = window.WindowFrames[4].Material;
+                        var matB = window.WindowFrames[5].Material;
+                        var matL = window.WindowFrames[6].Material;
+                        var matR = window.WindowFrames[7].Material;
+
+                        if (matTL.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matTL, Textures);
+                            DrawQuad(dX, dY, frameLeft, frameTop, texCoords, colors);
+                        }
+
+                        if (matTR.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matTR, Textures);
+                            DrawQuad(dX + pane.Width - frameRight, dY, frameRight, frameTop, texCoords, colors);
+                        }
+
+                        if (matBL.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matBL, Textures);
+                            DrawQuad(dX, dY - pane.Height + frameTop, frameLeft, frameBottom, texCoords, colors);
+                        }
+
+                        if (matBR.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matBR, Textures);
+                            DrawQuad(dX + pane.Width - frameLeft, dY - pane.Height + frameBottom, frameRight, frameBottom, texCoords, colors);
+                        }
+
+                        if (matT.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matT, Textures);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                            };
+
+                            DrawQuad(dX + frameLeft, dY, contentWidth, frameTop, texCoords, colors);
+                        }
+
+                        if (matB.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matB, Textures);
+
+                            texCoords = new Vector2[]
+                            {
+                                 new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                            };
+
+                            DrawQuad(dX + frameRight, dY - (pane.Height - frameBottom), contentWidth, frameTop, texCoords, colors);
+                        }
+
+                        if (matL.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matL, Textures);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0,(pane.Height - frameTop) / frameTop),
+                                new Vector2(1,(pane.Height - frameTop) / frameTop),
+                                new Vector2(1, 0),
+                                new Vector2(0, 0),
+                            };
+
+                            DrawQuad(dX, dY - frameTop, frameLeft, contentHeight, texCoords, colors);
+                        }
+
+                        if (matR.TextureMaps.Length > 0)
+                        {
+                            SetupShaders(matR, Textures);
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2(1, 0),
+                                new Vector2(1,(pane.Height - frameBottom) / frameBottom),
+                                new Vector2(0,(pane.Height - frameBottom) / frameBottom),
+                            };
+
+                            DrawQuad(dX + (pane.Width - frameRight), dY - frameTop, frameRight, contentHeight, texCoords, colors);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private static void GetTextureSize(BxlytMaterial pane, Dictionary<string, STGenericTexture> Textures, out float width, out float height)
+        {
+            width = 0;
+            height = 0;
+            if (pane.TextureMaps.Length > 0)
+            {
+                if (Textures.ContainsKey(pane.TextureMaps[0].Name))
+                {
+                    var tex = Textures[pane.TextureMaps[0].Name];
+                    width = tex.Width;
+                    height = tex.Height;
+                }
+            }
+        }
+
+        private static float DrawnVertexX(float width, OriginX originX)
+        {
+            switch (originX)
+            {
+                case OriginX.Center: return -width / 2.0f;
+                case OriginX.Right: return -width;
+                default: return 0.0f;
+            }
+        }
+
+        private static float DrawnVertexY(float height, OriginY originX)
+        {
+            switch (originX)
+            {
+                case OriginY.Center: return height / 2.0f;
+                case OriginY.Bottom: return height;
+                default: return 0.0f;
+            }
+        }
+
+        private static void DrawQuad(float x, float y, float w, float h, Vector2[] texCoords, Color[] colors)
+        {
+            GL.Disable(EnableCap.AlphaTest);
+            GL.Disable(EnableCap.Blend);
+
+            GL.LineWidth(0.5f);
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color4(Color.Green);
+            GL.Vertex2(x, y);
+            GL.Vertex2(x + w, y);
+            GL.Vertex2(x + w, y - h);
+            GL.Vertex2(x, y - h);
+            GL.End();
+            GL.LineWidth(1f);
+
+            GL.Enable(EnableCap.AlphaTest);
+            GL.Enable(EnableCap.Blend);
+
+            GL.Begin(PrimitiveType.Quads);
+            GL.Color4(colors[0]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
+            GL.Vertex2(x, y);
+            GL.Color4(colors[1]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
+            GL.Vertex2(x + w, y);
+            GL.Color4(colors[2]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
+            GL.Vertex2(x + w, y - h);
+            GL.Color4(colors[3]);
+            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
+            GL.Vertex2(x, y - h);
+            GL.End();
         }
 
         enum FrameType

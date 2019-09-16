@@ -93,7 +93,8 @@ namespace LayoutBXLYT
             }
         }
 
-        private void UpdateRectangle() {
+        private void UpdateRectangle()
+        {
             rectangle = CreateRectangle();
         }
 
@@ -163,7 +164,7 @@ namespace LayoutBXLYT
             else if (originY == OriginY.Bottom)
                 y = -(Height / 2);
 
-            return new Vector2(x,y);
+            return new Vector2(x, y);
         }
 
         private static Vector4 TransformOrientation(int Width, int Height, OriginX originX, OriginY originY)
@@ -456,6 +457,7 @@ namespace LayoutBXLYT
 
         BxlytWindowContent Content { get; set; }
 
+        [Browsable(false)]
         List<BxlytWindowFrame> WindowFrames { get; set; }
     }
 
@@ -571,7 +573,7 @@ namespace LayoutBXLYT
 
     public class BxlanHeader : LayoutHeader
     {
-    
+
     }
 
     public class BxlytHeader : LayoutHeader
@@ -610,7 +612,7 @@ namespace LayoutBXLYT
         public BxlytTextureRef[] TextureMaps { get; set; }
     }
 
-    public class SectionCommon 
+    public class SectionCommon
     {
         [Browsable(false)]
         public virtual string Signature { get; }

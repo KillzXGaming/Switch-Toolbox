@@ -241,11 +241,6 @@ namespace LayoutBXLYT.Cafe
         {
             if (header != null)
             {
-                foreach (var mat in header.GetMaterials())
-                {
-                    if (mat.Shader != null)
-                        mat.Shader.Dispose();
-                }
             }
         }
 
@@ -926,8 +921,56 @@ namespace LayoutBXLYT.Cafe
             [TypeConverter(typeof(ExpandableObjectConverter))]
             public BxlytWindowContent Content { get; set; }
 
-            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Browsable(false)]
             public List<BxlytWindowFrame> WindowFrames { get; set; }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame TopLeftFrame
+            {
+                get { return WindowFrames.Count >= 1 ? WindowFrames[0] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame TopRightFrame
+            {
+                get { return WindowFrames.Count >= 2 ? WindowFrames[1] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame BottomLeftFrame
+            {
+                get { return WindowFrames.Count >= 3 ? WindowFrames[2] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame BottomRightFrame
+            {
+                get { return WindowFrames.Count >= 4 ? WindowFrames[3] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame TopFrame
+            {
+                get { return WindowFrames.Count >= 5 ? WindowFrames[4] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame BottomFrame
+            {
+                get { return WindowFrames.Count >= 6 ? WindowFrames[5] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame LeftFrame
+            {
+                get { return WindowFrames.Count >= 7 ? WindowFrames[6] : null; }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowFrame RightFrame
+            {
+                get { return WindowFrames.Count >= 8 ? WindowFrames[7] : null; }
+            }
 
             public WND1(FileReader reader, Header header) : base(reader)
             {

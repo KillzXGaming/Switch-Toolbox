@@ -114,7 +114,7 @@ namespace LayoutBXLYT
             GL.ClearColor(BackgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-          //  GL.Disable(EnableCap.CullFace);
+            //  GL.Disable(EnableCap.CullFace);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Always, 0f);
@@ -186,6 +186,13 @@ namespace LayoutBXLYT
             }
             else
             {
+                /*Matrix4 translate = Matrix4.CreateTranslation(pane.Translate.X, pane.Translate.Y, 0);
+                Matrix4 rotateX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.X));
+                Matrix4 rotateY = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.Y));
+                Matrix4 rotateZ = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.Z));
+                Matrix4 scale = Matrix4.CreateScale(pane.Scale.X, pane.Scale.Y, 0);
+                Matrix4 transform = scale * (rotateX * rotateY * rotateZ) * translate;*/
+
                 GL.Translate(pane.Translate.X, pane.Translate.Y, 0);
                 GL.Rotate(pane.Rotate.X, 1, 0, 0);
                 GL.Rotate(pane.Rotate.Y, 0, 1, 0);
@@ -307,56 +314,56 @@ namespace LayoutBXLYT
         {
             if (backgroundTex == null)
             {
-            /*    backgroundTex = RenderableTex.FromBitmap(Properties.Resources.GridBackground);
-                backgroundTex.TextureWrapR = TextureWrapMode.Repeat;
-                backgroundTex.TextureWrapT = TextureWrapMode.Repeat;
+                /*    backgroundTex = RenderableTex.FromBitmap(Properties.Resources.GridBackground);
+                    backgroundTex.TextureWrapR = TextureWrapMode.Repeat;
+                    backgroundTex.TextureWrapT = TextureWrapMode.Repeat;
 
 
-                GL.Enable(EnableCap.Texture2D);
-                GL.BindTexture(TextureTarget.Texture2D, backgroundTex.TexID);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)backgroundTex.TextureWrapR);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)backgroundTex.TextureWrapT);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)backgroundTex.TextureMagFilter);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)backgroundTex.TextureMinFilter);
+                    GL.Enable(EnableCap.Texture2D);
+                    GL.BindTexture(TextureTarget.Texture2D, backgroundTex.TexID);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)backgroundTex.TextureWrapR);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)backgroundTex.TextureWrapT);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)backgroundTex.TextureMagFilter);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)backgroundTex.TextureMinFilter);
 
-                float UVscale = 15;
+                    float UVscale = 15;
 
-                int PanelWidth = 9000;
-                int PanelWHeight = 9000;
+                    int PanelWidth = 9000;
+                    int PanelWHeight = 9000;
 
-                Vector2 scaleCenter = new Vector2(0.5f, 0.5f);
+                    Vector2 scaleCenter = new Vector2(0.5f, 0.5f);
 
-                Vector2[] TexCoords = new Vector2[] {
-                new Vector2(1,1),
-                new Vector2(0,1),
-                new Vector2(0,0),
-                new Vector2(1,0),
-            };
+                    Vector2[] TexCoords = new Vector2[] {
+                    new Vector2(1,1),
+                    new Vector2(0,1),
+                    new Vector2(0,0),
+                    new Vector2(1,0),
+                };
 
-                for (int i = 0; i < TexCoords.Length; i++)
-                    TexCoords[i] = (TexCoords[i] - scaleCenter) * 20 + scaleCenter;
+                    for (int i = 0; i < TexCoords.Length; i++)
+                        TexCoords[i] = (TexCoords[i] - scaleCenter) * 20 + scaleCenter;
 
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.LoadIdentity();
-                GL.PushMatrix();
-                GL.Scale(1, 1, 1);
-                GL.Translate(0, 0, 0);
+                    GL.MatrixMode(MatrixMode.Modelview);
+                    GL.LoadIdentity();
+                    GL.PushMatrix();
+                    GL.Scale(1, 1, 1);
+                    GL.Translate(0, 0, 0);
 
-                GL.Color4(Color.White);
+                    GL.Color4(Color.White);
 
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(TexCoords[0]);
-                GL.Vertex3(PanelWidth, PanelWHeight, 0);
-                GL.TexCoord2(TexCoords[1]);
-                GL.Vertex3(-PanelWidth, PanelWHeight, 0);
-                GL.TexCoord2(TexCoords[2]);
-                GL.Vertex3(-PanelWidth, -PanelWHeight, 0);
-                GL.TexCoord2(TexCoords[3]);
-                GL.Vertex3(PanelWidth, -PanelWHeight, 0);
-                GL.End();
+                    GL.Begin(PrimitiveType.Quads);
+                    GL.TexCoord2(TexCoords[0]);
+                    GL.Vertex3(PanelWidth, PanelWHeight, 0);
+                    GL.TexCoord2(TexCoords[1]);
+                    GL.Vertex3(-PanelWidth, PanelWHeight, 0);
+                    GL.TexCoord2(TexCoords[2]);
+                    GL.Vertex3(-PanelWidth, -PanelWHeight, 0);
+                    GL.TexCoord2(TexCoords[3]);
+                    GL.Vertex3(PanelWidth, -PanelWHeight, 0);
+                    GL.End();
 
-                GL.BindTexture(TextureTarget.Texture2D, 0);
-                GL.PopMatrix();*/
+                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                    GL.PopMatrix();*/
             }
         }
 
@@ -461,13 +468,14 @@ namespace LayoutBXLYT
 
         private void SearchHit(BasePane pane, int X, int Y, ref BasePane SelectedPane)
         {
-            if (pane.IsHit(X, Y)){
+            if (pane.IsHit(X, Y))
+            {
                 SelectedPane = pane;
                 return;
             }
 
             foreach (var childPane in pane.Childern)
-                 SearchHit(childPane, X, Y, ref SelectedPane);
+                SearchHit(childPane, X, Y, ref SelectedPane);
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)

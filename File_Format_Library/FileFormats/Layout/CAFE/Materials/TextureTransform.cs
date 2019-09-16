@@ -5,9 +5,9 @@ namespace LayoutBXLYT.Cafe
 {
     public class TextureTransform
     {
-        public Vector2F Translate;
-        public float Rotate;
-        public Vector2F Scale;
+        public Vector2F Translate { get; set; }
+        public float Rotate { get; set; }
+        public Vector2F Scale { get; set; }
 
         public TextureTransform() { }
 
