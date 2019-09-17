@@ -73,9 +73,9 @@ namespace LayoutBXLYT
                 float shiftX = 0;
                 float shiftY = 0;
                 if (transform.Scale.X < 0)
-                    shiftX = 1;
+                    shiftX = -1;
                 if (transform.Scale.Y < 0)
-                    shiftY = 1;
+                    shiftY = -1;
 
                 SetVec2("uvScale0",new Vector2(transform.Scale.X, transform.Scale.Y));
                 SetFloat("uvRotate0", transform.Rotate);

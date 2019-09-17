@@ -323,7 +323,7 @@ namespace LayoutBXLYT
             float contentWidth = ((window.StretchLeft + (pane.Width - frameLeft)) - frameRight) + window.StretchRight;
             float contentHeight = ((window.StretchTop + (pane.Height - frameTop)) - frameBottom) + window.StretchBottm;
 
-            if (!window.NotDrawnContent)
+            if (!window.NotDrawnContent && window.WindowKind != WindowKind.HorizontalNoContent)
             {
                 SetupShaders(window.Content.Material, Textures);
                 DrawQuad(dX + frameLeft - window.StretchLeft,
