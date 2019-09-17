@@ -108,9 +108,7 @@ namespace FirstPlugin
                     reader.Seek(4, System.IO.SeekOrigin.Begin);
                     uint decompSize = reader.ReadUInt32();
                     uint compSize = (uint)reader.BaseStream.Length - 8;
-
-                    var comp = new STLibraryCompression.MTA_CUSTOM();
-                    return comp.Decompress(data, decompSize);
+                    return STLibraryCompression.MTA_CUSTOM.Decompress(data, decompSize);
                 }
                 else if (compType == 0x30 || compType == 0x20)
                 {

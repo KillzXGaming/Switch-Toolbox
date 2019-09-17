@@ -222,6 +222,7 @@
     <Compile Include="Compression\Formats\lz4.cs" />
     <Compile Include="Compression\Formats\LZ4F.cs" />
     <Compile Include="Compression\Formats\LZMA.cs" />
+    <Compile Include="Compression\Formats\MtaCustomCmp.cs" />
     <Compile Include="Compression\Formats\ZlibGZ.cs" />
     <Compile Include="Compression\Formats\Zstb.cs" />
     <Compile Include="Compression\LZ77_WII.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoder.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBit.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBitTree.cs" />
+    <Compile Include="Compression\MarioTennisCmp32.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
     <Compile Include="Compression\Formats\Yay0.cs" />
     <Compile Include="Compression\Formats\Yaz0.cs" />
