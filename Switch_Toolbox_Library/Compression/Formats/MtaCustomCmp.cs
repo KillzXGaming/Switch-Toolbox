@@ -30,7 +30,8 @@ namespace Toolbox.Library
             {
                 reader.SeekBegin(4);
                 uint decompSize = reader.ReadUInt32();
-                return new MemoryStream(STLibraryCompression.MTA_CUSTOM.Decompress(stream.ToArray(), decompSize));
+                var acesComp = new STLibraryCompression.MTA_CUSTOM();
+                return new MemoryStream(acesComp.Decompress(stream.ToArray(), decompSize));
             }
         }
 
