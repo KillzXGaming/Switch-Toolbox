@@ -181,6 +181,8 @@ namespace Toolbox.Library.IO
 
             long streamStartPos = stream.Position;
 
+            if (stream.Length < 8) return null;
+
             //Check all supported compression formats and decompress. Then loop back
             if (!Compressed)
             {
