@@ -358,8 +358,7 @@ namespace LayoutBXLYT
                         SetupShaders(windowFrame.Material, Textures);
 
                         //2 sides, no corners
-                        if (window.WindowKind == WindowKind.Horizontal ||
-                            window.WindowKind == WindowKind.HorizontalNoContent)
+                        if (window.WindowKind == WindowKind.Horizontal)
                         {
                             texCoords = new Vector2[]
                             {
@@ -380,6 +379,28 @@ namespace LayoutBXLYT
                             };
 
                             DrawQuad(dX, dY, frameLeft, pane.Height, texCoords, colors);
+                        }
+                        else if (window.WindowKind == WindowKind.HorizontalNoContent)
+                        {
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2((pane.Width - frameRight) / frameRight, 0),
+                                new Vector2(0, 0),
+                                new Vector2(0, 1),
+                                new Vector2((pane.Width - frameRight) / frameRight, 1),
+                            };
+
+                            DrawQuad(dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
+                                new Vector2(0, 1),
+                            };
+
+                            DrawQuad(dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
                         }
                         else if (window.WindowKind == WindowKind.Around)
                         {
