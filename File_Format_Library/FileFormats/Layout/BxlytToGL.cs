@@ -174,7 +174,7 @@ namespace LayoutBXLYT
 
         public static void DrawBoundryPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
-            if (!Runtime.LayoutEditor.DisplayBoundryPane)
+            if (!Runtime.LayoutEditor.DisplayBoundryPane || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -203,7 +203,7 @@ namespace LayoutBXLYT
 
         public static void DrawAlignmentPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
-            if (!Runtime.LayoutEditor.DisplayAlignmentPane)
+            if (!Runtime.LayoutEditor.DisplayAlignmentPane || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
 
@@ -232,7 +232,7 @@ namespace LayoutBXLYT
 
         public static void DrawScissorPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
-            if (!Runtime.LayoutEditor.DisplayScissorPane)
+            if (!Runtime.LayoutEditor.DisplayScissorPane || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -677,21 +677,24 @@ namespace LayoutBXLYT
 
         private static void DrawQuad(float x, float y, float w, float h, Vector2[] texCoords, Color[] colors)
         {
-            GL.Disable(EnableCap.AlphaTest);
-            GL.Disable(EnableCap.Blend);
+            if (!Runtime.LayoutEditor.IsGamePreview)
+            {
+                GL.Disable(EnableCap.AlphaTest);
+                GL.Disable(EnableCap.Blend);
 
-            GL.LineWidth(0.5f);
-            GL.Begin(PrimitiveType.LineLoop);
-            GL.Color4(Color.Green);
-            GL.Vertex2(x, y);
-            GL.Vertex2(x + w, y);
-            GL.Vertex2(x + w, y - h);
-            GL.Vertex2(x, y - h);
-            GL.End();
-            GL.LineWidth(1f);
+                GL.LineWidth(0.5f);
+                GL.Begin(PrimitiveType.LineLoop);
+                GL.Color4(Color.Green);
+                GL.Vertex2(x, y);
+                GL.Vertex2(x + w, y);
+                GL.Vertex2(x + w, y - h);
+                GL.Vertex2(x, y - h);
+                GL.End();
+                GL.LineWidth(1f);
 
-            GL.Enable(EnableCap.AlphaTest);
-            GL.Enable(EnableCap.Blend);
+                GL.Enable(EnableCap.AlphaTest);
+                GL.Enable(EnableCap.Blend);
+            }
 
             GL.Begin(PrimitiveType.Quads);
             GL.Color4(colors[0]);
@@ -928,21 +931,30 @@ namespace LayoutBXLYT
                 }
                 else
                 {
-                    GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-                    GL.Enable(EnableCap.LineSmooth);
-                    GL.LineWidth(1f);
-                    GL.PolygonOffset(1f, 1f);
+                    if (!Runtime.LayoutEditor.IsGamePreview)
+                    {
+                        GL.Disable(EnableCap.Blend);
+                        GL.Disable(EnableCap.AlphaTest);
 
-                    GL.Begin(PrimitiveType.Quads);
-                    GL.Color4(Color.Green);
-                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                    GL.End();
+                        GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+                        GL.Enable(EnableCap.LineSmooth);
+                        GL.LineWidth(1f);
+                        GL.PolygonOffset(1f, 1f);
 
-                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                    GL.PolygonOffset(0f, 0f);
+                        GL.Begin(PrimitiveType.Quads);
+                        GL.Color4(Color.Green);
+                        GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                        GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                        GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                        GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                        GL.End();
+
+                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                        GL.PolygonOffset(0f, 0f);
+
+                        GL.Enable(EnableCap.Blend);
+                        GL.Enable(EnableCap.AlphaTest);
+                    }
 
                     GL.Begin(PrimitiveType.Quads);
                     GL.Color4(colors[0]);

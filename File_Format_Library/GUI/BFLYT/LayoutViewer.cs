@@ -264,7 +264,7 @@ namespace LayoutBXLYT
 
         private void DrawDefaultPane(BasePane pane)
         {
-            if (!Runtime.LayoutEditor.DisplayNullPane)
+            if (!Runtime.LayoutEditor.DisplayNullPane || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -376,6 +376,9 @@ namespace LayoutBXLYT
 
         private void DrawXyLines()
         {
+            if (Runtime.LayoutEditor.IsGamePreview)
+                return;
+
             int lineLength = 20;
 
             GL.Color3(Color.Green);
@@ -393,6 +396,9 @@ namespace LayoutBXLYT
 
         private void DrawGrid()
         {
+            if (!Runtime.LayoutEditor.DisplayGrid)
+                return;
+
             var size = 40;
             var amount = 300;
 

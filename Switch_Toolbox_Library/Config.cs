@@ -270,6 +270,9 @@ namespace Toolbox.Library
                     case "DisplayWindowPane":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayWindowPane);
                         break;
+                    case "LayoutDisplayGrid":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayGrid);
+                        break;
                 }
             }
 
@@ -389,6 +392,7 @@ namespace Toolbox.Library
             layoutSettingsNode.AppendChild(createNode(doc, "LayoutShadingMode", Runtime.LayoutEditor.Shading.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "LayoutBackgroundColor", ColorTranslator.ToHtml(Runtime.LayoutEditor.BackgroundColor)));
             layoutSettingsNode.AppendChild(createNode(doc, "IsGamePreview", Runtime.LayoutEditor.IsGamePreview.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "LayoutDisplayGrid", Runtime.LayoutEditor.DisplayGrid.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayNullPane", Runtime.LayoutEditor.DisplayNullPane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayBoundryPane", Runtime.LayoutEditor.DisplayBoundryPane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayPicturePane", Runtime.LayoutEditor.DisplayPicturePane.ToString()));

@@ -46,6 +46,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renderInGamePreviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +54,7 @@
             this.displayyBoundryPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayWindowPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayPicturePanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -211,6 +213,8 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderInGamePreviewToolStripMenuItem,
+            this.displayGridToolStripMenuItem,
             this.textureListToolStripMenuItem,
             this.textConverterToolStripMenuItem,
             this.orthographicViewToolStripMenuItem,
@@ -222,17 +226,25 @@
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
             // 
+            // renderInGamePreviewToolStripMenuItem
+            // 
+            this.renderInGamePreviewToolStripMenuItem.CheckOnClick = true;
+            this.renderInGamePreviewToolStripMenuItem.Name = "renderInGamePreviewToolStripMenuItem";
+            this.renderInGamePreviewToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.renderInGamePreviewToolStripMenuItem.Text = "Render In Game Preview";
+            this.renderInGamePreviewToolStripMenuItem.Click += new System.EventHandler(this.renderInGamePreviewToolStripMenuItem_Click);
+            // 
             // textureListToolStripMenuItem
             // 
             this.textureListToolStripMenuItem.Name = "textureListToolStripMenuItem";
-            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.textureListToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.textureListToolStripMenuItem.Text = "Texture List";
             this.textureListToolStripMenuItem.Click += new System.EventHandler(this.textureListToolStripMenuItem_Click);
             // 
             // textConverterToolStripMenuItem
             // 
             this.textConverterToolStripMenuItem.Name = "textConverterToolStripMenuItem";
-            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.textConverterToolStripMenuItem.Text = "Text Converter";
             this.textConverterToolStripMenuItem.Click += new System.EventHandler(this.textConverterToolStripMenuItem_Click);
             // 
@@ -242,7 +254,7 @@
             this.orthographicViewToolStripMenuItem.CheckOnClick = true;
             this.orthographicViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.orthographicViewToolStripMenuItem.Name = "orthographicViewToolStripMenuItem";
-            this.orthographicViewToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.orthographicViewToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.orthographicViewToolStripMenuItem.Text = "Orthographic View";
             this.orthographicViewToolStripMenuItem.Click += new System.EventHandler(this.orthographicViewToolStripMenuItem_Click);
             // 
@@ -252,7 +264,7 @@
             this.displayNullPanesToolStripMenuItem.CheckOnClick = true;
             this.displayNullPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.displayNullPanesToolStripMenuItem.Name = "displayNullPanesToolStripMenuItem";
-            this.displayNullPanesToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.displayNullPanesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.displayNullPanesToolStripMenuItem.Text = "Display Null Panes";
             this.displayNullPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
@@ -262,7 +274,7 @@
             this.displayyBoundryPanesToolStripMenuItem.CheckOnClick = true;
             this.displayyBoundryPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.displayyBoundryPanesToolStripMenuItem.Name = "displayyBoundryPanesToolStripMenuItem";
-            this.displayyBoundryPanesToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.displayyBoundryPanesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.displayyBoundryPanesToolStripMenuItem.Text = "Display Boundry Panes";
             this.displayyBoundryPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
@@ -272,7 +284,7 @@
             this.displayWindowPanesToolStripMenuItem.CheckOnClick = true;
             this.displayWindowPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.displayWindowPanesToolStripMenuItem.Name = "displayWindowPanesToolStripMenuItem";
-            this.displayWindowPanesToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.displayWindowPanesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.displayWindowPanesToolStripMenuItem.Text = "Display Window Panes";
             this.displayWindowPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
@@ -282,9 +294,17 @@
             this.displayPicturePanesToolStripMenuItem.CheckOnClick = true;
             this.displayPicturePanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.displayPicturePanesToolStripMenuItem.Name = "displayPicturePanesToolStripMenuItem";
-            this.displayPicturePanesToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.displayPicturePanesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.displayPicturePanesToolStripMenuItem.Text = "Display Picture Panes";
             this.displayPicturePanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
+            // 
+            // displayGridToolStripMenuItem
+            // 
+            this.displayGridToolStripMenuItem.CheckOnClick = true;
+            this.displayGridToolStripMenuItem.Name = "displayGridToolStripMenuItem";
+            this.displayGridToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.displayGridToolStripMenuItem.Text = "Display Grid";
+            this.displayGridToolStripMenuItem.Click += new System.EventHandler(this.displayGridToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -341,5 +361,7 @@
         private System.Windows.Forms.ToolStripMenuItem displayyBoundryPanesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayWindowPanesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayPicturePanesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renderInGamePreviewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayGridToolStripMenuItem;
     }
 }

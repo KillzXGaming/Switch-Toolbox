@@ -47,6 +47,8 @@ namespace Toolbox.Library
             public static bool DisplayAlignmentPane = true;
             public static bool DisplayScissorPane = true;
 
+            public static bool DisplayGrid = true;
+
             public static Color BackgroundColor = Color.FromArgb(130, 130, 130);
 
             public static DebugShading Shading = DebugShading.Default;

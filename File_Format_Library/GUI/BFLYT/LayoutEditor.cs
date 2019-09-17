@@ -65,6 +65,8 @@ namespace LayoutBXLYT
             displayyBoundryPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayBoundryPane;
             displayPicturePanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayPicturePane;
             displayWindowPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayWindowPane;
+            renderInGamePreviewToolStripMenuItem.Checked = Runtime.LayoutEditor.IsGamePreview;
+            displayGridToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayGrid;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
@@ -634,8 +636,19 @@ namespace LayoutBXLYT
             Runtime.LayoutEditor.DisplayPicturePane = displayPicturePanesToolStripMenuItem.Checked;
             Runtime.LayoutEditor.DisplayWindowPane = displayWindowPanesToolStripMenuItem.Checked;
 
-            if (ActiveViewport != null)
-                ActiveViewport.UpdateViewport();
+            ActiveViewport?.UpdateViewport();
+        }
+
+        private void renderInGamePreviewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Runtime.LayoutEditor.IsGamePreview = renderInGamePreviewToolStripMenuItem.Checked;
+            ActiveViewport?.UpdateViewport();
+        }
+
+        private void displayGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Runtime.LayoutEditor.DisplayGrid = displayGridToolStripMenuItem.Checked;
+            ActiveViewport?.UpdateViewport();
         }
     }
 }
